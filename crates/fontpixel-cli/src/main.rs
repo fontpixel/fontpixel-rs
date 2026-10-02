@@ -1,6 +1,6 @@
 //! Font inspection and conversion through the feature-gated real codec registry.
 #![forbid(unsafe_code)]
-use clap::{Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
+use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
 use fontpixel::{Error, Input, ReadOptions, ResourceLimits};
 use std::{
     fs::File,
@@ -59,7 +59,77 @@ enum Command {
         /// Diagnostic format.
         #[arg(long, value_enum, default_value = "text")]
         report: ReportStyle,
+        #[command(flatten)]
+        pcf: PcfArguments,
     },
+}
+
+#[derive(Args, Default)]
+struct PcfArguments {
+    /// PCF table integer byte order.
+    #[arg(long = "byteorder", alias = "byte-order", value_enum)]
+    byte_order: Option<Significance>,
+    /// PCF bitmap bit order.
+    #[arg(long = "bitorder", alias = "bit-order", value_enum)]
+    bit_order: Option<Significance>,
+    /// PCF row alignment in bytes (1, 2, 4 or 8).
+    #[arg(long = "glyphpad", alias = "glyph-pad", value_parser = ["1", "2", "4", "8"])]
+    glyph_pad: Option<String>,
+    /// PCF bitmap scan unit in bytes (1, 2 or 4).
+    #[arg(long = "scanunit", alias = "scan-unit", value_parser = ["1", "2", "4"])]
+    scan_unit: Option<String>,
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum Significance {
+    Msb,
+    Lsb,
+}
+impl PcfArguments {
+    fn apply(&self, id: &str, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        let requested = self.byte_order.is_some()
+            || self.bit_order.is_some()
+            || self.glyph_pad.is_some()
+            || self.scan_unit.is_some();
+        if !requested {
+            return Ok(());
+        }
+        if id != "pcf" {
+            return Err(Error::InvalidInput(
+                "PCF layout options require --to pcf".into(),
+            ));
+        }
+        #[cfg(feature = "pcf")]
+        {
+            use fontpixel::formats::pcf::{GlyphPad, Order, PcfWriteOptions, ScanUnit};
+            let order = |v| match v {
+                Some(Significance::Lsb) => Order::Lsb,
+                _ => Order::Msb,
+            };
+            registry.set_pcf_write_options(PcfWriteOptions {
+                byte_order: order(self.byte_order),
+                bit_order: order(self.bit_order),
+                glyph_pad: match self.glyph_pad.as_deref() {
+                    Some("1") => GlyphPad::One,
+                    Some("2") => GlyphPad::Two,
+                    Some("8") => GlyphPad::Eight,
+                    _ => GlyphPad::Four,
+                },
+                scan_unit: match self.scan_unit.as_deref() {
+                    Some("2") => ScanUnit::Two,
+                    Some("4") => ScanUnit::Four,
+                    _ => ScanUnit::One,
+                },
+                ..PcfWriteOptions::default()
+            })
+        }
+        #[cfg(not(feature = "pcf"))]
+        {
+            let _ = registry;
+            Err(Error::FeatureDisabled {
+                format: "pcf".into(),
+            })
+        }
+    }
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -107,7 +177,7 @@ fn read_primary(path: &Path, limits: &ResourceLimits) -> fontpixel::Result<Vec<u
 }
 
 fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
-    let registry = fontpixel::registry();
+    let mut registry = fontpixel::registry();
     match command {
         Command::Formats { json } => {
             let statuses: Vec<_> = registry.formats().collect();
@@ -178,6 +248,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             to,
             strict,
             report: style,
+            pcf,
         } => {
             let id = match to {
                 Some(id) => id,
@@ -186,6 +257,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     .id
                     .into(),
             };
+            pcf.apply(&id, &mut registry)?;
             // Check the target before doing work, and never create/truncate output.
             registry.ensure_writable(&id)?;
             let options = ReadOptions {

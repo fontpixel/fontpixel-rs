@@ -254,3 +254,43 @@ checking disabled, recording the initial infrastructure failure and clean reruns
 **Reason:** Validate the actual isolated dependency graph without hiding a license
 or changing operating-system security settings. No memory-leak certification is
 claimed from these runs.
+
+## 2026-10-02 — PCF wire fidelity and safe table accounting
+
+**Question:** PCF includes independent table formats, optional records, and the
+bdftopcf convention that the last accelerator's TOC size exceeds EOF.
+**Choice:** Use checked bounded table cursors; permit only accelerator padding to
+be absent, never required fields. Enforce counts, slices, glyph pixels, table and
+model limits before expansion. Parse and preserve ink metrics/attributes and
+unknown-table provenance beyond SPEC's minimum projection. Recompute output from
+actual fields; diagnose overwritten opaque metadata and discarded duplicate
+records. A direct reader consumes uncompressed PCF; registry gzip remains shared.
+**Reason:** Match all supplied wire variants without trusting malformed lengths
+or confusing a cached source file with a real editable serializer.
+
+## 2026-10-02 — Share X11 field projection without enabling BDF capabilities
+
+**Question:** PCF uses the BDF-compatible model, field snapshots and source hex
+interpretation, but `pcf` alone must not depend on the BDF feature.
+**Choice:** Move existing metadata/provenance helpers into an internal `x11`
+module, retaining BDF's public API and behavior. Register codecs independently.
+Reconcile PCF FONT, point-size and resolution properties when normalized fields
+change; otherwise honor direct property edits. Use BDF source hex only while its
+pixel/dimension snapshot matches; diagnose explicitly lenient nibble decoding.
+**Reason:** Avoid a second model, duplicated edit rules, false feature advertising,
+or interpreting an invalid BDF raster's placeholder bytes as validated pixels.
+
+## 2026-10-02 — PCF aliases, compiler quirks and independent oracle limits
+
+**Question:** The core can retain shared glyph identity, while SPEC's legacy map
+expands aliases and reorders unencoded glyphs; some compiler flags are broken.
+**Choice:** Preserve PCF aliases as shared glyph indices. BDF-origin canonical
+output selects effective mappings then unencoded records; report omissions and
+alternate-marker loss. Default serialization follows bdftopcf exactly. Follow
+Python's corrected pad-8 flag and final scan-unit swap for nondefault options;
+reject swap units larger than row padding. Retain input metrics/attributes but
+report any recomputed ink/accelerator differences and unsupported vertical fields.
+**Reason:** Honor the real model and SPEC rather than reproducing undefined memory
+access or corrupting terminal pixels for a tool bug. monobit 0.54 also reverses
+its two-byte encoding-table axes; record those independent-tool mismatches,
+verify all its glyph pixels/metrics, and separately verify exact one-byte codes.

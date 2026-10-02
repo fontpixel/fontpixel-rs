@@ -347,7 +347,7 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
     assert!(
         registry
             .formats()
-            .filter(|f| f.format.id != "bdf")
+            .filter(|f| f.format.id != "bdf" && f.format.id != "pcf")
             .all(|f| !f.read && !f.write)
     );
     registry.register(Registration {

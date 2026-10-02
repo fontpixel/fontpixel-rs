@@ -1,5 +1,5 @@
 //! Bitmap-font core with bounded Mono/Gray8 operations, loss-preserving strikes,
-//! and exact charset maps. Feature-gated BDF support includes bounded gzip input.
+//! and exact charset maps. Feature-gated BDF/PCF support includes bounded gzip input.
 //! The catalogue always distinguishes planned formats from real capabilities.
 #![forbid(unsafe_code)]
 
@@ -31,6 +31,8 @@ pub fn registry() -> FontRegistry {
     let mut registry = FontRegistry::new();
     #[cfg(feature = "bdf")]
     registry.install_bdf();
+    #[cfg(feature = "pcf")]
+    registry.install_pcf();
     registry
 }
 
@@ -42,7 +44,7 @@ pub fn read(bytes: &[u8], options: &ReadOptions) -> Result<formats::Loaded<FontS
 
 /// Encode a complete font set into validated in-memory assets with diagnostics.
 /// Strict mode is enforced by the registry before any output is returned.
-/// BDF is available with the `bdf` feature; other planned formats remain explicit errors.
+/// BDF and PCF use their respective features; planned formats remain explicit errors.
 pub fn write(fonts: &FontSet, format: &str, options: &WriteOptions) -> Result<resources::Written> {
     registry().write(fonts, format, options)
 }

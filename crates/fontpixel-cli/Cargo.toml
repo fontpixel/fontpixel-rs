@@ -13,8 +13,9 @@ path = "src/main.rs"
 doc = false
 
 [features]
-default = ["fontpixel/default"]
-all-formats = ["fontpixel/all-formats"]
+default = ["fontpixel/default", "pcf"]
+pcf = ["fontpixel/pcf"]
+all-formats = ["fontpixel/all-formats", "pcf"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["serde"] }

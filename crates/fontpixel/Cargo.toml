@@ -11,7 +11,7 @@ authors.workspace = true
 default = ["bdf", "pcf", "yaff"]
 all-formats = ["bdf", "pcf", "snf", "hex", "draw", "psf", "cpi", "raw", "yaff", "pf2", "fnt", "fon", "fontx2", "hzk", "hbf", "hanfont", "nfnt", "bdat", "iigs", "otb", "ttf", "otf", "woff", "woff2", "ttc", "color", "vector-raster", "svg", "bmfont", "image", "c", "kbitx", "kbits", "pbf", "sfd", "pk", "gf", "plan9", "amiga", "gem", "vfont", "fzx", "figlet", "palm", "gdr", "drcs"]
 bdf = ["gzip"]
-pcf = []
+pcf = ["gzip"]
 snf = []
 hex = []
 draw = []
@@ -82,3 +82,8 @@ harness = false
 name = "bdf"
 harness = false
 required-features = ["bdf"]
+
+[[bench]]
+name = "pcf"
+harness = false
+required-features = ["bdf", "pcf"]

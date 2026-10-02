@@ -1,0 +1,278 @@
+[
+  {
+    "file": "syn-proportional.i.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.i.pcf.gz",
+    "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.lsbbit-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbit-lsbbyte.pcf.gz",
+    "sha256": "12e577f56ee20e269c44f4073f31185d1e58db248ed6f84b0bd9ecec74f19339",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbit.pcf.gz",
+    "sha256": "aaef575f4a02999d4da29d419a440e4cf617a824f44593e1685c8e9dc1db9775",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbyte.pcf.gz",
+    "sha256": "f88e0800321fefecef2a679d5283e7c84a74605bb11db1ebd9dac77a382fe89e",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.msbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.msbbit.pcf.gz",
+    "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.msbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.msbbyte.pcf.gz",
+    "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p1-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p1-lsbbit.pcf.gz",
+    "sha256": "3e01b02094be90af905e3d8c5963545106bb0f99ba1dd739974d090ff208ad31",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p1-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p1-lsbbyte.pcf.gz",
+    "sha256": "15bd4fc90962cacc3543f9e45915cb0656e14305cf6fa7204df7bddc747753ac",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p1-u1-lsbbit-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p1-u1-lsbbit-lsbbyte.pcf.gz",
+    "sha256": "535714d6347031ea68f26039a5810ff3bf23ee7edc5799ae67b96ca6487bafda",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p1.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p1.pcf.gz",
+    "sha256": "9c6bcfad8f1b9c796d4871a91597b4b878374d5a27849ff95358a89acef1984f",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p2-u2-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u2-lsbbit.pcf.gz",
+    "sha256": "0fa9f70ea1727f56d4145ad71de61ef16c3f3f8021113ca684c4128e21081ff7",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p2-u2-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u2-lsbbyte.pcf.gz",
+    "sha256": "7fd24952c3c8ba66ca9b01c6ce91ec8f9274f1a9a771e01f2d0de4ba685db661",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p2-u4.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u4.pcf.gz",
+    "sha256": "562952f1c286572b06d41951f20eb69e6f3e1d2d584c777909b61a2b8f90f06e",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p2.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p2.pcf.gz",
+    "sha256": "6fc7c751dbb523db95bc2f1d8e9c1698235e69e465ac3d4f28571faf3a4f5b6a",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p4-u2-lsbbit-msbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u2-lsbbit-msbbyte.pcf.gz",
+    "sha256": "c585a316f82586baec1bd8b7e1e406fc42333bd3d8bf98ed15c0a7ddb7ecbb55",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+    "sha256": "cba7ff4fb7718e767148419d47dc9add70940abf7efda44a1f2ab25c22ef8849",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p4-u4-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbit.pcf.gz",
+    "sha256": "2e16b69b38121d934899a8c41eb0e49bbdab8d86b69d5784fe534395f66d5dbc",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.p4-u4-lsbbyte-msbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbyte-msbbit.pcf.gz",
+    "sha256": "4809d2bc8272fb22bea5eec2cd03dcb59d78a8bb702f51b39c5b0ddc0b898c86",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.pcf.gz",
+    "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.t.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.t.pcf.gz",
+    "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.u2.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.u2.pcf.gz",
+    "sha256": "10081edad7baff9b380edcd1fff23806a5c7d66fb2cefcb720f29a494fd3a150",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-proportional.u4.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-proportional.u4.pcf.gz",
+    "sha256": "23552ebbec105fe1108b1d3060c58fdcab74e685beed6cffa788d9ce24302955",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.i.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.i.pcf.gz",
+    "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.lsbbit-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbit-lsbbyte.pcf.gz",
+    "sha256": "a75ad1f7a60c4e7fbce32f2750d8cb67ad7b5c629e68f081716b8e8bcf3b9104",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbit.pcf.gz",
+    "sha256": "0d426d62cc21272a25d5cb599ea4bec240ef89c424671b7e140dc91b3e36e362",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbyte.pcf.gz",
+    "sha256": "13df0a124b2b7061672ba9169b3ea09aa870ed0a01f7ddbca3003fa41225610a",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.msbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.msbbit.pcf.gz",
+    "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.msbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.msbbyte.pcf.gz",
+    "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p1-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p1-lsbbit.pcf.gz",
+    "sha256": "b9436628f647a05a25b1d7208ef8b6571c73b9795943e49403823fb9d909ded0",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p1-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p1-lsbbyte.pcf.gz",
+    "sha256": "db294f5be1f7831953cf04ac71026e316db12595a4863b53806e704a5812c01e",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p1-u1-lsbbit-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p1-u1-lsbbit-lsbbyte.pcf.gz",
+    "sha256": "6c75737a7ab4d1f42c28b2e3bb2d6ea4ebac006049c481862f125052247bcb6f",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p1.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p1.pcf.gz",
+    "sha256": "b19a07c591b896b344b358499d19bd3458d40e46f58645cd7a4885bdade93ff0",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p2-u2-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u2-lsbbit.pcf.gz",
+    "sha256": "7db141f8287544b28d03058a8c6c22904b93966676b2a54319c8372463d62b99",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p2-u2-lsbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u2-lsbbyte.pcf.gz",
+    "sha256": "b73eac8318019d1f98d581a8da91db3b655401897025937f527de85b688b6d2a",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p2-u4.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u4.pcf.gz",
+    "sha256": "87b99144367ba6f4d4b28507ea8adb2bbfa9b13827f6e311fc4ba0350869600a",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p2.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p2.pcf.gz",
+    "sha256": "b4f105cefe553916017ec8ef9d75ac30758c9b250deb62236b0d2b2e8f93bd4f",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p4-u2-lsbbit-msbbyte.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u2-lsbbit-msbbyte.pcf.gz",
+    "sha256": "149665dbbd623d2ede8a9d7d8090bf9f561be6a8186d94ddcc202b403188c97e",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+    "sha256": "be000e46dcc2082718423c686185bab0cc88d9a7584fe1b1c1e8a3348203acdb",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p4-u4-lsbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbit.pcf.gz",
+    "sha256": "9e412ac2ff93ce8649a8f16ccf01f6aa9724a575c3dd153f1985917cb21d1636",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.p4-u4-lsbbyte-msbbit.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbyte-msbbit.pcf.gz",
+    "sha256": "643064183d1fd1c795f9d23c24f1f5bdb5d3acabef5ad18606fd9d563922bd7a",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.pcf.gz",
+    "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.t.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.t.pcf.gz",
+    "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.u2.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.u2.pcf.gz",
+    "sha256": "5faf0e8a1b9ca90329bd5f6ac9611894b9e0ab3e7eaf588f5cac6053aa7e422f",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-terminal.u4.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-terminal.u4.pcf.gz",
+    "sha256": "ece27a0d1bb1e5bc6044800506b65a20e3ccccc2493afbdc0146dcb7d9564577",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-two-rows.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-two-rows.pcf.gz",
+    "sha256": "274cdfc738549c94a4de9720a9f55adb48394e6fd8bdf5096bb8feed5f575e95",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  },
+  {
+    "file": "syn-unencoded-only.pcf.gz",
+    "source": "../reference/bdfparser/tests/fonts/golden/syn-unencoded-only.pcf.gz",
+    "sha256": "9a0cb1a810c86784f03b7c6df9eaf9c768dff8a7b8e6366e420285d2c0874270",
+    "license": "MIT; Tom Chen; bdfparser synthetic test font and generated golden"
+  }
+]

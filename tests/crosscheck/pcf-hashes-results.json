@@ -1,0 +1,858 @@
+[
+  {
+    "golden": "HanWangYanKai-26.pcf",
+    "committed_sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+    "bdftopcf_sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+    "rust_sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "spec_example_bad.pcf",
+    "committed_sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+    "bdftopcf_sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+    "rust_sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "spec_example_fixed.pcf",
+    "committed_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+    "bdftopcf_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+    "rust_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.i.pcf",
+    "committed_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "bdftopcf_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "rust_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.lsbbit-lsbbyte.pcf",
+    "committed_sha256": "05a3849f7e4128bccd0b3cf2f27f9238a1352d3be40a82de322735d67ea628d8",
+    "bdftopcf_sha256": "05a3849f7e4128bccd0b3cf2f27f9238a1352d3be40a82de322735d67ea628d8",
+    "rust_sha256": "05a3849f7e4128bccd0b3cf2f27f9238a1352d3be40a82de322735d67ea628d8",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.lsbbit.pcf",
+    "committed_sha256": "b883bee87dbf00c3527df74501973f3164a2420fd090a7717cdded8ebff780cc",
+    "bdftopcf_sha256": "b883bee87dbf00c3527df74501973f3164a2420fd090a7717cdded8ebff780cc",
+    "rust_sha256": "b883bee87dbf00c3527df74501973f3164a2420fd090a7717cdded8ebff780cc",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.lsbbyte.pcf",
+    "committed_sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+    "bdftopcf_sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+    "rust_sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.msbbit.pcf",
+    "committed_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "bdftopcf_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "rust_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.msbbyte.pcf",
+    "committed_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "bdftopcf_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "rust_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p1-lsbbit.pcf",
+    "committed_sha256": "4a58f32c8777216d57fcd1ab2fd3d5eec910356d3147a40f49e81690842085ad",
+    "bdftopcf_sha256": "4a58f32c8777216d57fcd1ab2fd3d5eec910356d3147a40f49e81690842085ad",
+    "rust_sha256": "4a58f32c8777216d57fcd1ab2fd3d5eec910356d3147a40f49e81690842085ad",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p1-lsbbyte.pcf",
+    "committed_sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+    "bdftopcf_sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+    "rust_sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p1-u1-lsbbit-lsbbyte.pcf",
+    "committed_sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+    "bdftopcf_sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+    "rust_sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p1.pcf",
+    "committed_sha256": "f078c3329aad9d7fb54280fc9a54d886f8cc34e7abda6840faf25447a3cda740",
+    "bdftopcf_sha256": "f078c3329aad9d7fb54280fc9a54d886f8cc34e7abda6840faf25447a3cda740",
+    "rust_sha256": "f078c3329aad9d7fb54280fc9a54d886f8cc34e7abda6840faf25447a3cda740",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p2-u2-lsbbit.pcf",
+    "committed_sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+    "bdftopcf_sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+    "rust_sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p2-u2-lsbbyte.pcf",
+    "committed_sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+    "bdftopcf_sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+    "rust_sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p2-u4.pcf",
+    "committed_sha256": "d9d2f03e6b10c7122a547908a7c2f810e79074bdaa497870ae35cc7bfc14deb7",
+    "bdftopcf_sha256": "d9d2f03e6b10c7122a547908a7c2f810e79074bdaa497870ae35cc7bfc14deb7",
+    "rust_sha256": "d9d2f03e6b10c7122a547908a7c2f810e79074bdaa497870ae35cc7bfc14deb7",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p2.pcf",
+    "committed_sha256": "24d9c396d34d65126cf2093f44baba5b1e30be78ed2b2d3d7b2b3e331c63ab42",
+    "bdftopcf_sha256": "24d9c396d34d65126cf2093f44baba5b1e30be78ed2b2d3d7b2b3e331c63ab42",
+    "rust_sha256": "24d9c396d34d65126cf2093f44baba5b1e30be78ed2b2d3d7b2b3e331c63ab42",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p4-u2-lsbbit-msbbyte.pcf",
+    "committed_sha256": "5a7c777bfff70831ba3773b10c0a19ffa6dd493b3ccbb5e93d479ab57b912a11",
+    "bdftopcf_sha256": "5a7c777bfff70831ba3773b10c0a19ffa6dd493b3ccbb5e93d479ab57b912a11",
+    "rust_sha256": "5a7c777bfff70831ba3773b10c0a19ffa6dd493b3ccbb5e93d479ab57b912a11",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf",
+    "committed_sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+    "bdftopcf_sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+    "rust_sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p4-u4-lsbbit.pcf",
+    "committed_sha256": "b18f7e17e994f87c6853bee6413aa12461b23d615e2787847dff84f7aa6f20fd",
+    "bdftopcf_sha256": "b18f7e17e994f87c6853bee6413aa12461b23d615e2787847dff84f7aa6f20fd",
+    "rust_sha256": "b18f7e17e994f87c6853bee6413aa12461b23d615e2787847dff84f7aa6f20fd",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.p4-u4-lsbbyte-msbbit.pcf",
+    "committed_sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+    "bdftopcf_sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+    "rust_sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.pcf",
+    "committed_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "bdftopcf_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "rust_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.t.pcf",
+    "committed_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "bdftopcf_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "rust_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.u2.pcf",
+    "committed_sha256": "bcaf0964e6fb6c734b6083e6df3ba6a7c92cedc97e2d80df68a4fb6ae63ce995",
+    "bdftopcf_sha256": "bcaf0964e6fb6c734b6083e6df3ba6a7c92cedc97e2d80df68a4fb6ae63ce995",
+    "rust_sha256": "bcaf0964e6fb6c734b6083e6df3ba6a7c92cedc97e2d80df68a4fb6ae63ce995",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-proportional.u4.pcf",
+    "committed_sha256": "0c6e8ddc3c9f0557462e86527e5d867132fe96840c2b379e5b05c88f7df1e533",
+    "bdftopcf_sha256": "0c6e8ddc3c9f0557462e86527e5d867132fe96840c2b379e5b05c88f7df1e533",
+    "rust_sha256": "0c6e8ddc3c9f0557462e86527e5d867132fe96840c2b379e5b05c88f7df1e533",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.i.pcf",
+    "committed_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "bdftopcf_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "rust_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.lsbbit-lsbbyte.pcf",
+    "committed_sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+    "bdftopcf_sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+    "rust_sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.lsbbit.pcf",
+    "committed_sha256": "e4f89458fde36049a1f06a22ed9332c08105276c6f2631cb8fc06ecbf9e22b04",
+    "bdftopcf_sha256": "e4f89458fde36049a1f06a22ed9332c08105276c6f2631cb8fc06ecbf9e22b04",
+    "rust_sha256": "e4f89458fde36049a1f06a22ed9332c08105276c6f2631cb8fc06ecbf9e22b04",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.lsbbyte.pcf",
+    "committed_sha256": "90a27313017aad9c6092b046f37821fccc1a2c54a337a145762e96b6ff4c07c8",
+    "bdftopcf_sha256": "90a27313017aad9c6092b046f37821fccc1a2c54a337a145762e96b6ff4c07c8",
+    "rust_sha256": "90a27313017aad9c6092b046f37821fccc1a2c54a337a145762e96b6ff4c07c8",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.msbbit.pcf",
+    "committed_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "bdftopcf_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "rust_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.msbbyte.pcf",
+    "committed_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "bdftopcf_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "rust_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p1-lsbbit.pcf",
+    "committed_sha256": "bc06c5c211ae6e0193382d3e9fb8c1cc23d09cfca8dab2cbbd7ad24cbc682b3e",
+    "bdftopcf_sha256": "bc06c5c211ae6e0193382d3e9fb8c1cc23d09cfca8dab2cbbd7ad24cbc682b3e",
+    "rust_sha256": "bc06c5c211ae6e0193382d3e9fb8c1cc23d09cfca8dab2cbbd7ad24cbc682b3e",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p1-lsbbyte.pcf",
+    "committed_sha256": "377e7763690446544625ec1db098ab7f96b2f124136e47365c36277060356ff4",
+    "bdftopcf_sha256": "377e7763690446544625ec1db098ab7f96b2f124136e47365c36277060356ff4",
+    "rust_sha256": "377e7763690446544625ec1db098ab7f96b2f124136e47365c36277060356ff4",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p1-u1-lsbbit-lsbbyte.pcf",
+    "committed_sha256": "a1b1db7a23106512599ffde71fea61896c427148003a7204b213e44d7e6c05d0",
+    "bdftopcf_sha256": "a1b1db7a23106512599ffde71fea61896c427148003a7204b213e44d7e6c05d0",
+    "rust_sha256": "a1b1db7a23106512599ffde71fea61896c427148003a7204b213e44d7e6c05d0",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p1.pcf",
+    "committed_sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+    "bdftopcf_sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+    "rust_sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p2-u2-lsbbit.pcf",
+    "committed_sha256": "3951c842bf6c17c7e0fd0a4a47811714d574a22be3e639002fa8a1d3fa340eca",
+    "bdftopcf_sha256": "14d05c08031e2336c65f56e0c4840b78304d59e469af3df10ebf969d8ab1d78a",
+    "rust_sha256": "3951c842bf6c17c7e0fd0a4a47811714d574a22be3e639002fa8a1d3fa340eca",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "syn-terminal.p2-u2-lsbbyte.pcf",
+    "committed_sha256": "92f024b9162a775a31411340562aba97415269461431cf0986ed531dbd7de953",
+    "bdftopcf_sha256": "7fdb38dba2769f70b865ab8a75733145d0200d3fec73c4c2fd0baf4a24dc6253",
+    "rust_sha256": "92f024b9162a775a31411340562aba97415269461431cf0986ed531dbd7de953",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "syn-terminal.p2-u4.pcf",
+    "committed_sha256": "a67f6bfa33358014cf4de65d7ee778839abe2db57d84ade0413aa8ba967a7e4c",
+    "bdftopcf_sha256": "a67f6bfa33358014cf4de65d7ee778839abe2db57d84ade0413aa8ba967a7e4c",
+    "rust_sha256": "a67f6bfa33358014cf4de65d7ee778839abe2db57d84ade0413aa8ba967a7e4c",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p2.pcf",
+    "committed_sha256": "8f8e348ba127c0cb03f5e44f14c10ce947300c94743b7fbe5dbcd8097eb06bb0",
+    "bdftopcf_sha256": "8f8e348ba127c0cb03f5e44f14c10ce947300c94743b7fbe5dbcd8097eb06bb0",
+    "rust_sha256": "8f8e348ba127c0cb03f5e44f14c10ce947300c94743b7fbe5dbcd8097eb06bb0",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p4-u2-lsbbit-msbbyte.pcf",
+    "committed_sha256": "09f8cd48468a8c3d63088a70b695cd9634f87ded050eede9a37f2d0c995fc2f8",
+    "bdftopcf_sha256": "78247b132546d257e7597c64f9b22a80c0615df31edba0b7db9873a1c851aac0",
+    "rust_sha256": "09f8cd48468a8c3d63088a70b695cd9634f87ded050eede9a37f2d0c995fc2f8",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf",
+    "committed_sha256": "5f23a1d884f4bac537ad52a897474f3206da5f7f3560ec063ec86669526275bb",
+    "bdftopcf_sha256": "5f23a1d884f4bac537ad52a897474f3206da5f7f3560ec063ec86669526275bb",
+    "rust_sha256": "5f23a1d884f4bac537ad52a897474f3206da5f7f3560ec063ec86669526275bb",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.p4-u4-lsbbit.pcf",
+    "committed_sha256": "134ffb3d8f318991f8a39b79eb32d2860f856deb6de77cd0c6a283b107a1b9d2",
+    "bdftopcf_sha256": "9d1743a149f7efa978e684030e33c936ec747f9804f8039d25efc9b540efc4be",
+    "rust_sha256": "134ffb3d8f318991f8a39b79eb32d2860f856deb6de77cd0c6a283b107a1b9d2",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "syn-terminal.p4-u4-lsbbyte-msbbit.pcf",
+    "committed_sha256": "3639dba7ab2b8638e6edea1d643deee17296d97f8e21b87a79aaa4ec5ec7e1d9",
+    "bdftopcf_sha256": "1f66d91a3db25fe991d4b0802985899914409dfa3024f078e81ee8cd3697a1bc",
+    "rust_sha256": "3639dba7ab2b8638e6edea1d643deee17296d97f8e21b87a79aaa4ec5ec7e1d9",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "syn-terminal.pcf",
+    "committed_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "bdftopcf_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "rust_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.t.pcf",
+    "committed_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "bdftopcf_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "rust_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.u2.pcf",
+    "committed_sha256": "c0a98b023464f9a43f498f74955fbdbba12af9eea4b17407a1398af78543d9eb",
+    "bdftopcf_sha256": "c0a98b023464f9a43f498f74955fbdbba12af9eea4b17407a1398af78543d9eb",
+    "rust_sha256": "c0a98b023464f9a43f498f74955fbdbba12af9eea4b17407a1398af78543d9eb",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-terminal.u4.pcf",
+    "committed_sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+    "bdftopcf_sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+    "rust_sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-two-rows.pcf",
+    "committed_sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+    "bdftopcf_sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+    "rust_sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "syn-unencoded-only.pcf",
+    "committed_sha256": "6a1a43ba151c5a90ce342f8047a85e9589dce0e739b5587ff15c7681e656dfc0",
+    "bdftopcf_sha256": "6a1a43ba151c5a90ce342f8047a85e9589dce0e739b5587ff15c7681e656dfc0",
+    "rust_sha256": "6a1a43ba151c5a90ce342f8047a85e9589dce0e739b5587ff15c7681e656dfc0",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.i.pcf",
+    "committed_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "bdftopcf_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "rust_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.lsbbit-lsbbyte.pcf",
+    "committed_sha256": "f4aabe335c34d3e215a0432836b3d0e2b1c542518ae631ce1dc34905c1f0eab6",
+    "bdftopcf_sha256": "f4aabe335c34d3e215a0432836b3d0e2b1c542518ae631ce1dc34905c1f0eab6",
+    "rust_sha256": "f4aabe335c34d3e215a0432836b3d0e2b1c542518ae631ce1dc34905c1f0eab6",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.lsbbit.pcf",
+    "committed_sha256": "7253198fd3cc7c1933ad779e64de8c6db14d354392c689069cab44f59fc0b312",
+    "bdftopcf_sha256": "7253198fd3cc7c1933ad779e64de8c6db14d354392c689069cab44f59fc0b312",
+    "rust_sha256": "7253198fd3cc7c1933ad779e64de8c6db14d354392c689069cab44f59fc0b312",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.lsbbyte.pcf",
+    "committed_sha256": "13f300893e0f876413a5749e4c66c8c76c9f0d69eed66a22a87ebf348d16df44",
+    "bdftopcf_sha256": "13f300893e0f876413a5749e4c66c8c76c9f0d69eed66a22a87ebf348d16df44",
+    "rust_sha256": "13f300893e0f876413a5749e4c66c8c76c9f0d69eed66a22a87ebf348d16df44",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.msbbit.pcf",
+    "committed_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "bdftopcf_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "rust_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.msbbyte.pcf",
+    "committed_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "bdftopcf_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "rust_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p1-lsbbit.pcf",
+    "committed_sha256": "cdb6e96251e9cc393518aa6c26304ab558a667c8c2982156babc21b571710b7f",
+    "bdftopcf_sha256": "cdb6e96251e9cc393518aa6c26304ab558a667c8c2982156babc21b571710b7f",
+    "rust_sha256": "cdb6e96251e9cc393518aa6c26304ab558a667c8c2982156babc21b571710b7f",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p1-lsbbyte.pcf",
+    "committed_sha256": "20d0fe389dbbbbf8c74b1fc00af68c46d93076181a526cc3dc2f1f0d11e1e188",
+    "bdftopcf_sha256": "20d0fe389dbbbbf8c74b1fc00af68c46d93076181a526cc3dc2f1f0d11e1e188",
+    "rust_sha256": "20d0fe389dbbbbf8c74b1fc00af68c46d93076181a526cc3dc2f1f0d11e1e188",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p1-u1-lsbbit-lsbbyte.pcf",
+    "committed_sha256": "f2aac2f6190b477410b6781fe4c7294498ae0c1bc9582bed5892fcfccb0935fa",
+    "bdftopcf_sha256": "f2aac2f6190b477410b6781fe4c7294498ae0c1bc9582bed5892fcfccb0935fa",
+    "rust_sha256": "f2aac2f6190b477410b6781fe4c7294498ae0c1bc9582bed5892fcfccb0935fa",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p1.pcf",
+    "committed_sha256": "874d56ab57ed2b68fea3057029f3552786f9e56bbd960c01559d530d1e24e4ab",
+    "bdftopcf_sha256": "874d56ab57ed2b68fea3057029f3552786f9e56bbd960c01559d530d1e24e4ab",
+    "rust_sha256": "874d56ab57ed2b68fea3057029f3552786f9e56bbd960c01559d530d1e24e4ab",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p2-u2-lsbbit.pcf",
+    "committed_sha256": "677cb7294bc1e463750434f5d09b9c6b706d0d479b1aa8311f1ab88e9ae6bd89",
+    "bdftopcf_sha256": "677cb7294bc1e463750434f5d09b9c6b706d0d479b1aa8311f1ab88e9ae6bd89",
+    "rust_sha256": "677cb7294bc1e463750434f5d09b9c6b706d0d479b1aa8311f1ab88e9ae6bd89",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p2-u2-lsbbyte.pcf",
+    "committed_sha256": "656565b6f4da12d78a313babf574d60e4824cfe61ab2c5caec215276301482e0",
+    "bdftopcf_sha256": "656565b6f4da12d78a313babf574d60e4824cfe61ab2c5caec215276301482e0",
+    "rust_sha256": "656565b6f4da12d78a313babf574d60e4824cfe61ab2c5caec215276301482e0",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p2-u4.pcf",
+    "committed_sha256": "d62815ebb27df5aa42060440b8537518b6671b8c59c3a95fc367a3098dc61b00",
+    "bdftopcf_sha256": "d62815ebb27df5aa42060440b8537518b6671b8c59c3a95fc367a3098dc61b00",
+    "rust_sha256": "d62815ebb27df5aa42060440b8537518b6671b8c59c3a95fc367a3098dc61b00",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p2.pcf",
+    "committed_sha256": "28941d302e844872b31b33aad6b06d215cf9e9dfa248ee3949432a8ca0bd2650",
+    "bdftopcf_sha256": "28941d302e844872b31b33aad6b06d215cf9e9dfa248ee3949432a8ca0bd2650",
+    "rust_sha256": "28941d302e844872b31b33aad6b06d215cf9e9dfa248ee3949432a8ca0bd2650",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p4-u2-lsbbit-msbbyte.pcf",
+    "committed_sha256": "61c2d5c6f5e301c185a890d2fc421113d08dbb615566f2b6790a4829d3e9dc88",
+    "bdftopcf_sha256": "61c2d5c6f5e301c185a890d2fc421113d08dbb615566f2b6790a4829d3e9dc88",
+    "rust_sha256": "61c2d5c6f5e301c185a890d2fc421113d08dbb615566f2b6790a4829d3e9dc88",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p4-u4-lsbbit-lsbbyte-t-i.pcf",
+    "committed_sha256": "68a5f37aad0057fcac75b13d751114814560439ddff432fc91cf99e1799ed032",
+    "bdftopcf_sha256": "68a5f37aad0057fcac75b13d751114814560439ddff432fc91cf99e1799ed032",
+    "rust_sha256": "68a5f37aad0057fcac75b13d751114814560439ddff432fc91cf99e1799ed032",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p4-u4-lsbbit.pcf",
+    "committed_sha256": "dd5df8986b7268913ac22127a400a9a345609082c9fec532b891f42fe8c4e4aa",
+    "bdftopcf_sha256": "9a38c12ea34e7a66f8e501ccf46cbfc3c326931046a4f86d3fa50ee55b4b09c9",
+    "rust_sha256": "dd5df8986b7268913ac22127a400a9a345609082c9fec532b891f42fe8c4e4aa",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.p4-u4-lsbbyte-msbbit.pcf",
+    "committed_sha256": "43ab0e28dc9eb20581b48927c8a38582d0eb3f168e5d757155c8e14bd75c7d82",
+    "bdftopcf_sha256": "39cd22cd08929f7cee02de28ed04a6b380b19c8362f0e695d08ea3b68640f9ad",
+    "rust_sha256": "43ab0e28dc9eb20581b48927c8a38582d0eb3f168e5d757155c8e14bd75c7d82",
+    "python": "byte-identical",
+    "compiler_bug_corrected": true
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.pcf",
+    "committed_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "bdftopcf_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "rust_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.t.pcf",
+    "committed_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "bdftopcf_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "rust_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.u2.pcf",
+    "committed_sha256": "195365015bd55cead05f74fa75cefb680d0727cd40258153b3cdcbb85c993ed2",
+    "bdftopcf_sha256": "195365015bd55cead05f74fa75cefb680d0727cd40258153b3cdcbb85c993ed2",
+    "rust_sha256": "195365015bd55cead05f74fa75cefb680d0727cd40258153b3cdcbb85c993ed2",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-2atest.u4.pcf",
+    "committed_sha256": "bbc2a29ecdc80ab995a3808e5c75e5231f48ccd6837a13f7b1617f53a40084f4",
+    "bdftopcf_sha256": "bbc2a29ecdc80ab995a3808e5c75e5231f48ccd6837a13f7b1617f53a40084f4",
+    "rust_sha256": "bbc2a29ecdc80ab995a3808e5c75e5231f48ccd6837a13f7b1617f53a40084f4",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-big5.pcf",
+    "committed_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+    "bdftopcf_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+    "rust_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-cp1250.pcf",
+    "committed_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+    "bdftopcf_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+    "rust_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-cp1251.pcf",
+    "committed_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+    "bdftopcf_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+    "rust_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-cp1252.pcf",
+    "committed_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+    "bdftopcf_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+    "rust_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-euckr.pcf",
+    "committed_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+    "bdftopcf_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+    "rust_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-gb2312.pcf",
+    "committed_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+    "bdftopcf_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+    "rust_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-iso10646.pcf",
+    "committed_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+    "bdftopcf_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+    "rust_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-iso2022cn.pcf",
+    "committed_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+    "bdftopcf_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+    "rust_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-shiftjis.pcf",
+    "committed_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+    "bdftopcf_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+    "rust_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-unicode.pcf",
+    "committed_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+    "bdftopcf_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+    "rust_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-enctest-utf8.pcf",
+    "committed_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+    "bdftopcf_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+    "rust_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test-emptylines.pcf",
+    "committed_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+    "bdftopcf_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+    "rust_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.i.pcf",
+    "committed_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "bdftopcf_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "rust_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.lsbbit-lsbbyte.pcf",
+    "committed_sha256": "fa94378bf98bb89173f5aa936861b308d7072ffea394bd7aab3f9f0fd724ea74",
+    "bdftopcf_sha256": "fa94378bf98bb89173f5aa936861b308d7072ffea394bd7aab3f9f0fd724ea74",
+    "rust_sha256": "fa94378bf98bb89173f5aa936861b308d7072ffea394bd7aab3f9f0fd724ea74",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.lsbbit.pcf",
+    "committed_sha256": "306037029595b5a39a95c427937b9bad34b4652126b608a0767ed8ca9bdae5a2",
+    "bdftopcf_sha256": "306037029595b5a39a95c427937b9bad34b4652126b608a0767ed8ca9bdae5a2",
+    "rust_sha256": "306037029595b5a39a95c427937b9bad34b4652126b608a0767ed8ca9bdae5a2",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.lsbbyte.pcf",
+    "committed_sha256": "ab738d9f27c2223fb5dd7f9895f29903568c589881f30e6cd791866b4a6067eb",
+    "bdftopcf_sha256": "ab738d9f27c2223fb5dd7f9895f29903568c589881f30e6cd791866b4a6067eb",
+    "rust_sha256": "ab738d9f27c2223fb5dd7f9895f29903568c589881f30e6cd791866b4a6067eb",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.msbbit.pcf",
+    "committed_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "bdftopcf_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "rust_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.msbbyte.pcf",
+    "committed_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "bdftopcf_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "rust_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p1-lsbbit.pcf",
+    "committed_sha256": "524912fc4f5a68e7285d94ef8ef0a5b0850b9f6ffb836db74f2912bddf063290",
+    "bdftopcf_sha256": "524912fc4f5a68e7285d94ef8ef0a5b0850b9f6ffb836db74f2912bddf063290",
+    "rust_sha256": "524912fc4f5a68e7285d94ef8ef0a5b0850b9f6ffb836db74f2912bddf063290",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p1-lsbbyte.pcf",
+    "committed_sha256": "4a00d8a2660e3690a200a389534f549aba76446702f335443063359c5ff19c55",
+    "bdftopcf_sha256": "4a00d8a2660e3690a200a389534f549aba76446702f335443063359c5ff19c55",
+    "rust_sha256": "4a00d8a2660e3690a200a389534f549aba76446702f335443063359c5ff19c55",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p1-u1-lsbbit-lsbbyte.pcf",
+    "committed_sha256": "02cfd687f20b27b9106de125c56ac173bc641d4d51d6cc03bc9fee40abc57120",
+    "bdftopcf_sha256": "02cfd687f20b27b9106de125c56ac173bc641d4d51d6cc03bc9fee40abc57120",
+    "rust_sha256": "02cfd687f20b27b9106de125c56ac173bc641d4d51d6cc03bc9fee40abc57120",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p1.pcf",
+    "committed_sha256": "de56eda0fa94720dbf2bde90aacf5166a6981497759e10d122bdba46c7f4e47d",
+    "bdftopcf_sha256": "de56eda0fa94720dbf2bde90aacf5166a6981497759e10d122bdba46c7f4e47d",
+    "rust_sha256": "de56eda0fa94720dbf2bde90aacf5166a6981497759e10d122bdba46c7f4e47d",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p2-u2-lsbbit.pcf",
+    "committed_sha256": "9fe8489e59ef26859fda7fbfe6c896922f3d254db5a6e29cb0352c993064f375",
+    "bdftopcf_sha256": "9fe8489e59ef26859fda7fbfe6c896922f3d254db5a6e29cb0352c993064f375",
+    "rust_sha256": "9fe8489e59ef26859fda7fbfe6c896922f3d254db5a6e29cb0352c993064f375",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p2-u2-lsbbyte.pcf",
+    "committed_sha256": "05deeb9884e069bd14651ce8e01fff60d8eeed7b25be1fddd519a26582956279",
+    "bdftopcf_sha256": "05deeb9884e069bd14651ce8e01fff60d8eeed7b25be1fddd519a26582956279",
+    "rust_sha256": "05deeb9884e069bd14651ce8e01fff60d8eeed7b25be1fddd519a26582956279",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p2-u4.pcf",
+    "committed_sha256": "984eecc01d26f17fd7dde13843acf52b8e87323500b867cd1cb46cdd54f2b0aa",
+    "bdftopcf_sha256": "984eecc01d26f17fd7dde13843acf52b8e87323500b867cd1cb46cdd54f2b0aa",
+    "rust_sha256": "984eecc01d26f17fd7dde13843acf52b8e87323500b867cd1cb46cdd54f2b0aa",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p2.pcf",
+    "committed_sha256": "4722adb613c56c5a7063a8ec4c1e08a0d0636314a58e0641c3be5557b03e6542",
+    "bdftopcf_sha256": "4722adb613c56c5a7063a8ec4c1e08a0d0636314a58e0641c3be5557b03e6542",
+    "rust_sha256": "4722adb613c56c5a7063a8ec4c1e08a0d0636314a58e0641c3be5557b03e6542",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p4-u2-lsbbit-msbbyte.pcf",
+    "committed_sha256": "d83439d369598b5c444812c6b1406383e8e7b815aed2bf4dcc638eb95f717d28",
+    "bdftopcf_sha256": "d83439d369598b5c444812c6b1406383e8e7b815aed2bf4dcc638eb95f717d28",
+    "rust_sha256": "d83439d369598b5c444812c6b1406383e8e7b815aed2bf4dcc638eb95f717d28",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p4-u4-lsbbit-lsbbyte-t-i.pcf",
+    "committed_sha256": "f5e923d40b4584cf372ad1a4de4ca40696531ba48092f841b243494eba657c1b",
+    "bdftopcf_sha256": "f5e923d40b4584cf372ad1a4de4ca40696531ba48092f841b243494eba657c1b",
+    "rust_sha256": "f5e923d40b4584cf372ad1a4de4ca40696531ba48092f841b243494eba657c1b",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p4-u4-lsbbit.pcf",
+    "committed_sha256": "628f6fec5826b7af8575b10e16baa20515f2c09630ba5471b872b66a7b8c6a18",
+    "bdftopcf_sha256": "628f6fec5826b7af8575b10e16baa20515f2c09630ba5471b872b66a7b8c6a18",
+    "rust_sha256": "628f6fec5826b7af8575b10e16baa20515f2c09630ba5471b872b66a7b8c6a18",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.p4-u4-lsbbyte-msbbit.pcf",
+    "committed_sha256": "83fb7250f5a78d07946a3dbca88bd79bded81928eedb0c6b164b68fb815ac2db",
+    "bdftopcf_sha256": "83fb7250f5a78d07946a3dbca88bd79bded81928eedb0c6b164b68fb815ac2db",
+    "rust_sha256": "83fb7250f5a78d07946a3dbca88bd79bded81928eedb0c6b164b68fb815ac2db",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.pcf",
+    "committed_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "bdftopcf_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "rust_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.t.pcf",
+    "committed_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "bdftopcf_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "rust_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.u2.pcf",
+    "committed_sha256": "63a1d313015ca335de08a343f394ef9b8ee21070f94ca38218ac801038f348a8",
+    "bdftopcf_sha256": "63a1d313015ca335de08a343f394ef9b8ee21070f94ca38218ac801038f348a8",
+    "rust_sha256": "63a1d313015ca335de08a343f394ef9b8ee21070f94ca38218ac801038f348a8",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-for-test.u4.pcf",
+    "committed_sha256": "e958e3f8338888dda7ffc0fe822f43839d8978d8cc95e84cf9fb50966d497507",
+    "bdftopcf_sha256": "e958e3f8338888dda7ffc0fe822f43839d8978d8cc95e84cf9fb50966d497507",
+    "rust_sha256": "e958e3f8338888dda7ffc0fe822f43839d8978d8cc95e84cf9fb50966d497507",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04-reduced.pcf",
+    "committed_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+    "bdftopcf_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+    "rust_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  },
+  {
+    "golden": "unifont-13.0.04.pcf",
+    "committed_sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+    "bdftopcf_sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+    "rust_sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+    "python": "byte-identical",
+    "compiler_bug_corrected": false
+  }
+]

@@ -28,3 +28,29 @@ Check isolated fuzz dependencies with:
 `cargo deny --manifest-path fuzz/Cargo.toml --locked --config fuzz/deny.toml check`.
 The fuzz policy alone permits libFuzzer's additional NCSA license; production
 policy remains unchanged.
+
+## PCF
+
+The `pcf` target exercises actual registry/gzip decoding, checked TOC/table parsing,
+metrics, encodings, names, properties, optional accelerators and ink metrics,
+then writes parsed models in default and mixed-order pad-8/scan-4 layouts and
+reads the default output back. It uses the same 64 KiB input/table/decompressed,
+256 glyph, 65,536 pixel and 4 MiB model budgets. Seed with the synthetic PCF oracle:
+
+```sh
+python3 -B - <<'PY'
+import json,gzip,pathlib
+p=pathlib.Path('fuzz/corpus/pcf');p.mkdir(parents=True,exist_ok=True)
+cases=json.loads(gzip.decompress(pathlib.Path('crates/fontpixel/tests/data/pcf_reference.json.gz').read_bytes()))
+for i,c in enumerate(cases):
+    if 'pcf' in c:
+        b=bytes.fromhex(c['pcf'])
+        if len(b)<=65536:(p/f'oracle-{i:04}').write_bytes(b)
+PY
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run pcf -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536 -detect_leaks=0
+```
+
+The reviewed reader run and earlier exploratory 611-second runs are reported in
+`reports/w1.3.md`. LeakSanitizer is disabled for the same documented sandbox
+ptrace restriction; AddressSanitizer remains enabled. No security settings changed.

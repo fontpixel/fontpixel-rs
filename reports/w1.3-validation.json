@@ -1,0 +1,128 @@
+{
+  "work_item": "W1.3",
+  "date": "2026-10-02",
+  "base_main": "4c4b6f7c2911cdbcf8b2527a70bbba9bea10a6cf",
+  "source_sha256": "b4e61ce326fe530c40366f01f57a5cd3ae2c73c1060fa99b0105ecef654efbea",
+  "checks": {
+    "scripts/check.sh": "pass",
+    "rustdoc_with_D_warnings": "pass",
+    "pcf_only_clippy_and_tests": "pass",
+    "production_cargo_deny": "pass",
+    "isolated_fuzz_cargo_deny": "pass",
+    "bdf_oracle_regeneration": "924 pass",
+    "pcf_oracle_regeneration": "455 pass",
+    "fresh_model_proptest": "512 pass",
+    "physical_pcf_inputs": "139 pass",
+    "bdf_corpus_python_bdftopcf": "59 byte-identical",
+    "python_hash_goldens": "107 byte-identical",
+    "typescript_hash_goldens": "800 checked; 67 documented compiler differences, all match both language references",
+    "protected_inputs": "690 unchanged",
+    "focused_pcf_contracts": "15 pass"
+  },
+  "fuzz_final": {
+    "run": "-reviewed",
+    "seconds": 611,
+    "executions": 3904582,
+    "coverage": 4923,
+    "features": 19784,
+    "corpus_inputs": 1702,
+    "corpus_kib": 2082,
+    "peak_rss_mib": 627,
+    "exit_code": 0,
+    "asan": true,
+    "lsan": false,
+    "lsan_reason": "sandbox ptrace restriction; no security changes",
+    "tested_binary_sha256": "1e98ffb65f384cd61867d4212c2030d84ccdc4dbb478f4f40ac543956f608f0a",
+    "validation_boundary": "Reviewed reader including charset and accelerator fixes. Subsequently only equivalent slice-iteration spelling and BDF-only loss reports changed; dedicated regressions and full checks passed."
+  },
+  "fuzz_exploratory": [
+    {
+      "run": "-exploratory",
+      "seconds": 611,
+      "executions": 3065234,
+      "coverage": 4667,
+      "features": 17563,
+      "corpus_inputs": 1872,
+      "corpus_kib": 2646,
+      "peak_rss_mib": 553,
+      "exit_code": 0
+    },
+    {
+      "run": "-final",
+      "seconds": 611,
+      "executions": 4656824,
+      "coverage": 4829,
+      "features": 19236,
+      "corpus_inputs": 1694,
+      "corpus_kib": 2153,
+      "peak_rss_mib": 564,
+      "exit_code": 0
+    },
+    {
+      "run": "-verified",
+      "seconds": 611,
+      "executions": 4267096,
+      "coverage": 4867,
+      "features": 19619,
+      "corpus_inputs": 1697,
+      "corpus_kib": 2118,
+      "peak_rss_mib": 612,
+      "exit_code": 0
+    },
+    {
+      "run": "-release",
+      "seconds": 611,
+      "executions": 3932839,
+      "coverage": 4893,
+      "features": 19938,
+      "corpus_inputs": 1716,
+      "corpus_kib": 2160,
+      "peak_rss_mib": 624,
+      "exit_code": 0
+    }
+  ],
+  "monobit_limitation": "Version 0.54 swaps two-byte encoding axes. Both-direction full glyph pixels/metrics and exact single-byte maps pass. Full map mismatches retained in pcf-results.json.",
+  "performance": {
+    "bdf_parse_ms": [
+      94.903474,
+      85.466209,
+      86.893755,
+      81.360603,
+      85.622583
+    ],
+    "bdf_to_pcf_ms": [
+      135.77204400000002,
+      137.309246,
+      135.165391,
+      139.31099799999998,
+      133.791956
+    ],
+    "glyphs": 38653,
+    "input_bytes": 5746021,
+    "path": "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+    "pcf_bytes": 2995428,
+    "pcf_read_ms": [
+      19.478823,
+      16.336836,
+      16.537428,
+      16.484388,
+      16.006739
+    ],
+    "pcf_write_ms": [
+      53.879301,
+      50.606098,
+      52.542535,
+      54.191872000000004,
+      51.078879
+    ]
+  },
+  "worker": {
+    "requested_model": "gpt-6-astra",
+    "requested_effort": "xhigh",
+    "fork_turns": "none",
+    "actual_model": "not independently verifiable",
+    "fast_mode": "requested, native tool has no parameter; unable to verify",
+    "child_agents": 0
+  },
+  "scope": "W1.3 only; no stage completion, merge, push or package"
+}

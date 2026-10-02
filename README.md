@@ -4,26 +4,30 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W1.2 BDF reader and writer
+## Current status: W1.3 BDF and PCF read/write
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
 unencoded alternates, field-level source provenance and structured diagnostics.
-Bounded gzip transport handles `.bdf.gz`. `info` prints actual font metadata;
+PCF has full byte/bit/padding/scan-unit support and a standalone deterministic
+writer matching SPEC and compiler goldens. Bounded gzip handles `.bdf.gz` and `.pcf.gz`. `info` prints actual font metadata;
 `convert` buffers/validates all output before safe replacement. `--strict`
 rejects combined read/write losses without touching the destination.
 
-The other 45 formats and Python/WASM bindings remain unimplemented and are
+The other 44 formats and Python/WASM bindings remain unimplemented and are
 reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
-[charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md).
+[charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md), [PCF contracts](docs/formats/pcf.md),
+and [W1.3 validation](reports/w1.3.md).
 This is a work item, not completion of phase 1 or the full compatibility facade.
 
 ```sh
 cargo run -p fontpixel-cli -- info font.bdf --json
 cargo run -p fontpixel-cli -- convert font.bdf -o canonical.bdf --strict
 cargo run -p fontpixel-cli -- convert canonical.bdf -o canonical.bdf.gz
+cargo run -p fontpixel-cli -- convert font.bdf -o font.pcf.gz
+cargo run -p fontpixel-cli -- convert font.bdf -o swapped.pcf --byteorder lsb --bitorder msb --glyphpad 8 --scanunit 4
 ```
 
 ## Build and inspect
@@ -48,8 +52,8 @@ its advisory database. Missing tools or unavailable checks fail rather than skip
 CI is configured, but no remote workflow run is claimed by a local check.
 
 The library's production dependency tree is empty with `--no-default-features`.
-`bdf` enables shared `gzip` transport using flate2's pure-Rust backend (flate2 plus five small
-support crates); `pcf` alone remains a planned feature. Optional `serde`
+`bdf` and `pcf` independently enable shared `gzip` transport using flate2's pure-Rust backend (flate2 plus five small
+support crates); neither enables the other codec. Optional `serde`
 enables structured reports. Each format has its own feature; `all-formats`
 selects all 46, while defaults select `bdf,pcf,yaff`. Feature selection does not
 claim an implementation. Heavy `cff`/`fea` slots still add no behavior.
@@ -85,8 +89,9 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-W1.3 can use the real BDF model and shared bounded gzip transport, while adding
-only actual PCF hooks. BDF's `source_rows` and `validate_bitmap` make raw raster
+W1.4 can use the real model and registry to implement yaff without changing
+the established BDF/PCF contracts. PCF options are available through
+`PcfWriteOptions`, `PcfCodec` and `FontRegistry::set_pcf_write_options`. BDF's `source_rows` and `validate_bitmap` make raw raster
 provenance explicit; other consumers must not silently render invalid-source
 placeholders. The future compatibility facade selects effective mappings from
 source duplicate glyphs. See the integration section of [W1.2](reports/w1.2.md).

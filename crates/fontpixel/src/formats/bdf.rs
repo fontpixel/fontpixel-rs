@@ -20,7 +20,7 @@ mod nonprintable;
 mod parser;
 mod source;
 mod writer;
-pub use source::{source_rows, validate_bitmap};
+pub use crate::formats::x11::{source_rows, validate_bitmap};
 
 /// BDF-specific output choices. Mono is lossless; Gray8 conversion is explicit.
 #[derive(Debug, Clone, PartialEq, Eq)]

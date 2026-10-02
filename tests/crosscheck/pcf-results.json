@@ -1,0 +1,1951 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "bdftopcf": "bdftopcf 1.1",
+  "pcf_inputs": [
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/spec_example_bad.pcf.gz",
+      "input_sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+      "glyphs": 2,
+      "read_bdf_sha256": "6fbb2ede7f6bdfb12a768456ae4fb79017e2bd1ffb2de9b1460245eddd8891e5",
+      "rewrite_sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/spec_example_fixed.pcf.gz",
+      "input_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+      "glyphs": 2,
+      "read_bdf_sha256": "9d76eae62abdca92f4ec637326781bdce37c64ea257e61d152c1f12913238db7",
+      "rewrite_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.i.pcf.gz",
+      "input_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "05a3849f7e4128bccd0b3cf2f27f9238a1352d3be40a82de322735d67ea628d8",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "05a3849f7e4128bccd0b3cf2f27f9238a1352d3be40a82de322735d67ea628d8",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbit.pcf.gz",
+      "input_sha256": "b883bee87dbf00c3527df74501973f3164a2420fd090a7717cdded8ebff780cc",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "b883bee87dbf00c3527df74501973f3164a2420fd090a7717cdded8ebff780cc",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.lsbbyte.pcf.gz",
+      "input_sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.msbbit.pcf.gz",
+      "input_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.msbbyte.pcf.gz",
+      "input_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p1-lsbbit.pcf.gz",
+      "input_sha256": "4a58f32c8777216d57fcd1ab2fd3d5eec910356d3147a40f49e81690842085ad",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "4a58f32c8777216d57fcd1ab2fd3d5eec910356d3147a40f49e81690842085ad",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p1-lsbbyte.pcf.gz",
+      "input_sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p1-u1-lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p1.pcf.gz",
+      "input_sha256": "f078c3329aad9d7fb54280fc9a54d886f8cc34e7abda6840faf25447a3cda740",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "f078c3329aad9d7fb54280fc9a54d886f8cc34e7abda6840faf25447a3cda740",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u2-lsbbit.pcf.gz",
+      "input_sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u2-lsbbyte.pcf.gz",
+      "input_sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p2-u4.pcf.gz",
+      "input_sha256": "d9d2f03e6b10c7122a547908a7c2f810e79074bdaa497870ae35cc7bfc14deb7",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "d9d2f03e6b10c7122a547908a7c2f810e79074bdaa497870ae35cc7bfc14deb7",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p2.pcf.gz",
+      "input_sha256": "24d9c396d34d65126cf2093f44baba5b1e30be78ed2b2d3d7b2b3e331c63ab42",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "24d9c396d34d65126cf2093f44baba5b1e30be78ed2b2d3d7b2b3e331c63ab42",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u2-lsbbit-msbbyte.pcf.gz",
+      "input_sha256": "5a7c777bfff70831ba3773b10c0a19ffa6dd493b3ccbb5e93d479ab57b912a11",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "5a7c777bfff70831ba3773b10c0a19ffa6dd493b3ccbb5e93d479ab57b912a11",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+      "input_sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbit.pcf.gz",
+      "input_sha256": "b18f7e17e994f87c6853bee6413aa12461b23d615e2787847dff84f7aa6f20fd",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "b18f7e17e994f87c6853bee6413aa12461b23d615e2787847dff84f7aa6f20fd",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.p4-u4-lsbbyte-msbbit.pcf.gz",
+      "input_sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.pcf.gz",
+      "input_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.t.pcf.gz",
+      "input_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.u2.pcf.gz",
+      "input_sha256": "bcaf0964e6fb6c734b6083e6df3ba6a7c92cedc97e2d80df68a4fb6ae63ce995",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "bcaf0964e6fb6c734b6083e6df3ba6a7c92cedc97e2d80df68a4fb6ae63ce995",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-proportional.u4.pcf.gz",
+      "input_sha256": "0c6e8ddc3c9f0557462e86527e5d867132fe96840c2b379e5b05c88f7df1e533",
+      "glyphs": 8,
+      "read_bdf_sha256": "68bbc181bc6043a136f3bbb5a14b0ef3bcb4be5de794c6a9e893969e4b74e18b",
+      "rewrite_sha256": "0c6e8ddc3c9f0557462e86527e5d867132fe96840c2b379e5b05c88f7df1e533",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.i.pcf.gz",
+      "input_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9f030c7b15fb19fab576b6d609a735c65d9234591afc01c26f6dd2c326c0a829",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "bc6939483033fef248deddba3b90c8bcc9d11809c04966d4afc7016dc686bb6c",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbit.pcf.gz",
+      "input_sha256": "e4f89458fde36049a1f06a22ed9332c08105276c6f2631cb8fc06ecbf9e22b04",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "c999be320ddd0c1a78da0e86a8a31386eff1e0f0e7bebfdfa399169952a1756e",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.lsbbyte.pcf.gz",
+      "input_sha256": "90a27313017aad9c6092b046f37821fccc1a2c54a337a145762e96b6ff4c07c8",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "3665300dd0a57d85ebee8c8720a13af12b89992e2f7ec92c1320a000fb028a58",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.msbbit.pcf.gz",
+      "input_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9f030c7b15fb19fab576b6d609a735c65d9234591afc01c26f6dd2c326c0a829",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.msbbyte.pcf.gz",
+      "input_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9f030c7b15fb19fab576b6d609a735c65d9234591afc01c26f6dd2c326c0a829",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p1-lsbbit.pcf.gz",
+      "input_sha256": "bc06c5c211ae6e0193382d3e9fb8c1cc23d09cfca8dab2cbbd7ad24cbc682b3e",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "84173f6368608e1800b28daaea6451fffa3f0ee5434974f0322df10e21265674",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p1-lsbbyte.pcf.gz",
+      "input_sha256": "377e7763690446544625ec1db098ab7f96b2f124136e47365c36277060356ff4",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "b6ae367e98bd9025ffab410a5d6a0bcf0f45a70bc4ae7ba7241943350d69f43a",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p1-u1-lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "a1b1db7a23106512599ffde71fea61896c427148003a7204b213e44d7e6c05d0",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "1385d5727e054d93a21b8c55674dfded954467ed9a8db9e558be9bd5241b1387",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p1.pcf.gz",
+      "input_sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "7d6219974a5a05c27f6b7408aa06d059a3cf610e6f675175460eb501e2117276",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u2-lsbbit.pcf.gz",
+      "input_sha256": "3951c842bf6c17c7e0fd0a4a47811714d574a22be3e639002fa8a1d3fa340eca",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "1f5c303d836ad38e6cf6a71dcdca36bab420f7ed3f65f122b070447e363434b7",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u2-lsbbyte.pcf.gz",
+      "input_sha256": "92f024b9162a775a31411340562aba97415269461431cf0986ed531dbd7de953",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "be299d6ae74c36c03ba475d103fb406fe3e3289a1157f2048af310018c64fb99",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p2-u4.pcf.gz",
+      "input_sha256": "a67f6bfa33358014cf4de65d7ee778839abe2db57d84ade0413aa8ba967a7e4c",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9d08e925495b66dffb0e24bf7a80654b3e292ae615e6d97a82dc0946ebe418b7",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p2.pcf.gz",
+      "input_sha256": "8f8e348ba127c0cb03f5e44f14c10ce947300c94743b7fbe5dbcd8097eb06bb0",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "49108b6458125649318067bb9ad5fc63980c138fc4a15cf69b6d195e9ebc1f9a",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u2-lsbbit-msbbyte.pcf.gz",
+      "input_sha256": "09f8cd48468a8c3d63088a70b695cd9634f87ded050eede9a37f2d0c995fc2f8",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "ed6f2e8a696aed601e46bdb0cf803f610eab531670ee6ccd0c3805ac88b138ba",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+      "input_sha256": "5f23a1d884f4bac537ad52a897474f3206da5f7f3560ec063ec86669526275bb",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "c183d185c440f6bdc926a63083cc41be91db09cf94576269c4f228fb9926023a",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbit.pcf.gz",
+      "input_sha256": "134ffb3d8f318991f8a39b79eb32d2860f856deb6de77cd0c6a283b107a1b9d2",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "7d430f4f1ad1d2babf7e1e73298e75038889ed99e005985f9f88fc6a576db7cc",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.p4-u4-lsbbyte-msbbit.pcf.gz",
+      "input_sha256": "3639dba7ab2b8638e6edea1d643deee17296d97f8e21b87a79aaa4ec5ec7e1d9",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "10e26343ed1e6a2747c918ee6c0e4b604686011132fc1e356546b84b6081e16f",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.pcf.gz",
+      "input_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9f030c7b15fb19fab576b6d609a735c65d9234591afc01c26f6dd2c326c0a829",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.t.pcf.gz",
+      "input_sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "9f030c7b15fb19fab576b6d609a735c65d9234591afc01c26f6dd2c326c0a829",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.u2.pcf.gz",
+      "input_sha256": "c0a98b023464f9a43f498f74955fbdbba12af9eea4b17407a1398af78543d9eb",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "c7d704acdbccdd3d427a5fc2fb863b4d02d16af1016ae42d2b0783fb59ed2bad",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-terminal.u4.pcf.gz",
+      "input_sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+      "glyphs": 7,
+      "read_bdf_sha256": "d9b4bc1c59503b3bf377cbbbc42e57ceb58ee64ce1423b23a6d66ac66c171712",
+      "rewrite_sha256": "37a8489223be930c3451ebcc77c0975a394d5ecd23648366e3239626dade3c8a",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-two-rows.pcf.gz",
+      "input_sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+      "glyphs": 3,
+      "read_bdf_sha256": "8e96166314ce3480907e0f5364e010ceaf03abc078887ab5c741340cd1eab9c8",
+      "rewrite_sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/syn-unencoded-only.pcf.gz",
+      "input_sha256": "6a1a43ba151c5a90ce342f8047a85e9589dce0e739b5587ff15c7681e656dfc0",
+      "glyphs": 2,
+      "read_bdf_sha256": "c440aa655d522f5e8292bba5042fe2928f6d1607a1efe513cd39a36d8ec9e595",
+      "rewrite_sha256": "6a1a43ba151c5a90ce342f8047a85e9589dce0e739b5587ff15c7681e656dfc0",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.i.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "f4aabe335c34d3e215a0432836b3d0e2b1c542518ae631ce1dc34905c1f0eab6",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "f4aabe335c34d3e215a0432836b3d0e2b1c542518ae631ce1dc34905c1f0eab6",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.lsbbit.pcf.gz",
+      "input_sha256": "7253198fd3cc7c1933ad779e64de8c6db14d354392c689069cab44f59fc0b312",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "7253198fd3cc7c1933ad779e64de8c6db14d354392c689069cab44f59fc0b312",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.lsbbyte.pcf.gz",
+      "input_sha256": "13f300893e0f876413a5749e4c66c8c76c9f0d69eed66a22a87ebf348d16df44",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "13f300893e0f876413a5749e4c66c8c76c9f0d69eed66a22a87ebf348d16df44",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.msbbit.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.msbbyte.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p1-lsbbit.pcf.gz",
+      "input_sha256": "cdb6e96251e9cc393518aa6c26304ab558a667c8c2982156babc21b571710b7f",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "cdb6e96251e9cc393518aa6c26304ab558a667c8c2982156babc21b571710b7f",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p1-lsbbyte.pcf.gz",
+      "input_sha256": "20d0fe389dbbbbf8c74b1fc00af68c46d93076181a526cc3dc2f1f0d11e1e188",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "20d0fe389dbbbbf8c74b1fc00af68c46d93076181a526cc3dc2f1f0d11e1e188",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p1-u1-lsbbit-lsbbyte.pcf.gz",
+      "input_sha256": "f2aac2f6190b477410b6781fe4c7294498ae0c1bc9582bed5892fcfccb0935fa",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "f2aac2f6190b477410b6781fe4c7294498ae0c1bc9582bed5892fcfccb0935fa",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p1.pcf.gz",
+      "input_sha256": "874d56ab57ed2b68fea3057029f3552786f9e56bbd960c01559d530d1e24e4ab",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "874d56ab57ed2b68fea3057029f3552786f9e56bbd960c01559d530d1e24e4ab",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p2-u2-lsbbit.pcf.gz",
+      "input_sha256": "677cb7294bc1e463750434f5d09b9c6b706d0d479b1aa8311f1ab88e9ae6bd89",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "677cb7294bc1e463750434f5d09b9c6b706d0d479b1aa8311f1ab88e9ae6bd89",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p2-u2-lsbbyte.pcf.gz",
+      "input_sha256": "656565b6f4da12d78a313babf574d60e4824cfe61ab2c5caec215276301482e0",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "656565b6f4da12d78a313babf574d60e4824cfe61ab2c5caec215276301482e0",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p2-u4.pcf.gz",
+      "input_sha256": "d62815ebb27df5aa42060440b8537518b6671b8c59c3a95fc367a3098dc61b00",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "d62815ebb27df5aa42060440b8537518b6671b8c59c3a95fc367a3098dc61b00",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p2.pcf.gz",
+      "input_sha256": "28941d302e844872b31b33aad6b06d215cf9e9dfa248ee3949432a8ca0bd2650",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "28941d302e844872b31b33aad6b06d215cf9e9dfa248ee3949432a8ca0bd2650",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p4-u2-lsbbit-msbbyte.pcf.gz",
+      "input_sha256": "61c2d5c6f5e301c185a890d2fc421113d08dbb615566f2b6790a4829d3e9dc88",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "61c2d5c6f5e301c185a890d2fc421113d08dbb615566f2b6790a4829d3e9dc88",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+      "input_sha256": "68a5f37aad0057fcac75b13d751114814560439ddff432fc91cf99e1799ed032",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "68a5f37aad0057fcac75b13d751114814560439ddff432fc91cf99e1799ed032",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p4-u4-lsbbit.pcf.gz",
+      "input_sha256": "dd5df8986b7268913ac22127a400a9a345609082c9fec532b891f42fe8c4e4aa",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "dd5df8986b7268913ac22127a400a9a345609082c9fec532b891f42fe8c4e4aa",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.p4-u4-lsbbyte-msbbit.pcf.gz",
+      "input_sha256": "43ab0e28dc9eb20581b48927c8a38582d0eb3f168e5d757155c8e14bd75c7d82",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "43ab0e28dc9eb20581b48927c8a38582d0eb3f168e5d757155c8e14bd75c7d82",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.t.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.u2.pcf.gz",
+      "input_sha256": "195365015bd55cead05f74fa75cefb680d0727cd40258153b3cdcbb85c993ed2",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "195365015bd55cead05f74fa75cefb680d0727cd40258153b3cdcbb85c993ed2",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-2atest.u4.pcf.gz",
+      "input_sha256": "bbc2a29ecdc80ab995a3808e5c75e5231f48ccd6837a13f7b1617f53a40084f4",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "bbc2a29ecdc80ab995a3808e5c75e5231f48ccd6837a13f7b1617f53a40084f4",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-big5.pcf.gz",
+      "input_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+      "glyphs": 3,
+      "read_bdf_sha256": "5d15293ccef56b8061404a22b144aa744f75fe7feff02d67e217b2f622acf947",
+      "rewrite_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-cp1250.pcf.gz",
+      "input_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+      "glyphs": 2,
+      "read_bdf_sha256": "e9cdda77ebc905dc767709fb9005f8c2ecd67bd092c0939b4b23ba86f6a4a684",
+      "rewrite_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-cp1251.pcf.gz",
+      "input_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+      "glyphs": 2,
+      "read_bdf_sha256": "161ba7d2928d6fb4e238ac63f6e8dfddaedb7c5a082b9dfb5efdb354957945b6",
+      "rewrite_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-cp1252.pcf.gz",
+      "input_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+      "glyphs": 2,
+      "read_bdf_sha256": "7624ab829e9646ccb6abf19730496208e300a270ce966ba879f26993def2a00b",
+      "rewrite_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-euckr.pcf.gz",
+      "input_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+      "glyphs": 3,
+      "read_bdf_sha256": "e32af4390ccd2d88b4594a8b58c28073bc1f7fa917373563d91b3e15fd545b7c",
+      "rewrite_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-gb2312.pcf.gz",
+      "input_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+      "glyphs": 3,
+      "read_bdf_sha256": "3a4bf0bcdb828d78870d9ee3559078b428f2db2ed54f5ae5fc11f0d0f8869624",
+      "rewrite_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-iso10646.pcf.gz",
+      "input_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+      "glyphs": 3,
+      "read_bdf_sha256": "7c467fb4e5479acf6b475458d1001592333a320756499142cf61beb69de59aad",
+      "rewrite_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-iso2022cn.pcf.gz",
+      "input_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+      "glyphs": 3,
+      "read_bdf_sha256": "d9375e3522cacafbd8aa1489490078f3eec13bd9b4a022892f886c9132604a80",
+      "rewrite_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-shiftjis.pcf.gz",
+      "input_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+      "glyphs": 3,
+      "read_bdf_sha256": "759134ad7c484b25803468ae98d6f3631405dc369583c9d147935fa8214c9a5b",
+      "rewrite_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-unicode.pcf.gz",
+      "input_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+      "glyphs": 3,
+      "read_bdf_sha256": "a9d54a8577654bc52f588d39371aabf76e9f86531a17cdadf1ad4c6a0d5e7b18",
+      "rewrite_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-enctest-utf8.pcf.gz",
+      "input_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+      "glyphs": 3,
+      "read_bdf_sha256": "0d156a0af6a792fe1ff97af6131c3a3ab4c08b75b5828a29b4d04d7f9cf0e62c",
+      "rewrite_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-for-test-emptylines.pcf.gz",
+      "input_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+      "glyphs": 3,
+      "read_bdf_sha256": "9c13b7f3913bb95f0306e5a40e75e9cd56d7c1c7976262df39e8d65295ca35cc",
+      "rewrite_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-for-test.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/golden/unifont-13.0.04-reduced.pcf.gz",
+      "input_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+      "glyphs": 5441,
+      "read_bdf_sha256": "e9a2a9a79341ea087e5a2600ab9e6e3c2f2c9c41a31b744384dcfc4a90085f6c",
+      "rewrite_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/HanWangYanKai-26.pcf.gz",
+      "input_sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+      "glyphs": 14160,
+      "read_bdf_sha256": "c5e78b2f254662fbbe60b199ed3cf63451de40aea2d610105a28bf39b59e59c8",
+      "rewrite_sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/spec_example_fixed.pcf.gz",
+      "input_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+      "glyphs": 2,
+      "read_bdf_sha256": "9d76eae62abdca92f4ec637326781bdce37c64ea257e61d152c1f12913238db7",
+      "rewrite_sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-i.pcf.gz",
+      "input_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbit-lsbbyte-p1.pcf.gz",
+      "input_sha256": "6c6b7b615e46ff24e028e30bfece8acbb7b6fea5c3c00a561de5e3662df6ca09",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "6c6b7b615e46ff24e028e30bfece8acbb7b6fea5c3c00a561de5e3662df6ca09",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbit-lsbbyte-u4-p8.pcf.gz",
+      "input_sha256": "432a17cf662ae69cc17e7e3a60396c1bd0b86457f990bdf2dcaa26d98099aec4",
+      "glyphs": 7,
+      "read_bdf_sha256": "dad07ee81620d1c9068be847474eb2de40158b5678c3c1a44bdc017567302bdc",
+      "rewrite_sha256": "f5993a1ee5b8838268d308343f08457d2ff29a5ac3ebfc29ba525738a4475955",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbit-u2.pcf.gz",
+      "input_sha256": "3d6e03103bf23d2056f342fcf6b5cf82a7bc4b54b6baeb935b1376937b853aba",
+      "glyphs": 7,
+      "read_bdf_sha256": "255d9bac01a665538be1618957ccac1549391a529a6ebaf6c9b982b85bb528cc",
+      "rewrite_sha256": "3d6e03103bf23d2056f342fcf6b5cf82a7bc4b54b6baeb935b1376937b853aba",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbit-u4.pcf.gz",
+      "input_sha256": "c313fb5a21131933b0dc46b0bf8a022e1f5b75fbeb843e37dd538c4045bed385",
+      "glyphs": 7,
+      "read_bdf_sha256": "255d9bac01a665538be1618957ccac1549391a529a6ebaf6c9b982b85bb528cc",
+      "rewrite_sha256": "c313fb5a21131933b0dc46b0bf8a022e1f5b75fbeb843e37dd538c4045bed385",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbit.pcf.gz",
+      "input_sha256": "04c4f018f90381710e9079e26b27ba2b2d788cb19b04c5a12c52e910499e2ba4",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "04c4f018f90381710e9079e26b27ba2b2d788cb19b04c5a12c52e910499e2ba4",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbyte-p2-u2.pcf.gz",
+      "input_sha256": "b6567a15eef6a5bcb5ec3bbbefa41ec3a77d34104579d993df7bbc4617b885b3",
+      "glyphs": 7,
+      "read_bdf_sha256": "255d9bac01a665538be1618957ccac1549391a529a6ebaf6c9b982b85bb528cc",
+      "rewrite_sha256": "b6567a15eef6a5bcb5ec3bbbefa41ec3a77d34104579d993df7bbc4617b885b3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbyte-u4.pcf.gz",
+      "input_sha256": "46c02fd0d9e67524739db16da71c6e60f3a08feb7abe13a5df525dae3437c71b",
+      "glyphs": 7,
+      "read_bdf_sha256": "255d9bac01a665538be1618957ccac1549391a529a6ebaf6c9b982b85bb528cc",
+      "rewrite_sha256": "46c02fd0d9e67524739db16da71c6e60f3a08feb7abe13a5df525dae3437c71b",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-lsbbyte.pcf.gz",
+      "input_sha256": "8623ddd30680e0f45bfb26a3bd67462b3fef1abb0b3a81f9a0736ecf86e0aeb2",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "8623ddd30680e0f45bfb26a3bd67462b3fef1abb0b3a81f9a0736ecf86e0aeb2",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-msbbit.pcf.gz",
+      "input_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-msbbyte.pcf.gz",
+      "input_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-p1.pcf.gz",
+      "input_sha256": "e59b6825338608a04e05c4e9a4f16a05c5c22364e5c56b29ac89e11ea53a6f42",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "e59b6825338608a04e05c4e9a4f16a05c5c22364e5c56b29ac89e11ea53a6f42",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-p2.pcf.gz",
+      "input_sha256": "ad64ccdcc6e03ef7745bb5f1557e2a6f7647295b691a01c396cc65e3d9d6e906",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "ad64ccdcc6e03ef7745bb5f1557e2a6f7647295b691a01c396cc65e3d9d6e906",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-p8.pcf.gz",
+      "input_sha256": "dd3e7fdeffaa88440e945a12179379986e44a197bfd444726a386f135611f24d",
+      "glyphs": 7,
+      "read_bdf_sha256": "dad07ee81620d1c9068be847474eb2de40158b5678c3c1a44bdc017567302bdc",
+      "rewrite_sha256": "8947ef9328bad462a6c9db2b524ae4f8904885eb49a27bc242afd872dffb4c8d",
+      "byte_identical_input": false,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-t.pcf.gz",
+      "input_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-u2.pcf.gz",
+      "input_sha256": "ca9a79336f05eeead77942afd9ee3e19544fdd23f47afc437af8b9519703c887",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "ca9a79336f05eeead77942afd9ee3e19544fdd23f47afc437af8b9519703c887",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal-u4.pcf.gz",
+      "input_sha256": "b042c15e57fd4def640c59eea2e48cb55e01ac66e07f389ba365ecab3f5ba24e",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "b042c15e57fd4def640c59eea2e48cb55e01ac66e07f389ba365ecab3f5ba24e",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/terminal.pcf.gz",
+      "input_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "glyphs": 7,
+      "read_bdf_sha256": "698da1c87a9bf95471d00ac80c17e0aa35fa9f0b00e81f965dc635c4bfadd835",
+      "rewrite_sha256": "1450a8b2aec6599245b2e19823c2faccdb14181792e5baac420de500ed2df353",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-2atest.pcf.gz",
+      "input_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "glyphs": 2,
+      "read_bdf_sha256": "e772497af9f305c9636ed37382c72836d49ec22170c4aedef299c199bbac4f46",
+      "rewrite_sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-big5.pcf.gz",
+      "input_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+      "glyphs": 3,
+      "read_bdf_sha256": "5d15293ccef56b8061404a22b144aa744f75fe7feff02d67e217b2f622acf947",
+      "rewrite_sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-cp1250.pcf.gz",
+      "input_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+      "glyphs": 2,
+      "read_bdf_sha256": "e9cdda77ebc905dc767709fb9005f8c2ecd67bd092c0939b4b23ba86f6a4a684",
+      "rewrite_sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-cp1251.pcf.gz",
+      "input_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+      "glyphs": 2,
+      "read_bdf_sha256": "161ba7d2928d6fb4e238ac63f6e8dfddaedb7c5a082b9dfb5efdb354957945b6",
+      "rewrite_sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-cp1252.pcf.gz",
+      "input_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+      "glyphs": 2,
+      "read_bdf_sha256": "7624ab829e9646ccb6abf19730496208e300a270ce966ba879f26993def2a00b",
+      "rewrite_sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-euckr.pcf.gz",
+      "input_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+      "glyphs": 3,
+      "read_bdf_sha256": "e32af4390ccd2d88b4594a8b58c28073bc1f7fa917373563d91b3e15fd545b7c",
+      "rewrite_sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-gb2312.pcf.gz",
+      "input_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+      "glyphs": 3,
+      "read_bdf_sha256": "3a4bf0bcdb828d78870d9ee3559078b428f2db2ed54f5ae5fc11f0d0f8869624",
+      "rewrite_sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-iso10646.pcf.gz",
+      "input_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+      "glyphs": 3,
+      "read_bdf_sha256": "7c467fb4e5479acf6b475458d1001592333a320756499142cf61beb69de59aad",
+      "rewrite_sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-iso2022cn.pcf.gz",
+      "input_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+      "glyphs": 3,
+      "read_bdf_sha256": "d9375e3522cacafbd8aa1489490078f3eec13bd9b4a022892f886c9132604a80",
+      "rewrite_sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-shiftjis.pcf.gz",
+      "input_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+      "glyphs": 3,
+      "read_bdf_sha256": "759134ad7c484b25803468ae98d6f3631405dc369583c9d147935fa8214c9a5b",
+      "rewrite_sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-unicode.pcf.gz",
+      "input_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+      "glyphs": 3,
+      "read_bdf_sha256": "a9d54a8577654bc52f588d39371aabf76e9f86531a17cdadf1ad4c6a0d5e7b18",
+      "rewrite_sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-enctest-utf8.pcf.gz",
+      "input_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+      "glyphs": 3,
+      "read_bdf_sha256": "0d156a0af6a792fe1ff97af6131c3a3ab4c08b75b5828a29b4d04d7f9cf0e62c",
+      "rewrite_sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-emptylines.pcf.gz",
+      "input_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+      "glyphs": 3,
+      "read_bdf_sha256": "9c13b7f3913bb95f0306e5a40e75e9cd56d7c1c7976262df39e8d65295ca35cc",
+      "rewrite_sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-i.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbit-lsbbyte-p1.pcf.gz",
+      "input_sha256": "02cfd687f20b27b9106de125c56ac173bc641d4d51d6cc03bc9fee40abc57120",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "02cfd687f20b27b9106de125c56ac173bc641d4d51d6cc03bc9fee40abc57120",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbit-lsbbyte-u4-p8.pcf.gz",
+      "input_sha256": "f96fb361f16d2a6c3d93d4395f65ffaf7e4ca21727f582ffd8c063e9ec15662a",
+      "glyphs": 849,
+      "read_bdf_sha256": "b8df10cb4b9d34406a60dd4cf9c466df097631fd07b34d2df3ce708f75c03592",
+      "rewrite_sha256": "f96fb361f16d2a6c3d93d4395f65ffaf7e4ca21727f582ffd8c063e9ec15662a",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbit-u2.pcf.gz",
+      "input_sha256": "d83439d369598b5c444812c6b1406383e8e7b815aed2bf4dcc638eb95f717d28",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "d83439d369598b5c444812c6b1406383e8e7b815aed2bf4dcc638eb95f717d28",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbit-u4.pcf.gz",
+      "input_sha256": "628f6fec5826b7af8575b10e16baa20515f2c09630ba5471b872b66a7b8c6a18",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "628f6fec5826b7af8575b10e16baa20515f2c09630ba5471b872b66a7b8c6a18",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbit.pcf.gz",
+      "input_sha256": "306037029595b5a39a95c427937b9bad34b4652126b608a0767ed8ca9bdae5a2",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "306037029595b5a39a95c427937b9bad34b4652126b608a0767ed8ca9bdae5a2",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbyte-p2-u2.pcf.gz",
+      "input_sha256": "05deeb9884e069bd14651ce8e01fff60d8eeed7b25be1fddd519a26582956279",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "05deeb9884e069bd14651ce8e01fff60d8eeed7b25be1fddd519a26582956279",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbyte-u4.pcf.gz",
+      "input_sha256": "83fb7250f5a78d07946a3dbca88bd79bded81928eedb0c6b164b68fb815ac2db",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "83fb7250f5a78d07946a3dbca88bd79bded81928eedb0c6b164b68fb815ac2db",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-lsbbyte.pcf.gz",
+      "input_sha256": "ab738d9f27c2223fb5dd7f9895f29903568c589881f30e6cd791866b4a6067eb",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "ab738d9f27c2223fb5dd7f9895f29903568c589881f30e6cd791866b4a6067eb",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-msbbit.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-msbbyte.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-p1.pcf.gz",
+      "input_sha256": "de56eda0fa94720dbf2bde90aacf5166a6981497759e10d122bdba46c7f4e47d",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "de56eda0fa94720dbf2bde90aacf5166a6981497759e10d122bdba46c7f4e47d",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-p2.pcf.gz",
+      "input_sha256": "4722adb613c56c5a7063a8ec4c1e08a0d0636314a58e0641c3be5557b03e6542",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "4722adb613c56c5a7063a8ec4c1e08a0d0636314a58e0641c3be5557b03e6542",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-p8.pcf.gz",
+      "input_sha256": "caaddd66353be88d49432d64a2c38cd7f2de3fa2cf6e5f90499a9831d8262fba",
+      "glyphs": 849,
+      "read_bdf_sha256": "b8df10cb4b9d34406a60dd4cf9c466df097631fd07b34d2df3ce708f75c03592",
+      "rewrite_sha256": "caaddd66353be88d49432d64a2c38cd7f2de3fa2cf6e5f90499a9831d8262fba",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-t.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-u2.pcf.gz",
+      "input_sha256": "63a1d313015ca335de08a343f394ef9b8ee21070f94ca38218ac801038f348a8",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "63a1d313015ca335de08a343f394ef9b8ee21070f94ca38218ac801038f348a8",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test-u4.pcf.gz",
+      "input_sha256": "e958e3f8338888dda7ffc0fe822f43839d8978d8cc95e84cf9fb50966d497507",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "e958e3f8338888dda7ffc0fe822f43839d8978d8cc95e84cf9fb50966d497507",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-for-test.pcf.gz",
+      "input_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "glyphs": 849,
+      "read_bdf_sha256": "a74d554d8e4203403fa1729dce2bd2bcd31d20cc3ce17732657d274f87ce7f11",
+      "rewrite_sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04-reduced.pcf.gz",
+      "input_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+      "glyphs": 5441,
+      "read_bdf_sha256": "e9a2a9a79341ea087e5a2600ab9e6e3c2f2c9c41a31b744384dcfc4a90085f6c",
+      "rewrite_sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser-js/test/fixtures/pcf/unifont-13.0.04.pcf.gz",
+      "input_sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+      "glyphs": 57086,
+      "read_bdf_sha256": "944b679390e4df54d30d6e64e81174a1e62f25c351ca51f1caf076ec918bcc02",
+      "rewrite_sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/fontpixel/pipeline/tests/fixtures/mini-t.pcf",
+      "input_sha256": "e5db167bf70527b7c2efd41936da839b5eaccf07ffcaefef48b8ffec184b4979",
+      "glyphs": 3,
+      "read_bdf_sha256": "447c41010bd99f391095c88e9884e8e77cbb3ad679c18b35bdd8aebd295a22f8",
+      "rewrite_sha256": "e5db167bf70527b7c2efd41936da839b5eaccf07ffcaefef48b8ffec184b4979",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/fontpixel/pipeline/tests/fixtures/mini.pcf",
+      "input_sha256": "e5db167bf70527b7c2efd41936da839b5eaccf07ffcaefef48b8ffec184b4979",
+      "glyphs": 3,
+      "read_bdf_sha256": "447c41010bd99f391095c88e9884e8e77cbb3ad679c18b35bdd8aebd295a22f8",
+      "rewrite_sha256": "e5db167bf70527b7c2efd41936da839b5eaccf07ffcaefef48b8ffec184b4979",
+      "byte_identical_input": true,
+      "stable_second_cycle": true,
+      "result": "pass"
+    }
+  ],
+  "bdf_corpus": [
+    {
+      "source": "reference/bdfparser/tests/fonts/HanWangYanKai-26.bdf",
+      "glyphs": 14160,
+      "bytes": 1665976,
+      "sha256": "c60e81f8b911b262ae28a6ef764a307d028f3dc209ff0fabdf6d814e66dbd3ad",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 4
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/spec_example_bad.bdf",
+      "glyphs": 2,
+      "bytes": 912,
+      "sha256": "e0978f133e13a4f82e62b87f873aab555e047b052fb3de2f8fccfcf0c883e42a",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/spec_example_fixed.bdf",
+      "glyphs": 2,
+      "bytes": 912,
+      "sha256": "3df3c8ff65c6dece09e0988c690a11d10d7052df74212e826963ae60a9923a1c",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-2atest.bdf",
+      "glyphs": 2,
+      "bytes": 130060,
+      "sha256": "30c071219977e6eea13f735efa8c7d49053c69daa590e9b36d98c10ec1b6e812",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-big5.bdf",
+      "glyphs": 3,
+      "bytes": 63324,
+      "sha256": "87b6287b1489bc6f253eb319dfbfc5e05b8f5d6e00c0fa2db158b74a1147ca96",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1250.bdf",
+      "glyphs": 2,
+      "bytes": 1724,
+      "sha256": "0957699a1f7811f44a3e3cd2754569c725b81311b3fa038588bc5e1bf1ff8aa3",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 3
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1251.bdf",
+      "glyphs": 2,
+      "bytes": 1848,
+      "sha256": "a572122a24b69d868644d9c476f049844728d375dfc00c0811f8fbf4d3942335",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 3
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1252.bdf",
+      "glyphs": 2,
+      "bytes": 1728,
+      "sha256": "4842067e7c681fe52212fe659848343b0a03b5571c59ed0d49e80994fd8af547",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 3
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-euckr.bdf",
+      "glyphs": 3,
+      "bytes": 70300,
+      "sha256": "77f51ddbe178b6687a0f230f3a7ca27dc2e47a011f1587d4916b4aaddf82fb01",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-gb2312.bdf",
+      "glyphs": 3,
+      "bytes": 66700,
+      "sha256": "09c926e3bfe3f35c43d8213df60a991c52aa2349b6deb5f7027a4af495ca0462",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso10646.bdf",
+      "glyphs": 3,
+      "bytes": 21584,
+      "sha256": "2ea86b35091d8e568d245df4cf4a9220a3411bfe6156994a95bff1b65d95d20c",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso2022cn.bdf",
+      "glyphs": 3,
+      "bytes": 6540,
+      "sha256": "2e1c4ff5c822e6c503392a2d5cfcf12272594ddba3245f3301fddbbec8073eb2",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-shiftjis.bdf",
+      "glyphs": 3,
+      "bytes": 54064,
+      "sha256": "cc1e4a64ce6bab213eac78a3a8246d4e84fa1aefa2ed7ca4da24ba5e3e6d2827",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-unicode.bdf",
+      "glyphs": 3,
+      "bytes": 21580,
+      "sha256": "1c29ac7d1ec3653ac5bb014a9d1fdd9dd92b9eea684a24dc610c588b25510ae7",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-utf8.bdf",
+      "glyphs": 3,
+      "bytes": 21580,
+      "sha256": "9e65753266439827bd59f21282e4e27545ef59a66adce60313b60b9fba69c27e",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test-emptylines.bdf",
+      "glyphs": 3,
+      "bytes": 5152,
+      "sha256": "6af5f69e9eed48fbf0eff024af06a3ff92d159da494f29761fd33a4797fc935a",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 8
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test.bdf",
+      "glyphs": 849,
+      "bytes": 136956,
+      "sha256": "6e37d0cce3c6c9a63c98c9d999b4f6390539b3841c5b0b306b43963263812805",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-reduced.bdf",
+      "glyphs": 5441,
+      "bytes": 561532,
+      "sha256": "8c1db8ed4c76951a301faa100302fe22fb0ce4aff4c1dcfb9cf04c3d1a9d239d",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04.bdf",
+      "glyphs": 57086,
+      "bytes": 5155956,
+      "sha256": "cd6e5bbf5eb22651bf95502b32daf24c0d1e7997b1171b11894a7340a45333a8",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Adjusted-Regular-6px.bdf",
+      "glyphs": 102,
+      "bytes": 11720,
+      "sha256": "847d76923644d868f2bbd9b02d13acf55120994fc015c2d66042577d7d36e5be",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Mono-Regular-6px.bdf",
+      "glyphs": 102,
+      "bytes": 12988,
+      "sha256": "e40ea46e6b79dbd7d5362c08dd5d669f1f2c0d93e9b410016d4f4ca176b48868",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "samples/fontpixel-catalogue/capsigrany/Capsigrany-16px.bdf",
+      "glyphs": 99,
+      "bytes": 6008,
+      "sha256": "52b1f24dd33341f94935eb5198b98a6ce9b264cf12c6071b9b97ec7ced41caf0",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "samples/fontpixel-catalogue/cozette/cozette.bdf",
+      "glyphs": 6046,
+      "bytes": 487872,
+      "sha256": "b2d6d4424931a1670e1f54e923d6e193fe525c55fa1aab83daafaec8fb06c6de",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1448
+    },
+    {
+      "source": "samples/fontpixel-catalogue/cozette/cozettecrossedseven.bdf",
+      "glyphs": 6046,
+      "bytes": 487908,
+      "sha256": "0c0004207fabf9e2e98d0588d2c2da3d453de94c680f6e70221c8d3421a9cc9d",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1448
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-12x24.bdf",
+      "glyphs": 950,
+      "bytes": 234792,
+      "sha256": "3319e8db10f9070a1bb18c2539bf7153a7b5b549e461172562fd555ff9d9b70a",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 933
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-16x32.bdf",
+      "glyphs": 995,
+      "bytes": 272252,
+      "sha256": "009ce8d1d31925ecde806e10cc80746b0289eace68c21bf6715247c430b70161",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 976
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-32x64.bdf",
+      "glyphs": 995,
+      "bytes": 399612,
+      "sha256": "3a88406a7b55c07738ade049e99f0f5faf98b8ec6ac9957a3879b01ddbe80f02",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 976
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-5x8.bdf",
+      "glyphs": 472,
+      "bytes": 145220,
+      "sha256": "8d0862c985741ee0dd2ae3743c9a2afae6ba8f5d89678333e29c0c902be1e987",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 465
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-6x12.bdf",
+      "glyphs": 548,
+      "bytes": 158776,
+      "sha256": "1421bb51f686fd56638c824837f221e3111ee62a549c5a2d652d451691aed599",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 541
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-8x16.bdf",
+      "glyphs": 1001,
+      "bytes": 209116,
+      "sha256": "9b49c12bf8e2263861f346c1bbb9c9ddf0c57f407a1a43e04f635adb4cd2bcbe",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 982
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u12b.bdf",
+      "glyphs": 891,
+      "bytes": 201848,
+      "sha256": "8aa93fab5a4c6b4d85bb1e9586d5f9930c333b20a6139df3064f0b6d8a792d35",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u12n.bdf",
+      "glyphs": 891,
+      "bytes": 201852,
+      "sha256": "d3baf991f98f18068913140afe59f2865029e194d0415dce3b4c70f40e1b9745",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14b.bdf",
+      "glyphs": 891,
+      "bytes": 208976,
+      "sha256": "eebec48ff6d947864372e43f6bdd7dd22cb89ca6172466e8758e8d82f635ea07",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14n.bdf",
+      "glyphs": 891,
+      "bytes": 208980,
+      "sha256": "6aeb1d68619467b6fb388693b0ed4657efdb9e752a394cdc204590596818ea7f",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14v.bdf",
+      "glyphs": 891,
+      "bytes": 208976,
+      "sha256": "834618334dcfdf14e270cf3d6e9d3679d509c399527ab25d8fbd4db25d63041b",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16b.bdf",
+      "glyphs": 891,
+      "bytes": 216104,
+      "sha256": "896464cb57666b6864ac1679bf9a4b42819c671ae8a8dda2e5c495b13e6bf02c",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16n.bdf",
+      "glyphs": 891,
+      "bytes": 216108,
+      "sha256": "64ea6f87a6346bfb460c27b9e7d95f4cf6daafd7df2cefadd3a02e7dcb6852ce",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16v.bdf",
+      "glyphs": 891,
+      "bytes": 216104,
+      "sha256": "c27a875b4d997be0a90a77629ba4792501541371d6dbed0cac60838a71c8209b",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u18b.bdf",
+      "glyphs": 891,
+      "bytes": 223232,
+      "sha256": "af774f41fafbee6a1d97ee1897fda01d2e9376a59fa76d688af9478135d9ecc7",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u18n.bdf",
+      "glyphs": 891,
+      "bytes": 223236,
+      "sha256": "0e5a104b4b20032764e55ba8da837477d2c48e12b2f44d5ad9421a3c85b138bb",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u20b.bdf",
+      "glyphs": 891,
+      "bytes": 230360,
+      "sha256": "1636292bf4dc517a5f9495763b0984f9be732035701d47473bc5f7e2e920f637",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u20n.bdf",
+      "glyphs": 891,
+      "bytes": 230364,
+      "sha256": "73b827c010dd03aa3ab6930b38c04e5816dd52401e6764c30faf840158842a0e",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u22b.bdf",
+      "glyphs": 891,
+      "bytes": 237488,
+      "sha256": "d99421aab51e95627a9bfff9385f0558eac776cfaf15c83c2eeb0275d494ed26",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u22n.bdf",
+      "glyphs": 891,
+      "bytes": 237492,
+      "sha256": "6083159b6e327eecd31a73075d3ea6984ebbbf42d759571285e4851a807217ad",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u24b.bdf",
+      "glyphs": 891,
+      "bytes": 244616,
+      "sha256": "abb4284ad42e8151291a3aa5dde5a9f1ac7ce33a6ef34a46358f10120ad6d9e3",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u24n.bdf",
+      "glyphs": 891,
+      "bytes": 244620,
+      "sha256": "136e80a1194378bae512649fa64ab6dd6d705beb3f9671d235ff54cc5718a059",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u28b.bdf",
+      "glyphs": 891,
+      "bytes": 258872,
+      "sha256": "ac42cbe5afb04f32f2b168838dde4913704fc60b0a10d32db56a87aa3ad15ea8",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u28n.bdf",
+      "glyphs": 891,
+      "bytes": 258876,
+      "sha256": "3f7ea250278a044cd98746ef0d89efbbb386c84da2adcca4fe9817db90e98aab",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u32b.bdf",
+      "glyphs": 891,
+      "bytes": 273128,
+      "sha256": "adbdd5043ff0b11743f1e4d87f1f288b0e077fe778149747ef14f3a95fa65741",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u32n.bdf",
+      "glyphs": 891,
+      "bytes": 273132,
+      "sha256": "0c8ccfe2230485564f825d4015205159131ef0fbe8cde935aebab5f719341c6e",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/fontpixel-catalogue/tinypixel/tinypixel-7px.bdf",
+      "glyphs": 101,
+      "bytes": 11352,
+      "sha256": "414ce4c3acb835f4348f981f5565e85bba386575689f37ad581db2a0a74df47f",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 0
+    },
+    {
+      "source": "samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+      "glyphs": 204,
+      "bytes": 125732,
+      "sha256": "bec05e0018711960af3df983e0ced2155d6501aca3ad108627ad7d85e9c5fd97",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 1
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-JP.bdf",
+      "glyphs": 38653,
+      "bytes": 2994828,
+      "sha256": "5a2fee3d0862212bedd11fb5ae906f557b57408b5829834884ea8277ab9aa366",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 588
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-KR.bdf",
+      "glyphs": 38653,
+      "bytes": 2994836,
+      "sha256": "fd73b11fea0a5b57ca1f7e4d9a33eeb34964d8ce38d02d81354e3b5e6d7d30d5",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 588
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+      "glyphs": 3645,
+      "bytes": 353368,
+      "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+      "glyphs": 38653,
+      "bytes": 2995428,
+      "sha256": "867339698270ee9fba76c97fbbe235e4c27d4130c3ef95e8b68120acd12cd238",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 588
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-TC.bdf",
+      "glyphs": 38653,
+      "bytes": 2994876,
+      "sha256": "1dc568394b94bc06ba0e8581e132bbc53902a7a196915943e3f172de8105fa81",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 588
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "glyphs": 3645,
+      "bytes": 340324,
+      "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSansMono14Large-Latin.bdf",
+      "glyphs": 3645,
+      "bytes": 352956,
+      "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91",
+      "python": "byte-identical",
+      "bdftopcf": "byte-identical",
+      "loss_entries": 2
+    }
+  ],
+  "monobit": [
+    {
+      "source": "tests/data/bdf/3x5-block.bdf",
+      "glyphs": 102,
+      "bidirectional_all_glyph_pixels_metrics": "pass",
+      "singlebyte_glyphs": 95,
+      "singlebyte_bidirectional_encodings": "pass",
+      "monobit_054_two_byte_read_code_mismatches": 99,
+      "monobit_054_two_byte_write_code_mismatches": 99,
+      "limitation": "monobit 0.54 swaps the two-byte encoding-table axes; no Rust workaround is applied"
+    },
+    {
+      "source": "tests/data/bdf/spleen-5x8.bdf",
+      "glyphs": 472,
+      "bidirectional_all_glyph_pixels_metrics": "pass",
+      "singlebyte_glyphs": 192,
+      "singlebyte_bidirectional_encodings": "pass",
+      "monobit_054_two_byte_read_code_mismatches": 311,
+      "monobit_054_two_byte_write_code_mismatches": 311,
+      "limitation": "monobit 0.54 swaps the two-byte encoding-table axes; no Rust workaround is applied"
+    }
+  ]
+}

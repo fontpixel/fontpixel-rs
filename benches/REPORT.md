@@ -95,3 +95,10 @@ neither replaces nor reduces the final PLAN §10 performance comparison scope.
 Actual BDF parse/write benchmarks and Python/Node comparisons are now available
 in [BDF-REPORT.md](BDF-REPORT.md). The W1.1 measurements above remain historical
 core-only results; they are not retroactively claimed as font-codec measurements.
+
+## W1.3 PCF codec measurements
+
+[PCF-REPORT.md](PCF-REPORT.md) records actual PCF read/write and end-to-end
+BDF-to-PCF measurements against Python and Node. The final five-sample BDF parse
+and BDF-to-PCF medians are 85.623 ms and 135.772 ms; both corresponding PLAN §10
+goals pass in the documented run. The preliminary contended run is retained too.

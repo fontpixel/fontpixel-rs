@@ -8,6 +8,10 @@ use crate::{Error, Operation, Report, Result};
 #[cfg(feature = "bdf")]
 pub mod bdf;
 pub mod catalogue;
+#[cfg(feature = "pcf")]
+pub mod pcf;
+#[cfg(any(feature = "bdf", feature = "pcf"))]
+mod x11;
 
 /// Static format metadata, including compiled feature state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -400,5 +404,31 @@ impl Registry<crate::FontSet> {
             entry.reader = Some(Box::new(bdf::BdfCodec::default()));
             entry.writer = Some(Box::new(bdf::BdfCodec::default()));
         }
+    }
+}
+
+#[cfg(feature = "pcf")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_pcf(&mut self) {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "pcf") {
+            entry.detector = Some(Box::new(pcf::PcfCodec::default()));
+            entry.reader = Some(Box::new(pcf::PcfCodec::default()));
+            entry.writer = Some(Box::new(pcf::PcfCodec::default()));
+        }
+    }
+    /// Configure the built-in PCF writer without altering its detector/reader.
+    pub fn set_pcf_write_options(&mut self, options: pcf::PcfWriteOptions) -> Result<()> {
+        let entry = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "pcf" && e.writer.is_some())
+            .ok_or_else(|| Error::NotImplemented {
+                format: "pcf".into(),
+                operation: Operation::Write,
+            })?;
+        entry.writer = Some(Box::new(pcf::PcfCodec {
+            write_options: options,
+        }));
+        Ok(())
     }
 }

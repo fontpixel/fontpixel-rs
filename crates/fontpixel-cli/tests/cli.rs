@@ -43,7 +43,7 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
     assert!(
         lines[1..]
             .iter()
-            .filter(|line| !line.starts_with("bdf\t"))
+            .filter(|line| !line.starts_with("bdf\t") && !line.starts_with("pcf\t"))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -65,7 +65,7 @@ fn formats_json_is_parseable_and_honest() {
     assert!(
         formats
             .iter()
-            .filter(|entry| entry["format"]["id"] != "bdf")
+            .filter(|entry| entry["format"]["id"] != "bdf" && entry["format"]["id"] != "pcf")
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
@@ -134,7 +134,7 @@ fn info_reports_missing_inputs_and_ambiguous_extensions() {
 fn failed_conversion_never_creates_or_overwrites_output() {
     let dir = TempDir::new();
     let input = dir.0.join("input.bdf");
-    let target = dir.0.join("out.pcf");
+    let target = dir.0.join("out.yaff");
     fs::write(&input, b"STARTFONT 2.1\n").unwrap();
     for existing in [false, true] {
         if existing {
@@ -155,7 +155,7 @@ fn failed_conversion_never_creates_or_overwrites_output() {
             json["error"]["message"]
                 .as_str()
                 .unwrap()
-                .contains("write for format 'pcf' is not implemented")
+                .contains("write for format 'yaff' is not implemented")
         );
         if existing {
             assert_eq!(fs::read(&target).unwrap(), b"KEEP EXISTING BYTES");
@@ -305,4 +305,74 @@ fn malformed_loss_multi_font_and_filesystem_errors_leave_outputs_untouched() {
     );
     assert_eq!(fs::read(&input).unwrap(), BDF.as_bytes());
     assert_eq!(fs::read_dir(&dir.0).unwrap().count(), 2);
+}
+
+#[test]
+fn pcf_conversion_layout_gzip_and_strict_reporting() {
+    let status: serde_json::Value =
+        serde_json::from_slice(&run(&["formats", "--json"]).stdout).unwrap();
+    if !status["formats"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|v| v["format"]["id"] == "pcf" && v["write"] == true)
+    {
+        return;
+    }
+    let dir = TempDir::new();
+    let source = dir.0.join("in.bdf");
+    let target = dir.0.join("out.pcf.gz");
+    fs::write(&source,b"STARTFONT 2.1\nFONT tiny\nSIZE 8 75 75\nFONTBOUNDINGBOX 1 1 0 0\nCHARS 1\nSTARTCHAR A\nENCODING 65\nDWIDTH 2 0\nBBX 1 1 0 0\nBITMAP\n80\nENDCHAR\nENDFONT\n").unwrap();
+    let p = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--byteorder",
+        "lsb",
+        "--bitorder",
+        "msb",
+        "--glyphpad",
+        "8",
+        "--scanunit",
+        "4",
+        "--report",
+        "json",
+    ]);
+    assert!(p.status.success(), "{}", String::from_utf8_lossy(&p.stderr));
+    assert!(fs::read(&target).unwrap().starts_with(&[31, 139]));
+    let p = run(&["info", target.to_str().unwrap(), "--json"]);
+    assert!(p.status.success());
+    let j: serde_json::Value = serde_json::from_slice(&p.stdout).unwrap();
+    assert_eq!(j["format"], "pcf");
+    let existing = fs::read(&target).unwrap();
+    let p = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--byteorder",
+        "lsb",
+        "--glyphpad",
+        "1",
+        "--scanunit",
+        "4",
+    ]);
+    assert_eq!(p.status.code(), Some(1));
+    assert_eq!(fs::read(&target).unwrap(), existing);
+    let text = fs::read_to_string(&source)
+        .unwrap()
+        .replace("ENCODING 65", "ENCODING 70000");
+    fs::write(&source, text).unwrap();
+    let p = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert_eq!(p.status.code(), Some(3));
+    assert_eq!(fs::read(&target).unwrap(), existing);
 }

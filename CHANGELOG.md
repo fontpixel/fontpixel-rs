@@ -17,3 +17,7 @@
   bounded gzip transport, live registry capabilities, CLI inspection and safe
   conversion, independent oracle/real-font/property tests and BDF benchmarks
 - All other font codecs and Python/WASM bindings remain unimplemented
+- W1.3: actual PCF detector, bounded reader, deterministic standalone writer,
+  independent PCF/gzip feature, typed layout options and CLI controls; all supplied
+  physical/hash goldens, real corpus and cross-tool checks, reported metadata loss,
+  final-code fuzzing and measured BDF-to-PCF performance. W1.4 remains pending.

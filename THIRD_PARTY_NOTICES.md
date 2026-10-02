@@ -106,3 +106,31 @@ cfg-if, miniz_oxide, adler2 and simd-adler32 retain their own compatible upstrea
 fuzz workspace uses crates.io `libfuzzer-sys`; libFuzzer retains its LLVM notices.
 Cargo.lock / fuzz/Cargo.lock pin versions, and their license checks are recorded
 in reports/w1.2.md. No GPL implementation is copied.
+
+## W1.3 PCF format semantics and compiler fixtures
+
+The PCF field layout, accelerator/terminal-cell/ink-metric algorithms and exact
+SPEC-v3 serialization rules are adapted from the supplied MIT bdfparser sources
+(Tom Chen, copyright 2017–2025; license `LICENSES/bdfparser-MIT.txt`):
+
+- `reference/bdfparser/src/bdfparser/pcf.py`, SHA-256
+  `1a48cd5e0b5644164b14df3292696e21c0aa4c385ad71eba526e917c1018079c`
+- `reference/bdfparser/tests/test_pcf.py`, SHA-256
+  `0ed2a75ae63556b564b784c3471b65427241be55e44df58284b7437b23e42044`
+- `reference/bdfparser-js/src/pcf.ts`, SHA-256
+  `831fe227bd81ecc592755944247f9773b6de7eebc9b5ea07b234470a911ca6b1`
+
+The Rust checked-cursor reader, resource accounting, actual-model writer,
+provenance reconciliation, typed options and reporting are project code. The
+46 tiny `tests/data/pcf/syn-*.pcf.gz` files are copied compiler/reference goldens
+of the MIT-authored synthetic fonts in `test_pcf.py`; individual file hashes and
+origins are in `tests/data/pcf/SOURCES.json`. The generated compressed JSON oracle
+contains only those synthetic fixtures, seeded random test fonts and earlier
+synthetic BDF cases. It contains no external real font designs.
+
+Crosschecks read the original fonts and both reference implementations without
+modifying them. The TypeScript random generator is extracted into a temporary
+file and executed using an already installed esbuild; it is not vendored as a
+production dependency. X.Org bdftopcf and monobit are independent test tools only;
+their implementation code is not copied. No new production crate is introduced:
+`pcf` uses the same optional pure-Rust gzip dependency as `bdf`.
