@@ -12,6 +12,8 @@ pub mod catalogue;
 pub mod pcf;
 #[cfg(any(feature = "bdf", feature = "pcf"))]
 pub(crate) mod x11;
+#[cfg(feature = "yaff")]
+pub mod yaff;
 
 /// Static format metadata, including compiled feature state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -427,6 +429,32 @@ impl Registry<crate::FontSet> {
                 operation: Operation::Write,
             })?;
         entry.writer = Some(Box::new(pcf::PcfCodec {
+            write_options: options,
+        }));
+        Ok(())
+    }
+}
+
+#[cfg(feature = "yaff")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_yaff(&mut self) {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "yaff") {
+            entry.detector = Some(Box::new(yaff::YaffCodec::default()));
+            entry.reader = Some(Box::new(yaff::YaffCodec::default()));
+            entry.writer = Some(Box::new(yaff::YaffCodec::default()));
+        }
+    }
+    /// Configure bounded YAFF writes independently of other codecs.
+    pub fn set_yaff_write_options(&mut self, options: yaff::YaffWriteOptions) -> Result<()> {
+        let entry = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "yaff" && e.writer.is_some())
+            .ok_or_else(|| Error::NotImplemented {
+                format: "yaff".into(),
+                operation: Operation::Write,
+            })?;
+        entry.writer = Some(Box::new(yaff::YaffCodec {
             write_options: options,
         }));
         Ok(())

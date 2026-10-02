@@ -1,0 +1,26 @@
+{
+  "tool": "monobit",
+  "version": "0.54.0",
+  "checks": [
+    {
+      "source": "tests/data/bdf/3x5-block.bdf",
+      "glyphs": 102,
+      "bidirectional_pixels_horizontal_metrics_characters": "pass",
+      "bdf_exact_bytes": "pass",
+      "yaff_sha256": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+    },
+    {
+      "source": "tests/data/bdf/spleen-5x8.bdf",
+      "glyphs": 472,
+      "bidirectional_pixels_horizontal_metrics_characters": "pass",
+      "bdf_exact_bytes": "pass",
+      "yaff_sha256": "0e508103a3095cc4419f4900e8627753e118db890c8b3fe6ded5ad09aba85534"
+    },
+    {
+      "source": "tests/data/yaff/portable.yaff",
+      "fonts": 2,
+      "glyphs": 4,
+      "bidirectional_pixels_metrics_all_labels": "pass"
+    }
+  ]
+}

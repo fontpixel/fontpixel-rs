@@ -54,3 +54,22 @@ ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run pcf -- \
 The reviewed reader run and earlier exploratory 611-second runs are reported in
 `reports/w1.3.md`. LeakSanitizer is disabled for the same documented sandbox
 ptrace restriction; AddressSanitizer remains enabled. No security settings changed.
+
+## YAFF
+
+The `yaff` target checks UTF-8 structure, metadata JSON, gray/mono/empty rasters,
+registry gzip and all resource budgets. Successful parses are written and read
+again, asserting exact native model equality when the bounded reread succeeds.
+It uses the same 64 KiB input/table, 256 glyph and 4 MiB accounting limits above.
+
+```sh
+mkdir -p fuzz/corpus/yaff
+cp tests/data/yaff/*.yaff fuzz/corpus/yaff/
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run yaff -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536 -detect_leaks=0
+```
+
+An initial exploratory 611-second run reached LeakSanitizer's known sandbox
+ptrace failure only at shutdown (empty artifact); the final run disables only
+that unsupported leak detector, retains AddressSanitizer and is reported in
+`reports/w1.6.md`.

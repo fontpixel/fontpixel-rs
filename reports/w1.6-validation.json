@@ -1,0 +1,56 @@
+{
+  "base": "1a8d290",
+  "branch": "w1.6-yaff",
+  "date": "2026-10-02",
+  "checks": [
+    {
+      "command": "scripts/check.sh",
+      "exit_code": 0,
+      "log": "reports/w1.6-evidence/check.log.gz",
+      "uncompressed_bytes": 50836,
+      "uncompressed_sha256": "99dc0c37ba181ce9fa6b03417a7e766caa9c00542a7c99d690ffd59b2499ce9b"
+    },
+    {
+      "command": "cargo test --locked -p fontpixel --no-default-features --features yaff",
+      "exit_code": 0,
+      "log": "reports/w1.6-evidence/standalone.log.gz",
+      "uncompressed_bytes": 7806,
+      "uncompressed_sha256": "b13a9a9eb273ace7e1e61448b7ff8306e5c554b25fe4b5cc23b0a529638dacd4"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -u tests/parity/run_all.py --out tests/parity/out-w1.6-complete",
+      "exit_code": 0,
+      "log": "reports/w1.6-evidence/parity.log.gz",
+      "uncompressed_bytes": 3229,
+      "uncompressed_sha256": "ed87f77ce2bb1cdff2580235fb510e095f3ed4b3ab1db048fff96ad45280bd38"
+    },
+    {
+      "command": "ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run yaff -- -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536 -detect_leaks=0",
+      "exit_code": 0,
+      "log": "reports/w1.6-evidence/fuzz.log.gz",
+      "uncompressed_bytes": 502440,
+      "uncompressed_sha256": "d549205a96bb47553390756132c98c2f8359b3b49192b5b6be532b5e2adaef24"
+    },
+    {
+      "command": "cargo deny --manifest-path fuzz/Cargo.toml --locked --config fuzz/deny.toml check",
+      "exit_code": 0,
+      "log": "reports/w1.6-evidence/fuzz-deny.log.gz",
+      "uncompressed_bytes": 48,
+      "uncompressed_sha256": "f1a0fca39d4280363937aabd77783990ea6480bd9ca257816de3b68fc8efa845"
+    }
+  ],
+  "protected_inputs": {
+    "files": 690,
+    "changed": 0
+  },
+  "fuzz": {
+    "seconds": 611,
+    "executions": 1785199,
+    "coverage": 5663,
+    "features": 30231,
+    "rss_mib": 585
+  },
+  "performance": "tests/crosscheck/yaff-timing-results.json",
+  "monobit": "tests/crosscheck/yaff-results.json",
+  "full_parity": "tests/crosscheck/yaff-parity-summary.json"
+}

@@ -183,3 +183,18 @@ The compatibility feature uses serde_json (MIT OR Apache-2.0), including its
 exact integer and ordered-map support. SHA-256 and base64 are runner-only
 optional dependencies (sha2 MIT OR Apache-2.0; base64 MIT OR Apache-2.0).
 Cargo.lock pins all transitive dependencies; cargo-deny audits the graph.
+
+## W1.6 YAFF
+
+The YAFF reader/writer is project-authored from Rob Hagemans's public YAFF 1.0.4
+specification, https://github.com/robhagemans/monobit/blob/master/YAFF.md,
+consulted 2026-10-02. monobit 0.54.0 (MIT, Rob Hagemans) is used as an independent
+bidirectional test oracle and its YAFF implementation was inspected; no monobit
+implementation code or font artwork is copied into this project. The synthetic
+YAFF fixture and its canonical golden are project-authored, MIT, Tom Chen.
+Source hashes and regeneration are in `tests/data/yaff/SOURCES.json`.
+
+The existing serde/serde_json dependencies (MIT OR Apache-2.0) are also enabled
+by the YAFF feature for bounded versioned native-metadata extensions. They remain
+absent from BDF/PCF-only production builds. `cargo deny` audits both the main
+workspace and the separately locked fuzz dependency graph.

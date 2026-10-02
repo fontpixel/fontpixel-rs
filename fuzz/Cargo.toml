@@ -8,7 +8,7 @@ license = "MIT"
 cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.4"
-fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf"] }
+fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff"] }
 [workspace]
 members = ["."]
 [[bin]]
@@ -20,6 +20,13 @@ bench = false
 [[bin]]
 name = "pcf"
 path = "fuzz_targets/pcf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "yaff"
+path = "fuzz_targets/yaff.rs"
 test = false
 doc = false
 bench = false

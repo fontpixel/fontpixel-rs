@@ -4,6 +4,7 @@
 /// Typed property value. Decimal text avoids lossy float parsing; raw records
 /// can preserve exact spelling/quoting independently of this semantic value.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
 pub enum PropertyValue {
     /// Signed integer.
     Integer(i64),
@@ -38,6 +39,7 @@ impl From<i64> for PropertyValue {
 
 /// One original-cased source property.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
 pub struct Property {
     /// Exact source key spelling.
     pub name: String,
@@ -45,6 +47,10 @@ pub struct Property {
     pub value: PropertyValue,
     /// Optional original record bytes, including delimiters/line ending if needed.
     /// This is provenance; writers must not blindly reuse it after model edits.
+    #[cfg_attr(
+        feature = "yaff",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
     pub raw: Option<Vec<u8>>,
 }
 impl Property {
@@ -59,6 +65,7 @@ impl Property {
 }
 /// Insertion-ordered properties preserving duplicates; getters return the last match.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
 pub struct Properties(Vec<Property>);
 impl Properties {
     /// Number of records, including repeated names.

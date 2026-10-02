@@ -1,0 +1,18 @@
+{
+  "license": "MIT",
+  "copyright": "2026 Tom Chen",
+  "files": [
+    {
+      "path": "portable.golden.yaff",
+      "sha256": "51b60c55ab993b87c0577c215a904969a57384caa6594f4d8908843d50da31ef",
+      "bytes": 3005
+    },
+    {
+      "path": "portable.yaff",
+      "sha256": "6d1b08238f4ba4b2f975bf232f05b2f696ba3140e1d81b2751255fb8291e7697",
+      "bytes": 526
+    }
+  ],
+  "regenerate": "cargo run --release -p fontpixel-cli -- convert tests/data/yaff/portable.yaff -o tests/data/yaff/portable.golden.yaff --strict",
+  "semantic_oracle": "monobit 0.54.0; tests/crosscheck/yaff.py"
+}

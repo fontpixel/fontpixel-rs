@@ -54,7 +54,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "yaff",
         name: "monobit YAFF",
-        extensions: &["yaff"],
+        extensions: &["yaff", "yaffs", "yaff.gz", "yaffs.gz"],
         feature_enabled: cfg!(feature = "yaff"),
     },
     FormatInfo {

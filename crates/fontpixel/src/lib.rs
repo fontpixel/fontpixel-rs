@@ -36,6 +36,8 @@ pub fn registry() -> FontRegistry {
     registry.install_bdf();
     #[cfg(feature = "pcf")]
     registry.install_pcf();
+    #[cfg(feature = "yaff")]
+    registry.install_yaff();
     registry
 }
 

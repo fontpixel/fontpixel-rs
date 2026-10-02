@@ -43,7 +43,9 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
     assert!(
         lines[1..]
             .iter()
-            .filter(|line| !line.starts_with("bdf\t") && !line.starts_with("pcf\t"))
+            .filter(|line| !line.starts_with("bdf\t")
+                && !line.starts_with("pcf\t")
+                && !line.starts_with("yaff\t"))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -65,7 +67,9 @@ fn formats_json_is_parseable_and_honest() {
     assert!(
         formats
             .iter()
-            .filter(|entry| entry["format"]["id"] != "bdf" && entry["format"]["id"] != "pcf")
+            .filter(|entry| entry["format"]["id"] != "bdf"
+                && entry["format"]["id"] != "pcf"
+                && entry["format"]["id"] != "yaff")
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
@@ -155,7 +159,7 @@ fn failed_conversion_never_creates_or_overwrites_output() {
             json["error"]["message"]
                 .as_str()
                 .unwrap()
-                .contains("write for format 'yaff' is not implemented")
+                .contains("Unexpected end of file before the end of the headers")
         );
         if existing {
             assert_eq!(fs::read(&target).unwrap(), b"KEEP EXISTING BYTES");
@@ -551,4 +555,35 @@ fn render_png_and_empty_input_behavior() {
             .stdout
             .is_empty()
     );
+}
+
+#[test]
+fn yaff_collection_and_gzip_roundtrip() {
+    let dir = TempDir::new();
+    let source = dir.0.join("source.yaff");
+    let output = dir.0.join("out.yaffs.gz");
+    fs::write(
+        &source,
+        include_bytes!("../../../tests/data/yaff/portable.yaff"),
+    )
+    .unwrap();
+    let converted = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        output.to_str().unwrap(),
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert!(
+        converted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&converted.stderr)
+    );
+    let info = run(&["info", output.to_str().unwrap(), "--json"]);
+    assert!(info.status.success());
+    let json: serde_json::Value = serde_json::from_slice(&info.stdout).unwrap();
+    assert_eq!(json["format"], "yaff");
+    assert_eq!(json["fonts"].as_array().unwrap().len(), 2);
 }

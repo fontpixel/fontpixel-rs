@@ -495,6 +495,9 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     }
                 }
                 report.extend(loaded.report);
+                if inputs.len() == 1 {
+                    fonts.source_format = loaded.fonts.source_format.take();
+                }
                 fonts.fonts.extend(loaded.fonts.fonts);
                 // Preserve container metadata too; unsupported target fields must be reported.
                 for property in loaded.fonts.properties.into_vec() {

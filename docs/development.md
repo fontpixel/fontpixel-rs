@@ -78,3 +78,26 @@ Nightly and cargo-fuzz are isolated in the same toolchain directory. See
 exit-time ptrace check in this sandbox; fuzz runs disable leak detection, retaining
 address sanitizer/coverage and the Rust panic/OOM checks. No kernel security
 settings are changed. Do not count an infrastructure-failed run as a clean pass.
+
+## YAFF validation (W1.6)
+
+YAFF's default feature enables serde/serde_json and the existing gzip transport;
+`--no-default-features --features bdf,pcf` remains free of JSON/serde production
+dependencies. The ordinary matrix runs YAFF syntax/editing/native-model tests,
+the checked-in canonical golden, 200-case proptest, and CLI multi-font gzip tests.
+For a standalone build, also run:
+
+```sh
+cargo test --locked -p fontpixel --no-default-features --features yaff
+cargo build --locked -p fontpixel-cli --release --features parity
+PYTHONPATH=../../toolchain/python-packages python3 tests/crosscheck/yaff.py \
+  --output tests/crosscheck/yaff-results.json
+python3 -B tests/parity/run_all.py --out tests/parity/out-w1.6
+cargo run --release -p fontpixel --example yaff_timing -- \
+  ../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf
+```
+
+Timing excludes filesystem reads and BDF parse, and verifies exact native model
+roundtrip on each of five iterations. The complete default W1.5 differential gate
+is rerun unchanged, with matching start/end source fingerprints. See
+`reports/w1.6.md`, `tests/crosscheck/yaff-*-results.json` and `fuzz/README.md`.

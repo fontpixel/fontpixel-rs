@@ -83,3 +83,16 @@ All committed third-party fonts are small and freely licensed. Infrastructure te
   not redistributed font files. Rendering output does not relicense the font.
   The independent image comparisons record exact RGBA output hashes in
   `tests/crosscheck/render-image-results.json`
+
+## W1.6 YAFF fixtures
+
+- `tests/data/yaff/portable.yaff`: original project-authored MIT synthetic font
+  collection (Tom Chen), covering aliases, sequences, unencoded glyphs, additive
+  bearings, comments, multiline strings and 256-level pixels.
+- `portable.golden.yaff`: canonical Rust output of the above; exact SHA-256 and
+  regeneration command are in `tests/data/yaff/SOURCES.json`. Its semantic pixels,
+  horizontal metrics and complete label sets are independently crosschecked with
+  monobit 0.54.0. This is a deterministic output regression, not an independent
+  byte-format oracle (YAFF has no single mandatory spelling).
+- The two already-licensed BDF fixtures above are also roundtripped through YAFF
+  with exact native model and canonical BDF byte equality; they are not copied.

@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W1.4 rendering, BDF and PCF read/write
+## Current status: W1.6 YAFF, BDF/PCF, rendering and SPEC compatibility
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -18,19 +18,27 @@ rejects combined read/write losses without touching the destination.
 scale, RGBA colors, all direction pairs, exact charset mapping and strict loss
 checks. See [rendering API/CLI](docs/rendering.md) and [W1.4 validation](reports/w1.4.md).
 
-The other 44 formats and Python/WASM bindings remain unimplemented and are
+YAFF 1.0 supports single/multi-strike monochrome and grayscale fonts, with
+bounded gzip and lossless versioned native-metadata extensions for golden tests.
+See [YAFF contracts](docs/formats/yaff.md) and [W1.6 validation](reports/w1.6.md).
+
+The other 43 formats and Python/WASM bindings remain unimplemented and are
 reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
 [charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md), [PCF contracts](docs/formats/pcf.md),
 and [W1.3 validation](reports/w1.3.md).
-This is a work item, not completion of phase 1 or the full compatibility facade.
+The optional `compat-bdfparser` facade and `fontpixel-parity` executable pass the
+full default differential suite; see [W1.5 validation](reports/w1.5.md). Phase
+acceptance remains the coordinator's review/merge gate.
 
 ```sh
 cargo run -p fontpixel-cli -- info font.bdf --json
 cargo run -p fontpixel-cli -- convert font.bdf -o canonical.bdf --strict
 cargo run -p fontpixel-cli -- convert canonical.bdf -o canonical.bdf.gz
 cargo run -p fontpixel-cli -- convert font.bdf -o font.pcf.gz
+cargo run -p fontpixel-cli -- convert font.bdf -o golden.yaff --strict
+cargo run -p fontpixel-cli -- convert golden.yaff -o golden.yaff.gz
 cargo run -p fontpixel-cli -- convert font.bdf -o swapped.pcf --byteorder lsb --bitorder msb --glyphpad 8 --scanunit 4
 ```
 

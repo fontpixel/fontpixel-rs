@@ -1,0 +1,58 @@
+---
+yaff: 1.0
+fontpixel.container: {"version":1,"properties":[],"source_format":"yaff","empty":false}
+fontpixel.font: {"version":1,"metrics":{"ascent":3,"descent":1,"bounds":{"width":3,"height":3,"x":-1,"y":-1},"glyph_defaults":{"bounds":{"width":0,"height":0,"x":0,"y":0}}},"names":{"family":"Portable fixture","license":"Synthetic design for testing.\nNo third-party font artwork.","xlfd_fields":[],"localized":[]},"charset":{"code_ranges":[]},"source_format":"yaff","headers":[],"properties":[{"name":"yaff.comment","value":{"Text":"Project-authored YAFF fixture, MIT, Tom Chen, 2026-10-02."}},{"name":"family","value":{"Text":"Portable fixture"}},{"name":"notice","value":{"Text":"Synthetic design for testing.\nNo third-party font artwork."}},{"name":"ascent","value":{"Text":"3"}},{"name":"descent","value":{"Text":"1"}},{"name":"left-bearing","value":{"Text":"-1"}},{"name":"right-bearing","value":{"Text":"1"}},{"name":"shift-up","value":{"Text":"-1"}}],"slots":3}
+family: Portable fixture
+notice:
+    Synthetic design for testing.
+    No third-party font artwork.
+ascent: 3
+descent: 1
+
+u+0041:
+0x41:
+"letter-a":
+    .@.
+    @@@
+    @.@
+
+    left-bearing: -1
+    shift-up: -1
+    right-bearing: 3
+    fontpixel.glyph: {"version":1,"id":0,"codepoints":[{"Unicode":65},{"Legacy":65}],"unicode_sequences":[],"name":"letter-a","metrics":{"bounds":{"width":3,"height":3,"x":-1,"y":-1},"advance":{"x":5,"y":0}},"gray":false,"properties":[{"name":"right-bearing","value":{"Text":"2"}}]}
+
+u+0066, u+0069:
+"ligature":
+    @@
+    .@
+
+    left-bearing: -1
+    shift-up: -1
+    right-bearing: 1
+    fontpixel.glyph: {"version":1,"id":1,"codepoints":[],"unicode_sequences":[[102,105]],"name":"ligature","metrics":{"bounds":{"width":2,"height":2,"x":-1,"y":-1},"advance":{"x":2,"y":0}},"gray":false,"properties":[]}
+
+:
+    -
+
+    left-bearing: -1
+    shift-up: -1
+    right-bearing: 1
+    fontpixel.glyph: {"version":1,"id":2,"codepoints":[],"unicode_sequences":[],"name":null,"metrics":{"bounds":{"width":0,"height":0,"x":-1,"y":-1},"advance":{"x":0,"y":0}},"gray":false,"properties":[]}
+
+---
+yaff: 1.0
+fontpixel.font: {"version":1,"metrics":{"bounds":{"width":4,"height":2,"x":2,"y":-2},"glyph_defaults":{"bounds":{"width":0,"height":0,"x":0,"y":0}}},"names":{"full":"Gray fixture","xlfd_fields":[],"localized":[]},"charset":{"code_ranges":[]},"source_format":"yaff","headers":[],"properties":[{"name":"name","value":{"Text":"Gray fixture"}},{"name":"levels","value":{"Text":"256"}}],"slots":1}
+name: Gray fixture
+levels: 256
+
+u+0042:
+0x42:
+"letter-b":
+    ..01FE@@
+    11223344
+
+    left-bearing: 2
+    shift-up: -2
+    right-bearing: -1
+    fontpixel.glyph: {"version":1,"id":0,"codepoints":[{"Unicode":66},{"Legacy":66}],"unicode_sequences":[],"name":"letter-b","metrics":{"bounds":{"width":4,"height":2,"x":2,"y":-2},"advance":{"x":5,"y":0}},"gray":true,"properties":[{"name":"left-bearing","value":{"Text":"2"}},{"name":"shift-up","value":{"Text":"-2"}},{"name":"right-bearing","value":{"Text":"-1"}}]}
+

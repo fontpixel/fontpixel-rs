@@ -385,3 +385,38 @@ integers, and parity continues comparing exact canonical strings/hashes.
 **Reason:** Keep earlier validation at its original strength while avoiding a
 production global JSON feature that silently alters test meaning. No float
 precision tolerance or expected-output change is introduced.
+
+## 2026-10-02 — YAFF is interoperable text plus versioned lossless metadata
+
+**Question:** YAFF's portable metrics cannot distinguish absent from explicit-zero
+vectors, retain all typed/raw source properties, mixed pixel depths, stable deleted
+slots, or the complete native charset and font/container model.
+**Choice:** Emit ordinary YAFF 1.0 labels, visible pixels and horizontal metrics,
+plus version-1 `fontpixel.font`, `fontpixel.glyph` and `fontpixel.container`
+JSON properties, using YAFF's allowed namespaced extension mechanism. Pixels
+remain solely in the visible raster. Metadata serialization borrows the model,
+is byte-bounded, and escapes non-ASCII/DEL source text to legal ASCII JSON.
+Restore exact source fields only while their portable projection is unchanged;
+portable edits take precedence, including raster resizing. Preserve empty sets,
+empty strikes and zero-area dimensions. All optional derived serde support is
+behind `yaff`; BDF/PCF-only builds gain no JSON/serde production dependency.
+**Reason:** The mandated golden format must be exact and diffable while monobit
+can still read its meaningful labels, pixels and horizontal spacing. A third-party
+rewrite may discard extension-only data; document this explicitly instead of
+silently weakening native roundtrip equality or treating original bytes as an
+uneditable opaque font payload.
+
+## 2026-10-02 — YAFF parsing rejects malformed structure and keeps unknown semantics
+
+**Question:** monobit tolerates ambiguous legacy labels and supports experimental
+stroke/vertical/kerning fields beyond this phase's native semantic model.
+**Choice:** Accept legacy labels/offset/tracking and documented gray levels;
+retain ordered properties, duplicate fields and comments. Normalize supported
+horizontal fields with the specification's additive global/per-glyph metrics.
+Retain unsupported vertical/kerning fields as metadata; reject path-only glyphs
+rather than invent pixels. Invalid UTF-8/control/noncharacter input, malformed
+numerics, inconsistent rasters, extension versions and resource overflow fail.
+**Reason:** Preserve information without claiming a later-phase stroke renderer.
+Semantic fields plus original property records are maintained independently, as
+with earlier BDF provenance. Property/JSON/raster row limits and cumulative model
+budgets precede substantial allocation; global metrics are parsed only once.

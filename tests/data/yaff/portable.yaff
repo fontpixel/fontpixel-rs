@@ -1,0 +1,44 @@
+---
+# Project-authored YAFF fixture, MIT, Tom Chen, 2026-10-02.
+yaff: 1.0
+family: Portable fixture
+notice:
+    Synthetic design for testing.
+    No third-party font artwork.
+ascent: 3
+descent: 1
+left-bearing: -1
+right-bearing: 1
+shift-up: -1
+
+u+0041:
+0x41:
+"letter-a":
+    .@.
+    @@@
+    @.@
+
+    right-bearing: 2
+
+u+0066, u+0069:
+"ligature":
+    @@
+    .@
+
+:
+    -
+
+---
+yaff: 1.0
+name: Gray fixture
+levels: 256
+
+u+0042:
+0x42:
+"letter-b":
+    ..01FE@@
+    11223344
+
+    left-bearing: 2
+    shift-up: -2
+    right-bearing: -1

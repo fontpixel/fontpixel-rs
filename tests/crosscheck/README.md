@@ -64,3 +64,13 @@ Corpus inputs and their hashes, case counts and results are in
 not checked in. Layout error cases currently compare success/failure; exact Python
 exception classes/text and warnings belong to W1.5's compatibility facade. Image
 SVG is pixel-equivalent native output, not W2.8 contour/SVG-font byte parity.
+
+## YAFF
+
+`PYTHONPATH=/path/to/monobit python3 tests/crosscheck/yaff.py --output tests/crosscheck/yaff-results.json`
+checks both directions through monobit 0.54.0, all pixels/horizontal metrics and
+Unicode mappings for the 574 BDF glyphs, exact reconstructed BDF bytes, and every
+label in the two-strike synthetic gray/mono fixture. monobit's BDF loader omits
+computed Char labels on some blank glyphs; the check resolves their original
+ISO10646 codepoint directly rather than skipping those glyphs. Native metadata
+and canonical bytes have separate offline Rust tests and 200-case property tests.
