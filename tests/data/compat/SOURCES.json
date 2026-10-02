@@ -1,0 +1,27 @@
+{
+  "license": "MIT, Tom Chen; LICENSES/bdfparser-MIT.txt",
+  "source": "Supplied bdfparser tests/info.py mini_bdf; tests/test_svg.py EXPECTED_MINI_SVGFONT; Python oracle on the migrated parity synthetic generators; no external font artwork.",
+  "files": {
+    "cases.jsonl": "ca7481a37e1534b241f2d4c21cca8173464d9ee2459820ecb1c0d7c1cbede1c1",
+    "expected.jsonl": "8435211c82907a5270a2a26c3e340f95ef4d8a3438052be4174057075f5684d2",
+    "mini-circle-0.7-0.bdf": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+    "mini-circle-0.7-0.ttf": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+    "mini-circle-0.7-1.bdf": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+    "mini-circle-0.7-1.ttf": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+    "mini-circle-1.0-0.bdf": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+    "mini-circle-1.0-0.ttf": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+    "mini-circle-1.0-1.bdf": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+    "mini-circle-1.0-1.ttf": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+    "mini-square-0.7-0.bdf": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+    "mini-square-0.7-0.ttf": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+    "mini-square-0.7-1.bdf": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+    "mini-square-0.7-1.ttf": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+    "mini-square-1.0-0.bdf": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+    "mini-square-1.0-0.ttf": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+    "mini-square-1.0-1.bdf": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+    "mini-square-1.0-1.ttf": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+    "mini.bdf": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+    "mini.svg": "8c59eb2abcbe263f75ea7fd901d7f04fc0c3c3318681559b4e12946740dbbf85",
+    "ttf.json": "64a23362d59c35734f03d24325e366fe5da0c7352179377b83a5c067f4975ff6"
+  }
+}

@@ -9,6 +9,7 @@ authors.workspace = true
 
 [features]
 default = ["bdf", "pcf", "yaff"]
+compat-bdfparser = ["bdf", "pcf", "dep:serde_json"]
 all-formats = ["bdf", "pcf", "snf", "hex", "draw", "psf", "cpi", "raw", "yaff", "pf2", "fnt", "fon", "fontx2", "hzk", "hbf", "hanfont", "nfnt", "bdat", "iigs", "otb", "ttf", "otf", "woff", "woff2", "ttc", "color", "vector-raster", "svg", "bmfont", "image", "c", "kbitx", "kbits", "pbf", "sfd", "pk", "gf", "plan9", "amiga", "gem", "vfont", "fzx", "figlet", "palm", "gdr", "drcs"]
 bdf = ["gzip"]
 pcf = ["gzip"]
@@ -64,6 +65,7 @@ gzip = ["dep:flate2"]
 serde = ["dep:serde"]
 
 [dependencies]
+serde_json = { workspace = true, optional = true, features = ["arbitrary_precision", "preserve_order"] }
 crc32fast = { version = "1.5", optional = true }
 flate2 = { version = "1.1", default-features = false, features = ["rust_backend"], optional = true }
 serde = { workspace = true, optional = true }

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+<metadata>
+  Title: Mini
+  Weight: Medium
+</metadata>
+<defs>
+  <font id="test-mini-medium-r-normal--8-80-75-75-c-60-iso10646-1" horiz-adv-x="8">
+<font-face
+  font-family="Mini"
+  font-weight="Medium"
+  font-style="normal"
+  units-per-em="8"
+  cap-height="7"
+  x-height="3.5"
+  ascent="7"
+  descent="1"
+  bbox="0 -1 6 8"
+  underline-thickness="0"
+  underline-position="-1"
+  unicode-range="U+0020, U+0041-0042"
+></font-face>
+<missing-glyph horiz-adv-x="8" d="M0,0h8v8h-8z" />
+<glyph glyph-name=".notdef" horiz-adv-x="8" d="M0,0h8v8h-8z" />
+<glyph
+  glyph-name="A"
+  unicode="&#x41;"
+  horiz-adv-x="6"
+  d="M0 1V6H1V5H4V6H5V1H4V4H1V1ZM1 6V7H2V6ZM3 6V7H4V6ZM2 7V8H3V7Z"
+></glyph>
+<glyph
+  glyph-name="B"
+  unicode="&#x42;"
+  horiz-adv-x="6"
+  d="M1 1V8H4V7H2V5H4V4H2V2H4V1ZM4 2V4H5V2ZM4 5V7H5V5Z"
+></glyph>
+</font>
+</defs>
+</svg>

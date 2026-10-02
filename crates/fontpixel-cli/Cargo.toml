@@ -12,13 +12,22 @@ name = "fontpixel"
 path = "src/main.rs"
 doc = false
 
+[[bin]]
+name = "fontpixel-parity"
+path = "src/parity.rs"
+doc = false
+required-features = ["parity"]
+
 [features]
+parity = ["fontpixel/compat-bdfparser", "fontpixel/cjk-charsets", "dep:sha2", "dep:base64"]
 default = ["fontpixel/default", "pcf", "png"]
 pcf = ["fontpixel/pcf"]
 png = ["fontpixel/png"]
 all-formats = ["fontpixel/all-formats", "pcf"]
 
 [dependencies]
+sha2 = { version = "0.10", optional = true }
+base64 = { version = "0.22", optional = true }
 fontpixel = { workspace = true, features = ["serde"] }
 clap.workspace = true
 serde_json.workspace = true

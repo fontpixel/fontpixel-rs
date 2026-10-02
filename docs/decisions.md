@@ -327,3 +327,61 @@ paper/ink paths so alpha matches PNG. Empty PNG output fails explicitly. Leave
 catalogue `image`/`svg` hooks absent; contour/dot/SVG-font serialization stays W2.8.
 **Reason:** Deliver the requested render commands without falsely claiming future
 font codec or byte-for-byte contour serialization capability.
+
+## 2026-10-02 — Full phase-1 parity brings forward narrow compatibility dependencies
+
+**Question:** W1.5/§9.2 requires the entire default differential suite, but that
+suite includes TTF and SVG/outline methods otherwise assigned to W2.2/W2.8.
+**Choice:** Implement the exact SPEC outline, SVG-font and glyf/TrueType reader/
+writer inside `compat::bdfparser`, behind `compat-bdfparser`, including BDFP
+metadata and composite glyph reading. Do not register native `ttf`/`svg` codecs.
+**Reason:** The stronger phase-1 completion gate must not be weakened by skipping
+operations or substituting Python. W2 still owns native sfnt architecture, CFF,
+embedded bitmaps, variants, general SVG-format parsing, independent external
+crosschecks and integration; it may reuse these tested compatibility algorithms.
+
+## 2026-10-02 — Dynamic SPEC metadata lives on the native model
+
+**Question:** SPEC permits independent null metric components and edits through
+stale attached handles, while native metrics are typed vectors with stable IDs.
+**Choice:** Keep one native Font as the authority. Store dynamic 17-slot metadata
+only as native glyph properties when needed; retain raw BDF bitmap provenance.
+Generation-checked handles hold snapshots and merge only their changed fields.
+Projection materializes partial metrics for native rendering/PCF without altering
+SPEC metadata. PCF writes preserve numeric encodings, and an `encoding()` override
+never changes serialized properties. Recompute native derived metadata before
+snapshot reconciliation, preserving source properties such as `PIXEL_SIZE -1`.
+**Reason:** Avoid a second competing font implementation and accidental charset
+conversion or source-property loss. Python's actual removeglyph behavior is used:
+removed/replaced attached handles cannot remove replacements, but a freshly
+cloned detached handle removes by codepoint. This is subtler than §11.4's prose.
+
+## 2026-10-02 — Rust-specific known-issue assessment and UTF-16 transport
+
+**Question:** JS's wide-integer and ragged-array exceptions do not transfer
+unchanged to Rust; Python JSON also allows lone UTF-16 surrogates.
+**Choice:** K11 is not exempt: arbitrary-width numeric bitmap rows are exact
+serde_json integers. The runner preserves lone surrogate code units and uses
+numeric charset APIs instead of manufacturing invalid Rust strings. Scalar
+cp2char remains a Rust char convenience; cp2unicode retains every numeric value.
+K12 applies only to invalid ragged construction/replacement, which Rust rejects
+transactionally to retain the native rectangle invariant. Its matcher checks the
+specific error and trigger, not arbitrary case failures. All other historical
+findings remain strict regressions, including state after exceptions.
+**Reason:** Preserve exact valid-domain comparison without importing JavaScript
+precision loss or undefined ragged behavior. Diagnostic JSON is ASCII-escaped so
+printing a surrogate-containing failing case cannot crash the test harness.
+
+## 2026-10-02 — Exact JSON integers retain original fixture numeric semantics
+
+**Question:** `serde_json/arbitrary_precision` feature unification changes existing
+float equality from parsed f64 equality to lexical decimal equality (for example,
+`0.00001` versus `1e-05`) and makes an untyped empty-byte assertion ambiguous.
+**Choice:** The pre-existing BDF fixture test explicitly reconstructs only its
+STARTFONT/version JSON number from f64, restoring its original semantics. Exact
+integer comparisons and all serialized BDF bytes stay unchanged. The empty byte
+assertion uses `is_empty()`. New compatibility numeric rows retain unbounded exact
+integers, and parity continues comparing exact canonical strings/hashes.
+**Reason:** Keep earlier validation at its original strength while avoiding a
+production global JSON feature that silently alters test meaning. No float
+precision tolerance or expected-output change is introduced.

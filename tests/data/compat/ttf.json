@@ -1,0 +1,90 @@
+[
+  {
+    "name": "mini-square-1.0-1",
+    "options": {
+      "shape": "square",
+      "dotsize": 1.0,
+      "metadata": true,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721"
+  },
+  {
+    "name": "mini-square-1.0-0",
+    "options": {
+      "shape": "square",
+      "dotsize": 1.0,
+      "metadata": false,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296"
+  },
+  {
+    "name": "mini-square-0.7-1",
+    "options": {
+      "shape": "square",
+      "dotsize": 0.7,
+      "metadata": true,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c"
+  },
+  {
+    "name": "mini-square-0.7-0",
+    "options": {
+      "shape": "square",
+      "dotsize": 0.7,
+      "metadata": false,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a"
+  },
+  {
+    "name": "mini-circle-1.0-1",
+    "options": {
+      "shape": "circle",
+      "dotsize": 1.0,
+      "metadata": true,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783"
+  },
+  {
+    "name": "mini-circle-1.0-0",
+    "options": {
+      "shape": "circle",
+      "dotsize": 1.0,
+      "metadata": false,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797"
+  },
+  {
+    "name": "mini-circle-0.7-1",
+    "options": {
+      "shape": "circle",
+      "dotsize": 0.7,
+      "metadata": true,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a"
+  },
+  {
+    "name": "mini-circle-0.7-0",
+    "options": {
+      "shape": "circle",
+      "dotsize": 0.7,
+      "metadata": false,
+      "ppu": 64,
+      "timestamp": 0
+    },
+    "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c"
+  }
+]

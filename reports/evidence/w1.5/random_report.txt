@@ -1,0 +1,1 @@
+compared 2000 cases, 35941 operations: 0 independent divergence(s) in 0 case(s) (0 NEW), 0 cascaded op divergence(s) suppressed

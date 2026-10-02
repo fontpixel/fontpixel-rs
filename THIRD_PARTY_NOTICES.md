@@ -157,3 +157,29 @@ oracle contains only project-generated synthetic fonts and their reference
 outputs. Larger supplied fonts and TypeScript sources are read-only runtime
 crosschecks. Pillow and CairoSVG are test-only external tools; their implementations
 are not copied. PNG reuses the existing compatible flate2/crc32fast dependencies.
+
+## W1.5 bdfparser compatibility, outlines, TrueType and parity harness
+
+`crates/fontpixel/src/compat/bdfparser` ports the exact SPEC behavior and narrowly
+scoped outline/SVG/TrueType algorithms from the supplied MIT bdfparser source,
+Tom Chen. Native model, bitmap, BDF/PCF and render engines are reused. The complete
+upstream license is `LICENSES/bdfparser-MIT.txt`. The Mac glyph-name list is
+reproduced from that same permissive TrueType reference.
+
+`tests/parity/{gen_cases,run_py,probes,compare,known_issues,minimize,run_all}.py`
+are adapted from the supplied MIT bdfparser-js parity harness, Tom Chen. Changes
+are limited to source paths, the Rust execution command, source fingerprints,
+Rust known-issue applicability and surrogate-safe diagnostics. Original reference
+trees are never modified. Python is an independent test oracle only and is not
+invoked by the library or `fontpixel-parity`.
+
+`tests/data/compat` contains the MIT synthetic Mini fixture from bdfparser
+`tests/info.py`, the literal expected SVG from `tests/test_svg.py`, generated
+TTF/round-trip goldens and synthetic operation-script oracles. Exact files and
+hashes are listed in its `SOURCES.json`; regeneration is documented in
+`tools/gen_compat_goldens.py`. No large external font designs are vendored.
+
+The compatibility feature uses serde_json (MIT OR Apache-2.0), including its
+exact integer and ordered-map support. SHA-256 and base64 are runner-only
+optional dependencies (sha2 MIT OR Apache-2.0; base64 MIT OR Apache-2.0).
+Cargo.lock pins all transitive dependencies; cargo-deny audits the graph.

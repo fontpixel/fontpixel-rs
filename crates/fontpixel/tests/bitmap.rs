@@ -61,7 +61,7 @@ fn zero_dimensions_are_explicit() -> Result<()> {
     for (w, h) in [(0, 0), (0, 4), (5, 0)] {
         let b = Bitmap::<Mono>::new(w, h)?;
         assert_eq!((b.width(), b.height()), (w, h));
-        assert_eq!(b.as_bytes(), &[]);
+        assert!(b.as_bytes().is_empty());
         assert_eq!(b.bbox(), Bounds::default());
         assert_eq!(b.trim()?, Bitmap::default());
         assert_eq!(b.rotate(90)?.rotate(-90)?, b);

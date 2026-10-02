@@ -5,6 +5,8 @@
 
 pub mod bitmap;
 pub mod charset;
+#[cfg(feature = "compat-bdfparser")]
+pub mod compat;
 pub mod error;
 pub mod formats;
 pub mod model;

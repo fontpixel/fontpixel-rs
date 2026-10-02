@@ -1,0 +1,8 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling syn v3.0.6
+   Compiling serde_derive v1.0.229
+    Checking serde v1.0.229
+ Documenting fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/crates/fontpixel)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.11s
+   Generated /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/target/doc/fontpixel/index.html

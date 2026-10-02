@@ -9,7 +9,17 @@ use serde_json::Value;
 fn python_generated_bdf_parity() {
     let cases: Vec<Value> = serde_json::from_str(include_str!("data/bdf_reference.json")).unwrap();
     assert_eq!(cases.len(), 924);
-    for case in cases {
+    for mut case in cases {
+        // Optional compatibility serde_json arbitrary_precision retains lexical
+        // float spelling. Restore the original fixture's f64 interpretation for
+        // STARTFONT only: no tolerance, integer rounding or output-byte change.
+        if let Some(v) = case
+            .get_mut("metadata")
+            .and_then(|m| m.get_mut("headers"))
+            .and_then(|h| h.get_mut("bdfversion"))
+        {
+            *v = serde_json::json!(v.as_f64().unwrap());
+        }
         let name = case["name"].as_str().unwrap();
         let read = bdf::read(
             case["source"].as_str().unwrap().as_bytes(),
