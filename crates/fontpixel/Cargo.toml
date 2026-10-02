@@ -40,6 +40,7 @@ vector-raster = []
 svg = []
 bmfont = []
 image = []
+png = ["dep:flate2", "dep:crc32fast"]
 c = []
 kbitx = []
 kbits = []
@@ -63,6 +64,7 @@ gzip = ["dep:flate2"]
 serde = ["dep:serde"]
 
 [dependencies]
+crc32fast = { version = "1.5", optional = true }
 flate2 = { version = "1.1", default-features = false, features = ["rust_backend"], optional = true }
 serde = { workspace = true, optional = true }
 
@@ -87,3 +89,7 @@ required-features = ["bdf"]
 name = "pcf"
 harness = false
 required-features = ["bdf", "pcf"]
+
+[[bench]]
+name = "render"
+harness = false

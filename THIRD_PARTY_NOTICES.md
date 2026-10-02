@@ -134,3 +134,26 @@ file and executed using an already installed esbuild; it is not vendored as a
 production dependency. X.Org bdftopcf and monobit are independent test tools only;
 their implementation code is not copied. No new production crate is introduced:
 `pcf` uses the same optional pure-Rust gzip dependency as `bdf`.
+
+## W1.4 rendering semantics and oracle
+
+The layout semantics (full-cell draw, width-based wrapping, arbitrary direction
+pairs, current/prior advance, effective drawall order and zero-area behavior) are
+adapted from the supplied MIT bdfparser sources, Tom Chen; the complete license
+is in `LICENSES/bdfparser-MIT.txt`:
+
+- `reference/bdfparser/src/bdfparser/font.py`, SHA-256
+  `59ad9a8ed2d2a42afd811873329248814b38e212d1c78ea05ea806ea36b97d85`
+- `reference/bdfparser/src/bdfparser/glyph.py`, SHA-256
+  `44cbc64dccaed4fd822ad9f8a1b39bb1b585eb77b88c92a0f1ba7a1455670da5`
+- `reference/bdfparser/src/bdfparser/bitmap.py`, SHA-256
+  `2c37d08deebe07f9a4f802c120e0b3d888e795c1d5b5bbe6c10a93790451c3d8`
+- `reference/bdfparser/docs/SPEC-v3.md`, SHA-256
+  `38de6696d4371f89be35c4ed56ee456dea4ad8e5be5697f4f0592e90780626ad`
+
+The borrowed packed-row renderer, bounded diagnostics, native extra spacing/ink
+mode, image serializers and tests are project code. The committed rendering
+oracle contains only project-generated synthetic fonts and their reference
+outputs. Larger supplied fonts and TypeScript sources are read-only runtime
+crosschecks. Pillow and CairoSVG are test-only external tools; their implementations
+are not copied. PNG reuses the existing compatible flate2/crc32fast dependencies.

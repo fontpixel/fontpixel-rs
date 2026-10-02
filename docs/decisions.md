@@ -294,3 +294,36 @@ report any recomputed ink/accelerator differences and unsupported vertical field
 access or corrupting terminal pixels for a tool bug. monobit 0.54 also reverses
 its two-byte encoding-table axes; record those independent-tool mismatches,
 verify all its glyph pixels/metrics, and separately verify exact one-byte codes.
+
+## 2026-10-02 — Native rendering preserves SPEC's cell and direction rules
+
+**Question:** PLAN calls mode 0 ink concatenation, while the supplied Python
+renderer uses full font cells and width-based line limits even for vertical text.
+**Choice:** Keep `Advance`/`Cell` exact to Python, add separate native `Ink`, and
+expose signed letter/line gaps without changing defaults. All sixteen independent
+direction pairs, current/prior spacing, missing zero-advance cells, effective
+mapping order and zero-area normalization follow executable oracle cases.
+**Reason:** Preserve compatibility without silently changing historical layouts
+or preempting the later full bdfparser facade's warning/exception contract.
+
+## 2026-10-02 — Rendering borrows packed rasters and reports bounded loss
+
+**Question:** Per-glyph/line temporary bitmaps and linear diagnostic deduplication
+make large strings expensive; malformed BDF placeholders must never look valid.
+**Choice:** Store borrowed placements, blit clipped packed row regions into one
+result, validate unchanged BDF source rows, and report missing, clipped or
+thresholded content. Separately budget layout and diagnostic storage; use fallible
+hash deduplication and bounded diagnostic names. CLI strictness includes read loss
+before any text or atomically replaced image output is emitted.
+**Reason:** Meet the no-per-glyph-raster-allocation goal while bounding adversarial
+input and retaining deterministic, inspectable information-loss reporting.
+
+## 2026-10-02 — Image rendering does not advertise later font codecs
+
+**Question:** W1.4 requires PNG/SVG images before W2.8 SVG fonts and W3.3 image atlases.
+**Choice:** Add a small independent `png` export feature and dependency-free SVG
+run paths, both with typed palette alpha and integer scale. SVG uses disjoint
+paper/ink paths so alpha matches PNG. Empty PNG output fails explicitly. Leave
+catalogue `image`/`svg` hooks absent; contour/dot/SVG-font serialization stays W2.8.
+**Reason:** Deliver the requested render commands without falsely claiming future
+font codec or byte-for-byte contour serialization capability.

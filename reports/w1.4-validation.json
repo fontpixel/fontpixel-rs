@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-02",
+  "branch": "w1.4-rendering-recovery",
+  "base_commit": "71bdf36",
+  "requested_worker": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "fast": "无法核实",
+    "actual_model_and_effort": "无法核实"
+  },
+  "checks": {
+    "check": {
+      "status": "PASS",
+      "log_bytes": 44361,
+      "sha256": "cd822178a6b1f8f74e4222a2d85288b6dd2fd0b6e1b354e88953d75801e7424c",
+      "log": "reports/evidence/w1.4/check.log"
+    },
+    "doc": {
+      "status": "PASS",
+      "log_bytes": 833,
+      "sha256": "c24b54743dd74cc3d5550ed2745fe802bb50ea37fb3acdca3595b3bd41eda438",
+      "log": "reports/evidence/w1.4/doc.log"
+    },
+    "pcf": {
+      "status": "PASS",
+      "log_bytes": 264,
+      "sha256": "db718788dc3fd2cd563589b3b75e810e558dea5558cdf4662f5a6b9bdcd1f372"
+    },
+    "png": {
+      "status": "PASS",
+      "log_bytes": 6966,
+      "sha256": "ec9bc1cce05cafab6479ffb5854e7d19606d65036da74033e853c9bd14bdb2a3"
+    },
+    "cli-minimal": {
+      "status": "PASS",
+      "log_bytes": 214,
+      "sha256": "a8a45186b68dc8737e24454e73b8aab9087876249822cd90bed5e78a5ca2cfff"
+    },
+    "criterion": {
+      "status": "PASS",
+      "log_bytes": 1051,
+      "sha256": "d7049c70f079f16cd79a9854d187d20b320b582b65049ba9e16455ca22c7372f",
+      "log": "reports/evidence/w1.4/criterion.log"
+    },
+    "protected": {
+      "status": "PASS",
+      "log_bytes": 44504,
+      "sha256": "885b03e3a2aab8eaa609846080c3cae2c95aed6f3cd0148393210109875aab52"
+    }
+  },
+  "render_unit_tests": 12,
+  "cli_tests": 14,
+  "synthetic_cases": 1680,
+  "full_render_cases": 2919,
+  "pixel_dimension_outputs": 2509,
+  "error_cases": 410,
+  "image_combinations": 48,
+  "transport_checks": [
+    "pcf",
+    "pcf.gz",
+    "bdf.gz"
+  ],
+  "protected_source_files": 690,
+  "source_snapshot": "32 original dirty-tree paths remained byte-identical; no added/deleted late paths at final pre-commit comparison",
+  "typescript_bundle_sha256": "9ae26cde269436e62a92f9b774a803bfdf6f434b9cd7e21373609f340232607c",
+  "wallclock_median_ms": {
+    "rust": {
+      "screen": 1.006328,
+      "drawall": 29.189293000000003
+    },
+    "python": {
+      "screen": 43.80358899652492,
+      "drawall": 1103.6329529888462
+    },
+    "node": {
+      "screen": 9.282274999999913,
+      "drawall": 423.25524199999995
+    }
+  },
+  "limits": [
+    "native exception/warning facade and full parity runner deferred to W1.5",
+    "SVG contour/font serializer deferred to W2.8",
+    "image atlas codec deferred to W3.3",
+    "no new font reader added and no new fuzz reader target claimed"
+  ]
+}

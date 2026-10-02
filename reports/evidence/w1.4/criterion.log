@@ -1,0 +1,21 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/crates/fontpixel)
+    Finished `bench` profile [optimized] target(s) in 1.92s
+     Running benches/render.rs (target/release/deps/render-8cd9539ef795def8)
+Benchmarking render/screen_80x25
+Benchmarking render/screen_80x25: Warming up for 1.0000 s
+Benchmarking render/screen_80x25: Collecting 30 samples in estimated 2.1555 s (5580 iterations)
+Benchmarking render/screen_80x25: Analyzing
+render/screen_80x25     time:   [378.90 µs 383.42 µs 391.44 µs]
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) high mild
+  1 (3.33%) high severe
+
+Benchmarking render/drawall_96
+Benchmarking render/drawall_96: Warming up for 1.0000 s
+Benchmarking render/drawall_96: Collecting 30 samples in estimated 2.0018 s (114k iterations)
+Benchmarking render/drawall_96: Analyzing
+render/drawall_96       time:   [17.747 µs 18.162 µs 18.802 µs]
+Found 6 outliers among 30 measurements (20.00%)
+  3 (10.00%) high mild
+  3 (10.00%) high severe
+

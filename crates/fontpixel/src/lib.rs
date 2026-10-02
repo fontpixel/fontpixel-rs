@@ -8,6 +8,7 @@ pub mod charset;
 pub mod error;
 pub mod formats;
 pub mod model;
+pub mod render;
 pub mod report;
 pub mod resources;
 

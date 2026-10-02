@@ -11,7 +11,7 @@ pub mod catalogue;
 #[cfg(feature = "pcf")]
 pub mod pcf;
 #[cfg(any(feature = "bdf", feature = "pcf"))]
-mod x11;
+pub(crate) mod x11;
 
 /// Static format metadata, including compiled feature state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

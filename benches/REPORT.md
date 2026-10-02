@@ -102,3 +102,10 @@ core-only results; they are not retroactively claimed as font-codec measurements
 BDF-to-PCF measurements against Python and Node. The final five-sample BDF parse
 and BDF-to-PCF medians are 85.623 ms and 135.772 ms; both corresponding PLAN §10
 goals pass in the documented run. The preliminary contended run is retained too.
+
+## W1.4 text-rendering measurements
+
+[RENDER-REPORT.md](RENDER-REPORT.md) records complete resident Font.draw and drawall
+against Python/Node, alongside Criterion hot paths. The real 2,000-character
+screen median is 1.006 ms; the 38,653-code atlas median is 29.189 ms. These are
+actual layout/render operations, extending rather than replacing W1.1's paste test.

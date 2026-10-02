@@ -1,0 +1,430 @@
+{
+  "date": "2026-10-02",
+  "fonts": 83,
+  "synthetic_fonts": 24,
+  "corpus_fonts": 59,
+  "cases": 2919,
+  "pixel_dimension_outputs": 2509,
+  "error_cases": 410,
+  "rust_mismatches": 0,
+  "typescript_mismatches": 0,
+  "oracle": "supplied Python bdfparser SPEC-v3",
+  "error_comparison": "success/failure; exception class/text facade deferred to W1.5",
+  "inputs": [
+    {
+      "name": "random-0",
+      "input_text_sha256": "7e2201e1536a49b21c672213480b8b950a11899d8c3aba80fa94e9e4e74d7736",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-1",
+      "input_text_sha256": "3985f30fca9aad60fd343d5a973f94d5c2841cbd4ea5032760eed1bbfd15971d",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-2",
+      "input_text_sha256": "8990116f2919d391d06507bb1e9eefe00c86558f48ae72ec7f89d785fbf152ab",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-3",
+      "input_text_sha256": "b2739dfa8aa433feee0a0f1cd863499444e093016e3abc0b98eb3d1d720e191f",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-4",
+      "input_text_sha256": "5b9c235bd1b176cbc4c9252d86d814abbcde610e24650afe697386458f24a3ee",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-5",
+      "input_text_sha256": "f5fb6938c9eddca62c6c3d549e14fd134b1fecf2fab19e271d1d7850e3832fa7",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-6",
+      "input_text_sha256": "597706535cfcc8b97544902436f154565c342e7b20fe95543c4543702b8e2dac",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-7",
+      "input_text_sha256": "f7fcc8bb674d84395b7a8373bd6e8f5587c6aaadb310790a8cb8c0505aa6ea33",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-8",
+      "input_text_sha256": "76f800ce9e1da342c0fe71b2fe81a3d87449374750db63bce8b9fa7f6fe854d8",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-9",
+      "input_text_sha256": "34084c8e3c8bbdefe359bdfd505a595f85ea5b3e8f5b36a917dfe7cc2670e688",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-10",
+      "input_text_sha256": "d0db33625c995a793ca2299a1910bf683441943d0034d6c611f7d2e8979ae16e",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-11",
+      "input_text_sha256": "83bd1d7dec206e510e34f0be1da20614a874b43687e1ac5845a9c5cd1f4ab81d",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-12",
+      "input_text_sha256": "50dd19d756d4216f6eeec96188810367200e61bc6c6df9d873f9ee142c137d02",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-13",
+      "input_text_sha256": "1d7b712456bf7614c4477aff6e2695ce9cc654a3143a32c203ee04807c5c675c",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-14",
+      "input_text_sha256": "13ce459b799c822532f22f5d71b72cfe81e3be24268ba831af18912c71043b1b",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-15",
+      "input_text_sha256": "0f8662c9a03ff5bbfe22347c2ded44aee21b00cb347b366236d5d49c49f6b0f2",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-16",
+      "input_text_sha256": "d28653f7dd34ea604cb486b88266ee73bffca00a2dba83d6e4dc848db518e1f8",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-17",
+      "input_text_sha256": "a5a641836b41f790a665abb3b2130f547b759a0d837b23639bb2010e321e84d1",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-18",
+      "input_text_sha256": "0c27691fa9472deb5f1c275cf2df79d8371ba0cbfed7c3de7bff1f2e05a3f1f5",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-19",
+      "input_text_sha256": "05b644e38ab08896e69443096fae55d3295cd0b1f15045487996235a21b2b478",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-20",
+      "input_text_sha256": "c10f95e8c00c1a56140db9c304ecae39657d052ff5be3e1e07ef5ea5e26a6a77",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-21",
+      "input_text_sha256": "3dd96cb7eb8f8123fc66b1e37eb4a0e6c851531268dbc27f685de66cfaa4acd6",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-22",
+      "input_text_sha256": "bee9357d9128e2db10c33f37c75975b1abc74a8a31e634b9866e10899a66ee02",
+      "source_file_sha256": null
+    },
+    {
+      "name": "random-23",
+      "input_text_sha256": "6132697e05b05f3cf92d9f08fc7455c57a82ed549813e409a41de3faf65ba6ed",
+      "source_file_sha256": null
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/HanWangYanKai-26.bdf",
+      "input_text_sha256": "a58d1e97a97bedbf9630db3c0273a3f6c59f14540c5fb904e106ae36d558de84",
+      "source_file_sha256": "a58d1e97a97bedbf9630db3c0273a3f6c59f14540c5fb904e106ae36d558de84"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/spec_example_bad.bdf",
+      "input_text_sha256": "f85fe2175386a661bd962bd988b7c2b2431d15adab5cb186e5ddae7c57c0b0e3",
+      "source_file_sha256": "f85fe2175386a661bd962bd988b7c2b2431d15adab5cb186e5ddae7c57c0b0e3"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/spec_example_fixed.bdf",
+      "input_text_sha256": "cbace750abb6f21173f6e557ec785ebcb25a6839d8f6e8b01b3bd0c2d28b50b3",
+      "source_file_sha256": "cbace750abb6f21173f6e557ec785ebcb25a6839d8f6e8b01b3bd0c2d28b50b3"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-2atest.bdf",
+      "input_text_sha256": "3abb5aead4da95b4bccca70d365a4de74e5b1a85ebbe70e44bd7250e9b7671ab",
+      "source_file_sha256": "3abb5aead4da95b4bccca70d365a4de74e5b1a85ebbe70e44bd7250e9b7671ab"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-big5.bdf",
+      "input_text_sha256": "0bc258875e75ba9a1c4abe3b8624773d1350406ef97ce9a66e06fc3b35b8f2d7",
+      "source_file_sha256": "0bc258875e75ba9a1c4abe3b8624773d1350406ef97ce9a66e06fc3b35b8f2d7"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1250.bdf",
+      "input_text_sha256": "7f596c492478bf6e1e1a3fe7bf75f4e2899405cd2ba55a957db18a92544d0a11",
+      "source_file_sha256": "7f596c492478bf6e1e1a3fe7bf75f4e2899405cd2ba55a957db18a92544d0a11"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1251.bdf",
+      "input_text_sha256": "8c783cfe23d3b2c58cbe630bc8966c80adf6548c0b18d5625e957a490fff13aa",
+      "source_file_sha256": "8c783cfe23d3b2c58cbe630bc8966c80adf6548c0b18d5625e957a490fff13aa"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1252.bdf",
+      "input_text_sha256": "c3848d318db56d194f0e2e58ff26f6b4c65c26d6a430d1e6df797f320ca1d5bc",
+      "source_file_sha256": "c3848d318db56d194f0e2e58ff26f6b4c65c26d6a430d1e6df797f320ca1d5bc"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-euckr.bdf",
+      "input_text_sha256": "8d3e4479b135117ded9694a7f90dc8b6bbf4c13a58bafb697c85f81d3e097b72",
+      "source_file_sha256": "8d3e4479b135117ded9694a7f90dc8b6bbf4c13a58bafb697c85f81d3e097b72"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-gb2312.bdf",
+      "input_text_sha256": "d919c5d3118312af35dbe9dde86eed62113fc3d4df7eb6217c0821dee88585c6",
+      "source_file_sha256": "d919c5d3118312af35dbe9dde86eed62113fc3d4df7eb6217c0821dee88585c6"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso10646.bdf",
+      "input_text_sha256": "0e9cf41e93c47b1cecf5b883a1d88d18426080accc8674161e35c5738dbdf0e1",
+      "source_file_sha256": "0e9cf41e93c47b1cecf5b883a1d88d18426080accc8674161e35c5738dbdf0e1"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso2022cn.bdf",
+      "input_text_sha256": "f8b7d378f6c36f8efc1470e71b03a539fa4b4dfa722b4287f8b05a91b6de4d34",
+      "source_file_sha256": "f8b7d378f6c36f8efc1470e71b03a539fa4b4dfa722b4287f8b05a91b6de4d34"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-shiftjis.bdf",
+      "input_text_sha256": "3d5706f513fd149d15cdb59eeb71228d97a042e8ebcd89fea83380852416d43b",
+      "source_file_sha256": "3d5706f513fd149d15cdb59eeb71228d97a042e8ebcd89fea83380852416d43b"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-unicode.bdf",
+      "input_text_sha256": "8c2cb8677941d58428736fa9babf656b3ec61fe9122e9686a6445844942e6f54",
+      "source_file_sha256": "8c2cb8677941d58428736fa9babf656b3ec61fe9122e9686a6445844942e6f54"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-utf8.bdf",
+      "input_text_sha256": "6ef71bb5f8e0b833cf0a449e9543177eb76bda2d2d3a94d02eecf87fb7a8a36f",
+      "source_file_sha256": "6ef71bb5f8e0b833cf0a449e9543177eb76bda2d2d3a94d02eecf87fb7a8a36f"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test-emptylines.bdf",
+      "input_text_sha256": "0d2192c9b89f96d9588257d786c524e2de11054db652478cde166296af9e8a24",
+      "source_file_sha256": "0d2192c9b89f96d9588257d786c524e2de11054db652478cde166296af9e8a24"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test.bdf",
+      "input_text_sha256": "e0e456639f55be294a05d1ec2831838f04dca0c9ccf6c9c3ae8554eb8f3041d2",
+      "source_file_sha256": "e0e456639f55be294a05d1ec2831838f04dca0c9ccf6c9c3ae8554eb8f3041d2"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04-reduced.bdf",
+      "input_text_sha256": "a83dfabcded96d1edc76a23e2ce9fc9cede891cf5e012b944383ed23b9f49416",
+      "source_file_sha256": "a83dfabcded96d1edc76a23e2ce9fc9cede891cf5e012b944383ed23b9f49416"
+    },
+    {
+      "name": "reference/bdfparser/tests/fonts/unifont-13.0.04.bdf",
+      "input_text_sha256": "8cfecd45af8f2637b21a1cfc1c95f75479219fcdbe1c03255ec27cd510ef8932",
+      "source_file_sha256": "8cfecd45af8f2637b21a1cfc1c95f75479219fcdbe1c03255ec27cd510ef8932"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Adjusted-Regular-6px.bdf",
+      "input_text_sha256": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de",
+      "source_file_sha256": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Mono-Regular-6px.bdf",
+      "input_text_sha256": "590a87f87360e76efd067b98797ab1f0f8adcfb802e0593e4c1df37f98c3d1e2",
+      "source_file_sha256": "590a87f87360e76efd067b98797ab1f0f8adcfb802e0593e4c1df37f98c3d1e2"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/capsigrany/Capsigrany-16px.bdf",
+      "input_text_sha256": "77be20529d8d6c6afc3b6b553a920f9dd5d913c2e62790d4fc63c510d930db2f",
+      "source_file_sha256": "77be20529d8d6c6afc3b6b553a920f9dd5d913c2e62790d4fc63c510d930db2f"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/cozette/cozette.bdf",
+      "input_text_sha256": "8d740166af3a14053773ac7a8846bf288c8818a44f73ab28d4725d91b03a5639",
+      "source_file_sha256": "8d740166af3a14053773ac7a8846bf288c8818a44f73ab28d4725d91b03a5639"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/cozette/cozettecrossedseven.bdf",
+      "input_text_sha256": "21dc0b8936c7de68ffc64136e60e90a2ea2683c4c95ee60758f887efd8b1383d",
+      "source_file_sha256": "21dc0b8936c7de68ffc64136e60e90a2ea2683c4c95ee60758f887efd8b1383d"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-12x24.bdf",
+      "input_text_sha256": "ab7f434db312de6700e55ee7f174ebd0bd57fef16f7a15bc9ac9478fb26f2cd1",
+      "source_file_sha256": "ab7f434db312de6700e55ee7f174ebd0bd57fef16f7a15bc9ac9478fb26f2cd1"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-16x32.bdf",
+      "input_text_sha256": "d9195a94badfe33f4bba4b68b8d711c031c28524ddcdebd095717be7ce98de7a",
+      "source_file_sha256": "d9195a94badfe33f4bba4b68b8d711c031c28524ddcdebd095717be7ce98de7a"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-32x64.bdf",
+      "input_text_sha256": "f965717e52ef7ba6a69514fa1b5a8c2336061d16b26730a1d3c7dc82d48c43a0",
+      "source_file_sha256": "f965717e52ef7ba6a69514fa1b5a8c2336061d16b26730a1d3c7dc82d48c43a0"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-5x8.bdf",
+      "input_text_sha256": "40488184d075d0c752cdd239b441c5ece51e50b353156f2496c756c384ab01cb",
+      "source_file_sha256": "40488184d075d0c752cdd239b441c5ece51e50b353156f2496c756c384ab01cb"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-6x12.bdf",
+      "input_text_sha256": "fc0743d164690f99b7e2e1b9d503180e4c719a9831ae03fd8f6da18c857dee27",
+      "source_file_sha256": "fc0743d164690f99b7e2e1b9d503180e4c719a9831ae03fd8f6da18c857dee27"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/spleen/spleen-8x16.bdf",
+      "input_text_sha256": "b38b32a66920068965a3101f98071d310c5c74659fe86e55d346140770f8f6e8",
+      "source_file_sha256": "b38b32a66920068965a3101f98071d310c5c74659fe86e55d346140770f8f6e8"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u12b.bdf",
+      "input_text_sha256": "af46d879b8a0f598bd70c59a30b34ec190410ab82ae184f4b6c56fe594e9e2ed",
+      "source_file_sha256": "af46d879b8a0f598bd70c59a30b34ec190410ab82ae184f4b6c56fe594e9e2ed"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u12n.bdf",
+      "input_text_sha256": "0a7e9ca5a5dd29114f0514cacdf197700018fc05028d4dde28b049deca472a90",
+      "source_file_sha256": "0a7e9ca5a5dd29114f0514cacdf197700018fc05028d4dde28b049deca472a90"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u14b.bdf",
+      "input_text_sha256": "c6de4b6b88941a673a2956c480123d9f0e6108b4f0c59579bb351fdf17d01152",
+      "source_file_sha256": "c6de4b6b88941a673a2956c480123d9f0e6108b4f0c59579bb351fdf17d01152"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u14n.bdf",
+      "input_text_sha256": "39ff3b6616ba22febc385c1df5609bc4b9a3fe467b4a4b6d0bf53af55bee3ce0",
+      "source_file_sha256": "39ff3b6616ba22febc385c1df5609bc4b9a3fe467b4a4b6d0bf53af55bee3ce0"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u14v.bdf",
+      "input_text_sha256": "9298d138e69dac1c35524b67c5ac4f7c5b257065bfb47a37fa32d81d867a2912",
+      "source_file_sha256": "9298d138e69dac1c35524b67c5ac4f7c5b257065bfb47a37fa32d81d867a2912"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u16b.bdf",
+      "input_text_sha256": "52134dc43b540d35dcbd630b2eafa28423627fd56fc2da18c1949c80150ca81b",
+      "source_file_sha256": "52134dc43b540d35dcbd630b2eafa28423627fd56fc2da18c1949c80150ca81b"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u16n.bdf",
+      "input_text_sha256": "9470a9b3d454fd3327ecd26f5c774a75cbc6a28adcd0ce0e52fcc1ed5e5b85f5",
+      "source_file_sha256": "9470a9b3d454fd3327ecd26f5c774a75cbc6a28adcd0ce0e52fcc1ed5e5b85f5"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u16v.bdf",
+      "input_text_sha256": "e05eb94888f1704cf89249cb6d7d31bac80b34199e0952e01d9924822d6de1a4",
+      "source_file_sha256": "e05eb94888f1704cf89249cb6d7d31bac80b34199e0952e01d9924822d6de1a4"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u18b.bdf",
+      "input_text_sha256": "4c723dacaf69b609147c947de677740bf6b1ad0ed65ae73a8068792c17b24e45",
+      "source_file_sha256": "4c723dacaf69b609147c947de677740bf6b1ad0ed65ae73a8068792c17b24e45"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u18n.bdf",
+      "input_text_sha256": "c5d49710817dad17f613566db303a12a370052ec0c60a068cce994456c801c46",
+      "source_file_sha256": "c5d49710817dad17f613566db303a12a370052ec0c60a068cce994456c801c46"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u20b.bdf",
+      "input_text_sha256": "eba07d04d20e63e55b0812c28210b035162bfd96f1fee0aaa866fd1de7af33d5",
+      "source_file_sha256": "eba07d04d20e63e55b0812c28210b035162bfd96f1fee0aaa866fd1de7af33d5"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u20n.bdf",
+      "input_text_sha256": "768d4a79eedc26ee6f7dc6950230e532d8d4a42f9352a6973b95af593211e179",
+      "source_file_sha256": "768d4a79eedc26ee6f7dc6950230e532d8d4a42f9352a6973b95af593211e179"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u22b.bdf",
+      "input_text_sha256": "b6f4ed8496326c67de2ec18ea11e59e16ecb42c063a5639da336eac2722678c0",
+      "source_file_sha256": "b6f4ed8496326c67de2ec18ea11e59e16ecb42c063a5639da336eac2722678c0"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u22n.bdf",
+      "input_text_sha256": "a8dda1d62b23a07282afd87ce869bbfc7dd96e73b43c51f09507490c2c2ae77b",
+      "source_file_sha256": "a8dda1d62b23a07282afd87ce869bbfc7dd96e73b43c51f09507490c2c2ae77b"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u24b.bdf",
+      "input_text_sha256": "899f4e401cea9dff28f2eb47cf8a06c0481172e3c12757789d676020f679a1de",
+      "source_file_sha256": "899f4e401cea9dff28f2eb47cf8a06c0481172e3c12757789d676020f679a1de"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u24n.bdf",
+      "input_text_sha256": "5e0be9b2f877e53f049803c4b3fc7ba1cc1d819643222e9335747171ff3ae7c0",
+      "source_file_sha256": "5e0be9b2f877e53f049803c4b3fc7ba1cc1d819643222e9335747171ff3ae7c0"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u28b.bdf",
+      "input_text_sha256": "9b1e55c63850a7afdc6345b82be4daee28ad1fe4bf976aca6f6d30857981df04",
+      "source_file_sha256": "9b1e55c63850a7afdc6345b82be4daee28ad1fe4bf976aca6f6d30857981df04"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u28n.bdf",
+      "input_text_sha256": "69ae2ae94eddbd41ebc6a11636e175ca463124a21bb80f0755041461ef642a68",
+      "source_file_sha256": "69ae2ae94eddbd41ebc6a11636e175ca463124a21bb80f0755041461ef642a68"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u32b.bdf",
+      "input_text_sha256": "83c3635159a7b0d6512288a65bc3962a6db44654ba3a07c8ca6ac31f4bbccb2a",
+      "source_file_sha256": "83c3635159a7b0d6512288a65bc3962a6db44654ba3a07c8ca6ac31f4bbccb2a"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/terminus/ter-u32n.bdf",
+      "input_text_sha256": "343c974c5531762d53f84a720399e5998119cd54b8d52944ad80c00103493461",
+      "source_file_sha256": "343c974c5531762d53f84a720399e5998119cd54b8d52944ad80c00103493461"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/tinypixel/tinypixel-7px.bdf",
+      "input_text_sha256": "db7496bbb34364b8509f07036ab465a1dbd7210112a53ab05b2933bc13ec745c",
+      "source_file_sha256": "db7496bbb34364b8509f07036ab465a1dbd7210112a53ab05b2933bc13ec745c"
+    },
+    {
+      "name": "samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+      "input_text_sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b",
+      "source_file_sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Large-JP.bdf",
+      "input_text_sha256": "7fd8803b982a56473a0406e5bbf231b72c35ffba8e56bfbb104d65f641c47bfd",
+      "source_file_sha256": "7fd8803b982a56473a0406e5bbf231b72c35ffba8e56bfbb104d65f641c47bfd"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Large-KR.bdf",
+      "input_text_sha256": "2f35f9f1b2731c25ba0da6e5b19d373d39e496db83027e953c16e8052c49f500",
+      "source_file_sha256": "2f35f9f1b2731c25ba0da6e5b19d373d39e496db83027e953c16e8052c49f500"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+      "input_text_sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46",
+      "source_file_sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+      "input_text_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "source_file_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Large-TC.bdf",
+      "input_text_sha256": "e62c69056c2c2ba76b5e4b4569777f19b80b53f8257bb0429ae9d2dec0d830df",
+      "source_file_sha256": "e62c69056c2c2ba76b5e4b4569777f19b80b53f8257bb0429ae9d2dec0d830df"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "input_text_sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+      "source_file_sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+    },
+    {
+      "name": "samples/tong-pixel-sans/TongPixelSansMono14Large-Latin.bdf",
+      "input_text_sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650",
+      "source_file_sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+    }
+  ]
+}

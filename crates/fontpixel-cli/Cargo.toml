@@ -13,8 +13,9 @@ path = "src/main.rs"
 doc = false
 
 [features]
-default = ["fontpixel/default", "pcf"]
+default = ["fontpixel/default", "pcf", "png"]
 pcf = ["fontpixel/pcf"]
+png = ["fontpixel/png"]
 all-formats = ["fontpixel/all-formats", "pcf"]
 
 [dependencies]

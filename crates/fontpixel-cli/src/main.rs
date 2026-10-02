@@ -39,6 +39,34 @@ enum Command {
         #[arg(long)]
         json: bool,
     },
+    /// Render text (or --all) as terminal character art.
+    Preview {
+        #[command(flatten)]
+        layout: LayoutArguments,
+        /// Exactly two characters: ink then paper.
+        #[arg(long, default_value = "#.")]
+        chars: String,
+    },
+    /// Render text (or --all) to a PNG or SVG image.
+    Render {
+        #[command(flatten)]
+        layout: LayoutArguments,
+        /// PNG or SVG output; written only after successful validation.
+        #[arg(short, long)]
+        output: PathBuf,
+        /// Explicit image type; otherwise inferred from output extension.
+        #[arg(long, value_parser = ["png", "svg"])]
+        to: Option<String>,
+        /// Positive integer nearest-neighbor scale.
+        #[arg(long, default_value_t = 1, value_parser = clap::value_parser!(u32).range(1..))]
+        scale: u32,
+        /// Ink color: #RGB, #RGBA, #RRGGBB, #RRGGBBAA, or transparent.
+        #[arg(long, default_value = "#000000")]
+        color: fontpixel::render::Rgba,
+        /// Paper color, in the same syntax as --color.
+        #[arg(long, default_value = "#ffffff")]
+        background: fontpixel::render::Rgba,
+    },
     /// Convert fonts with loss reporting and safe output replacement.
     Convert {
         /// One or more inputs, combined as ordered strikes in a FontSet.
@@ -62,6 +90,101 @@ enum Command {
         #[command(flatten)]
         pcf: PcfArguments,
     },
+}
+
+#[derive(Args)]
+struct LayoutArguments {
+    /// Input font (BDF/PCF, including gzip when enabled).
+    input: PathBuf,
+    /// Text in logical input order. Newline is an ordinary glyph, as in SPEC.
+    #[arg(required_unless_present = "all", conflicts_with = "all")]
+    text: Option<String>,
+    /// Render every effective encoded mapping (drawall).
+    #[arg(long)]
+    all: bool,
+    /// Inclusive code ranges, e.g. U+0020-007E,U+4E00-4EFF; requires --all.
+    #[arg(long, requires = "all")]
+    range: Option<String>,
+    /// Ordering for --all.
+    #[arg(long, value_enum, default_value = "ascending", requires = "all")]
+    order: DrawOrder,
+    /// Input format override.
+    #[arg(long, value_parser = format_parser())]
+    from: Option<String>,
+    /// Zero-based strike index; required for inputs containing multiple fonts.
+    #[arg(long)]
+    font_index: Option<usize>,
+    /// lr, rl, tb, bt, or a four-letter pair such as lrbt or tbrl.
+    #[arg(long, default_value = "lrtb")]
+    direction: fontpixel::render::WritingDirection,
+    /// Maximum accumulated width-plus-offset per line (SPEC vertical behavior).
+    #[arg(
+        long,
+        alias = "linelimit",
+        default_value_t = 512,
+        allow_hyphen_values = true
+    )]
+    line_limit: i64,
+    /// Advance (1), complete font cell (0), or tight ink; --all defaults to cell.
+    #[arg(long, value_enum)]
+    mode: Option<DrawMode>,
+    /// Use the current glyph's spacing at boundaries instead of the previous glyph.
+    #[arg(long)]
+    use_current_glyph_spacing: bool,
+    /// Additional signed gap between glyphs.
+    #[arg(long, default_value_t = 0, allow_hyphen_values = true)]
+    letter_spacing: i64,
+    /// Additional signed gap between lines/columns.
+    #[arg(long, default_value_t = 0, allow_hyphen_values = true)]
+    line_spacing: i64,
+    /// Replacement glyph code, e.g. U+003F, 0x3f, or 63.
+    #[arg(long, conflicts_with = "fail_missing")]
+    missing: Option<String>,
+    /// Fail on any absent/unrepresentable character.
+    #[arg(long)]
+    fail_missing: bool,
+    /// Explicit grayscale-to-monochrome threshold (0..255).
+    #[arg(long)]
+    gray_threshold: Option<u8>,
+    /// Reject read/render loss before displaying or saving output.
+    #[arg(long)]
+    strict: bool,
+    /// Maximum rendered/scaled pixel count; increase for large --all atlases.
+    #[arg(long, default_value_t = 16 * 1024 * 1024)]
+    max_pixels: usize,
+    /// Maximum rendered width or height.
+    #[arg(long, default_value_t = 1_048_576)]
+    max_dimension: u32,
+    /// Maximum layout bookkeeping bytes.
+    #[arg(long, default_value_t = 128 * 1024 * 1024)]
+    max_layout_bytes: usize,
+    /// Maximum diagnostic text and deduplication bookkeeping bytes.
+    #[arg(long, default_value_t = 16 * 1024 * 1024)]
+    max_report_bytes: usize,
+    /// Maximum number of input glyphs, including missing ones.
+    #[arg(long, default_value_t = 1_000_000)]
+    max_glyphs: usize,
+    /// Maximum encoded image/text bytes.
+    #[arg(long, default_value_t = 64 * 1024 * 1024)]
+    max_output_bytes: usize,
+    /// Diagnostics format (preview diagnostics go to stderr).
+    #[arg(long, value_enum, default_value = "text")]
+    report: ReportStyle,
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum DrawMode {
+    #[value(alias = "1")]
+    Advance,
+    #[value(alias = "0")]
+    Cell,
+    Ink,
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum DrawOrder {
+    Ascending,
+    Descending,
+    File,
+    ReverseFile,
 }
 
 #[derive(Args, Default)]
@@ -150,6 +273,7 @@ fn report_style(command: &Command) -> ReportStyle {
     match command {
         Command::Info { json: true, .. } | Command::Formats { json: true } => ReportStyle::Json,
         Command::Convert { report, .. } => *report,
+        Command::Preview { layout, .. } | Command::Render { layout, .. } => layout.report,
         _ => ReportStyle::Text,
     }
 }
@@ -241,6 +365,101 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 Ok(())
             }
         }
+        Command::Preview { layout, chars } => {
+            let palette: Vec<_> = chars.chars().collect();
+            if palette.len() != 2 {
+                return Err(Error::InvalidInput(
+                    "--chars must contain exactly two characters (ink then paper)".into(),
+                ));
+            }
+            let rendered = render_layout(&layout)?;
+            let text = rendered
+                .bitmap
+                .to_text(&[(1, palette[0]), (0, palette[1])])?;
+            // The terminal stream includes its final LF as well as UTF-8 pixels.
+            if !text.is_empty() && text.len().saturating_add(1) > layout.max_output_bytes {
+                return Err(Error::ResourceLimit {
+                    resource: "preview output bytes",
+                    limit: layout.max_output_bytes,
+                });
+            }
+            // Never interleave diagnostics with the bitmap's stdout stream.
+            if !rendered.report.entries.is_empty() {
+                emit_render_report(&rendered.report, layout.report, &mut io::stderr().lock())?;
+            }
+            if !text.is_empty() {
+                writeln!(output, "{text}")?;
+            }
+            Ok(())
+        }
+        Command::Render {
+            layout,
+            output: destination,
+            to,
+            scale,
+            color,
+            background,
+        } => {
+            let kind = to
+                .or_else(|| {
+                    destination
+                        .extension()
+                        .and_then(|e| e.to_str())
+                        .map(str::to_ascii_lowercase)
+                })
+                .ok_or_else(|| {
+                    Error::InvalidInput("output needs .png/.svg or --to png/svg".into())
+                })?;
+            if kind != "png" && kind != "svg" {
+                return Err(Error::InvalidInput(
+                    "render output must be PNG or SVG".into(),
+                ));
+            }
+            #[cfg(not(feature = "png"))]
+            if kind == "png" {
+                return Err(Error::FeatureDisabled {
+                    format: "png".into(),
+                });
+            }
+            let rendered = render_layout(&layout)?;
+            let image_options = fontpixel::render::ImageOptions {
+                scale,
+                foreground: color,
+                background,
+                limits: render_bitmap_limits(&layout),
+            };
+            let bytes = if kind == "svg" {
+                fontpixel::render::to_svg(&rendered.bitmap, &image_options)?.into_bytes()
+            } else {
+                #[cfg(feature = "png")]
+                {
+                    fontpixel::render::to_png(&rendered.bitmap, &image_options)?
+                }
+                #[cfg(not(feature = "png"))]
+                {
+                    return Err(Error::FeatureDisabled {
+                        format: "png".into(),
+                    });
+                }
+            };
+            persist(&destination, &bytes)?;
+            match layout.report {
+                ReportStyle::Json => emit_json(
+                    output,
+                    &serde_json::json!({"output":destination,"format":kind,"bytes":bytes.len(),"width":rendered.bitmap.width(),"height":rendered.bitmap.height(),"scale":scale,"report":rendered.report}),
+                ),
+                ReportStyle::Text => {
+                    write!(output, "{}", rendered.report)?;
+                    writeln!(
+                        output,
+                        "Wrote {} bytes to {}",
+                        bytes.len(),
+                        destination.display()
+                    )?;
+                    Ok(())
+                }
+            }
+        }
         Command::Convert {
             inputs,
             output: destination,
@@ -308,6 +527,156 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     Ok(())
                 }
             }
+        }
+    }
+}
+
+fn parse_code(value: &str) -> fontpixel::Result<u32> {
+    let parsed = if let Some(v) = value
+        .strip_prefix("U+")
+        .or_else(|| value.strip_prefix("u+"))
+        .or_else(|| value.strip_prefix("0x"))
+    {
+        u32::from_str_radix(v, 16)
+    } else {
+        value.parse()
+    };
+    parsed.map_err(|_| Error::InvalidInput(format!("invalid codepoint {value:?}")))
+}
+fn render_bitmap_limits(args: &LayoutArguments) -> fontpixel::bitmap::BitmapLimits {
+    fontpixel::bitmap::BitmapLimits {
+        max_dimension: args.max_dimension,
+        max_pixels: args.max_pixels,
+        max_bytes: args.max_output_bytes,
+    }
+}
+fn render_layout(args: &LayoutArguments) -> fontpixel::Result<fontpixel::render::Rendered> {
+    use fontpixel::model::Codepoint;
+    use fontpixel::render::{GlyphOrder, MissingGlyph, RenderMode, RenderOptions};
+    let read_options = ReadOptions {
+        format: args.from.clone(),
+        ..Default::default()
+    };
+    let bytes = read_primary(&args.input, &read_options.limits)?;
+    let loaded = fontpixel::registry().read(
+        &Input::new(&bytes).with_name(&args.input.to_string_lossy()),
+        &read_options,
+    )?;
+    let index = match args.font_index {
+        Some(index) => index,
+        None if loaded.fonts.fonts.len() == 1 => 0,
+        None => {
+            return Err(Error::InvalidInput(
+                "input must contain one font; choose --font-index".into(),
+            ));
+        }
+    };
+    let font = loaded
+        .fonts
+        .fonts
+        .get(index)
+        .ok_or_else(|| Error::InvalidInput("font index out of range".into()))?;
+    if args.strict && loaded.report.has_loss() {
+        return Err(Error::StrictLoss(loaded.report));
+    }
+    let missing = if let Some(cp) = &args.missing {
+        let cp = parse_code(cp)?;
+        let glyph = font
+            .glyph_for_codepoint(Codepoint::Unicode(cp))
+            .or_else(|| font.glyph_for_codepoint(Codepoint::Legacy(cp)))
+            .ok_or_else(|| {
+                Error::InvalidInput("replacement glyph is not present in the font".into())
+            })?;
+        MissingGlyph::Glyph(glyph)
+    } else if args.fail_missing {
+        MissingGlyph::Error
+    } else {
+        MissingGlyph::Blank
+    };
+    let mode = match args.mode {
+        Some(DrawMode::Advance) => RenderMode::Advance,
+        Some(DrawMode::Ink) => RenderMode::Ink,
+        Some(DrawMode::Cell) => RenderMode::Cell,
+        None if args.all => RenderMode::Cell,
+        None => RenderMode::Advance,
+    };
+    let mut options = RenderOptions {
+        line_limit: args.line_limit,
+        mode,
+        direction: args.direction,
+        use_current_glyph_spacing: args.use_current_glyph_spacing,
+        letter_spacing: args.letter_spacing,
+        line_spacing: args.line_spacing,
+        missing,
+        gray_threshold: args.gray_threshold,
+        strict: false,
+        ..Default::default()
+    };
+    options.limits.max_glyphs = args.max_glyphs;
+    options.limits.max_layout_bytes = args.max_layout_bytes;
+    options.limits.max_report_bytes = args.max_report_bytes;
+    options.limits.bitmap = render_bitmap_limits(args);
+    let mut rendered = if args.all {
+        let ranges = args
+            .range
+            .as_deref()
+            .map(|s| {
+                s.split(',')
+                    .map(|r| {
+                        let (a, b) = r.split_once('-').unwrap_or((r, r));
+                        let start = parse_code(a)?;
+                        // Bare end of a U+/0x range uses the same hexadecimal notation.
+                        let end =
+                            if (a.starts_with("U+") || a.starts_with("u+") || a.starts_with("0x"))
+                                && !b.starts_with("U+")
+                                && !b.starts_with("u+")
+                                && !b.starts_with("0x")
+                            {
+                                u32::from_str_radix(b, 16)
+                                    .map_err(|_| Error::InvalidInput("invalid range end".into()))?
+                            } else {
+                                parse_code(b)?
+                            };
+                        if start > end {
+                            return Err(Error::InvalidInput("range start exceeds end".into()));
+                        }
+                        Ok((start, end))
+                    })
+                    .collect::<fontpixel::Result<Vec<_>>>()
+            })
+            .transpose()?
+            .unwrap_or_default();
+        let order = match args.order {
+            DrawOrder::Ascending => GlyphOrder::Ascending,
+            DrawOrder::Descending => GlyphOrder::Descending,
+            DrawOrder::File => GlyphOrder::File,
+            DrawOrder::ReverseFile => GlyphOrder::ReverseFile,
+        };
+        font.draw_all(order, &ranges, &options)?
+    } else {
+        font.draw(args.text.as_deref().unwrap_or(""), &options)?
+    };
+    let mut report = loaded.report;
+    for entry in &mut rendered.report.entries {
+        entry.location.font_index = Some(index);
+    }
+    report.extend(rendered.report);
+    if args.strict && report.has_loss() {
+        return Err(Error::StrictLoss(report));
+    }
+    rendered.report = report;
+    Ok(rendered)
+}
+fn emit_render_report(
+    report: &fontpixel::Report,
+    style: ReportStyle,
+    output: &mut dyn Write,
+) -> fontpixel::Result<()> {
+    match style {
+        ReportStyle::Json => emit_json(output, &serde_json::json!({"report":report})),
+        ReportStyle::Text => {
+            write!(output, "{report}")?;
+            Ok(())
         }
     }
 }

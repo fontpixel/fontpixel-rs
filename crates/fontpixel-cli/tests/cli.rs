@@ -376,3 +376,179 @@ fn pcf_conversion_layout_gzip_and_strict_reporting() {
     assert_eq!(p.status.code(), Some(3));
     assert_eq!(fs::read(&target).unwrap(), existing);
 }
+
+#[test]
+fn preview_keeps_art_on_stdout_and_reports_on_stderr() {
+    let dir = TempDir::new();
+    let input = dir.0.join("font.bdf");
+    fs::write(&input, BDF).unwrap();
+    let result = run(&["preview", input.to_str().unwrap(), "A", "--chars", "10"]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert_eq!(
+        String::from_utf8(result.stdout).unwrap(),
+        "00000000\n00000000\n00000000\n00000000\n00000000\n00000000\n00000000\n10000000\n"
+    );
+    let result = run(&["preview", input.to_str().unwrap(), "A?", "--report", "json"]);
+    assert!(result.status.success());
+    let report: serde_json::Value = serde_json::from_slice(&result.stderr).unwrap();
+    assert!(
+        report["report"]["entries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|e| e["code"] == "render.missing_glyph")
+    );
+    for (limit, success) in [("73", false), ("74", true)] {
+        let result = run(&[
+            "preview",
+            input.to_str().unwrap(),
+            "A",
+            "--chars",
+            "█.",
+            "--max-output-bytes",
+            limit,
+        ]);
+        assert_eq!(result.status.success(), success);
+        if success {
+            assert_eq!(result.stdout.len(), 74);
+        } else {
+            assert!(result.stdout.is_empty());
+        }
+    }
+    let result = run(&["preview", input.to_str().unwrap(), "A?", "--strict"]);
+    assert_eq!(result.status.code(), Some(3));
+    assert!(result.stdout.is_empty());
+    assert_eq!(
+        run(&[
+            "preview",
+            input.to_str().unwrap(),
+            "A",
+            "--direction",
+            "invalid"
+        ])
+        .status
+        .code(),
+        Some(2)
+    );
+    assert_eq!(
+        run(&["preview", input.to_str().unwrap(), "A", "--chars", "three"])
+            .status
+            .code(),
+        Some(1)
+    );
+}
+#[test]
+fn render_svg_drawall_controls_and_atomic_failure() {
+    let dir = TempDir::new();
+    let input = dir.0.join("font.bdf");
+    fs::write(&input, BDF).unwrap();
+    let target = dir.0.join("image.svg");
+    let result = run(&[
+        "render",
+        input.to_str().unwrap(),
+        "--all",
+        "--range",
+        "U+0041-0041",
+        "--order",
+        "reverse-file",
+        "-o",
+        target.to_str().unwrap(),
+        "--scale",
+        "3",
+        "--color",
+        "#a23",
+        "--background",
+        "transparent",
+        "--report",
+        "json",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let json: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(json["width"], 8);
+    let original = fs::read(&target).unwrap();
+    let svg = String::from_utf8(original.clone()).unwrap();
+    assert!(svg.contains("width=\"24\" height=\"24\""));
+    assert!(svg.contains("#aa2233"));
+    for flags in [
+        vec!["--strict"],
+        vec!["--fail-missing"],
+        vec!["--max-pixels", "1"],
+    ] {
+        let mut args = vec![
+            "render",
+            input.to_str().unwrap(),
+            "?",
+            "-o",
+            target.to_str().unwrap(),
+        ];
+        args.extend(flags);
+        assert!(!run(&args).status.success());
+        assert_eq!(fs::read(&target).unwrap(), original);
+    }
+    let result = run(&[
+        "render",
+        input.to_str().unwrap(),
+        "A",
+        "-o",
+        target.to_str().unwrap(),
+        "--scale",
+        "0",
+    ]);
+    assert_eq!(result.status.code(), Some(2));
+    assert_eq!(fs::read(&target).unwrap(), original);
+    let result = run(&[
+        "preview",
+        input.to_str().unwrap(),
+        "--all",
+        "--range",
+        "U+0042-0043",
+    ]);
+    assert!(result.status.success());
+    assert!(result.stdout.is_empty());
+}
+#[cfg(feature = "png")]
+#[test]
+fn render_png_and_empty_input_behavior() {
+    let dir = TempDir::new();
+    let input = dir.0.join("font.bdf");
+    fs::write(&input, BDF).unwrap();
+    let target = dir.0.join("image.png");
+    assert!(
+        run(&[
+            "render",
+            input.to_str().unwrap(),
+            "A",
+            "-o",
+            target.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    let original = fs::read(&target).unwrap();
+    assert!(original.starts_with(b"\x89PNG\r\n\x1a\n"));
+    assert!(
+        !run(&[
+            "render",
+            input.to_str().unwrap(),
+            "",
+            "-o",
+            target.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&target).unwrap(), original);
+    assert!(
+        run(&["preview", input.to_str().unwrap(), ""])
+            .stdout
+            .is_empty()
+    );
+}

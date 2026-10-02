@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W1.3 BDF and PCF read/write
+## Current status: W1.4 rendering, BDF and PCF read/write
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -13,6 +13,10 @@ PCF has full byte/bit/padding/scan-unit support and a standalone deterministic
 writer matching SPEC and compiler goldens. Bounded gzip handles `.bdf.gz` and `.pcf.gz`. `info` prints actual font metadata;
 `convert` buffers/validates all output before safe replacement. `--strict`
 rejects combined read/write losses without touching the destination.
+
+`preview` renders terminal art; `render` exports bounded PNG/SVG images with
+scale, RGBA colors, all direction pairs, exact charset mapping and strict loss
+checks. See [rendering API/CLI](docs/rendering.md) and [W1.4 validation](reports/w1.4.md).
 
 The other 44 formats and Python/WASM bindings remain unimplemented and are
 reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
@@ -40,6 +44,8 @@ cargo run -p fontpixel-cli -- formats
 cargo run -p fontpixel-cli -- formats --json
 cargo run -p fontpixel-cli -- info --help
 cargo run -p fontpixel-cli -- convert --help
+cargo run -p fontpixel-cli -- preview --help
+cargo run -p fontpixel-cli -- render --help
 cargo install cargo-deny --version 0.20.2 --locked
 scripts/check.sh
 ```
@@ -89,7 +95,7 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-W1.4 can use the real model and registry to implement yaff without changing
+W1.5 can layer the compatibility facade on the renderer; W1.6 can implement yaff without changing
 the established BDF/PCF contracts. PCF options are available through
 `PcfWriteOptions`, `PcfCodec` and `FontRegistry::set_pcf_write_options`. BDF's `source_rows` and `validate_bitmap` make raw raster
 provenance explicit; other consumers must not silently render invalid-source

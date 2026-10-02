@@ -20,4 +20,9 @@
 - W1.3: actual PCF detector, bounded reader, deterministic standalone writer,
   independent PCF/gzip feature, typed layout options and CLI controls; all supplied
   physical/hash goldens, real corpus and cross-tool checks, reported metadata loss,
-  final-code fuzzing and measured BDF-to-PCF performance. W1.4 remains pending.
+  final-code fuzzing and measured BDF-to-PCF performance.
+
+- W1.4: bounded all-direction text/drawall rendering with borrowed packed rows,
+  exact SPEC layout defaults, native ink/gap options, explicit missing/gray/loss
+  policies, PNG/SVG image export and preview/render CLI; Python/TypeScript pixel
+  oracle, independent image/transport checks and rendering benchmarks

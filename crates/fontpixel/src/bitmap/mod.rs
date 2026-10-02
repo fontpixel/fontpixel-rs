@@ -376,6 +376,41 @@ impl<F: PixelFormat> Bitmap<F> {
             );
         }
     }
+    /// Composite a borrowed subrectangle without allocating a cropped bitmap.
+    /// Unlike `crop`, `region.x/y` are source top-left coordinates. Both the
+    /// region and destination are clipped; pixels outside the source are absent.
+    pub fn composite_region(
+        &mut self,
+        source: &Self,
+        region: Bounds,
+        x: i64,
+        y: i64,
+        mode: CompositeMode,
+    ) {
+        let left = 0i128.max(-i128::from(region.x)).max(-i128::from(x));
+        let top = 0i128.max(-i128::from(region.y)).max(-i128::from(y));
+        let right = i128::from(region.width)
+            .min(i128::from(source.width) - i128::from(region.x))
+            .min(i128::from(self.width) - i128::from(x));
+        let bottom = i128::from(region.height)
+            .min(i128::from(source.height) - i128::from(region.y))
+            .min(i128::from(self.height) - i128::from(y));
+        if left >= right || top >= bottom {
+            return;
+        }
+        for row in top..bottom {
+            let sy = (i128::from(region.y) + row) as u32;
+            let dy = (i128::from(y) + row) as u32;
+            blit::<F>(
+                self.row_mut(dy),
+                source.row(sy),
+                (i128::from(region.x) + left) as u32,
+                (i128::from(x) + left) as u32,
+                (right - left) as u32,
+                mode,
+            );
+        }
+    }
     /// Paste nonzero source pixels with clipping (SPEC `paste`).
     pub fn paste(&mut self, source: &Self, x: i64, y: i64) {
         self.composite(source, x, y, CompositeMode::Over);
