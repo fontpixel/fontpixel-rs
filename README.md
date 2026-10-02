@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W1.6 YAFF, BDF/PCF, rendering and SPEC compatibility
+## Current status: phase 1 complete
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -29,17 +29,18 @@ See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
 [charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md), [PCF contracts](docs/formats/pcf.md),
 and [W1.3 validation](reports/w1.3.md).
 The optional `compat-bdfparser` facade and `fontpixel-parity` executable pass the
-full default differential suite; see [W1.5 validation](reports/w1.5.md). Phase
-acceptance remains the coordinator's review/merge gate.
+full default differential suite; see [W1.5 validation](reports/w1.5.md).
+The merged implementation passed the final aggregate gate; see the
+[phase 1 acceptance report](reports/phase-1.md) for evidence and remaining scope.
 
 ```sh
-cargo run -p fontpixel-cli -- info font.bdf --json
-cargo run -p fontpixel-cli -- convert font.bdf -o canonical.bdf --strict
-cargo run -p fontpixel-cli -- convert canonical.bdf -o canonical.bdf.gz
-cargo run -p fontpixel-cli -- convert font.bdf -o font.pcf.gz
-cargo run -p fontpixel-cli -- convert font.bdf -o golden.yaff --strict
-cargo run -p fontpixel-cli -- convert golden.yaff -o golden.yaff.gz
-cargo run -p fontpixel-cli -- convert font.bdf -o swapped.pcf --byteorder lsb --bitorder msb --glyphpad 8 --scanunit 4
+cargo run -p fontpixel-cli --bin fontpixel -- info font.bdf --json
+cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o canonical.bdf --strict
+cargo run -p fontpixel-cli --bin fontpixel -- convert canonical.bdf -o canonical.bdf.gz
+cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o font.pcf.gz
+cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o golden.yaff --strict
+cargo run -p fontpixel-cli --bin fontpixel -- convert golden.yaff -o golden.yaff.gz
+cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o swapped.pcf --byteorder lsb --bitorder msb --glyphpad 8 --scanunit 4
 ```
 
 ## Build and inspect
@@ -48,12 +49,12 @@ Install Rust 1.99.0 with rustfmt and clippy (rustup honors rust-toolchain.toml),
 then:
 
 ```sh
-cargo run -p fontpixel-cli -- formats
-cargo run -p fontpixel-cli -- formats --json
-cargo run -p fontpixel-cli -- info --help
-cargo run -p fontpixel-cli -- convert --help
-cargo run -p fontpixel-cli -- preview --help
-cargo run -p fontpixel-cli -- render --help
+cargo run -p fontpixel-cli --bin fontpixel -- formats
+cargo run -p fontpixel-cli --bin fontpixel -- formats --json
+cargo run -p fontpixel-cli --bin fontpixel -- info --help
+cargo run -p fontpixel-cli --bin fontpixel -- convert --help
+cargo run -p fontpixel-cli --bin fontpixel -- preview --help
+cargo run -p fontpixel-cli --bin fontpixel -- render --help
 cargo install cargo-deny --version 0.20.2 --locked
 scripts/check.sh
 ```
@@ -103,11 +104,13 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-W1.5 can layer the compatibility facade on the renderer; W1.6 can implement yaff without changing
-the established BDF/PCF contracts. PCF options are available through
+The compatibility facade and YAFF codec now use the shared model and established
+BDF/PCF contracts. Phase 2 adds general OpenType codecs and their independent
+validation; its scope remains broader than the exact compatibility TTF/SVG paths.
+PCF options are available through
 `PcfWriteOptions`, `PcfCodec` and `FontRegistry::set_pcf_write_options`. BDF's `source_rows` and `validate_bitmap` make raw raster
 provenance explicit; other consumers must not silently render invalid-source
-placeholders. The future compatibility facade selects effective mappings from
+placeholders. The compatibility facade selects effective mappings from
 source duplicate glyphs. See the integration section of [W1.2](reports/w1.2.md).
 See [bitmap/model contracts](docs/bitmap-model.md) and [core benchmarks](benches/REPORT.md).
 See [design decisions](docs/decisions.md) and [development tools](docs/development.md).
