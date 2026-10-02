@@ -1,0 +1,554 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "corpus": [
+    {
+      "source": "reference/bdfparser/tests/fonts/HanWangYanKai-26.bdf",
+      "bytes": 3301036,
+      "glyphs": 13970,
+      "unencoded": 190,
+      "sha256": "a58d1e97a97bedbf9630db3c0273a3f6c59f14540c5fb904e106ae36d558de84",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/spec_example_bad.bdf",
+      "bytes": 527,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "9b113cd382eede72680017e189ceb5dd0ef41be773d4640998143636a21c00d7",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/spec_example_fixed.bdf",
+      "bytes": 530,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "529b3a66de96fc087755bed70a926e8a7270c2d93060e6a71fabf3ceae2dc009",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-2atest.bdf",
+      "bytes": 1229,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "eb5bc9b1fcfdca43df1fce850b1f34d31335d4ab38693ccca3a8f9aee2cc44fd",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-big5.bdf",
+      "bytes": 1435,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "eead3b38063ba6d9cac3f698572c33accdf4682be4b340e1f7aaa14fdd5c54f8",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1250.bdf",
+      "bytes": 1237,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "e26a92c110ffa9cf6a58cc26ae9e2dce402a786552c0afce2e89a3174ee8e837",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1251.bdf",
+      "bytes": 1232,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "89f876ad9020371dc09e3c35296966d272f2cdf8821b7ff6d0ad7d098f657473",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-cp1252.bdf",
+      "bytes": 1238,
+      "glyphs": 2,
+      "unencoded": 0,
+      "sha256": "252c7fcbcee244739d753da3f9fb10ab4955d37f864b7e62cd627f73e641261b",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-euckr.bdf",
+      "bytes": 1437,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "bb7b9efaecb5442ff8d1e2312efbceb13e8387b53b1915742322a28a4f0e7f17",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-gb2312.bdf",
+      "bytes": 1442,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "84b56b92c73245a8fe4ac647d8b6f4890eba9a08d9cc2d43b2c9fae8c73e639b",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso10646.bdf",
+      "bytes": 1439,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "14978e375392d1a607095fb3130b168d518fe2cd1aca6a2366cca7b9ae51c25c",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-iso2022cn.bdf",
+      "bytes": 1442,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "5bfec6b65a6d880f83da1048623151d106db29aa9ba59214dc872ff8ff4347c5",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-shiftjis.bdf",
+      "bytes": 1440,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "4ae0b8958dd75147c10b9b9965383b84fdd2aab6b922c86cf8f5a8d737787844",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-unicode.bdf",
+      "bytes": 1438,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "d733e61f599005d04cd2019765216951e05579c0ee4b82493142fa3feaa9a209",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-enctest-utf8.bdf",
+      "bytes": 1436,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "982098901f3c9d70b31fb987235b9b3b0594e8bccf920c53e641d4cbb0dd8d7f",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test-emptylines.bdf",
+      "bytes": 1496,
+      "glyphs": 3,
+      "unencoded": 0,
+      "sha256": "195a76b3c3bbe29ad271d712c251af197790cb03795ac7783a3e925273be028d",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-for-test.bdf",
+      "bytes": 116144,
+      "glyphs": 849,
+      "unencoded": 0,
+      "sha256": "54b68d69fc8b90ad2e786b27373a46bc0a21337816c3af51f1cc6293eff8dd89",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04-reduced.bdf",
+      "bytes": 824304,
+      "glyphs": 5441,
+      "unencoded": 0,
+      "sha256": "a83dfabcded96d1edc76a23e2ce9fc9cede891cf5e012b944383ed23b9f49416",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "reference/bdfparser/tests/fonts/unifont-13.0.04.bdf",
+      "bytes": 9331390,
+      "glyphs": 57086,
+      "unencoded": 0,
+      "sha256": "8cfecd45af8f2637b21a1cfc1c95f75479219fcdbe1c03255ec27cd510ef8932",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Adjusted-Regular-6px.bdf",
+      "bytes": 9512,
+      "glyphs": 99,
+      "unencoded": 3,
+      "sha256": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/3x5-block/3x5_Block_Mono-Regular-6px.bdf",
+      "bytes": 9514,
+      "glyphs": 99,
+      "unencoded": 3,
+      "sha256": "590a87f87360e76efd067b98797ab1f0f8adcfb802e0593e4c1df37f98c3d1e2",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/capsigrany/Capsigrany-16px.bdf",
+      "bytes": 10393,
+      "glyphs": 97,
+      "unencoded": 2,
+      "sha256": "77be20529d8d6c6afc3b6b553a920f9dd5d913c2e62790d4fc63c510d930db2f",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/cozette/cozette.bdf",
+      "bytes": 683147,
+      "glyphs": 6046,
+      "unencoded": 0,
+      "sha256": "8d740166af3a14053773ac7a8846bf288c8818a44f73ab28d4725d91b03a5639",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/cozette/cozettecrossedseven.bdf",
+      "bytes": 683183,
+      "glyphs": 6046,
+      "unencoded": 0,
+      "sha256": "21dc0b8936c7de68ffc64136e60e90a2ea2683c4c95ee60758f887efd8b1383d",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-12x24.bdf",
+      "bytes": 216950,
+      "glyphs": 950,
+      "unencoded": 0,
+      "sha256": "2175b84589318c82448c9b60df5bc3c2030d4bdd81ad558478720717e41d885e",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-16x32.bdf",
+      "bytes": 266654,
+      "glyphs": 995,
+      "unencoded": 0,
+      "sha256": "de0e3304d49ba56ab88c03b12747db0ac911680d06fa8466632fbfb4fda66480",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-32x64.bdf",
+      "bytes": 681571,
+      "glyphs": 995,
+      "unencoded": 0,
+      "sha256": "259209a43b7315f3efb0cbe41a3dceac8787920e71449f06584258d951864267",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-5x8.bdf",
+      "bytes": 59796,
+      "glyphs": 472,
+      "unencoded": 0,
+      "sha256": "b3f3f107d5afcc36e38a71f2aa21facfec6ec9fcc8f2d1544e19ed6ded5a4654",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-6x12.bdf",
+      "bytes": 76613,
+      "glyphs": 548,
+      "unencoded": 0,
+      "sha256": "fbb68fd4572f677389a31000fc13e3c045e362c81c17068637a619a5c89ed2de",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/spleen/spleen-8x16.bdf",
+      "bytes": 154114,
+      "glyphs": 1001,
+      "unencoded": 0,
+      "sha256": "cebe3c07c265f1cd588e7c0e88c5114fa685f7f4a73b8a9938ee12b09d49ec73",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u12b.bdf",
+      "bytes": 108161,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "5d81b9992b52761bd173ef0d45e28873dd92d771bf60df5aedd1136d905214d6",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u12n.bdf",
+      "bytes": 108165,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "93c68588e4d32d9fdd9f98c806aeee7bb6fec2054006264efc5a7c0c1387dbd5",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14b.bdf",
+      "bytes": 113507,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "47e5ca2e0d58f0d4d77ea7f5f5e74d5e5b438e709d52454b1dcccf079afbb295",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14n.bdf",
+      "bytes": 113511,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "0a5b1709b394e823e1a3f70d720346234cf93dd46650e62bbf6959dea0b2fdd9",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u14v.bdf",
+      "bytes": 113507,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "8b9f8e0fcaee01b2c86b30cb11f5bf0e1102cb5017245946eb84d8d6b05cc2df",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16b.bdf",
+      "bytes": 118853,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "f49c2a0a8fef71a392828b2b94aa5be3b340b2d53099ae5caa8f37e9f38318de",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16n.bdf",
+      "bytes": 118857,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "2c9586b70e44de21ae7544440c2c3d8ef8dd3a9274394bd9cf8b2e55faca60dd",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u16v.bdf",
+      "bytes": 118853,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "884750902d94b30fb4d2d24a1b751697a6eb87716271d78597abb276b4bfa18c",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u18b.bdf",
+      "bytes": 158061,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "7ff532b13bdf67819580831a8bd67b04b9e0f601d3790a177472c049e68c7685",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u18n.bdf",
+      "bytes": 158065,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "272ce81eeb8ff79cc082406ddc8429f0a6cc112b49cfe9c8bccfa72e7f1f3f8a",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u20b.bdf",
+      "bytes": 166971,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "c0fe8c083571be683f3c4eb38e4c142164b5d6b8abc69f174993bde0e08b3816",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u20n.bdf",
+      "bytes": 166975,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "504c571d3382e810d5d6037cd35ccb757506a949e379a2ae172981753e072cb0",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u22b.bdf",
+      "bytes": 175881,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "3634d5020a6ab8c81a1868e1b7ca11fb0eae27f27ffd2a12243ba495505bcc18",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u22n.bdf",
+      "bytes": 175885,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "caf2834445d18f3472781d333ede486a7823958bea2a5f4c4d2af3d43b6ab489",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u24b.bdf",
+      "bytes": 184791,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "b245a832531f92879e79d57f797af2ba19ea6ec3ac62a9aa7d0f01b184ae4d97",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u24n.bdf",
+      "bytes": 184795,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "9dd653ac52ca59942215452fc0d80e50e9bed81551fb81202bff4c01587dfebb",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u28b.bdf",
+      "bytes": 202611,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "770bb7de6dff805f4527505269f2b263a33fb9bd192b3e0db6c743e1c754cd27",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u28n.bdf",
+      "bytes": 202615,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "109e108097fcc4993de6b88908d5f528ea2dbf864b83f056c8600df9d1ba04d4",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u32b.bdf",
+      "bytes": 220431,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "e4036528b8efc96897c524b47473bc24d7c3d0cb75d59baacb21079474668d1a",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/terminus/ter-u32n.bdf",
+      "bytes": 220435,
+      "glyphs": 891,
+      "unencoded": 0,
+      "sha256": "88be74ec6165c07824605574818b6dd6298ff01eb0051392b8c6ee036922a3cc",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/tinypixel/tinypixel-7px.bdf",
+      "bytes": 9415,
+      "glyphs": 98,
+      "unencoded": 3,
+      "sha256": "db7496bbb34364b8509f07036ab465a1dbd7210112a53ab05b2933bc13ec745c",
+      "canonical_matches_original": true,
+      "result": "pass"
+    },
+    {
+      "source": "samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+      "bytes": 19964,
+      "glyphs": 204,
+      "unencoded": 0,
+      "sha256": "9d16437710aec612c8160dc80d7c78194828892ddffc0d2ed5188969cb5d68a8",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-JP.bdf",
+      "bytes": 5745257,
+      "glyphs": 38653,
+      "unencoded": 0,
+      "sha256": "ad9841155a13f945710e5435a6d56db45f5382647e1b9899a1478a8267d5c4de",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-KR.bdf",
+      "bytes": 5745265,
+      "glyphs": 38653,
+      "unencoded": 0,
+      "sha256": "7a544bca26e542e7d212948e006690bdc9cbdb89bf37de5a56ea5602dda2c28e",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+      "bytes": 418907,
+      "glyphs": 3645,
+      "unencoded": 0,
+      "sha256": "c346db51232f2bb54eb794e8e1fd1041ef6e5a6bfd00c690bdc4e6a06468926e",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+      "bytes": 5746021,
+      "glyphs": 38653,
+      "unencoded": 0,
+      "sha256": "021b098d2c4b33f1d66c42fc3b52578e3b94286e3562c537db433903a595f19f",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Large-TC.bdf",
+      "bytes": 5745314,
+      "glyphs": 38653,
+      "unencoded": 0,
+      "sha256": "2b985737275960243e76a54141474498d736c26db70fa0851ab1029115ad5d55",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "bytes": 405402,
+      "glyphs": 3645,
+      "unencoded": 0,
+      "sha256": "522ca7c34527e0f77b6b1c915e6f0c43caaadae6fbb73795fb148707758841e9",
+      "canonical_matches_original": false,
+      "result": "pass"
+    },
+    {
+      "source": "samples/tong-pixel-sans/TongPixelSansMono14Large-Latin.bdf",
+      "bytes": 410661,
+      "glyphs": 3645,
+      "unencoded": 0,
+      "sha256": "d2d768a1ac6c1441a561e49c5c120c1efb7de3949101a1446f10a6be39eb4b8d",
+      "canonical_matches_original": false,
+      "result": "pass"
+    }
+  ],
+  "monobit": [
+    {
+      "source": "tests/data/bdf/3x5-block.bdf",
+      "glyphs": 102,
+      "monobit_written_glyphs": 102,
+      "pixels_metrics_including_unencoded": "pass",
+      "monobit_changes_tags": true,
+      "result": "pass"
+    },
+    {
+      "source": "tests/data/bdf/spleen-5x8.bdf",
+      "glyphs": 472,
+      "monobit_written_glyphs": 472,
+      "pixels_metrics_including_unencoded": "pass",
+      "monobit_changes_tags": true,
+      "result": "pass"
+    }
+  ]
+}

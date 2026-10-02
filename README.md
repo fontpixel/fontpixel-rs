@@ -4,17 +4,27 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W1.1 core model and bitmap operations
+## Current status: W1.2 BDF reader and writer
 
-No real font format can be read, written, or structurally detected yet. `formats`
-lists all planned formats and marks every reader/writer **not implemented**.
-`info` and `convert` parse and dispatch requests but return an explicit error;
-conversion never creates or truncates an output file. Packed Mono/Gray8 bitmaps,
-all core bitmap operations, loss-preserving Glyph/Font/FontSet models and exact
-per-glyph charset maps are implemented. Gzip codecs and Python/WASM bindings
-belong to later items. See [core API](docs/bitmap-model.md) and
-[charset support](docs/charsets.md).
-Passing infrastructure tests does not establish font-format correctness.
+BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
+canonical byte parity, full horizontal/vertical metrics, source charsets,
+unencoded alternates, field-level source provenance and structured diagnostics.
+Bounded gzip transport handles `.bdf.gz`. `info` prints actual font metadata;
+`convert` buffers/validates all output before safe replacement. `--strict`
+rejects combined read/write losses without touching the destination.
+
+The other 45 formats and Python/WASM bindings remain unimplemented and are
+reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
+Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
+See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
+[charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md).
+This is a work item, not completion of phase 1 or the full compatibility facade.
+
+```sh
+cargo run -p fontpixel-cli -- info font.bdf --json
+cargo run -p fontpixel-cli -- convert font.bdf -o canonical.bdf --strict
+cargo run -p fontpixel-cli -- convert canonical.bdf -o canonical.bdf.gz
+```
 
 ## Build and inspect
 
@@ -31,19 +41,21 @@ scripts/check.sh
 ```
 
 The complete check requires Python >= 3.12 (standard library only) to verify
-generated charset data, then runs rustfmt, warning-free clippy, tests, and
+generated charset data and Unicode diagnostic tables, then runs rustfmt, warning-free clippy, tests, and
 cargo-deny for licenses, advisories, bans, and sources. It also tests default, all-format, no-default,
 and BDF/PCF-only feature configurations. `cargo deny` needs network access for
 its advisory database. Missing tools or unavailable checks fail rather than skip.
 CI is configured, but no remote workflow run is claimed by a local check.
 
-The library's production dependency tree is empty with `--no-default-features`
-or just `bdf,pcf`; optional `serde` enables structured report serialization. Each
-format has its own feature and `all-formats` selects all 46. Default features are
-`bdf,pcf,yaff`. Selecting a feature reserves that capability, not an implementation.
-Heavy dependency feature slots (`cff`, `fea`, `gzip`) currently add no dependency
-or behavior. `cjk-charsets` includes exact CJK tables and GB18030 ranges without
-adding a runtime dependency; without it, known CJK charsets return a feature error.
+The library's production dependency tree is empty with `--no-default-features`.
+`bdf` enables shared `gzip` transport using flate2's pure-Rust backend (flate2 plus five small
+support crates); `pcf` alone remains a planned feature. Optional `serde`
+enables structured reports. Each format has its own feature; `all-formats`
+selects all 46, while defaults select `bdf,pcf,yaff`. Feature selection does not
+claim an implementation. Heavy `cff`/`fea` slots still add no behavior.
+`cjk-charsets` includes exact CJK tables and GB18030 ranges without a runtime
+dependency. BDF can preserve CJK source codes without those tables; actual CJK
+conversion returns an explicit feature error when the exact table is disabled.
 Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-bindgen dependencies until their phases.
 
 ## Library contracts
@@ -73,9 +85,11 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-W1.2 can implement BDF against the real model and register its actual hooks in
-`registry()`. Every codec adds format documentation first, then live hooks under
-feature gates. No format becomes supported just because the model exists.
+W1.3 can use the real BDF model and shared bounded gzip transport, while adding
+only actual PCF hooks. BDF's `source_rows` and `validate_bitmap` make raw raster
+provenance explicit; other consumers must not silently render invalid-source
+placeholders. The future compatibility facade selects effective mappings from
+source duplicate glyphs. See the integration section of [W1.2](reports/w1.2.md).
 See [bitmap/model contracts](docs/bitmap-model.md) and [core benchmarks](benches/REPORT.md).
 See [design decisions](docs/decisions.md) and [development tools](docs/development.md).
 

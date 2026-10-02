@@ -53,6 +53,13 @@ pub enum Error {
     UnrecognizedFormat,
     /// Invalid options, registration, asset paths, or data.
     InvalidInput(String),
+    /// Fatal BDF syntax error with a one-based source line.
+    BdfParse {
+        /// One-based source line.
+        line: usize,
+        /// SPEC/Python diagnostic without the line prefix.
+        message: String,
+    },
     /// Configured resource bound exceeded.
     ResourceLimit {
         /// Resource category.
@@ -114,6 +121,7 @@ impl fmt::Display for Error {
                 f.write_str("format not recognized; specify --from explicitly")
             }
             Self::InvalidInput(message) => f.write_str(message),
+            Self::BdfParse { line, message } => write!(f, "line {line}: {message}"),
             Self::ResourceLimit { resource, limit } => {
                 write!(f, "{resource} exceeds configured limit {limit}")
             }

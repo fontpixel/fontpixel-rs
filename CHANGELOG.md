@@ -12,4 +12,8 @@
   wire layouts, loss-preserving Glyph/Font/FontSet with indexed multi-encoding and
   Unicode-sequence lookup, real-model registry wiring, Python-oracle/scalar tests,
   Criterion and five-batch wall-clock benchmarks
-- No font format, Python binding, or WASM binding is implemented yet
+- W1.2: SPEC-v3 BDF parsing and deterministic writing, effective/source metadata,
+  edited-field reconciliation, raw bitmap provenance, structured repairs/losses,
+  bounded gzip transport, live registry capabilities, CLI inspection and safe
+  conversion, independent oracle/real-font/property tests and BDF benchmarks
+- All other font codecs and Python/WASM bindings remain unimplemented

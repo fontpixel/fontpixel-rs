@@ -1,0 +1,21 @@
+{
+  "scripts/check.sh": "pass",
+  "test_result_groups": 62,
+  "failed": 0,
+  "rustdoc_warnings_as_errors": "pass",
+  "oracle_cases": 924,
+  "proptest_cases": 512,
+  "corpus_fonts": 59,
+  "monobit_fonts": 2,
+  "protected_source_files": 690,
+  "fuzz_final": {
+    "seconds": 611,
+    "executions": 1425975,
+    "coverage_counter": 3520,
+    "feature_counter": 17243,
+    "exit_status": 0,
+    "address_sanitizer": true,
+    "leak_sanitizer": false
+  },
+  "fuzz_dependency_deny": "pass"
+}

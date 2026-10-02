@@ -50,3 +50,31 @@ read-only Python checkout to `tools/check_charsets.py --reference PATH`, then
 repeat with `--no-cjk`. It builds a release probe in Cargo's target directory and
 writes nothing in the reference tree. `docs/charsets.md` describes exact coverage,
 feature behavior, mapping sizes, and intentional per-glyph/stream boundaries.
+
+## BDF validation (W1.2)
+
+Ordinary `scripts/check.sh` runs without the supplied reference checkout: it
+replays the committed oracle/real-font fixtures, seeded proptest, CLI and resource
+checks. The Unicode printability generator uses Python 3.12's standard library.
+Independent regeneration requires the unchanged sibling reference package:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 tools/gen_bdf_cases.py --check
+cargo build --release -p fontpixel-cli
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/bdf.py --monobit \
+  --output tests/crosscheck/bdf-results.json
+```
+
+W1.2 installed monobit 0.54.0 and dependencies from PyPI in the isolated
+`toolchain/python-packages` directory (add it to PYTHONPATH). The first acefile
+wheel build needed an unavailable `clang`; retrying with the available official
+system compiler (`CC=gcc`) succeeded. No source or system settings changed.
+The crosscheck compares all encoded and unencoded glyph pixels and baseline/
+advance metrics in both directions. Monobit may change unencoded glyph tags;
+those external-tool differences are recorded, not attributed to fontpixel.
+
+Nightly and cargo-fuzz are isolated in the same toolchain directory. See
+`fuzz/README.md` for exact limits and commands. LeakSanitizer cannot perform its
+exit-time ptrace check in this sandbox; fuzz runs disable leak detection, retaining
+address sanitizer/coverage and the Rust panic/OOM checks. No kernel security
+settings are changed. Do not count an infrastructure-failed run as a clean pass.

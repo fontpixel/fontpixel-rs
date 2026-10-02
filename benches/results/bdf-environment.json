@@ -1,0 +1,14 @@
+{
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "logical_cpus": 9,
+  "memory_total_kib": 10206508,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "esbuild": "0.28.2",
+  "monobit": "0.54.0",
+  "fuzz_seconds": 611,
+  "fuzz_executions": 1425975,
+  "fuzz_cov": 3520,
+  "fuzz_features": 17243,
+  "fuzz_rss_mib": 592,
+  "source_fingerprint": "72f06ec92b261d1323fb06a5a12cf869416d24921e6e7a31a656a27bea1e07fa"
+}

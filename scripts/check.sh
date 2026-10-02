@@ -3,6 +3,7 @@
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 PYTHONDONTWRITEBYTECODE=1 python3 tools/gen_charsets.py --check
+PYTHONDONTWRITEBYTECODE=1 python3 tools/gen_bdf_printable.py --check
 cargo fmt --all -- --check
 cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
 cargo clippy --locked -p fontpixel --all-targets --no-default-features -- -D warnings

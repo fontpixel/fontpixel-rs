@@ -216,3 +216,41 @@ values are represented as unencoded glyphs plus preserved source properties.
 **Reason:** Preserve tolerant input information and defer format-specific legality
 and loss diagnostics to readers/writers. This does not make an invalid number a
 valid Unicode character or bypass W0.2's strict charset conversion rules.
+
+## 2026-10-02 — BDF source fidelity versus canonical SPEC behavior
+
+**Question:** Core preserves duplicates and rectangular pixels, while SPEC chooses
+last duplicate mappings, keeps raw hexadecimal rows and defers malformed-row
+errors until drawing; the catalogue parser instead chooses first duplicates.
+**Choice:** Follow SPEC/Python for parsing and canonical writing. Retain source
+records and field-level bitmap provenance in reserved `bdf.*` properties. Keep
+source duplicates in the core but select only effective mappings in SPEC output.
+Reconcile semantic edits against source snapshots; never return a saved whole
+input file. Materialization repairs are separately identified from the exact
+Python parser warnings; invalid hex remains round-trippable but a public source
+validation guard fails before consumers claim a drawable glyph.
+**Reason:** Preserve information and future compatibility without weakening the
+core rectangle invariant or silently substituting a different BDF dialect.
+
+## 2026-10-02 — Gzip is a transport layer, not a codec capability
+
+**Question:** BDF and later PCF need gzip without duplicating decompression or
+advertising nonexistent PCF support.
+**Choice:** Bounded multi-member gzip decoding is shared in ReadContext behind
+`gzip`; BDF enables that small pure-Rust dependency. Registry output applies a
+deterministic gzip envelope only to a single `.gz` primary asset. Codec hooks
+still advertise only actually implemented formats.
+**Reason:** Enforce decompression budgets once before content detection and keep
+strict output validation before any file is persisted.
+
+## 2026-10-02 — Isolate libFuzzer's license and sandbox limitations
+
+**Question:** `libfuzzer-sys` carries LLVM's permissive NCSA notice in addition to
+MIT/Apache, and this sandbox does not allow LeakSanitizer's exit-time ptrace check.
+**Choice:** Keep the production deny policy unchanged. A separate fuzz-only deny
+config permits the BSD-style NCSA license, with the same advisory/source/ban
+checks and no wildcard dependencies. Run address-sanitized fuzzing with leak
+checking disabled, recording the initial infrastructure failure and clean reruns.
+**Reason:** Validate the actual isolated dependency graph without hiding a license
+or changing operating-system security settings. No memory-leak certification is
+claimed from these runs.

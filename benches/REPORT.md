@@ -89,3 +89,9 @@ W1.4; TTF/OTB/vector/WOFF/WOFF2 and Tong's complete export are later stages. The
 Node/bdfparser-js comparison, fontTools, reference export-rs, bindings and catalogue
 batch conversion will be added when those respective paths exist. This report
 neither replaces nor reduces the final PLAN §10 performance comparison scope.
+
+## W1.2 codec measurements
+
+Actual BDF parse/write benchmarks and Python/Node comparisons are now available
+in [BDF-REPORT.md](BDF-REPORT.md). The W1.1 measurements above remain historical
+core-only results; they are not retroactively claimed as font-codec measurements.

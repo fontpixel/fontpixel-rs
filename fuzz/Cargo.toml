@@ -1,0 +1,19 @@
+[package]
+name = "fontpixel-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+license = "MIT"
+[package.metadata]
+cargo-fuzz = true
+[dependencies]
+libfuzzer-sys = "0.4"
+fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf"] }
+[workspace]
+members = ["."]
+[[bin]]
+name = "bdf"
+path = "fuzz_targets/bdf.rs"
+test = false
+doc = false
+bench = false

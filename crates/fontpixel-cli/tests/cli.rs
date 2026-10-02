@@ -1,4 +1,4 @@
-//! CLI behavior and side-effect checks; no real font support is asserted.
+//! CLI dispatch, actual BDF behavior and safe output persistence.
 use std::{
     fs,
     path::PathBuf,
@@ -32,7 +32,7 @@ impl Drop for TempDir {
 }
 
 #[test]
-fn formats_lists_all_46_and_marks_every_codec_unimplemented() {
+fn formats_lists_all_46_and_marks_actual_codecs() {
     let output = run(&["formats"]);
     assert!(output.status.success());
     assert!(output.stderr.is_empty());
@@ -43,6 +43,7 @@ fn formats_lists_all_46_and_marks_every_codec_unimplemented() {
     assert!(
         lines[1..]
             .iter()
+            .filter(|line| !line.starts_with("bdf\t"))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -61,9 +62,14 @@ fn formats_json_is_parseable_and_honest() {
     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     let formats = json["formats"].as_array().unwrap();
     assert_eq!(formats.len(), 46);
-    assert!(formats.iter().all(|entry| entry["read"] == false
-        && entry["write"] == false
-        && entry["detect"] == false));
+    assert!(
+        formats
+            .iter()
+            .filter(|entry| entry["format"]["id"] != "bdf")
+            .all(|entry| entry["read"] == false
+                && entry["write"] == false
+                && entry["detect"] == false)
+    );
 }
 
 #[test]
@@ -88,7 +94,7 @@ fn help_and_version_succeed_but_invalid_usage_returns_two() {
 }
 
 #[test]
-fn info_does_not_claim_success_for_unimplemented_reader() {
+fn info_does_not_claim_success_for_truncated_bdf() {
     let dir = TempDir::new();
     let input = dir.0.join("input.bdf");
     fs::write(&input, b"STARTFONT 2.1\n").unwrap();
@@ -100,7 +106,7 @@ fn info_does_not_claim_success_for_unimplemented_reader() {
         json["error"]["message"]
             .as_str()
             .unwrap()
-            .contains("read for format 'bdf' is not implemented")
+            .contains("Unexpected end of file before the end of the headers")
     );
 }
 
@@ -187,4 +193,116 @@ fn ambiguous_target_is_not_selected_by_catalogue_order() {
     let output = run(&["convert", "input.bdf", "-o", "out.fnt"]);
     assert_eq!(output.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&output.stderr).contains("ambiguous format"));
+}
+
+const BDF: &str = "STARTFONT 2.1\nFONT test\nSIZE 8 75 75\nFONTBOUNDINGBOX 8 8 0 0\nCHARS 1\nSTARTCHAR A\nENCODING 65\nBBX 1 1 0 0\nBITMAP\n80\nENDCHAR\nENDFONT\n";
+#[test]
+fn bdf_info_and_convert_are_real_and_output_is_stable() {
+    let dir = TempDir::new();
+    let input = dir.0.join("input.unusual");
+    let target = dir.0.join("out.bdf");
+    fs::write(&input, BDF).unwrap();
+    let info = run(&["info", input.to_str().unwrap(), "--json"]);
+    assert!(
+        info.status.success(),
+        "{}",
+        String::from_utf8_lossy(&info.stderr)
+    );
+    let j: serde_json::Value = serde_json::from_slice(&info.stdout).unwrap();
+    assert_eq!(j["format"], "bdf");
+    assert_eq!(j["fonts"][0]["glyph_count"], 1);
+    fs::write(&target, b"old output").unwrap();
+    let converted = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert!(
+        converted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&converted.stderr)
+    );
+    assert_eq!(fs::read(&target).unwrap(), BDF.as_bytes());
+    assert_eq!(fs::read_dir(&dir.0).unwrap().count(), 2);
+    let compressed = dir.0.join("out.bdf.gz");
+    assert!(
+        run(&[
+            "convert",
+            input.to_str().unwrap(),
+            "-o",
+            compressed.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    assert!(fs::read(&compressed).unwrap().starts_with(&[0x1f, 0x8b]));
+    assert!(
+        run(&["info", compressed.to_str().unwrap()])
+            .status
+            .success()
+    );
+}
+#[test]
+fn malformed_loss_multi_font_and_filesystem_errors_leave_outputs_untouched() {
+    let dir = TempDir::new();
+    let input = dir.0.join("input.bdf");
+    let target = dir.0.join("out.bdf");
+    for (source, code) in [
+        (BDF.replace("ENCODING 65", "ENCODING malformed"), 1),
+        (BDF.replace("FONT test", "UNKNOWN field\nFONT test"), 3),
+    ] {
+        fs::write(&input, source).unwrap();
+        fs::write(&target, b"KEEP").unwrap();
+        let result = run(&[
+            "convert",
+            input.to_str().unwrap(),
+            "-o",
+            target.to_str().unwrap(),
+            "--strict",
+            "--report",
+            "json",
+        ]);
+        assert_eq!(result.status.code(), Some(code));
+        assert_eq!(fs::read(&target).unwrap(), b"KEEP");
+    }
+    fs::write(&input, BDF).unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+    ]);
+    assert_eq!(result.status.code(), Some(1));
+    assert_eq!(fs::read(&target).unwrap(), b"KEEP");
+    let bad = dir.0.join("missing/out.bdf");
+    assert_eq!(
+        run(&[
+            "convert",
+            input.to_str().unwrap(),
+            "-o",
+            bad.to_str().unwrap()
+        ])
+        .status
+        .code(),
+        Some(1)
+    );
+    assert!(!bad.exists());
+    // Input and output may be the same path: all reading/validation happens first.
+    assert!(
+        run(&[
+            "convert",
+            input.to_str().unwrap(),
+            "-o",
+            input.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&input).unwrap(), BDF.as_bytes());
+    assert_eq!(fs::read_dir(&dir.0).unwrap().count(), 2);
 }

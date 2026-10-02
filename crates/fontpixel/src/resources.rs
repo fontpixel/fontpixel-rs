@@ -53,13 +53,13 @@ pub struct ResourceLimits {
     pub max_total_bytes: usize,
     /// Maximum number of resource resolutions (including repeats).
     pub max_resources: usize,
-    /// Maximum decompressed size, enforced by future compression readers.
+    /// Maximum decompressed size, enforced by the shared gzip transport.
     pub max_decompressed_bytes: usize,
-    /// Maximum glyph count, enforced by future model readers.
+    /// Maximum glyph count, enforced by model readers.
     pub max_glyphs: usize,
-    /// Maximum pixels in one glyph, enforced by future model readers.
+    /// Maximum pixels in one glyph, enforced by model readers.
     pub max_pixels_per_glyph: usize,
-    /// Maximum font table size, enforced by future table readers.
+    /// Maximum font table or text record size, enforced by format readers.
     pub max_table_bytes: usize,
 }
 
@@ -131,6 +131,7 @@ pub struct ReadContext<'a> {
     limits: &'a ResourceLimits,
     total_bytes: usize,
     resource_count: usize,
+    decoded: Option<Vec<u8>>,
 }
 
 impl<'a> ReadContext<'a> {
@@ -148,17 +149,33 @@ impl<'a> ReadContext<'a> {
                 limit: limits.max_total_bytes,
             });
         }
+        let decoded = decode_transport(input.bytes, limits)?;
+        let total_bytes = input
+            .bytes
+            .len()
+            .checked_add(decoded.as_ref().map_or(0, Vec::len))
+            .ok_or(Error::ResourceLimit {
+                resource: "total input bytes",
+                limit: limits.max_total_bytes,
+            })?;
+        if total_bytes > limits.max_total_bytes {
+            return Err(Error::ResourceLimit {
+                resource: "total input bytes",
+                limit: limits.max_total_bytes,
+            });
+        }
         Ok(Self {
+            decoded,
             input,
             limits,
-            total_bytes: input.bytes.len(),
+            total_bytes,
             resource_count: 0,
         })
     }
 
     /// Primary bytes, already checked against input and total limits.
     pub fn bytes(&self) -> &[u8] {
-        self.input.bytes
+        self.decoded.as_deref().unwrap_or(self.input.bytes)
     }
 
     /// Optional filename hint.
@@ -286,4 +303,93 @@ pub struct Written {
     pub output: OutputBundle,
     /// Conversion diagnostics.
     pub report: Report,
+}
+
+/// Decode a gzip envelope independently of font format detection. Concatenated
+/// members are supported; CRC/trailer corruption and trailing junk fail. Nested
+/// compression is not recursively expanded. The output cap is enforced in chunks.
+fn decode_transport(bytes: &[u8], limits: &ResourceLimits) -> Result<Option<Vec<u8>>> {
+    if !bytes.starts_with(&[0x1f, 0x8b]) {
+        return Ok(None);
+    }
+    #[cfg(not(feature = "gzip"))]
+    {
+        let _ = limits;
+        Err(Error::FeatureDisabled {
+            format: "gzip".into(),
+        })
+    }
+    #[cfg(feature = "gzip")]
+    {
+        use std::io::Read;
+        let maximum = limits
+            .max_decompressed_bytes
+            .min(limits.max_total_bytes.saturating_sub(bytes.len()));
+        let mut decoder = flate2::read::MultiGzDecoder::new(bytes);
+        let mut decoded = Vec::new();
+        let mut chunk = [0_u8; 8192];
+        loop {
+            let budget = maximum
+                .saturating_sub(decoded.len())
+                .saturating_add(1)
+                .min(chunk.len());
+            let count = decoder
+                .read(&mut chunk[..budget])
+                .map_err(|e| Error::InvalidInput(format!("invalid gzip input: {e}")))?;
+            if count == 0 {
+                break;
+            }
+            if decoded.len().saturating_add(count) > maximum {
+                return Err(Error::ResourceLimit {
+                    resource: "decompressed bytes",
+                    limit: maximum,
+                });
+            }
+            decoded
+                .try_reserve(count)
+                .map_err(|_| Error::ResourceLimit {
+                    resource: "decompression allocation",
+                    limit: maximum,
+                })?;
+            decoded.extend_from_slice(&chunk[..count]);
+        }
+        if decoded.starts_with(&[0x1f, 0x8b]) {
+            return Err(Error::InvalidInput(
+                "nested gzip envelopes are not supported".into(),
+            ));
+        }
+        Ok(Some(decoded))
+    }
+}
+
+/// Apply deterministic gzip transport to a single `.gz` output asset. Called
+/// after combined strict validation, never by a font codec itself.
+pub(crate) fn encode_transport(bundle: OutputBundle) -> Result<OutputBundle> {
+    if !bundle
+        .primary()
+        .as_str()
+        .to_ascii_lowercase()
+        .ends_with(".gz")
+    {
+        return Ok(bundle);
+    }
+    #[cfg(not(feature = "gzip"))]
+    {
+        let _ = bundle;
+        Err(Error::FeatureDisabled {
+            format: "gzip".into(),
+        })
+    }
+    #[cfg(feature = "gzip")]
+    {
+        use std::io::Write;
+        let path = bundle.primary().clone();
+        let bytes = bundle.into_single()?;
+        let mut encoder = flate2::GzBuilder::new()
+            .mtime(0)
+            .operating_system(255)
+            .write(Vec::new(), flate2::Compression::default());
+        encoder.write_all(&bytes)?;
+        Ok(OutputBundle::single(path, encoder.finish()?))
+    }
 }

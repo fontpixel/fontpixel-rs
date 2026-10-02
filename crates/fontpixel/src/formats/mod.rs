@@ -1,10 +1,12 @@
 //! Capability registration and model-independent dispatch infrastructure.
 //!
-//! The built-in catalogue deliberately has no detector, reader, or writer yet.
-//! Format implementations register actual hooks under their Cargo feature.
+//! The generic registry starts with planned entries. `crate::registry()` installs
+//! actual FontSet codecs under their Cargo features.
 use crate::resources::{Input, ReadContext, ResourceLimits, ResourcePath, Written};
 use crate::{Error, Operation, Report, Result};
 
+#[cfg(feature = "bdf")]
+pub mod bdf;
 pub mod catalogue;
 
 /// Static format metadata, including compiled feature state.
@@ -162,7 +164,7 @@ impl<M> Default for Registry<M> {
 }
 
 impl<M> Registry<M> {
-    /// Built-in catalogue with only implemented hooks registered (currently none).
+    /// Generic planned catalogue. Use `crate::registry()` for built-in FontSet codecs.
     pub fn new() -> Self {
         Self {
             entries: catalogue::CATALOGUE
@@ -384,8 +386,19 @@ impl<M> Registry<M> {
             return Err(Error::StrictLoss(report));
         }
         Ok(Written {
-            output: written.output,
+            output: crate::resources::encode_transport(written.output)?,
             report,
         })
+    }
+}
+
+#[cfg(feature = "bdf")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_bdf(&mut self) {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "bdf") {
+            entry.detector = Some(Box::new(bdf::BdfCodec::default()));
+            entry.reader = Some(Box::new(bdf::BdfCodec::default()));
+            entry.writer = Some(Box::new(bdf::BdfCodec::default()));
+        }
     }
 }

@@ -344,7 +344,12 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
         }
     }
     let mut registry = fontpixel::registry();
-    assert!(registry.formats().all(|f| !f.read && !f.write));
+    assert!(
+        registry
+            .formats()
+            .filter(|f| f.format.id != "bdf")
+            .all(|f| !f.read && !f.write)
+    );
     registry.register(Registration {
         format: FormatInfo {
             id: "test-model",

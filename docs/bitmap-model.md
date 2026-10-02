@@ -1,8 +1,9 @@
 # Bitmap and model API (W1.1)
 
-This is the core used by later readers, writers, rendering, and compatibility
-adapters. It does not implement a font codec. `fontpixel::registry()` returns
-`Registry<FontSet>` with honest unimplemented catalogue entries. Custom readers
+This is the core used by readers, writers, rendering, and compatibility
+adapters. W1.2 now registers actual feature-gated BDF hooks in
+`fontpixel::registry()` (`Registry<FontSet>`); other catalogue entries remain
+honestly unimplemented. Custom readers
 and writers implement the existing `FormatReader<FontSet>` and
 `FormatWriter<FontSet>` contracts, including sidecars and combined strict reports.
 

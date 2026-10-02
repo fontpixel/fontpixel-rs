@@ -1,4 +1,4 @@
-//! The `fontpixel` command-line skeleton. Font codecs are not implemented yet.
+//! Font inspection and conversion through the feature-gated real codec registry.
 #![forbid(unsafe_code)]
 use clap::{Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
 use fontpixel::{Error, Input, ReadOptions, ResourceLimits};
@@ -13,7 +13,7 @@ use std::{
 #[command(
     name = "fontpixel",
     version,
-    about = "Bitmap font tools (under development; no codecs implemented yet)"
+    about = "Bitmap font inspection and conversion"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -28,20 +28,20 @@ enum Command {
         #[arg(long)]
         json: bool,
     },
-    /// Inspect a font (dispatch is present; font readers are not implemented).
+    /// Inspect a font, including its metrics, properties and diagnostics.
     Info {
         /// Primary input asset.
         input: PathBuf,
         /// Explicit input format, otherwise use structural detection then hints.
         #[arg(long, value_parser = format_parser())]
         from: Option<String>,
-        /// Emit JSON diagnostics (font information is not implemented yet).
+        /// Emit machine-readable font information and diagnostics.
         #[arg(long)]
         json: bool,
     },
-    /// Convert fonts (dispatch is present; font readers/writers are not implemented).
+    /// Convert fonts with loss reporting and safe output replacement.
     Convert {
-        /// One or more primary inputs; multi-input model merging arrives with codecs.
+        /// One or more inputs, combined as ordered strikes in a FontSet.
         #[arg(required = true, num_args = 1..)]
         inputs: Vec<PathBuf>,
         /// Output entry point. No file is opened until conversion succeeds.
@@ -147,11 +147,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             }
             Ok(())
         }
-        Command::Info {
-            input,
-            from,
-            json: _,
-        } => {
+        Command::Info { input, from, json } => {
             let options = ReadOptions {
                 format: from,
                 ..ReadOptions::default()
@@ -159,23 +155,34 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             let bytes = read_primary(&input, &options.limits)?;
             let name = input.to_string_lossy();
             let loaded = registry.read(&Input::new(&bytes).with_name(&name), &options)?;
-            let _ = loaded;
-            Err(Error::InvalidInput(
-                "CLI font inspection/output is not implemented yet".into(),
-            ))
+            let fonts: Vec<_> = loaded.fonts.fonts.iter().map(font_info).collect();
+            if json {
+                emit_json(
+                    output,
+                    &serde_json::json!({"format":loaded.format,"font_count":fonts.len(),"fonts":fonts,"report":loaded.report}),
+                )
+            } else {
+                writeln!(output, "Format: {}", loaded.format)?;
+                writeln!(output, "Fonts: {}", fonts.len())?;
+                for font in &fonts {
+                    emit_json(output, font)?;
+                }
+                write!(output, "{}", loaded.report)?;
+                Ok(())
+            }
         }
         Command::Convert {
             inputs,
-            output,
+            output: destination,
             from,
             to,
-            strict: _,
-            report: _,
+            strict,
+            report: style,
         } => {
             let id = match to {
                 Some(id) => id,
                 None => registry
-                    .format_from_name(&output.to_string_lossy())?
+                    .format_from_name(&destination.to_string_lossy())?
                     .id
                     .into(),
             };
@@ -185,18 +192,131 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 format: from,
                 ..ReadOptions::default()
             };
-            let first = inputs
-                .first()
-                .ok_or_else(|| Error::InvalidInput("at least one input is required".into()))?;
-            let bytes = read_primary(first, &options.limits)?;
-            let name = first.to_string_lossy();
-            let loaded = registry.read(&Input::new(&bytes).with_name(&name), &options)?;
-            let _ = loaded;
-            Err(Error::InvalidInput(
-                "CLI font inspection/output is not implemented yet".into(),
-            ))
+            let mut fonts = fontpixel::FontSet::default();
+            let mut report = fontpixel::Report::default();
+            for input in &inputs {
+                let bytes = read_primary(input, &options.limits)?;
+                let name = input.to_string_lossy();
+                let mut loaded = registry.read(&Input::new(&bytes).with_name(&name), &options)?;
+                for entry in &mut loaded.report.entries {
+                    if let Some(index) = &mut entry.location.font_index {
+                        *index += fonts.fonts.len();
+                    }
+                }
+                report.extend(loaded.report);
+                fonts.fonts.extend(loaded.fonts.fonts);
+                // Preserve container metadata too; unsupported target fields must be reported.
+                for property in loaded.fonts.properties.into_vec() {
+                    fonts.properties.push(property);
+                }
+            }
+            let filename = destination
+                .file_name()
+                .and_then(|s| s.to_str())
+                .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
+            let mut write_options =
+                fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
+            write_options.strict = strict;
+            let written = registry.write_with_report(&fonts, &id, &write_options, report)?;
+            let bytes = written.output.into_single()?;
+            persist(&destination, &bytes)?;
+            match style {
+                ReportStyle::Json => emit_json(
+                    output,
+                    &serde_json::json!({"output":destination,"format":id,"bytes":bytes.len(),"report":written.report}),
+                ),
+                ReportStyle::Text => {
+                    write!(output, "{}", written.report)?;
+                    writeln!(
+                        output,
+                        "Wrote {} bytes to {}",
+                        bytes.len(),
+                        destination.display()
+                    )?;
+                    Ok(())
+                }
+            }
         }
     }
+}
+
+fn property_json(v: &fontpixel::model::PropertyValue) -> serde_json::Value {
+    use fontpixel::model::PropertyValue::*;
+    match v {
+        Integer(v) => serde_json::json!(v),
+        Unsigned(v) => serde_json::json!(v),
+        Decimal(v) | Text(v) => serde_json::json!(v),
+        Flag => serde_json::Value::Null,
+        Bytes(v) => serde_json::json!({"bytes":v}),
+        List(v) => v.iter().map(property_json).collect(),
+    }
+}
+fn properties_json(p: &fontpixel::model::Properties) -> serde_json::Value {
+    p.iter()
+        .filter(|p| !p.name.starts_with("bdf."))
+        .map(|p| serde_json::json!({"name":p.name,"value":property_json(&p.value)}))
+        .collect()
+}
+fn font_info(font: &fontpixel::Font) -> serde_json::Value {
+    let unencoded = font
+        .glyphs()
+        .filter(|(_, g)| g.codepoints.is_empty())
+        .count();
+    let codes: Vec<_> = font.codepoints().map(|(c, _)| c.value()).collect();
+    let bbox = font
+        .metrics
+        .bounds
+        .map(|b| [i64::from(b.width), i64::from(b.height), b.x, b.y]);
+    serde_json::json!({
+        "name":font.names.xlfd,"family":font.names.family,"glyph_count":font.len(),
+        "encoded_count":font.len()-unencoded,"unencoded_count":unencoded,"distinct_codes":codes.len(),
+        "first_code":codes.first(),"last_code":codes.last(),"pixel_size":font.metrics.pixel_size,
+        "point_size":font.metrics.point_size.map(|v| serde_json::json!({"numerator":v.numerator(),"denominator":v.denominator()})),
+        "resolution":font.metrics.resolution.map(|v| [v.x,v.y]),
+        "ascent":font.metrics.ascent,"descent":font.metrics.descent,"bounds":bbox,
+        "charset":font.charset.canonical_name(),"charset_registry":font.charset.registry,"charset_encoding":font.charset.encoding,"gl":font.charset.gl,
+        "headers":properties_json(&font.headers),"properties":properties_json(&font.properties),
+    })
+}
+
+fn persist(destination: &Path, bytes: &[u8]) -> fontpixel::Result<()> {
+    use std::fs::{self, OpenOptions};
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    struct Temporary(PathBuf);
+    impl Drop for Temporary {
+        fn drop(&mut self) {
+            let _ = fs::remove_file(&self.0);
+        }
+    }
+    let parent = destination
+        .parent()
+        .filter(|p| !p.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    let mut chosen = None;
+    for _ in 0..100 {
+        let path = parent.join(format!(
+            ".fontpixel-{}-{}.tmp",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ));
+        match OpenOptions::new().write(true).create_new(true).open(&path) {
+            Ok(file) => {
+                chosen = Some((Temporary(path), file));
+                break;
+            }
+            Err(error) if error.kind() == io::ErrorKind::AlreadyExists => continue,
+            Err(error) => return Err(error.into()),
+        }
+    }
+    let (temporary, mut file) = chosen.ok_or_else(|| {
+        Error::InvalidInput("cannot allocate a unique output temporary file".into())
+    })?;
+    file.write_all(bytes)?;
+    file.sync_all()?;
+    drop(file);
+    fs::rename(&temporary.0, destination)?;
+    Ok(())
 }
 
 fn emit_error(error: &Error, style: ReportStyle, output: &mut dyn Write) -> fontpixel::Result<()> {
