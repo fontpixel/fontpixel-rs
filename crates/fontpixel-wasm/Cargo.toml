@@ -1,0 +1,15 @@
+[package]
+name = "fontpixel-wasm"
+description = "Reserved for fontpixel WASM bindings (not implemented)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+fontpixel.workspace = true
+
+[lints]
+workspace = true

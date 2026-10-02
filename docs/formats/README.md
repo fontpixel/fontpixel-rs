@@ -1,0 +1,1 @@
+Before implementing a format, add <id>.md with public specification references, field/model mapping, ambiguities and choices, and write-time information loss. Catalogue entries alone are not format implementations.

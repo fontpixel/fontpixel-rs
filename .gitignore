@@ -1,0 +1,7 @@
+/target/
+/fuzz/target/
+/fuzz/artifacts/
+/fuzz/corpus/
+**/__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,25 @@
+[package]
+name = "fontpixel-cli"
+description = "Command-line interface for fontpixel (under development)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "fontpixel"
+path = "src/main.rs"
+doc = false
+
+[features]
+default = ["fontpixel/default"]
+all-formats = ["fontpixel/all-formats"]
+
+[dependencies]
+fontpixel = { workspace = true, features = ["serde"] }
+clap.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

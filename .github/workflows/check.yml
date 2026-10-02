@@ -1,0 +1,15 @@
+name: Check
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain
+        run: rustup show
+      - name: Install license and advisory checker
+        run: cargo install cargo-deny --version 0.20.2 --locked
+      - name: Check workspace
+        run: scripts/check.sh

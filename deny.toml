@@ -1,0 +1,18 @@
+# Allow only the license families authorized in PLAN.md. No advisory ignores.
+[advisories]
+version = 2
+
+[licenses]
+version = 2
+# Expand only when an actual dependency needs another PLAN-approved license.
+allow = ["MIT", "Apache-2.0", "Unicode-3.0"]
+confidence-threshold = 0.93
+
+[bans]
+multiple-versions = "deny"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
