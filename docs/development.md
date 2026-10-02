@@ -37,3 +37,16 @@ needed to a writable work directory or redirect every generated output. Never
 write caches, `node_modules`, golden output, or build files under the original
 `reference/` or `samples/` trees. Fixtures copied into this repository require
 source, license, and purpose entries in `tests/data/SOURCES.md`.
+
+## Charset generation and independent parity (W0.2)
+
+Python >= 3.12 is now required by `scripts/check.sh` to verify generated codec
+tables; no Python packages are needed. Initial generation used CPython 3.12.14.
+The checked-in registry and source make regeneration independent of the original
+task package. CI selects Python 3.12; codec drift is an error requiring review.
+
+For the stronger independent byte-for-byte comparison, pass the supplied
+read-only Python checkout to `tools/check_charsets.py --reference PATH`, then
+repeat with `--no-cjk`. It builds a release probe in Cargo's target directory and
+writes nothing in the reference tree. `docs/charsets.md` describes exact coverage,
+feature behavior, mapping sizes, and intentional per-glyph/stream boundaries.

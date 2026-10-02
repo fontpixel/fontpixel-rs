@@ -1,11 +1,13 @@
 //! Infrastructure for a bitmap-font library under development.
 //!
-//! No built-in font reader, writer, bitmap model, or charset table is implemented
-//! yet. The catalogue reports planned formats separately from actual capabilities.
+//! Exact charset maps are available in [`charset`]. No built-in font reader,
+//! writer, or bitmap model is implemented yet. The catalogue reports planned
+//! formats separately from actual capabilities.
 //! [`Registry`] is generic over the model, so the phase-1 `FontSet` can be added
 //! without introducing an empty pretend font type at the skeleton stage.
 #![forbid(unsafe_code)]
 
+pub mod charset;
 pub mod error;
 pub mod formats;
 pub mod report;

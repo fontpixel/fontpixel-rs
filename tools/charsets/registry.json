@@ -1,0 +1,697 @@
+{
+  "source": "bdfparser/src/bdfparser/encoding.py; SPEC-v3 sections 4, 11.1, 11.6",
+  "unicode_prefixes": [
+    "utf16",
+    "utf32",
+    "ucs2",
+    "ucs4"
+  ],
+  "charsets": {
+    "iso10646": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "unicode": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "utf8": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "utf7": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "ucs2": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "ucs4": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "ucs": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "utf16": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "utf32": {
+      "codec": null,
+      "kind": "unicode",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO10646",
+        "1"
+      ],
+      "aliases": []
+    },
+    "ascii": {
+      "codec": "ascii",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO646.1991",
+        "IRV"
+      ],
+      "aliases": []
+    },
+    "iso646": {
+      "codec": "ascii",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO646.1991",
+        "IRV"
+      ],
+      "aliases": []
+    },
+    "iso88591": {
+      "codec": "latin_1",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "1"
+      ],
+      "aliases": []
+    },
+    "iso88592": {
+      "codec": "iso8859_2",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "2"
+      ],
+      "aliases": []
+    },
+    "iso88593": {
+      "codec": "iso8859_3",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "3"
+      ],
+      "aliases": []
+    },
+    "iso88594": {
+      "codec": "iso8859_4",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "4"
+      ],
+      "aliases": []
+    },
+    "iso88595": {
+      "codec": "iso8859_5",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "5"
+      ],
+      "aliases": []
+    },
+    "iso88596": {
+      "codec": "iso8859_6",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "6"
+      ],
+      "aliases": []
+    },
+    "iso88597": {
+      "codec": "iso8859_7",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "7"
+      ],
+      "aliases": []
+    },
+    "iso88598": {
+      "codec": "iso8859_8",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "8"
+      ],
+      "aliases": []
+    },
+    "iso88599": {
+      "codec": "iso8859_9",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "9"
+      ],
+      "aliases": []
+    },
+    "iso885910": {
+      "codec": "iso8859_10",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "10"
+      ],
+      "aliases": []
+    },
+    "iso885911": {
+      "codec": "iso8859_11",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "11"
+      ],
+      "aliases": []
+    },
+    "iso885913": {
+      "codec": "iso8859_13",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "13"
+      ],
+      "aliases": []
+    },
+    "iso885914": {
+      "codec": "iso8859_14",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "14"
+      ],
+      "aliases": []
+    },
+    "iso885915": {
+      "codec": "iso8859_15",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "15"
+      ],
+      "aliases": []
+    },
+    "iso885916": {
+      "codec": "iso8859_16",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "ISO8859",
+        "16"
+      ],
+      "aliases": []
+    },
+    "koi8r": {
+      "codec": "koi8_r",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "KOI8",
+        "R"
+      ],
+      "aliases": []
+    },
+    "koi8u": {
+      "codec": "koi8_u",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "KOI8",
+        "U"
+      ],
+      "aliases": []
+    },
+    "cp1250": {
+      "codec": "cp1250",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1250"
+      ],
+      "aliases": []
+    },
+    "cp1251": {
+      "codec": "cp1251",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1251"
+      ],
+      "aliases": []
+    },
+    "cp1252": {
+      "codec": "cp1252",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1252"
+      ],
+      "aliases": []
+    },
+    "cp1253": {
+      "codec": "cp1253",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1253"
+      ],
+      "aliases": []
+    },
+    "cp1254": {
+      "codec": "cp1254",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1254"
+      ],
+      "aliases": []
+    },
+    "cp1255": {
+      "codec": "cp1255",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1255"
+      ],
+      "aliases": []
+    },
+    "cp1256": {
+      "codec": "cp1256",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1256"
+      ],
+      "aliases": []
+    },
+    "cp1257": {
+      "codec": "cp1257",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1257"
+      ],
+      "aliases": []
+    },
+    "cp1258": {
+      "codec": "cp1258",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP1258"
+      ],
+      "aliases": []
+    },
+    "cp437": {
+      "codec": "cp437",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "IBM",
+        "CP437"
+      ],
+      "aliases": []
+    },
+    "cp850": {
+      "codec": "cp850",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "IBM",
+        "CP850"
+      ],
+      "aliases": []
+    },
+    "cp852": {
+      "codec": "cp852",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "IBM",
+        "CP852"
+      ],
+      "aliases": []
+    },
+    "cp866": {
+      "codec": "cp866",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "IBM",
+        "CP866"
+      ],
+      "aliases": []
+    },
+    "cp874": {
+      "codec": "cp874",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP874"
+      ],
+      "aliases": []
+    },
+    "tis620": {
+      "codec": "tis_620",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "TIS620",
+        "0"
+      ],
+      "aliases": []
+    },
+    "macroman": {
+      "codec": "mac_roman",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MACROMAN",
+        "0"
+      ],
+      "aliases": []
+    },
+    "jisx0201": {
+      "codec": "shift_jis",
+      "kind": "sbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "JISX0201.1976",
+        "0"
+      ],
+      "aliases": []
+    },
+    "gb2312": {
+      "codec": "gb2312",
+      "kind": "dbcs",
+      "gl": true,
+      "forcegl": false,
+      "props": [
+        "GB2312.1980",
+        "0"
+      ],
+      "aliases": []
+    },
+    "euccn": {
+      "codec": "gb2312",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "EUCCN",
+        "0"
+      ],
+      "aliases": []
+    },
+    "iso2022cn": {
+      "codec": "gb2312",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": true,
+      "props": [
+        "GB2312.1980",
+        "0"
+      ],
+      "aliases": []
+    },
+    "gbk": {
+      "codec": "gbk",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "GBK",
+        "0"
+      ],
+      "aliases": []
+    },
+    "cp936": {
+      "codec": "cp936",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP936"
+      ],
+      "aliases": []
+    },
+    "gb18030": {
+      "codec": "gb18030",
+      "kind": "gb18030",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "GB18030",
+        "0"
+      ],
+      "aliases": []
+    },
+    "jisx0208": {
+      "codec": "euc_jp",
+      "kind": "dbcs",
+      "gl": true,
+      "forcegl": false,
+      "props": [
+        "JISX0208.1983",
+        "0"
+      ],
+      "aliases": []
+    },
+    "eucjp": {
+      "codec": "euc_jp",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "EUCJP",
+        "0"
+      ],
+      "aliases": []
+    },
+    "shiftjis": {
+      "codec": "shift_jis",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "SHIFTJIS",
+        "0"
+      ],
+      "aliases": [
+        "sjis"
+      ]
+    },
+    "cp932": {
+      "codec": "cp932",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP932"
+      ],
+      "aliases": []
+    },
+    "ksc5601": {
+      "codec": "euc_kr",
+      "kind": "dbcs",
+      "gl": true,
+      "forcegl": false,
+      "props": [
+        "KSC5601.1987",
+        "0"
+      ],
+      "aliases": [
+        "ksx1001"
+      ]
+    },
+    "euckr": {
+      "codec": "euc_kr",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "EUCKR",
+        "0"
+      ],
+      "aliases": []
+    },
+    "cp949": {
+      "codec": "cp949",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP949"
+      ],
+      "aliases": []
+    },
+    "johab": {
+      "codec": "johab",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "JOHAB",
+        "0"
+      ],
+      "aliases": []
+    },
+    "big5": {
+      "codec": "big5",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "BIG5",
+        "0"
+      ],
+      "aliases": []
+    },
+    "big5hkscs": {
+      "codec": "big5hkscs",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "BIG5HKSCS",
+        "0"
+      ],
+      "aliases": []
+    },
+    "cp950": {
+      "codec": "cp950",
+      "kind": "dbcs",
+      "gl": false,
+      "forcegl": false,
+      "props": [
+        "MICROSOFT",
+        "CP950"
+      ],
+      "aliases": []
+    }
+  }
+}

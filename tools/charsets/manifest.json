@@ -1,0 +1,385 @@
+{
+  "gb18030_four_byte_count": 1087996,
+  "gb18030_four_byte_ranges": 207,
+  "registry_sha256": "3ab9ae08c0ab928bca0421bd0a79e8b5faf63717c14d91591146360003893769",
+  "tables": {
+    "ascii": {
+      "data_bytes": 24,
+      "decode_count": 128,
+      "dense_values": 0,
+      "encode_count": 128,
+      "group": "core",
+      "segments": 2
+    },
+    "big5": {
+      "data_bytes": 154744,
+      "decode_count": 13838,
+      "dense_values": 26536,
+      "encode_count": 13834,
+      "group": "cjk",
+      "segments": 4050
+    },
+    "big5hkscs": {
+      "data_bytes": 208156,
+      "decode_count": 18526,
+      "dense_values": 35842,
+      "encode_count": 18514,
+      "group": "cjk",
+      "segments": 5399
+    },
+    "cp1250": {
+      "data_bytes": 1696,
+      "decode_count": 251,
+      "dense_values": 220,
+      "encode_count": 251,
+      "group": "core",
+      "segments": 68
+    },
+    "cp1251": {
+      "data_bytes": 844,
+      "decode_count": 255,
+      "dense_values": 118,
+      "encode_count": 255,
+      "group": "core",
+      "segments": 31
+    },
+    "cp1252": {
+      "data_bytes": 516,
+      "decode_count": 251,
+      "dense_values": 54,
+      "encode_count": 251,
+      "group": "core",
+      "segments": 25
+    },
+    "cp1253": {
+      "data_bytes": 724,
+      "decode_count": 239,
+      "dense_values": 64,
+      "encode_count": 239,
+      "group": "core",
+      "segments": 39
+    },
+    "cp1254": {
+      "data_bytes": 688,
+      "decode_count": 249,
+      "dense_values": 64,
+      "encode_count": 249,
+      "group": "core",
+      "segments": 36
+    },
+    "cp1255": {
+      "data_bytes": 716,
+      "decode_count": 233,
+      "dense_values": 50,
+      "encode_count": 233,
+      "group": "core",
+      "segments": 43
+    },
+    "cp1256": {
+      "data_bytes": 1280,
+      "decode_count": 256,
+      "dense_values": 116,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 68
+    },
+    "cp1257": {
+      "data_bytes": 1640,
+      "decode_count": 244,
+      "dense_values": 200,
+      "encode_count": 244,
+      "group": "core",
+      "segments": 70
+    },
+    "cp1258": {
+      "data_bytes": 1060,
+      "decode_count": 247,
+      "dense_values": 100,
+      "encode_count": 247,
+      "group": "core",
+      "segments": 55
+    },
+    "cp437": {
+      "data_bytes": 1756,
+      "decode_count": 256,
+      "dense_values": 256,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 61
+    },
+    "cp850": {
+      "data_bytes": 1420,
+      "decode_count": 256,
+      "dense_values": 256,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 33
+    },
+    "cp852": {
+      "data_bytes": 1924,
+      "decode_count": 256,
+      "dense_values": 256,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 75
+    },
+    "cp866": {
+      "data_bytes": 992,
+      "decode_count": 256,
+      "dense_values": 128,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 40
+    },
+    "cp874": {
+      "data_bytes": 284,
+      "decode_count": 225,
+      "dense_values": 20,
+      "encode_count": 225,
+      "group": "core",
+      "segments": 17
+    },
+    "cp932": {
+      "data_bytes": 110028,
+      "decode_count": 9800,
+      "dense_values": 14226,
+      "encode_count": 9402,
+      "group": "cjk",
+      "segments": 4427
+    },
+    "cp949": {
+      "data_bytes": 149676,
+      "decode_count": 17176,
+      "dense_values": 18822,
+      "encode_count": 17176,
+      "group": "cjk",
+      "segments": 6199
+    },
+    "cp950": {
+      "data_bytes": 154984,
+      "decode_count": 13880,
+      "dense_values": 26614,
+      "encode_count": 13870,
+      "group": "cjk",
+      "segments": 4044
+    },
+    "gb18030": {
+      "data_bytes": 143156,
+      "decode_count": 24068,
+      "dense_values": 22502,
+      "encode_count": 24068,
+      "group": "cjk",
+      "segments": 4429
+    },
+    "gb2312": {
+      "data_bytes": 99740,
+      "decode_count": 7573,
+      "dense_values": 13520,
+      "encode_count": 7573,
+      "group": "cjk",
+      "segments": 3805
+    },
+    "gbk": {
+      "data_bytes": 140624,
+      "decode_count": 21919,
+      "dense_values": 22322,
+      "encode_count": 21919,
+      "group": "cjk",
+      "segments": 4278
+    },
+    "iso88591": {
+      "data_bytes": 24,
+      "decode_count": 256,
+      "dense_values": 0,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 2
+    },
+    "iso885910": {
+      "data_bytes": 1096,
+      "decode_count": 256,
+      "dense_values": 112,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 54
+    },
+    "iso885911": {
+      "data_bytes": 72,
+      "decode_count": 248,
+      "dense_values": 0,
+      "encode_count": 248,
+      "group": "core",
+      "segments": 6
+    },
+    "iso885913": {
+      "data_bytes": 1240,
+      "decode_count": 256,
+      "dense_values": 166,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 48
+    },
+    "iso885914": {
+      "data_bytes": 772,
+      "decode_count": 256,
+      "dense_values": 76,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 39
+    },
+    "iso885915": {
+      "data_bytes": 332,
+      "decode_count": 256,
+      "dense_values": 32,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 17
+    },
+    "iso885916": {
+      "data_bytes": 1056,
+      "decode_count": 256,
+      "dense_values": 126,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 46
+    },
+    "iso88592": {
+      "data_bytes": 1324,
+      "decode_count": 256,
+      "dense_values": 190,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 47
+    },
+    "iso88593": {
+      "data_bytes": 956,
+      "decode_count": 249,
+      "dense_values": 92,
+      "encode_count": 249,
+      "group": "core",
+      "segments": 49
+    },
+    "iso88594": {
+      "data_bytes": 1184,
+      "decode_count": 256,
+      "dense_values": 146,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 50
+    },
+    "iso88595": {
+      "data_bytes": 220,
+      "decode_count": 256,
+      "dense_values": 10,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 15
+    },
+    "iso88596": {
+      "data_bytes": 220,
+      "decode_count": 211,
+      "dense_values": 10,
+      "encode_count": 211,
+      "group": "core",
+      "segments": 15
+    },
+    "iso88597": {
+      "data_bytes": 484,
+      "decode_count": 253,
+      "dense_values": 40,
+      "encode_count": 253,
+      "group": "core",
+      "segments": 27
+    },
+    "iso88598": {
+      "data_bytes": 256,
+      "decode_count": 220,
+      "dense_values": 10,
+      "encode_count": 220,
+      "group": "core",
+      "segments": 18
+    },
+    "iso88599": {
+      "data_bytes": 248,
+      "decode_count": 256,
+      "dense_values": 14,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 16
+    },
+    "jisx0201": {
+      "data_bytes": 48,
+      "decode_count": 191,
+      "dense_values": 0,
+      "encode_count": 191,
+      "group": "core",
+      "segments": 4
+    },
+    "jisx0208": {
+      "data_bytes": 102976,
+      "decode_count": 7070,
+      "dense_values": 13036,
+      "encode_count": 7070,
+      "group": "cjk",
+      "segments": 4236
+    },
+    "johab": {
+      "data_bytes": 103732,
+      "decode_count": 17193,
+      "dense_values": 10336,
+      "encode_count": 17176,
+      "group": "cjk",
+      "segments": 5199
+    },
+    "koi8r": {
+      "data_bytes": 1264,
+      "decode_count": 256,
+      "dense_values": 148,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 56
+    },
+    "koi8u": {
+      "data_bytes": 1484,
+      "decode_count": 256,
+      "dense_values": 170,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 67
+    },
+    "ksc5601": {
+      "data_bytes": 121532,
+      "decode_count": 8353,
+      "dense_values": 14678,
+      "encode_count": 8353,
+      "group": "cjk",
+      "segments": 5235
+    },
+    "macroman": {
+      "data_bytes": 1576,
+      "decode_count": 256,
+      "dense_values": 256,
+      "encode_count": 256,
+      "group": "core",
+      "segments": 46
+    },
+    "shiftjis": {
+      "data_bytes": 103036,
+      "decode_count": 7070,
+      "dense_values": 13036,
+      "encode_count": 7070,
+      "group": "cjk",
+      "segments": 4241
+    },
+    "tis620": {
+      "data_bytes": 72,
+      "decode_count": 247,
+      "dense_values": 0,
+      "encode_count": 247,
+      "group": "core",
+      "segments": 6
+    }
+  },
+  "unique_cjk_tables": 12,
+  "unique_core_tables": 35
+}

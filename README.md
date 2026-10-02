@@ -4,13 +4,14 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W0.1 infrastructure only
+## Current status: W0.1 infrastructure and W0.2 exact charsets
 
 No real font format can be read, written, or structurally detected yet. `formats`
 lists all planned formats and marks every reader/writer **not implemented**.
 `info` and `convert` parse and dispatch requests but return an explicit error;
 conversion never creates or truncates an output file. Models, bitmap operations,
-charset tables, gzip decoding, and Python/WASM bindings belong to later items.
+gzip decoding, and Python/WASM bindings belong to later items. Exact per-glyph charset maps are implemented; see
+[charset support](docs/charsets.md).
 Passing infrastructure tests does not establish font-format correctness.
 
 ## Build and inspect
@@ -27,8 +28,9 @@ cargo install cargo-deny --version 0.20.2 --locked
 scripts/check.sh
 ```
 
-The complete check runs rustfmt, warning-free clippy, tests, and cargo-deny for
-licenses, advisories, bans, and sources. It also tests default, all-format, no-default,
+The complete check requires Python >= 3.12 (standard library only) to verify
+generated charset data, then runs rustfmt, warning-free clippy, tests, and
+cargo-deny for licenses, advisories, bans, and sources. It also tests default, all-format, no-default,
 and BDF/PCF-only feature configurations. `cargo deny` needs network access for
 its advisory database. Missing tools or unavailable checks fail rather than skip.
 CI is configured, but no remote workflow run is claimed by a local check.
@@ -37,9 +39,10 @@ The library's production dependency tree is empty with `--no-default-features`
 or just `bdf,pcf`; optional `serde` enables structured report serialization. Each
 format has its own feature and `all-formats` selects all 46. Default features are
 `bdf,pcf,yaff`. Selecting a feature reserves that capability, not an implementation.
-Heavy dependency feature slots (`cff`, `fea`, `gzip`, `cjk-charsets`) currently add
-no dependency or behavior. Python and WASM are honest, non-publishable reserved
-crates, without pyo3/wasm-bindgen dependencies until their phases.
+Heavy dependency feature slots (`cff`, `fea`, `gzip`) currently add no dependency
+or behavior. `cjk-charsets` includes exact CJK tables and GB18030 ranges without
+adding a runtime dependency; without it, known CJK charsets return a feature error.
+Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-bindgen dependencies until their phases.
 
 ## Library contracts
 
@@ -65,9 +68,9 @@ is not evidence for any of the 46 font formats.
 
 ## Next integration points
 
-W0.2 owns `crates/fontpixel/src/charset/`, table-generation scripts, generated
-Rust sources, and `cjk-charsets` gating. Export the real module from `lib.rs` when
-ready. Do not replace precise codec-derived tables with approximate encodings.
+Exact generated tables and public conversion helpers live in
+`crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
+use `tools/check_charsets.py` for complete cross-language mapping comparison.
 W1.1 will supply the real model and bitmap operations; later codec items add their
 format documentation first and then register actual hooks under feature gates.
 See [design decisions](docs/decisions.md) and [development tools](docs/development.md).

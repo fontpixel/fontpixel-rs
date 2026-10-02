@@ -1,0 +1,582 @@
+{
+  "ascii": {
+    "decode": {
+      "count": 128,
+      "fnv1a64": "00479e75ad05e725"
+    },
+    "encode": {
+      "count": 128,
+      "fnv1a64": "00479e75ad05e725"
+    }
+  },
+  "big5": {
+    "decode": {
+      "count": 13838,
+      "fnv1a64": "da74228654e94f4d"
+    },
+    "encode": {
+      "count": 13834,
+      "fnv1a64": "0a88396c66495caf"
+    }
+  },
+  "big5hkscs": {
+    "decode": {
+      "count": 18526,
+      "fnv1a64": "153d72ddcadb1eaf"
+    },
+    "encode": {
+      "count": 18514,
+      "fnv1a64": "0aa2dbf03e0eefb2"
+    }
+  },
+  "cp1250": {
+    "decode": {
+      "count": 251,
+      "fnv1a64": "974bb688ea030624"
+    },
+    "encode": {
+      "count": 251,
+      "fnv1a64": "595c6d522b6824b4"
+    }
+  },
+  "cp1251": {
+    "decode": {
+      "count": 255,
+      "fnv1a64": "8b409dfe33f04ecf"
+    },
+    "encode": {
+      "count": 255,
+      "fnv1a64": "da52e0b52ef46baf"
+    }
+  },
+  "cp1252": {
+    "decode": {
+      "count": 251,
+      "fnv1a64": "7788bf0e8a3ae14c"
+    },
+    "encode": {
+      "count": 251,
+      "fnv1a64": "d5d101d323debea8"
+    }
+  },
+  "cp1253": {
+    "decode": {
+      "count": 239,
+      "fnv1a64": "3c7e8c6ca96315b2"
+    },
+    "encode": {
+      "count": 239,
+      "fnv1a64": "7c11433dd40afd8a"
+    }
+  },
+  "cp1254": {
+    "decode": {
+      "count": 249,
+      "fnv1a64": "281215a4fa98121a"
+    },
+    "encode": {
+      "count": 249,
+      "fnv1a64": "71986e9b134390c2"
+    }
+  },
+  "cp1255": {
+    "decode": {
+      "count": 233,
+      "fnv1a64": "eae287e098d09f40"
+    },
+    "encode": {
+      "count": 233,
+      "fnv1a64": "62f20b3fe8e95b7c"
+    }
+  },
+  "cp1256": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "680f3891a03998b8"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "9012f5d11dda13c4"
+    }
+  },
+  "cp1257": {
+    "decode": {
+      "count": 244,
+      "fnv1a64": "be2fe7731bd23851"
+    },
+    "encode": {
+      "count": 244,
+      "fnv1a64": "8cc5106c8e32baf9"
+    }
+  },
+  "cp1258": {
+    "decode": {
+      "count": 247,
+      "fnv1a64": "bc161ccba6f9fff2"
+    },
+    "encode": {
+      "count": 247,
+      "fnv1a64": "549640b03d18111a"
+    }
+  },
+  "cp437": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "ea6523baa056f21d"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "bdb7c143fd724749"
+    }
+  },
+  "cp850": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "5ed0ef6507f06775"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "4f7e5bd839fe7ca5"
+    }
+  },
+  "cp852": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "18abef9f6cd1e42a"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "82df570310051962"
+    }
+  },
+  "cp866": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "be51dd03f8a39851"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "c731661adf137ecd"
+    }
+  },
+  "cp874": {
+    "decode": {
+      "count": 225,
+      "fnv1a64": "dc4a85bc8f44d4a1"
+    },
+    "encode": {
+      "count": 225,
+      "fnv1a64": "4e1f5e315b8f1de9"
+    }
+  },
+  "cp932": {
+    "decode": {
+      "count": 9800,
+      "fnv1a64": "98bd4ce0180c9933"
+    },
+    "encode": {
+      "count": 9402,
+      "fnv1a64": "729136f738b90c4b"
+    }
+  },
+  "cp936": {
+    "decode": {
+      "count": 21919,
+      "fnv1a64": "b18b130d1a63c955"
+    },
+    "encode": {
+      "count": 21919,
+      "fnv1a64": "9f024740e4be4f19"
+    }
+  },
+  "cp949": {
+    "decode": {
+      "count": 17176,
+      "fnv1a64": "17765932069f02bf"
+    },
+    "encode": {
+      "count": 17176,
+      "fnv1a64": "a12b458f9374139b"
+    }
+  },
+  "cp950": {
+    "decode": {
+      "count": 13880,
+      "fnv1a64": "a89acdb335bba5f0"
+    },
+    "encode": {
+      "count": 13870,
+      "fnv1a64": "ca91a284ade859f6"
+    }
+  },
+  "euccn": {
+    "decode": {
+      "count": 7573,
+      "fnv1a64": "a42027e0c12b8848"
+    },
+    "encode": {
+      "count": 7573,
+      "fnv1a64": "e2fc259aea58028c"
+    }
+  },
+  "eucjp": {
+    "decode": {
+      "count": 7070,
+      "fnv1a64": "6104a2c3c8814879"
+    },
+    "encode": {
+      "count": 7070,
+      "fnv1a64": "d92992493b2b962d"
+    }
+  },
+  "euckr": {
+    "decode": {
+      "count": 8353,
+      "fnv1a64": "3c0c3b8c5f3be685"
+    },
+    "encode": {
+      "count": 8353,
+      "fnv1a64": "de179d784ac70bdd"
+    }
+  },
+  "gb18030": {
+    "decode": {
+      "count": 24068,
+      "fnv1a64": "c7553189e9c5ac37"
+    },
+    "encode": {
+      "count": 24068,
+      "fnv1a64": "4d6ed4f81277499b"
+    }
+  },
+  "gb18030/4": {
+    "decode": {
+      "count": 1087996,
+      "fnv1a64": "2feb02f80ddf7c7f"
+    },
+    "encode": {
+      "count": 1087996,
+      "fnv1a64": "e89ac6f1bdaafdef"
+    }
+  },
+  "gb2312": {
+    "decode": {
+      "count": 7573,
+      "fnv1a64": "a42027e0c12b8848"
+    },
+    "encode": {
+      "count": 7573,
+      "fnv1a64": "e2fc259aea58028c"
+    }
+  },
+  "gb2312/gl": {
+    "decode": {
+      "count": 7573,
+      "fnv1a64": "72550a8c77375948"
+    },
+    "encode": {
+      "count": 7573,
+      "fnv1a64": "5be73290c8c49b8c"
+    }
+  },
+  "gbk": {
+    "decode": {
+      "count": 21919,
+      "fnv1a64": "b18b130d1a63c955"
+    },
+    "encode": {
+      "count": 21919,
+      "fnv1a64": "9f024740e4be4f19"
+    }
+  },
+  "iso2022cn": {
+    "decode": {
+      "count": 7573,
+      "fnv1a64": "a42027e0c12b8848"
+    },
+    "encode": {
+      "count": 7573,
+      "fnv1a64": "e2fc259aea58028c"
+    }
+  },
+  "iso2022cn/gl": {
+    "decode": {
+      "count": 7573,
+      "fnv1a64": "72550a8c77375948"
+    },
+    "encode": {
+      "count": 7573,
+      "fnv1a64": "5be73290c8c49b8c"
+    }
+  },
+  "iso646": {
+    "decode": {
+      "count": 128,
+      "fnv1a64": "00479e75ad05e725"
+    },
+    "encode": {
+      "count": 128,
+      "fnv1a64": "00479e75ad05e725"
+    }
+  },
+  "iso88591": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "c7d72cc5a502a725"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "c7d72cc5a502a725"
+    }
+  },
+  "iso885910": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "0de9bc3429f8b0cb"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "612b737af2c0aed3"
+    }
+  },
+  "iso885911": {
+    "decode": {
+      "count": 248,
+      "fnv1a64": "40aca0e1f93f106b"
+    },
+    "encode": {
+      "count": 248,
+      "fnv1a64": "32a871276d40f263"
+    }
+  },
+  "iso885913": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "963518ff07ba394a"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "6ecc58b2780a6d4e"
+    }
+  },
+  "iso885914": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "61a8c304bf6e757b"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "e4ef9abe97d72823"
+    }
+  },
+  "iso885915": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "5b68123d82b4b764"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "4936f1b7573b8008"
+    }
+  },
+  "iso885916": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "8c94e7f4a4f6e3b8"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "9d599349b4e3e9cc"
+    }
+  },
+  "iso88592": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "f11612dacd4e402e"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "63451528e05c8236"
+    }
+  },
+  "iso88593": {
+    "decode": {
+      "count": 249,
+      "fnv1a64": "f843533d48b18efe"
+    },
+    "encode": {
+      "count": 249,
+      "fnv1a64": "5429bcb15f682ebe"
+    }
+  },
+  "iso88594": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "af0fd59bec30ef44"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "984857597886440c"
+    }
+  },
+  "iso88595": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "b541620cc7f5ae82"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "807688fdec11c38e"
+    }
+  },
+  "iso88596": {
+    "decode": {
+      "count": 211,
+      "fnv1a64": "8db3d13d62847975"
+    },
+    "encode": {
+      "count": 211,
+      "fnv1a64": "ea496520142abe6d"
+    }
+  },
+  "iso88597": {
+    "decode": {
+      "count": 253,
+      "fnv1a64": "2d0251d906585ae3"
+    },
+    "encode": {
+      "count": 253,
+      "fnv1a64": "cf2d4f89ebd006ab"
+    }
+  },
+  "iso88598": {
+    "decode": {
+      "count": 220,
+      "fnv1a64": "20f6a72f27096d84"
+    },
+    "encode": {
+      "count": 220,
+      "fnv1a64": "1c105634bc439354"
+    }
+  },
+  "iso88599": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "0d81b34d8079557c"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "e5c94c768a2e10c8"
+    }
+  },
+  "jisx0201": {
+    "decode": {
+      "count": 191,
+      "fnv1a64": "ce9ccdc8c641d9f0"
+    },
+    "encode": {
+      "count": 191,
+      "fnv1a64": "515f217d08a74d00"
+    }
+  },
+  "jisx0208": {
+    "decode": {
+      "count": 7070,
+      "fnv1a64": "6104a2c3c8814879"
+    },
+    "encode": {
+      "count": 7070,
+      "fnv1a64": "d92992493b2b962d"
+    }
+  },
+  "jisx0208/gl": {
+    "decode": {
+      "count": 7007,
+      "fnv1a64": "c6d6997a705eec8e"
+    },
+    "encode": {
+      "count": 7007,
+      "fnv1a64": "132cab860045e8d2"
+    }
+  },
+  "johab": {
+    "decode": {
+      "count": 17193,
+      "fnv1a64": "88bd8f014c049092"
+    },
+    "encode": {
+      "count": 17176,
+      "fnv1a64": "7960cf303d564e11"
+    }
+  },
+  "koi8r": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "b048ac31a8f359fe"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "c0a1bd4d1cb54b3a"
+    }
+  },
+  "koi8u": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "b9749c4705630be3"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "8d5651c5b42cef53"
+    }
+  },
+  "ksc5601": {
+    "decode": {
+      "count": 8353,
+      "fnv1a64": "3c0c3b8c5f3be685"
+    },
+    "encode": {
+      "count": 8353,
+      "fnv1a64": "de179d784ac70bdd"
+    }
+  },
+  "ksc5601/gl": {
+    "decode": {
+      "count": 8353,
+      "fnv1a64": "53f4ce334b8c4f85"
+    },
+    "encode": {
+      "count": 8353,
+      "fnv1a64": "31add2ace59781dd"
+    }
+  },
+  "macroman": {
+    "decode": {
+      "count": 256,
+      "fnv1a64": "109922a3ad7fe065"
+    },
+    "encode": {
+      "count": 256,
+      "fnv1a64": "63fd15d0d6371a49"
+    }
+  },
+  "shiftjis": {
+    "decode": {
+      "count": 7070,
+      "fnv1a64": "34450dc5b6755e93"
+    },
+    "encode": {
+      "count": 7070,
+      "fnv1a64": "e3a742efadd821f3"
+    }
+  },
+  "tis620": {
+    "decode": {
+      "count": 247,
+      "fnv1a64": "5f98ddcf7762560b"
+    },
+    "encode": {
+      "count": 247,
+      "fnv1a64": "ffa5dafcc5956d83"
+    }
+  }
+}
