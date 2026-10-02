@@ -140,3 +140,79 @@ variants for DEFAULT/OEM/MAC/SYMBOL, and unknown for undocumented values. Provid
 94×94 grid helpers for HBF/HZK and distinct Shift-JIS/CP932 tables for FONTX2.
 **Reason:** Preserve ambiguity for the real format codec and caller to resolve;
 never quietly substitute the host's locale, ASCII, CP437, or a symbol mapping.
+
+## 2026-10-02 — W1.1 bounded generic raster and explicit label palettes
+
+**Question:** PLAN requires packed 1-bit plus Gray8, while SPEC effects need a
+third value (label 2) that cannot fit in one bit.
+**Choice:** Implement `Bitmap<Mono>` with canonical per-row MSB-packed bytes and
+`Bitmap<Gray8>` with byte samples. All conversions, thresholds and palettes are
+explicit. A compatibility raster may carry 0/1/2 labels in Gray8; shadow/glow and
+binary inversion accept explicit sample values. Gray tone negation is separate.
+**Reason:** Preserve the labels exactly without a second competing raster engine,
+unrequested grayscale quantization, or weakening the compact Mono representation.
+Default allocation/dimension budgets propagate through derived bitmaps; codecs
+must tighten them to their input budgets before allocating.
+
+## 2026-10-02 — Core geometry is fallible and dimension-preserving
+
+**Question:** Rust native API need not inherit ambiguous Python list shapes or
+allocation-hiding operators; some SPEC operations mutate into nonrectangular data.
+**Choice:** Dimension-changing operations return `Result<Bitmap>`; both dimensions
+are preserved even when area is zero. Pixel/paste coordinates are top-left, crop/
+shift/bbox are bottom-left as SPEC specifies. Pattern replacement rejects ragged
+results. Integer enlarge requires positive factors. Numeric row values use u64
+with an explicit error above 64 bits and lossless arbitrary-width hex available.
+**Reason:** Keep native invariants/overflow safety clear. W1.5 owns mutating/chaining,
+Python zero-height normalization, <=1 enlarge handling, warnings and language
+numeric serialization. These are documented adapter work, not a claim that the
+full bdfparser facade or full phase-1 parity is already finished.
+
+## 2026-10-02 — Preserve file order, duplicate mappings and stable glyph IDs
+
+**Question:** Multiple encodings/sequences and duplicate source codes do not fit a
+single code-to-glyph map; unrestricted mutable access could leave a stale cmap.
+**Choice:** Font keeps stable file-order slots plus ordered BTree indexes of all
+code/sequence mappings. Effective lookup uses the last file-order glyph, with all
+IDs exposed for diagnostics. Validated replace/edit methods update indexes;
+deleting a glyph does not renumber saved IDs. Glyph Unicode/legacy domains are
+explicit; legacy identity comes from its FontCharset. Ordered raw properties keep
+original case, duplicate keys, typed/opaque values and optional exact record bytes.
+**Reason:** Support lossless readers and predictable O(log n) lookup/ranges without
+silently deleting duplicate or unencoded glyphs. Writers reconcile raw provenance
+with edited semantic fields; raw bytes must not override a subsequent edit.
+
+## 2026-10-02 — Reuse real-model registry contracts without inventing codecs
+
+**Question:** W0 deliberately made `Registry<M>` independent of the future model.
+**Choice:** Supply `FontRegistry = Registry<FontSet>`, public built-in `registry`,
+`read` and `write` entry points, and switch CLI dispatch to the real model. No
+built-in capability hooks become live in W1.1. Synthetic real-model tests exercise
+sidecar absence, multi-asset refusal and strict loss alongside existing contracts.
+**Reason:** W1.2 can register its actual BDF hooks here, retaining all W0 safety and
+reporting behavior; the data model alone is not evidence of format support.
+
+## 2026-10-02 — Benchmark dependencies are development-only
+
+**Question:** PLAN asks for Criterion while BDF/PCF-only production builds must stay
+small and dependency-light.
+**Choice:** Add Criterion 0.8.2 as a dev dependency, default features disabled,
+with no plotter/rayon production footprint. Include a separate five-batch
+wall-clock executable and matching Python benchmark; commit measurements and
+platform details. Normal no-default-feature dependency tree remains empty.
+**Reason:** Quantify core hotspots reproducibly without implying BDF/PCF parsing or
+future whole-font performance targets have been reached.
+
+## 2026-10-02 — Preserve Unicode-tagged invalid source numbers
+
+**Question:** The full reference parity generator deliberately puts 0x110000 and
+0x7FFFFFFF in Unicode BDF fonts; rejecting such aliases in the model would prevent
+later codecs from preserving/querying them as the Python reference does.
+**Choice:** `Codepoint::Unicode(u32)` tags the source's declared encoding, without
+asserting scalar validity. It retains all u32 numbers, including surrogates and
+out-of-range source codes. `scalar()` rejects these for character use. Actual
+Unicode sequences retain their numeric range validation; negative BDF ENCODING
+values are represented as unencoded glyphs plus preserved source properties.
+**Reason:** Preserve tolerant input information and defer format-specific legality
+and loss diagnostics to readers/writers. This does not make an invalid number a
+valid Unicode character or bypass W0.2's strict charset conversion rules.

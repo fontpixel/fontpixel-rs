@@ -1,0 +1,110 @@
+[
+  {
+    "iterations_per_batch": 100000,
+    "median_ns": 371.07235,
+    "name": "crop_64x64_to_31x31",
+    "samples_ns": [
+      389.26875,
+      380.02689,
+      369.00344,
+      361.60749,
+      371.07235
+    ]
+  },
+  {
+    "iterations_per_batch": 20000,
+    "median_ns": 903.80745,
+    "name": "concat_two_64x64",
+    "samples_ns": [
+      907.4359,
+      905.3688,
+      901.21255,
+      903.80745,
+      896.7398
+    ]
+  },
+  {
+    "iterations_per_batch": 5000,
+    "median_ns": 12744.4966,
+    "name": "concat_80_glyphs",
+    "samples_ns": [
+      12744.4966,
+      12643.3362,
+      13066.5474,
+      12838.9968,
+      12682.1426
+    ]
+  },
+  {
+    "iterations_per_batch": 200,
+    "median_ns": 331452.895,
+    "name": "paste_screen_80x25",
+    "samples_ns": [
+      331452.895,
+      324542.82,
+      329810.725,
+      361490.825,
+      382562.755
+    ]
+  },
+  {
+    "iterations_per_batch": 100,
+    "median_ns": 49446.46,
+    "name": "crop_4096x1024",
+    "samples_ns": [
+      57759.83,
+      40491.47,
+      57061.93,
+      49446.46,
+      37011.93
+    ]
+  },
+  {
+    "iterations_per_batch": 100,
+    "median_ns": 47638.84,
+    "name": "overlay_4096x1024_unaligned",
+    "samples_ns": [
+      47886.3,
+      55055.0,
+      43303.81,
+      47638.84,
+      46851.15
+    ]
+  },
+  {
+    "iterations_per_batch": 10000,
+    "median_ns": 3409.2376,
+    "name": "bold_64x64_radius8",
+    "samples_ns": [
+      3337.5136,
+      3409.2376,
+      3309.3522,
+      3728.4782,
+      3748.6997
+    ]
+  },
+  {
+    "iterations_per_batch": 20000,
+    "median_ns": 2710.78485,
+    "name": "rotate_64x64",
+    "samples_ns": [
+      2710.78485,
+      2725.93565,
+      2580.30185,
+      2727.26965,
+      2608.76525
+    ]
+  },
+  {
+    "iterations_per_batch": 1000000,
+    "median_ns": 105.374992,
+    "name": "cmap_lookup_38653",
+    "samples_ns": [
+      111.626805,
+      105.374992,
+      92.965045,
+      103.510585,
+      115.899002
+    ]
+  }
+]

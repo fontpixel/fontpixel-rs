@@ -1,9 +1,8 @@
 //! The `fontpixel` command-line skeleton. Font codecs are not implemented yet.
 #![forbid(unsafe_code)]
 use clap::{Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
-use fontpixel::{Error, Input, ReadOptions, Registry, ResourceLimits};
+use fontpixel::{Error, Input, ReadOptions, ResourceLimits};
 use std::{
-    convert::Infallible,
     fs::File,
     io::{self, Read, Write},
     path::{Path, PathBuf},
@@ -108,9 +107,7 @@ fn read_primary(path: &Path, limits: &ResourceLimits) -> fontpixel::Result<Vec<u
 }
 
 fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
-    // The uninhabited model makes it impossible to claim a successful empty font.
-    // Phase 1 will substitute the real FontSet and register its implemented codecs.
-    let registry = Registry::<Infallible>::new();
+    let registry = fontpixel::registry();
     match command {
         Command::Formats { json } => {
             let statuses: Vec<_> = registry.formats().collect();
@@ -162,7 +159,10 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             let bytes = read_primary(&input, &options.limits)?;
             let name = input.to_string_lossy();
             let loaded = registry.read(&Input::new(&bytes).with_name(&name), &options)?;
-            match loaded.fonts {}
+            let _ = loaded;
+            Err(Error::InvalidInput(
+                "CLI font inspection/output is not implemented yet".into(),
+            ))
         }
         Command::Convert {
             inputs,
@@ -191,7 +191,10 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             let bytes = read_primary(first, &options.limits)?;
             let name = first.to_string_lossy();
             let loaded = registry.read(&Input::new(&bytes).with_name(&name), &options)?;
-            match loaded.fonts {}
+            let _ = loaded;
+            Err(Error::InvalidInput(
+                "CLI font inspection/output is not implemented yet".into(),
+            ))
         }
     }
 }

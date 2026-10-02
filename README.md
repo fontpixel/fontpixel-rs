@@ -4,13 +4,15 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: W0.1 infrastructure and W0.2 exact charsets
+## Current status: W1.1 core model and bitmap operations
 
 No real font format can be read, written, or structurally detected yet. `formats`
 lists all planned formats and marks every reader/writer **not implemented**.
 `info` and `convert` parse and dispatch requests but return an explicit error;
-conversion never creates or truncates an output file. Models, bitmap operations,
-gzip decoding, and Python/WASM bindings belong to later items. Exact per-glyph charset maps are implemented; see
+conversion never creates or truncates an output file. Packed Mono/Gray8 bitmaps,
+all core bitmap operations, loss-preserving Glyph/Font/FontSet models and exact
+per-glyph charset maps are implemented. Gzip codecs and Python/WASM bindings
+belong to later items. See [core API](docs/bitmap-model.md) and
 [charset support](docs/charsets.md).
 Passing infrastructure tests does not establish font-format correctness.
 
@@ -47,7 +49,7 @@ Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-b
 ## Library contracts
 
 - `Registry<M>` owns format metadata plus separate detector/reader/writer hooks
-  over a shared model. Phase 1 will specialize it with the actual `FontSet`
+  over a shared model. `FontRegistry` / `registry()` use the real `FontSet`
 - `Input` supplies primary bytes and an optional caller-owned `ResourceResolver`;
   `ReadContext` validates primary, sidecar, aggregate-byte, and resource-count
   limits, shared between detection and decoding
@@ -71,6 +73,24 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-W1.1 will supply the real model and bitmap operations; later codec items add their
-format documentation first and then register actual hooks under feature gates.
+W1.2 can implement BDF against the real model and register its actual hooks in
+`registry()`. Every codec adds format documentation first, then live hooks under
+feature gates. No format becomes supported just because the model exists.
+See [bitmap/model contracts](docs/bitmap-model.md) and [core benchmarks](benches/REPORT.md).
 See [design decisions](docs/decisions.md) and [development tools](docs/development.md).
+
+## Core example
+
+```rust
+use fontpixel::{Bitmap, Font, FontSet, Glyph};
+use fontpixel::model::Codepoint;
+fn main() -> fontpixel::Result<()> {
+    let bitmap: Bitmap = ".#.\n###".parse()?;
+    let mut glyph = Glyph::new(bitmap.enlarge(2, 2)?);
+    glyph.codepoints.push(Codepoint::Unicode(65));
+    let font = Font::from_glyphs([glyph])?;
+    let set = FontSet::from(font);
+    assert_eq!(set.single()?.len(), 1);
+    Ok(())
+}
+```

@@ -88,7 +88,7 @@ impl WriteOptions {
 /// A decoded model and all read diagnostics.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Loaded<M> {
-    /// Decoded font model (phase 1 supplies `FontSet`).
+    /// Decoded model (`FontSet` for the built-in font registry).
     pub fonts: M,
     /// Reader diagnostics.
     pub report: Report,
@@ -149,8 +149,8 @@ impl<M> Registration<M> {
     }
 }
 
-/// Extensible format registry. Generic model avoids inventing an incomplete
-/// `FontSet` in phase 0; the core model can specialize this registry in phase 1.
+/// Extensible model-independent format registry. [`crate::FontRegistry`]
+/// specializes it with the real FontSet without duplicating dispatch contracts.
 pub struct Registry<M> {
     entries: Vec<Registration<M>>,
 }
