@@ -69,6 +69,8 @@ def main():
     parser.add_argument('--work', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--profile', action='append', choices=['default', 'intra4', 'quality8', 'quality5', 'serial5'])
+    parser.add_argument('--runs', type=int, default=5,
+                        help='Use 1 only for a smoke run; acceptance measurements use 5')
     args = parser.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
     for kind in ['bdf', 'pcf', 'otb', 'ttf', 'otf', 'woff2']:
@@ -90,7 +92,8 @@ def main():
                        'full CLI parsing/variant planning/encoding/I/O; frozen BDF inputs; '
                        'external bounded process pool pending phase-6 batch command',
               'input_hashes': {p.name: sha(p) for p in sorted(args.bdf_dir.glob('*.bdf'))},
-              'profiles': []}
+              'requested_runs': args.runs, 'profiles': []}
+    assert args.runs >= 1
     assert len(result['input_hashes']) == 20
     for label, quality, threads, jobs in profiles:
         group = {'label': label, 'quality': quality, 'compression_threads': threads,
@@ -98,7 +101,7 @@ def main():
         result['profiles'].append(group)
         tasks = commands(args.binary, ref, args.bdf_dir, args.work, quality, threads)
         first = None
-        for repetition in range(5):
+        for repetition in range(args.runs):
             assert sha(args.binary) == binary_hash
             started = time.perf_counter()
             for source in sorted(args.bdf_dir.glob('*.bdf')):
@@ -124,7 +127,7 @@ def main():
         group['median_seconds'] = statistics.median(r['wall_seconds'] for r in group['runs'])
         group['total_bytes'] = sum(v['bytes'] for v in first.values())
         group['woff2_bytes'] = sum(v['bytes'] for k, v in first.items() if k.startswith('woff2/'))
-        group['all_five_outputs_byte_identical'] = True
+        group['all_outputs_byte_identical'] = True
         # Retain only the eight small webfonts per strategy for independent verification.
         saved = args.work / ('saved-' + label)
         saved.mkdir(exist_ok=True)
