@@ -1,6 +1,8 @@
 //! WOFF2 Brotli coding, glyf/loca and hmtx transforms, and bounded parallel jobs.
 use super::*;
 use std::collections::BTreeMap;
+#[cfg(feature = "ttc")]
+mod collection;
 mod transform;
 #[rustfmt::skip]
 const TAGS:[[u8;4];63]=[
@@ -197,6 +199,11 @@ struct Record {
 /// Decode WOFF2 into standalone sfnt. Advisory original glyf/font lengths are
 /// not used as allocation sizes or strict equality checks.
 pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
+    #[cfg(feature = "ttc")]
+    if data.get(4..8) == Some(b"ttcf") {
+        return collection::decode(data, l);
+    }
+
     let (flavor, n) = input(data, b"wOF2", 48, l)?;
     let mut cursor = Cursor { data, pos: 48 };
     let mut records = Vec::with_capacity(n);
@@ -339,6 +346,11 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
 /// Encode a standalone sfnt with actual glyf/loca preprocessing. Unknown and
 /// non-transformed tables are retained, except invalidated DSIG (reported).
 pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
+    #[cfg(feature = "ttc")]
+    if data.starts_with(b"ttcf") {
+        return collection::encode(data, o, l);
+    }
+
     check_options(o, l)?;
     let font = sfnt::Sfnt::parse(data, &l.sfnt)?;
     let mut tables = font

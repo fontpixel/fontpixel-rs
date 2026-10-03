@@ -1,0 +1,54 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 10.83s
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/collection-7a8e29c6f97fa1bf)
+
+running 10 tests
+test duplicate_tags_and_limits ... ok
+test deterministic_and_smaller ... ok
+test invalid_writer_limits ... ok
+test malformed_directories_offsets_and_versions ... ok
+test signatures_removed_not_forged ... ok
+test rejects_partial_alias_and_directory_overlap ... ok
+test checksum_validation_is_explicit ... ok
+test v2_signature_bounded_and_lossy_on_extract ... ok
+test versions_mixed_flavors_shared_tables ... ok
+test truncated_every_byte ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-192d642e85be95f9)
+
+running 17 tests
+test embedded_priority_skips_bad_outlines ... ok
+test explicit_grid_override ... ok
+test bounded_pixels_points_and_model ... ok
+test explicit_offset_translation ... ok
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test embedded_outline_detection_not_ambiguous ... ok
+test grid_and_roundtrip_cubic ... ok
+test grid_and_roundtrip_quadratic ... ok
+test nongrid_requires_explicit_ppem ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test collection_native_faces_selected_and_all ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test preserves_aliases_unencoded_notdef_names ... ok
+test wrong_embedded_size_falls_back ... ok
+test invalid_options_and_truncations ... FAILED
+test all_native_registry_wrappers ... ok
+
+failures:
+
+---- invalid_options_and_truncations stdout ----
+
+thread 'invalid_options_and_truncations' (122) panicked at crates/fontpixel/tests/vector_raster.rs:345:9:
+assertion failed: vr::read(&d[..n], &Options::default()).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    invalid_options_and_truncations
+
+test result: FAILED. 16 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p fontpixel --test vector_raster`

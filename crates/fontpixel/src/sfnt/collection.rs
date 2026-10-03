@@ -120,7 +120,7 @@ impl<'a> Collection<'a> {
             if tag == 0 && len == 0 && off == 0 {
                 None
             } else {
-                if tag != u32::from_be_bytes(*b"DSIG") || len == 0 || off % 4 != 0 {
+                if tag != u32::from_be_bytes(*b"DSIG") || len == 0 || !off.is_multiple_of(4) {
                     return Err(invalid("invalid TTC DSIG fields"));
                 }
                 l.sfnt.table(len)?;
@@ -136,7 +136,7 @@ impl<'a> Collection<'a> {
         let mut expanded = 0usize;
         for i in 0..count {
             let off = u32_at(data, 12 + i * 4)? as usize;
-            if off % 4 != 0 {
+            if !off.is_multiple_of(4) {
                 return Err(invalid("unaligned TTC face directory"));
             }
             let f = flavor(u32_at(data, off)?)?;
@@ -168,9 +168,10 @@ impl<'a> Collection<'a> {
                 let start = u32_at(data, p + 8)? as usize;
                 let len = u32_at(data, p + 12)? as usize;
                 l.sfnt.table(len)?;
-                if start % 4 != 0 {
+                if !start.is_multiple_of(4) {
                     return Err(invalid("unaligned TTC table"));
                 }
+                bytes(data, start, align(len)?)?;
                 let table = bytes(data, start, len)?;
                 if len > 0 {
                     spans.push((start, start + len, 1));
@@ -273,8 +274,8 @@ pub fn encode(fonts: &[&[u8]], version: u32, l: &Limits) -> Result<(Vec<u8>, Rep
     let mut refs = 0usize;
     let mut directory_end = 12 + fonts.len() * 4 + if version == 0x20000 { 12 } else { 0 };
     let mut records = Vec::new();
-    let mut shared = BTreeMap::<([u8; 4], Vec<u8>), usize>::new();
-    let mut payloads = Vec::new();
+    let mut shared = BTreeMap::<([u8; 4], usize, u64), Vec<usize>>::new();
+    let mut payloads = Vec::<([u8; 4], Vec<u8>)>::new();
     for f in &parsed {
         let mut rows = Vec::new();
         for t in f.tables() {
@@ -289,13 +290,19 @@ pub fn encode(fonts: &[&[u8]], version: u32, l: &Limits) -> Result<(Vec<u8>, Rep
                 bytes(&data, 0, 12)?;
                 data[8..12].fill(0);
             }
-            let key = (t.tag, data);
-            let id = if let Some(id) = shared.get(&key) {
+            use std::hash::{Hash, Hasher};
+            let mut hash = std::collections::hash_map::DefaultHasher::new();
+            data.hash(&mut hash);
+            let key = (t.tag, data.len(), hash.finish());
+            let id = if let Some(id) = shared
+                .get(&key)
+                .and_then(|ids| ids.iter().find(|&&i| payloads[i].1 == data))
+            {
                 *id
             } else {
                 let id = payloads.len();
-                payloads.push(key.clone());
-                shared.insert(key, id);
+                payloads.push((t.tag, data));
+                shared.entry(key).or_default().push(id);
                 id
             };
             rows.push((t.tag, id));

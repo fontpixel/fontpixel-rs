@@ -36,6 +36,13 @@ impl Edge {
             ),
         }
     }
+    /// Exact extremal vertical coordinate, including interior cubic turns.
+    pub fn max_y(&self) -> f64 {
+        self.extrema()
+            .into_iter()
+            .map(|t| self.eval(t).1)
+            .fold(f64::NEG_INFINITY, f64::max)
+    }
     fn extrema(self) -> Vec<f64> {
         let mut t = vec![0., 1.];
         match self {

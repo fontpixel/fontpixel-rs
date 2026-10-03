@@ -120,3 +120,7 @@ required-features = ["bdf", "otb", "bdat", "color"]
 [[example]]
 name = "woff_check"
 required-features = ["woff", "woff2"]
+
+[[example]]
+name = "raster_check"
+required-features = ["ttc", "woff", "woff2"]

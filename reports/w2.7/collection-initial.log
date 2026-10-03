@@ -1,0 +1,54 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+warning: unused import: `self`
+ --> crates/fontpixel/tests/collection.rs:5:9
+  |
+5 |         self, Flavor, Sfnt, SfntBuilder,
+  |         ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: missing documentation for the crate
+   --> crates/fontpixel/tests/collection.rs:1:1
+    |
+  1 | / #![cfg(feature = "ttc")]
+  2 | | use fontpixel::{
+  3 | |     Report,
+  4 | |     sfnt::{
+...   |
+163 | |     assert!(collection::encode(&[&a], 0x10000, &l).is_err());
+164 | | }
+    | |_^
+    |
+    = note: requested on the command line with `-W missing-docs`
+
+warning: `fontpixel` (test "collection") generated 2 warnings (run `cargo fix --test "collection" -p fontpixel` to apply 1 suggestion)
+    Finished `test` profile [unoptimized] target(s) in 0.38s
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/collection-7a8e29c6f97fa1bf)
+
+running 10 tests
+test duplicate_tags_and_limits ... ok
+test deterministic_and_smaller ... ok
+test invalid_writer_limits ... ok
+test signatures_removed_not_forged ... ok
+test checksum_validation_is_explicit ... ok
+test malformed_directories_offsets_and_versions ... ok
+test rejects_partial_alias_and_directory_overlap ... ok
+test v2_signature_bounded_and_lossy_on_extract ... ok
+test versions_mixed_flavors_shared_tables ... ok
+test truncated_every_byte ... FAILED
+
+failures:
+
+---- truncated_every_byte stdout ----
+
+thread 'truncated_every_byte' (63) panicked at crates/fontpixel/tests/collection.rs:61:9:
+178
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    truncated_every_byte
+
+test result: FAILED. 9 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p fontpixel --test collection`

@@ -1,0 +1,28 @@
+full-square-ttf.ttf PASS 45664 0.8484211
+full-square-otf.otf PASS 45664 0.710740062
+full-dot-ttf.ttf PASS 45665 8.687070378
+full-dot-otf.otf PASS 45664 13.456119419
+TongPixelSans14Large-Latin-dot-ttf.ttf PASS 3647 0.153836661
+TongPixelSans14Large-Latin-square-ttf.ttf PASS 3646 0.046744152
+TongPixelSans14Small-Latin-dot-ttf.ttf PASS 3647 0.241220817
+TongPixelSans14Small-Latin-square-ttf.ttf PASS 3646 0.045583495
+TongPixelSansMono14Large-Latin-dot-ttf.ttf PASS 3647 0.218519146
+TongPixelSansMono14Large-Latin-square-ttf.ttf PASS 3646 0.04358965
+TongPixelSans14Large-Latin-dot-otf.otf PASS 3646 0.331369227
+TongPixelSans14Large-Latin-square-otf.otf PASS 3646 0.039046209
+TongPixelSans14Small-Latin-dot-otf.otf PASS 3646 0.358298506
+TongPixelSans14Small-Latin-square-otf.otf PASS 3646 0.06262766
+TongPixelSansMono14Large-Latin-dot-otf.otf PASS 3646 0.370301679
+TongPixelSansMono14Large-Latin-square-otf.otf PASS 3646 0.045970816
+File sanitized successfully!
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 82, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 81, in main
+    collections=collection_cases(a.driver,a.work,paths[:2]);a.output.write_text(json.dumps({'partial':False,'raster':results,'collections':collections},indent=2)+'\n');print('COLLECTIONS PASS',flush=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 62, in collection_cases
+    assert s.getTableData(t)==x.getTableData(t),(i,t)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (0, 'glyf')

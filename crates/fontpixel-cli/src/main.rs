@@ -46,6 +46,8 @@ enum Command {
         /// Emit machine-readable font information and diagnostics.
         #[arg(long)]
         json: bool,
+        #[command(flatten)]
+        raster: RasterArguments,
     },
     /// Render text (or --all) as terminal character art.
     Preview {
@@ -97,11 +99,17 @@ enum Command {
         report: ReportStyle,
         #[command(flatten)]
         pcf: PcfArguments,
+        #[command(flatten)]
+        raster: RasterArguments,
+        #[command(flatten)]
+        vector: VectorArguments,
     },
 }
 
 #[derive(Args)]
 struct LayoutArguments {
+    #[command(flatten)]
+    raster: RasterArguments,
     /// Input font (BDF/PCF, including gzip when enabled).
     input: PathBuf,
     /// Text in logical input order. Newline is an ordinary glyph, as in SPEC.
@@ -357,7 +365,13 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             }
             Ok(())
         }
-        Command::Info { input, from, json } => {
+        Command::Info {
+            input,
+            from,
+            json,
+            raster,
+        } => {
+            raster.apply(&mut registry)?;
             let options = ReadOptions {
                 format: from,
                 ..ReadOptions::default()
@@ -484,15 +498,31 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             strict,
             report: style,
             pcf,
+            raster,
+            vector,
         } => {
             let id = match to {
                 Some(id) => id,
-                None => registry
-                    .format_from_name(&destination.to_string_lossy())?
-                    .id
-                    .into(),
+                None => match destination
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .map(str::to_ascii_lowercase)
+                    .as_deref()
+                {
+                    Some("ttf") => "ttf".into(),
+                    Some("otf") => "otf".into(),
+                    Some("ttc" | "otc") => "ttc".into(),
+                    Some("woff") => "woff".into(),
+                    Some("woff2") => "woff2".into(),
+                    _ => registry
+                        .format_from_name(&destination.to_string_lossy())?
+                        .id
+                        .into(),
+                },
             };
             pcf.apply(&id, &mut registry)?;
+            raster.apply(&mut registry)?;
+            vector.apply(&id, &mut registry)?;
             // Check the target before doing work, and never create/truncate output.
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
@@ -577,7 +607,9 @@ fn render_layout(args: &LayoutArguments) -> fontpixel::Result<fontpixel::render:
         ..Default::default()
     };
     let bytes = read_primary(&args.input, &read_options.limits)?;
-    let loaded = fontpixel::registry().read(
+    let mut registry = fontpixel::registry();
+    args.raster.apply(&mut registry)?;
+    let loaded = registry.read(
         &Input::new(&bytes).with_name(&args.input.to_string_lossy()),
         &read_options,
     )?;
@@ -807,5 +839,136 @@ fn main() -> ExitCode {
             let _ = emit_error(&error, style, &mut io::stderr().lock());
             ExitCode::from(error.exit_code())
         }
+    }
+}
+
+#[derive(Args, Default)]
+struct RasterArguments {
+    /// Explicit raster size for reviewed off-grid/curved outlines.
+    #[arg(long)]
+    ppem: Option<u16>,
+    /// Select a TTC/OTC face (zero based); otherwise read every face.
+    #[arg(long)]
+    face_index: Option<usize>,
+    /// Rasterize outlines even when matching embedded images exist.
+    #[arg(long)]
+    no_embedded_bitmaps: bool,
+    /// Explicit design units per pixel; requires --ppem.
+    #[arg(long, requires = "ppem")]
+    grid_units: Option<u16>,
+    /// Reviewed horizontal and vertical translations in pixel units.
+    #[arg(long, default_value_t = 0.0, allow_hyphen_values = true)]
+    pixel_offset_x: f64,
+    #[arg(long, default_value_t = 0.0, allow_hyphen_values = true)]
+    pixel_offset_y: f64,
+}
+impl RasterArguments {
+    fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        #[cfg(feature = "opentype")]
+        registry.set_vector_read_options(fontpixel::formats::vector_raster::Options {
+            ppem: self.ppem,
+            face_index: self.face_index,
+            prefer_embedded: !self.no_embedded_bitmaps,
+            grid_units: self.grid_units,
+            pixel_offset: (self.pixel_offset_x, self.pixel_offset_y),
+            ..Default::default()
+        });
+        #[cfg(not(feature = "opentype"))]
+        {
+            let _ = registry;
+            if self.ppem.is_some()
+                || self.face_index.is_some()
+                || self.no_embedded_bitmaps
+                || self.grid_units.is_some()
+                || self.pixel_offset_x != 0.
+                || self.pixel_offset_y != 0.
+            {
+                return Err(Error::InvalidInput("OpenType feature is disabled".into()));
+            }
+        }
+        Ok(())
+    }
+}
+#[derive(Args, Default)]
+struct VectorArguments {
+    /// Outline shape for TTF/OTF/WOFF/WOFF2/TTC conversion.
+    #[arg(long,value_parser=["square","square-separate","dot"])]
+    shape: Option<String>,
+    #[arg(long)]
+    dotsize: Option<f64>,
+    /// Design units per source pixel (default 100).
+    #[arg(long)]
+    ppu: Option<u16>,
+    #[arg(long)]
+    upm: Option<u16>,
+    #[arg(long)]
+    embed_bitmaps: bool,
+    #[arg(long)]
+    gray_threshold: Option<u8>,
+    /// Outline source in webfonts/TTC (auto selects CFF squares, TrueType dots).
+    #[arg(long,value_parser=["auto","cff","ttf"])]
+    woff2_source: Option<String>,
+    #[arg(long,value_parser=clap::value_parser!(u32).range(0..=11))]
+    woff2_quality: Option<u32>,
+    #[arg(long)]
+    collection_v2: bool,
+}
+impl VectorArguments {
+    fn apply(&self, id: &str, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        let explicit = self.shape.is_some()
+            || self.dotsize.is_some()
+            || self.ppu.is_some()
+            || self.upm.is_some()
+            || self.embed_bitmaps
+            || self.gray_threshold.is_some()
+            || self.woff2_source.is_some()
+            || self.woff2_quality.is_some()
+            || self.collection_v2;
+        if explicit && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"].contains(&id) {
+            return Err(Error::InvalidInput(
+                "outline options require an OpenType output".into(),
+            ));
+        }
+        #[cfg(feature = "opentype")]
+        {
+            use fontpixel::{outline::Shape, variants::OutlineFlavor};
+            let mut o = fontpixel::formats::vector_raster::WriteOptions::default();
+            o.outline.shape = match self.shape.as_deref() {
+                Some("dot") => Shape::Dot,
+                Some("square-separate") => Shape::SquareSeparate,
+                _ => Shape::Square,
+            };
+            o.outline.dot_size = self.dotsize.unwrap_or(if o.outline.shape == Shape::Dot {
+                0.9
+            } else {
+                1.
+            });
+            o.outline.units_per_pixel = self.ppu.unwrap_or(100);
+            o.outline.units_per_em = self.upm;
+            o.outline.embed_bitmaps = self.embed_bitmaps;
+            o.outline.gray_threshold = self.gray_threshold;
+            o.outline.flavor = match self.woff2_source.as_deref() {
+                Some("ttf") => OutlineFlavor::TrueType,
+                Some("cff") => OutlineFlavor::Cff,
+                _ => {
+                    if o.outline.shape == Shape::Dot {
+                        OutlineFlavor::TrueType
+                    } else {
+                        OutlineFlavor::Cff
+                    }
+                }
+            };
+            o.woff2.quality = self.woff2_quality.unwrap_or(11);
+            o.collection_v2 = self.collection_v2;
+            registry.set_vector_write_options(o);
+        }
+        #[cfg(not(feature = "opentype"))]
+        {
+            let _ = registry;
+            if explicit {
+                return Err(Error::InvalidInput("OpenType feature is disabled".into()));
+            }
+        }
+        Ok(())
     }
 }

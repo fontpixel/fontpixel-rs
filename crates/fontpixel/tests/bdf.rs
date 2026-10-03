@@ -32,7 +32,21 @@ fn detect_registry_and_feature_capabilities() {
     assert!(
         registry
             .formats()
-            .filter(|s| !["bdf", "pcf", "yaff", "otb", "bdat", "color"].contains(&s.format.id))
+            .filter(|s| ![
+                "bdf",
+                "pcf",
+                "yaff",
+                "otb",
+                "bdat",
+                "color",
+                "ttf",
+                "otf",
+                "woff",
+                "woff2",
+                "ttc",
+                "vector-raster"
+            ]
+            .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)
     );
     for prefix in ["", "\u{feff}", " \r\n\t\u{b}\u{c}"] {

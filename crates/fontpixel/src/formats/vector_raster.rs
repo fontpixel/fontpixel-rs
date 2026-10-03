@@ -115,9 +115,15 @@ fn validate(o: &Options) -> Result<()> {
     }
     Ok(())
 }
+struct TrueTypeSource {
+    table: glyf::GlyfTable,
+    origins: Vec<f64>,
+    owners: Vec<usize>,
+    bounds: Vec<[i16; 4]>,
+}
 enum Outlines<'a> {
-    TrueType(glyf::GlyfTable),
-    Cff(cff::Cff<'a>),
+    TrueType(TrueTypeSource),
+    Cff(Box<cff::Cff<'a>>),
 }
 impl<'a> Outlines<'a> {
     fn new(f: &Sfnt<'a>, l: &Limits) -> Result<Self> {
@@ -129,9 +135,67 @@ impl<'a> Outlines<'a> {
             }
         }
         if f.table(*b"glyf").is_some() {
-            Ok(Self::TrueType(glyf::GlyfTable::from_sfnt(f, &gl(l))?))
+            {
+                let table = glyf::GlyfTable::from_sfnt(f, &gl(l))?;
+                let count = table.glyphs.len() as u16;
+                let (_, metrics) = metrics::decode(
+                    metrics::Axis::Horizontal,
+                    required(f, *b"hhea")?,
+                    required(f, *b"hmtx")?,
+                    count,
+                    &l.sfnt,
+                )?;
+                let loca = required(f, *b"loca")?;
+                let data = required(f, *b"glyf")?;
+                let format = sfnt::u16_at(required(f, *b"head")?, 50)?;
+                let offset = |i: usize| -> Result<usize> {
+                    if format == 0 {
+                        Ok(sfnt::u16_at(loca, i * 2)? as usize * 2)
+                    } else {
+                        Ok(sfnt::u32_at(loca, i * 4)? as usize)
+                    }
+                };
+                let mut bounds = Vec::with_capacity(count as usize);
+                for i in 0..count as usize {
+                    let at = offset(i)?;
+                    bounds.push(if at == offset(i + 1)? {
+                        [0; 4]
+                    } else {
+                        [
+                            sfnt::u16_at(data, at + 2)? as i16,
+                            sfnt::u16_at(data, at + 4)? as i16,
+                            sfnt::u16_at(data, at + 6)? as i16,
+                            sfnt::u16_at(data, at + 8)? as i16,
+                        ]
+                    });
+                }
+                fn owner(table: &glyf::GlyfTable, gid: usize, depth: usize) -> Result<usize> {
+                    if depth > 64 {
+                        return Err(invalid("metric component depth"));
+                    }
+                    if let Some(glyf::Glyph::Composite(c)) = table.glyphs.get(gid)
+                        && let Some(c) = c.components.iter().rfind(|c| c.use_my_metrics)
+                    {
+                        return owner(table, c.glyph_id as usize, depth + 1);
+                    }
+                    Ok(gid)
+                }
+                let owners = (0..count as usize)
+                    .map(|i| owner(&table, i, 0))
+                    .collect::<Result<Vec<_>>>()?;
+                let origins = owners
+                    .iter()
+                    .map(|&i| f64::from(metrics[i].bearing) - f64::from(bounds[i][0]))
+                    .collect();
+                Ok(Self::TrueType(TrueTypeSource {
+                    table,
+                    origins,
+                    owners,
+                    bounds,
+                }))
+            }
         } else if f.table(*b"CFF ").is_some() {
-            Ok(Self::Cff(cff::Cff::from_sfnt(f, &cl(l))?))
+            Ok(Self::Cff(Box::new(cff::Cff::from_sfnt(f, &cl(l))?)))
         } else {
             Err(invalid(
                 "no supported outlines or matching embedded bitmaps",
@@ -147,8 +211,11 @@ impl<'a> Outlines<'a> {
         let (mut work, mut commands, mut edges) = (0usize, 0usize, 0usize);
         for gid in 0..count {
             let path = match self {
-                Self::TrueType(table) => {
-                    let cs = table.contours_cumulative(gid, &gl(l), &mut work)?;
+                Self::TrueType(source) => {
+                    let mut cs = source.table.contours_cumulative(gid, &gl(l), &mut work)?;
+                    for point in cs.iter_mut().flatten() {
+                        point.0 += source.origins[gid as usize];
+                    }
                     let mut out = Vec::new();
                     for c in cs {
                         for s in outline::segments(&c)? {
@@ -167,10 +234,10 @@ impl<'a> Outlines<'a> {
                     for c in glyph.commands {
                         match c {
                             cff::Command::MoveTo(p) => {
-                                if let (Some(a), Some(b)) = (cur, start) {
-                                    if a != b {
-                                        out.push(Edge::Line(a, b));
-                                    }
+                                if let (Some(a), Some(b)) = (cur, start)
+                                    && a != b
+                                {
+                                    out.push(Edge::Line(a, b));
                                 }
                                 start = Some(p);
                                 cur = Some(p);
@@ -192,20 +259,20 @@ impl<'a> Outlines<'a> {
                                 cur = Some(p);
                             }
                             cff::Command::Close => {
-                                if let (Some(a), Some(b)) = (cur, start) {
-                                    if a != b {
-                                        out.push(Edge::Line(a, b));
-                                    }
+                                if let (Some(a), Some(b)) = (cur, start)
+                                    && a != b
+                                {
+                                    out.push(Edge::Line(a, b));
                                 }
                                 cur = None;
                                 start = None;
                             }
                         }
                     }
-                    if let (Some(a), Some(b)) = (cur, start) {
-                        if a != b {
-                            out.push(Edge::Line(a, b));
-                        }
+                    if let (Some(a), Some(b)) = (cur, start)
+                        && a != b
+                    {
+                        out.push(Edge::Line(a, b));
                     }
                     out
                 }
@@ -297,7 +364,10 @@ fn raster(edges: &[Edge], scale: f64, offset: Point, l: &Limits) -> Result<(Bitm
     if edges.is_empty() {
         return Ok((Bitmap::default(), Bounds::default(), 0.));
     }
-    let design_top = top;
+    let design_top = edges
+        .iter()
+        .map(Edge::max_y)
+        .fold(f64::NEG_INFINITY, f64::max);
     let x = (left / scale + offset.0).floor();
     let y = (bottom / scale + offset.1).floor();
     let w = (right / scale + offset.0).ceil() - x;
@@ -333,10 +403,28 @@ fn scale_metric(v: f64, scale: f64, rounded: &mut bool) -> i64 {
     *rounded |= (p - p.round_ties_even()).abs() > 1e-10;
     p.round_ties_even() as i64
 }
+fn names_bytes(n: &crate::model::FontNames) -> usize {
+    [
+        &n.family,
+        &n.style,
+        &n.full,
+        &n.postscript,
+        &n.version,
+        &n.copyright,
+        &n.license,
+        &n.license_url,
+        &n.foundry,
+        &n.xlfd,
+    ]
+    .iter()
+    .fold(0usize, |sum, n| {
+        sum.saturating_add(n.as_ref().map_or(0, String::len))
+    })
+}
 fn model_charge(f: &Font, total: &mut usize, l: &Limits) -> Result<()> {
     charge(
         total,
-        2048,
+        2048 + names_bytes(&f.names),
         l.sfnt.resources.max_total_bytes,
         "raster model bytes",
     )?;
@@ -479,6 +567,8 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
         f.table(*b"glyf").is_some() || f.table(*b"CFF ").is_some() || f.table(*b"CFF2").is_some();
     let mut embedded_set = FontSet::default();
     let mut report = Report::default();
+    let mut embedded_bytes = 0usize;
+    let mut embedded_glyphs = 0usize;
     if o.prefer_embedded {
         // Stable priority: OpenType mono/gray, Apple mono/gray, then color.
         for kind in [
@@ -510,6 +600,14 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                         s.metrics.ppem_x == strike.metrics.ppem_x
                             && s.metrics.ppem_y == strike.metrics.ppem_y
                     }) {
+                        model_charge(&strike, &mut embedded_bytes, l)?;
+                        charge(
+                            &mut embedded_glyphs,
+                            strike.len(),
+                            l.sfnt.resources.max_glyphs,
+                            "embedded retained glyphs",
+                        )?;
+                        bound(embedded_set.fonts.len() + 1, l.max_fonts, "raster fonts")?;
                         embedded_set.fonts.push(strike);
                     }
                 }
@@ -519,7 +617,7 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
     }
     bound(embedded_set.fonts.len(), l.max_fonts, "raster fonts")?;
     if !embedded_set.fonts.is_empty()
-        && (!has_outline || embedded_set.fonts.iter().all(|s| s.len() == count as usize))
+        && embedded_set.fonts.iter().all(|s| s.len() == count as usize)
     {
         report
             .entries
@@ -535,6 +633,15 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
     let upem = sfnt::u16_at(required(&f, *b"head")?, 18)?;
     if !(16..=16384).contains(&upem) {
         return Err(invalid("invalid unitsPerEm"));
+    }
+    if embedded_set
+        .fonts
+        .iter()
+        .any(|s| s.metrics.ppem_x != s.metrics.ppem_y)
+    {
+        return Err(invalid(
+            "sparse anisotropic embedded strikes require explicit square ppem selection or bitmap-only extraction",
+        ));
     }
     let paths = Outlines::new(&f, l)?;
     let sizes: Vec<u16> = if embedded_set.fonts.is_empty() {
@@ -579,6 +686,26 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
         (None, None) => None,
         _ => return Err(invalid("unpaired vertical metrics")),
     };
+    let vorg = if let Some(t) = f.table(*b"VORG") {
+        if sfnt::u16_at(t, 0)? != 1 || sfnt::u16_at(t, 2)? != 0 {
+            return Err(invalid("unsupported VORG version"));
+        }
+        let default = sfnt::u16_at(t, 4)? as i16;
+        let n = sfnt::u16_at(t, 6)? as usize;
+        let mut origins = vec![default; count as usize];
+        let mut previous = None;
+        for i in 0..n {
+            let gid = sfnt::u16_at(t, 8 + i * 4)?;
+            if gid >= count || previous.is_some_and(|p| p >= gid) {
+                return Err(invalid("invalid VORG glyph index order"));
+            }
+            origins[gid as usize] = sfnt::u16_at(t, 10 + i * 4)? as i16;
+            previous = Some(gid);
+        }
+        Some(origins)
+    } else {
+        None
+    };
     let mut out = FontSet::default();
     let (mut native_bytes, mut total_glyphs) = (0usize, 0usize);
     let mut rounded = false;
@@ -588,6 +715,12 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
             .map(f64::from)
             .unwrap_or(f64::from(upem) / f64::from(ppem));
         let mut font = Font::default();
+        charge(
+            &mut native_bytes,
+            2048 + names_bytes(&names),
+            l.sfnt.resources.max_total_bytes,
+            "raster font names",
+        )?;
         font.names = names.clone();
         font.source_format = Some("vector-raster".into());
         let embedded = embedded_set
@@ -632,19 +765,30 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                 let (b, bounds, design_top) = raster(&edges, scale, o.pixel_offset, l)?;
                 let mut g = Glyph::new(b);
                 g.metrics.bounds = bounds;
+                let owner = match &paths {
+                    Outlines::TrueType(s) => s.owners[gid as usize],
+                    _ => gid as usize,
+                };
                 g.metrics.advance = Some(Vector::new(
-                    scale_metric(hmtx[gid as usize].advance as f64, scale, &mut rounded),
+                    scale_metric(hmtx[owner].advance as f64, scale, &mut rounded),
                     0,
                 ));
                 if let Some((_, v)) = &vertical {
                     g.metrics.vertical_advance = Some(Vector::new(
                         0,
-                        -scale_metric(v[gid as usize].advance as f64, scale, &mut rounded),
+                        -scale_metric(v[owner].advance as f64, scale, &mut rounded),
                     ));
                     g.metrics.vertical_origin = Some(Vector::new(
-                        scale_metric(hmtx[gid as usize].advance as f64 / 2., scale, &mut rounded),
+                        scale_metric(hmtx[owner].advance as f64 / 2., scale, &mut rounded),
                         scale_metric(
-                            design_top + v[gid as usize].bearing as f64,
+                            vorg.as_ref()
+                                .map(|v| v[gid as usize] as f64)
+                                .unwrap_or_else(|| match &paths {
+                                    Outlines::TrueType(s) => {
+                                        f64::from(s.bounds[owner][3]) + f64::from(v[owner].bearing)
+                                    }
+                                    _ => design_top + f64::from(v[owner].bearing),
+                                }),
                             scale,
                             &mut rounded,
                         ),
@@ -712,7 +856,7 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
         if ![
             *b"head", *b"maxp", *b"cmap", *b"name", *b"post", *b"hhea", *b"hmtx", *b"vhea",
             *b"vmtx", *b"glyf", *b"loca", *b"CFF ", *b"EBDT", *b"EBLC", *b"bdat", *b"bloc",
-            *b"CBDT", *b"CBLC", *b"sbix",
+            *b"CBDT", *b"CBLC", *b"sbix", *b"VORG",
         ]
         .contains(&table.tag)
         {
@@ -772,6 +916,63 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
         if options.style.is_none() {
             options.style = f.names.style.clone();
         }
+        if options.names.is_none() {
+            use sfnt::name::{NameRecord, NameTable};
+            let family = options
+                .family
+                .as_deref()
+                .or(f.names.family.as_deref())
+                .unwrap_or("Fontpixel");
+            let style = options.style.as_deref().unwrap_or("Regular");
+            let full = format!("{family} {style}");
+            let postscript = format!(
+                "{}-{}",
+                family
+                    .chars()
+                    .filter(|c| c.is_ascii_alphanumeric())
+                    .collect::<String>(),
+                style
+                    .chars()
+                    .filter(|c| c.is_ascii_alphanumeric())
+                    .collect::<String>()
+            );
+            let version = format!("Version {}", options.version);
+            let mut table = NameTable::default();
+            for (id, value) in [
+                (
+                    0,
+                    options
+                        .copyright
+                        .as_deref()
+                        .or(f.names.copyright.as_deref()),
+                ),
+                (1, Some(family)),
+                (2, Some(style)),
+                (4, Some(f.names.full.as_deref().unwrap_or(&full))),
+                (5, Some(f.names.version.as_deref().unwrap_or(&version))),
+                (
+                    6,
+                    Some(f.names.postscript.as_deref().unwrap_or(&postscript)),
+                ),
+                (8, f.names.foundry.as_deref()),
+                (
+                    13,
+                    options.license.as_deref().or(f.names.license.as_deref()),
+                ),
+                (
+                    14,
+                    options
+                        .license_url
+                        .as_deref()
+                        .or(f.names.license_url.as_deref()),
+                ),
+            ] {
+                if let Some(value) = value {
+                    table.records.push(NameRecord::unicode(id, 0x409, value));
+                }
+            }
+            options.names = Some(table);
+        }
         let e = crate::variants::encode_single(f, &options)?;
         report.extend(e.report);
         charge(
@@ -791,6 +992,28 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
                 &mut report,
                 "source_metadata",
                 "Source properties, charset and localized/XLFD names are not copied into regenerated outline tables",
+            );
+        }
+        let m = &f.metrics;
+        if m.point_size.is_some()
+            || m.resolution.is_some()
+            || m.bounds.is_some()
+            || m.line_height.is_some()
+            || m.default_character.is_some()
+            || m.default_glyph.is_some()
+            || m.space_width.is_some()
+            || m.metrics_set.is_some()
+            || m.glyph_defaults.scalable_advance.is_some()
+            || m.glyph_defaults.vertical_scalable_advance.is_some()
+            || m.glyph_defaults.abc.is_some()
+            || m.glyph_defaults.left_bearing.is_some()
+            || m.glyph_defaults.right_bearing.is_some()
+            || m.glyph_defaults.image_offset.is_some()
+        {
+            note(
+                &mut report,
+                "font_metrics",
+                "Independent source cell bounds, point/resolution/default/spacing or scalable fields are not retained as independent OpenType values",
             );
         }
         for (_, g) in f.glyphs() {

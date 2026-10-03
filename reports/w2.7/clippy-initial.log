@@ -1,0 +1,142 @@
+    Checking serde_core v1.0.229
+    Checking libc v0.2.189
+    Checking zerocopy v0.8.59
+    Checking regex-syntax v0.8.11
+    Checking either v1.18.0
+    Checking ciborium-io v0.2.2
+    Checking num-traits v0.2.19
+    Checking cast v0.3.0
+    Checking same-file v1.0.6
+    Checking alloca v0.4.0
+    Checking walkdir v2.5.0
+    Checking oorandom v11.1.5
+    Checking anes v0.1.6
+    Checking unarray v0.1.4
+    Checking itertools v0.13.0
+    Checking getrandom v0.3.4
+    Checking page_size v0.6.0
+    Checking rand_core v0.9.5
+    Checking rand_xorshift v0.4.0
+    Checking rand v0.9.5
+    Checking regex-automata v0.4.18
+    Checking criterion-plot v0.8.2
+    Checking serde v1.0.229
+    Checking serde_json v1.0.151
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+    Checking tinytemplate v1.2.1
+    Checking regex v1.13.1
+    Checking half v2.7.1
+    Checking ppv-lite86 v0.2.21
+    Checking ciborium-ll v0.2.2
+    Checking rand_chacha v0.9.0
+    Checking proptest v1.11.0
+    Checking ciborium v0.2.2
+    Checking criterion v0.8.2
+error: large size difference between variants
+   --> crates/fontpixel/src/formats/vector_raster.rs:118:1
+    |
+118 | / enum Outlines<'a> {
+119 | |     TrueType(glyf::GlyfTable),
+    | |     ------------------------- the second-largest variant contains at least 24 bytes
+120 | |     Cff(cff::Cff<'a>),
+    | |     ----------------- the largest variant contains at least 304 bytes
+121 | | }
+    | |_^ the entire enum is at least 304 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+120 -     Cff(cff::Cff<'a>),
+120 +     Cff(Box<cff::Cff<'a>>),
+    |
+
+error: this `if` statement can be collapsed
+   --> crates/fontpixel/src/formats/vector_raster.rs:170:33
+    |
+170 | / ...                   if let (Some(a), Some(b)) = (cur, start) {
+171 | | ...                       if a != b {
+172 | | ...                           out.push(Edge::Line(a, b));
+173 | | ...                       }
+174 | | ...                   }
+    | |_______________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+170 ~                                 if let (Some(a), Some(b)) = (cur, start)
+171 ~                                     && a != b {
+172 |                                         out.push(Edge::Line(a, b));
+173 ~                                     }
+    |
+
+error: this `if` statement can be collapsed
+   --> crates/fontpixel/src/formats/vector_raster.rs:195:33
+    |
+195 | / ...                   if let (Some(a), Some(b)) = (cur, start) {
+196 | | ...                       if a != b {
+197 | | ...                           out.push(Edge::Line(a, b));
+198 | | ...                       }
+199 | | ...                   }
+    | |_______________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+195 ~                                 if let (Some(a), Some(b)) = (cur, start)
+196 ~                                     && a != b {
+197 |                                         out.push(Edge::Line(a, b));
+198 ~                                     }
+    |
+
+error: this `if` statement can be collapsed
+   --> crates/fontpixel/src/formats/vector_raster.rs:205:21
+    |
+205 | /                     if let (Some(a), Some(b)) = (cur, start) {
+206 | |                         if a != b {
+207 | |                             out.push(Edge::Line(a, b));
+208 | |                         }
+209 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+205 ~                     if let (Some(a), Some(b)) = (cur, start)
+206 ~                         && a != b {
+207 |                             out.push(Edge::Line(a, b));
+208 ~                         }
+    |
+
+error: manual implementation of `.is_multiple_of()`
+   --> crates/fontpixel/src/sfnt/collection.rs:123:71
+    |
+123 |                 if tag != u32::from_be_bytes(*b"DSIG") || len == 0 || off % 4 != 0 {
+    |                                                                       ^^^^^^^^^^^^ help: replace with: `!off.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+    = note: `-D clippy::manual-is-multiple-of` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_is_multiple_of)]`
+
+error: manual implementation of `.is_multiple_of()`
+   --> crates/fontpixel/src/sfnt/collection.rs:139:16
+    |
+139 |             if off % 4 != 0 {
+    |                ^^^^^^^^^^^^ help: replace with: `!off.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+
+error: manual implementation of `.is_multiple_of()`
+   --> crates/fontpixel/src/sfnt/collection.rs:171:20
+    |
+171 |                 if start % 4 != 0 {
+    |                    ^^^^^^^^^^^^^^ help: replace with: `!start.is_multiple_of(4)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+
+error: could not compile `fontpixel` (lib) due to 7 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `fontpixel` (lib test) due to 7 previous errors

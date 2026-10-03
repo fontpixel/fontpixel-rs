@@ -47,3 +47,26 @@ transformed composites, holes, quadratic/cubic curves, embedded priority/sparse
 fallback, negative origins, aliases, empty outlines, malformed inputs and limits.
 External checks use fontTools, FreeType, HarfBuzz and OTS, with source bitmap grid
 truth kept separate from FreeType's dropout policy on deliberately off-grid fonts.
+
+## Additional fidelity boundaries
+
+TrueType raster origins use the horizontal phantom-point displacement from the
+stored glyf box and hmtx bearing. USE_MY_METRICS resolves recursively to the last
+marked component, retaining its untransformed phantom metrics; FreeType-generated
+pixel/advance evidence covers differing bearings, scale and translation. CFF
+vertical origins honor VORG; otherwise they use exact Bézier extrema plus vmtx.
+
+Only a preferred nominal Unicode cmap and normalized Unicode/English names enter
+the native model. UVS, non-Unicode encoding tables, localized records, hinting,
+layout and arbitrary sfnt metadata are not preserved as editable semantics.
+General outline conversion carries a projection-loss report; use the low-level
+container/subset APIs for binary-table preservation. Variable outlines and CFF2,
+and the inherited CFF1 unsupported operators documented in `cff.md`, fail explicitly.
+Hinting, antialiasing and FreeType dropout control are not implemented. A reusable
+dot component centered at the origin can have no lit pixel centers although
+FreeType's dropout policy paints a pixel; translated source glyphs remain exact.
+
+Complete anisotropic physical strikes are retained. Sparse anisotropic strikes
+currently require explicit square-ppem selection or bitmap-only extraction;
+unified fallback rejects them rather than silently applying the y scale to x.
+The first bitmap family at a size wins: EBDT/EBLC, then bdat/bloc, then color.

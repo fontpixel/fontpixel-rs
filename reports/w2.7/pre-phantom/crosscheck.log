@@ -1,0 +1,17 @@
+full-square-ttf.ttf PASS 45664 0.850416782
+full-square-otf.otf PASS 45664 0.664549265
+full-dot-ttf.ttf PASS 45665 4.18999863
+full-dot-otf.otf PASS 45664 5.7659312
+TongPixelSans14Large-Latin-dot-ttf.ttf PASS 3647 0.148737995
+TongPixelSans14Large-Latin-square-ttf.ttf PASS 3646 0.028833652
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 82, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 80, in main
+    result=raster_case(a.driver,path,a.work,ppem);results.append(result);print(path.name,'PASS',result['glyphs'],result['native_seconds'],flush=True);a.output.write_text(json.dumps({'partial':True,'raster':results},indent=2)+'\n')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 46, in raster_case
+    assert 'dot' in path.name and 'glyf'in f and gid==len(order)-1 and not got,(path.name,gid,len(got),len(ink),sorted(got^ink)[:8])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('TongPixelSans14Small-Latin-dot-ttf.ttf', 0, 6, 16, [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (3, 1), (3, 2), (3, 3)])

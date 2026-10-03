@@ -825,3 +825,25 @@ reassembly remove stale DSIG and recompute standalone checksums; native readers
 annotate source face indices and preserve ordered face/strike expansion.
 **Reason:** Preserve useful low-level fidelity without guessing face groupings
 or claiming arbitrary OpenType layout survives bitmap projection.
+
+## 2026-10-03 — WOFF2 collection scope includes associated transforms
+
+**Question:** W2.5 deliberately deferred collection envelopes to W2.7; a TTC
+wrapper cannot be treated as a standalone sfnt or compressed as opaque bytes.
+**Choice:** Implement WOFF2 collection directories and all associated glyf/loca
+transforms, preserving shared-table identity and font order. Keep hmtx untransformed
+inside collections. Reject one-sided glyf/loca sharing under WOFF2's explicit rule.
+**Reason:** A real collection codec must preserve face topology and not duplicate
+originally shared table records or reuse context-dependent transformed metrics.
+Source: https://www.w3.org/TR/WOFF2/#collection_dir_format.
+
+## 2026-10-03 — TrueType raster origins include phantom metrics
+
+**Question:** Stored outline x coordinates alone differed from FreeType when hmtx
+LSB did not equal glyf xMin; scaled USE_MY_METRICS components amplified the error.
+**Choice:** Apply the source glyph's horizontal phantom displacement and recursively
+resolve marked component metrics before rasterization. Retain raw glyf bounds for
+vertical metrics; CFF uses exact cubic extrema and VORG where present.
+**Reason:** The effective outline origin includes side-bearing semantics. Fresh
+independent FontTools/FreeType fixtures verify scaled and translated components,
+including that inherited unhinted advances are not multiplied by the component scale.

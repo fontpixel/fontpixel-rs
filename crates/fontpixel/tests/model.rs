@@ -347,7 +347,21 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
     assert!(
         registry
             .formats()
-            .filter(|f| !["bdf", "pcf", "yaff", "otb", "bdat", "color"].contains(&f.format.id))
+            .filter(|f| ![
+                "bdf",
+                "pcf",
+                "yaff",
+                "otb",
+                "bdat",
+                "color",
+                "ttf",
+                "otf",
+                "woff",
+                "woff2",
+                "ttc",
+                "vector-raster"
+            ]
+            .contains(&f.format.id))
             .all(|f| !f.read && !f.write)
     );
     registry.register(Registration {

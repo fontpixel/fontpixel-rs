@@ -449,6 +449,7 @@ impl GlyfTable {
         self.expand(glyph_id as usize, l, &mut visits, &mut path)
             .map(|v| v.0)
     }
+    #[cfg(feature = "vector-raster")]
     /// Resolve one glyph while charging a caller's whole-font expansion budget.
     pub(crate) fn contours_cumulative(
         &self,
