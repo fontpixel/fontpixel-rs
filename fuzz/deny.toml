@@ -1,6 +1,6 @@
 # Isolated fuzz-only dependency policy; production deny.toml is unchanged.
 # libfuzzer-sys combines MIT/Apache-2.0 with LLVM's permissive BSD-style NCSA notice.
-# No advisory ignores or ban relaxations.
+# No advisory or license exceptions. Exact duplicate policy is documented below.
 [advisories]
 version = 2
 
@@ -12,6 +12,10 @@ allow = ["MIT", "Apache-2.0", "NCSA", "Unicode-3.0"]
 confidence-threshold = 0.93
 
 [bans]
+# Recovery reconciliation, 2026-10-03: match the production policy exactly.
+# png 0.18.1 requires miniz_oxide ^0.8; flate2 1.1.10 requires ^0.9.
+# Their verified dependency paths are recorded with the recovery evidence.
+skip = [{ name = "miniz_oxide", version = "=0.8.9" }]
 multiple-versions = "deny"
 wildcards = "deny"
 
