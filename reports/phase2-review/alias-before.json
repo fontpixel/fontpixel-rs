@@ -1,0 +1,31 @@
+{
+  "root": "/workspace/scratch/ef9059dd510b/fontpixel-review-alias-_50757qj",
+  "returncode": 0,
+  "stderr": "",
+  "bdf_sizes_after": {
+    "TongPixelSans14Large-SC.bdf": 0,
+    "TongPixelSansMono14Large-SC.bdf": 0,
+    "TongPixelSansMono14Large-JP.bdf": 0,
+    "TongPixelSansMono14Small-KR.bdf": 0,
+    "TongPixelSans14Small-SC.bdf": 0,
+    "TongPixelSansMono14Small-Latin.bdf": 0,
+    "TongPixelSansMono14Large-TC.bdf": 0,
+    "TongPixelSansMono14Small-SC.bdf": 0,
+    "TongPixelSans14Large-TC.bdf": 0,
+    "TongPixelSans14Small-Latin.bdf": 0,
+    "TongPixelSans14Large-KR.bdf": 0,
+    "TongPixelSans14Small-KR.bdf": 0,
+    "TongPixelSans14Small-TC.bdf": 0,
+    "TongPixelSansMono14Small-TC.bdf": 0,
+    "TongPixelSans14Small-JP.bdf": 0,
+    "TongPixelSans14Large-JP.bdf": 0,
+    "TongPixelSans14Large-Latin.bdf": 0,
+    "TongPixelSansMono14Large-KR.bdf": 0,
+    "TongPixelSansMono14Large-Latin.bdf": 0,
+    "TongPixelSansMono14Small-JP.bdf": 0
+  },
+  "initial_size": 282,
+  "candidate_commit": "00a552777d16e62cc1d8c4d6b76ba68c68719abe",
+  "binary_sha256": "eb3190a3f2e4c2a176bd94c09b8cb7eddecd6c488383d1690090cba976f88114",
+  "command": "tong_export ROOT/bdf ROOT 1 0 1 (disposable generated BDF fixtures only)"
+}

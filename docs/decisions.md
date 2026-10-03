@@ -1090,3 +1090,36 @@ literal retains the old per-pixel representation and rows is intermediate.
 must remain inspectable and selectable. Every policy retains quality 11 by
 default and identical expanded circle geometry, glyph IDs, metrics and metadata.
 Tests compare all three policies and retain dependent helpers through subsetting.
+
+## 2026-10-03 — Reject Tong exporter destinations that alias sources or each other
+
+**Question:** Independent review found that passing the BDF directory's parent as
+`tong_export`'s output directory returned success while `fs::copy` truncated all
+20 input BDFs. Existing symlink or hard-link destinations could also overwrite an
+input through another format's output path.
+**Choice:** Before parsing or writing any font, compare open-file identities for
+all input and existing output paths. Reject input/output aliases, output/output
+aliases, non-file destinations and unresolved destination symlinks. Ordinary
+reruns into separate existing output directories remain supported. The example
+uses the already-locked `same-file` crate as a dev dependency for portable file
+identity; it adds no library runtime dependency.
+**Reason:** A successful bulk export must never silently destroy its inputs or
+make one artifact overwrite another through an existing alias. Unit and actual
+binary tests cover identical paths, cross-input/cross-format hard links, file and
+directory symlinks, dangling links, and identical-byte 84-file reruns. This is a
+preflight for stable filesystem paths, not a defense against hostile concurrent
+filesystem replacement. The frozen pre-review timing evidence stays identified
+with its original executable; final acceptance needs the guarded executable's
+verification.
+
+## 2026-10-03 — Check dense-outline vertex additions on 32-bit targets
+
+**Question:** The new small-grid dispatch checked vertex-count multiplication but
+computed width+1 and height+1 first. A caller can legitimately construct a
+zero-height, maximum-u32-width bitmap with explicitly raised bitmap limits; those
+additions overflow usize on 32-bit targets.
+**Choice:** Centralize both checked additions and multiplication before choosing
+the packed tracer. Overflow selects the existing general path. Regressions cover
+maximum-usize arithmetic and the public zero-height/maximum-u32-width case.
+**Reason:** Resource-limit overrides must not introduce arithmetic panics. Normal
+small-grid dispatch and all contour bytes remain unchanged.

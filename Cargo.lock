@@ -411,6 +411,7 @@ dependencies = [
  "proptest",
  "read-fonts",
  "roxmltree",
+ "same-file",
  "serde",
  "serde_json",
  "svgtypes",

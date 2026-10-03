@@ -81,6 +81,7 @@ brotli = { version = "9.0.0", default-features = false, features = ["std"], opti
 [dev-dependencies]
 criterion = { version = "0.8.2", default-features = false, features = ["cargo_bench_support"] }
 proptest = { version = "1.11.0", default-features = false, features = ["std"] }
+same-file = "1.0.6"
 serde_json.workspace = true
 
 [lints]
@@ -111,6 +112,7 @@ required-features = ["compat-bdfparser"]
 [[example]]
 name = "tong_export"
 required-features = ["bdf", "pcf", "otb", "ttf", "otf", "woff2"]
+test = true
 
 [[example]]
 name = "glyf_check"

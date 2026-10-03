@@ -1,0 +1,23 @@
+# Run from fontpixel-rs-phase2-review. No protected input is edited.
+source /workspace/scratch/ef9059dd510b/fontpixel-phase2-work/env.sh
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-phase2-review-target
+export CARGO_BUILD_JOBS=2
+cargo fmt --all
+bash scripts/check.sh
+cargo build --offline --locked --release -p fontpixel --all-features --example tong_export
+python3 -B tests/crosscheck/phase2_export_paths.py --binary "$CARGO_TARGET_DIR/release/examples/tong_export" --output reports/phase2-review/export-paths.json
+# Full-family output identity/timing checks are appended after the release build.
+python3 -B benches/phase2_optimized.py --binary "$CARGO_TARGET_DIR/release/examples/tong_export" --bdf-dir /workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf --work /workspace/scratch/ef9059dd510b/fontpixel-phase2-review-output --quality 11 --output reports/phase2-review/default-five-run.json
+sha256sum -c ../fontpixel-rs-phase2-acceptance/reports/phase2-optimization/protected-final.sha256
+sha256sum -c ../fontpixel-rs-phase2-acceptance/reports/phase2-optimization/binaries-final.sha256
+# After the run, compare the complete artifact inventory and raw timing inputs.
+python3 -B - <<'PY'
+import json
+from pathlib import Path
+review=json.loads(Path('reports/phase2-review/default-five-run.json').read_text())
+frozen=json.loads(Path('benches/results/phase2-optimized-default.json').read_text())
+assert not review['partial'] and review['all_outputs_byte_identical'] and review['binary_unchanged']
+assert review['input_hashes']==frozen['input_hashes']
+assert review['outputs']==frozen['outputs']  # includes all 84 SHA-256 digests and lengths
+print('PASS: all 84 guarded outputs match the complete frozen oracle set')
+PY

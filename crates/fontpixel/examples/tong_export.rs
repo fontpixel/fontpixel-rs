@@ -7,7 +7,7 @@ use fontpixel::{
     variants::{DotReuse, Options, OutlineFlavor, ScriptVariant},
 };
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashSet},
     error::Error,
     fs,
     io::Read,
@@ -19,6 +19,66 @@ use std::{
     time::Instant,
 };
 type AnyResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
+
+/// Validate every destination before starting any output. Comparing open-file
+/// identities also catches hard links and symlinks, including cross-format
+/// destinations that refer to an input or another output.
+fn check_output_aliases(inputs: &[(String, PathBuf)], out: &Path) -> AnyResult<()> {
+    let sources = inputs
+        .iter()
+        .map(|(_, path)| same_file::Handle::from_path(path))
+        .collect::<Result<HashSet<_>, _>>()?;
+    let mut destinations = Vec::new();
+    for (stem, _) in inputs {
+        for kind in ["bdf", "pcf", "otb"] {
+            destinations.push(out.join(kind).join(format!("{stem}.{kind}")));
+        }
+    }
+    for size in ["Large", "Small"] {
+        for spacing in ["", "Mono"] {
+            for shape in ["dot", "square"] {
+                for kind in ["ttf", "otf", "woff2"] {
+                    destinations.push(
+                        out.join(kind)
+                            .join(format!("TongPixelSans{spacing}14{size}-{shape}.{kind}")),
+                    );
+                }
+            }
+        }
+    }
+    let mut outputs = HashSet::new();
+    for path in destinations {
+        match fs::metadata(&path) {
+            Ok(metadata) if metadata.is_file() => {}
+            Ok(_) => return Err(format!("output is not a regular file: {}", path.display()).into()),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                // A dangling output link could become an alias when an earlier
+                // output is written, so it is not equivalent to an absent file.
+                match fs::symlink_metadata(&path) {
+                    Ok(_) => {
+                        return Err(format!(
+                            "output has an unresolved symlink: {}",
+                            path.display()
+                        )
+                        .into());
+                    }
+                    Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                    Err(error) => return Err(error.into()),
+                }
+                continue;
+            }
+            Err(error) => return Err(error.into()),
+        }
+        let handle = same_file::Handle::from_path(&path)?;
+        if sources.contains(&handle) {
+            return Err(format!("output aliases a source BDF: {}", path.display()).into());
+        }
+        if !outputs.insert(handle) {
+            return Err(format!("output aliases another output: {}", path.display()).into());
+        }
+    }
+    Ok(())
+}
 
 fn parallel<'a, T: Sync, R: Send>(
     items: &'a [T],
@@ -144,6 +204,7 @@ fn main() -> AnyResult<()> {
             }
         }
     }
+    check_output_aliases(&inputs_to_read, out)?;
     let faces = parallel(&inputs_to_read, jobs, |(stem, path)| {
         let read_options = fontpixel::ReadOptions {
             format: Some("bdf".into()),
@@ -264,4 +325,129 @@ fn main() -> AnyResult<()> {
         "bitmaps":bitmap_reports,"vectors":vector_reports});
     println!("{}", serde_json::to_string_pretty(&result)?);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct Scratch(PathBuf);
+    impl Scratch {
+        fn new() -> Self {
+            static NEXT: AtomicUsize = AtomicUsize::new(0);
+            loop {
+                let path = std::env::temp_dir().join(format!(
+                    "fontpixel-tong-paths-{}-{}",
+                    std::process::id(),
+                    NEXT.fetch_add(1, Ordering::Relaxed)
+                ));
+                match fs::create_dir(&path) {
+                    Ok(()) => return Self(path),
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                    Err(error) => panic!("{error}"),
+                }
+            }
+        }
+        fn input(&self) -> (String, PathBuf) {
+            let stem = "TongPixelSans14Large-SC".to_owned();
+            let path = self.0.join("bdf").join(format!("{stem}.bdf"));
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(&path, b"source BDF fixture").unwrap();
+            (stem, path)
+        }
+    }
+    impl Drop for Scratch {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    #[test]
+    fn identical_input_and_output_is_rejected_without_modification() {
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let error = check_output_aliases(std::slice::from_ref(&input), &scratch.0).unwrap_err();
+        assert!(error.to_string().contains("aliases a source BDF"));
+        assert_eq!(fs::read(&input.1).unwrap(), b"source BDF fixture");
+    }
+
+    #[test]
+    fn separate_new_and_existing_outputs_are_allowed() {
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let out = scratch.0.join("out");
+        check_output_aliases(std::slice::from_ref(&input), &out).unwrap();
+        fs::create_dir_all(out.join("bdf")).unwrap();
+        fs::write(
+            out.join("bdf").join(format!("{}.bdf", input.0)),
+            b"old output",
+        )
+        .unwrap();
+        check_output_aliases(std::slice::from_ref(&input), &out).unwrap();
+        assert_eq!(fs::read(&input.1).unwrap(), b"source BDF fixture");
+    }
+
+    #[test]
+    fn hard_link_from_any_output_to_any_input_is_rejected() {
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let out = scratch.0.join("out");
+        fs::create_dir_all(out.join("otf")).unwrap();
+        fs::hard_link(&input.1, out.join("otf/TongPixelSans14Large-dot.otf")).unwrap();
+        let error = check_output_aliases(std::slice::from_ref(&input), &out).unwrap_err();
+        assert!(error.to_string().contains("aliases a source BDF"));
+        assert_eq!(fs::read(&input.1).unwrap(), b"source BDF fixture");
+    }
+
+    #[test]
+    fn outputs_must_not_alias_each_other() {
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let out = scratch.0.join("out");
+        fs::create_dir_all(out.join("bdf")).unwrap();
+        fs::create_dir_all(out.join("pcf")).unwrap();
+        let bdf = out.join("bdf").join(format!("{}.bdf", input.0));
+        fs::write(&bdf, b"old output").unwrap();
+        fs::hard_link(&bdf, out.join("pcf").join(format!("{}.pcf", input.0))).unwrap();
+        let error = check_output_aliases(std::slice::from_ref(&input), &out).unwrap_err();
+        assert!(error.to_string().contains("aliases another output"));
+        assert_eq!(fs::read(&bdf).unwrap(), b"old output");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn file_and_directory_symlink_aliases_are_rejected() {
+        use std::os::unix::fs::symlink;
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let out = scratch.0.join("out");
+        fs::create_dir_all(out.join("bdf")).unwrap();
+        symlink(&input.1, out.join("bdf").join(format!("{}.bdf", input.0))).unwrap();
+        let error = check_output_aliases(std::slice::from_ref(&input), &out).unwrap_err();
+        assert!(error.to_string().contains("aliases a source BDF"));
+        let other = scratch.0.join("other");
+        fs::create_dir(&other).unwrap();
+        symlink(scratch.0.join("bdf"), other.join("bdf")).unwrap();
+        let error = check_output_aliases(std::slice::from_ref(&input), &other).unwrap_err();
+        assert!(error.to_string().contains("aliases a source BDF"));
+        assert_eq!(fs::read(&input.1).unwrap(), b"source BDF fixture");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn dangling_output_symlink_cannot_alias_a_future_output() {
+        let scratch = Scratch::new();
+        let input = scratch.input();
+        let out = scratch.0.join("out");
+        fs::create_dir_all(out.join("bdf")).unwrap();
+        fs::create_dir_all(out.join("pcf")).unwrap();
+        std::os::unix::fs::symlink(
+            out.join("bdf").join(format!("{}.bdf", input.0)),
+            out.join("pcf").join(format!("{}.pcf", input.0)),
+        )
+        .unwrap();
+        let error = check_output_aliases(std::slice::from_ref(&input), &out).unwrap_err();
+        assert!(error.to_string().contains("unresolved symlink"));
+        assert_eq!(fs::read(&input.1).unwrap(), b"source BDF fixture");
+    }
 }

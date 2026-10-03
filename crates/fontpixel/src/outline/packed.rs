@@ -5,6 +5,12 @@ use crate::{Bitmap, Result};
 /// Bound the dense vertex map. Large/sparse inputs retain the general tracer.
 pub(super) const MAX_VERTICES: usize = 4096;
 
+/// Check additions as well as multiplication, including zero-area bitmaps whose
+/// explicitly raised dimensions can reach usize::MAX on 32-bit targets.
+pub(super) fn vertex_count(width: usize, height: usize) -> Option<usize> {
+    width.checked_add(1)?.checked_mul(height.checked_add(1)?)
+}
+
 pub(super) fn square(bitmap: &Bitmap, o: &Options, limits: &Limits) -> Result<Vec<Contour>> {
     if o.origin.0 == i32::MIN || o.origin.1 == i32::MIN {
         return Err(invalid("outline coordinate budget exceeded"));
@@ -138,6 +144,41 @@ pub(super) fn square(bitmap: &Bitmap, o: &Options, limits: &Limits) -> Result<Ve
 mod tests {
     use super::*;
     use crate::outline::spec;
+
+    #[test]
+    fn dense_grid_dimensions_are_checked_before_arithmetic() {
+        for (width, height) in [
+            (usize::MAX, 0),
+            (0, usize::MAX),
+            (usize::MAX, usize::MAX),
+            (usize::MAX - 1, 1),
+        ] {
+            assert_eq!(vertex_count(width, height), None);
+        }
+        assert_eq!(vertex_count(0, 0), Some(1));
+        assert_eq!(vertex_count(63, 63), Some(MAX_VERTICES));
+        assert_eq!(vertex_count(4095, 0), Some(MAX_VERTICES));
+        assert_eq!(vertex_count(4096, 0), Some(MAX_VERTICES + 1));
+    }
+
+    #[test]
+    fn maximum_width_empty_bitmap_has_no_outline() {
+        let bitmap = Bitmap::with_limits(
+            u32::MAX,
+            0,
+            crate::bitmap::BitmapLimits {
+                max_dimension: u32::MAX,
+                max_pixels: 0,
+                max_bytes: 0,
+            },
+        )
+        .unwrap();
+        assert!(
+            crate::outline::contours(&bitmap, &Options::default(), &Limits::default())
+                .unwrap()
+                .is_empty()
+        );
+    }
 
     #[test]
     fn every_three_by_three_bitmap_has_exact_spec_order() {
