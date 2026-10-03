@@ -20,3 +20,17 @@ INFO: seed corpus: files: 418 min: 1b max: 84460b total: 9491809b rss: 30Mb
 #1752119	NEW    cov: 1037 ft: 3352 corp: 315/6501Kb lim: 91140 exec/s: 5309 rss: 428Mb L: 14564/73700 MS: 1 PersAutoDict- DE: "DSIG"-
 #1764270	NEW    cov: 1037 ft: 3362 corp: 316/6516Kb lim: 91252 exec/s: 5314 rss: 428Mb L: 14980/73700 MS: 1 PersAutoDict- DE: "DSIG"-
 #1764766	NEW    cov: 1037 ft: 3363 corp: 317/6531Kb lim: 91252 exec/s: 5315 rss: 428Mb L: 15992/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#1780617	RELOAD cov: 1038 ft: 3392 corp: 318/6550Kb lim: 91396 exec/s: 5315 rss: 428Mb
+#1886498	NEW    cov: 1038 ft: 3393 corp: 319/6566Kb lim: 92452 exec/s: 5359 rss: 428Mb L: 16028/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#2009985	NEW    cov: 1038 ft: 3395 corp: 320/6584Kb lim: 93668 exec/s: 5417 rss: 428Mb L: 19160/73700 MS: 2 ChangeBinInt-ShuffleBytes-
+#2059951	NEW    cov: 1038 ft: 3396 corp: 321/6600Kb lim: 94164 exec/s: 5378 rss: 428Mb L: 15972/73700 MS: 1 CMP- DE: "\377\377\377\377\377\377\377+"-
+#2097152	pulse  cov: 1038 ft: 3396 corp: 321/6600Kb lim: 94532 exec/s: 5391 rss: 428Mb
+#3302812	NEW    cov: 1038 ft: 3397 corp: 322/6618Kb lim: 106548 exec/s: 5704 rss: 435Mb L: 19072/73700 MS: 1 CopyPart-
+#3311728	NEW    cov: 1039 ft: 3398 corp: 323/6634Kb lim: 106628 exec/s: 5709 rss: 448Mb L: 15972/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#3473903	DONE   cov: 1039 ft: 3398 corp: 323/6634Kb lim: 108244 exec/s: 5685 rss: 451Mb
+###### Recommended dictionary. ######
+"\003\000\000\000" # Uses: 53154
+"DSIG" # Uses: 53809
+"\377\377\377\377\377\377\377+" # Uses: 39948
+###### End of recommended dictionary. ######
+Done 3473903 runs in 611 second(s)

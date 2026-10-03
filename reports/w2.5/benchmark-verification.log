@@ -1,3 +1,8 @@
 fonttools-Tong-Latin-dot-q11.woff2 PASS 3647
 fonttools-Tong-SC-square-q11.woff2 PASS 38654
 tong-woff063-Tong-Latin-dot-q11.woff2 PASS 3647
+tong-woff063-Tong-SC-dot-q11.woff2 PASS 38655
+tong-woff063-Tong-SC-dot-q5.woff2 PASS 38655
+tong-woff063-Tong-SC-square-q11.woff2 PASS 38654
+tong-woff063-Tong-SC-square-q5.woff2 PASS 38654
+PASS 23 timed outputs

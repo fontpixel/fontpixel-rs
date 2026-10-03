@@ -40,3 +40,5 @@ memoryview adapter and independent official Google WOFF2 decoder. See
 `stock-full-sc-censoring.txt` and `oracle-zero-copy.json` for the unchanged stock
 run observation and byte-identical adapter evidence. The performance suite starts
 only after all correctness/fuzz/build tasks have terminated.
+
+Final retained WOFF1 reader fuzz: 3,473,903 executions, 611 s, cov 1039 / ft 3398, no crash. Final acceptance is summarized in ../w2.5.md.
