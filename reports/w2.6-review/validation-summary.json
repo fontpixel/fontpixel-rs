@@ -19,5 +19,11 @@
   },
   "full_regional_final_byte_proof": "four outputs match all bytes; only the unrelated Macao tag conversion postdates their full matrix",
   "gsub_asan_source_unchanged_from_candidate": true,
-  "main_integration": "pending"
+  "main_integration": "472c45d5923de858745925aac06e249281a21ef9",
+  "main_check_passed_invocations": 713,
+  "protected_files": 690,
+  "main_focused_metric_and_Macao_check": "pass",
+  "benchmark_validated_fonts": 8,
+  "all_eight_benchmark_hashes_equal_original": true,
+  "main_source_equals_final_review_source": true
 }

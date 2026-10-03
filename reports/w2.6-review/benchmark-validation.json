@@ -1,0 +1,66 @@
+[
+  {
+    "case": "variants-square-ttf",
+    "glyphs": 45664,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "ab47926396dcc55c93c2d69d6097c35245663fbd43fd04150a7ce96250f3a343"
+  },
+  {
+    "case": "subset-square-ttf",
+    "glyphs": 24,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "493dea2b89ec70b2c12d2f0a29ecafbdc4707610ebedc94ddb2644b278b03716"
+  },
+  {
+    "case": "variants-square-otf",
+    "glyphs": 45664,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "27e5b71a06088d365d72fbac78a9d5d505e44336290a0d3b17bd7adf27eca23c"
+  },
+  {
+    "case": "subset-square-otf",
+    "glyphs": 24,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "689c6a79c0bb821b39781e0b210709a81860a7d69340d61f9bbea25078a38603"
+  },
+  {
+    "case": "variants-dot-ttf",
+    "glyphs": 45665,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "97973f7f508c8eaa6d39bd4133c4d14697f30158e7d494e2ea6b529b0a969020"
+  },
+  {
+    "case": "subset-dot-ttf",
+    "glyphs": 25,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "e733893e52997c9efd98f6f34f77a7180c19bbf59cdb7d8c39b74f04601a288c"
+  },
+  {
+    "case": "variants-dot-otf",
+    "glyphs": 45664,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "a76f612d7288ddc35a77296ac7a0b65d2d4137d25db60835a084cab428f1d756"
+  },
+  {
+    "case": "subset-dot-otf",
+    "glyphs": 24,
+    "fontTools": "pass",
+    "OTS": "pass",
+    "same_bytes_as_original_validated_benchmark": true,
+    "sha256": "1bc2d6211362af4bc4cdc3ee9e98ce680d4894cb245a89c051416f20c67f23b5"
+  }
+]

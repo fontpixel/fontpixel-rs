@@ -1,0 +1,8 @@
+PASS square.ttf
+PASS square-subset.ttf
+PASS square.otf
+PASS square-subset.otf
+PASS dot.ttf
+PASS dot-subset.ttf
+PASS dot.otf
+PASS dot-subset.otf

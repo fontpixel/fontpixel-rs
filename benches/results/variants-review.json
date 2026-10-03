@@ -1,0 +1,114 @@
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "cpu": "",
+  "logical_cpus": 9,
+  "binary_sha256": "b74e450290e67ea14b41c6999364351524560edf3f80cc3c3c14e1a5a3352831",
+  "source": "all provided Large SC/TC/JP/KR/Latin BDFs, including ZHT/ZHH aliases",
+  "scope": "Native CLI wall-clock timings, five repetitions. No comparison with unlike reference workloads. No whole-phase export performance claim.",
+  "results": [
+    {
+      "case": "variants-square-ttf",
+      "seconds": [
+        3.2867179509994457,
+        3.5245305450007436,
+        5.209342677000677,
+        3.0042467519997444,
+        3.088618204998056
+      ],
+      "median_seconds": 3.2867179509994457,
+      "bytes": 9345980,
+      "sha256": "ab47926396dcc55c93c2d69d6097c35245663fbd43fd04150a7ce96250f3a343"
+    },
+    {
+      "case": "subset-square-ttf",
+      "seconds": [
+        0.20824518500012346,
+        0.17795641200063983,
+        0.19388502099900506,
+        0.16995885299911606,
+        0.17456696699809982
+      ],
+      "median_seconds": 0.17795641200063983,
+      "bytes": 5988,
+      "sha256": "493dea2b89ec70b2c12d2f0a29ecafbdc4707610ebedc94ddb2644b278b03716"
+    },
+    {
+      "case": "variants-square-otf",
+      "seconds": [
+        3.0487507970028673,
+        3.2592671000020346,
+        3.176536828003009,
+        3.4826908959985303,
+        3.0638184909985284
+      ],
+      "median_seconds": 3.176536828003009,
+      "bytes": 9111600,
+      "sha256": "27e5b71a06088d365d72fbac78a9d5d505e44336290a0d3b17bd7adf27eca23c"
+    },
+    {
+      "case": "subset-square-otf",
+      "seconds": [
+        0.027591153997491347,
+        0.02761049299806473,
+        0.02623252500052331,
+        0.02541913800087059,
+        0.028013174000079744
+      ],
+      "median_seconds": 0.027591153997491347,
+      "bytes": 484488,
+      "sha256": "689c6a79c0bb821b39781e0b210709a81860a7d69340d61f9bbea25078a38603"
+    },
+    {
+      "case": "variants-dot-ttf",
+      "seconds": [
+        1.681315147998248,
+        1.5877824599992891,
+        1.5086228799991659,
+        1.50391494699943,
+        1.5231387629974051
+      ],
+      "median_seconds": 1.5231387629974051,
+      "bytes": 22649056,
+      "sha256": "97973f7f508c8eaa6d39bd4133c4d14697f30158e7d494e2ea6b529b0a969020"
+    },
+    {
+      "case": "subset-dot-ttf",
+      "seconds": [
+        0.14588281699980143,
+        0.13790517099914723,
+        0.14544252099949517,
+        0.14417806200071936,
+        0.14584558999922592
+      ],
+      "median_seconds": 0.14544252099949517,
+      "bytes": 10228,
+      "sha256": "e733893e52997c9efd98f6f34f77a7180c19bbf59cdb7d8c39b74f04601a288c"
+    },
+    {
+      "case": "variants-dot-otf",
+      "seconds": [
+        1.4531665789982071,
+        1.2637618249973457,
+        1.3588180640035716,
+        1.2397974810010055,
+        1.2889635559986345
+      ],
+      "median_seconds": 1.2889635559986345,
+      "bytes": 14181516,
+      "sha256": "a76f612d7288ddc35a77296ac7a0b65d2d4137d25db60835a084cab428f1d756"
+    },
+    {
+      "case": "subset-dot-otf",
+      "seconds": [
+        0.03173800199874677,
+        0.030832028001896106,
+        0.028726125001412584,
+        0.028990278999117436,
+        0.02763255199897685
+      ],
+      "median_seconds": 0.028990278999117436,
+      "bytes": 486276,
+      "sha256": "1bc2d6211362af4bc4cdc3ee9e98ce680d4894cb245a89c051416f20c67f23b5"
+    }
+  ]
+}

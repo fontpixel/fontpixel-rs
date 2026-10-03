@@ -1,0 +1,34 @@
+Run from the reviewed main worktree; reference/ and samples/ remain read-only.
+Toolchain/Python environment and earlier conformance commands: ../w2.6/COMMANDS.txt.
+All commands below use the same configured CARGO_TARGET_DIR, sequential compilation,
+and PYTHONDONTWRITEBYTECODE=1. Recreate the /tmp output directories as needed.
+
+bash scripts/check.sh
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features sfnt -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo deny --locked --manifest-path fuzz/Cargo.toml check
+cargo build --locked -p fontpixel-cli --release
+python3 -B tests/crosscheck/variants.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-review-full --output reports/w2.6-review/crosscheck-full.json --full
+python3 -B tests/crosscheck/variants_extra.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-review-extra --full-work /tmp/fontpixel-w26-review-full --output reports/w2.6-review/crosscheck-extra.json
+python3 -B tests/crosscheck/variants_latin.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-review-latin --output reports/w2.6-review/crosscheck-latin.json
+python3 -B tests/crosscheck/variants_review.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-main-metrics --output reports/w2.6-review/metrics-crosscheck-main.json
+cargo build --locked -p fontpixel-cli --features parity --bin fontpixel-parity --release
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w26-review-final-parity
+
+# Fresh ASan subset gate, with the separate existing fuzz target directory:
+normal_target="$CARGO_TARGET_DIR"
+export CARGO_TARGET_DIR="$normal_target/../fuzz/target"
+cargo +nightly fuzz build subset
+ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/subset" /tmp/fontpixel-w26-review-fuzz-subset -max_total_time=610 -max_len=65536 -rss_limit_mb=1024
+# The seed corpus is the prior retained generated subset/CFF corpus plus the new
+# small vertical-metric TTF/CFF fixtures. No reader source changed after this run.
+
+# Restore the ordinary target directory; only after other active checks end:
+export CARGO_TARGET_DIR="$normal_target"
+python3 -B benches/variants.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-main-bench --output benches/results/variants-review.json
+# All eight outputs were fully decompiled with fontTools TTFont.ensureDecompiled(),
+# passed ots.sanitize(), and had SHA-256 equal to both measured output hashes and
+# the previously independently validated benchmark output hashes.
+
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.6-review/protected-after.sha256
+cmp reports/w2.6/protected-after.sha256 reports/w2.6-review/protected-after.sha256
