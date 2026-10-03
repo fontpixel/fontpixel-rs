@@ -1,0 +1,117 @@
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "cpu": "",
+  "logical_cpus": 9,
+  "binary_sha256": "2bd0ee72cc78486420d4d47d3abc4218708e5ae02337ed8bf5558f2cdedfe90c",
+  "source": "all provided Large SC/TC/JP/KR/Latin BDFs, including ZHT/ZHH aliases",
+  "scope": "Native CLI wall-clock timings, five repetitions. No comparison with unlike reference workloads. No whole-phase export performance claim.",
+  "results": [
+    {
+      "case": "variants-square-ttf",
+      "seconds": [
+        5.087632049999229,
+        4.337796543000877,
+        3.0370034629995644,
+        2.8533638620028796,
+        4.014547116999893
+      ],
+      "median_seconds": 4.014547116999893,
+      "bytes": 9345980,
+      "sha256": "ab47926396dcc55c93c2d69d6097c35245663fbd43fd04150a7ce96250f3a343"
+    },
+    {
+      "case": "subset-square-ttf",
+      "seconds": [
+        0.16244027599896071,
+        0.26309388799927547,
+        0.1699467270009336,
+        0.190010310998332,
+        0.1618296160013415
+      ],
+      "median_seconds": 0.1699467270009336,
+      "bytes": 5988,
+      "sha256": "493dea2b89ec70b2c12d2f0a29ecafbdc4707610ebedc94ddb2644b278b03716"
+    },
+    {
+      "case": "variants-square-otf",
+      "seconds": [
+        4.788673820999975,
+        3.1737157399984426,
+        4.427405421996809,
+        3.0386652870001853,
+        2.9357312450010795
+      ],
+      "median_seconds": 3.1737157399984426,
+      "bytes": 9111600,
+      "sha256": "27e5b71a06088d365d72fbac78a9d5d505e44336290a0d3b17bd7adf27eca23c"
+    },
+    {
+      "case": "subset-square-otf",
+      "seconds": [
+        0.02645921399744111,
+        0.03323892400294426,
+        0.0734752100033802,
+        0.025697654997202335,
+        0.038418428997829324
+      ],
+      "median_seconds": 0.03323892400294426,
+      "bytes": 484488,
+      "sha256": "689c6a79c0bb821b39781e0b210709a81860a7d69340d61f9bbea25078a38603"
+    },
+    {
+      "case": "variants-dot-ttf",
+      "seconds": [
+        1.5611784879984043,
+        1.5885465890023625,
+        1.5596543669998937,
+        1.6126837140000134,
+        1.654159276997234
+      ],
+      "median_seconds": 1.5885465890023625,
+      "bytes": 22649056,
+      "sha256": "97973f7f508c8eaa6d39bd4133c4d14697f30158e7d494e2ea6b529b0a969020"
+    },
+    {
+      "case": "subset-dot-ttf",
+      "seconds": [
+        0.14278564699998242,
+        0.2610968769986357,
+        0.14291675099957502,
+        0.19805015699967043,
+        0.16116784599944367
+      ],
+      "median_seconds": 0.16116784599944367,
+      "bytes": 10228,
+      "sha256": "e733893e52997c9efd98f6f34f77a7180c19bbf59cdb7d8c39b74f04601a288c"
+    },
+    {
+      "case": "variants-dot-otf",
+      "seconds": [
+        2.559199446997809,
+        1.8093837469969003,
+        1.6720110659989587,
+        1.7408910319973074,
+        1.4249073610008054
+      ],
+      "median_seconds": 1.7408910319973074,
+      "bytes": 14181516,
+      "sha256": "a76f612d7288ddc35a77296ac7a0b65d2d4137d25db60835a084cab428f1d756"
+    },
+    {
+      "case": "subset-dot-otf",
+      "seconds": [
+        0.029479589997208677,
+        0.04361743600020418,
+        0.028957353002624586,
+        0.029420021000987617,
+        0.028802319000533316
+      ],
+      "median_seconds": 0.029420021000987617,
+      "bytes": 486276,
+      "sha256": "1bc2d6211362af4bc4cdc3ee9e98ce680d4894cb245a89c051416f20c67f23b5"
+    }
+  ],
+  "cpu_model": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+  "host_memory": "MemTotal:       10206504 kB",
+  "cgroup_memory_max": "unavailable"
+}

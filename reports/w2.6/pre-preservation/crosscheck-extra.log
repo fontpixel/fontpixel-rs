@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6/tests/crosscheck/variants_extra.py", line 68, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6/tests/crosscheck/variants_extra.py", line 36, in main
+    results.append(compare_subset(a.binary,source,a.work,'external-GSUB-'+kind,cps))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6/tests/crosscheck/variants.py", line 67, in compare_subset
+    status=ots.sanitize(str(dest),str(dest)+'.ots',capture_output=True);assert status.returncode==0,(label,kind,'subset OTS',status.stderr)
+                                                                               ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('external-GSUB-ttf', 'ttf', 'subset OTS', b"ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table\n")

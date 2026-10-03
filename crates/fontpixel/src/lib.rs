@@ -16,6 +16,8 @@ pub mod report;
 pub mod resources;
 #[cfg(feature = "sfnt")]
 pub mod sfnt;
+#[cfg(feature = "sfnt")]
+pub mod variants;
 
 pub use error::{Error, Operation, Result};
 pub use formats::{ReadOptions, Registry, WriteOptions};
@@ -27,6 +29,8 @@ pub use resources::{
 /// Core bitmap with packed monochrome storage by default.
 pub use bitmap::Bitmap;
 pub use model::{Font, FontSet, Glyph};
+#[cfg(feature = "sfnt")]
+pub use variants::Variants;
 
 /// Registry specialized to the real font model.
 pub type FontRegistry = Registry<FontSet>;

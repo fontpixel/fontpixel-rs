@@ -19,7 +19,7 @@ pub struct Cff<'a> {
     identifiers: Vec<u16>,
 }
 /// Validate complete monotonic 1-based CFF1 INDEX offsets before Fontations lookup.
-fn index_at<'a>(data: &'a [u8], off: usize) -> Result<(Index<'a>, usize)> {
+pub(super) fn index_at<'a>(data: &'a [u8], off: usize) -> Result<(Index<'a>, usize)> {
     let count = u16_at(data, off)? as usize;
     if count == 0 {
         return Ok((Index::Empty, off + 2));
@@ -43,7 +43,7 @@ fn index_at<'a>(data: &'a [u8], off: usize) -> Result<(Index<'a>, usize)> {
     let index = Index::new(&data[off..end], false).map_err(ps_error)?;
     Ok((index, end))
 }
-fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<Vec<Entry>> {
+pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<Vec<Entry>> {
     bounded(data.len(), l.max_dict_bytes, "CFF DICT bytes")?;
     add_budget(
         total,
@@ -474,6 +474,34 @@ impl<'a> Cff<'a> {
             return Err(invalid("CFF/maxp glyph count mismatch"));
         }
         Ok(cff)
+    }
+    pub(super) fn subfont_selector(&self, gid: u16) -> Result<u8> {
+        self.selectors
+            .get(usize::from(gid))
+            .copied()
+            .and_then(|v| u8::try_from(v).ok())
+            .ok_or_else(|| invalid("CFF FDSelect outside uint8"))
+    }
+    pub(super) fn validate_selected(&self, glyphs: &[u16], l: &Limits) -> Result<()> {
+        let (mut programs, mut commands) = (0, 0);
+        for &gid in glyphs {
+            let fd = usize::from(self.subfont_selector(gid)?);
+            let program = self
+                .raw
+                .charstrings()
+                .get(usize::from(gid))
+                .ok_or_else(|| invalid("missing CFF charstring"))?;
+            let (p, c, _) =
+                validate::program(program, &self.locals[fd], self.raw.global_subrs(), l)?;
+            add_budget(
+                &mut programs,
+                p,
+                l.max_total_program_bytes,
+                "CFF total program bytes",
+            )?;
+            add_budget(&mut commands, c, l.max_total_commands, "CFF total commands")?;
+        }
+        Ok(())
     }
     /// Original borrowed bytes, including unsupported metadata not projected here.
     pub fn data(&self) -> &'a [u8] {

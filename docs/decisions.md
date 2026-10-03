@@ -697,3 +697,107 @@ Byte comparisons now construct exactly the specification-mandated head change;
 all other null-transform bytes remain exact, and no glyph/pixel assertions relax.
 Sources: https://www.w3.org/TR/WOFF/#TableDirectory and
 https://www.w3.org/TR/WOFF2/#table_format.
+
+## 2026-10-03 — W2.6 scopes layout and subset preservation explicitly
+
+**Question:** General OpenType tables can contain hidden glyph references, while
+W2.6 specifically requires regional single substitutions and useful web subsets.
+**Choice:** Construct and read bounded GSUB single substitutions directly; close
+and compact glyph IDs together with every supported glyph-indexed table. Reject
+unhandled layout/table forms by default rather than copying stale IDs. Retain
+all name bytes, deterministic ordering, and diagnostics through sfnt/web wrappers.
+Keep W2.7 collection and general raster-reader registration separate.
+**Reason:** A small correct subset must remain shape-equivalent and must not
+silently corrupt an opaque glyph-indexed table. Explicit errors preserve the
+source when a broader codec is required.
+
+## 2026-10-03 — Subsets preserve raw TrueType/CFF hinting semantics
+
+**Question:** Re-encoding geometry is visually equivalent unhinted, but an
+originally padded glyph bounding box can influence TrueType phantom points and
+hint execution. CFF re-vectorization would also discard hints and subroutines.
+**Choice:** Validate TrueType glyphs using the existing bounded reader, retain
+selected original glyph records byte-for-byte, and patch only composite child
+IDs. Retain conservative original maxp maxima and global bounds; rebuild loca.
+Rebuild CFF offsets/selection while retaining raw programs, all subroutines,
+private hints, widths, matrices, SIDs/CIDs and strings. Keep unsupported encodings
+explicit rather than dropping them. Compare hinted external fixtures as well as
+native unhinted regional fonts.
+**Reason:** Subsetting changes coverage and IDs; it should not silently alter a
+retained glyph's hinting program, original box, component flags or subroutine
+semantics. Unused CFF subroutines/strings can remain, trading some size for fidelity.
+
+## 2026-10-03 — Relocate even unused CID Top DICT Private blocks
+
+**Question:** A valid FontTools CID font can retain a Top DICT Private entry in
+addition to FD-specific Private dictionaries. Internal outline execution ignores
+that top-level block, while OTS still validates its offsets.
+**Choice:** Preserve and relocate that optional block and its local-subroutine
+INDEX as well. A fresh external CID fixture exposed the stale-offset bug; its
+source passes OTS, so rejecting or weakening the oracle was not appropriate.
+**Reason:** A preserved dictionary containing a stale absolute offset is not
+preserved valid data. Hint/outline equivalence alone did not detect this failure.
+
+## 2026-10-03 — Canonicalize missing DFLT default language systems
+
+**Question:** The external FontTools/Tong FEA compiler can produce a DFLT script
+with language-specific features but a NULL DefaultLangSys. HarfBuzz shapes it,
+while OTS rejects it under the OpenType DFLT requirement.
+**Choice:** GSUB output adds an empty default language system for DFLT when it is
+missing. Subsetting reports this as a repair, preserving every explicit language
+and its feature selection. Existing native output already has that empty default.
+**Reason:** This does not introduce default substitutions or change the measured
+language fallback behavior; it produces conforming output from that tolerant input.
+
+## 2026-10-03 — Empty layout has zero maximum context
+
+**Question:** Additional all-glyph tests for every supplied Latin-only BDF found
+`usMaxContext=1` even when no substitutions were generated, versus zero from the
+reference. All regional fonts correctly require one input glyph of context.
+**Choice:** Set the value from the actual presence of layout features. Add a
+focused metadata regression and all three supplied Latin font matrices. Rebuild
+and byte-compare all four full regional outputs against their completed external
+oracle results; the regional bytes must remain exact. Reader sources are unchanged.
+**Reason:** Make native metadata precise in the no-alternative case without
+weakening the external assertion or relabeling older full-font evidence.
+
+## 2026-10-03 — W2.6 review resolves source defaults before deduplication
+
+**Question:** A valid Font/BDF 2.2 can put DWIDTH, DWIDTH1, VVECTOR and scalable
+metrics in font-level defaults. Comparing only each glyph's optional fields
+merged different regional advances, and later output borrowed the base face's
+defaults for alternatives.
+**Choice:** Resolve every optional glyph metric against its own source Font
+before planning. Explicit and inherited equal metrics deduplicate, distinct
+effective metrics remain distinct, and a missing alternate metric never borrows
+an unrelated base default. Keep source bitmap bounds authoritative.
+**Reason:** Bitmap-plus-metric identity must describe the effective glyph. API
+regressions and independent BDF 2.2 / HarfBuzz / fontTools checks cover both
+different defaults and equivalent explicit-versus-inherited alternatives.
+
+## 2026-10-03 — W2.6 review preserves embedded vertical metrics and table pairs
+
+**Question:** The variants writer emitted vhea/vmtx but horizontal-only embedded
+bitmap records, silently losing source vertical metrics. Separately, requesting
+only `--drop-table vhea` produced a font OTS rejected because vmtx requires vhea.
+**Choice:** Write both directions in big sbit metrics when vertical layout is
+present, including each effective advance and vertical origin. For an absent
+pixel origin, use the ascent and integer cell midpoint (half-pixel midpoints
+round down, as the bitmap metrics are integral); explicit origins stay exact.
+Reject unpaired vhea/vmtx drops before output, requiring both exact tags to
+acknowledge removal of the optional vertical metric pair.
+**Reason:** Outline and bitmap paths must both preserve representable metrics,
+and an acknowledged table loss must not leave an invalid dependent table.
+The OpenType [EBDT specification](https://learn.microsoft.com/en-us/typography/opentype/spec/ebdt)
+defines both directions in BigGlyphMetrics; independent FreeType and OTS checks
+verify the corrected output and atomic failure of unpaired removal.
+
+## 2026-10-03 — Match Macao's registered OpenType language tag
+
+**Question:** The candidate grouped both `zh-HK` and `zh-MO` under ZHH, but the
+current Microsoft registry explicitly assigns traditional Macao Chinese ZHTM.
+**Choice:** Map `zh-MO` and `zh-Hant-MO` to ZHTM. An explicit Hans script continues
+to select ZHS, including in Macao. Hong Kong continues to select ZHH.
+**Reason:** The promised registry-based BCP-47 conversion must distinguish the
+registered regional tags. Source: Microsoft's
+[language system registry](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags).

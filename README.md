@@ -147,3 +147,43 @@ existing TTF/OTF builders. Registry/CLI use the same native implementation.
 See `docs/formats/otb.md`, `bdat.md`, and `color.md` for limits, loss reporting,
 unsupported Apple Huffman/JPEG/TIFF cases and independent-tool caveats. General
 outline FontSet conversion, collections and wrapper formats remain later work.
+
+### Regional OpenType fonts and web subsets (W2.6)
+
+The default CLI now includes native `variants` and `subset`. No Python, FEA
+compiler or external font program is used at runtime.
+
+```sh
+fontpixel variants --base SC.bdf --lang zh-Hant,zh-HK=TC.bdf \
+  --lang ja=JP.bdf --lang ko=KR.bdf \
+  --script latn,grek,cyrl=Latin.bdf -o regional.woff2
+fontpixel variants --base SC.bdf --lang ja=JP.bdf \
+  --lang-scripts ja=DFLT,hani,kana --shape dot --dotsize 0.9 \
+  --embed-bitmaps --family 'My Regional Pixel Font' -o regional.ttf
+fontpixel subset regional.woff2 --text '漢字 “Hello”…' -o small.woff2
+fontpixel subset regional.otf --unicodes U+0020-007E,U+4E00-4EFF -o small.otf
+fontpixel subset regional.ttf --text-file page.txt -o small.woff
+```
+
+Languages accept explicit OpenType tags (`ZHT`, `JAN`, etc.) or mapped BCP-47
+language identifiers. `--lang-scripts` configures each language's script scope.
+By default languages apply to DFLT/hani/kana/hang/bopo; script alternatives apply
+to their script in every language. Identical alternate bitmaps and complete
+metrics share one glyph. Alternative-only characters become default mappings.
+Square web output defaults to CFF and dots to TrueType; override using
+`--woff2-source cff|ttf|auto`. Quality defaults to 11; `--woff2-quality` and
+`--woff2-threads` expose the existing bounded compressor controls.
+
+Subsets preserve related single-substitution layout, composite dependencies,
+raw CFF programs/hints/subroutines, names, metric arrays, post names, and supported
+embedded strikes. Glyph IDs are compacted consistently. WOFF envelope metadata
+survives web-to-web subsetting. Unsupported glyph-indexed tables/layout forms,
+nondefault legacy CFF encoding, UVS and non-Unicode cmap records fail explicitly.
+An exact unsupported table can be discarded with `--drop-table TAG`, generating
+a loss report; `--strict` rejects that loss before replacing the destination.
+A TTF subset remains TrueType and a CFF subset remains CFF; both can be wrapped
+as WOFF or WOFF2. This does not implement W2.7's general raster reader or TTC.
+
+Rust API: `Variants::new`, `add_language`, configurable `LanguageVariant` and
+`ScriptVariant`, `Variants::plan`, `variants::encode`, `sfnt::gsub::Gsub` and
+`sfnt::subset::subset`. Core BDF/PCF-only builds acquire no new dependencies.

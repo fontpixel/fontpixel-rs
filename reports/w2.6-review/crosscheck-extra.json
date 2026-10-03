@@ -1,0 +1,49 @@
+{
+  "partial": false,
+  "results": [
+    {
+      "case": "external-cid-format0",
+      "raw_CFF_preservation_hinted_and_unhinted_FreeType": "pass",
+      "OTS": "pass"
+    },
+    {
+      "case": "external-cid",
+      "raw_CFF_preservation_hinted_and_unhinted_FreeType": "pass",
+      "OTS": "pass"
+    },
+    {
+      "case": "external-fontmatrix",
+      "raw_CFF_preservation_hinted_and_unhinted_FreeType": "pass",
+      "OTS": "pass"
+    },
+    {
+      "case": "external-operators",
+      "raw_CFF_preservation_hinted_and_unhinted_FreeType": "pass",
+      "OTS": "pass"
+    },
+    {
+      "case": "external-GSUB-ttf",
+      "retained_codepoints": 24,
+      "subset_shaping_glyph_checks": 3456,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "external-GSUB-otf",
+      "retained_codepoints": 24,
+      "subset_shaping_glyph_checks": 3456,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TrueType-original-bboxes-and-bytecode",
+      "hinted_FreeType_and_OTS": "pass"
+    },
+    {
+      "case": "embedded-dot-dependency",
+      "embedded_FreeType": "pass"
+    },
+    {
+      "case": "explicit-loss-strict-atomicity",
+      "result": "pass"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+diff --git a/crates/fontpixel/src/variants.rs b/crates/fontpixel/src/variants.rs
+index a00417a..eb396c2 100644
+--- a/crates/fontpixel/src/variants.rs
++++ b/crates/fontpixel/src/variants.rs
+@@ -387,9 +387,12 @@ pub fn language_tag(value: &str) -> Result<Tag> {
+         if parts.contains(&"hans") {
+             return Ok(*b"ZHS ");
+         }
+-        if parts.contains(&"hk") || parts.contains(&"mo") {
++        if parts.contains(&"hk") {
+             return Ok(*b"ZHH ");
+         }
++        if parts.contains(&"mo") {
++            return Ok(*b"ZHTM");
++        }
+         if parts.contains(&"hant") || parts.contains(&"tw") {
+             return Ok(*b"ZHT ");
+         }

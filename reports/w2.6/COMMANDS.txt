@@ -1,0 +1,34 @@
+W2.6 reproduction (run in the worktree; input package remains read-only)
+
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export PYTHONDONTWRITEBYTECODE=1
+export CARGO_INCREMENTAL=0 CARGO_BUILD_JOBS=2
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/python-w2.5:/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+
+bash scripts/check.sh
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features sfnt -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo tree --locked -p fontpixel --no-default-features --features bdf,pcf -e normal
+cargo deny --locked --manifest-path fuzz/Cargo.toml check
+cargo build --locked -p fontpixel-cli --release
+python3 -B tests/crosscheck/variants.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-full --output reports/w2.6/crosscheck-full.json --full
+python3 -B tests/crosscheck/variants_extra.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-extra --full-work /tmp/fontpixel-w26-full --output reports/w2.6/crosscheck-extra.json
+python3 -B tests/crosscheck/variants_latin.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-latin --output reports/w2.6/crosscheck-latin.json
+python3 -B tests/crosscheck/variants_reproduce.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-full --report reports/w2.6/crosscheck-full.json --output reports/w2.6/final-regional-byte-proof.json
+cargo build --locked -p fontpixel-cli --features parity --bin fontpixel-parity --release
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w26-parity
+
+# Fuzz targets (bounded binary inputs; seed with generated GSUB/sfnt/CFF fixtures).
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target
+cargo +nightly fuzz build gsub
+cargo +nightly fuzz build subset
+ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/gsub" /tmp/fontpixel-w26-fuzz-gsub -max_total_time=610 -max_len=65536 -rss_limit_mb=1024
+ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/subset" /tmp/fontpixel-w26-fuzz-subset -max_total_time=610 -max_len=65536 -rss_limit_mb=1024
+
+# Only after compilation, correctness and fuzz work complete:
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+python3 -B benches/variants.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w26-bench --output benches/results/variants.json
+
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.6/protected-after.sha256
+cmp reports/w2.5/protected-before.sha256 reports/w2.6/protected-after.sha256
