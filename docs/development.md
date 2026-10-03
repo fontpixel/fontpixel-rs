@@ -130,3 +130,33 @@ matching start/end fingerprints and the process exit status. An interrupted log
 or a parity warning about changed sources is not a final pass. See
 `fuzz/README.md` for the documented local sfnt target and limits and
 `reports/w2.1.md` for the verified results and known scope boundaries.
+
+## HEX / PSF validation (W3.1)
+
+`hex` and `psf` are independent library features; the CLI enables both by default.
+No production dependency is added (`psf` uses the existing gzip transport).
+The focused test binary requires both features and runs 19 tests including 400
+proptest cases. Use the complete matrix as usual, plus individual feature builds:
+
+```sh
+cargo test --locked -p fontpixel --no-default-features --features hex,psf --test hex_psf
+cargo clippy --locked -p fontpixel --no-default-features --features hex -- -D warnings
+cargo clippy --locked -p fontpixel --no-default-features --features psf -- -D warnings
+cargo build --locked --release -p fontpixel-cli --bin fontpixel
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/hex_psf.py \
+  --output tests/crosscheck/hex-psf-results.json
+cargo run --locked --release -p fontpixel --no-default-features \
+  --features hex,psf --example console_timing
+```
+
+The crosscheck requires monobit 0.54.0 and the read-only supplied catalogue
+reference. It compares both directions for the oracle's real supported subset,
+records its extended-HEX and PSF-sequence shortcomings, independently validates
+complete kbd wire grammar, and calls the actual BDF catalogue importer after new
+format conversions. There is no direct HEX/PSF importer to claim as tested.
+All inputs for these tests are generated; no external font is copied into Git.
+
+On storage-constrained workers, `CARGO_PROFILE_DEV_DEBUG=0`,
+`CARGO_PROFILE_TEST_DEBUG=0`, `CARGO_INCREMENTAL=0`, and `CARGO_BUILD_JOBS=4`
+reduce disposable build-cache size. They change neither test coverage nor
+release settings. An interrupted/full-disk run is never counted as passing.

@@ -287,3 +287,18 @@ subsetter code or runtime dependency was added.
   implementation or third-party SVG font parser source was copied.
 - xmlparser 0.13.6, MIT OR Apache-2.0, provides allocation-free XML token preflight
   before DOM allocation; no parser implementation is copied into this repository.
+
+## W3.1 HEX / PSF format and oracle references
+
+The codecs and independent wire fixture generators are original implementation,
+based on GNU Unifont's public format description and the Linux kbd PSF format
+specification (links in `docs/formats/hex.md` and `psf.md`). No GPL implementation
+was copied. monobit 0.54.0 (MIT, Rob Hagemans) was inspected and run as an external
+oracle; its HEX-width heuristic and PSF sequence limitations are explicitly
+recorded, not imported into the codecs.
+
+`tests/crosscheck/hex_psf.py` adapts the mini-font assertions from the supplied
+MIT `reference/fontpixel/pipeline/tests/test_bdf.py` and invokes the unmodified
+catalogue parser. The source checkout and mini fixture stay outside the new
+repository. No new font data is redistributed; all native unit/fuzz/performance
+fixtures are algorithmically generated under this project's MIT license.

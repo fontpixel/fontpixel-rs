@@ -68,7 +68,7 @@ impl FormatDetector for PsfCodec {
 }
 impl FormatReader<FontSet> for PsfCodec {
     fn read(&self, c: &mut ReadContext<'_>, _: &ReadOptions) -> Result<(FontSet, Report)> {
-        let (font, mut report) = read(c.bytes(), c.limits())?;
+        let (font, mut report) = parse(c.bytes(), c.limits())?;
         for e in &mut report.entries {
             e.location.asset = c.name().map(str::to_owned);
         }
@@ -164,6 +164,11 @@ fn header(bytes: &[u8]) -> Result<Header> {
 }
 /// Read strict PSF geometry and Unicode grammar without guessing an encoding.
 pub fn read(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
+    check(bytes.len(), limits.max_input_bytes, "PSF input bytes")?;
+    parse(bytes, limits)
+}
+
+fn parse(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
     let mut budget = Budget::new(bytes, limits)?;
     let h = header(bytes)?;
     if h.count == 0 {
@@ -438,19 +443,14 @@ pub fn write(font: &Font, options: &PsfWriteOptions) -> Result<(Vec<u8>, Report)
     } else {
         32
     };
-    check(
-        size.saturating_add(header_size),
-        options.max_output_bytes,
-        "PSF output bytes",
-    )?;
+    let output_limit = options.max_output_bytes.min(options.limits.max_total_bytes);
+    let fixed = size
+        .checked_add(header_size)
+        .ok_or_else(|| limit("PSF output bytes", output_limit))?;
+    check(fixed, output_limit, "PSF output bytes")?;
     let mut report = Report::default();
-    let mut out = Output::new(options.max_output_bytes);
-    let mut unicode = Output::new(
-        options
-            .limits
-            .max_table_bytes
-            .min(options.max_output_bytes - size - header_size),
-    );
+    let mut out = Output::new(output_limit);
+    let mut unicode = Output::new(options.limits.max_table_bytes.min(output_limit - fixed));
     let mut has_sequences = false;
     for (position, (id, g)) in font.glyphs().enumerate() {
         let index = id.index();

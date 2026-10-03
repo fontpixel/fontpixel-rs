@@ -360,7 +360,9 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
                 "woff2",
                 "ttc",
                 "vector-raster",
-                "svg"
+                "svg",
+                "hex",
+                "psf"
             ]
             .contains(&f.format.id))
             .all(|f| !f.read && !f.write)

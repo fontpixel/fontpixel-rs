@@ -130,3 +130,12 @@ fontTools supplies empty-outline scaffolding. Files contain no copied font
 artwork. `SOURCES.json` records SHA-256, byte sizes and the regeneration command.
 Fixed sfnt timestamps make generation reproducible. Larger Tong inputs stay in
 the read-only task package and are never copied into the repository.
+
+## W3.1 generated HEX / PSF cases (no third-party fonts)
+
+`crates/fontpixel/tests/hex_psf.rs` builds independent wire fixtures in memory;
+`tools/gen_console_cases.py` reproduces the fuzz seeds under the ignored corpus
+directory. `console_timing` generates 38,653 synthetic 16×16 cells. All are
+original test/performance data covered by this project's MIT license. External
+crosschecks temporarily invoke monobit and the supplied catalogue mini BDF
+fixture, which stays in the read-only reference package and is not redistributed.

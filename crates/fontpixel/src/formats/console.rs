@@ -26,7 +26,6 @@ pub(super) struct Budget {
 }
 impl Budget {
     pub fn new(input: &[u8], limits: &ResourceLimits) -> Result<Self> {
-        check(input.len(), limits.max_input_bytes, "console input bytes")?;
         let mut out = Self {
             used: 0,
             max: limits.max_total_bytes,

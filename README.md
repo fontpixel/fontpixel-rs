@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 2 in progress (through W2.8)
+## Current status: phase 2 complete; phase 3 started (W3.1)
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -22,8 +22,15 @@ YAFF 1.0 supports single/multi-strike monochrome and grayscale fonts, with
 bounded gzip and lossless versioned native-metadata extensions for golden tests.
 See [YAFF contracts](docs/formats/yaff.md) and [W1.6 validation](reports/w1.6.md).
 
-Thirteen format IDs now have native readers, twelve have writers (color writing
-is deferred); the remaining 33 IDs and Python/WASM bindings remain unimplemented
+GNU Unifont HEX supports 8/16/24/32-wide cells, explicit alternate heights and
+baseline conventions. Linux PSF1/PSF2 support Unicode aliases and complete
+combining sequences, with deterministic gzip and strict loss reporting.
+The CLI includes both; library users enable `hex` and/or `psf` explicitly.
+See [HEX](docs/formats/hex.md), [PSF](docs/formats/psf.md) and
+[W3.1 validation](reports/w3.1.md).
+
+Fifteen format IDs now have native readers, fourteen have writers (color writing
+is deferred); the remaining 31 IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
@@ -42,6 +49,16 @@ cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o font.pcf.gz
 cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o golden.yaff --strict
 cargo run -p fontpixel-cli --bin fontpixel -- convert golden.yaff -o golden.yaff.gz
 cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o swapped.pcf --byteorder lsb --bitorder msb --glyphpad 8 --scanunit 4
+```
+
+Console examples (HEX/PSF cannot retain source names and all BDF metadata):
+
+```sh
+fontpixel convert source.hex -o console.psf.gz
+fontpixel convert source.hex -o console.psf --psf-version 1 --psf1-count 512
+fontpixel info eight-row.hex --hex-height 8 --json
+fontpixel convert source.bdf -o unifont.hex --hex-height 16 --hex-descent 2
+fontpixel convert source.psf -o restored.psf --strict
 ```
 
 ## Build and inspect

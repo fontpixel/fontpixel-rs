@@ -60,7 +60,7 @@ impl FormatDetector for HexCodec {
 }
 impl FormatReader<FontSet> for HexCodec {
     fn read(&self, c: &mut ReadContext<'_>, _: &ReadOptions) -> Result<(FontSet, Report)> {
-        let (font, mut report) = read(c.bytes(), &self.read_options, c.limits())?;
+        let (font, mut report) = parse(c.bytes(), &self.read_options, c.limits())?;
         for e in &mut report.entries {
             e.location.asset = c.name().map(str::to_owned);
         }
@@ -134,6 +134,15 @@ fn nibble(b: u8) -> Option<u8> {
 }
 /// Parse ordered HEX records with strict scalar/geometry validation and bounded memory.
 pub fn read(
+    bytes: &[u8],
+    options: &HexReadOptions,
+    limits: &ResourceLimits,
+) -> Result<(Font, Report)> {
+    check(bytes.len(), limits.max_input_bytes, "HEX input bytes")?;
+    parse(bytes, options, limits)
+}
+
+fn parse(
     bytes: &[u8],
     options: &HexReadOptions,
     limits: &ResourceLimits,
@@ -223,16 +232,28 @@ pub fn read(
 pub fn write(font: &Font, options: &HexWriteOptions) -> Result<(Vec<u8>, Report)> {
     geometry(&options.geometry)?;
     font.validate(&options.limits)?;
-    let mut out = Output::new(options.max_output_bytes);
+    let mut out = Output::new(options.max_output_bytes.min(options.limits.max_total_bytes));
     let mut report = Report::default();
     let h = options.geometry.height;
     let descent = options.geometry.descent;
     cell_size(8, h, &options.limits)?;
     let mut max_width = 0;
+    let mut records = 0usize;
     for p in font.headers.iter() {
         if p.name == "hex.comment"
             && let PropertyValue::Text(text) = &p.value
         {
+            if text.contains('\n') || text.ends_with(|c: char| c.is_ascii_whitespace()) {
+                diag(
+                    &mut report,
+                    "hex",
+                    "write.comment",
+                    Impact::Loss,
+                    None,
+                    None,
+                    "Edited comment line boundaries or trailing whitespace are normalized",
+                );
+            }
             for line in text.split('\n') {
                 out.add(b"#")?;
                 out.add(line.as_bytes())?;
@@ -272,6 +293,10 @@ pub fn write(font: &Font, options: &HexWriteOptions) -> Result<(Vec<u8>, Report)
             );
         }
         let count = g.codepoints.iter().filter(|c| c.scalar().is_some()).count();
+        records = records
+            .checked_add(count)
+            .ok_or_else(|| limit("HEX output glyph count", options.limits.max_glyphs))?;
+        check(records, options.limits.max_glyphs, "HEX output glyph count")?;
         if count == 0 {
             diag(
                 &mut report,

@@ -644,3 +644,105 @@ proptest! {
         prop_assume!(char::from_u32(cp).is_some());let descent=descent.min(height);let data=(0..width*height as usize).map(|i|format!("{:02X}",bytes[i%bytes.len()])).collect::<String>();let wire=format!("{cp:04X}:{data}\n");let o=HexReadOptions{height,descent};let f=hex::read(wire.as_bytes(),&o,&limits()).unwrap().0;let (b,r)=hex::write(&f,&HexWriteOptions{geometry:o.clone(),..Default::default()}).unwrap();prop_assert!(!r.has_loss());prop_assert_eq!(&b,wire.as_bytes());prop_assert_eq!(hex::read(&b,&o,&limits()).unwrap().0,f);
     }
 }
+
+#[test]
+fn output_totals_alias_expansion_and_edited_comment_loss() {
+    let mut font = read_hex(hx(65, 8, 16).as_bytes());
+    let id = font.glyphs().next().unwrap().0;
+    font.edit_glyph(id, |g| {
+        g.codepoints.push(Codepoint::Unicode(66));
+        Ok(())
+    })
+    .unwrap();
+    assert!(
+        hex::write(
+            &font,
+            &HexWriteOptions {
+                limits: ResourceLimits {
+                    max_glyphs: 1,
+                    ..limits()
+                },
+                ..Default::default()
+            }
+        )
+        .is_err()
+    );
+    assert!(
+        hex::write(
+            &font,
+            &HexWriteOptions {
+                limits: ResourceLimits {
+                    max_total_bytes: 32,
+                    ..limits()
+                },
+                ..Default::default()
+            }
+        )
+        .is_err()
+    );
+    assert!(
+        psf::write(
+            &font,
+            &PsfWriteOptions {
+                limits: ResourceLimits {
+                    max_total_bytes: 32,
+                    ..limits()
+                },
+                ..Default::default()
+            }
+        )
+        .is_err()
+    );
+    font.headers
+        .push(Property::new("hex.comment", "edited\ncomment "));
+    let (_, report) = hex::write(&font, &HexWriteOptions::default()).unwrap();
+    assert!(report.entries.iter().any(|e| e.code == "hex.write.comment"));
+}
+
+#[test]
+fn gzip_wire_and_decompressed_limits_are_independent() {
+    let font = read_psf(&psf2(8, 16, &vec![vec![0; 16]; 64], None));
+    let set = FontSet::from(font);
+    let opts = WriteOptions::new(ResourcePath::new("test.psf.gz").unwrap());
+    let compressed = fontpixel::write(&set, "psf", &opts)
+        .unwrap()
+        .output
+        .into_single()
+        .unwrap();
+    let plain = encoded_psf(&set.fonts[0]);
+    assert!(compressed.len() < plain.len());
+    let options = ReadOptions {
+        limits: ResourceLimits {
+            max_input_bytes: compressed.len(),
+            max_decompressed_bytes: plain.len(),
+            ..limits()
+        },
+        ..Default::default()
+    };
+    assert_eq!(
+        fontpixel::read(&compressed, &options).unwrap().fonts.fonts,
+        set.fonts
+    );
+    assert!(psf::read(&plain, &options.limits).is_err());
+    let options = ReadOptions {
+        limits: ResourceLimits {
+            max_decompressed_bytes: plain.len() - 1,
+            ..options.limits
+        },
+        ..Default::default()
+    };
+    assert!(fontpixel::read(&compressed, &options).is_err());
+}
+
+#[test]
+fn embedded_carriage_return_in_hex_comment_is_lossless() {
+    let (font, _) = hex::read(b"# before\rafter\n", &HexReadOptions::default(), &limits()).unwrap();
+    let (bytes, report) = hex::write(&font, &HexWriteOptions::default()).unwrap();
+    assert!(!report.has_loss());
+    assert_eq!(
+        hex::read(&bytes, &HexReadOptions::default(), &limits())
+            .unwrap()
+            .0,
+        font
+    );
+}

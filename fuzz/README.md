@@ -120,3 +120,27 @@ LeakSanitizer is disabled only because this environment cannot support its
 exit-time ptrace check; AddressSanitizer remains active. Record each run's `DONE`,
 exit status, execution count and coverage counters; incomplete runs do not meet
 the ten-minute requirement. No generated corpus or binaries are committed.
+
+## HEX and PSF (W3.1)
+
+`hex` exercises three explicit heights (8/16/24), comments, Unicode scalars,
+resource bounds and exact native read/write/read equality. `psf` covers both
+headers, arbitrary widths, aliases, sequence-only/multiple sequences, strict
+Unicode grammar and both writers. No-loss roundtrips must preserve the native
+model exactly. Seeds are generated from the independent fixtures described in
+`crates/fontpixel/tests/hex_psf.rs`; no licensed external font is required.
+
+```sh
+python3 -B tools/gen_console_cases.py
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run hex -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1536 -max_len=65536 -detect_leaks=0
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run psf -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1536 -max_len=65536 -detect_leaks=0
+```
+
+Both targets use 64 KiB input, 4 MiB aggregate model accounting and 65,536
+pixels/glyph; HEX caps records at 8 KiB and 256 glyphs, PSF tables at 64 KiB and
+512 glyphs. Writes cap at 256 KiB. Final elapsed time, executions, coverage,
+exit status and identical production-source fingerprints are recorded in the
+W3.1 report/evidence. The same sandbox-only LeakSanitizer exception applies;
+AddressSanitizer and Rust overflow/panic checks remain enabled.
