@@ -1,0 +1,129 @@
+[
+  {
+    "name": "TongPixelSans14Large-JP.bdf",
+    "sample_count": 38653,
+    "rebuilt_count": 38653,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 4323,
+    "first_changes": [
+      "U+3402",
+      "U+3406",
+      "U+342C",
+      "U+342E",
+      "U+3468",
+      "U+346A",
+      "U+3492",
+      "U+34B5",
+      "U+34BC",
+      "U+34C1",
+      "U+34C7",
+      "U+34DB",
+      "U+351F",
+      "U+355D",
+      "U+355E"
+    ]
+  },
+  {
+    "name": "TongPixelSans14Large-KR.bdf",
+    "sample_count": 38653,
+    "rebuilt_count": 38653,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 4323,
+    "first_changes": [
+      "U+3402",
+      "U+3406",
+      "U+342C",
+      "U+342E",
+      "U+3468",
+      "U+346A",
+      "U+3492",
+      "U+34B5",
+      "U+34BC",
+      "U+34C1",
+      "U+34C7",
+      "U+34DB",
+      "U+351F",
+      "U+355D",
+      "U+355E"
+    ]
+  },
+  {
+    "name": "TongPixelSans14Large-Latin.bdf",
+    "sample_count": 3645,
+    "rebuilt_count": 3645,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 0,
+    "first_changes": []
+  },
+  {
+    "name": "TongPixelSans14Large-SC.bdf",
+    "sample_count": 38653,
+    "rebuilt_count": 38653,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 4323,
+    "first_changes": [
+      "U+3402",
+      "U+3406",
+      "U+342C",
+      "U+342E",
+      "U+3468",
+      "U+346A",
+      "U+3492",
+      "U+34B5",
+      "U+34BC",
+      "U+34C1",
+      "U+34C7",
+      "U+34DB",
+      "U+351F",
+      "U+355D",
+      "U+355E"
+    ]
+  },
+  {
+    "name": "TongPixelSans14Large-TC.bdf",
+    "sample_count": 38653,
+    "rebuilt_count": 38653,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 4323,
+    "first_changes": [
+      "U+3402",
+      "U+3406",
+      "U+342C",
+      "U+342E",
+      "U+3468",
+      "U+346A",
+      "U+3492",
+      "U+34B5",
+      "U+34BC",
+      "U+34C1",
+      "U+34C7",
+      "U+34DB",
+      "U+351F",
+      "U+355D",
+      "U+355E"
+    ]
+  },
+  {
+    "name": "TongPixelSans14Small-Latin.bdf",
+    "sample_count": 3645,
+    "rebuilt_count": 3645,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 0,
+    "first_changes": []
+  },
+  {
+    "name": "TongPixelSansMono14Large-Latin.bdf",
+    "sample_count": 3645,
+    "rebuilt_count": 3645,
+    "only_sample": 0,
+    "only_rebuilt": 0,
+    "changed": 0,
+    "first_changes": []
+  }
+]
