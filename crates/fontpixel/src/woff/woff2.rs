@@ -19,7 +19,7 @@ pub struct Options {
     pub transform_glyf: bool,
     /// Apply hmtx transform when a full LSB array is reconstructible (default true).
     pub transform_hmtx: bool,
-    /// Intra-font Brotli workers, 1..=16. Default one; more changes compression
+    /// Intra-font Brotli workers, 1..=16. Default two; more changes compression
     /// decisions/size but still emits one standard Brotli stream.
     pub compression_threads: usize,
     /// Envelope version and optional blocks.

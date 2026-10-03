@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/benches/phase2_exports.py", line 143, in <module>
+    main()
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/benches/phase2_exports.py", line 110, in main
+    timings = list(pool.map(execute, tasks))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/benches/phase2_exports.py", line 61, in execute
+    raise RuntimeError((command, proc.returncode, proc.stdout, proc.stderr))
+RuntimeError: (['/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/release/fontpixel', 'variants', '--base', '/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf/TongPixelSans14Large-SC.bdf', '--lang', 'zh-Hant,zh-HK=/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf/TongPixelSans14Large-TC.bdf', '--lang', 'ja=/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf/TongPixelSans14Large-JP.bdf', '--lang', 'ko=/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf/TongPixelSans14Large-KR.bdf', '--script', 'latn,grek,cyrl=/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/bdf/TongPixelSans14Large-Latin.bdf', '--family', 'Tong Pixel Sans 14 Large', '--vendor', 'TONG', '--font-version', 'phase2', '--copyright', 'Tong Pixel Sans. Derived from Source Han Sans, Source Sans 3, Source Code Pro (Adobe), the Noto fonts (Google), Plangothic P1; Han bitmaps partly after TUMBLED (TsFreddie).', '--license', 'This Font Software is licensed under the SIL Open Font License, Version 1.1.', '--license-url', 'https://openfontlicense.org', '--shape', 'square', '-o', '/tmp/fontpixel-phase2-native/woff2/TongPixelSans14Large-square.woff2', '--woff2-quality', '11', '--woff2-threads', '1'], -9, '', '')

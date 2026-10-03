@@ -20,6 +20,17 @@ pub enum OutlineFlavor {
     /// Cubic CFF1 outlines (requires `cff`).
     Cff,
 }
+/// Native default-scale dot composite representation; pixels and glyph IDs agree.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum DotReuse {
+    /// One circle component per pixel, favoring repetitive webfont compression.
+    Literal,
+    /// Reuse existing one-row patterns, balancing sfnt size and compression ratio.
+    Rows,
+    /// Reuse bounded rows, columns and tiny 2D patterns for fastest native export.
+    #[default]
+    Patterns,
+}
 /// Native variant output choices, independent from the outer webfont container.
 #[derive(Clone, Debug)]
 pub struct Options {
@@ -27,6 +38,8 @@ pub struct Options {
     pub shape: Shape,
     /// Pixel diameter/side; merged squares require 1.
     pub dot_size: f64,
+    /// Dot representation at 100 units/pixel and diameter 0.9; default Patterns.
+    pub dot_reuse: DotReuse,
     /// Font design units per source pixel.
     pub units_per_pixel: u16,
     /// Override units per em; default pixel size times scale.
@@ -61,6 +74,7 @@ impl Default for Options {
         Self {
             shape: Shape::Square,
             dot_size: 1.,
+            dot_reuse: DotReuse::default(),
             units_per_pixel: 100,
             units_per_em: None,
             flavor: OutlineFlavor::TrueType,
@@ -215,10 +229,15 @@ fn encode_planned(
     #[cfg(feature = "cff")]
     let mut cff_glyphs = Vec::new();
     let shared = o.flavor == OutlineFlavor::TrueType && o.shape == Shape::Dot;
-    // Existing one-row glyphs can shorten default Tong dot composites without
+    // Existing small ink-pattern glyphs shorten default Tong dot composites without
     // introducing any new glyph IDs. Other scales/diameters retain direct dots.
-    let dot_rows = (shared && o.units_per_pixel == 100 && o.dot_size == 0.9)
-        .then(|| super::dot_rows::Catalogue::new(&sources, scale));
+    let dot_rows = (shared
+        && o.units_per_pixel == 100
+        && o.dot_size == 0.9
+        && o.dot_reuse != DotReuse::Literal)
+        .then(|| {
+            super::dot_rows::Catalogue::new(&sources, scale, o.dot_reuse == DotReuse::Patterns)
+        });
     let count = sources.len() + usize::from(shared);
     l.glyphs(count)?;
     let dot_id = sources.len() as u16;

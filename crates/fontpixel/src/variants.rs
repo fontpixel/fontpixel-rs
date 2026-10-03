@@ -11,7 +11,7 @@ use std::{
 };
 mod dot_rows;
 mod export;
-pub use export::{Encoded, Options, OutlineFlavor, encode, encode_single};
+pub use export::{DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single};
 
 /// A language-specific face with explicit OpenType script selection.
 #[derive(Clone, Debug, PartialEq, Eq)]

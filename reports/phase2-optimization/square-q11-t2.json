@@ -1,0 +1,12 @@
+{
+  "threads": 2,
+  "quality": 11,
+  "returncode": 0,
+  "wall_seconds": 19.47869411799911,
+  "peak_rss_kib": 222456,
+  "cpu_user_seconds": 34.132146,
+  "cpu_system_seconds": 0.379914,
+  "source_sha256": "64df0f18a84a84b0f4e0c08ef42701246e05118c3e211c9a7d6d3c7f2e1c6a2f",
+  "output_bytes": 1136532,
+  "scope": "single CFF codec resource/profile probe; not a five-run benchmark"
+}

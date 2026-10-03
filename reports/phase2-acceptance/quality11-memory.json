@@ -1,0 +1,9 @@
+{
+  "return_code": 0,
+  "wall_seconds": 61.68328652299533,
+  "maximum_child_rss_kib": 430448,
+  "user_seconds": 60.574377,
+  "system_seconds": 1.085596,
+  "case": "complete Large proportional regional dot WOFF2, default q11/t1",
+  "scope": "single resource probe, not a five-run timing result"
+}

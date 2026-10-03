@@ -1,10 +1,10 @@
 //! Bounded multicore full Tong export, reusing parsed faces, plans and sfnt bytes.
-//! Usage: tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS=4] [QUALITY=11]
-//!                   [COMPRESSION_THREADS=2] [VERSION=1.0]
+//! Usage: tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS=8] [QUALITY=11]
+//!                   [COMPRESSION_THREADS=1] [VERSION=1.0] [DOT_REUSE=patterns]
 use fontpixel::{
     FontSet, Input, ResourcePath, Variants,
     outline::Shape,
-    variants::{Options, OutlineFlavor, ScriptVariant},
+    variants::{DotReuse, Options, OutlineFlavor, ScriptVariant},
 };
 use std::{
     collections::BTreeMap,
@@ -102,7 +102,7 @@ fn write_bitmap(face: &InputFace, out: &Path) -> AnyResult<serde_json::Value> {
 fn main() -> AnyResult<()> {
     let args = std::env::args().collect::<Vec<_>>();
     if args.len() < 3 {
-        return Err("tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS] [QUALITY] [COMPRESSION_THREADS] [VERSION]".into());
+        return Err("tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS] [QUALITY] [COMPRESSION_THREADS] [VERSION] [DOT_REUSE]".into());
     }
     let input = Path::new(&args[1]);
     let out = Path::new(&args[2]);
@@ -111,10 +111,16 @@ fn main() -> AnyResult<()> {
         .get(3)
         .map(|s| s.parse())
         .transpose()?
-        .unwrap_or(cpus.min(4));
+        .unwrap_or(cpus.min(8));
     let quality: u32 = args.get(4).map(|s| s.parse()).transpose()?.unwrap_or(11);
-    let threads: usize = args.get(5).map(|s| s.parse()).transpose()?.unwrap_or(2);
+    let threads: usize = args.get(5).map(|s| s.parse()).transpose()?.unwrap_or(1);
     let version = args.get(6).map_or("1.0", String::as_str);
+    let dot_reuse = match args.get(7).map_or("patterns", String::as_str) {
+        "literal" => DotReuse::Literal,
+        "rows" => DotReuse::Rows,
+        "patterns" => DotReuse::Patterns,
+        _ => return Err("dot reuse must be literal, rows or patterns".into()),
+    };
     if !(1..=8).contains(&jobs)
         || !(1..=8).contains(&threads)
         || jobs * threads > 16
@@ -204,7 +210,8 @@ fn main() -> AnyResult<()> {
         Ok(family.variants.prepare(&Default::default())?)
     })?;
     let plan_seconds = plan_start.elapsed().as_secs_f64();
-    // The historically expensive dot jobs start first, reducing tail idle time.
+    // Fixed task order keeps scheduling reproducible; at eight jobs all fonts
+    // run together, amortizing compressor startup without rereading sources.
     let tasks = [Shape::Dot, Shape::Square]
         .into_iter()
         .flat_map(|shape| (0..families.len()).map(move |family| (family, shape)))
@@ -214,7 +221,7 @@ fn main() -> AnyResult<()> {
         let started = Instant::now();
         let shape_name = if shape == Shape::Dot { "dot" } else { "square" };
         let options = Options {
-            shape, dot_size: if shape == Shape::Dot { 0.9 } else { 1. },
+            shape, dot_size: if shape == Shape::Dot { 0.9 } else { 1. }, dot_reuse,
             family: Some(families[family].name.clone()), version: version.into(), vendor: *b"TONG",
             copyright: Some("Tong Pixel Sans. Derived from Source Han Sans, Source Sans 3, Source Code Pro (Adobe), the Noto fonts (Google), Plangothic P1; Han bitmaps partly after TUMBLED (TsFreddie).".into()),
             license: Some("This Font Software is licensed under the SIL Open Font License, Version 1.1.".into()),

@@ -1,4 +1,4 @@
-//! Reuse existing one-row glyphs without adding glyph IDs or changing pixels.
+//! Reuse existing bounded ink patterns without adding glyph IDs or changing pixels.
 use crate::{
     Bitmap, Glyph, Result,
     model::GlyphBitmap,
@@ -6,43 +6,55 @@ use crate::{
     sfnt::{self, glyf},
 };
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 struct Row {
     glyph: u16,
     x: i16,
     y: i16,
     width: usize,
-    mask: u64,
+    masks: Vec<u64>,
+    ink: u32,
 }
 
-/// Selected row glyphs themselves stay direct circle composites, preventing cycles.
+/// Selected helpers themselves stay direct circle composites, preventing cycles.
 pub(super) struct Catalogue {
     rows: Vec<Row>,
     selected: Vec<bool>,
 }
 impl Catalogue {
-    pub(super) fn new(sources: &[(&str, &Glyph)], scale: i64) -> Self {
+    pub(super) fn new(sources: &[(&str, &Glyph)], scale: i64, include_2d: bool) -> Self {
         let mut patterns = std::collections::BTreeMap::new();
         for (id, (_, glyph)) in sources.iter().enumerate().skip(1) {
             let GlyphBitmap::Mono(bitmap) = &glyph.bitmap else {
                 continue;
             };
             let ink = bitmap.bbox();
-            if ink.height != 1 || !(2..=64).contains(&ink.width) {
+            if !include_2d && ink.height != 1 {
                 continue;
             }
-            let row = bitmap.height() - 1 - ink.y as u32;
-            let mut mask = 0u64;
-            for x in 0..ink.width {
-                if bitmap
-                    .get_pixel(ink.x as u32 + x, row)
-                    .is_ok_and(|p| p != 0)
-                {
-                    mask |= 1u64 << x;
+            if ink.width == 0
+                || ink.height == 0
+                || ink.width > 64
+                || ink.height > 64
+                || (ink.width > 1 && ink.height > 1 && (ink.width > 4 || ink.height > 4))
+            {
+                continue;
+            }
+            let mut masks = vec![0u64; ink.height as usize];
+            for y in 0..ink.height {
+                let row = bitmap.height() - 1 - ink.y as u32 - y;
+                for x in 0..ink.width {
+                    if bitmap
+                        .get_pixel(ink.x as u32 + x, row)
+                        .is_ok_and(|p| p != 0)
+                    {
+                        masks[y as usize] |= 1u64 << x;
+                    }
                 }
             }
-            if mask.count_ones() < 2
-                || patterns.contains_key(&(ink.width, mask))
+            let pixels = masks.iter().map(|m| m.count_ones()).sum::<u32>();
+            if pixels < 2
+                || patterns.contains_key(&(ink.width, masks.clone()))
                 || patterns.len() >= 256
             {
                 continue;
@@ -70,20 +82,21 @@ impl Catalogue {
                 continue;
             };
             patterns.insert(
-                (ink.width, mask),
+                (ink.width, masks.clone()),
                 Row {
                     glyph,
                     x,
                     y,
                     width: ink.width as usize,
-                    mask,
+                    masks,
+                    ink: pixels,
                 },
             );
         }
         let mut rows = patterns.into_values().collect::<Vec<_>>();
         rows.sort_by_key(|r| {
             (
-                std::cmp::Reverse(r.mask.count_ones()),
+                std::cmp::Reverse(r.ink),
                 std::cmp::Reverse(r.width),
                 r.glyph,
             )
@@ -124,56 +137,76 @@ impl Catalogue {
             .into_iter()
             .map(|(x, y)| Ok((coordinate(x)?, coordinate(y)?)))
             .collect::<Result<Vec<_>>>()?;
+        if origins.is_empty() {
+            return Ok(glyf::Glyph::Empty);
+        }
+        let x0 = origins.iter().map(|p| p.0).min().unwrap();
+        let y0 = origins.iter().map(|p| p.1).min().unwrap();
+        let x1 = origins.iter().map(|p| p.0).max().unwrap();
+        let y1 = origins.iter().map(|p| p.1).max().unwrap();
+        let width = ((i32::from(x1) - i32::from(x0)) / options.units_per_pixel + 1) as usize;
+        let height = ((i32::from(y1) - i32::from(y0)) / options.units_per_pixel + 1) as usize;
+        if width > 64 || height > 64 {
+            return glyf::Glyph::pixels(bitmap, options, dot, limits);
+        }
+        let mut remaining = vec![0u64; height];
+        for &(x, y) in &origins {
+            let x = ((i32::from(x) - i32::from(x0)) / options.units_per_pixel) as usize;
+            let y = ((i32::from(y) - i32::from(y0)) / options.units_per_pixel) as usize;
+            remaining[y] |= 1u64 << x;
+        }
         let mut components = Vec::with_capacity(origins.len());
-        let mut start = 0;
-        while start < origins.len() {
-            let mut end = start + 1;
-            while end < origins.len() && origins[end].1 == origins[start].1 {
-                end += 1;
-            }
-            let (x0, y) = origins[start];
-            let span =
-                (i32::from(origins[end - 1].0) - i32::from(x0)) / options.units_per_pixel + 1;
-            if span > 64 {
-                for &(x, y) in &origins[start..end] {
-                    components.push(glyf::Component::translated(dot, x, y));
-                }
-                start = end;
-                continue;
-            }
-            let mut remaining = 0u64;
-            for &(x, _) in &origins[start..end] {
-                remaining |= 1u64 << ((i32::from(x) - i32::from(x0)) / options.units_per_pixel);
-            }
-            while remaining != 0 {
-                let first = remaining.trailing_zeros() as usize;
-                let x = i32::from(x0) + first as i32 * options.units_per_pixel;
+        for y in (0..height).rev() {
+            while remaining[y] != 0 {
+                let first = remaining[y].trailing_zeros() as usize;
                 let mut chosen = None;
                 for helper in &self.rows {
-                    if first + helper.width > span as usize {
+                    // Top row always has ink. Its first bit anchors the match;
+                    // bounding-box x may lie left of that first top-row pixel.
+                    let anchor = helper.masks.last().unwrap().trailing_zeros() as usize;
+                    let Some(x) = first.checked_sub(anchor) else {
+                        continue;
+                    };
+                    let Some(start_y) = (y + 1).checked_sub(helper.masks.len()) else {
+                        continue;
+                    };
+                    if x + helper.width > width {
                         continue;
                     }
-                    let mask = helper.mask << first;
-                    if remaining & mask != mask {
+                    if !helper
+                        .masks
+                        .iter()
+                        .enumerate()
+                        .all(|(j, mask)| remaining[start_y + j] & (mask << x) == mask << x)
+                    {
                         continue;
                     }
                     if let (Ok(dx), Ok(dy)) = (
-                        i16::try_from(x - i32::from(helper.x)),
-                        i16::try_from(i32::from(y) - i32::from(helper.y)),
+                        i16::try_from(
+                            i32::from(x0) + x as i32 * options.units_per_pixel
+                                - i32::from(helper.x),
+                        ),
+                        i16::try_from(
+                            i32::from(y0) + start_y as i32 * options.units_per_pixel
+                                - i32::from(helper.y),
+                        ),
                     ) {
-                        chosen = Some((helper.glyph, dx, dy, mask));
+                        chosen = Some((helper, x, start_y, dx, dy));
                         break;
                     }
                 }
-                if let Some((glyph, dx, dy, mask)) = chosen {
-                    components.push(glyf::Component::translated(glyph, dx, dy));
-                    remaining &= !mask;
+                if let Some((helper, x, start_y, dx, dy)) = chosen {
+                    components.push(glyf::Component::translated(helper.glyph, dx, dy));
+                    for (j, mask) in helper.masks.iter().enumerate() {
+                        remaining[start_y + j] &= !(mask << x);
+                    }
                 } else {
-                    components.push(glyf::Component::translated(dot, x as i16, y));
-                    remaining &= !(1u64 << first);
+                    let px = (i32::from(x0) + first as i32 * options.units_per_pixel) as i16;
+                    let py = (i32::from(y0) + y as i32 * options.units_per_pixel) as i16;
+                    components.push(glyf::Component::translated(dot, px, py));
+                    remaining[y] &= !(1u64 << first);
                 }
             }
-            start = end;
         }
         Ok(if components.is_empty() {
             glyf::Glyph::Empty
@@ -190,6 +223,96 @@ impl Catalogue {
 mod tests {
     use super::*;
     #[test]
+    fn small_two_dimensional_patterns_preserve_every_3x3_mask() {
+        let mut sources = vec![Glyph::new(Bitmap::<crate::bitmap::Mono>::default())];
+        for text in ["##", "#\n#", ".#\n##", "##\n.#", "#.#"] {
+            let mut glyph = Glyph::new(text.parse::<Bitmap>().unwrap());
+            glyph.metrics.bounds.x = -2;
+            glyph.metrics.bounds.y = -1;
+            sources.push(glyph);
+        }
+        sources.push(Glyph::new(
+            "######\n######\n######\n######\n######"
+                .parse::<Bitmap>()
+                .unwrap(),
+        ));
+        let catalogue = Catalogue::new(
+            &sources.iter().map(|g| ("", g)).collect::<Vec<_>>(),
+            100,
+            true,
+        );
+        let limits = glyf::Limits::default();
+        let options = outline::Options {
+            shape: outline::Shape::Dot,
+            dot_size: 0.9,
+            origin: (-3, 2),
+            ..Default::default()
+        };
+        let dot = sources.len() as u16;
+        let mut glyphs = vec![glyf::Glyph::Empty];
+        for glyph in &sources[1..sources.len() - 1] {
+            let GlyphBitmap::Mono(bitmap) = &glyph.bitmap else {
+                unreachable!()
+            };
+            glyphs.push(
+                glyf::Glyph::pixels(
+                    bitmap,
+                    &outline::Options {
+                        origin: (-2, -1),
+                        ..options.clone()
+                    },
+                    dot,
+                    &limits,
+                )
+                .unwrap(),
+            );
+        }
+        let target = glyphs.len();
+        glyphs.push(glyf::Glyph::Empty);
+        glyphs.push(glyf::Glyph::simple(vec![
+            outline::pixel_contour(&options).unwrap(),
+        ]));
+        let mut smaller = false;
+        for mask in 0..512 {
+            let mut bitmap = Bitmap::new(6, 5).unwrap();
+            bitmap.set_pixel(5, 4, 1).unwrap();
+            for y in 0..3 {
+                for x in 0..3 {
+                    if mask & (1 << (y * 3 + x)) != 0 {
+                        bitmap.set_pixel(x + 1, y + 1, 1).unwrap();
+                    }
+                }
+            }
+            let mut old = glyf::GlyfTable {
+                glyphs: glyphs.clone(),
+            };
+            old.glyphs[target] = glyf::Glyph::pixels(&bitmap, &options, dot, &limits).unwrap();
+            let mut new = glyf::GlyfTable {
+                glyphs: glyphs.clone(),
+            };
+            new.glyphs[target] = catalogue
+                .glyph(target, &bitmap, &options, dot, &limits)
+                .unwrap();
+            let canonical = |table: &glyf::GlyfTable| {
+                let mut contours = table
+                    .contours(target as u16, &limits)
+                    .unwrap()
+                    .into_iter()
+                    .map(|c| format!("{c:?}"))
+                    .collect::<Vec<_>>();
+                contours.sort();
+                contours
+            };
+            assert_eq!(canonical(&old), canonical(&new), "mask {mask}");
+            if let (glyf::Glyph::Composite(a), glyf::Glyph::Composite(b)) =
+                (&old.glyphs[target], &new.glyphs[target])
+            {
+                smaller |= b.components.len() < a.components.len();
+            }
+        }
+        assert!(smaller);
+    }
+    #[test]
     fn nested_rows_keep_glyph_count_and_exact_expanded_contours() {
         let empty = Glyph::new(Bitmap::<crate::bitmap::Mono>::default());
         let mut row = Glyph::new("##".parse::<Bitmap>().unwrap());
@@ -199,7 +322,7 @@ mod tests {
         target.metrics.bounds.x = -1;
         target.metrics.bounds.y = -2;
         let sources = [(".notdef", &empty), ("row", &row), ("target", &target)];
-        let catalogue = Catalogue::new(&sources, 100);
+        let catalogue = Catalogue::new(&sources, 100, true);
         let limits = glyf::Limits::default();
         let base = outline::Options {
             shape: outline::Shape::Dot,
@@ -244,9 +367,9 @@ mod tests {
     fn patterned_rows_cover_ink_once_and_keep_original_work_limits() {
         let empty = Glyph::new(Bitmap::<crate::bitmap::Mono>::default());
         let row = Glyph::new("#.#".parse::<Bitmap>().unwrap());
-        let target = Glyph::new("###\n.#.".parse::<Bitmap>().unwrap());
+        let target = Glyph::new("###..#\n.#....".parse::<Bitmap>().unwrap());
         let sources = [(".notdef", &empty), ("row", &row), ("target", &target)];
-        let catalogue = Catalogue::new(&sources, 100);
+        let catalogue = Catalogue::new(&sources, 100, true);
         let options = outline::Options {
             shape: outline::Shape::Dot,
             dot_size: 0.9,
@@ -291,7 +414,7 @@ mod tests {
         let glyf::Glyph::Composite(glyph) = &optimized.glyphs[2] else {
             panic!("composite")
         };
-        assert_eq!(glyph.components.len(), 3);
+        assert_eq!(glyph.components.len(), 4);
         let strict = glyf::Limits {
             max_components: 3,
             ..limits
@@ -309,6 +432,7 @@ mod tests {
         let catalogue = Catalogue::new(
             &[(".notdef", &empty), ("row", &row), ("target", &target)],
             100,
+            true,
         );
         let options = outline::Options {
             shape: outline::Shape::Dot,

@@ -1,0 +1,50 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 9.08s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/fontpixel-6ea26c7d1d3893e3)
+
+running 2 tests
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.01s
+
+    Finished `test` profile [unoptimized] target(s) in 0.04s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/fontpixel-6ea26c7d1d3893e3)
+
+running 1 test
+test variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 12.07s
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/variants-7b748a099fdb590c)
+
+running 22 tests
+test language_registry_and_regional_tags ... ok
+test alternative_only_characters_become_defaults ... ok
+test dedup_uses_bitmap_and_all_metrics ... ok
+test embedded_variants_preserve_vertical_metrics ... ok
+test script_defaults_and_explicit_empty_routes ... ok
+test selected_glyph_closure_handles_chains_and_cycles ... ok
+test alternate_missing_metrics_do_not_inherit_base_font_defaults ... ok
+test maximum_context_matches_actual_layout_presence ... ok
+test source_limits_and_metric_overflow_are_errors ... ok
+test cff_subset_preserves_raw_programs ... ok
+test subset_preserves_explicit_truetype_bbox_bytes ... ok
+test subset_prunes_scaling_for_removed_sparse_strikes ... ok
+test prepared_variants_match_direct_encoding_and_preserve_budgets ... ok
+test subset_cff_cid_hints_subroutines_and_font_matrices ... ok
+test writer_repairs_missing_dflt_default_without_changing_language_routing ... ok
+test vertical_metrics_survive_variant_export_and_subset ... ok
+test subset_rejects_unpaired_vertical_metric_drops ... ok
+test unsupported_tables_fail_or_report_explicit_loss ... ok
+test variants_resolve_each_source_fonts_metric_defaults_before_deduplication ... ok
+test variants_and_subsets_keep_names_cmap_dependencies ... ok
+test malformed_layout_never_panics ... ok
+test large_extension_offsets_roundtrip ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 6.82s

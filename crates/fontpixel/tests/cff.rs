@@ -90,6 +90,44 @@ fn square_dot_and_separate_roundtrip() {
     }
 }
 #[test]
+fn alternating_axis_runs_split_and_reset_without_geometry_changes() {
+    // Cross the 40-operand packing boundary, then break runs with every other
+    // command kind. Consecutive same-axis and zero-length lines must survive.
+    for vertical_first in [false, true] {
+        let mut path = vec![Command::MoveTo((0., 0.))];
+        let mut p = (0., 0.);
+        for index in 0..97 {
+            if (index % 2 == 0) == vertical_first {
+                p.1 += 1.;
+            } else {
+                p.0 += 1.;
+            }
+            path.push(Command::LineTo(p));
+        }
+        path.push(Command::LineTo(p));
+        p.0 += 2.;
+        path.push(Command::LineTo(p));
+        p.0 += 3.;
+        path.push(Command::LineTo(p));
+        p = (p.0 + 4., p.1 + 5.);
+        path.push(Command::LineTo(p));
+        path.push(Command::CurveTo((60., 60.), (70., 70.), (80., 80.)));
+        path.push(Command::LineTo((80., 81.)));
+        path.push(Command::Close);
+        path.push(Command::MoveTo((-5., -5.)));
+        path.push(Command::LineTo((-4., -5.)));
+        path.push(Command::LineTo((-4., -4.)));
+        path.push(Command::Close);
+        let mut f = empty();
+        f.glyphs[0].outline = Outline::Path(path.clone());
+        let limits = Limits::default();
+        let encoded = f.encode(&limits).unwrap();
+        let parsed = Cff::parse(&encoded.data, f.units_per_em, &limits).unwrap();
+        assert_eq!(parsed.glyph(0, &limits).unwrap().commands, path);
+        assert_eq!(parsed.glyph(0, &limits).unwrap().advance, 700.);
+    }
+}
+#[test]
 fn all_3x3_square_masks() {
     let l = Limits::default();
     for mask in 0..512 {

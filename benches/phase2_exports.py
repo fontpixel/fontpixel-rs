@@ -76,8 +76,10 @@ def main():
     for kind in ['bdf', 'pcf', 'otb', 'ttf', 'otf', 'woff2']:
         (args.work / kind).mkdir(exist_ok=True)
     ref = load_reference(ROOT.parent)
-    profiles = [('default', 11, 1, 8), ('intra4', 11, 4, 2),
-                ('quality8', 8, 1, 8), ('quality5', 5, 1, 8), ('serial5', 5, 1, 1)]
+    # Eight simultaneous default-quality processes exceeded the current shared
+    # host's available memory. Four keeps headroom; q11/t1 are historical baseline options.
+    profiles = [('default', 11, 1, 4), ('intra4', 11, 4, 2),
+                ('quality8', 8, 1, 4), ('quality5', 5, 1, 4), ('serial5', 5, 1, 1)]
     if args.profile:
         profiles = [p for p in profiles if p[0] in args.profile]
     binary_hash = sha(args.binary)

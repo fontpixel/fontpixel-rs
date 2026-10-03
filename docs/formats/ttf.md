@@ -80,3 +80,19 @@ preserved. Matching is bounded to 256 patterns of at most 64 cells, with a direc
 circle fallback. Native bytes and `maxp` composite-depth statistics may differ
 from the literal-component representation. The bdfparser compatibility writer
 is unchanged. See `docs/decisions.md` and the combined Phase 2 evidence.
+
+The final Phase 2 candidate extends dot reuse to single-row/column patterns up
+to 64 pixels and two-dimensional patterns no larger than 4×4, with at most 256
+existing helper glyphs. A bounded 64×64 ink mask consumes each pixel once; larger
+inputs retain direct circle components. Helpers remain literal composites, so
+there are no cycles and at most two composite levels. This can trade webfont
+compression ratio for smaller sfnts and faster encoding; benchmark reports state
+both time and bytes. Quality remains 11. Compatibility output is unchanged.
+
+API callers select `variants::Options::dot_reuse` with `DotReuse::Literal`,
+`Rows` or `Patterns` (default). Native CLI `variants` and `convert` expose
+`--dot-reuse literal|rows|patterns`; SVG rejects this OpenType-only flag. The
+complete-family example accepts the same policy as its final positional option.
+`literal` keeps one circle per pixel and commonly compresses smaller; `rows`
+provides an intermediate size/speed choice. Policy does not affect CFF or square
+outlines, non-default dot scales, the glyph mapping or the compatibility writer.
