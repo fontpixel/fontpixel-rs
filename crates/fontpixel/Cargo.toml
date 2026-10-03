@@ -32,7 +32,7 @@ bdat = ["sfnt"]
 iigs = []
 otb = ["sfnt"]
 ttf = ["sfnt"]
-otf = ["sfnt"]
+otf = ["cff"]
 woff = ["sfnt"]
 woff2 = ["sfnt"]
 ttc = ["sfnt"]
@@ -106,3 +106,7 @@ required-features = ["compat-bdfparser"]
 [[example]]
 name = "glyf_check"
 required-features = ["sfnt"]
+
+[[example]]
+name = "cff_check"
+required-features = ["cff"]

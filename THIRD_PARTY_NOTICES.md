@@ -228,3 +228,15 @@ four-quadratic round-dot construction are informed by Tom Chen's MIT Tong Pixel
 Sans exporter (`tools/export-rs/src/outlines.rs`, `python_reference.py`) provided
 in the read-only reference package. External validation invokes that original
 Python exporter, without modifying it. No GPL implementation was copied.
+
+## W2.3 CFF1
+
+The CFF1 deterministic INDEX/DICT layout, relative line encoding strategy and
+shared four-cubic circle are adapted from Tom Chen's MIT Tong Pixel Sans
+`tools/export-rs/src/cff.rs` and `python_reference.py`. Exact source hashes and
+specification sections are in `docs/formats/cff.md`. The supplied PLAN §2 identifies these same-author exporter sources as MIT;
+the project MIT license and Tom Chen copyright notice are retained in `LICENSE`. Checked encoding,
+strict structural/Type 2 validation, resource accounting and native APIs are
+project code. Fontations read-fonts 0.44.0 (MIT OR Apache-2.0) supplies borrowed
+CFF parsing and validated Type 2 evaluation. No new runtime dependency and no
+GPL source are introduced. External test tools are invoked, not copied.

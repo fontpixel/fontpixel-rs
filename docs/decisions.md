@@ -504,3 +504,26 @@ hinted outlines or treating a typed lazy reader as complete validation.
 The compatibility reader also charges cumulative whole-font pixels, estimated
 model/provenance bytes, expanded points and graph visits. Counting row overhead
 covers zero-width, very tall metadata rectangles that evade an area-only limit.
+
+## 2026-10-03 — CFF1 is explicit cubic geometry, with a strict Fontations boundary
+
+**Question:** W2.3 requires a minimal CFF encoder and reading, while Fontations'
+locked evaluator accepts legacy recovery and silently ignores several Type 2
+arithmetic operators; native FontSet/raster and bitmap-strike work comes later.
+**Choice:** Provide a feature-gated CFF1 table API and configurable shared cubic
+dot subroutine. Reuse native bitmap tracing/origins and sfnt assembly. Preflight
+INDEX/DICT/charset/FDSelect structures and Type 2 execution before Fontations
+interpretation, applying per-glyph and cumulative work/geometry budgets. Read
+SID and CID fonts, hints as unhinted geometry, local/global subrs and the normal
+line/cubic/flex operators. Explicitly reject unsupported legacy arithmetic,
+seac, endchar inside subrs, CFF2, and unrepresentable signed-16.16 arithmetic.
+Retain fractions in design space rather than using FreeType-like integer draw
+rounding. Emit canonical unhinted name-keyed CFF1; expose original bytes separately.
+Keep `otf` registry hooks absent until W2.4/W2.7 finish the promised native codec.
+**Reason:** Validated geometry is useful now without confusing a table parser with
+a bitmap font decoder or silently approximating unsupported programs. Fontations
+already contains the necessary interpreter, so no new dependency is needed.
+The Type 2 numeric range is checked independently from DICT's 32-bit integers;
+large widths, coordinates, displacements and custom-SID exhaustion error rather
+than truncate. This is an explicit boundary, not a claim to execute arbitrary
+PostScript or all legacy CFF1 programs.

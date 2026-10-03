@@ -4,6 +4,8 @@
 //! register a bitmap codec. See `docs/formats/sfnt.md` for scope and loss policy.
 use crate::{Error, ResourceLimits, Result};
 
+#[cfg(feature = "cff")]
+pub mod cff;
 pub mod cmap;
 mod container;
 mod data;

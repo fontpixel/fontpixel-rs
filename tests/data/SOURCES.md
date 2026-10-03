@@ -109,3 +109,14 @@ All committed third-party fonts are small and freely licensed. Infrastructure te
   Unicode block boundary and supplementary-plane behavior; not font artwork.
 - External integration output/fonts are temporary; only hashes, versions and
   results are committed. All reference/sample source trees remain read-only.
+
+## W2.3 CFF synthetic programs
+
+`cff/` contains six tiny, generated CFF tables from the project-authored patterns
+and Type 2 programs in `tests/crosscheck/cff.py` (MIT, Tom Chen). These cover a
+shared global circle, independent squares, local subroutines/hints/flex/widths,
+CID FDSelect formats 0 and 3 with two FDs, and a scaled FontMatrix. Common
+font scaffolding and `.notdef` construction use Tom Chen's supplied MIT Tong
+Python exporter, not sampled font artwork. `cff/SOURCES.json` records precise
+hashes, byte sizes and regeneration. All external Tong BDFs remain read-only
+runtime inputs and are not added to this fixture directory.
