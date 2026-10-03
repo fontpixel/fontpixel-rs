@@ -13,10 +13,11 @@ Design recorded before implementation, 2026-10-03.
 `woff::woff2` operates on complete sfnt bytes. It supports all standalone sfnt
 flavors accepted by W2.1 and both transformed and untransformed glyf/loca, plus
 optional hmtx transforms. CFF, bitmap and unknown tables use the null transform.
-A complete FontSet-to-outline/raster registry codec remains W2.7's work; exposing
-container APIs here does not falsely advertise that future model conversion.
-TTC/OTC collection envelopes are explicitly deferred to W2.7 with other collection
-work, and rejected clearly rather than selecting one face silently.
+W2.7 now adds native [FontSet raster/vector codecs](vector-raster.md), plus
+[TTC/OTC collection envelopes](ttc.md) when `ttc` is enabled. Collection directories
+permit repeated tags across faces, preserve table sharing and face order, and
+require paired glyf/loca transforms. Per-face nominal metrics keep legal hmtx null
+transforms. The standalone W2.5 semantics below remain unchanged.
 
 ## Fields and transform mapping
 

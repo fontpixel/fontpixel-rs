@@ -24,7 +24,7 @@ default = ["fontpixel/default", "pcf", "png", "opentype"]
 pcf = ["fontpixel/pcf"]
 png = ["fontpixel/png"]
 all-formats = ["fontpixel/all-formats", "pcf", "opentype"]
-opentype = ["fontpixel/cff", "fontpixel/woff", "fontpixel/woff2"]
+opentype = ["fontpixel/ttf", "fontpixel/otf", "fontpixel/ttc", "fontpixel/cff", "fontpixel/woff", "fontpixel/woff2"]
 
 [dependencies]
 sha2 = { version = "0.10", optional = true }

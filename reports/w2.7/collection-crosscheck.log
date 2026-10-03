@@ -1,0 +1,17 @@
+File sanitized successfully!
+File sanitized successfully!
+File sanitized successfully!
+WARNING: fixing incorrect maxp version for CFF font
+ERROR: maxp: wrong maxp version for glyph data
+Failed to sanitize file!
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/tests/crosscheck/raster_collections.py", line 71, in collection_cases
+    ots_output=work/'ots-collection.ttf';ots.sanitize(str(web),str(ots_output),check=True);ft=freetype.Face(str(web));assert ft.num_faces==3
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/toolchain/python-packages/ots/__init__.py", line 86, in sanitize
+    return _run([OTS_SANITIZE] + list(args), **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/toolchain/python-packages/ots/__init__.py", line 72, in _run
+    raise CalledProcessError(retcode, args, output=stdout, stderr=stderr)
+ots.CalledProcessError: Command '['/workspace/scratch/ef9059dd510b/toolchain/python-packages/ots/ots-sanitize', '/tmp/fontpixel-w27-crosscheck/collection.woff2', '/tmp/fontpixel-w27-crosscheck/ots-collection.ttf']' returned non-zero exit status 1.

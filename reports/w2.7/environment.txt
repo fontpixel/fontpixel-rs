@@ -1,0 +1,11 @@
+rustc 1.99.0 (b940084d7 2026-09-28)
+cargo 1.99.0 (5f94df478 2026-08-27)
+rustc 1.101.0-nightly (0abfedbc7 2026-10-02)
+cargo-fuzz 0.13.2
+cargo-deny 0.20.2
+Python 3.12.14
+Linux 26fc8ec97a49 6.18.44 #1 SMP Sat Sep 26 20:02:31 UTC 2026 x86_64 GNU/Linux
+
+CPU fallback (sysfs lscpu unavailable):
+model name	: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+9

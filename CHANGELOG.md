@@ -26,3 +26,9 @@
   exact SPEC layout defaults, native ink/gap options, explicit missing/gray/loss
   policies, PNG/SVG image export and preview/render CLI; Python/TypeScript pixel
   oracle, independent image/transport checks and rendering benchmarks
+
+
+- W2.7: native exhaustive-grid and explicit vector rasterization, exact quadratic/
+  cubic center filling, matching embedded preference, aliases/unencoded glyphs,
+  phantom/vertical metrics, TTC/OTC v1/v2 table-sharing containers, WOFF2 collection
+  transforms, native registry/CLI integration, and bounded-reader validation.

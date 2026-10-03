@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "shape": "square",
+      "container": "ttf",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "8500744fd565e203ccc2219ac6316814d82438beb0fe4701d8f4fb5e7205d5b2"
+    },
+    {
+      "shape": "square",
+      "container": "otf",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "9a4baf4f8a36ff613fd9c613facb2e8fcab26de533e8f3545d04fe6b22ef5403"
+    },
+    {
+      "shape": "square",
+      "container": "woff",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "e4225fe70cc1ad171e6fe93f93987b391c7460dd9cd725f83064958498656890"
+    },
+    {
+      "shape": "square",
+      "container": "woff2",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "aa546bd2369e3245ebf6d037a3a381bfc29a63eca1308d9a26256973c10f2dbe"
+    },
+    {
+      "shape": "square",
+      "container": "ttc",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "19cb208070031c91d0fae7562067988808baefb953f3f46c29bac091a65c2d28"
+    },
+    {
+      "shape": "dot",
+      "container": "ttf",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "c06dd9eb4c5dea6d2efe1fdbae4d05b3d0a77675f28b5f3ba5eefa97111d68a6"
+    },
+    {
+      "shape": "dot",
+      "container": "otf",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "171761b1faff20e0c92494dd6f6b57b253316e873823fa5d2c38a3a340103283"
+    },
+    {
+      "shape": "dot",
+      "container": "woff",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "3f842bc700e403f76507a057170232d7ead4fa6303e82d67fa2476b52a3b3021"
+    },
+    {
+      "shape": "dot",
+      "container": "woff2",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "d6e385a8cc177d150b68dc6ccbb4eec3c2535a6e15f3f499b0e9e3c9aebe8730"
+    },
+    {
+      "shape": "dot",
+      "container": "ttc",
+      "mapped_glyphs": 3645,
+      "outline_and_embedded_pixels_exact": true,
+      "ots": true,
+      "sha256": "a99dc28a9b3b6bf3e22335208bae0744bccbf9ca6861763ab98ff1ae9cf8bf33"
+    }
+  ],
+  "glyph_comparisons": 72900
+}

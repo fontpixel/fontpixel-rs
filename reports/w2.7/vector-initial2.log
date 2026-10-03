@@ -1,0 +1,55 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+warning: missing documentation for the crate
+   --> crates/fontpixel/tests/vector_raster.rs:1:1
+    |
+  1 | / #![cfg(feature = "vector-raster")]
+  2 | | use fontpixel::{
+  3 | |     Bitmap, Font, FontSet, Glyph,
+  4 | |     formats::vector_raster::{self as vr, Limits, Options, WriteOptions},
+...   |
+486 | |     );
+487 | | }
+    | |_^
+    |
+    = note: requested on the command line with `-W missing-docs`
+
+warning: `fontpixel` (test "vector_raster") generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.41s
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-192d642e85be95f9)
+
+running 17 tests
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test embedded_priority_skips_bad_outlines ... ok
+test explicit_offset_translation ... ok
+test embedded_outline_detection_not_ambiguous ... ok
+test bounded_pixels_points_and_model ... ok
+test explicit_grid_override ... ok
+test grid_and_roundtrip_cubic ... ok
+test grid_and_roundtrip_quadratic ... ok
+test nongrid_requires_explicit_ppem ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test collection_native_faces_selected_and_all ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test preserves_aliases_unencoded_notdef_names ... FAILED
+test wrong_embedded_size_falls_back ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test invalid_options_and_truncations ... ok
+test all_native_registry_wrappers ... ok
+
+failures:
+
+---- preserves_aliases_unencoded_notdef_names stdout ----
+
+thread 'preserves_aliases_unencoded_notdef_names' (54) panicked at crates/fontpixel/tests/vector_raster.rs:118:9:
+assertion `left == right` failed
+  left: None
+ right: Some("g2")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    preserves_aliases_unencoded_notdef_names
+
+test result: FAILED. 16 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p fontpixel --test vector_raster`

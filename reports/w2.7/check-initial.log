@@ -1,0 +1,23 @@
+Verified 53 non-Unicode keys; 35 core + 12 CJK unique tables; 207 GB18030 ranges (1,087,996 four-byte mappings); CPython 3.12.14
+BDF printability: 712 ranges
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+    Checking fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-cli)
+    Checking fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-wasm)
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> crates/fontpixel/tests/vector_raster.rs:507:9
+    |
+507 |         o.quality = 1;
+    |         ^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `fontpixel::woff::woff2::Options { quality: 1, ..Default::default() }` and removing relevant reassignments
+   --> crates/fontpixel/tests/vector_raster.rs:506:9
+    |
+506 |         let mut o = fontpixel::woff::woff2::Options::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+    Checking fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-py)
+error: could not compile `fontpixel` (test "vector_raster") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

@@ -801,3 +801,104 @@ to select ZHS, including in Macao. Hong Kong continues to select ZHH.
 **Reason:** The promised registry-based BCP-47 conversion must distinguish the
 registered regional tags. Source: Microsoft's
 [language system registry](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags).
+
+## 2026-10-03 — W2.7 uses exhaustive grid checks and explicit raster overrides
+
+**Question:** The catalogue's importer samples at most 300 outlines and requires
+20 samples, while PLAN requires all coordinates on a common grid and bounded
+native OpenType integration.
+**Choice:** Examine all expanded geometry, accept small provable grid fonts, and
+require explicit ppem for non-grid outlines. Preserve physical bitmap strikes by
+default; exact requested-size strikes precede per-glyph outline fallback. Keep
+CFF cubic paths exact through center-sampling, rather than flattening them.
+**Reason:** Sampling could miss a late anomalous component or reject valid tiny
+fonts. Automatic grid recovery and reviewed arbitrary rasterization are distinct
+contracts; unsupported variation/hinting must stay explicit.
+
+## 2026-10-03 — Collections separate face packaging from bitmap projection
+
+**Question:** A FontSet can represent independent faces or bitmap strikes, and
+TTC shares tables rather than concatenating standalone sfnts.
+**Choice:** Expose a bounded TTC v1/v2 container API and deterministic same-tag
+byte sharing. Native TTC writes interpret each Font as one face. Extraction and
+reassembly remove stale DSIG and recompute standalone checksums; native readers
+annotate source face indices and preserve ordered face/strike expansion.
+**Reason:** Preserve useful low-level fidelity without guessing face groupings
+or claiming arbitrary OpenType layout survives bitmap projection.
+
+## 2026-10-03 — WOFF2 collection scope includes associated transforms
+
+**Question:** W2.5 deliberately deferred collection envelopes to W2.7; a TTC
+wrapper cannot be treated as a standalone sfnt or compressed as opaque bytes.
+**Choice:** Implement WOFF2 collection directories and all associated glyf/loca
+transforms, preserving shared-table identity and font order. Keep hmtx untransformed
+inside collections. Reject one-sided glyf/loca sharing under WOFF2's explicit rule.
+**Reason:** A real collection codec must preserve face topology and not duplicate
+originally shared table records or reuse context-dependent transformed metrics.
+Source: https://www.w3.org/TR/WOFF2/#collection_dir_format.
+
+## 2026-10-03 — TrueType raster origins include phantom metrics
+
+**Question:** Stored outline x coordinates alone differed from FreeType when hmtx
+LSB did not equal glyf xMin; scaled USE_MY_METRICS components amplified the error.
+**Choice:** Apply the source glyph's horizontal phantom displacement and recursively
+resolve marked component metrics before rasterization. Retain raw glyf bounds for
+vertical metrics; CFF uses exact cubic extrema and VORG where present.
+**Reason:** The effective outline origin includes side-bearing semantics. Fresh
+independent FontTools/FreeType fixtures verify scaled and translated components,
+including that inherited unhinted advances are not multiplied by the component scale.
+
+## 2026-10-03 — Keep strike scaling metadata through native wrappers
+
+**Question:** Combining preferred embedded families copied Fonts but discarded
+FontSet-level EBSC instructions and raw-table provenance. TTC diagnostics also
+needed the flattened output index rather than a face-local strike index.
+**Choice:** Preserve bounded EBSC instructions for selected physical strikes;
+retain face-local instructions under face-qualified collection properties. Report
+omitted raw common/outline provenance explicitly. Offset diagnostic font indices
+when flattening collection faces. Reserve the generated dot-helper name before
+assigning source glyph names.
+**Reason:** Wrapper integration must not silently lose existing bitmap scaling
+metadata, misidentify the affected font, or introduce glyph-name collisions.
+Focused regressions cover each boundary; changed reader code receives a fresh
+full-duration fuzz run before handoff.
+
+## 2026-10-03 — Native source glyph zero uses source metrics
+
+**Question:** Independent W2.7 review found that reusing the regional exporter
+also reused its synthesized `.notdef` rules for a real source glyph zero. This
+shifted TrueType ink to x=1, ignored explicit vertical origins, and could silently
+accept an unrepresentable origin. Native underline fields were also reset.
+**Choice:** Apply generated-placeholder rules only to the regional synthetic
+`.notdef`. Native source glyph zero follows the same shape, bearings, origin and
+validation rules as other source glyphs. Native blank outlines encode their
+vertical origin relative to the empty outline top at zero. Native post tables
+scale and preserve source underline position and thickness, with checked range
+conversion. The original regional variant output contract remains unchanged.
+**Reason:** Sharing an exporter must not overwrite physical source-glyph metrics.
+Failing-before/passing-after tests, plus independent FontTools/FreeType/OTS checks,
+cover these cases. The review also makes the outline-only path enforce max_fonts,
+as embedded and collection paths already did.
+
+## 2026-10-03 — Bitmap detection defers only to enabled canonical codecs
+
+**Question:** With `otb,vector-raster` enabled but no `ttf`/`otf` features,
+outline-bearing embedded fonts became unrecognized. Enabling a web wrapper
+implicitly enabled vector-raster and thus could break existing OTB detection.
+**Choice:** Embedded detectors defer to TTF/OTF only when that exact canonical
+codec is enabled. The format-agnostic vector-raster alias remains explicit.
+**Reason:** Feature dependencies must not disable the only installed detector.
+A narrow-feature failing-before regression covers both TrueType and CFF hybrids;
+the all-feature case still resolves to the canonical outline container.
+
+## 2026-10-03 — Strike-filtered diagnostics reference retained fonts
+
+**Question:** Selecting a second embedded ppem kept its old font index in reports,
+so diagnostics could refer to index 1 when only one Font was returned. Combining
+multiple bitmap families had the same source-index versus output-index risk.
+**Choice:** Preserve source strike indices through selection, remap retained
+strike diagnostics to their output Font indices, and omit strike-scoped messages
+for unselected or superseded strikes. Global conversion-loss reports remain.
+**Reason:** Diagnostics must identify the actual returned font, including before
+collection face indices are flattened. A two-size second-strike regression
+reproduces the invalid index and verifies the mapping.

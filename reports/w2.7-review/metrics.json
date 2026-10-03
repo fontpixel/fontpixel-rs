@@ -1,0 +1,59 @@
+{
+  "partial": false,
+  "cases": [
+    {
+      "shape": "square",
+      "flavor": "ttf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "851cdffa8b80c6b5858304c68b20278f570d1b8c6dd6bd1ea52f0c9ce61f0cf9"
+    },
+    {
+      "shape": "square",
+      "flavor": "otf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "e42517979f3a22eabae11b011f5fd993130afc1433901504382e3f833bb321cd"
+    },
+    {
+      "shape": "square-separate",
+      "flavor": "ttf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "8b2bc0ae3bf5fe3c0b5bc81af689c6b465f16e6432e8e3ffe45047b7ad54b461"
+    },
+    {
+      "shape": "square-separate",
+      "flavor": "otf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "4c9770b96dcc3d6bcb51c50251924b1c36a6397cbeb325f131634d65f21f56fd"
+    },
+    {
+      "shape": "dot",
+      "flavor": "ttf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "0decc927c5f5c3e6f53f25654c087f35cbd455d3adc174df2d5a5156a88b2401"
+    },
+    {
+      "shape": "dot",
+      "flavor": "otf",
+      "glyphs": 3,
+      "fonttools_metrics": true,
+      "freetype_ink_and_advances": true,
+      "ots": true,
+      "sha256": "79dcfc617572fb2b7299a1fa28295c6dd0f19f1cc157f739e9ebbd5d13fcd226"
+    }
+  ]
+}

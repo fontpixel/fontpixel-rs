@@ -1,0 +1,102 @@
+Verified 53 non-Unicode keys; 35 core + 12 CJK unique tables; 207 GB18030 ranges (1,087,996 four-byte mappings); CPython 3.12.14
+BDF printability: 712 ranges
+    Checking fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-py)
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+    Checking fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-cli)
+    Finished `dev` profile [unoptimized] target(s) in 0.39s
+   Compiling syn v3.0.6
+   Compiling serde_json v1.0.151
+    Checking clap_builder v4.6.7
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+   Compiling serde_derive v1.0.229
+    Checking clap v4.6.7
+    Checking serde v1.0.229
+    Checking ciborium v0.2.2
+    Checking tinytemplate v1.2.1
+    Checking criterion v0.8.2
+    Finished `dev` profile [unoptimized] target(s) in 6.48s
+   Compiling utf8parse v0.2.2
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling colorchoice v1.0.5
+   Compiling serde v1.0.229
+   Compiling bytemuck v1.25.2
+   Compiling anstyle-query v1.1.5
+   Compiling strsim v0.11.1
+   Compiling typenum v1.20.1
+   Compiling cpufeatures v0.2.17
+   Compiling base64 v0.22.1
+   Compiling anstyle-parse v1.0.0
+   Compiling anstream v1.0.0
+   Compiling font-types v0.12.5
+   Compiling clap_builder v4.6.7
+   Compiling ciborium v0.2.2
+   Compiling tinytemplate v1.2.1
+   Compiling read-fonts v0.44.0
+   Compiling generic-array v0.14.7
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling clap v4.6.7
+   Compiling criterion v0.8.2
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+   Compiling fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-py)
+   Compiling fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-wasm)
+   Compiling fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel-cli)
+    Finished `test` profile [unoptimized] target(s) in 22.42s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/fontpixel-becc7981e03cae01)
+
+running 15 tests
+test sfnt::cff::read::tests::index_offsets_and_header_are_checked ... ok
+test sfnt::cff::validate::tests::cyclic_and_missing_subroutines_fail ... ok
+test sfnt::cff::validate::tests::hints_and_cross_call_operand_stacks ... ok
+test sfnt::cff::read::tests::private_fractional_widths_are_not_grid_rounded ... ok
+test sfnt::cff::read::tests::private_width_overflow_and_bad_dict_are_errors ... ok
+test sfnt::cff::validate::tests::flex_axis_distances_cannot_wrap_even_when_points_fit ... ok
+test sfnt::cff::validate::tests::malformed_type2_is_not_recovered ... ok
+test sfnt::cff::validate::tests::point_sums_cannot_wrap ... ok
+test sfnt::cff::validate::tests::repeated_empty_calls_consume_budget ... ok
+test woff::woff2::transform::tests::horizontal_metrics_arrays ... ok
+test woff::woff2::transform::tests::triplet_classes_and_boundaries ... ok
+test woff::woff2::tests::auxiliary_and_parallel ... ok
+test woff::woff2::tests::woff1_roundtrip ... ok
+test woff::woff2::tests::basic_roundtrip ... ok
+test woff::woff2::tests::integers ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/bdf-39d36922dd10332a)
+
+running 13 tests
+test detect_registry_and_feature_capabilities ... FAILED
+test changed_charset_properties_recompute_inferred_gl ... ok
+test direct_property_edits_and_deletions_are_not_overridden_by_stale_views ... ok
+test edits_override_only_changed_source_fields ... ok
+test fresh_models_round_trip_without_source_cache ... ok
+test reserved_source_names_cannot_mask_unknown_field_loss ... ok
+test reports_all_unrepresentable_fields_and_gray_requires_threshold ... ok
+test source_metadata_charset_and_vertical_metrics ... ok
+test duplicate_unencoded_and_out_of_unicode_codes_remain_inspectable ... ok
+test rejects_malformed_numbers_and_enforces_all_resource_limits ... ok
+test malformed_rasters_preserve_source_but_guard_drawing ... ok
+test bounded_gzip_transport_is_deterministic_and_codec_independent ... ok
+test trailing_numeric_tokens_do_not_allocate_a_token_vector ... ok
+
+failures:
+
+---- detect_registry_and_feature_capabilities stdout ----
+
+thread 'detect_registry_and_feature_capabilities' (1635) panicked at crates/fontpixel/tests/bdf.rs:32:5:
+assertion failed: registry.formats().filter(|s|
+            !["bdf", "pcf", "yaff", "otb", "bdat",
+                            "color"].contains(&s.format.id)).all(|s|
+        !s.read && !s.write && !s.detect)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    detect_registry_and_feature_capabilities
+
+test result: FAILED. 12 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p fontpixel --test bdf`

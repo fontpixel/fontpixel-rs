@@ -3,6 +3,7 @@
 //! Geometry is independent of sfnt. TrueType encoding requires integral int16
 //! coordinates; composite flattening and rasterization can retain fractions.
 use crate::{Bitmap, Error, Result, bitmap::BitmapLimits};
+pub mod path;
 mod spec;
 /// TrueType point `(x, y, on_curve)` in design units, with y upward.
 pub type Point = (f64, f64, bool);

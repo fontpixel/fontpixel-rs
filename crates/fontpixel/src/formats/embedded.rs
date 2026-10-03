@@ -64,6 +64,15 @@ impl FormatDetector for EmbeddedCodec {
         let Ok(font) = Sfnt::parse(input.bytes(), &limits) else {
             return Ok(Confidence::NoMatch);
         };
+        if cfg!(feature = "ttf") && font.table(*b"glyf").is_some()
+            || cfg!(feature = "otf")
+                && (font.table(*b"CFF ").is_some() || font.table(*b"CFF2").is_some())
+        {
+            // Defer only to a canonical outline detector that is actually
+            // installed; enabling a web wrapper also enables vector-raster,
+            // but need not enable standalone TTF/OTF registry entries.
+            return Ok(Confidence::NoMatch);
+        }
         let (data, location) = self.kind.tags();
         let matches = font.table(data).is_some() && font.table(location).is_some()
             || self.kind == sbit::Kind::Color && font.table(*b"sbix").is_some();
@@ -177,7 +186,7 @@ fn family_id(kind: sbit::Kind) -> &'static str {
         sbit::Kind::Color => "color",
     }
 }
-fn names(table: Option<&[u8]>, limits: &sfnt::Limits) -> Result<FontNames> {
+pub(crate) fn names(table: Option<&[u8]>, limits: &sfnt::Limits) -> Result<FontNames> {
     let mut out = FontNames::default();
     if let Some(table) = table {
         let table = name::NameTable::decode(table, limits)?;
@@ -599,7 +608,7 @@ pub fn read(
     }
     Ok((out, report.finish()?))
 }
-fn finish_font(font: &mut Font) -> Result<()> {
+pub(crate) fn finish_font(font: &mut Font) -> Result<()> {
     font.update_bounds()?;
     let spacing = {
         let mut advances = font

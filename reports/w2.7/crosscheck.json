@@ -1,0 +1,149 @@
+{
+  "partial": true,
+  "raster": [
+    {
+      "file": "full-square-ttf.ttf",
+      "sha256": "790a6480d6be1e296edc0c3d1b1eec9a39b7b378d4f45eaab9533e25ea3a30c8",
+      "glyphs": 45664,
+      "exact_freetype_glyphs": 45664,
+      "exceptions": [],
+      "native_seconds": 0.8484211,
+      "ppem": 14
+    },
+    {
+      "file": "full-square-otf.otf",
+      "sha256": "deec0ca162c3207adfda213bb76d8bd6e20b164f503688a6b79c9fd5eeccc153",
+      "glyphs": 45664,
+      "exact_freetype_glyphs": 45664,
+      "exceptions": [],
+      "native_seconds": 0.710740062,
+      "ppem": 14
+    },
+    {
+      "file": "full-dot-ttf.ttf",
+      "sha256": "09893276b4cdc5ab645ab6451010f299c6f8870b11e5fb4e7c09584ca8277224",
+      "glyphs": 45665,
+      "exact_freetype_glyphs": 45665,
+      "exceptions": [],
+      "native_seconds": 8.687070378,
+      "ppem": 14
+    },
+    {
+      "file": "full-dot-otf.otf",
+      "sha256": "1f79a1232fbe570170c3a5d26c0ce7d04b99a32ed41de9dda095390ddb05e837",
+      "glyphs": 45664,
+      "exact_freetype_glyphs": 45664,
+      "exceptions": [],
+      "native_seconds": 13.456119419,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-Latin-dot-ttf.ttf",
+      "sha256": "ff58f9c77e575605d6041353d9f7cec9a6f979462e89898f2dd48264b5cc7719",
+      "glyphs": 3647,
+      "exact_freetype_glyphs": 3647,
+      "exceptions": [],
+      "native_seconds": 0.153836661,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-Latin-square-ttf.ttf",
+      "sha256": "e44eb9333fcac113d2e8dabe5a07cf2d8f3d070035eb5c59e5ad750e94e82e3a",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.046744152,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-Latin-dot-ttf.ttf",
+      "sha256": "c163ffbe10734894be86aa8c69cb4c846d42cf3ce5143b0208b3357d9a02f678",
+      "glyphs": 3647,
+      "exact_freetype_glyphs": 3647,
+      "exceptions": [],
+      "native_seconds": 0.241220817,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-Latin-square-ttf.ttf",
+      "sha256": "5c6e836e264321b64673529cb90e2a2a46be5dfc09955bb8cb7fab20b516eb36",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.045583495,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-Latin-dot-ttf.ttf",
+      "sha256": "9a0f4206af6931624ab9061246f9673f4297875d3c556a739cef351e3309d195",
+      "glyphs": 3647,
+      "exact_freetype_glyphs": 3647,
+      "exceptions": [],
+      "native_seconds": 0.218519146,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-Latin-square-ttf.ttf",
+      "sha256": "b9b5702d0ac1286080f0580fd8bc4cd42a3fb04a2772131b7e06760cf91ef21c",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.04358965,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-Latin-dot-otf.otf",
+      "sha256": "524e3e69b561c03fbb36c4b5a3abb7e133f400c9e46b058bfc69387dfb2c23d7",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.331369227,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-Latin-square-otf.otf",
+      "sha256": "bc0e9f23389a90fea0061225728f793dac0c76e0413e833af5def1be971064cf",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.039046209,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-Latin-dot-otf.otf",
+      "sha256": "c56169ceadb1379ef996dc13fd2277ce29f426423f2642ac23904932ef32b156",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.358298506,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-Latin-square-otf.otf",
+      "sha256": "fc2ed9bc03e36eb7d0923f4662e23c3b098e4c8e447e22956bbce7ce40440341",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.06262766,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-Latin-dot-otf.otf",
+      "sha256": "aaeb91ab922aa6bb6ace90dbec3129d5f5e3b156c2119113d852c45d4b7d3c5c",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.370301679,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-Latin-square-otf.otf",
+      "sha256": "5efc0a8313e9f1b7298b9fb238e4a119732ef06eb240a665bb63a8cac6f7e712",
+      "glyphs": 3646,
+      "exact_freetype_glyphs": 3646,
+      "exceptions": [],
+      "native_seconds": 0.045970816,
+      "ppem": 14
+    }
+  ]
+}

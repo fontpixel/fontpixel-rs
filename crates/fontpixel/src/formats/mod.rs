@@ -8,10 +8,17 @@ use crate::{Error, Operation, Report, Result};
 #[cfg(feature = "bdf")]
 pub mod bdf;
 pub mod catalogue;
-#[cfg(any(feature = "otb", feature = "bdat", feature = "color"))]
+#[cfg(any(
+    feature = "otb",
+    feature = "bdat",
+    feature = "color",
+    feature = "vector-raster"
+))]
 pub mod embedded;
 #[cfg(feature = "pcf")]
 pub mod pcf;
+#[cfg(feature = "vector-raster")]
+pub mod vector_raster;
 #[cfg(any(feature = "bdf", feature = "pcf"))]
 pub(crate) mod x11;
 #[cfg(feature = "yaff")]
@@ -476,6 +483,48 @@ impl Registry<crate::FontSet> {
             entry.reader = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
             if write {
                 entry.writer = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
+            }
+        }
+    }
+}
+
+#[cfg(feature = "vector-raster")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_vector(&mut self, id: &'static str) {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == id) {
+            let codec = vector_raster::Codec::new(id);
+            if id != "vector-raster" {
+                entry.detector = Some(Box::new(codec.clone()));
+            }
+            entry.reader = Some(Box::new(codec.clone()));
+            entry.writer = Some(Box::new(codec));
+        }
+    }
+    /// Configure all registered outline/container readers consistently.
+    pub fn set_vector_read_options(&mut self, options: vector_raster::Options) {
+        for id in ["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
+            if let Some(entry) = self
+                .entries
+                .iter_mut()
+                .find(|e| e.format.id == id && e.reader.is_some())
+            {
+                let mut codec = vector_raster::Codec::new(entry.format.id);
+                codec.read_options = options.clone();
+                entry.reader = Some(Box::new(codec));
+            }
+        }
+    }
+    /// Configure all registered outline/container writers consistently.
+    pub fn set_vector_write_options(&mut self, options: vector_raster::WriteOptions) {
+        for id in ["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
+            if let Some(entry) = self
+                .entries
+                .iter_mut()
+                .find(|e| e.format.id == id && e.writer.is_some())
+            {
+                let mut codec = vector_raster::Codec::new(entry.format.id);
+                codec.write_options = options.clone();
+                entry.writer = Some(Box::new(codec));
             }
         }
     }

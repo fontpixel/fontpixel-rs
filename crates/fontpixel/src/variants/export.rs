@@ -142,6 +142,17 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         return Err(invalid("invalid dot size for the chosen outline shape"));
     }
     let plan = variants.plan(&o.limits)?;
+    encode_planned(&variants.base, o, plan, None)
+}
+fn encode_planned(
+    base: &Font,
+    o: &Options,
+    plan: Plan,
+    source_notdef: Option<Glyph>,
+) -> Result<Encoded> {
+    if !(o.dot_size > 0. && o.dot_size <= 1.5) || (o.shape == Shape::Square && o.dot_size != 1.) {
+        return Err(invalid("invalid dot size for the chosen outline shape"));
+    }
     let l = &o.limits.sfnt;
     let scale = i64::from(o.units_per_pixel);
     if scale == 0 {
@@ -149,9 +160,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     }
     let upm = o.units_per_em.unwrap_or_else(|| {
         u16::try_from(
-            variants
-                .base
-                .metrics
+            base.metrics
                 .pixel_size
                 .unwrap_or(14)
                 .saturating_mul(u32::from(o.units_per_pixel)),
@@ -162,18 +171,14 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         return Err(invalid("units_per_em outside 16..=16384"));
     }
     let ascent = i16n(
-        variants
-            .base
-            .metrics
+        base.metrics
             .ascent
-            .unwrap_or(i64::from(variants.base.metrics.pixel_size.unwrap_or(14)))
+            .unwrap_or(i64::from(base.metrics.pixel_size.unwrap_or(14)))
             .checked_mul(scale)
             .ok_or_else(|| invalid("ascent overflow"))?,
     )?;
     let descent = i16n(
-        variants
-            .base
-            .metrics
+        base.metrics
             .descent
             .unwrap_or(0)
             .checked_mul(-scale)
@@ -182,7 +187,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     let family = o
         .family
         .as_deref()
-        .or(variants.base.names.family.as_deref())
+        .or(base.names.family.as_deref())
         .unwrap_or("Fontpixel");
     let style = o.style.as_deref().unwrap_or(match o.shape {
         Shape::Square => "Square",
@@ -198,7 +203,8 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             .collect::<String>()
     );
     let mut report = Report::default();
-    let notdef = notdef()?;
+    let retain_names = source_notdef.is_some();
+    let notdef = source_notdef.map_or_else(notdef, Ok)?;
     let sources = std::iter::once((".notdef", &notdef))
         .chain(plan.glyphs.iter().map(|(n, g)| (n.as_str(), g)))
         .collect::<Vec<_>>();
@@ -209,12 +215,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     let count = sources.len() + usize::from(shared);
     l.glyphs(count)?;
     let dot_id = sources.len() as u16;
-    let vertical = variants
-        .base
-        .metrics
-        .glyph_defaults
-        .vertical_advance
-        .is_some()
+    let vertical = base.metrics.glyph_defaults.vertical_advance.is_some()
         || sources.iter().any(|(_, g)| {
             g.metrics.vertical_advance.is_some() || g.metrics.vertical_origin.is_some()
         });
@@ -249,11 +250,16 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 .checked_mul(scale)
                 .ok_or_else(|| invalid("advance overflow"))?,
         )?;
-        let shape = if i == 0 { Shape::Square } else { o.shape };
+        let generated_notdef = i == 0 && !retain_names;
+        let shape = if generated_notdef {
+            Shape::Square
+        } else {
+            o.shape
+        };
         let opts = outline::Options {
             shape,
             units_per_pixel: i32::from(o.units_per_pixel),
-            dot_size: if i == 0 { 1. } else { o.dot_size },
+            dot_size: if generated_notdef { 1. } else { o.dot_size },
             origin: (x, y),
         };
         let ink = bitmap.bbox();
@@ -262,7 +268,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         } else {
             (1. - opts.dot_size) * f64::from(o.units_per_pixel) / 2.
         };
-        let bearing = if i == 0 {
+        let bearing = if generated_notdef {
             i16n(scale)?
         } else if ink.width == 0 {
             0
@@ -283,7 +289,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 .vertical_advance
                 .unwrap_or(crate::model::Vector::new(
                     0,
-                    -i64::from(variants.base.metrics.pixel_size.unwrap_or(14)),
+                    -i64::from(base.metrics.pixel_size.unwrap_or(14)),
                 ));
             if va.x != 0 {
                 return Err(invalid("vertical advance x cannot be represented by vmtx"));
@@ -292,7 +298,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 va.y.checked_mul(-scale)
                     .ok_or_else(|| invalid("vertical advance overflow"))?,
             )?;
-            let origin = if i == 0 {
+            let origin = if generated_notdef {
                 None
             } else {
                 g.metrics.vertical_origin
@@ -308,17 +314,25 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             } else {
                 i64::from(ascent)
             };
-            let top = (g.metrics.bounds.y + ink.y + i64::from(ink.height))
-                .checked_mul(scale)
-                .ok_or_else(|| invalid("vertical top overflow"))?;
-            let bearing = if ink.height == 0 {
+            let top = if ink.height == 0 && retain_names {
+                0
+            } else {
+                (g.metrics.bounds.y + ink.y + i64::from(ink.height))
+                    .checked_mul(scale)
+                    .ok_or_else(|| invalid("vertical top overflow"))?
+            };
+            let bearing = if ink.height == 0 && !retain_names {
                 0
             } else {
                 i16n(
                     origin_y
                         .checked_sub(top)
                         .ok_or_else(|| invalid("vertical bearing overflow"))?
-                        .checked_add(inset.round() as i64)
+                        .checked_add(if ink.height == 0 {
+                            0
+                        } else {
+                            inset.round() as i64
+                        })
                         .ok_or_else(|| invalid("vertical bearing overflow"))?,
                 )?
             };
@@ -367,7 +381,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         extents.push(width);
         match o.flavor {
             OutlineFlavor::TrueType => {
-                let glyph = if shared && i != 0 {
+                let glyph = if shared && !generated_notdef {
                     glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
                 } else {
                     glyf::Glyph::simple(outline::contours(&bitmap, &opts, &gl.geometry)?)
@@ -534,9 +548,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     h.ascender = ascent;
     h.descender = descent;
     h.line_gap = i16n(
-        variants
-            .base
-            .metrics
+        base.metrics
             .line_gap
             .unwrap_or(0)
             .checked_mul(scale)
@@ -586,8 +598,32 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         sfnt::cmap::encode(&plan.cmap, count as u16, l)?.data,
     )?;
     let mut post = PostTable::default();
+    if retain_names {
+        post.header.underline_position = i16n(
+            base.metrics
+                .underline_position
+                .unwrap_or(0)
+                .checked_mul(scale)
+                .ok_or_else(|| invalid("underline position overflow"))?,
+        )?;
+        post.header.underline_thickness = i16n(
+            base.metrics
+                .underline_thickness
+                .unwrap_or(0)
+                .checked_mul(scale)
+                .ok_or_else(|| invalid("underline thickness overflow"))?,
+        )?;
+        let mut names = sources
+            .iter()
+            .map(|(name, _)| (*name).to_owned())
+            .collect::<Vec<_>>();
+        if shared {
+            names.push("fontpixel.dot".into());
+        }
+        post.names = Some(names);
+    }
     post.header.is_fixed_pitch = u32::from(matches!(
-        variants.base.metrics.spacing,
+        base.metrics.spacing,
         Some(crate::model::Spacing::Monospaced | crate::model::Spacing::CharacterCell)
     ));
     b.insert(*b"post", post.encode(count as u16, l)?)?;
@@ -605,21 +641,11 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             (17, style.to_owned()),
         ];
         for (id, text) in [
-            (
-                0,
-                o.copyright
-                    .as_ref()
-                    .or(variants.base.names.copyright.as_ref()),
-            ),
-            (
-                13,
-                o.license.as_ref().or(variants.base.names.license.as_ref()),
-            ),
+            (0, o.copyright.as_ref().or(base.names.copyright.as_ref())),
+            (13, o.license.as_ref().or(base.names.license.as_ref())),
             (
                 14,
-                o.license_url
-                    .as_ref()
-                    .or(variants.base.names.license_url.as_ref()),
+                o.license_url.as_ref().or(base.names.license_url.as_ref()),
             ),
         ] {
             if let Some(s) = text {
@@ -660,7 +686,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         .encode(l)?,
     )?;
     if o.embed_bitmaps {
-        let ppem = u8::try_from(variants.base.metrics.pixel_size.unwrap_or(14))
+        let ppem = u8::try_from(base.metrics.pixel_size.unwrap_or(14))
             .map_err(|_| invalid("bitmap ppem exceeds uint8"))?;
         let mut line = [0; 12];
         line[0] = i8::try_from(i64::from(ascent) / scale)
@@ -692,4 +718,116 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         bytes: b.build(l)?,
         report,
     })
+}
+
+/// Vectorize one complete Font while retaining aliases and unencoded glyphs.
+/// Unlike regional planning this preserves physical glyph identity and order.
+pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
+    font.validate(&o.limits.sfnt.resources)?;
+    let mut native_bytes = 0usize;
+    for (_, g) in font.glyphs() {
+        native_bytes = native_bytes
+            .checked_add(
+                1024usize
+                    .saturating_add(g.bitmap.as_bytes().len().saturating_mul(2))
+                    .saturating_add(g.codepoints.len().saturating_mul(64))
+                    .saturating_add(g.name.as_ref().map_or(0, String::len)),
+            )
+            .ok_or_else(|| invalid("native source size overflow"))?;
+        sfnt::bounded(
+            native_bytes,
+            o.limits.sfnt.resources.max_total_bytes,
+            "native outline source bytes",
+        )?;
+    }
+    let mut mapping = BTreeMap::new();
+    let mut glyphs = Vec::new();
+    let notdef_id = font
+        .glyphs()
+        .find(|(_, g)| g.name.as_deref() == Some(".notdef"))
+        .map(|(id, _)| id);
+    o.limits
+        .sfnt
+        .glyphs(font.len().saturating_add(usize::from(notdef_id.is_none())))?;
+    let source_notdef = notdef_id
+        .and_then(|id| font.glyph(id))
+        .map(|g| planned_glyph(font, g))
+        .unwrap_or_else(|| {
+            let mut g = Glyph::new(Bitmap::<crate::bitmap::Mono>::default());
+            g.metrics.advance = Some(crate::model::Vector::new(0, 0));
+            g
+        });
+    let mut names = std::collections::BTreeSet::from([".notdef".to_owned()]);
+    if o.flavor == OutlineFlavor::TrueType && o.shape == Shape::Dot {
+        names.insert("fontpixel.dot".into());
+    }
+    let mut report = Report::default();
+    for (id, g) in font.glyphs() {
+        let gid = if Some(id) == notdef_id {
+            0
+        } else {
+            o.limits.sfnt.glyphs(glyphs.len().saturating_add(2))?;
+            let mut name = g
+                .name
+                .clone()
+                .filter(|n| {
+                    !n.is_empty()
+                        && n.len() <= 63
+                        && n.bytes()
+                            .all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_')
+                })
+                .unwrap_or_else(|| format!("glyph{}", id.index()));
+            if names.contains(&name) {
+                name = format!("glyph{}", id.index());
+                while names.contains(&name) {
+                    name.push('_');
+                }
+            }
+            if g.name.as_deref() != Some(&name) && g.name.is_some() {
+                note(
+                    &mut report,
+                    "opentype.glyph_name",
+                    "Unrepresentable/duplicate glyph names were replaced with unique PostScript names",
+                );
+            }
+            names.insert(name.clone());
+            glyphs.push((name, planned_glyph(font, g)));
+            glyphs.len() as u16
+        };
+        for cp in &g.codepoints {
+            let Codepoint::Unicode(cp) = *cp else {
+                return Err(invalid(
+                    "native OpenType output requires Unicode codepoints",
+                ));
+            };
+            if char::from_u32(cp).is_none() {
+                return Err(invalid("non-scalar Unicode codepoint"));
+            }
+            if mapping.insert(cp, gid).is_some()
+                && !report
+                    .entries
+                    .iter()
+                    .any(|e| e.code == "opentype.duplicate_codepoint")
+            {
+                note(
+                    &mut report,
+                    "opentype.duplicate_codepoint",
+                    "Duplicate cmap entries resolve to the last source glyph",
+                );
+            }
+            sfnt::bounded(
+                mapping.len(),
+                o.limits.sfnt.max_cmap_mappings,
+                "native Unicode mappings",
+            )?;
+        }
+    }
+    let plan = Plan {
+        glyphs,
+        cmap: mapping,
+        gsub: Gsub::default(),
+    };
+    let mut encoded = encode_planned(font, o, plan, Some(source_notdef))?;
+    encoded.report.extend(report);
+    Ok(encoded)
 }

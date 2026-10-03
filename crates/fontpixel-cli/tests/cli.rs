@@ -48,7 +48,10 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("yaff\t")
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
-                && !line.starts_with("color\t"))
+                && !line.starts_with("color\t")
+                && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
+                    .iter()
+                    .any(|id| line.starts_with(&format!("{id}\t"))))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -75,11 +78,24 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "yaff"
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
-                && entry["format"]["id"] != "color")
+                && entry["format"]["id"] != "color"
+                && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
+                    .iter()
+                    .any(|id| entry["format"]["id"] == *id))
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
     );
+    for id in ["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
+        let entry = formats
+            .iter()
+            .find(|entry| entry["format"]["id"] == id)
+            .unwrap();
+        let enabled = entry["format"]["feature_enabled"].as_bool().unwrap();
+        assert_eq!(entry["read"], enabled);
+        assert_eq!(entry["write"], enabled);
+        assert_eq!(entry["detect"], enabled && id != "vector-raster");
+    }
     for id in ["otb", "bdat", "color"] {
         let entry = formats
             .iter()
@@ -698,5 +714,104 @@ fn variants_subset_cli_all_containers_and_selectors() {
         .status
         .code(),
         Some(2)
+    );
+}
+
+#[cfg(feature = "opentype")]
+#[test]
+fn raster_collection_cli_and_atomic_failures() {
+    let dir = TempDir::new();
+    let source = dir.0.join("source.bdf");
+    fs::write(&source,"STARTFONT 2.1\nFONT cli-grid\nSIZE 8 75 75\nFONTBOUNDINGBOX 3 3 0 -1\nSTARTPROPERTIES 3\nPIXEL_SIZE 8\nFONT_ASCENT 7\nFONT_DESCENT 1\nENDPROPERTIES\nCHARS 1\nSTARTCHAR A\nENCODING 65\nSWIDTH 500 0\nDWIDTH 4 0\nBBX 3 3 0 -1\nBITMAP\nA0\nE0\nA0\nENDCHAR\nENDFONT\n").unwrap();
+    for extension in ["ttf", "otf", "woff", "woff2", "ttc", "otc"] {
+        let output = dir.0.join(format!("font.{extension}"));
+        let result = run(&[
+            "convert",
+            source.to_str().unwrap(),
+            "-o",
+            output.to_str().unwrap(),
+        ]);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        let info = run(&["info", output.to_str().unwrap(), "--json"]);
+        assert!(
+            info.status.success(),
+            "{}",
+            String::from_utf8_lossy(&info.stderr)
+        );
+        let json: serde_json::Value = serde_json::from_slice(&info.stdout).unwrap();
+        assert_eq!(json["font_count"], 1);
+    }
+    let dot = dir.0.join("dot.ttf");
+    let result = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        dot.to_str().unwrap(),
+        "--shape",
+        "dot",
+    ]);
+    assert!(result.status.success());
+    assert!(!run(&["info", dot.to_str().unwrap()]).status.success());
+    assert!(
+        run(&["info", dot.to_str().unwrap(), "--ppem", "8"])
+            .status
+            .success()
+    );
+    assert!(
+        !run(&[
+            "info",
+            dot.to_str().unwrap(),
+            "--face-index",
+            "1",
+            "--ppem",
+            "8"
+        ])
+        .status
+        .success()
+    );
+    let sentinel = dir.0.join("sentinel.bdf");
+    fs::write(&sentinel, b"keep me").unwrap();
+    let fail = run(&[
+        "convert",
+        dot.to_str().unwrap(),
+        "-o",
+        sentinel.to_str().unwrap(),
+        "--ppem",
+        "8",
+        "--strict",
+    ]);
+    assert_eq!(fail.status.code(), Some(3));
+    assert_eq!(fs::read(&sentinel).unwrap(), b"keep me");
+    let many = dir.0.join("many.ttc");
+    assert!(
+        run(&[
+            "convert",
+            source.to_str().unwrap(),
+            source.to_str().unwrap(),
+            "-o",
+            many.to_str().unwrap(),
+            "--collection-v2"
+        ])
+        .status
+        .success()
+    );
+    let one = run(&[
+        "info",
+        many.to_str().unwrap(),
+        "--face-index",
+        "1",
+        "--json",
+    ]);
+    assert!(one.status.success());
+    let json: serde_json::Value = serde_json::from_slice(&one.stdout).unwrap();
+    assert_eq!(json["font_count"], 1);
+    assert!(
+        !run(&["info", many.to_str().unwrap(), "--face-index", "2"])
+            .status
+            .success()
     );
 }

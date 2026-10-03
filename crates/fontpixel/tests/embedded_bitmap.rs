@@ -507,8 +507,12 @@ fn native_capability_flags_remain_honest() {
                 (s.detect, s.read, s.write),
                 (cfg!(feature = "color"), cfg!(feature = "color"), false)
             ),
-            "ttf" | "otf" | "ttc" | "vector-raster" => {
-                assert_eq!((s.detect, s.read, s.write), (false, false, false))
+            "ttf" | "otf" | "ttc" | "woff" | "woff2" | "vector-raster" => {
+                let enabled = s.format.feature_enabled;
+                assert_eq!(
+                    (s.detect, s.read, s.write),
+                    (enabled && s.format.id != "vector-raster", enabled, enabled)
+                );
             }
             _ => (),
         }

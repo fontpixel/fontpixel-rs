@@ -1,0 +1,155 @@
+   Compiling cfg-if v1.0.5
+   Compiling libc v0.2.189
+   Compiling zerocopy v0.8.59
+   Compiling serde_core v1.0.229
+   Compiling getrandom v0.3.4
+   Compiling serde v1.0.229
+   Compiling simd-adler32 v0.3.10
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling equivalent v1.0.2
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling autocfg v1.5.1
+   Compiling adler2 v2.0.1
+   Compiling hashbrown v0.17.1
+   Compiling zmij v1.0.23
+   Compiling itoa v1.0.18
+   Compiling cc v1.5.1
+   Compiling alloc-no-stdlib v3.0.0
+   Compiling memchr v2.8.3
+   Compiling regex-syntax v0.8.11
+   Compiling num-traits v0.2.19
+   Compiling alloc-stdlib v0.3.0
+   Compiling indexmap v2.14.2
+   Compiling miniz_oxide v0.9.1
+   Compiling crc32fast v1.5.2
+   Compiling either v1.18.0
+   Compiling bitflags v2.13.2
+   Compiling ciborium-io v0.2.2
+   Compiling clap_lex v1.1.1
+   Compiling anstyle v1.0.14
+   Compiling rand_core v0.9.5
+   Compiling itertools v0.13.0
+   Compiling flate2 v1.1.10
+   Compiling clap_builder v4.6.7
+   Compiling brotli-decompressor v6.0.1
+   Compiling alloca v0.4.0
+   Compiling miniz_oxide v0.8.9
+   Compiling serde_derive v1.0.229
+   Compiling bytemuck_derive v1.12.1
+   Compiling serde_json v1.0.151
+   Compiling regex-automata v0.4.18
+   Compiling fdeflate v0.3.7
+   Compiling cast v0.3.0
+   Compiling same-file v1.0.6
+   Compiling once_cell v1.21.4
+   Compiling criterion-plot v0.8.2
+   Compiling walkdir v2.5.0
+   Compiling png v0.18.1
+   Compiling brotli v9.0.0
+   Compiling rand v0.9.5
+   Compiling bytemuck v1.25.2
+   Compiling font-types v0.12.5
+   Compiling clap v4.6.7
+   Compiling zerocopy-derive v0.8.59
+   Compiling rand_xorshift v0.4.0
+   Compiling page_size v0.6.0
+   Compiling oorandom v11.1.5
+   Compiling read-fonts v0.44.0
+   Compiling anes v0.1.6
+   Compiling unarray v0.1.4
+   Compiling regex v1.13.1
+   Compiling tinytemplate v1.2.1
+   Compiling half v2.7.1
+   Compiling ppv-lite86 v0.2.21
+   Compiling ciborium-ll v0.2.2
+   Compiling rand_chacha v0.9.0
+   Compiling ciborium v0.2.2
+   Compiling proptest v1.11.0
+   Compiling criterion v0.8.2
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7/crates/fontpixel)
+error[E0283]: type annotations needed for `fontpixel::Bitmap<_>`
+   --> crates/fontpixel/tests/vector_raster.rs:29:13
+    |
+ 29 |         let mut b = Bitmap::new(3, 3).unwrap();
+    |             ^^^^^   ------ type must be known at this point
+    |
+    = note: the type must implement `PixelFormat`
+help: the following types implement trait `PixelFormat`
+   --> crates/fontpixel/src/bitmap/mod.rs:43:1
+    |
+ 43 | impl PixelFormat for Mono {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^ `fontpixel::bitmap::Mono`
+...
+ 53 | impl PixelFormat for Gray8 {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^ `fontpixel::bitmap::Gray8`
+note: required by a bound in `fontpixel::Bitmap`
+   --> crates/fontpixel/src/bitmap/mod.rs:205:22
+    |
+205 | pub struct Bitmap<F: PixelFormat = Mono> {
+    |                      ^^^^^^^^^^^ required by this bound in `Bitmap`
+help: consider giving `b` an explicit type, where the type for type parameter `F` is specified
+    |
+ 29 |         let mut b: fontpixel::Bitmap<F> = Bitmap::new(3, 3).unwrap();
+    |                  ++++++++++++++++++++++
+
+error[E0369]: binary operation `==` cannot be applied to type `Result<u8, fontpixel::Error>`
+   --> crates/fontpixel/tests/vector_raster.rs:401:5
+    |
+401 |     assert_eq!(b.get_pixel(1, 1), Some(0));
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     |
+    |     Result<u8, fontpixel::Error>
+    |     Option<{integer}>
+    |
+note: `Result<u8, fontpixel::Error>` does not implement `PartialEq<Option<{integer}>>`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/result.rs:558:0
+    |
+    = note: `Result<u8, fontpixel::Error>` is defined in another crate
+
+error[E0369]: binary operation `==` cannot be applied to type `Result<u8, fontpixel::Error>`
+   --> crates/fontpixel/tests/vector_raster.rs:402:5
+    |
+402 |     assert_eq!(b.get_pixel(0, 0), Some(1));
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     |
+    |     Result<u8, fontpixel::Error>
+    |     Option<{integer}>
+    |
+note: `Result<u8, fontpixel::Error>` does not implement `PartialEq<Option<{integer}>>`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/result.rs:558:0
+    |
+    = note: `Result<u8, fontpixel::Error>` is defined in another crate
+
+error[E0369]: binary operation `==` cannot be applied to type `Result<u8, fontpixel::Error>`
+   --> crates/fontpixel/tests/vector_raster.rs:408:5
+    |
+408 |     assert_eq!(b.get_pixel(1, 1), Some(1));
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     |
+    |     Result<u8, fontpixel::Error>
+    |     Option<{integer}>
+    |
+note: `Result<u8, fontpixel::Error>` does not implement `PartialEq<Option<{integer}>>`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/result.rs:558:0
+    |
+    = note: `Result<u8, fontpixel::Error>` is defined in another crate
+
+error[E0369]: binary operation `==` cannot be applied to type `Result<u8, fontpixel::Error>`
+   --> crates/fontpixel/tests/vector_raster.rs:409:5
+    |
+409 |     assert_eq!(b.get_pixel(0, 0), Some(0));
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     |
+    |     Result<u8, fontpixel::Error>
+    |     Option<{integer}>
+    |
+note: `Result<u8, fontpixel::Error>` does not implement `PartialEq<Option<{integer}>>`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/result.rs:558:0
+    |
+    = note: `Result<u8, fontpixel::Error>` is defined in another crate
+
+Some errors have detailed explanations: E0283, E0369.
+For more information about an error, try `rustc --explain E0283`.
+error: could not compile `fontpixel` (test "vector_raster") due to 5 previous errors

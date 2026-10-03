@@ -1,10 +1,10 @@
 # CFF1 outline table (W2.3)
 
 Implementation contract written before code, 2026-10-03. `sfnt::cff` is a
-native table/geometry API behind `cff` (`otf` enables it). It is not a FontSet
-bitmap codec: the `otf` registry hooks stay absent pending strike support (W2.4)
-and the raster/grid/projection contract (W2.7). CFF2 and variable instances are
-outside this CFF1 work item.
+native table/geometry API behind `cff` (`otf` enables it). W2.7 now provides the
+separate native `otf` FontSet codec with cubic rasterization and embedded preference;
+see [vector-raster](vector-raster.md). CFF2 and variable instances remain explicit
+unsupported inputs for this CFF1 geometry layer.
 
 ## Sources and attribution
 

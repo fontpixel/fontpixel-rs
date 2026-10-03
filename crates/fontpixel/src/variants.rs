@@ -10,7 +10,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 mod export;
-pub use export::{Encoded, Options, OutlineFlavor, encode};
+pub use export::{Encoded, Options, OutlineFlavor, encode, encode_single};
 
 /// A language-specific face with explicit OpenType script selection.
 #[derive(Clone, Debug, PartialEq, Eq)]

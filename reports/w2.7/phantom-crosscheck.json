@@ -1,0 +1,12 @@
+[
+  {
+    "use_my_metrics": false,
+    "glyphs": 3,
+    "all_pixels_and_advances_equal": true
+  },
+  {
+    "use_my_metrics": true,
+    "glyphs": 3,
+    "all_pixels_and_advances_equal": true
+  }
+]

@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 1 complete
+## Current status: phase 2 in progress (through W2.7)
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -22,8 +22,9 @@ YAFF 1.0 supports single/multi-strike monochrome and grayscale fonts, with
 bounded gzip and lossless versioned native-metadata extensions for golden tests.
 See [YAFF contracts](docs/formats/yaff.md) and [W1.6 validation](reports/w1.6.md).
 
-The other 43 formats and Python/WASM bindings remain unimplemented and are
-reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
+Twelve format IDs now have native readers, eleven have writers (color writing
+is deferred); the remaining 34 IDs and Python/WASM bindings remain unimplemented
+and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
 [charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md), [PCF contracts](docs/formats/pcf.md),
@@ -187,3 +188,36 @@ as WOFF or WOFF2. This does not implement W2.7's general raster reader or TTC.
 Rust API: `Variants::new`, `add_language`, configurable `LanguageVariant` and
 `ScriptVariant`, `Variants::plan`, `variants::encode`, `sfnt::gsub::Gsub` and
 `sfnt::subset::subset`. Core BDF/PCF-only builds acquire no new dependencies.
+
+
+## OpenType raster and collection conversion
+
+TTF, CFF OTF, WOFF, WOFF2 and TTC/OTC now use the unified native reader. A proven
+4–64 ppem integral grid is recovered automatically. Matching embedded images
+win by default. Ordinary/off-grid/dot outlines require an explicit size:
+
+```sh
+fontpixel convert pixels.ttf -o restored.bdf
+fontpixel convert round.otf --ppem 14 -o restored.bdf
+fontpixel info family.ttc --face-index 1 --json
+fontpixel convert small.bdf large.bdf -o family.ttc
+fontpixel convert pixels.bdf --shape dot --embed-bitmaps -o round.woff2
+```
+
+`--no-embedded-bitmaps` requests outlines; `--grid-units` (with `--ppem`) and
+`--pixel-offset-x/--pixel-offset-y` are explicit reviewed raster overrides.
+`--ppu`, `--upm`, `--dotsize`, `--gray-threshold`, `--woff2-source`,
+`--woff2-quality` and `--collection-v2` control native output. A TTC FontSet write
+maps each Font to one independent face. Existing destinations stay intact after
+errors or strict-loss refusal.
+
+Rust APIs are `formats::vector_raster::{read, write, detect_native_ppem}`,
+`sfnt::collection::{Collection, encode}`, and configurable registry methods
+`set_vector_read_options` / `set_vector_write_options`. The low-level collection
+and webfont APIs preserve original table semantics; raster conversion reports
+unrepresentable source information. General hint execution, variable instances,
+CFF2, and sparse anisotropic fallback remain explicit unsupported cases.
+See [raster contracts](docs/formats/vector-raster.md),
+[collection contracts and deployed-tool limits](docs/formats/ttc.md),
+and [W2.7 validation](reports/w2.7.md). W2.8 and the whole-phase completion gates
+are still outstanding.
