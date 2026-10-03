@@ -1,5 +1,5 @@
 {
-  "partial": true,
+  "partial": false,
   "raster": [
     {
       "file": "full-square-ttf.ttf",
@@ -145,5 +145,77 @@
       "native_seconds": 0.029612944,
       "ppem": 14
     }
-  ]
+  ],
+  "collections": {
+    "faces": 3,
+    "shared_tags": [
+      "GSUB",
+      "OS/2",
+      "cmap",
+      "gasp",
+      "glyf",
+      "head",
+      "hhea",
+      "hmtx",
+      "loca",
+      "maxp",
+      "name",
+      "post"
+    ],
+    "fonttools_writer_roundtrip": true,
+    "woff2_bytes": 3669060,
+    "google_decoder_all_faces": true,
+    "ots_extracted_faces": 6,
+    "homogeneous": [
+      {
+        "flavor": "ttf",
+        "faces": 2,
+        "ots_ttc": true,
+        "ots_woff2": true
+      },
+      {
+        "flavor": "otf",
+        "faces": 2,
+        "ots_ttc": true,
+        "ots_woff2": true
+      }
+    ],
+    "tool_limitations": [
+      {
+        "file": "native.ttc",
+        "tool": "OTS",
+        "returncode": 1,
+        "stderr": "WARNING: fixing incorrect maxp version for CFF font\nERROR: maxp: wrong maxp version for glyph data"
+      },
+      {
+        "file": "fonttools.ttc",
+        "tool": "OTS",
+        "returncode": 1,
+        "stderr": "WARNING: fixing incorrect maxp version for CFF font\nERROR: maxp: wrong maxp version for glyph data"
+      },
+      {
+        "file": "google.ttc",
+        "tool": "OTS",
+        "returncode": 1,
+        "stderr": "WARNING: fixing incorrect maxp version for CFF font\nERROR: maxp: wrong maxp version for glyph data"
+      },
+      {
+        "file": "collection.woff2",
+        "tool": "OTS",
+        "returncode": 1,
+        "stderr": "WARNING: fixing incorrect maxp version for CFF font\nERROR: maxp: wrong maxp version for glyph data"
+      },
+      {
+        "file": "collection.woff2",
+        "tool": "FreeType WOFF2 CFF face 1",
+        "error": "FT_Exception:  (unknown file format)"
+      },
+      {
+        "file": "google-compressed.woff2",
+        "tool": "FreeType WOFF2 CFF face 1",
+        "error": "FT_Exception:  (unknown file format)"
+      }
+    ],
+    "harfbuzz_language_batches": 54
+  }
 }

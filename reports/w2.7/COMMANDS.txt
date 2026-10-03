@@ -12,12 +12,12 @@ RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-d
 cargo deny --locked --manifest-path fuzz/Cargo.toml check
 cargo build --locked --release -p fontpixel-cli --all-features
 cargo build --locked --release -p fontpixel --all-features --example raster_check
-python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w27-parity
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w27-complete-parity
 
 # Reuse the accepted W2.6 full/Latin generated fonts. To recreate them, use
 # reports/w2.6-review/COMMANDS.txt; do not edit any reference/sample source.
-python3 -B tests/crosscheck/raster_collections.py --driver "$CARGO_TARGET_DIR/release/examples/raster_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --full-work /tmp/fontpixel-w26-review-full --latin-work /tmp/fontpixel-w26-review-latin --work /tmp/fontpixel-w27-crosscheck --output reports/w2.7/crosscheck-final.json
-python3 -B tests/crosscheck/raster_metrics.py --driver "$CARGO_TARGET_DIR/release/examples/raster_check" --work /tmp/fontpixel-w27-metrics --output reports/w2.7/phantom-crosscheck-final.json
+python3 -B tests/crosscheck/raster_collections.py --driver "$CARGO_TARGET_DIR/release/examples/raster_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --full-work /tmp/fontpixel-w26-review-full --latin-work /tmp/fontpixel-w26-review-latin --work /tmp/fontpixel-w27-crosscheck --output reports/w2.7/crosscheck-complete.json
+python3 -B tests/crosscheck/raster_metrics.py --driver "$CARGO_TARGET_DIR/release/examples/raster_check" --work /tmp/fontpixel-w27-metrics --output reports/w2.7/phantom-crosscheck-complete.json
 
 # Separate existing ASan target; normal builds in their own reused target.
 export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target
@@ -26,6 +26,9 @@ cargo +nightly fuzz build collection
 ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/vector_raster" /tmp/fontpixel-w27-fuzz-vector -max_total_time=611 -max_len=65536 -rss_limit_mb=1024
 ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/collection" /tmp/fontpixel-w27-fuzz-collection -max_total_time=611 -max_len=65536 -rss_limit_mb=1024
 # Generated seed paths, hashes and sizes are retained in fuzz-seeds.json.
-sha256sum -c reports/w2.7/fuzz-source.sha256
+sha256sum -c reports/w2.7/fuzz-final-source.sha256
 find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.7/protected-after.sha256
 cmp reports/w2.6-review/protected-after.sha256 reports/w2.7/protected-after.sha256
+
+python3 -B tests/crosscheck/raster_native_write.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --work /tmp/fontpixel-w27-native-write --output reports/w2.7/native-write-complete.json
+# Use the normal Cargo target for this writer command, as above.
