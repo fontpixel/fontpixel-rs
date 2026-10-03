@@ -17,7 +17,7 @@
 |---|---|
 | font-face units-per-em | native pixel size × units per pixel |
 | ascent / descent | baseline metrics, descent normalized to positive distance |
-| font-family / font-style | family / style names |
+| font-family / font-style | family / SVG style descriptor; native fp:style retains free-form style names |
 | horiz-adv-x | effective horizontal device advance × scale |
 | vert-adv-y | negative of upward-facing vertical advance y × scale |
 | vert-origin-x/y | vertical origin relative to horizontal origin |
@@ -85,7 +85,9 @@ filled paths are instead parsed independently with FontTools and rasterized with
 CairoSVG, including a supplied-Python-produced SVG-font import check.
 
 Large CJK separate-square/dot documents can exceed the standard 64 MiB input
-budget. A caller may explicitly raise `ReadOptions.limits.resources.max_input_bytes`
+budget. CLI `info`, `convert`, `preview` and `render` accept an explicit
+`--max-input-bytes 268435456`; the independent 256 MiB aggregate cap remains.
+A library caller may explicitly raise `ReadOptions.limits.resources.max_input_bytes`
 (and the registry's common resource limit when using registry dispatch). The
 crosscheck driver does this explicitly for full Tong CJK dot output. Geometry is
 retained for one glyph at a time, with a separate bounded exhaustive pass only
@@ -97,3 +99,18 @@ including namespace declaration count. Arc operand validation bounds radius
 correction and the normalizer's subdivision buffer before it is allocated. The
 conservative radius bound can reject extreme anisotropic ellipses even if a
 particular rotated segment would fit; these are errors, never approximated silently.
+
+## Independent-review corrections
+
+Separate child paths are painted independently and unioned, while subpaths
+within one path retain nonzero winding. The cumulative raster-work budget counts
+each painted layer. Native alias mappings are collected before indexing, avoiding
+quadratic cloning/reindexing; report locations refer to the merged output glyph.
+UTF-32 mapping/model allocation is charged before decoding. Fixed native metric
+fields do not allocate an unbounded token vector. SMIL animation elements are
+rejected as active content, and unknown native glyph attributes report loss.
+
+Free-form style names (for example `Regular` or `Bold Italic`) use `fp:style`.
+The standard `font-style` attribute is emitted only for valid SVG descriptors
+(`all`, or a comma-separated list of `normal`, `italic`, `oblique`). This preserves
+native style names without emitting invalid standard font metadata.

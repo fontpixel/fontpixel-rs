@@ -148,6 +148,8 @@ impl FormatReader<FontSet> for SvgCodec {
             .min(l.max_total_bytes);
         o.limits.resources.max_table_bytes =
             o.limits.resources.max_table_bytes.min(l.max_table_bytes);
+        o.limits.resources.max_total_bytes =
+            o.limits.resources.max_total_bytes.min(l.max_total_bytes);
         o.limits.resources.max_glyphs = o.limits.resources.max_glyphs.min(l.max_glyphs);
         o.limits.resources.max_pixels_per_glyph = o
             .limits

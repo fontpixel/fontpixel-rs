@@ -338,7 +338,7 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
         out.attr("units-per-em", &scaled(i64::from(ppem), ppu)?)?;
         for (k, v) in [
             ("font-family", &f.names.family),
-            ("font-style", &f.names.style),
+            ("fp:style", &f.names.style),
             ("fp:full", &f.names.full),
             ("fp:postscript", &f.names.postscript),
             ("fp:version", &f.names.version),
@@ -350,6 +350,16 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
         ] {
             if let Some(v) = v {
                 out.attr(k, v)?;
+            }
+        }
+        if let Some(style) = &f.names.style {
+            // A free-form family substyle is not an SVG/CSS font-style descriptor.
+            if style == "all"
+                || style
+                    .split(',')
+                    .all(|s| matches!(s.trim(), "normal" | "italic" | "oblique"))
+            {
+                out.attr("font-style", style)?;
             }
         }
         for (k, v) in [

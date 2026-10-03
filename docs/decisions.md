@@ -941,3 +941,29 @@ resolved endpoints and conservative arc radius/subdivision expansion before
 invoking svgtypes normalization. Keep DTDs and non-UTF-8 declarations explicit errors.
 **Reason:** Post-parse limits are too late for adversarial attribute lists or
 extremely anisotropic radii. Dedicated regression tests exercise both boundaries.
+
+## 2026-10-03 — SVG review preserves separate paint and bounded alias identity
+
+**Question:** Opposite-winding child paths cancelled despite SVG painting them
+separately; alias grouping repeatedly cloned/reindexed accumulated mappings, and
+loss locations could name a nonexistent glyph. Free-form style names were also
+written as invalid SVG `font-style` descriptors.
+**Choice:** Union independently rasterized child paths, charge every layer's
+raster work, collect each alias group before model indexing, and use its retained
+index in diagnostics. Charge expanded Unicode metadata before allocation, parse
+fixed native metric fields without a token vector, reject SMIL elements, and
+report unknown native glyph metadata. Retain exact style names in `fp:style`;
+only valid SVG style descriptors are also written as `font-style`.
+**Reason:** Supported SVG geometry and native metadata must remain faithful;
+configurable resource limits must cover expansion and avoid quadratic work.
+Independent failing-before regressions and fresh reader fuzzing cover the changes.
+
+## 2026-10-03 — Explicit CLI input-size override for large SVG fonts
+
+**Question:** Full CJK circular SVG output is valid but exceeds the CLI's common
+64 MiB default input cap, with no way to reopen it in that CLI.
+**Choice:** Add `--max-input-bytes` to inspection/conversion/rendering arguments
+and carry it through file reading and SVG registry limits. Keep the default and
+independent 256 MiB aggregate cap unchanged.
+**Reason:** A safe default should remain overridable for known local full-font
+outputs. Check the complete supplied Tong CJK circular font using this path.

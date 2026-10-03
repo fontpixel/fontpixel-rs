@@ -589,3 +589,144 @@ fn legacy_conversion_requires_its_charset_feature() {
             .contains("cjk-charsets")
     );
 }
+
+#[test]
+fn independent_child_paths_union_even_with_opposite_winding() {
+    let o = ReadOptions {
+        ppem: Some(8),
+        ..Default::default()
+    };
+    let (set, _) = svg::read(
+        &text("<glyph><path d='M0 0h300v300H0Z'/><path d='M0 0v300h300V0Z'/></glyph>"),
+        &o,
+    )
+    .unwrap();
+    let g = set.fonts[0].glyphs().next().unwrap().1;
+    assert_eq!(
+        g.bitmap,
+        Glyph::new("###\n###\n###".parse::<Bitmap>().unwrap()).bitmap
+    );
+    // Subpaths of a single path still use the nonzero winding rule.
+    let (set, _) = svg::read(&text("<glyph d='M0 0h300v300H0Z M0 0v300h300V0Z'/>"), &o).unwrap();
+    assert_eq!(set.fonts[0].glyphs().next().unwrap().1.bitmap.width(), 0);
+    let mut limited = o;
+    limited.limits.max_total_pixels = 20;
+    assert!(matches!(
+        svg::read(
+            &text("<glyph><path d='M0 0h300v300H0Z'/><path d='M0 0v300h300V0Z'/></glyph>"),
+            &limited
+        ),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
+fn alias_loss_locations_reference_retained_glyph() {
+    let d = text(
+        "<glyph xmlns:fp='https://fontpixel.org/ns/svg/1' fp:id='0' unicode='A' d='M0 0h100v100H0Z' extra='x'/><glyph xmlns:fp='https://fontpixel.org/ns/svg/1' fp:id='0' unicode='B' d='M0 0h100v100H0Z' extra='x'/>",
+    );
+    let (set, r) = svg::read(&d, &Default::default()).unwrap();
+    assert_eq!(set.fonts[0].len(), 1);
+    assert!(
+        r.entries
+            .iter()
+            .filter_map(|e| e.location.glyph_index)
+            .all(|i| i == 0)
+    );
+}
+
+#[test]
+fn arbitrary_style_names_are_not_invalid_svg_descriptors() {
+    for style in [
+        "Regular",
+        "Bold Italic",
+        "自定义",
+        "italic",
+        "normal,oblique",
+    ] {
+        let mut f = font();
+        f.names.style = Some(style.into());
+        let (d, r) = svg::write(&FontSet::from(f.clone()), &Default::default()).unwrap();
+        assert!(!r.has_loss());
+        let s = std::str::from_utf8(&d).unwrap();
+        let doc = roxmltree::Document::parse(s).unwrap();
+        let face = doc
+            .descendants()
+            .find(|n| n.tag_name().name() == "font-face")
+            .unwrap();
+        if let Some(value) = face.attribute("font-style") {
+            assert!(
+                value == "all"
+                    || value
+                        .split(',')
+                        .all(|s| matches!(s.trim(), "normal" | "italic" | "oblique")),
+                "{value}"
+            );
+        }
+        equal(&f, &svg::read(&d, &Default::default()).unwrap().0.fonts[0]);
+    }
+}
+
+#[test]
+fn unicode_mapping_model_budget_is_preallocation() {
+    let d = text(&format!(
+        "<glyph unicode='{}' d='M0 0h100v100H0Z'/>",
+        "A".repeat(1024)
+    ));
+    let mut o = ReadOptions::default();
+    o.limits.resources.max_total_bytes = 4096;
+    assert!(matches!(
+        svg::read(&d, &o),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
+fn many_aliases_are_grouped_once_before_indexing() {
+    let mut body = String::new();
+    for i in 0..8192 {
+        body.push_str(&format!("<glyph xmlns:fp='https://fontpixel.org/ns/svg/1' fp:id='0' unicode='&#x{:x};' d='M0 0h100v100H0Z'/>", 0x10000 + i));
+    }
+    let (set, _) = read(&body).unwrap();
+    let f = &set.fonts[0];
+    assert_eq!(f.len(), 1);
+    assert_eq!(f.glyphs().next().unwrap().1.codepoints.len(), 8192);
+    assert_eq!(
+        f.glyph_id(Codepoint::Unicode(0x10000)),
+        f.glyph_id(Codepoint::Unicode(0x11fff))
+    );
+}
+
+#[test]
+fn active_animation_is_rejected_and_unknown_native_fields_reported() {
+    for content in [
+        "<animate attributeName='d'/>",
+        "<animateMotion/>",
+        "<animateTransform/>",
+        "<set attributeName='horiz-adv-x' to='200'/>",
+    ] {
+        assert!(read(&format!("{content}<glyph d='M0 0h100v100H0Z'/>")).is_err());
+    }
+    let (_, r) = read(
+        "<glyph xmlns:fp='https://fontpixel.org/ns/svg/1' fp:unknown='x' d='M0 0h100v100H0Z'/>",
+    )
+    .unwrap();
+    assert!(r.entries.iter().any(|e| e.code == "svg.glyph-attributes"));
+}
+
+#[test]
+fn common_registry_model_budget_reaches_explicit_svg_reader() {
+    let d = text(&format!(
+        "<glyph unicode='{}' d='M0 0h100v100H0Z'/>",
+        "A".repeat(1024)
+    ));
+    let mut o = fontpixel::ReadOptions {
+        format: Some("svg".into()),
+        ..Default::default()
+    };
+    o.limits.max_total_bytes = 4096;
+    assert!(matches!(
+        fontpixel::read(&d, &o),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}

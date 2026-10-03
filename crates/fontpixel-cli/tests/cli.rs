@@ -886,3 +886,40 @@ fn svg_convert_render_and_atomic_errors() {
     assert_eq!(bad.status.code(), Some(3));
     assert_eq!(fs::read(&svg).unwrap(), saved);
 }
+
+#[cfg(feature = "svg")]
+#[test]
+fn svg_explicit_input_budget_applies_to_inspection_conversion_and_rendering() {
+    let dir = TempDir::new();
+    let source = dir.0.join("source.svg");
+    fs::write(&source, "<svg><font><font-face units-per-em='800'/><glyph unicode='A' d='M0 0h100v100H0Z'/></font></svg>").unwrap();
+    let destination = dir.0.join("output.svg");
+    for mut args in [
+        vec!["info", source.to_str().unwrap()],
+        vec![
+            "convert",
+            source.to_str().unwrap(),
+            "-o",
+            destination.to_str().unwrap(),
+        ],
+        vec![
+            "render",
+            source.to_str().unwrap(),
+            "A",
+            "-o",
+            destination.to_str().unwrap(),
+        ],
+    ] {
+        fs::write(&destination, b"keep me").unwrap();
+        args.extend(["--max-input-bytes", "16"]);
+        assert!(!run(&args).status.success());
+        assert_eq!(fs::read(&destination).unwrap(), b"keep me");
+        *args.last_mut().unwrap() = "4096";
+        let result = run(&args);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+    }
+}

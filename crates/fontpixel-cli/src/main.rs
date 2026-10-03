@@ -380,7 +380,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             raster.apply(&mut registry)?;
             let options = ReadOptions {
                 format: from,
-                ..ReadOptions::default()
+                limits: raster.input_limits(),
             };
             let bytes = read_primary(&input, &options.limits)?;
             let name = input.to_string_lossy();
@@ -568,7 +568,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
                 format: from,
-                ..ReadOptions::default()
+                limits: raster.input_limits(),
             };
             let mut fonts = fontpixel::FontSet::default();
             let mut report = fontpixel::Report::default();
@@ -645,7 +645,7 @@ fn render_layout(args: &LayoutArguments) -> fontpixel::Result<fontpixel::render:
     use fontpixel::render::{GlyphOrder, MissingGlyph, RenderMode, RenderOptions};
     let read_options = ReadOptions {
         format: args.from.clone(),
-        ..Default::default()
+        limits: args.raster.input_limits(),
     };
     let bytes = read_primary(&args.input, &read_options.limits)?;
     let mut registry = fontpixel::registry();
@@ -885,6 +885,9 @@ fn main() -> ExitCode {
 
 #[derive(Args, Default)]
 struct RasterArguments {
+    /// Primary input byte budget (default 64 MiB); aggregate 256 MiB cap remains.
+    #[arg(long)]
+    max_input_bytes: Option<usize>,
     /// Explicit raster size for reviewed off-grid/curved outlines.
     #[arg(long)]
     ppem: Option<u16>,
@@ -904,12 +907,22 @@ struct RasterArguments {
     pixel_offset_y: f64,
 }
 impl RasterArguments {
+    fn input_limits(&self) -> ResourceLimits {
+        let mut limits = ResourceLimits::default();
+        if let Some(maximum) = self.max_input_bytes {
+            limits.max_input_bytes = maximum;
+        }
+        limits
+    }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         #[cfg(feature = "svg")]
         registry.set_svg_read_options(fontpixel::formats::svg::ReadOptions {
             ppem: self.ppem,
             font_index: self.face_index,
-            ..Default::default()
+            limits: fontpixel::formats::svg::Limits {
+                resources: self.input_limits(),
+                ..Default::default()
+            },
         });
         #[cfg(feature = "opentype")]
         registry.set_vector_read_options(fontpixel::formats::vector_raster::Options {

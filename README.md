@@ -242,6 +242,7 @@ A generic off-grid SVG font requires explicit `--ppem`. SVG font collections use
 `--face-index`; default import retains all fonts. Only path-filled SVG glyphs are
 supported; scripts, external references, CSS, strokes and graphical effects are
 rejected. Full CJK dot documents may exceed the default 64 MiB input budget; the
-library exposes typed limits for explicit larger inputs. SVG 1.1 font embedding
+CLI supports `--max-input-bytes 268435456` to reopen those larger fonts; the
+library also exposes typed limits. SVG 1.1 font embedding
 has limited support in modern browsers; use path images for portable previews.
 See [the SVG format contract](docs/formats/svg.md) for metadata loss and bounds.
