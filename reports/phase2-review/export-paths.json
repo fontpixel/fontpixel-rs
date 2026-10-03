@@ -1,0 +1,62 @@
+{
+  "binary_sha256": "3426bb4d2357d9983574dd35920fc9bfc7b693648d91673270ce13ceda77c455",
+  "partial": false,
+  "results": [
+    {
+      "case": "identical",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "cross-input-hardlink",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "cross-format-hardlink",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "output-hardlinks",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "ordinary-rerun",
+      "sources_unchanged": 20,
+      "expected_exit": 0,
+      "no_output_mutation_on_rejection": false,
+      "identical_84_output_rerun": true
+    },
+    {
+      "case": "file-symlink",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "directory-symlink",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    },
+    {
+      "case": "dangling-symlink",
+      "sources_unchanged": 20,
+      "expected_exit": 1,
+      "no_output_mutation_on_rejection": true,
+      "identical_84_output_rerun": false
+    }
+  ]
+}

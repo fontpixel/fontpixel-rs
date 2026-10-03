@@ -1,10 +1,11 @@
 # Phase 2 complete Tong export performance
 
-The final candidate's default-quality complete export takes a **38.233 s median
-of five runs**, meeting PLAN §10's ≤40 s target on this host. All 84 artifacts
-are byte-identical across the five repetitions. These are candidate measurements;
-independent full-font gates and coordinator review are still required before
-Phase 2 acceptance. No Phase 3 work is included.
+The independently safety-fixed exporter takes a **38.414 s median of five runs**
+at quality 11, meeting PLAN §10's ≤40 s target on this host. Every one of its 84
+artifacts is byte-identical to the full independent oracles. The earlier frozen
+candidate measured 38.233 s; both identities are retained separately below.
+All correctness/review gates pass, but coordinator integration and Phase 2
+acceptance are still pending. No Phase 3 work is included.
 
 ## Machine and method
 
@@ -97,10 +98,48 @@ attempt is counted as a successful gate or timing sample.
 
 ## Independent comparisons and validation
 
-Complete final native output validation, original Tong five-run timings and
-stock fontTools comparisons are being completed. The completed baseline contains
-54 PCF/OTB cases (1,585,430 glyph-format checks), 32 complete-family vector/web
-cases, twelve newer supplied-input cases and sixteen WOFF1 transports.
+The original Tong Rust exporter and its unchanged Python plan/metadata helpers,
+adapted to the same frozen BDF input boundary, take **134.569 s median** across
+five complete runs: 136.686, 122.436, 134.569, 136.874 and 101.748 s. It uses eight
+Rayon jobs. Native complete export is 3.52× faster in these measurements. This is
+a workflow comparison, not a claim that the Brotli implementation alone is
+3.52× faster. The reference includes a 39.141 s median Python preparation stage,
+92.000 s vector/webfont stage and 0.884 s bitmap stage. Its eight webfonts have a
+median total of 7,456,168 bytes, versus native 8,778,688 bytes. The native default
+therefore trades approximately 17.74% more webfont bytes for its faster workflow.
+
+Every reference repetition verifies all 84 outputs: twenty BDF and twenty PCF
+files match previous source/oracle byte identities, and 44 sfnt/webfont files
+match the previously validated exact tables after normalizing only head dates
+and checksum adjustment. The original reference embeds current timestamps;
+its aggregate WOFF2 sizes vary from 7,454,760 to 7,458,740 bytes. Native output
+does not vary. See `results/phase2-reference.json`.
+
+Stock fontTools 4.66.1 and Google Brotli 1.2.0 comparisons also use five runs:
+
+| Same input and operation | Native median s | fontTools median s | Native bytes | fontTools bytes |
+|---|---:|---:|---:|---:|
+| Full supplied SC BDF to square TTF | 0.879 | 12.800 | 7,550,376 | 7,549,728 |
+| Full-family Large proportional square CFF to WOFF2 q11 t1 | 18.724 | 19.184 | 1,107,844 | 1,103,688 |
+| Supplied Latin dot TTF to WOFF2 q11 t1 | 1.626 | 2.351 | 39,120 | 39,004 |
+
+The SC native result also meets the ≤1 s target and is about 14.56× faster for
+this end-to-end read/plan/vectorize/write operation. Compression excludes file
+I/O equally; both encoders receive identical sfnt bytes. The full CFF compression
+times are close and noisy, so no broad compressor superiority is inferred. The
+Latin comparison is a separate small workload, not a proxy for full CJK dots.
+All 38,654 SC glyphs/metrics and 912 shaping batches pass the independent vector
+comparison; all 44,833 CFF and 3,647 Latin glyphs survive both encoded containers
+and the final native reader. See `results/phase2-fonttools.json`.
+
+Final correctness now passes: 32 full-family vector/webfont cases (1,431,612
+glyph-format checks); twelve newer supplied-input cases (547,971 checks); sixteen
+WOFF1 transports; all literal/row policy checks; sixteen font subsets (87,552
+shaping-glyph checks); and twenty-four full native raster reads (1,073,708 glyphs,
+no exceptions). All three timed native profiles are tied to these independent
+oracles by exact sfnt/table/stream identities and OTS. The 54 bitmap oracle cases
+cover 1,585,430 glyph-format checks; all final rebuilt and supplied bitmap outputs
+are byte-identical to their accepted oracle inputs.
 
 The original Tong exporter has the already-documented null DFLT DefaultLangSys
 OTS defect. Its rejection is recorded explicitly; it is never accepted for a
@@ -119,3 +158,25 @@ Run `tests/crosscheck/phase2_optimized_validate.py` after the full external matr
 so every timed artifact is tied to independent glyph/table/OTS evidence.
 Exact environment, commands and final source/binary identities accompany the
 Phase 2 candidate report.
+
+## Independent safety review and fresh timing
+
+An independent review confirmed a safety defect in this measured candidate's new
+example: if the output paths alias input BDF files, direct copying can truncate
+those inputs. All measurements and correctness runs used separate output paths,
+so their artifacts remain valid. The fix is committed at `7b7ed29c86a75d02d4a429bdb61d9ec4324c3c61` on
+`review/phase2-input-safety`, together with a checked-add boundary fix for 32-bit
+grid dispatch. Its complete check passes 928 executions and its release binary
+passes eight source-preservation/path/rerun cases. No actual 32-bit executable
+run is claimed; maximum-usize and public zero-height cases exercise the arithmetic.
+
+A fresh isolated profile on the guarded binary gives 38.414, 36.947, 39.481,
+39.317 and 36.554 s: **38.414 s median**, **2.869 GiB peak RSS**. All 84 artifacts
+are byte-identical both across runs and to the frozen candidate's full independent
+oracles, and all twenty input hashes match. The guarded workflow is about 3.50×
+faster than the measured original workflow. Its binary SHA-256 is
+`3426bb4d2357d9983574dd35920fc9bfc7b693648d91673270ce13ceda77c455`.
+See `../reports/phase2-review/default-five-run.json`, `output-identity.json` and
+`README.md`. The earlier tables retain their pre-review measured identities;
+no unmeasured post-fix timing is assigned to lower-quality or stock-tool rows.
+The fixed branch remains unmerged pending coordinator integration.

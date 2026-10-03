@@ -25,10 +25,13 @@ retained, and top-down processing was restored. An early policy test called a
 nonexistent method rather than the public free function; its compile-failure log
 is retained. These are development failures, not accepted gates.
 
-Still required: final aggregate check and release build, five-run final timing,
-complete final native/reference external matrix, supplied-newer inputs, webfont
-and subset/raster validation, compatibility parity, fresh fuzz gate, protected
-input hashes and review/integration. No W3 work has begun.
+All listed aggregate, external, timing, parity, raster, subset, protected-input
+and fresh fuzz gates now pass. See validation-summary.json, fuzz-summary.json
+and ../../benches/PHASE2-REPORT.md. Independent review confirmed the example
+input/output-alias defect; its separate guard and a 32-bit arithmetic fix are validated at `7b7ed29` and
+must be integrated. See ../phase2-review/README.md for 928 checks, eight release
+path cases and a fresh 38.414-second five-run profile with all 84 hashes unchanged.
+The candidate is not merged or accepted, and no W3 work has begun.
 
 Release commands with explicit --example selectors do not build CLI binaries.
 The final CLI/parity gate therefore uses a separate explicit --bins build; its

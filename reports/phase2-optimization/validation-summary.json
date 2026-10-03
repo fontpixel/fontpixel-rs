@@ -1,0 +1,33 @@
+{
+  "full-export-validation": {
+    "cases": 32,
+    "glyph_checks": 1431612
+  },
+  "supplied-vectors": {
+    "cases": 12,
+    "glyph_checks": 547971
+  },
+  "woff1": {
+    "cases": 16,
+    "glyph_checks": 0
+  },
+  "dot-policies": {
+    "cases": 8,
+    "glyph_checks": 178954
+  },
+  "subsets-raster": {
+    "subset_fonts": 16,
+    "subset_shaping_glyph_checks": 87552,
+    "raster_fonts": 24,
+    "raster_glyphs": 1073708,
+    "exceptions": []
+  },
+  "supplied-bitmap-identical": {
+    "cases": 14,
+    "glyph_checks": 328750
+  },
+  "benchmark-validation": {
+    "cases": 3,
+    "glyph_checks": 0
+  }
+}

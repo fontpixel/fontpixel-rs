@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "target": "woff2",
+      "runs": 442906,
+      "seconds": 612,
+      "exit_code": 0,
+      "asan": true,
+      "codegen_units": 16,
+      "binary_sha256": "6a0eaf640d090e5bb333c018a391d65685610b09fe1b80128f8651f9c5a58031",
+      "terminal_stats": "#442906\tDONE   cov: 3981 ft: 12442 corp: 891/2106Kb lim: 4610 exec/s: 723 rss: 112Mb"
+    },
+    {
+      "target": "vector_raster",
+      "runs": 304010,
+      "seconds": 612,
+      "exit_code": 0,
+      "asan": true,
+      "codegen_units": 16,
+      "binary_sha256": "e08cae44618597a018fdb5a3772c41c5bcf236b3e168601a3a4ff88016225009",
+      "terminal_stats": "#304010\tDONE   cov: 6052 ft: 17183 corp: 1049/5414Kb lim: 7772 exec/s: 496 rss: 498Mb"
+    },
+    {
+      "target": "cff",
+      "runs": 9491231,
+      "seconds": 612,
+      "exit_code": 0,
+      "asan": true,
+      "codegen_units": 16,
+      "binary_sha256": "2eade8acc03fe64b4c61653af89d560152d1d111474458bddd9c94dd810407cd",
+      "terminal_stats": "#9491231\tDONE   cov: 2849 ft: 8391 corp: 1244/478Kb lim: 65536 exec/s: 15508 rss: 393Mb"
+    }
+  ]
+}

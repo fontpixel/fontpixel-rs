@@ -6,13 +6,19 @@ warning-free documentation and final-code default parity with 0 new divergences.
 All six SVG outputs remain byte-identical to their accepted full oracles and all
 690 protected input files remain unchanged. Native complete-family quality-11
 export has a five-run median of 38.233 s, meeting the 40-second target, with
-2.905 GiB peak RSS and 84 byte-identical outputs in every run.
+2.905 GiB peak RSS and 84 byte-identical outputs in every run. The independently
+guarded exporter subsequently passed a 38.414 s five-run median at 2.869 GiB RSS
+with all 84 outputs exactly identical.
 
-The full-font final matrices, fresh ASan runs and independent engine timing
-comparisons are in progress. Production source is checkpointed at `df83a08`;
-main remains reviewed W2.8 `54c7f29`. This is not a Phase 2 acceptance or merge.
-An independent coordinator review and integration are still required. No W3 work
-has begun. See `benches/PHASE2-REPORT.md` and `reports/phase2-optimization/`.
+All final full-font, transport, subset, raster and fresh ASan gates now pass.
+The isolated original-Tong and stock-fontTools comparisons also completed.
+An independent review confirmed input/output alias truncation in the new example;
+its guard and a 32-bit arithmetic fix are validated at `7b7ed29` on
+`review/phase2-input-safety`, with 928 passing check executions and eight release
+path/rerun cases. The earlier measured
+production source is `df83a08`, and main remains reviewed W2.8 `54c7f29`.
+This is not a Phase 2 acceptance or merge. See `phase-2-candidate.md` for terminal
+evidence and the review/integration boundary. No W3 work has begun.
 
 ## Earlier reviewed main status
 

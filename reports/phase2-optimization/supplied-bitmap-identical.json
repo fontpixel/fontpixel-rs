@@ -1,0 +1,103 @@
+{
+  "binary_sha256": "7e547010b0d20c12c055998a411882c94bd4c3115e3b7645cc0a863dc7290cbd",
+  "results": [
+    {
+      "source": "TongPixelSans14Large-JP.bdf",
+      "format": "pcf",
+      "sha256": "5a2fee3d0862212bedd11fb5ae906f557b57408b5829834884ea8277ab9aa366",
+      "glyphs": 38067,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-JP.bdf",
+      "format": "otb",
+      "sha256": "e1dfcc0cfc28c3954b92cc20c7b0922eff81a39325734b7f941f99b9bf909191",
+      "glyphs": 38653,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-KR.bdf",
+      "format": "pcf",
+      "sha256": "fd73b11fea0a5b57ca1f7e4d9a33eeb34964d8ce38d02d81354e3b5e6d7d30d5",
+      "glyphs": 38067,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-KR.bdf",
+      "format": "otb",
+      "sha256": "0a3b4a72ce7a2a949dc85a01ddacee682aee69d5baed1baa1aea27dc053022c7",
+      "glyphs": 38653,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-Latin.bdf",
+      "format": "pcf",
+      "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-Latin.bdf",
+      "format": "otb",
+      "sha256": "654139b0a77732cdded333021f7272a41ecabad82d0fbeff2ee669c8e6673555",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-SC.bdf",
+      "format": "pcf",
+      "sha256": "867339698270ee9fba76c97fbbe235e4c27d4130c3ef95e8b68120acd12cd238",
+      "glyphs": 38067,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-SC.bdf",
+      "format": "otb",
+      "sha256": "0d48dc73d4e1e14b03ab08fbfef048dfb51535ace6536c6c2c1c054a7435721f",
+      "glyphs": 38653,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-TC.bdf",
+      "format": "pcf",
+      "sha256": "1dc568394b94bc06ba0e8581e132bbc53902a7a196915943e3f172de8105fa81",
+      "glyphs": 38067,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Large-TC.bdf",
+      "format": "otb",
+      "sha256": "433a99719fb7bfdb5f61b4454282799db9865eaccbb0c041a02ea0d7268a5e68",
+      "glyphs": 38653,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Small-Latin.bdf",
+      "format": "pcf",
+      "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSans14Small-Latin.bdf",
+      "format": "otb",
+      "sha256": "a7bba298cbe5985ad003ea704f2fcb1e2593b786284af288da8315f4abed2d33",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSansMono14Large-Latin.bdf",
+      "format": "pcf",
+      "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    },
+    {
+      "source": "TongPixelSansMono14Large-Latin.bdf",
+      "format": "otb",
+      "sha256": "f54b39f3012cc2b628854a7de1c84baa7ff38897e6fd45dd98ac4fe663ec2dd6",
+      "glyphs": 3645,
+      "byte_identical_to_full_external_pixel_oracle": true
+    }
+  ]
+}

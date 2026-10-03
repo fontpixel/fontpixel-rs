@@ -1,0 +1,337 @@
+{
+  "partial": false,
+  "binary_sha256": "7e547010b0d20c12c055998a411882c94bd4c3115e3b7645cc0a863dc7290cbd",
+  "raster_driver_sha256": "c5d7890b91471743c6e525be4ff45a6215faf7ff8ab585d5fde73a1acf6ea2a4",
+  "subsets": [
+    {
+      "case": "TongPixelSans14Large-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "a9bd839234b312e1c52765f41b917ff01430a9a5ab580acad82cb8c82a32745f"
+    },
+    {
+      "case": "TongPixelSans14Large-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "1785f4b2e16657112d455e3ff8cb4a63afd24117e2645a300505f998537a977a"
+    },
+    {
+      "case": "TongPixelSans14Small-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "a3ee3604bd35777cdc00b88fa6242c3c1b8c231deef29137c1137a9a005c4246"
+    },
+    {
+      "case": "TongPixelSans14Small-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "b2ddcbd76e66bdc512794ae471b15997a4675b8b3f77c5479f3b14a4569e9727"
+    },
+    {
+      "case": "TongPixelSansMono14Large-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "14487e5521efe5d8ff774eb939914d11e11d32932cd22affc7417b8c2bca21bb"
+    },
+    {
+      "case": "TongPixelSansMono14Large-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "a3d3f0480dab2bc3a4b73262c9f2d0537127c5492e36b1a2f2912c5658403a8a"
+    },
+    {
+      "case": "TongPixelSansMono14Small-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "a58d6750d192e88ac97f0a71199dfb92bceaf5021238eba41348e0adcd0b1265"
+    },
+    {
+      "case": "TongPixelSansMono14Small-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "8db03cd0bbe66f13295aac5458122331281580840e96f4e662d09fcdedd93580"
+    },
+    {
+      "case": "TongPixelSans14Large-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "d8c7af9ef5841e5e15c449c7f79f4f198c31626674e80d2b0b81955c0dc6ccb4"
+    },
+    {
+      "case": "TongPixelSans14Large-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941"
+    },
+    {
+      "case": "TongPixelSans14Small-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "1234041e89ed005ae1bf72a292f43cc7355ea6b8aaa0a04dc44e93a45856eeaf"
+    },
+    {
+      "case": "TongPixelSans14Small-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "51940cc1c71bcb1640e7d312eef330e525ddd2568fa0881a387e76d55277fd2e"
+    },
+    {
+      "case": "TongPixelSansMono14Large-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "e1f57371b1fdca29f29d06964c749d968425c9edd7972242a5043a909d6c9769"
+    },
+    {
+      "case": "TongPixelSansMono14Large-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "8da885fd3d993d1e6b3aa28f3934713de05ad698c9df073be5c36a9cdb2ca4fb"
+    },
+    {
+      "case": "TongPixelSansMono14Small-dot",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "7e461e88be8092fd687a7745b970314a6f74fd01ecd622990eceefc9b7b2f468"
+    },
+    {
+      "case": "TongPixelSansMono14Small-square",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true,
+      "source_sha256": "ba9469005481ab05f72deb8c9b099c204128587592ad3f917edec66c484e7a39"
+    }
+  ],
+  "rasters": [
+    {
+      "file": "TongPixelSans14Large-dot.otf",
+      "sha256": "a9bd839234b312e1c52765f41b917ff01430a9a5ab580acad82cb8c82a32745f",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 5.974320283,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-square.otf",
+      "sha256": "1785f4b2e16657112d455e3ff8cb4a63afd24117e2645a300505f998537a977a",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 0.659171957,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-dot.otf",
+      "sha256": "a3ee3604bd35777cdc00b88fa6242c3c1b8c231deef29137c1137a9a005c4246",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 5.77971203,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-square.otf",
+      "sha256": "b2ddcbd76e66bdc512794ae471b15997a4675b8b3f77c5479f3b14a4569e9727",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 0.636908547,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-dot.otf",
+      "sha256": "14487e5521efe5d8ff774eb939914d11e11d32932cd22affc7417b8c2bca21bb",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 6.211411021,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-square.otf",
+      "sha256": "a3d3f0480dab2bc3a4b73262c9f2d0537127c5492e36b1a2f2912c5658403a8a",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.640031365,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-dot.otf",
+      "sha256": "a58d6750d192e88ac97f0a71199dfb92bceaf5021238eba41348e0adcd0b1265",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 6.264770858,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-square.otf",
+      "sha256": "8db03cd0bbe66f13295aac5458122331281580840e96f4e662d09fcdedd93580",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.676163082,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-dot.ttf",
+      "sha256": "d8c7af9ef5841e5e15c449c7f79f4f198c31626674e80d2b0b81955c0dc6ccb4",
+      "glyphs": 44834,
+      "exact_freetype_glyphs": 44834,
+      "exceptions": [],
+      "native_seconds": 4.185646793,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-square.ttf",
+      "sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 1.155234383,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-dot.ttf",
+      "sha256": "1234041e89ed005ae1bf72a292f43cc7355ea6b8aaa0a04dc44e93a45856eeaf",
+      "glyphs": 44834,
+      "exact_freetype_glyphs": 44834,
+      "exceptions": [],
+      "native_seconds": 4.638831551,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-square.ttf",
+      "sha256": "51940cc1c71bcb1640e7d312eef330e525ddd2568fa0881a387e76d55277fd2e",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 0.830260421,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-dot.ttf",
+      "sha256": "e1f57371b1fdca29f29d06964c749d968425c9edd7972242a5043a909d6c9769",
+      "glyphs": 44643,
+      "exact_freetype_glyphs": 44643,
+      "exceptions": [],
+      "native_seconds": 4.728280209,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-square.ttf",
+      "sha256": "8da885fd3d993d1e6b3aa28f3934713de05ad698c9df073be5c36a9cdb2ca4fb",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.859675077,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-dot.ttf",
+      "sha256": "7e461e88be8092fd687a7745b970314a6f74fd01ecd622990eceefc9b7b2f468",
+      "glyphs": 44643,
+      "exact_freetype_glyphs": 44643,
+      "exceptions": [],
+      "native_seconds": 4.242519033,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-square.ttf",
+      "sha256": "ba9469005481ab05f72deb8c9b099c204128587592ad3f917edec66c484e7a39",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.829928747,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-dot.woff2",
+      "sha256": "8ca835b13499bfdd71efa81e3c7245c9f5135ae273b29b7aba6212e85a269b6c",
+      "glyphs": 44834,
+      "exact_freetype_glyphs": 44834,
+      "exceptions": [],
+      "native_seconds": 4.676168312,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Large-square.woff2",
+      "sha256": "07dc497690f5f3b3089efa437ce15fc39a78169ac21f6c193cee068ad16b494b",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 0.733526422,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-dot.woff2",
+      "sha256": "28af0c6561de56ce04fd92f4850cb3cff8e41916290b7459ea9adf61eb6b3ebe",
+      "glyphs": 44834,
+      "exact_freetype_glyphs": 44834,
+      "exceptions": [],
+      "native_seconds": 8.057569472,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSans14Small-square.woff2",
+      "sha256": "9a3d03a9e394d2cfab62baeda8ed560312e42a077dc6c9bbcbcbd365227385ec",
+      "glyphs": 44833,
+      "exact_freetype_glyphs": 44833,
+      "exceptions": [],
+      "native_seconds": 0.811753854,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-dot.woff2",
+      "sha256": "22c0638aa9ddda2e7892b30c4fcc56beb25d8418af238364a078f23696919b91",
+      "glyphs": 44643,
+      "exact_freetype_glyphs": 44643,
+      "exceptions": [],
+      "native_seconds": 4.375520289,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Large-square.woff2",
+      "sha256": "bdfd1d44312aa0864e2bf08486993450ddc6c601ae5fa18bb74431bfca82ec79",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.738767476,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-dot.woff2",
+      "sha256": "1c706e49922cd70af6143c0e96264d8c6cf6b438f29c080d4c759021bfd4e8f8",
+      "glyphs": 44643,
+      "exact_freetype_glyphs": 44643,
+      "exceptions": [],
+      "native_seconds": 4.350021732,
+      "ppem": 14
+    },
+    {
+      "file": "TongPixelSansMono14Small-square.woff2",
+      "sha256": "15aeb27fc69dd91117dcd2626587b528775065b1c68144e166eb8e62e6157a1f",
+      "glyphs": 44642,
+      "exact_freetype_glyphs": 44642,
+      "exceptions": [],
+      "native_seconds": 0.677123379,
+      "ppem": 14
+    }
+  ]
+}

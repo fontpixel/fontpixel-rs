@@ -1,0 +1,8 @@
+identical PASS
+cross-input-hardlink PASS
+cross-format-hardlink PASS
+output-hardlinks PASS
+ordinary-rerun PASS
+file-symlink PASS
+directory-symlink PASS
+dangling-symlink PASS

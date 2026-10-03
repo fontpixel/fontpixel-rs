@@ -1,0 +1,3482 @@
+{
+  "partial": false,
+  "started_utc": "2026-10-03T22:32:28.365829+00:00",
+  "scope": "84 outputs: 20 BDF copies + 20 PCF + 20 OTB + 8 TTF + 8 OTF + 8 WOFF2; native API example with shared immutable plans and bounded multicore jobs; all input reads, parsing, planning, encoding and output I/O included",
+  "shared_host_caveat": "Shared virtualized host; five unrelated glyph workers may run intermittent light Python render/checkpoint commands. No other sustained software build or CPU-heavy job was scheduled during accepted timed intervals. No CPU pinning or exclusive-core guarantee.",
+  "machine": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "logical_cpus": 9,
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "memory": "MemTotal:       10206504 kB"
+  },
+  "binary_sha256": "3426bb4d2357d9983574dd35920fc9bfc7b693648d91673270ce13ceda77c455",
+  "jobs": 8,
+  "quality": 11,
+  "compression_threads": 1,
+  "dot_reuse": "patterns",
+  "requested_runs": 5,
+  "is_five_run_measurement": true,
+  "input_hashes": {
+    "TongPixelSans14Large-JP.bdf": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a",
+    "TongPixelSans14Large-KR.bdf": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2",
+    "TongPixelSans14Large-Latin.bdf": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46",
+    "TongPixelSans14Large-SC.bdf": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42",
+    "TongPixelSans14Large-TC.bdf": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17",
+    "TongPixelSans14Small-JP.bdf": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333",
+    "TongPixelSans14Small-KR.bdf": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae",
+    "TongPixelSans14Small-Latin.bdf": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+    "TongPixelSans14Small-SC.bdf": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee",
+    "TongPixelSans14Small-TC.bdf": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21",
+    "TongPixelSansMono14Large-JP.bdf": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654",
+    "TongPixelSansMono14Large-KR.bdf": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649",
+    "TongPixelSansMono14Large-Latin.bdf": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650",
+    "TongPixelSansMono14Large-SC.bdf": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c",
+    "TongPixelSansMono14Large-TC.bdf": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7",
+    "TongPixelSansMono14Small-JP.bdf": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22",
+    "TongPixelSansMono14Small-KR.bdf": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c",
+    "TongPixelSansMono14Small-Latin.bdf": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1",
+    "TongPixelSansMono14Small-SC.bdf": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972",
+    "TongPixelSansMono14Small-TC.bdf": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+  },
+  "runs": [
+    {
+      "wall_seconds": 38.41377583800204,
+      "load_start": [
+        1.2783203125,
+        2.033203125,
+        2.6337890625
+      ],
+      "load_end": [
+        5.88134765625,
+        3.18896484375,
+        3.0029296875
+      ],
+      "maximum_rss_kib": 2963328,
+      "user_seconds": 215.715361,
+      "system_seconds": 10.363438,
+      "driver": {
+        "wall_seconds": 36.533035147,
+        "read_seconds": 0.749166863,
+        "bitmap_seconds": 1.4069095520000001,
+        "plan_seconds": 0.518380366,
+        "vector_seconds": 33.858573498,
+        "jobs": 8,
+        "quality": 11,
+        "compression_threads": 1,
+        "available_cpus": 9,
+        "bitmaps": [
+          {
+            "source": "TongPixelSans14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-SC.pcf",
+                "bytes": 2992180,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-SC.otb",
+                "bytes": 1948140,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-TC.pcf",
+                "bytes": 2991588,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-TC.otb",
+                "bytes": 1947844,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-JP.pcf",
+                "bytes": 2991532,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-JP.otb",
+                "bytes": 1947820,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-KR.pcf",
+                "bytes": 2991552,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-KR.otb",
+                "bytes": 1947832,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-Latin.pcf",
+                "bytes": 353368,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-Latin.otb",
+                "bytes": 135376,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-SC.pcf",
+                "bytes": 2991204,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-SC.otb",
+                "bytes": 1942776,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-TC.pcf",
+                "bytes": 2990612,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-TC.otb",
+                "bytes": 1942480,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-JP.pcf",
+                "bytes": 2990580,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-JP.otb",
+                "bytes": 1942464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-KR.pcf",
+                "bytes": 2990608,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-KR.otb",
+                "bytes": 1942476,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-Latin.pcf",
+                "bytes": 352956,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-Latin.otb",
+                "bytes": 131464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-SC.pcf",
+                "bytes": 2979320,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-SC.otb",
+                "bytes": 1943464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-TC.pcf",
+                "bytes": 2978728,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-TC.otb",
+                "bytes": 1943168,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-JP.pcf",
+                "bytes": 2978672,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-JP.otb",
+                "bytes": 1943148,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-KR.pcf",
+                "bytes": 2978692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-KR.otb",
+                "bytes": 1943156,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-Latin.pcf",
+                "bytes": 340324,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-Latin.otb",
+                "bytes": 130748,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-SC.pcf",
+                "bytes": 2978316,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-SC.otb",
+                "bytes": 1939324,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-TC.pcf",
+                "bytes": 2977724,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-TC.otb",
+                "bytes": 1939028,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-JP.pcf",
+                "bytes": 2977692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-JP.otb",
+                "bytes": 1939012,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-KR.pcf",
+                "bytes": 2977720,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-KR.otb",
+                "bytes": 1939024,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-Latin.pcf",
+                "bytes": 339952,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-Latin.otb",
+                "bytes": 127916,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          }
+        ],
+        "vectors": [
+          {
+            "font": "TongPixelSans14Large-dot",
+            "ttf_bytes": 6468504,
+            "otf_bytes": 13789332,
+            "woff2_bytes": 1108480,
+            "sfnt_seconds": 2.645785497,
+            "compression_seconds": 22.599481507,
+            "wall_seconds": 25.245268762
+          },
+          {
+            "font": "TongPixelSansMono14Large-dot",
+            "ttf_bytes": 6362784,
+            "otf_bytes": 13719216,
+            "woff2_bytes": 1090816,
+            "sfnt_seconds": 2.974420849,
+            "compression_seconds": 25.618157696,
+            "wall_seconds": 28.592580116
+          },
+          {
+            "font": "TongPixelSans14Small-dot",
+            "ttf_bytes": 6356312,
+            "otf_bytes": 13713408,
+            "woff2_bytes": 1089416,
+            "sfnt_seconds": 2.685632463,
+            "compression_seconds": 23.225038224,
+            "wall_seconds": 25.910671736
+          },
+          {
+            "font": "TongPixelSansMono14Small-dot",
+            "ttf_bytes": 6316984,
+            "otf_bytes": 13654784,
+            "woff2_bytes": 1079760,
+            "sfnt_seconds": 2.677459762,
+            "compression_seconds": 20.41197672,
+            "wall_seconds": 23.08943748
+          },
+          {
+            "font": "TongPixelSans14Large-square",
+            "ttf_bytes": 9061276,
+            "otf_bytes": 6799760,
+            "woff2_bytes": 1107844,
+            "sfnt_seconds": 3.09433033,
+            "compression_seconds": 26.769850647,
+            "wall_seconds": 29.864182257
+          },
+          {
+            "font": "TongPixelSansMono14Large-square",
+            "ttf_bytes": 9022808,
+            "otf_bytes": 6769268,
+            "woff2_bytes": 1096660,
+            "sfnt_seconds": 2.832276081,
+            "compression_seconds": 27.726579331,
+            "wall_seconds": 30.558856524
+          },
+          {
+            "font": "TongPixelSans14Small-square",
+            "ttf_bytes": 9048024,
+            "otf_bytes": 6830420,
+            "woff2_bytes": 1104992,
+            "sfnt_seconds": 3.229041167,
+            "compression_seconds": 30.618019131,
+            "wall_seconds": 33.847061465
+          },
+          {
+            "font": "TongPixelSansMono14Small-square",
+            "ttf_bytes": 9015916,
+            "otf_bytes": 6804268,
+            "woff2_bytes": 1100720,
+            "sfnt_seconds": 3.091202295,
+            "compression_seconds": 30.120076649,
+            "wall_seconds": 33.211280458
+          }
+        ]
+      }
+    },
+    {
+      "wall_seconds": 36.94677455999772,
+      "load_start": [
+        5.88134765625,
+        3.18896484375,
+        3.0029296875
+      ],
+      "load_end": [
+        7.09033203125,
+        3.83740234375,
+        3.22998046875
+      ],
+      "maximum_rss_kib": 2986992,
+      "user_seconds": 206.961553,
+      "system_seconds": 6.482808,
+      "driver": {
+        "wall_seconds": 36.305696709,
+        "read_seconds": 0.912616323,
+        "bitmap_seconds": 1.2590273220000001,
+        "plan_seconds": 0.457536016,
+        "vector_seconds": 33.676522481,
+        "jobs": 8,
+        "quality": 11,
+        "compression_threads": 1,
+        "available_cpus": 9,
+        "bitmaps": [
+          {
+            "source": "TongPixelSans14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-SC.pcf",
+                "bytes": 2992180,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-SC.otb",
+                "bytes": 1948140,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-TC.pcf",
+                "bytes": 2991588,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-TC.otb",
+                "bytes": 1947844,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-JP.pcf",
+                "bytes": 2991532,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-JP.otb",
+                "bytes": 1947820,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-KR.pcf",
+                "bytes": 2991552,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-KR.otb",
+                "bytes": 1947832,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-Latin.pcf",
+                "bytes": 353368,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-Latin.otb",
+                "bytes": 135376,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-SC.pcf",
+                "bytes": 2991204,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-SC.otb",
+                "bytes": 1942776,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-TC.pcf",
+                "bytes": 2990612,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-TC.otb",
+                "bytes": 1942480,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-JP.pcf",
+                "bytes": 2990580,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-JP.otb",
+                "bytes": 1942464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-KR.pcf",
+                "bytes": 2990608,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-KR.otb",
+                "bytes": 1942476,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-Latin.pcf",
+                "bytes": 352956,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-Latin.otb",
+                "bytes": 131464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-SC.pcf",
+                "bytes": 2979320,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-SC.otb",
+                "bytes": 1943464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-TC.pcf",
+                "bytes": 2978728,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-TC.otb",
+                "bytes": 1943168,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-JP.pcf",
+                "bytes": 2978672,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-JP.otb",
+                "bytes": 1943148,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-KR.pcf",
+                "bytes": 2978692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-KR.otb",
+                "bytes": 1943156,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-Latin.pcf",
+                "bytes": 340324,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-Latin.otb",
+                "bytes": 130748,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-SC.pcf",
+                "bytes": 2978316,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-SC.otb",
+                "bytes": 1939324,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-TC.pcf",
+                "bytes": 2977724,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-TC.otb",
+                "bytes": 1939028,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-JP.pcf",
+                "bytes": 2977692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-JP.otb",
+                "bytes": 1939012,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-KR.pcf",
+                "bytes": 2977720,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-KR.otb",
+                "bytes": 1939024,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-Latin.pcf",
+                "bytes": 339952,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-Latin.otb",
+                "bytes": 127916,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          }
+        ],
+        "vectors": [
+          {
+            "font": "TongPixelSans14Large-dot",
+            "ttf_bytes": 6468504,
+            "otf_bytes": 13789332,
+            "woff2_bytes": 1108480,
+            "sfnt_seconds": 2.769754247,
+            "compression_seconds": 25.247464294,
+            "wall_seconds": 28.017219591
+          },
+          {
+            "font": "TongPixelSansMono14Large-dot",
+            "ttf_bytes": 6362784,
+            "otf_bytes": 13719216,
+            "woff2_bytes": 1090816,
+            "sfnt_seconds": 2.721326597,
+            "compression_seconds": 23.90997341,
+            "wall_seconds": 26.63130142
+          },
+          {
+            "font": "TongPixelSans14Small-dot",
+            "ttf_bytes": 6356312,
+            "otf_bytes": 13713408,
+            "woff2_bytes": 1089416,
+            "sfnt_seconds": 2.8316118980000002,
+            "compression_seconds": 23.478846979,
+            "wall_seconds": 26.310460162
+          },
+          {
+            "font": "TongPixelSansMono14Small-dot",
+            "ttf_bytes": 6316984,
+            "otf_bytes": 13654784,
+            "woff2_bytes": 1079760,
+            "sfnt_seconds": 2.931984559,
+            "compression_seconds": 24.194725764,
+            "wall_seconds": 27.126711416
+          },
+          {
+            "font": "TongPixelSans14Large-square",
+            "ttf_bytes": 9061276,
+            "otf_bytes": 6799760,
+            "woff2_bytes": 1107844,
+            "sfnt_seconds": 1.937843158,
+            "compression_seconds": 20.900295198,
+            "wall_seconds": 22.838139408
+          },
+          {
+            "font": "TongPixelSansMono14Large-square",
+            "ttf_bytes": 9022808,
+            "otf_bytes": 6769268,
+            "woff2_bytes": 1096660,
+            "sfnt_seconds": 3.014231833,
+            "compression_seconds": 28.644246035,
+            "wall_seconds": 31.658479006
+          },
+          {
+            "font": "TongPixelSans14Small-square",
+            "ttf_bytes": 9048024,
+            "otf_bytes": 6830420,
+            "woff2_bytes": 1104992,
+            "sfnt_seconds": 2.599442722,
+            "compression_seconds": 29.818195786,
+            "wall_seconds": 32.417639722
+          },
+          {
+            "font": "TongPixelSansMono14Small-square",
+            "ttf_bytes": 9015916,
+            "otf_bytes": 6804268,
+            "woff2_bytes": 1100720,
+            "sfnt_seconds": 2.805550317,
+            "compression_seconds": 30.857231341,
+            "wall_seconds": 33.662782837
+          }
+        ]
+      }
+    },
+    {
+      "wall_seconds": 39.48120095299964,
+      "load_start": [
+        7.09033203125,
+        3.83740234375,
+        3.22998046875
+      ],
+      "load_end": [
+        7.63720703125,
+        4.42822265625,
+        3.4580078125
+      ],
+      "maximum_rss_kib": 3004436,
+      "user_seconds": 217.255189,
+      "system_seconds": 4.790108,
+      "driver": {
+        "wall_seconds": 37.855384576,
+        "read_seconds": 0.65091791,
+        "bitmap_seconds": 1.026299587,
+        "plan_seconds": 0.423251492,
+        "vector_seconds": 35.754918433,
+        "jobs": 8,
+        "quality": 11,
+        "compression_threads": 1,
+        "available_cpus": 9,
+        "bitmaps": [
+          {
+            "source": "TongPixelSans14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-SC.pcf",
+                "bytes": 2992180,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-SC.otb",
+                "bytes": 1948140,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-TC.pcf",
+                "bytes": 2991588,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-TC.otb",
+                "bytes": 1947844,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-JP.pcf",
+                "bytes": 2991532,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-JP.otb",
+                "bytes": 1947820,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-KR.pcf",
+                "bytes": 2991552,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-KR.otb",
+                "bytes": 1947832,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-Latin.pcf",
+                "bytes": 353368,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-Latin.otb",
+                "bytes": 135376,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-SC.pcf",
+                "bytes": 2991204,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-SC.otb",
+                "bytes": 1942776,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-TC.pcf",
+                "bytes": 2990612,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-TC.otb",
+                "bytes": 1942480,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-JP.pcf",
+                "bytes": 2990580,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-JP.otb",
+                "bytes": 1942464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-KR.pcf",
+                "bytes": 2990608,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-KR.otb",
+                "bytes": 1942476,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-Latin.pcf",
+                "bytes": 352956,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-Latin.otb",
+                "bytes": 131464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-SC.pcf",
+                "bytes": 2979320,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-SC.otb",
+                "bytes": 1943464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-TC.pcf",
+                "bytes": 2978728,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-TC.otb",
+                "bytes": 1943168,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-JP.pcf",
+                "bytes": 2978672,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-JP.otb",
+                "bytes": 1943148,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-KR.pcf",
+                "bytes": 2978692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-KR.otb",
+                "bytes": 1943156,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-Latin.pcf",
+                "bytes": 340324,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-Latin.otb",
+                "bytes": 130748,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-SC.pcf",
+                "bytes": 2978316,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-SC.otb",
+                "bytes": 1939324,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-TC.pcf",
+                "bytes": 2977724,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-TC.otb",
+                "bytes": 1939028,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-JP.pcf",
+                "bytes": 2977692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-JP.otb",
+                "bytes": 1939012,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-KR.pcf",
+                "bytes": 2977720,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-KR.otb",
+                "bytes": 1939024,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-Latin.pcf",
+                "bytes": 339952,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-Latin.otb",
+                "bytes": 127916,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          }
+        ],
+        "vectors": [
+          {
+            "font": "TongPixelSans14Large-dot",
+            "ttf_bytes": 6468504,
+            "otf_bytes": 13789332,
+            "woff2_bytes": 1108480,
+            "sfnt_seconds": 2.34254004,
+            "compression_seconds": 24.594644961,
+            "wall_seconds": 26.937186007
+          },
+          {
+            "font": "TongPixelSansMono14Large-dot",
+            "ttf_bytes": 6362784,
+            "otf_bytes": 13719216,
+            "woff2_bytes": 1090816,
+            "sfnt_seconds": 2.73876156,
+            "compression_seconds": 29.645388334,
+            "wall_seconds": 32.384151184
+          },
+          {
+            "font": "TongPixelSans14Small-dot",
+            "ttf_bytes": 6356312,
+            "otf_bytes": 13713408,
+            "woff2_bytes": 1089416,
+            "sfnt_seconds": 2.456123943,
+            "compression_seconds": 25.35685701,
+            "wall_seconds": 27.81298173
+          },
+          {
+            "font": "TongPixelSansMono14Small-dot",
+            "ttf_bytes": 6316984,
+            "otf_bytes": 13654784,
+            "woff2_bytes": 1079760,
+            "sfnt_seconds": 2.624673086,
+            "compression_seconds": 29.724964161,
+            "wall_seconds": 32.34963843
+          },
+          {
+            "font": "TongPixelSans14Large-square",
+            "ttf_bytes": 9061276,
+            "otf_bytes": 6799760,
+            "woff2_bytes": 1107844,
+            "sfnt_seconds": 2.527962595,
+            "compression_seconds": 32.960005637,
+            "wall_seconds": 35.48796954
+          },
+          {
+            "font": "TongPixelSansMono14Large-square",
+            "ttf_bytes": 9022808,
+            "otf_bytes": 6769268,
+            "woff2_bytes": 1096660,
+            "sfnt_seconds": 2.462100401,
+            "compression_seconds": 29.709348703,
+            "wall_seconds": 32.17145012
+          },
+          {
+            "font": "TongPixelSans14Small-square",
+            "ttf_bytes": 9048024,
+            "otf_bytes": 6830420,
+            "woff2_bytes": 1104992,
+            "sfnt_seconds": 2.815329402,
+            "compression_seconds": 32.93882706,
+            "wall_seconds": 35.754157421
+          },
+          {
+            "font": "TongPixelSansMono14Small-square",
+            "ttf_bytes": 9015916,
+            "otf_bytes": 6804268,
+            "woff2_bytes": 1100720,
+            "sfnt_seconds": 2.233706298,
+            "compression_seconds": 25.144233682,
+            "wall_seconds": 27.377940905
+          }
+        ]
+      }
+    },
+    {
+      "wall_seconds": 39.317197263997514,
+      "load_start": [
+        7.63720703125,
+        4.42822265625,
+        3.4580078125
+      ],
+      "load_end": [
+        7.99072265625,
+        4.9619140625,
+        3.6806640625
+      ],
+      "maximum_rss_kib": 3008144,
+      "user_seconds": 212.626272,
+      "system_seconds": 5.216824,
+      "driver": {
+        "wall_seconds": 37.580750004,
+        "read_seconds": 0.710086994,
+        "bitmap_seconds": 1.195473786,
+        "plan_seconds": 0.418253977,
+        "vector_seconds": 35.256921101,
+        "jobs": 8,
+        "quality": 11,
+        "compression_threads": 1,
+        "available_cpus": 9,
+        "bitmaps": [
+          {
+            "source": "TongPixelSans14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-SC.pcf",
+                "bytes": 2992180,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-SC.otb",
+                "bytes": 1948140,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-TC.pcf",
+                "bytes": 2991588,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-TC.otb",
+                "bytes": 1947844,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-JP.pcf",
+                "bytes": 2991532,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-JP.otb",
+                "bytes": 1947820,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-KR.pcf",
+                "bytes": 2991552,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-KR.otb",
+                "bytes": 1947832,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-Latin.pcf",
+                "bytes": 353368,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-Latin.otb",
+                "bytes": 135376,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-SC.pcf",
+                "bytes": 2991204,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-SC.otb",
+                "bytes": 1942776,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-TC.pcf",
+                "bytes": 2990612,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-TC.otb",
+                "bytes": 1942480,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-JP.pcf",
+                "bytes": 2990580,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-JP.otb",
+                "bytes": 1942464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-KR.pcf",
+                "bytes": 2990608,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-KR.otb",
+                "bytes": 1942476,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-Latin.pcf",
+                "bytes": 352956,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-Latin.otb",
+                "bytes": 131464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-SC.pcf",
+                "bytes": 2979320,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-SC.otb",
+                "bytes": 1943464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-TC.pcf",
+                "bytes": 2978728,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-TC.otb",
+                "bytes": 1943168,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-JP.pcf",
+                "bytes": 2978672,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-JP.otb",
+                "bytes": 1943148,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-KR.pcf",
+                "bytes": 2978692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-KR.otb",
+                "bytes": 1943156,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-Latin.pcf",
+                "bytes": 340324,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-Latin.otb",
+                "bytes": 130748,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-SC.pcf",
+                "bytes": 2978316,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-SC.otb",
+                "bytes": 1939324,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-TC.pcf",
+                "bytes": 2977724,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-TC.otb",
+                "bytes": 1939028,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-JP.pcf",
+                "bytes": 2977692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-JP.otb",
+                "bytes": 1939012,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-KR.pcf",
+                "bytes": 2977720,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-KR.otb",
+                "bytes": 1939024,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-Latin.pcf",
+                "bytes": 339952,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-Latin.otb",
+                "bytes": 127916,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          }
+        ],
+        "vectors": [
+          {
+            "font": "TongPixelSans14Large-dot",
+            "ttf_bytes": 6468504,
+            "otf_bytes": 13789332,
+            "woff2_bytes": 1108480,
+            "sfnt_seconds": 2.829313568,
+            "compression_seconds": 27.484168972,
+            "wall_seconds": 30.313504762
+          },
+          {
+            "font": "TongPixelSansMono14Large-dot",
+            "ttf_bytes": 6362784,
+            "otf_bytes": 13719216,
+            "woff2_bytes": 1090816,
+            "sfnt_seconds": 2.646752409,
+            "compression_seconds": 23.808243722,
+            "wall_seconds": 26.454997247
+          },
+          {
+            "font": "TongPixelSans14Small-dot",
+            "ttf_bytes": 6356312,
+            "otf_bytes": 13713408,
+            "woff2_bytes": 1089416,
+            "sfnt_seconds": 2.434123156,
+            "compression_seconds": 22.502688474,
+            "wall_seconds": 24.936812858
+          },
+          {
+            "font": "TongPixelSansMono14Small-dot",
+            "ttf_bytes": 6316984,
+            "otf_bytes": 13654784,
+            "woff2_bytes": 1079760,
+            "sfnt_seconds": 2.565200593,
+            "compression_seconds": 22.940528969,
+            "wall_seconds": 25.505730858
+          },
+          {
+            "font": "TongPixelSans14Large-square",
+            "ttf_bytes": 9061276,
+            "otf_bytes": 6799760,
+            "woff2_bytes": 1107844,
+            "sfnt_seconds": 2.714462217,
+            "compression_seconds": 27.255745379,
+            "wall_seconds": 29.970209392
+          },
+          {
+            "font": "TongPixelSansMono14Large-square",
+            "ttf_bytes": 9022808,
+            "otf_bytes": 6769268,
+            "woff2_bytes": 1096660,
+            "sfnt_seconds": 1.9558278580000001,
+            "compression_seconds": 20.721165184,
+            "wall_seconds": 22.67699443
+          },
+          {
+            "font": "TongPixelSans14Small-square",
+            "ttf_bytes": 9048024,
+            "otf_bytes": 6830420,
+            "woff2_bytes": 1104992,
+            "sfnt_seconds": 2.506014461,
+            "compression_seconds": 28.706415764,
+            "wall_seconds": 31.21243115
+          },
+          {
+            "font": "TongPixelSansMono14Small-square",
+            "ttf_bytes": 9015916,
+            "otf_bytes": 6804268,
+            "woff2_bytes": 1100720,
+            "sfnt_seconds": 2.572430694,
+            "compression_seconds": 32.667062001,
+            "wall_seconds": 35.239494147
+          }
+        ]
+      }
+    },
+    {
+      "wall_seconds": 36.55425047099561,
+      "load_start": [
+        7.99072265625,
+        4.9619140625,
+        3.6806640625
+      ],
+      "load_end": [
+        10.177734375,
+        5.86376953125,
+        4.03173828125
+      ],
+      "maximum_rss_kib": 2994264,
+      "user_seconds": 211.778723,
+      "system_seconds": 6.694571,
+      "driver": {
+        "wall_seconds": 35.857990626,
+        "read_seconds": 0.683291547,
+        "bitmap_seconds": 1.109268011,
+        "plan_seconds": 0.414063717,
+        "vector_seconds": 33.65136746,
+        "jobs": 8,
+        "quality": 11,
+        "compression_threads": 1,
+        "available_cpus": 9,
+        "bitmaps": [
+          {
+            "source": "TongPixelSans14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-SC.pcf",
+                "bytes": 2992180,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-SC.otb",
+                "bytes": 1948140,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-TC.pcf",
+                "bytes": 2991588,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-TC.otb",
+                "bytes": 1947844,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-JP.pcf",
+                "bytes": 2991532,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-JP.otb",
+                "bytes": 1947820,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-KR.pcf",
+                "bytes": 2991552,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-KR.otb",
+                "bytes": 1947832,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Large-Latin.pcf",
+                "bytes": 353368,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Large-Latin.otb",
+                "bytes": 135376,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-SC.pcf",
+                "bytes": 2991204,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-SC.otb",
+                "bytes": 1942776,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-TC.pcf",
+                "bytes": 2990612,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-TC.otb",
+                "bytes": 1942480,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-JP.pcf",
+                "bytes": 2990580,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-JP.otb",
+                "bytes": 1942464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-KR.pcf",
+                "bytes": 2990608,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-KR.otb",
+                "bytes": 1942476,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Large-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Large-Latin.pcf",
+                "bytes": 352956,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Large-Latin.otb",
+                "bytes": 131464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-SC.pcf",
+                "bytes": 2979320,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-SC.otb",
+                "bytes": 1943464,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-TC.pcf",
+                "bytes": 2978728,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-TC.otb",
+                "bytes": 1943168,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-JP.pcf",
+                "bytes": 2978672,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-JP.otb",
+                "bytes": 1943148,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-KR.pcf",
+                "bytes": 2978692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-KR.otb",
+                "bytes": 1943156,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSans14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSans14Small-Latin.pcf",
+                "bytes": 340324,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSans14Small-Latin.otb",
+                "bytes": 130748,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 25
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-SC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-SC.pcf",
+                "bytes": 2978316,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-SC.otb",
+                "bytes": 1939324,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-TC",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-TC.pcf",
+                "bytes": 2977724,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-TC.otb",
+                "bytes": 1939028,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-JP",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-JP.pcf",
+                "bytes": 2977692,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-JP.otb",
+                "bytes": 1939012,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-KR",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-KR.pcf",
+                "bytes": 2977720,
+                "report_codes": {
+                  "pcf.write.code_range": 586,
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-KR.otb",
+                "bytes": 1939024,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 38653,
+                  "embedded.glyph_name": 38653,
+                  "embedded.glyph_property": 77306,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          },
+          {
+            "source": "TongPixelSansMono14Small-Latin",
+            "outputs": [
+              {
+                "file": "TongPixelSansMono14Small-Latin.pcf",
+                "bytes": 339952,
+                "report_codes": {
+                  "pcf.write.header": 2
+                }
+              },
+              {
+                "file": "TongPixelSansMono14Small-Latin.otb",
+                "bytes": 127916,
+                "report_codes": {
+                  "embedded.charset": 1,
+                  "embedded.font_metric": 4,
+                  "embedded.glyph_metric": 3645,
+                  "embedded.glyph_name": 3645,
+                  "embedded.glyph_property": 7290,
+                  "embedded.source_names": 1,
+                  "embedded.source_property": 26
+                }
+              }
+            ]
+          }
+        ],
+        "vectors": [
+          {
+            "font": "TongPixelSans14Large-dot",
+            "ttf_bytes": 6468504,
+            "otf_bytes": 13789332,
+            "woff2_bytes": 1108480,
+            "sfnt_seconds": 2.552426419,
+            "compression_seconds": 25.66197607,
+            "wall_seconds": 28.214403589
+          },
+          {
+            "font": "TongPixelSansMono14Large-dot",
+            "ttf_bytes": 6362784,
+            "otf_bytes": 13719216,
+            "woff2_bytes": 1090816,
+            "sfnt_seconds": 2.712714127,
+            "compression_seconds": 23.443461925,
+            "wall_seconds": 26.156176968
+          },
+          {
+            "font": "TongPixelSans14Small-dot",
+            "ttf_bytes": 6356312,
+            "otf_bytes": 13713408,
+            "woff2_bytes": 1089416,
+            "sfnt_seconds": 2.547347718,
+            "compression_seconds": 23.782998622,
+            "wall_seconds": 26.330347593
+          },
+          {
+            "font": "TongPixelSansMono14Small-dot",
+            "ttf_bytes": 6316984,
+            "otf_bytes": 13654784,
+            "woff2_bytes": 1079760,
+            "sfnt_seconds": 2.696196478,
+            "compression_seconds": 18.078843975,
+            "wall_seconds": 20.775041435
+          },
+          {
+            "font": "TongPixelSans14Large-square",
+            "ttf_bytes": 9061276,
+            "otf_bytes": 6799760,
+            "woff2_bytes": 1107844,
+            "sfnt_seconds": 3.080243618,
+            "compression_seconds": 30.552813572,
+            "wall_seconds": 33.633058299
+          },
+          {
+            "font": "TongPixelSansMono14Large-square",
+            "ttf_bytes": 9022808,
+            "otf_bytes": 6769268,
+            "woff2_bytes": 1096660,
+            "sfnt_seconds": 2.447509175,
+            "compression_seconds": 29.619290115,
+            "wall_seconds": 32.066800545
+          },
+          {
+            "font": "TongPixelSans14Small-square",
+            "ttf_bytes": 9048024,
+            "otf_bytes": 6830420,
+            "woff2_bytes": 1104992,
+            "sfnt_seconds": 2.870379058,
+            "compression_seconds": 28.470089712,
+            "wall_seconds": 31.340469823
+          },
+          {
+            "font": "TongPixelSansMono14Small-square",
+            "ttf_bytes": 9015916,
+            "otf_bytes": 6804268,
+            "woff2_bytes": 1100720,
+            "sfnt_seconds": 2.501752911,
+            "compression_seconds": 31.148984571,
+            "wall_seconds": 33.650738748
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "bdf/TongPixelSans14Large-JP.bdf": {
+      "bytes": 5741022,
+      "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+    },
+    "bdf/TongPixelSans14Large-KR.bdf": {
+      "bytes": 5741045,
+      "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+    },
+    "bdf/TongPixelSans14Large-Latin.bdf": {
+      "bytes": 418907,
+      "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+    },
+    "bdf/TongPixelSans14Large-SC.bdf": {
+      "bytes": 5741837,
+      "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+    },
+    "bdf/TongPixelSans14Large-TC.bdf": {
+      "bytes": 5741089,
+      "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+    },
+    "bdf/TongPixelSans14Small-JP.bdf": {
+      "bytes": 5728038,
+      "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+    },
+    "bdf/TongPixelSans14Small-KR.bdf": {
+      "bytes": 5728060,
+      "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+    },
+    "bdf/TongPixelSans14Small-Latin.bdf": {
+      "bytes": 405402,
+      "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+    },
+    "bdf/TongPixelSans14Small-SC.bdf": {
+      "bytes": 5728851,
+      "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+    },
+    "bdf/TongPixelSans14Small-TC.bdf": {
+      "bytes": 5728104,
+      "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+    },
+    "bdf/TongPixelSansMono14Large-JP.bdf": {
+      "bytes": 5728925,
+      "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+    },
+    "bdf/TongPixelSansMono14Large-KR.bdf": {
+      "bytes": 5728958,
+      "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+    },
+    "bdf/TongPixelSansMono14Large-Latin.bdf": {
+      "bytes": 410661,
+      "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+    },
+    "bdf/TongPixelSansMono14Large-SC.bdf": {
+      "bytes": 5729709,
+      "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+    },
+    "bdf/TongPixelSansMono14Large-TC.bdf": {
+      "bytes": 5728961,
+      "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+    },
+    "bdf/TongPixelSansMono14Small-JP.bdf": {
+      "bytes": 5718702,
+      "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+    },
+    "bdf/TongPixelSansMono14Small-KR.bdf": {
+      "bytes": 5718736,
+      "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+    },
+    "bdf/TongPixelSansMono14Small-Latin.bdf": {
+      "bytes": 399689,
+      "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+    },
+    "bdf/TongPixelSansMono14Small-SC.bdf": {
+      "bytes": 5719484,
+      "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+    },
+    "bdf/TongPixelSansMono14Small-TC.bdf": {
+      "bytes": 5718737,
+      "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+    },
+    "pcf/TongPixelSans14Large-JP.pcf": {
+      "bytes": 2991532,
+      "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+    },
+    "pcf/TongPixelSans14Large-KR.pcf": {
+      "bytes": 2991552,
+      "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+    },
+    "pcf/TongPixelSans14Large-Latin.pcf": {
+      "bytes": 353368,
+      "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+    },
+    "pcf/TongPixelSans14Large-SC.pcf": {
+      "bytes": 2992180,
+      "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+    },
+    "pcf/TongPixelSans14Large-TC.pcf": {
+      "bytes": 2991588,
+      "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+    },
+    "pcf/TongPixelSans14Small-JP.pcf": {
+      "bytes": 2978672,
+      "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+    },
+    "pcf/TongPixelSans14Small-KR.pcf": {
+      "bytes": 2978692,
+      "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+    },
+    "pcf/TongPixelSans14Small-Latin.pcf": {
+      "bytes": 340324,
+      "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+    },
+    "pcf/TongPixelSans14Small-SC.pcf": {
+      "bytes": 2979320,
+      "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+    },
+    "pcf/TongPixelSans14Small-TC.pcf": {
+      "bytes": 2978728,
+      "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+    },
+    "pcf/TongPixelSansMono14Large-JP.pcf": {
+      "bytes": 2990580,
+      "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+    },
+    "pcf/TongPixelSansMono14Large-KR.pcf": {
+      "bytes": 2990608,
+      "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+    },
+    "pcf/TongPixelSansMono14Large-Latin.pcf": {
+      "bytes": 352956,
+      "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+    },
+    "pcf/TongPixelSansMono14Large-SC.pcf": {
+      "bytes": 2991204,
+      "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+    },
+    "pcf/TongPixelSansMono14Large-TC.pcf": {
+      "bytes": 2990612,
+      "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+    },
+    "pcf/TongPixelSansMono14Small-JP.pcf": {
+      "bytes": 2977692,
+      "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+    },
+    "pcf/TongPixelSansMono14Small-KR.pcf": {
+      "bytes": 2977720,
+      "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+    },
+    "pcf/TongPixelSansMono14Small-Latin.pcf": {
+      "bytes": 339952,
+      "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+    },
+    "pcf/TongPixelSansMono14Small-SC.pcf": {
+      "bytes": 2978316,
+      "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+    },
+    "pcf/TongPixelSansMono14Small-TC.pcf": {
+      "bytes": 2977724,
+      "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+    },
+    "otb/TongPixelSans14Large-JP.otb": {
+      "bytes": 1947820,
+      "sha256": "e0b722c396fa2e08160f76b43effe737cb1b4eb472c928d09e235c2fb8d07d15"
+    },
+    "otb/TongPixelSans14Large-KR.otb": {
+      "bytes": 1947832,
+      "sha256": "da521cdcb716ac7c2b9e5f659a06dafb45fe32f926b2cde1a39673a4e4d2abbc"
+    },
+    "otb/TongPixelSans14Large-Latin.otb": {
+      "bytes": 135376,
+      "sha256": "654139b0a77732cdded333021f7272a41ecabad82d0fbeff2ee669c8e6673555"
+    },
+    "otb/TongPixelSans14Large-SC.otb": {
+      "bytes": 1948140,
+      "sha256": "e27eeea8ebef9d59b5d7b5377f7e3a6be0c3461158324be75f836afbf011ee0f"
+    },
+    "otb/TongPixelSans14Large-TC.otb": {
+      "bytes": 1947844,
+      "sha256": "f3dd1413e2c01271fb2050d21e8505c901992e0c4000bf5d91364f447898414c"
+    },
+    "otb/TongPixelSans14Small-JP.otb": {
+      "bytes": 1943148,
+      "sha256": "914d85e6d64c94e5cc35d3d73a7e0a57bd2da636863720965bc0510b5d3b8a32"
+    },
+    "otb/TongPixelSans14Small-KR.otb": {
+      "bytes": 1943156,
+      "sha256": "4ec5e4531d3dd23b47e7690a6a800dd288c560d961e1594700cc186b85496fff"
+    },
+    "otb/TongPixelSans14Small-Latin.otb": {
+      "bytes": 130748,
+      "sha256": "a7bba298cbe5985ad003ea704f2fcb1e2593b786284af288da8315f4abed2d33"
+    },
+    "otb/TongPixelSans14Small-SC.otb": {
+      "bytes": 1943464,
+      "sha256": "c798fccfc1d1e25b171aa4c6a80a0d3b0c3a42a26e8933a142c829afd30b5f59"
+    },
+    "otb/TongPixelSans14Small-TC.otb": {
+      "bytes": 1943168,
+      "sha256": "49cbd2c152fd2a332f52b530ebd5da41d50fb0cbe5d5b0f2f8fe25e3d146b7e3"
+    },
+    "otb/TongPixelSansMono14Large-JP.otb": {
+      "bytes": 1942464,
+      "sha256": "ffa84a3eee55e9f7d460b4c4d2b4c1f7b0b3982f4302e5390f65624c0f0bd008"
+    },
+    "otb/TongPixelSansMono14Large-KR.otb": {
+      "bytes": 1942476,
+      "sha256": "67afbe2b93208fb5a7c8f7b7f410353ac3c4d01edbefa0e658d2f578318d9809"
+    },
+    "otb/TongPixelSansMono14Large-Latin.otb": {
+      "bytes": 131464,
+      "sha256": "f54b39f3012cc2b628854a7de1c84baa7ff38897e6fd45dd98ac4fe663ec2dd6"
+    },
+    "otb/TongPixelSansMono14Large-SC.otb": {
+      "bytes": 1942776,
+      "sha256": "49bea0c00eaf61c4e143b9e935d4a9c2e7f51c6d9fdbf3946b8ed768959f72d2"
+    },
+    "otb/TongPixelSansMono14Large-TC.otb": {
+      "bytes": 1942480,
+      "sha256": "f8f5fc4d03cb8e7c73538a35c9aa0392bd3e0918361269ddbee7c6ee6246382a"
+    },
+    "otb/TongPixelSansMono14Small-JP.otb": {
+      "bytes": 1939012,
+      "sha256": "024cd29de0487c1efcce8cd7fedcd9327d036a7968f823d491ae62238b5d1da5"
+    },
+    "otb/TongPixelSansMono14Small-KR.otb": {
+      "bytes": 1939024,
+      "sha256": "091490ab46f89bc22bb8317f8c9086b15cb047ad656a1d6521335db2818ab36d"
+    },
+    "otb/TongPixelSansMono14Small-Latin.otb": {
+      "bytes": 127916,
+      "sha256": "23fd37422f9d34f9820a8d3c2cc21448be074d9b852e371fbe6d7d6b2cbf14b5"
+    },
+    "otb/TongPixelSansMono14Small-SC.otb": {
+      "bytes": 1939324,
+      "sha256": "d6b81dc9587c41a4eda5869c49f9620fa9f00e2a89d42d372f203ef0403341f4"
+    },
+    "otb/TongPixelSansMono14Small-TC.otb": {
+      "bytes": 1939028,
+      "sha256": "e6888ac5a545fac9c357bc2cf08d816987659ef52e657480438be55505c317fa"
+    },
+    "ttf/TongPixelSans14Large-dot.ttf": {
+      "bytes": 6468504,
+      "sha256": "d8c7af9ef5841e5e15c449c7f79f4f198c31626674e80d2b0b81955c0dc6ccb4"
+    },
+    "ttf/TongPixelSans14Large-square.ttf": {
+      "bytes": 9061276,
+      "sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941"
+    },
+    "ttf/TongPixelSans14Small-dot.ttf": {
+      "bytes": 6356312,
+      "sha256": "1234041e89ed005ae1bf72a292f43cc7355ea6b8aaa0a04dc44e93a45856eeaf"
+    },
+    "ttf/TongPixelSans14Small-square.ttf": {
+      "bytes": 9048024,
+      "sha256": "51940cc1c71bcb1640e7d312eef330e525ddd2568fa0881a387e76d55277fd2e"
+    },
+    "ttf/TongPixelSansMono14Large-dot.ttf": {
+      "bytes": 6362784,
+      "sha256": "e1f57371b1fdca29f29d06964c749d968425c9edd7972242a5043a909d6c9769"
+    },
+    "ttf/TongPixelSansMono14Large-square.ttf": {
+      "bytes": 9022808,
+      "sha256": "8da885fd3d993d1e6b3aa28f3934713de05ad698c9df073be5c36a9cdb2ca4fb"
+    },
+    "ttf/TongPixelSansMono14Small-dot.ttf": {
+      "bytes": 6316984,
+      "sha256": "7e461e88be8092fd687a7745b970314a6f74fd01ecd622990eceefc9b7b2f468"
+    },
+    "ttf/TongPixelSansMono14Small-square.ttf": {
+      "bytes": 9015916,
+      "sha256": "ba9469005481ab05f72deb8c9b099c204128587592ad3f917edec66c484e7a39"
+    },
+    "otf/TongPixelSans14Large-dot.otf": {
+      "bytes": 13789332,
+      "sha256": "a9bd839234b312e1c52765f41b917ff01430a9a5ab580acad82cb8c82a32745f"
+    },
+    "otf/TongPixelSans14Large-square.otf": {
+      "bytes": 6799760,
+      "sha256": "1785f4b2e16657112d455e3ff8cb4a63afd24117e2645a300505f998537a977a"
+    },
+    "otf/TongPixelSans14Small-dot.otf": {
+      "bytes": 13713408,
+      "sha256": "a3ee3604bd35777cdc00b88fa6242c3c1b8c231deef29137c1137a9a005c4246"
+    },
+    "otf/TongPixelSans14Small-square.otf": {
+      "bytes": 6830420,
+      "sha256": "b2ddcbd76e66bdc512794ae471b15997a4675b8b3f77c5479f3b14a4569e9727"
+    },
+    "otf/TongPixelSansMono14Large-dot.otf": {
+      "bytes": 13719216,
+      "sha256": "14487e5521efe5d8ff774eb939914d11e11d32932cd22affc7417b8c2bca21bb"
+    },
+    "otf/TongPixelSansMono14Large-square.otf": {
+      "bytes": 6769268,
+      "sha256": "a3d3f0480dab2bc3a4b73262c9f2d0537127c5492e36b1a2f2912c5658403a8a"
+    },
+    "otf/TongPixelSansMono14Small-dot.otf": {
+      "bytes": 13654784,
+      "sha256": "a58d6750d192e88ac97f0a71199dfb92bceaf5021238eba41348e0adcd0b1265"
+    },
+    "otf/TongPixelSansMono14Small-square.otf": {
+      "bytes": 6804268,
+      "sha256": "8db03cd0bbe66f13295aac5458122331281580840e96f4e662d09fcdedd93580"
+    },
+    "woff2/TongPixelSans14Large-dot.woff2": {
+      "bytes": 1108480,
+      "sha256": "8ca835b13499bfdd71efa81e3c7245c9f5135ae273b29b7aba6212e85a269b6c"
+    },
+    "woff2/TongPixelSans14Large-square.woff2": {
+      "bytes": 1107844,
+      "sha256": "07dc497690f5f3b3089efa437ce15fc39a78169ac21f6c193cee068ad16b494b"
+    },
+    "woff2/TongPixelSans14Small-dot.woff2": {
+      "bytes": 1089416,
+      "sha256": "28af0c6561de56ce04fd92f4850cb3cff8e41916290b7459ea9adf61eb6b3ebe"
+    },
+    "woff2/TongPixelSans14Small-square.woff2": {
+      "bytes": 1104992,
+      "sha256": "9a3d03a9e394d2cfab62baeda8ed560312e42a077dc6c9bbcbcbd365227385ec"
+    },
+    "woff2/TongPixelSansMono14Large-dot.woff2": {
+      "bytes": 1090816,
+      "sha256": "22c0638aa9ddda2e7892b30c4fcc56beb25d8418af238364a078f23696919b91"
+    },
+    "woff2/TongPixelSansMono14Large-square.woff2": {
+      "bytes": 1096660,
+      "sha256": "bdfd1d44312aa0864e2bf08486993450ddc6c601ae5fa18bb74431bfca82ec79"
+    },
+    "woff2/TongPixelSansMono14Small-dot.woff2": {
+      "bytes": 1079760,
+      "sha256": "1c706e49922cd70af6143c0e96264d8c6cf6b438f29c080d4c759021bfd4e8f8"
+    },
+    "woff2/TongPixelSansMono14Small-square.woff2": {
+      "bytes": 1100720,
+      "sha256": "15aeb27fc69dd91117dcd2626587b528775065b1c68144e166eb8e62e6157a1f"
+    }
+  },
+  "all_outputs_byte_identical": true,
+  "binary_unchanged": true,
+  "median_seconds": 38.41377583800204,
+  "peak_rss_kib": 3008144,
+  "total_bytes": 326576649,
+  "woff2_bytes": 8778688
+}

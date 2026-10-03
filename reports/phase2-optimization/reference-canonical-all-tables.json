@@ -1,0 +1,2350 @@
+{
+  "ttf/TongPixelSans14Large-Square.ttf": {
+    "head": {
+      "sha256": "c58d17d1282116778f327b03d6f5085d079b8136b2a0f94d7b51b72bd61bb31f",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "f93214b1576d34fede68349ff106dbc10731cadee91af2415cb21341a426f703",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f99673c8879e515e36ced5a987ed27dbd577fecaa2b5dee2f2e4a5f223353b26",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "cae451c2e1d0b55e24c0d3b1020d08f9b42cef21e0903b23489f3dbc38ac0de9",
+      "length": 179332,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "7ce72840403ddccd12a33171d7f616419ed105d7b6887ffd7ca044a787e27ac9",
+      "length": 179336,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "731c6bdd941e22e53b198f8c24a7eac0a01b8d3b00a4c828220d777a5da3e231",
+      "length": 8494998,
+      "transform": null
+    },
+    "name": {
+      "sha256": "27e448fc3d7833d2bc97702f0d7d9137fce50508bc73985f6a85ba0d5e62f754",
+      "length": 1536,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSans14Large-Square.otf": {
+    "head": {
+      "sha256": "f7423c60210f0275bc18ec9dca079678d57c949ca4b81fdeaec5d5b8e08e5128",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "f93214b1576d34fede68349ff106dbc10731cadee91af2415cb21341a426f703",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "27e448fc3d7833d2bc97702f0d7d9137fce50508bc73985f6a85ba0d5e62f754",
+      "length": 1536,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "82c07452aa5fa95dba08bca509a23ca44c0c1f39c24dcce156bbc62f2d615b91",
+      "length": 6423353,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "cae451c2e1d0b55e24c0d3b1020d08f9b42cef21e0903b23489f3dbc38ac0de9",
+      "length": 179332,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSans14Large-Square.woff2": {
+    "CFF ": {
+      "sha256": "82c07452aa5fa95dba08bca509a23ca44c0c1f39c24dcce156bbc62f2d615b91",
+      "length": 6423353,
+      "transform": 0
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "6a6a38e1cf8faeda4689f1a24b80bd108baf5aa0822c6dc717347ad7f2bd23c5",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "f93214b1576d34fede68349ff106dbc10731cadee91af2415cb21341a426f703",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "cae451c2e1d0b55e24c0d3b1020d08f9b42cef21e0903b23489f3dbc38ac0de9",
+      "length": 179332,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "27e448fc3d7833d2bc97702f0d7d9137fce50508bc73985f6a85ba0d5e62f754",
+      "length": 1536,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSans14Large-Dot.ttf": {
+    "head": {
+      "sha256": "a63b4a1d3e2e69d46efb8f448e2ae758acbac32030bc35ab23e78ed95621a144",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "ae2ec07c8aeda5632494514b804b94e966023d0b75906dd9d1761d7140b4c725",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "b28d4bbbf296dc705c357c53a3eba24687f35bed6436d03c2be80f5a71d566d7",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "9f8c982d624a49cc77a8a06bbeb568b78ce244d562aa1b2188f996b0c86314d7",
+      "length": 179336,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "eabd02dfd7ae81243bfa1ed71358b62d00e7a722a59b3645f85c132bade8112d",
+      "length": 179340,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "3e23ce443841da13839a11600407c6915c1b38dee7df57f351e28b5657dd4a5a",
+      "length": 21475094,
+      "transform": null
+    },
+    "name": {
+      "sha256": "f7f21b92e3c518b15fde46e72acaa6c87eddb1ea083eea9c76890ec93bab3a27",
+      "length": 1500,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSans14Large-Dot.otf": {
+    "head": {
+      "sha256": "0254de0868b38d7710987248597f59ffe165ed51b0f73b61bdea4b1f138b1965",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "fe0dd6bbd42c81175b4f588d2bd6293fe448326e5d7c3cee4d0b22a0f719ea48",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "f7f21b92e3c518b15fde46e72acaa6c87eddb1ea083eea9c76890ec93bab3a27",
+      "length": 1500,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "2d9bb46bc361d55168ef3bbe40ece6a1a83b35c317ac5ce0ba75378eaee2fca4",
+      "length": 15535882,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "e3fe0f0e6f7c20bc75751962f9b0fc898e5579c97d4b4d857e3e6d3ebafae219",
+      "length": 179332,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSans14Large-Dot.woff2": {
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "0634e3519c53c302476d14b6ff672ac67f90b6880ad5fc7692681d63b0eaa2d3",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": 0
+    },
+    "glyf": {
+      "sha256": "55ad3e24b5d77d41e7bd1326760250c4a24bc363f192cd322adf89a63d83ebcd",
+      "length": 21529640,
+      "transform": 0
+    },
+    "loca": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "length": 179340,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "afdc49a0b69cb1389cb9694ff373ed491d0f9eb127780d7ae20c3a2180996ae6",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "ae2ec07c8aeda5632494514b804b94e966023d0b75906dd9d1761d7140b4c725",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "9f8c982d624a49cc77a8a06bbeb568b78ce244d562aa1b2188f996b0c86314d7",
+      "length": 179336,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "b28d4bbbf296dc705c357c53a3eba24687f35bed6436d03c2be80f5a71d566d7",
+      "length": 32,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "f7f21b92e3c518b15fde46e72acaa6c87eddb1ea083eea9c76890ec93bab3a27",
+      "length": 1500,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSansMono14Large-Square.ttf": {
+    "head": {
+      "sha256": "3b63e450a7774f2470b712c982025e65117c80ab51027c68033d2ed8efa22dfb",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "56a8b79cff1899f83e6383f419b90937f24a63cea0d4fbe11bad7d43a89cde3c",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "576dccc007ad2f349ff414069fbdcc482e76e93aab89ea291fcd56a033dce6b9",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "fe74ded57b25df045bba836fc2b50a6c31c16a8876beaca82fe89f30518a91a7",
+      "length": 178552,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "52eac0dc14a0742151dfcfa192a5bd0bef5160eff99dacf2db71c588f1df026d",
+      "length": 178572,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "6484f8733b625e1342b26a6afbb74083cd3cd0393a205e46a2173fafecf0e292",
+      "length": 8462638,
+      "transform": null
+    },
+    "name": {
+      "sha256": "4f05920b4826189d253144cad4701ddca9808259101a7314760d053cf7eabc77",
+      "length": 1593,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSansMono14Large-Square.otf": {
+    "head": {
+      "sha256": "b6056ff9685ea88fa8f563a645e979d95e268a91f96169a477cf02b18df4a8b1",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "56a8b79cff1899f83e6383f419b90937f24a63cea0d4fbe11bad7d43a89cde3c",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "4f05920b4826189d253144cad4701ddca9808259101a7314760d053cf7eabc77",
+      "length": 1593,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "44f796f80248bf571a183d7984a085d98f2f6e6cb31fa4866619b5e73d20fa40",
+      "length": 6398990,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "fe74ded57b25df045bba836fc2b50a6c31c16a8876beaca82fe89f30518a91a7",
+      "length": 178552,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSansMono14Large-Square.woff2": {
+    "CFF ": {
+      "sha256": "44f796f80248bf571a183d7984a085d98f2f6e6cb31fa4866619b5e73d20fa40",
+      "length": 6398990,
+      "transform": 0
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "68e8474c274e243db2afaa21cce2df2e90ff198b95038b282af073b82919a374",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "56a8b79cff1899f83e6383f419b90937f24a63cea0d4fbe11bad7d43a89cde3c",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "fe74ded57b25df045bba836fc2b50a6c31c16a8876beaca82fe89f30518a91a7",
+      "length": 178552,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "4f05920b4826189d253144cad4701ddca9808259101a7314760d053cf7eabc77",
+      "length": 1593,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSansMono14Large-Dot.ttf": {
+    "head": {
+      "sha256": "3686ce569b71482f2c17044b548581d4f7fd251358b47426d54f4851a223065f",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "b1bfeb409d6582ed06ec16945712a1b5ab91103e327b2353545a75b3bc0b195a",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "b518a57b85ce0e06b1ad79f9875d56600fbad3f88aaa38abf2bb37eb16d2dd03",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "d637125aec82c581e641d04554b61d72e2f4254d3c8da487e4cd485b07b12d50",
+      "length": 178572,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "0e1dd7ade7ed5820374dffaa683b85b41f629b61757a9c21517dffbe4407f94f",
+      "length": 178576,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "351e4b94641be749f7a47d59ac0955969fb0126175b7459d50196dbf78e05eb9",
+      "length": 21367114,
+      "transform": null
+    },
+    "name": {
+      "sha256": "756b7abc5d3e3080e277a5e0da468e959d3af255fe0060fb01bc4b6559b3a673",
+      "length": 1557,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSansMono14Large-Dot.otf": {
+    "head": {
+      "sha256": "073cdee1ac34bde8a56841fba8dbb79c8440888b1f0c74b959ff7e45e5580fae",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "6e530fdbd426c721b47cd61edfd21bb0b24914ca03380c842a5819c3f58bdc69",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "756b7abc5d3e3080e277a5e0da468e959d3af255fe0060fb01bc4b6559b3a673",
+      "length": 1557,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "04018ac9829e49cab890825e191303e0d06d1088f4f7a338a02bd732bae7b50b",
+      "length": 15459278,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "8d3f69af7654f2b40578617914d5268840dcb5c02116ca3e794d9ffa2d503d6b",
+      "length": 178552,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSansMono14Large-Dot.woff2": {
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "341a5ce3efc0741cec6a72c2698837ccfcb11ff85bcdf0fe791519ac0ae2b9f5",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": 0
+    },
+    "glyf": {
+      "sha256": "b719fa8f77d5f139ccedc72e94b5439255aacde98258886106d880ad215cf70d",
+      "length": 21421412,
+      "transform": 0
+    },
+    "loca": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "length": 178576,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "fee7a0e0671704b0b758074e655bfebc250950b343559fb397c700b272ee9eb4",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "b1bfeb409d6582ed06ec16945712a1b5ab91103e327b2353545a75b3bc0b195a",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "d637125aec82c581e641d04554b61d72e2f4254d3c8da487e4cd485b07b12d50",
+      "length": 178572,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "b518a57b85ce0e06b1ad79f9875d56600fbad3f88aaa38abf2bb37eb16d2dd03",
+      "length": 32,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "756b7abc5d3e3080e277a5e0da468e959d3af255fe0060fb01bc4b6559b3a673",
+      "length": 1557,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSans14Small-Square.ttf": {
+    "head": {
+      "sha256": "0fd4df35580b9b57898db1ab88629362ff3b7ccdbe3fd2eeb37f34bfbc19b679",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "896f0abfa600f6575ec603fc21fef544e2c12e53c7b3858ef531ce4d2715061b",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "c29d10467933402fcf4303e4611ee74af931e58c58c99e82463a382f177daf85",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "0acba67bb746341c24cd2a72ff151bf232d70dfe84949987fdc2d4a9934dc9c0",
+      "length": 179332,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "7e91bfa7cd0607b32e12979312078a26d263f7ae4f52b12d5d7799e13e0cdaae",
+      "length": 179336,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "65c12afd68910a7861a289021bbc509ed6cd2de033203ff0983dc7e812524285",
+      "length": 8481792,
+      "transform": null
+    },
+    "name": {
+      "sha256": "5c521440e2b8b4c5406e367c2bcfc419fd651a7089b36eb7f1ae478bb7d28004",
+      "length": 1536,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSans14Small-Square.otf": {
+    "head": {
+      "sha256": "a01181e3fdabb106d97f97f372b4e0e49d2c309e5cb9d34e7d69e96bb003079d",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "896f0abfa600f6575ec603fc21fef544e2c12e53c7b3858ef531ce4d2715061b",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "5c521440e2b8b4c5406e367c2bcfc419fd651a7089b36eb7f1ae478bb7d28004",
+      "length": 1536,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "e33bce13177b7bc0906c3388a8401c02c93f46f9214b0a8bc0dcc512fc93ce4f",
+      "length": 6408885,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "0acba67bb746341c24cd2a72ff151bf232d70dfe84949987fdc2d4a9934dc9c0",
+      "length": 179332,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSans14Small-Square.woff2": {
+    "CFF ": {
+      "sha256": "e33bce13177b7bc0906c3388a8401c02c93f46f9214b0a8bc0dcc512fc93ce4f",
+      "length": 6408885,
+      "transform": 0
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "630b7d6d3fa769ca23d6b82abf3d6d1851d8c7ae26d8be046c9fd14910c4439f",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "896f0abfa600f6575ec603fc21fef544e2c12e53c7b3858ef531ce4d2715061b",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "0acba67bb746341c24cd2a72ff151bf232d70dfe84949987fdc2d4a9934dc9c0",
+      "length": 179332,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "5c521440e2b8b4c5406e367c2bcfc419fd651a7089b36eb7f1ae478bb7d28004",
+      "length": 1536,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSans14Small-Dot.ttf": {
+    "head": {
+      "sha256": "751b659521da8c2c66cb3c260e2202a0bb1548cc406cd3168333002c3f2042c2",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "9f93ea622eac91cf2b9fb97610cb5f2809be18f1507ee9516c5e7a2fd61bcac4",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "1a221c9fdfebb2ee829b158087568791e6689971c63cded943b57bf91876c9d6",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "0ceb2d247d795446f5012566fdc1c57170abf94feb6bf2f21dea7b7d23f3a712",
+      "length": 179336,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "e3068b807308482a7ac2a3551f2152d64edbcd7a0d156c2ba84dbd4bce1f640c",
+      "length": 179340,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "55b7025fdc40e2754b7b031941a43d7fb61f4bccad0b0139b43c4e8b62bd196f",
+      "length": 21420004,
+      "transform": null
+    },
+    "name": {
+      "sha256": "5e58b7674d116b6573145b9f5baeb542b12b98d7e543196e0e89faa2cb19fbea",
+      "length": 1500,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSans14Small-Dot.otf": {
+    "head": {
+      "sha256": "875bc32681f587490cfb002f4112379a3adb4648bffc5cd93a85e39169402a15",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "073fefe9c218afc1e5bb1a98851b40eb810e8817dafe2e30f832890429fd286b",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "5e58b7674d116b6573145b9f5baeb542b12b98d7e543196e0e89faa2cb19fbea",
+      "length": 1500,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "254c59e9e3ff9aec17937982676808978e3457c076fc0044562d5bb72bd17121",
+      "length": 15454294,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "aea96837a2bd56b9144b10f103c9377ddc1c0d3ca77a104a9fdc704c33ce0a1a",
+      "length": 179332,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSans14Small-Dot.woff2": {
+    "GSUB": {
+      "sha256": "dc9dcb10fdb400d1f3b4e304513687eade980ec19cbd3869eece0714fcf58c8a",
+      "length": 43998,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "7438c4d8e5107517533a386205e2391a72889c72a2fbf034d0401f51f121a829",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "ee7cbe3a4f71da3970a6006ad0d0234cffcaab418729210a6754e5680b14092e",
+      "length": 115754,
+      "transform": 0
+    },
+    "glyf": {
+      "sha256": "7430a65697976607033dce319a26ef2d936ed99ec5f3af9b2aef44e57611f555",
+      "length": 21480512,
+      "transform": 0
+    },
+    "loca": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "length": 179340,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "c561d6c16bcc2c4e75406adaebee9eef467652910b735089b421e51d2489b9c7",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "9f93ea622eac91cf2b9fb97610cb5f2809be18f1507ee9516c5e7a2fd61bcac4",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "0ceb2d247d795446f5012566fdc1c57170abf94feb6bf2f21dea7b7d23f3a712",
+      "length": 179336,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "1a221c9fdfebb2ee829b158087568791e6689971c63cded943b57bf91876c9d6",
+      "length": 32,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "5e58b7674d116b6573145b9f5baeb542b12b98d7e543196e0e89faa2cb19fbea",
+      "length": 1500,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSansMono14Small-Square.ttf": {
+    "head": {
+      "sha256": "0fd4df35580b9b57898db1ab88629362ff3b7ccdbe3fd2eeb37f34bfbc19b679",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "637a458cd6aaef2ce97aa88d0ebd04ab0fedc870757a61715d51561d86f4b4e9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "b92e8fdb4bf619c4e88e684e24795273e673f9eaccc31315183f92cab8eb2956",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "f7b000f2c591958297a7bfed154222147099cb52b22e80fbc91031778fa77e18",
+      "length": 178552,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "194b610c94f69b858dfecd90cfdd3bd9359b128e0a2dccf8666d405bc9e15a36",
+      "length": 178572,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "a3b0303c7a2d64324311a818cf1bde175f2389db129337b45b47b364af1db166",
+      "length": 8456030,
+      "transform": null
+    },
+    "name": {
+      "sha256": "44e77fa96ccdd6827ee032ab0654bc1b803cff5c5ffd1126c9ff66ff56fb3191",
+      "length": 1593,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSansMono14Small-Square.otf": {
+    "head": {
+      "sha256": "a01181e3fdabb106d97f97f372b4e0e49d2c309e5cb9d34e7d69e96bb003079d",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "637a458cd6aaef2ce97aa88d0ebd04ab0fedc870757a61715d51561d86f4b4e9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "44e77fa96ccdd6827ee032ab0654bc1b803cff5c5ffd1126c9ff66ff56fb3191",
+      "length": 1593,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "e62cf6fc69aebf8e6fa9a330fcdea4fa7d7091f33fe2f90095a18343c54061bd",
+      "length": 6388991,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "f7b000f2c591958297a7bfed154222147099cb52b22e80fbc91031778fa77e18",
+      "length": 178552,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSansMono14Small-Square.woff2": {
+    "CFF ": {
+      "sha256": "e62cf6fc69aebf8e6fa9a330fcdea4fa7d7091f33fe2f90095a18343c54061bd",
+      "length": 6388991,
+      "transform": 0
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "630b7d6d3fa769ca23d6b82abf3d6d1851d8c7ae26d8be046c9fd14910c4439f",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "637a458cd6aaef2ce97aa88d0ebd04ab0fedc870757a61715d51561d86f4b4e9",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "f7b000f2c591958297a7bfed154222147099cb52b22e80fbc91031778fa77e18",
+      "length": 178552,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "44e77fa96ccdd6827ee032ab0654bc1b803cff5c5ffd1126c9ff66ff56fb3191",
+      "length": 1593,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "ttf/TongPixelSansMono14Small-Dot.ttf": {
+    "head": {
+      "sha256": "751b659521da8c2c66cb3c260e2202a0bb1548cc406cd3168333002c3f2042c2",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "e4ed8963694ac5d2a764559264ef54602410975dfa10f551d45c6312c28ac0df",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "b518a57b85ce0e06b1ad79f9875d56600fbad3f88aaa38abf2bb37eb16d2dd03",
+      "length": 32,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "683aa9c33c0837c18f02f7b4d55dace768bebb50bafc78e400b73ddbaea2374c",
+      "length": 178572,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "loca": {
+      "sha256": "059beacc54eda897a810b43a0ee6bb22403e366df1b7ed0002c1fe38fc29dc7a",
+      "length": 178576,
+      "transform": null
+    },
+    "glyf": {
+      "sha256": "87fec708946bc46a8c1b657ed24d85c6a6a77d32836373ccb5f79dc26acf1386",
+      "length": 21333012,
+      "transform": null
+    },
+    "name": {
+      "sha256": "e2dcfce06565ab28f55c3050e06cc87f01595423708795b2c00fbea6e0021736",
+      "length": 1557,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    }
+  },
+  "otf/TongPixelSansMono14Small-Dot.otf": {
+    "head": {
+      "sha256": "875bc32681f587490cfb002f4112379a3adb4648bffc5cd93a85e39169402a15",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "28eef0a550d0c131f5151c6b17db97d8cdb7aeb377002b64d50eb9675204b5a7",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": null
+    },
+    "name": {
+      "sha256": "e2dcfce06565ab28f55c3050e06cc87f01595423708795b2c00fbea6e0021736",
+      "length": 1557,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "CFF ": {
+      "sha256": "e00ff74aa216c5435638de2ce9476e5c1d4567a503eaa4180fdcec257d112ced",
+      "length": 15391475,
+      "transform": null
+    },
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "3c25f5e45e467da5847b3593b93d122e03379795893d366ec33da3d743e2a4fc",
+      "length": 178552,
+      "transform": null
+    }
+  },
+  "woff2/TongPixelSansMono14Small-Dot.woff2": {
+    "GSUB": {
+      "sha256": "bd0bc8c753ac69c7e701db0c7e8c29ea139519c8097855f9d124af8cb5984cdd",
+      "length": 43058,
+      "transform": 0
+    },
+    "OS/2": {
+      "sha256": "57551509a01774fb1dd2486f1731f2892db5048fe7e6275aa642a475b541f593",
+      "length": 96,
+      "transform": 0
+    },
+    "cmap": {
+      "sha256": "179ad436d2f0eb51c42f536ee75baf025d507de71acf651b9b06a5b4a191d310",
+      "length": 112996,
+      "transform": 0
+    },
+    "glyf": {
+      "sha256": "9510474dd424c7ef9113d7f6a73f2d848f4f2258ba01f4b13763cfda68bc3d9d",
+      "length": 21393392,
+      "transform": 0
+    },
+    "loca": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "length": 178576,
+      "transform": 0
+    },
+    "head": {
+      "sha256": "c561d6c16bcc2c4e75406adaebee9eef467652910b735089b421e51d2489b9c7",
+      "length": 54,
+      "transform": 0
+    },
+    "hhea": {
+      "sha256": "e4ed8963694ac5d2a764559264ef54602410975dfa10f551d45c6312c28ac0df",
+      "length": 36,
+      "transform": 0
+    },
+    "hmtx": {
+      "sha256": "683aa9c33c0837c18f02f7b4d55dace768bebb50bafc78e400b73ddbaea2374c",
+      "length": 178572,
+      "transform": 0
+    },
+    "maxp": {
+      "sha256": "b518a57b85ce0e06b1ad79f9875d56600fbad3f88aaa38abf2bb37eb16d2dd03",
+      "length": 32,
+      "transform": 0
+    },
+    "name": {
+      "sha256": "e2dcfce06565ab28f55c3050e06cc87f01595423708795b2c00fbea6e0021736",
+      "length": 1557,
+      "transform": 0
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": 0
+    }
+  },
+  "otb/TongPixelSans14Large-JP.otb": {
+    "head": {
+      "sha256": "164b21bcac97c62002716c15276682e758cba3ae04099c0e94cfe91d425c974a",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "dd4f649b317d33924cd48bdcc6e9de03c2cc26009a64390e45f006451e01818d",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7bedf09efdbaf896450a09c0aaf142f0fe123d1679b48ae5ab7572aae07ae752",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "51ae15babd9da09546541a855b52b922600e490870bb1732518cd74b8071eeaa",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "e97312dd3fab8b6430c6c93ac19e708192fa235bc8d965fc27a4716ea0ae7a37",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "3870140b9cee47744dda13553aa253de0ac29e92d2f04aa66133b185e18a52cc",
+      "length": 874243,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "402508f138c4d2163cdc545471faa287391dfd456b7cf31899bf595ac278db83",
+      "length": 90908,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Large-KR.otb": {
+    "head": {
+      "sha256": "164b21bcac97c62002716c15276682e758cba3ae04099c0e94cfe91d425c974a",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "dd4f649b317d33924cd48bdcc6e9de03c2cc26009a64390e45f006451e01818d",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7bedf09efdbaf896450a09c0aaf142f0fe123d1679b48ae5ab7572aae07ae752",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "b223434340e175c1a4fe29ea75a20921a2d6375371f4bd3c55f57fab1c11c79f",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "c19b61ea4daa8610809dd32728bd22f508b2ad0f26652d88047ca56a2134360d",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "6a487a054033f157b5fdf84c997090a8932613aedd0d602dd5fdb9c35d03ce52",
+      "length": 874185,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "24351799a3f7732199dd6fd09e17cb4ae94cb39942bb82ba0ca3ab6f2ff91f81",
+      "length": 90896,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Large-Latin.otb": {
+    "head": {
+      "sha256": "2e0379f33d5cb04c87efe6ac64af7d8bc78ba93576a521fab55a5e91996998fa",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "3ec8ae95fa481b67b00a6273b66bf82ef5f3e1ab2a70d065c3872d19219ec3eb",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f9a52cf216c61f92b5765372b19d5d12fa3b935dec56bc6456d616d924cbd34d",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "a48c3eb80b20e1f1986fecc618a5ce1ca26664ce02b9e3810ee4ea0aa3b7e6eb",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "777c3025d809f49e86d9af03752e2dafa89943bf27de597206503ed6e7a0b6fa",
+      "length": 14584,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "70c1b20f60a604201497244391ebd2b22e8a2fc452f3b7660f763030734a5f6e",
+      "length": 3028,
+      "transform": null
+    },
+    "name": {
+      "sha256": "764a292f2e994087d432f086bd0e0f1f88811ba5a7dad547209a6fb8ecac4475",
+      "length": 1096,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "12449a5b87d46da68da9bbfd7086646be5405c92e1a67abf36c6d44a25383a2f",
+      "length": 45535,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "1a7ce9815091cf62d33fcd49a4bc10a1ff518150f9c8f509ed6fa1c6bd7cbc96",
+      "length": 7740,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Large-SC.otb": {
+    "head": {
+      "sha256": "164b21bcac97c62002716c15276682e758cba3ae04099c0e94cfe91d425c974a",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "dd4f649b317d33924cd48bdcc6e9de03c2cc26009a64390e45f006451e01818d",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7bedf09efdbaf896450a09c0aaf142f0fe123d1679b48ae5ab7572aae07ae752",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "916470b25090f5314e410151cf6ee6ca4ff53c15aec9c2134047684b30091350",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "22b832ac73f06124fd8678ffd52c3a0e418fec3338b666ca3467ea786f6acb5a",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "3a44ee8d7f846bd092e00aabc10a45b9bec0ebd52fe33b1638e742e5762bd246",
+      "length": 872713,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "37cec4948160d8a325bfbe2da6b8269af6eeb803700a388cfec3bbfb717b2eb9",
+      "length": 91580,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Large-TC.otb": {
+    "head": {
+      "sha256": "164b21bcac97c62002716c15276682e758cba3ae04099c0e94cfe91d425c974a",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "dd4f649b317d33924cd48bdcc6e9de03c2cc26009a64390e45f006451e01818d",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "7bedf09efdbaf896450a09c0aaf142f0fe123d1679b48ae5ab7572aae07ae752",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "b07ad6d9214af2eeaae58279e7e8f67fc3bb8f404192d1e3eda0ce917302ac51",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "c2d029eceeffcedf1daec2382072b941e3c62e35e17f2599a6547472b03fabc2",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "ddec879fa0c8821947e0212e5b8a7685d20f295085155d40084420ae4e1d0fac",
+      "length": 874191,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "3847f8197a3740c90f4c12f796618554064c218e77937b28461feba9743bc0e8",
+      "length": 90896,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Small-JP.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "863b130bd7edf0cb8928d1cef824e9eae912af7d0b04e9c9128f5bf3da7cc1c9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "ae7aab01df031062fd1b8198e4f8bffe9e55bf4251bd0803b46f50fbe74450ca",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "6877aff768492a061720704fc0e9c059b645e8dce210c88106c84b8b2b0e171c",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "9ec33086af21dd1a2eeca60b0432feb91517cac6d0f228d7def09a69c8bc1c98",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "52322db6ade955cadf967579066999410145d00ba323a0da63e3337801eb262d",
+      "length": 869952,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "70b35fcb94a4b30cb06bd83fe4848bf97bf1baec3f5d3b35c72ef90d4890e475",
+      "length": 90976,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Small-KR.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "863b130bd7edf0cb8928d1cef824e9eae912af7d0b04e9c9128f5bf3da7cc1c9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "ae7aab01df031062fd1b8198e4f8bffe9e55bf4251bd0803b46f50fbe74450ca",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "284ba635c1a66ecfb2b9bd319098bdeafa3982f72ea95b4dbf5ef7bdaef4d138",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "cc26bc6f0e7608048782ba641a22ba1403d2bf74297b9da0cd1c7f01edbdb286",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "56beff5c8fd782682f644bf10a3346c42a2f150617451701ab4a4fe33074fea2",
+      "length": 869894,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "83dbed687fa45a02ae5b7179776c17333fed22f872f1686a23f5256e8339a31d",
+      "length": 90964,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Small-Latin.otb": {
+    "head": {
+      "sha256": "7092473ccdf0ad0242252078ff8faa07379295bd6c7ffe0fc6ec6705beee0bec",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "b2cb95143adc3212d4a9b6af13828109b9bc4bac0b58e585753efebee3a63784",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f9a52cf216c61f92b5765372b19d5d12fa3b935dec56bc6456d616d924cbd34d",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "a31e073272ee48b857975c708ec196c57507166d49af8c45a08de58c724d9f99",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "e19b3c1ba8edaac9ac0efe2c4111c75e3dd9e07f5a2a0f4a665cf8c088649c7c",
+      "length": 14584,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "70c1b20f60a604201497244391ebd2b22e8a2fc452f3b7660f763030734a5f6e",
+      "length": 3028,
+      "transform": null
+    },
+    "name": {
+      "sha256": "8e94002c480a9692464a61274ba8e9263ad910a84e3fb947314dadf7b04a14c6",
+      "length": 1096,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "51e190eb1196f3a19003449b2ca3b2def2865b01b9293525a7ffcfe1b41c97ac",
+      "length": 41389,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "1d60641e30b961988e315671f737fa86baf804c61250ee1d9ab3c252b0bb5fcd",
+      "length": 7812,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Small-SC.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "863b130bd7edf0cb8928d1cef824e9eae912af7d0b04e9c9128f5bf3da7cc1c9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "e7729cd691e1ea3415aabad4b2b80d6f61a678572d638a801ef024b2c50ce20b",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "196187950f30160da44b0cb41df65f45d251086c757ee8c134ea15f8510b1ade",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "daa1400f012191864025a8f85c9c15f0a31122e76def2b567926303399a8281a",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "b5a27cc598b3110428ec8163eb2d4874bc04de147dfbb298919cfda44319f18d",
+      "length": 868422,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "3692fd1fb1a470585f1549569a348d8eb79007da8c4573ab3b9e6ac7e796d355",
+      "length": 91648,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSans14Small-TC.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "863b130bd7edf0cb8928d1cef824e9eae912af7d0b04e9c9128f5bf3da7cc1c9",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "e7729cd691e1ea3415aabad4b2b80d6f61a678572d638a801ef024b2c50ce20b",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "477c88eb15e69d82d15a56a4621768ef87409965788fd2d2669ca10093d1b33a",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "63d661e5f2073d5e1445cce091590c1f50e56fea648373d55e8f32bb71796c6f",
+      "length": 1066,
+      "transform": null
+    },
+    "post": {
+      "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "c6c4b49eadac0aafc52f5b58300b94f72c10616de6b6fce7e3a7ad35e885e02c",
+      "length": 869900,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "d93690e916a0aefdb803c7ac545520fa2d9cbe418f847990c98d77737ee8e7a1",
+      "length": 90964,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Large-JP.otb": {
+    "head": {
+      "sha256": "d26c925cf6ae22a79d853fd6b23a9b6d7ba725e8ee975b03d84cbe55a40f904c",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "8659c8a8f9cfb90ecfe98f546233fe2e814f6f63d05a87e7c56b56fb73ab1db4",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "72e49fca127b0eff1061c67b4bd8924d223faf17f63c605a8f546e259c182fe5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "28d769fdcec4c700a35306c9593315fb2dce5b06f90f003dfbd9593a378aeefa",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "dcb440341f6ac240842408105ece9ba863884d424b30e031eaa41414df65cc68",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "57a3f644b0eb3a1f2d3e185a99a6731b7f4d9540edc1efa91a1e0f14a6c82547",
+      "length": 869434,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "3f931ac58004a3c2daa8b367169fc190224536c52c222677ac93533e9f802b86",
+      "length": 90992,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Large-KR.otb": {
+    "head": {
+      "sha256": "d26c925cf6ae22a79d853fd6b23a9b6d7ba725e8ee975b03d84cbe55a40f904c",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "8659c8a8f9cfb90ecfe98f546233fe2e814f6f63d05a87e7c56b56fb73ab1db4",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "72e49fca127b0eff1061c67b4bd8924d223faf17f63c605a8f546e259c182fe5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "39ef0b98c7dc5cc4ad22a73e66050eefdf2edb5a1fc96f9e2ad362fd4d9aa7c4",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "ada9570186498ee90bf0edb46c169dbaba1e52650fc087fb9ea49cc043a4166b",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "22e726925575b120f8d472ba8ea55eaa2a537428d1bd69feea0c51262198ce89",
+      "length": 869378,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "822597a7807fa3790b24324ae3f2462bbb4bc9466a70cee5d5bf239cbd9d4c77",
+      "length": 90980,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Large-Latin.otb": {
+    "head": {
+      "sha256": "7cdc76da7de1244fe4e2da15bb86d2ef186adde9193b71231c85785774fb092d",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "a786fe08bba220a41584fd441e81171a62db47fb578ab75d5c4c1df5b6a26e22",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f9a52cf216c61f92b5765372b19d5d12fa3b935dec56bc6456d616d924cbd34d",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "261b41bfeb4a67f35be4bf8ed6063a0e8cb9e4662d3232f320a6883ddeb984b9",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "8265ffe25251674e7a38bf2484a7f71e39479f86f67e1d589528294f3e2da26a",
+      "length": 14584,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "70c1b20f60a604201497244391ebd2b22e8a2fc452f3b7660f763030734a5f6e",
+      "length": 3028,
+      "transform": null
+    },
+    "name": {
+      "sha256": "1975518e7ead77e5649f664e136fd4784bc8810c4ed3a1884af626f598bf068b",
+      "length": 1144,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "0fb271f9541fb97b32c61328bb031d64e1af0a007019f207a46aa24f96b36252",
+      "length": 42326,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "72933d408ad22ce6324a49503b5a1c249894fdd70389cb982eba58abe46b8530",
+      "length": 7732,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Large-SC.otb": {
+    "head": {
+      "sha256": "d26c925cf6ae22a79d853fd6b23a9b6d7ba725e8ee975b03d84cbe55a40f904c",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "8659c8a8f9cfb90ecfe98f546233fe2e814f6f63d05a87e7c56b56fb73ab1db4",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "72e49fca127b0eff1061c67b4bd8924d223faf17f63c605a8f546e259c182fe5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "523a057e84083a659ff7b19813c844595ebf600bd35d63c69b239cdfe71ef1e7",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "1d6140c0509f6ee0af13be73090a8e80a3995973d568ab40081cd2459614f8b4",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "9c80631de1ed81b9eed4f63948999cf668db4d365233329d5523340780f3cf43",
+      "length": 867902,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "32249f953939e077a9c346d6f3e0e6b6c830ee5a9369d7964a52e338cf75e61d",
+      "length": 91664,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Large-TC.otb": {
+    "head": {
+      "sha256": "d26c925cf6ae22a79d853fd6b23a9b6d7ba725e8ee975b03d84cbe55a40f904c",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "8659c8a8f9cfb90ecfe98f546233fe2e814f6f63d05a87e7c56b56fb73ab1db4",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "72e49fca127b0eff1061c67b4bd8924d223faf17f63c605a8f546e259c182fe5",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "e17699563f31cd48db7df91bef54ed2deb60e142b3f28cd1939ec7746ee0564f",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "356f42e66736cf9c134501cae40cd7c255c62e4e15cdc21e06959ff96c42c676",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "6e32c98fcd7230f85234d201cb663271678f0d88a657bb4626703e33407b020d",
+      "length": 869380,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "89be4358c52d782f5c4f9123469db80626f034b5ed06734dfe6a824aca4b798f",
+      "length": 90980,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Small-JP.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "3574eb7f1eff58bee058427c37ce8b9a7e877fbe56314fdbdabf4574d5497507",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "96c7b1a74b542760619e5f502bf6a5ee1cd913b4538b4f05d5c4ac58b0aa3a95",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "5d0272047988f8406b06206e3354e6b716aacc8dd7c642399d8f759deb647cd7",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "ec4cd8c38150ad7e64f100dd009d86f9bc0f923581dec6ba0b8e504ba74e90fd",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "6357c9504153e36818f5f650a4b3459e9388babad39e7665af32d256a46d40cd",
+      "length": 866694,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "ed16ee7e59a17db0623c9df16cdb48e85b1bdd2a5c3f95c26b14748f84c30b95",
+      "length": 91020,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Small-KR.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "3574eb7f1eff58bee058427c37ce8b9a7e877fbe56314fdbdabf4574d5497507",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "96c7b1a74b542760619e5f502bf6a5ee1cd913b4538b4f05d5c4ac58b0aa3a95",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "dfca87ad1d322d205bacb2a590d88dd0ba6ebc46b775829c859659298f2b7337",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "c1b5aca39316f984329e4fd629a305efd93dde80c96c1ae4b32dac43a5e61d22",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "b6995e4887e8af408052c145118edbf52a1ade4c88c7ed200a2781b7d5e217b1",
+      "length": 866638,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "847b570057c24969f105c94bf8829283ddc190a0717c5c58c0d07ef8e48c34cd",
+      "length": 91008,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Small-Latin.otb": {
+    "head": {
+      "sha256": "7092473ccdf0ad0242252078ff8faa07379295bd6c7ffe0fc6ec6705beee0bec",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "5617b8f64374af04576629961c4bc3e8c969f424e7e3af5da3d1d70352b49b56",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "f9a52cf216c61f92b5765372b19d5d12fa3b935dec56bc6456d616d924cbd34d",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "38eb29bd12eaeaa59d63dd9e27bd252cef6db0903fa04524431ab147d621db39",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "c978ff2650a5d18315743942a74368f3178b947a1f611479f0897a10934b8e8f",
+      "length": 14584,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "70c1b20f60a604201497244391ebd2b22e8a2fc452f3b7660f763030734a5f6e",
+      "length": 3028,
+      "transform": null
+    },
+    "name": {
+      "sha256": "5970082a5b1bfb238563daf24c4ae8c269ed08b40a5c71640656a4efe5427104",
+      "length": 1144,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "82c5f96180ff6f996f8d3c0df11bf632b097a000674cd334bb088c7be63c6d65",
+      "length": 39524,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "dfa87720a065614dc4b6c8a6392d8e6abcc91209910d6e7bfb1f64819fc012fb",
+      "length": 7760,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Small-SC.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "3574eb7f1eff58bee058427c37ce8b9a7e877fbe56314fdbdabf4574d5497507",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "96c7b1a74b542760619e5f502bf6a5ee1cd913b4538b4f05d5c4ac58b0aa3a95",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "9b1f3fa08319ca651108244bb346932cb8caee1e9786eba75b52f663d9548628",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "71a3924f95e812ecf4f7ae2d44c9bacbe417c81d30b5a21f4b943dd011a35f4d",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "12587f69471a1b21b9fb271b3954c1b304c7206cca97d7fe37e8bd3f4fe8f2fb",
+      "length": 865162,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "7cb3eaf9ffd9ab601806be315e2db6f180e4bdb86f9ca9058773b9ac9493da71",
+      "length": 91692,
+      "transform": null
+    }
+  },
+  "otb/TongPixelSansMono14Small-TC.otb": {
+    "head": {
+      "sha256": "1f13b3bea61f9b12c65257854e8f7f6a773fc03ee7bbf985e1bc75a1d7099ff4",
+      "length": 54,
+      "transform": null
+    },
+    "hhea": {
+      "sha256": "3574eb7f1eff58bee058427c37ce8b9a7e877fbe56314fdbdabf4574d5497507",
+      "length": 36,
+      "transform": null
+    },
+    "maxp": {
+      "sha256": "4e15486ea59ef4f15641b2df1b92f94f535ccebc7c2d097380d91caa5bd87cbf",
+      "length": 6,
+      "transform": null
+    },
+    "OS/2": {
+      "sha256": "96c7b1a74b542760619e5f502bf6a5ee1cd913b4538b4f05d5c4ac58b0aa3a95",
+      "length": 96,
+      "transform": null
+    },
+    "hmtx": {
+      "sha256": "210875497ca25bb7ab78056b189c8e301fca1ce34762bbb69c5d915bd90e8e5b",
+      "length": 154616,
+      "transform": null
+    },
+    "cmap": {
+      "sha256": "b2f87bd198d943798e51db543d6132090355a9497dd06dd22834b417cda2d836",
+      "length": 15508,
+      "transform": null
+    },
+    "name": {
+      "sha256": "778e8f5b970df238836bccb9a6d3eb690d45f38678b40fbf353600dab3a24a4b",
+      "length": 1114,
+      "transform": null
+    },
+    "post": {
+      "sha256": "b9a57f115fd19f3ef288ddf449dc816d6433fa944f7a1caec297602b65b37835",
+      "length": 32,
+      "transform": null
+    },
+    "EBDT": {
+      "sha256": "e05c684a24eb1930640559d5ac1d2c3133ac01924871ff6db4383d48183238f6",
+      "length": 866640,
+      "transform": null
+    },
+    "EBLC": {
+      "sha256": "269cfa04987652754c6ff8c0806a9d7b53e1a7854f160d34b13255d554e73a12",
+      "length": 91008,
+      "transform": null
+    }
+  }
+}

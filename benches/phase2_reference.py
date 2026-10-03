@@ -43,6 +43,10 @@ def main():
     parser.add_argument('--jobs', type=int, default=8)
     parser.add_argument('--runs', type=int, default=5,
                         help='Use 1 for an explicitly non-benchmark smoke run; acceptance uses 5')
+    parser.add_argument('--expected-canonical', type=Path,
+                        help='Previously validated sfnt/webfont table identities, except dates/checksum')
+    parser.add_argument('--expected-bitmaps', type=Path,
+                        help='Complete bitmap oracle manifest for source and PCF byte identities')
     args = parser.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
     out = args.work / 'out'
@@ -60,8 +64,19 @@ def main():
                        'preparation, native original Rust vectors/WOFF2/OTB, bdftopcf; full I/O',
               'runs': []}
     result['requested_runs'] = args.runs
+    expected = json.loads(args.expected_canonical.read_text()) if args.expected_canonical else None
+    bitmap_expected = json.loads(args.expected_bitmaps.read_text()) if args.expected_bitmaps else None
+    if expected is not None:
+        from phase2_timing_validate import canonical
+        result['expected_canonical_sha256'] = sha(args.expected_canonical)
+    if bitmap_expected is not None:
+        result['expected_bitmaps_sha256'] = sha(args.expected_bitmaps)
+        for r in bitmap_expected['results']:
+            if r['dataset'] == 'rebuilt':
+                assert result['input_hashes'][r['file']] == r['source_sha256']
     assert args.runs >= 1
     for repetition in range(args.runs):
+        assert sha(args.binary) == result['binary_sha256']
         started = time.perf_counter()
         jobs = []
         for size in ['Large', 'Small']:
@@ -100,16 +115,34 @@ def main():
                    for kind in ['bdf', 'pcf', 'otb', 'ttf', 'otf', 'woff2']
                    for p in sorted((out / kind).iterdir()) if p.is_file()}
         assert len(outputs) == 84
+        # Excluded from the timed interval. Check every repetition, rather than
+        # trusting only the last retained output after timestamp-varying runs.
+        if expected is not None:
+            for name, tables in expected.items():
+                assert canonical(out / name) == tables, (repetition + 1, name)
+        if bitmap_expected is not None:
+            for r in bitmap_expected['results']:
+                if r['dataset'] == 'rebuilt' and r['format'] == 'pcf':
+                    name = 'pcf/' + Path(r['file']).with_suffix('.pcf').name
+                    assert outputs[name]['sha256'] == r['reference_sha256'], name
+            for name, digest in result['input_hashes'].items():
+                assert outputs['bdf/' + name]['sha256'] == digest
         result['runs'].append({'wall_seconds': elapsed, 'prepare_seconds': prepared,
                                'vectors_woff2_seconds': vectors, 'bitmaps_seconds': bitmaps,
+                               'canonical_tables_verified': len(expected) if expected else 0,
+                               'source_and_pcf_bytes_verified': bitmap_expected is not None,
                                'outputs': outputs})
         (args.work / f'run-{repetition + 1}.log').write_text(log)
         args.output.write_text(json.dumps(result, indent=2) + '\n')
         print('reference', repetition + 1, round(elapsed, 3), 's', flush=True)
     result['median_seconds'] = statistics.median(r['wall_seconds'] for r in result['runs'])
     result['partial'] = False
+    result['binary_unchanged'] = sha(args.binary) == result['binary_sha256']
     result['total_bytes'] = sum(v['bytes'] for v in outputs.values())
     result['woff2_bytes'] = sum(v['bytes'] for k, v in outputs.items() if k.startswith('woff2/'))
+    result['woff2_bytes_samples'] = [sum(v['bytes'] for k, v in r['outputs'].items()
+                                        if k.startswith('woff2/')) for r in result['runs']]
+    result['median_woff2_bytes'] = statistics.median(result['woff2_bytes_samples'])
     args.output.write_text(json.dumps(result, indent=2) + '\n')
 
 
