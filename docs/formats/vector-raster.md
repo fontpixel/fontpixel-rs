@@ -70,3 +70,17 @@ Complete anisotropic physical strikes are retained. Sparse anisotropic strikes
 currently require explicit square-ppem selection or bitmap-only extraction;
 unified fallback rejects them rather than silently applying the y scale to x.
 The first bitmap family at a size wins: EBDT/EBLC, then bdat/bloc, then color.
+
+
+The inferred ppem is the coarsest grid demonstrated by the outline coordinates;
+it need not equal an original BDF PIXEL_SIZE. Geometrically indistinguishable
+coarser grids cannot reveal hidden source pixel subdivisions. Embedded strike
+metadata or an explicit ppem supplies that extra information.
+
+Embedded EBSC instructions survive native wrapper reads as `sfnt.EBSC`; records
+whose physical source strike was not selected are omitted with a loss report.
+For collections, face-local instructions use `sfnt.face.N.sfnt.EBSC`, together
+with each Font's face-index annotation. Unsupported raw common/outline-table
+provenance is explicitly reported rather than silently discarded. Native outline
+writers regenerate tables and report container-property loss; use the bitmap
+codec or low-level collection API when preserving those instructions is required.

@@ -13,9 +13,10 @@ Shared sfnt assembly, names, metrics, cmap and checksums use W2.1.
 Table APIs operate on glyph IDs, allowing callers to attach strikes to existing
 TTF/OTF outlines without changing glyph ordering. The `otb` native codec reads
 embedded EBDT/EBLC strikes and writes a bitmap-only sfnt. It does not synthesize
-outlines. `ttf`, `otf` and general vector-raster registry activation remain later
-work. Mixed outline/bitmap input projects only the requested bitmap family and
-reports omitted tables/outline fallbacks.
+outlines. W2.7's [unified outline reader](vector-raster.md) now prefers matching
+embedded images and supplies supported missing-glyph outline fallback. An explicit
+`otb` request still projects only the requested bitmap family and reports omitted
+tables/outline fallbacks.
 
 ## Wire mapping
 

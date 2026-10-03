@@ -731,6 +731,9 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
             g
         });
     let mut names = std::collections::BTreeSet::from([".notdef".to_owned()]);
+    if o.flavor == OutlineFlavor::TrueType && o.shape == Shape::Dot {
+        names.insert("fontpixel.dot".into());
+    }
     let mut report = Report::default();
     for (id, g) in font.glyphs() {
         let gid = if Some(id) == notdef_id {

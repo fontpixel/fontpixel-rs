@@ -634,3 +634,81 @@ fn cff_vertical_origin_vorg_overrides_top_bearing() {
         7
     );
 }
+
+#[test]
+fn source_name_cannot_collide_with_generated_dot_component() {
+    let mut f = Font::default();
+    f.metrics.pixel_size = Some(8);
+    let mut b: Bitmap = Bitmap::new(1, 1).unwrap();
+    b.set_pixel(0, 0, 1).unwrap();
+    let mut g = Glyph::new(b);
+    g.name = Some("fontpixel.dot".into());
+    g.codepoints.push(Codepoint::Unicode(65));
+    g.metrics.advance = Some(Vector::new(2, 0));
+    f.add_glyph(g).unwrap();
+    let mut o = WriteOptions::default();
+    o.outline.shape = outline::Shape::Dot;
+    o.outline.dot_size = 0.9;
+    let (d, r) = vr::write(&FontSet::from(f), "ttf", &o).unwrap();
+    assert!(r.entries.iter().any(|e| e.code == "opentype.glyph_name"));
+    let f = Sfnt::parse(&d, &Default::default()).unwrap();
+    let p =
+        sfnt::post::PostTable::decode(f.table(*b"post").unwrap(), 3, &Default::default()).unwrap();
+    let n = p.names.unwrap();
+    assert_eq!(n.iter().collect::<std::collections::BTreeSet<_>>().len(), 3);
+}
+
+#[cfg(feature = "ttc")]
+#[test]
+fn collection_diagnostics_use_flattened_font_indices() {
+    let d = encoded(OutlineFlavor::TrueType, true);
+    let f = Sfnt::parse(&d, &Default::default()).unwrap();
+    let mut h = f.table(*b"hhea").unwrap().to_vec();
+    h[8..10].copy_from_slice(&1u16.to_be_bytes());
+    let d = patch(&d, *b"hhea", h);
+    let ttc = sfnt::collection::encode(&[&d, &d], 0x10000, &Default::default())
+        .unwrap()
+        .0;
+    let (_, r) = vr::read(&ttc, &Options::default()).unwrap();
+    let indices = r
+        .entries
+        .iter()
+        .filter(|e| e.code == "embedded.metric_rounding")
+        .filter_map(|e| e.location.font_index)
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(indices, std::collections::BTreeSet::from([0, 1]));
+}
+
+#[cfg(feature = "ttc")]
+#[test]
+fn embedded_scaling_survives_projection_and_is_scoped_per_face() {
+    let d = encoded(OutlineFlavor::TrueType, true);
+    let scale = sfnt::bitmap::Scale {
+        horizontal: Default::default(),
+        vertical: Default::default(),
+        source: [8, 8],
+        target: [16, 16],
+    };
+    let ebsc = sfnt::bitmap::encode_scaling(&[scale], &Default::default()).unwrap();
+    let d = patch(&d, *b"EBSC", ebsc.clone());
+    let (s, _) = vr::read(&d, &Default::default()).unwrap();
+    assert_eq!(
+        s.properties.get("sfnt.EBSC"),
+        Some(&fontpixel::model::PropertyValue::Bytes(ebsc.clone()))
+    );
+    let ttc = sfnt::collection::encode(&[&d, &d], 0x10000, &Default::default())
+        .unwrap()
+        .0;
+    let (s, r) = vr::read(&ttc, &Default::default()).unwrap();
+    for i in 0..2 {
+        assert_eq!(
+            s.properties.get(&format!("sfnt.face.{i}.sfnt.EBSC")),
+            Some(&fontpixel::model::PropertyValue::Bytes(ebsc.clone()))
+        );
+    }
+    assert!(
+        r.entries
+            .iter()
+            .any(|e| e.code == "vector-raster.embedded_provenance")
+    );
+}

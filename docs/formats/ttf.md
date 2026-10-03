@@ -12,9 +12,10 @@
 - Fontations `read-fonts` 0.44 typed readers, with independent structural validation.
 
 This item provides native outline generation and editable glyf/loca tables. The
-existing bdfparser facade retains its exact TTF reader/writer. Native `ttf` format
-registration remains unavailable: embedded strikes and general pixel-grid font
-projection belong to W2.4/W2.7. No partial FontSet decoder is advertised.
+existing bdfparser facade retains its exact TTF reader/writer. W2.7 now supplies
+the native `ttf` registry codec, embedded preference, exhaustive grid detection,
+phantom-aware rasterization and single-face writing; see [vector-raster](vector-raster.md).
+The table-level contracts below remain independent of that model projection.
 
 ## Field mapping
 

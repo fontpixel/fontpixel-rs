@@ -847,3 +847,18 @@ vertical metrics; CFF uses exact cubic extrema and VORG where present.
 **Reason:** The effective outline origin includes side-bearing semantics. Fresh
 independent FontTools/FreeType fixtures verify scaled and translated components,
 including that inherited unhinted advances are not multiplied by the component scale.
+
+## 2026-10-03 — Keep strike scaling metadata through native wrappers
+
+**Question:** Combining preferred embedded families copied Fonts but discarded
+FontSet-level EBSC instructions and raw-table provenance. TTC diagnostics also
+needed the flattened output index rather than a face-local strike index.
+**Choice:** Preserve bounded EBSC instructions for selected physical strikes;
+retain face-local instructions under face-qualified collection properties. Report
+omitted raw common/outline provenance explicitly. Offset diagnostic font indices
+when flattening collection faces. Reserve the generated dot-helper name before
+assigning source glyph names.
+**Reason:** Wrapper integration must not silently lose existing bitmap scaling
+metadata, misidentify the affected font, or introduce glyph-name collisions.
+Focused regressions cover each boundary; changed reader code receives a fresh
+full-duration fuzz run before handoff.

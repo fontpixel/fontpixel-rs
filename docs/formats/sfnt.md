@@ -22,10 +22,11 @@ code never invokes Python. No FontForge code or its code-page heuristic is used.
 
 This is a public, feature-gated `sfnt` building block, not a registered bitmap
 codec. It reads borrowed table records and typed common tables and assembles
-caller-supplied tables. Glyph extraction, outline drawing/rasterization and native
-FontSet conversion belong to W2.2–W2.4/W2.7. CFF, bitmap strikes, GSUB, WOFF and
-collections are neither synthesized nor advertised here. Single-font SFNT
-versions 0x00010000, OTTO and legacy `true` are accepted; `ttcf` is deferred.
+caller-supplied tables. Higher-level CFF, glyph, bitmap, layout and webfont modules
+remain separate. Single-font SFNT versions 0x00010000, OTTO and legacy `true` are
+accepted here. W2.7 adds `sfnt::collection` for TTC/OTC and the independent
+[vector-raster FontSet codecs](vector-raster.md), without changing this low-level
+borrowed-container contract.
 
 ## Fields and internal meaning
 

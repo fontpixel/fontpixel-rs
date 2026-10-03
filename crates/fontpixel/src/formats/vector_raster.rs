@@ -481,6 +481,13 @@ fn read_inner(data: &[u8], o: &Options, depth: u8) -> Result<(FontSet, Report)> 
                     inner.face_index = None;
                     let (mut set, rr) = read_inner(&f, &inner, depth + 1)?;
                     r.extend(rr);
+                    for entry in &mut r.entries {
+                        if let Some(index) = &mut entry.location.font_index {
+                            *index = index
+                                .checked_add(out.fonts.len())
+                                .ok_or_else(|| invalid("collection diagnostic index overflow"))?;
+                        }
+                    }
                     for f in &mut set.fonts {
                         f.properties
                             .push(Property::new("sfnt.face_index", i as i64));
@@ -497,6 +504,23 @@ fn read_inner(data: &[u8], o: &Options, depth: u8) -> Result<(FontSet, Report)> 
                         o.limits.max_fonts,
                         "raster fonts",
                     )?;
+                    for property in set.properties.into_vec() {
+                        let size = if let PropertyValue::Bytes(raw) = &property.value {
+                            raw.len()
+                        } else {
+                            256
+                        };
+                        charge(
+                            &mut bytes,
+                            size.saturating_add(256),
+                            o.limits.sfnt.resources.max_total_bytes,
+                            "collection metadata bytes",
+                        )?;
+                        out.properties.push(Property::new(
+                            format!("sfnt.face.{i}.{}", property.name),
+                            property.value,
+                        ));
+                    }
                     out.fonts.extend(set.fonts);
                     report.extend(r);
                 }
@@ -594,6 +618,42 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                     set.fonts.retain(|s| {
                         s.metrics.ppem_x == Some(p as u32) && s.metrics.ppem_y == Some(p as u32)
                     });
+                }
+                if !set.properties.is_empty() {
+                    note(
+                        &mut report,
+                        "embedded_provenance",
+                        "Original common/outline table bytes are not retained as bitmap model fields; EBSC instructions are retained separately",
+                    );
+                }
+                if let Some(PropertyValue::Bytes(raw)) = set.properties.get("sfnt.EBSC") {
+                    let mut scales = sfnt::bitmap::decode_scaling(raw, &eo.limits)?;
+                    let before = scales.len();
+                    scales.retain(|scale| {
+                        set.fonts.iter().any(|s| {
+                            s.metrics.ppem_x == Some(scale.source[0] as u32)
+                                && s.metrics.ppem_y == Some(scale.source[1] as u32)
+                        })
+                    });
+                    if scales.len() != before {
+                        note(
+                            &mut report,
+                            "selected_scaling",
+                            "EBSC records referring to unselected physical strikes were omitted",
+                        );
+                    }
+                    if !scales.is_empty() && embedded_set.properties.get("sfnt.EBSC").is_none() {
+                        let raw = sfnt::bitmap::encode_scaling(&scales, &eo.limits)?;
+                        charge(
+                            &mut embedded_bytes,
+                            raw.len().saturating_add(256),
+                            l.sfnt.resources.max_total_bytes,
+                            "embedded retained metadata",
+                        )?;
+                        embedded_set
+                            .properties
+                            .push(Property::new("sfnt.EBSC", PropertyValue::Bytes(raw)));
+                    }
                 }
                 for strike in set.fonts {
                     if !embedded_set.fonts.iter().any(|s| {
@@ -850,7 +910,7 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
     note(
         &mut report,
         "outline_projection",
-        "Outlines and hint programs projected to unhinted pixel-center coverage; original geometry is not editable in the bitmap model",
+        "Outlines and hints projected to unhinted pixel-center coverage; only the preferred nominal Unicode cmap and normalized names are retained, not original geometry or encoding/localization records",
     );
     for table in f.tables() {
         if ![
@@ -870,6 +930,17 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
             );
         }
     }
+    for property in embedded_set.properties.iter() {
+        if let PropertyValue::Bytes(raw) = &property.value {
+            charge(
+                &mut native_bytes,
+                raw.len().saturating_add(256),
+                l.sfnt.resources.max_total_bytes,
+                "raster retained metadata",
+            )?;
+        }
+    }
+    out.properties = embedded_set.properties;
     out.source_format = Some("vector-raster".into());
     Ok((out, report))
 }

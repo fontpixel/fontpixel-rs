@@ -9,8 +9,8 @@ Design recorded before implementation, 2026-10-03.
 - OpenType sfnt tables retain their existing semantics. `woff::woff1` wraps or
   unwraps an arbitrary supported standalone sfnt, including bitmap-only and CFF
   fonts. It never rasterizes outlines or projects arbitrary sfnt into FontSet.
-  Native TTF/OTF/vector-raster model hooks remain W2.7's responsibility; no
-  partially implemented registry capability is advertised here.
+  W2.7 adds separate native [FontSet reader/writer hooks](vector-raster.md).
+  WOFF1 itself supports standalone fonts only; collections use TTC or WOFF2.
 
 ## Fields and mapping
 
