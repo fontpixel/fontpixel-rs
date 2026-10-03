@@ -697,3 +697,16 @@ Byte comparisons now construct exactly the specification-mandated head change;
 all other null-transform bytes remain exact, and no glyph/pixel assertions relax.
 Sources: https://www.w3.org/TR/WOFF/#TableDirectory and
 https://www.w3.org/TR/WOFF2/#table_format.
+
+## 2026-10-03 — W2.6 scopes layout and subset preservation explicitly
+
+**Question:** General OpenType tables can contain hidden glyph references, while
+W2.6 specifically requires regional single substitutions and useful web subsets.
+**Choice:** Construct and read bounded GSUB single substitutions directly; close
+and compact glyph IDs together with every supported glyph-indexed table. Reject
+unhandled layout/table forms by default rather than copying stale IDs. Retain
+all name bytes, deterministic ordering, and diagnostics through sfnt/web wrappers.
+Keep W2.7 collection and general raster-reader registration separate.
+**Reason:** A small correct subset must remain shape-equivalent and must not
+silently corrupt an opaque glyph-indexed table. Explicit errors preserve the
+source when a broader codec is required.
