@@ -252,3 +252,15 @@ their hashes and sources are under tests/data/embedded-bitmap. PNG decoding uses
 png 0.18.1 (MIT OR Apache-2.0), fdeflate and miniz_oxide under their compatible
 licenses. Test-time FreeType, HarfBuzz, OTS and monobit are invoked externally;
 no GPL implementation is copied. All protected font samples stay read-only.
+
+## WOFF2 transform reference and Brotli dependencies
+
+The WOFF2 triplet equations/stream design were independently implemented from
+W3C WOFF2 (<https://www.w3.org/TR/WOFF2/>) and cross-checked against fontTools'
+MIT-licensed `fontTools/ttLib/woff2.py` (copyright Behdad Esfahbod and contributors,
+<https://github.com/fonttools/fonttools>). No GPL code is used.
+
+Optional `brotli` 9.0.0 / `brotli-decompressor` 6.0.1 use BSD-3-Clause and MIT;
+`alloc-no-stdlib` 3.0.0 and `alloc-stdlib` 0.3.0 use BSD-3-Clause. Their full
+notices are shipped in the crates' own license files. The dependency policy
+permits BSD-3-Clause, one of PLAN §3's explicitly approved license families.

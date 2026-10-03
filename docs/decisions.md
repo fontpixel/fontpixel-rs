@@ -585,3 +585,26 @@ rejection separately. monobit bdat+EBSC generation raises KeyError('EBLC'); test
 monobit bdat without EBSC and independently test our shared EBSC API.
 **Reason:** Do not alter valid pixels to mimic an external bug or portray OTS
 container acceptance as bitmap-table validation.
+
+## 2026-10-03 — WOFF containers remain separate from outline model projection
+
+**Question:** W2.5 must read/write webfonts while general TTF/OTF raster and TTC
+support are explicitly assigned to W2.7 and not yet registered.
+**Choice:** Add real, public, bounded sfnt-to-WOFF1/WOFF2 codecs, retaining all
+opaque tables and auxiliary blocks. Do not register partial FontSet codecs.
+Treat collections as the W2.7 integration dependency and reject them explicitly.
+**Reason:** Complete standalone webfont coding can be tested independently without
+pretending that decoding a container already performs general outline rasterization.
+
+## 2026-10-03 — WOFF2 transforms preserve font semantics and disclose wire changes
+
+**Question:** WOFF2 reconstructs glyph encodings, invalidates signatures, and has
+original-size fields that are advisory rather than allocation guarantees.
+**Choice:** Implement glyf/loca and optional hmtx transforms directly with bounded
+streams. Preserve original bounding boxes, instructions, components and overlaps;
+remove DSIG with a loss report. Reject nonempty programs on zero-contour glyphs
+for transformed output rather than silently discarding them. Offer explicit null
+transforms for comparison/fidelity. Validate actual output sizes, not advisory
+original sizes. Retain optional metadata/private data outside sfnt.
+**Reason:** Honor the W3C functional-fidelity contract and explicit loss reporting,
+without conflating canonical encoding changes with missing glyph information.

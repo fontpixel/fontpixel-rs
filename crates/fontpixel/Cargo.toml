@@ -33,8 +33,8 @@ iigs = []
 otb = ["sfnt"]
 ttf = ["sfnt"]
 otf = ["cff"]
-woff = ["sfnt"]
-woff2 = ["sfnt"]
+woff = ["sfnt", "dep:flate2"]
+woff2 = ["sfnt", "dep:brotli"]
 ttc = ["sfnt"]
 color = ["sfnt", "dep:png"]
 vector-raster = ["sfnt"]
@@ -73,6 +73,7 @@ serde_json = { workspace = true, optional = true, features = ["arbitrary_precisi
 crc32fast = { version = "1.5", optional = true }
 flate2 = { version = "1.1", default-features = false, features = ["rust_backend"], optional = true }
 serde = { workspace = true, optional = true }
+brotli = { version = "9.0.0", default-features = false, features = ["std"], optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.8.2", default-features = false, features = ["cargo_bench_support"] }
