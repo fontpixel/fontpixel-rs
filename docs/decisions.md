@@ -585,3 +585,115 @@ rejection separately. monobit bdat+EBSC generation raises KeyError('EBLC'); test
 monobit bdat without EBSC and independently test our shared EBSC API.
 **Reason:** Do not alter valid pixels to mimic an external bug or portray OTS
 container acceptance as bitmap-table validation.
+
+## 2026-10-03 — WOFF containers remain separate from outline model projection
+
+**Question:** W2.5 must read/write webfonts while general TTF/OTF raster and TTC
+support are explicitly assigned to W2.7 and not yet registered.
+**Choice:** Add real, public, bounded sfnt-to-WOFF1/WOFF2 codecs, retaining all
+opaque tables and auxiliary blocks. Do not register partial FontSet codecs.
+Treat collections as the W2.7 integration dependency and reject them explicitly.
+**Reason:** Complete standalone webfont coding can be tested independently without
+pretending that decoding a container already performs general outline rasterization.
+
+## 2026-10-03 — WOFF2 transforms preserve font semantics and disclose wire changes
+
+**Question:** WOFF2 reconstructs glyph encodings, invalidates signatures, and has
+original-size fields that are advisory rather than allocation guarantees.
+**Choice:** Implement glyf/loca and optional hmtx transforms directly with bounded
+streams. Preserve original bounding boxes, instructions, components and overlaps;
+remove DSIG with a loss report. Reject nonempty programs on zero-contour glyphs
+for transformed output rather than silently discarding them. Offer explicit null
+transforms for comparison/fidelity. Validate actual output sizes, not advisory
+original sizes. Retain optional metadata/private data outside sfnt.
+**Reason:** Honor the W3C functional-fidelity contract and explicit loss reporting,
+without conflating canonical encoding changes with missing glyph information.
+
+## 2026-10-03 — Normalize WOFF2 transform input for deployed decoder compatibility
+
+**Question:** W3C makes original glyph/font lengths advisory, but Google WOFF2
+(as used by OTS) bounds its output using totalSfntSize and FreeType consults the
+original glyf length after reconstructing four-byte-aligned glyph records.
+**Choice:** Normalize transformed input glyph records to four-byte boundaries,
+upgrade short loca when necessary, then record those true normalized lengths.
+Pad the compressed block to four bytes even without auxiliary blocks. Keep the
+reader standards-compliant when valid reconstructed sizes differ from headers.
+**Reason:** An initial unnormalized output had exact fontTools glyphs but OTS
+failed and FreeType's last glyph was invalid; changing the advisory lengths to
+the normalized input sizes fixed both independent consumers. This preserves
+font functionality and makes output interoperable, rather than weakening tests.
+
+## 2026-10-03 — Avoid optional hmtx transform for nonminimal long-metric counts
+
+**Question:** fontTools 4.66.1 recompiles transformed hmtx to its minimum count
+but leaves the exposed hhea count unchanged; legal sfnt fonts with redundant
+trailing long metrics then fail its normal TTFont reader.
+**Choice:** Preserve those hmtx bytes using the legal null transform. Continue
+using transform 1 when arrays match and the source long-metric count is minimal;
+our decoder reconstructs the full declared count even when it is nonminimal.
+**Reason:** hmtx transformation is optional; preserving source tables avoids a
+consumer bug without silently changing metrics or reducing glyf/loca coverage.
+
+## 2026-10-03 — Keep external verification strict while avoiding oracle tail copies
+
+**Question:** Stock fontTools' WOFF2 composite decoder repeatedly copies the
+entire remaining byte stream for every component. The full-SC shared-dot font
+has millions of components; its correctness run had not finished its first equivalence pass after an
+approximately 20-minute total observation window.
+**Choice:** Preserve that censored stock-run evidence. Add an isolated,
+verification-only read-only memoryview wrapper around compositeStream, still
+calling the original component decoder. Prove its reconstructed bytes identical
+on simple, composite, Latin, hinted, affine, explicit-bbox and overlap fixtures;
+then keep all full-SC assertions. Independently corroborate with Google's C++
+decoder, FreeType, OTS and HarfBuzz. Use stock fontTools only for benchmarks;
+measure Latin-dot same-input three-way medians separately from full-SC native/C++
+(and full-SC CFF three-way) medians.
+**Reason:** Remove only an oracle transport-copy bottleneck, without modifying
+installed/reference code, weakening correctness checks, presenting an adapted
+oracle as stock, or mixing unlike workloads in speedup ratios.
+
+## 2026-10-03 — Bound retained multi-font results as well as worker count
+
+**Question:** Per-font and worker limits alone do not bound a caller's very long
+input list or the accumulated output/auxiliary blocks of a batch.
+**Choice:** Add configurable batch font-count and aggregate input/output budgets
+(default 1024 fonts and 256 MiB each for input and retained output). Check before
+queue allocation; stop admitting new jobs on error, join in-flight jobs, and
+return no partial output. Preserve deterministic input order for successful jobs.
+**Reason:** A valid small-font array should not bypass resource accounting by
+repetition. These guards do not change serialized bytes or any reader path.
+
+## 2026-10-03 — Preserve WOFF1 physical ordering and signature validity boundaries
+
+**Question:** Glyph/OTS interoperability alone does not detect WOFF1 §6's input
+physical-table-order requirement. Using the general alphabetically ordered sfnt
+builder would change a legal physical layout and could invalidate DSIG.
+**Choice:** Keep tag-sorted directories and input physical payload order in both
+WOFF1 directions with a bounded order-preserving assembler. Roundtrip well-formed
+sfnt bytes exactly. Report nonzero non-table data loss and structural repairs;
+remove a signature invalidated by normalization with a loss entry. Test a valid
+reverse-physical-order font carrying DSIG, plus hidden data/checksum repairs.
+**Reason:** Meet the normative packaging rule rather than mistaking identical
+rendering for exact envelope fidelity. WOFF2 algorithms and timings are unchanged.
+
+
+## 2026-10-03 — W2.5 review closes mandatory webfont conformance gaps
+
+**Question:** Independent specification review found that candidate `cc5ba81`
+normalized invalid WOFF1 source checksums, accepted missing final WOFF1 table
+padding, and set WOFF2 head.flags bit 11 only when a table transform was used.
+**Choice:** Reject invalid source table and whole-font checksums before WOFF1
+packaging; continue reporting normalization only for checksum-valid structural
+anomalies and remove any resulting stale DSIG. Report incoming WOFF1 checksum-adjustment repairs even without a DSIG.
+Require the last WOFF1 table's complete zero padding separately from WOFF2's optional final block padding.
+Set bit 11 for every WOFF2 output, including CFF and null transforms. Preserve
+all earlier raw evidence as candidate observations and rerun affected validation
+and representative final-code performance measurements in separate files.
+**Reason:** WOFF1 §5 has an explicit MUST-reject checksum requirement; its later
+advisory wording about correcting checksums is not a reason to weaken the strict
+encoding boundary. WOFF1 §5/§6 mandates table padding, including the final table.
+WOFF2 §5 requires the head flag independently of whether glyf/hmtx is transformed.
+Byte comparisons now construct exactly the specification-mandated head change;
+all other null-transform bytes remain exact, and no glyph/pixel assertions relax.
+Sources: https://www.w3.org/TR/WOFF/#TableDirectory and
+https://www.w3.org/TR/WOFF2/#table_format.

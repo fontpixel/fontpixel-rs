@@ -1,0 +1,202 @@
+{
+  "machine": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "cpus": 9,
+    "memory": "MemTotal:       10206504 kB"
+  },
+  "tools": {
+    "fonttools": "4.66.1",
+    "brotli": "1.2.0"
+  },
+  "results": [
+    {
+      "seconds": [
+        0.236877644,
+        0.22900041,
+        0.216760013,
+        0.215769996,
+        0.23709818
+      ],
+      "bytes": 1045860,
+      "quality": 5,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q5-t1-x1",
+      "median_seconds": 0.22900041
+    },
+    {
+      "seconds": [
+        0.504678702,
+        0.50184768,
+        0.525415611,
+        0.498310495,
+        0.515940213
+      ],
+      "bytes": 969772,
+      "quality": 8,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q8-t1-x1",
+      "median_seconds": 0.504678702
+    },
+    {
+      "seconds": [
+        0.779733967,
+        0.792818,
+        0.776065127,
+        0.812693622,
+        0.822445623
+      ],
+      "bytes": 976340,
+      "quality": 9,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q9-t1-x1",
+      "median_seconds": 0.792818
+    },
+    {
+      "seconds": [
+        15.432642387,
+        14.696186465,
+        13.427677875,
+        13.41715616,
+        13.674484632
+      ],
+      "bytes": 842840,
+      "quality": 11,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t1-x1",
+      "median_seconds": 13.674484632
+    },
+    {
+      "seconds": [
+        7.214586325,
+        7.179089302,
+        7.112657232,
+        7.327204263,
+        6.995687192
+      ],
+      "bytes": 844152,
+      "quality": 11,
+      "threads": 2,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t2-x1",
+      "median_seconds": 7.179089302
+    },
+    {
+      "seconds": [
+        4.453131245,
+        5.636923195,
+        4.457430911,
+        4.429822381,
+        4.389135105
+      ],
+      "bytes": 842540,
+      "quality": 11,
+      "threads": 4,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t4-x1",
+      "median_seconds": 4.453131245
+    },
+    {
+      "seconds": [
+        0.226648867,
+        0.214001748,
+        0.220676373,
+        0.216150064,
+        0.210977662
+      ],
+      "bytes": 1045860,
+      "quality": 5,
+      "threads": 1,
+      "transformed": false,
+      "label": "native-Tong-SC-square-q5-t1-x0",
+      "median_seconds": 0.216150064
+    },
+    {
+      "seconds": [
+        0.164239408,
+        0.146366134,
+        0.146856421,
+        0.141080902,
+        0.141660265
+      ],
+      "bytes": 1047688,
+      "quality": 5,
+      "label": "tong-woff063-Tong-SC-square-q5",
+      "median_seconds": 0.146366134
+    },
+    {
+      "seconds": [
+        12.870967094000001,
+        12.481865096,
+        12.638190178,
+        12.11431616,
+        12.14498086
+      ],
+      "bytes": 841060,
+      "quality": 11,
+      "label": "tong-woff063-Tong-SC-square-q11",
+      "median_seconds": 12.481865096
+    },
+    {
+      "seconds": [
+        13.699259069000618,
+        13.672239433000868,
+        13.370846735000669,
+        13.567924459999631,
+        13.162173656999585
+      ],
+      "bytes": 841060,
+      "label": "fonttools-Tong-SC-square-q11",
+      "median_seconds": 13.567924459999631
+    },
+    {
+      "seconds": [
+        0.452552133,
+        0.363326118,
+        0.343650072,
+        0.33429449,
+        0.336839048
+      ],
+      "bytes": 1026248,
+      "quality": 5,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-dot-q5-t1-x1",
+      "median_seconds": 0.343650072
+    },
+    {
+      "seconds": [
+        0.814844331,
+        0.659413587,
+        0.682126904,
+        0.713055709,
+        0.670215052
+      ],
+      "bytes": 859264,
+      "quality": 8,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-dot-q8-t1-x1",
+      "median_seconds": 0.682126904
+    },
+    {
+      "seconds": [
+        1.2040704660000001,
+        1.113618073,
+        1.022547855,
+        1.062713116,
+        1.022744663
+      ],
+      "bytes": 830792,
+      "quality": 9,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-dot-q9-t1-x1",
+      "median_seconds": 1.062713116
+    }
+  ]
+}

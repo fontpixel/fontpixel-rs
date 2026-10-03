@@ -8,7 +8,8 @@ license = "MIT"
 cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.4"
-fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff", "sfnt", "cff", "compat-bdfparser", "otb", "bdat", "color"] }
+brotli = { version = "9.0.0", default-features = false, features = ["std"] }
+fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff", "sfnt", "cff", "compat-bdfparser", "otb", "bdat", "color", "woff", "woff2"] }
 [workspace]
 members = ["."]
 [[bin]]
@@ -68,6 +69,20 @@ bench = false
 [[bin]]
 name = "color_bitmap"
 path = "fuzz_targets/color_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "woff1"
+path = "fuzz_targets/woff1.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "woff2"
+path = "fuzz_targets/woff2.rs"
 test = false
 doc = false
 bench = false

@@ -1,0 +1,20 @@
+    Updating crates.io index
+     Locking 8 packages to highest Rust 1.99.0 compatible versions
+ Downloading crates ...
+  Downloaded cc v1.6.0
+  Downloaded pkg-config v0.3.34
+  Downloaded vcpkg v0.2.15
+  Downloaded libc v0.2.190
+  Downloaded libz-sys v1.1.29
+   Compiling find-msvc-tools v0.1.14
+   Compiling shlex v2.0.1
+   Compiling vcpkg v0.2.15
+   Compiling pkg-config v0.3.34
+   Compiling libc v0.2.190
+   Compiling cc v1.6.0
+   Compiling libz-sys v1.1.29
+   Compiling woff v0.6.3
+   Compiling fontpixel-tong-woff-reference v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/benches/woff-reference)
+    Finished `release` profile [optimized] target(s) in 46.82s
+   Compiling fontpixel-tong-woff-reference v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/benches/woff-reference)
+    Finished `release` profile [optimized] target(s) in 0.55s

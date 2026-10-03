@@ -1,0 +1,6 @@
+# Versions used by W2.5 interoperability and benchmark evidence.
+fonttools==4.66.1
+brotli==1.2.0
+freetype-py==2.5.1
+uharfbuzz==0.56.2
+opentype-sanitizer==9.2.0

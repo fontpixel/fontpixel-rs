@@ -1,0 +1,15 @@
+Candidate: cc5ba8161173a0173ed33f699551ff8672d4a387.
+Rebuilt release example before reproduction; source fixture:
+tests/data/compat/mini-square-1.0-1.ttf.
+
+1. XOR byte 16 (first directory checksum) by 1; WOFF1 encoding exits 0,
+   Info [woff1.sfnt_normalized] Repair.
+2. XOR head.checkSumAdjustment byte 0 by 1; same incorrect success.
+3. WOFF2 null-transform encoding of mini-square returns head.flags=11 decimal,
+   required bit 11 absent. CFF Tong-SC-square gives flags=3, also absent.
+4. Encode mini-square as WOFF1 quality 0; remove final null padding and update
+   header length to 1839. Decode incorrectly exits 0.
+
+Regression tests are in crates/fontpixel/tests/woff.rs. The checks reject the
+invalid cases and require head.flags & 0x0800 for every WOFF2 flavor/transform.
+The original candidate branch and original raw evidence remain retained.

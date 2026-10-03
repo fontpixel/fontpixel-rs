@@ -1,0 +1,23 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5-review/crates/fontpixel)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.34s
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/woff-0c01592b11a31a37)
+
+running 15 tests
+test invalid_options_and_collections ... ok
+test metadata_errors_and_auxiliary_limits ... ok
+test limits_precede_decompression ... ok
+test woff1_preserves_physical_table_order_and_reports_invalidated_signatures ... ok
+test woff1_rejects_bad_source_checksums_and_missing_final_padding ... ok
+test woff2_advisory_sizes_reserved_and_null_transform ... ok
+test woff2_always_marks_lossless_modification ... ok
+test batch_budgets_and_distinct_input_order ... ok
+test signature_loss_is_explicit ... ok
+test fixture_roundtrips_and_quality ... ok
+test normalized_short_loca_upgrades_without_losing_glyphs ... ok
+test arbitrary_bytes_are_safe ... ok
+test random_simple_glyph_transform_roundtrip ... ok
+test opaque_table_roundtrip ... ok
+test truncation_and_mutation_never_panic ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+

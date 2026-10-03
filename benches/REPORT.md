@@ -109,3 +109,10 @@ goals pass in the documented run. The preliminary contended run is retained too.
 against Python/Node, alongside Criterion hot paths. The real 2,000-character
 screen median is 1.006 ms; the 38,653-code atlas median is 29.189 ms. These are
 actual layout/render operations, extending rather than replacing W1.1's paste test.
+
+## W2.5: WOFF1/WOFF2 containers and WOFF2 acceleration
+
+See [WOFF-REPORT.md](WOFF-REPORT.md) for 29 five-sample quality/thread/batch and
+same-input independent-encoder comparisons, raw samples, byte counts, restart
+segments and limits. See `reports/w2.5.md` for correctness, fuzzing, decisions and
+scope. This does not claim the full phase-2 export pipeline is complete.

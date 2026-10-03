@@ -1,0 +1,2389 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "brotli": "1.2.0",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "cjk_count": 256,
+  "results": [
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19072,
+      "sha256": "f3368a7bca1390d166733536fc03295f74e853bbdfdeccae39bbb9b0914e5524",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15380,
+      "sha256": "758bdfb5e6cdd957e7b2e60a55af643cadc5c4de75f0cf9053abd06d187d881a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16560,
+      "sha256": "195f4a47c561970e97d52b55a198c6850f6e521d9d61ce8dddb53571480b900d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18812,
+      "sha256": "d67b49cf9d02e2559ee0ae4d66eb738f07e7ba07536a6ced75ebb96132e55b30",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15996,
+      "sha256": "dd64083220c607ef61d3f2c2060beee03a8e34dc78bfafb95cfe112f13205ac0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12416,
+      "sha256": "5ad8aa3dcb7e85513cee47af42b12c9b6fb4f9d21bb0a6b1fa5885b7e9c485e3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14948,
+      "sha256": "5848170dd43ba7a995b6a9248dd989f3f076508228d3c5323fd10c747d865678",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15432,
+      "sha256": "e6a41f44f0b68a7c61ed6fdc12e5f4d9b95c8523b66479becc716c961dba9450",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 16008,
+      "sha256": "0b815f3962f330831a096a6318069b8e60d1401282ebd7a3b37faf036a6ee862",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13416,
+      "sha256": "cef1ba06b7265ce00f5595daab3588b03f7720cc50216d1509d10263fc54980a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15052,
+      "sha256": "9c0b3560fa7bf1be03492e4fc4fbc0016155ab2d6780bf600d0f39033c64e732",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15092,
+      "sha256": "c65dfbc7cc9bc5c586340848fcf517a4332dddb2a0f1c1f8d8e182eccf756325",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14564,
+      "sha256": "5c0eada46ba4d62214540a6b46e5562ae2202712a72ab8b055fba2cea4cffd39",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11656,
+      "sha256": "0da31c135ef75fe0b61824b5e204db80b0fc344f448dfa96654f03c6ecdaacfb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15144,
+      "sha256": "0f906c819e1bd60d480fb5d6fdb947f1533b4b96052885aec60fbe26099486bc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15132,
+      "sha256": "a3f559e6178afb2fdc2c2dbb32b0c64f2b3edb7271aa30374ff8c07dc018055e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19048,
+      "sha256": "00859172d81654b481d24242fdb5d4be992eacaa48333845f04036125a2552f9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15400,
+      "sha256": "434fdf34af5116241d49b01ce011fc5729ac2256d240e1e4928ccdb6754ccc89",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16548,
+      "sha256": "0f3f80dfaee3eb8341099334919d19203514e3115d8cea2f564bd22408aa87a4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18804,
+      "sha256": "bd2a4f3ce52427ec3d7e24807c49340837e4796f33dda3f98cf6d04eb1342739",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15968,
+      "sha256": "723fcee7d7e24c83ffabb75b4b1ba378274d30e7b42743f48b34d6b710ec47b8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12520,
+      "sha256": "6e615bc86a71e6f464150e8c9b8d306cb40039e771fdfc96a1e9a513ac76d4ae",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14932,
+      "sha256": "dccad4fdbdd5bcd5d67d49424a490c085bd8b3508ca652172148426c5d7e4944",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15424,
+      "sha256": "1c31a09f4a5dbc2668a68f52d3be525db0d7f116df1bc75baf60abf22ad87907",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 16000,
+      "sha256": "efbe08169c3df2fdad68f7581ddbcdcb90ef11f215449b4ada78b7cb3b12857c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13288,
+      "sha256": "97a138d11beda6929e6e532ca89854d118a1264c5a04a7c506f900560caf41cd",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15036,
+      "sha256": "a2a20f47a32adc91fa077d802ad3305cb0268b3dacd620f0ad3573f69fde8499",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15088,
+      "sha256": "1c35763dc6db754c583ada97520fb3741c2acfff7571cc9b9463cb48c0de96b9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14536,
+      "sha256": "e95a87925942d477f30e00b28dc6aec538c6f58bda0fa4277e8101343d6bb0e2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11728,
+      "sha256": "dc846833a31909034eda5e517dced7be25dc89fe26c193cb67677a748e48fae9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15132,
+      "sha256": "3ccab5761973edfdb0b309ca87b8d6a5038d435d3239f56344a731637f59f02d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15116,
+      "sha256": "1fc35399811b7da70b5f3d476f0dfb67d2b88f00900d4453272dc8b66ebf6773",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 83308,
+      "sha256": "df8de03f055aaa218a185734c0bc1630556593803ad6585bd3f22fd2cfed7bca",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 50876,
+      "sha256": "fdb36e49607602c894ae488d012a65de44c5a856c74796920e68a7480df7e94c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 57188,
+      "sha256": "a3fae974bdd4ab0d9727390429723491d4618831bec3b304904b1c38a8aacb35",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 80076,
+      "sha256": "b8075c0857ee86513e2898ae93b48e60ffb58b284fa4a31b21bf7dd8c12e9455",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 3647,
+      "bytes": 66944,
+      "sha256": "7266033e1a11f82c6d4e28c84cb63c08988fac1fb8d734c4bbf639d8ab740262",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 3647,
+      "bytes": 39064,
+      "sha256": "e53d5376d609ff3113c923f31b739d9f51a615ce97e015785810fde64a9ede86",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 3647,
+      "bytes": 55604,
+      "sha256": "23c4784e1370ff0b6584e9d4d12a02a880c11b0acc1d539e306c7981f726ea03",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 3647,
+      "bytes": 63280,
+      "sha256": "b0fb53b6b3f1224e1174c1c72c1578acb7ccdfc36990fefa3979349d82db45a3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 73700,
+      "sha256": "dbdc0d0c5b5f031e4b6e171839590e521856fe1d97ffe9ed7ebfd951827278bf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 46996,
+      "sha256": "fa969f4bcce7d75db9623bfe1804d07e0f6c6920abc77fd7824c09db6b2afeec",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 60292,
+      "sha256": "cf370f3e830e4f1492d13221497c2e4236f73ba97233e2193502aa188b371946",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 60632,
+      "sha256": "28f86d2305858c9bf2e56379c9f3cc607b1bb4d1e78b8c6b7e594dfb40a9469d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-dot-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 70532,
+      "sha256": "fc6c0aa4f769fecd97ddde4155939e143908a431cbd338cb4b5114e32b1fe69e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 44072,
+      "sha256": "f9cea8bee5293d3c4ed42902905b4d753351347628bd244a645806b438ce85b5",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 61516,
+      "sha256": "7ba324c3adaccf63179027df40e077987abd57ef3a2c771403834b2ba97cbad7",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 61472,
+      "sha256": "70f491e88db0c299bacc6ede5530fbb93f7004112e3cfe214e6e689ee546b233",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19012,
+      "sha256": "b721d128e6b3de2217bf3fed4af68a5ff2df47508d3360eab8d95d68edf3a2f8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15432,
+      "sha256": "b5e31fef67ee3efe67e1182ce30c9838c8c80eddd30391d1c8050004e464c313",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16548,
+      "sha256": "a8688bb4cab22d061d6d9ee70f7eccf056f146e31c5f975ac3410de743bf8f65",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18768,
+      "sha256": "c85a3f3f5aad97065886b7e5d911363c34067366018eb6a481f43b39ed6bf4bf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15972,
+      "sha256": "1c92fa2de057de9bb862bffe00d3c64be5a27f5fded906e4f899dbca9aa48d9f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12444,
+      "sha256": "80f3fb65a210566395e7a1f4b8ee484ddcbf0a9737a607d35438cc807284d090",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14936,
+      "sha256": "6d413fb70b1e56341b9eed0c7469132a90c466036ecdd6bc529b6dd8cfa33a02",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15412,
+      "sha256": "6e4a8f1ceb2059fab1a531fa7011fba6c0cd8e06e4c12295e530c16fbcc927af",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 15992,
+      "sha256": "6e5988fae49011272589c560edd739648beca6e4e447c9481722e921d93a8573",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13232,
+      "sha256": "bbef2bd18be64cfbaa837b679c7689151dc37e33ba197182aa9fe0e0262d34d3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15048,
+      "sha256": "6c702aa1eb0845f0e1018cdd47fa94c775f21a91af58ec701db3429c46af413e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15096,
+      "sha256": "3274f9479b4cc8c83087fcd7925e4bc531e07fac95249a0028af30cbe7fbc4d4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14544,
+      "sha256": "936b72ddf705d2e6fc9a89c5c039b51ceb62b4fdd3a7cbd60dce6f8e84ff8321",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11700,
+      "sha256": "e696dd0ff0b09c2e8384d95849db1c208eb0619f1be5ba54b494b612ba94a298",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15112,
+      "sha256": "3379966076847cd861ee2a54a79ede80dac877ee3c04a39ca1b8e430db0f3ed4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15064,
+      "sha256": "6dab960adac2b940cdd54a1f70a73c8c1667842a4a0db53df31bfab83a9db126",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19048,
+      "sha256": "3bd341864c80b84915785fcad1a73450cdf1c90de65392aab2d2b9d45482bbcd",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15380,
+      "sha256": "25f5f4ad577fbe6cf5e41f6ee02c7cdca7a8f096f3690fd82030513780ba3170",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16552,
+      "sha256": "5d8a2a03393f4db3e10cb711c4ad701786e479164beb4651b601f918b811eb64",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18800,
+      "sha256": "abfb2c79cddd6333c0ea205bfc708ef56a580d52404ef2f1d4de474486516074",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15968,
+      "sha256": "e85f48dd1645b0f44518677667b91e26d2002035f519f2c9b54ade8a3bc99353",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12492,
+      "sha256": "ff2e2d5d57147443ac9725d214a1944f21b19e964adf3f4be13af0baf89d5959",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14932,
+      "sha256": "b663d18aba4aaee8233584e3206bfa826c4902458f0d933e90638efaecd40cb8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15424,
+      "sha256": "5455d7723ebc55cf53a44e342c787e3769496d6ecc55a8d980d1ae9188af0e33",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 16000,
+      "sha256": "a97723620fdc4b4c8e10259e01575040ab18cbf367e5eadf869fac80232190d9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13380,
+      "sha256": "e7cd9bd79ac536a91680746d56726296f37d698cd8a5cc22a32f070e82595875",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15040,
+      "sha256": "0f9b9660b5abf30696453e6fd1f1b567bc5e19b7381e64012767e32904cfc509",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15088,
+      "sha256": "be90b6f5df62e1402d424e4b7940746ad47f62e8bdfa5b6abdccc6331659692d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14536,
+      "sha256": "dcd2ba605b30daaaccaac994fed95bd1db75a8d00c991f64d8eea7cceb318168",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11728,
+      "sha256": "819d8b54ffe37d2fd34790f5d051e9955a3c553a4a72973803689c4678712588",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15132,
+      "sha256": "9150232141c2d33d7bc9b6d9c970f02ff818a68cd2743459afe88da95e31afe0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15120,
+      "sha256": "1dbc9319d1eabddbbfa459be75d32a62ed148e669ff56d85504fb3e412e8afe4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 81160,
+      "sha256": "95a1553b1c25e5db6941f8b9a21449decc97fb64e3278a530b67a5a2ba191f35",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 49304,
+      "sha256": "1f74491137d6d2d879e966a7f4072c4c04f0862bdcb614155804d1f22bc515d3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 55288,
+      "sha256": "f67b44c54ad8e65ddadafcbfa853f2c8e0a0fc59afb6b22e6bfa9e02e6b586c8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 77472,
+      "sha256": "077885e5d1e4dfa0b164c229c330f1f2efb784f3a9153d0dffe0b353a02069e9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 3647,
+      "bytes": 62164,
+      "sha256": "0f0cfb3ece3f8a402afc50c1c42fb63cdeb4085675e737fe52924b9d5475dcd9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 3647,
+      "bytes": 36728,
+      "sha256": "aa818ecabcaeec6b910b9ff434824878fcda2543d94f32e23d0113190ca0815d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 3647,
+      "bytes": 51800,
+      "sha256": "c11eb10e6070875f89c6842abdb24ec1a80ce3edec39df87cfbef9d46e95a17b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 3647,
+      "bytes": 59224,
+      "sha256": "9a8362f11021899ccab2493eb86fd6318522ada7540bae3adf4528f558b267df",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 71776,
+      "sha256": "873b543b2455e3b6aa7e00fc9689ce5e22fe949233509bc38107d0db0432d98a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 45464,
+      "sha256": "b288f0de2dc8b53fdce0af4cf261a06d79ed63a2a2437cd06ae02a4577139acc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 58584,
+      "sha256": "69d2641634bd633e058bd7f3917c67bb5f6ffe28c1c531f4f93771848022970d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 58672,
+      "sha256": "6fe8451662173bc5c99c2d6ba37d00cd6f13d8fee9d1ad024863801c5e866129",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-dot-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 68280,
+      "sha256": "b983967dd5a94d05aa036ccbf2e0df08897e3568d110337692f5fb2f58613f50",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 42340,
+      "sha256": "1b5f56a6ad17f30c9a993da0b0c2506e5e5781e2fe2da9df128ea9bba6a3c93e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 59100,
+      "sha256": "c50832d9d3e449c044b927ae5c583611da7c02c65f7a45dd98c5eb7ea15f1cfd",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 59104,
+      "sha256": "cef6b1d6fa7a198e661eda4b76402aa2b3d978a127c6ff8d6b5d25df895726ae",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 78256,
+      "sha256": "d0c8e58e79af629571bc5dce0ad3221647c04d2c58d7806f1f8dfebad478409a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 46884,
+      "sha256": "70c0323800c00717610ca71e3537c180f2ae0e4a4b1dee68b52b6b1b4da0db87",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 52500,
+      "sha256": "e6b4fa7c18711275fc00c9b8fbd514d074c39cfe2591fda5f125dcf067beac22",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 74492,
+      "sha256": "9990150b3743d6601a96b20e5c9b914b33dc25993b2d8e53754769a12c044062",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 3647,
+      "bytes": 59472,
+      "sha256": "fafaba6e816ab52830489658246a02f0c9f00416b38783a47dc12ff72d3605ae",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 3647,
+      "bytes": 33732,
+      "sha256": "53ad4c370abe715a03c787e7c82e1f0de60a5b08f5ebe8a5ef4f9e0701a8632a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 3647,
+      "bytes": 48500,
+      "sha256": "8469a3bfb1a11d55c100551e8f24d30ec5b446c55d6b768df35e7e3429599621",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 3647,
+      "bytes": 56752,
+      "sha256": "eba71df7577a894e422ec2bca937e4c3f59cf9601092e8a482408ebf22fc7219",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 68784,
+      "sha256": "005a13dd9ca7fd8bb18ab8ed2d83c97e0e99c1c3886b71868eba484ee0a2fb38",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 43172,
+      "sha256": "a1e0f400599638dd0466f7e1bea1fb330f407a593ceb9a37338cc9307fada123",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 56044,
+      "sha256": "d26a87c6396bbcaa63d0ad05b88faf55b9aea6468152f22b75e72114ce132f4d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 56272,
+      "sha256": "5eb4fa9318219d4584282af6ed4bb900f6911286655794ce6bc51d1e781bd33a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-dot-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 64640,
+      "sha256": "fd0b8062e544918834997a2d211bf73a0dfc727ef2578ad8f6a23e463ceb571b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 39456,
+      "sha256": "f31d971153be551a1d14eb33d8ccf6e73c80d89f2b2a226969df7d47b4b7876c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 56600,
+      "sha256": "14ae248b03e7a340b76349032e63504b5c1972d7186a1d3107a4d60c9a210658",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 56612,
+      "sha256": "37dbee2ad2c4c4d231892a84b6f35c12ef4a9db02fc616dd74468109c1d8ea6d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "hints-overlap-explicit-bbox-affine-woff-q9-t1-x1",
+      "glyphs": 3,
+      "bytes": 1316,
+      "sha256": "169b752a6dbfe50132d088d76a8ff72b0a586f0dd5e2ac5d76b467184d9a5eed",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "hints-overlap-explicit-bbox-affine-woff2-q11-t1-x1",
+      "glyphs": 3,
+      "bytes": 884,
+      "sha256": "efef8759d61a8f50f66acb1810a9c5e86e15b19931571dfb502af153a08439b4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "hints-overlap-explicit-bbox-affine-woff2-q5-t4-x1",
+      "glyphs": 3,
+      "bytes": 1080,
+      "sha256": "620e1a9174cae8813b6719d6641765994bd9b08f33b2b8266854b8c5893d456c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "hints-overlap-explicit-bbox-affine-woff2-q5-t1-x0",
+      "glyphs": 3,
+      "bytes": 1004,
+      "sha256": "0bef9cabb8b1dd9f2989cde85d133bfefc23119edace68b98a7fe7cf796378ac",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "bdat-i1-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 772,
+      "sha256": "28e0916a600766a916eb2f32a38a5ab36e04667fad711285f0c8a2975f785ceb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "ed1fe07cffe5381b6da1bf747469f963f78a93b173fd9470b9b63233980e3d69",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 492,
+      "sha256": "0be1aab5ab29103a284379419c3d1c00d58f4aa8da0fb5e5cb50b16bc808e8f9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "b1102dc0a2fe78c417ab444264378fec89dc5173cfa7f0c4c5c247d6d69d23a9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "15f2bdd6222ce8be365419912b446bdb7f9adf15669d7c29d7c3621ba100b544",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "9a0aaab61a8706c5635279322015d9cd759f88b2cbefbd10a29a09f3dd531e60",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "461fb6745c78978e93fdb5cd9dd11e9c73ce85a26e3353820fb0fc713e264aae",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "147f3443bb39d4b5a261ccc11af58b629f15c00b2143dd378c34e1789feb9f42",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "3102a8ea2fde1f49f5e22fa0d7fd20607b7efa859454d7892194b8d564fe96c7",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "04329e80f36b4d1b0ba5e05f46e5b13b7d9d4d6f545ca2eb1384e068adb3d433",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "364c23b51ab769fcd25c94346623788231c04e14e400ce1511b1a1509e885e9b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "74cdde4d9d12add4a6660ef9adad4dcbeda172e2b494c082d388f4518af55500",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "9e1f311a2b50ab6339fda5eb75686595a36eaefe16558ec5391f38c6a2280aa8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "fe863579c6505dedc4a4c74bbd058449b7211702c6a7d09e844a42c205930cb2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "4bf30a70ec34f85a4304c30235c53ec8435fa72e92defecebcc21452efca02cf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i1-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "ce691e067789928c4b65fc6e3cf9dcaab40345458944e230bbda6e9b73477a40",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i2-f5-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "025541a273046b8178eb5e754614c7a308f40f891ee9401796a0e0548c89766a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i2-f5-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "96d1146cd91429de1c6d8e82538f23671ea1e8bf159654881fafa2dcf2b8f71b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i2-f5-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "c244827629454d0d9876feb691607ce91ae5058ca9f6a4756f1b175cb8249aaf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i2-f5-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "7b52c7c76bba0f8e233265c0dee4d1ea8479e2d55fa1a1fe29c9782029ead59e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 772,
+      "sha256": "eb3bdf5bb291522bb4707daf20b1247ae0166f6e39a88078cfc48dc07e3792dc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "332dbb0acf13983fe792f1a5dae64badbe0566c1a9d04dde98673cdbf0a68821",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "214715c13c4e595e5703ecc0327f9a9d1ebca451e8e7f7745dc44fd047b7b3b8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "569e3d36e3ac4d13540e427caccee3e0cef956c8225280131128c3148accc5f8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "ab20812cf7c29ab61c912b20683dc1ba7bb44565dd91da1151c6317a148d6d8a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "577748f0de13ae7e123e9bf50e516c7e980081f67a0d5b9b2a4d8cc8c2a11b12",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "2193c06c312109e782eef20e7c7021ab617cb77097877e745625ee7dab5983f0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "49969ae8629e69772f0ca7147ea6ff0a707541f5b97c5da554b670ec1bdb2972",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "abd71b313a2e46b06a591adf7149b1cd568a9af607a469905d1cd05ffa99c7f8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 392,
+      "sha256": "2e214da8aab1ccbdb4f112c75878319cdc9cd2df7c6c47eef956f94682d05193",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "69e56af1bea948ed51caf775f174d33af77738d6f9e45025bf708ebef0cc700d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "77cb3937519076a4f951f6b12aac51ede683619bfa4725985a7950f3a314a5f8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "38635b9f1b76ee5b81e81a57f0931f60760ea94ed56e0a8c6b5e56f86c12b79b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "e810fa6f5b8b89aaa3118619d1f98bc16d2c844bb82ebceb557b057963508ab3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "ef5f869c84eccf4d19f0e40953d46d087beeb94ed5a9080599a4b25000e3bcee",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i3-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "4e5b0e698ebc1ac42631a6fce30b47b90bfd12b89a16ffea80ae39de458da5bc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "e69bce24b8f8d4a2ec554efa50d465e1f82f5ceeeb9844acaf456eeae47efd10",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "7053d54d5706403d6995c97f64c71784c519ec4c942b9bbf0960557136749bc5",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "46fc17c34f35d4ad9ba221b03802f1113f4645e2608dd21169beea2044b89840",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "3f4643f33fc0691e7b58c416737e26d1601aa0a36e7e4d5df49e8f0d163e0b07",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "dad1d913b1e3845966c2ccb916560218e29e8becff472a38744c213629d074c0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "1659772aa4afce8e79fa9c213a3b487e1fa8de3999e9f13ad8f1a0bc8d43c87e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "c77b85124326015a49d548478d08df4b3597bd12bbb990516d9834aa07ea1162",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "875ce9a12323aeb16a23818c98a4104b68ceaa6399c8acbb7081414f9ec8a2a1",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "80b6458f22b3ed95a4899227bd02db98cf86ca1457056741177ad968ff702dba",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "ab10f01aec1528e0f0b453e4859d1ec893eefee077a757140e52b916635f310c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "6e78f8c1cb65839469c5198999671052e1a1487465537bc063820bdebf97b720",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "e6aae4aa5dea2336dd2681f9b839a94921f54664ab403fbe74a3fb8633f4f971",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "32fe719e9730d096a47bb9eebe9a3eb335d0a6b67bbef6051375ac4fe82ec938",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "e5e528da58ccbe93357f92be6f641ec4b1fa19a62333d71decaddc479283aa28",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "51fb94af21f810df613e92f57a5cedb5b89cfe58a1846c943e5be84115740130",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i4-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 412,
+      "sha256": "ebb5581ddd898535cc5711a67b5cae23ee0241129b057ddbdf9b1e4c4d34a5a2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i5-f5-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "037987453dd05b9e8f9ddb1b6928e4f5bc5a3d46ff46efd9dee4ea540ea93b5f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i5-f5-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "12f1af90937d2333b2563e4e7ee5c144611a20e2b763d0d01774346fd5b3e087",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i5-f5-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "566f8bd0de6bb6501ec3e09c1d4cfbc9573e4adc74da4299875f769243e520ca",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "bdat-i5-f5-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "f91182525b1af533dd26091a46d75feb848bbb4a9db1c6ee0e0a563eb966ecb0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i1-f17-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 868,
+      "sha256": "4cff26f995c33461241547a833cc225860955a6e9d84dbb9c0656981137dc002",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i1-f17-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 484,
+      "sha256": "498dcd6fc5b6dd31312cc6151976f17fddec4933612d26318dda635df692f19e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i1-f17-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 592,
+      "sha256": "492bf2129992566d5eec0ad9ff15fbe363b78f5ee0a32df37a04fa61fa4ed192",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i1-f17-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 492,
+      "sha256": "cef2b2d7763dfaf657270cdecf951f29dea7e4f0e3182f846cd7422b73001c4f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i2-f19-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 868,
+      "sha256": "090b19bf5380b8cdae74c53a32955fa7eb6fc7452e28e6accab2cf28f80f71bf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i2-f19-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 492,
+      "sha256": "08daed3e160ec94fe49ec2abb8f4173aaab69f6f3a7d61d5b718e194c585bcdc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i2-f19-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 604,
+      "sha256": "528d4b413c9bcf8b111af96d0aece27b4b134dc0ad7661ae9b6fd7aba96f06ed",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i2-f19-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "53fa1e7c0f2fa2d0e116fe7fcdc850909dbd912eea2e439849723ec87fa34dbc",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i3-f18-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 872,
+      "sha256": "efdfcf6004b9105a65332b40d900bfd9fc60daad6d872c839a5ca4dd04edac31",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i3-f18-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 484,
+      "sha256": "738d203213e434487c79d9ae530e690caab5996f7c15a27cc25f84a2647003cb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i3-f18-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 604,
+      "sha256": "10b06e5724fb578c84e0d997735ccea030f4c3d2baf109e1008df8b0082b8726",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i3-f18-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "dad65b2201bf22397015e5d0561426902cf23e9694190caa9ba62cf648f97928",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i5-f19-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 872,
+      "sha256": "5d9a7e749edbb762acf4bea8bea7f7d1ae77cd90dd7d06d57b5bd963503de3c3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i5-f19-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "faafa552c3d0e1e914f4ab045cb622d9f17dd814e48da69951a55b755ef08985",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i5-f19-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 604,
+      "sha256": "4491192049715df20d9e4613f067ab7e27ec98ee6a798d40f37db7df5ab13414",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "color-i5-f19-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "b6a9cba9c572d3a7d1b116f933d87d836891758814e93d2e898df54f52c794bf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f8-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 800,
+      "sha256": "0e4da2391829d5063add72a69f54cd0307b023c19e0da5171c14dd16e6318d5d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f8-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 416,
+      "sha256": "ba42b29ed0342bcd2feafab15a69426c1c2f27800866d08ffb340670b49a87d0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f8-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 516,
+      "sha256": "aa60066e67a79d95ef5c3820f0d1346e3b1cb86a65acb2d54f32e49960c4869e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f8-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 424,
+      "sha256": "b8a2a9d2962492ef16b0f6a3c668d270c6396f0228bbc6b84a79dcfae3de88d4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f9-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 804,
+      "sha256": "216311f951a9ca475d0ffb7236e798ab5ec9612846952adcb3be86bc301a51fa",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f9-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 420,
+      "sha256": "fcc317915a992810b1a9b0d906aa159eec5b430ecc8be180363ff2836078046c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f9-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 520,
+      "sha256": "f27ac8d6246aef40b67baa1f2da72f071700fe0f1f7a2b6ea20892bec1b04459",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-f9-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 428,
+      "sha256": "af3e0216182bf820954b36f226f62852f00bcf8fc5b5698a71f68f09604f0043",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-gray-overlap-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 816,
+      "sha256": "a5d5173d9ea0cadf8f0ae20139089e5a346a07901c081d5c95a9d3541b975581",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-gray-overlap-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 416,
+      "sha256": "8579132ba1eca98c412d3b6555c1b223bb7b8760f78b8ea80c5556dd748d71f4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-gray-overlap-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 540,
+      "sha256": "5fbabde8b3ea446fdb48125829bc10c6801a363fe51fe7e480b7982c22518435",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "composite-gray-overlap-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 440,
+      "sha256": "a00f5d7e6f593cc31c5f4065b8e947d07b10ee2d5a4c0ad0da7bbfb455ed395a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 772,
+      "sha256": "64035ed678f01a3994628aa5965528137d730f59b83bb1a36cdee9fd180de762",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 392,
+      "sha256": "1940e8d19060c5ac28aca7e7c2a8c751ee41cb609b98df6e9a0b4600bcdb9002",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "cc3c4badfde831af3310694f5313d1bd3754f1e70bc7e3220234192b6a2a993f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 404,
+      "sha256": "07ed4d1d69ba534b808e9248928410535ddc065c33fe2411d5df058eb99ebfca",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "7d31d12b6c6a78d3965240516d4ebfcb444b8b9f4fc7c1870bac3bf340adbd03",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 392,
+      "sha256": "106091f7bf2710eac59240b7dc2107ac34a2b30fa3b69f26ba7c52ebbd5b7922",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "96d79bd51e1055f2c53e5bbf7a23e08b3387bbf2cb9043aa0d84fca9d761483c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "5f153037fc6c23dab3e1479d7ab7702fd901e6d53e01f36294e2217d5af38e72",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "c0d56c01d510e3a015f7272af8982ec03b18c9ecea2f5fca481a542c6b8194a3",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "8e8502ab84abb3041e4202a852ff20ca281b383959817c5e53c51b439173c3ad",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "c5019749d6714b2aa512a7084cf74b714a5442a80b3eff39b8aa39a27459eeb0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 412,
+      "sha256": "31253945a1d6ad9b3db7fce51f3b8ea80388c09312047099ae56f4da1b2b8b75",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "91ff0a1308c7dc9e50d7640970db3f9fc8d3f428d1731a3955dd7c7616c40994",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "c3e7b4dd01cf1c6b3e78d749ecd28be6823370f612465fbafc57321b91134e6a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "0bcd2ac223fb942affee416f5563d4734756c494a9e721911d808587025abcc0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i1-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "719abf38187d7848ee401520ba50b01c5a5902734adc663793c70613b4969a58",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i2-f5-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "54ca323e522e510faa9c93f472c4a682822067cecc85efb555cc175d0c79ec2c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i2-f5-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 392,
+      "sha256": "c1cb507c74e5aacc6072be5c203e04d6e262ac810736c85086ca277deaaf321b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i2-f5-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "7ec8c30f0337f12df26d9395a03851eddfeff7b7421a8be5b5f930f817e7fe5b",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i2-f5-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 412,
+      "sha256": "b1f5ac2f691d3836ea98ea9fad0373034a723bc61748a18923519dc12233c590",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 772,
+      "sha256": "938fdbdcfaa5ffe551e42ed47493acf14821d358d43c053be08404b341f338de",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "c96690aa228870bc2dece3c0e71f20d5491d8a9c88df5ced744f910a53c2df73",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 496,
+      "sha256": "5148f3114ccdba0792ec044ed317429e9f09a841b54adf65437d64a186b9cf22",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "1da0bfc5f812e45075397a34a372539c78f0ebade4f8256c816b42c5d5ec0458",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "555ca56ec0d4b1daab498a2b468bb1e8523141cbf20b6c5634d3154c5d9caceb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "d2c74d21a308953020bd4e433f184dd21d219fa0688d59ac50c3c8ced0d93a69",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "cba68ad6ac1701d784f238e044e2ee34ffd7e4ed7b4ed2a83ed0625625ee1501",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "5eeb3d40d27525661a12ce60be095c1c086237727413d46893b7c3454b89b306",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "3b77cbde9fbd7be33164ff2b67edfcbde21e80e162632210901232a80a4b5c5f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "65a78d6b033731fe3b722522a7bc9bad76d6d9e0fbf46578d0868f9d0d899176",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "6d1a2825c4579e62598221c91a6c59631b5901328177c8d101608a21562962e0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 416,
+      "sha256": "1b85d1a18d358b699db9b4eb849a777604f80ae1bb58a8518dfe640f398f9eba",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "7c7778be4669107133209bcc32b6c3521c5062abed4efd97a1bbe1ebc107c105",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 392,
+      "sha256": "d35f5ffda88d7cb74b355b11f1eea09ef3411649ecf4a56f4059435aa2078983",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "30352fd104db0a67de41022eeee93af6a1c6dc933c6fdbc803c12b4a077e76cf",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i3-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "efe828fd51e71d73283f37de96f3e9fff32b9a92981257ba4f1b4900552504ad",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f1-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "67d3a2b2701afcb1d9dae91fb37a49a031d7bdf9aa03ae788ba270de5269e296",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f1-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "6e2b9d8f262f8d9f6a844c790c1b2576f21e8f1a377e0df4c562edfc317c4a0a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f1-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "3f1d37609843a5cd7a8f8d56ea1f7535aa65caaca74c8399ae75d0b5c58e2114",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f1-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "0e4215be00e1a4aa99eecef243c7a736968c430330692a3b57b31be76e4886e4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f2-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "0a9fb60ec99286eb48b0d6f17fd88c5493ada0b967c174f1d963759a2bc19e58",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f2-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 400,
+      "sha256": "85459160727dfb58c3e1dfe9e5b6558eddb50895aeb4ec0c0b53cba3eb9f06d9",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f2-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "28b794e6be532393ba14725fdc10cb30849ebde3e9086463b1eada910a8697ca",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f2-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "7251a1a99ec5bfa5fdce0e41668b1b274864e5396a4ef19684ada7303470defe",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f6-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "bc96a51f3b7dcfcda519351002f25f5c23aadbe4a8b6cc330e4ad11bc03d44d7",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f6-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "ea27ab212ce2b8bd6eca954b08e1356f9a0604de86ed11bd2f4cfadae2fcd2d0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f6-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 508,
+      "sha256": "c37c08d8c03de892988eedcadd3bf4d4e15307b0e49e4fc721d1d9af6eb089da",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f6-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 412,
+      "sha256": "bea6964fbc5f43b11c4c180953bb88dfb8813db4061ba60b611a34dabb87e8a8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f7-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 780,
+      "sha256": "25f815a6ee999b0a8cc7c2fa8b006d7255d598d0e949316b055c1551a8e3bb20",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f7-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "edc568fb16a8d44a7ead399bfedb40d5e3d216617a7e0380968ae69c8d29b9b6",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f7-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "292fe8f5942d8ce9ec3cd5a37cf4cb5736b9405bb35a62db634ddf79c2b0ca0f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i4-f7-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 412,
+      "sha256": "13fff3be9bd874f7666ba59b9355f4b64e9528e8d51e7fe0ee74e1e4c7652628",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i5-f5-d1-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 776,
+      "sha256": "24ccc237212d05285d1eea2b3581e0d95d311443faa1eb860f202e01814a32cd",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i5-f5-d1-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 396,
+      "sha256": "6271033c53fced8dedf3bc587dffbbe50b5f781ec872360b7a9c977b71413bce",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i5-f5-d1-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "df8173333bdc0e39832a7e73582d9a9738ac84d13d1c6336d98e655285e0e43a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "otb-i5-f5-d1-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 408,
+      "sha256": "46ebb4a0ea32982992b318a4ba67b57d3cbd3c2566684100d424a741508f8a3c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-False-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 828,
+      "sha256": "c4aa9b0e6dbecb091ea1bfabf09b445e3b114260b488f44f6f95822a65796d6f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-False-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 492,
+      "sha256": "c20a367705057ffb5382ecc1bb3ce75d9ca4a19e27b712f1e2850226aafabefb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-False-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 576,
+      "sha256": "f34c3aa97304ed14ab0ee5fc41ceeb4f3eec782053de6d8c0b5fee8ee021d146",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-False-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 488,
+      "sha256": "131f273814c0dcf4f3f2d93aecc67b73846dee5f46cf3093536fb40aa7ffbe40",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-True-woff-q9-t1-x1",
+      "glyphs": 4,
+      "bytes": 856,
+      "sha256": "5502f3eafedd26efff51cf739bf7d7f369ca01efde08d4c53f56f3a45202dc60",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-True-woff2-q11-t1-x1",
+      "glyphs": 4,
+      "bytes": 500,
+      "sha256": "fae3f0ecc56664203d313f08a937c062e450889409a72e4b940858171a8f2984",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-True-woff2-q5-t4-x1",
+      "glyphs": 4,
+      "bytes": 608,
+      "sha256": "76a2ff4f41a4532ef466f318db7a737897b8929d500419f36805d742dc4329f5",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    },
+    {
+      "case": "sbix-True-woff2-q5-t1-x0",
+      "glyphs": 4,
+      "bytes": 504,
+      "sha256": "1a0d533781fe4de3ee7011aaf8c6da0cde06e2dbcdf971a4bcaafbd3bb24bda0",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "not applicable to bitmap-only sfnt"
+    }
+  ],
+  "scope": "Standalone WOFF envelopes, actual transforms and preserved glyph semantics. Native locl creation and TTC containers remain later work items."
+}

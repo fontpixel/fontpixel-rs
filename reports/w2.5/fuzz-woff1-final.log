@@ -1,0 +1,48 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 82053934
+INFO: Loaded 1 modules   (5271 inline 8-bit counters): 5271 [0x56229216bfd0, 0x56229216d467), 
+INFO: Loaded 1 PC tables (5271 PCs): 5271 [0x56229216d468,0x562292181dd8), 
+INFO:      398 files found in /tmp/fontpixel-fuzz-woff1
+INFO: seed corpus: files: 398 min: 1b max: 84460b total: 9173557b rss: 30Mb
+#399	INITED cov: 1012 ft: 3349 corp: 304/6435Kb exec/s: 199 rss: 156Mb
+#512	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73700 exec/s: 256 rss: 161Mb
+#1024	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73700 exec/s: 512 rss: 191Mb
+#2048	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73716 exec/s: 682 rss: 244Mb
+#4096	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73732 exec/s: 1024 rss: 357Mb
+#8192	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73780 exec/s: 1365 rss: 383Mb
+#16384	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 73860 exec/s: 2048 rss: 387Mb
+#32768	pulse  cov: 1012 ft: 3349 corp: 304/6435Kb lim: 74020 exec/s: 2340 rss: 395Mb
+#38750	NEW    cov: 1012 ft: 3351 corp: 305/6454Kb lim: 74084 exec/s: 2583 rss: 397Mb L: 19184/73700 MS: 1 CrossOver-
+#65536	pulse  cov: 1012 ft: 3351 corp: 305/6454Kb lim: 74340 exec/s: 2730 rss: 397Mb
+#117471	NEW    cov: 1012 ft: 3352 corp: 306/6469Kb lim: 74868 exec/s: 2936 rss: 406Mb L: 16020/73700 MS: 1 ChangeBinInt-
+#131072	pulse  cov: 1012 ft: 3352 corp: 306/6469Kb lim: 74996 exec/s: 2912 rss: 406Mb
+#262144	pulse  cov: 1012 ft: 3352 corp: 306/6469Kb lim: 76308 exec/s: 3360 rss: 414Mb
+#262607	NEW    cov: 1012 ft: 3353 corp: 307/6484Kb lim: 76308 exec/s: 3366 rss: 414Mb L: 14980/73700 MS: 1 ChangeBit-
+#388374	NEW    cov: 1012 ft: 3354 corp: 308/6499Kb lim: 77556 exec/s: 3883 rss: 414Mb L: 15996/73700 MS: 2 ShuffleBytes-CopyPart-
+#472640	NEW    cov: 1012 ft: 3356 corp: 309/6515Kb lim: 78388 exec/s: 4145 rss: 421Mb L: 15972/73700 MS: 1 ShuffleBytes-
+#524288	pulse  cov: 1012 ft: 3356 corp: 309/6515Kb lim: 78900 exec/s: 4262 rss: 421Mb
+#591147	NEW    cov: 1014 ft: 3358 corp: 310/6529Kb lim: 79556 exec/s: 4411 rss: 421Mb L: 14564/73700 MS: 2 CopyPart-CMP- DE: "true"-
+#593113	NEW    cov: 1015 ft: 3359 corp: 311/6543Kb lim: 79572 exec/s: 4426 rss: 421Mb L: 14564/73700 MS: 1 PersAutoDict- DE: "true"-
+#702829	NEW    cov: 1015 ft: 3360 corp: 312/6559Kb lim: 80660 exec/s: 4593 rss: 421Mb L: 15972/73700 MS: 1 CMP- DE: "\377\377\377\377\377\377\265m"-
+#704854	NEW    cov: 1015 ft: 3361 corp: 313/6575Kb lim: 80676 exec/s: 4576 rss: 421Mb L: 15972/73700 MS: 5 ChangeASCIIInt-ShuffleBytes-PersAutoDict-ChangeByte-ChangeByte- DE: "true"-
+#772144	NEW    cov: 1015 ft: 3362 corp: 314/6590Kb lim: 81332 exec/s: 4515 rss: 421Mb L: 16020/73700 MS: 5 ChangeBinInt-ChangeByte-CMP-CopyPart-CopyPart- DE: "hhma"-
+#806119	NEW    cov: 1016 ft: 3363 corp: 315/6606Kb lim: 81668 exec/s: 4503 rss: 421Mb L: 16020/73700 MS: 5 ChangeASCIIInt-ChangeByte-ShuffleBytes-ChangeByte-ShuffleBytes-
+#911440	NEW    cov: 1016 ft: 3364 corp: 316/6622Kb lim: 82708 exec/s: 4424 rss: 421Mb L: 16000/73700 MS: 1 ShuffleBytes-
+#929301	NEW    cov: 1017 ft: 3365 corp: 317/6637Kb lim: 82884 exec/s: 4302 rss: 421Mb L: 16020/73700 MS: 1 CrossOver-
+#1048576	pulse  cov: 1017 ft: 3365 corp: 317/6637Kb lim: 84068 exec/s: 3813 rss: 421Mb
+#1336648	NEW    cov: 1017 ft: 3366 corp: 318/6653Kb lim: 86932 exec/s: 3818 rss: 421Mb L: 15972/73700 MS: 2 ChangeBit-ShuffleBytes-
+#1576575	NEW    cov: 1019 ft: 3368 corp: 319/6668Kb lim: 89316 exec/s: 3826 rss: 421Mb L: 15972/73700 MS: 2 ChangeASCIIInt-CopyPart-
+#1728756	NEW    cov: 1020 ft: 3369 corp: 320/6684Kb lim: 90820 exec/s: 3824 rss: 421Mb L: 16020/73700 MS: 1 CMP- DE: "\001;"-
+#1911292	NEW    cov: 1021 ft: 3370 corp: 321/6699Kb lim: 92628 exec/s: 3822 rss: 421Mb L: 14996/73700 MS: 1 ChangeBinInt-
+#1912929	NEW    cov: 1021 ft: 3371 corp: 322/6714Kb lim: 92644 exec/s: 3825 rss: 421Mb L: 15968/73700 MS: 2 ChangeASCIIInt-ChangeByte-
+#1924425	NEW    cov: 1023 ft: 3373 corp: 323/6730Kb lim: 92756 exec/s: 3825 rss: 421Mb L: 16020/73700 MS: 1 PersAutoDict- DE: "\001;"-
+#2097152	pulse  cov: 1023 ft: 3373 corp: 323/6730Kb lim: 94468 exec/s: 3819 rss: 427Mb
+#2287471	NEW    cov: 1024 ft: 3374 corp: 324/6746Kb lim: 96372 exec/s: 3818 rss: 427Mb L: 16020/73700 MS: 1 ChangeByte-
+#2330056	DONE   cov: 1024 ft: 3374 corp: 324/6746Kb lim: 96788 exec/s: 3813 rss: 427Mb
+###### Recommended dictionary. ######
+"true" # Uses: 52629
+"\377\377\377\377\377\377\265m" # Uses: 42951
+"hhma" # Uses: 39817
+"\001;" # Uses: 12659
+###### End of recommended dictionary. ######
+Done 2330056 runs in 611 second(s)

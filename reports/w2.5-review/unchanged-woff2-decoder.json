@@ -1,0 +1,18 @@
+[
+  {
+    "path": "crates/fontpixel/src/woff/mod.rs",
+    "sha256": "bd13d1591287d67ee3128fb1def0b10d4cbba4c85c07c3e7da730bede146dc91",
+    "candidate_equals_review": true
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff2/transform.rs",
+    "sha256": "774572619c2f0c54f225bce0fe6a304370d1699a13cd86be4b846ba27345c7b0",
+    "candidate_equals_review": true
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff2.rs",
+    "section": "WOFF2 decode function",
+    "sha256": "6d57d64212b5be9da81be7ef6a50abfbaa2eda041ddad1a3413bf1237738a4bb",
+    "candidate_equals_review": true
+  }
+]

@@ -1,0 +1,19 @@
+native-Tong-SC-square-q5-t1-x1 MEASURED 1045860
+native-Tong-SC-square-q8-t1-x1 MEASURED 969772
+native-Tong-SC-square-q9-t1-x1 MEASURED 976344
+native-Tong-SC-square-q11-t1-x1 MEASURED 842596
+native-Tong-SC-square-q11-t2-x1 MEASURED 844404
+native-Tong-SC-square-q11-t4-x1 MEASURED 842508
+native-Tong-SC-square-q5-t1-x0 MEASURED 1045860
+native-Tong-SC-dot-q5-t1-x1 BYTE-IDENTICAL 1026248
+native-Tong-SC-dot-q8-t1-x1 BYTE-IDENTICAL 859264
+native-Tong-SC-dot-q9-t1-x1 BYTE-IDENTICAL 830792
+native-Tong-SC-dot-q11-t1-x1 BYTE-IDENTICAL 669740
+native-Tong-SC-dot-q11-t2-x1 BYTE-IDENTICAL 669720
+native-Tong-SC-dot-q11-t4-x1 BYTE-IDENTICAL 670048
+native-Tong-SC-dot-q5-t1-x0 MEASURED 1112260
+native-Tong-Latin-dot-q11-t1-x1 BYTE-IDENTICAL 39028
+native-four-fonts-q5-jobs1 1.222678154 4144216
+native-four-fonts-q5-jobs2 0.976215071 4144216
+native-four-fonts-q5-jobs4 0.428863145 4144216
+PASS 11 five-sample groups; 7 unchanged-output checks

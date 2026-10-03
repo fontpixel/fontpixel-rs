@@ -1,0 +1,24 @@
+Stock fontTools 4.66.1 full-SC correctness run was stopped with SIGINT (exit 130)
+on 2026-10-03 at 08:15:15 UTC after approximately 20 minutes of total elapsed
+validation time. It had completed all square-CFF checks and had not finished
+the first full-SC dot TrueType equivalent() check (fontTools decoding plus
+all glyph/table/FreeType comparisons). This is a censored
+correctness-run observation, NOT an isolated encoder/decoder benchmark and NOT a
+five-run median. Its complete stdout/stderr is retained unchanged in
+full-sc-crosscheck.log.
+
+The replacement verification-only adapter wraps compositeStream in a read-only
+memoryview and calls the SAME unmodified fontTools _decodeComponents method.
+It eliminates quadratic remaining-stream byte copies and changes no parsing,
+coordinate arithmetic, instruction handling, counts, or validation assertions.
+Stock and adapted reconstructed glyf bytes were proven identical for regional
+simple glyphs, regional and Latin composites, and the independently constructed
+hint/affine/explicit-bbox/overlap font (oracle-zero-copy.json).
+
+All full-SC glyph/table/FreeType/OTS/HarfBuzz assertions then passed with the
+adapter. The independent official Google WOFF2 decoder through woff 0.6.3 also
+passed the same all-glyph geometry/table/FreeType comparisons for both full fonts.
+No installed dependency or protected reference was edited. Performance samples
+use STOCK fontTools only, on full-SC CFF square and the same smaller Latin dot
+input as its native/C++ comparators; adapter timings are never used as stock
+performance measurements.

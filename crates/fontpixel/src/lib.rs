@@ -62,3 +62,6 @@ pub fn read(bytes: &[u8], options: &ReadOptions) -> Result<formats::Loaded<FontS
 pub fn write(fonts: &FontSet, format: &str, options: &WriteOptions) -> Result<resources::Written> {
     registry().write(fonts, format, options)
 }
+
+#[cfg(any(feature = "woff", feature = "woff2"))]
+pub mod woff;

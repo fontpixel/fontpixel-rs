@@ -1,0 +1,9 @@
+Additional external-font smoke test (no fonts copied into the repository):
+- Source: installed uniseg package's documentation assets in
+  toolchain/python-w2.4/uniseg/docs/html/_static/css/fonts/*.woff2.
+- Decode each with `woff_check decode woff2 SOURCE OUTPUT.ttf`.
+- Call `tests/crosscheck/woff.py`'s `equivalent(SOURCE, OUTPUT, label, True)`.
+- This checks every contour, point, component, instruction, bounding box,
+  untouched table, metric and FreeType glyph against the original WOFF2.
+- Seven bundled Lato/Roboto Slab/FontAwesome faces, 14,903 glyphs, passed.
+The package files remain outside the delivered code and are not test fixtures.

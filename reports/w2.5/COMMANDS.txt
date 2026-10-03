@@ -1,0 +1,58 @@
+W2.5 reproducible acceptance commands (2026-10-03)
+
+Working tree: fontpixel-rs-w2.5, branch w2.5-woff from main 49fffd2.
+Protected package inputs: ../reference and ../samples, read-only.
+
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export PYTHONDONTWRITEBYTECODE=1
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/python-w2.5:/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+
+bash scripts/check.sh
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff -- -D warnings
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff2 -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo tree -p fontpixel --no-default-features --features bdf,pcf -e normal
+cargo build --release --locked -p fontpixel --features woff,woff2 --example woff_check
+cargo build --release --locked -p fontpixel-cli --features parity --bin fontpixel-parity
+PYTHONDONTWRITEBYTECODE=1 python3 tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-woff-parity-final
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --output reports/w2.5/crosscheck.json --keep /tmp/fontpixel-woff-crosscheck
+
+# No normal-build target sharing concurrently with another worktree.
+# Fuzzer outputs use the separately reused fuzz target cache.
+CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target cargo +nightly fuzz build woff1
+CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target cargo +nightly fuzz build woff2
+ASAN_OPTIONS=detect_leaks=0 <fuzz-target>/x86_64-unknown-linux-gnu/release/woff1 /tmp/fontpixel-fuzz-woff1 -max_total_time=610 -max_len=131072 -rss_limit_mb=2048
+ASAN_OPTIONS=detect_leaks=0 <fuzz-target>/x86_64-unknown-linux-gnu/release/woff2 /tmp/fontpixel-fuzz-woff2 -max_total_time=610 -max_len=131072 -rss_limit_mb=2048
+cargo deny --manifest-path fuzz/Cargo.toml --config fuzz/deny.toml --locked check
+
+# Seed directories contain the crosscheck-generated small WOFF1/WOFF2 outputs.
+# WOFF2 also accepts seeds beginning with 0xff plus a raw transformed glyf table;
+# the fuzz target builds a valid Brotli envelope to reach deep reconstruction.
+# Leak checking remains disabled for this environment's known ptrace restriction;
+# AddressSanitizer instrumentation is active. No leak-freedom claim is made.
+
+CARGO_TARGET_DIR=/tmp/fontpixel-reference-target cargo build --release --locked --manifest-path benches/woff-reference/Cargo.toml
+cargo deny --manifest-path benches/woff-reference/Cargo.toml --locked --config deny.toml check
+PYTHONDONTWRITEBYTECODE=1 python3 benches/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --work /tmp/fontpixel-woff-bench --output benches/results/woff.json --prepare-only
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff_full.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --work /tmp/fontpixel-woff-bench --output reports/w2.5/full-sc-crosscheck.json
+# Run measured portion only AFTER other CPU-heavy validation jobs complete:
+PYTHONDONTWRITEBYTECODE=1 python3 benches/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --work /tmp/fontpixel-woff-bench --output benches/results/woff.json --resume
+
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.5/protected-after.sha256
+cmp reports/w2.5/protected-before.sha256 reports/w2.5/protected-after.sha256
+
+# Full-SC dot oracle transport acceleration (verification only):
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff_full.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --work /tmp/fontpixel-woff-bench --output reports/w2.5/full-sc-crosscheck-zero-copy.json --oracle-zero-copy
+# Extra independent official decoder corroboration:
+/tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference decode INPUT.woff2 OUTPUT.sfnt
+# Run `woff.equivalent(original_sfnt, OUTPUT.sfnt, label, True)` for all glyphs.
+
+# Resumed final timing segment after the 08:40 UTC infrastructure interruption:
+PYTHONDONTWRITEBYTECODE=1 python3 benches/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --work /tmp/fontpixel-woff-bench --output benches/results/woff-resumed.json --resume --segment-note 'resumed environment; fingerprints recorded' --recheck-dot-q11
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff_bench_verify.py --work /tmp/fontpixel-woff-bench --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --output reports/w2.5/benchmark-verification.json
+PYTHONDONTWRITEBYTECODE=1 python3 benches/report_woff.py --input benches/results/woff-resumed.json --work /tmp/fontpixel-woff-bench
+# Final WOFF1 physical-order/DSIG correction changes no WOFF2 reader/encoder
+# algorithm. WOFF2 timing-binary SHA-256 values remain in the JSON segment data.
+# The final code's WOFF1 reader receives another 610+ second ASan run, captured
+# in fuzz-woff1-order-final.log; full check/parity/crosscheck gates are repeated.
