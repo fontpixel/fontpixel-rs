@@ -1,0 +1,23 @@
+{
+  "candidate": "87d1d081e8fe43848938c3e92c0dc2a032a6b864",
+  "review_production_commit": "5db6a0e9cbc6d2c8c83dac0d5c0f5840e7485be9",
+  "branch_check_passed_invocations": 713,
+  "generated_font_cases": 16,
+  "glyph_checks": 226412,
+  "full_shaping_batches": 4800,
+  "subset_shaping_glyph_checks": 51264,
+  "extra_cases": 9,
+  "new_metric_matrix": "four native outlines, twelve subsets, Macao language shaping, explicit paired-table loss",
+  "parity_new_differences": 0,
+  "parity_seconds": 104.8,
+  "subset_asan": {
+    "executions": 3260649,
+    "coverage": 7722,
+    "features": 23968,
+    "peak_rss_mb": 484,
+    "seconds": 611
+  },
+  "full_regional_final_byte_proof": "four outputs match all bytes; only the unrelated Macao tag conversion postdates their full matrix",
+  "gsub_asan_source_unchanged_from_candidate": true,
+  "main_integration": "pending"
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "file": "crates/fontpixel/src/sfnt/data.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "8833258b3d9178cf2842ab09509fb8881d79b9d8858df7b521993cb01dbea462"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/bitmap.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "656742a476078c19b68f44b395719e077ff011f7ffe87fb3281de2ba94ec56a2"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/glyf.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "b6aa99a7afde2db79e5075a9140b2b5a2fbe3080650455623bb69b470f766ca4"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/mod.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "18e81468acd3c4f964091337b7c86ace39098b8d6d3ac046b0bcd9db636d3072"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/post.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "fefcaf20d7b76c955f062079f4b2a0471f62c2445a5ad166fbb440a2e4d89508"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/name.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "202b143c0816d8e53d30140cf67665e41af45ae91661a69785e02da7dad9323a"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/gasp.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "e154ff67d525c16d369406231f2844cb7297fa75fd20b9ccd61bef0f7e81e4fd"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/gsub.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "92c8afb9c7102f16853b2660caf8fa58a5155032a79bc7aba5ed2911609234e6"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cmap.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "c918d1731ff4038fb855d3b2c6500fb768335e6451cf544f1e8d4bd63272b1ff"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/container.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "9cbdfb859d0831212b0d4f647fa80af7bccdfba85927af76c6a751b377a3a209"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/os2.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "18cdf9533096a6ebe42abc294235f92daeac0a97fe5c0a522f7d8a23ca29a731"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cff.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "d95112958cc3cc866aa4e8ccfd3c58edf1982a85f8f1bcc112a573903d8b9514"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/languages.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "fb5a2a1c24e2229a8d4e8ce000d7da8cbc2e032704ba1dce75df23b699e58252"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/metrics.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "e183061bb861ebc15a1b07751811f588e3252ac85aecd4b7f9d55d5192119544"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/subset.rs",
+    "same_as_candidate_fuzz": false,
+    "sha256": "8e211783f29544d9a5342b2cf3a2d16605858b8851b18bc2355d99ec8cbbc51b"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/bitmap/color.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "b4531d9b42ce39b37c0981bb84d2b49318480b603e82be1730a96249eef80441"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cff/validate.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "482e251847bf438cd39b8502e7335ae0757b9dc3eeb0aa695dc0a75e796f0618"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cff/write.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "2be2c07bf0345d2e610274f83cea91b704d21a617c1f23c381e13ab7d78142e3"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cff/read.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "9e78ea4def51fe4b817668c8d1d45d6675c174661676172d6cc4e174bd60e4a9"
+  },
+  {
+    "file": "crates/fontpixel/src/sfnt/cff/subset.rs",
+    "same_as_candidate_fuzz": true,
+    "sha256": "3c1b57594f93d65a2fc73cd27f4e4cb63158e8902c70fb9642555db4913222b8"
+  }
+]

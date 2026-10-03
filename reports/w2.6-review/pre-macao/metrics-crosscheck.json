@@ -1,0 +1,50 @@
+{
+  "partial": false,
+  "cases": [
+    {
+      "shape": "square",
+      "flavor": "ttf",
+      "inherited_and_explicit_metrics_deduplicate": true,
+      "vertical_sbit_fontTools_FreeType_HarfBuzz_OTS": "pass",
+      "subset_containers": [
+        "ttf",
+        "woff",
+        "woff2"
+      ]
+    },
+    {
+      "shape": "square",
+      "flavor": "otf",
+      "inherited_and_explicit_metrics_deduplicate": true,
+      "vertical_sbit_fontTools_FreeType_HarfBuzz_OTS": "pass",
+      "subset_containers": [
+        "otf",
+        "woff",
+        "woff2"
+      ]
+    },
+    {
+      "shape": "dot",
+      "flavor": "ttf",
+      "inherited_and_explicit_metrics_deduplicate": true,
+      "vertical_sbit_fontTools_FreeType_HarfBuzz_OTS": "pass",
+      "subset_containers": [
+        "ttf",
+        "woff",
+        "woff2"
+      ]
+    },
+    {
+      "shape": "dot",
+      "flavor": "otf",
+      "inherited_and_explicit_metrics_deduplicate": true,
+      "vertical_sbit_fontTools_FreeType_HarfBuzz_OTS": "pass",
+      "subset_containers": [
+        "otf",
+        "woff",
+        "woff2"
+      ]
+    }
+  ],
+  "paired_metric_drops_and_atomic_failure": "pass"
+}

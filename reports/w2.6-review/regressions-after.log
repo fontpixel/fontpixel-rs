@@ -1,0 +1,27 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6-review/crates/fontpixel)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.91s
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/variants-c19dbe7a34aa3acb)
+
+running 19 tests
+test language_registry_and_regional_tags ... ok
+test alternative_only_characters_become_defaults ... ok
+test selected_glyph_closure_handles_chains_and_cycles ... ok
+test dedup_uses_bitmap_and_all_metrics ... ok
+test script_defaults_and_explicit_empty_routes ... ok
+test embedded_variants_preserve_vertical_metrics ... ok
+test source_limits_and_metric_overflow_are_errors ... ok
+test subset_preserves_explicit_truetype_bbox_bytes ... ok
+test maximum_context_matches_actual_layout_presence ... ok
+test subset_prunes_scaling_for_removed_sparse_strikes ... ok
+test cff_subset_preserves_raw_programs ... ok
+test writer_repairs_missing_dflt_default_without_changing_language_routing ... ok
+test subset_cff_cid_hints_subroutines_and_font_matrices ... ok
+test unsupported_tables_fail_or_report_explicit_loss ... ok
+test vertical_metrics_survive_variant_export_and_subset ... ok
+test variants_resolve_each_source_fonts_metric_defaults_before_deduplication ... ok
+test variants_and_subsets_keep_names_cmap_dependencies ... ok
+test malformed_layout_never_panics ... ok
+test large_extension_offsets_roundtrip ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+

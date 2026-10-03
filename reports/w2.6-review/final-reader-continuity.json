@@ -1,0 +1,8 @@
+{
+  "fuzz_library_source_commit": "f68b0c46cee8a252b7a3f8bb1cd7662ea36b2ab1",
+  "final_production_commit": "5db6a0e9cbc6d2c8c83dac0d5c0f5840e7485be9",
+  "only_later_library_change": [
+    "crates/fontpixel/src/variants.rs"
+  ],
+  "change": "Map zh-MO to ZHTM in string-language configuration; every binary font reader and subset source is identical to the fresh fuzz binary."
+}

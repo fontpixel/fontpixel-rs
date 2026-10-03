@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6-review/tests/crosscheck/variants_review.py", line 143, in <module>
+    main()
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6-review/tests/crosscheck/variants_review.py", line 107, in main
+    expected, names = validate(source)
+                      ^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.6-review/tests/crosscheck/variants_review.py", line 64, in validate
+    assert font["hmtx"][name] == (advance * 100, 0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

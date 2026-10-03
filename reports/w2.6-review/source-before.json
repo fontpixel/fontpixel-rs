@@ -1,0 +1,478 @@
+[
+  {
+    "path": "crates/fontpixel/benches/bdf.rs",
+    "sha256": "b8bfc45897359482385757d077ff87473e44ef0ecffe71feec44d7076909df5a"
+  },
+  {
+    "path": "crates/fontpixel/benches/bitmap.rs",
+    "sha256": "e85bef76e85d98fa7d36a9302983880b055b0183104eb52180c4ecf0b8340798"
+  },
+  {
+    "path": "crates/fontpixel/benches/pcf.rs",
+    "sha256": "8d29a23914e8a10c30f8752e8d15e6be2b5bb28e969f3f2fce0b32d759977116"
+  },
+  {
+    "path": "crates/fontpixel/benches/render.rs",
+    "sha256": "f807d4aa7cf5e2087173127423e08e7813061345ee7cfac2df30ce8f1a829456"
+  },
+  {
+    "path": "crates/fontpixel/examples/bdf_timing.rs",
+    "sha256": "12591b2f9862fec0ffe02b31766ec206aaa8d20fa37ae0227ffafeef8b5811f6"
+  },
+  {
+    "path": "crates/fontpixel/examples/bitmap_check.rs",
+    "sha256": "b617de11990ca948b03b53850782612bfeccb41acb7441b2c697a454b5c710c5"
+  },
+  {
+    "path": "crates/fontpixel/examples/bitmap_measure.rs",
+    "sha256": "9f7052eace9e39920b6d644c6de11087f6ed3ff7d90bdf02a9b94f142a96e409"
+  },
+  {
+    "path": "crates/fontpixel/examples/cff_check.rs",
+    "sha256": "4436671d886c8ee395dfaa30a9bc4a3fe187cb767cf6751e4d2c48ceb3203772"
+  },
+  {
+    "path": "crates/fontpixel/examples/charset_probe.rs",
+    "sha256": "ba53d4e9744341c2386eea8fb698977e417af96957ad7464bd835b568fbd57b9"
+  },
+  {
+    "path": "crates/fontpixel/examples/glyf_check.rs",
+    "sha256": "0ef7a5bfe89882df11dd5fd115607f38747a856a67ba440669ca795a42210965"
+  },
+  {
+    "path": "crates/fontpixel/examples/pcf_timing.rs",
+    "sha256": "623704ec0f36e7f313dbe820368a9bbbb6536f1eb1f4cb6460d9db92085eafd4"
+  },
+  {
+    "path": "crates/fontpixel/examples/render_check.rs",
+    "sha256": "e430886589f7c25ff3e4f6293bb79b5952565baaf79609911920611872a3a74e"
+  },
+  {
+    "path": "crates/fontpixel/examples/render_timing.rs",
+    "sha256": "95b5ee46dac6d760768b29b7080caa5119cb5f1b5795e608c3d76ac09d1fb6c2"
+  },
+  {
+    "path": "crates/fontpixel/examples/sfnt_check.rs",
+    "sha256": "ae36229e7ad3f8135e1cc40d37e21b162d3027a5f71494b35ea020599516d83c"
+  },
+  {
+    "path": "crates/fontpixel/examples/woff_check.rs",
+    "sha256": "0eda3a094df893915e7bc431938510b2fc236268987f382caa572224ac84bf15"
+  },
+  {
+    "path": "crates/fontpixel/examples/yaff_timing.rs",
+    "sha256": "ed0b70c9686d316a423d635d3bf46938f88d1f2ec96ff14e11aaf4d03490e7d3"
+  },
+  {
+    "path": "crates/fontpixel/src/bitmap/bytes.rs",
+    "sha256": "850b06c85568fff0ed6695f4a4defdf99256cfa08c814a22d0bf7f994f3d4205"
+  },
+  {
+    "path": "crates/fontpixel/src/bitmap/effects.rs",
+    "sha256": "204cd6bdc506de0f645c328326cfc732e3f546e88177a3349a76b7789562a581"
+  },
+  {
+    "path": "crates/fontpixel/src/bitmap/geometry.rs",
+    "sha256": "4997d389e7570cb677a0aa2d7780e2773f6792e4f0f4c76452c5d81b83db4fe4"
+  },
+  {
+    "path": "crates/fontpixel/src/bitmap/mod.rs",
+    "sha256": "a83549fad43a38fdf20117e251b771ad5163b48f111cddbb3a8c0597a7d93c94"
+  },
+  {
+    "path": "crates/fontpixel/src/charset/cjk.rs",
+    "sha256": "8f01df645355b603979b4365e34b16d12df386e3326d5392d2bf65e12ceba4bf"
+  },
+  {
+    "path": "crates/fontpixel/src/charset/core.rs",
+    "sha256": "9ea0ac6c6dac42965fc3dedf93598ac8ffacccef5f129e78d21a727fbecfd8e5"
+  },
+  {
+    "path": "crates/fontpixel/src/charset/mod.rs",
+    "sha256": "45f5fd44f8dac25bad493108663a776cead220447ab0485e987b7bc621786c93"
+  },
+  {
+    "path": "crates/fontpixel/src/charset/registry.rs",
+    "sha256": "17f041329e02c0d6f2f059fd41c7c8f6178ad8c2c3a21d763052a18e8a6399e7"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/bitmap.rs",
+    "sha256": "0378844200e69895b87ed6da7123f376278fdfd373816f6488d3b071b68f62f8"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/font.rs",
+    "sha256": "d88130d81fe8a59e47dd21a09e1cd8371c8dc992d9a8fc569ae7c4227c666025"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/glyph.rs",
+    "sha256": "75060117fe35ad2ad55e55c97fc4d7d76d99a5e7a3dd2a80b3dc4c38eaf14ae8"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/io.rs",
+    "sha256": "637fe57d7e195647668a321fb53d84ccc2146697feb5dd1ce566c8221fb5064f"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/mod.rs",
+    "sha256": "82f7cdebbceda5c3a46f789253064705b0ed1dc0b2aede99d58e3bed5efd84dc"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/outline.rs",
+    "sha256": "8e0a8ec30886ad79a138f9143c23dec79b554b240f91b05a7d532f54c41aef04"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/projection.rs",
+    "sha256": "dc8718845e9a7a6221b56a1b80e81e8b17e766381ec49474efcd6efe09de0910"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/svg.rs",
+    "sha256": "838ff7ed4487d6271d9ba2506feaf87cbd51397af000506ce5ab6ed0007d9d56"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/bdfparser/ttf.rs",
+    "sha256": "874d9ea9d8752fc5b900cefd40106796def7a5fcd1af6594a509d91d63f990f3"
+  },
+  {
+    "path": "crates/fontpixel/src/compat/mod.rs",
+    "sha256": "1db5d63a1da900243bc89bf8f5de140c9e64090176025723f4325172028170b0"
+  },
+  {
+    "path": "crates/fontpixel/src/error.rs",
+    "sha256": "9174dad5f88a505906df9efa3d7dbeb28de4d8cee62e8fec9278a8dba5a62e30"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/bdf/nonprintable.rs",
+    "sha256": "dc9269becabd8fb88c746963593c9a2817342d39c0bfa01a8fd99f11b90dc121"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/bdf/parser.rs",
+    "sha256": "c8ac732d63f675980f09c095f8f3a5934c47d68437b9153a98a2608d7c639020"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/bdf/source.rs",
+    "sha256": "2e73b7635322700f60998f81a4c6a0ab4de98c42a0919ad1cbdf30aa649d8ec2"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/bdf/writer.rs",
+    "sha256": "6392eb35ef7188c67b069ca258692c0c88f98df0b6ee76996e0a8eb1cd6d3ae8"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/bdf.rs",
+    "sha256": "31dce1fb1883c55da400d665e155e570c00e8d843e3037b77aa95acab2e5bc05"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/catalogue.rs",
+    "sha256": "9a47ef8ae412ffc7e538d0351022690a34bb7c791c34b548f4a5d6ea764e7370"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/embedded.rs",
+    "sha256": "a99b643c5523caa7983d7b35ac8b196f351a95abaaa1ec727105a5a7cb297f4b"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/mod.rs",
+    "sha256": "36b93a125102218b531dc5334f9a047cd07e2285fbb4e321a8dedb355c778471"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/pcf/reader.rs",
+    "sha256": "0a7b63b24dd76fb9f4cdace22aabb0d4819c9cd05d718e5942251e36f3817703"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/pcf/writer.rs",
+    "sha256": "8e75b32f2582d5a740b33936e5fbab8692666bd75135b119a6c6281d492ba6a3"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/pcf.rs",
+    "sha256": "f2faf437a87b10479c4cd3fc762322eb72d08bdba9c545331258d948ade3e048"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/x11.rs",
+    "sha256": "50306058aa8e0db46ec018853c15d2bfcb372a2ec46bd69611c4e419e2376d60"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/yaff/parser.rs",
+    "sha256": "8ab730d445d3f13c55c107e1ccdf588d94a955edb3625b9af72e6623e3f5ef95"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/yaff/writer.rs",
+    "sha256": "f35fc568817f15125bc416ab678bfc8064edaf78cb2555aa6958f43e89df2bb7"
+  },
+  {
+    "path": "crates/fontpixel/src/formats/yaff.rs",
+    "sha256": "8dfa583e5fd57e15642dc7c2342de44ac60f67ac54de3997be04633b2227052d"
+  },
+  {
+    "path": "crates/fontpixel/src/lib.rs",
+    "sha256": "12145e1b4362f2bfa91c4b0ee08deff154db71be32ff299a1f0eb04f74819627"
+  },
+  {
+    "path": "crates/fontpixel/src/model/mod.rs",
+    "sha256": "8e8a5aa1c0bbe1a4d001f724edde24ba8247b369fbdf320f0c8aee0547616231"
+  },
+  {
+    "path": "crates/fontpixel/src/model/properties.rs",
+    "sha256": "b1713f9823e8137c6b025a2c7fdb26f77dd7a98b7fadf1fd5bdba9f0cf62fae5"
+  },
+  {
+    "path": "crates/fontpixel/src/outline/mod.rs",
+    "sha256": "4a76771c622b458e183871578d175c95d4ba8f49defda18aa222277461fced43"
+  },
+  {
+    "path": "crates/fontpixel/src/outline/spec.rs",
+    "sha256": "ec00a194fffba2c414581413ef4ab30c2842b378a5c06d79888f5ca32ca8dab5"
+  },
+  {
+    "path": "crates/fontpixel/src/render/image.rs",
+    "sha256": "9d72bdb3ee775554e6fc0444adf9fbeb804af83af3f98675bf93b29f3c45739b"
+  },
+  {
+    "path": "crates/fontpixel/src/render/mod.rs",
+    "sha256": "5285f988b76f8d3e19edb9ae129312d8b74b1217dde1747e5d94182d855b0592"
+  },
+  {
+    "path": "crates/fontpixel/src/report.rs",
+    "sha256": "f4888e3a06fe4fe510e46c034ac30f0a259a2d35fcbeb47700b2255e9b0e150a"
+  },
+  {
+    "path": "crates/fontpixel/src/resources.rs",
+    "sha256": "787ef7342da17980bd1b4e5543131416ce4a6049dbb103504e0b10c70a1b461e"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/bitmap/color.rs",
+    "sha256": "b4531d9b42ce39b37c0981bb84d2b49318480b603e82be1730a96249eef80441"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/bitmap.rs",
+    "sha256": "656742a476078c19b68f44b395719e077ff011f7ffe87fb3281de2ba94ec56a2"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/read.rs",
+    "sha256": "9e78ea4def51fe4b817668c8d1d45d6675c174661676172d6cc4e174bd60e4a9"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/subset.rs",
+    "sha256": "3c1b57594f93d65a2fc73cd27f4e4cb63158e8902c70fb9642555db4913222b8"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/validate.rs",
+    "sha256": "482e251847bf438cd39b8502e7335ae0757b9dc3eeb0aa695dc0a75e796f0618"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/write.rs",
+    "sha256": "2be2c07bf0345d2e610274f83cea91b704d21a617c1f23c381e13ab7d78142e3"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff.rs",
+    "sha256": "d95112958cc3cc866aa4e8ccfd3c58edf1982a85f8f1bcc112a573903d8b9514"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cmap.rs",
+    "sha256": "c918d1731ff4038fb855d3b2c6500fb768335e6451cf544f1e8d4bd63272b1ff"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/container.rs",
+    "sha256": "9cbdfb859d0831212b0d4f647fa80af7bccdfba85927af76c6a751b377a3a209"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/data.rs",
+    "sha256": "8833258b3d9178cf2842ab09509fb8881d79b9d8858df7b521993cb01dbea462"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/gasp.rs",
+    "sha256": "e154ff67d525c16d369406231f2844cb7297fa75fd20b9ccd61bef0f7e81e4fd"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/glyf.rs",
+    "sha256": "b6aa99a7afde2db79e5075a9140b2b5a2fbe3080650455623bb69b470f766ca4"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/gsub.rs",
+    "sha256": "92c8afb9c7102f16853b2660caf8fa58a5155032a79bc7aba5ed2911609234e6"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/languages.rs",
+    "sha256": "fb5a2a1c24e2229a8d4e8ce000d7da8cbc2e032704ba1dce75df23b699e58252"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/metrics.rs",
+    "sha256": "e183061bb861ebc15a1b07751811f588e3252ac85aecd4b7f9d55d5192119544"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/mod.rs",
+    "sha256": "18e81468acd3c4f964091337b7c86ace39098b8d6d3ac046b0bcd9db636d3072"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/name.rs",
+    "sha256": "202b143c0816d8e53d30140cf67665e41af45ae91661a69785e02da7dad9323a"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/os2.rs",
+    "sha256": "18cdf9533096a6ebe42abc294235f92daeac0a97fe5c0a522f7d8a23ca29a731"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/post.rs",
+    "sha256": "fefcaf20d7b76c955f062079f4b2a0471f62c2445a5ad166fbb440a2e4d89508"
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/subset.rs",
+    "sha256": "8e211783f29544d9a5342b2cf3a2d16605858b8851b18bc2355d99ec8cbbc51b"
+  },
+  {
+    "path": "crates/fontpixel/src/variants/export.rs",
+    "sha256": "bf7449b1eadaaa4b4ef13f6f9e6264ae10f62929bb4539d86b241bcba8d8651a"
+  },
+  {
+    "path": "crates/fontpixel/src/variants.rs",
+    "sha256": "4a250ab5a48e5108423e9fde30b4e5f5d242bce2c11a2223f286730966a2c537"
+  },
+  {
+    "path": "crates/fontpixel/src/woff/mod.rs",
+    "sha256": "bd13d1591287d67ee3128fb1def0b10d4cbba4c85c07c3e7da730bede146dc91"
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff1.rs",
+    "sha256": "3be1189de01b23f16a8d59d7eb0f520af05791f3a2232c072854a67955443b59"
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff2/tests.rs",
+    "sha256": "2ab3f7dbd5f2b977b4f5ad4b6569fb0aff022cc6e59d01fb080d3eaef377c168"
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff2/transform.rs",
+    "sha256": "774572619c2f0c54f225bce0fe6a304370d1699a13cd86be4b846ba27345c7b0"
+  },
+  {
+    "path": "crates/fontpixel/src/woff/woff2.rs",
+    "sha256": "f7f2e2e7e432e766f4e88c1b6b9fe710de781be5236cc570dddd015e1013f379"
+  },
+  {
+    "path": "crates/fontpixel/tests/bdf.rs",
+    "sha256": "50cbac092ff4c446e7bf0239e21c00fe3d5ea311e59d954638019b5774340652"
+  },
+  {
+    "path": "crates/fontpixel/tests/bdf_properties.rs",
+    "sha256": "ca76bbb6d4907556ce0a356a08ac50eee95ecaee5bd171811277b33484d36a49"
+  },
+  {
+    "path": "crates/fontpixel/tests/bdf_reference.rs",
+    "sha256": "abce6870aee40af5d31c58db30060104cf965b4a431dc9d27ec26cbff75a353d"
+  },
+  {
+    "path": "crates/fontpixel/tests/bitmap.rs",
+    "sha256": "b9f0caa30a48a386e8fa85ed1674b1375a77a22ee527692f558cc9183154ecc4"
+  },
+  {
+    "path": "crates/fontpixel/tests/bitmap_reference.rs",
+    "sha256": "62c59757d69ad4bedd73f85a2f81987c087a4669278e8347a50d1e3024d546d7"
+  },
+  {
+    "path": "crates/fontpixel/tests/cff.rs",
+    "sha256": "c3df3dc8ca363cf72238a8aa722be07d713dc657ea42ae10c4ebfe02f653945a"
+  },
+  {
+    "path": "crates/fontpixel/tests/charsets.rs",
+    "sha256": "84bf437896bc4551adbe8358e2e3a15b0f59517dc487ec28766fc146983b0a08"
+  },
+  {
+    "path": "crates/fontpixel/tests/compat_bdfparser.rs",
+    "sha256": "5a270071ed4a784781dedcca7b05112f4025090ccb0a3080b274dc0f32877117"
+  },
+  {
+    "path": "crates/fontpixel/tests/contracts.rs",
+    "sha256": "9c78c8e5d95d58b8760ba9cbb3555fbe2432518f8dec8dc5b2e39c6ab0b15ae6"
+  },
+  {
+    "path": "crates/fontpixel/tests/embedded_bitmap.rs",
+    "sha256": "818bb62ba623404e74cba94a26d325c7ade53b9802502311593245204e504300"
+  },
+  {
+    "path": "crates/fontpixel/tests/glyf.rs",
+    "sha256": "9f23d35bd8b4d162461d434cc995705eacbb94c48f6c45db0437c5d1447b9124"
+  },
+  {
+    "path": "crates/fontpixel/tests/model.rs",
+    "sha256": "71d6f18a2f917a06069e47ee05f31e9435e032a1e6f1405dae85f3192b0bb5f5"
+  },
+  {
+    "path": "crates/fontpixel/tests/outlines.rs",
+    "sha256": "d90deb21d40f964ad02e6e2d2d6dafe09514a4a669a011fa65ebb098d9498ed8"
+  },
+  {
+    "path": "crates/fontpixel/tests/pcf.rs",
+    "sha256": "c2b2ebec433cc80832ab7332f2a39d1af50a08db139d9b83ce676d625a3370d9"
+  },
+  {
+    "path": "crates/fontpixel/tests/pcf_properties.rs",
+    "sha256": "2ae2368fe3a9f9006886a9f79d62b86688b8a2a14e66714b33bab0a73d844676"
+  },
+  {
+    "path": "crates/fontpixel/tests/pcf_reference.rs",
+    "sha256": "e4bced6d7291a92cb7e5c429fd426b869e2e905737afd0b44176e79350252971"
+  },
+  {
+    "path": "crates/fontpixel/tests/render.rs",
+    "sha256": "97d8f999b0504a1e0d33a4e439f58369ee752703002ce57b5ccef4f26d6b1e93"
+  },
+  {
+    "path": "crates/fontpixel/tests/render_reference.rs",
+    "sha256": "1cd9dc3ff3774f55ccc48f0434c3decdc22ee8bf6fa753c290fbba730031fead"
+  },
+  {
+    "path": "crates/fontpixel/tests/sfnt.rs",
+    "sha256": "8729ac11e679cfd7a574eaccb4697bde1c440c42e90d7e287d066d2785e11def"
+  },
+  {
+    "path": "crates/fontpixel/tests/support/bdf_snapshot.rs",
+    "sha256": "90fcbda9f9e364ac7ccafd02b7cbd8f89ad0cc7b70e9eac0e0aa7cbdf812b8f2"
+  },
+  {
+    "path": "crates/fontpixel/tests/support/bitmap_cases.rs",
+    "sha256": "f7a3b8b443cbc343a0d80d858065cfd1edf537c48e79ed676f64a4e5ccdd1b19"
+  },
+  {
+    "path": "crates/fontpixel/tests/support/render_cases.rs",
+    "sha256": "9b8bc77d30c41e062be0828b5aecc5957ced2264420424a74d9e0d42aa101e28"
+  },
+  {
+    "path": "crates/fontpixel/tests/variants.rs",
+    "sha256": "ba8afcbc1553199efb2f84a97119dda0717caed1fa8115f75ef2e963221e75fa"
+  },
+  {
+    "path": "crates/fontpixel/tests/woff.rs",
+    "sha256": "50673d4c0236bf8075cb3dc194873e6fc4e49254e240caf2fa88999fd2336e78"
+  },
+  {
+    "path": "crates/fontpixel/tests/yaff.rs",
+    "sha256": "8762ec21a46a217ac54f8581ad59f3cf4d335645dda7541cf0b3b0956cbd8d0c"
+  },
+  {
+    "path": "crates/fontpixel/tests/yaff_properties.rs",
+    "sha256": "5ee8d0eab71e8d9b2ca42443374c318e19e1a759a87388a92646a1961e8b65a1"
+  },
+  {
+    "path": "crates/fontpixel-cli/src/main.rs",
+    "sha256": "11af8256515ad4cd556de856ea8e0d9843ecf362d741a9a05ef947448c906670"
+  },
+  {
+    "path": "crates/fontpixel-cli/src/opentype.rs",
+    "sha256": "e6efffc097c33c824a67c5efb97b824d76a7eca86a87c41f5dc13a7bac63c4da"
+  },
+  {
+    "path": "crates/fontpixel-cli/src/parity.rs",
+    "sha256": "20a018c3fbdfa8d97f7576ee6c8372e24a8eec31ff5c5b36775c3159a58ea3f5"
+  },
+  {
+    "path": "crates/fontpixel-cli/tests/cli.rs",
+    "sha256": "b8e75e5b7d2cce8d0a030e9098a27d7cfbcc6152d2b12386311d635cd61e534c"
+  },
+  {
+    "path": "crates/fontpixel-cli/tests/parity.rs",
+    "sha256": "a360ff4fdcc6828d49d66fa6d440307ebd7c63f94185ca418ad91e5633bfb55c"
+  },
+  {
+    "path": "crates/fontpixel-py/src/lib.rs",
+    "sha256": "855435e53215d95e1a9e1569210d84b280572e12ee71c9a13a0814dd2e73a0eb"
+  },
+  {
+    "path": "crates/fontpixel-wasm/src/lib.rs",
+    "sha256": "92c8bab13d9e90a31406f254c424a886111429ebef60f31abb5abec56edfb8f1"
+  }
+]

@@ -1,0 +1,6 @@
+Pre-pair-guard binary: metric fixes present; subset logic still identical to original candidate.
+1156573daaa03a37957aaf0460924df67cd4c851aa4f6a94b815c692d86ed757  /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/release/fontpixel
+Warning [subset.table_dropped] Loss: Explicitly discarded table vhea
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'ots'
