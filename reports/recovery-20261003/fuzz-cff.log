@@ -11,8 +11,8 @@
      Running `fuzz/target/x86_64-unknown-linux-gnu/release/cff -artifact_prefix=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/artifacts/cff/ -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536 /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/corpus/cff`
 INFO: Running with entropic power schedule (0xFF, 100).
 INFO: Seed: 133475137
-INFO: Loaded 1 modules   (12912 inline 8-bit counters): 12912 [0x5572cebd2e70, 0x5572cebd60e0), 
-INFO: Loaded 1 PC tables (12912 PCs): 12912 [0x5572cebd60e0,0x5572cec087e0), 
+INFO: Loaded 1 modules   (12912 inline 8-bit counters): 12912 [0x5572cebd2e70, 0x5572cebd60e0),
+INFO: Loaded 1 PC tables (12912 PCs): 12912 [0x5572cebd60e0,0x5572cec087e0),
 INFO:       13 files found in /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/corpus/cff
 INFO: seed corpus: files: 13 min: 235b max: 1221b total: 4604b rss: 30Mb
 #14	INITED cov: 1244 ft: 1989 corp: 9/3479b exec/s: 0 rss: 36Mb

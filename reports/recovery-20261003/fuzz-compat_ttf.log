@@ -11,8 +11,8 @@
      Running `fuzz/target/x86_64-unknown-linux-gnu/release/compat_ttf -artifact_prefix=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/artifacts/compat_ttf/ -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536 /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/corpus/compat_ttf`
 INFO: Running with entropic power schedule (0xFF, 100).
 INFO: Seed: 111065920
-INFO: Loaded 1 modules   (25565 inline 8-bit counters): 25565 [0x56401ee998c0, 0x56401ee9fc9d), 
-INFO: Loaded 1 PC tables (25565 PCs): 25565 [0x56401ee9fca0,0x56401ef03a70), 
+INFO: Loaded 1 modules   (25565 inline 8-bit counters): 25565 [0x56401ee998c0, 0x56401ee9fc9d),
+INFO: Loaded 1 PC tables (25565 PCs): 25565 [0x56401ee9fca0,0x56401ef03a70),
 INFO:        8 files found in /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery/fuzz/corpus/compat_ttf
 INFO: seed corpus: files: 8 min: 960b max: 2876b total: 16056b rss: 31Mb
 #9	INITED cov: 2527 ft: 3647 corp: 8/16056b exec/s: 0 rss: 42Mb

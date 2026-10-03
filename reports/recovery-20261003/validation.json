@@ -1,0 +1,78 @@
+{
+  "date_utc": "2026-10-03",
+  "scope": "Fresh validation of reconstructed W2.1-W2.3, separate from old historical evidence.",
+  "checks": {
+    "check": 0,
+    "parity": 0,
+    "sfnt-crosscheck": 0,
+    "glyf-crosscheck": 0,
+    "cff-crosscheck": 0,
+    "glyf-full-sc": 0,
+    "cff-full-sc": 0,
+    "sfnt-only": 0,
+    "sfnt-data": 0,
+    "doc": 0,
+    "fuzz-build": 0,
+    "fuzz-deny": 0,
+    "fuzz-sfnt": 0,
+    "fuzz-glyf": 0,
+    "fuzz-compat_ttf": 0,
+    "fuzz-cff": 0
+  },
+  "aggregate_test_executions": 546,
+  "parity_new_divergences": 0,
+  "fingerprint_results": {
+    "34d8482": {
+      "historical": "63c4972f231fa4b4",
+      "recovered": "63c4972f231fa4b4",
+      "matches": true
+    },
+    "bb31cf4": {
+      "historical": "873ec98e9affe795",
+      "recovered": "873ec98e9affe795",
+      "matches": true
+    }
+  },
+  "fuzz": {
+    "sfnt": {
+      "exit": 0,
+      "executions": 6124739,
+      "seconds": 611,
+      "done": "#6124739\tDONE   cov: 2801 ft: 7998 corp: 939/726Kb lim: 44145 exec/s: 10024 rss: 611Mb",
+      "address_sanitizer": true,
+      "leak_sanitizer": false
+    },
+    "glyf": {
+      "exit": 0,
+      "executions": 6132071,
+      "seconds": 611,
+      "done": "#6132071\tDONE   cov: 1528 ft: 5789 corp: 760/526Kb lim: 49845 exec/s: 10036 rss: 509Mb",
+      "address_sanitizer": true,
+      "leak_sanitizer": false
+    },
+    "compat_ttf": {
+      "exit": 0,
+      "executions": 314472,
+      "seconds": 611,
+      "done": "#314472\tDONE   cov: 3943 ft: 11483 corp: 931/1928Kb lim: 3910 exec/s: 514 rss: 700Mb",
+      "address_sanitizer": true,
+      "leak_sanitizer": false
+    },
+    "cff": {
+      "exit": 0,
+      "executions": 18109323,
+      "seconds": 611,
+      "done": "#18109323\tDONE   cov: 2791 ft: 8597 corp: 1468/411Kb lim: 65536 exec/s: 29638 rss: 541Mb",
+      "address_sanitizer": true,
+      "leak_sanitizer": false
+    }
+  },
+  "protected_inputs": {
+    "files": 690,
+    "changed": [],
+    "extra": [],
+    "missing": []
+  },
+  "original_git_objects_restored": false,
+  "regenerated_fixture_count": 6
+}

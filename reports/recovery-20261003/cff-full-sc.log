@@ -1,0 +1,13 @@
+TongPixelSans14Large-SC-square checking all writer paths
+TongPixelSans14Large-SC-square checking native reads of both fonts
+TongPixelSans14Large-SC-square checking OTS and all FreeType source pixels
+TongPixelSans14Large-SC-square normalizing external font and checking all paths
+TongPixelSans14Large-SC-square all checks passed
+TongPixelSans14Large-SC-square PASS 38654
+TongPixelSans14Large-SC-dot checking all writer paths
+TongPixelSans14Large-SC-dot checking native reads of both fonts
+TongPixelSans14Large-SC-dot checking OTS and all FreeType source pixels
+TongPixelSans14Large-SC-dot normalizing external font and checking all paths
+TongPixelSans14Large-SC-dot all checks passed
+TongPixelSans14Large-SC-dot PASS 38654
+{"cases": 8, "glyph_checks": 77326}

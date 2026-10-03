@@ -1,0 +1,84 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "selection": {
+    "font": "TongPixelSans14Large-SC.bdf",
+    "cjk_count": 38653,
+    "Latin": "all glyphs"
+  },
+  "results": [
+    {
+      "case": "TongPixelSans14Large-SC-square",
+      "glyphs": 38654,
+      "bytes": 7330556,
+      "sha256": "dcad8239a28410c3ca6fe5919ecc2c605671bc5a2eece90a3edf5a90baccca8b",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-dot",
+      "glyphs": 38654,
+      "bytes": 11600220,
+      "sha256": "cd4cc680ae1de3e63698eda8f326ca07c598fb38cd69b5a02ce5adbd7a0ac70d",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "separate-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2244,
+      "sha256": "60fb54b2200e759591de70235fcf06a03ecc4b178ec1d2f9251176f9d2babedc",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "dot-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2260,
+      "sha256": "e5532750e5525bb3ce6ac852e66b6a61e2dc0bc1e686658ab9e704018c852983",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "external-FontMatrix-scale",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-format0",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-local-hints-flex-widths",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-two-FDs",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    }
+  ],
+  "scope": "CFF1 outline equivalence and existing mappings; variants/locl creation, bitmap strikes and WOFF2 remain later work items."
+}
