@@ -1,0 +1,21 @@
+Integrated-main verification, 2026-10-03 UTC
+
+Worktree: /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-main
+Branch: main
+Tested source revision: b59747ca046af00a70adfa9a1ed51315dffeffa2
+
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+bash scripts/check.sh
+
+The target cache is shared only to reuse existing build outputs and preserve disk.
+Cargo rebuilt crates from the integrated main worktree. No test or assertion was
+skipped. The script includes both generator checks, rustfmt, two strict Clippy
+configurations, five workspace/library test configurations and cargo-deny.
+
+For independent Python crosschecks in a subsequent worktree:
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+
+Python crosscheck scripts may infer a worktree-local target path. Pass their
+explicit --binary argument if reusing CARGO_TARGET_DIR, or use a local target.
+Do not run concurrent work against the same shared target directory.

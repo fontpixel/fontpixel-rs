@@ -1,3 +1,16 @@
+# Phase 2 current progress
+
+2026-10-03 UTC: W2.1–W2.4 have been recovered, independently validated,
+accepted and fast-forward integrated into main. The integrated-main full
+aggregate check passes (561 test executions). W2.5 WOFF1/WOFF2 is next;
+phase 2 remains incomplete. See `main-integration-20261003/INTEGRATION-REPORT.md`
+for current integration status and `recovery-w2.4-20261003/` for acceptance evidence.
+
+## Earlier checkpoint history
+
+The following statements describe earlier interrupted checkpoints and do not
+override the current status above.
+
 # Phase 2 interrupted progress / 第2阶段未完成进度
 
 2026-10-03 UTC.
