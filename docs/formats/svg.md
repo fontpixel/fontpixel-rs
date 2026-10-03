@@ -73,3 +73,27 @@ standalone SVG image exports contain paths and need no installed font.
 
 Independent oracle, parser fuzz and visual evidence are recorded in the W2.8
 report. No copied GPL implementation is used.
+
+## Oracle and capacity findings
+
+The installed monobit 0.54 SVG adapter is for single-stroke fonts. Its loader
+requires several optional font-face numbers and searches a glyph's descendants
+for `d`, ignoring a standard `d` attribute on the glyph itself; its writer emits
+`fill="none" stroke="currentColor"`. It therefore cannot be a filled-pixel SVG
+oracle. The recorded attempt fails on an absent optional underline field. Native
+filled paths are instead parsed independently with FontTools and rasterized with
+CairoSVG, including a supplied-Python-produced SVG-font import check.
+
+Large CJK separate-square/dot documents can exceed the standard 64 MiB input
+budget. A caller may explicitly raise `ReadOptions.limits.resources.max_input_bytes`
+(and the registry's common resource limit when using registry dispatch). The
+crosscheck driver does this explicitly for full Tong CJK dot output. Geometry is
+retained for one glyph at a time, with a separate bounded exhaustive pass only
+when automatic grid detection is required; input size is not permission to retain
+all expanded curves simultaneously. Both passes consume the total edge-work budget.
+
+XML limits are checked in an allocation-free tokenizer pass before DOM parsing,
+including namespace declaration count. Arc operand validation bounds radius
+correction and the normalizer's subdivision buffer before it is allocated. The
+conservative radius bound can reject extreme anisotropic ellipses even if a
+particular rotated segment would fit; these are errors, never approximated silently.

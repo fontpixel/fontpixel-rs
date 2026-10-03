@@ -44,7 +44,8 @@ fn detect_registry_and_feature_capabilities() {
                 "woff",
                 "woff2",
                 "ttc",
-                "vector-raster"
+                "vector-raster",
+                "svg"
             ]
             .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)

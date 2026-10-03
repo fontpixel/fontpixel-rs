@@ -116,7 +116,20 @@ pub struct SvgCodec {
 }
 impl FormatDetector for SvgCodec {
     fn detect(&self, input: &mut ReadContext<'_>) -> Result<Confidence> {
-        Ok(reader::detect(input.bytes(), &self.read_options.limits))
+        let mut limits = self.read_options.limits.clone();
+        limits.resources.max_input_bytes = limits
+            .resources
+            .max_input_bytes
+            .min(input.limits().max_input_bytes);
+        limits.resources.max_table_bytes = limits
+            .resources
+            .max_table_bytes
+            .min(input.limits().max_table_bytes);
+        limits.resources.max_total_bytes = limits
+            .resources
+            .max_total_bytes
+            .min(input.limits().max_total_bytes);
+        Ok(reader::detect(input.bytes(), &limits))
     }
 }
 impl FormatReader<FontSet> for SvgCodec {

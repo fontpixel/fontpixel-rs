@@ -917,3 +917,27 @@ external resources, scripts and unsupported paint semantics are never executed.
 own output without pretending to be a general SVG document renderer. Every
 unrepresented source field is diagnosed; native rendering and SPEC parity remain
 separate, testable contracts.
+
+## 2026-10-03 — SVG rasterization streams expanded glyph geometry
+
+**Question:** Full Tong CJK separate-square SVG passed serialization but retaining
+all expanded paths exceeded the reader's 256 MiB geometry/model budget.
+**Choice:** Keep XML as bounded borrowed input, retain only glyph node references,
+and parse/rasterize one glyph at a time. Automatic grid detection makes a bounded
+first pass; native/explicit sizes need only the raster pass. Alias consistency
+compares borrowed XML attributes rather than retaining another copy of every path.
+Large textual dot fonts may require an explicit input-byte budget increase.
+**Reason:** Raising the geometry budget would mask avoidable peak-memory growth.
+A small-budget many-glyph regression and full CJK external checks cover the change.
+
+## 2026-10-03 — Reject XML and arc expansion before allocation
+
+**Question:** DOM node limits alone do not bound attributes per element before
+roxmltree's duplicate-attribute scan, and SVG arc radius correction happens before
+svgtypes returns normalized segments.
+**Choice:** Add an allocation-free xmlparser token preflight enforcing attribute,
+namespace, depth, node and bookkeeping budgets before DOM construction. Bound
+resolved endpoints and conservative arc radius/subdivision expansion before
+invoking svgtypes normalization. Keep DTDs and non-UTF-8 declarations explicit errors.
+**Reason:** Post-parse limits are too late for adversarial attribute lists or
+extremely anisotropic radii. Dedicated regression tests exercise both boundaries.

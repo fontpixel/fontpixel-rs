@@ -214,6 +214,15 @@ fn font_loss(f: &Font, r: &mut Report, fi: usize) {
         );
     }
     let m = &f.metrics;
+    if m.default_character.is_some() {
+        loss(
+            r,
+            "default-character",
+            "Default character code is represented as an effective missing glyph",
+            Some(fi),
+            None,
+        );
+    }
     if m.point_size.is_some()
         || m.resolution.is_some()
         || m.metrics_set.is_some()
@@ -260,7 +269,7 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
     fonts.validate(&o.limits.resources)?;
     let mut r = Report::default();
     let mut out = Text::new(o.max_output_bytes);
-    let (mut total_pixels, mut total_glyphs) = (0usize, 0usize);
+    let (mut total_pixels, mut total_glyphs, mut total_edges) = (0usize, 0usize, 0usize);
     if !fonts.properties.is_empty() {
         loss(
             &mut r,
@@ -413,6 +422,12 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                 &o.limits.geometry,
                 o.max_output_bytes,
             )?;
+            charge(
+                &mut total_edges,
+                d.bytes().filter(u8::is_ascii_alphabetic).count(),
+                o.limits.max_total_edges,
+                "SVG total generated commands",
+            )?;
             let mut common = Text::new(o.max_output_bytes);
             common.attr("fp:id", &gi.to_string())?;
             common.attr("fp:bounds", &bbox(b))?;
@@ -459,7 +474,7 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                     Codepoint::Legacy(v) => codec.as_ref().ok().and_then(|c| c.cp2char(*v)),
                 };
                 if let Some(c) = ch.filter(|c| valid_char(*c)) {
-                    mappings.push(c.to_string());
+                    mappings.push((c.to_string(), false));
                 } else {
                     loss(
                         &mut r,
@@ -477,7 +492,7 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                     .map(char::from_u32)
                     .collect::<Option<String>>();
                 if let Some(s) = s.filter(|s| s.chars().all(valid_char)) {
-                    mappings.push(s);
+                    mappings.push((s, true));
                 } else {
                     loss(
                         &mut r,
@@ -488,6 +503,14 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                     );
                 }
             }
+            let additional =
+                mappings.len().max(1).saturating_sub(1) + usize::from(default == Some(gid));
+            charge(
+                &mut total_glyphs,
+                additional,
+                o.limits.resources.max_glyphs,
+                "SVG emitted glyph records",
+            )?;
             if default == Some(gid) {
                 out.add("<missing-glyph")?;
                 out.add(&common.value)?;
@@ -498,9 +521,12 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                 out.add(&common.value)?;
                 out.add("/>\n")?;
             }
-            for s in mappings {
+            for (s, sequence) in mappings {
                 out.add("<glyph")?;
                 out.add(&common.value)?;
+                if sequence {
+                    out.attr("fp:mapping", "sequence")?;
+                }
                 out.add(" unicode=\"")?;
                 for c in s.chars() {
                     let mut n = String::new();

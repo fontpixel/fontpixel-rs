@@ -541,13 +541,17 @@ impl Registry<crate::FontSet> {
             e.writer = Some(Box::new(svg::SvgCodec::default()));
         }
     }
-    /// Configure the SVG font reader independently of its writer.
+    /// Configure the SVG font reader/detector independently of its writer.
     pub fn set_svg_read_options(&mut self, options: svg::ReadOptions) {
         if let Some(e) = self
             .entries
             .iter_mut()
             .find(|e| e.format.id == "svg" && e.reader.is_some())
         {
+            e.detector = Some(Box::new(svg::SvgCodec {
+                read_options: options.clone(),
+                ..Default::default()
+            }));
             e.reader = Some(Box::new(svg::SvgCodec {
                 read_options: options,
                 ..Default::default()

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 88, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 51, in main
+    assert rows(ng)==expected,(source,shape,cp,'native pixels')
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf'), 'square', 33, 'native pixels')

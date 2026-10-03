@@ -274,3 +274,16 @@ specifications. The factual language-tag mapping in sfnt/languages.rs was
 transcribed from Microsoft's OpenType language-tag registry on 2026-10-03,
 with ISO 639 language aliases and explicit BCP-47 Chinese routing. No third-party
 subsetter code or runtime dependency was added.
+
+## W2.8 SVG parser dependencies
+
+- roxmltree 0.21.1, copyright the roxmltree developers, MIT OR Apache-2.0.
+  Used for bounded XML parsing with DTD/entity resolution disabled.
+- svgtypes 0.16.1, copyright the SVG Types Authors, MIT OR Apache-2.0.
+  Used for SVG path grammar and arc normalization; its kurbo dependency and
+  associated transitive crates retain their upstream notices in Cargo metadata.
+- W3C SVG 1.1 font/path specifications were consulted as format documentation.
+  The pre-existing supplied bdfparser SPEC contour engine is reused; no GPL
+  implementation or third-party SVG font parser source was copied.
+- xmlparser 0.13.6, MIT OR Apache-2.0, provides allocation-free XML token preflight
+  before DOM allocation; no parser implementation is copied into this repository.

@@ -49,7 +49,8 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
-                && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
+                && !line.starts_with("svg\t")
+                && !["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
                     .iter()
                     .any(|id| line.starts_with(&format!("{id}\t"))))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
@@ -79,14 +80,14 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
-                && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
+                && !["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
                     .iter()
                     .any(|id| entry["format"]["id"] == *id))
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
     );
-    for id in ["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
+    for id in ["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
         let entry = formats
             .iter()
             .find(|entry| entry["format"]["id"] == id)
@@ -814,4 +815,74 @@ fn raster_collection_cli_and_atomic_failures() {
             .status
             .success()
     );
+}
+
+#[cfg(feature = "svg")]
+#[test]
+fn svg_convert_render_and_atomic_errors() {
+    let dir = TempDir::new();
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/data/bdf/tiny.bdf");
+    // Use a generated independent minimal input, including a blank space glyph.
+    let source = if source.is_file() {
+        source
+    } else {
+        let p = dir.0.join("source.bdf");
+        fs::write(&p,"STARTFONT 2.1\nFONT svg-test\nSIZE 8 75 75\nFONTBOUNDINGBOX 3 3 0 0\nSTARTPROPERTIES 3\nFONT_ASCENT 3\nFONT_DESCENT 0\nPIXEL_SIZE 8\nENDPROPERTIES\nCHARS 2\nSTARTCHAR A\nENCODING 65\nSWIDTH 500 0\nDWIDTH 4 0\nBBX 3 3 0 0\nBITMAP\nA0\nE0\nA0\nENDCHAR\nSTARTCHAR space\nENCODING 32\nSWIDTH 500 0\nDWIDTH 2 0\nBBX 0 0 0 0\nBITMAP\nENDCHAR\nENDFONT\n").unwrap();
+        p
+    };
+    let svg = dir.0.join("font.svg");
+    let output = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        svg.to_str().unwrap(),
+        "--shape",
+        "dot",
+        "--dotsize",
+        "0.8",
+        "--ppu",
+        "20",
+    ]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let saved = fs::read(&svg).unwrap();
+    let info = run(&["info", svg.to_str().unwrap(), "--json"]);
+    assert!(info.status.success());
+    let json: serde_json::Value = serde_json::from_slice(&info.stdout).unwrap();
+    assert_eq!(json["format"], "svg");
+    let image = dir.0.join("image.svg");
+    assert!(
+        run(&[
+            "render",
+            svg.to_str().unwrap(),
+            "A",
+            "-o",
+            image.to_str().unwrap(),
+            "--shape",
+            "dot"
+        ])
+        .status
+        .success()
+    );
+    let bad = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        svg.to_str().unwrap(),
+        "--embed-bitmaps",
+    ]);
+    assert!(!bad.status.success());
+    assert_eq!(fs::read(&svg).unwrap(), saved);
+    let bad = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        svg.to_str().unwrap(),
+        "--strict",
+    ]);
+    assert_eq!(bad.status.code(), Some(3));
+    assert_eq!(fs::read(&svg).unwrap(), saved);
 }

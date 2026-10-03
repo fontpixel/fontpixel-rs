@@ -1,0 +1,55 @@
+   Compiling arrayvec v0.7.8
+   Compiling smallvec v1.16.2
+   Compiling siphasher v1.0.4
+   Compiling roxmltree v0.21.1
+   Compiling polycool v0.4.0
+   Compiling kurbo v0.13.1
+   Compiling svgtypes v0.16.1
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+error[E0061]: this method takes 0 arguments but 2 arguments were supplied
+   --> crates/fontpixel/tests/svg.rs:40:134
+    |
+ 40 | ...ay=".#".parse::<Bitmap>().unwrap().to_gray8(0,255).unwrap();f.add_glyph(Glyph::new(gray)).unwrap();assert!(svg::write(&FontSet::...
+    |                                       ^^^^^^^^ - --- unexpected argument #2 of type `{integer}`
+    |                                                |
+    |                                                unexpected argument #1 of type `{integer}`
+    |
+note: method defined here
+   --> crates/fontpixel/src/bitmap/mod.rs:581:12
+    |
+581 |     pub fn to_gray8(&self) -> Result<Bitmap<Gray8>> {
+    |            ^^^^^^^^
+help: remove the extra arguments
+    |
+ 40 - #[test] fn gray_requires_threshold(){let mut f=Font::default();f.metrics.pixel_size=Some(8);let gray=".#".parse::<Bitmap>().unwrap().to_gray8(0,255).unwrap();f.add_glyph(Glyph::new(gray)).unwrap();assert!(svg::write(&FontSet::from(f.clone()),&Default::default()).is_err());let (_,r)=svg::write(&FontSet::from(f),&WriteOptions{gray_threshold:Some(128),..Default::default()}).unwrap();assert!(r.has_loss());}
+ 40 + #[test] fn gray_requires_threshold(){let mut f=Font::default();f.metrics.pixel_size=Some(8);let gray=".#".parse::<Bitmap>().unwrap().to_gray8().unwrap();f.add_glyph(Glyph::new(gray)).unwrap();assert!(svg::write(&FontSet::from(f.clone()),&Default::default()).is_err());let (_,r)=svg::write(&FontSet::from(f),&WriteOptions{gray_threshold:Some(128),..Default::default()}).unwrap();assert!(r.has_loss());}
+    |
+
+error[E0283]: type annotations needed for `fontpixel::Bitmap<_>`
+   --> crates/fontpixel/tests/svg.rs:44:197
+    |
+ 44 | ...u32..17,x in -8i32..8,y in -8i32..8){let mut b=Bitmap::new(w,h).unwrap();for row in 0..h{for col in 0..w{if data.get(((row*w+col...
+    |                                             ^^^^^ ------ type must be known at this point
+    |
+    = note: the type must implement `PixelFormat`
+help: the following types implement trait `PixelFormat`
+   --> crates/fontpixel/src/bitmap/mod.rs:43:1
+    |
+ 43 | impl PixelFormat for Mono {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^ `fontpixel::bitmap::Mono`
+...
+ 53 | impl PixelFormat for Gray8 {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^ `fontpixel::bitmap::Gray8`
+note: required by a bound in `fontpixel::Bitmap`
+   --> crates/fontpixel/src/bitmap/mod.rs:205:22
+    |
+205 | pub struct Bitmap<F: PixelFormat = Mono> {
+    |                      ^^^^^^^^^^^ required by this bound in `Bitmap`
+help: consider giving `b` an explicit type, where the type for type parameter `F` is specified
+    |
+ 44 | proptest::proptest! {#[test] fn random_bitmap_font_roundtrip(data in proptest::collection::vec(proptest::prelude::any::<u8>(),0..256), w in 1u32..17,h in 0u32..17,x in -8i32..8,y in -8i32..8){let mut b: fontpixel::Bitmap<F>=Bitmap::new(w,h).unwrap();for row in 0..h{for col in 0..w{if data.get(((row*w+col) as usize)%data.len().max(1)).is_some_and(|v|v&1!=0){b.set_pixel(col,row,1).unwrap();}}}let mut g=Glyph::new(b);g.metrics.bounds.x=i64::from(x);g.metrics.bounds.y=i64::from(y);g.metrics.advance=Some(Vector::new(9,0));let mut f=Font::default();f.metrics.pixel_size=Some(16);f.add_glyph(g).unwrap();for shape in [Shape::Square,Shape::Dot]{let d=svg::write(&FontSet::from(f.clone()),&WriteOptions{shape,..Default::default()}).unwrap().0;equal(&f,&svg::read(&d,&Default::default()).unwrap().0.fonts[0]);}}}
+    |                                                                                                                                                                                                          ++++++++++++++++++++++
+
+Some errors have detailed explanations: E0061, E0283.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `fontpixel` (test "svg") due to 2 previous errors

@@ -1,0 +1,33 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.46s
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/svg-a5a8df2f384ae5b4)
+
+running 25 tests
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test explicit_scale_rounding_and_origin ... ok
+test generic_child_paths ... ok
+test curves_arcs_and_smooth_commands ... ok
+test aliases_must_match ... ok
+test image_empty_and_limits ... ok
+test custom_registry_options_persist_independently ... ok
+test gray_requires_threshold ... ok
+test generic_grid_and_all_commands ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test budgets_are_effective ... ok
+test image_shapes_and_single_glyph ... ok
+test malformed_numbers_paths ... ok
+test malformed_and_unsafe_xml ... ok
+test missing_glyph_and_blank_preserved ... ok
+test loss_and_strict_are_atomic ... ok
+test collection_and_select ... ok
+test native_vertical_advance_without_origin ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test rejects_unsupported_graphics ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test native_roundtrip_all_shapes ... ok
+test random_bitmap_font_roundtrip ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
