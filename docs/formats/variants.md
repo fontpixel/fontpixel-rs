@@ -50,3 +50,19 @@ invalid after editing and are removed with a loss diagnostic.
 
 Independent tests will compare source and subset shaping across all required
 languages and western scripts, full Tong plans, fontTools, OTS and FreeType.
+
+## CFF subset bytecode fidelity
+
+CFF subsetting rebuilds CharStrings/charset/FDSelect and relocates Top DICT,
+Font DICT and Private DICT offsets. It copies retained Type 2 programs, local and
+global subroutines, hint parameters, widths, matrices, strings and other DICT
+entries unchanged. Unused subroutines/string entries are deliberately retained:
+this avoids changing bias, computed subroutine calls, hints or private semantics.
+CID Font DICT indices remain stable. Selected programs have cumulative preflight
+budgets. Nondefault CFF legacy encodings fail explicitly until remapping exists;
+Unicode cmap and default StandardEncoding behavior remain valid.
+
+Subsets retain sfnt outline flavor; output containers can be sfnt/WOFF/WOFF2.
+TTF-to-CFF conversion is generation, not subsetting. CLI rejects a misleading
+TTF/OTF extension instead of silently changing the source format. WOFF auxiliary
+blocks survive web-to-web subsets; removing them for sfnt is reported.

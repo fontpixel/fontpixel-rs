@@ -20,10 +20,11 @@ required-features = ["parity"]
 
 [features]
 parity = ["fontpixel/compat-bdfparser", "fontpixel/cjk-charsets", "dep:sha2", "dep:base64"]
-default = ["fontpixel/default", "pcf", "png"]
+default = ["fontpixel/default", "pcf", "png", "opentype"]
 pcf = ["fontpixel/pcf"]
 png = ["fontpixel/png"]
-all-formats = ["fontpixel/all-formats", "pcf"]
+all-formats = ["fontpixel/all-formats", "pcf", "opentype"]
+opentype = ["fontpixel/cff", "fontpixel/woff", "fontpixel/woff2"]
 
 [dependencies]
 sha2 = { version = "0.10", optional = true }

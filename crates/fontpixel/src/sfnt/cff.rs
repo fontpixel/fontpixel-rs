@@ -13,6 +13,7 @@ use read_fonts::{
     types::{Fixed, GlyphId},
 };
 mod read;
+mod subset;
 mod validate;
 mod write;
 pub use read::Cff;

@@ -603,3 +603,100 @@ fn yaff_collection_and_gzip_roundtrip() {
     assert_eq!(json["format"], "yaff");
     assert_eq!(json["fonts"].as_array().unwrap().len(), 2);
 }
+
+#[cfg(feature = "opentype")]
+#[test]
+fn variants_subset_cli_all_containers_and_selectors() {
+    let dir = TempDir::new();
+    let base = dir.0.join("base.bdf");
+    fs::write(&base, include_bytes!("../../../tests/data/compat/mini.bdf")).unwrap();
+    let base = base.to_str().unwrap();
+    for ext in ["ttf", "otf", "woff", "woff2"] {
+        let out = dir.0.join(format!("variants.{ext}"));
+        let output = run(&[
+            "variants",
+            "--base",
+            base,
+            "--lang",
+            &format!("ja={base}"),
+            "--script",
+            &format!("latn,grek,cyrl={base}"),
+            "-o",
+            out.to_str().unwrap(),
+            "--woff2-quality",
+            "1",
+            "--report",
+            "json",
+        ]);
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        for (selector, value) in [("--text", "A"), ("--unicodes", "U+0041")] {
+            let subset = dir.0.join(format!("subset-{selector}.{ext}"));
+            let output = run(&[
+                "subset",
+                out.to_str().unwrap(),
+                selector,
+                value,
+                "-o",
+                subset.to_str().unwrap(),
+                "--woff2-quality",
+                "1",
+            ]);
+            assert!(
+                output.status.success(),
+                "{}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
+    }
+    let input = dir.0.join("variants.ttf");
+    let output = dir.0.join("subset.ttf");
+    let text = dir.0.join("text.txt");
+    fs::write(&text, "A").unwrap();
+    assert!(
+        run(&[
+            "subset",
+            input.to_str().unwrap(),
+            "--text-file",
+            text.to_str().unwrap(),
+            "-o",
+            output.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    fs::write(&output, "sentinel").unwrap();
+    for selection in ["U+D800", "U+110000", "U+45-41", "oops"] {
+        assert!(
+            !run(&[
+                "subset",
+                input.to_str().unwrap(),
+                "--unicodes",
+                selection,
+                "-o",
+                output.to_str().unwrap()
+            ])
+            .status
+            .success()
+        );
+        assert_eq!(fs::read(&output).unwrap(), b"sentinel");
+    }
+    assert_eq!(
+        run(&[
+            "subset",
+            input.to_str().unwrap(),
+            "--text",
+            "A",
+            "--unicodes",
+            "41",
+            "-o",
+            output.to_str().unwrap()
+        ])
+        .status
+        .code(),
+        Some(2)
+    );
+}

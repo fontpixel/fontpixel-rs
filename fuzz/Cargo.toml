@@ -86,3 +86,17 @@ path = "fuzz_targets/woff2.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "gsub"
+path = "fuzz_targets/gsub.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "subset"
+path = "fuzz_targets/subset.rs"
+test = false
+doc = false
+bench = false

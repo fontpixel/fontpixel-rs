@@ -1,0 +1,64 @@
+{
+  "partial": false,
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "reference_plan": "unchanged python_reference.plan with sample-backed build.faces/latin_faces",
+  "results": [
+    {
+      "case": "sample-square-ttf",
+      "glyphs": 621,
+      "shaping_batches": 48,
+      "bytes": 135608,
+      "sha256": "a8c71b85c2a1666780c71e5998717ca04998d1a4cf4768ee6edc6828c554a1a4"
+    },
+    {
+      "case": "sample-square-ttf",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "sample-square-otf",
+      "glyphs": 621,
+      "shaping_batches": 48,
+      "bytes": 133052,
+      "sha256": "0fd38025690c22d42eca9e93ef3655c2d9cc9aff4dfb3ae300df7b78f3971d33"
+    },
+    {
+      "case": "sample-square-otf",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "sample-dot-ttf",
+      "glyphs": 622,
+      "shaping_batches": 48,
+      "bytes": 309008,
+      "sha256": "2057feaf56cb76d9461a420ddc01476be51dc75f0c4f1ca655380d8c951b3b61"
+    },
+    {
+      "case": "sample-dot-ttf",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "sample-dot-otf",
+      "glyphs": 621,
+      "shaping_batches": 48,
+      "bytes": 197920,
+      "sha256": "ac3f5e5bea345da096fa95a21411a84e6f3905c5b89e4b987abe7bd70cec924e"
+    },
+    {
+      "case": "sample-dot-otf",
+      "retained_codepoints": 38,
+      "subset_shaping_glyph_checks": 5472,
+      "fonttools_subset_equivalent": true
+    }
+  ]
+}

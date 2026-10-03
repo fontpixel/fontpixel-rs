@@ -1,5 +1,7 @@
 //! Font inspection and conversion through the feature-gated real codec registry.
 #![forbid(unsafe_code)]
+#[cfg(feature = "opentype")]
+mod opentype;
 use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
 use fontpixel::{Error, Input, ReadOptions, ResourceLimits};
 use std::{
@@ -22,6 +24,12 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Combine regional/script faces into a locl-enabled OpenType font.
+    #[cfg(feature = "opentype")]
+    Variants(opentype::VariantsArgs),
+    /// Subset sfnt/WOFF/WOFF2 by text or Unicode ranges.
+    #[cfg(feature = "opentype")]
+    Subset(opentype::SubsetArgs),
     /// List all planned formats and their actual implementation status.
     Formats {
         /// Emit machine-readable metadata and capability flags.
@@ -271,6 +279,10 @@ fn format_parser() -> PossibleValuesParser {
 
 fn report_style(command: &Command) -> ReportStyle {
     match command {
+        #[cfg(feature = "opentype")]
+        Command::Variants(args) => args.report_style(),
+        #[cfg(feature = "opentype")]
+        Command::Subset(args) => args.report_style(),
         Command::Info { json: true, .. } | Command::Formats { json: true } => ReportStyle::Json,
         Command::Convert { report, .. } => *report,
         Command::Preview { layout, .. } | Command::Render { layout, .. } => layout.report,
@@ -303,6 +315,10 @@ fn read_primary(path: &Path, limits: &ResourceLimits) -> fontpixel::Result<Vec<u
 fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
     let mut registry = fontpixel::registry();
     match command {
+        #[cfg(feature = "opentype")]
+        Command::Variants(args) => opentype::variants(args, output),
+        #[cfg(feature = "opentype")]
+        Command::Subset(args) => opentype::subset(args, output),
         Command::Formats { json } => {
             let statuses: Vec<_> = registry.formats().collect();
             if json {

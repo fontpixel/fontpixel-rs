@@ -264,3 +264,13 @@ Optional `brotli` 9.0.0 / `brotli-decompressor` 6.0.1 use BSD-3-Clause and MIT;
 `alloc-no-stdlib` 3.0.0 and `alloc-stdlib` 0.3.0 use BSD-3-Clause. Their full
 notices are shipped in the crates' own license files. The dependency policy
 permits BSD-3-Clause, one of PLAN §3's explicitly approved license families.
+
+## OpenType regional layout and language identifiers (W2.6)
+
+The regional glyph-planning and script policy follow the supplied Tong Pixel
+Sans MIT reference exporter (Tom Chen), already credited above. Native GSUB
+encoding and subsetting are new implementations of the Microsoft/Adobe OpenType
+specifications. The factual language-tag mapping in sfnt/languages.rs was
+transcribed from Microsoft's OpenType language-tag registry on 2026-10-03,
+with ISO 639 language aliases and explicit BCP-47 Chinese routing. No third-party
+subsetter code or runtime dependency was added.

@@ -60,6 +60,31 @@ impl Variants {
     }
     /// Build Unicode glyph order, alternate deduplication and exact locl routing.
     pub fn plan(&self, limits: &LayoutLimits) -> Result<Plan> {
+        let alternatives = self
+            .languages
+            .len()
+            .checked_add(self.scripts.len())
+            .ok_or_else(|| invalid("variant count overflow"))?;
+        sfnt::to16(alternatives)?;
+        sfnt::bounded(alternatives, limits.max_records, "variant alternatives")?;
+        let mut routes = 0usize;
+        for scripts in self
+            .languages
+            .iter()
+            .map(|v| &v.scripts)
+            .chain(self.scripts.iter().map(|v| &v.scripts))
+        {
+            routes = routes.saturating_add(scripts.len());
+            sfnt::bounded(routes, limits.max_records, "variant script routes")?;
+        }
+        let mut script_tags = std::collections::BTreeSet::new();
+        for v in &self.scripts {
+            for &tag in &v.scripts {
+                if !script_tags.insert(tag) {
+                    return Err(invalid("duplicate script variant"));
+                }
+            }
+        }
         let mut count = 0usize;
         let mut bytes = 0usize;
         for f in std::iter::once(&self.base)
@@ -86,9 +111,10 @@ impl Variants {
         let mut records = BTreeMap::<String, Glyph>::new();
         let mut cmap = BTreeMap::<u32, String>::new();
         for (cp, g) in effective(&self.base)? {
+            limits.sfnt.glyphs(records.len().saturating_add(2))?;
             let name = gname(cp);
             cmap.insert(cp, name.clone());
-            records.insert(name, g.clone());
+            records.insert(name, planned_glyph(g));
         }
         let mut signatures = HashMap::<u64, Vec<String>>::new();
         let mut maps = Vec::new();
@@ -114,7 +140,7 @@ impl Variants {
                 } else {
                     let n = gname(cp);
                     cmap.insert(cp, n.clone());
-                    records.insert(n, g.clone());
+                    records.insert(n, planned_glyph(g));
                     continue;
                 };
                 let base = records
@@ -141,7 +167,7 @@ impl Variants {
                         n = format!("{}.{label}{suffix}", gname(cp));
                         suffix += 1;
                     }
-                    records.insert(n.clone(), g.clone());
+                    records.insert(n.clone(), planned_glyph(g));
                     signatures.entry(hash).or_default().push(n.clone());
                     n
                 };
@@ -263,6 +289,13 @@ fn effective(font: &Font) -> Result<Vec<(u32, &Glyph)>> {
         })
         .collect()
 }
+fn planned_glyph(g: &Glyph) -> Glyph {
+    Glyph {
+        metrics: g.metrics.clone(),
+        bitmap: g.bitmap.clone(),
+        ..Default::default()
+    }
+}
 fn equivalent(a: &Glyph, b: &Glyph) -> bool {
     a.bitmap == b.bitmap && a.metrics == b.metrics
 }
@@ -334,6 +367,9 @@ pub fn language_tag(value: &str) -> Result<Tag> {
     let tag = value.to_ascii_lowercase();
     let parts = tag.split('-').collect::<Vec<_>>();
     if parts[0] == "zh" || parts[0] == "zho" || parts[0] == "cmn" {
+        if parts.contains(&"hans") {
+            return Ok(*b"ZHS ");
+        }
         if parts.contains(&"hk") || parts.contains(&"mo") {
             return Ok(*b"ZHH ");
         }

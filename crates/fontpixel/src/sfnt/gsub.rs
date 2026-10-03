@@ -306,6 +306,28 @@ impl Gsub {
     }
     /// Encode with extension lookups so large CJK tables have valid offsets.
     pub fn encode(&self, num_glyphs: u16, l: &LayoutLimits) -> Result<Vec<u8>> {
+        l.sfnt.glyphs(usize::from(num_glyphs))?;
+        let mut records = 0;
+        for n in [self.scripts.len(), self.features.len(), self.lookups.len()] {
+            to16(n)?;
+            charge(&mut records, n, l)?;
+        }
+        for s in self.scripts.values() {
+            to16(s.languages.len())?;
+            charge(&mut records, s.languages.len(), l)?;
+            for lang in s.default.iter().chain(s.languages.values()) {
+                to16(lang.features.len())?;
+                charge(&mut records, lang.features.len(), l)?;
+            }
+        }
+        for f in &self.features {
+            to16(f.lookups.len())?;
+            charge(&mut records, f.lookups.len(), l)?;
+        }
+        for m in &self.lookups {
+            charge(&mut records, m.len().saturating_mul(2), l)?;
+        }
+        l.sfnt.table(records.saturating_mul(8))?;
         let mut scripts = vec![0; 2 + 6 * self.scripts.len()];
         scripts[..2].copy_from_slice(&to16(self.scripts.len())?.to_be_bytes());
         for (i, (t, s)) in self.scripts.iter().enumerate() {

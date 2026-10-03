@@ -138,6 +138,9 @@ fn notdef() -> Result<Glyph> {
 }
 /// Vectorize planned variants using the native, independently checked table codecs.
 pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
+    if !(o.dot_size > 0. && o.dot_size <= 1.5) || (o.shape == Shape::Square && o.dot_size != 1.) {
+        return Err(invalid("invalid dot size for the chosen outline shape"));
+    }
     let plan = variants.plan(&o.limits)?;
     let l = &o.limits.sfnt;
     let scale = i64::from(o.units_per_pixel);
@@ -206,12 +209,27 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     let count = sources.len() + usize::from(shared);
     l.glyphs(count)?;
     let dot_id = sources.len() as u16;
+    let vertical = variants
+        .base
+        .metrics
+        .glyph_defaults
+        .vertical_advance
+        .is_some()
+        || sources.iter().any(|(_, g)| {
+            g.metrics.vertical_advance.is_some() || g.metrics.vertical_origin.is_some()
+        });
+    let mut vm = Vec::new();
+    let mut vertical_extents = Vec::new();
     let mut hm = Vec::new();
     let mut extents = Vec::new();
     let gl = glyf::Limits {
         sfnt: l.clone(),
         ..Default::default()
     };
+    let mut total_points = 0usize;
+    let mut total_components = 0usize;
+    #[cfg(feature = "cff")]
+    let mut total_commands = 0usize;
     let mut bitmaps = BTreeMap::new();
     for (i, (name, g)) in sources.iter().enumerate() {
         let bitmap = mono(g, o.gray_threshold, &mut report)?;
@@ -259,26 +277,119 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 (f64::from(ink.width) * scale as f64 - 2. * inset).round() as i64,
             )?)
         };
+        if vertical {
+            let va = g
+                .metrics
+                .vertical_advance
+                .or(variants.base.metrics.glyph_defaults.vertical_advance)
+                .unwrap_or(crate::model::Vector::new(
+                    0,
+                    -i64::from(variants.base.metrics.pixel_size.unwrap_or(14)),
+                ));
+            if va.x != 0 {
+                return Err(invalid("vertical advance x cannot be represented by vmtx"));
+            }
+            let vadvance = u16n(
+                va.y.checked_mul(-scale)
+                    .ok_or_else(|| invalid("vertical advance overflow"))?,
+            )?;
+            let origin = if i == 0 {
+                None
+            } else {
+                g.metrics
+                    .vertical_origin
+                    .or(variants.base.metrics.glyph_defaults.vertical_origin)
+            };
+            if origin.is_some_and(|p| p.x.checked_mul(2) != Some(adv.x)) {
+                return Err(invalid(
+                    "non-centered vertical origin x cannot be represented by vmtx",
+                ));
+            }
+            let origin_y = if let Some(p) = origin {
+                p.y.checked_mul(scale)
+                    .ok_or_else(|| invalid("vertical origin overflow"))?
+            } else {
+                i64::from(ascent)
+            };
+            let top = (g.metrics.bounds.y + ink.y + i64::from(ink.height))
+                .checked_mul(scale)
+                .ok_or_else(|| invalid("vertical top overflow"))?;
+            let bearing = if ink.height == 0 {
+                0
+            } else {
+                i16n(
+                    origin_y
+                        .checked_sub(top)
+                        .ok_or_else(|| invalid("vertical bearing overflow"))?
+                        .checked_add(inset.round() as i64)
+                        .ok_or_else(|| invalid("vertical bearing overflow"))?,
+                )?
+            };
+            vm.push(LongMetric {
+                advance: vadvance,
+                bearing,
+            });
+            vertical_extents.push(if ink.height == 0 {
+                None
+            } else {
+                Some(u16n(
+                    (f64::from(ink.height) * scale as f64 - 2. * inset).round() as i64,
+                )?)
+            });
+        }
         hm.push(LongMetric { advance, bearing });
         extents.push(width);
         match o.flavor {
-            OutlineFlavor::TrueType => tt.glyphs.push(if shared && i != 0 {
-                glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
-            } else {
-                glyf::Glyph::simple(outline::contours(&bitmap, &opts, &gl.geometry)?)
-            }),
+            OutlineFlavor::TrueType => {
+                let glyph = if shared && i != 0 {
+                    glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
+                } else {
+                    glyf::Glyph::simple(outline::contours(&bitmap, &opts, &gl.geometry)?)
+                };
+                match &glyph {
+                    glyf::Glyph::Simple(g) => {
+                        total_points = total_points
+                            .saturating_add(g.contours.iter().map(Vec::len).sum::<usize>())
+                    }
+                    glyf::Glyph::Composite(g) => {
+                        total_components = total_components.saturating_add(g.components.len())
+                    }
+                    _ => (),
+                }
+                sfnt::bounded(total_points, gl.max_total_points, "variant outline points")?;
+                sfnt::bounded(
+                    total_components,
+                    gl.max_total_components,
+                    "variant outline components",
+                )?;
+                tt.glyphs.push(glyph);
+            }
             OutlineFlavor::Cff => {
                 #[cfg(feature = "cff")]
-                cff_glyphs.push(sfnt::cff::Glyph::from_bitmap(
-                    *name,
-                    f64::from(advance),
-                    &bitmap,
-                    &opts,
-                    &sfnt::cff::Limits {
+                {
+                    let cl = sfnt::cff::Limits {
                         sfnt: l.clone(),
                         ..Default::default()
-                    },
-                )?);
+                    };
+                    let glyph = sfnt::cff::Glyph::from_bitmap(
+                        *name,
+                        f64::from(advance),
+                        &bitmap,
+                        &opts,
+                        &cl,
+                    )?;
+                    let commands = match &glyph.outline {
+                        sfnt::cff::Outline::Path(p) => p.len(),
+                        sfnt::cff::Outline::Dots(p) => p.len().saturating_mul(6),
+                    };
+                    total_commands = total_commands.saturating_add(commands);
+                    sfnt::bounded(
+                        total_commands,
+                        cl.max_total_commands,
+                        "variant CFF commands",
+                    )?;
+                    cff_glyphs.push(glyph);
+                }
                 #[cfg(not(feature = "cff"))]
                 {
                     let _ = name;
@@ -328,6 +439,13 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             bearing: i16n(((1. - o.dot_size) * scale as f64 / 2.).round() as i64)?,
         });
         extents.push(Some(u16n((o.dot_size * scale as f64).round() as i64)?));
+    }
+    if vertical && shared {
+        vm.push(LongMetric {
+            advance: upm,
+            bearing: i16n(i64::from(ascent) - (o.dot_size * scale as f64).round() as i64)?,
+        });
+        vertical_extents.push(Some(u16n((o.dot_size * scale as f64).round() as i64)?));
     }
     let mut b = SfntBuilder::new(if o.flavor == OutlineFlavor::TrueType {
         Flavor::TrueType
@@ -389,27 +507,53 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     let mut h = Header::new(Axis::Horizontal);
     h.ascender = ascent;
     h.descender = descent;
-    h.line_gap = i16n(variants.base.metrics.line_gap.unwrap_or(0) * scale)?;
+    h.line_gap = i16n(
+        variants
+            .base
+            .metrics
+            .line_gap
+            .unwrap_or(0)
+            .checked_mul(scale)
+            .ok_or_else(|| invalid("line gap overflow"))?,
+    )?;
     h.recompute(&hm, &extents)?;
     let he = metrics::encode(Axis::Horizontal, &h, &hm, true, l)?;
     b.insert(*b"hhea", he.header)?;
     b.insert(*b"hmtx", he.metrics)?;
+    if vertical {
+        let mut vh = Header::new(Axis::Vertical);
+        vh.ascender = (upm / 2) as i16;
+        vh.descender = -((upm - upm / 2) as i16);
+        vh.recompute(&vm, &vertical_extents)?;
+        let e = metrics::encode(Axis::Vertical, &vh, &vm, true, l)?;
+        b.insert(*b"vhea", e.header)?;
+        b.insert(*b"vmtx", e.metrics)?;
+    }
     let cps = plan.cmap.keys().copied().collect();
-    let mut os = Os2Table::default();
-    os.version = 3;
+    let mut os = Os2Table {
+        version: 3,
+        ..Default::default()
+    };
     os.base.vendor_id = o.vendor;
     os.base.typo_metrics = [ascent, descent, h.line_gap];
     os.base.windows_metrics = [ascent.unsigned_abs(), descent.unsigned_abs()];
-    os.base.average_width =
-        i16n(hm.iter().map(|m| i64::from(m.advance)).sum::<i64>() / hm.len() as i64)?;
+    let nonzero = hm.iter().filter(|m| m.advance != 0).collect::<Vec<_>>();
+    os.base.average_width = if nonzero.is_empty() {
+        0
+    } else {
+        i16n(
+            (nonzero.iter().map(|m| u64::from(m.advance)).sum::<u64>() as f64
+                / nonzero.len() as f64)
+                .round() as i64,
+        )?
+    };
     os.extension.as_mut().unwrap().max_context = 1;
     os.set_unicode_coverage(&cps)?;
-    os.code_page_ranges = Some(sfnt::os2::code_page_ranges(
-        &cps,
-        &[
-            1252, 1250, 1251, 1253, 1254, 1255, 1256, 1257, 1258, 874, 932, 936, 949, 950, 1361,
-        ],
-    )?);
+    let mut pages = vec![1252, 1250, 1251, 1253, 1254, 1255, 1256, 1257, 1258, 874];
+    if cfg!(feature = "cjk-charsets") {
+        pages.extend([932, 936, 949, 950, 1361]);
+    }
+    os.code_page_ranges = Some(sfnt::os2::code_page_ranges(&cps, &pages)?);
     b.insert(*b"OS/2", os.encode(l)?)?;
     b.insert(
         *b"cmap",
