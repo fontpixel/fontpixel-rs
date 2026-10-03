@@ -130,3 +130,20 @@ fn main() -> fontpixel::Result<()> {
     Ok(())
 }
 ```
+
+### Embedded bitmap sfnt (W2.4)
+
+Optional `otb` and `bdat` features enable native multi-strike bitmap sfnt reading
+and writing. `color` enables CBDT/CBLC and PNG/dupe sbix reading, with reported
+alpha-to-Gray8 projection; no color writer is advertised. Use
+`formats::embedded::{read, write, EmbeddedReadOptions, EmbeddedWriteOptions}` for
+typed bounds, color darkness/threshold choices and EBSC instructions.
+`sfnt::bitmap` exposes editable glyph-ID strikes and table pairs for embedding in
+existing TTF/OTF builders. Registry/CLI use the same native implementation.
+
+    cargo run -p fontpixel-cli --features all-formats -- convert font.bdf --to otb -o font.otb
+    cargo run -p fontpixel-cli --features all-formats -- info font.otb --json
+
+See `docs/formats/otb.md`, `bdat.md`, and `color.md` for limits, loss reporting,
+unsupported Apple Huffman/JPEG/TIFF cases and independent-tool caveats. General
+outline FontSet conversion, collections and wrapper formats remain later work.

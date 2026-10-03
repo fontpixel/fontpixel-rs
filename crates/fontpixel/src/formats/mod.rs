@@ -8,6 +8,8 @@ use crate::{Error, Operation, Report, Result};
 #[cfg(feature = "bdf")]
 pub mod bdf;
 pub mod catalogue;
+#[cfg(any(feature = "otb", feature = "bdat", feature = "color"))]
+pub mod embedded;
 #[cfg(feature = "pcf")]
 pub mod pcf;
 #[cfg(any(feature = "bdf", feature = "pcf"))]
@@ -458,5 +460,23 @@ impl Registry<crate::FontSet> {
             write_options: options,
         }));
         Ok(())
+    }
+}
+
+#[cfg(any(feature = "otb", feature = "bdat", feature = "color"))]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_embedded(
+        &mut self,
+        id: &'static str,
+        kind: crate::sfnt::bitmap::Kind,
+        write: bool,
+    ) {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == id) {
+            entry.detector = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
+            entry.reader = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
+            if write {
+                entry.writer = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
+            }
+        }
     }
 }

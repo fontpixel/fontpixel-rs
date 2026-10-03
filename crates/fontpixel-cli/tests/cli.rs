@@ -45,7 +45,10 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
             .iter()
             .filter(|line| !line.starts_with("bdf\t")
                 && !line.starts_with("pcf\t")
-                && !line.starts_with("yaff\t"))
+                && !line.starts_with("yaff\t")
+                && !line.starts_with("otb\t")
+                && !line.starts_with("bdat\t")
+                && !line.starts_with("color\t"))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -69,11 +72,24 @@ fn formats_json_is_parseable_and_honest() {
             .iter()
             .filter(|entry| entry["format"]["id"] != "bdf"
                 && entry["format"]["id"] != "pcf"
-                && entry["format"]["id"] != "yaff")
+                && entry["format"]["id"] != "yaff"
+                && entry["format"]["id"] != "otb"
+                && entry["format"]["id"] != "bdat"
+                && entry["format"]["id"] != "color")
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
     );
+    for id in ["otb", "bdat", "color"] {
+        let entry = formats
+            .iter()
+            .find(|entry| entry["format"]["id"] == id)
+            .unwrap();
+        let enabled = entry["format"]["feature_enabled"].as_bool().unwrap();
+        assert_eq!(entry["read"], enabled);
+        assert_eq!(entry["detect"], enabled);
+        assert_eq!(entry["write"], enabled && id != "color");
+    }
 }
 
 #[test]

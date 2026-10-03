@@ -1,0 +1,7 @@
+    Updating crates.io index
+     Locking 5 packages to highest Rust 1.99.0 compatible versions
+      Adding bitflags v2.13.2
+      Adding fdeflate v0.3.7
+      Adding miniz_oxide v0.8.9
+      Adding png v0.18.1
+      Adding zlib-rs v0.6.8

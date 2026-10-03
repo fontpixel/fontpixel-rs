@@ -9,6 +9,10 @@ allow = ["MIT", "Apache-2.0", "Unicode-3.0"]
 confidence-threshold = 0.93
 
 [bans]
+# png 0.18.1 directly requires miniz_oxide ^0.8; the pre-existing flate2
+# requires ^0.9. Keep current security fixes rather than downgrade either.
+# This one exact duplicate is allowed; all advisories/licenses remain checked.
+skip = [{ name = "miniz_oxide", version = "=0.8.9" }]
 multiple-versions = "deny"
 wildcards = "deny"
 

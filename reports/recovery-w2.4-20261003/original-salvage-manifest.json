@@ -1,0 +1,162 @@
+{
+  "kind": "conversation-tool-input salvage, not verified final checkout",
+  "rollback_observed_utc": "2026-10-03T05:10:00Z",
+  "original_worktree": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-recovery",
+  "branch": "w2.4-bitmaps",
+  "base_commit_prefix": "30cb21e",
+  "known_commit_prefixes": [
+    "113539d",
+    "ece15ea",
+    "e08d69c"
+  ],
+  "recovery_operations": "Only local text transcription, hashing and archiving; no compilation, tests, downloads, dependency recreation or fixture generation",
+  "confidence": {
+    "initial_source_snapshots": "Complete source text copied from initial tool inputs; final rustfmt bytes unavailable; no claim of final-commit byte identity",
+    "patch_history": "Later code blocks/replacements copied from tool inputs; semantic anchors may require whitespace adaptation, and no replay was performed",
+    "evidence": "Selected directly observed output excerpts plus explicitly labeled status summaries, not original full logs"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1423,
+      "sha256": "af6e8ac08bfb2c5f9e92ff1ae66550ee3e9f05f37e6582b357f64b478904a099"
+    },
+    {
+      "path": "STATUS.md",
+      "bytes": 5745,
+      "sha256": "0a2785766b7436cb5941fb8612837edf24a615c64e60895db6e4b1e3445c616c"
+    },
+    {
+      "path": "docs/bdat.md",
+      "bytes": 1670,
+      "sha256": "e8e0c9b5f0cf93d225d32f23416ecfdb7e29b7ac038d31f67c1fde91a2425e09"
+    },
+    {
+      "path": "docs/color.initial.md",
+      "bytes": 2441,
+      "sha256": "01ad2048865348e308e8498fd732e8a3fd83be2872d689cf6b5ba134edf4e475"
+    },
+    {
+      "path": "docs/decisions.append.md",
+      "bytes": 3804,
+      "sha256": "693a1afcbf1b9f0a16021bea04437f30f4599e1d8cc5368b489b1b88b61be2e2"
+    },
+    {
+      "path": "docs/final-appendices.md",
+      "bytes": 4728,
+      "sha256": "df727a4626eab76471532ab714faa334f5e35bd3b446716a1d4657dace9fa138"
+    },
+    {
+      "path": "docs/otb.initial.md",
+      "bytes": 4087,
+      "sha256": "d51dc12614f75293f74b89dc81ffc9862adb4cce6a8d10a2829425eeb37f04e8"
+    },
+    {
+      "path": "evidence/observed-output-excerpts.txt",
+      "bytes": 2904,
+      "sha256": "832c6df8e564444c48c3f99b1dc2fb85c03e84053f912cce5139a74097325eef"
+    },
+    {
+      "path": "patch-history/bitmap-final-changes.md",
+      "bytes": 1064,
+      "sha256": "5342c53fe34ee42ced7674b01a70a9f8b4495aca1461c73094a244f2861ae88e"
+    },
+    {
+      "path": "patch-history/color-final-changes.md",
+      "bytes": 653,
+      "sha256": "587dbf3420ac0e780fde1897c00f8a7282b9e6189698f49699e58886c11ddc3b"
+    },
+    {
+      "path": "patch-history/crosscheck-final-changes.md",
+      "bytes": 6632,
+      "sha256": "53bf72b1cde15c6d61a3cb9668bfee21149a1d72a09f85a4695598e560e59753"
+    },
+    {
+      "path": "patch-history/embedded-final-changes.md",
+      "bytes": 12549,
+      "sha256": "7bdafa55e1be0c35321f61f3b083fbb66d5afb444ea1485e601e2ad98270c6b3"
+    },
+    {
+      "path": "patch-history/integration.md",
+      "bytes": 3163,
+      "sha256": "ad1269bd821d2022d7f9bf35af8b376189b86f65363498f4692d997f4231c196"
+    },
+    {
+      "path": "patch-history/tests-final-changes.md",
+      "bytes": 1239,
+      "sha256": "b7790cde8e64a0c73e1a9bc3479789eb61ffa1ec701e7272514ea43b13366704"
+    },
+    {
+      "path": "source-snapshots/bitmap.initial.rs",
+      "bytes": 25952,
+      "sha256": "54b7ab36a29ca2436042a6305531fff940a00d16314484b9c4d7e6848f2163db"
+    },
+    {
+      "path": "source-snapshots/bitmap_check.initial.rs",
+      "bytes": 2224,
+      "sha256": "05dc30819b99bfcd1496a1475b2f0ec9c1d8c0d6d80fd8ed060a0b04872ac0cb"
+    },
+    {
+      "path": "source-snapshots/color.initial.rs",
+      "bytes": 8711,
+      "sha256": "fa24952398972c10877b74031456f0d3fe18ec08e4315e870e92afb246b441f9"
+    },
+    {
+      "path": "source-snapshots/color_bitmap.fuzz.rs",
+      "bytes": 1029,
+      "sha256": "2f35478a1c2d0e63c0c1be58d4b8f3f16b4eb96b2b74dc52e271b043c39a3110"
+    },
+    {
+      "path": "source-snapshots/embedded.initial.rs",
+      "bytes": 31336,
+      "sha256": "1aaf219197ef588c7f0d14ae7ddac148d1c797f283621488a47e3465e4878d86"
+    },
+    {
+      "path": "source-snapshots/embedded_bitmap.crosscheck.initial.py",
+      "bytes": 11032,
+      "sha256": "c82fd2eb9be37357ebb162e7c0a83e330492b6eaffce9b9c60da40c9e3c9e228"
+    },
+    {
+      "path": "source-snapshots/embedded_bitmap.fuzz.rs",
+      "bytes": 948,
+      "sha256": "4f97df95a88a1a510c9d7584db4847b1cd1b6f0540324e6fe51ad10bfad34dac"
+    },
+    {
+      "path": "source-snapshots/embedded_bitmap.tests.append-color.rs",
+      "bytes": 3149,
+      "sha256": "051c7379d39747e5ea2a3eeaa4b1c74c6bf4b201873f825c356b6b94af95f05e"
+    },
+    {
+      "path": "source-snapshots/embedded_bitmap.tests.append-final.rs",
+      "bytes": 5443,
+      "sha256": "a92bad0d81c7b97351f1e9d1d959f54159954bf362f3bf9c9cfc2ddbb429b72e"
+    },
+    {
+      "path": "source-snapshots/embedded_bitmap.tests.initial.rs",
+      "bytes": 8827,
+      "sha256": "fc3d27e9407ed5822f7253ffa988270906736dbae29cd54cc23cdeb7b0b39077"
+    }
+  ],
+  "missing": [
+    "Original Git objects and history for all three W2.4 commits; no bundle was made",
+    "Final rustfmt-formatted files and byte-level source fingerprints for e08d69c",
+    "Full Cargo.lock and fuzz/Cargo.lock with exact resolved graph/checksums",
+    "37 generated tiny TTF fixtures under tests/data/embedded-bitmap and their original SOURCES.json hashes; generator source and later additions are recovered",
+    "Full tests/crosscheck/embedded-bitmap-results.json with per-case hashes and version metadata",
+    "Full raw reports/evidence/w2.4 logs, .exit files and fuzz corpora/artifacts",
+    "Final-code aggregate check result and final ten-minute fuzz outcomes; in-flight sessions were lost",
+    "Final clean-commit parity, optional feature matrix/rustdoc/fuzz-deny/dependency-tree checks were not completed on e08d69c",
+    "reports/w2.4.md was never written; STATUS.md is a new, clearly labeled recovery status",
+    "Existing pre-W2.4 baseline files, protected reference/sample files, and toolchain dependencies are not included"
+  ],
+  "mapping": {
+    "source-snapshots/bitmap.initial.rs": "crates/fontpixel/src/sfnt/bitmap.rs + patch-history/bitmap-final-changes.md",
+    "source-snapshots/color.initial.rs": "crates/fontpixel/src/sfnt/bitmap/color.rs + patch-history/color-final-changes.md",
+    "source-snapshots/embedded.initial.rs": "crates/fontpixel/src/formats/embedded.rs + patch-history/embedded-final-changes.md",
+    "source-snapshots/bitmap_check.initial.rs": "crates/fontpixel/examples/bitmap_check.rs (rustfmt only after initial input)",
+    "source-snapshots/embedded_bitmap.fuzz.rs": "fuzz/fuzz_targets/embedded_bitmap.rs",
+    "source-snapshots/color_bitmap.fuzz.rs": "fuzz/fuzz_targets/color_bitmap.rs",
+    "source-snapshots/embedded_bitmap.crosscheck.initial.py": "tests/crosscheck/embedded_bitmap.py + patch-history/crosscheck-final-changes.md",
+    "source-snapshots/embedded_bitmap.tests.initial.rs": "crates/fontpixel/tests/embedded_bitmap.rs + append-color + append-final and patch-history/tests-final-changes.md"
+  }
+}

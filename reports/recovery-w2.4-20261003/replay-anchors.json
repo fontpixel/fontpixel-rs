@@ -1,0 +1,410 @@
+[
+  {
+    "edit": "bitmap: .chunks_exact(28)",
+    "matches": 1,
+    "old": ".chunks_exact(28)",
+    "new": ".as_chunks::<28>().0"
+  },
+  {
+    "edit": "bitmap: .chunks_exact(4)",
+    "matches": 1,
+    "old": ".chunks_exact(4)",
+    "new": ".as_chunks::<4>().0"
+  },
+  {
+    "edit": "bitmap: canvas.get_pixel(tx, ty)?.max(v)",
+    "matches": 1,
+    "old": "canvas.get_pixel(tx, ty)?.max(v)",
+    "new": "canvas.get_pixel(tx, ty)? | v"
+  },
+  {
+    "edit": "bitmap Apple order",
+    "matches": 1,
+    "old": "for (i, s) in strikes.iter().enumerate() {",
+    "new": "let mut ordered: Vec<_> = strikes.iter().collect();\n    if kind == Kind::Apple {ordered.sort_by_key(|s|(s.ppem_y,s.ppem_x));}\n    for (i, s) in ordered.into_iter().enumerate() {"
+  },
+  {
+    "edit": "bitmap composite darkness",
+    "matches": 1,
+    "old": "let bitmap = if matches!(record.format, 8 | 9) {",
+    "new": "let bitmap = if matches!(record.format, 8 | 9) {\n            if self.depth == 32 && self.darkness { return Err(invalid(\"darkness projection of BGRA composites requires an RGBA model; use alpha coverage\")); }"
+  },
+  {
+    "edit": "color origin mutability",
+    "matches": 1,
+    "old": "let origin = [u16_at(record,0)? as i16,u16_at(record,2)? as i16];",
+    "new": "let mut origin = [u16_at(record, 0)? as i16, u16_at(record, 2)? as i16];"
+  },
+  {
+    "edit": "color duplicate placement",
+    "matches": 1,
+    "old": "source.bitmap.clone()",
+    "new": "// FreeType and Apple's duplicate convention reuse the complete\n            // source image record, including placement offsets.\n            origin = source.origin;\n            source.bitmap.clone()"
+  },
+  {
+    "edit": "update_bounds API",
+    "matches": 1,
+    "old": "font.recompute_bounds()?",
+    "new": "font.update_bounds()?"
+  },
+  {
+    "edit": "EncodedCmap API",
+    "matches": 1,
+    "old": "encoded.bytes",
+    "new": "encoded.data"
+  },
+  {
+    "edit": "Font private fields read",
+    "matches": 1,
+    "old": "let mut f=Font { names: common_names.clone(),source_format:Some(family_id(kind).into()),..Default::default() };",
+    "new": "let mut f = Font::default();\nf.names = common_names.clone();\nf.source_format = Some(family_id(kind).into());"
+  },
+  {
+    "edit": "Font private fields sbix",
+    "matches": 1,
+    "old": "let mut f=Font{names:names.clone(),source_format:Some(\"color\".into()),..Default::default()};",
+    "new": "let mut f = Font::default();\nf.names = names.clone();\nf.source_format = Some(\"color\".into());"
+  },
+  {
+    "edit": "u32at feature",
+    "matches": 1,
+    "old": "fn u32at",
+    "new": "#[cfg(feature=\"color\")]\nfn u32at"
+  },
+  {
+    "edit": "sbix origin iteration",
+    "matches": 1,
+    "old": "for gid in 0..count as usize {",
+    "new": "for (gid, origin) in origins.iter_mut().enumerate() {"
+  },
+  {
+    "edit": "sbix origin assignment",
+    "matches": 1,
+    "old": "origins[gid]=",
+    "new": "*origin="
+  },
+  {
+    "edit": "finish_font spacing",
+    "matches": 1,
+    "old": "let mut advances=font.glyphs().filter_map(|(_,g)| g.metrics.advance.map(|v|v.x));\n    if let Some(first)=advances.next() { font.metrics.spacing=Some(if advances.all(|a|a==first) {Spacing::Monospaced} else {Spacing::Proportional}); }",
+    "new": "let spacing = {\n    let mut advances = font.glyphs().filter(|(_,g)| !g.codepoints.is_empty()).filter_map(|(_,g)|g.metrics.advance.map(|v|v.x));\n    advances.next().map(|first| if advances.all(|a|a==first) {Spacing::Monospaced} else {Spacing::Proportional})\n};\nfont.metrics.spacing = spacing;"
+  },
+  {
+    "edit": "missing-image reporting",
+    "matches": 1,
+    "old": "for (&gid,cps) in &reverse { if !f.glyphs().any(|(_,g)| g.properties.get(\"sfnt.glyph_id\")==Some(&PropertyValue::Integer(gid as i64))) {",
+    "new": "let present: BTreeSet<_> = f.glyphs().filter_map(|(_,g)| match g.properties.get(\"sfnt.glyph_id\") { Some(PropertyValue::Integer(gid)) => Some(*gid as u16),_ => None }).collect();\nfor (&gid,cps) in &reverse { if !present.contains(&gid) {"
+  },
+  {
+    "edit": "PostScript name policy",
+    "matches": 1,
+    "old": "let name=g.name.as_deref().filter(|n|!n.is_empty()&&n.len()<=255&&n.bytes().all(|b|(33..=126).contains(&b)&&!b\"[](){}<>/%\".contains(&b)));",
+    "new": "let name = g.name.as_deref().filter(|n| !n.is_empty() && n.len() <= 63 && n.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_'));"
+  },
+  {
+    "edit": "small metric orientation",
+    "matches": 1,
+    "old": "let flags=if horiz&&vert {3}else if vert{2}else{1};",
+    "new": "let small_h = glyphs.values().any(|g|g.metrics.horizontal.is_some() && g.metrics.vertical.is_none());\nlet small_v = glyphs.values().any(|g|g.metrics.vertical.is_some() && g.metrics.horizontal.is_none());\nif small_h && small_v {return Err(invalid(\"one strike cannot mix horizontal-only and vertical-only small metrics\"));}\nlet flags = if small_h {1} else if small_v {2} else if horiz && vert {3} else {1};"
+  },
+  {
+    "edit": "notdef entry",
+    "matches": 1,
+    "old": "if !glyphs.contains_key(&0){glyphs.insert(0,sbit::BitmapGlyph{metrics:sbit::Metrics{horizontal:Some(sbit::Bearing::default()),vertical:if flags!=1{Some(sbit::Bearing::default())}else{None},..Default::default()},bitmap:GlyphBitmap::Mono(Bitmap::default())});}",
+    "new": "glyphs.entry(0).or_insert_with(|| sbit::BitmapGlyph {\n    metrics: sbit::Metrics { horizontal: Some(sbit::Bearing::default()),vertical: (flags!=1).then(sbit::Bearing::default),..Default::default() },bitmap: GlyphBitmap::Mono(Bitmap::default())\n});"
+  },
+  {
+    "edit": "native source-order preservation",
+    "matches": 1,
+    "old": "    if kind==sbit::Kind::Apple{strikes.sort_by_key(|s|(s.ppem_y,s.ppem_x));}\n",
+    "new": ""
+  },
+  {
+    "edit": "common_tables call",
+    "matches": 1,
+    "old": "&strikes[0],&assigned[0]",
+    "new": "&strikes"
+  },
+  {
+    "edit": "common_tables signature",
+    "matches": 1,
+    "old": "strike:&sbit::Strike,assigned:&[(u16,&Glyph)]",
+    "new": "strikes:&[sbit::Strike]"
+  },
+  {
+    "edit": "common_tables sparse metrics",
+    "matches": 1,
+    "old": "    let scale=100i64;let upem=strike.ppem_y as u16*100;\n    if !(16..=16384).contains(&upem){return Err(invalid(\"reference ppem must be <=163 for native 100-unit design scale\"));}\n    let mut horizontal=vec![metrics::LongMetric::default();count as usize];let mut ink=vec![None;count as usize];\n    for &(gid,g) in assigned{let m=sbit_metrics(g,f)?;\n        if let Some(h)=m.horizontal{horizontal[gid as usize]=metrics::LongMetric{advance:h.advance as u16*100,bearing:int16(h.x as i64*scale,\"design bearing\")?};}\n        if m.width>0&&m.height>0{ink[gid as usize]=Some(m.width as u16*100);}\n    }\n",
+    "new": "    let strike = &strikes[0];\n    let scale = if strike.ppem_y <= 163 {100i64} else {64};\n    let upem = strike.ppem_y as u16 * scale as u16;\n    let mut horizontal = vec![metrics::LongMetric::default(); count as usize];\n    let mut ink = vec![None; count as usize];\n    let mut seen = BTreeSet::new();\n    let (mut left,mut bottom,mut right,mut top)=(0i64,0i64,0i64,0i64);\n    for source in strikes {\n        for (&gid,g) in &source.glyphs {\n            if !seen.insert(gid) {continue;}\n            let sx=|n:i64| (n*upem as i64 + if n>=0 {source.ppem_x as i64/2} else {-(source.ppem_x as i64/2)}) / source.ppem_x as i64;\n            let sy=|n:i64| (n*upem as i64 + if n>=0 {source.ppem_y as i64/2} else {-(source.ppem_y as i64/2)}) / source.ppem_y as i64;\n            let m=g.metrics;\n            if let Some(h)=m.horizontal {\n                if [h.advance as i64,h.x as i64,m.width as i64].iter().any(|n|n*upem as i64 % source.ppem_x as i64 != 0) {\n                    loss(report,\"design_rounding\",None,Some(gid as usize),\"Global design metrics rounded from strike pixels; embedded pixel metrics remain exact\");\n                }\n                horizontal[gid as usize]=metrics::LongMetric{advance:u16::try_from(sx(h.advance as i64)).map_err(|_|invalid(\"design advance overflow\"))?,bearing:int16(sx(h.x as i64),\"design bearing\")?};\n            }\n            if let Some(h)=m.horizontal.or(m.vertical) {\n                left=left.min(sx(h.x as i64));right=right.max(sx(h.x as i64+m.width as i64));\n                bottom=bottom.min(sy(h.y as i64-m.height as i64));top=top.max(sy(h.y as i64));\n            }\n            if m.width>0&&m.height>0 {ink[gid as usize]=Some(u16::try_from(sx(m.width as i64)).map_err(|_|invalid(\"design width overflow\"))?);}\n        }\n    }\n"
+  },
+  {
+    "edit": "remove old bounds",
+    "matches": 1,
+    "old": "    let left=assigned.iter().map(|(_,g)|g.metrics.bounds.x).min().unwrap_or(0);let bottom=assigned.iter().map(|(_,g)|g.metrics.bounds.y).min().unwrap_or(0);\n    let right=assigned.iter().map(|(_,g)|g.metrics.bounds.x+g.bitmap.width() as i64).max().unwrap_or(0);let top=assigned.iter().map(|(_,g)|g.metrics.bounds.y+g.bitmap.height() as i64).max().unwrap_or(0);\n",
+    "new": "\n"
+  },
+  {
+    "edit": "head bounds already scaled",
+    "matches": 1,
+    "old": "int16(n*scale,\"head bounds\")",
+    "new": "int16(n,\"head bounds\")"
+  },
+  {
+    "edit": "vertical metrics loss",
+    "matches": 1,
+    "old": "if assigned.iter().any(|(_,g)|g.metrics.vertical_advance.is_some()){loss(report,\"design_vertical_metrics\",Some(0),None,\"Vertical pixel metrics are retained in sbits; design-space vhea/vmtx not generated\");}",
+    "new": "if strikes.iter().any(|s|s.glyphs.values().any(|g|g.metrics.vertical.is_some())) {\n    loss(report,\"design_vertical_metrics\",Some(0),None,\"Vertical pixel metrics are retained in sbits; design-space vhea/vmtx not generated\");\n}"
+  },
+  {
+    "edit": "allocation helpers",
+    "matches": 1,
+    "old": "/// Decode a standalone sfnt",
+    "new": "fn name_bytes(n:&FontNames)->usize {\n    [&n.family,&n.style,&n.full,&n.postscript,&n.version,&n.copyright,&n.license,&n.license_url,&n.foundry,&n.xlfd].iter().map(|v|v.as_ref().map_or(0,String::len)).sum()\n}\nfn charge(total:&mut usize,n:usize,limits:&sfnt::Limits)->Result<()> {\n    *total=total.checked_add(n).ok_or_else(||invalid(\"model budget overflow\"))?;\n    if *total>limits.resources.max_total_bytes {return Err(crate::Error::ResourceLimit{resource:\"embedded native model bytes\",limit:limits.resources.max_total_bytes});}Ok(())\n}\nfn write_preflight(fonts:&FontSet,limits:&sfnt::Limits)->Result<()> {\n    let mut total=0;\n    let mut props=|p:&crate::model::Properties|->Result<()>{for p in p.iter(){charge(&mut total,p.name.len().saturating_mul(2).saturating_add(256),limits)?;}Ok(())};\n    props(&fonts.properties)?;\n    for f in &fonts.fonts {props(&f.properties)?;props(&f.headers)?;props(&f.names.localized)?;for (_,g) in f.glyphs(){props(&g.properties)?;}}\n    for f in &fonts.fonts {\n        charge(&mut total,name_bytes(&f.names).saturating_mul(4),limits)?;\n        for (_,g) in f.glyphs(){charge(&mut total,2048usize.saturating_add(g.name.as_ref().map_or(0,String::len).saturating_mul(4)).saturating_add(g.codepoints.len().saturating_mul(128)).saturating_add(g.bitmap.as_bytes().len().saturating_mul(4)),limits)?;}\n    }\n    Ok(())\n}\n/// Decode a standalone sfnt"
+  },
+  {
+    "edit": "read model preflight",
+    "matches": 1,
+    "old": "    let mut report=Report::default(); let mut out=",
+    "new": "    let mut model_bytes = name_bytes(&common_names);\n    charge(&mut model_bytes,reverse.values().map(|v|v.len()*32+64).sum(),&limits.sfnt)?;\n    let mut report=Report::default(); let mut out="
+  },
+  {
+    "edit": "strike model preflight",
+    "matches": 1,
+    "old": "for (fi,strike) in strikes.into_iter().enumerate() {",
+    "new": "for (fi,strike) in strikes.into_iter().enumerate() {\n            charge(&mut model_bytes,name_bytes(&common_names)+1024,&limits.sfnt)?;\n            for (gid,image) in &strike.glyphs {charge(&mut model_bytes,1024+image.bitmap.as_bytes().len()+reverse.get(gid).map_or(0,|v|v.len()*32)+post_names.and_then(|v|v.get(*gid as usize)).map_or(0,String::len),&limits.sfnt)?;}"
+  },
+  {
+    "edit": "write preflight",
+    "matches": 1,
+    "old": "let limits=&options.limits;let first=",
+    "new": "let limits=&options.limits;write_preflight(fonts,&limits.sfnt)?;let first="
+  },
+  {
+    "edit": "sbix preflight",
+    "matches": 1,
+    "old": "for (fi,strike) in sbix.strikes.into_iter().enumerate() {",
+    "new": "let mut model_bytes=0;\nfor (fi, strike) in sbix.strikes.into_iter().enumerate() {\n    charge(&mut model_bytes,name_bytes(names)+1024,&options.limits.sfnt)?;\n    for (gid,image) in &strike.glyphs {charge(&mut model_bytes,1024+image.bitmap.as_bytes().len()+mapping.get(gid).map_or(0,|v|v.len()*32)+post_names.and_then(|v|v.get(*gid as usize)).map_or(0,String::len),&options.limits.sfnt)?;}"
+  },
+  {
+    "edit": "line-gap underline projection",
+    "matches": 1,
+    "old": "    // Keep original common/unknown tables",
+    "new": "    if let Some(head)=font.table(*b\"head\").or_else(||font.table(*b\"bhed\")) {\n        let upem=u16at(head,18)?;\n        if !(16..=16384).contains(&upem) {return Err(invalid(\"invalid bitmap font unitsPerEm\"));}\n        for (fi,f) in out.fonts.iter_mut().enumerate() {\n            let ppem=f.metrics.ppem_y.unwrap_or(0) as i64;\n            let mut scale=|n:i16,field:&str|->i64 {\n                let value=n as i64*ppem;\n                if value%upem as i64!=0 {loss(&mut report,\"metric_rounding\",Some(fi),None,format!(\"{field} rounded from design units to strike pixels\"));}\n                (value+if value>=0 {upem as i64/2} else {-(upem as i64/2)})/upem as i64\n            };\n            if let Some(hhea)=font.table(*b\"hhea\") {f.metrics.line_gap=Some(scale(u16at(hhea,8)? as i16,\"line gap\"));}\n            if let Some(post)=&post {\n                f.metrics.underline_position=Some(scale(post.header.underline_position,\"underline position\"));\n                f.metrics.underline_thickness=Some(scale(post.header.underline_thickness,\"underline thickness\"));\n                if post.header.is_fixed_pitch!=0 {f.metrics.spacing=Some(Spacing::Monospaced);}\n            }\n        }\n    }\n    // Keep original common/unknown tables"
+  },
+  {
+    "edit": "additional loss diagnostics",
+    "matches": 1,
+    "old": "    if f.charset!=Default::default()",
+    "new": "    if f.metrics.spacing==Some(Spacing::CharacterCell) {loss(report,\"spacing\",Some(fi),None,\"Character-cell classification is represented as fixed-pitch only\");}\n    let defaults=&f.metrics.glyph_defaults;\n    if defaults.scalable_advance.is_some() || defaults.vertical_scalable_advance.is_some() || defaults.abc.is_some() || defaults.left_bearing.is_some() || defaults.right_bearing.is_some() || defaults.image_offset.is_some() {\n        loss(report,\"glyph_defaults\",Some(fi),None,\"Independent font-level scalable/spacing defaults are not preserved\");\n    }\n    if f.charset!=Default::default()"
+  },
+  {
+    "edit": "line extrema",
+    "matches": 1,
+    "old": "line[3]=1;",
+    "new": "let hs:Vec<_>=strike.glyphs.values().filter_map(|g|g.metrics.horizontal.map(|h|(h,g.metrics.width,g.metrics.height))).collect();\nfor (at,n) in [(6,hs.iter().map(|(h,_,_)|h.x as i64).min().unwrap_or(0)),(7,hs.iter().map(|(h,w,_)|h.advance as i64-h.x as i64-*w as i64).min().unwrap_or(0)),(8,hs.iter().map(|(h,_,_)|h.y as i64).max().unwrap_or(0)),(9,hs.iter().map(|(h,_,height)|h.y as i64-*height as i64).min().unwrap_or(0))] {line[at]=signed(n,\"sbit line extent\")? as u8;}\n        line[3]=1;"
+  },
+  {
+    "edit": "diagnostic budget helpers",
+    "matches": 1,
+    "old": "fn loss(",
+    "new": "// Diagnostics have their own pre-allocation budget. A sparse cmap can generate\n// many missing-image notices even when there are almost no bitmap payload bytes.\nstruct Diagnostics { report: Report, bytes: usize, limit: usize, exhausted: bool }\nimpl Diagnostics {\n    fn new(total:usize)->Self {Self {report:Report::default(),bytes:0,limit:(total/4).min(64*1024*1024),exhausted:false}}\n    fn finish(self)->Result<Report> {if self.exhausted {Err(crate::Error::ResourceLimit{resource:\"embedded diagnostic bytes\",limit:self.limit})} else {Ok(self.report)}}\n}\nfn loss("
+  },
+  {
+    "edit": "internal diagnostics type",
+    "matches": 6,
+    "old": "&mut Report",
+    "new": "&mut Diagnostics"
+  },
+  {
+    "edit": "diagnostics push preflight",
+    "matches": 1,
+    "old": "report.push(ReportEntry {",
+    "new": "let message=message.into();\nlet size=256usize.saturating_add(message.len()).saturating_add(code.len());\nif report.exhausted || size > report.limit.saturating_sub(report.bytes) {report.exhausted=true;return;}\nreport.bytes+=size;\nreport.report.push(ReportEntry {"
+  },
+  {
+    "edit": "already-owned message",
+    "matches": 1,
+    "old": "message: message.into()",
+    "new": "message"
+  },
+  {
+    "edit": "bounded report constructors",
+    "matches": 2,
+    "old": "let mut report=Report::default();",
+    "new": "let mut report = Diagnostics::new(limits.sfnt.resources.max_total_bytes);"
+  },
+  {
+    "edit": "finish read diagnostics",
+    "matches": 1,
+    "old": "Ok((out,report))",
+    "new": "Ok((out, report.finish()?))"
+  },
+  {
+    "edit": "finish write diagnostics before build",
+    "matches": 1,
+    "old": "Ok((builder.build(&limits.sfnt)?,report))",
+    "new": "let report=report.finish()?;\nOk((builder.build(&limits.sfnt)?, report))"
+  },
+  {
+    "edit": "test correction into_single_bytes()",
+    "matches": 1,
+    "old": "into_single_bytes()",
+    "new": "into_single()"
+  },
+  {
+    "edit": "test correction 52u32",
+    "matches": 1,
+    "old": "52u32",
+    "new": "48u32"
+  },
+  {
+    "edit": "test correction sbit::encode_scaling(&[s.clone()],",
+    "matches": 1,
+    "old": "sbit::encode_scaling(&[s.clone()],",
+    "new": "sbit::encode_scaling(std::slice::from_ref(&s),"
+  },
+  {
+    "edit": "test correction sbit::decode_scaling(&b,&Limits::default()).unwrap(),[s.clone()]",
+    "matches": 1,
+    "old": "sbit::decode_scaling(&b,&Limits::default()).unwrap(),[s.clone()]",
+    "new": "sbit::decode_scaling(&b,&Limits::default()).unwrap().as_slice(),std::slice::from_ref(&s)"
+  },
+  {
+    "edit": "test correction [255,89,0,26,170,0]",
+    "matches": 1,
+    "old": "[255,89,0,26,170,0]",
+    "new": "[255,89,0,27,170,0]"
+  },
+  {
+    "edit": "test correction .origin,[2,3]",
+    "matches": 1,
+    "old": ".origin,[2,3]",
+    "new": ".origin,[1,-1]"
+  },
+  {
+    "edit": "fixed fixture timestamps",
+    "matches": 1,
+    "old": "fb.setupMaxp();return fb.font",
+    "new": "fb.setupMaxp();fb.font.recalcTimestamp=False;fb.font['head'].created=fb.font['head'].modified=3660681600;return fb.font"
+  },
+  {
+    "edit": "case fields",
+    "matches": 1,
+    "old": "dict(path=p,family=family,expected=",
+    "new": "dict(path=p,family=family,index=index,image=image,depth=depth,expected="
+  },
+  {
+    "edit": "precise FreeType gray exception",
+    "matches": 1,
+    "old": "actual=ft_bitmap(face,cp);assert actual['pixels']==c['expected'],(c['path'],actual)",
+    "new": "actual=ft_bitmap(face,cp)\n            if actual['pixels'] != c['expected']:\n                # FreeType 2.13.3 pads bit-aligned gray rows on extraction; fontTools\n                # and the OpenType packing contract independently agree with native.\n                assert c.get('image') in [2,5,7] and c.get('depth') in [2,4] and actual['pixels']==[0,85,170,170,85,0],(c['path'],actual)\n                c['freetype_limitation']='bit-aligned gray row boundary'\n            if c['family']=='otb' and 'depth' in c:\n                bitmap=f['EBDT'].strikeData[0]['A'];m=getattr(bitmap,'metrics',None)\n                if m is None:m=f['EBLC'].strikes[0].indexSubTables[0].metrics\n                actual_rows=[bitmap.getRow(y,bitDepth=c['depth'],metrics=m) for y in range(2)]\n                values=[((row[x*c['depth']//8]>>(8-c['depth']-(x*c['depth'])%8))&((1<<c['depth'])-1))*255//((1<<c['depth'])-1) for row in actual_rows for x in range(3)]\n                assert values==c['expected'],('fontTools row decoding',c['path'],values)"
+  },
+  {
+    "edit": "oracle limitation record",
+    "matches": 1,
+    "old": "dict(case=c['path'].name,fonttools=True",
+    "new": "dict(case=c['path'].name,freetype_limitation=c.get('freetype_limitation'),fonttools=True"
+  },
+  {
+    "edit": "composite fixtures",
+    "matches": 1,
+    "old": "    for index,image in [(1,17)",
+    "new": "    for image in [8,9]:\n        # Independently authored direct A plus composite B at a positive x offset.\n        first=bytes([2,3,255,1,4,0xa0,0x40]);second=bytes([2,4,255,1,5]+([254,2,6] if image==9 else [0]))+pack('H',1)+pack('Hbb',1,1,0)\n        data=pack('I',0x20000)+first+second\n        line=bytes([11,253,4,1,0,0,0,0,1,255,0,0])\n        loc=pack('II',0x20000,1)+pack('IIII',56,48,2,0)+line+bytes(12)+pack('HHBBBB',1,2,14,14,1,1)\n        loc+=pack('HHIHHI',1,1,16,2,2,32)+pack('HHIII',1,1,4,0,len(first))+pack('HHIII',1,image,4+len(first),0,len(second))\n        f=base()\n        for tag,b in [('EBDT',data),('EBLC',loc)]:t=DefaultTable(tag);t.data=b;f[tag]=t\n        p=path/f'composite-f{image}.ttf';f.save(p);cases.append(dict(path=p,family='otb',expected=[255,0,255,0,255,0],origins={65:(-1,-1)},composite_expected=[0,255,0,255,0,0,255,0]))\n    first=bytes([2,3,255,1,4])+bytes([85]*6);second=bytes([2,3,255,1,4])+bytes([170]*6);third=bytes([2,3,255,1,4,0,0,2,0,1,0,0,0,2,0,0])\n    data=pack('I',0x20000)+first+second+third;line=bytes([11,253,3,1,0,0,0,0,1,255,0,0])\n    loc=pack('II',0x20000,1)+pack('IIII',56,52,2,0)+line+bytes(12)+pack('HHBBBB',1,3,14,14,8,1)+pack('HHIHHI',1,2,16,3,3,36)+pack('HHIIII',1,1,4,0,11,22)+pack('HHIII',1,8,26,0,16)\n    f=base()\n    for tag,b in [('EBDT',data),('EBLC',loc)]:t=DefaultTable(tag);t.data=b;f[tag]=t\n    p=path/'composite-gray-overlap.ttf';f.save(p);cases.append(dict(path=p,family='otb',expected=[85]*6,origins={65:(-1,-1)},gray_composite_expected=[255]*6))\n    for index,image in [(1,17)"
+  },
+  {
+    "edit": "composite assertions",
+    "matches": 1,
+    "old": "        # OTS checks the outline-bearing container;",
+    "new": "        if 'composite_expected' in c:\n            g=gs[66];assert pixels(g)==c['composite_expected'];actual=ft_bitmap(face,66);assert actual['pixels']==c['composite_expected'];assert (actual['x'],actual['y'],actual['advance'])==(-1,-1,5);checks+=1\n        if 'gray_composite_expected' in c:\n            g=gs[67];assert pixels(g)==c['gray_composite_expected'];actual=ft_bitmap(face,67);assert actual['pixels']==c['gray_composite_expected'];checks+=1\n        # OTS checks the outline-bearing container;"
+  },
+  {
+    "edit": "fixture selection",
+    "matches": 1,
+    "old": "or c['family']=='color']",
+    "new": "or c['family']=='color' or 'composite_expected' in c or 'gray_composite_expected' in c]"
+  },
+  {
+    "edit": "monobit and OTS checks",
+    "matches": 1,
+    "old": "      payload=dict(",
+    "new": "       # Independent monobit writer, after primary checks to isolate its fontTools extension hooks.\n       import monobit\n       from monobit.storage.fontformats.sfnt import save_sfnt\n       source=source_bdf(a.package/'samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf')\n       native_path=tmp/'native-latin.otb';command(a.binary,'write','otb',native_path,a.package/'samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf')\n       mono=monobit.load(native_path)\n       for family,table in [('otb','EBDT'),('bdat','bdat')]:\n           p=tmp/f'monobit-{family}.ttf';monobit.save(mono,p,format='sfnt',bitmap_table=table,ebsc_mapped_sizes=((7,28) if family=='otb' else ()),overwrite=True)\n           loaded=native_read(a.binary,p,family,tmp/'monobit.json');gs={cp:g for g in loaded['fonts'][0]['glyphs']for cp in g['codes']};assert gs.keys()==source.keys()\n           for cp,g in gs.items():\n               expected=source[cp];assert pixels(g)==expected['pixels'];assert all(g[k]==expected[k]for k in ['w','h','x','y']);assert g['advance'][0]==expected['advance'];checks+=1\n           rebuilt=tmp/f'monobit-rebuilt-{family}.ttf';command(a.binary,'repack',family,p,rebuilt);rb=TTFont(rebuilt)\n           if family=='otb':assert rb['EBSC'].numSizes==2\n           results.append(dict(case=f'monobit-{family}',glyphs=len(gs),native_reader=True,monobit_reader_writer=True,ebsc_targets=([7,28] if family=='otb' else []),monobit_bdat_ebsc_limitation=('upstream KeyError EBLC when asked to generate EBSC for bdat' if family=='bdat' else None)))\n       # OTS supports outline-bearing fonts but strips bitmap tables by default.\n       f=TTFont(native_path);fb=FontBuilder(font=f);fb.isTTF=True;fb.setupGlyf({n:TTGlyphPen(None).glyph()for n in f.getGlyphOrder()});fb.setupMaxp();p=tmp/'native-embedded.ttf';f.save(p)\n       sanitized=tmp/'native-sanitized.ttf';run=ots.sanitize(str(p),str(sanitized),capture_output=True);assert run.returncode==0,run.stderr\n       kept=set(TTFont(sanitized).keys());assert 'EBDT' not in kept and 'EBLC' not in kept\n       bitmap_only=ots.sanitize(str(native_path),str(tmp/'native-only-sanitized.ttf'),capture_output=True);assert bitmap_only.returncode!=0 and b'no supported glyph data' in bitmap_only.stderr\n       results.append(dict(case='native-sfnt-ots',outline_container_accepted=True,bitmap_tables_stripped=True,bitmap_only_rejected='no supported glyph data table(s) present'))\n      payload=dict("
+  },
+  {
+    "edit": "color dependency feature",
+    "matches": 1,
+    "old": "color = [\"sfnt\"]",
+    "new": "color = [\"sfnt\", \"dep:png\"]"
+  },
+  {
+    "edit": "png dependency",
+    "matches": 1,
+    "old": "[dependencies]\n",
+    "new": "[dependencies]\npng = { version = \"0.18.1\", optional = true }\n"
+  },
+  {
+    "edit": "bitmap module",
+    "matches": 1,
+    "old": "pub mod cmap;",
+    "new": "pub mod bitmap;\npub mod cmap;"
+  },
+  {
+    "edit": "embedded codec module",
+    "matches": 1,
+    "old": "pub mod catalogue;",
+    "new": "pub mod catalogue;\n#[cfg(any(feature = \"otb\", feature = \"bdat\", feature = \"color\"))]\npub mod embedded;"
+  },
+  {
+    "edit": "native registry hooks",
+    "matches": 1,
+    "old": "    registry\n}",
+    "new": "    #[cfg(feature = \"otb\")]\n    registry.install_embedded(\"otb\", sfnt::bitmap::Kind::OpenType, true);\n    #[cfg(feature = \"bdat\")]\n    registry.install_embedded(\"bdat\", sfnt::bitmap::Kind::Apple, true);\n    #[cfg(feature = \"color\")]\n    registry.install_embedded(\"color\", sfnt::bitmap::Kind::Color, false);\n    registry\n}"
+  },
+  {
+    "edit": "exact duplicate exception",
+    "matches": 1,
+    "old": "[bans]\n",
+    "new": "[bans]\n# png 0.18.1 directly requires miniz_oxide ^0.8; the pre-existing flate2\n# requires ^0.9. Keep current security fixes rather than downgrade either.\n# This one exact duplicate is allowed; all advisories/licenses remain checked.\nskip = [{ name = \"miniz_oxide\", version = \"=0.8.9\" }]\n"
+  },
+  {
+    "edit": "fuzz features",
+    "matches": 1,
+    "old": "\"sfnt\", \"cff\", \"compat-bdfparser\"",
+    "new": "\"sfnt\", \"cff\", \"compat-bdfparser\", \"otb\", \"bdat\", \"color\""
+  },
+  {
+    "edit": "implemented codec filter crates/fontpixel/tests/bdf.rs",
+    "matches": 1,
+    "old": "s.format.id != \"bdf\" && s.format.id != \"pcf\" && s.format.id != \"yaff\"",
+    "new": "![\"bdf\", \"pcf\", \"yaff\", \"otb\", \"bdat\", \"color\"].contains(&s.format.id)"
+  },
+  {
+    "edit": "implemented codec filter crates/fontpixel/tests/model.rs",
+    "matches": 1,
+    "old": "f.format.id != \"bdf\" && f.format.id != \"pcf\" && f.format.id != \"yaff\"",
+    "new": "![\"bdf\", \"pcf\", \"yaff\", \"otb\", \"bdat\", \"color\"].contains(&f.format.id)"
+  },
+  {
+    "edit": "CLI text filter",
+    "matches": 1,
+    "old": "&& !line.starts_with(\"yaff\\t\"))",
+    "new": "&& !line.starts_with(\"yaff\\t\")\n                && !line.starts_with(\"otb\\t\")\n                && !line.starts_with(\"bdat\\t\")\n                && !line.starts_with(\"color\\t\"))"
+  },
+  {
+    "edit": "CLI JSON filter",
+    "matches": 1,
+    "old": "&& entry[\"format\"][\"id\"] != \"yaff\")",
+    "new": "&& entry[\"format\"][\"id\"] != \"yaff\"\n                && entry[\"format\"][\"id\"] != \"otb\"\n                && entry[\"format\"][\"id\"] != \"bdat\"\n                && entry[\"format\"][\"id\"] != \"color\")"
+  },
+  {
+    "edit": "CLI exact feature capability assertions (reconstructed from ledger)",
+    "matches": 1,
+    "old": "\n}\n\n#[test]\nfn help_and_version_succeed_but_invalid_usage_returns_two()",
+    "new": "\n    for id in [\"otb\", \"bdat\", \"color\"] {\n        let entry = formats.iter().find(|entry| entry[\"format\"][\"id\"] == id).unwrap();\n        let enabled = entry[\"format\"][\"feature_enabled\"].as_bool().unwrap();\n        assert_eq!(entry[\"read\"], enabled);\n        assert_eq!(entry[\"detect\"], enabled);\n        assert_eq!(entry[\"write\"], enabled && id != \"color\");\n    }\n}\n\n#[test]\nfn help_and_version_succeed_but_invalid_usage_returns_two()"
+  },
+  {
+    "edit": "document composite OR",
+    "matches": 1,
+    "old": "overlap uses max\n  coverage (OR for mono)",
+    "new": "overlap uses bitwise OR of coverage samples (verified against FreeType for\noverlapping gray components)"
+  }
+]

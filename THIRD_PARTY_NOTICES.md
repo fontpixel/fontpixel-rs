@@ -240,3 +240,15 @@ strict structural/Type 2 validation, resource accounting and native APIs are
 project code. Fontations read-fonts 0.44.0 (MIT OR Apache-2.0) supplies borrowed
 CFF parsing and validated Type 2 evaluation. No new runtime dependency and no
 GPL source are introduced. External test tools are invoked, not copied.
+
+## W2.4 embedded bitmap tables
+
+The EBDT/EBLC/EBSC, bdat/bloc, CBDT/CBLC and sbix implementations are new project
+code based on the official Microsoft OpenType and Apple TrueType chapters linked
+in docs/formats/{otb,bdat,color}.md. Tong's supplied MIT otb.rs is an independent
+oracle for bitmap-only sfnt construction and metrics, not copied code. Generated
+small font fixtures use project-authored pixels and fontTools (MIT) scaffolding;
+their hashes and sources are under tests/data/embedded-bitmap. PNG decoding uses
+png 0.18.1 (MIT OR Apache-2.0), fdeflate and miniz_oxide under their compatible
+licenses. Test-time FreeType, HarfBuzz, OTS and monobit are invoked externally;
+no GPL implementation is copied. All protected font samples stay read-only.

@@ -41,6 +41,12 @@ pub fn registry() -> FontRegistry {
     registry.install_pcf();
     #[cfg(feature = "yaff")]
     registry.install_yaff();
+    #[cfg(feature = "otb")]
+    registry.install_embedded("otb", sfnt::bitmap::Kind::OpenType, true);
+    #[cfg(feature = "bdat")]
+    registry.install_embedded("bdat", sfnt::bitmap::Kind::Apple, true);
+    #[cfg(feature = "color")]
+    registry.install_embedded("color", sfnt::bitmap::Kind::Color, false);
     registry
 }
 

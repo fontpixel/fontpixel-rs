@@ -36,7 +36,7 @@ otf = ["cff"]
 woff = ["sfnt"]
 woff2 = ["sfnt"]
 ttc = ["sfnt"]
-color = ["sfnt"]
+color = ["sfnt", "dep:png"]
 vector-raster = ["sfnt"]
 svg = []
 bmfont = []
@@ -67,6 +67,7 @@ serde = ["dep:serde"]
 sfnt = ["dep:read-fonts"]
 
 [dependencies]
+png = { version = "0.18.1", optional = true }
 read-fonts = { version = "0.44.0", optional = true }
 serde_json = { workspace = true, optional = true, features = ["arbitrary_precision", "preserve_order"] }
 crc32fast = { version = "1.5", optional = true }
@@ -110,3 +111,7 @@ required-features = ["sfnt"]
 [[example]]
 name = "cff_check"
 required-features = ["cff"]
+
+[[example]]
+name = "bitmap_check"
+required-features = ["bdf", "otb", "bdat", "color"]

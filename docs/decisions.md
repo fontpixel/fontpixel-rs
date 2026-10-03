@@ -527,3 +527,61 @@ The Type 2 numeric range is checked independently from DICT's 32-bit integers;
 large widths, coordinates, displacements and custom-SID exhaustion error rather
 than truncate. This is an explicit boundary, not a claim to execute arbitrary
 PostScript or all legacy CFF1 programs.
+
+## 2026-10-03 — Embedded table codecs and native registry scope
+
+**Question:** W2.4 needs complete native bitmap extraction without claiming that
+outline rasterization, collections, resource forks or color writing already exist.
+**Choice:** Register OTB and bdat detect/read/write and color detect/read only.
+Expose glyph-ID-based `sfnt::bitmap` APIs for attaching bitmap pairs to existing
+outline fonts; native writes are bitmap-only sfnt. Keep TTF/OTF/vector-raster/TTC
+hooks absent until their full native contracts are implemented. A source with
+multiple bitmap families can require an explicit format. Preserve sparse physical
+strikes; EBSC remains editable scaling instructions rather than invented pixels.
+**Reason:** Table parsing and true FontSet codecs are different capabilities.
+Errors and conversion diagnostics preserve this distinction and strict-mode loss.
+
+## 2026-10-03 — Color coverage, sbix duplicates and composite arithmetic
+
+**Question:** The model has Mono/Gray8 but no RGBA, and duplicate/composite behavior
+is incompletely described in the public chapters.
+**Choice:** Default color extraction is alpha coverage. Offer an explicit
+alpha-weighted-darkness alternative and explicit Mono threshold; always report
+color projection loss. Decode PNG and premultiplied BGRA; reject unsupported image
+tags. sbix duplicates reuse the target's image placement, matching measured
+FreeType behavior even when the duplicate's own offsets differ. Nonempty glyf
+origins are separately added for the current glyph. Composite grayscale samples
+combine with bitwise OR, not max; the 0x55/0xAA overlap is independently verified
+as 0xFF by FreeType. Darkness projection of 32-bit BGRA composites is rejected
+because projecting components first cannot reproduce RGB-space composition.
+**Reason:** Avoid silently inventing color preservation or an unverified blend.
+The first implementation used max for gray overlap; an explicit independent-tool
+review caught this and added a permanent regression before acceptance.
+
+## 2026-10-03 — Narrow PNG dependency duplication, no advisory exception
+
+**Question:** Cached, verified png 0.18.1 requires miniz_oxide ^0.8 directly while
+existing flate2 1.1.10 requires ^0.9; the repository denies duplicate production
+versions by default.
+**Choice:** Add optional png only to the color feature and one exact cargo-deny
+bans exception for miniz_oxide =0.8.9. Keep flate2 current; neither advisory nor
+license checks are relaxed. BDF/PCF-only and default normal dependency graphs
+remain free of PNG/Fontations unless separately selected.
+**Reason:** Prefer a maintained bounded PNG implementation over a new homemade
+codec or an unrelated decompressor downgrade. This is an explicit dependency
+policy decision; the exception can be removed when png updates its dependency.
+
+## 2026-10-03 — Independent bitmap-tool limitations remain visible
+
+**Question:** System FreeType 2.13.3 extracts non-byte-aligned gray rows differently
+from OpenType/fontTools; bundled FreeType lacks PNG. OTS rejects bitmap-only fonts
+and strips bitmap tables from otherwise accepted outline-bearing fonts.
+**Choice:** Use the installed PNG-enabled system FreeType for color verification.
+For width-3 bit-aligned depth-2/4 images, assert the exact known FreeType shifted
+row result and independently require native/fontTools/spec packing equality.
+Keep all byte-aligned native writer pixels strict. Record OTS's acceptance of
+native common tables with valid outlines, bitmap stripping, and bitmap-only
+rejection separately. monobit bdat+EBSC generation raises KeyError('EBLC'); test
+monobit bdat without EBSC and independently test our shared EBSC API.
+**Reason:** Do not alter valid pixels to mimic an external bug or portray OTS
+container acceptance as bitmap-table validation.
