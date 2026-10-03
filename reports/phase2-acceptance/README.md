@@ -43,6 +43,11 @@ unchanged, as proved by the protected manifest.
   code or pixel/metric assertion was weakened.
 
 No production source changed from accepted W2.8. New harnesses add evidence only.
+The original Tong Rust export also reproduces the W2.6-documented null DFLT
+DefaultLangSys defect. OTS rejects its original sfnt and WOFF2 for that same
+reason. This rejection is retained explicitly, never counted as an OTS pass,
+and never permitted for a native output. The original reference still supplies
+independent full-glyph, metadata and shaping evidence; native output is conforming.
 FontTools's full-dot WOFF2 decoder uses the previously reviewed read-only
 memoryview optimization for its unchanged composite parsing algorithm; it is not
 used to claim a stock-fontTools decoding benchmark.

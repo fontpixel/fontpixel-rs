@@ -84,10 +84,25 @@ def main():
                     with tempfile.TemporaryDirectory(prefix='verify-', dir=a.native) as temp:
                         decoded, sanitized = Path(temp) / 'decoded.sfnt', Path(temp) / 'ots.sfnt'
                         run = ots.sanitize(str(web), str(sanitized), capture_output=True)
-                        assert run.returncode == 0, (label, run.stderr)
-                        left, right = freetype.Face(str(source)), freetype.Face(str(sanitized))
-                        for gid in range(count):
-                            assert bitmap(left, gid) == bitmap(right, gid), (label, gid, 'OTS pixels')
+                        reference_rejection = None
+                        if run.returncode:
+                            # Original Tong's fea-rs output has the same previously
+                            # documented null-DFLT defect as the Python reference.
+                            # This is never waived for a native output.
+                            assert engine == 'reference', (label, run.stderr)
+                            assert b'DFLT script doesn\'t satisfy the spec. DefaultLangSys is NULL' in run.stderr, (label, run.stderr)
+                            original_run = ots.sanitize(str(source), str(sanitized), capture_output=True)
+                            assert original_run.returncode != 0
+                            assert b'DefaultLangSys is NULL' in original_run.stderr
+                            font = TTFont(source)
+                            dflt = next(r.Script for r in font['GSUB'].table.ScriptList.ScriptRecord
+                                        if r.ScriptTag == 'DFLT')
+                            assert dflt.DefaultLangSys is None
+                            reference_rejection = run.stderr.decode().strip()
+                        else:
+                            left, right = freetype.Face(str(source)), freetype.Face(str(sanitized))
+                            for gid in range(count):
+                                assert bitmap(left, gid) == bitmap(right, gid), (label, gid, 'OTS pixels')
                         subprocess.run([str(a.woff_driver), 'decode', 'woff2', str(web), str(decoded)],
                                        check=True, capture_output=True)
                         equivalent(source, decoded, label + '-native-decode', False)
@@ -95,10 +110,13 @@ def main():
                         report['native_woff2_streams'][web.name] = streams(web)
                     report['results'].append({'case': label, 'glyphs': count,
                                               'bytes': web.stat().st_size, 'sha256': sha(web),
-                                              'independent_full_glyphs': True, 'ots_full_pixels': True,
+                                              'independent_full_glyphs': True,
+                                              'ots_full_pixels': reference_rejection is None,
+                                              'original_reference_ots_rejection': reference_rejection,
                                               'native_reader_full_tables': True})
                     save()
-                    print(label, 'PASS', count, flush=True)
+                    print(label, 'KNOWN REFERENCE OTS REJECTION; GLYPH/READER PASS'
+                          if reference_rejection else 'PASS', count, flush=True)
     report['partial'] = False
     save()
 
