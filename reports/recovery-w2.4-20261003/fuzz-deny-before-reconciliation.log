@@ -1,10 +1,10 @@
 error[duplicate]: found 2 duplicate entries for crate 'miniz_oxide'
    ┌─ /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/Cargo.lock:24:1
-   │  
+   │
 24 │ ╭ miniz_oxide 0.8.9 registry+https://github.com/rust-lang/crates.io-index
 25 │ │ miniz_oxide 0.9.1 registry+https://github.com/rust-lang/crates.io-index
    │ ╰───────────────────────────────────────────────────────────────────────┘ lock entries
-   │  
+   │
    ├ miniz_oxide v0.8.9
      └── png v0.18.1
          └── fontpixel v0.1.0

@@ -1,0 +1,39 @@
+{
+  "date_utc": "2026-10-03",
+  "status": "progress",
+  "production_revision": "0c4bfdd",
+  "reconciliation_revision": "cbcbed4",
+  "checks": {
+    "build": 0,
+    "check": 0,
+    "crosscheck": 0,
+    "doc": 0,
+    "feature-sfnt": 0,
+    "feature-otb": 0,
+    "feature-bdat": 0,
+    "feature-color": 0,
+    "fixture-regeneration": 0,
+    "fuzz-build": 0,
+    "fuzz-deny": 0,
+    "root-deny": 0,
+    "parity": 0,
+    "release-build": 0
+  },
+  "aggregate_test_executions": 561,
+  "embedded_bitmap_tests": 15,
+  "crosscheck_cases": 140,
+  "crosscheck_glyph_checks": 380808,
+  "parity_new": 0,
+  "source_fingerprint": "d8adc6b27c3354dd",
+  "fuzz": {
+    "embedded_bitmap": {
+      "status": "running"
+    },
+    "color_bitmap": {
+      "status": "running"
+    }
+  },
+  "protected_files": 690,
+  "regenerated_fixtures": 37,
+  "original_git_objects_restored": false
+}

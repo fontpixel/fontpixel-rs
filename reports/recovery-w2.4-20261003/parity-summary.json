@@ -1,0 +1,85 @@
+{
+ "sources": {
+  "python": {
+   "head": "",
+   "src_dirty": false,
+   "src_sha256": "938d9ed560ef29ba"
+  },
+  "rust": {
+   "head": "0c4bfdd",
+   "src_dirty": false,
+   "src_sha256": "d8adc6b27c3354dd"
+  }
+ },
+ "sources_end": {
+  "python": {
+   "head": "",
+   "src_dirty": false,
+   "src_sha256": "938d9ed560ef29ba"
+  },
+  "rust": {
+   "head": "0c4bfdd",
+   "src_dirty": false,
+   "src_sha256": "d8adc6b27c3354dd"
+  }
+ },
+ "phases": [
+  {
+   "phase": "tables",
+   "summary": "67 charset tables compared, 0 differ (SPEC-v3 \u00a711.1: tables must be exact, see README.md)",
+   "new": 0,
+   "seconds": 18.7
+  },
+  {
+   "phase": "random",
+   "cases": 2000,
+   "operations": 35941,
+   "divergences": 0,
+   "new": 0,
+   "labels": {},
+   "seconds": 20.1,
+   "py_seconds_max_shard": 19.3,
+   "js_seconds_max_shard": 4.3
+  },
+  {
+   "phase": "random_all",
+   "cases": 1000,
+   "operations": 17588,
+   "divergences": 6,
+   "new": 0,
+   "labels": {
+    "K12-ragged-bitmap": 6
+   },
+   "seconds": 10.7,
+   "py_seconds_max_shard": 9.9,
+   "js_seconds_max_shard": 2.4
+  },
+  {
+   "phase": "probes",
+   "cases": 41,
+   "operations": 89,
+   "divergences": 1,
+   "new": 0,
+   "labels": {
+    "K12-ragged-bitmap": 1
+   },
+   "seconds": 0.5,
+   "py_seconds_max_shard": 0.2,
+   "js_seconds_max_shard": 0.0,
+   "probe_changes": 0
+  },
+  {
+   "phase": "corpus",
+   "cases": 251,
+   "operations": 5221,
+   "divergences": 0,
+   "new": 0,
+   "labels": {},
+   "seconds": 82.8,
+   "py_seconds_max_shard": 82.5,
+   "js_seconds_max_shard": 29.7
+  }
+ ],
+ "seconds": 137.2,
+ "new": 0
+}

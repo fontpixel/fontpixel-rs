@@ -1,0 +1,8 @@
+compared 41 cases, 89 operations: 1 independent divergence(s) in 1 case(s) (0 NEW), 1 cascaded op divergence(s) suppressed
+      1  K12-ragged-bitmap  bset:js-error x1
+         Operations on "ragged" bitmaps (rows of different lengths, e.g. after replace("10", "2"); invalid input, SPEC-v3 §1.3): Python permits ragged intermediate lists; Rust rejects the invalid input transactionally
+
+--- [K12-ragged-bitmap] K12-ragged-bitmap op#0 bset:js-error
+  op: {"op": "bset", "rows": ["110", "1"]}
+  py: null
+  js: Error: Bitmap rows must be rectangular labels 0, 1, 2

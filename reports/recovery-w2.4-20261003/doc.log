@@ -1,0 +1,9 @@
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+    Checking serde_json v1.0.151
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/crates/fontpixel)
+ Documenting fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/crates/fontpixel)
+ Documenting fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/crates/fontpixel-py)
+ Documenting fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/crates/fontpixel-wasm)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 11.69s
+   Generated /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/doc/fontpixel/index.html and 2 other files

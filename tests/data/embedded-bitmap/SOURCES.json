@@ -1,0 +1,195 @@
+{
+  "license": "MIT",
+  "copyright": "Tom Chen",
+  "source": "Project-authored independent fixture programs in tests/crosscheck/embedded_bitmap.py, with fontTools empty-outline scaffolding and Pillow PNG encoding. No copied font artwork.",
+  "regenerate": "cargo build --locked --release -p fontpixel --all-features --example bitmap_check; python3 -B tests/crosscheck/embedded_bitmap.py --synthetic-only --fixtures tests/data/embedded-bitmap",
+  "recovery_provenance": "Regenerated 2026-10-03 from retained source and exact change ledger. Original fixture bytes and hash manifest were lost; these hashes authenticate only the regenerated files.",
+  "fixed_head_timestamp": 3660681600,
+  "files": [
+    {
+      "file": "bdat-i1-f1-d1.ttf",
+      "bytes": 980,
+      "sha256": "5c340360bcaa8e73792a1cec395fba494289ebdb392b76c6580a2035ee7b03a3"
+    },
+    {
+      "file": "bdat-i1-f2-d1.ttf",
+      "bytes": 980,
+      "sha256": "57f222566a12f1e3f02f96f9d86d2ac76f7570ffbcf7ce7293078261ec0e4b43"
+    },
+    {
+      "file": "bdat-i1-f6-d1.ttf",
+      "bytes": 984,
+      "sha256": "646e415a0b74c35b24c755b6b93c92c3933ae3a9d16680321e6d41acde4532f2"
+    },
+    {
+      "file": "bdat-i1-f7-d1.ttf",
+      "bytes": 984,
+      "sha256": "00143a9a0aa8127e173e2120c1fb5166a54a16df63ef82dfac1795f84092f6f7"
+    },
+    {
+      "file": "bdat-i2-f5-d1.ttf",
+      "bytes": 980,
+      "sha256": "7a57a68a38edc3685f158d1ea45ec680a0738351834d0b3f39cc557eec2f5ef6"
+    },
+    {
+      "file": "bdat-i3-f1-d1.ttf",
+      "bytes": 976,
+      "sha256": "749ea837a06d00e5fddf4ecc1e006faca6d15d6bbca32858e92becfe88c7947e"
+    },
+    {
+      "file": "bdat-i3-f2-d1.ttf",
+      "bytes": 976,
+      "sha256": "6eef8c0fd2d3918f3b93268544fd034b03f31c4e638645982df911d86a7832b6"
+    },
+    {
+      "file": "bdat-i3-f6-d1.ttf",
+      "bytes": 980,
+      "sha256": "0797d9feb37a9e60bf8c6a20341848d273f9389536bd04a4102316e3e90450a0"
+    },
+    {
+      "file": "bdat-i3-f7-d1.ttf",
+      "bytes": 980,
+      "sha256": "5decfa0fa065d87bae3d586652a166d51bd18cf45743245c0baeab22739d2239"
+    },
+    {
+      "file": "bdat-i4-f1-d1.ttf",
+      "bytes": 984,
+      "sha256": "cf7c54f395d0961ae1220592e2e23a44bb10dbc7a188fa5d5117a1646bc37d86"
+    },
+    {
+      "file": "bdat-i4-f2-d1.ttf",
+      "bytes": 984,
+      "sha256": "808c910388bac4d8453b7cb8a9da73b08d87a1cc721ec67b1368a80960e18609"
+    },
+    {
+      "file": "bdat-i4-f6-d1.ttf",
+      "bytes": 988,
+      "sha256": "d02aacd4b6eaf96c8865ddd52fe600e05a0894dbd27ef75fd97c6752dfa130a0"
+    },
+    {
+      "file": "bdat-i4-f7-d1.ttf",
+      "bytes": 988,
+      "sha256": "d8ae06d276e2ca9cc1282cdbda27ee4e4cd314a62c0c641c33459e147d9f7dbc"
+    },
+    {
+      "file": "bdat-i5-f5-d1.ttf",
+      "bytes": 988,
+      "sha256": "bf91fe41c1206692fd302885f8b5df28183a285fb1e1d1182b91ac3d1a078354"
+    },
+    {
+      "file": "color-i1-f17.ttf",
+      "bytes": 1068,
+      "sha256": "61172de482f93a07f2a9271c63a776081b8cf07911c14868b6f399a4acde02c4"
+    },
+    {
+      "file": "color-i2-f19.ttf",
+      "bytes": 1068,
+      "sha256": "d8b4bb1f4ef247855624814b6ffc24748b92d4376564eb79f72a63c00c94afff"
+    },
+    {
+      "file": "color-i3-f18.ttf",
+      "bytes": 1068,
+      "sha256": "b80826d1e57aca16bb5c38a51f914731d36f8ffcb7f4b5edfde3ceb9fcc63465"
+    },
+    {
+      "file": "color-i5-f19.ttf",
+      "bytes": 1076,
+      "sha256": "53acc946907e22c82a7f7684c9d3847c10374b0a15db82fad9ae73f1d102227f"
+    },
+    {
+      "file": "composite-f8.ttf",
+      "bytes": 1016,
+      "sha256": "ef8c8809a80eda830b5fcb38686bb11931d47a1a95da13ab5a69f9e27a72bd5d"
+    },
+    {
+      "file": "composite-f9.ttf",
+      "bytes": 1020,
+      "sha256": "60e3a8d806a230fa16dc17ec809da6ac3e032d10824807acf66b3a88f77eaa3c"
+    },
+    {
+      "file": "composite-gray-overlap.ttf",
+      "bytes": 1040,
+      "sha256": "cae6a9e143286390acd6227fe85bb4ba6b415b01f3e2e8e7646499ca830c56cf"
+    },
+    {
+      "file": "otb-i1-f1-d1.ttf",
+      "bytes": 980,
+      "sha256": "e6d61bbe115d1419639f0c09614a7f1d24ff840870f83beed8dd93de1e556444"
+    },
+    {
+      "file": "otb-i1-f2-d1.ttf",
+      "bytes": 980,
+      "sha256": "ec05d6de32efded74932e962bbd600f45caa14b4c68feb77376e53985d09c277"
+    },
+    {
+      "file": "otb-i1-f6-d1.ttf",
+      "bytes": 984,
+      "sha256": "fc39f7f09b924c2cda78d6874c846a1c14c2ccb742d11514aad653157ccac0a5"
+    },
+    {
+      "file": "otb-i1-f7-d1.ttf",
+      "bytes": 984,
+      "sha256": "916bc5ce2e0d0373fec33ccc8b1c79695c5ee444416c34e0681a030df98f5a29"
+    },
+    {
+      "file": "otb-i2-f5-d1.ttf",
+      "bytes": 980,
+      "sha256": "674b20df7120e92572823438960319fed4b51726772893cfeb250ecd046ad4bc"
+    },
+    {
+      "file": "otb-i3-f1-d1.ttf",
+      "bytes": 976,
+      "sha256": "aa0181f9a6211274825fb87e4934150df1f0802ee9f6002290a593529347e8aa"
+    },
+    {
+      "file": "otb-i3-f2-d1.ttf",
+      "bytes": 976,
+      "sha256": "8397d3a0b047438e6ab17104cac8c58080a0ae9f79bc63ad0dc1249dfa7ee3bb"
+    },
+    {
+      "file": "otb-i3-f6-d1.ttf",
+      "bytes": 980,
+      "sha256": "8f2062afabeb53c0e14ba006d5c07a7efa0578ed083d8290c19cab570ed5e901"
+    },
+    {
+      "file": "otb-i3-f7-d1.ttf",
+      "bytes": 980,
+      "sha256": "1744a1eb19bf1d5a6c62ecbb960ef115b8fdc365b038a43b0a9e164d9606c319"
+    },
+    {
+      "file": "otb-i4-f1-d1.ttf",
+      "bytes": 984,
+      "sha256": "8f981d3fcfd7f114e0465b7127b67a356a9de9155e7eb03eb57cc3ac2bc2542e"
+    },
+    {
+      "file": "otb-i4-f2-d1.ttf",
+      "bytes": 984,
+      "sha256": "dc3ca57c029fe17a9570cb9717368cee499db25f9d4474e037acab84de8441f0"
+    },
+    {
+      "file": "otb-i4-f6-d1.ttf",
+      "bytes": 988,
+      "sha256": "296a18bf707e68698d51643ed4f40e73bb0d269957f02374bd77c048e10a18a3"
+    },
+    {
+      "file": "otb-i4-f7-d1.ttf",
+      "bytes": 988,
+      "sha256": "365f1ecaa609dd788856caa1368ded93f6a4af3ae31ba44d20ccf592fda2e388"
+    },
+    {
+      "file": "otb-i5-f5-d1.ttf",
+      "bytes": 988,
+      "sha256": "f66bd6b0cfcb7683c42cf96262afed3165e515df15782b496151e221642fd276"
+    },
+    {
+      "file": "sbix-False.ttf",
+      "bytes": 1012,
+      "sha256": "19e47f3c8f64f8cb403d5a0057a32cb2f25f0c30120f1ad44b963bd9d83cfc21"
+    },
+    {
+      "file": "sbix-True.ttf",
+      "bytes": 1032,
+      "sha256": "a3825830805cab28e8745248ce8f1a188413d0dc0571906146faa704a942e2a4"
+    }
+  ]
+}
