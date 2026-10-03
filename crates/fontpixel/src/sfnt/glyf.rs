@@ -449,6 +449,23 @@ impl GlyfTable {
         self.expand(glyph_id as usize, l, &mut visits, &mut path)
             .map(|v| v.0)
     }
+    /// Resolve one glyph while charging a caller's whole-font expansion budget.
+    pub(crate) fn contours_cumulative(
+        &self,
+        glyph_id: u16,
+        l: &Limits,
+        visits: &mut usize,
+    ) -> Result<Vec<Contour>> {
+        let mut local = 0;
+        let result = self
+            .expand(glyph_id as usize, l, &mut local, &mut Vec::new())?
+            .0;
+        *visits = visits
+            .checked_add(local)
+            .ok_or_else(|| invalid("glyf visit overflow"))?;
+        bounded(*visits, l.max_total_visits, "glyf cumulative raster visits")?;
+        Ok(result)
+    }
     fn expand(
         &self,
         gid: usize,

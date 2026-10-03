@@ -553,7 +553,7 @@ impl<'a> Cff<'a> {
         }
         Ok(out)
     }
-    fn decode(
+    pub(crate) fn decode(
         &self,
         gid: u16,
         l: &Limits,

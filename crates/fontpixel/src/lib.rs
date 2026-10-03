@@ -51,6 +51,18 @@ pub fn registry() -> FontRegistry {
     registry.install_embedded("bdat", sfnt::bitmap::Kind::Apple, true);
     #[cfg(feature = "color")]
     registry.install_embedded("color", sfnt::bitmap::Kind::Color, false);
+    #[cfg(feature = "ttf")]
+    registry.install_vector("ttf");
+    #[cfg(feature = "otf")]
+    registry.install_vector("otf");
+    #[cfg(feature = "woff")]
+    registry.install_vector("woff");
+    #[cfg(feature = "woff2")]
+    registry.install_vector("woff2");
+    #[cfg(feature = "ttc")]
+    registry.install_vector("ttc");
+    #[cfg(feature = "vector-raster")]
+    registry.install_vector("vector-raster");
     registry
 }
 

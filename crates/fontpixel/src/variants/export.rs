@@ -142,6 +142,14 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         return Err(invalid("invalid dot size for the chosen outline shape"));
     }
     let plan = variants.plan(&o.limits)?;
+    encode_planned(variants, o, plan, None)
+}
+fn encode_planned(
+    variants: &Variants,
+    o: &Options,
+    plan: Plan,
+    source_notdef: Option<Glyph>,
+) -> Result<Encoded> {
     let l = &o.limits.sfnt;
     let scale = i64::from(o.units_per_pixel);
     if scale == 0 {
@@ -198,7 +206,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             .collect::<String>()
     );
     let mut report = Report::default();
-    let notdef = notdef()?;
+    let notdef = source_notdef.map_or_else(notdef, Ok)?;
     let sources = std::iter::once((".notdef", &notdef))
         .chain(plan.glyphs.iter().map(|(n, g)| (n.as_str(), g)))
         .collect::<Vec<_>>();
@@ -692,4 +700,84 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         bytes: b.build(l)?,
         report,
     })
+}
+
+/// Vectorize one complete Font while retaining aliases and unencoded glyphs.
+/// Unlike regional planning this preserves physical glyph identity and order.
+pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
+    font.validate(&o.limits.sfnt.resources)?;
+    let mut mapping = BTreeMap::new();
+    let mut glyphs = Vec::new();
+    let notdef_id = font
+        .glyphs()
+        .find(|(_, g)| g.name.as_deref() == Some(".notdef"))
+        .map(|(id, _)| id);
+    let source_notdef = notdef_id
+        .and_then(|id| font.glyph(id))
+        .map(|g| planned_glyph(font, g))
+        .unwrap_or_else(|| {
+            let mut g = Glyph::new(Bitmap::<crate::bitmap::Mono>::default());
+            g.metrics.advance = Some(crate::model::Vector::new(0, 0));
+            g
+        });
+    let mut names = std::collections::BTreeSet::from([".notdef".to_owned()]);
+    let mut report = Report::default();
+    for (id, g) in font.glyphs() {
+        let gid = if Some(id) == notdef_id {
+            0
+        } else {
+            o.limits.sfnt.glyphs(glyphs.len().saturating_add(2))?;
+            let mut name = g
+                .name
+                .clone()
+                .filter(|n| {
+                    !n.is_empty()
+                        && n.len() <= 63
+                        && n.bytes()
+                            .all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_')
+                })
+                .unwrap_or_else(|| format!("glyph{}", id.index()));
+            if names.contains(&name) {
+                name = format!("glyph{}", id.index());
+                while names.contains(&name) {
+                    name.push('_');
+                }
+            }
+            if g.name.as_deref() != Some(&name) && g.name.is_some() {
+                note(
+                    &mut report,
+                    "opentype.glyph_name",
+                    "Unrepresentable/duplicate glyph names were replaced with unique PostScript names",
+                );
+            }
+            names.insert(name.clone());
+            glyphs.push((name, planned_glyph(font, g)));
+            glyphs.len() as u16
+        };
+        for cp in &g.codepoints {
+            let Codepoint::Unicode(cp) = *cp else {
+                return Err(invalid(
+                    "native OpenType output requires Unicode codepoints",
+                ));
+            };
+            if char::from_u32(cp).is_none() {
+                return Err(invalid("non-scalar Unicode codepoint"));
+            }
+            if mapping.insert(cp, gid).is_some() {
+                note(
+                    &mut report,
+                    "opentype.duplicate_codepoint",
+                    "Duplicate cmap entries resolve to the last source glyph",
+                );
+            }
+        }
+    }
+    let plan = Plan {
+        glyphs,
+        cmap: mapping,
+        gsub: Gsub::default(),
+    };
+    let mut encoded = encode_planned(&Variants::new(font.clone()), o, plan, Some(source_notdef))?;
+    encoded.report.extend(report);
+    Ok(encoded)
 }

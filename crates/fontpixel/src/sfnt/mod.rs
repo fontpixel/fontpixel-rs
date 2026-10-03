@@ -8,6 +8,8 @@ pub mod bitmap;
 #[cfg(feature = "cff")]
 pub mod cff;
 pub mod cmap;
+#[cfg(feature = "ttc")]
+pub mod collection;
 mod container;
 mod data;
 pub mod gasp;
