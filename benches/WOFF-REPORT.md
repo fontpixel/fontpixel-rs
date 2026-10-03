@@ -1,5 +1,11 @@
 # WOFF2 performance — W2.5, 2026-10-03
 
+**Candidate measurements:** The tables below retain the original `cc5ba81`
+measurements. Subsequent conformance review changed CFF and explicit null-transform
+output by setting mandatory head.flags bit 11. Final-code measurements and byte
+verification are recorded separately in `WOFF-REVIEW-REPORT.md`; historical
+affected byte counts are not presented as final-code outputs.
+
 All medians use five wall-clock samples, retained in `benches/results/woff-resumed.json`. Input reads/output writes are outside the timer. No other worker-owned build, fuzz or correctness job ran during timed groups. The VM is shared and unpinned; these are observed results, not universal speed guarantees.
 
 Machine: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz; 9 visible CPUs; MemTotal:       10206504 kB; Linux-6.18.44-x86_64-with-glibc2.41.

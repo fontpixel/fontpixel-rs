@@ -124,7 +124,14 @@ fn woff2_advisory_sizes_reserved_and_null_transform() {
         ..options()
     };
     let e = woff2::encode(FONT, &o, &l).unwrap();
-    assert_eq!(woff2::decode(&e.bytes, &l).unwrap().sfnt, FONT);
+    let source = Sfnt::parse(FONT, &l.sfnt).unwrap();
+    let mut head = source.table(*b"head").unwrap().to_vec();
+    let flags = u16::from_be_bytes(head[16..18].try_into().unwrap()) | 0x0800;
+    head[16..18].copy_from_slice(&flags.to_be_bytes());
+    assert_eq!(
+        woff2::decode(&e.bytes, &l).unwrap().sfnt,
+        replace(FONT, *b"head", head)
+    );
 }
 #[test]
 fn signature_loss_is_explicit() {
@@ -397,6 +404,9 @@ fn woff1_preserves_physical_table_order_and_reports_invalidated_signatures() {
     // Hidden non-table data and checksum repair must not carry a stale DSIG.
     let mut extra = reversed.clone();
     extra.extend([1, 2, 3, 4]);
+    extra[head + 8..head + 12].fill(0);
+    let adjustment = 0xb1b0_afbau32.wrapping_sub(fontpixel::sfnt::checksum(&extra));
+    extra[head + 8..head + 12].copy_from_slice(&adjustment.to_be_bytes());
     let encoded = woff1::encode(&extra, &woff1::Options::default(), &limits).unwrap();
     assert!(encoded.report.has_loss());
     let decoded = woff1::decode(&encoded.bytes, &limits).unwrap();
@@ -426,13 +436,9 @@ fn woff1_preserves_physical_table_order_and_reports_invalidated_signatures() {
     ) as usize;
     incoming[head_payload + 8..head_payload + 12].fill(0);
     let repaired = woff1::decode(&incoming, &limits).unwrap();
-    assert!(
-        repaired
-            .report
-            .entries
-            .iter()
-            .any(|e| e.code == "woff1.dsig_removed")
-    );
+    for code in ["woff1.dsig_removed", "woff1.checksum_adjustment_repaired"] {
+        assert!(repaired.report.entries.iter().any(|e| e.code == code));
+    }
     assert!(
         Sfnt::parse(&repaired.sfnt, &limits.sfnt)
             .unwrap()
@@ -442,13 +448,81 @@ fn woff1_preserves_physical_table_order_and_reports_invalidated_signatures() {
     // A broken incoming head adjustment is independently diagnosed on decode.
     let mut bad = reversed;
     bad[head + 8..head + 12].fill(0);
-    // The encoder repairs it before wrapping; that repair also removes DSIG.
-    let encoded = woff1::encode(&bad, &woff1::Options::default(), &limits).unwrap();
-    assert!(
-        encoded
-            .report
-            .entries
-            .iter()
-            .any(|e| e.code == "woff1.dsig_removed")
-    );
+    // WOFF1 creators must reject bad source checksums before packaging.
+    assert!(woff1::encode(&bad, &woff1::Options::default(), &limits).is_err());
+}
+
+#[test]
+fn woff1_rejects_bad_source_checksums_and_missing_final_padding() {
+    let limits = Limits::default();
+    let mut bad = FONT.to_vec();
+    bad[16] ^= 1; // First directory checksum, with no table-payload change.
+    assert!(woff1::encode(&bad, &woff1::Options::default(), &limits).is_err());
+    let mut encoded = woff1::encode(
+        FONT,
+        &woff1::Options {
+            compression_level: 0,
+            ..Default::default()
+        },
+        &limits,
+    )
+    .unwrap()
+    .bytes;
+    let count = u16::from_be_bytes(encoded[12..14].try_into().unwrap()) as usize;
+    let end = (0..count)
+        .map(|i| {
+            let at = 44 + i * 20;
+            u32::from_be_bytes(encoded[at + 4..at + 8].try_into().unwrap()) as usize
+                + u32::from_be_bytes(encoded[at + 8..at + 12].try_into().unwrap()) as usize
+        })
+        .max()
+        .unwrap();
+    assert!(!end.is_multiple_of(4));
+    assert_eq!(encoded.len(), (end + 3) & !3);
+    encoded.truncate(end);
+    encoded[8..12].copy_from_slice(&(end as u32).to_be_bytes());
+    assert!(woff1::decode(&encoded, &limits).is_err());
+}
+
+#[test]
+fn woff2_always_marks_lossless_modification() {
+    let limits = Limits::default();
+    for flavor in [
+        fontpixel::sfnt::Flavor::TrueType,
+        fontpixel::sfnt::Flavor::Cff,
+    ] {
+        let mut builder = SfntBuilder::new(flavor);
+        let source = Sfnt::parse(FONT, &limits.sfnt).unwrap();
+        for table in source.tables() {
+            if flavor == fontpixel::sfnt::Flavor::Cff && [*b"glyf", *b"loca"].contains(&table.tag) {
+                continue;
+            }
+            builder.insert(table.tag, table.data.to_vec()).unwrap();
+        }
+        if flavor == fontpixel::sfnt::Flavor::Cff {
+            // Opaque CFF transport: no outline interpretation is needed here.
+            builder.insert(*b"CFF ", vec![1, 0, 4, 4]).unwrap();
+        }
+        let font = builder.build(&limits.sfnt).unwrap();
+        for transform in [false, true] {
+            let encoded = woff2::encode(
+                &font,
+                &woff2::Options {
+                    transform_glyf: transform,
+                    transform_hmtx: transform,
+                    ..options()
+                },
+                &limits,
+            )
+            .unwrap();
+            let decoded = woff2::decode(&encoded.bytes, &limits).unwrap();
+            let result = Sfnt::parse(&decoded.sfnt, &limits.sfnt).unwrap();
+            result.validate_checksums().unwrap();
+            let head = result.table(*b"head").unwrap();
+            assert_ne!(
+                u16::from_be_bytes(head[16..18].try_into().unwrap()) & 0x800,
+                0
+            );
+        }
+    }
 }

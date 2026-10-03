@@ -61,6 +61,7 @@ def verify(binary,source,tmp,label,check_ots=True):
         web=tmp/(name+'.'+kind);out=tmp/(name+'.sfnt')
         invoke(binary,'encode',kind,source,web,q,threads,*([] if transform else ['null']))
         equivalent(source,web,name,check_ots)
+        if kind=='woff2':assert TTFont(web)['head'].flags & 0x800,(name,'required WOFF2 head flag')
         if kind=='woff':
             def physical(path):
                 font=TTFont(path);return [tag for tag,_ in sorted(font.reader.tables.items(),key=lambda item:(item[1].offset,getattr(item[1],'origLength',item[1].length),item[0]))]

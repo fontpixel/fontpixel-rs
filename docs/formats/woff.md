@@ -32,7 +32,7 @@ level is configurable 0–9. Unknown sfnt tables remain byte-identical.
 ## Fidelity, malformed input, and losses
 
 Reordering tables, normalizing padding and correcting checksum adjustment can
-change the sfnt envelope bytes, not table semantics. Bad table checksums, spans,
+change the sfnt envelope bytes, not table semantics. Bad source or container table checksums, source whole-font checksums, spans,
 compression streams or declared lengths fail. Input/output/table/decompression
 budgets are applied before allocation. Optional blocks are preserved separately
 from sfnt; passing only the sfnt bytes to an unrelated writer discards them by
@@ -51,6 +51,10 @@ though directory entries remain tag-sorted. Both directions use an explicitly
 order-preserving sfnt assembler. For well-formed input with ordinary padding,
 standalone sfnt bytes (including a DSIG table) roundtrip exactly. Non-table data
 cannot be carried by WOFF; nonzero discarded bytes produce a loss report.
-Directory/checksum/padding repairs are reported, and a DSIG invalidated by
-normalization is removed with an explicit loss report. No signature validity or
+Checksum-valid directory/padding normalization is reported, and a DSIG invalidated
+by normalization is removed with an explicit loss report. Source checksum errors
+are rejected before normalization, following the explicit WOFF1 §5 MUST-reject
+requirement; the later advisory wording about correcting checksums does not
+relax that strict default. Every WOFF1 table, including the last, must contain
+its full zero padding to a four-byte boundary. No signature validity or
 cryptographic verification is claimed.

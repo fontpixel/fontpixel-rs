@@ -19,6 +19,7 @@ def raw(path):
 def main():
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--reference',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();results=[]
     for path in sorted(a.work.glob('native-*.woff2')):
+        assert TTFont(path)['head'].flags & 0x800,(path,'required WOFF2 head flag')
         if 'Tong-SC-square' in path.name:source=a.work/'Tong-SC-square.otf';validated=a.work/'Tong-SC-square.validation.woff2'
         elif 'Tong-SC-dot' in path.name:source=a.work/'Tong-SC-dot.ttf';validated=a.work/'Tong-SC-dot.validation.woff2'
         elif 'Tong-Latin-dot' in path.name:
@@ -29,7 +30,11 @@ def main():
         else:
             src=TTFont(source);web=TTFont(path)
             assert set(src.reader.tables)==set(web.reader.tables)
-            for tag,entry in web.reader.tables.items():assert entry.loadData(web.reader.transformBuffer)==src.reader[tag],(path,tag)
+            for tag,entry in web.reader.tables.items():
+                actual=entry.loadData(web.reader.transformBuffer);expected=src.reader[tag]
+                if tag=='head':
+                    expected=bytearray(expected);expected[16:18]=(int.from_bytes(expected[16:18],'big')|0x800).to_bytes(2,'big')
+                assert actual==expected,(path,tag)
         results.append({'file':path.name,'checks':'stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes'})
     for path in sorted([*a.work.glob('tong-woff063-*.woff2'),*a.work.glob('fonttools-*.woff2')]):
         source=a.work/('Tong-SC-square.otf' if 'Tong-SC-square' in path.name else 'Tong-SC-dot.ttf' if 'Tong-SC-dot' in path.name else 'Tong-Latin-dot.ttf')

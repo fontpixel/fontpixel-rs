@@ -381,7 +381,9 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
         transformed.insert(*b"glyf", transform::encode(&tables, l)?);
         transformed.insert(*b"loca", Vec::new());
     }
-    if !transformed.is_empty() {
+    // WOFF2 §5 requires this flag for every encoded font, including CFF and
+    // null-transform fonts, because envelope reconstruction can change bytes.
+    {
         let head = tables
             .get_mut(b"head")
             .ok_or_else(|| invalid("missing head"))?;

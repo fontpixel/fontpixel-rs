@@ -22,6 +22,7 @@ def main():
     for source in [a.work/'Tong-SC-square.otf',a.work/'Tong-SC-dot.ttf']:
         started=time.perf_counter();label=source.stem;web=source.with_suffix('.validation.woff2');out=source.with_suffix('.validation.sfnt');sanitized=source.with_suffix('.validation.ots.sfnt')
         invoke(a.binary,'encode','woff2',source,web,5,4);print(label,'encoded',flush=True)
+        assert TTFont(web)['head'].flags & 0x800,(label,'required WOFF2 head flag')
         count=equivalent(source,web,label,True);print(label,'fontTools and FreeType all glyphs passed',count,flush=True)
         invoke(a.binary,'decode','woff2',web,out);equivalent(source,out,label,False)
         status=ots.sanitize(str(web),str(sanitized),capture_output=True);assert status.returncode==0,status.stderr

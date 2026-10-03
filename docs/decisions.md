@@ -675,3 +675,25 @@ remove a signature invalidated by normalization with a loss entry. Test a valid
 reverse-physical-order font carrying DSIG, plus hidden data/checksum repairs.
 **Reason:** Meet the normative packaging rule rather than mistaking identical
 rendering for exact envelope fidelity. WOFF2 algorithms and timings are unchanged.
+
+
+## 2026-10-03 — W2.5 review closes mandatory webfont conformance gaps
+
+**Question:** Independent specification review found that candidate `cc5ba81`
+normalized invalid WOFF1 source checksums, accepted missing final WOFF1 table
+padding, and set WOFF2 head.flags bit 11 only when a table transform was used.
+**Choice:** Reject invalid source table and whole-font checksums before WOFF1
+packaging; continue reporting normalization only for checksum-valid structural
+anomalies and remove any resulting stale DSIG. Report incoming WOFF1 checksum-adjustment repairs even without a DSIG.
+Require the last WOFF1 table's complete zero padding separately from WOFF2's optional final block padding.
+Set bit 11 for every WOFF2 output, including CFF and null transforms. Preserve
+all earlier raw evidence as candidate observations and rerun affected validation
+and representative final-code performance measurements in separate files.
+**Reason:** WOFF1 §5 has an explicit MUST-reject checksum requirement; its later
+advisory wording about correcting checksums is not a reason to weaken the strict
+encoding boundary. WOFF1 §5/§6 mandates table padding, including the final table.
+WOFF2 §5 requires the head flag independently of whether glyf/hmtx is transformed.
+Byte comparisons now construct exactly the specification-mandated head change;
+all other null-transform bytes remain exact, and no glyph/pixel assertions relax.
+Sources: https://www.w3.org/TR/WOFF/#TableDirectory and
+https://www.w3.org/TR/WOFF2/#table_format.

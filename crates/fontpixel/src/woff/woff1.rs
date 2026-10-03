@@ -169,7 +169,13 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         }
         end = offset + len;
     }
-    let (auxiliary, mut report) = read_aux(data, 20, end, l, decompress)?;
+    // WOFF1 pads every table, including the final table. WOFF2 instead permits
+    // an unpadded final compressed block, so keep this check outside read_aux.
+    let padded_end = align(end)?;
+    if slice(data, end, padded_end - end)?.iter().any(|b| *b != 0) {
+        return Err(invalid("nonzero final table padding"));
+    }
+    let (auxiliary, mut report) = read_aux(data, 20, padded_end, l, decompress)?;
     let mut tables = Vec::with_capacity(n);
     for (tag, offset, compressed, original, sum) in records {
         let raw = slice(data, offset, compressed)?;
@@ -196,6 +202,15 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             .1,
         8,
     )?;
+    if adjustment != original_adjustment {
+        report.push(ReportEntry {
+            level: Level::Info,
+            impact: Impact::Repair,
+            code: "woff1.checksum_adjustment_repaired".into(),
+            location: Default::default(),
+            message: "Recomputed an incorrect incoming sfnt checksum adjustment".into(),
+        });
+    }
     if adjustment != original_adjustment && borrowed.iter().any(|t| t.0 == *b"DSIG") {
         borrowed.retain(|t| t.0 != *b"DSIG");
         sfnt = assemble_ordered(flavor, &borrowed, l)?.0;
@@ -226,6 +241,16 @@ pub fn encode(data: &[u8], options: &Options, l: &Limits) -> Result<Encoded> {
     }
     checked_aux(&options.auxiliary, l)?;
     let original = sfnt::Sfnt::parse(data, &l.sfnt)?;
+    // WOFF1 §5 explicitly requires creators to validate and reject incorrect
+    // table/whole-font checksums before any packaging normalization.
+    for table in original.tables() {
+        if checksum(table.tag, table.data)? != table.checksum {
+            return Err(invalid("source sfnt table checksum mismatch"));
+        }
+    }
+    if sfnt::checksum(data) != 0xb1b0_afba {
+        return Err(invalid("source sfnt whole-font checksum mismatch"));
+    }
     let mut report = Report::default();
     let mut tables = source_tables(&original);
     let mut canonical = assemble_ordered(original.flavor(), &tables, l)?.0;
@@ -242,7 +267,7 @@ pub fn encode(data: &[u8], options: &Options, l: &Limits) -> Result<Encoded> {
                 impact: Impact::Repair,
                 code: "woff1.sfnt_normalized".into(),
                 location: Default::default(),
-                message: "sfnt directory, padding or checksum fields normalized before packaging"
+                message: "checksum-valid sfnt directory or padding normalized before packaging"
                     .into(),
             });
         }

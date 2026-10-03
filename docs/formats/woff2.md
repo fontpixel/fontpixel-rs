@@ -42,8 +42,10 @@ bounds or instruction programs cannot be transformed losslessly and are rejected
 with a clear error (the caller can explicitly select the null transform).
 Short loca reconstruction uses optimal point flag runs to avoid gratuitous growth;
 if the mandated short offsets cannot hold reconstructed glyph bytes, decoding
-fails rather than changing indexFormat. Transformed output marks head flags bit 11
-(lossless font-data transformation). Digital signatures cannot remain valid after
+fails rather than changing indexFormat. Every WOFF2 output marks head flags bit 11
+(lossless font-data transformation), including CFF and explicit null-transform
+output, as required by WOFF2 §5. A null transform preserves table payload bytes
+except for this required head flag and reconstructed checksum adjustment. Digital signatures cannot remain valid after
 transforms/reordering: DSIG is removed with an explicit report entry.
 
 Unknown/reserved transform versions, missing/mismatched table pairs, inconsistent
