@@ -387,8 +387,11 @@ pub fn language_tag(value: &str) -> Result<Tag> {
         if parts.contains(&"hans") {
             return Ok(*b"ZHS ");
         }
-        if parts.contains(&"hk") || parts.contains(&"mo") {
+        if parts.contains(&"hk") {
             return Ok(*b"ZHH ");
+        }
+        if parts.contains(&"mo") {
+            return Ok(*b"ZHTM");
         }
         if parts.contains(&"hant") || parts.contains(&"tw") {
             return Ok(*b"ZHT ");

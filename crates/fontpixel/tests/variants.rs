@@ -37,6 +37,9 @@ fn language_registry_and_regional_tags() {
     for (s, t) in [
         ("zh-Hant", *b"ZHT "),
         ("zh-HK", *b"ZHH "),
+        ("zh-MO", *b"ZHTM"),
+        ("zh-Hant-MO", *b"ZHTM"),
+        ("zh-Hans-MO", *b"ZHS "),
         ("zh-TW", *b"ZHT "),
         ("ja-JP", *b"JAN "),
         ("ko", *b"KOR "),

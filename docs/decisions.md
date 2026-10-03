@@ -791,3 +791,13 @@ and an acknowledged table loss must not leave an invalid dependent table.
 The OpenType [EBDT specification](https://learn.microsoft.com/en-us/typography/opentype/spec/ebdt)
 defines both directions in BigGlyphMetrics; independent FreeType and OTS checks
 verify the corrected output and atomic failure of unpaired removal.
+
+## 2026-10-03 — Match Macao's registered OpenType language tag
+
+**Question:** The candidate grouped both `zh-HK` and `zh-MO` under ZHH, but the
+current Microsoft registry explicitly assigns traditional Macao Chinese ZHTM.
+**Choice:** Map `zh-MO` and `zh-Hant-MO` to ZHTM. An explicit Hans script continues
+to select ZHS, including in Macao. Hong Kong continues to select ZHH.
+**Reason:** The promised registry-based BCP-47 conversion must distinguish the
+registered regional tags. Source: Microsoft's
+[language system registry](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags).
