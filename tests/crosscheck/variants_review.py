@@ -40,7 +40,7 @@ def shape(data, language, script, direction):
     return info.codepoint, pos.x_advance, pos.y_advance, pos.x_offset, pos.y_offset
 
 
-def validate(path):
+def validate(path, shape_name):
     font = TTFont(path)
     font.ensureDecompiled()
     raw = sfnt_bytes(path)
@@ -61,8 +61,11 @@ def validate(path):
         assert vertical[1:3] == (0, -height * 100)
         assert vertical[0] == gid
         name = font.getGlyphName(gid)
-        assert font["hmtx"][name] == (advance * 100, 0)
-        assert font["vmtx"][name] == (height * 100, (origin - 2) * 100)
+        # A 90%-diameter outline is inset by 5 design units; the embedded
+        # source bitmap still has its exact integer-pixel bearings.
+        inset = 5 if shape_name == "dot" else 0
+        assert font["hmtx"][name] == (advance * 100, inset)
+        assert font["vmtx"][name] == (height * 100, (origin - 2) * 100 + inset)
         metrics = font["EBDT"].strikeData[0][name].metrics
         expected = (-advance // 2, 2 - origin, height)
         assert (metrics.vertBearingX, metrics.vertBearingY, metrics.vertAdvance) == expected
@@ -104,12 +107,12 @@ def main():
         for flavor in ["ttf", "otf"]:
             source = args.work / f"metrics-{shape_name}.{flavor}"
             invoke(args.binary, *common, "--shape", shape_name, "-o", source)
-            expected, names = validate(source)
+            expected, names = validate(source, shape_name)
             for container in [flavor, "woff", "woff2"]:
                 output = args.work / f"subset-{shape_name}-{flavor}.{container}"
                 invoke(args.binary, "subset", source, "--text", "A", "-o", output,
                        "--woff2-quality", "5")
-                actual, subset_names = validate(output)
+                actual, subset_names = validate(output, shape_name)
                 assert actual == expected
                 assert subset_names == names
             cases.append({"shape": shape_name, "flavor": flavor,
