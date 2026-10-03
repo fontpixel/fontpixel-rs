@@ -1,6 +1,6 @@
 {
   "date_utc": "2026-10-03",
-  "status": "progress",
+  "status": "fresh validation passed",
   "production_revision": "0c4bfdd",
   "reconciliation_revision": "cbcbed4",
   "checks": {
@@ -17,7 +17,13 @@
     "fuzz-deny": 0,
     "root-deny": 0,
     "parity": 0,
-    "release-build": 0
+    "release-build": 0,
+    "minimal-deps": 0,
+    "source-hash-verification": 0,
+    "production-unchanged": 0,
+    "fixture-repeat": 0,
+    "fuzz-embedded_bitmap": 0,
+    "fuzz-color_bitmap": 0
   },
   "aggregate_test_executions": 561,
   "embedded_bitmap_tests": 15,
@@ -27,10 +33,22 @@
   "source_fingerprint": "d8adc6b27c3354dd",
   "fuzz": {
     "embedded_bitmap": {
-      "status": "running"
+      "status": "pass",
+      "exit": 0,
+      "executions": 6587559,
+      "seconds": 611,
+      "done": "#6587559\tDONE   cov: 2732 ft: 5926 corp: 642/598Kb lim: 60325 exec/s: 10781 rss: 537Mb",
+      "ASAN": true,
+      "LSAN": false
     },
     "color_bitmap": {
-      "status": "running"
+      "status": "pass",
+      "exit": 0,
+      "executions": 10270436,
+      "seconds": 611,
+      "done": "#10270436\tDONE   cov: 4381 ft: 9170 corp: 973/950Kb lim: 65536 exec/s: 16809 rss: 497Mb",
+      "ASAN": true,
+      "LSAN": false
     }
   },
   "protected_files": 690,

@@ -1,0 +1,40 @@
+Fresh W2.4 recovery checks, 2026-10-03 UTC
+
+All production source was unchanged after recovery commit 0c4bfdd. Only the
+separately approved isolated fuzz duplicate policy changed, in cbcbed4.
+
+cargo build --workspace --all-features --lib --bins --examples
+cargo metadata --manifest-path fuzz/Cargo.toml --format-version 1
+cargo build --locked --release -p fontpixel-cli --features parity --bin fontpixel-parity
+cargo build --locked --release -p fontpixel --all-features --example bitmap_check
+python3 -B tests/crosscheck/embedded_bitmap.py --synthetic-only --binary "$PWD/target/debug/examples/bitmap_check" --fixtures tests/data/embedded-bitmap --output reports/recovery-w2.4-20261003/synthetic-results.json
+scripts/check.sh
+python3 -B tests/parity/run_all.py --out tests/parity/out-recovery-w2.4
+python3 -B tests/crosscheck/embedded_bitmap.py --output reports/recovery-w2.4-20261003/embedded-bitmap-results.json
+cargo test --locked -p fontpixel --no-default-features --features {sfnt,otb,bdat,color}
+RUSTDOCFLAGS='-D warnings' cargo doc --locked --workspace --all-features --no-deps
+cargo tree --locked -p fontpixel --no-default-features --features bdf,pcf
+cargo tree --locked --manifest-path fuzz/Cargo.toml --invert miniz_oxide@0.8.9
+cargo tree --locked --manifest-path fuzz/Cargo.toml --invert miniz_oxide@0.9.1
+cargo deny --manifest-path fuzz/Cargo.toml --locked check
+cargo deny --locked --all-features check
+cargo +nightly fuzz build {embedded_bitmap,color_bitmap}
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run {embedded_bitmap,color_bitmap} -- -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536
+sha256sum -c reports/recovery-w2.4-20261003/source.sha256
+git diff --exit-code 0c4bfdd -- crates Cargo.toml Cargo.lock fuzz/Cargo.toml fuzz/Cargo.lock fuzz/fuzz_targets
+
+Brace notation here lists independently executed commands. Fuzz targets ran
+concurrently after their builds, seeded with all 37 synthetic TTF fixtures.
+A separate synthetic-only run wrote another workspace directory; all 37 files
+were compared byte-for-byte and matched the committed regenerated fixtures.
+
+Python used PYTHONDONTWRITEBYTECODE=1 and workspace-local installed dependencies.
+Pinned fontTools 4.66.1 and monobit 0.54.0 were used; other exact tool versions are
+in toolchain.log. pip's acefile build initially could not find its default clang;
+retry with the existing GCC compiler succeeded. No policy denial was bypassed.
+For PNG-enabled FreeType tests, the freetype-py Python package was copied to a
+separate workspace directory, excluding its bundled .so; libfreetype.so there
+was symlinked to the observed installed /lib/x86_64-linux-gnu/libfreetype.so.6.
+That wrapper directory preceded installed packages in PYTHONPATH. The actual
+loaded FreeType version was verified as 2.13.3. No protected input, installed
+system library, account permission or system security setting was changed.

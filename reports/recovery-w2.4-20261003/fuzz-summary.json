@@ -1,8 +1,20 @@
 {
   "embedded_bitmap": {
-    "status": "running"
+    "status": "pass",
+    "exit": 0,
+    "executions": 6587559,
+    "seconds": 611,
+    "done": "#6587559\tDONE   cov: 2732 ft: 5926 corp: 642/598Kb lim: 60325 exec/s: 10781 rss: 537Mb",
+    "ASAN": true,
+    "LSAN": false
   },
   "color_bitmap": {
-    "status": "running"
+    "status": "pass",
+    "exit": 0,
+    "executions": 10270436,
+    "seconds": 611,
+    "done": "#10270436\tDONE   cov: 4381 ft: 9170 corp: 973/950Kb lim: 65536 exec/s: 16809 rss: 497Mb",
+    "ASAN": true,
+    "LSAN": false
   }
 }

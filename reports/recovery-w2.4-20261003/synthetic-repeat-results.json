@@ -1,0 +1,1106 @@
+{
+  "versions": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "freetype_library": [
+    2,
+    13,
+    3
+  ],
+  "cases": [
+    {
+      "case": "otb-i1-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "e6d61bbe115d1419639f0c09614a7f1d24ff840870f83beed8dd93de1e556444"
+    },
+    {
+      "case": "otb-i1-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "adf840d24930b24412896eaea2cf6b6a0c29473751adb7afb22c6079cab6204d"
+    },
+    {
+      "case": "otb-i1-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "9c60e9d9efb1d483276bbc6d3f1a465462511963159e506c8a3e2189f2c838ca"
+    },
+    {
+      "case": "otb-i1-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "dc3d3d87b93d33aff8bd16d66eafb6bd725960e9ee20b5aefbc078f9f8ab0328"
+    },
+    {
+      "case": "otb-i1-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "ec05d6de32efded74932e962bbd600f45caa14b4c68feb77376e53985d09c277"
+    },
+    {
+      "case": "otb-i1-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "2d32ee750c469209fc1f0dac9596c0bbb4338dbce64b3ffe71243cd0c3d74653"
+    },
+    {
+      "case": "otb-i1-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "67ec5e164cd5c0c4194fac30818e34e554d9c208bdda965d7ebdd7105a2acb8d"
+    },
+    {
+      "case": "otb-i1-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8ad3d8bf106eeccb44f50173f20b67a4327e1a687bca8cedd3938770f427184b"
+    },
+    {
+      "case": "otb-i1-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "fc39f7f09b924c2cda78d6874c846a1c14c2ccb742d11514aad653157ccac0a5"
+    },
+    {
+      "case": "otb-i1-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "0abe0bacbd13f58e48bcf8504ffb881b84c92c4229152aa7c42683f21dbbf982"
+    },
+    {
+      "case": "otb-i1-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f661602079803a1291c987f0c71d36452bf2e9e6362bac8097a3c6e40d19713d"
+    },
+    {
+      "case": "otb-i1-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c5c16c4a94fd70a2ea1ad36ec54bd1f2dcae5e2a72c7f6abce26b15e0925d640"
+    },
+    {
+      "case": "otb-i1-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "916bc5ce2e0d0373fec33ccc8b1c79695c5ee444416c34e0681a030df98f5a29"
+    },
+    {
+      "case": "otb-i1-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "57ca28de9f8cb51a97b5bb2498ad455450c6d2c48208655f61ac038250eca599"
+    },
+    {
+      "case": "otb-i1-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f4a5d47c132b2efda191854b75ddb4a845b7f305c11cb0c6f89ad479124c3fae"
+    },
+    {
+      "case": "otb-i1-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "654fd01df696bfdc5bf227b483d4e658d8857ea440262c406ff7be460da9fdd3"
+    },
+    {
+      "case": "otb-i2-f5-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "674b20df7120e92572823438960319fed4b51726772893cfeb250ecd046ad4bc"
+    },
+    {
+      "case": "otb-i2-f5-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "888b620bddd7f65cabfb5e643420c3f35e502ef74244495e7eb418783ed15552"
+    },
+    {
+      "case": "otb-i2-f5-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c238a75f5e04842103b71af8d2a328362fa1cdde4bae65afe154b585edd537f2"
+    },
+    {
+      "case": "otb-i2-f5-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "05bf784847ed78ad3373e8c7532f63cd11d2bbd56cbfe80845ae5919afa81cbb"
+    },
+    {
+      "case": "otb-i3-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "aa0181f9a6211274825fb87e4934150df1f0802ee9f6002290a593529347e8aa"
+    },
+    {
+      "case": "otb-i3-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "fd7035c8927360662e2f90fdd7b3070606f7af7ff4e749a933754b6841040bab"
+    },
+    {
+      "case": "otb-i3-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "051234c8a332b22c5f728ae582769bc50fe90ba7cad1c073f854c78b43436f33"
+    },
+    {
+      "case": "otb-i3-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f7ad8b539880810e69c57acfaefea92b056ed8e41c79c4268928be42a7b46721"
+    },
+    {
+      "case": "otb-i3-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8397d3a0b047438e6ab17104cac8c58080a0ae9f79bc63ad0dc1249dfa7ee3bb"
+    },
+    {
+      "case": "otb-i3-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d8500523f765fda8b5f4536d303a6ee616fe1ed7074ec230f08d2c4bd10fa2ba"
+    },
+    {
+      "case": "otb-i3-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "91441888781ed7391460b28dbf8fffed84e41c9f3fb846351273797075140269"
+    },
+    {
+      "case": "otb-i3-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "688997e6d9b85b457bc41c23a7f678a1b5629973107ecf2a56589cfafa030793"
+    },
+    {
+      "case": "otb-i3-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8f2062afabeb53c0e14ba006d5c07a7efa0578ed083d8290c19cab570ed5e901"
+    },
+    {
+      "case": "otb-i3-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "94d57537d70bf2bd9277114840135505a0be2cda3fc6c7dc0a4a2fa15e601afe"
+    },
+    {
+      "case": "otb-i3-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "192fb64e92d4ffe61b57422233d9e68a2733c74ab6e052ea7af5a7b8b30a3974"
+    },
+    {
+      "case": "otb-i3-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "e8536295369a79a8c7ad4b56d9ac823589ec498025a130da096707734fc12dd9"
+    },
+    {
+      "case": "otb-i3-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "1744a1eb19bf1d5a6c62ecbb960ef115b8fdc365b038a43b0a9e164d9606c319"
+    },
+    {
+      "case": "otb-i3-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "bbb3d2d767a5b65113fe07b4e89d3f3d2659c697e8c41882bb5d18b269a89b47"
+    },
+    {
+      "case": "otb-i3-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "1a7fd91331861c331bf9c79b84a7bd3db439a7241c1c48fe1c520a866a61d092"
+    },
+    {
+      "case": "otb-i3-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "e4c509f222305c9a674a932619de8dd09f76271d2ffe4721d58f3e54684bb32d"
+    },
+    {
+      "case": "otb-i4-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8f981d3fcfd7f114e0465b7127b67a356a9de9155e7eb03eb57cc3ac2bc2542e"
+    },
+    {
+      "case": "otb-i4-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "ab2ed6aac54b4f542fa87be528a7954bf38c915b8b8b12c75fa264e3142ca3c7"
+    },
+    {
+      "case": "otb-i4-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "b650d540147b4fc16e75a42d2e4fb1b42baf7ed0784d5be7974350481b9b56da"
+    },
+    {
+      "case": "otb-i4-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "18ab2bce0a102818f054533253004f9cfac0efc8e5ae74d457f34877f365e2f6"
+    },
+    {
+      "case": "otb-i4-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "dc3ca57c029fe17a9570cb9717368cee499db25f9d4474e037acab84de8441f0"
+    },
+    {
+      "case": "otb-i4-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "0dce4f7cfd0a169594448698d7b688a1693d23b7eb1ba762e75c69008ee53b88"
+    },
+    {
+      "case": "otb-i4-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "b0964fa8483891f581bb0b0356c59b9e4dc5add07422ea16adc7fd7930f98f07"
+    },
+    {
+      "case": "otb-i4-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "94cb8e2e9e5f49a9e87a6b806d5a21bc7313d77a57d223643df93ef6af3854a6"
+    },
+    {
+      "case": "otb-i4-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "296a18bf707e68698d51643ed4f40e73bb0d269957f02374bd77c048e10a18a3"
+    },
+    {
+      "case": "otb-i4-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "1bb4a044d959bfa7e48cc455dc6504002d3eaeb1f5d5bd30c596eb96308d5c3d"
+    },
+    {
+      "case": "otb-i4-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "08f379c904a2ad35699768d93b44ab45bff1b23bc819264ae8d93cdb2ba8fb52"
+    },
+    {
+      "case": "otb-i4-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "409b12292ad5b425d3158130bcace8b65cc8b886ebd26abc79977c41b2580da0"
+    },
+    {
+      "case": "otb-i4-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "365f1ecaa609dd788856caa1368ded93f6a4af3ae31ba44d20ccf592fda2e388"
+    },
+    {
+      "case": "otb-i4-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f004fb52332a2b25d6aba4c4a59d8b2145929415580a1246390abac5f3bbb170"
+    },
+    {
+      "case": "otb-i4-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "40a10fa5fd049f029f3b9be9a73b0ce408554d63c768dd1f0eaef514051cd86e"
+    },
+    {
+      "case": "otb-i4-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8ac8d67486bcc748f25bb9f768c6c63ad4feac0c5c8016fd001207685886e112"
+    },
+    {
+      "case": "otb-i5-f5-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f66bd6b0cfcb7683c42cf96262afed3165e515df15782b496151e221642fd276"
+    },
+    {
+      "case": "otb-i5-f5-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c179c6fffeed53af3614124f57f0fba38732c43e744e01fe92b387df4a01ad73"
+    },
+    {
+      "case": "otb-i5-f5-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "481e3028dae26f357b12f94e6191575c51499ea3073a5355f0674bf68cfb5847"
+    },
+    {
+      "case": "otb-i5-f5-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "28da487b0c00819e2912af506a3a5b2cd308ba21712a69134ae33a0a7585780e"
+    },
+    {
+      "case": "bdat-i1-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "5c340360bcaa8e73792a1cec395fba494289ebdb392b76c6580a2035ee7b03a3"
+    },
+    {
+      "case": "bdat-i1-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "4e36a666c0f9228582ba68cca98cf87858178e1cb7378dc96d379c64730bf374"
+    },
+    {
+      "case": "bdat-i1-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "9ba6572d9ffe2cfbd8036c52fd4960fd9ca743521110f557450f37eb211d7171"
+    },
+    {
+      "case": "bdat-i1-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f344c8c7d444a13f5a13f368df22c236f81a11d0eaa3d9bd711d3900d462c7b3"
+    },
+    {
+      "case": "bdat-i1-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "57f222566a12f1e3f02f96f9d86d2ac76f7570ffbcf7ce7293078261ec0e4b43"
+    },
+    {
+      "case": "bdat-i1-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "6ba24baad872720fe065d697b869d3f046b504fac1308049dc8f191209e60c46"
+    },
+    {
+      "case": "bdat-i1-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f2228eb4c8dc5264ac66712ba76091c7c12d33bfcd22f1d63d7db34ea5d9138c"
+    },
+    {
+      "case": "bdat-i1-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c0d62091d7a04150daa2fb447f9de8ae4560fc41e4254a5538b5958a97a878b1"
+    },
+    {
+      "case": "bdat-i1-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "646e415a0b74c35b24c755b6b93c92c3933ae3a9d16680321e6d41acde4532f2"
+    },
+    {
+      "case": "bdat-i1-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "93abc8f340cf25e0d4f39496f7a3a2be6b3822fdc045065f1c47899eb1715888"
+    },
+    {
+      "case": "bdat-i1-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "14b5f0f0b907431b80f2bfe62bf8142082d44bfeca8fdb5537830d0808643400"
+    },
+    {
+      "case": "bdat-i1-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c8cf68f51565125810171e36bd5fffc49477fa91428dbf7b1446a759a0608c29"
+    },
+    {
+      "case": "bdat-i1-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "00143a9a0aa8127e173e2120c1fb5166a54a16df63ef82dfac1795f84092f6f7"
+    },
+    {
+      "case": "bdat-i1-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "bb5156c2ffd0309fb1e60d710421548c3c9db12cdba3791238c0c00ad61b851e"
+    },
+    {
+      "case": "bdat-i1-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "fff76104124244c5be4b48d9bdcfa3680a24c9200ce7e2f688186feb730b26ed"
+    },
+    {
+      "case": "bdat-i1-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d84924496922d364a955ed6f405b78a8c14bad97d0e58c64864ee3b519b92292"
+    },
+    {
+      "case": "bdat-i2-f5-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "7a57a68a38edc3685f158d1ea45ec680a0738351834d0b3f39cc557eec2f5ef6"
+    },
+    {
+      "case": "bdat-i2-f5-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "87860b13abd694edc8ebbc6836989d119504229e9ba9b075ae5baab340192782"
+    },
+    {
+      "case": "bdat-i2-f5-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d3155cb74fd56436c9df39e9077ad6d995f16bc5458eade081acb4b704e0fe8c"
+    },
+    {
+      "case": "bdat-i2-f5-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "0a03fb3964d158a857c847ec0c49009c4ebe634000e20323b7ec1ea7036c8838"
+    },
+    {
+      "case": "bdat-i3-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "749ea837a06d00e5fddf4ecc1e006faca6d15d6bbca32858e92becfe88c7947e"
+    },
+    {
+      "case": "bdat-i3-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "cf3bbd6853e0e6a0479cd74151376475b8f90386df0a097a63906f5a5de8f6f8"
+    },
+    {
+      "case": "bdat-i3-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "06b6551586bc134c62e78362524a24214167b54a6f2ab55d284d1273fd0f21a3"
+    },
+    {
+      "case": "bdat-i3-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "f5f47f0cf5a894495301d25386429a05c6cc059e46e36340b992f4d3b29fbb8b"
+    },
+    {
+      "case": "bdat-i3-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "6eef8c0fd2d3918f3b93268544fd034b03f31c4e638645982df911d86a7832b6"
+    },
+    {
+      "case": "bdat-i3-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "88a59ff7e086425d83bad7b606a0ad20e521ab16538c977940d51021db733abf"
+    },
+    {
+      "case": "bdat-i3-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d308eee346becdf8bfb6f94ecbeadd1cd72cb399bfc2838ad6bc9b52ca2a3150"
+    },
+    {
+      "case": "bdat-i3-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "13cbefcd946de8aa4b4f8c3734e690b9857ea6c1b6b449c091b7f3a2948d1eaa"
+    },
+    {
+      "case": "bdat-i3-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "0797d9feb37a9e60bf8c6a20341848d273f9389536bd04a4102316e3e90450a0"
+    },
+    {
+      "case": "bdat-i3-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "2c67a62162a4ae72b91a4882192dd666d33980d20a8c093fce7b83700c636e3f"
+    },
+    {
+      "case": "bdat-i3-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "62ecd433f677147d3d577e7a25cb0f3dc1437ad8e1455333f09eb9f0a7938b97"
+    },
+    {
+      "case": "bdat-i3-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "195873a472587a972d46549a740edfcd7683bbdb8b707625b3fe7428a8f8890f"
+    },
+    {
+      "case": "bdat-i3-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "5decfa0fa065d87bae3d586652a166d51bd18cf45743245c0baeab22739d2239"
+    },
+    {
+      "case": "bdat-i3-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "493dd4434128fbf6e7d8856876c5ac8dbafd8db3fb0cf642ef3e73a32861a8fa"
+    },
+    {
+      "case": "bdat-i3-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "52cffd6bb0ebd4806ff2664c00f99734523fe935fec082a472fe9b0ce1b48a66"
+    },
+    {
+      "case": "bdat-i3-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c0fd6fe708d0d5cc7cf81ab2148488470733c4e18c66033c3f5c85982f77aac1"
+    },
+    {
+      "case": "bdat-i4-f1-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "cf7c54f395d0961ae1220592e2e23a44bb10dbc7a188fa5d5117a1646bc37d86"
+    },
+    {
+      "case": "bdat-i4-f1-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "549c03ab42f3bf6556dd8c457e64bc75f18da7bfb4e48d3ec9d97e521c61ac1d"
+    },
+    {
+      "case": "bdat-i4-f1-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "aa3fd009fd66bb8caaca86dba39b0af1442b0d28806a4b3b19fbc2bfe65e464a"
+    },
+    {
+      "case": "bdat-i4-f1-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "5b3d69c422c8264c6ea74a8706544b450cb02b14e604c0e01f62f8f8ed787beb"
+    },
+    {
+      "case": "bdat-i4-f2-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "808c910388bac4d8453b7cb8a9da73b08d87a1cc721ec67b1368a80960e18609"
+    },
+    {
+      "case": "bdat-i4-f2-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "c4e05578d660a2d983e59fe82f0366cf87692eef2b08628c3216ad71f33203d5"
+    },
+    {
+      "case": "bdat-i4-f2-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "2d011a8bf5b926d94c7d373a44399a97687c17f9ab1eb4fc37601af65ef548c9"
+    },
+    {
+      "case": "bdat-i4-f2-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "de257f11945aae30f76aff25ad98830231fbdfa27b36ede65c078b2db2032ad2"
+    },
+    {
+      "case": "bdat-i4-f6-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d02aacd4b6eaf96c8865ddd52fe600e05a0894dbd27ef75fd97c6752dfa130a0"
+    },
+    {
+      "case": "bdat-i4-f6-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "62cfe65bd2dd2b1cf2775cddd0485fedb0d5cb505338d65df9eeb710aa1ab094"
+    },
+    {
+      "case": "bdat-i4-f6-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "cbec13f06d6e85ebd371a1fd8c616a17dbe6927ce89d947331f1229406a00f3a"
+    },
+    {
+      "case": "bdat-i4-f6-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "8564ff2d8918db78141fc6602a2a7c5a56c5b0fd63e06fe1f2cbb9aa11edde00"
+    },
+    {
+      "case": "bdat-i4-f7-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d8ae06d276e2ca9cc1282cdbda27ee4e4cd314a62c0c641c33459e147d9f7dbc"
+    },
+    {
+      "case": "bdat-i4-f7-d2.ttf",
+      "freetype_limitation": "bit-aligned gray row boundary",
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "828e28aca24157477f71eb81e6fa4531fc1a1a8e622309ed002501c82ad6801d"
+    },
+    {
+      "case": "bdat-i4-f7-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "1aa336046e11515ac2e61d8008d99dd9a6915902595cec5197ca6b88eb272946"
+    },
+    {
+      "case": "bdat-i4-f7-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "ff12628f131971dbc724a08a3e90bfb118734c7f3a741a460e7ba2569bd5fd4d"
+    },
+    {
+      "case": "bdat-i5-f5-d1.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "bf91fe41c1206692fd302885f8b5df28183a285fb1e1d1182b91ac3d1a078354"
+    },
+    {
+      "case": "bdat-i5-f5-d2.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "e05317c63ed42e1dbc64e4810c03dd9b0b9baedfe70fb082604aaea60b5bbb2c"
+    },
+    {
+      "case": "bdat-i5-f5-d4.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "2de1d04476eec53a8da105b1c0b3513f06f5cf10b69aba9401e4fbc1cb80e85a"
+    },
+    {
+      "case": "bdat-i5-f5-d8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "39a3b14885bdd063878ac6a850f1385a0c76557ff450d6eae6fd1a2a864e8cca"
+    },
+    {
+      "case": "composite-f8.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "ef8c8809a80eda830b5fcb38686bb11931d47a1a95da13ab5a69f9e27a72bd5d"
+    },
+    {
+      "case": "composite-f9.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "60e3a8d806a230fa16dc17ec809da6ac3e032d10824807acf66b3a88f77eaa3c"
+    },
+    {
+      "case": "composite-gray-overlap.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "cae6a9e143286390acd6227fe85bb4ba6b415b01f3e2e8e7646499ca830c56cf"
+    },
+    {
+      "case": "color-i1-f17.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "61172de482f93a07f2a9271c63a776081b8cf07911c14868b6f399a4acde02c4"
+    },
+    {
+      "case": "color-i3-f18.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "b80826d1e57aca16bb5c38a51f914731d36f8ffcb7f4b5edfde3ceb9fcc63465"
+    },
+    {
+      "case": "color-i2-f19.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "d8b4bb1f4ef247855624814b6ffc24748b92d4376564eb79f72a63c00c94afff"
+    },
+    {
+      "case": "color-i5-f19.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "53acc946907e22c82a7f7684c9d3847c10374b0a15db82fad9ae73f1d102227f"
+    },
+    {
+      "case": "sbix-False.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "19e47f3c8f64f8cb403d5a0057a32cb2f25f0c30120f1ad44b963bd9d83cfc21"
+    },
+    {
+      "case": "sbix-True.ttf",
+      "freetype_limitation": null,
+      "fonttools": true,
+      "freetype": true,
+      "ots": true,
+      "native": true,
+      "sha256": "a3825830805cab28e8745248ce8f1a188413d0dc0571906146faa704a942e2a4"
+    }
+  ],
+  "glyph_checks": 126,
+  "elapsed_seconds": 1.134
+}

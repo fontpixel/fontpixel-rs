@@ -1,6 +1,6 @@
 # W2.4 embedded bitmap recovery
 
-Date: 2026-10-03 UTC. All completed checks pass; final two reader fuzz runs still in progress.
+Date: 2026-10-03 UTC. Reconstructed implementation and all fresh acceptance checks pass; coordinator review pending.
 
 ## Implementation and history
 
@@ -24,14 +24,14 @@ Original W2.4 Git objects (`113539d`, `ece15ea`, `e08d69c`), final original sour
 - `scripts/check.sh`: exit 0; 561 aggregate test executions, including all 15 embedded-bitmap tests. Generator checks, rustfmt, Clippy, feature matrices and production dependency audit pass.
 - Complete default parity: 0 NEW divergences; all 67 charset tables, 2,000 random cases / 35,941 operations, 1,000 random_all / 17,588, 41 probes / 89 and all 251 corpus cases / 5,221 ran. Existing K12 cases remain six random_all plus one probe. Python fingerprint remains `938d9ed560ef29ba`; crate sources are clean and unchanged during parity.
 - Independent crosscheck: 140 cases / 380,808 glyph comparisons. It covers all seven Tong BDFs as OTB and bdat, both supplied OTB reference round trips, 121 synthetic cases, monobit round trips/EBSC, HarfBuzz mappings and the applicable sfnt-container OTS checks.
-- Synthetic fixture regeneration independently passes 121 cases / 126 glyph comparisons. All 37 tiny binary fixtures are regenerated from the recovered deterministic generator and labelled accordingly in SOURCES.json, with current hashes and fixed timestamps. Original binary hashes are unavailable.
+- Synthetic fixture regeneration independently passes 121 cases / 126 glyph comparisons. All 37 tiny binary fixtures are regenerated from the recovered deterministic generator and labelled accordingly in SOURCES.json, with current hashes and fixed timestamps. Original binary hashes are unavailable. A separate second generation reproduces all 37 current fixture bytes exactly.
 - Separate no-default `sfnt`, `otb`, `bdat` and `color` configurations pass. Strict all-feature rustdoc passes. BDF/PCF-only dependency tree excludes Fontations and png.
 - Root and isolated-fuzz dependency audits pass after the narrow separately documented policy reconciliation below. No independent claim of online advisory-database freshness is made.
 - 690 protected reference/sample files remain identical, with no missing or extra files. All 24 W2.4 salvage-manifest entries remain unchanged.
 
 Final-reader robustness results (each target uses generated synthetic seeds, a 610-second minimum, 10-second case timeout, 2 GiB RSS limit and 64 KiB maximum input):
-- embedded_bitmap: running, not counted as passed.
-- color_bitmap: running, not counted as passed.
+- embedded_bitmap: 6,587,559 executions, 611 seconds, exit 0, ASAN enabled.
+- color_bitmap: 10,270,436 executions, 611 seconds, exit 0, ASAN enabled.
 
 Leak detection alone is disabled under the recorded sandbox configuration; AddressSanitizer remains enabled. Historical initial fuzz runs are not used as substitutes for these fresh final-code runs.
 
