@@ -1,7 +1,8 @@
 Stock fontTools 4.66.1 full-SC correctness run was stopped with SIGINT (exit 130)
 on 2026-10-03 at 08:15:15 UTC after approximately 20 minutes of total elapsed
-validation time. It had completed all square-CFF checks and was still decoding
-the full-SC dot TrueType WOFF2 in the first equivalent() check. This is a censored
+validation time. It had completed all square-CFF checks and had not finished
+the first full-SC dot TrueType equivalent() check (fontTools decoding plus
+all glyph/table/FreeType comparisons). This is a censored
 correctness-run observation, NOT an isolated encoder/decoder benchmark and NOT a
 five-run median. Its complete stdout/stderr is retained unchanged in
 full-sc-crosscheck.log.

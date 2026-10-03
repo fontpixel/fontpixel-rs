@@ -638,7 +638,7 @@ consumer bug without silently changing metrics or reducing glyf/loca coverage.
 
 **Question:** Stock fontTools' WOFF2 composite decoder repeatedly copies the
 entire remaining byte stream for every component. The full-SC shared-dot font
-has millions of components; its correctness run remained in decoding after an
+has millions of components; its correctness run had not finished its first equivalence pass after an
 approximately 20-minute total observation window.
 **Choice:** Preserve that censored stock-run evidence. Add an isolated,
 verification-only read-only memoryview wrapper around compositeStream, still

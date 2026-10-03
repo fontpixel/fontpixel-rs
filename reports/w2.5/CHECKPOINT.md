@@ -1,9 +1,9 @@
-# W2.5 checkpoint 3 — 2026-10-03
+# W2.5 checkpoint 4 — 2026-10-03
 
 W2.5 correctness acceptance is complete; performance measurement is running.
 No W2.6 work or phase-2 completion claim.
 
-- scripts/check.sh: 578 passed test invocations, all other gates passed.
+- scripts/check.sh: 579 passed test invocations, all other gates passed.
 - Full frozen-source parity: 0 NEW differences, 67 exact tables, all 3292 cases;
   previous 7 known differences remain unchanged.
 - Strict rustdoc, woff-only/woff2-only Clippy, production/fuzz/reference deny pass.
@@ -25,3 +25,10 @@ path. Full-SC native/C++ data and smaller same-input Latin three-way comparisons
 are kept separate. No adapter timing is labeled as stock performance.
 
 Model requested gpt-6-astra/xhigh; actual runtime settings and fast mode 无法核实.
+
+Aggregate batch guards are now committed and re-accepted at 24a032e: default
+1024 fonts, 256 MiB aggregate input and separately retained output. The extra
+ordering/budget test passes. scripts/check.sh, full parity, minimal-feature
+Clippy and strict rustdoc were rerun successfully after this change. Reader
+algorithms and serialized font bytes are unchanged. All timing samples are
+being rerun with this final binary; earlier observations are kept separately.
