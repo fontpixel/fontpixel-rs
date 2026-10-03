@@ -902,3 +902,18 @@ for unselected or superseded strikes. Global conversion-loss reports remain.
 **Reason:** Diagnostics must identify the actual returned font, including before
 collection face indices are flattened. A two-size second-strike regression
 reproduces the invalid index and verifies the mapping.
+
+## 2026-10-03 — Native SVG font paths retain bounded raster provenance
+
+**Question:** SVG 1.1 has no bitmap padding rectangle or alias identity, generic
+curves need a reviewed raster size, and compatibility output deliberately follows
+historical bdfparser omissions and formatting.
+**Choice:** Keep compatibility bytes unchanged. Add an independent native codec
+with standard SVG glyph paths, explicit private pixel-size/bounds/identity
+attributes, and typed limits. Native reading still rasterizes the visible paths.
+Generic fonts use exhaustive 4–64 ppem grid detection or explicit ppem. XML DTDs,
+external resources, scripts and unsupported paint semantics are never executed.
+**Reason:** Blank glyphs, negative bearings, aliases and padding must survive our
+own output without pretending to be a general SVG document renderer. Every
+unrepresented source field is diagnosed; native rendering and SPEC parity remain
+separate, testable contracts.

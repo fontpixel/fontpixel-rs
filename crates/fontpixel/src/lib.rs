@@ -63,6 +63,8 @@ pub fn registry() -> FontRegistry {
     registry.install_vector("ttc");
     #[cfg(feature = "vector-raster")]
     registry.install_vector("vector-raster");
+    #[cfg(feature = "svg")]
+    registry.install_svg();
     registry
 }
 
