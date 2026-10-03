@@ -93,3 +93,21 @@ fontTools write/edit -> Rust reads, OTS sanitization, every native-size glyph's
 FreeType pixels/metrics, and HarfBuzz horizontal/vertical/supplementary mapping.
 A fontTools-produced format 13 tests incoming constant mapping groups. This is
 not the later CFF/bitmap/locl/whole-Tong phase-2 acceptance gate.
+
+## W2.2 native glyf / outlines
+
+Build `cargo build --release -p fontpixel --features sfnt --example glyf_check`,
+then run `python3 -B tests/crosscheck/glyf.py --output tests/crosscheck/glyf-results.json`.
+It uses fontTools/Tong as independent source-outline generators, all glyphs from
+the three Latin BDF samples and 1,024 evenly selected glyphs from each regional
+BDF. For each square/dot output it compares contour geometry, cmap and metadata,
+FreeType pixels and advances against both source BDF and reference font, OTS
+acceptance and sanitized pixels, and HarfBuzz shaping in six languages. It also
+covers independent squares and affine/point-attached/nested composites. The
+native driver generates new glyf/loca from the source bitmaps; the original
+font's common metadata is retained. This is not a claim of native `locl` creation,
+full regional variant planning, bitmap strikes, or phase-2 completion.
+
+`--font TongPixelSans14Large-SC.bdf --cjk-count 38653` additionally checks every
+glyph in the full SC sample, both square and shared-dot output. The report in
+`glyf-full-sc-results.json` is separate from the seven-sample default suite.

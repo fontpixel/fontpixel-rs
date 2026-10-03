@@ -471,3 +471,36 @@ libFuzzer-discovered truncated-format-4 regression and reserved-gasp-flag tests.
 **Reason:** A typed reader is not a whole-font validator. Explicit preflight guards
 prevent panics and prevent malformed arrays or unknown flag bits from silently
 turning into apparently valid empty data.
+
+## 2026-10-03 — W2.2 keeps native geometry and SPEC wire contracts explicit
+
+**Question:** SPEC circles and Tong's round-dot export use different quadratic
+approximations, while `ttf` also promises embedded strikes and general pixel-grid
+reading assigned to later work items.
+**Choice:** Share the exact SPEC merged-square tracer with a dependency-free
+native outline API. Expose independent squares and Tong's four-quadratic dots;
+use one shared dot glyph and typed composite components for native TrueType.
+Keep the existing SPEC TTF serializer's point representation and bytes unchanged.
+Do not register the native `ttf` format until its full read/write contract exists.
+**Reason:** Native glyph-level equivalence and exact compatibility are distinct
+requirements; neither should be implemented by silently substituting the other.
+
+## 2026-10-03 — Editable glyf is unhinted geometry, not an interpreter
+
+**Question:** Composite glyphs can carry bytecode, device rounding, metrics flags,
+phantom-point attachment and ambiguous default offset scaling.
+**Choice:** Retain bytecode and all defined semantic component flags. Resolve
+ordinary point attachment, F2DOT14 transforms and explicitly scaled offsets;
+otherwise use the recommended unscaled offset convention. Do not run instructions
+or device grid fitting. Reject phantom-point attachment without the required
+metrics/interpreter context. Recompute bounds and geometry maxima on output;
+provide maxp generation only for unhinted glyphs, preserving caller control over
+hint interpreter budgets. Apply per-glyph and cumulative byte/point/component/
+instruction budgets, cycle/depth validation and visit budgets including empty
+component graphs. Strengthen the compatibility parser's glyph-slice boundaries,
+flag runs, cmap expansion and raster work without changing valid-font results.
+**Reason:** Honest, bounded design-space behavior is safer than approximating
+hinted outlines or treating a typed lazy reader as complete validation.
+The compatibility reader also charges cumulative whole-font pixels, estimated
+model/provenance bytes, expanded points and graph visits. Counting row overhead
+covers zero-width, very tall metadata rectangles that evade an area-only limit.

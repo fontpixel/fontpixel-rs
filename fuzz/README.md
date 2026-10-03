@@ -100,3 +100,23 @@ ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run sfnt -- \
 AddressSanitizer remains enabled; LeakSanitizer's unsupported ptrace shutdown
 check is disabled under the already documented sandbox limitation. The initial
 exploratory crash, fix and final clean-run counts are reported in `reports/w2.1.md`.
+
+## W2.2 readers
+
+`glyf` exercises borrowed sfnt extraction, short/long loca, bounded direct glyph
+records, graph expansion, centre-fill rasterization and canonical semantic
+roundtrips. Its per-case budgets cap points, components, visits and table/model
+sizes. `compat_ttf` exercises complete SPEC `read_ttf` both with explicit pixel
+size and the BDFP-only route. Seed both from `tests/data/compat/*.ttf`.
+
+```sh
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run glyf -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run compat_ttf -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536
+```
+
+LeakSanitizer is disabled only because this environment cannot support its
+exit-time ptrace check; AddressSanitizer remains active. Record each run's `DONE`,
+exit status, execution count and coverage counters; incomplete runs do not meet
+the ten-minute requirement. No generated corpus or binaries are committed.

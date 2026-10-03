@@ -729,7 +729,20 @@ struct Glyf<'a> {
     loca: Vec<usize>,
 }
 impl Glyf<'_> {
-    fn contours(&self, gid: usize, depth: usize) -> Result<Vec<Contour>> {
+    fn contours(&self, gid: usize, depth: usize, budget: &mut ReadBudget) -> Result<Vec<Contour>> {
+        let mut work = 0usize;
+        let contours = self.contours_inner(gid, depth, &mut work)?;
+        budget.work = budget.work.saturating_add(work);
+        if budget.work > 32 * 1024 * 1024 {
+            return Err(invalid("TrueType cumulative expansion budget exceeded"));
+        }
+        Ok(contours)
+    }
+    fn contours_inner(&self, gid: usize, depth: usize, work: &mut usize) -> Result<Vec<Contour>> {
+        *work += 1;
+        if *work > 1_048_576 {
+            return Err(invalid("composite expansion work budget exceeded"));
+        }
         if depth > 32 {
             return Err(invalid("composite glyph nesting too deep"));
         }
@@ -741,23 +754,31 @@ impl Glyf<'_> {
             .loca
             .get(gid + 1)
             .ok_or_else(|| invalid("glyph index out of range"))?;
-        if end <= start {
+        if end < start {
+            return Err(invalid("descending loca offsets"));
+        }
+        if end == start {
             return Ok(vec![]);
         }
-        self.r.bytes(start, end - start)?;
-        let nc = self.r.i16(start)?;
+        let r = Reader {
+            b: self.r.bytes(start, end - start)?,
+        };
+        r.bytes(0, 10)?;
+        let nc = r.i16(0)?;
         if nc >= 0 {
-            self.simple(start, nc as usize)
+            self.simple(r, 0, nc as usize)
         } else {
-            self.composite(start, depth)
+            self.composite(r, 0, depth, work)
         }
     }
-    fn simple(&self, off: usize, nc: usize) -> Result<Vec<Contour>> {
-        let r = self.r;
+    fn simple(&self, r: Reader<'_>, off: usize, nc: usize) -> Result<Vec<Contour>> {
         let mut p = off + 10;
         let ends = (0..nc)
             .map(|i| r.u16(p + 2 * i).map(usize::from))
             .collect::<Result<Vec<_>>>()?;
+        if ends.windows(2).any(|w| w[0] >= w[1]) {
+            return Err(invalid("bad endPtsOfContours"));
+        }
         p += 2 * nc;
         let n = ends.last().map(|v| v + 1).unwrap_or(0);
         p += 2 + r.u16(p)? as usize;
@@ -769,6 +790,9 @@ impl Glyf<'_> {
             if f & 8 != 0 {
                 let repeat = r.u8(p)? as usize;
                 p += 1;
+                if repeat > n - flags.len() {
+                    return Err(invalid("flag run exceeds point count"));
+                }
                 flags.extend(std::iter::repeat_n(f, repeat));
             }
         }
@@ -806,11 +830,17 @@ impl Glyf<'_> {
         }
         Ok(out)
     }
-    fn composite(&self, off: usize, depth: usize) -> Result<Vec<Contour>> {
-        let r = self.r;
+    fn composite(
+        &self,
+        r: Reader<'_>,
+        off: usize,
+        depth: usize,
+        work: &mut usize,
+    ) -> Result<Vec<Contour>> {
         let mut p = off + 10;
         let mut result = Vec::<Contour>::new();
         let mut components = 0;
+        let mut point_count = 0usize;
         loop {
             components += 1;
             if components > 65536 {
@@ -852,7 +882,7 @@ impl Glyf<'_> {
                 yy = r.i16(p + 6)? as f64 / 16384.0;
                 p += 8;
             }
-            let mut tr = self.contours(gid, depth + 1)?;
+            let mut tr = self.contours_inner(gid, depth + 1, work)?;
             for c in &mut tr {
                 for (x, y, _) in c {
                     let (nx, ny) = (*x * xx + *y * yx, *x * xy + *y * yy);
@@ -881,10 +911,11 @@ impl Glyf<'_> {
                     *y += dy;
                 }
             }
-            result.extend(tr);
-            if result.iter().map(Vec::len).sum::<usize>() > 1 << 24 {
+            point_count = point_count.saturating_add(tr.iter().map(Vec::len).sum::<usize>());
+            if point_count > 1 << 20 {
                 return Err(invalid("composite point budget exceeded"));
             }
+            result.extend(tr);
             if flags & 0x20 == 0 {
                 break;
             }
@@ -892,7 +923,42 @@ impl Glyf<'_> {
         Ok(result)
     }
 }
-fn raster_meta(cs: &[Contour], ppu: f64, box_: Option<[i64; 4]>) -> Result<Meta> {
+#[derive(Default)]
+struct ReadBudget {
+    pixels: u64,
+    bytes: u64,
+    points: usize,
+    work: usize,
+}
+impl ReadBudget {
+    fn charge(&mut self, cs: &[Contour], w: i64, h: i64) -> Result<()> {
+        self.points = self
+            .points
+            .saturating_add(cs.iter().map(Vec::len).sum::<usize>());
+        let (w, h) = (w.max(0) as u64, h.max(0) as u64);
+        self.pixels = self.pixels.saturating_add(w.saturating_mul(h));
+        // Gray raster, packed/hex provenance and per-row string/vector overhead.
+        self.bytes = self.bytes.saturating_add(
+            w.saturating_add(w.div_ceil(4))
+                .saturating_add(64)
+                .saturating_mul(h)
+                .saturating_add(512),
+        );
+        if self.pixels > 64 * 1024 * 1024
+            || self.bytes > 256 * 1024 * 1024
+            || self.points > 64 * 1024 * 1024
+        {
+            return Err(invalid("TrueType cumulative model budget exceeded"));
+        }
+        Ok(())
+    }
+}
+fn raster_meta(
+    cs: &[Contour],
+    ppu: f64,
+    box_: Option<[i64; 4]>,
+    budget: &mut ReadBudget,
+) -> Result<Meta> {
     let mut m = vec![V::Null; 17];
     let explicit = box_.is_some();
     let b = if let Some(b) = box_ {
@@ -908,6 +974,7 @@ fn raster_meta(cs: &[Contour], ppu: f64, box_: Option<[i64; 4]>) -> Result<Meta>
         [x1 - x0, y1 - y0, x0, y0]
     };
     let (w, h, mut x, mut y) = (b[0], b[1], b[2], b[3]);
+    budget.charge(cs, w, h)?;
     if w.max(1) as u64 * h.max(1) as u64 > 1 << 24 {
         return Err(invalid(
             "Malformed TrueType font: glyph bounding box too large",
@@ -950,6 +1017,7 @@ fn parse_cmap(data: &[u8]) -> Result<BTreeMap<u32, usize>> {
         }
     }
     let mut out = BTreeMap::new();
+    let mut work = 0u64;
     for (_, _, off) in order {
         let fmt = r.u16(off)?;
         match fmt {
@@ -980,6 +1048,10 @@ fn parse_cmap(data: &[u8]) -> Result<BTreeMap<u32, usize>> {
                     let s = r.u16(off + 16 + segx2 + 2 * i)? as u32;
                     let d = r.u16(off + 16 + 2 * segx2 + 2 * i)? as u32;
                     let ro = r.u16(rb + 2 * i)? as usize;
+                    work += u64::from(e.saturating_sub(s)) + 1;
+                    if work > 2_097_152 {
+                        return Err(invalid("cmap expansion budget exceeded"));
+                    }
                     for c in s..=e {
                         if c == 65535 {
                             continue;
@@ -1006,6 +1078,10 @@ fn parse_cmap(data: &[u8]) -> Result<BTreeMap<u32, usize>> {
                     let sg = r.u32(p + 8)?;
                     if e < s || e > 0x10ffff {
                         return Err(invalid("bad cmap format 12 group"));
+                    }
+                    work += u64::from(e.saturating_sub(s)) + 1;
+                    if work > 2_097_152 {
+                        return Err(invalid("cmap expansion budget exceeded"));
                     }
                     for c in s..=e {
                         let g = sg as u64 + c as u64 - s as u64;
@@ -1111,8 +1187,12 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
         return Err(invalid("TrueType input exceeds byte budget"));
     }
     let tables = parse_tables(data)?;
+    let mut budget = ReadBudget::default();
     let head = Reader { b: tables["head"] };
     let upem = head.u16(18)? as i64;
+    if upem == 0 {
+        return Err(invalid("zero unitsPerEm"));
+    }
     let lf = head.i16(50)?;
     let n = Reader { b: tables["maxp"] }.u16(4)? as usize;
     let hh = Reader { b: tables["hhea"] };
@@ -1179,17 +1259,18 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
             let cp = e[1]
                 .as_i64()
                 .ok_or_else(|| invalid("Malformed BDFP encoding"))?;
-            let cs = gr.contours(gid, 0)?;
+            let cs = gr.contours(gid, 0, &mut budget)?;
             let (mut m, alt) = if e.len() == 18 {
                 let mut m = raster_meta(
                     &cs,
                     ppu,
                     Some([num(&e[3]), num(&e[4]), num(&e[5]), num(&e[6])]),
+                    &mut budget,
                 )?;
                 m[6..16].clone_from_slice(&e[7..17]);
                 (m, e[17].clone())
             } else {
-                let mut m = raster_meta(&cs, ppu, None)?;
+                let mut m = raster_meta(&cs, ppu, None, &mut budget)?;
                 let dw = (advances[gid] as f64 / ppu + 0.5).floor() as i64;
                 m[6] = json!(f.swidth(dw));
                 m[7] = json!(0);
@@ -1274,7 +1355,7 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
         } else {
             format!("glyph{gid}")
         };
-        let mut m = raster_meta(&gr.contours(gid, 0)?, ppu, None)?;
+        let mut m = raster_meta(&gr.contours(gid, 0, &mut budget)?, ppu, None, &mut budget)?;
         let dw = (advances[gid] as f64 / ppu + 0.5).floor() as i64;
         m[0] = json!(name);
         m[1] = json!(cp.map(i64::from).unwrap_or(-1));

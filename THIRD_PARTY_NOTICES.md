@@ -219,3 +219,12 @@ Fontations read-fonts 0.44.0 (MIT OR Apache-2.0) is an optional production
 reader dependency, with its dependency graph locked and cargo-deny checked.
 fontTools, OTS, freetype-py/FreeType and uharfbuzz/HarfBuzz are independent test
 executables/bindings; their implementation code is not copied into the project.
+
+## W2.2 outline reuse
+
+The shared SPEC contour tracing and compatibility algorithms continue the MIT
+bdfparser attribution above. Native merged-square corner handling and the
+four-quadratic round-dot construction are informed by Tom Chen's MIT Tong Pixel
+Sans exporter (`tools/export-rs/src/outlines.rs`, `python_reference.py`) provided
+in the read-only reference package. External validation invokes that original
+Python exporter, without modifying it. No GPL implementation was copied.

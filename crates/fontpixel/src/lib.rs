@@ -10,6 +10,7 @@ pub mod compat;
 pub mod error;
 pub mod formats;
 pub mod model;
+pub mod outline;
 pub mod render;
 pub mod report;
 pub mod resources;

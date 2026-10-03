@@ -217,3 +217,44 @@ fn io_byte_palettes_and_custom_encoding() {
     assert!(f.glyphbycp(97).is_some());
     assert_eq!(f.char2cp("a").unwrap(), Some(97));
 }
+
+#[test]
+fn ttf_metadata_cumulative_zero_width_rows_are_bounded() {
+    use fontpixel::sfnt::{Limits, Sfnt, SfntBuilder};
+    let source = include_bytes!("../../../tests/data/compat/mini-square-1.0-1.ttf");
+    let limits = Limits::default();
+    let font = Sfnt::parse(source, &limits).unwrap();
+    let mut metadata: serde_json::Value =
+        serde_json::from_slice(font.table(*b"BDFP").unwrap()).unwrap();
+    let mut entry = metadata["glyphs"][0].clone();
+    assert_eq!(entry.as_array().unwrap().len(), 18);
+    entry[3] = serde_json::json!(0);
+    entry[4] = serde_json::json!(1_000_000);
+    let entries: Vec<_> = (0..8)
+        .map(|i| {
+            let mut e = entry.clone();
+            e[1] = serde_json::json!(1000 + i);
+            e
+        })
+        .collect();
+    metadata["glyphs"] = serde_json::json!(entries);
+    let mut builder = SfntBuilder::new(font.flavor());
+    for table in font.tables() {
+        builder
+            .insert(
+                table.tag,
+                if table.tag == *b"BDFP" {
+                    serde_json::to_vec(&metadata).unwrap()
+                } else {
+                    table.data.to_vec()
+                },
+            )
+            .unwrap();
+    }
+    let data = builder.build(&limits).unwrap();
+    let error = fontpixel::compat::bdfparser::ttf::read_ttf(&data, None).unwrap_err();
+    assert!(
+        error.to_string().contains("cumulative model budget"),
+        "{error}"
+    );
+}

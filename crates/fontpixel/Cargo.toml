@@ -102,3 +102,7 @@ harness = false
 [[example]]
 name = "sfnt_check"
 required-features = ["compat-bdfparser"]
+
+[[example]]
+name = "glyf_check"
+required-features = ["sfnt"]

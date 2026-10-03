@@ -8,6 +8,7 @@ pub mod cmap;
 mod container;
 mod data;
 pub mod gasp;
+pub mod glyf;
 pub mod metrics;
 pub mod name;
 pub mod os2;
