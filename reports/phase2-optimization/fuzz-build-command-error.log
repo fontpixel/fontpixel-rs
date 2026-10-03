@@ -1,0 +1,5 @@
+error: unexpected argument 'vector_raster' found
+
+Usage: cargo-fuzz build [OPTIONS] [TARGET]
+
+For more information, try '--help'.

@@ -29,3 +29,8 @@ Still required: final aggregate check and release build, five-run final timing,
 complete final native/reference external matrix, supplied-newer inputs, webfont
 and subset/raster validation, compatibility parity, fresh fuzz gate, protected
 input hashes and review/integration. No W3 work has begun.
+
+Release commands with explicit --example selectors do not build CLI binaries.
+The final CLI/parity gate therefore uses a separate explicit --bins build; its
+help output and fresh binary hashes are checked before accepted measurements.
+Any earlier parity run using the pre-rebuild CLI is diagnostic only.

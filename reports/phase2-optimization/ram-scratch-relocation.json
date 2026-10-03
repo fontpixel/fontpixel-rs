@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/tmp/fontpixel-phase2-native",
+    "target": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/disk-scratch/fontpixel-phase2-native",
+    "files": 41,
+    "all_file_hashes_preserved": true
+  },
+  {
+    "path": "/tmp/fontpixel-phase2-optimized",
+    "target": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/disk-scratch/fontpixel-phase2-optimized",
+    "files": 84,
+    "all_file_hashes_preserved": true
+  },
+  {
+    "path": "/tmp/fontpixel-phase2-patterns",
+    "target": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/disk-scratch/fontpixel-phase2-patterns",
+    "files": 7,
+    "all_file_hashes_preserved": true
+  },
+  {
+    "path": "/tmp/fontpixel-phase2-reference",
+    "target": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/disk-scratch/fontpixel-phase2-reference",
+    "files": 30,
+    "all_file_hashes_preserved": true
+  }
+]

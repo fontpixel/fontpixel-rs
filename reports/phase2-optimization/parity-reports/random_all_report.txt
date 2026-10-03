@@ -1,0 +1,13 @@
+compared 1000 cases, 17588 operations: 6 independent divergence(s) in 6 case(s) (0 NEW), 34 cascaded op divergence(s) suppressed
+      6  K12-ragged-bitmap  bop.replace:js-error x4, transform:js-error x2
+         Operations on "ragged" bitmaps (rows of different lengths, e.g. after replace("10", "2"); invalid input, SPEC-v3 §1.3): Python permits ragged intermediate lists; Rust rejects the invalid input transactionally
+
+--- [K12-ragged-bitmap] r1001-00273 op#15 bop.replace:js-error
+  op: {"op": "bop", "m": "replace", "a": ["10", ""]}
+  py: {"$bitmap":["111111","202201","1121","0220","1111","1111"]}
+  js: Error: Bitmap rows must be rectangular labels 0, 1, 2
+
+--- [K12-ragged-bitmap] r1001-00426 op#2 transform:js-error
+  op: {"op": "transform", "fn": [["replace", "1", "12"], ["glow"], ["trim"]], "mode": 2, "r": [[104, 129], [1619, 1631]]}
+  py: {"model":"55d1c917834fa2068e7ec69611903f4289177cd91f79c51cf2e8a72923a719af","n":23,"u":3}
+  js: Error: Bitmap rows must be rectangular labels 0, 1, 2
