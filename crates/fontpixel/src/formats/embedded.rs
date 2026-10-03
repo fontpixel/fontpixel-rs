@@ -64,13 +64,13 @@ impl FormatDetector for EmbeddedCodec {
         let Ok(font) = Sfnt::parse(input.bytes(), &limits) else {
             return Ok(Confidence::NoMatch);
         };
-        if font.table(*b"glyf").is_some()
-            || font.table(*b"CFF ").is_some()
-            || font.table(*b"CFF2").is_some()
+        if cfg!(feature = "ttf") && font.table(*b"glyf").is_some()
+            || cfg!(feature = "otf")
+                && (font.table(*b"CFF ").is_some() || font.table(*b"CFF2").is_some())
         {
-            // Outline-bearing fonts belong to canonical TTF/OTF detectors; their
-            // unified reader gives matching embedded images first priority.
-            #[cfg(feature = "vector-raster")]
+            // Defer only to a canonical outline detector that is actually
+            // installed; enabling a web wrapper also enables vector-raster,
+            // but need not enable standalone TTF/OTF registry entries.
             return Ok(Confidence::NoMatch);
         }
         let (data, location) = self.kind.tags();

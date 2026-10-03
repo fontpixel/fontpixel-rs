@@ -613,11 +613,14 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                     gray_threshold: o.gray_threshold,
                     color_darkness: o.color_darkness,
                 };
-                let (mut set, r) = embedded::read(data, kind, &eo)?;
+                let (mut set, mut r) = embedded::read(data, kind, &eo)?;
+                let mut selected_indices = (0..set.fonts.len()).collect::<Vec<_>>();
                 if let Some(p) = o.ppem {
-                    set.fonts.retain(|s| {
+                    let selected = |s: &Font| {
                         s.metrics.ppem_x == Some(p as u32) && s.metrics.ppem_y == Some(p as u32)
-                    });
+                    };
+                    selected_indices.retain(|&i| selected(&set.fonts[i]));
+                    set.fonts.retain(selected);
                 }
                 if !set.properties.is_empty() {
                     note(
@@ -655,7 +658,8 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                             .push(Property::new("sfnt.EBSC", PropertyValue::Bytes(raw)));
                     }
                 }
-                for strike in set.fonts {
+                let mut output_indices = BTreeMap::new();
+                for (source_index, strike) in selected_indices.into_iter().zip(set.fonts) {
                     if !embedded_set.fonts.iter().any(|s| {
                         s.metrics.ppem_x == strike.metrics.ppem_x
                             && s.metrics.ppem_y == strike.metrics.ppem_y
@@ -668,9 +672,19 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
                             "embedded retained glyphs",
                         )?;
                         bound(embedded_set.fonts.len() + 1, l.max_fonts, "raster fonts")?;
+                        output_indices.insert(source_index, embedded_set.fonts.len());
                         embedded_set.fonts.push(strike);
                     }
                 }
+                r.entries.retain_mut(|entry| {
+                    if let Some(index) = &mut entry.location.font_index {
+                        let Some(&output_index) = output_indices.get(index) else {
+                            return false;
+                        };
+                        *index = output_index;
+                    }
+                    true
+                });
                 report.extend(r);
             }
         }
@@ -718,6 +732,7 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
             .map(|s| s.metrics.ppem_y.unwrap_or(0) as u16)
             .collect()
     };
+    bound(sizes.len(), l.max_fonts, "raster fonts")?;
     let mapping = cmap::decode(required(&f, *b"cmap")?, count, &l.sfnt)?;
     let mut reverse = BTreeMap::<u16, Vec<u32>>::new();
     for (cp, gid) in mapping {

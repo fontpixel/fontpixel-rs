@@ -84,3 +84,10 @@ with each Font's face-index annotation. Unsupported raw common/outline-table
 provenance is explicitly reported rather than silently discarded. Native outline
 writers regenerate tables and report container-property loss; use the bitmap
 codec or low-level collection API when preserving those instructions is required.
+
+Native source `.notdef` is treated as a real glyph: its origin, horizontal and
+vertical advances, explicit centered vertical origin and chosen outline shape
+are retained. Only the separate regional exporter synthesizes its standard
+placeholder. Native blank-glyph vertical origins use a zero outline top;
+unrepresentable non-centered origins fail. Underline position/thickness are
+scaled into post fields with checked range conversion.

@@ -250,11 +250,16 @@ fn encode_planned(
                 .checked_mul(scale)
                 .ok_or_else(|| invalid("advance overflow"))?,
         )?;
-        let shape = if i == 0 { Shape::Square } else { o.shape };
+        let generated_notdef = i == 0 && !retain_names;
+        let shape = if generated_notdef {
+            Shape::Square
+        } else {
+            o.shape
+        };
         let opts = outline::Options {
             shape,
             units_per_pixel: i32::from(o.units_per_pixel),
-            dot_size: if i == 0 { 1. } else { o.dot_size },
+            dot_size: if generated_notdef { 1. } else { o.dot_size },
             origin: (x, y),
         };
         let ink = bitmap.bbox();
@@ -263,7 +268,7 @@ fn encode_planned(
         } else {
             (1. - opts.dot_size) * f64::from(o.units_per_pixel) / 2.
         };
-        let bearing = if i == 0 {
+        let bearing = if generated_notdef {
             i16n(scale)?
         } else if ink.width == 0 {
             0
@@ -293,7 +298,7 @@ fn encode_planned(
                 va.y.checked_mul(-scale)
                     .ok_or_else(|| invalid("vertical advance overflow"))?,
             )?;
-            let origin = if i == 0 {
+            let origin = if generated_notdef {
                 None
             } else {
                 g.metrics.vertical_origin
@@ -309,17 +314,25 @@ fn encode_planned(
             } else {
                 i64::from(ascent)
             };
-            let top = (g.metrics.bounds.y + ink.y + i64::from(ink.height))
-                .checked_mul(scale)
-                .ok_or_else(|| invalid("vertical top overflow"))?;
-            let bearing = if ink.height == 0 {
+            let top = if ink.height == 0 && retain_names {
+                0
+            } else {
+                (g.metrics.bounds.y + ink.y + i64::from(ink.height))
+                    .checked_mul(scale)
+                    .ok_or_else(|| invalid("vertical top overflow"))?
+            };
+            let bearing = if ink.height == 0 && !retain_names {
                 0
             } else {
                 i16n(
                     origin_y
                         .checked_sub(top)
                         .ok_or_else(|| invalid("vertical bearing overflow"))?
-                        .checked_add(inset.round() as i64)
+                        .checked_add(if ink.height == 0 {
+                            0
+                        } else {
+                            inset.round() as i64
+                        })
                         .ok_or_else(|| invalid("vertical bearing overflow"))?,
                 )?
             };
@@ -368,7 +381,7 @@ fn encode_planned(
         extents.push(width);
         match o.flavor {
             OutlineFlavor::TrueType => {
-                let glyph = if shared && i != 0 {
+                let glyph = if shared && !generated_notdef {
                     glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
                 } else {
                     glyf::Glyph::simple(outline::contours(&bitmap, &opts, &gl.geometry)?)
@@ -586,6 +599,20 @@ fn encode_planned(
     )?;
     let mut post = PostTable::default();
     if retain_names {
+        post.header.underline_position = i16n(
+            base.metrics
+                .underline_position
+                .unwrap_or(0)
+                .checked_mul(scale)
+                .ok_or_else(|| invalid("underline position overflow"))?,
+        )?;
+        post.header.underline_thickness = i16n(
+            base.metrics
+                .underline_thickness
+                .unwrap_or(0)
+                .checked_mul(scale)
+                .ok_or_else(|| invalid("underline thickness overflow"))?,
+        )?;
         let mut names = sources
             .iter()
             .map(|(name, _)| (*name).to_owned())

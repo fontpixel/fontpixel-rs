@@ -862,3 +862,43 @@ assigning source glyph names.
 metadata, misidentify the affected font, or introduce glyph-name collisions.
 Focused regressions cover each boundary; changed reader code receives a fresh
 full-duration fuzz run before handoff.
+
+## 2026-10-03 — Native source glyph zero uses source metrics
+
+**Question:** Independent W2.7 review found that reusing the regional exporter
+also reused its synthesized `.notdef` rules for a real source glyph zero. This
+shifted TrueType ink to x=1, ignored explicit vertical origins, and could silently
+accept an unrepresentable origin. Native underline fields were also reset.
+**Choice:** Apply generated-placeholder rules only to the regional synthetic
+`.notdef`. Native source glyph zero follows the same shape, bearings, origin and
+validation rules as other source glyphs. Native blank outlines encode their
+vertical origin relative to the empty outline top at zero. Native post tables
+scale and preserve source underline position and thickness, with checked range
+conversion. The original regional variant output contract remains unchanged.
+**Reason:** Sharing an exporter must not overwrite physical source-glyph metrics.
+Failing-before/passing-after tests, plus independent FontTools/FreeType/OTS checks,
+cover these cases. The review also makes the outline-only path enforce max_fonts,
+as embedded and collection paths already did.
+
+## 2026-10-03 — Bitmap detection defers only to enabled canonical codecs
+
+**Question:** With `otb,vector-raster` enabled but no `ttf`/`otf` features,
+outline-bearing embedded fonts became unrecognized. Enabling a web wrapper
+implicitly enabled vector-raster and thus could break existing OTB detection.
+**Choice:** Embedded detectors defer to TTF/OTF only when that exact canonical
+codec is enabled. The format-agnostic vector-raster alias remains explicit.
+**Reason:** Feature dependencies must not disable the only installed detector.
+A narrow-feature failing-before regression covers both TrueType and CFF hybrids;
+the all-feature case still resolves to the canonical outline container.
+
+## 2026-10-03 — Strike-filtered diagnostics reference retained fonts
+
+**Question:** Selecting a second embedded ppem kept its old font index in reports,
+so diagnostics could refer to index 1 when only one Font was returned. Combining
+multiple bitmap families had the same source-index versus output-index risk.
+**Choice:** Preserve source strike indices through selection, remap retained
+strike diagnostics to their output Font indices, and omit strike-scoped messages
+for unselected or superseded strikes. Global conversion-loss reports remain.
+**Reason:** Diagnostics must identify the actual returned font, including before
+collection face indices are flattened. A two-size second-strike regression
+reproduces the invalid index and verifies the mapping.

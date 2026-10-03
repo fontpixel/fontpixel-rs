@@ -712,3 +712,194 @@ fn embedded_scaling_survives_projection_and_is_scoped_per_face() {
             .any(|e| e.code == "vector-raster.embedded_provenance")
     );
 }
+
+#[test]
+fn review_native_notdef_preserves_ink_origin_and_metrics() {
+    let mut f = font();
+    let id = f.glyphs().next().unwrap().0;
+    let mut b: Bitmap = Bitmap::new(2, 2).unwrap();
+    b.set_pixel(0, 0, 1).unwrap();
+    b.set_pixel(1, 1, 1).unwrap();
+    let mut g = f.glyph(id).unwrap().clone();
+    g.bitmap = b.into();
+    g.metrics.bounds = fontpixel::bitmap::Bounds {
+        x: -2,
+        y: -1,
+        width: 2,
+        height: 2,
+    };
+    g.metrics.advance = Some(Vector::new(6, 0));
+    g.metrics.vertical_advance = Some(Vector::new(0, -8));
+    g.metrics.vertical_origin = Some(Vector::new(3, 5));
+    f.replace_glyph(id, g).unwrap();
+    for flavor in [OutlineFlavor::TrueType, OutlineFlavor::Cff] {
+        let mut o = WriteOptions::default();
+        o.outline.flavor = flavor;
+        o.outline.embed_bitmaps = true;
+        let (d, _) = vr::write(&FontSet::from(f.clone()), "vector-raster", &o).unwrap();
+        for prefer_embedded in [false, true] {
+            let (set, _) = vr::read(
+                &d,
+                &Options {
+                    ppem: Some(8),
+                    prefer_embedded,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let got = set.fonts[0].glyphs().next().unwrap().1;
+            let expected = f.glyph(id).unwrap();
+            assert_eq!(
+                got.bitmap, expected.bitmap,
+                "{flavor:?}, embedded={prefer_embedded}"
+            );
+            assert_eq!(
+                got.metrics.bounds, expected.metrics.bounds,
+                "{flavor:?}, embedded={prefer_embedded}"
+            );
+            assert_eq!(got.metrics.advance, expected.metrics.advance);
+            assert_eq!(
+                got.metrics.vertical_advance,
+                expected.metrics.vertical_advance
+            );
+            assert_eq!(
+                got.metrics.vertical_origin,
+                expected.metrics.vertical_origin
+            );
+        }
+    }
+}
+
+#[test]
+fn review_native_font_underline_metrics_survive() {
+    let mut f = font();
+    f.metrics.underline_position = Some(-2);
+    f.metrics.underline_thickness = Some(1);
+    for id in ["ttf", "otf"] {
+        let (d, _) = vr::write(&FontSet::from(f.clone()), id, &WriteOptions::default()).unwrap();
+        let (set, _) = vr::read(&d, &Options::default()).unwrap();
+        assert_eq!(set.fonts[0].metrics.underline_position, Some(-2));
+        assert_eq!(set.fonts[0].metrics.underline_thickness, Some(1));
+    }
+}
+
+#[test]
+fn review_zero_font_budget_rejects_outline_projection() {
+    let d = encoded(OutlineFlavor::TrueType, false);
+    let mut o = Options::default();
+    o.limits.max_fonts = 0;
+    assert!(vr::read(&d, &o).is_err());
+}
+
+#[test]
+fn review_native_blank_vertical_origin_survives() {
+    let mut f = font();
+    let id = f.glyphs().next().unwrap().0;
+    let mut g = f.glyph(id).unwrap().clone();
+    g.metrics.advance = Some(Vector::new(6, 0));
+    g.metrics.vertical_advance = Some(Vector::new(0, -8));
+    g.metrics.vertical_origin = Some(Vector::new(3, 5));
+    f.replace_glyph(id, g).unwrap();
+    for flavor in [OutlineFlavor::TrueType, OutlineFlavor::Cff] {
+        let mut o = WriteOptions::default();
+        o.outline.flavor = flavor;
+        let (d, _) = vr::write(&FontSet::from(f.clone()), "vector-raster", &o).unwrap();
+        let (set, _) = vr::read(
+            &d,
+            &Options {
+                ppem: Some(8),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            set.fonts[0]
+                .glyphs()
+                .next()
+                .unwrap()
+                .1
+                .metrics
+                .vertical_origin,
+            Some(Vector::new(3, 5))
+        );
+    }
+}
+
+#[test]
+fn review_native_notdef_rejects_unrepresentable_vertical_origin() {
+    let mut f = font();
+    let id = f.glyphs().next().unwrap().0;
+    let mut g = f.glyph(id).unwrap().clone();
+    g.metrics.advance = Some(Vector::new(6, 0));
+    g.metrics.vertical_origin = Some(Vector::new(4, 5));
+    f.replace_glyph(id, g).unwrap();
+    for id in ["ttf", "otf"] {
+        assert!(vr::write(&FontSet::from(f.clone()), id, &WriteOptions::default()).is_err());
+    }
+}
+
+#[cfg(feature = "otb")]
+#[test]
+fn review_embedded_detection_tracks_available_outline_codecs() {
+    for (flavor, enabled, id) in [
+        (OutlineFlavor::TrueType, cfg!(feature = "ttf"), "ttf"),
+        (OutlineFlavor::Cff, cfg!(feature = "otf"), "otf"),
+    ] {
+        let d = encoded(flavor, true);
+        let loaded = fontpixel::read(&d, &Default::default()).unwrap();
+        assert_eq!(loaded.format, if enabled { id } else { "otb" });
+        equal(&font(), &loaded.fonts.fonts[0]);
+    }
+}
+
+#[test]
+fn review_selected_embedded_diagnostics_use_output_font_indices() {
+    let d = encoded(OutlineFlavor::TrueType, true);
+    let f = Sfnt::parse(&d, &Default::default()).unwrap();
+    let mut strikes = sfnt::bitmap::decode(
+        f.table(*b"EBLC").unwrap(),
+        f.table(*b"EBDT").unwrap(),
+        sfnt::bitmap::Kind::OpenType,
+        4,
+        &Default::default(),
+    )
+    .unwrap();
+    let mut second = strikes[0].clone();
+    second.ppem_x = 16;
+    second.ppem_y = 16;
+    strikes.push(second);
+    let e = sfnt::bitmap::encode(
+        &strikes,
+        sfnt::bitmap::Kind::OpenType,
+        4,
+        &Default::default(),
+    )
+    .unwrap();
+    let mut h = f.table(*b"hhea").unwrap().to_vec();
+    h[8..10].copy_from_slice(&1u16.to_be_bytes());
+    let d = patch(
+        &patch(&patch(&d, *b"EBDT", e.data), *b"EBLC", e.location),
+        *b"hhea",
+        h,
+    );
+    let (set, report) = vr::read(
+        &d,
+        &Options {
+            ppem: Some(16),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert_eq!(set.fonts.len(), 1);
+    assert!(
+        report
+            .entries
+            .iter()
+            .any(|e| e.code == "embedded.metric_rounding")
+    );
+    for entry in report.entries {
+        if let Some(i) = entry.location.font_index {
+            assert!(i < set.fonts.len(), "{entry:?}");
+        }
+    }
+}
