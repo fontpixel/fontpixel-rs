@@ -1,0 +1,161 @@
+{
+  "partial": false,
+  "results": [
+    {
+      "case": "TongPixelSans14Large-Latin-square-ttf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 347656,
+      "sha256": "e44eb9333fcac113d2e8dabe5a07cf2d8f3d070035eb5c59e5ad750e94e82e3a"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-square-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-square-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 330324,
+      "sha256": "bc0e9f23389a90fea0061225728f793dac0c76e0413e833af5def1be971064cf"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-square-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot-ttf",
+      "glyphs": 3647,
+      "shaping_batches": 96,
+      "bytes": 685284,
+      "sha256": "ff58f9c77e575605d6041353d9f7cec9a6f979462e89898f2dd48264b5cc7719"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 464112,
+      "sha256": "524e3e69b561c03fbb36c4b5a3abb7e133f400c9e46b058bfc69387dfb2c23d7"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square-ttf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 334828,
+      "sha256": "5c6e836e264321b64673529cb90e2a2a46be5dfc09955bb8cb7fab20b516eb36"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 319564,
+      "sha256": "fc2ed9bc03e36eb7d0923f4662e23c3b098e4c8e447e22956bbce7ce40440341"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot-ttf",
+      "glyphs": 3647,
+      "shaping_batches": 96,
+      "bytes": 633016,
+      "sha256": "c163ffbe10734894be86aa8c69cb4c846d42cf3ce5143b0208b3357d9a02f678"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 431868,
+      "sha256": "c56169ceadb1379ef996dc13fd2277ce29f426423f2642ac23904932ef32b156"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square-ttf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 330444,
+      "sha256": "b9b5702d0ac1286080f0580fd8bc4cd42a3fb04a2772131b7e06760cf91ef21c"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 315428,
+      "sha256": "5efc0a8313e9f1b7298b9fb238e4a119732ef06eb240a665bb63a8cac6f7e712"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot-ttf",
+      "glyphs": 3647,
+      "shaping_batches": 96,
+      "bytes": 651456,
+      "sha256": "9a0f4206af6931624ab9061246f9673f4297875d3c556a739cef351e3309d195"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot-ttf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot-otf",
+      "glyphs": 3646,
+      "shaping_batches": 96,
+      "bytes": 444568,
+      "sha256": "aaeb91ab922aa6bb6ace90dbec3129d5f5e3b156c2119113d852c45d4b7d3c5c"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot-otf",
+      "retained_codepoints": 13,
+      "subset_shaping_glyph_checks": 1872,
+      "fonttools_subset_equivalent": true
+    }
+  ]
+}

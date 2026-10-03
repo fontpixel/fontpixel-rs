@@ -1,0 +1,27 @@
+{
+  "generated_font_cases": 16,
+  "glyph_checks": 226412,
+  "full_shaping_batches": 4800,
+  "subset_shaping_glyph_checks": 51264,
+  "extra_cases": 9,
+  "check_passed_invocations": 705,
+  "protected_files": 690,
+  "final_code_commit": "1dd7f84596757ce7cd2078739974dcc5b2e220d9",
+  "parity_new_differences": 0,
+  "fuzz": {
+    "gsub": {
+      "executions": 2309774,
+      "coverage": 2286,
+      "features": 9891,
+      "seconds": 611,
+      "peak_rss_mb": 513
+    },
+    "subset": {
+      "executions": 2572452,
+      "coverage": 6927,
+      "features": 20692,
+      "seconds": 611,
+      "peak_rss_mb": 483
+    }
+  }
+}

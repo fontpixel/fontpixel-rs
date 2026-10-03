@@ -1,0 +1,50 @@
+[
+  {
+    "file": "dot-subset.otf",
+    "glyphs": 24,
+    "cmap_entries": 15,
+    "OTS": "pass"
+  },
+  {
+    "file": "dot-subset.ttf",
+    "glyphs": 25,
+    "cmap_entries": 15,
+    "OTS": "pass"
+  },
+  {
+    "file": "dot.otf",
+    "glyphs": 45664,
+    "cmap_entries": 38653,
+    "OTS": "pass"
+  },
+  {
+    "file": "dot.ttf",
+    "glyphs": 45665,
+    "cmap_entries": 38653,
+    "OTS": "pass"
+  },
+  {
+    "file": "square-subset.otf",
+    "glyphs": 24,
+    "cmap_entries": 15,
+    "OTS": "pass"
+  },
+  {
+    "file": "square-subset.ttf",
+    "glyphs": 24,
+    "cmap_entries": 15,
+    "OTS": "pass"
+  },
+  {
+    "file": "square.otf",
+    "glyphs": 45664,
+    "cmap_entries": 38653,
+    "OTS": "pass"
+  },
+  {
+    "file": "square.ttf",
+    "glyphs": 45664,
+    "cmap_entries": 38653,
+    "OTS": "pass"
+  }
+]
