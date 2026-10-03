@@ -987,3 +987,123 @@ INFO: seed corpus: files: 85 min: 11636b max: 651660b total: 3249998b rss: 32Mb
 #44490	NEW    cov: 3718 ft: 17697 corp: 973/43Mb lim: 131072 exec/s: 90 rss: 251Mb L: 37179/131072 MS: 1 ChangeBinInt-
 #44639	REDUCE cov: 3718 ft: 17697 corp: 973/43Mb lim: 131072 exec/s: 90 rss: 251Mb L: 2180/131072 MS: 4 ShuffleBytes-CrossOver-InsertByte-EraseBytes-
 #44731	REDUCE cov: 3718 ft: 17697 corp: 973/43Mb lim: 131072 exec/s: 90 rss: 251Mb L: 41/131072 MS: 2 CMP-EraseBytes- DE: "\344\376\377\000"-
+#45458	NEW    cov: 3718 ft: 17698 corp: 974/43Mb lim: 131072 exec/s: 90 rss: 251Mb L: 37279/131072 MS: 2 ChangeByte-PersAutoDict- DE: "\275\372\377\000"-
+#45635	REDUCE cov: 3718 ft: 17698 corp: 974/43Mb lim: 131072 exec/s: 90 rss: 251Mb L: 3003/131072 MS: 2 InsertByte-EraseBytes-
+#45926	NEW    cov: 3718 ft: 17699 corp: 975/43Mb lim: 131072 exec/s: 89 rss: 251Mb L: 37236/131072 MS: 1 ChangeByte-
+#46095	REDUCE cov: 3718 ft: 17699 corp: 975/43Mb lim: 131072 exec/s: 89 rss: 251Mb L: 64263/131072 MS: 4 InsertRepeatedBytes-ShuffleBytes-PersAutoDict-EraseBytes- DE: "\377\377\377\377"-
+#46346	NEW    cov: 3719 ft: 17701 corp: 976/43Mb lim: 131072 exec/s: 88 rss: 251Mb L: 37279/131072 MS: 1 ChangeByte-
+#46487	NEW    cov: 3720 ft: 17702 corp: 977/43Mb lim: 131072 exec/s: 88 rss: 251Mb L: 48774/131072 MS: 1 EraseBytes-
+#46778	NEW    cov: 3785 ft: 17767 corp: 978/43Mb lim: 131072 exec/s: 88 rss: 251Mb L: 46940/131072 MS: 1 CrossOver-
+#47014	NEW    cov: 3785 ft: 17769 corp: 979/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 37279/131072 MS: 1 CMP- DE: "\377@"-
+#47181	NEW    cov: 3785 ft: 17770 corp: 980/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 2315/131072 MS: 2 ChangeBinInt-ChangeByte-
+#47472	NEW    cov: 3785 ft: 17771 corp: 981/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 15300/131072 MS: 1 ChangeByte-
+#47754	NEW    cov: 3785 ft: 17772 corp: 982/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 37179/131072 MS: 2 ShuffleBytes-CopyPart-
+#47824	REDUCE cov: 3785 ft: 17772 corp: 982/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 33/131072 MS: 5 ChangeByte-ChangeASCIIInt-ChangeASCIIInt-ChangeByte-EraseBytes-
+#48145	REDUCE cov: 3785 ft: 17772 corp: 982/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 27051/131072 MS: 1 EraseBytes-
+#48379	REDUCE cov: 3785 ft: 17772 corp: 982/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 39872/131072 MS: 4 ChangeASCIIInt-EraseBytes-ShuffleBytes-CrossOver-
+#48650	REDUCE cov: 3786 ft: 17773 corp: 983/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 34/131072 MS: 1 InsertByte-
+#48702	NEW    cov: 3786 ft: 17774 corp: 984/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 37236/131072 MS: 2 PersAutoDict-ChangeBinInt- DE: "\001<"-
+#48903	REDUCE cov: 3786 ft: 17774 corp: 984/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 63822/131072 MS: 1 EraseBytes-
+#48914	NEW    cov: 3786 ft: 17776 corp: 985/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 37279/131072 MS: 1 CMP- DE: "\000\000\000\000\000\000\000\001"-
+#49596	NEW    cov: 3787 ft: 17777 corp: 986/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 24615/131072 MS: 2 EraseBytes-EraseBytes-
+#49597	NEW    cov: 3787 ft: 17778 corp: 987/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 37236/131072 MS: 1 ChangeByte-
+#49849	NEW    cov: 3787 ft: 17780 corp: 988/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 37179/131072 MS: 2 ChangeBinInt-CopyPart-
+#49897	REDUCE cov: 3787 ft: 17780 corp: 988/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 100088/131072 MS: 3 ChangeBit-ChangeByte-EraseBytes-
+#50122	NEW    cov: 3787 ft: 17783 corp: 989/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 37279/131072 MS: 5 ChangeByte-ChangeByte-ChangeByte-ShuffleBytes-PersAutoDict- DE: "\344\376\377\000"-
+#50252	REDUCE cov: 3787 ft: 17783 corp: 989/43Mb lim: 131072 exec/s: 86 rss: 251Mb L: 48723/131072 MS: 5 EraseBytes-ChangeByte-CMP-CrossOver-CopyPart- DE: "\012\000\000\000\000\000\000\000"-
+#50496	REDUCE cov: 3787 ft: 17783 corp: 989/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 1025/131072 MS: 4 ChangeByte-ShuffleBytes-PersAutoDict-EraseBytes- DE: "\001\000\000\000\000\000\000\000"-
+#50662	NEW    cov: 3787 ft: 17784 corp: 990/43Mb lim: 131072 exec/s: 87 rss: 251Mb L: 37236/131072 MS: 1 CMP- DE: "\001\000\000\000\000\000K&"-
+#50705	NEW    cov: 3787 ft: 17785 corp: 991/44Mb lim: 131072 exec/s: 87 rss: 251Mb L: 37279/131072 MS: 3 CMP-ChangeASCIIInt-ChangeBinInt- DE: "\000\000@\000"-
+#50755	REDUCE cov: 3787 ft: 17785 corp: 991/44Mb lim: 131072 exec/s: 87 rss: 251Mb L: 38813/131072 MS: 5 ChangeBit-CMP-ChangeBinInt-EraseBytes-ChangeBit- DE: "\000\000\000\000\000\000\000\013"-
+#50862	REDUCE cov: 3787 ft: 17785 corp: 991/44Mb lim: 131072 exec/s: 87 rss: 251Mb L: 28313/131072 MS: 2 ChangeBinInt-EraseBytes-
+#51719	NEW    cov: 3787 ft: 17787 corp: 992/44Mb lim: 131072 exec/s: 87 rss: 253Mb L: 50888/131072 MS: 2 ChangeBit-ChangeBinInt-
+#52261	REDUCE cov: 3787 ft: 17787 corp: 992/44Mb lim: 131072 exec/s: 87 rss: 253Mb L: 323/131072 MS: 2 InsertRepeatedBytes-CrossOver-
+#52293	NEW    cov: 3787 ft: 17788 corp: 993/44Mb lim: 131072 exec/s: 87 rss: 253Mb L: 37279/131072 MS: 2 ChangeBit-ShuffleBytes-
+#52909	NEW    cov: 3787 ft: 17789 corp: 994/44Mb lim: 131072 exec/s: 87 rss: 253Mb L: 22917/131072 MS: 1 CrossOver-
+#53169	DONE   cov: 3787 ft: 17789 corp: 994/44Mb lim: 131072 exec/s: 87 rss: 253Mb
+###### Recommended dictionary. ######
+"OS/2" # Uses: 124
+" \000\000\000" # Uses: 76
+"\001\000\006\221" # Uses: 99
+"\000\000\000\000\000\000\000\004" # Uses: 66
+"\005\000\000\000" # Uses: 89
+"\006\000\000\000\000\000\000\000" # Uses: 87
+"\000\000\000\000\000\000\000\000" # Uses: 86
+"\200\240\202JK{\000\000" # Uses: 81
+"CFF " # Uses: 79
+"\011\000\000\000\000\000\000\000" # Uses: 60
+"\001\000\000\000\000\000\000\000" # Uses: 78
+"\001\000\000\000\000\000\000\001" # Uses: 71
+"\376\377\377\177\000\000\000\000" # Uses: 73
+"@\000\000\000" # Uses: 69
+"\376\177\000\000" # Uses: 67
+"head" # Uses: 64
+"\001\000\000\000\000\000\000\013" # Uses: 76
+"\024\001\000\000" # Uses: 78
+"name" # Uses: 67
+"\377\377\377\377\377\000\006\252" # Uses: 67
+"\020\000" # Uses: 70
+"maxp" # Uses: 74
+"!\000\000\000" # Uses: 53
+"+\000" # Uses: 67
+"vOF2" # Uses: 64
+"hhea" # Uses: 61
+"\001\000\334\016" # Uses: 51
+"\014'\001\000\000\000\000\000" # Uses: 51
+"\377\377\377\377\377\377\220O" # Uses: 56
+"\001\015" # Uses: 53
+"\275\372\377\000" # Uses: 82
+"glyf" # Uses: 65
+"(\000\000\000\000\000\000\000" # Uses: 65
+"\001\000\000\000\000\001\002\243" # Uses: 64
+"\001<" # Uses: 59
+"A\000\000\000" # Uses: 51
+"\001;" # Uses: 58
+"\003\000\000\000\000\000\000\000" # Uses: 52
+"\001\001\007\257" # Uses: 46
+"\000\000\000\000\000\001\252L" # Uses: 71
+"\000\222\325Y" # Uses: 62
+"post" # Uses: 66
+".\000" # Uses: 58
+"\376\377\377\377\377\377\377\377" # Uses: 73
+"\000\017" # Uses: 66
+"\033\000\000\000" # Uses: 56
+"\377\377\377\377" # Uses: 61
+"\377\377\377\377\377\377\377\377" # Uses: 59
+"\000\000\000\000\000\000\221O" # Uses: 73
+"\377\377\377\000" # Uses: 71
+"[\000" # Uses: 48
+"\031\000" # Uses: 61
+"\377\377?\000" # Uses: 64
+"\001\000\000\000\000\000\000\002" # Uses: 49
+"\377\377\377\377\377\377\377&" # Uses: 58
+"\377\016" # Uses: 45
+"1FOw" # Uses: 47
+"\010\000\000\000\000\000\000\000" # Uses: 61
+"\377\377\377\377\377\377\377\002" # Uses: 50
+"\000\000\000\000\000\000\0006" # Uses: 46
+"\377\377\3773" # Uses: 37
+"\000\000\000\000" # Uses: 44
+"\000\000\000\000\000\000\020\000" # Uses: 34
+"\001\377\376\231" # Uses: 39
+"\001\000\000\013" # Uses: 34
+"6\002@\000\000\000\000\000" # Uses: 37
+"\000\000\000\000\000\000\000\001" # Uses: 26
+"\001\000\000\000\000\000\000\010" # Uses: 29
+"\001\000\000\000\000\000\000\024" # Uses: 32
+"j<\000\000\000\000\000\000" # Uses: 20
+"5\000\000\000" # Uses: 15
+"\377\377\377\377\377\000\"\346" # Uses: 17
+"\314\266\000\000\000\000\000\000" # Uses: 24
+"\000\000\000\200\000\000\000\000" # Uses: 18
+"\014\000\000\000" # Uses: 17
+"\000\000\000\000\000\000\000\002" # Uses: 20
+"\031K\000\000\000\000\000\000" # Uses: 12
+"\344\376\377\000" # Uses: 8
+"\377@" # Uses: 9
+"\012\000\000\000\000\000\000\000" # Uses: 3
+"\001\000\000\000\000\000K&" # Uses: 3
+"\000\000@\000" # Uses: 4
+"\000\000\000\000\000\000\000\013" # Uses: 2
+###### End of recommended dictionary. ######
+Done 53169 runs in 611 second(s)

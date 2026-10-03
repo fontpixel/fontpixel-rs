@@ -7,3 +7,23 @@ TongPixelSans14Large-KR-ttf-dot PASS 257
 TongPixelSans14Large-KR-otf-square PASS 257
 TongPixelSans14Large-KR-otf-dot PASS 257
 TongPixelSans14Large-Latin-ttf-square PASS 3646
+TongPixelSans14Large-Latin-ttf-dot PASS 3646
+TongPixelSans14Large-Latin-otf-square PASS 3646
+TongPixelSans14Large-Latin-otf-dot PASS 3646
+TongPixelSans14Large-SC-ttf-square PASS 257
+TongPixelSans14Large-SC-ttf-dot PASS 257
+TongPixelSans14Large-SC-otf-square PASS 257
+TongPixelSans14Large-SC-otf-dot PASS 257
+TongPixelSans14Large-TC-ttf-square PASS 257
+TongPixelSans14Large-TC-ttf-dot PASS 257
+TongPixelSans14Large-TC-otf-square PASS 257
+TongPixelSans14Large-TC-otf-dot PASS 257
+TongPixelSans14Small-Latin-ttf-square PASS 3646
+TongPixelSans14Small-Latin-ttf-dot PASS 3646
+TongPixelSans14Small-Latin-otf-square PASS 3646
+TongPixelSans14Small-Latin-otf-dot PASS 3646
+TongPixelSansMono14Large-Latin-ttf-square PASS 3646
+TongPixelSansMono14Large-Latin-ttf-dot PASS 3646
+TongPixelSansMono14Large-Latin-otf-square PASS 3646
+TongPixelSansMono14Large-Latin-otf-dot PASS 3646
+{"cases": 264, "glyph_checks": 192088}

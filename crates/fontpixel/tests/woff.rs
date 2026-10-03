@@ -254,3 +254,59 @@ proptest! {
         let _=woff1::decode(&data,&l);let _=woff2::decode(&data,&l);
     }
 }
+
+proptest! {
+    #![proptest_config(ProptestConfig::with_cases(100))]
+    #[test]
+    fn random_simple_glyph_transform_roundtrip(points in prop::collection::vec((-2000i16..2000,-2000i16..2000,any::<bool>()),1..50),overlap in any::<bool>(),short in any::<bool>()){
+        use fontpixel::sfnt::glyf::{GlyfTable,Glyph,SimpleGlyph,LocaFormat};
+        let contours=vec![points.iter().map(|&(x,y,on)|(x as f64,y as f64,on)).collect()];
+        let table=GlyfTable{glyphs:vec![Glyph::Simple(SimpleGlyph{contours,instructions:vec![0xb0,0,0x21],overlap});4]};
+        let l=fontpixel::sfnt::glyf::Limits::default();
+        let encoded=table.encode(if short{LocaFormat::Short}else{LocaFormat::Long},&l).unwrap();
+        let mut data=replace(FONT,*b"glyf",encoded.glyf);data=replace(&data,*b"loca",encoded.loca);
+        let mut head=Sfnt::parse(&data,&l.sfnt).unwrap().table(*b"head").unwrap().to_vec();head[50..52].copy_from_slice(&encoded.index_to_loc_format.to_be_bytes());data=replace(&data,*b"head",head);
+        let result=woff2::encode(&data,&options(),&Limits::default()).unwrap();equivalent(&data,&result.bytes,true);
+    }
+}
+
+#[test]
+fn normalized_short_loca_upgrades_without_losing_glyphs() {
+    use fontpixel::sfnt::glyf::{GlyfTable, Glyph, LocaFormat};
+    let gl = fontpixel::sfnt::glyf::Limits::default();
+    let count = 7000u16;
+    let table = GlyfTable {
+        glyphs: vec![Glyph::simple(vec![vec![(1.0, 1.0, true)]]); count as usize],
+    };
+    let e = table.encode(LocaFormat::Short, &gl).unwrap();
+    assert_eq!(e.index_to_loc_format, 0);
+    let mut data = replace(FONT, *b"glyf", e.glyf);
+    data = replace(&data, *b"loca", e.loca);
+    let mut head = Sfnt::parse(&data, &gl.sfnt)
+        .unwrap()
+        .table(*b"head")
+        .unwrap()
+        .to_vec();
+    head[50..52].copy_from_slice(&0u16.to_be_bytes());
+    data = replace(&data, *b"head", head);
+    data = replace(&data, *b"maxp", e.statistics.unhinted_maxp(count).unwrap());
+    let mut hhea = Sfnt::parse(&data, &gl.sfnt)
+        .unwrap()
+        .table(*b"hhea")
+        .unwrap()
+        .to_vec();
+    hhea[34..36].copy_from_slice(&1u16.to_be_bytes());
+    data = replace(&data, *b"hhea", hhea);
+    let mut hmtx = vec![0; 2 * (count as usize + 1)];
+    hmtx[..2].copy_from_slice(&500u16.to_be_bytes());
+    data = replace(&data, *b"hmtx", hmtx);
+    let limits = Limits::default();
+    let e = woff2::encode(&data, &options(), &limits).unwrap();
+    let d = woff2::decode(&e.bytes, &limits).unwrap();
+    let f = Sfnt::parse(&d.sfnt, &limits.sfnt).unwrap();
+    assert_eq!(&f.table(*b"head").unwrap()[50..52], &1u16.to_be_bytes());
+    assert_eq!(
+        fontpixel::sfnt::glyf::GlyfTable::from_sfnt(&f, &gl).unwrap(),
+        table
+    );
+}
