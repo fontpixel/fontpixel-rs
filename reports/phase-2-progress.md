@@ -1,15 +1,35 @@
 # Phase 2 current progress
 
+2026-10-03 UTC: W2.1–W2.8 are accepted and integrated into main. W2.8's
+independent review corrected separate-path paint, aliases, metadata/resource
+handling and CLI input capacity. Integration merge:
+`e82baf5268cbafdb54c69da363cda52497efa8f9`.
+
+Integrated full check: **884 passing test invocations**. Rebuilt-release full
+parity: **0 NEW divergences**, with stable clean source fingerprints. W2.8's
+fresh reader ASan gate and complete external SVG oracles also pass. See
+`reports/w2.8-review.md` and `reports/w2.8-review/` for exact evidence.
+
+**Phase 2 is still incomplete.** The next separate task is the combined
+acceptance gate: PLAN §9.3 external-container checks, §9.4 complete Tong export
+and locl equivalence, and §10 whole-export five-run timing/size comparisons on
+final integrated main. Do not begin W3 until the combined gate passes and the
+phase-2 report is written. W2.8 integration alone does not establish that gate.
+
+## Earlier checkpoint history
+
+The following statements describe earlier checkpoints and do not override the
+current status above.
+
+### Earlier W2.1–W2.4 integration checkpoint
+
 2026-10-03 UTC: W2.1–W2.4 have been recovered, independently validated,
 accepted and fast-forward integrated into main. The integrated-main full
 aggregate check passes (561 test executions). W2.5 WOFF1/WOFF2 is next;
 phase 2 remains incomplete. See `main-integration-20261003/INTEGRATION-REPORT.md`
 for current integration status and `recovery-w2.4-20261003/` for acceptance evidence.
 
-## Earlier checkpoint history
 
-The following statements describe earlier interrupted checkpoints and do not
-override the current status above.
 
 # Phase 2 interrupted progress / 第2阶段未完成进度
 

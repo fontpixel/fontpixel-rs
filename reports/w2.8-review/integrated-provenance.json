@@ -1,0 +1,16 @@
+{
+  "merge_commit": "e82baf5268cbafdb54c69da363cda52497efa8f9",
+  "production_commit": "133153b45bcbd895e2016204460a8c868a5349dd",
+  "production_sources_unchanged": true,
+  "check_test_invocations": 884,
+  "parity_seconds": 80.8,
+  "new_parity_divergences": 0,
+  "parity_source_fingerprint_stable": true,
+  "known_k12_observations": 7,
+  "binary_sha256": {
+    "fontpixel": "3029e2a000c9a098ef0c1872dbb9f7a250dd054a073605545bd19c04d093c1fb",
+    "fontpixel-parity": "e4dc3818f6761bcb4c2c1592051b4f6d525b74cf83d1eb43905ad8c97ab03934"
+  },
+  "all_six_integrated_exports_byte_identical": true,
+  "protected_reference_sample_files": 690
+}
