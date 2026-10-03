@@ -1,0 +1,20 @@
+{
+  "original_commit": "66e1b7cb9d5cc41492aac67d75497be50b5a5b04",
+  "original_changed_paths": 22,
+  "recovered_paths": 12,
+  "missing_paths": {
+    "reports/evidence/w2.1/SHA256SUMS": "Original 18-entry hash manifest was generated but never displayed; cannot recover original blob hashes.",
+    "reports/evidence/w2.1/check.log": "Original 1168-line full output missing; only terminal/tail excerpts and exit 0 survive.",
+    "reports/evidence/w2.1/corpus_report.txt": "Original one-line report was not displayed verbatim; counts survive separately.",
+    "reports/evidence/w2.1/fuzz.log": "Original 632-line output missing; terminal DONE/counts and selected excerpts survive. Final whitespace-normalized bytes cannot be recreated.",
+    "reports/evidence/w2.1/minimal-deps.log": "Original seven-line cargo tree was not displayed; absence of Fontations was observed by successful explicit grep guard.",
+    "reports/evidence/w2.1/probes_report.txt": "Original eight-line report was not displayed verbatim; labels/counts survive in parity output.",
+    "reports/evidence/w2.1/probes_status.json": "Original 289-line generated status JSON missing; no reconstruction from unobserved descriptions or guessed data.",
+    "reports/evidence/w2.1/random_all_report.txt": "Original 13-line report was not displayed verbatim; six K12 classifications observed.",
+    "reports/evidence/w2.1/random_report.txt": "Original one-line report was not displayed verbatim; counts survive separately.",
+    "reports/evidence/w2.1/tables_report.txt": "Original 68-line report was not displayed verbatim; 67 compared/zero differences observed."
+  },
+  "production_code_changed": false,
+  "acceptance_tests_rerun_during_recovery": false,
+  "original_byte_hash_validation_available": false
+}

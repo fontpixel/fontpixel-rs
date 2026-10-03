@@ -1,0 +1,45 @@
+Original committed evidence files lost in rollback (names retained from final
+commit output). Only separate observed excerpts/summary files exist in recovery:
+
+reports/evidence/w2.2/SHA256SUMS
+reports/evidence/w2.2/check-disk-full.log
+reports/evidence/w2.2/check.exit
+reports/evidence/w2.2/check.log
+reports/evidence/w2.2/compat-tests.log
+reports/evidence/w2.2/compat-ttf-fuzz-pre-budget.log
+reports/evidence/w2.2/compat-ttf-fuzz.exit
+reports/evidence/w2.2/compat-ttf-fuzz.log
+reports/evidence/w2.2/corpus_report.txt
+reports/evidence/w2.2/crosscheck-build.log
+reports/evidence/w2.2/crosscheck.exit
+reports/evidence/w2.2/crosscheck.log
+reports/evidence/w2.2/doc.exit
+reports/evidence/w2.2/doc.log
+reports/evidence/w2.2/focused.log
+reports/evidence/w2.2/full-sc-memory-limit.exit
+reports/evidence/w2.2/full-sc-memory-limit.log
+reports/evidence/w2.2/full-sc.exit
+reports/evidence/w2.2/full-sc.log
+reports/evidence/w2.2/fuzz-deny.exit
+reports/evidence/w2.2/fuzz-deny.log
+reports/evidence/w2.2/glyf-fuzz.exit
+reports/evidence/w2.2/glyf-fuzz.log
+reports/evidence/w2.2/minimal-deps.log
+reports/evidence/w2.2/model-budget.log
+reports/evidence/w2.2/parity-build.log
+reports/evidence/w2.2/parity-summary.json
+reports/evidence/w2.2/parity.exit
+reports/evidence/w2.2/parity.log
+reports/evidence/w2.2/probes_report.txt
+reports/evidence/w2.2/probes_status.json
+reports/evidence/w2.2/protected-inputs.json
+reports/evidence/w2.2/random_all_report.txt
+reports/evidence/w2.2/random_report.txt
+reports/evidence/w2.2/sfnt-only.exit
+reports/evidence/w2.2/sfnt-only.log
+reports/evidence/w2.2/source.sha256
+reports/evidence/w2.2/tables_report.txt
+reports/evidence/w2.2/validation.json
+reports/w2.2.md
+ tests/crosscheck/glyf-full-sc-results.json
+ tests/crosscheck/glyf-results.json
