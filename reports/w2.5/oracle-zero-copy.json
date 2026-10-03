@@ -1,0 +1,30 @@
+[
+  {
+    "font": "TongPixelSans14Large-JP-ttf-dot-woff2-q11-t1-x1.woff2",
+    "stock_seconds_single_observation": 0.18887966999864148,
+    "zero_copy_seconds_single_observation": 0.12904412600073556,
+    "glyf_bytes": 118684,
+    "sha256": "e67cb88aa3fe257d4398ba81656b27359b3ace5acdc34d87eb4563a460796332",
+    "byte_identical": true
+  },
+  {
+    "font": "TongPixelSans14Large-Latin-ttf-dot-woff2-q11-t1-x1.woff2",
+    "stock_seconds_single_observation": 2.687605502000224,
+    "zero_copy_seconds_single_observation": 0.7283546189992194,
+    "glyf_bytes": 651131,
+    "sha256": "9a3101808b8bb9c78ebff3675576af17e87e8f0ab1b284a9d586592badd8ebdc",
+    "byte_identical": true
+  },
+  {
+    "font": "TongPixelSans14Large-JP-ttf-square-woff2-q11-t1-x1.woff2",
+    "glyf_bytes": 46772,
+    "sha256": "8b780e41c8e6b86121221a3b79a76d17da6d826a10b0109958cca7ae0261d302",
+    "byte_identical": true
+  },
+  {
+    "font": "hints-overlap-explicit-bbox-affine-woff2-q11-t1-x1.woff2",
+    "glyf_bytes": 108,
+    "sha256": "3b2d852295037c1983161843e650bbe50d44a311abaf5dfd5fbe929b51eee93b",
+    "byte_identical": true
+  }
+]

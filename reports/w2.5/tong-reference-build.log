@@ -16,3 +16,5 @@
    Compiling woff v0.6.3
    Compiling fontpixel-tong-woff-reference v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/benches/woff-reference)
     Finished `release` profile [optimized] target(s) in 46.82s
+   Compiling fontpixel-tong-woff-reference v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/benches/woff-reference)
+    Finished `release` profile [optimized] target(s) in 0.55s

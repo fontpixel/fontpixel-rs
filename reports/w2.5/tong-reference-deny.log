@@ -1,0 +1,19 @@
+warning[license-not-encountered]: license was not encountered
+  ┌─ /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/deny.toml:8:47
+  │
+8 │ allow = ["MIT", "Apache-2.0", "Unicode-3.0", "BSD-3-Clause"]
+  │                                               ━━━━━━━━━━━━ unmatched license allowance
+
+warning[license-not-encountered]: license was not encountered
+  ┌─ /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/deny.toml:8:32
+  │
+8 │ allow = ["MIT", "Apache-2.0", "Unicode-3.0", "BSD-3-Clause"]
+  │                                ━━━━━━━━━━━ unmatched license allowance
+
+warning[unmatched-skip]: skipped crate 'miniz_oxide = =0.8.9' was not encountered
+   ┌─ /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/deny.toml:15:19
+   │
+15 │ skip = [{ name = "miniz_oxide", version = "=0.8.9" }]
+   │                   ━━━━━━━━━━━ unmatched skip configuration
+
+advisories ok, bans ok, licenses ok, sources ok

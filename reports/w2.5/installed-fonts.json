@@ -1,0 +1,30 @@
+[
+  {
+    "file": "Roboto-Slab-Bold.woff2",
+    "glyphs": 1052
+  },
+  {
+    "file": "Roboto-Slab-Regular.woff2",
+    "glyphs": 1052
+  },
+  {
+    "file": "fontawesome-webfont.woff2",
+    "glyphs": 707
+  },
+  {
+    "file": "lato-bold-italic.woff2",
+    "glyphs": 3023
+  },
+  {
+    "file": "lato-bold.woff2",
+    "glyphs": 3023
+  },
+  {
+    "file": "lato-normal-italic.woff2",
+    "glyphs": 3023
+  },
+  {
+    "file": "lato-normal.woff2",
+    "glyphs": 3023
+  }
+]

@@ -633,3 +633,21 @@ using transform 1 when arrays match and the source long-metric count is minimal;
 our decoder reconstructs the full declared count even when it is nonminimal.
 **Reason:** hmtx transformation is optional; preserving source tables avoids a
 consumer bug without silently changing metrics or reducing glyf/loca coverage.
+
+## 2026-10-03 — Keep external verification strict while avoiding oracle tail copies
+
+**Question:** Stock fontTools' WOFF2 composite decoder repeatedly copies the
+entire remaining byte stream for every component. The full-SC shared-dot font
+has millions of components; its correctness run remained in decoding after an
+approximately 20-minute total observation window.
+**Choice:** Preserve that censored stock-run evidence. Add an isolated,
+verification-only read-only memoryview wrapper around compositeStream, still
+calling the original component decoder. Prove its reconstructed bytes identical
+on simple, composite, Latin, hinted, affine, explicit-bbox and overlap fixtures;
+then keep all full-SC assertions. Independently corroborate with Google's C++
+decoder, FreeType, OTS and HarfBuzz. Use stock fontTools only for benchmarks;
+measure Latin-dot same-input three-way medians separately from full-SC native/C++
+(and full-SC CFF three-way) medians.
+**Reason:** Remove only an oracle transport-copy bottleneck, without modifying
+installed/reference code, weakening correctness checks, presenting an adapted
+oracle as stock, or mixing unlike workloads in speedup ratios.
