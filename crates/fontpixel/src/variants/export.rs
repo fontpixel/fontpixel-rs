@@ -238,7 +238,6 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         let adv = g
             .metrics
             .advance
-            .or(variants.base.metrics.glyph_defaults.advance)
             .unwrap_or(crate::model::Vector::new(i64::from(bitmap.width()), 0));
         if adv.y != 0 {
             return Err(invalid(
@@ -277,11 +276,11 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 (f64::from(ink.width) * scale as f64 - 2. * inset).round() as i64,
             )?)
         };
+        let mut bitmap_vertical = None;
         if vertical {
             let va = g
                 .metrics
                 .vertical_advance
-                .or(variants.base.metrics.glyph_defaults.vertical_advance)
                 .unwrap_or(crate::model::Vector::new(
                     0,
                     -i64::from(variants.base.metrics.pixel_size.unwrap_or(14)),
@@ -296,9 +295,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             let origin = if i == 0 {
                 None
             } else {
-                g.metrics
-                    .vertical_origin
-                    .or(variants.base.metrics.glyph_defaults.vertical_origin)
+                g.metrics.vertical_origin
             };
             if origin.is_some_and(|p| p.x.checked_mul(2) != Some(adv.x)) {
                 return Err(invalid(
@@ -336,6 +333,35 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                     (f64::from(ink.height) * scale as f64 - 2. * inset).round() as i64,
                 )?)
             });
+            if o.embed_bitmaps {
+                let pixel_origin_y = origin.map_or(i64::from(ascent) / scale, |p| p.y);
+                let pixel_origin_x = origin.map_or(adv.x / 2, |p| p.x);
+                let narrow = |v| {
+                    i8::try_from(v).map_err(|_| invalid("embedded vertical bearing exceeds int8"))
+                };
+                bitmap_vertical = Some(sbit::Bearing {
+                    x: narrow(
+                        g.metrics
+                            .bounds
+                            .x
+                            .checked_sub(pixel_origin_x)
+                            .ok_or_else(|| invalid("embedded vertical bearing overflow"))?,
+                    )?,
+                    y: narrow(
+                        g.metrics
+                            .bounds
+                            .y
+                            .checked_add(i64::from(bitmap.height()))
+                            .and_then(|top| top.checked_sub(pixel_origin_y))
+                            .ok_or_else(|| invalid("embedded vertical bearing overflow"))?,
+                    )?,
+                    advance: u8::try_from(
+                        va.y.checked_neg()
+                            .ok_or_else(|| invalid("embedded vertical advance overflow"))?,
+                    )
+                    .map_err(|_| invalid("embedded vertical advance exceeds uint8"))?,
+                });
+            }
         }
         hm.push(LongMetric { advance, bearing });
         extents.push(width);
@@ -417,7 +443,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                             advance: u8::try_from(adv.x)
                                 .map_err(|_| invalid("embedded bitmap advance exceeds uint8"))?,
                         }),
-                        vertical: None,
+                        vertical: bitmap_vertical,
                     },
                     bitmap: GlyphBitmap::Mono(bitmap),
                 },
@@ -645,7 +671,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
             ppem_x: ppem,
             ppem_y: ppem,
             bit_depth: 1,
-            flags: 1,
+            flags: if vertical { 3 } else { 1 },
             horizontal: sbit::LineMetrics(line),
             vertical: sbit::LineMetrics::default(),
             glyphs: bitmaps,

@@ -450,3 +450,119 @@ fn maximum_context_matches_actual_layout_presence() {
         assert_eq!(os.extension.unwrap().max_context, context);
     }
 }
+
+#[test]
+fn variants_resolve_each_source_fonts_metric_defaults_before_deduplication() {
+    let default_face = |advance| {
+        let mut f = face("#", 1);
+        let id = f.glyph_id(Codepoint::Unicode(65)).unwrap();
+        f.edit_glyph(id, |g| {
+            g.metrics.advance = None;
+            Ok(())
+        })
+        .unwrap();
+        f.metrics.glyph_defaults.advance = Some(Vector::new(advance, 0));
+        f
+    };
+    let mut v = Variants::new(default_face(4));
+    v.add_language("ja", default_face(6)).unwrap();
+    v.add_language("ko", face("#", 6)).unwrap();
+    let p = v.plan(&Default::default()).unwrap();
+    assert_eq!(p.glyphs.len(), 2);
+    assert_eq!(p.gsub.lookups.len(), 2);
+    assert_eq!(p.gsub.lookups[0], p.gsub.lookups[1]);
+    let e = variants::encode(&v, &Default::default()).unwrap();
+    let f = sfnt::Sfnt::parse(&e.bytes, &Default::default()).unwrap();
+    let (_, metrics) = sfnt::metrics::decode(
+        sfnt::metrics::Axis::Horizontal,
+        f.table(*b"hhea").unwrap(),
+        f.table(*b"hmtx").unwrap(),
+        3,
+        &Default::default(),
+    )
+    .unwrap();
+    let base = p.cmap[&65];
+    let alternate = p.gsub.lookups[0][&base];
+    assert_eq!(metrics[usize::from(base)].advance, 400);
+    assert_eq!(metrics[usize::from(alternate)].advance, 600);
+}
+
+#[test]
+fn alternate_missing_metrics_do_not_inherit_base_font_defaults() {
+    let mut base = face("#", 4);
+    base.metrics.glyph_defaults.advance = Some(Vector::new(9, 0));
+    let mut alt = face("#", 1);
+    let id = alt.glyph_id(Codepoint::Unicode(65)).unwrap();
+    alt.edit_glyph(id, |g| {
+        g.metrics.advance = None;
+        Ok(())
+    })
+    .unwrap();
+    let mut v = Variants::new(base);
+    v.add_language("ja", alt).unwrap();
+    let p = v.plan(&Default::default()).unwrap();
+    let e = variants::encode(&v, &Default::default()).unwrap();
+    let f = sfnt::Sfnt::parse(&e.bytes, &Default::default()).unwrap();
+    let (_, metrics) = sfnt::metrics::decode(
+        sfnt::metrics::Axis::Horizontal,
+        f.table(*b"hhea").unwrap(),
+        f.table(*b"hmtx").unwrap(),
+        3,
+        &Default::default(),
+    )
+    .unwrap();
+    let alt_id = p.gsub.lookups[0][&p.cmap[&65]];
+    assert_eq!(metrics[usize::from(alt_id)].advance, 100);
+}
+
+#[test]
+fn embedded_variants_preserve_vertical_metrics() {
+    let mut f = face("##\n.#", 4);
+    f.metrics.glyph_defaults.vertical_advance = Some(Vector::new(0, -14));
+    f.metrics.glyph_defaults.vertical_origin = Some(Vector::new(2, 12));
+    let e = variants::encode(
+        &Variants::new(f),
+        &Options {
+            embed_bitmaps: true,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let f = sfnt::Sfnt::parse(&e.bytes, &Default::default()).unwrap();
+    let strikes = sfnt::bitmap::decode(
+        f.table(*b"EBLC").unwrap(),
+        f.table(*b"EBDT").unwrap(),
+        sfnt::bitmap::Kind::OpenType,
+        2,
+        &Default::default(),
+    )
+    .unwrap();
+    assert_eq!(
+        strikes[0].glyphs[&1].metrics.vertical,
+        Some(sfnt::bitmap::Bearing {
+            x: -2,
+            y: -10,
+            advance: 14
+        })
+    );
+}
+
+#[test]
+fn subset_rejects_unpaired_vertical_metric_drops() {
+    let mut f = face("#", 4);
+    f.metrics.glyph_defaults.vertical_advance = Some(Vector::new(0, -14));
+    let e = variants::encode(&Variants::new(f), &Default::default()).unwrap();
+    for tag in [*b"vhea", *b"vmtx"] {
+        let mut o = sfnt::subset::Options::text("A");
+        o.drop_tables.insert(tag);
+        assert!(sfnt::subset::subset(&e.bytes, &o).is_err());
+    }
+    let mut o = sfnt::subset::Options::text("A");
+    o.drop_tables.extend([*b"vhea", *b"vmtx"]);
+    let sub = sfnt::subset::subset(&e.bytes, &o).unwrap();
+    assert_eq!(sub.report.entries.len(), 2);
+    assert!(sub.report.has_loss());
+    let f = sfnt::Sfnt::parse(&sub.bytes, &Default::default()).unwrap();
+    assert!(f.table(*b"vhea").is_none());
+    assert!(f.table(*b"vmtx").is_none());
+}

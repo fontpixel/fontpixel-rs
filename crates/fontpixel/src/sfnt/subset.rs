@@ -63,6 +63,9 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     let f = Sfnt::parse(data, l)?;
     let count = u16_at(get(&f, *b"maxp")?, 4)?;
     l.glyphs(usize::from(count))?;
+    if o.drop_tables.contains(b"vhea") != o.drop_tables.contains(b"vmtx") {
+        return Err(invalid("vhea and vmtx must be explicitly dropped together"));
+    }
     let required = [
         *b"head", *b"hhea", *b"hmtx", *b"maxp", *b"cmap", *b"name", *b"OS/2", *b"post",
     ];

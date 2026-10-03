@@ -114,7 +114,7 @@ impl Variants {
             limits.sfnt.glyphs(records.len().saturating_add(2))?;
             let name = gname(cp);
             cmap.insert(cp, name.clone());
-            records.insert(name, planned_glyph(g));
+            records.insert(name, planned_glyph(&self.base, g));
         }
         let mut signatures = HashMap::<u64, Vec<String>>::new();
         let mut maps = Vec::new();
@@ -135,27 +135,28 @@ impl Variants {
         {
             let mut substitutions = BTreeMap::new();
             for (cp, g) in effective(font)? {
+                let g = planned_glyph(font, g);
                 let name = if let Some(n) = cmap.get(&cp) {
                     n.clone()
                 } else {
                     let n = gname(cp);
                     cmap.insert(cp, n.clone());
-                    records.insert(n, planned_glyph(g));
+                    records.insert(n, g);
                     continue;
                 };
                 let base = records
                     .get(&name)
                     .ok_or_else(|| invalid("missing planned glyph"))?;
-                if equivalent(g, base) {
+                if equivalent(&g, base) {
                     continue;
                 }
-                let hash = signature(g);
+                let hash = signature(&g);
                 let existing = signatures
                     .get(&hash)
                     .and_then(|names| {
                         names
                             .iter()
-                            .find(|n| records.get(*n).is_some_and(|v| equivalent(v, g)))
+                            .find(|n| records.get(*n).is_some_and(|v| equivalent(v, &g)))
                     })
                     .cloned();
                 let replacement = if let Some(n) = existing {
@@ -167,7 +168,7 @@ impl Variants {
                         n = format!("{}.{label}{suffix}", gname(cp));
                         suffix += 1;
                     }
-                    records.insert(n.clone(), planned_glyph(g));
+                    records.insert(n.clone(), g);
                     signatures.entry(hash).or_default().push(n.clone());
                     n
                 };
@@ -289,9 +290,25 @@ fn effective(font: &Font) -> Result<Vec<(u32, &Glyph)>> {
         })
         .collect()
 }
-fn planned_glyph(g: &Glyph) -> Glyph {
+fn planned_glyph(font: &Font, g: &Glyph) -> Glyph {
+    // Defaults belong to each source face, not to the eventual combined font.
+    // Resolve them before comparison so inherited and explicit equal metrics
+    // deduplicate, while different regional defaults remain distinct.
+    let d = &font.metrics.glyph_defaults;
+    let m = &g.metrics;
     Glyph {
-        metrics: g.metrics.clone(),
+        metrics: crate::model::GlyphMetrics {
+            bounds: m.bounds,
+            advance: m.advance.or(d.advance),
+            scalable_advance: m.scalable_advance.or(d.scalable_advance),
+            vertical_advance: m.vertical_advance.or(d.vertical_advance),
+            vertical_scalable_advance: m.vertical_scalable_advance.or(d.vertical_scalable_advance),
+            vertical_origin: m.vertical_origin.or(d.vertical_origin),
+            abc: m.abc.or(d.abc),
+            left_bearing: m.left_bearing.or(d.left_bearing),
+            right_bearing: m.right_bearing.or(d.right_bearing),
+            image_offset: m.image_offset.or(d.image_offset),
+        },
         bitmap: g.bitmap.clone(),
         ..Default::default()
     }
