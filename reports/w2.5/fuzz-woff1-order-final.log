@@ -1,0 +1,22 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 541964274
+INFO: Loaded 1 modules   (5834 inline 8-bit counters): 5834 [0x556760e34ef0, 0x556760e365ba), 
+INFO: Loaded 1 PC tables (5834 PCs): 5834 [0x556760e365c0,0x556760e4d260), 
+INFO:      418 files found in /tmp/fontpixel-fuzz-woff1
+INFO: seed corpus: files: 418 min: 1b max: 84460b total: 9491809b rss: 30Mb
+#419	INITED cov: 1009 ft: 3251 corp: 311/6385Kb exec/s: 0 rss: 161Mb
+#16384	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 73860 exec/s: 5461 rss: 401Mb
+#32768	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 74020 exec/s: 5461 rss: 410Mb
+#65536	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 74340 exec/s: 5041 rss: 413Mb
+#131072	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 74996 exec/s: 4854 rss: 413Mb
+#262144	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 76308 exec/s: 4096 rss: 418Mb
+#524288	pulse  cov: 1009 ft: 3251 corp: 311/6385Kb lim: 78916 exec/s: 4599 rss: 423Mb
+#760850	NEW    cov: 1009 ft: 3252 corp: 312/6457Kb lim: 81284 exec/s: 4667 rss: 423Mb L: 73700/73700 MS: 1 CrossOver-
+#1048576	pulse  cov: 1009 ft: 3252 corp: 312/6457Kb lim: 84148 exec/s: 4788 rss: 428Mb
+#1265976	NEW    cov: 1010 ft: 3253 corp: 313/6473Kb lim: 86308 exec/s: 4984 rss: 428Mb L: 15992/73700 MS: 1 CopyPart-
+	NEW_FUNC[1/3]: 0x556760d47900  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target/x86_64-unknown-linux-gnu/release/woff1+0x159900) (BuildId: 10f63880d9455ed1e7a1d1248e67963fc31a22a3)
+	NEW_FUNC[2/3]: 0x556760d4f3c0  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target/x86_64-unknown-linux-gnu/release/woff1+0x1613c0) (BuildId: 10f63880d9455ed1e7a1d1248e67963fc31a22a3)
+#1743883	NEW    cov: 1037 ft: 3351 corp: 314/6487Kb lim: 91060 exec/s: 5300 rss: 428Mb L: 14564/73700 MS: 2 CMP-CMP- DE: "\003\000\000\000"-"DSIG"-
+#1752119	NEW    cov: 1037 ft: 3352 corp: 315/6501Kb lim: 91140 exec/s: 5309 rss: 428Mb L: 14564/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#1764270	NEW    cov: 1037 ft: 3362 corp: 316/6516Kb lim: 91252 exec/s: 5314 rss: 428Mb L: 14980/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#1764766	NEW    cov: 1037 ft: 3363 corp: 317/6531Kb lim: 91252 exec/s: 5315 rss: 428Mb L: 15992/73700 MS: 1 PersAutoDict- DE: "DSIG"-

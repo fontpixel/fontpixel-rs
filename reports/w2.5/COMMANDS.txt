@@ -47,3 +47,12 @@ PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff_full.py --binary "$CARGO
 # Extra independent official decoder corroboration:
 /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference decode INPUT.woff2 OUTPUT.sfnt
 # Run `woff.equivalent(original_sfnt, OUTPUT.sfnt, label, True)` for all glyphs.
+
+# Resumed final timing segment after the 08:40 UTC infrastructure interruption:
+PYTHONDONTWRITEBYTECODE=1 python3 benches/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --work /tmp/fontpixel-woff-bench --output benches/results/woff-resumed.json --resume --segment-note 'resumed environment; fingerprints recorded' --recheck-dot-q11
+PYTHONDONTWRITEBYTECODE=1 python3 tests/crosscheck/woff_bench_verify.py --work /tmp/fontpixel-woff-bench --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --output reports/w2.5/benchmark-verification.json
+PYTHONDONTWRITEBYTECODE=1 python3 benches/report_woff.py --input benches/results/woff-resumed.json --work /tmp/fontpixel-woff-bench
+# Final WOFF1 physical-order/DSIG correction changes no WOFF2 reader/encoder
+# algorithm. WOFF2 timing-binary SHA-256 values remain in the JSON segment data.
+# The final code's WOFF1 reader receives another 610+ second ASan run, captured
+# in fuzz-woff1-order-final.log; full check/parity/crosscheck gates are repeated.

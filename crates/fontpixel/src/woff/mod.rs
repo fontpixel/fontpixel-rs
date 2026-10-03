@@ -101,11 +101,9 @@ fn u32_at(data: &[u8], offset: usize) -> Result<u32> {
         slice(data, offset, 4)?.try_into().map_err(invalid)?,
     ))
 }
-#[cfg(feature = "woff2")]
 fn p16(v: &mut Vec<u8>, n: u16) {
     v.extend(n.to_be_bytes());
 }
-#[cfg(feature = "woff2")]
 fn p32(v: &mut Vec<u8>, n: u32) {
     v.extend(n.to_be_bytes());
 }

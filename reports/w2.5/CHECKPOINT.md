@@ -53,3 +53,19 @@ versus C++ 34.134294 s / 671,148 bytes; Rust is slower here. On identical Latin-
 input, q11 medians are native 1.404296 s, C++ 1.166106 s, stock fontTools 2.108960 s.
 Only three quality-11 batch groups and final post-timing output verification /
 report compilation remain. Existing fonts are reused; no large duplicate inputs.
+
+## Final WOFF1 normative correction and complete measurements
+
+All 29 timing groups are complete (five samples each), including a post-restart
+native baseline repeat. Quality-11 four-font jobs 1/2/4 measured
+125.077219 / 74.509803 / 49.641880 seconds with identical 3,025,160 aggregate bytes.
+`benches/WOFF-REPORT.md` is generated from those complete samples.
+
+Final normative review found and corrected WOFF1 §6 physical-table ordering.
+The new bounded order-preserving assembler exactly reconstructs well-formed
+sfnt bytes, including reverse-order layout and DSIG; invalidated signatures and
+nonzero hidden data are explicitly reported. Full `scripts/check.sh` now passes
+580 test invocations and full parity again has 0 NEW differences. The repeated
+264-case external pass adds physical-order and exact sfnt-byte assertions.
+WOFF1's final 611-second fuzz and all timed-output verification are still running.
+WOFF2 algorithms/serialized bytes/timing paths are unchanged by this WOFF1 fix.

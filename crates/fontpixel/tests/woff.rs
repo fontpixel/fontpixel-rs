@@ -339,3 +339,116 @@ fn batch_budgets_and_distinct_input_order() {
     let error = woff2::encode_many(&[&a], &aux, &low, 1).unwrap_err();
     assert!(error.to_string().contains("WOFF2 batch output bytes"));
 }
+
+#[test]
+fn woff1_preserves_physical_table_order_and_reports_invalidated_signatures() {
+    // Repack an already valid sfnt into deliberately reversed physical order,
+    // keeping its directory sorted. This is an ordinary valid sfnt layout.
+    let limits = Limits::default();
+    let signed = replace(FONT, *b"DSIG", vec![0; 8]);
+    let f = Sfnt::parse(&signed, &limits.sfnt).unwrap();
+    let n = f.tables().len();
+    let directory = 12 + 16 * n;
+    let mut reversed = signed[..directory].to_vec();
+    let mut head = 0;
+    for (i, t) in f.tables().iter().enumerate().rev() {
+        let offset = reversed.len();
+        reversed[12 + i * 16 + 8..12 + i * 16 + 12].copy_from_slice(&(offset as u32).to_be_bytes());
+        if t.tag == *b"head" {
+            head = offset;
+        }
+        reversed.extend(t.data);
+        while !reversed.len().is_multiple_of(4) {
+            reversed.push(0);
+        }
+    }
+    reversed[head + 8..head + 12].fill(0);
+    let adjustment = 0xb1b0_afbau32.wrapping_sub(fontpixel::sfnt::checksum(&reversed));
+    reversed[head + 8..head + 12].copy_from_slice(&adjustment.to_be_bytes());
+    Sfnt::parse(&reversed, &limits.sfnt)
+        .unwrap()
+        .validate_checksums()
+        .unwrap();
+    let encoded = woff1::encode(&reversed, &woff1::Options::default(), &limits).unwrap();
+    assert!(!encoded.report.has_loss());
+    let mut physical = (0..n)
+        .map(|i| {
+            let at = 44 + 20 * i;
+            (
+                u32::from_be_bytes(encoded.bytes[at + 4..at + 8].try_into().unwrap()),
+                encoded.bytes[at..at + 4].to_vec(),
+            )
+        })
+        .collect::<Vec<_>>();
+    physical.sort();
+    let expected = f
+        .tables()
+        .iter()
+        .rev()
+        .map(|t| t.tag.to_vec())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        physical.into_iter().map(|t| t.1).collect::<Vec<_>>(),
+        expected
+    );
+    let decoded = woff1::decode(&encoded.bytes, &limits).unwrap();
+    assert_eq!(decoded.sfnt, reversed);
+    assert!(!decoded.report.has_loss());
+    // Hidden non-table data and checksum repair must not carry a stale DSIG.
+    let mut extra = reversed.clone();
+    extra.extend([1, 2, 3, 4]);
+    let encoded = woff1::encode(&extra, &woff1::Options::default(), &limits).unwrap();
+    assert!(encoded.report.has_loss());
+    let decoded = woff1::decode(&encoded.bytes, &limits).unwrap();
+    assert!(
+        Sfnt::parse(&decoded.sfnt, &limits.sfnt)
+            .unwrap()
+            .table(*b"DSIG")
+            .is_none()
+    );
+    let mut incoming = woff1::encode(
+        &reversed,
+        &woff1::Options {
+            compression_level: 0,
+            ..Default::default()
+        },
+        &limits,
+    )
+    .unwrap()
+    .bytes;
+    let head_record = (0..n)
+        .find(|i| &incoming[44 + i * 20..48 + i * 20] == b"head")
+        .unwrap();
+    let head_payload = u32::from_be_bytes(
+        incoming[48 + head_record * 20..52 + head_record * 20]
+            .try_into()
+            .unwrap(),
+    ) as usize;
+    incoming[head_payload + 8..head_payload + 12].fill(0);
+    let repaired = woff1::decode(&incoming, &limits).unwrap();
+    assert!(
+        repaired
+            .report
+            .entries
+            .iter()
+            .any(|e| e.code == "woff1.dsig_removed")
+    );
+    assert!(
+        Sfnt::parse(&repaired.sfnt, &limits.sfnt)
+            .unwrap()
+            .table(*b"DSIG")
+            .is_none()
+    );
+    // A broken incoming head adjustment is independently diagnosed on decode.
+    let mut bad = reversed;
+    bad[head + 8..head + 12].fill(0);
+    // The encoder repairs it before wrapping; that repair also removes DSIG.
+    let encoded = woff1::encode(&bad, &woff1::Options::default(), &limits).unwrap();
+    assert!(
+        encoded
+            .report
+            .entries
+            .iter()
+            .any(|e| e.code == "woff1.dsig_removed")
+    );
+}

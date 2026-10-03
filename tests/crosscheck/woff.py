@@ -61,6 +61,10 @@ def verify(binary,source,tmp,label,check_ots=True):
         web=tmp/(name+'.'+kind);out=tmp/(name+'.sfnt')
         invoke(binary,'encode',kind,source,web,q,threads,*([] if transform else ['null']))
         equivalent(source,web,name,check_ots)
+        if kind=='woff':
+            def physical(path):
+                font=TTFont(path);return [tag for tag,_ in sorted(font.reader.tables.items(),key=lambda item:(item[1].offset,getattr(item[1],'origLength',item[1].length),item[0]))]
+            assert physical(web)==physical(source),(name,'WOFF1 physical table order')
         if check_ots:
             sanitized=tmp/(name+'-ots.sfnt');status=ots.sanitize(str(web),str(sanitized),capture_output=True)
             assert status.returncode==0,(name,status.stderr.decode(),status.stdout.decode())
@@ -69,6 +73,7 @@ def verify(binary,source,tmp,label,check_ots=True):
             a,b=freetype.Face(str(source)),freetype.Face(str(sanitized))
             for gid in range(a.num_glyphs):assert bitmap(a,gid)==bitmap(b,gid),(name,gid,'OTS')
         invoke(binary,'decode',kind,web,out);count=equivalent(source,out,name,check_ots)
+        if kind=='woff':assert source.read_bytes()==out.read_bytes(),(name,'WOFF1 exact sfnt reconstruction')
         if check_ots:
             cmap=TTFont(source).getBestCmap();text=''.join(chr(cp) for cp in list(cmap)[:100])
             for lang in ['zh-Hans','zh-Hant','zh-HK','ja','ko','en']:

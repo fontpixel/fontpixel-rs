@@ -662,3 +662,16 @@ queue allocation; stop admitting new jobs on error, join in-flight jobs, and
 return no partial output. Preserve deterministic input order for successful jobs.
 **Reason:** A valid small-font array should not bypass resource accounting by
 repetition. These guards do not change serialized bytes or any reader path.
+
+## 2026-10-03 — Preserve WOFF1 physical ordering and signature validity boundaries
+
+**Question:** Glyph/OTS interoperability alone does not detect WOFF1 §6's input
+physical-table-order requirement. Using the general alphabetically ordered sfnt
+builder would change a legal physical layout and could invalidate DSIG.
+**Choice:** Keep tag-sorted directories and input physical payload order in both
+WOFF1 directions with a bounded order-preserving assembler. Roundtrip well-formed
+sfnt bytes exactly. Report nonzero non-table data loss and structural repairs;
+remove a signature invalidated by normalization with a loss entry. Test a valid
+reverse-physical-order font carrying DSIG, plus hidden data/checksum repairs.
+**Reason:** Meet the normative packaging rule rather than mistaking identical
+rendering for exact envelope fidelity. WOFF2 algorithms and timings are unchanged.

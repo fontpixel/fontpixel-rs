@@ -49,6 +49,79 @@ fn compress(data: &[u8], level: u32, limit: usize) -> Result<Vec<u8>> {
     e.write_all(data).map_err(invalid)?;
     Ok(e.finish().map_err(invalid)?.bytes)
 }
+// WOFF1 §6 preserves physical table order independently of its tag-sorted
+// directory. SfntBuilder intentionally sorts physical tables, so this wrapper
+// needs an order-preserving assembler instead. Returns the new head adjustment.
+fn assemble_ordered(
+    flavor: sfnt::Flavor,
+    tables: &[([u8; 4], &[u8], usize)],
+    l: &Limits,
+) -> Result<(Vec<u8>, u32)> {
+    let n = tables.len();
+    if n == 0 {
+        return Err(invalid("empty sfnt"));
+    }
+    let total = table_sum(n, tables.iter().map(|t| t.1.len()), l)?;
+    as32(total)?;
+    let mut physical = (0..n).collect::<Vec<_>>();
+    physical.sort_unstable_by_key(|&i| (tables[i].2, tables[i].1.len(), tables[i].0));
+    let mut directory = (0..n).collect::<Vec<_>>();
+    directory.sort_unstable_by_key(|&i| tables[i].0);
+    let mut offsets = vec![0; n];
+    let mut offset = 12 + n * 16;
+    for &i in &physical {
+        offsets[i] = offset;
+        offset += align(tables[i].1.len())?;
+    }
+    let head = tables
+        .iter()
+        .position(|t| t.0 == *b"head")
+        .ok_or_else(|| invalid("missing head"))?;
+    slice(tables[head].1, 0, 12)?;
+    let head_offset = offsets[head];
+    let selector = n.ilog2() as u16;
+    let search_range = 16usize << selector;
+    let mut out = buffer(total)?;
+    p32(&mut out, flavor.version());
+    p16(&mut out, n as u16);
+    p16(&mut out, search_range as u16);
+    p16(&mut out, selector);
+    p16(&mut out, (n * 16 - search_range) as u16);
+    for &i in &directory {
+        let (tag, data, _) = tables[i];
+        out.extend(tag);
+        p32(&mut out, checksum(tag, data)?);
+        p32(&mut out, as32(offsets[i])?);
+        p32(&mut out, as32(data.len())?);
+    }
+    for &i in &physical {
+        out.extend(tables[i].1);
+        pad(&mut out);
+    }
+    out[head_offset + 8..head_offset + 12].fill(0);
+    let adjustment = 0xb1b0_afbau32.wrapping_sub(sfnt::checksum(&out));
+    out[head_offset + 8..head_offset + 12].copy_from_slice(&adjustment.to_be_bytes());
+    Ok((out, adjustment))
+}
+fn source_tables<'a>(f: &sfnt::Sfnt<'a>) -> Vec<([u8; 4], &'a [u8], usize)> {
+    f.tables()
+        .iter()
+        .map(|t| (t.tag, t.data, t.offset as usize))
+        .collect()
+}
+fn hidden_data(data: &[u8], f: &sfnt::Sfnt<'_>) -> bool {
+    let mut tables = f.tables().iter().collect::<Vec<_>>();
+    tables.sort_unstable_by_key(|t| t.offset);
+    let mut end = 12 + tables.len() * 16;
+    for t in tables {
+        let start = t.offset as usize;
+        if start > end && data[end..start].iter().any(|b| *b != 0) {
+            return true;
+        }
+        end = end.max(start + t.data.len());
+    }
+    data[end..].iter().any(|b| *b != 0)
+}
 /// Decode WOFF1 into standalone sfnt, preserving optional blocks.
 pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
     let (flavor, n) = input(data, b"wOFF", 44, l)?;
@@ -96,8 +169,8 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         }
         end = offset + len;
     }
-    let (auxiliary, report) = read_aux(data, 20, end, l, decompress)?;
-    let mut builder = sfnt::SfntBuilder::new(flavor);
+    let (auxiliary, mut report) = read_aux(data, 20, end, l, decompress)?;
+    let mut tables = Vec::with_capacity(n);
     for (tag, offset, compressed, original, sum) in records {
         let raw = slice(data, offset, compressed)?;
         let table = if compressed == original {
@@ -108,9 +181,30 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         if checksum(tag, &table)? != sum {
             return Err(invalid("WOFF1 table checksum mismatch"));
         }
-        builder.insert(tag, table)?;
+        tables.push((tag, table, offset));
     }
-    let sfnt = builder.build(&l.sfnt)?;
+    let mut borrowed = tables
+        .iter()
+        .map(|(tag, data, offset)| (*tag, data.as_slice(), *offset))
+        .collect::<Vec<_>>();
+    let (mut sfnt, adjustment) = assemble_ordered(flavor, &borrowed, l)?;
+    let original_adjustment = u32_at(
+        borrowed
+            .iter()
+            .find(|t| t.0 == *b"head")
+            .ok_or_else(|| invalid("missing head"))?
+            .1,
+        8,
+    )?;
+    if adjustment != original_adjustment && borrowed.iter().any(|t| t.0 == *b"DSIG") {
+        borrowed.retain(|t| t.0 != *b"DSIG");
+        sfnt = assemble_ordered(flavor, &borrowed, l)?.0;
+        loss(
+            &mut report,
+            "woff1.dsig_removed",
+            "Checksum/layout repair invalidates the sfnt digital signature; DSIG removed",
+        );
+    }
     bounded(
         sfnt.len()
             + auxiliary.metadata.as_ref().map_or(0, Vec::len)
@@ -131,7 +225,40 @@ pub fn encode(data: &[u8], options: &Options, l: &Limits) -> Result<Encoded> {
         return Err(invalid("zlib quality must be 0..=9"));
     }
     checked_aux(&options.auxiliary, l)?;
-    let f = sfnt::Sfnt::parse(data, &l.sfnt)?;
+    let original = sfnt::Sfnt::parse(data, &l.sfnt)?;
+    let mut report = Report::default();
+    let mut tables = source_tables(&original);
+    let mut canonical = assemble_ordered(original.flavor(), &tables, l)?.0;
+    if canonical != data {
+        if hidden_data(data, &original) {
+            loss(
+                &mut report,
+                "woff1.non_table_data_removed",
+                "Nonzero data outside sfnt tables cannot be represented by WOFF1",
+            );
+        } else {
+            report.push(ReportEntry {
+                level: Level::Info,
+                impact: Impact::Repair,
+                code: "woff1.sfnt_normalized".into(),
+                location: Default::default(),
+                message: "sfnt directory, padding or checksum fields normalized before packaging"
+                    .into(),
+            });
+        }
+        if tables.iter().any(|t| t.0 == *b"DSIG") {
+            tables.retain(|t| t.0 != *b"DSIG");
+            canonical = assemble_ordered(original.flavor(), &tables, l)?.0;
+            loss(
+                &mut report,
+                "woff1.dsig_removed",
+                "sfnt normalization invalidates the digital signature; DSIG removed",
+            );
+        }
+    }
+    let mut output_limits = l.sfnt.clone();
+    output_limits.resources.max_input_bytes = output_limits.resources.max_total_bytes;
+    let f = sfnt::Sfnt::parse(&canonical, &output_limits)?;
     let mut records = f.tables().iter().collect::<Vec<_>>();
     records.sort_unstable_by_key(|r| r.tag);
     let total = table_sum(records.len(), records.iter().map(|r| r.data.len()), l)?;
@@ -140,7 +267,9 @@ pub fn encode(data: &[u8], options: &Options, l: &Limits) -> Result<Encoded> {
     out[4..8].copy_from_slice(&f.flavor().version().to_be_bytes());
     out[12..14].copy_from_slice(&(records.len() as u16).to_be_bytes());
     set32(&mut out, 16, total)?;
-    for (i, r) in records.iter().enumerate() {
+    let mut physical = records.iter().enumerate().collect::<Vec<_>>();
+    physical.sort_unstable_by_key(|(_, r)| (r.offset, r.data.len(), r.tag));
+    for (i, r) in physical {
         let compressed = compress(
             r.data,
             options.compression_level,
@@ -175,8 +304,5 @@ pub fn encode(data: &[u8], options: &Options, l: &Limits) -> Result<Encoded> {
             l.sfnt.resources.max_total_bytes,
         )
     })?;
-    Ok(Encoded {
-        bytes: out,
-        report: Report::default(),
-    })
+    Ok(Encoded { bytes: out, report })
 }

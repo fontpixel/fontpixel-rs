@@ -24,8 +24,8 @@ Design recorded before implementation, 2026-10-03.
 | metaOffset/Length/OrigLength | bounded separately compressed metadata bytes |
 | privOffset/Length | opaque private data, retained without interpretation |
 
-The decoder reconstructs sorted sfnt tables using SfntBuilder, which recomputes
-head.checkSumAdjustment. Compression uses deterministic pure-Rust zlib; a table
+The decoder reconstructs a tag-sorted sfnt directory while preserving physical
+table order and recomputing head.checkSumAdjustment. Compression uses deterministic pure-Rust zlib; a table
 is compressed only if smaller, otherwise it is stored verbatim. Compression
 level is configurable 0–9. Unknown sfnt tables remain byte-identical.
 
@@ -43,3 +43,14 @@ otherwise usable font fail, as required of WOFF consumers. Writer accepts raw
 metadata with an explicit caller obligation to provide valid WOFF XML.
 
 Collections cannot be represented by WOFF 1.0. A TTC input is rejected.
+
+## Physical order and digital signatures
+
+WOFF1 §6 requires the input's physical table order to survive packaging even
+though directory entries remain tag-sorted. Both directions use an explicitly
+order-preserving sfnt assembler. For well-formed input with ordinary padding,
+standalone sfnt bytes (including a DSIG table) roundtrip exactly. Non-table data
+cannot be carried by WOFF; nonzero discarded bytes produce a loss report.
+Directory/checksum/padding repairs are reported, and a DSIG invalidated by
+normalization is removed with an explicit loss report. No signature validity or
+cryptographic verification is claimed.

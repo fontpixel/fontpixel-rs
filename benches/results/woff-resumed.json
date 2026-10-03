@@ -409,6 +409,54 @@
       "label": "native-four-fonts-q5-jobs4",
       "segment": 1,
       "median_seconds": 0.564424571
+    },
+    {
+      "seconds": [
+        121.557740984,
+        125.824121186,
+        119.71887296,
+        125.077218885,
+        133.245847622
+      ],
+      "bytes": 3025160,
+      "jobs": 1,
+      "quality": 11,
+      "threads": 1,
+      "label": "native-four-fonts-q11-jobs1",
+      "segment": 1,
+      "median_seconds": 125.077218885
+    },
+    {
+      "seconds": [
+        74.509802679,
+        74.30338323,
+        77.793929883,
+        72.913831253,
+        79.669894646
+      ],
+      "bytes": 3025160,
+      "jobs": 2,
+      "quality": 11,
+      "threads": 1,
+      "label": "native-four-fonts-q11-jobs2",
+      "segment": 1,
+      "median_seconds": 74.509802679
+    },
+    {
+      "seconds": [
+        49.641879734,
+        46.07444984,
+        55.26120215,
+        45.979068814,
+        51.658938259
+      ],
+      "bytes": 3025160,
+      "jobs": 4,
+      "quality": 11,
+      "threads": 1,
+      "label": "native-four-fonts-q11-jobs4",
+      "segment": 1,
+      "median_seconds": 49.641879734
     }
   ],
   "segments": [
@@ -430,7 +478,7 @@
         "cpus": 9,
         "memory": "MemTotal:       10206504 kB"
       },
-      "note": "Resumed after 08:40 UTC executor interruption; same CPU, RAM, kernel and binary fingerprints; incomplete groups restarted",
+      "note": "Resumed after 08:40 UTC executor interruption; same reported CPU, RAM and kernel; retained binaries fingerprinted after restart, no rebuild before these samples; incomplete groups restarted",
       "started_utc": "2026-10-03T08:46:09.543034+00:00",
       "native_binary_sha256": "496479199a33c6d80bfbce11e2a8aad5ecac6eedd54eae84fb6a6414b60ac13e",
       "reference_binary_sha256": "d2a5d23ac2fa3df495db3edcfc0111ad2f0d0e6412e3021aa169c6d57700dcf8"
