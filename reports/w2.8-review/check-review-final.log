@@ -1,0 +1,43 @@
+Verified 53 non-Unicode keys; 35 core + 12 CJK unique tables; 207 GB18030 ranges (1,087,996 four-byte mappings); CPython 3.12.14
+BDF printability: 712 ranges
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel)
+    Checking fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel-cli)
+    Checking fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel-wasm)
+    Checking fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel-py)
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> crates/fontpixel-cli/src/main.rs:384:19
+    |
+384 |                 ..ReadOptions::default()
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_update
+    = note: `-D clippy::needless-update` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_update)]`
+
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> crates/fontpixel-cli/src/main.rs:573:19
+    |
+573 |                 ..ReadOptions::default()
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_update
+
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> crates/fontpixel-cli/src/main.rs:651:11
+    |
+651 |         ..Default::default()
+    |           ^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_update
+
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> crates/fontpixel-cli/src/main.rs:929:15
+    |
+929 |             ..Default::default()
+    |               ^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_update
+
+error: could not compile `fontpixel-cli` (bin "fontpixel" test) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `fontpixel-cli` (bin "fontpixel") due to 4 previous errors

@@ -1,0 +1,76 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 12.06s
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/svg-6e2449b6f93435b9)
+
+running 37 tests
+test alias_loss_locations_reference_retained_glyph ... FAILED
+test arbitrary_style_names_are_not_invalid_svg_descriptors ... FAILED
+test curves_arcs_and_smooth_commands ... ok
+test common_registry_budgets_are_enforced ... ok
+test custom_registry_options_persist_independently ... ok
+test aliases_must_match ... ok
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test effective_defaults_zero_advances_and_negative_bearings ... ok
+test generic_metadata_loss_and_selected_font_locations ... ok
+test budgets_are_effective ... ok
+test explicit_scale_rounding_and_origin ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test generic_child_paths ... ok
+test generic_grid_and_all_commands ... ok
+test gray_requires_threshold ... ok
+test image_empty_and_limits ... ok
+test collection_and_select ... ok
+test huge_arc_expansion_is_rejected_before_normalization ... ok
+test independent_child_paths_union_even_with_opposite_winding ... FAILED
+test image_shapes_and_single_glyph ... ok
+test malformed_and_unsafe_xml ... ok
+test missing_glyph_and_blank_preserved ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test loss_and_strict_are_atomic ... ok
+test malformed_numbers_paths ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test unicode_mapping_model_budget_is_preallocation ... FAILED
+test writer_counts_alias_records_and_generated_commands ... ok
+test rejects_unsupported_graphics ... ok
+test native_vertical_advance_without_origin ... ok
+test xml_budgets_preflight_attributes_namespaces_and_depth ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test native_roundtrip_all_shapes ... ok
+test deterministic_truncations_and_byte_mutations_do_not_panic ... ok
+test repeated_glyph_geometry_is_streamed_under_model_budget ... ok
+test random_bitmap_font_roundtrip ... ok
+
+failures:
+
+---- alias_loss_locations_reference_retained_glyph stdout ----
+
+thread 'alias_loss_locations_reference_retained_glyph' (62) panicked at crates/fontpixel/tests/svg.rs:608:5:
+assertion failed: r.entries.iter().filter_map(|e| e.location.glyph_index).all(|i| i == 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- arbitrary_style_names_are_not_invalid_svg_descriptors stdout ----
+
+thread 'arbitrary_style_names_are_not_invalid_svg_descriptors' (64) panicked at crates/fontpixel/tests/svg.rs:621:13:
+Regular
+
+---- independent_child_paths_union_even_with_opposite_winding stdout ----
+
+thread 'independent_child_paths_union_even_with_opposite_winding' (83) panicked at crates/fontpixel/tests/svg.rs:595:98:
+called `Result::unwrap()` on an `Err` value: InvalidInput("SVG: no native grid; specify ppem")
+
+---- unicode_mapping_model_budget_is_preallocation stdout ----
+
+thread 'unicode_mapping_model_budget_is_preallocation' (95) panicked at crates/fontpixel/tests/svg.rs:632:5:
+assertion failed: matches!(svg::read(&d, &o), Err(fontpixel::Error::ResourceLimit { .. }))
+
+
+failures:
+    alias_loss_locations_reference_retained_glyph
+    arbitrary_style_names_are_not_invalid_svg_descriptors
+    independent_child_paths_union_even_with_opposite_winding
+    unicode_mapping_model_budget_is_preallocation
+
+test result: FAILED. 33 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+error: test failed, to rerun pass `-p fontpixel --test svg`
