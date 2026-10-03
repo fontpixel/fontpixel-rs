@@ -16,7 +16,7 @@ pcf = ["gzip"]
 snf = []
 hex = []
 draw = []
-psf = []
+psf = ["gzip"]
 cpi = []
 raw = []
 yaff = ["gzip", "dep:serde", "dep:serde_json"]
@@ -137,3 +137,7 @@ required-features = ["ttc", "woff", "woff2"]
 [[example]]
 name = "svg_check"
 required-features = ["svg"]
+
+[[example]]
+name = "console_timing"
+required-features = ["hex", "psf"]

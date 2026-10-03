@@ -1123,3 +1123,23 @@ the packed tracer. Overflow selects the existing general path. Regressions cover
 maximum-usize arithmetic and the public zero-height/maximum-u32-width case.
 **Reason:** Resource-limit overrides must not introduce arithmetic panics. Normal
 small-grid dispatch and all contour bytes remain unchanged.
+
+## 2026-10-03 — W3.1 console-font geometry and Unicode semantics
+
+**Question:** HEX has no encoded height/baseline; PSF has glyph positions but no
+baseline or character set in table-less fonts. External monobit behavior is
+ambiguous for extended HEX and disagrees with the PSF1 sequence marker.
+**Choice:** HEX defaults to height 16/descent 0 with explicit overrides and fixed
+8/16/24/32 widths. PSF defaults to PSF2 and baseline 0; table-less positions are
+legacy codes. Follow kbd's LE FFFE PSF1 marker and strict UTF-8 PSF2 grammar,
+including sequence-only entries. Refuse malformed geometry instead of guessing.
+Use loss reports for target metadata, alias identity, geometry normalization and
+nonrepresentable mappings. Do not silently clip, truncate, or remap legacy codes.
+**Reason:** Deterministic reversible native subsets, honest strict conversion,
+and interoperable specification semantics take priority over oracle quirks.
+The supplied catalogue has no HEX/PSF importer; test its BDF conversion boundary
+and document the absent direct importer rather than inventing a passing test.
+
+The native console readers derive point size = cell height at 72 dpi so the
+existing BDF writer has a complete SIZE header. This introduces no claimed source
+physical measurement, and is documented as an explicit conversion convention.

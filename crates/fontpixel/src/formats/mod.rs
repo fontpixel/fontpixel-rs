@@ -8,6 +8,8 @@ use crate::{Error, Operation, Report, Result};
 #[cfg(feature = "bdf")]
 pub mod bdf;
 pub mod catalogue;
+#[cfg(any(feature = "hex", feature = "psf"))]
+mod console;
 #[cfg(any(
     feature = "otb",
     feature = "bdat",
@@ -15,8 +17,12 @@ pub mod catalogue;
     feature = "vector-raster"
 ))]
 pub mod embedded;
+#[cfg(feature = "hex")]
+pub mod hex;
 #[cfg(feature = "pcf")]
 pub mod pcf;
+#[cfg(feature = "psf")]
+pub mod psf;
 #[cfg(feature = "svg")]
 pub mod svg;
 #[cfg(feature = "vector-raster")]
@@ -568,6 +574,65 @@ impl Registry<crate::FontSet> {
             e.writer = Some(Box::new(svg::SvgCodec {
                 write_options: options,
                 ..Default::default()
+            }));
+        }
+    }
+}
+
+#[cfg(feature = "hex")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_hex(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "hex") {
+            e.detector = Some(Box::new(hex::HexCodec::default()));
+            e.reader = Some(Box::new(hex::HexCodec::default()));
+            e.writer = Some(Box::new(hex::HexCodec::default()));
+        }
+    }
+    /// Set explicit HEX input geometry without changing output choices.
+    pub fn set_hex_read_options(&mut self, options: hex::HexReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "hex" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(hex::HexCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure bounded deterministic HEX output.
+    pub fn set_hex_write_options(&mut self, options: hex::HexWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "hex" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(hex::HexCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+#[cfg(feature = "psf")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_psf(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "psf") {
+            e.detector = Some(Box::new(psf::PsfCodec::default()));
+            e.reader = Some(Box::new(psf::PsfCodec::default()));
+            e.writer = Some(Box::new(psf::PsfCodec::default()));
+        }
+    }
+    /// Configure bounded PSF1/PSF2 output and Unicode-table policy.
+    pub fn set_psf_write_options(&mut self, options: psf::PsfWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "psf" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(psf::PsfCodec {
+                write_options: options,
             }));
         }
     }

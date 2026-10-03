@@ -65,6 +65,10 @@ pub fn registry() -> FontRegistry {
     registry.install_vector("vector-raster");
     #[cfg(feature = "svg")]
     registry.install_svg();
+    #[cfg(feature = "hex")]
+    registry.install_hex();
+    #[cfg(feature = "psf")]
+    registry.install_psf();
     registry
 }
 

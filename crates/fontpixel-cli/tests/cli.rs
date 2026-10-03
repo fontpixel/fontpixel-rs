@@ -46,6 +46,8 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
             .filter(|line| !line.starts_with("bdf\t")
                 && !line.starts_with("pcf\t")
                 && !line.starts_with("yaff\t")
+                && !line.starts_with("hex\t")
+                && !line.starts_with("psf\t")
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
@@ -77,6 +79,8 @@ fn formats_json_is_parseable_and_honest() {
             .filter(|entry| entry["format"]["id"] != "bdf"
                 && entry["format"]["id"] != "pcf"
                 && entry["format"]["id"] != "yaff"
+                && entry["format"]["id"] != "hex"
+                && entry["format"]["id"] != "psf"
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
@@ -978,4 +982,114 @@ fn native_dot_reuse_cli_policies_and_validation() {
         .success()
     );
     assert!(!output.exists());
+}
+
+#[cfg(all(feature = "hex", feature = "psf"))]
+#[test]
+fn hex_psf_cli_variants_and_strict_atomic_failure() {
+    let temp = TempDir::new();
+    let source = temp.0.join("source.hex");
+    fs::write(
+        &source,
+        format!("0041:{}\n0042:{}\n", "A5".repeat(8), "5A".repeat(8)),
+    )
+    .unwrap();
+    let psf = temp.0.join("out.psf.gz");
+    let back = temp.0.join("back.hex");
+    let o = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        psf.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert!(o.status.success(), "{}", String::from_utf8_lossy(&o.stderr));
+    let o = run(&["info", psf.to_str().unwrap(), "--json"]);
+    assert!(o.status.success());
+    let info: serde_json::Value = serde_json::from_slice(&o.stdout).unwrap();
+    assert_eq!(info["format"], "psf");
+    let o = run(&[
+        "convert",
+        psf.to_str().unwrap(),
+        "-o",
+        back.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--strict",
+    ]);
+    assert!(o.status.success(), "{}", String::from_utf8_lossy(&o.stderr));
+    assert_eq!(fs::read(&back).unwrap(), fs::read(&source).unwrap());
+    let sentinel = temp.0.join("sentinel.psf");
+    fs::write(&sentinel, b"unchanged").unwrap();
+    let o = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        sentinel.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--psf-version",
+        "1",
+        "--strict",
+    ]);
+    assert_eq!(o.status.code(), Some(3));
+    assert_eq!(fs::read(&sentinel).unwrap(), b"unchanged");
+    let o = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        sentinel.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--psf-version",
+        "1",
+        "--psf1-count",
+        "512",
+        "--report",
+        "json",
+    ]);
+    assert!(o.status.success(), "{}", String::from_utf8_lossy(&o.stderr));
+    assert_eq!(&fs::read(&sentinel).unwrap()[..4], &[0x36, 4, 3, 8]);
+    for args in [
+        vec!["--psf1-count", "17"],
+        vec!["--psf1-count", "256"],
+        vec!["--psf-version", "1", "--psf1-count", "17"],
+    ] {
+        fs::write(&sentinel, b"unchanged").unwrap();
+        let mut a = vec![
+            "convert",
+            source.to_str().unwrap(),
+            "-o",
+            sentinel.to_str().unwrap(),
+            "--hex-height",
+            "8",
+        ];
+        a.extend(args);
+        assert!(!run(&a).status.success());
+        assert_eq!(fs::read(&sentinel).unwrap(), b"unchanged");
+    }
+    let o = run(&[
+        "info",
+        source.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--hex-descent",
+        "9",
+    ]);
+    assert!(!o.status.success());
+    let o = run(&[
+        "convert",
+        source.to_str().unwrap(),
+        "-o",
+        back.to_str().unwrap(),
+        "--hex-height",
+        "8",
+        "--psf-version",
+        "1",
+    ]);
+    assert!(!o.status.success());
 }

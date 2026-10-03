@@ -106,6 +106,8 @@ enum Command {
         #[command(flatten)]
         pcf: PcfArguments,
         #[command(flatten)]
+        console: ConsoleArguments,
+        #[command(flatten)]
         raster: RasterArguments,
         #[command(flatten)]
         vector: VectorArguments,
@@ -274,6 +276,73 @@ impl PcfArguments {
                 format: "pcf".into(),
             })
         }
+    }
+}
+
+#[derive(Args, Default)]
+struct ConsoleArguments {
+    /// PSF output version, 1 or 2 (default 2).
+    #[arg(long, value_parser=["1","2"])]
+    psf_version: Option<String>,
+    /// PSF1 cells, 256 or 512; default chooses the smallest fit.
+    #[arg(long, value_parser=clap::value_parser!(u16))]
+    psf1_count: Option<u16>,
+    /// PSF Unicode table policy (default auto).
+    #[arg(long, value_parser=["auto","include","omit"])]
+    psf_unicode_table: Option<String>,
+}
+impl ConsoleArguments {
+    fn apply(
+        &self,
+        id: &str,
+        raster: &RasterArguments,
+        threshold: Option<u8>,
+        registry: &mut fontpixel::FontRegistry,
+    ) -> fontpixel::Result<()> {
+        let requested = self.psf_version.is_some()
+            || self.psf1_count.is_some()
+            || self.psf_unicode_table.is_some();
+        if requested && id != "psf" {
+            return Err(Error::InvalidInput("PSF options require --to psf".into()));
+        }
+        #[cfg(feature = "hex")]
+        if id == "hex" {
+            registry.set_hex_write_options(fontpixel::formats::hex::HexWriteOptions {
+                geometry: fontpixel::formats::hex::HexReadOptions {
+                    height: raster.hex_height.unwrap_or(16),
+                    descent: raster.hex_descent.unwrap_or(0),
+                },
+                gray_threshold: threshold,
+                ..Default::default()
+            });
+        }
+        #[cfg(feature = "psf")]
+        if id == "psf" {
+            use fontpixel::formats::psf::{PsfWriteOptions, UnicodeTable, Version};
+            registry.set_psf_write_options(PsfWriteOptions {
+                version: if self.psf_version.as_deref() == Some("1") {
+                    Version::One
+                } else {
+                    Version::Two
+                },
+                psf1_count: self.psf1_count,
+                unicode_table: match self.psf_unicode_table.as_deref() {
+                    Some("include") => UnicodeTable::Include,
+                    Some("omit") => UnicodeTable::Omit,
+                    _ => UnicodeTable::Auto,
+                },
+                gray_threshold: threshold,
+                ..Default::default()
+            });
+        }
+        let _ = (raster, threshold, registry);
+        #[cfg(not(feature = "psf"))]
+        if requested {
+            return Err(Error::FeatureDisabled {
+                format: "psf".into(),
+            });
+        }
+        Ok(())
     }
 }
 
@@ -539,6 +608,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             strict,
             report: style,
             pcf,
+            console,
             raster,
             vector,
         } => {
@@ -564,6 +634,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             pcf.apply(&id, &mut registry)?;
             raster.apply(&mut registry)?;
             vector.apply(&id, &mut registry)?;
+            console.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
             // Check the target before doing work, and never create/truncate output.
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
@@ -885,6 +956,12 @@ fn main() -> ExitCode {
 
 #[derive(Args, Default)]
 struct RasterArguments {
+    /// HEX input/output rows (default 16); never inferred from record length.
+    #[arg(long, value_parser=clap::value_parser!(u32).range(1..))]
+    hex_height: Option<u32>,
+    /// HEX baseline-to-bottom distance (default 0).
+    #[arg(long)]
+    hex_descent: Option<u32>,
     /// Primary input byte budget (default 64 MiB); aggregate 256 MiB cap remains.
     #[arg(long)]
     max_input_bytes: Option<usize>,
@@ -915,6 +992,17 @@ impl RasterArguments {
         limits
     }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        #[cfg(feature = "hex")]
+        registry.set_hex_read_options(fontpixel::formats::hex::HexReadOptions {
+            height: self.hex_height.unwrap_or(16),
+            descent: self.hex_descent.unwrap_or(0),
+        });
+        #[cfg(not(feature = "hex"))]
+        if self.hex_height.is_some() || self.hex_descent.is_some() {
+            return Err(Error::FeatureDisabled {
+                format: "hex".into(),
+            });
+        }
         #[cfg(feature = "svg")]
         registry.set_svg_read_options(fontpixel::formats::svg::ReadOptions {
             ppem: self.ppem,
@@ -983,7 +1071,7 @@ impl VectorArguments {
             || self.ppu.is_some()
             || self.upm.is_some()
             || self.embed_bitmaps
-            || self.gray_threshold.is_some()
+            || (self.gray_threshold.is_some() && !["hex", "psf"].contains(&id))
             || self.woff2_source.is_some()
             || self.woff2_quality.is_some()
             || self.collection_v2;
