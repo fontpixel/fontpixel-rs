@@ -1,0 +1,26 @@
+[
+  {
+    "font": "Tong-SC-square",
+    "glyphs": 38654,
+    "quality": 5,
+    "compression_threads": 4,
+    "oracle_zero_copy": true,
+    "validation_seconds": 8.289501633000327,
+    "fontTools": "all glyphs/tables equal",
+    "FreeType": "all glyphs equal",
+    "OTS": "accepted, all glyphs equal",
+    "HarfBuzz": "all cmap characters, 6 languages equal"
+  },
+  {
+    "font": "Tong-SC-dot",
+    "glyphs": 38655,
+    "quality": 5,
+    "compression_threads": 4,
+    "oracle_zero_copy": true,
+    "validation_seconds": 61.3815891689992,
+    "fontTools": "all glyphs/tables equal",
+    "FreeType": "all glyphs equal",
+    "OTS": "accepted, all glyphs equal",
+    "HarfBuzz": "all cmap characters, 6 languages equal"
+  }
+]

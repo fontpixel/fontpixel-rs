@@ -1,0 +1,63 @@
+[
+  {
+    "file": "native-Tong-Latin-dot-q11-t1-x1.woff2",
+    "glyphs": 3647,
+    "checks": "stock fontTools and FreeType, every glyph"
+  },
+  {
+    "file": "native-Tong-SC-dot-q11-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q11-t2-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q11-t4-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q5-t1-x0.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q5-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q8-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-dot-q9-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q11-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q11-t2-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q11-t4-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q5-t1-x0.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q5-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q8-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  },
+  {
+    "file": "native-Tong-SC-square-q9-t1-x1.woff2",
+    "checks": "stock Brotli-decoded table streams exactly match validated full-font streams or original null-transform bytes"
+  }
+]

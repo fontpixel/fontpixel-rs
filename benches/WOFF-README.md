@@ -25,3 +25,11 @@ Only run timing after other worker-owned builds/fuzz/correctness jobs finish.
 The verification-only fontTools memoryview adapter is NEVER enabled in timing.
 Afterward run `tests/crosscheck/woff_bench_verify.py` to independently validate
 all timed output bytes/glyphs. Exact commands: `reports/w2.5/COMMANDS.txt`.
+
+Independent review corrected the mandatory head flag for CFF/null-transform
+outputs. `benches/woff_review.py` remeasures all affected single-font strategies
+and quality-5 multi-font groups with five samples, regenerates unchanged output
+strategies and requires exact equality with the prior candidate, and keeps all
+results separate. Its `--original-work`, `--work`, and `--output` paths prevent
+any modification of original candidate timing evidence. See
+`reports/w2.5-review/COMMANDS.txt` and `WOFF-REVIEW-REPORT.md`.

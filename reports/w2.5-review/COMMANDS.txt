@@ -1,0 +1,45 @@
+W2.5 independent review reproduction, 2026-10-03
+
+Review worktree: fontpixel-rs-w2.5-review, review/w2.5-compliance.
+Original candidate retained on w2.5-woff at cc5ba81.
+
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export PYTHONDONTWRITEBYTECODE=1
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/python-w2.5:/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+
+bash scripts/check.sh
+cargo test --locked -p fontpixel --all-features --test woff
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff -- -D warnings
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff2 -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo build --release --locked -p fontpixel --features woff,woff2 --example woff_check
+python3 tests/crosscheck/woff.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --output reports/w2.5-review/crosscheck-final.json --keep /tmp/fontpixel-woff-review-crosscheck
+
+# The three source sfnts in the original benchmark work directory are unchanged.
+# Link or copy them into /tmp/fontpixel-woff-review-bench first.
+python3 tests/crosscheck/woff_full.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --work /tmp/fontpixel-woff-review-bench --output reports/w2.5-review/full-sc-crosscheck.json --oracle-zero-copy
+# Independent official C++ decode followed by woff.equivalent(source, output,
+# label, True) for both full-SC fonts is also captured in official-decoder.json.
+
+cargo build --release --locked -p fontpixel-cli --features parity --bin fontpixel-parity
+python3 tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-woff-review-parity
+CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target cargo +nightly fuzz build woff1
+ASAN_OPTIONS=detect_leaks=0 /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target/x86_64-unknown-linux-gnu/release/woff1 /tmp/fontpixel-fuzz-woff1 -max_total_time=610 -max_len=131072 -rss_limit_mb=2048
+
+# Only after all builds/correctness/fuzz jobs finish:
+python3 benches/woff_review.py --binary "$CARGO_TARGET_DIR/release/examples/woff_check" --original-work /tmp/fontpixel-woff-bench --work /tmp/fontpixel-woff-review-bench --output benches/results/woff-review.json
+python3 tests/crosscheck/woff_bench_verify.py --work /tmp/fontpixel-woff-review-bench --reference /tmp/fontpixel-reference-target/release/fontpixel-tong-woff-reference --output reports/w2.5-review/benchmark-verification.json
+
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.5-review/protected-after.sha256
+cmp reports/w2.5/protected-before.sha256 reports/w2.5-review/protected-after.sha256
+
+# After acceptance: non-destructive --no-ff merge, then on integrated main:
+bash scripts/check.sh
+cargo test --locked -p fontpixel --all-features --test woff
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff -- -D warnings
+cargo clippy --locked -p fontpixel --all-targets --no-default-features --features woff2 -- -D warnings
+
+# All histories retained; never push.
+git bundle create /tmp/fontpixel-rs-w2.5-reviewed.bundle --all
+git bundle verify /tmp/fontpixel-rs-w2.5-reviewed.bundle

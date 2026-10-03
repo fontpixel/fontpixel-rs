@@ -1,0 +1,237 @@
+{
+  "started_utc": "2026-10-03T10:17:12.156516+00:00",
+  "binary_sha256": "a22be53fa83888ef70010ba2888e9c6e0fd3e4205751ce209f41f47bb046b630",
+  "machine": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpus": 9,
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "memory": "MemTotal:       10206504 kB"
+  },
+  "results": [
+    {
+      "seconds": [
+        0.240406987,
+        0.240135566,
+        0.24379542,
+        0.227035346,
+        0.236355478
+      ],
+      "bytes": 1045860,
+      "quality": 5,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q5-t1-x1",
+      "sha256": "caa733806f19b76193fe275de0118f8fcffc6fb0e882b572cb1af4d0c540a372",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 0.240135566
+    },
+    {
+      "seconds": [
+        0.542188223,
+        0.504794642,
+        0.570914201,
+        0.535249498,
+        0.495470257
+      ],
+      "bytes": 969772,
+      "quality": 8,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q8-t1-x1",
+      "sha256": "edeb70983a973ce8647551df7644f310cc2f72a8154b0e37a2660d972ca1875b",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 0.535249498
+    },
+    {
+      "seconds": [
+        0.82180728,
+        0.828068445,
+        0.80464719,
+        0.813666691,
+        0.802104226
+      ],
+      "bytes": 976344,
+      "quality": 9,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q9-t1-x1",
+      "sha256": "2030103bfc8fbae5df0eb774050b273c4b7704acb6e8d652cc4f5fe3ae7dbc37",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 0.813666691
+    },
+    {
+      "seconds": [
+        13.992488061,
+        13.676973009,
+        13.648022168,
+        13.653643309,
+        13.568939683
+      ],
+      "bytes": 842596,
+      "quality": 11,
+      "threads": 1,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t1-x1",
+      "sha256": "c35b1cb4673c706ebb156d94aa143efa0b470245a8209f5fbfe83d86d3cba752",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 13.653643309
+    },
+    {
+      "seconds": [
+        7.12548743,
+        7.088079216,
+        7.09170323,
+        6.994661589,
+        7.085965603
+      ],
+      "bytes": 844404,
+      "quality": 11,
+      "threads": 2,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t2-x1",
+      "sha256": "6e4b83fd75b91de77a6e65fca4c0a2767b50be381fa7e17f73697654d296d5d9",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 7.088079216
+    },
+    {
+      "seconds": [
+        6.434259346,
+        5.779233133,
+        4.720394243,
+        6.070943761,
+        5.954203043
+      ],
+      "bytes": 842508,
+      "quality": 11,
+      "threads": 4,
+      "transformed": true,
+      "label": "native-Tong-SC-square-q11-t4-x1",
+      "sha256": "641dfcc33341934a616de098fdd87dc4c5f82c4584be6ace53bca131bb6588af",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 5.954203043
+    },
+    {
+      "seconds": [
+        0.22024391,
+        0.215896678,
+        0.253155511,
+        0.213140619,
+        0.212239802
+      ],
+      "bytes": 1045860,
+      "quality": 5,
+      "threads": 1,
+      "transformed": false,
+      "label": "native-Tong-SC-square-q5-t1-x0",
+      "sha256": "caa733806f19b76193fe275de0118f8fcffc6fb0e882b572cb1af4d0c540a372",
+      "input_sha256": "9deb82c1107845387b67387ca1584c0c35484d32962e747af1c89913757ddb61",
+      "median_seconds": 0.215896678
+    },
+    {
+      "seconds": [
+        0.310869555,
+        0.34355875,
+        0.33344137,
+        0.341014991,
+        0.352466801
+      ],
+      "bytes": 1112260,
+      "quality": 5,
+      "threads": 1,
+      "transformed": false,
+      "label": "native-Tong-SC-dot-q5-t1-x0",
+      "sha256": "964756bba82ed1c98447ad59d6a66b7bc39afa159c224e47bbbee676cce321b9",
+      "input_sha256": "cb73ddf52517491f9eacf87f0b2ab74e5797face051658645f92d1b7e33462e2",
+      "median_seconds": 0.341014991
+    },
+    {
+      "seconds": [
+        1.236265904,
+        1.104709858,
+        1.10678451,
+        1.240343276,
+        1.222678154
+      ],
+      "bytes": 4144216,
+      "jobs": 1,
+      "quality": 5,
+      "threads": 1,
+      "label": "native-four-fonts-q5-jobs1",
+      "median_seconds": 1.222678154
+    },
+    {
+      "seconds": [
+        1.009482515,
+        0.705377191,
+        1.033831718,
+        0.756523869,
+        0.976215071
+      ],
+      "bytes": 4144216,
+      "jobs": 2,
+      "quality": 5,
+      "threads": 1,
+      "label": "native-four-fonts-q5-jobs2",
+      "median_seconds": 0.976215071
+    },
+    {
+      "seconds": [
+        0.408499574,
+        0.428863145,
+        0.575360563,
+        0.431281575,
+        0.386600189
+      ],
+      "bytes": 4144216,
+      "jobs": 4,
+      "quality": 5,
+      "threads": 1,
+      "label": "native-four-fonts-q5-jobs4",
+      "median_seconds": 0.428863145
+    }
+  ],
+  "byte_regressions": [
+    {
+      "label": "native-Tong-SC-dot-q5-t1-x1",
+      "bytes": 1026248,
+      "sha256": "05bfb50fc4f17de87084ed8b498a4a846c6c406c6017ad3c77aca08e740d0c93",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-SC-dot-q8-t1-x1",
+      "bytes": 859264,
+      "sha256": "d8cc08447d5e4e55a89f627c98eecef0c028c57cb93796e8fc8c6e84406f2c56",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-SC-dot-q9-t1-x1",
+      "bytes": 830792,
+      "sha256": "974d47967e647823058eb46e307c829884ce0f5e50ccbeb54aaa33a80a97d6c8",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-SC-dot-q11-t1-x1",
+      "bytes": 669740,
+      "sha256": "973e224f1bf9f71f799548399b401c1ae4753aeb52154e7acc52462324c8a9b0",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-SC-dot-q11-t2-x1",
+      "bytes": 669720,
+      "sha256": "d8cd83158700dbe5fff5cc75bb7be56186ec92d1c14ea4f4538f1e85ae037485",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-SC-dot-q11-t4-x1",
+      "bytes": 670048,
+      "sha256": "94ee1925657bcca872ef7480fc0b8867ccaf3bdb8b9743ed3e0cf71512b81a90",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    },
+    {
+      "label": "native-Tong-Latin-dot-q11-t1-x1",
+      "bytes": 39028,
+      "sha256": "d5d89a9f53d8e67ebf361f4698cb24720e1f191c22e58f6d117604f86fc701ab",
+      "checks": "exact candidate/final output equality; not a timing sample"
+    }
+  ]
+}

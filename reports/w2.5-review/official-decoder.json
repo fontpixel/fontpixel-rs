@@ -1,0 +1,14 @@
+[
+  {
+    "font": "Tong-SC-square",
+    "glyphs": 38654,
+    "webfont_sha256": "341d4c2ddece30b2cc54731cb8e866989c5129ba877b8401d49d1a368a9e5533",
+    "checks": "official Google C++ decode; all glyphs/tables/FreeType pixels equal; mandatory head flag set"
+  },
+  {
+    "font": "Tong-SC-dot",
+    "glyphs": 38655,
+    "webfont_sha256": "e0fa905bde0c03b2897e16ebb3a224fae58a4e14404d24eeb44a7ba21865f127",
+    "checks": "official Google C++ decode; all glyphs/tables/FreeType pixels equal; mandatory head flag set"
+  }
+]

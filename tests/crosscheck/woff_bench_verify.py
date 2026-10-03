@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify every timed output without changing the measured compression runs.
+"""Verify every saved output without changing measured compression runs.
 
 Native transformed blocks must be exactly those of the independently validated
 full-font output, using stock fontTools + Google Brotli for stream decoding.
@@ -41,5 +41,5 @@ def main():
         out=path.with_suffix('.verified.sfnt');subprocess.run([str(a.reference),'decode',str(path),str(out)],check=True)
         count=equivalent(source,out,path.name,True);results.append({'file':path.name,'glyphs':count,'checks':'official C++ decoder, stock fontTools sfnt, FreeType, every glyph'})
         print(path.name,'PASS',count,flush=True)
-    a.output.write_text(json.dumps(results,indent=2)+'\n');print('PASS',len(results),'timed outputs',flush=True)
+    a.output.write_text(json.dumps(results,indent=2)+'\n');print('PASS',len(results),'saved outputs',flush=True)
 if __name__=='__main__':main()

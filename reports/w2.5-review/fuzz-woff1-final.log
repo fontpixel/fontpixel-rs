@@ -1,0 +1,28 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 3555179750
+INFO: Loaded 1 modules   (5872 inline 8-bit counters): 5872 [0x556f94d25050, 0x556f94d26740), 
+INFO: Loaded 1 PC tables (5872 PCs): 5872 [0x556f94d26740,0x556f94d3d640), 
+INFO:      430 files found in /tmp/fontpixel-fuzz-woff1
+INFO: seed corpus: files: 430 min: 1b max: 84460b total: 9746877b rss: 30Mb
+#431	INITED cov: 1044 ft: 3410 corp: 323/6638Kb exec/s: 0 rss: 168Mb
+#8192	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 73780 exec/s: 4096 rss: 393Mb
+#16384	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 73860 exec/s: 5461 rss: 417Mb
+#32768	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 74020 exec/s: 5461 rss: 425Mb
+#65536	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 74340 exec/s: 5461 rss: 425Mb
+#131072	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 74996 exec/s: 3640 rss: 425Mb
+#262144	pulse  cov: 1044 ft: 3410 corp: 323/6638Kb lim: 76308 exec/s: 4297 rss: 425Mb
+#417712	NEW    cov: 1044 ft: 3411 corp: 324/6657Kb lim: 77860 exec/s: 4746 rss: 425Mb L: 19012/73700 MS: 1 CMP- DE: "DSIG"-
+#428983	NEW    cov: 1044 ft: 3412 corp: 325/6673Kb lim: 77972 exec/s: 4766 rss: 425Mb L: 16364/73700 MS: 1 PersAutoDict- DE: "DSIG"-
+#524288	pulse  cov: 1044 ft: 3412 corp: 325/6673Kb lim: 78916 exec/s: 4946 rss: 425Mb
+#649804	NEW    cov: 1048 ft: 3416 corp: 326/6687Kb lim: 80164 exec/s: 5116 rss: 425Mb L: 14536/73700 MS: 1 ChangeBit-
+#1048576	pulse  cov: 1048 ft: 3416 corp: 326/6687Kb lim: 84132 exec/s: 5216 rss: 431Mb
+#1522673	NEW    cov: 1050 ft: 3418 corp: 327/6703Kb lim: 88852 exec/s: 5399 rss: 431Mb L: 16008/73700 MS: 4 CMP-ChangeByte-ChangeASCIIInt-ChangeBinInt- DE: "hekJ"-
+#1995506	NEW    cov: 1050 ft: 3423 corp: 328/6717Kb lim: 93556 exec/s: 5558 rss: 431Mb L: 14544/73700 MS: 3 ChangeBinInt-ChangeBinInt-CrossOver-
+#2097152	pulse  cov: 1050 ft: 3423 corp: 328/6717Kb lim: 94564 exec/s: 5577 rss: 431Mb
+#3333077	NEW    cov: 1050 ft: 3424 corp: 329/6733Kb lim: 106884 exec/s: 5707 rss: 431Mb L: 16020/73700 MS: 1 ChangeBit-
+#3491457	DONE   cov: 1050 ft: 3424 corp: 329/6733Kb lim: 108452 exec/s: 5714 rss: 444Mb
+###### Recommended dictionary. ######
+"DSIG" # Uses: 177483
+"hekJ" # Uses: 83868
+###### End of recommended dictionary. ######
+Done 3491457 runs in 611 second(s)
