@@ -77,3 +77,16 @@ BDF building from glyph sources is outside both engines' benchmark intervals;
 input BDF parsing, variant planning, encoding and output I/O are included.
 The native benchmark uses bounded parallel CLI processes pending Phase 6's batch
 command. This is disclosed rather than claiming that the future batch CLI exists.
+
+## Resource interruption and restart rule
+
+The initial Python vector oracle was killed by the OS after fifteen completed
+cases, while another large fontTools oracle and RAM-backed scratch exports were
+active. This is recorded in `vectors-interruption.json`, not counted as an
+accepted run or a native failure. Completed input/binary/output identities are
+retained. The harness now supports `--resume` with matching binary/tool versions,
+source hashes, output hashes and the protected-input manifest. It releases the
+reference builder before loading the two comparison fonts. Heavy fontTools
+oracles run serially; only duplicate scratch copies created by this acceptance
+run were removed. Original inputs, committed evidence and delivered archives
+were not deleted.

@@ -87,6 +87,8 @@ def main():
     parser.add_argument('--work', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--only', help='Optional exact configuration label')
+    parser.add_argument('--resume', action='store_true',
+                        help='Keep completed cases only when binary and input identities match')
     args = parser.parse_args()
     args.work.mkdir(parents=True, exist_ok=True)
     # Same independent decoder algorithm, avoiding quadratic whole-tail copies.
@@ -104,6 +106,17 @@ def main():
                'tools': {n: importlib.metadata.version(n) for n in
                          ['fonttools', 'freetype-py', 'uharfbuzz', 'opentype-sanitizer']},
                'woff2_oracle_readonly_zero_copy': True, 'inputs': [], 'results': []}
+    if args.resume:
+        previous = json.loads(args.output.read_text())
+        for key in ['binary_sha256', 'woff_driver_sha256', 'tools']:
+            assert previous[key] == results[key], ('resume provenance changed', key)
+        manifest = ROOT / 'reports/phase2-acceptance/protected-before.sha256'
+        subprocess.run(['sha256sum', '-c', str(manifest)], cwd=ROOT,
+                       check=True, capture_output=True)
+        results = previous
+        results['partial'] = True
+        results['resumed_after_interruption'] = True
+    completed = {r['case']: r for r in results['results']}
 
     def save():
         args.output.write_text(json.dumps(results, indent=2) + '\n')
@@ -118,8 +131,23 @@ def main():
         prefix = 'TongPixelSans' + ('Mono' if spacing == 'mono' else '') + '14' + size
         paths = {r: directory / (prefix + '-' + r + '.bdf')
                  for r in ['SC', 'TC', 'JP', 'KR', 'Latin']}
-        results['inputs'].append({'configuration': config, 'files':
-                                 [{'name': p.name, 'sha256': sha(p)} for p in paths.values()]})
+        identity = {'configuration': config, 'files':
+                    [{'name': p.name, 'sha256': sha(p)} for p in paths.values()]}
+        old_identity = next((x for x in results['inputs'] if x['configuration'] == config), None)
+        if old_identity is None:
+            results['inputs'].append(identity)
+        else:
+            assert old_identity == identity, (config, 'resume input changed')
+        labels = [config + '-' + shape + '-' + kind + suffix
+                  for shape in ['square', 'dot'] for kind in ['ttf', 'otf']
+                  for suffix in ['', '-woff', '-woff2']]
+        if all(label in completed for label in labels):
+            for shape in ['square', 'dot']:
+                for kind in ['ttf', 'otf']:
+                    label = config + '-' + shape + '-' + kind
+                    assert sha(args.work / (label + '.' + kind)) == completed[label]['sha256']
+            print(config, 'retained 12 completed unchanged-input cases', flush=True)
+            continue
         if config.startswith('supplied'):
             faces = {r: parse_bdf(p) for r, p in paths.items()}
             ref.build.faces = lambda root, size: [(r, faces[r], faces[r])
@@ -136,27 +164,36 @@ def main():
                 label = config + '-' + shape_name + '-' + kind
                 started = time.monotonic()
                 native = args.work / (label + '.' + kind)
-                invoke(args.binary, *common, '--shape', shape_name, '-o', native)
                 with tempfile.TemporaryDirectory(prefix='oracle-', dir=args.work) as temp:
                     tmp = Path(temp)
-                    reference = tmp / ('reference.' + kind)
-                    font = builder(spacing, shape_name, 'phase2', plan, size)
-                    font.recalcTimestamp = False
-                    font.save(reference)
-                    result = compare_full(native, reference, plan, shape_name, label)
-                    result['seconds_including_validation'] = time.monotonic() - started
-                    result['fontconfig'] = subprocess.check_output(
-                        ['fc-query', '--format', '%{family}|%{style}|%{spacing}', str(native)],
-                        text=True)
-                    results['results'].append(result)
-                    save()
-                    print(label, 'SFNT PASS', result['glyphs'], flush=True)
-                    del font
-                    gc.collect()
+                    if label not in completed:
+                        invoke(args.binary, *common, '--shape', shape_name, '-o', native)
+                        reference = tmp / ('reference.' + kind)
+                        font = builder(spacing, shape_name, 'phase2', plan, size)
+                        font.recalcTimestamp = False
+                        font.save(reference)
+                        # Release the reference builder before loading two comparison fonts.
+                        del font
+                        gc.collect()
+                        result = compare_full(native, reference, plan, shape_name, label)
+                        result['seconds_including_validation'] = time.monotonic() - started
+                        result['fontconfig'] = subprocess.check_output(
+                            ['fc-query', '--format', '%{family}|%{style}|%{spacing}', str(native)],
+                            text=True)
+                        results['results'].append(result)
+                        completed[label] = result
+                        save()
+                        print(label, 'SFNT PASS', result['glyphs'], flush=True)
+                        gc.collect()
+                    else:
+                        assert sha(native) == completed[label]['sha256'], (label, 'resume output changed')
                     for container in ['woff', 'woff2']:
+                        if label + '-' + container in completed:
+                            continue
                         result = wrapper(args.woff_driver, native, container, tmp,
                                          label + '-' + container)
                         results['results'].append(result)
+                        completed[result['case']] = result
                         save()
                         print(result['case'], 'PASS', result['glyphs'], flush=True)
                 gc.collect()

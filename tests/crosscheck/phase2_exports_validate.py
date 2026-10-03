@@ -6,6 +6,7 @@ Every native and original-reference WOFF2 is independently decoded, rasterized,
 and read through the final native reader. No timing claims are made here.
 """
 import argparse
+import gc
 import hashlib
 import json
 import subprocess
@@ -73,6 +74,7 @@ def main():
                     report['results'].append(result)
                     save()
                     print(label, 'ORIGINAL RUST PASS', result['glyphs'], flush=True)
+                    gc.collect()
                 kind = 'otf' if shape == 'square' else 'ttf'
                 for engine, directory, suffix in [('native', a.native, shape),
                                                    ('reference', a.reference, shape.capitalize())]:
@@ -117,6 +119,7 @@ def main():
                     save()
                     print(label, 'KNOWN REFERENCE OTS REJECTION; GLYPH/READER PASS'
                           if reference_rejection else 'PASS', count, flush=True)
+                    gc.collect()
     report['partial'] = False
     save()
 

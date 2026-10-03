@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/tests/crosscheck/phase2_bitmaps.py", line 115, in <module>
+    main()
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/tests/crosscheck/phase2_bitmaps.py", line 104, in main
+    entry = check(source, native, reference, kind)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/tests/crosscheck/phase2_bitmaps.py", line 51, in check
+    assert query.split('|')[0] == family, (source.name, kind, 'fontconfig family', query)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('TongPixelSans14Large-JP.bdf', 'pcf', 'fontconfig family', 'Tong Tong Pixel Sans 14 Large JP|Regular|14|')
