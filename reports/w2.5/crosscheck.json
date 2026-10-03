@@ -1,0 +1,329 @@
+{
+  "partial": true,
+  "results": [
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19072,
+      "sha256": "d6e69e2c53e68abe56740d4e972fd631d22fa4be503e0e80120ae7428428202e",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15448,
+      "sha256": "fe3a35858727e5b58daccb2d4edc203ea06a17e3e6589afc70199bb40ee35b70",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16560,
+      "sha256": "b723139195b9bc9f5e4825b2d1622e909ce3f270f7a7c7a63d8d13cf12febf26",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18812,
+      "sha256": "f8333d9490b28171f687d6519767bb942d992d2c21faebae8f321a42814d9647",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15996,
+      "sha256": "acbe2fc1de5de31a27900b0b487ad72f0039042639c081358ff33a61370e06a4",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12512,
+      "sha256": "2e3b5d498ce69a3ddac1bb964a569aa3dfbc1db18576c400fe3063c75c29f68f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14944,
+      "sha256": "57965c305cb68c98f0dc19960c85b98fa26da15aab8c765b4eb874b0aa39be1c",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15432,
+      "sha256": "ed4fb6f1cfb2c6c74fe7a2445ad0b674a32ebf91d626babef601d3763e3f11f7",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 16008,
+      "sha256": "13ae39a1f054d853555633b253ed819088dd8828465c8b32b897f0f58227fb66",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13364,
+      "sha256": "4478c039906a20c570f94c3192cc0f50540b1176fbc53afe6941e7f3a1d8fabb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15052,
+      "sha256": "319e081a56890a8a21f8379271be2326570afa089a2ec4cea12b446684f698cb",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15092,
+      "sha256": "c3abaef1650602d79f1dd775da3e98712405894daf844f22be5e3807c361f7d7",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14564,
+      "sha256": "7b1148f7b61b2fd655f9d2994768d5589bbce2e892544507e51ed7aa021319e2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11652,
+      "sha256": "5f7f5a1b2ffbbd769cb660432ba7acfeef1a4a78b31174faf634fe57e47f93ef",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15144,
+      "sha256": "9443d6a0f037fc19aa0feb433b102f8f7003c1fb5fd85b19efd35681391a7b6a",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15132,
+      "sha256": "d68a6b6088f117864944e755a1d02963e43e0ccb6dbed140e6a3feaacbc2a9b2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 19048,
+      "sha256": "6189dc629e4c9e5279da3843b54076bad5ab29812731308a7a32206988126962",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 15348,
+      "sha256": "adcfb9da561e7f5e306aa6d9ff7241367733672cec2fb25980d572c22f39a061",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 16548,
+      "sha256": "7bfa90807b548b16eb613ef6584aaeb2f4869898521aea1812c5f52bdb12d544",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 18804,
+      "sha256": "fff7bcc33cd28410c4b38dfa493657a34880708af9c64287d2e770a25997d0c8",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff-q9-t1-x1",
+      "glyphs": 258,
+      "bytes": 15968,
+      "sha256": "05e800132122dd96a53088b43fa25af02cf601707358eab2cbcfea305bde17ad",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q11-t1-x1",
+      "glyphs": 258,
+      "bytes": 12504,
+      "sha256": "a78940eed0c0210394063a7fed4f3f579332949a77af2715ce13345c6dfc86de",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q5-t4-x1",
+      "glyphs": 258,
+      "bytes": 14928,
+      "sha256": "6c8630cd1d05e64d82f4b4c79d5f43bddde4658c4a08bc0ffd8aa82f2e40f22f",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-ttf-dot-woff2-q5-t1-x0",
+      "glyphs": 258,
+      "bytes": 15424,
+      "sha256": "478757976bf2b07affc206c20c737b40ba671dafd5ac00f2b214dc9d99ebd6b2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 16000,
+      "sha256": "f6c33c72c8ce31661f250797c6ed9d37d92510725554444429273f6e64693546",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 13344,
+      "sha256": "e8ed069228585a0d3e592cd1a618ffa3ecb07624dc1d74e8ddfa817527ba5d86",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15040,
+      "sha256": "d08abf01abaf830d884012ee7275404a4f06babfb913e2f75b529569149375a5",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-square-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15088,
+      "sha256": "aa1bd2726fe825bd5ffa3360538292e5ec7a0cd194c967e9688372bf1f090271",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff-q9-t1-x1",
+      "glyphs": 257,
+      "bytes": 14536,
+      "sha256": "824ab367b90029c6594e36b049e321c731804605a6689108a8376bfa6c89dbab",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q11-t1-x1",
+      "glyphs": 257,
+      "bytes": 11728,
+      "sha256": "af6c319df4e3e3f17a2f0c03d0cd102325ec9ea3c587e8adc1cd1ed6eb1330a5",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q5-t4-x1",
+      "glyphs": 257,
+      "bytes": 15132,
+      "sha256": "ecd7973c50f24a56b5a45d8758f802acbaaca216f39e07aa8c054ad72781ff28",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-otf-dot-woff2-q5-t1-x0",
+      "glyphs": 257,
+      "bytes": 15116,
+      "sha256": "6ff507d674280a4e21623e5acf487ad5acf21840e5a7bae0b2f17a9b9e6c22b1",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff-q9-t1-x1",
+      "glyphs": 3646,
+      "bytes": 83308,
+      "sha256": "7700c1b422a6455464aa3e8c1792a7b511d8b4eec0e674dd6fef7193d09360e2",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q11-t1-x1",
+      "glyphs": 3646,
+      "bytes": 50848,
+      "sha256": "f42cf7d20af5ff29408a4801eeec389ec8a01539e79ec0bbc623a474871604fa",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q5-t4-x1",
+      "glyphs": 3646,
+      "bytes": 57188,
+      "sha256": "508d4151fc48dcd2df2ba3e061c13841eae6e07df81c001832f141a004cd33ee",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-ttf-square-woff2-q5-t1-x0",
+      "glyphs": 3646,
+      "bytes": 80076,
+      "sha256": "69773869bde577a627dde4e1a017af23a04011e5fe737a18d9d76f1fbc26554d",
+      "fontTools": "pass",
+      "native_roundtrip": "pass",
+      "OTS_FreeType_HarfBuzz": "pass"
+    }
+  ]
+}

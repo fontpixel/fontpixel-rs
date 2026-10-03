@@ -608,3 +608,28 @@ transforms for comparison/fidelity. Validate actual output sizes, not advisory
 original sizes. Retain optional metadata/private data outside sfnt.
 **Reason:** Honor the W3C functional-fidelity contract and explicit loss reporting,
 without conflating canonical encoding changes with missing glyph information.
+
+## 2026-10-03 — Normalize WOFF2 transform input for deployed decoder compatibility
+
+**Question:** W3C makes original glyph/font lengths advisory, but Google WOFF2
+(as used by OTS) bounds its output using totalSfntSize and FreeType consults the
+original glyf length after reconstructing four-byte-aligned glyph records.
+**Choice:** Normalize transformed input glyph records to four-byte boundaries,
+upgrade short loca when necessary, then record those true normalized lengths.
+Pad the compressed block to four bytes even without auxiliary blocks. Keep the
+reader standards-compliant when valid reconstructed sizes differ from headers.
+**Reason:** An initial unnormalized output had exact fontTools glyphs but OTS
+failed and FreeType's last glyph was invalid; changing the advisory lengths to
+the normalized input sizes fixed both independent consumers. This preserves
+font functionality and makes output interoperable, rather than weakening tests.
+
+## 2026-10-03 — Avoid optional hmtx transform for nonminimal long-metric counts
+
+**Question:** fontTools 4.66.1 recompiles transformed hmtx to its minimum count
+but leaves the exposed hhea count unchanged; legal sfnt fonts with redundant
+trailing long metrics then fail its normal TTFont reader.
+**Choice:** Preserve those hmtx bytes using the legal null transform. Continue
+using transform 1 when arrays match and the source long-metric count is minimal;
+our decoder reconstructs the full declared count even when it is nonminimal.
+**Reason:** hmtx transformation is optional; preserving source tables avoids a
+consumer bug without silently changing metrics or reducing glyf/loca coverage.

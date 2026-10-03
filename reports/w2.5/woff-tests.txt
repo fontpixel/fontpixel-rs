@@ -1,0 +1,31 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/crates/fontpixel)
+warning: missing documentation for the crate
+   --> crates/fontpixel/tests/woff.rs:1:1
+    |
+  1 | / #![cfg(all(feature = "woff", feature = "woff2"))]
+  2 | | use fontpixel::{
+  3 | |     sfnt::{Sfnt, SfntBuilder},
+  4 | |     woff::{self, Auxiliary, Limits, woff1, woff2},
+...   |
+255 | | }
+    | |_^
+    |
+    = note: requested on the command line with `-W missing-docs`
+
+warning: `fontpixel` (test "woff") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.08s
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/woff-e7a1a2c24dd6f3b0)
+
+running 9 tests
+test metadata_errors_and_auxiliary_limits ... ok
+test invalid_options_and_collections ... ok
+test limits_precede_decompression ... ok
+test woff2_advisory_sizes_reserved_and_null_transform ... ok
+test signature_loss_is_explicit ... ok
+test fixture_roundtrips_and_quality ... ok
+test arbitrary_bytes_are_safe ... ok
+test opaque_table_roundtrip ... ok
+test truncation_and_mutation_never_panic ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+

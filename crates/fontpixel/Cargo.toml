@@ -116,3 +116,7 @@ required-features = ["cff"]
 [[example]]
 name = "bitmap_check"
 required-features = ["bdf", "otb", "bdat", "color"]
+
+[[example]]
+name = "woff_check"
+required-features = ["woff", "woff2"]

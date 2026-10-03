@@ -63,3 +63,23 @@ stream; concatenating independent streams is invalid WOFF2. Benchmark five-run
 wall-clock medians and output size on Tong square/CFF and round-dot/TrueType,
 compare native Brotli and fontTools/Google Brotli, and record CPU/memory limits.
 Do not change the required default quality to make timing claims look better.
+
+## Verified interoperability details
+
+For transformed output, normalize sfnt glyph records to four-byte boundaries
+before deriving original glyf/font lengths (upgrade loca/head format if needed).
+This is required for consistent deployed Google/FreeType behavior even though
+W3C calls those lengths advisory. Compressed data receives final zero padding.
+The native decoder still accepts valid unpadded final blocks and advisory-size
+mismatches, and never uses those fields as allocation authorities.
+
+fontTools 4.66.1 recompiles transformed hmtx to a minimal long-metric count without
+updating exposed hhea bytes. For nonminimal source counts our encoder preserves
+hmtx with a null transform; all original bytes and metrics remain available.
+The reader continues accepting a transformed nonminimal count correctly.
+
+Brotli 9.0.0 supports a legal single-stream parallel encoder. The explicit
+`compression_threads` option uses that implementation, bounded to 1–16 threads;
+independent multi-font jobs are separately bounded (product at most 64). Both
+strategies retain deterministic results for fixed inputs/options. Default remains
+one intra-font thread and quality 11. No parallel feature is imposed on BDF/PCF.

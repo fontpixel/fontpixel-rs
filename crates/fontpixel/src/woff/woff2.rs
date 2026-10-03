@@ -358,6 +358,9 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
     if have_glyf != tables.contains_key(b"loca") {
         return Err(invalid("missing glyf/loca pair"));
     }
+    if have_glyf && o.transform_glyf {
+        transform::normalize(&mut tables, l)?;
+    }
     let total = table_sum(tables.len(), tables.values().map(Vec::len), l)?;
     let mut transformed = BTreeMap::new();
     if have_glyf && o.transform_hmtx && tables.contains_key(b"hmtx") {
@@ -443,6 +446,9 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
         "WOFF2 output bytes",
     )?;
     out.extend(compressed);
+    // Pad the compressed block even without auxiliary blocks (Google decoder
+    // advances its source cursor to a four-byte boundary).
+    pad(&mut out);
     write_aux(&mut out, 24, &o.auxiliary, l, |d| compress(d, o, l))?;
     Ok(Encoded { bytes: out, report })
 }

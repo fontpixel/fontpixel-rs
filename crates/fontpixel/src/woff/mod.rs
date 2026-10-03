@@ -94,9 +94,11 @@ fn u32_at(data: &[u8], offset: usize) -> Result<u32> {
         slice(data, offset, 4)?.try_into().map_err(invalid)?,
     ))
 }
+#[cfg(feature = "woff2")]
 fn p16(v: &mut Vec<u8>, n: u16) {
     v.extend(n.to_be_bytes());
 }
+#[cfg(feature = "woff2")]
 fn p32(v: &mut Vec<u8>, n: u32) {
     v.extend(n.to_be_bytes());
 }
@@ -157,6 +159,7 @@ fn input(data: &[u8], magic: &[u8; 4], header: usize, l: &Limits) -> Result<(sfn
     Ok((f, n))
 }
 fn table_sum(n: usize, lengths: impl Iterator<Item = usize>, l: &Limits) -> Result<usize> {
+    bounded(n, l.sfnt.max_tables.min(4095), "WOFF tables")?;
     let mut total = 12 + n * 16;
     for len in lengths {
         bounded(len, l.sfnt.resources.max_table_bytes, "WOFF table bytes")?;
@@ -191,11 +194,12 @@ impl Write for Output {
         Ok(())
     }
 }
+#[cfg(feature = "woff")]
 fn checksum(tag: [u8; 4], data: &[u8]) -> Result<u32> {
     Ok(sfnt::checksum(data).wrapping_sub(if tag == *b"head" { u32_at(data, 8)? } else { 0 }))
 }
 fn pad(out: &mut Vec<u8>) {
-    while out.len() % 4 != 0 {
+    while !out.len().is_multiple_of(4) {
         out.push(0);
     }
 }
@@ -323,6 +327,7 @@ fn write_aux(
         out.extend(private);
     }
     let size = out.len();
+    bounded(size, l.sfnt.resources.max_total_bytes, "WOFF output bytes")?;
     set32(out, 8, size)?;
     Ok(())
 }

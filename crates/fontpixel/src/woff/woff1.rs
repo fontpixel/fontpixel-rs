@@ -69,7 +69,7 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         let offset = u32_at(data, o + 4)? as usize;
         let compressed = u32_at(data, o + 8)? as usize;
         let original = u32_at(data, o + 12)? as usize;
-        if offset % 4 != 0 || offset < directory_end || compressed > original {
+        if !offset.is_multiple_of(4) || offset < directory_end || compressed > original {
             return Err(invalid("invalid WOFF1 table span"));
         }
         slice(data, offset, compressed)?;

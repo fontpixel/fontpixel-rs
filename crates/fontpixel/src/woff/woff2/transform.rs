@@ -47,6 +47,44 @@ fn source<'a>(t: &'a Tables, l: &Limits) -> Result<Source<'a>> {
         index_format: format,
     })
 }
+// Google/FreeType reconstruct at four-byte glyph boundaries and consult the
+// advertised sizes. Normalize the transform input, upgrading short loca only
+// when the normalized offsets require it, before recording original lengths.
+pub(super) fn normalize(t: &mut Tables, l: &Limits) -> Result<()> {
+    let s = source(t, l)?;
+    let mut glyf = Vec::new();
+    let mut offsets = Vec::with_capacity(s.offsets.len());
+    for p in s.offsets.windows(2) {
+        offsets.push(glyf.len());
+        let bytes = &s.glyf[p[0]..p[1]];
+        bounded(
+            glyf.len().saturating_add(align(bytes.len())?),
+            l.sfnt.resources.max_table_bytes,
+            "WOFF2 normalized glyf bytes",
+        )?;
+        glyf.extend(bytes);
+        pad(&mut glyf);
+    }
+    offsets.push(glyf.len());
+    let format = if s.index_format == 0 && glyf.len() / 2 <= u16::MAX as usize {
+        0u16
+    } else {
+        1u16
+    };
+    let mut loca = Vec::with_capacity(offsets.len() * if format == 0 { 2 } else { 4 });
+    for offset in offsets {
+        if format == 0 {
+            p16(&mut loca, (offset / 2) as u16);
+        } else {
+            p32(&mut loca, as32(offset)?);
+        }
+    }
+    let head = t.get_mut(b"head").ok_or_else(|| invalid("missing head"))?;
+    head[50..52].copy_from_slice(&format.to_be_bytes());
+    t.insert(*b"glyf", glyf);
+    t.insert(*b"loca", loca);
+    Ok(())
+}
 pub(super) fn xmins(t: &Tables, l: &Limits) -> Result<Vec<i16>> {
     let s = source(t, l)?;
     s.offsets
@@ -149,12 +187,13 @@ fn bbox(data: &[u8]) -> Result<[i16; 4]> {
 fn coord(v: i32) -> Result<i16> {
     i16::try_from(v).map_err(|_| invalid("glyph coordinate or delta overflow"))
 }
+type SimpleParts = (Vec<u16>, Vec<(i16, i16, bool)>, Vec<u8>, bool);
 fn read_simple(
     r: &mut Cursor<'_>,
     nc: usize,
     budget: &mut Budget,
     l: &Limits,
-) -> Result<(Vec<u16>, Vec<(i16, i16, bool)>, Vec<u8>, bool)> {
+) -> Result<SimpleParts> {
     let mut lengths = Vec::with_capacity(nc);
     let mut n = 0;
     for _ in 0..nc {
@@ -593,6 +632,12 @@ pub(super) fn encode_hmtx(data: &[u8], xs: &[i16], h: usize) -> Result<Option<Ve
     if data.len() != 4 * h + 2 * (n - h) {
         return Err(invalid("incorrect hmtx length"));
     }
+    // fontTools' WOFF2 reader recompiles hmtx into its minimum long-metric
+    // count without changing the exposed hhea bytes. Keep the legal null
+    // transform for nonminimal input counts so every consumer sees all metrics.
+    if h > 1 && u16_at(data, 4 * (h - 1))? == u16_at(data, 4 * (h - 2))? {
+        return Ok(None);
+    }
     let a = (0..h).all(|i| u16_at(data, 4 * i + 2).is_ok_and(|v| v as i16 == xs[i]));
     let b = (h..n).all(|i| u16_at(data, 4 * h + 2 * (i - h)).is_ok_and(|v| v as i16 == xs[i]));
     if !a && !b {
@@ -656,4 +701,81 @@ pub(super) fn decode_hmtx(data: &[u8], xs: &[i16], h: usize) -> Result<Vec<u8>> 
         }
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn triplet_classes_and_boundaries() {
+        for flag in 0..=255u8 {
+            let length = match flag & 127 {
+                0..=83 => 1,
+                84..=119 => 2,
+                120..=123 => 3,
+                _ => 4,
+            };
+            for value in [0, 1, 15, 16, 63, 127, 255] {
+                let bytes = vec![value; length];
+                let mut r = Cursor::new(&bytes);
+                let (x, y, on) = read_triplet(flag, &mut r).unwrap();
+                r.end().unwrap();
+                let mut flags = Vec::new();
+                let mut out = Vec::new();
+                triplet(&mut flags, &mut out, x, y, on);
+                assert_eq!(
+                    read_triplet(flags[0], &mut Cursor::new(&out)).unwrap(),
+                    (x, y, on)
+                );
+            }
+        }
+        for x in [
+            -65535, -4096, -4095, -1280, -1279, -769, -768, -65, -64, -1, 0, 1, 64, 65, 768, 769,
+            1279, 1280, 4095, 4096, 65535,
+        ] {
+            for y in [-65535, -4096, -65, -1, 0, 1, 64, 65, 768, 769, 4095, 65535] {
+                let mut f = Vec::new();
+                let mut out = Vec::new();
+                triplet(&mut f, &mut out, x, y, true);
+                assert_eq!(
+                    read_triplet(f[0], &mut Cursor::new(&out)).unwrap(),
+                    (x, y, true)
+                );
+            }
+        }
+    }
+    #[test]
+    fn horizontal_metrics_arrays() {
+        let xs = [0, -20, 30, 40];
+        for mismatch in [0, 1, 2, 3] {
+            let lsbs = [
+                if mismatch & 1 != 0 { 7 } else { 0 },
+                -20,
+                if mismatch & 2 != 0 { 9 } else { 30 },
+                40,
+            ];
+            let mut data = Vec::new();
+            p16(&mut data, 500);
+            p16(&mut data, lsbs[0] as u16);
+            p16(&mut data, 600);
+            p16(&mut data, lsbs[1] as u16);
+            p16(&mut data, lsbs[2] as u16);
+            p16(&mut data, lsbs[3] as u16);
+            match encode_hmtx(&data, &xs, 2).unwrap() {
+                Some(t) => {
+                    assert_ne!(mismatch, 3);
+                    assert_eq!(decode_hmtx(&t, &xs, 2).unwrap(), data);
+                    for cut in 0..t.len() {
+                        assert!(decode_hmtx(&t[..cut], &xs, 2).is_err());
+                    }
+                }
+                None => assert_eq!(mismatch, 3),
+            }
+        }
+        for flags in [0, 4, 255] {
+            assert!(decode_hmtx(&[flags; 17], &xs, 2).is_err());
+        }
+        assert!(decode_hmtx(&[3; 17], &xs, 0).is_err());
+        assert!(decode_hmtx(&[3; 17], &xs, 5).is_err());
+    }
 }
