@@ -198,3 +198,24 @@ The existing serde/serde_json dependencies (MIT OR Apache-2.0) are also enabled
 by the YAFF feature for bounded versioned native-metadata extensions. They remain
 absent from BDF/PCF-only production builds. `cargo deny` audits both the main
 workspace and the separately locked fuzz dependency graph.
+
+## W2.1 sfnt common layer
+
+The public OpenType OS/2 Unicode block assignments and 258 Macintosh standard
+PostScript glyph names in `crates/fontpixel/src/sfnt/data.rs` are reproduced from
+fontTools 4.61.1, Copyright (c) 2017 Just van Rossum, MIT license. The full notice
+is in `LICENSES/fontTools-MIT.txt`; `tools/gen_sfnt_data.py` reproduces the data
+and boundary oracle. fontTools 4.66.1 independently verifies the same data.
+Only these published data tables and generated expected outputs are copied;
+FontForge's code-page heuristic (including its fontTools translation) is not
+used. The code-page algorithm here is project-authored full-repertoire coverage
+using the already-attributed native charset tables.
+
+The deterministic sfnt checksum/assembly algorithm refactors the existing MIT
+bdfparser compatibility implementation; its table-specific byte choices remain
+unchanged. Other common-table encoders and bounded adapters are project code
+written from the OpenType specification linked in `docs/formats/sfnt.md`.
+Fontations read-fonts 0.44.0 (MIT OR Apache-2.0) is an optional production
+reader dependency, with its dependency graph locked and cargo-deny checked.
+fontTools, OTS, freetype-py/FreeType and uharfbuzz/HarfBuzz are independent test
+executables/bindings; their implementation code is not copied into the project.

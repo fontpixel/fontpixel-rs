@@ -73,3 +73,30 @@ An initial exploratory 611-second run reached LeakSanitizer's known sandbox
 ptrace failure only at shutdown (empty artifact); the final run disables only
 that unsupported leak detector, retains AddressSanitizer and is reported in
 `reports/w1.6.md`.
+
+## sfnt common layer
+
+The `sfnt` target exercises checked envelope parsing/reassembly and standalone
+name/cmap/post/OS2/gasp/metric decoders, plus successful table roundtrips. Counts
+are limited to 256 glyphs/names, 4,096 expanded mappings and 64 tables; bytes to
+64 KiB per input/table. Seed using the common integration example and its raw
+tables, plus the checked-in malformed regression:
+
+```sh
+cargo run --locked -p fontpixel --features compat-bdfparser --example sfnt_check -- /tmp/sfnt-seeds
+mkdir -p fuzz/corpus/sfnt
+cp /tmp/sfnt-seeds/common.ttf tests/data/sfnt/truncated-format4.cmap fuzz/corpus/sfnt/
+python3 -B - <<'PY'
+from fontTools.ttLib import TTFont
+from pathlib import Path
+f=TTFont('/tmp/sfnt-seeds/common.ttf')
+for tag in ['cmap','name','post','OS/2','hhea','hmtx','vhea','vmtx','gasp']:
+    Path('fuzz/corpus/sfnt',tag.replace('/','_')).write_bytes(f.getTableData(tag))
+PY
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run sfnt -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536
+```
+
+AddressSanitizer remains enabled; LeakSanitizer's unsupported ptrace shutdown
+check is disabled under the already documented sandbox limitation. The initial
+exploratory crash, fix and final clean-run counts are reported in `reports/w2.1.md`.

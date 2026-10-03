@@ -13,6 +13,8 @@ pub mod model;
 pub mod render;
 pub mod report;
 pub mod resources;
+#[cfg(feature = "sfnt")]
+pub mod sfnt;
 
 pub use error::{Error, Operation, Result};
 pub use formats::{ReadOptions, Registry, WriteOptions};

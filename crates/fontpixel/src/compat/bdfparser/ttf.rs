@@ -77,15 +77,6 @@ fn pad4(mut data: Vec<u8>) -> Vec<u8> {
     data.resize(data.len().next_multiple_of(4), 0);
     data
 }
-fn checksum(data: &[u8]) -> u32 {
-    let mut s = 0u32;
-    for c in data.chunks(4) {
-        let mut b = [0; 4];
-        b[..c.len()].copy_from_slice(c);
-        s = s.wrapping_add(u32::from_be_bytes(b));
-    }
-    s
-}
 #[derive(Clone)]
 struct G {
     cs: Vec<Contour>,
@@ -235,30 +226,16 @@ fn name_table(records: &[(i64, String)]) -> Result<Vec<u8>> {
     Ok(out)
 }
 fn assemble(tables: BTreeMap<&str, Vec<u8>>) -> Result<Vec<u8>> {
-    let n = tables.len() as i64;
-    let lg = n.ilog2() as i64;
-    let sr = 16 * (1 << lg);
-    let mut out = pack("IHHHH", &[0x10000, n, sr, lg, 16 * n - sr])?;
-    let mut offset = 12 + 16 * n as usize;
-    let mut body = Vec::new();
-    let mut head = 0;
-    for (tag, b) in tables {
-        if tag == "head" {
-            head = offset;
-        }
-        out.extend(tag.as_bytes());
-        out.extend(pack(
-            "III",
-            &[checksum(&b) as i64, offset as i64, b.len() as i64],
-        )?);
-        let b = pad4(b);
-        offset += b.len();
-        body.extend(b);
+    let mut builder = crate::sfnt::SfntBuilder::new(crate::sfnt::Flavor::TrueType);
+    for (tag, data) in tables {
+        builder.insert(
+            tag.as_bytes()
+                .try_into()
+                .map_err(|_| invalid("invalid sfnt tag"))?,
+            data,
+        )?;
     }
-    out.extend(body);
-    let adj = 0xb1b0afbau32.wrapping_sub(checksum(&out));
-    out[head + 8..head + 12].copy_from_slice(&adj.to_be_bytes());
-    Ok(out)
+    builder.build(&crate::sfnt::Limits::default())
 }
 fn source_bitmap(m: &Meta) -> Result<Vec<String>> {
     let (w, h) = (num(&m[2]), num(&m[3]));

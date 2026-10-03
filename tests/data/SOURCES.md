@@ -96,3 +96,16 @@ All committed third-party fonts are small and freely licensed. Infrastructure te
   byte-format oracle (YAFF has no single mandatory spelling).
 - The two already-licensed BDF fixtures above are also roundtripped through YAFF
   with exact native model and canonical BDF byte equality; they are not copied.
+
+## W2.1 sfnt common-table fixtures
+
+- Reuses the already-attributed MIT Mini compatibility TTF/BDF goldens. The
+  common-table integration example rewrites only common tables and adds synthetic
+  Unicode aliases, vertical metrics and names. No external outline design is added.
+- `sfnt/truncated-format4.cmap`: 105-byte libFuzzer mutation of the project-generated
+  cmap seed. Regresses a lazy Fontations truncated-array boundary; project MIT.
+- `sfnt/unicode-ranges.json`: generated boundary/single-scalar expected range bits
+  from fontTools (MIT), via `tools/gen_sfnt_data.py`. Covers every assigned OS/2
+  Unicode block boundary and supplementary-plane behavior; not font artwork.
+- External integration output/fonts are temporary; only hashes, versions and
+  results are committed. All reference/sample source trees remain read-only.

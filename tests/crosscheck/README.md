@@ -74,3 +74,22 @@ label in the two-strike synthetic gray/mono fixture. monobit's BDF loader omits
 computed Char labels on some blank glyphs; the check resolves their original
 ISO10646 codepoint directly rather than skipping those glyphs. Native metadata
 and canonical bytes have separate offline Rust tests and 200-case property tests.
+
+## W2.1 sfnt common tables
+
+Build and run the common-table integration oracle:
+
+```sh
+cargo build --locked -p fontpixel --features compat-bdfparser --example sfnt_check
+python3 tests/crosscheck/sfnt.py --output tests/crosscheck/sfnt-results.json
+python3 tools/gen_sfnt_data.py --check
+```
+
+Requires fonttools, freetype-py, uharfbuzz and opentype-sanitizer. Missing tools
+fail explicitly. Reuses the prior MIT compatibility outlines, replaces all W2.1
+common tables and adds vertical metrics plus supplementary aliases. Includes
+dense non-linear and oversized sparse cmap stress fonts, full TTX decompilation,
+fontTools write/edit -> Rust reads, OTS sanitization, every native-size glyph's
+FreeType pixels/metrics, and HarfBuzz horizontal/vertical/supplementary mapping.
+A fontTools-produced format 13 tests incoming constant mapping groups. This is
+not the later CFF/bitmap/locl/whole-Tong phase-2 acceptance gate.

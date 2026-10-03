@@ -420,3 +420,54 @@ numerics, inconsistent rasters, extension versions and resource overflow fail.
 Semantic fields plus original property records are maintained independently, as
 with earlier BDF provenance. Property/JSON/raster row limits and cumulative model
 budgets precede substantial allocation; global metrics are parsed only once.
+
+## 2026-10-02 — Native sfnt tables are a bounded layer, not a premature codec
+
+**Question:** W2.1 owns common sfnt tables and reading while actual glyph/image
+extraction and FontSet projection belong to later OpenType work items.
+**Choice:** Expose `sfnt::{Sfnt,SfntBuilder}` and editable common-table APIs behind
+an optional `sfnt` feature. Use Fontations read-fonts for typed reading, with
+explicit bounds/count validation before expansion. Keep opaque table bytes
+accessible. Reuse only assembly/checksum mechanics in the compatibility TTF
+writer; retain all of its table-specific byte policies and do not register any
+new native font format.
+**Reason:** Give W2.2–W2.7 a real production foundation without pretending a
+container parser is already a bitmap-font decoder. BDF/PCF-only production builds
+remain independent of Fontations; full existing parity stays a regression gate.
+
+## 2026-10-02 — Unicode cmap completeness and explicit legacy fallback
+
+**Question:** A format-4 cmap's 16-bit length cannot represent every valid Unicode
+mapping, and the existing compatibility path has historical truncation rules.
+**Choice:** Native output always carries the complete scalar-to-glyph mapping in
+format 12. Also emit a format 4 when the bounded segment/glyph-array encoding
+fits, returning an explicit flag when omitted. Alias mappings and supplementary
+scalars are retained; invalid scalars/IDs error. Native reading deliberately
+selects a Unicode nominal subtable, never a symbol/Macintosh map; legacy and UVS
+subtables remain available in the raw/Fontations interface.
+**Reason:** Avoid silent loss while keeping the unchanged SPEC byte contract in
+its own compatibility path. Nominal-map projection is not full cmap preservation.
+
+## 2026-10-02 — OS/2 coverage is explicit rather than heuristic licensing risk
+
+**Question:** “Functional code page” is left to the designer by OpenType; the
+fontTools representative-character heuristic is translated from FontForge.
+**Choice:** Use the permissive public Unicode-block data from fontTools, including
+all supplementary bit-57 behavior, and an independently written optional
+full-printable-repertoire code-page check over native charset tables. Unsupported
+or uncompiled requested pages error. Keep raw OS/2 coverage fields editable for a
+caller's documented policy. Do not copy FontForge code or its translation.
+**Reason:** Provide deterministic defensible range calculation under the project's
+license constraints, without confusing a single representative glyph or block
+intersection with functional legacy coverage or shaping support.
+
+## 2026-10-02 — Fontations lazy arrays need independent completeness checks
+
+**Question:** Fontations accepts minimum table headers and returns empty arrays
+for some truncated optional ranges; its bitflag readers also discard unknown bits.
+**Choice:** Validate declared counts against complete array lengths before indexing
+or expanding. Read preservation-critical raw flags at checked offsets. Keep a
+libFuzzer-discovered truncated-format-4 regression and reserved-gasp-flag tests.
+**Reason:** A typed reader is not a whole-font validator. Explicit preflight guards
+prevent panics and prevent malformed arrays or unknown flag bits from silently
+turning into apparently valid empty data.

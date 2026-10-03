@@ -9,7 +9,7 @@ authors.workspace = true
 
 [features]
 default = ["bdf", "pcf", "yaff"]
-compat-bdfparser = ["bdf", "pcf", "dep:serde_json"]
+compat-bdfparser = ["bdf", "pcf", "sfnt", "dep:serde_json"]
 all-formats = ["bdf", "pcf", "snf", "hex", "draw", "psf", "cpi", "raw", "yaff", "pf2", "fnt", "fon", "fontx2", "hzk", "hbf", "hanfont", "nfnt", "bdat", "iigs", "otb", "ttf", "otf", "woff", "woff2", "ttc", "color", "vector-raster", "svg", "bmfont", "image", "c", "kbitx", "kbits", "pbf", "sfd", "pk", "gf", "plan9", "amiga", "gem", "vfont", "fzx", "figlet", "palm", "gdr", "drcs"]
 bdf = ["gzip"]
 pcf = ["gzip"]
@@ -28,16 +28,16 @@ hzk = []
 hbf = []
 hanfont = []
 nfnt = []
-bdat = []
+bdat = ["sfnt"]
 iigs = []
-otb = []
-ttf = []
-otf = []
-woff = []
-woff2 = []
-ttc = []
-color = []
-vector-raster = []
+otb = ["sfnt"]
+ttf = ["sfnt"]
+otf = ["sfnt"]
+woff = ["sfnt"]
+woff2 = ["sfnt"]
+ttc = ["sfnt"]
+color = ["sfnt"]
+vector-raster = ["sfnt"]
 svg = []
 bmfont = []
 image = []
@@ -59,12 +59,15 @@ palm = []
 gdr = []
 drcs = []
 cjk-charsets = []
-cff = []
+cff = ["sfnt"]
 fea = []
 gzip = ["dep:flate2"]
 serde = ["dep:serde"]
 
+sfnt = ["dep:read-fonts"]
+
 [dependencies]
+read-fonts = { version = "0.44.0", optional = true }
 serde_json = { workspace = true, optional = true, features = ["arbitrary_precision", "preserve_order"] }
 crc32fast = { version = "1.5", optional = true }
 flate2 = { version = "1.1", default-features = false, features = ["rust_backend"], optional = true }
@@ -95,3 +98,7 @@ required-features = ["bdf", "pcf"]
 [[bench]]
 name = "render"
 harness = false
+
+[[example]]
+name = "sfnt_check"
+required-features = ["compat-bdfparser"]
