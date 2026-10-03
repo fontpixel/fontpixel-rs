@@ -42,3 +42,14 @@ complete five-sample benchmark groups are retained verbatim in
 measurement has no complete result and is not counted. Ten planned groups remain.
 Recovery uses a separate result path to avoid uncertain producer writeback and
 records the post-restart environment as a new measurement segment.
+
+## Post-restart timing milestone
+
+All per-font native/C++/stock-fontTools comparisons and the quality-5 batch
+matrix are complete: 26 complete five-sample groups are saved in
+`benches/results/woff-resumed.json`, with measurement-segment metadata. The
+post-restart full-SC-dot q11 comparison is native 45.772158 s / 669,740 bytes
+versus C++ 34.134294 s / 671,148 bytes; Rust is slower here. On identical Latin-dot
+input, q11 medians are native 1.404296 s, C++ 1.166106 s, stock fontTools 2.108960 s.
+Only three quality-11 batch groups and final post-timing output verification /
+report compilation remain. Existing fonts are reused; no large duplicate inputs.

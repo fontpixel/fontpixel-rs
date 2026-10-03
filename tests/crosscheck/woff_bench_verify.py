@@ -25,7 +25,7 @@ def main():
             # This smaller input uses the unchanged stock fontTools decoder.
             count=equivalent(a.work/'Tong-Latin-dot.ttf',path,path.name,True);results.append({'file':path.name,'glyphs':count,'checks':'stock fontTools and FreeType, every glyph'});continue
         else:raise AssertionError(path)
-        if '-x1.' in path.name:assert raw(path)==raw(validated),path.name
+        if '-x1' in path.stem:assert raw(path)==raw(validated),path.name
         else:
             src=TTFont(source);web=TTFont(path)
             assert set(src.reader.tables)==set(web.reader.tables)
