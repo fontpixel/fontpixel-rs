@@ -336,7 +336,12 @@ impl Gsub {
             put16(&mut scripts, 6 + 6 * i, start)?;
             let mut sub = vec![0; 4 + 6 * s.languages.len()];
             put16(&mut sub, 2, s.languages.len())?;
-            if let Some(d) = &s.default {
+            let empty_default = LanguageSystem::default();
+            if let Some(d) = s
+                .default
+                .as_ref()
+                .or_else(|| (*t == *b"DFLT").then_some(&empty_default))
+            {
                 let n = sub.len();
                 put16(&mut sub, 0, n)?;
                 write_language(&mut sub, d)?;

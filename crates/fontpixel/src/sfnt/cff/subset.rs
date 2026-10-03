@@ -205,7 +205,21 @@ impl Cff<'_> {
         }
         let mut changes =
             BTreeMap::from([(CHARSET, arguments(&[0])?), (CHARSTRINGS, arguments(&[0])?)]);
-        let mut private_bytes = 0usize;
+        // Some valid CID fonts also retain an unused Top DICT Private entry.
+        // Its bytes still need relocation: leaving an old offset can invalidate
+        // the whole CFF table even though glyph execution uses only FD privates.
+        let top_private = if fdarray.is_some() {
+            private
+                .clone()
+                .map(|range| private_blob(data, range, l, &mut dict_work))
+                .transpose()?
+        } else {
+            None
+        };
+        if let Some((_, len)) = &top_private {
+            changes.insert(PRIVATE, arguments(&[*len, 0])?);
+        }
+        let mut private_bytes = top_private.as_ref().map_or(0, |(data, _)| data.len());
         let mut private_blocks = Vec::new();
         let mut font_dicts = Vec::new();
         let mut selectors = Vec::new();
@@ -283,6 +297,9 @@ impl Cff<'_> {
             )?);
             private_at += private_blocks[i].0.len();
         }
+        if let Some((_, len)) = &top_private {
+            changes.insert(PRIVATE, arguments(&[*len, private_at])?);
+        }
         changes.insert(CHARSET, arguments(&[charset_at])?);
         changes.insert(CHARSTRINGS, arguments(&[cs_at])?);
         if font_dicts.is_empty() {
@@ -305,6 +322,10 @@ impl Cff<'_> {
         for (b, _) in private_blocks {
             l.sfnt.table(out.len().saturating_add(b.len()))?;
             out.extend(b);
+        }
+        if let Some((data, _)) = top_private {
+            l.sfnt.table(out.len().saturating_add(data.len()))?;
+            out.extend(data);
         }
         l.sfnt.table(out.len())?;
         Ok(out)

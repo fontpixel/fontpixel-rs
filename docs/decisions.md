@@ -710,3 +710,41 @@ Keep W2.7 collection and general raster-reader registration separate.
 **Reason:** A small correct subset must remain shape-equivalent and must not
 silently corrupt an opaque glyph-indexed table. Explicit errors preserve the
 source when a broader codec is required.
+
+## 2026-10-03 — Subsets preserve raw TrueType/CFF hinting semantics
+
+**Question:** Re-encoding geometry is visually equivalent unhinted, but an
+originally padded glyph bounding box can influence TrueType phantom points and
+hint execution. CFF re-vectorization would also discard hints and subroutines.
+**Choice:** Validate TrueType glyphs using the existing bounded reader, retain
+selected original glyph records byte-for-byte, and patch only composite child
+IDs. Retain conservative original maxp maxima and global bounds; rebuild loca.
+Rebuild CFF offsets/selection while retaining raw programs, all subroutines,
+private hints, widths, matrices, SIDs/CIDs and strings. Keep unsupported encodings
+explicit rather than dropping them. Compare hinted external fixtures as well as
+native unhinted regional fonts.
+**Reason:** Subsetting changes coverage and IDs; it should not silently alter a
+retained glyph's hinting program, original box, component flags or subroutine
+semantics. Unused CFF subroutines/strings can remain, trading some size for fidelity.
+
+## 2026-10-03 — Relocate even unused CID Top DICT Private blocks
+
+**Question:** A valid FontTools CID font can retain a Top DICT Private entry in
+addition to FD-specific Private dictionaries. Internal outline execution ignores
+that top-level block, while OTS still validates its offsets.
+**Choice:** Preserve and relocate that optional block and its local-subroutine
+INDEX as well. A fresh external CID fixture exposed the stale-offset bug; its
+source passes OTS, so rejecting or weakening the oracle was not appropriate.
+**Reason:** A preserved dictionary containing a stale absolute offset is not
+preserved valid data. Hint/outline equivalence alone did not detect this failure.
+
+## 2026-10-03 — Canonicalize missing DFLT default language systems
+
+**Question:** The external FontTools/Tong FEA compiler can produce a DFLT script
+with language-specific features but a NULL DefaultLangSys. HarfBuzz shapes it,
+while OTS rejects it under the OpenType DFLT requirement.
+**Choice:** GSUB output adds an empty default language system for DFLT when it is
+missing. Subsetting reports this as a repair, preserving every explicit language
+and its feature selection. Existing native output already has that empty default.
+**Reason:** This does not introduce default substitutions or change the measured
+language fallback behavior; it produces conforming output from that tolerant input.

@@ -327,3 +327,115 @@ fn vertical_metrics_survive_variant_export_and_subset() {
     let f = sfnt::Sfnt::parse(&sub.bytes, &l).unwrap();
     assert!(f.table(*b"vmtx").is_some());
 }
+
+#[test]
+fn subset_preserves_explicit_truetype_bbox_bytes() {
+    let e = variants::encode(&Variants::new(face("##\n.#", 4)), &Default::default()).unwrap();
+    let l = sfnt::Limits::default();
+    let f = sfnt::Sfnt::parse(&e.bytes, &l).unwrap();
+    let mut data = f.table(*b"glyf").unwrap().to_vec();
+    let loca = f.table(*b"loca").unwrap();
+    let start = usize::from(u16::from_be_bytes([loca[2], loca[3]])) * 2;
+    data[start + 2..start + 4].copy_from_slice(&(-17i16).to_be_bytes());
+    let mut b = sfnt::SfntBuilder::new(f.flavor());
+    for t in f.tables() {
+        b.insert(
+            t.tag,
+            if t.tag == *b"glyf" {
+                data.clone()
+            } else {
+                t.data.to_vec()
+            },
+        )
+        .unwrap();
+    }
+    let source = b.build(&l).unwrap();
+    let sub = sfnt::subset::subset(&source, &sfnt::subset::Options::text("A")).unwrap();
+    let font = sfnt::Sfnt::parse(&sub.bytes, &l).unwrap();
+    assert_eq!(font.table(*b"glyf").unwrap(), data);
+}
+
+#[test]
+fn subset_prunes_scaling_for_removed_sparse_strikes() {
+    use sfnt::bitmap as sbit;
+    let mut f = face("#", 4);
+    let mut glyph = f
+        .glyph_for_codepoint(Codepoint::Unicode(65))
+        .unwrap()
+        .clone();
+    glyph.codepoints = vec![Codepoint::Unicode(66)];
+    f.add_glyph(glyph).unwrap();
+    let e = variants::encode(
+        &Variants::new(f),
+        &Options {
+            embed_bitmaps: true,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let l = sfnt::Limits::default();
+    let f = sfnt::Sfnt::parse(&e.bytes, &l).unwrap();
+    let mut strikes = sbit::decode(
+        f.table(*b"EBLC").unwrap(),
+        f.table(*b"EBDT").unwrap(),
+        sbit::Kind::OpenType,
+        3,
+        &Default::default(),
+    )
+    .unwrap();
+    let mut second = strikes[0].clone();
+    second.ppem_x = 28;
+    second.ppem_y = 28;
+    second.glyphs.retain(|&id, _| id == 2);
+    strikes[0].glyphs.retain(|&id, _| id != 2);
+    strikes.push(second);
+    let bitmap = sbit::encode(&strikes, sbit::Kind::OpenType, 3, &Default::default()).unwrap();
+    let scale = sbit::Scale {
+        horizontal: Default::default(),
+        vertical: Default::default(),
+        target: [56, 56],
+        source: [28, 28],
+    };
+    let mut b = sfnt::SfntBuilder::new(f.flavor());
+    for t in f.tables() {
+        if ![*b"EBDT", *b"EBLC"].contains(&t.tag) {
+            b.insert(t.tag, t.data.to_vec()).unwrap();
+        }
+    }
+    b.insert(*b"EBDT", bitmap.data).unwrap();
+    b.insert(*b"EBLC", bitmap.location).unwrap();
+    b.insert(
+        *b"EBSC",
+        sbit::encode_scaling(&[scale], &Default::default()).unwrap(),
+    )
+    .unwrap();
+    let source = b.build(&l).unwrap();
+    let s = sfnt::subset::subset(&source, &sfnt::subset::Options::text("A")).unwrap();
+    let f = sfnt::Sfnt::parse(&s.bytes, &l).unwrap();
+    assert!(f.table(*b"EBSC").is_none());
+    let strikes = sbit::decode(
+        f.table(*b"EBLC").unwrap(),
+        f.table(*b"EBDT").unwrap(),
+        sbit::Kind::OpenType,
+        2,
+        &Default::default(),
+    )
+    .unwrap();
+    assert_eq!(strikes.len(), 1);
+}
+
+#[test]
+fn writer_repairs_missing_dflt_default_without_changing_language_routing() {
+    let mut g = sample().plan(&Default::default()).unwrap().gsub;
+    g.scripts.get_mut(b"DFLT").unwrap().default = None;
+    let b = g.encode(5, &Default::default()).unwrap();
+    let result = Gsub::decode(&b, 5, &Default::default()).unwrap();
+    assert_eq!(
+        result.scripts[b"DFLT"].default,
+        Some(LanguageSystem::default())
+    );
+    assert_eq!(
+        result.scripts[b"DFLT"].languages,
+        g.scripts[b"DFLT"].languages
+    );
+}

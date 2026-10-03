@@ -34,6 +34,22 @@ def main():
   source=a.full_work/('full-square-'+kind+'-reference.'+kind)
   cmap=sorted(TTFont(source).getBestCmap());cps=sorted(set(cmap[::2000])|{65,0x201c,0x201d,0x2026})
   results.append(compare_subset(a.binary,source,a.work,'external-GSUB-'+kind,cps))
+ # Retain nonminimal TrueType glyph bboxes and instruction bytes exactly.
+ from fontTools.ttLib.tables.ttProgram import Program
+ source=a.work/'hinted-box.ttf';invoke(a.binary,'variants','--base',tiny,'-o',source)
+ font=TTFont(source,recalcTimestamp=False);name=font.getBestCmap()[66]
+ glyph=font['glyf'][name];glyph.program=Program();glyph.program.fromBytecode([0x00]);font.save(source)
+ font=TTFont(source,recalcTimestamp=False,recalcBBoxes=False);glyph=font['glyf'][name];glyph.xMin-=17;glyph.xMax+=13;font.save(source)
+ dest=a.work/'hinted-box-subset.ttf';invoke(a.binary,'subset',source,'--text','B','-o',dest)
+ one,two=TTFont(source),TTFont(dest);ga=one['glyf'][one.getBestCmap()[66]];gb=two['glyf'][two.getBestCmap()[66]]
+ assert (ga.xMin,ga.xMax,ga.yMin,ga.yMax)==(gb.xMin,gb.xMax,gb.yMin,gb.yMax)
+ assert ga.program.getBytecode()==gb.program.getBytecode()
+ fa,fb=freetype.Face(str(source)),freetype.Face(str(dest))
+ for ppem in [9,14,19]:
+  for face in [fa,fb]:face.set_pixel_sizes(0,ppem);face.load_char('B',freetype.FT_LOAD_RENDER|freetype.FT_LOAD_TARGET_MONO)
+  assert (fa.glyph.bitmap.width,fa.glyph.bitmap.rows,bytes(fa.glyph.bitmap.buffer),fa.glyph.advance.x)==(fb.glyph.bitmap.width,fb.glyph.bitmap.rows,bytes(fb.glyph.bitmap.buffer),fb.glyph.advance.x)
+ status=ots.sanitize(str(dest),str(dest)+'.ots',capture_output=True);assert status.returncode==0,status.stderr
+ results.append({'case':'TrueType-original-bboxes-and-bytecode','hinted_FreeType_and_OTS':'pass'})
  # Embed the same source strike and remap it together with outline IDs.
  native=a.work/'embedded.ttf';invoke(a.binary,'variants','--base',tiny,'--embed-bitmaps','--shape','dot','-o',native)
  sub=a.work/'embedded-subset.ttf';invoke(a.binary,'subset',native,'--unicodes','U+0042','-o',sub)

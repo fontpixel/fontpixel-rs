@@ -66,3 +66,9 @@ Subsets retain sfnt outline flavor; output containers can be sfnt/WOFF/WOFF2.
 TTF-to-CFF conversion is generation, not subsetting. CLI rejects a misleading
 TTF/OTF extension instead of silently changing the source format. WOFF auxiliary
 blocks survive web-to-web subsets; removing them for sfnt is reported.
+
+TrueType subsets retain raw simple-glyph records and patch only the two-byte
+child IDs in validated composite records. Stored bounding boxes, component flags,
+instructions and original point encoding remain exact. Existing global bounds
+and maxp maxima remain safe conservative upper bounds. This is important for
+hinted fonts, whose phantom-point behavior can depend on stored glyph boxes.

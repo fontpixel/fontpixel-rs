@@ -1,6 +1,6 @@
 //! Compact Unicode subsets with GSUB/composite closure and explicit table safety.
 use super::{
-    glyf::{GlyfTable, Glyph, LocaFormat},
+    glyf::{GlyfTable, Glyph},
     gsub::{Gsub, LayoutLimits},
     metrics::{self, Axis},
     *,
@@ -81,11 +81,11 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     let rewritten = [
         *b"head", *b"maxp", *b"cmap", *b"hhea", *b"hmtx", *b"vhea", *b"vmtx", *b"glyf", *b"loca",
         *b"CFF ", *b"GSUB", *b"post", *b"OS/2", *b"EBDT", *b"EBLC", *b"bdat", *b"bloc", *b"VORG",
-        *b"LTSH", *b"hdmx",
+        *b"LTSH", *b"hdmx", *b"EBSC",
     ];
     // These tables have no glyph-indexed payload. Preserve every byte.
     let globals = [
-        *b"name", *b"gasp", *b"cvt ", *b"fpgm", *b"prep", *b"VDMX", *b"PCLT", *b"EBSC", *b"meta",
+        *b"name", *b"gasp", *b"cvt ", *b"fpgm", *b"prep", *b"VDMX", *b"PCLT", *b"meta",
     ];
     for t in f.tables() {
         if t.tag == *b"DSIG" {
@@ -135,6 +135,13 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
             .map(|b| Gsub::decode(b, count, &o.limits))
             .transpose()?
     };
+    if gsub
+        .as_ref()
+        .and_then(|g| g.scripts.get(b"DFLT"))
+        .is_some_and(|s| s.default.is_none())
+    {
+        report.push(ReportEntry{level:Level::Warning,impact:Impact::Repair,code:"subset.dflt_langsys_repaired".into(),location:Default::default(),message:"Added the required empty DFLT default language system; explicit language routing is unchanged".into()});
+    }
     let mut keep = cmap.values().copied().collect::<BTreeSet<_>>();
     keep.insert(0);
     if let Some(g) = &gsub {
@@ -144,7 +151,7 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         sfnt: l.clone(),
         ..Default::default()
     };
-    let mut glyf = if f.table(*b"glyf").is_some() {
+    let glyf = if f.table(*b"glyf").is_some() {
         Some(GlyfTable::from_sfnt(&f, &gl)?)
     } else {
         None
@@ -172,37 +179,13 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     bytes(&head, 0, 54)?;
     let mut maxp = get(&f, *b"maxp")?.to_vec();
     maxp[4..6].copy_from_slice(&n.to_be_bytes());
-    if let Some(table) = &mut glyf {
-        table.glyphs = keep
-            .iter()
-            .map(|&id| table.glyphs[usize::from(id)].clone())
-            .collect();
-        for g in &mut table.glyphs {
-            if let Glyph::Composite(g) = g {
-                for c in &mut g.components {
-                    c.glyph_id = mapping[&c.glyph_id];
-                }
-            }
-        }
-        let e = table.encode(LocaFormat::Auto, &gl)?;
-        head[50..52].copy_from_slice(&e.index_to_loc_format.to_be_bytes());
-        for (i, b) in e.bounds.iter().enumerate() {
-            head[36 + 2 * i..38 + 2 * i].copy_from_slice(&b.to_be_bytes());
-        }
-        bytes(&maxp, 0, 32)?;
-        for (at, v) in [
-            (6, e.statistics.max_points),
-            (8, e.statistics.max_contours),
-            (10, e.statistics.max_composite_points),
-            (12, e.statistics.max_composite_contours),
-            (26, e.statistics.max_size_of_instructions),
-            (28, e.statistics.max_component_elements),
-            (30, e.statistics.max_component_depth),
-        ] {
-            maxp[at..at + 2].copy_from_slice(&v.to_be_bytes());
-        }
-        replacements.insert(*b"glyf", e.glyf);
-        replacements.insert(*b"loca", e.loca);
+    if let Some(table) = &glyf {
+        let (data, locations, format) = subset_glyf(&f, table, &keep, &mapping, l)?;
+        head[50..52].copy_from_slice(&format.to_be_bytes());
+        // Keep conservative original maxp maxima and the original global bbox.
+        // Hint programs may use stored glyph bboxes through phantom points.
+        replacements.insert(*b"glyf", data);
+        replacements.insert(*b"loca", locations);
     } else if f.table(*b"CFF ").is_some() {
         #[cfg(feature = "cff")]
         {
@@ -262,6 +245,7 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         sfnt: l.clone(),
         ..Default::default()
     };
+    let mut retained_ppems = BTreeSet::new();
     for kind in [bitmap::Kind::OpenType, bitmap::Kind::Apple] {
         let (dt, lt) = kind.tags();
         if f.table(dt).is_some() || f.table(lt).is_some() {
@@ -273,11 +257,21 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
                     .collect();
             }
             strikes.retain(|s| !s.glyphs.is_empty());
+            retained_ppems.extend(strikes.iter().map(|s| [s.ppem_x, s.ppem_y]));
             if !strikes.is_empty() {
                 let e = bitmap::encode(&strikes, kind, n, &bl)?;
                 replacements.insert(dt, e.data);
                 replacements.insert(lt, e.location);
             }
+        }
+    }
+    if let Some(data) = f.table(*b"EBSC") {
+        let scales = bitmap::decode_scaling(data, &bl)?
+            .into_iter()
+            .filter(|s| retained_ppems.contains(&s.source))
+            .collect::<Vec<_>>();
+        if !scales.is_empty() {
+            replacements.insert(*b"EBSC", bitmap::encode_scaling(&scales, &bl)?);
         }
     }
     if let Some(v) = f.table(*b"VORG") {
@@ -369,4 +363,73 @@ fn hdmx(data: &[u8], count: u16, keep: &BTreeSet<u16>, l: &Limits) -> Result<Vec
         dst[1] = *dst[2..2 + keep.len()].iter().max().unwrap_or(&0);
     }
     Ok(out)
+}
+
+fn subset_glyf(
+    f: &Sfnt<'_>,
+    parsed: &GlyfTable,
+    keep: &BTreeSet<u16>,
+    mapping: &BTreeMap<u16, u16>,
+    l: &Limits,
+) -> Result<(Vec<u8>, Vec<u8>, i16)> {
+    let loca = get(f, *b"loca")?;
+    let glyf = get(f, *b"glyf")?;
+    let original_format = u16_at(get(f, *b"head")?, 50)?;
+    let offset = |gid: usize| -> Result<usize> {
+        match original_format {
+            0 => Ok(usize::from(u16_at(loca, 2 * gid)?) * 2),
+            1 => Ok(u32_at(loca, 4 * gid)? as usize),
+            _ => Err(invalid("invalid loca format")),
+        }
+    };
+    let mut out = Vec::new();
+    let mut offsets = Vec::with_capacity(keep.len() + 1);
+    for &gid in keep {
+        offsets.push(out.len());
+        let start = offset(usize::from(gid))?;
+        let end = offset(usize::from(gid) + 1)?;
+        let size = end
+            .checked_sub(start)
+            .ok_or_else(|| invalid("decreasing loca"))?;
+        l.table(out.len().saturating_add(size).saturating_add(1))?;
+        let mut record = bytes(glyf, start, size)?.to_vec();
+        if let Glyph::Composite(g) = &parsed.glyphs[usize::from(gid)] {
+            let mut at = 10;
+            // The existing bounded glyf reader already validated all flags,
+            // arguments, programs, graph edges and compound expansion budgets.
+            for component in &g.components {
+                let flags = u16_at(&record, at)?;
+                if u16_at(&record, at + 2)? != component.glyph_id {
+                    return Err(invalid("composite preflight mismatch"));
+                }
+                record[at + 2..at + 4].copy_from_slice(&mapping[&component.glyph_id].to_be_bytes());
+                at += 4 + if flags & 1 != 0 { 4 } else { 2 };
+                at += if flags & 8 != 0 {
+                    2
+                } else if flags & 64 != 0 {
+                    4
+                } else if flags & 128 != 0 {
+                    8
+                } else {
+                    0
+                };
+            }
+        }
+        out.extend(record);
+        if !out.len().is_multiple_of(2) {
+            out.push(0);
+        }
+    }
+    offsets.push(out.len());
+    let short = out.len() / 2 <= usize::from(u16::MAX);
+    let mut locations = Vec::new();
+    for offset in offsets {
+        if short {
+            p16(&mut locations, to16(offset / 2)?);
+        } else {
+            p32(&mut locations, to32(offset)?);
+        }
+    }
+    l.table(locations.len())?;
+    Ok((out, locations, i16::from(!short)))
 }
