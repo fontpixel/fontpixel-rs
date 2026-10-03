@@ -25,6 +25,11 @@ pub struct Limits {
     pub max_total_instructions: usize,
     /// Maximum uncompressed metadata and private-data bytes each.
     pub max_auxiliary_bytes: usize,
+    /// Maximum fonts queued by a multi-font compression call.
+    pub max_batch_fonts: usize,
+    /// Maximum aggregate input bytes and, separately, retained output bytes for
+    /// one multi-font call. Per-font working memory still scales with workers.
+    pub max_batch_bytes: usize,
 }
 impl Default for Limits {
     fn default() -> Self {
@@ -35,6 +40,8 @@ impl Default for Limits {
             max_total_components: 4 * 1024 * 1024,
             max_total_instructions: 16 * 1024 * 1024,
             max_auxiliary_bytes: 16 * 1024 * 1024,
+            max_batch_fonts: 1024,
+            max_batch_bytes: 256 * 1024 * 1024,
         }
     }
 }

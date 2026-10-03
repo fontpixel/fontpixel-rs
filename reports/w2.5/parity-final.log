@@ -1,10 +1,10 @@
-[parity] sources: {"python": {"head": "", "src_dirty": false, "src_sha256": "938d9ed560ef29ba"}, "rust": {"head": "fda181f", "src_dirty": false, "src_sha256": "7901c704e5a5de4a"}}
-[parity] Rust runner: /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/release/fontpixel-parity; jobs: 8; out: /tmp/fontpixel-woff-parity-final
-[tables] 67 charset tables compared, 0 differ (SPEC-v3 §11.1: tables must be exact, see README.md) (14.1s) -> /tmp/fontpixel-woff-parity-final/tables_report.txt
-[random] 2000 cases, 35941 ops, 0 divergence(s), 0 NEW (11.3s wall; slowest shard py 10.3s / js 3.6s)
-[random_all] 1000 cases, 17588 ops, 6 divergence(s), 0 NEW (8.3s wall; slowest shard py 7.8s / js 1.6s)
+[parity] sources: {"python": {"head": "", "src_dirty": false, "src_sha256": "938d9ed560ef29ba"}, "rust": {"head": "be7c929", "src_dirty": true, "src_sha256": "9048d43809ee0e9b"}}
+[parity] Rust runner: /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/release/fontpixel-parity; jobs: 8; out: /tmp/fontpixel-woff-parity-batch-final
+[tables] 67 charset tables compared, 0 differ (SPEC-v3 §11.1: tables must be exact, see README.md) (10.8s) -> /tmp/fontpixel-woff-parity-batch-final/tables_report.txt
+[random] 2000 cases, 35941 ops, 0 divergence(s), 0 NEW (10.9s wall; slowest shard py 10.1s / js 3.2s)
+[random_all] 1000 cases, 17588 ops, 6 divergence(s), 0 NEW (5.2s wall; slowest shard py 4.8s / js 1.5s)
           6  K12-ragged-bitmap
-[probes] 41 cases, 89 ops, 1 divergence(s), 0 NEW (0.4s wall; slowest shard py 0.2s / js 0.0s)
+[probes] 41 cases, 89 ops, 1 divergence(s), 0 NEW (0.3s wall; slowest shard py 0.1s / js 0.0s)
           1  K12-ragged-bitmap
       ok  R01-empty-draw                 agrees
       ok  R02-stale-writeback            agrees
@@ -47,5 +47,5 @@
       ok  S10-new-codepages              agrees
       ok  S11-pcf-without-fbb            agrees
       ok  S12-bom-in-names               agrees
-[corpus] 251 cases, 5221 ops, 0 divergence(s), 0 NEW (68.2s wall; slowest shard py 67.9s / js 23.4s)
-[parity] done in 105.7s: 0 NEW divergence(s). Reports: /tmp/fontpixel-woff-parity-final/*_report.txt
+[corpus] 251 cases, 5221 ops, 0 divergence(s), 0 NEW (61.8s wall; slowest shard py 61.5s / js 23.9s)
+[parity] done in 92.1s: 0 NEW divergence(s). Reports: /tmp/fontpixel-woff-parity-batch-final/*_report.txt

@@ -310,3 +310,32 @@ fn normalized_short_loca_upgrades_without_losing_glyphs() {
         table
     );
 }
+
+#[test]
+fn batch_budgets_and_distinct_input_order() {
+    let a = replace(FONT, *b"ZZZZ", vec![1; 100]);
+    let b = replace(FONT, *b"ZZZZ", vec![2; 300]);
+    let l = Limits::default();
+    let o = options();
+    let expected = vec![
+        woff2::encode(&a, &o, &l).unwrap(),
+        woff2::encode(&b, &o, &l).unwrap(),
+    ];
+    assert_eq!(woff2::encode_many(&[&a, &b], &o, &l, 2).unwrap(), expected);
+    let mut low = l.clone();
+    low.max_batch_fonts = 1;
+    assert!(woff2::encode_many(&[&a, &b], &o, &low, 2).is_err());
+    low = l.clone();
+    low.max_batch_bytes = a.len() - 1;
+    assert!(woff2::encode_many(&[&a], &o, &low, 1).is_err());
+    low.max_batch_bytes = a.len() * 2;
+    let aux = woff2::Options {
+        auxiliary: Auxiliary {
+            private_data: Some(vec![7; a.len() * 2]),
+            ..Default::default()
+        },
+        ..o
+    };
+    let error = woff2::encode_many(&[&a], &aux, &low, 1).unwrap_err();
+    assert!(error.to_string().contains("WOFF2 batch output bytes"));
+}

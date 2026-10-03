@@ -454,32 +454,64 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
 }
 /// Encode several independent fonts with bounded worker count, retaining input
 /// order. Jobs must be 1..=64; the product with compression_threads must be <=64.
-/// Limits apply per font; callers choose job count for their aggregate memory
-/// budget. An error returns no partially successful output to the caller.
+/// Per-font limits and aggregate batch input/output/count budgets all apply.
+/// Callers choose worker count for concurrent compressor working memory.
+/// An error returns no partially successful output to the caller.
 pub fn encode_many(inputs: &[&[u8]], o: &Options, l: &Limits, jobs: usize) -> Result<Vec<Encoded>> {
     check_options(o, l)?;
     if !(1..=64).contains(&jobs) || jobs.saturating_mul(o.compression_threads) > 64 {
         return Err(invalid("parallel worker product must be 1..=64"));
     }
+    bounded(inputs.len(), l.max_batch_fonts, "WOFF2 batch fonts")?;
+    let input_bytes = inputs.iter().try_fold(0usize, |n, b| {
+        n.checked_add(b.len())
+            .ok_or_else(|| invalid("batch byte count overflow"))
+    })?;
+    bounded(input_bytes, l.max_batch_bytes, "WOFF2 batch input bytes")?;
     if inputs.is_empty() {
         return Ok(Vec::new());
     }
     let next = std::sync::atomic::AtomicUsize::new(0);
+    let output_bytes = std::sync::atomic::AtomicUsize::new(0);
+    let stop = std::sync::atomic::AtomicBool::new(false);
     let slots = std::sync::Mutex::new((0..inputs.len()).map(|_| None).collect::<Vec<_>>());
     std::thread::scope(|scope| -> Result<()> {
         let mut handles = Vec::new();
         for _ in 0..jobs.min(inputs.len()) {
             let next = &next;
             let slots = &slots;
+            let output_bytes = &output_bytes;
+            let stop = &stop;
             handles.push(
                 std::thread::Builder::new()
                     .spawn_scoped(scope, move || -> Result<()> {
                         loop {
+                            if stop.load(std::sync::atomic::Ordering::Relaxed) {
+                                break;
+                            }
                             let i = next.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                             if i >= inputs.len() {
                                 break;
                             }
-                            let value = encode(inputs[i], o, l);
+                            let value = encode(inputs[i], o, l).and_then(|encoded| {
+                                output_bytes
+                                    .try_update(
+                                        std::sync::atomic::Ordering::Relaxed,
+                                        std::sync::atomic::Ordering::Relaxed,
+                                        |n| {
+                                            n.checked_add(encoded.bytes.len())
+                                                .filter(|n| *n <= l.max_batch_bytes)
+                                        },
+                                    )
+                                    .map_err(|_| Error::ResourceLimit {
+                                        resource: "WOFF2 batch output bytes",
+                                        limit: l.max_batch_bytes,
+                                    })?;
+                                Ok(encoded)
+                            });
+                            if value.is_err() {
+                                stop.store(true, std::sync::atomic::Ordering::Relaxed);
+                            }
                             slots
                                 .lock()
                                 .map_err(|_| invalid("worker result lock poisoned"))?[i] =

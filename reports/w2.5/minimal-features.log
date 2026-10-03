@@ -1,8 +1,4 @@
-    Checking serde v1.0.229
     Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/crates/fontpixel)
-    Checking ciborium v0.2.2
-    Checking tinytemplate v1.2.1
-    Checking criterion v0.8.2
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.16s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.06s
     Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.5/crates/fontpixel)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.16s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.02s

@@ -651,3 +651,14 @@ measure Latin-dot same-input three-way medians separately from full-SC native/C+
 **Reason:** Remove only an oracle transport-copy bottleneck, without modifying
 installed/reference code, weakening correctness checks, presenting an adapted
 oracle as stock, or mixing unlike workloads in speedup ratios.
+
+## 2026-10-03 — Bound retained multi-font results as well as worker count
+
+**Question:** Per-font and worker limits alone do not bound a caller's very long
+input list or the accumulated output/auxiliary blocks of a batch.
+**Choice:** Add configurable batch font-count and aggregate input/output budgets
+(default 1024 fonts and 256 MiB each for input and retained output). Check before
+queue allocation; stop admitting new jobs on error, join in-flight jobs, and
+return no partial output. Preserve deterministic input order for successful jobs.
+**Reason:** A valid small-font array should not bypass resource accounting by
+repetition. These guards do not change serialized bytes or any reader path.

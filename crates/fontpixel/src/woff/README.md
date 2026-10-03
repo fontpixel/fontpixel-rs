@@ -8,7 +8,8 @@
 - `woff2::encode_many` preserves order and bounds concurrent font jobs. The
   per-font `compression_threads` option separately enables legal intra-font
   Brotli stream parallelism. The product is capped at 64. Byte/work limits are
-  per font; callers must choose a worker count that fits aggregate memory.
+  per font, with separate batch input/output/count limits; callers choose a
+  worker count that fits concurrent compressor working memory.
 - Read/write diagnostics are explicit. WOFF2 removes invalidated DSIG signatures
   and reports loss. A strict caller should reject `report.has_loss()` before
   persisting output.
