@@ -1,0 +1,4 @@
+92c8afb9c7102f16853b2660caf8fa58a5155032a79bc7aba5ed2911609234e6  crates/fontpixel/src/sfnt/gsub.rs
+03b7370829f3d2d7dfc24219ccfea2861c21cc65875a1052afe3dd9efa60e6db  crates/fontpixel/src/sfnt/subset.rs
+3c1b57594f93d65a2fc73cd27f4e4cb63158e8902c70fb9642555db4913222b8  crates/fontpixel/src/sfnt/cff/subset.rs
+9e78ea4def51fe4b817668c8d1d45d6675c174661676172d6cc4e174bd60e4a9  crates/fontpixel/src/sfnt/cff/read.rs

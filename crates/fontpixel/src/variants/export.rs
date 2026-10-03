@@ -547,7 +547,7 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
                 .round() as i64,
         )?
     };
-    os.extension.as_mut().unwrap().max_context = 1;
+    os.extension.as_mut().unwrap().max_context = u16::from(!plan.gsub.features.is_empty());
     os.set_unicode_coverage(&cps)?;
     let mut pages = vec![1252, 1250, 1251, 1253, 1254, 1255, 1256, 1257, 1258, 874];
     if cfg!(feature = "cjk-charsets") {

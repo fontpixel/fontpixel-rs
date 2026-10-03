@@ -748,3 +748,15 @@ missing. Subsetting reports this as a repair, preserving every explicit language
 and its feature selection. Existing native output already has that empty default.
 **Reason:** This does not introduce default substitutions or change the measured
 language fallback behavior; it produces conforming output from that tolerant input.
+
+## 2026-10-03 — Empty layout has zero maximum context
+
+**Question:** Additional all-glyph tests for every supplied Latin-only BDF found
+`usMaxContext=1` even when no substitutions were generated, versus zero from the
+reference. All regional fonts correctly require one input glyph of context.
+**Choice:** Set the value from the actual presence of layout features. Add a
+focused metadata regression and all three supplied Latin font matrices. Rebuild
+and byte-compare all four full regional outputs against their completed external
+oracle results; the regional bytes must remain exact. Reader sources are unchanged.
+**Reason:** Make native metadata precise in the no-alternative case without
+weakening the external assertion or relabeling older full-font evidence.

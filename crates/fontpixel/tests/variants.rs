@@ -439,3 +439,14 @@ fn writer_repairs_missing_dflt_default_without_changing_language_routing() {
         g.scripts[b"DFLT"].languages
     );
 }
+
+#[test]
+fn maximum_context_matches_actual_layout_presence() {
+    for (v, context) in [(Variants::new(face("#", 4)), 0), (sample(), 1)] {
+        let e = variants::encode(&v, &Default::default()).unwrap();
+        let f = sfnt::Sfnt::parse(&e.bytes, &Default::default()).unwrap();
+        let os =
+            sfnt::os2::Os2Table::decode(f.table(*b"OS/2").unwrap(), &Default::default()).unwrap();
+        assert_eq!(os.extension.unwrap().max_context, context);
+    }
+}
