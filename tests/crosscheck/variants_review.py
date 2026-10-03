@@ -137,9 +137,18 @@ def main():
     result = ots.sanitize(str(destination), str(destination) + ".ots", capture_output=True)
     assert result.returncode == 0, result.stderr
     Path(str(destination) + ".ots").unlink()
+    macao = args.work / "macao.ttf"
+    invoke(args.binary, "variants", "--base", args.work / "base.bdf", "--lang",
+           f"zh-MO={args.work / 'ja.bdf'}", "-o", macao)
+    font = TTFont(macao)
+    hani = next(s.Script for s in font["GSUB"].table.ScriptList.ScriptRecord if s.ScriptTag == "hani")
+    assert [r.LangSysTag for r in hani.LangSysRecord] == ["ZHTM"]
+    assert shape(macao.read_bytes(), "zh-MO", "hani", "ltr")[1] == 600
+    assert shape(macao.read_bytes(), "zh-HK", "hani", "ltr")[1] == 400
     args.output.write_text(json.dumps({"partial": False, "cases": cases,
-                                     "paired_metric_drops_and_atomic_failure": "pass"}, indent=2) + "\n")
-    print("REVIEW PASS: four outline cases, twelve subsets, paired-drop validation")
+                                     "paired_metric_drops_and_atomic_failure": "pass",
+                                     "macao_language_tag_and_HarfBuzz_routing": "pass"}, indent=2) + "\n")
+    print("REVIEW PASS: four outline cases, twelve subsets, paired-drop and Macao routing validation")
 
 
 if __name__ == "__main__":
