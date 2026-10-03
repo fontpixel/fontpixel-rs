@@ -32,3 +32,13 @@ ordering/budget test passes. scripts/check.sh, full parity, minimal-feature
 Clippy and strict rustdoc were rerun successfully after this change. Reader
 algorithms and serialized font bytes are unchanged. All timing samples are
 being rerun with this final binary; earlier observations are kept separately.
+
+## Runtime interruption at 08:40 UTC
+
+The executor temporarily disconnected and its existing benchmark session could
+not be resumed (unknown session ID). Files and HEAD are preserved. Eighteen
+complete five-sample benchmark groups are retained verbatim in
+`reports/w2.5/benchmark-pre-restart.json`; the in-progress C++ full-SC-dot q11
+measurement has no complete result and is not counted. Ten planned groups remain.
+Recovery uses a separate result path to avoid uncertain producer writeback and
+records the post-restart environment as a new measurement segment.
