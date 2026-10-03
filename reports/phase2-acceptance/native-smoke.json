@@ -1,0 +1,398 @@
+{
+  "partial": false,
+  "started_utc": "2026-10-03T18:14:49.209218+00:00",
+  "binary_sha256": "3029e2a000c9a098ef0c1872dbb9f7a250dd054a073605545bd19c04d093c1fb",
+  "machine": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpus": 9,
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "memory": "MemTotal:       10206504 kB"
+  },
+  "scope": "20 BDF copies + 20 PCF + 20 OTB + 8 TTF + 8 OTF + 8 WOFF2; full CLI parsing/variant planning/encoding/I/O; frozen BDF inputs; external bounded process pool pending phase-6 batch command",
+  "input_hashes": {
+    "TongPixelSans14Large-JP.bdf": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a",
+    "TongPixelSans14Large-KR.bdf": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2",
+    "TongPixelSans14Large-Latin.bdf": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46",
+    "TongPixelSans14Large-SC.bdf": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42",
+    "TongPixelSans14Large-TC.bdf": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17",
+    "TongPixelSans14Small-JP.bdf": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333",
+    "TongPixelSans14Small-KR.bdf": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae",
+    "TongPixelSans14Small-Latin.bdf": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+    "TongPixelSans14Small-SC.bdf": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee",
+    "TongPixelSans14Small-TC.bdf": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21",
+    "TongPixelSansMono14Large-JP.bdf": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654",
+    "TongPixelSansMono14Large-KR.bdf": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649",
+    "TongPixelSansMono14Large-Latin.bdf": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650",
+    "TongPixelSansMono14Large-SC.bdf": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c",
+    "TongPixelSansMono14Large-TC.bdf": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7",
+    "TongPixelSansMono14Small-JP.bdf": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22",
+    "TongPixelSansMono14Small-KR.bdf": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c",
+    "TongPixelSansMono14Small-Latin.bdf": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1",
+    "TongPixelSansMono14Small-SC.bdf": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972",
+    "TongPixelSansMono14Small-TC.bdf": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+  },
+  "requested_runs": 1,
+  "profiles": [
+    {
+      "label": "quality5",
+      "quality": 5,
+      "compression_threads": 1,
+      "jobs": 8,
+      "runs": [
+        {
+          "wall_seconds": 26.358733383996878,
+          "task_seconds_sum_by_format": {
+            "pcf": 7.644730702988454,
+            "otb": 19.223348227002134,
+            "ttf": 53.49454364698613,
+            "otf": 57.011325045001286,
+            "woff2": 62.51508783000463
+          }
+        }
+      ],
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1947820,
+          "sha256": "e0b722c396fa2e08160f76b43effe737cb1b4eb472c928d09e235c2fb8d07d15"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1947832,
+          "sha256": "da521cdcb716ac7c2b9e5f659a06dafb45fe32f926b2cde1a39673a4e4d2abbc"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 135376,
+          "sha256": "654139b0a77732cdded333021f7272a41ecabad82d0fbeff2ee669c8e6673555"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1948140,
+          "sha256": "e27eeea8ebef9d59b5d7b5377f7e3a6be0c3461158324be75f836afbf011ee0f"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1947844,
+          "sha256": "f3dd1413e2c01271fb2050d21e8505c901992e0c4000bf5d91364f447898414c"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1943148,
+          "sha256": "914d85e6d64c94e5cc35d3d73a7e0a57bd2da636863720965bc0510b5d3b8a32"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1943156,
+          "sha256": "4ec5e4531d3dd23b47e7690a6a800dd288c560d961e1594700cc186b85496fff"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 130748,
+          "sha256": "a7bba298cbe5985ad003ea704f2fcb1e2593b786284af288da8315f4abed2d33"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1943464,
+          "sha256": "c798fccfc1d1e25b171aa4c6a80a0d3b0c3a42a26e8933a142c829afd30b5f59"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1943168,
+          "sha256": "49cbd2c152fd2a332f52b530ebd5da41d50fb0cbe5d5b0f2f8fe25e3d146b7e3"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1942464,
+          "sha256": "ffa84a3eee55e9f7d460b4c4d2b4c1f7b0b3982f4302e5390f65624c0f0bd008"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1942476,
+          "sha256": "67afbe2b93208fb5a7c8f7b7f410353ac3c4d01edbefa0e658d2f578318d9809"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 131464,
+          "sha256": "f54b39f3012cc2b628854a7de1c84baa7ff38897e6fd45dd98ac4fe663ec2dd6"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1942776,
+          "sha256": "49bea0c00eaf61c4e143b9e935d4a9c2e7f51c6d9fdbf3946b8ed768959f72d2"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1942480,
+          "sha256": "f8f5fc4d03cb8e7c73538a35c9aa0392bd3e0918361269ddbee7c6ee6246382a"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1939012,
+          "sha256": "024cd29de0487c1efcce8cd7fedcd9327d036a7968f823d491ae62238b5d1da5"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1939024,
+          "sha256": "091490ab46f89bc22bb8317f8c9086b15cb047ad656a1d6521335db2818ab36d"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 127916,
+          "sha256": "23fd37422f9d34f9820a8d3c2cc21448be074d9b852e371fbe6d7d6b2cbf14b5"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1939324,
+          "sha256": "d6b81dc9587c41a4eda5869c49f9620fa9f00e2a89d42d372f203ef0403341f4"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1939028,
+          "sha256": "e6888ac5a545fac9c357bc2cf08d816987659ef52e657480438be55505c317fa"
+        },
+        "ttf/TongPixelSans14Large-dot.ttf": {
+          "bytes": 22035120,
+          "sha256": "46fe2f723b94c6995a42487f06b7d032e24d412facf6091cb29e4894320cf0fc"
+        },
+        "ttf/TongPixelSans14Large-square.ttf": {
+          "bytes": 9061276,
+          "sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941"
+        },
+        "ttf/TongPixelSans14Small-dot.ttf": {
+          "bytes": 21980028,
+          "sha256": "49b6ed3c9eda1b7a7a003268cee004fed0d511b7126caf3b998e32e10589b953"
+        },
+        "ttf/TongPixelSans14Small-square.ttf": {
+          "bytes": 9048024,
+          "sha256": "51940cc1c71bcb1640e7d312eef330e525ddd2568fa0881a387e76d55277fd2e"
+        },
+        "ttf/TongPixelSansMono14Large-dot.ttf": {
+          "bytes": 21921128,
+          "sha256": "6bffc1d14227fcb78b93f63302b170097e51979cd035ddb48ea68fed56714176"
+        },
+        "ttf/TongPixelSansMono14Large-square.ttf": {
+          "bytes": 9022808,
+          "sha256": "8da885fd3d993d1e6b3aa28f3934713de05ad698c9df073be5c36a9cdb2ca4fb"
+        },
+        "ttf/TongPixelSansMono14Small-dot.ttf": {
+          "bytes": 21887024,
+          "sha256": "14c6666da73cfcb7cfc37a1496f57029b62cdd2109607ca316c6e390a0b4c96b"
+        },
+        "ttf/TongPixelSansMono14Small-square.ttf": {
+          "bytes": 9015916,
+          "sha256": "ba9469005481ab05f72deb8c9b099c204128587592ad3f917edec66c484e7a39"
+        },
+        "otf/TongPixelSans14Large-dot.otf": {
+          "bytes": 13789336,
+          "sha256": "8ca99e31f198e5db3c4ed68349de88af387d1380f02e4cf0a4c8453c931cf26b"
+        },
+        "otf/TongPixelSans14Large-square.otf": {
+          "bytes": 8845524,
+          "sha256": "64df0f18a84a84b0f4e0c08ef42701246e05118c3e211c9a7d6d3c7f2e1c6a2f"
+        },
+        "otf/TongPixelSans14Small-dot.otf": {
+          "bytes": 13713412,
+          "sha256": "98393d99e71724b00c5cb5dc82c450a44e91be8f5bc41b3d4f6a9cd874509b41"
+        },
+        "otf/TongPixelSans14Small-square.otf": {
+          "bytes": 8874388,
+          "sha256": "07932c00d71fa1e14dab8f8a6ea96578f09d81b0c146195a26255a8e929936a3"
+        },
+        "otf/TongPixelSansMono14Large-dot.otf": {
+          "bytes": 13719220,
+          "sha256": "f5801bf94c1c7bf62c16c4b9bc65c9f02add85eaf6102c8c8dc16fad90f1a731"
+        },
+        "otf/TongPixelSansMono14Large-square.otf": {
+          "bytes": 8808780,
+          "sha256": "530aa87c5134b5df34e452d40ea7dc79087a7cb44f16c9c13d033077a8cdf6ba"
+        },
+        "otf/TongPixelSansMono14Small-dot.otf": {
+          "bytes": 13654788,
+          "sha256": "54ff775eaebc9e5c8a9a95008ecd3483ab8ed15f3d652a3ab323fc915f1935c7"
+        },
+        "otf/TongPixelSansMono14Small-square.otf": {
+          "bytes": 8843036,
+          "sha256": "46689f71a545d3c31e571bd43bf9b60d5863a95d1a0d6bcc67fd46b13f4273cb"
+        },
+        "woff2/TongPixelSans14Large-dot.woff2": {
+          "bytes": 1255420,
+          "sha256": "b287631fe302a3d47389e41da6da5269e71f2776bb88c56bb79c52236f8c8a77"
+        },
+        "woff2/TongPixelSans14Large-square.woff2": {
+          "bytes": 1605016,
+          "sha256": "4bc34ec58fdecdce1b82d4f449ee3054d729d9c5d72d95489b682e7813b2be82"
+        },
+        "woff2/TongPixelSans14Small-dot.woff2": {
+          "bytes": 1249716,
+          "sha256": "791aa29498082522308d9012784db96b9e1fefa63870ac3aef1a47394fd22980"
+        },
+        "woff2/TongPixelSans14Small-square.woff2": {
+          "bytes": 1606168,
+          "sha256": "e98c0974a2962b232790bc95cd764ecdbd86171216a3ab26f55644c2fa9c5911"
+        },
+        "woff2/TongPixelSansMono14Large-dot.woff2": {
+          "bytes": 1239216,
+          "sha256": "7f716fe118a281728814167baef0866a1b8c5e0d21e9a682d0660be5b165849d"
+        },
+        "woff2/TongPixelSansMono14Large-square.woff2": {
+          "bytes": 1604984,
+          "sha256": "c4c338a8a0f31fa77e0f44916cdd1124de65384ff5a4aa82324c9510daaa1214"
+        },
+        "woff2/TongPixelSansMono14Small-dot.woff2": {
+          "bytes": 1236956,
+          "sha256": "b025beb0d23d58c46046ab9fbbd50164a8237e19614875a806dc525d4bab3d4c"
+        },
+        "woff2/TongPixelSansMono14Small-square.woff2": {
+          "bytes": 1605712,
+          "sha256": "bfb0396371accddc019a3a3e75ae977e531c2657243130dfb95176c83fda9060"
+        }
+      },
+      "median_seconds": 26.358733383996878,
+      "total_bytes": 399687893,
+      "woff2_bytes": 11403188,
+      "all_outputs_byte_identical": true
+    }
+  ],
+  "binary_unchanged": true
+}

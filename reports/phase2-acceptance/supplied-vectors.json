@@ -1,0 +1,167 @@
+{
+  "binary_sha256": "3029e2a000c9a098ef0c1872dbb9f7a250dd054a073605545bd19c04d093c1fb",
+  "woff_driver_sha256": "29352fe22b51ba6cf993f3f6c7ea005db2a280d87d8ae38dfc4887b8edd07f57",
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "woff2_oracle_readonly_zero_copy": true,
+  "partial": false,
+  "scope": "Complete supplied newer Large regional matrix; two shapes, TTF/OTF, WOFF1/WOFF2; supplementary baseline Python cases are not counted here.",
+  "extracted_from_interrupted_optional_superset": true,
+  "inputs": [
+    {
+      "configuration": "supplied-Large-prop",
+      "files": [
+        {
+          "name": "TongPixelSans14Large-SC.bdf",
+          "sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b"
+        },
+        {
+          "name": "TongPixelSans14Large-TC.bdf",
+          "sha256": "e62c69056c2c2ba76b5e4b4569777f19b80b53f8257bb0429ae9d2dec0d830df"
+        },
+        {
+          "name": "TongPixelSans14Large-JP.bdf",
+          "sha256": "7fd8803b982a56473a0406e5bbf231b72c35ffba8e56bfbb104d65f641c47bfd"
+        },
+        {
+          "name": "TongPixelSans14Large-KR.bdf",
+          "sha256": "2f35f9f1b2731c25ba0da6e5b19d373d39e496db83027e953c16e8052c49f500"
+        },
+        {
+          "name": "TongPixelSans14Large-Latin.bdf",
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "case": "supplied-Large-prop-square-ttf",
+      "glyphs": 45664,
+      "shaping_batches": 912,
+      "bytes": 9345840,
+      "sha256": "46b1b3ddc278e1dcc2ccea9ff13c12958f4fff7fb7cf224462b3704b904634ee",
+      "seconds_including_validation": 39.09339192200423,
+      "fontconfig": "Tong Pixel Sans 14 Large|Square,Regular|"
+    },
+    {
+      "case": "supplied-Large-prop-square-ttf-woff",
+      "glyphs": 45664,
+      "bytes": 2050584,
+      "sha256": "936574507589bdf8bc6363e20866d4347e2d4df3fb5509f719c9773783a7d3a7",
+      "quality": 9,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-square-ttf-woff2",
+      "glyphs": 45664,
+      "bytes": 1525084,
+      "sha256": "b7d301d515cd939c5d3feb87200c7c567a8dc2fcfd95c224e562c625fcf3d6bc",
+      "quality": 5,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-square-otf",
+      "glyphs": 45664,
+      "shaping_batches": 912,
+      "bytes": 9111456,
+      "sha256": "994dee10394a5065ec3d63964d2b051ed59729a0493aa0568e80520a44fbc9e2",
+      "seconds_including_validation": 51.870282242998655,
+      "fontconfig": "Tong Pixel Sans 14 Large|Square,Regular|"
+    },
+    {
+      "case": "supplied-Large-prop-square-otf-woff",
+      "glyphs": 45664,
+      "bytes": 1669760,
+      "sha256": "a6b5665a12c69017bcd4f4ee9d842e39e0039df2af54136466de8d91d01abd2d",
+      "quality": 9,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-square-otf-woff2",
+      "glyphs": 45664,
+      "bytes": 1599000,
+      "sha256": "97dfea5ffbe04be2e1b5e6b8925a0e88cf432a80c285cf71cad2d2593536eeb4",
+      "quality": 5,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-dot-ttf",
+      "glyphs": 45665,
+      "shaping_batches": 912,
+      "bytes": 22648916,
+      "sha256": "1279a855dea006666889b45c7fd359a6934865f74ec7d471a25d525ccf7ef189",
+      "seconds_including_validation": 76.05657326900109,
+      "fontconfig": "Tong Pixel Sans 14 Large|Dot,Regular|"
+    },
+    {
+      "case": "supplied-Large-prop-dot-ttf-woff",
+      "glyphs": 45665,
+      "bytes": 1449088,
+      "sha256": "ddf6e58a6c7f1c0395b9a158bfd58ade38261f272c380419626d0705b7d80677",
+      "quality": 9,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-dot-ttf-woff2",
+      "glyphs": 45665,
+      "bytes": 1235416,
+      "sha256": "82aa15b424df610b7c8700ebee9035ad70b69ab1722d1adc39bd0d98a3f0e3d5",
+      "quality": 5,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-dot-otf",
+      "glyphs": 45664,
+      "shaping_batches": 912,
+      "bytes": 14181372,
+      "sha256": "dda920027214d32b095aee8c917a9ccd0d20325a81e12e35fa1d712bb3ae301d",
+      "seconds_including_validation": 191.61357879199932,
+      "fontconfig": "Tong Pixel Sans 14 Large|Dot,Regular|"
+    },
+    {
+      "case": "supplied-Large-prop-dot-otf-woff",
+      "glyphs": 45664,
+      "bytes": 1477136,
+      "sha256": "73290c8dc61a929a0c1cf82ef1f752e8e2cfac1b3d077963c065036ec6b4dd8a",
+      "quality": 9,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    },
+    {
+      "case": "supplied-Large-prop-dot-otf-woff2",
+      "glyphs": 45664,
+      "bytes": 1551876,
+      "sha256": "50b0333c561e20244fd1b2115d5513b5565f06e43ccfa496767dd61732517912",
+      "quality": 5,
+      "fonttools_all_tables_glyphs": true,
+      "ots_all_pixels": true,
+      "native_read": true,
+      "shaping_batches": 912
+    }
+  ]
+}
