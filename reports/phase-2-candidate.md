@@ -1,3 +1,6 @@
+> Historical candidate handoff. The candidate and review fixes are now integrated;
+> see [phase-2.md](phase-2.md) for the accepted state and final checks.
+
 # Phase 2 acceptance candidate
 
 2026-10-03 UTC. Native complete Tong export now meets the 40-second target with

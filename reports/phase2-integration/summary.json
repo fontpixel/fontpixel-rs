@@ -1,0 +1,17 @@
+{
+  "accepted": true,
+  "integration_commit": "5e31babdfdae6fc17b5a0e15b6253a0aa8abee49",
+  "candidate_commit": "b7995ccb0bb127a84ac7c1b3db4bc0b9dba36470",
+  "review_commit": "7b7ed29c86a75d02d4a429bdb61d9ec4324c3c61",
+  "production_equal_to_review": true,
+  "aggregate_exit": 0,
+  "test_executions": 928,
+  "warning_free_rustdoc_exit": 0,
+  "protected_files_verified": 690,
+  "default_five_run_median_seconds": 38.41377583800204,
+  "peak_rss_gib": 2.8687896728515625,
+  "measured_exporter_sha256": "3426bb4d2357d9983574dd35920fc9bfc7b693648d91673270ce13ceda77c455",
+  "all_84_outputs_match_independently_validated_candidate": true,
+  "expensive_matrices_repeated": false,
+  "phase3_started": false
+}

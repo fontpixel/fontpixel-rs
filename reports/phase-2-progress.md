@@ -1,3 +1,14 @@
+# Phase 2 accepted integration
+
+The candidate and independent review fixes are integrated into main. The current
+acceptance report is [phase-2.md](phase-2.md), with final integrated evidence in
+`phase2-integration/`. The guarded default exporter measured 38.414 s median,
+2.869 GiB peak RSS, and all 84 files match the independently gated output set.
+No Phase 3 work has begun.
+
+The chronological checkpoints below are retained for history and do not override
+the accepted-stage report.
+
 # Phase 2 acceptance candidate progress
 
 2026-10-03 UTC: the unmerged `phase2-acceptance` candidate has completed the

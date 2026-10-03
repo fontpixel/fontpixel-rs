@@ -1,11 +1,20 @@
 # Phase 2 complete Tong export performance
 
-The independently safety-fixed exporter takes a **38.414 s median of five runs**
-at quality 11, meeting PLAN §10's ≤40 s target on this host. Every one of its 84
-artifacts is byte-identical to the full independent oracles. The earlier frozen
-candidate measured 38.233 s; both identities are retained separately below.
-All correctness/review gates pass, but coordinator integration and Phase 2
-acceptance are still pending. No Phase 3 work is included.
+Phase 2 is integrated into main with the independent review fixes. The accepted
+safety-guarded exporter takes a **38.414 s median of five runs** at quality 11,
+with **2.869 GiB peak RSS**. Every one of its 84 artifacts is byte-identical to
+the independently validated candidate output. Its exact source is review commit
+`7b7ed29`, now integrated without production changes.
+
+The accepted samples are 38.414, 36.947, 39.481, 39.317 and 36.554 seconds. See
+`../reports/phase2-review/default-five-run.json` and `output-identity.json`, and
+`../reports/phase-2.md` for the acceptance boundary and integrated checks.
+
+The detailed tables below retain the earlier frozen candidate's measurements
+(38.233 s default, plus explicit q8/q5 profiles) and executable identity. Those
+optional-quality timings were not rerun under the guard. The default guarded
+profile was rerun after the safety changes, with exact output identity verified.
+No Phase 3 work is included.
 
 ## Machine and method
 
@@ -180,3 +189,11 @@ See `../reports/phase2-review/default-five-run.json`, `output-identity.json` and
 `README.md`. The earlier tables retain their pre-review measured identities;
 no unmeasured post-fix timing is assigned to lower-quality or stock-tool rows.
 The fixed branch remains unmerged pending coordinator integration.
+
+## Final acceptance
+
+The reviewed alias guard and checked grid additions are integrated into main.
+`reports/phase2-integration/` records exact production equality to the tested
+review commit and the final integrated aggregate gate. Historical candidate and
+review-status descriptions above identify their original measurement boundary;
+`reports/phase-2.md` is the current acceptance report.

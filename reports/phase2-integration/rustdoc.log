@@ -1,0 +1,12 @@
+   Compiling syn v3.0.6
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+    Checking serde_json v1.0.151
+   Compiling bytemuck_derive v1.12.1
+   Compiling serde_derive v1.0.229
+    Checking bytemuck v1.25.2
+    Checking font-types v0.12.5
+    Checking read-fonts v0.44.0
+ Documenting fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-main/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 9.77s
+   Generated /workspace/scratch/ef9059dd510b/fontpixel-phase2-review-target/doc/fontpixel/index.html

@@ -1,0 +1,15 @@
+# Run from fontpixel-rs-main, with all branches/history retained.
+git merge --no-ff b7995ccb0bb127a84ac7c1b3db4bc0b9dba36470 -m "Integrate complete Phase 2 export validation and performance work"
+git merge --no-ff 7b7ed29c86a75d02d4a429bdb61d9ec4324c3c61 -m "Integrate reviewed Phase 2 input safety and dimension checks"
+git diff --exit-code 7b7ed29c86a75d02d4a429bdb61d9ec4324c3c61 -- Cargo.lock Cargo.toml rust-toolchain.toml crates
+sha256sum -c reports/phase2-review/production.sha256
+sha256sum -c reports/phase2-review/release-binary.sha256
+sha256sum -c reports/phase2-optimization/protected-final.sha256
+source /workspace/scratch/ef9059dd510b/fontpixel-phase2-work/env.sh
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-phase2-review-target
+export CARGO_BUILD_JOBS=2
+bash scripts/check.sh
+RUSTDOCFLAGS='-D warnings' cargo doc --offline --locked -p fontpixel --all-features --no-deps
+# Expensive matrices are retained unchanged: all integrated production sources
+# exactly equal tested review commit 7b7ed29, whose measured 84 outputs all match
+# the completed independent oracle hashes. No matrix is claimed as a new rerun.
