@@ -1,0 +1,16 @@
+All commands ran in the recovery worktree with Rust 1.99.0, Python 3.12.14 and PYTHONDONTWRITEBYTECODE=1. Dependencies came from official Rust/crates.io/PyPI sources.
+cargo build --locked --workspace --all-features --lib --bins --examples
+python3 -B tests/crosscheck/cff.py --font __synthetic_only__ --seeds fuzz/corpus/cff --binary "$PWD/target/debug/examples/cff_check" --output reports/recovery-20261003/cff-synthetic-results.json
+scripts/check.sh
+cargo build --locked --release -p fontpixel-cli --features parity --bin fontpixel-parity
+cargo build --locked --release -p fontpixel --all-features --examples
+python3 -B tests/parity/run_all.py --out tests/parity/out-recovery
+python3 -B tests/crosscheck/{sfnt,glyf,cff}.py --output reports/recovery-20261003/{sfnt,glyf,cff}-results.json
+python3 -B tests/crosscheck/{glyf,cff}.py --font TongPixelSans14Large-SC.bdf --cjk-count 38653 --output reports/recovery-20261003/{glyf,cff}-full-sc-results.json
+cargo test --locked -p fontpixel --no-default-features --features sfnt
+RUSTDOCFLAGS="-D warnings" cargo doc --locked --workspace --all-features --no-deps
+cargo deny --manifest-path fuzz/Cargo.toml --locked check
+cargo +nightly fuzz build
+ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run {sfnt,glyf,compat_ttf,cff} -- -max_total_time=610 -timeout=10 -rss_limit_mb=2048 -max_len=65536
+
+Brace notation lists independently executed commands, not an actual shell expansion. Fuzz readers ran concurrently after building all fuzz targets. Each used seeds copied from existing compatibility TTFs or regenerated synthetic CFFs. AddressSanitizer remained active; leak detection was disabled under the documented sandbox limitation.

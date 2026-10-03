@@ -1,0 +1,55 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "selection": {
+    "font_filter": "TongPixelSans14Large-SC.bdf",
+    "Latin": "all selected Latin samples, all glyphs",
+    "regional": "38653 evenly selected glyphs per selected regional sample"
+  },
+  "results": [
+    {
+      "case": "TongPixelSans14Large-SC-square",
+      "glyphs": 38654,
+      "sha256": "543387780db48c879810e7f9a162735d676e235ea30d46db9c745b4160a30721",
+      "bytes": 7549164,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-dot",
+      "glyphs": 38655,
+      "sha256": "ab153653c2eb99e4b996866388bec8da0e7076b9788466b8653194f1f3d26409",
+      "bytes": 18642720,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "separate-holes-offsets",
+      "glyphs": 4,
+      "sha256": "023dfbd7131553d6df5f094c5fea51f68f0a007d06862c4d20fa6be578ce2b73",
+      "bytes": 2220,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "affine-point-nested",
+      "glyphs": 4,
+      "fontTools": "pass",
+      "FreeType": "pass"
+    }
+  ],
+  "scope": "TTF outline glyph-level equivalence; native variants/locl creation and other sfnt formats remain their later work items"
+}

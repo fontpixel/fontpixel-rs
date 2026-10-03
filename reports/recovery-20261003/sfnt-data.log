@@ -1,0 +1,2 @@
+checked crates/fontpixel/src/sfnt/data.rs
+checked tests/data/sfnt/unicode-ranges.json

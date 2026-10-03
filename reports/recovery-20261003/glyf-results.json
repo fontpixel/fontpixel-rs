@@ -1,0 +1,187 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "selection": {
+    "font_filter": null,
+    "Latin": "all selected Latin samples, all glyphs",
+    "regional": "1024 evenly selected glyphs per selected regional sample"
+  },
+  "results": [
+    {
+      "case": "TongPixelSans14Large-JP-square",
+      "glyphs": 1025,
+      "sha256": "cf718daf29a3e6c8c13b78cbc2f437fbde38b5dbea582283664913f44af82a7c",
+      "bytes": 223208,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-dot",
+      "glyphs": 1026,
+      "sha256": "defe00b02cb0e07ecd34096c3d24be10fcbeec4383c4ffc6d64774d5bd8ffcfa",
+      "bytes": 515656,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-square",
+      "glyphs": 1025,
+      "sha256": "a2b650e13784668eaa0e39ffa3cfe3038dface3fe9fb406ef74979f2b6f06f04",
+      "bytes": 223580,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-dot",
+      "glyphs": 1026,
+      "sha256": "3428fb3df706b61049229a49cf1ac4684d4930a9aa79310d997df6c48bfa1f8c",
+      "bytes": 515272,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-square",
+      "glyphs": 3646,
+      "sha256": "7ff8567f0443b7ca4df32745117723075a1fc2faaff9916083026faa33803ae3",
+      "bytes": 345824,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot",
+      "glyphs": 3647,
+      "sha256": "fb1f882a8530dd6e48508631d4cef92817a5fa797ee5076a8e54fd52083ac918",
+      "bytes": 683452,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-square",
+      "glyphs": 1025,
+      "sha256": "4dd3727abaf16e954cb79471d22415b52f81ef1626d513d6fa5f0e5e0158b1d1",
+      "bytes": 223292,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-dot",
+      "glyphs": 1026,
+      "sha256": "c666cf158834bf722c646d20171555da5e307caa98e9de5962ec5c59e1de82b6",
+      "bytes": 515068,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-square",
+      "glyphs": 1025,
+      "sha256": "4cf4f9cedb71bfef98ca16611102924f8680e946f2e5af951cded4e4ff245f05",
+      "bytes": 223576,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-dot",
+      "glyphs": 1026,
+      "sha256": "b440e22b424229dea19cde9bde3918e2e92a23b81debf1b67d61d21ed503b249",
+      "bytes": 515244,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square",
+      "glyphs": 3646,
+      "sha256": "0da593baf03388ca6bc279c79a96449ebc2e128d5be6ca7cc9a4d25b167c619a",
+      "bytes": 332996,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot",
+      "glyphs": 3647,
+      "sha256": "2b8fa0bde1b5e081ddbf6419e80a4991584d57bca3c75c5712e5ad99b0766ba2",
+      "bytes": 631184,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square",
+      "glyphs": 3646,
+      "sha256": "47f74c00b91c5551550f2190dfbc7a80a0558b2c8a6e64ff718892c63ddfadfa",
+      "bytes": 328612,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot",
+      "glyphs": 3647,
+      "sha256": "12c77cbdc93bb649bf33c109852a1f58b06abe869c895ecd22898fe193e036bb",
+      "bytes": 649624,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "separate-holes-offsets",
+      "glyphs": 4,
+      "sha256": "87a893094153acda0232879d3571ee6ab0361d3c5a50c5a1bfd5278866b54ef0",
+      "bytes": 2220,
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_reference_and_source": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "read_external_reencode": "pass"
+    },
+    {
+      "case": "affine-point-nested",
+      "glyphs": 4,
+      "fontTools": "pass",
+      "FreeType": "pass"
+    }
+  ],
+  "scope": "TTF outline glyph-level equivalence; native variants/locl creation and other sfnt formats remain their later work items"
+}

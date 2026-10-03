@@ -1,0 +1,228 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "selection": {
+    "font": null,
+    "cjk_count": 1024,
+    "Latin": "all glyphs"
+  },
+  "results": [
+    {
+      "case": "TongPixelSans14Large-JP-square",
+      "glyphs": 1025,
+      "bytes": 216392,
+      "sha256": "40d5054cce34e0f4cf4c116fefb67b195914949b1eea11331c7aeb51ca9c7f54",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-JP-dot",
+      "glyphs": 1025,
+      "bytes": 328524,
+      "sha256": "fa55a80292d1ddbf5746cb934238c725073f7fb94caf615722f418f69b447207",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-square",
+      "glyphs": 1025,
+      "bytes": 216728,
+      "sha256": "8604188f405047e628bf914148714140ebef52995b3d227267b3929481928d67",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-KR-dot",
+      "glyphs": 1025,
+      "bytes": 328348,
+      "sha256": "73dd3c7bc64a41f88acb9856d32bd86a83b4049da4d973771fbd110ce9ef5d64",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-square",
+      "glyphs": 3646,
+      "bytes": 328472,
+      "sha256": "5770faa15b686c1c7fb60329388cc75aca086c3311d9b98b77b9bfb3980be248",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-Latin-dot",
+      "glyphs": 3646,
+      "bytes": 462268,
+      "sha256": "00fd5489d996583a095e84ecae32c135abea73a361ebbd653c99ac48904a1c6c",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-square",
+      "glyphs": 1025,
+      "bytes": 216360,
+      "sha256": "33f3adc1907c7b190cd2981d86cce25b5a6093fc6cf859d8d319307aaf31fbd4",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-SC-dot",
+      "glyphs": 1025,
+      "bytes": 328180,
+      "sha256": "931a55768f1b2a2e9e27c08e2bbb5002d05ccc26f536f0322026b8128c58da74",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-square",
+      "glyphs": 1025,
+      "bytes": 216724,
+      "sha256": "705149b7185c4e315bd13b1664daee4a99d13a288095d1c9403297df85f0b696",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Large-TC-dot",
+      "glyphs": 1025,
+      "bytes": 328328,
+      "sha256": "f2fdaceb0e18003121e937e127f5fbdb4c61f50b17e1412a4fa3372e2b2234ee",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-square",
+      "glyphs": 3646,
+      "bytes": 317712,
+      "sha256": "64e9177eff1a17bacb6113abf2d15cc726ece5ff88b5b7d9c5e9c3624e3ff904",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSans14Small-Latin-dot",
+      "glyphs": 3646,
+      "bytes": 430024,
+      "sha256": "2c8141645181f5426fdab69ebdf13c5493a4852e2054828477132135c142b6fb",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-square",
+      "glyphs": 3646,
+      "bytes": 313568,
+      "sha256": "4fe14f957d0c94e3960e074f7fd8181da311ec26778a80e93b818ca68a8103a2",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "TongPixelSansMono14Large-Latin-dot",
+      "glyphs": 3646,
+      "bytes": 442716,
+      "sha256": "57474d9b21f3ef8f3fed2181e85a4ef5395c62b640c0b518cbf1090f3422fd9b",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "separate-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2244,
+      "sha256": "6b67f0bee6a0caa2510109c9325acf69c3ef79eb94383a54864e7d299dd7f7e7",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "dot-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2260,
+      "sha256": "a802bd94c54cce1083e4b0bd1d0678bfdc0694732b62c567dcfe5075e0812f1e",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "external-FontMatrix-scale",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-format0",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-local-hints-flex-widths",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-two-FDs",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    }
+  ],
+  "scope": "CFF1 outline equivalence and existing mappings; variants/locl creation, bitmap strikes and WOFF2 remain later work items."
+}

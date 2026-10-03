@@ -1,0 +1,15 @@
+TongPixelSans14Large-JP-square PASS 1025
+TongPixelSans14Large-JP-dot PASS 1025
+TongPixelSans14Large-KR-square PASS 1025
+TongPixelSans14Large-KR-dot PASS 1025
+TongPixelSans14Large-Latin-square PASS 3646
+TongPixelSans14Large-Latin-dot PASS 3646
+TongPixelSans14Large-SC-square PASS 1025
+TongPixelSans14Large-SC-dot PASS 1025
+TongPixelSans14Large-TC-square PASS 1025
+TongPixelSans14Large-TC-dot PASS 1025
+TongPixelSans14Small-Latin-square PASS 3646
+TongPixelSans14Small-Latin-dot PASS 3646
+TongPixelSansMono14Large-Latin-square PASS 3646
+TongPixelSansMono14Large-Latin-dot PASS 3646
+{"cases": 20, "glyph_checks": 30094}

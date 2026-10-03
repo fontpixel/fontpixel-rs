@@ -1,0 +1,15 @@
+{
+  "method": "Exact parity fingerprint ordering: sorted Path objects (componentwise), not string-sorted Git pathnames. Initial diagnostic used the wrong ordering; corrected before final delivery.",
+  "results": {
+    "34d8482": {
+      "historical": "63c4972f231fa4b4",
+      "recovered": "63c4972f231fa4b4",
+      "matches": true
+    },
+    "bb31cf4": {
+      "historical": "873ec98e9affe795",
+      "recovered": "873ec98e9affe795",
+      "matches": true
+    }
+  }
+}

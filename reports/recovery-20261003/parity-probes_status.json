@@ -1,0 +1,289 @@
+[
+ {
+  "id": "R01-empty-draw",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Font.drawall/draw with no glyph to draw (Python raised ValueError, fixed in bdfparser 844c1c7)"
+ },
+ {
+  "id": "R02-stale-writeback",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Editing through a stale attached Glyph (write-back rules; fixed in 844c1c7 / efda8f7)"
+ },
+ {
+  "id": "K02-todata-empty-row",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Bitmap.todata(5|4) with zero-width rows"
+ },
+ {
+  "id": "K03-negative-size",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Bitmap.crop with a negative width; glyph drawn in a negative FONTBOUNDINGBOX"
+ },
+ {
+  "id": "K04-overlay-size",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Bitmap.overlay of different-size bitmaps"
+ },
+ {
+  "id": "K05-bigint",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Integers beyond 2**53 in properties and metrics"
+ },
+ {
+  "id": "K06a-numeric-prop-key",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Integer-like property names are reordered by JS objects"
+ },
+ {
+  "id": "K06b-proto-prop-key",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Property names __proto__ / constructor (JS Object prototype)"
+ },
+ {
+  "id": "K06c-comment-prop-key",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Lower-case property name \"comment\" collides with props[\"comment\"] (COMMENT lines)"
+ },
+ {
+  "id": "K06d-comment-prop-crash",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Lower-case \"comment\" integer property followed by a COMMENT line: Python AttributeError"
+ },
+ {
+  "id": "K07-exotic-whitespace",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "U+001F / U+0085 / U+FEFF handled as whitespace by one side only"
+ },
+ {
+  "id": "K08a-lenient-int",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Python int() accepts \"1_2\" in ENCODING and BBX"
+ },
+ {
+  "id": "K08b-version-inf",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "STARTFONT inf / Infinity accepted by both, written back differently"
+ },
+ {
+  "id": "K08c-version-hex",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "STARTFONT 0x10 accepted by JS Number() only"
+ },
+ {
+  "id": "K09-removeglyph-detached",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "removeglyph(glyph) with an already-removed Glyph deletes the new glyph in JS"
+ },
+ {
+  "id": "K10-gb18030-4byte",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "GB18030 4-byte codes (spec \u00a74: JS needs iconv)"
+ },
+ {
+  "id": "K11-todata-precision",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Bitmap.todata(5) of a row wider than 53 pixels: Python and Rust exact integers (JS-only limitation, SPEC-v3 \u00a711.2)"
+ },
+ {
+  "id": "K12-ragged-bitmap",
+  "expect": "diverge",
+  "diverges": true,
+  "ok": true,
+  "desc": "rotate() of a ragged bitmap (invalid input, permanent)"
+ },
+ {
+  "id": "K13a-gb2312",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "GB2312: 0xA1A4 (\u30fb vs \u00b7), GBK-only codes and 0x80 accepted by JS"
+ },
+ {
+  "id": "K13b-cp125x",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "windows-125x undefined bytes (0x81...) map to C1 controls in WHATWG"
+ },
+ {
+  "id": "K13c-iso8859-9-11",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "ISO 8859-9 / -11 / TIS-620 decoded as windows-1254 / windows-874 by WHATWG"
+ },
+ {
+  "id": "K13d-koi8u",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "KOI8-U: WHATWG koi8-u is KOI8-RU (0xAE, 0xBE)"
+ },
+ {
+  "id": "K13e-big5",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Big5: WHATWG big5 is Big5-HKSCS (0x8740...), 0xA145 \u2022 vs \u2027"
+ },
+ {
+  "id": "K13f-shiftjis-eucjp",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Shift_JIS / EUC-JP: JIS X 0208 vs windows-31j mappings (\u301c vs \uff5e ...)"
+ },
+ {
+  "id": "K13g-euckr-uhc",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "EUC-KR: WHATWG euc-kr is UHC (0x8141 \uac02)"
+ },
+ {
+  "id": "K13h-python-char2cp-invalid",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Python char2cp returns non-round-tripping 3-byte (JIS X 0212), 8-byte (KS X 1001 composition) and 0x5C (\u00a5) codes"
+ },
+ {
+  "id": "K13i-js-only-codecs",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "cp866, cp874, cp932, cp936, cp949, cp950, hz: Unicode identity in Python (unknown), real codecs in JS"
+ },
+ {
+  "id": "K14-charset-name",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "Charset name canonicalisation: ISO8859-01, KOI8-RU"
+ },
+ {
+  "id": "K16-concatall-empty",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "vertical concatall with empty bitmaps and offsets: Python emits zero-width rows"
+ },
+ {
+  "id": "S01-int32-fields",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "numeric fields outside the signed 32-bit range: BDFParseError"
+ },
+ {
+  "id": "S02-prop-int-range",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "unquoted property integers only in -2**31..2**32-1, else raw strings"
+ },
+ {
+  "id": "S03-comment-in-bitmap",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "COMMENT lines inside BITMAP are ignored"
+ },
+ {
+  "id": "S04-nonhex-row",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "drawing a glyph with a non-hex row raises; the PCF writer stays lenient"
+ },
+ {
+  "id": "S05-negative-bbx",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "negative BBX / FONTBOUNDINGBOX sizes: BDFParseError"
+ },
+ {
+  "id": "S06-ascii-whitespace",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "only ASCII whitespace separates tokens; a leading BOM is skipped"
+ },
+ {
+  "id": "S07-pcf-guards",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "PCF writer range guards before allocation (FONT_ASCENT, 32-bit properties)"
+ },
+ {
+  "id": "S08-svgfont-charset",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "tosvgfont unicode attributes / unicode-range via cp2char"
+ },
+ {
+  "id": "S09-cmap-surrogates",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "TTF cmap never maps surrogates"
+ },
+ {
+  "id": "S10-new-codepages",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "cp437 / cp932 / johab / big5hkscs single code points"
+ },
+ {
+  "id": "S11-pcf-without-fbb",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "PCF writer with headers missing (unrecognised FONTBOUNDINGBOX line): defaults"
+ },
+ {
+  "id": "S12-bom-in-names",
+  "expect": "agree",
+  "diverges": false,
+  "ok": true,
+  "desc": "U+FEFF inside property names survives the PCF round trip (no BOM stripping)"
+ }
+]

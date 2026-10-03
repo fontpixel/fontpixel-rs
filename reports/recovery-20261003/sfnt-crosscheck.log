@@ -1,0 +1,86 @@
+{
+  "scope": "W2.1 common tables; uses prior compatibility outlines; no locl, CFF, embedded bitmaps or complete phase-2 claim",
+  "versions": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "freetype_version": [
+    2,
+    13,
+    2
+  ],
+  "harfbuzz_version": "14.5.0",
+  "checks": [
+    {
+      "fixture": "common",
+      "sha256": "a7b3eb9a663d8cc1467aa76fe5aee231510107ff97793cc7fd00c41f0e30c197",
+      "bytes": 1100,
+      "glyphs": 4,
+      "mappings": 6,
+      "cmap_formats": [
+        4,
+        12
+      ],
+      "fonttools_full_ttx": "pass",
+      "fonttools_edited_readback": "pass",
+      "ots": "File sanitized successfully!",
+      "freetype_native_pixels_all_glyphs": "pass",
+      "harfbuzz_horizontal_supplementary_vertical": "pass"
+    },
+    {
+      "fixture": "fresh-common",
+      "sha256": "ff143313d2ee967f1ddbf28f7b210620bc3e6c25f27d3a45aa9cf5f773c44c01",
+      "bytes": 1900,
+      "glyphs": 4,
+      "mappings": 6,
+      "cmap_formats": [
+        4,
+        12
+      ],
+      "fonttools_full_ttx": "pass",
+      "fonttools_edited_readback": "pass",
+      "ots": "File sanitized successfully!",
+      "freetype_native_pixels_all_glyphs": "pass",
+      "harfbuzz_horizontal_supplementary_vertical": "pass"
+    },
+    {
+      "fixture": "dense",
+      "sha256": "9aa0d40c1bea77a816138bd3a18fb7b8b83f7a547d7cd497e7f4a67a40dc0b0d",
+      "bytes": 7040,
+      "glyphs": 4,
+      "mappings": 1000,
+      "cmap_formats": [
+        4,
+        12
+      ],
+      "fonttools_full_ttx": "pass",
+      "fonttools_edited_readback": "pass",
+      "ots": "File sanitized successfully!",
+      "freetype_native_pixels_all_glyphs": "pass",
+      "harfbuzz_horizontal_supplementary_vertical": "not applicable to stress map"
+    },
+    {
+      "fixture": "sparse",
+      "sha256": "9e670f9a7861e56aee0e2766f0ed793d3677143e26c5c8d7733fc4411fcaf4cf",
+      "bytes": 332760,
+      "glyphs": 4,
+      "mappings": 27648,
+      "cmap_formats": [
+        12
+      ],
+      "fonttools_full_ttx": "pass",
+      "fonttools_edited_readback": "pass",
+      "ots": "File sanitized successfully!",
+      "freetype_native_pixels_all_glyphs": "pass",
+      "harfbuzz_horizontal_supplementary_vertical": "not applicable to stress map"
+    },
+    {
+      "fixture": "fontTools format13",
+      "mappings": 256,
+      "rust_read": "pass"
+    }
+  ]
+}
+

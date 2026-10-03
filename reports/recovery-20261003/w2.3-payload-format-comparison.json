@@ -1,0 +1,32 @@
+[
+  {
+    "path": "crates/fontpixel/examples/cff_check.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "crates/fontpixel/tests/cff.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/validate.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/write.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "crates/fontpixel/src/sfnt/cff/read.rs",
+    "matches_formatted_recovered_payload": true
+  },
+  {
+    "path": "fuzz/fuzz_targets/cff.rs",
+    "matches_formatted_recovered_payload": false,
+    "matches_unformatted_recovered_payload": true,
+    "note": "Fuzz is a separate workspace; root cargo fmt does not format it. File matches the retained payload bytes exactly."
+  }
+]

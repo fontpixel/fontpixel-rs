@@ -1,0 +1,60 @@
+{
+  "tools": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "uharfbuzz": "0.56.2",
+    "opentype-sanitizer": "9.2.0"
+  },
+  "selection": {
+    "font": "__synthetic_only__",
+    "cjk_count": 1024,
+    "Latin": "all glyphs"
+  },
+  "results": [
+    {
+      "case": "separate-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2244,
+      "sha256": "9ae415a9881a15b9daea013a7371b4fb71e849e9027463fd22edea40b74d7709",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "dot-holes-offsets",
+      "glyphs": 3,
+      "bytes": 2260,
+      "sha256": "defc64913a3eda4bc9ef369457a15e03f4002272997340ce37c13286b00a0b76",
+      "fontTools": "pass",
+      "OTS": "pass",
+      "FreeType_source_and_reference": "pass",
+      "HarfBuzz_6_languages": "pass",
+      "native_reader_external_and_own": "pass",
+      "external_read_reencode": "pass"
+    },
+    {
+      "case": "external-FontMatrix-scale",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-format0",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-local-hints-flex-widths",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    },
+    {
+      "case": "external-CID-two-FDs",
+      "glyphs": 3,
+      "fontTools_and_native": "pass"
+    }
+  ],
+  "scope": "CFF1 outline equivalence and existing mappings; variants/locl creation, bitmap strikes and WOFF2 remain later work items."
+}
