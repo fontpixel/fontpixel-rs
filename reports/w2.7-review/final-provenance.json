@@ -102,5 +102,14 @@
   "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
   "nightly": "rustc 1.101.0-nightly (0abfedbc7 2026-10-02)",
   "leak_detection": false,
-  "notes": "Final W2.7 review source. Crosscheck scripts rerun after this build; candidate collection parser source and complete collection fuzz gate are unchanged."
+  "notes": "Final W2.7 review source. Crosscheck scripts rerun after this build; candidate collection parser source and complete collection fuzz gate are unchanged.",
+  "fuzz_binary_sha256": "2bb542948fdb41d6580395269e29b51e75aba173e2b08b835f60bb9cf837ea22",
+  "validated_main_merge": "fcacb171f0b70b9a8f0627533def57ffbd19cdde",
+  "main_binaries": {
+    "../fontpixel-rs-w2.4-recovery/target/release/fontpixel": "a826cec1fb214048d7ea6bb25fac76e470d4bc099bb8a313335cbf321ac99ac5",
+    "../fontpixel-rs-w2.4-recovery/target/release/fontpixel-parity": "dda2dbcb2811ddc061b471f56c999057b00cb3f4f6631a8124c7ec2054a5b560",
+    "../fontpixel-rs-w2.4-recovery/target/release/examples/raster_check": "62f3b329d80d48700ea7dbe410e6142d8d2dbcaeeeb3428838e4bc2bfcdc79b9"
+  },
+  "main_test_invocations": 795,
+  "main_parity_new_divergences": 0
 }

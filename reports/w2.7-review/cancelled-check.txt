@@ -1,0 +1,1 @@
+The first fuzz dependency check shell was cancelled by automatic approval review before cargo-deny produced output. The exact cargo deny command was retried once after parent supplied verified user authorization; deny-fuzz-retry.log and .exit record success. No dependency or policy changes were made.
