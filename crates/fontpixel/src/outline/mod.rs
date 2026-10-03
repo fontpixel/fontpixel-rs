@@ -113,7 +113,7 @@ pub fn contours(bitmap: &Bitmap, options: &Options, limits: &Limits) -> Result<V
         "outline pixels",
     )?;
     if options.shape == Shape::Square {
-        let vertices = (bitmap.width() as usize + 1).checked_mul(bitmap.height() as usize + 1);
+        let vertices = packed::vertex_count(bitmap.width() as usize, bitmap.height() as usize);
         if vertices.is_some_and(|n| n <= packed::MAX_VERTICES) {
             return packed::square(bitmap, options, limits);
         }
