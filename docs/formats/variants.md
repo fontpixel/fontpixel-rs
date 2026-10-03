@@ -23,6 +23,8 @@ new default glyphs. Alternate glyph identity compares bitmap depth, dimensions,
 bytes and complete metrics, excluding spelling, encoding and source properties.
 Glyph order is deterministic Unicode-style name order, matching Tong's plan.
 Limits bound source glyphs, bytes, resulting IDs and layout expansion.
+Each source face's optional metric defaults are resolved before this identity
+comparison; the base face's defaults never leak into an alternate face.
 
 ## Wire mapping
 
@@ -47,6 +49,7 @@ Unknown glyph-indexed tables must not be copied after remapping. Unsupported
 tables or GSUB types fail explicitly unless the caller explicitly requests their
 loss, which is reported and rejected in strict mode. Digital signatures become
 invalid after editing and are removed with a loss diagnostic.
+Optional `vhea` and `vmtx` can only be explicitly removed together.
 
 Independent tests will compare source and subset shaping across all required
 languages and western scripts, full Tong plans, fontTools, OTS and FreeType.
@@ -72,3 +75,8 @@ child IDs in validated composite records. Stored bounding boxes, component flags
 instructions and original point encoding remain exact. Existing global bounds
 and maxp maxima remain safe conservative upper bounds. This is important for
 hinted fonts, whose phantom-point behavior can depend on stored glyph boxes.
+
+When generation includes vertical layout and embedded bitmaps, big sbit metrics
+carry both horizontal and vertical bearings and advances. Explicit pixel origins
+are exact. Without a pixel origin, the synthesized integral bitmap origin uses
+the ascent and cell midpoint, rounding a half-pixel midpoint down.

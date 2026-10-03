@@ -760,3 +760,34 @@ and byte-compare all four full regional outputs against their completed external
 oracle results; the regional bytes must remain exact. Reader sources are unchanged.
 **Reason:** Make native metadata precise in the no-alternative case without
 weakening the external assertion or relabeling older full-font evidence.
+
+## 2026-10-03 — W2.6 review resolves source defaults before deduplication
+
+**Question:** A valid Font/BDF 2.2 can put DWIDTH, DWIDTH1, VVECTOR and scalable
+metrics in font-level defaults. Comparing only each glyph's optional fields
+merged different regional advances, and later output borrowed the base face's
+defaults for alternatives.
+**Choice:** Resolve every optional glyph metric against its own source Font
+before planning. Explicit and inherited equal metrics deduplicate, distinct
+effective metrics remain distinct, and a missing alternate metric never borrows
+an unrelated base default. Keep source bitmap bounds authoritative.
+**Reason:** Bitmap-plus-metric identity must describe the effective glyph. API
+regressions and independent BDF 2.2 / HarfBuzz / fontTools checks cover both
+different defaults and equivalent explicit-versus-inherited alternatives.
+
+## 2026-10-03 — W2.6 review preserves embedded vertical metrics and table pairs
+
+**Question:** The variants writer emitted vhea/vmtx but horizontal-only embedded
+bitmap records, silently losing source vertical metrics. Separately, requesting
+only `--drop-table vhea` produced a font OTS rejected because vmtx requires vhea.
+**Choice:** Write both directions in big sbit metrics when vertical layout is
+present, including each effective advance and vertical origin. For an absent
+pixel origin, use the ascent and integer cell midpoint (half-pixel midpoints
+round down, as the bitmap metrics are integral); explicit origins stay exact.
+Reject unpaired vhea/vmtx drops before output, requiring both exact tags to
+acknowledge removal of the optional vertical metric pair.
+**Reason:** Outline and bitmap paths must both preserve representable metrics,
+and an acknowledged table loss must not leave an invalid dependent table.
+The OpenType [EBDT specification](https://learn.microsoft.com/en-us/typography/opentype/spec/ebdt)
+defines both directions in BigGlyphMetrics; independent FreeType and OTS checks
+verify the corrected output and atomic failure of unpaired removal.
