@@ -730,3 +730,39 @@ fn common_registry_model_budget_reaches_explicit_svg_reader() {
         Err(fontpixel::Error::ResourceLimit { .. })
     ));
 }
+
+#[test]
+fn negative_horizontal_advances_cannot_emit_invalid_svg() {
+    for defaults in [false, true] {
+        let mut f = font();
+        if defaults {
+            f.metrics.glyph_defaults.advance = Some(Vector::new(-1, 0));
+        } else {
+            let id = f.glyphs().next().unwrap().0;
+            f.edit_glyph(id, |g| {
+                g.metrics.advance = Some(Vector::new(-1, 0));
+                Ok(())
+            })
+            .unwrap();
+        }
+        assert!(svg::write(&FontSet::from(f), &Default::default()).is_err());
+    }
+}
+
+#[test]
+fn child_paths_keep_documented_exact_center_boundary_rule() {
+    let (set, _) = svg::read(
+        &text("<glyph><path d='M0 0Q100 400 400 0Z'/><path d='M100 0L300 300L400 0Z'/></glyph>"),
+        &ReadOptions {
+            ppem: Some(8),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    // The right diagonal goes exactly through (350,150); the half-open native
+    // crossing rule excludes that center, unlike an antialias alpha >= 128 tie.
+    assert_eq!(
+        set.fonts[0].glyphs().next().unwrap().1.bitmap,
+        Glyph::new(".##.\n####".parse::<Bitmap>().unwrap()).bitmap
+    );
+}

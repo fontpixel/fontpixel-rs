@@ -13,12 +13,14 @@ def rows(g):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--driver',required=True);p.add_argument('--work',required=True,type=Path);p.add_argument('--output',required=True,type=Path);a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
+    # Avoid exact-center diagonal boundaries: Cairo antialias tie-breaking is
+    # distinct from the documented native half-open crossing convention.
     cases=[
         ['M0 0h300v300H0Z','M0 0v300h300V0Z'],
         ['M0 0h300v300H0Z','M100 100v300h300V100Z'],
         ['M0 0h400v400H0Z M100 100V300H300V100Z','M100 100h200v200H100Z'],
         ['M100 100h100v100H100z L400 100 L400 400'],
-        ['M0 0Q100 400 400 0Z','M100 0L300 300L400 0Z'],
+        ['M0 0Q100 400 400 0Z','M107 -7L307 313L417 -7Z'],
         ['m-100 -100h200v200h-200z','M200 100h100v100H200Z'],
     ];results=[]
     for index,paths in enumerate(cases):

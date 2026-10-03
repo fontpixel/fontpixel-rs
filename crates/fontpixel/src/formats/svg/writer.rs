@@ -299,6 +299,9 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
             return Err(invalid("native pixel size must be 1..4096"));
         }
         let ppu = o.units_per_pixel;
+        if f.metrics.glyph_defaults.advance.is_some_and(|v| v.x < 0) {
+            return Err(invalid("horizontal advance must be nonnegative"));
+        }
         out.add("<font")?;
         out.attr("id", &format!("fontpixel-{fi}"))?;
         out.attr(
@@ -449,6 +452,9 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
                 .advance
                 .or(f.metrics.glyph_defaults.advance)
                 .unwrap_or(Vector::new(i64::from(ppem), 0));
+            if advance.x < 0 {
+                return Err(invalid("horizontal advance must be nonnegative"));
+            }
             common.attr("horiz-adv-x", &scaled(advance.x, ppu)?)?;
             if advance.y != 0 {
                 common.attr("fp:advance-y", &advance.y.to_string())?;

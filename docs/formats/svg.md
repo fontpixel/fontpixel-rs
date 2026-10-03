@@ -114,3 +114,10 @@ Free-form style names (for example `Regular` or `Bold Italic`) use `fp:style`.
 The standard `font-style` attribute is emitted only for valid SVG descriptors
 (`all`, or a comma-separated list of `normal`, `italic`, `oblique`). This preserves
 native style names without emitting invalid standard font metadata.
+
+SVG requires nonnegative horizontal advances, including for RTL fonts. Native
+writing rejects a negative effective/default horizontal advance rather than
+emitting invalid SVG; negative glyph bearings and vertical/horizontal advance-y
+remain supported. Pixel centers exactly on a right boundary follow the shared
+half-open raster convention. Cairo antialias-alpha ties are not used as the
+expected value for that boundary-only case; it has a direct regression instead.
