@@ -31,7 +31,7 @@ impl Default for Options {
             quality: 11,
             transform_glyf: true,
             transform_hmtx: true,
-            compression_threads: 1,
+            compression_threads: 2,
             auxiliary: Auxiliary::default(),
         }
     }
@@ -147,7 +147,9 @@ fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
         size_hint: data.len(),
         ..Default::default()
     };
-    if o.compression_threads == 1 {
+    // Small streams do not amortize worker creation/dictionary preparation.
+    // The size-based choice is deterministic and independent of CPU count.
+    if o.compression_threads == 1 || data.len() < 128 * 1024 {
         let mut out = Output {
             bytes: Vec::new(),
             limit: l.sfnt.resources.max_total_bytes,

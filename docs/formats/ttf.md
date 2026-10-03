@@ -70,3 +70,13 @@ The compatibility reader additionally limits whole-font raster/model expansion:
 64 Mi pixels, 256 MiB estimated raster/provenance/row storage, 64 Mi expanded
 points, and 32 Mi component visits. These are charged cumulatively, including
 zero-width rows, before raster allocation. Per-glyph bounds remain in force.
+
+### Native dot-stream optimization
+
+At the default Tong scale/diameter, native exports may reference already-existing
+one-row glyphs as nested composites. These row glyphs remain direct circle
+composites; no glyph IDs are added, and glyph counts, cmap, metrics and pixels are
+preserved. Matching is bounded to 256 patterns of at most 64 cells, with a direct
+circle fallback. Native bytes and `maxp` composite-depth statistics may differ
+from the literal-component representation. The bdfparser compatibility writer
+is unchanged. See `docs/decisions.md` and the combined Phase 2 evidence.

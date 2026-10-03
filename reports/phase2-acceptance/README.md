@@ -90,3 +90,12 @@ reference builder before loading the two comparison fonts. Heavy fontTools
 oracles run serially; only duplicate scratch copies created by this acceptance
 run were removed. Original inputs, committed evidence and delivered archives
 were not deleted.
+
+## Later user-directed performance work
+
+The baseline correctness/benchmark evidence above is retained as a checkpoint.
+The user then explicitly emphasized maximum practical speed and multicore use.
+Subsequent production optimization is documented separately under
+`reports/phase2-optimization/`; it must pass fresh affected/final gates before
+main integration. The baseline's unchanged-source statements do not claim that
+those newer candidate sources have already been accepted. No W3 work began.

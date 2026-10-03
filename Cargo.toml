@@ -22,3 +22,7 @@ missing_docs = "warn"
 
 [workspace.lints.clippy]
 all = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

@@ -33,6 +33,29 @@ fn sample() -> Variants {
     v
 }
 #[test]
+fn prepared_variants_match_direct_encoding_and_preserve_budgets() {
+    let v = sample();
+    let options = Options::default();
+    let prepared = v.prepare(&options.limits).unwrap();
+    assert_eq!(
+        prepared.plan().glyphs.len(),
+        v.plan(&options.limits).unwrap().glyphs.len()
+    );
+    assert_eq!(
+        prepared.encode(&options).unwrap().bytes,
+        variants::encode(&v, &options).unwrap().bytes
+    );
+    let mut stricter = options.clone();
+    stricter.limits.max_records = 1;
+    assert!(prepared.encode(&stricter).is_err());
+    assert!(v.prepare(&stricter.limits).is_err());
+    std::thread::scope(|scope| {
+        let a = scope.spawn(|| prepared.encode(&options).unwrap().bytes);
+        let b = scope.spawn(|| prepared.encode(&options).unwrap().bytes);
+        assert_eq!(a.join().unwrap(), b.join().unwrap());
+    });
+}
+#[test]
 fn language_registry_and_regional_tags() {
     for (s, t) in [
         ("zh-Hant", *b"ZHT "),

@@ -967,3 +967,58 @@ and carry it through file reading and SVG registry limits. Keep the default and
 independent 256 MiB aggregate cap unchanged.
 **Reason:** A safe default should remain overridable for known local full-font
 outputs. Check the complete supplied Tong CJK circular font using this path.
+
+## 2026-10-03 — Preserve exact square contours with a packed small-grid tracer
+
+**Question:** Native square export converted packed bitmaps to strings and built a
+BTreeMap with an allocation for each boundary vertex.
+**Choice:** For at most 4,096 grid vertices, trace packed bits with a bounded dense
+two-edge adjacency map. Preserve the SPEC bottom-to-top edge insertion order,
+right-turn selection, collinear removal, contour rotation and conservative limits.
+Large grids and the ragged/label compatibility adapter keep the general tracer.
+**Reason:** Remove allocation and conversion overhead without changing ordering or
+compatibility bytes. Exhaustive 3×3 patterns and edge/point-budget regressions
+compare exact contours and errors; complete square-font outputs are byte-checked.
+
+## 2026-10-03 — Reuse immutable variant plans under identical limits
+
+**Question:** Producing multiple shapes/containers repeated source validation,
+alternate deduplication, sorting and GSUB construction.
+**Choice:** `Variants::prepare` returns an immutable reusable plan borrowing the
+base font's metadata. It supports bounded caller-owned threads. Encodes must use
+exactly the same layout/resource limits; changing limits requires preparing again.
+The ordinary `encode` API keeps its behavior.
+**Reason:** Avoid repeated planning and bitmap clones while preventing stale source
+metadata or a stricter caller budget from being silently bypassed.
+
+## 2026-10-03 — Reuse existing row glyphs in native default dot composites
+
+**Question:** A literal circle component for every pixel makes the full regional
+dot TTF and its quality-11 compression disproportionately expensive. Adding row
+helper glyphs would violate the reference glyph-count requirement.
+**Choice:** At the Tong defaults (100 units/pixel and 0.9 dot diameter), reuse up to
+256 existing monochrome one-row patterns of width at most 64. Add no glyphs and
+keep all glyph IDs, cmap, names and metrics. Selected row glyphs stay literal
+circle composites, preventing cycles and limiting nesting to two levels. Match
+only still-uncovered ink; use direct circles when no pattern or int16 translation
+fits. Preserve the original per-glyph and aggregate literal-dot work budgets.
+Other scales/diameters and the exact compatibility writer retain their paths.
+**Reason:** Shorten the native composite stream without changing the displayed
+pixels. Native TTF/WOFF2 bytes change intentionally; full external glyph, metric,
+shaping, subset and raster tests must pass before integration.
+
+## 2026-10-03 — Bounded multicore export, fixed quality, deterministic defaults
+
+**Question:** Eight separate quality-11 CLI jobs exceeded available memory, while
+one compression worker left single-font latency high. The user explicitly asked
+for maximum practical performance and multicore use.
+**Choice:** Keep quality 11. Use two Brotli workers by default for streams at least
+128 KiB, retaining the serial path below that size and the explicit thread option.
+The threshold depends on input bytes, never on host CPU count. Use thin LTO and
+one codegen unit for release builds. A complete native `tong_export` example reads
+faces and prepares plans in bounded parallel pools, then reuses each plan and the
+already-written TTF/CFF bytes for WOFF2. Its conservative default is four font jobs.
+**Reason:** Improve throughput while preserving deterministic options and honest
+memory bounds. The example is a reference-policy API workflow, not a claim that
+the Phase 6 generic `fontpixel batch` command is implemented. Five-run final
+measurements and peak-RSS probes decide acceptance; single probes are not medians.

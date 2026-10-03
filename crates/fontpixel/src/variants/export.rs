@@ -142,12 +142,15 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
         return Err(invalid("invalid dot size for the chosen outline shape"));
     }
     let plan = variants.plan(&o.limits)?;
-    encode_planned(&variants.base, o, plan, None)
+    encode_planned(&variants.base, o, &plan, None)
+}
+pub(super) fn encode_prepared(base: &Font, o: &Options, plan: &Plan) -> Result<Encoded> {
+    encode_planned(base, o, plan, None)
 }
 fn encode_planned(
     base: &Font,
     o: &Options,
-    plan: Plan,
+    plan: &Plan,
     source_notdef: Option<Glyph>,
 ) -> Result<Encoded> {
     if !(o.dot_size > 0. && o.dot_size <= 1.5) || (o.shape == Shape::Square && o.dot_size != 1.) {
@@ -212,6 +215,10 @@ fn encode_planned(
     #[cfg(feature = "cff")]
     let mut cff_glyphs = Vec::new();
     let shared = o.flavor == OutlineFlavor::TrueType && o.shape == Shape::Dot;
+    // Existing one-row glyphs can shorten default Tong dot composites without
+    // introducing any new glyph IDs. Other scales/diameters retain direct dots.
+    let dot_rows = (shared && o.units_per_pixel == 100 && o.dot_size == 0.9)
+        .then(|| super::dot_rows::Catalogue::new(&sources, scale));
     let count = sources.len() + usize::from(shared);
     l.glyphs(count)?;
     let dot_id = sources.len() as u16;
@@ -229,6 +236,7 @@ fn encode_planned(
     };
     let mut total_points = 0usize;
     let mut total_components = 0usize;
+    let mut total_dot_pixels = 0usize;
     #[cfg(feature = "cff")]
     let mut total_commands = 0usize;
     let mut bitmaps = BTreeMap::new();
@@ -381,8 +389,27 @@ fn encode_planned(
         extents.push(width);
         match o.flavor {
             OutlineFlavor::TrueType => {
+                if shared && !generated_notdef {
+                    // Sharing must not bypass the former literal-dot work budget.
+                    total_dot_pixels = total_dot_pixels.saturating_add(
+                        bitmap
+                            .as_bytes()
+                            .iter()
+                            .map(|byte| byte.count_ones() as usize)
+                            .sum::<usize>(),
+                    );
+                    sfnt::bounded(
+                        total_dot_pixels,
+                        gl.max_total_components,
+                        "variant outline components",
+                    )?;
+                }
                 let glyph = if shared && !generated_notdef {
-                    glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
+                    if let Some(rows) = &dot_rows {
+                        rows.glyph(i, &bitmap, &opts, dot_id, &gl)?
+                    } else {
+                        glyf::Glyph::pixels(&bitmap, &opts, dot_id, &gl)?
+                    }
                 } else {
                     glyf::Glyph::simple(outline::contours(&bitmap, &opts, &gl.geometry)?)
                 };
@@ -827,7 +854,7 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
         cmap: mapping,
         gsub: Gsub::default(),
     };
-    let mut encoded = encode_planned(font, o, plan, Some(source_notdef))?;
+    let mut encoded = encode_planned(font, o, &plan, Some(source_notdef))?;
     encoded.report.extend(report);
     Ok(encoded)
 }

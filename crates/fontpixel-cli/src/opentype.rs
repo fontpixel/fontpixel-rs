@@ -99,7 +99,7 @@ struct Output {
     #[arg(long,default_value_t=11,value_parser=clap::value_parser!(u32).range(0..=11))]
     woff2_quality: u32,
     /// Legal intra-font parallel Brotli workers, 1 through 16.
-    #[arg(long, default_value_t = 1)]
+    #[arg(long, default_value_t = 2)]
     woff2_threads: usize,
     /// Reject any conversion loss before replacing output.
     #[arg(long)]
