@@ -1,0 +1,37 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.49s
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-192d642e85be95f9)
+
+running 29 tests
+test bounded_pixels_points_and_model ... ok
+test cff_vertical_origin_vorg_overrides_top_bearing ... ok
+test embedded_outline_detection_not_ambiguous ... ok
+test embedded_priority_skips_bad_outlines ... ok
+test collection_diagnostics_use_flattened_font_indices ... ok
+test embedded_scaling_survives_projection_and_is_scoped_per_face ... ok
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test explicit_offset_translation ... ok
+test explicit_grid_override ... ok
+test grid_and_roundtrip_quadratic ... ok
+test grid_and_roundtrip_cubic ... ok
+test preserves_aliases_unencoded_notdef_names ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test nongrid_requires_explicit_ppem ... ok
+test review_native_notdef_rejects_unrepresentable_vertical_origin ... ok
+test source_name_cannot_collide_with_generated_dot_component ... ok
+test collection_native_faces_selected_and_all ... ok
+test review_zero_font_budget_rejects_outline_projection ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test review_native_blank_vertical_origin_survives ... ok
+test review_native_font_underline_metrics_survive ... ok
+test review_native_notdef_preserves_ink_origin_and_metrics ... ok
+test wrong_embedded_size_falls_back ... ok
+test invalid_options_and_truncations ... ok
+test writer_invalid_geometry_never_succeeds ... ok
+test true_type_phantom_origin_and_use_my_metrics ... ok
+test woff2_shared_mixed_collection_and_native_projection ... ok
+test all_native_registry_wrappers ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

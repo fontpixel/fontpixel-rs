@@ -1,0 +1,131 @@
+{
+  "cases": [
+    {
+      "use_my_metrics": false,
+      "translation": 0,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 0,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 0,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 100,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 100,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 100,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 200,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 200,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": false,
+      "translation": 200,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 0,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 0,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 0,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 100,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 100,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 100,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 200,
+      "scale": 0.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 200,
+      "scale": 1.0,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    },
+    {
+      "use_my_metrics": true,
+      "translation": 200,
+      "scale": 1.5,
+      "glyphs": 3,
+      "pixels_and_advances_equal": true
+    }
+  ],
+  "glyphs": 54
+}

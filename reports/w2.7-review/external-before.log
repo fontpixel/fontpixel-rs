@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/tests/crosscheck/raster_review.py", line 112, in <module>
+    main()
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/tests/crosscheck/raster_review.py", line 81, in main
+    assert (f['post'].underlinePosition, f['post'].underlineThickness) == (-200, 100)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,22 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.61s
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-192d642e85be95f9)
+
+running 1 test
+test review_selected_embedded_diagnostics_use_output_font_indices ... FAILED
+
+failures:
+
+---- review_selected_embedded_diagnostics_use_output_font_indices stdout ----
+
+thread 'review_selected_embedded_diagnostics_use_output_font_indices' (42) panicked at crates/fontpixel/tests/vector_raster.rs:873:54:
+ReportEntry { level: Warning, impact: Loss, code: "embedded.metric_rounding", location: Location { font_index: Some(1), glyph_index: None, codepoint: None, asset: None }, message: "line gap rounded from design units to strike pixels" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    review_selected_embedded_diagnostics_use_output_font_indices
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 30 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p fontpixel --test vector_raster`

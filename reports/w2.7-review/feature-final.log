@@ -1,0 +1,33 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 4.39s
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-1be05a0bcfd3c0a4)
+
+running 25 tests
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test embedded_priority_skips_bad_outlines ... ok
+test explicit_offset_translation ... ok
+test grid_and_roundtrip_cubic ... ok
+test explicit_grid_override ... ok
+test bounded_pixels_points_and_model ... ok
+test cff_vertical_origin_vorg_overrides_top_bearing ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test grid_and_roundtrip_quadratic ... ok
+test nongrid_requires_explicit_ppem ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test review_native_blank_vertical_origin_survives ... ok
+test review_native_font_underline_metrics_survive ... ok
+test preserves_aliases_unencoded_notdef_names ... ok
+test review_native_notdef_rejects_unrepresentable_vertical_origin ... ok
+test review_zero_font_budget_rejects_outline_projection ... ok
+test source_name_cannot_collide_with_generated_dot_component ... ok
+test review_embedded_detection_tracks_available_outline_codecs ... ok
+test writer_invalid_geometry_never_succeeds ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test review_native_notdef_preserves_ink_origin_and_metrics ... ok
+test wrong_embedded_size_falls_back ... ok
+test true_type_phantom_origin_and_use_my_metrics ... ok
+test invalid_options_and_truncations ... ok
+test review_selected_embedded_diagnostics_use_output_font_indices ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

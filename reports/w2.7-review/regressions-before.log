@@ -1,0 +1,40 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.7-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.50s
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/vector_raster-192d642e85be95f9)
+
+running 3 tests
+test review_zero_font_budget_rejects_outline_projection ... FAILED
+test review_native_notdef_preserves_ink_origin_and_metrics ... FAILED
+test review_native_font_underline_metrics_survive ... FAILED
+
+failures:
+
+---- review_zero_font_budget_rejects_outline_projection stdout ----
+
+thread 'review_zero_font_budget_rejects_outline_projection' (46) panicked at crates/fontpixel/tests/vector_raster.rs:766:5:
+assertion failed: vr::read(&d, &o).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- review_native_notdef_preserves_ink_origin_and_metrics stdout ----
+
+thread 'review_native_notdef_preserves_ink_origin_and_metrics' (45) panicked at crates/fontpixel/tests/vector_raster.rs:740:13:
+assertion `left == right` failed: TrueType, embedded=false
+  left: Bounds { width: 2, height: 2, x: 1, y: -1 }
+ right: Bounds { width: 2, height: 2, x: -2, y: -1 }
+
+---- review_native_font_underline_metrics_survive stdout ----
+
+thread 'review_native_font_underline_metrics_survive' (44) panicked at crates/fontpixel/tests/vector_raster.rs:756:9:
+assertion `left == right` failed
+  left: Some(0)
+ right: Some(-2)
+
+
+failures:
+    review_native_font_underline_metrics_survive
+    review_native_notdef_preserves_ink_origin_and_metrics
+    review_zero_font_budget_rejects_outline_projection
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p fontpixel --test vector_raster`
