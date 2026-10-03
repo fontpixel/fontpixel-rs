@@ -967,3 +967,126 @@ and carry it through file reading and SVG registry limits. Keep the default and
 independent 256 MiB aggregate cap unchanged.
 **Reason:** A safe default should remain overridable for known local full-font
 outputs. Check the complete supplied Tong CJK circular font using this path.
+
+## 2026-10-03 — Preserve exact square contours with a packed small-grid tracer
+
+**Question:** Native square export converted packed bitmaps to strings and built a
+BTreeMap with an allocation for each boundary vertex.
+**Choice:** For at most 4,096 grid vertices, trace packed bits with a bounded dense
+two-edge adjacency map. Preserve the SPEC bottom-to-top edge insertion order,
+right-turn selection, collinear removal, contour rotation and conservative limits.
+Large grids and the ragged/label compatibility adapter keep the general tracer.
+**Reason:** Remove allocation and conversion overhead without changing ordering or
+compatibility bytes. Exhaustive 3×3 patterns and edge/point-budget regressions
+compare exact contours and errors; complete square-font outputs are byte-checked.
+
+## 2026-10-03 — Reuse immutable variant plans under identical limits
+
+**Question:** Producing multiple shapes/containers repeated source validation,
+alternate deduplication, sorting and GSUB construction.
+**Choice:** `Variants::prepare` returns an immutable reusable plan borrowing the
+base font's metadata. It supports bounded caller-owned threads. Encodes must use
+exactly the same layout/resource limits; changing limits requires preparing again.
+The ordinary `encode` API keeps its behavior.
+**Reason:** Avoid repeated planning and bitmap clones while preventing stale source
+metadata or a stricter caller budget from being silently bypassed.
+
+## 2026-10-03 — Reuse existing row glyphs in native default dot composites
+
+**Question:** A literal circle component for every pixel makes the full regional
+dot TTF and its quality-11 compression disproportionately expensive. Adding row
+helper glyphs would violate the reference glyph-count requirement.
+**Choice:** At the Tong defaults (100 units/pixel and 0.9 dot diameter), reuse up to
+256 existing monochrome one-row patterns of width at most 64. Add no glyphs and
+keep all glyph IDs, cmap, names and metrics. Selected row glyphs stay literal
+circle composites, preventing cycles and limiting nesting to two levels. Match
+only still-uncovered ink; use direct circles when no pattern or int16 translation
+fits. Preserve the original per-glyph and aggregate literal-dot work budgets.
+Other scales/diameters and the exact compatibility writer retain their paths.
+**Reason:** Shorten the native composite stream without changing the displayed
+pixels. Native TTF/WOFF2 bytes change intentionally; full external glyph, metric,
+shaping, subset and raster tests must pass before integration.
+
+## 2026-10-03 — Bounded multicore export, fixed quality, deterministic defaults
+
+**Question:** Eight separate quality-11 CLI jobs exceeded available memory, while
+one compression worker left single-font latency high. The user explicitly asked
+for maximum practical performance and multicore use.
+**Choice:** Keep quality 11. Use two Brotli workers by default for streams at least
+128 KiB, retaining the serial path below that size and the explicit thread option.
+The threshold depends on input bytes, never on host CPU count. Use thin LTO and
+one codegen unit for release builds. A complete native `tong_export` example reads
+faces and prepares plans in bounded parallel pools, then reuses each plan and the
+already-written TTF/CFF bytes for WOFF2. Its conservative default is four font jobs.
+**Reason:** Improve throughput while preserving deterministic options and honest
+memory bounds. The example is a reference-policy API workflow, not a claim that
+the Phase 6 generic `fontpixel batch` command is implemented. Five-run final
+measurements and peak-RSS probes decide acceptance; single probes are not medians.
+
+## 2026-10-03 — Pack alternating CFF axis segments without changing paths
+
+**Question:** Separate hlineto/vlineto operators inflated square CFF data and the
+quality-11 compression workload relative to the original Tong encoder.
+**Choice:** Pack consecutive alternating horizontal/vertical line operands under
+one Type 2 operator, with at most 40 operands per run. Split same-axis runs and
+reset on moves, diagonal lines, curves and close. Keep quantization, geometry
+budgets and the existing circle subroutine unchanged.
+**Reason:** This is standard Type 2 encoding, below the 48-entry operand-stack
+limit; it changes bytes but no outline. Regression tests cross run boundaries
+and every reset case, including zero-length lines. Full external fontTools,
+FreeType, OTS and HarfBuzz gates still apply to all affected CFF/WOFF2 outputs.
+
+## 2026-10-03 — Reject experimental shared Brotli hasher setup
+
+**Question:** Brotli's `favor_cpu_efficiency` option promises less repeated
+prefix-dictionary work across compression threads.
+**Choice:** Do not enable it. A new >128 KiB synthetic sfnt regression exercised
+actual two/four-worker paths and triggered the dependency's internal
+`orig_hasher == self.hasher_` assertion. The normal default remains false;
+retain the test and rejected probe logs. Small-font tests alone would have
+missed it because they use the serial threshold path.
+**Reason:** A modest, noisy single-probe throughput change cannot justify a
+writer panic. Quality 11, safe fallback and deterministic valid output prevail.
+
+## 2026-10-03 — Extend dot reuse to tiny two-dimensional ink patterns
+
+**Question:** Row-only reuse shortened dot TTFs but quality-11 compression still
+kept the complete family above the 40-second target in engineering probes.
+**Choice:** Reuse existing single-row/column patterns up to 64 pixels and tiny
+2D patterns no larger than 4×4. Keep the 256-helper limit, original glyph count,
+metrics, literal-ink work budgets, int16 translations and maximum depth two.
+Match a bounded 64×64 remaining-ink mask top-down; consume each ink pixel once.
+Larger extents fall back to direct circles. Selected helpers stay literal.
+**Reason:** Reduce the data entering Brotli without lowering quality. Native
+TTF/WOFF2 bytes and circle-contour ordering may change, never pixels or mapping.
+The resulting webfont can be larger despite a much smaller sfnt; report this
+tradeoff explicitly. Exhaustive 3×3 combinations with displaced multirow helpers
+check exact expanded contours as a multiset; complete fonts also need independent
+pixel, metric, shaping, OTS, subset and reader validation before acceptance.
+
+## 2026-10-03 — Use shared-plan eight-font throughput for the Tong example
+
+**Question:** Four simultaneous fonts with two/four compressor workers incurred
+more CPU time than eight independent font compressions after data-size reduction.
+**Choice:** The complete-family example defaults to min(available CPUs, 8) jobs
+and one compression thread per font, still quality 11. Its explicit options remain
+bounded. Individual library/CLI exports retain two compression workers for latency.
+**Reason:** All eight shared-plan jobs fit the measured host at roughly 2.85 GiB
+peak RSS and a first 39.1-second probe. This is distinct from the rejected original
+eight-process CLI strategy, which repeated source parsing and exceeded memory.
+Five-run medians, resource measurements and independent output hashes, not the
+single probe, establish final performance. The generic batch CLI remains Phase 6.
+
+## 2026-10-03 — Expose dot representation's explicit time/size tradeoff
+
+**Question:** Pattern reuse speeds export and shrinks TTFs, but the first complete
+probe increased aggregate WOFF2 bytes from 7.75 MB to 8.78 MB (dot files roughly
+35–37% larger). Leaving callers no choice would hide a significant tradeoff.
+**Choice:** Expose `DotReuse::{Literal, Rows, Patterns}` in native variants options
+and `--dot-reuse literal|rows|patterns` on native variants/convert. The full-family
+example accepts the policy too. Patterns remains the speed-oriented default;
+literal retains the old per-pixel representation and rows is intermediate.
+**Reason:** The user's performance priority is explicit, but quality/size tradeoffs
+must remain inspectable and selectable. Every policy retains quality 11 by
+default and identical expanded circle geometry, glyph IDs, metrics and metadata.
+Tests compare all three policies and retain dependent helpers through subsetting.

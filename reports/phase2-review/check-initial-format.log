@@ -1,0 +1,17 @@
+Verified 53 non-Unicode keys; 35 core + 12 CJK unique tables; 207 GB18030 ranges (1,087,996 four-byte mappings); CPython 3.12.14
+BDF printability: 712 ranges
+Diff in /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-review/crates/fontpixel/examples/tong_export.rs:56:
+                 // output is written, so it is not equivalent to an absent file.
+                 match fs::symlink_metadata(&path) {
+                     Ok(_) => {
+-                        return Err(
+-                            format!("output has an unresolved symlink: {}", path.display()).into(),
+-                        );
++                        return Err(format!(
++                            "output has an unresolved symlink: {}",
++                            path.display()
++                        )
++                        .into());
+                     }
+                     Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                     Err(error) => return Err(error.into()),

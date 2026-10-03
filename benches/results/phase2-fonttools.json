@@ -1,0 +1,124 @@
+{
+  "partial": false,
+  "binary_sha256": "7e547010b0d20c12c055998a411882c94bd4c3115e3b7645cc0a863dc7290cbd",
+  "woff_driver_sha256": "570f3a4f3bedd1867bdbfa231ad921fe1fdadf61edab731287818ba63249553c",
+  "fonttools_version": "4.66.1",
+  "brotli_version": "1.2.0",
+  "results": [
+    {
+      "case": "full-SC-square-ttf",
+      "engine": "native",
+      "seconds": [
+        0.9436415649979608,
+        0.7141622820054181,
+        0.8790718140007812,
+        0.8866390449984465,
+        0.8634686280056485
+      ],
+      "median_seconds": 0.8790718140007812,
+      "bytes": 7550376,
+      "sha256": "f569d726e54fb97dd13b05ea80c0fb11ee459c6089963857611a1908c913952b",
+      "input_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "includes": "read/plan/encode/write"
+    },
+    {
+      "case": "full-SC-square-ttf",
+      "engine": "fonttools",
+      "seconds": [
+        13.442803477002599,
+        12.130623263001326,
+        12.440759523000452,
+        12.79961680300039,
+        13.58345445899613
+      ],
+      "median_seconds": 12.79961680300039,
+      "bytes": 7549728,
+      "sha256": "b62905d6f9f070c3af663ebe05166b5fcd0196907f80806b489fc06cb551219a",
+      "input_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "includes": "read/plan/encode/write"
+    },
+    {
+      "case": "woff2-TongPixelSans14Large-square",
+      "engine": "native",
+      "seconds": [
+        18.86089135,
+        18.724211513,
+        19.516187923,
+        18.489579124,
+        17.150062945
+      ],
+      "median_seconds": 18.724211513,
+      "bytes": 1107844,
+      "sha256": "07dc497690f5f3b3089efa437ce15fc39a78169ac21f6c193cee068ad16b494b",
+      "input_sha256": "1785f4b2e16657112d455e3ff8cb4a63afd24117e2645a300505f998537a977a",
+      "quality": 11,
+      "threads": 1,
+      "includes": "encode only",
+      "all_glyphs_verified": 44833
+    },
+    {
+      "case": "woff2-TongPixelSans14Large-square",
+      "engine": "fonttools",
+      "seconds": [
+        27.887582287999976,
+        20.63040851799451,
+        17.326886893999472,
+        19.18369183300092,
+        18.598317275995214
+      ],
+      "median_seconds": 19.18369183300092,
+      "bytes": 1103688,
+      "sha256": "85ddba0f466a4f749becfd494939ecb545c5dab2305ce1c7e74551117650e1bf",
+      "input_sha256": "1785f4b2e16657112d455e3ff8cb4a63afd24117e2645a300505f998537a977a",
+      "quality": 11,
+      "threads": 1,
+      "includes": "encode only",
+      "all_glyphs_verified": 44833
+    },
+    {
+      "case": "woff2-latin-dot-source",
+      "engine": "native",
+      "seconds": [
+        1.451947546,
+        1.477865774,
+        1.635187119,
+        2.098833222,
+        1.62586118
+      ],
+      "median_seconds": 1.62586118,
+      "bytes": 39120,
+      "sha256": "fa47c06fc43a1bfbd8280f8faa0bfdec9b8f80f96a91210af0103c9a42d3e37a",
+      "input_sha256": "8fdaf0dcdb51d31299ebb4d5cd7bd12f8a26a9f8b8256f17213ebfbf53ea447e",
+      "quality": 11,
+      "threads": 1,
+      "includes": "encode only",
+      "all_glyphs_verified": 3647
+    },
+    {
+      "case": "woff2-latin-dot-source",
+      "engine": "fonttools",
+      "seconds": [
+        3.0946911740029464,
+        2.3510639130035997,
+        2.2191323840015684,
+        2.730913668994617,
+        2.1942694089957513
+      ],
+      "median_seconds": 2.3510639130035997,
+      "bytes": 39004,
+      "sha256": "607172b1b57a148bed14eb43847addd3c0baf31d968793ad9ae7490d1efec942",
+      "input_sha256": "8fdaf0dcdb51d31299ebb4d5cd7bd12f8a26a9f8b8256f17213ebfbf53ea447e",
+      "quality": 11,
+      "threads": 1,
+      "includes": "encode only",
+      "all_glyphs_verified": 3647
+    }
+  ],
+  "vector_correctness": {
+    "case": "paired-full-SC-square",
+    "glyphs": 38654,
+    "shaping_batches": 912,
+    "bytes": 7550376,
+    "sha256": "f569d726e54fb97dd13b05ea80c0fb11ee459c6089963857611a1908c913952b"
+  }
+}

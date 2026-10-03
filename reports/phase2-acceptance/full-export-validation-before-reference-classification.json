@@ -1,0 +1,91 @@
+{
+  "partial": true,
+  "results": [
+    {
+      "case": "TongPixelSans14Large-square-ttf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 9061276,
+      "sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941",
+      "reference_sha256": "41f100cba6fed1406bd52645073e8dad5a0ef57377fc79c5651e583ce82b454c",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-square-otf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 8845524,
+      "sha256": "64df0f18a84a84b0f4e0c08ef42701246e05118c3e211c9a7d6d3c7f2e1c6a2f",
+      "reference_sha256": "cb946f04768d2121f02123bb4e8d4cfe7f79ba524dd05a7ac8333c65bfae9813",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-square-native-woff2",
+      "glyphs": 44833,
+      "bytes": 1605016,
+      "sha256": "4bc34ec58fdecdce1b82d4f449ee3054d729d9c5d72d95489b682e7813b2be82",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "native_reader_full_tables": true
+    }
+  ],
+  "native_woff2_streams": {
+    "TongPixelSans14Large-square.woff2": {
+      "CFF ": {
+        "length": 8464846,
+        "transform": 0,
+        "sha256": "a4d08df3a4902bf60eeb7c991238449a46cebd141c7282510529687c5ed0e05b"
+      },
+      "GSUB": {
+        "length": 69370,
+        "transform": 0,
+        "sha256": "2283763fbad0e0bf0522e659252cbbb40801d71986e93ddb65bd0560b2af16ac"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "286ed858e8a20fbf74b732ce1abc3724d3f29cc28845f75e3188c9208df0935b"
+      },
+      "cmap": {
+        "length": 130010,
+        "transform": 0,
+        "sha256": "c94ba1eff1e412882e4747ef93c74430ed67bdd7e7524c276b80b403fe30e1f3"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "dc4cbabce3362beffe7efc1823242eed50de6522a3ce36f3b1021d64a5d7e730"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "f93214b1576d34fede68349ff106dbc10731cadee91af2415cb21341a426f703"
+      },
+      "hmtx": {
+        "length": 179332,
+        "transform": 0,
+        "sha256": "cae451c2e1d0b55e24c0d3b1020d08f9b42cef21e0903b23489f3dbc38ac0de9"
+      },
+      "maxp": {
+        "length": 6,
+        "transform": 0,
+        "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8"
+      },
+      "name": {
+        "length": 1536,
+        "transform": 0,
+        "sha256": "27e448fc3d7833d2bc97702f0d7d9137fce50508bc73985f6a85ba0d5e62f754"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    }
+  }
+}

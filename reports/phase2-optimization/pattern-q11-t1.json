@@ -1,0 +1,13 @@
+{
+  "threads": 1,
+  "quality": 11,
+  "returncode": 0,
+  "wall_seconds": 28.289328551996732,
+  "peak_rss_kib": 141032,
+  "cpu_user_seconds": 28.104075,
+  "cpu_system_seconds": 0.17332599999999998,
+  "source_sha256": "94787d1093d1ad7976b6a7147e0acedd0251a970fdd2a227d81b142448babbaa",
+  "encoder_sha256": "29352fe22b51ba6cf993f3f6c7ea005db2a280d87d8ae38dfc4887b8edd07f57",
+  "output_bytes": 848644,
+  "scope": "single codec resource/profile probe; not a five-run benchmark"
+}

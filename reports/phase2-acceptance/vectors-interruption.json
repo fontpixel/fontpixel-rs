@@ -1,0 +1,8 @@
+{
+  "status": "interrupted",
+  "observation": "Shell reported Python process Killed; no native-code failure or Python traceback. Memory pressure suspected, not independently proven.",
+  "completed_cases": 15,
+  "last_completed_case": "rebuilt-Large-prop-square-ttf-woff2",
+  "last_produced_sfnt": "rebuilt-Large-prop-square-otf.otf",
+  "next_step": "Resume unchanged-source oracle cases serially, release source builder object before loading comparison fonts."
+}

@@ -1,0 +1,22 @@
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+TongPixelSans14Large-square-ttf ORIGINAL RUST PASS 44833
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+TongPixelSans14Large-square-otf ORIGINAL RUST PASS 44833
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+'created' timestamp seems very low; regarding as unix timestamp
+'modified' timestamp seems very low; regarding as unix timestamp
+TongPixelSans14Large-square-native-woff2 PASS 44833
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/tests/crosscheck/phase2_exports_validate.py", line 107, in <module>
+    main()
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/tests/crosscheck/phase2_exports_validate.py", line 87, in main
+    assert run.returncode == 0, (label, run.stderr)
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ('TongPixelSans14Large-Square-reference-woff2', b"ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table\n")

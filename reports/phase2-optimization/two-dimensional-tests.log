@@ -1,0 +1,26 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 15.94s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/fontpixel-6ea26c7d1d3893e3)
+
+running 3 tests
+test variants::dot_rows::tests::unrepresentable_helper_translation_uses_direct_circles ... ok
+test variants::dot_rows::tests::patterned_rows_cover_ink_once_and_keep_original_work_limits ... ok
+test variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours ... FAILED
+
+failures:
+
+---- variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours stdout ----
+
+thread 'variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours' (656) panicked at crates/fontpixel/src/variants/dot_rows.rs:256:13:
+assertion `left == right` failed
+  left: [[(-5.0, -50.0, true), (-9.0, -9.0, false), (-50.0, -5.0, true), (-91.0, -9.0, false), (-95.0, -50.0, true), (-91.0, -91.0, false), (-50.0, -95.0, true), (-9.0, -91.0, false)], [(95.0, -50.0, true), (91.0, -9.0, false), (50.0, -5.0, true), (9.0, -9.0, false), (5.0, -50.0, true), (9.0, -91.0, false), (50.0, -95.0, true), (91.0, -91.0, false)], [(195.0, -50.0, true), (191.0, -9.0, false), (150.0, -5.0, true), (109.0, -9.0, false), (105.0, -50.0, true), (109.0, -91.0, false), (150.0, -95.0, true), (191.0, -91.0, false)], [(295.0, -50.0, true), (291.0, -9.0, false), (250.0, -5.0, true), (209.0, -9.0, false), (205.0, -50.0, true), (209.0, -91.0, false), (250.0, -95.0, true), (291.0, -91.0, false)], [(395.0, -50.0, true), (391.0, -9.0, false), (350.0, -5.0, true), (309.0, -9.0, false), (305.0, -50.0, true), (309.0, -91.0, false), (350.0, -95.0, true), (391.0, -91.0, false)], [(-5.0, -150.0, true), (-9.0, -109.0, false), (-50.0, -105.0, true), (-91.0, -109.0, false), (-95.0, -150.0, true), (-91.0, -191.0, false), (-50.0, -195.0, true), (-9.0, -191.0, false)], [(95.0, -150.0, true), (91.0, -109.0, false), (50.0, -105.0, true), (9.0, -109.0, false), (5.0, -150.0, true), (9.0, -191.0, false), (50.0, -195.0, true), (91.0, -191.0, false)], [(295.0, -150.0, true), (291.0, -109.0, false), (250.0, -105.0, true), (209.0, -109.0, false), (205.0, -150.0, true), (209.0, -191.0, false), (250.0, -195.0, true), (291.0, -191.0, false)], [(395.0, -150.0, true), (391.0, -109.0, false), (350.0, -105.0, true), (309.0, -109.0, false), (305.0, -150.0, true), (309.0, -191.0, false), (350.0, -195.0, true), (391.0, -191.0, false)]]
+ right: [[(-5.0, -150.0, true), (-9.0, -109.0, false), (-50.0, -105.0, true), (-91.0, -109.0, false), (-95.0, -150.0, true), (-91.0, -191.0, false), (-50.0, -195.0, true), (-9.0, -191.0, false)], [(95.0, -150.0, true), (91.0, -109.0, false), (50.0, -105.0, true), (9.0, -109.0, false), (5.0, -150.0, true), (9.0, -191.0, false), (50.0, -195.0, true), (91.0, -191.0, false)], [(295.0, -150.0, true), (291.0, -109.0, false), (250.0, -105.0, true), (209.0, -109.0, false), (205.0, -150.0, true), (209.0, -191.0, false), (250.0, -195.0, true), (291.0, -191.0, false)], [(395.0, -150.0, true), (391.0, -109.0, false), (350.0, -105.0, true), (309.0, -109.0, false), (305.0, -150.0, true), (309.0, -191.0, false), (350.0, -195.0, true), (391.0, -191.0, false)], [(-5.0, -50.0, true), (-9.0, -9.0, false), (-50.0, -5.0, true), (-91.0, -9.0, false), (-95.0, -50.0, true), (-91.0, -91.0, false), (-50.0, -95.0, true), (-9.0, -91.0, false)], [(95.0, -50.0, true), (91.0, -9.0, false), (50.0, -5.0, true), (9.0, -9.0, false), (5.0, -50.0, true), (9.0, -91.0, false), (50.0, -95.0, true), (91.0, -91.0, false)], [(195.0, -50.0, true), (191.0, -9.0, false), (150.0, -5.0, true), (109.0, -9.0, false), (105.0, -50.0, true), (109.0, -91.0, false), (150.0, -95.0, true), (191.0, -91.0, false)], [(295.0, -50.0, true), (291.0, -9.0, false), (250.0, -5.0, true), (209.0, -9.0, false), (205.0, -50.0, true), (209.0, -91.0, false), (250.0, -95.0, true), (291.0, -91.0, false)], [(395.0, -50.0, true), (391.0, -9.0, false), (350.0, -5.0, true), (309.0, -9.0, false), (305.0, -50.0, true), (309.0, -91.0, false), (350.0, -95.0, true), (391.0, -91.0, false)]]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p fontpixel --lib`

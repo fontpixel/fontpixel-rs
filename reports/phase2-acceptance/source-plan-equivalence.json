@@ -1,0 +1,38 @@
+[
+  {
+    "size": "Large",
+    "spacing": "prop",
+    "raw_glyphs": 44833,
+    "cropped_glyphs": 44833,
+    "same_order": true,
+    "same_cmap": true,
+    "same_subs": true
+  },
+  {
+    "size": "Large",
+    "spacing": "mono",
+    "raw_glyphs": 44642,
+    "cropped_glyphs": 44642,
+    "same_order": true,
+    "same_cmap": true,
+    "same_subs": true
+  },
+  {
+    "size": "Small",
+    "spacing": "prop",
+    "raw_glyphs": 44833,
+    "cropped_glyphs": 44833,
+    "same_order": true,
+    "same_cmap": true,
+    "same_subs": true
+  },
+  {
+    "size": "Small",
+    "spacing": "mono",
+    "raw_glyphs": 44642,
+    "cropped_glyphs": 44642,
+    "same_order": true,
+    "same_cmap": true,
+    "same_subs": true
+  }
+]

@@ -9,8 +9,9 @@ use std::{
     collections::{BTreeMap, HashMap},
     hash::{Hash, Hasher},
 };
+mod dot_rows;
 mod export;
-pub use export::{Encoded, Options, OutlineFlavor, encode, encode_single};
+pub use export::{DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single};
 
 /// A language-specific face with explicit OpenType script selection.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -48,6 +49,18 @@ impl Variants {
             languages: Vec::new(),
             scripts: Vec::new(),
         }
+    }
+    /// Validate and plan once for repeated square/dot and TTF/CFF exports.
+    ///
+    /// The immutable plan can be shared across bounded caller-owned threads.
+    /// Encoding options must retain these exact layout/resource limits; prepare
+    /// again to change them, rather than bypassing source-validation budgets.
+    pub fn prepare(&self, limits: &LayoutLimits) -> Result<PreparedVariants<'_>> {
+        Ok(PreparedVariants {
+            base: &self.base,
+            plan: self.plan(limits)?,
+            limits: limits.clone(),
+        })
     }
     /// Add a BCP-47/OpenType language with Tong's default CJK script scope.
     pub fn add_language(&mut self, language: &str, font: Font) -> Result<()> {
@@ -258,6 +271,28 @@ impl Variants {
             cmap: cmap.into_iter().map(|(cp, n)| (cp, ids[&n])).collect(),
             gsub,
         })
+    }
+}
+/// Reusable immutable plan borrowing its source font for global metadata.
+#[derive(Debug)]
+pub struct PreparedVariants<'a> {
+    base: &'a Font,
+    plan: Plan,
+    limits: LayoutLimits,
+}
+impl PreparedVariants<'_> {
+    /// Inspect the exact immutable glyph order and layout plan.
+    pub fn plan(&self) -> &Plan {
+        &self.plan
+    }
+    /// Encode with identical safety limits, without replanning or cloning glyphs.
+    pub fn encode(&self, options: &Options) -> Result<Encoded> {
+        if options.limits != self.limits {
+            return Err(invalid(
+                "prepared variants require matching layout limits; prepare again to change limits",
+            ));
+        }
+        export::encode_prepared(self.base, options, &self.plan)
     }
 }
 /// Planned encoded and unencoded glyphs; implicit glyph 0 is `.notdef`.

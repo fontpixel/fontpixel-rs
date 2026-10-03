@@ -35,6 +35,9 @@ pub(super) struct VariantsArgs {
     /// Pixel diameter/side ratio; default 1 for square, 0.9 for dot.
     #[arg(long)]
     dotsize: Option<f64>,
+    /// Native dot reuse: literal favors webfont ratio; patterns favors export speed.
+    #[arg(long,default_value="patterns",value_parser=["literal","rows","patterns"])]
+    dot_reuse: String,
     /// Embed a matching EBDT/EBLC strike.
     #[arg(long)]
     embed_bitmaps: bool,
@@ -99,7 +102,7 @@ struct Output {
     #[arg(long,default_value_t=11,value_parser=clap::value_parser!(u32).range(0..=11))]
     woff2_quality: u32,
     /// Legal intra-font parallel Brotli workers, 1 through 16.
-    #[arg(long, default_value_t = 1)]
+    #[arg(long, default_value_t = 2)]
     woff2_threads: usize,
     /// Reject any conversion loss before replacing output.
     #[arg(long)]
@@ -273,6 +276,7 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
     }
     let o = Options {
         shape,
+        dot_reuse: dot_reuse(Some(&a.dot_reuse)),
         dot_size: a
             .dotsize
             .unwrap_or(if shape == Shape::Dot { 0.9 } else { 1. }),
@@ -293,6 +297,13 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
     let e = variants::encode(&v, &o)?;
     report.extend(e.report);
     a.output.save(e.bytes, report, Default::default(), out)
+}
+pub(super) fn dot_reuse(value: Option<&str>) -> variants::DotReuse {
+    match value {
+        Some("literal") => variants::DotReuse::Literal,
+        Some("rows") => variants::DotReuse::Rows,
+        _ => variants::DotReuse::Patterns,
+    }
 }
 pub(super) fn subset(a: SubsetArgs, out: &mut dyn Write) -> Result<()> {
     let limits = fontpixel::ResourceLimits::default();

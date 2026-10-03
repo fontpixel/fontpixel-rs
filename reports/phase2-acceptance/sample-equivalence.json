@@ -1,0 +1,44 @@
+[
+  {
+    "sample": "TongPixelSans14Large-SC.bdf",
+    "match": false,
+    "sample_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+    "generated_sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+  },
+  {
+    "sample": "TongPixelSans14Large-TC.bdf",
+    "match": false,
+    "sample_sha256": "e62c69056c2c2ba76b5e4b4569777f19b80b53f8257bb0429ae9d2dec0d830df",
+    "generated_sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+  },
+  {
+    "sample": "TongPixelSans14Small-Latin.bdf",
+    "match": true,
+    "sample_sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+    "generated_sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+  },
+  {
+    "sample": "TongPixelSans14Large-KR.bdf",
+    "match": false,
+    "sample_sha256": "2f35f9f1b2731c25ba0da6e5b19d373d39e496db83027e953c16e8052c49f500",
+    "generated_sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+  },
+  {
+    "sample": "TongPixelSans14Large-JP.bdf",
+    "match": false,
+    "sample_sha256": "7fd8803b982a56473a0406e5bbf231b72c35ffba8e56bfbb104d65f641c47bfd",
+    "generated_sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+  },
+  {
+    "sample": "TongPixelSans14Large-Latin.bdf",
+    "match": true,
+    "sample_sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46",
+    "generated_sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+  },
+  {
+    "sample": "TongPixelSansMono14Large-Latin.bdf",
+    "match": true,
+    "sample_sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650",
+    "generated_sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "partial": false,
+  "all_84_outputs_byte_identical_to_frozen_validated_candidate": true,
+  "actual_final_outputs_match_all_84_timed_hashes": true,
+  "binary_sha256": "3426bb4d2357d9983574dd35920fc9bfc7b693648d91673270ce13ceda77c455",
+  "times_seconds": [
+    38.41377583800204,
+    36.94677455999772,
+    39.48120095299964,
+    39.317197263997514,
+    36.55425047099561
+  ],
+  "median_seconds": 38.41377583800204,
+  "peak_rss_gib": 2.8687896728515625,
+  "total_bytes": 326576649,
+  "woff2_bytes": 8778688,
+  "candidate_quality11_median": 38.233479560003616,
+  "same_input_hashes": true
+}

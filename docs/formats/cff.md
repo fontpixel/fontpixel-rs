@@ -112,3 +112,11 @@ and a non-default FontMatrix. `--font TongPixelSans14Large-SC.bdf --cjk-count 38
 selects the full SC sample. `fuzz/fuzz_targets/cff.rs` fuzzes raw CFF and sfnt-CFF
 entry points with bounded whole-font evaluation. No Python or external tool is
 called by production fontpixel code.
+
+### Native axis-run packing (Phase 2 performance acceptance)
+
+The writer emits one hlineto/vlineto operator for up to 40 alternating axis
+operands. Same-axis segments, diagonal lines, curves and contour boundaries end
+the run. The Type 2 operand stack is bounded below its 48-entry limit; coordinate
+quantization, command-count limits and the circle subroutine remain unchanged.
+The exact outlines are checked across 97-segment runs and all reset conditions.

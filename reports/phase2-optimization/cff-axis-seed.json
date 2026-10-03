@@ -1,0 +1,30 @@
+{
+  "synthetic_source": true,
+  "fonttools_axis_operand_runs": [
+    40,
+    40,
+    40,
+    40,
+    40,
+    3
+  ],
+  "ots": true,
+  "glyphs": 2,
+  "seeds": [
+    {
+      "name": "packed-axis.bdf",
+      "bytes": 327,
+      "sha256": "1c3f8820df0f8a9dd2f495103c2c7193808b69cd0786d020a8fa5a736f9ddf70"
+    },
+    {
+      "name": "packed-axis.otf",
+      "bytes": 1448,
+      "sha256": "b0e7da77b0178f5ecc4d17add3484111fe6f145463847062e3c3cb83413f2c48"
+    },
+    {
+      "name": "packed-axis.cff",
+      "bytes": 477,
+      "sha256": "56d98b37c1bc099a5a43b7511594f5f926f2da38ed6dcd1645e3dc6848bd827a"
+    }
+  ]
+}

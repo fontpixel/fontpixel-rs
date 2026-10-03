@@ -923,3 +923,59 @@ fn svg_explicit_input_budget_applies_to_inspection_conversion_and_rendering() {
         );
     }
 }
+
+#[cfg(feature = "opentype")]
+#[test]
+fn native_dot_reuse_cli_policies_and_validation() {
+    let temp = TempDir::new();
+    let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/data/compat/mini.bdf");
+    for policy in ["literal", "rows", "patterns"] {
+        let output = temp.0.join(format!("{policy}.ttf"));
+        let result = run(&[
+            "variants",
+            "--base",
+            source.to_str().unwrap(),
+            "--shape",
+            "dot",
+            "--dot-reuse",
+            policy,
+            "-o",
+            output.to_str().unwrap(),
+        ]);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        let converted = temp.0.join(format!("converted-{policy}.ttf"));
+        let result = run(&[
+            "convert",
+            source.to_str().unwrap(),
+            "--shape",
+            "dot",
+            "--dot-reuse",
+            policy,
+            "-o",
+            converted.to_str().unwrap(),
+        ]);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+    }
+    let output = temp.0.join("invalid.svg");
+    assert!(
+        !run(&[
+            "convert",
+            source.to_str().unwrap(),
+            "--dot-reuse",
+            "rows",
+            "-o",
+            output.to_str().unwrap()
+        ])
+        .status
+        .success()
+    );
+    assert!(!output.exists());
+}

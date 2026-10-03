@@ -84,5 +84,9 @@ The reader continues accepting a transformed nonminimal count correctly.
 Brotli 9.0.0 supports a legal single-stream parallel encoder. The explicit
 `compression_threads` option uses that implementation, bounded to 1–16 threads;
 independent multi-font jobs are separately bounded (product at most 64). Both
-strategies retain deterministic results for fixed inputs/options. Default remains
-one intra-font thread and quality 11. No parallel feature is imposed on BDF/PCF.
+strategies retain deterministic results for fixed inputs/options. Quality remains
+11. After the combined Phase 2 performance review, the default is two intra-font
+workers for streams at least 128 KiB; smaller streams use the serial path to
+avoid worker/dictionary overhead. This input-size threshold is deterministic,
+not dependent on host CPU count. `--woff2-threads 1` keeps the serial choice.
+No parallel feature is imposed on BDF/PCF.

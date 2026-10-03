@@ -1,0 +1,1776 @@
+{
+  "partial": false,
+  "engine": "unchanged original Tong Rust exporter",
+  "binary_sha256": "af717a00b89b9eb23495272cfc303f05695d582fa62ed8a415a00a5126ada317",
+  "jobs": 8,
+  "input_hashes": {
+    "TongPixelSans14Large-JP.bdf": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a",
+    "TongPixelSans14Large-KR.bdf": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2",
+    "TongPixelSans14Large-Latin.bdf": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46",
+    "TongPixelSans14Large-SC.bdf": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42",
+    "TongPixelSans14Large-TC.bdf": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17",
+    "TongPixelSans14Small-JP.bdf": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333",
+    "TongPixelSans14Small-KR.bdf": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae",
+    "TongPixelSans14Small-Latin.bdf": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+    "TongPixelSans14Small-SC.bdf": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee",
+    "TongPixelSans14Small-TC.bdf": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21",
+    "TongPixelSansMono14Large-JP.bdf": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654",
+    "TongPixelSansMono14Large-KR.bdf": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649",
+    "TongPixelSansMono14Large-Latin.bdf": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650",
+    "TongPixelSansMono14Large-SC.bdf": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c",
+    "TongPixelSansMono14Large-TC.bdf": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7",
+    "TongPixelSansMono14Small-JP.bdf": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22",
+    "TongPixelSansMono14Small-KR.bdf": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c",
+    "TongPixelSansMono14Small-Latin.bdf": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1",
+    "TongPixelSansMono14Small-SC.bdf": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972",
+    "TongPixelSansMono14Small-TC.bdf": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+  },
+  "scope": "84 outputs from frozen BDFs; Python reference planning and metadata preparation, native original Rust vectors/WOFF2/OTB, bdftopcf; full I/O",
+  "runs": [
+    {
+      "wall_seconds": 136.68622185700224,
+      "prepare_seconds": 43.432265638999525,
+      "vectors_woff2_seconds": 92.00026132899802,
+      "bitmaps_seconds": 0.883837041001243,
+      "canonical_tables_verified": 44,
+      "source_and_pcf_bytes_verified": true,
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1136744,
+          "sha256": "a4638100568596311978356fda2078a2397776a15f7be17afc4b54c538bde99c"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1136676,
+          "sha256": "5c157740f067e524888fc0ca16f0b4a3755dc1521f39cb14eb898c6697a18c36"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 72384,
+          "sha256": "f4f2a39c7a4f9c03c60c898f881dfa8f190101f37539843ae26cb407b8725c51"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1135888,
+          "sha256": "53b0ca027537777570af07ef1234b05d0f6c13b6ccf2df6adfad00fd061e9f43"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1136680,
+          "sha256": "3bcf1faf34301abe68f431c5cfb01e4477634c08ce681dafcde7fd14291a346e"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1132520,
+          "sha256": "ed8a2a07c252bb7f8aad4224a8011b79a538cd7de269e7a614ad577d3d153bec"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1132452,
+          "sha256": "e7e46dee92d856ac52719fde53a18c74ab5b1bd423b8df22b603177344bc9c55"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 68312,
+          "sha256": "ddd71e0043a35dc5b4dd9bf8419691add59a352c480f9fe03646a8c593bd8a66"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1131664,
+          "sha256": "905723ca49ea42d4f0e44dde73d28877ed4595ebb512952c74a07f59bec41736"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1132456,
+          "sha256": "0f29e286ff4442bd85f4db8a3dc2a4e54e5a122314ab7787a5a0e6e353904a01"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1132068,
+          "sha256": "2f85042bf7af1fc55b0684dff5907e892e84ab5901a125b3f243cfcc22d91ef2"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1132000,
+          "sha256": "a829eab2f64f368119cf46f0bc7fef258f9e65fcc4c1a9f17bcb8d1319e49379"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 69216,
+          "sha256": "d9d96facb16ced850baba2704fe975b9d24935b02c59bc35efa6b93dd8682e3b"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1131208,
+          "sha256": "eb58845a57018f66d9789b00746f427e3067c0d2183374e9a8b6e2a256cdda35"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1132000,
+          "sha256": "9bc103c843a0d8edc69f5390e32c35d9e3139755a7e9c19c2d0008aab9d9fc6c"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1129356,
+          "sha256": "43398bd3c3c67f0684ff7b068c51f0d996b7e48949e95ffea8e16bccb6e7dcd2"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1129288,
+          "sha256": "abaa2e4860257fa5947d14405f08fdbe1e844d0aeeb43d08386ffd38a3a66ebc"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 66440,
+          "sha256": "a16201a98051c69159901d1d18bf5526433ead2d5e0039b9563d80172c6b6813"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1128496,
+          "sha256": "0e1f6a698dba1d10d4bda82525795a643dd983a78a89bb30caedff666011e4db"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1129288,
+          "sha256": "cb73d7d53f0d8f5c8ffe41470fbb4bd2ce2fd0b87cf62f3073cf9d103a5a8ad3"
+        },
+        "ttf/TongPixelSans14Large-Dot.ttf": {
+          "bytes": 21995468,
+          "sha256": "bd8308e342199ef9d5166a7428f3761ec061337a916ece4ee01283766f4e09a1"
+        },
+        "ttf/TongPixelSans14Large-Square.ttf": {
+          "bytes": 9015400,
+          "sha256": "2a24e9d9ba327911138d8855f603648d8f1c86533b24646d1334b6a87e26cf33"
+        },
+        "ttf/TongPixelSans14Small-Dot.ttf": {
+          "bytes": 21940376,
+          "sha256": "5a7ad5087b53f0a5bbdd3fe266b021770fe11606ecd0e2129313d9e6b5d34997"
+        },
+        "ttf/TongPixelSans14Small-Square.ttf": {
+          "bytes": 9002192,
+          "sha256": "544e42ad99805971939cfcf09022f6743c3f853f9c0d59da5d41e46f8b89aaf5"
+        },
+        "ttf/TongPixelSansMono14Large-Dot.ttf": {
+          "bytes": 21882320,
+          "sha256": "85d3286a496b36d51fece3fba01a47d8180f7002adf87a932814d47bfb1ba091"
+        },
+        "ttf/TongPixelSansMono14Large-Square.ttf": {
+          "bytes": 8977856,
+          "sha256": "f8b67904dba585b05286735bf7a2b53ab1bfa8ec7cc97ab408bcea55d59c5396"
+        },
+        "ttf/TongPixelSansMono14Small-Dot.ttf": {
+          "bytes": 21848216,
+          "sha256": "06fe0dd0f62de0dde912aa0bd01ed2f52e28b4fcef1271051127c193d7e80093"
+        },
+        "ttf/TongPixelSansMono14Small-Square.ttf": {
+          "bytes": 8971248,
+          "sha256": "377e74104822864db643b2a0bb8a4fd68129897405163a5741ac0574d2710501"
+        },
+        "otf/TongPixelSans14Large-Dot.otf": {
+          "bytes": 15876872,
+          "sha256": "97bfb758e8aef214e4450e838be48c6e008b60ddba38dd708f81750fc4123212"
+        },
+        "otf/TongPixelSans14Large-Square.otf": {
+          "bytes": 6764380,
+          "sha256": "807630e43152b57590862554d7e852fa1e412969687cb8060965eada30446a15"
+        },
+        "otf/TongPixelSans14Small-Dot.otf": {
+          "bytes": 15795284,
+          "sha256": "9d6deb91ab7e423aefbfb2ef5e0db4aafd38548817387e1abb417eaa690ca05f"
+        },
+        "otf/TongPixelSans14Small-Square.otf": {
+          "bytes": 6749912,
+          "sha256": "9f7264d8c1f80006cb6e7e202cdad4594d85b84a600845601bfe9e16b27abc46"
+        },
+        "otf/TongPixelSansMono14Large-Dot.otf": {
+          "bytes": 15795848,
+          "sha256": "ed49b3dc513265b4868536d48eb8c74d35d4243c2d2cf2bcc8601c2f11e907c1"
+        },
+        "otf/TongPixelSansMono14Large-Square.otf": {
+          "bytes": 6735596,
+          "sha256": "22061df63ef7c0519de74a9925636e3d3bb35a8ec1a678e6f3e2262b7558c6ac"
+        },
+        "otf/TongPixelSansMono14Small-Dot.otf": {
+          "bytes": 15728044,
+          "sha256": "593cb3d7090517fd908bb4505e1674598590dc0cf5a4fcbeebcae0327339bd44"
+        },
+        "otf/TongPixelSansMono14Small-Square.otf": {
+          "bytes": 6725596,
+          "sha256": "ddad2b339bb04e35de2da31102598e5c108cfbb8b079ab4200e4e5b69e60ef52"
+        },
+        "woff2/TongPixelSans14Large-Dot.woff2": {
+          "bytes": 805732,
+          "sha256": "a5bbb4859fccd4a5d99376cf6b5a5f0f944075ea851a436faf52ae88aae15e61"
+        },
+        "woff2/TongPixelSans14Large-Square.woff2": {
+          "bytes": 1068324,
+          "sha256": "23661c9929f330e8a6fa5cb0ef0263c3385c3097ef02bede872720e9389cf75c"
+        },
+        "woff2/TongPixelSans14Small-Dot.woff2": {
+          "bytes": 803216,
+          "sha256": "43c9b873db6ea95d0fc17d0127631f229e6a4d8b3ea600a7f5c8f34fd926c240"
+        },
+        "woff2/TongPixelSans14Small-Square.woff2": {
+          "bytes": 1065832,
+          "sha256": "93c6d6b9d03acc79f9314cab3e41e6c5e3e4c7510ac79454f0fb9e89935bfd8c"
+        },
+        "woff2/TongPixelSansMono14Large-Dot.woff2": {
+          "bytes": 797312,
+          "sha256": "a2cee915f9d6d5ac67a1cc716c783863da5a3cc8d2343c8bb3a2dfb18362870a"
+        },
+        "woff2/TongPixelSansMono14Large-Square.woff2": {
+          "bytes": 1060960,
+          "sha256": "fe1c6a8885e89eea5f7c2328e150ad0cb21473f3439b7399e30d672fcc85acc3"
+        },
+        "woff2/TongPixelSansMono14Small-Dot.woff2": {
+          "bytes": 795784,
+          "sha256": "d8711c56fe5d182d39b2c2f9569a1654728e4da6bfec429740e60e732b6d1638"
+        },
+        "woff2/TongPixelSansMono14Small-Square.woff2": {
+          "bytes": 1057600,
+          "sha256": "0ce24fbdc5fce1fb59bfa3fb426cfd3a93336dfa9e94e69d84e3eb9a5aeac378"
+        }
+      }
+    },
+    {
+      "wall_seconds": 122.43575686700206,
+      "prepare_seconds": 42.33662077599729,
+      "vectors_woff2_seconds": 79.02914480099571,
+      "bitmaps_seconds": 0.8766641769980197,
+      "canonical_tables_verified": 44,
+      "source_and_pcf_bytes_verified": true,
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1136744,
+          "sha256": "cd4a108c305bcbfb55640652133793cc56dc6283eb0369e228a1750655568ca0"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1136676,
+          "sha256": "731e3e8213d75014575314fa9f2ab6174767681aec1e2e722d6d98919a5f907f"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 72384,
+          "sha256": "20695ddf4e521ce26874471f77309b42feca73e6edb924d5c3095c49c6341c19"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1135888,
+          "sha256": "e3f3ba8be08f85609ba9e4ae64aa6427954fceff829dcad5939845f13aa3065b"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1136680,
+          "sha256": "773f8851a5ad9acccd47f7528a0646a7f8d4cc56ab4b8dd850840f983d291a0e"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1132520,
+          "sha256": "cd72849ff8ff5db3eb325edfd817890c2719967da263086eedd319a7a7b2c37d"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1132452,
+          "sha256": "4cd5cabe1ce74d631c92cb2ccfea3358d5d736b72e80b9e2f87af4a3009cb085"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 68312,
+          "sha256": "e00064d0f2cec901511aee268812fc2e90454192ece4ae7b44e00983d84e52c7"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1131664,
+          "sha256": "a0c0efa416976e52f2075fc9919d608670cec292566707f08900e0be12a9d8e4"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1132456,
+          "sha256": "bc97f37e12b558ef8cd84a8e0f3bc5849d594a730796e995da6800b0acbf31a2"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1132068,
+          "sha256": "65c4973c5804ba0e4e6135a4e8764e71ada1197ff4ce78a0c8c05699b310a992"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1132000,
+          "sha256": "0eefd8683f4de03eaa69ede1b875ad353a217c1f275b570ab1d9ef9f414552cb"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 69216,
+          "sha256": "0cda985b7952f56ab5d98cd6b8c396da1e86b4509149f3110439faeeaaf24965"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1131208,
+          "sha256": "eaa2265e6537a158a3e3047a0b71927c5f6d95e45c36f15ae837ee714f88cf6c"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1132000,
+          "sha256": "480ed992a056ae0943d39bf4a9e6b6b9ed756f573bd8f4c137c8bb229054e484"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1129356,
+          "sha256": "28b1189035cc021d9db9038c30411570984609e59ab9518aeacfc3d99fc4fa53"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1129288,
+          "sha256": "74665de2b6f29812629ef8838c8f758d2b34a0aca2a9054f83828faf0df2eff0"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 66440,
+          "sha256": "eb093d6a488fd956f03ca9e091197cddc34369d60a562ef010185bc28a570908"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1128496,
+          "sha256": "5c9513e66ad46398cc908002c881719efaf97b397d1a34624462008118753c85"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1129288,
+          "sha256": "6e221e1cbb8405b1ed9de05d235225145dfeb98b6875acd775c23032b5f1ad78"
+        },
+        "ttf/TongPixelSans14Large-Dot.ttf": {
+          "bytes": 21995468,
+          "sha256": "b9304c51227d7faf0d30322ac57a6b5fdfc8021904fdb7aa2d363044d79f23f6"
+        },
+        "ttf/TongPixelSans14Large-Square.ttf": {
+          "bytes": 9015400,
+          "sha256": "6b43251cafd29f51ee885a18ec0ebd26df190caa315ecd3373e8bac95826c367"
+        },
+        "ttf/TongPixelSans14Small-Dot.ttf": {
+          "bytes": 21940376,
+          "sha256": "693a182b84e8b0076d5ccd7ca3a5249536e265000abec2ada711a7ab10118e7c"
+        },
+        "ttf/TongPixelSans14Small-Square.ttf": {
+          "bytes": 9002192,
+          "sha256": "6a2f50655d860fb4d147a7dcdc333be2bde931d2b1fb37c6631ed70f376db3ae"
+        },
+        "ttf/TongPixelSansMono14Large-Dot.ttf": {
+          "bytes": 21882320,
+          "sha256": "62aa189939abb7ab06cf88f520b994b8e68d3c551d94834a56bab1a2d7cfb4bf"
+        },
+        "ttf/TongPixelSansMono14Large-Square.ttf": {
+          "bytes": 8977856,
+          "sha256": "340e34f5b820d538490324d749a28138f64f5b122dc48b03387fe53edf5cd7be"
+        },
+        "ttf/TongPixelSansMono14Small-Dot.ttf": {
+          "bytes": 21848216,
+          "sha256": "a6ede0cd4601eda9fb178536eab72b187198d648b99b5488b097753d270edb3f"
+        },
+        "ttf/TongPixelSansMono14Small-Square.ttf": {
+          "bytes": 8971248,
+          "sha256": "93f49e5f11c8ba1bd245665d035df5e5bc649e82fdf0abe3c68ee9de56a7c020"
+        },
+        "otf/TongPixelSans14Large-Dot.otf": {
+          "bytes": 15876872,
+          "sha256": "d18483bbdf53651d0104ec12bb3f73f3b272dd3eede52c8ad2ee2a1a1b5a226c"
+        },
+        "otf/TongPixelSans14Large-Square.otf": {
+          "bytes": 6764380,
+          "sha256": "f13cb1eb6cd80c45407e3da437ad6faa20337fab16d110be44f0dc08ecdca2bf"
+        },
+        "otf/TongPixelSans14Small-Dot.otf": {
+          "bytes": 15795284,
+          "sha256": "78a99c38be9a5148a632ad2ed6a797025d14c2b1a2ee39bfe515e990838e2990"
+        },
+        "otf/TongPixelSans14Small-Square.otf": {
+          "bytes": 6749912,
+          "sha256": "3d4808c21649e696decd646eb48c7e7d3f59909f9db0ee12839dbad4af390246"
+        },
+        "otf/TongPixelSansMono14Large-Dot.otf": {
+          "bytes": 15795848,
+          "sha256": "633f3c514caa302a0d76a6db56ee5e4cbb3b318091af330d66ef0d1f9e30d7ac"
+        },
+        "otf/TongPixelSansMono14Large-Square.otf": {
+          "bytes": 6735596,
+          "sha256": "0a2ea0a40cb419f416cc4851cac4cba72ad89efae5c7b9d94b46f71189ce9c9e"
+        },
+        "otf/TongPixelSansMono14Small-Dot.otf": {
+          "bytes": 15728044,
+          "sha256": "aadb3f7186b0e30f574f30a4e6dc8bb3943fcc483fd35975d267759175abd0e6"
+        },
+        "otf/TongPixelSansMono14Small-Square.otf": {
+          "bytes": 6725596,
+          "sha256": "725b6b960238210af26e448f3f8c9b632d13958a047806f22b4345a6df1b9e9e"
+        },
+        "woff2/TongPixelSans14Large-Dot.woff2": {
+          "bytes": 805648,
+          "sha256": "2e488fbe9901655d6ded39895113924b40af8513cadcee2471fcab69084403a8"
+        },
+        "woff2/TongPixelSans14Large-Square.woff2": {
+          "bytes": 1066496,
+          "sha256": "7aa4e89713390b7d0bc85f77f6a487d9207fd017e3d358b288c76416719c7880"
+        },
+        "woff2/TongPixelSans14Small-Dot.woff2": {
+          "bytes": 803256,
+          "sha256": "150aeb166e875094ce64ec61a8dbd032d4df76da301927c74ce41dfaf4c39efa"
+        },
+        "woff2/TongPixelSans14Small-Square.woff2": {
+          "bytes": 1066856,
+          "sha256": "be854a6ed927fa4928181100b2f04916b32f7e7a4735820b059321566c99ea74"
+        },
+        "woff2/TongPixelSansMono14Large-Dot.woff2": {
+          "bytes": 797312,
+          "sha256": "07e36d0745879924740fc5cdb07d584d1aadd120178f20da3743cef5df17d595"
+        },
+        "woff2/TongPixelSansMono14Large-Square.woff2": {
+          "bytes": 1061812,
+          "sha256": "3b23b6b80c4b1adaf4de57b29c5faf01e8bc1147e38d2340de102af317f3cdc0"
+        },
+        "woff2/TongPixelSansMono14Small-Dot.woff2": {
+          "bytes": 795784,
+          "sha256": "addad86532182e54e96b8ada70b8dc9d276e403f6b6fe8f8de70809b94d365b6"
+        },
+        "woff2/TongPixelSansMono14Small-Square.woff2": {
+          "bytes": 1059892,
+          "sha256": "75933a2ef0099f238ebd7b85fb90bd0040b7325c8aa348943b5b147699f9c521"
+        }
+      }
+    },
+    {
+      "wall_seconds": 134.56892625099863,
+      "prepare_seconds": 37.142841054999735,
+      "vectors_woff2_seconds": 96.15701079899736,
+      "bitmaps_seconds": 0.9739763730030973,
+      "canonical_tables_verified": 44,
+      "source_and_pcf_bytes_verified": true,
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1136744,
+          "sha256": "539b832624410737925f4b786acd5ca190bf0e6d8bb51f21ed526258b9c3fc3c"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1136676,
+          "sha256": "966d047a66daeaf929a5f3e342f19b890ca36d4917dbb47fb086a38b102823bf"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 72384,
+          "sha256": "533d73f282fb47144c733a10cc49b3e115ee0d66c8bb8120f8bff70fa0e5eff6"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1135888,
+          "sha256": "ecf01360387905a5c2f11c376d2f9a4915f4b6192906b7ce833850efe50516fe"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1136680,
+          "sha256": "7d03f50c0c8bfbf2466de937b83da5b4f02dd75fff3ac7f1aeb00dc4142ac916"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1132520,
+          "sha256": "8ed4abc06bef473e6997a5e4ea8670c7e30ab339af6e7b60a2fcde183d0ef4f2"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1132452,
+          "sha256": "adda0d0898d27545fc0918be9bfafa4f5c1e959695e044a10b5cb5b4a2457b1b"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 68312,
+          "sha256": "66c9882b574f2f5279f4b322f7937be610090619903e7bc59181165dc3a46adc"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1131664,
+          "sha256": "56b3767ba20f1c2d716077e0bae7965a440be3d933cf2ce337c6fab8625c8d3d"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1132456,
+          "sha256": "a15c50193b77e39152edce0d35f9c52e97d0d27e060198784b3b54fe47099bc3"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1132068,
+          "sha256": "c9572a590c3e1bb9f968de5fe6e18ac43e27fe6880affb7afd04747ac7033770"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1132000,
+          "sha256": "53c86450daf07543fc59308800c9e14372cce8a3cb5c152b379fcff52caa78e1"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 69216,
+          "sha256": "060ee55ea01570f24d5a5a511d7e3178da0849151fc1b33963b666221b20466a"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1131208,
+          "sha256": "47676671156d1b0554cc909745e3dc487bbc7cadc75edaa0d1b2cd299b3f9dd3"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1132000,
+          "sha256": "aa5259f66ca9f99a2b7298565b08307bfe800b2f1b78846f60aaa2a0ee0c1035"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1129356,
+          "sha256": "cbdae0e7a0d7613954b4a260197cfe49dcc8b6a5c960e78489b7721b1053d944"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1129288,
+          "sha256": "5cb5c1a0fb577cd51dc405a847d9bc415e1c6d620610e8e9cc6dee2636e6405c"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 66440,
+          "sha256": "1e3060882ad63a1f16a8b6e87933e9f37b897a5a1b262c0222e4d33d83d89cb1"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1128496,
+          "sha256": "88db5fa978454e1f59844dbda76d562cb44ee706d2142c4c0c0475d4572d4933"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1129288,
+          "sha256": "fedbf18df91a41b9d28ef8fa299ef793e43d1380f8138ff9a09e39185b8623d7"
+        },
+        "ttf/TongPixelSans14Large-Dot.ttf": {
+          "bytes": 21995468,
+          "sha256": "644065cf6d042035fc66a9ce7889bd6c9ce38941bd074311447dec41d5c3e55e"
+        },
+        "ttf/TongPixelSans14Large-Square.ttf": {
+          "bytes": 9015400,
+          "sha256": "5a1c2b66afe75b212f4de1ac6c6c3694677a90bd2c47606a8a883fc4ccbd48b3"
+        },
+        "ttf/TongPixelSans14Small-Dot.ttf": {
+          "bytes": 21940376,
+          "sha256": "3c0dbc770f796fd02a6525e09237b962bbb92da0c13e3fc6bd4b39744f5c5275"
+        },
+        "ttf/TongPixelSans14Small-Square.ttf": {
+          "bytes": 9002192,
+          "sha256": "2d3793ccaeae5192582be60b0c7e8e4c6896f38d2bcc75679a9b14a49847d4f6"
+        },
+        "ttf/TongPixelSansMono14Large-Dot.ttf": {
+          "bytes": 21882320,
+          "sha256": "d5205f0f7d8a4d163391c30f619cb489099457f56f67ce80bc066b959cce2b64"
+        },
+        "ttf/TongPixelSansMono14Large-Square.ttf": {
+          "bytes": 8977856,
+          "sha256": "e0d53efb05d5caecca0069678202039b19623cfeea198a7d5190dab3649e594e"
+        },
+        "ttf/TongPixelSansMono14Small-Dot.ttf": {
+          "bytes": 21848216,
+          "sha256": "087072db2988dbac08070d7f4c70934f536aa627024ec9c9ee2bd8965c736eac"
+        },
+        "ttf/TongPixelSansMono14Small-Square.ttf": {
+          "bytes": 8971248,
+          "sha256": "80c1adfac3fb8f6ea857dd60ee854ce6317d9dfa381d134bb125462517b60bb3"
+        },
+        "otf/TongPixelSans14Large-Dot.otf": {
+          "bytes": 15876872,
+          "sha256": "c819cbb7f7a53fece75e0fd15cad22522fea4c5e3d1e1dc6e0bf0db349cea024"
+        },
+        "otf/TongPixelSans14Large-Square.otf": {
+          "bytes": 6764380,
+          "sha256": "ec2012e9177c3b37f1e0620027815e2234f3a0c746792d714bac9cae8c7f87c9"
+        },
+        "otf/TongPixelSans14Small-Dot.otf": {
+          "bytes": 15795284,
+          "sha256": "58e2f106cc096dd8e2b24fe06e1dde335d9f6c19abea279b9879f39524bf76bf"
+        },
+        "otf/TongPixelSans14Small-Square.otf": {
+          "bytes": 6749912,
+          "sha256": "b7c3450805fbf54f49eca98dec942e4dd085efdc2f9be4307793c75169aca864"
+        },
+        "otf/TongPixelSansMono14Large-Dot.otf": {
+          "bytes": 15795848,
+          "sha256": "ec41588b8f9d06cf6b19530aed153bdc966829df28b98ea79400b9e5cd30cc5d"
+        },
+        "otf/TongPixelSansMono14Large-Square.otf": {
+          "bytes": 6735596,
+          "sha256": "958b096476ceba2d7a67737d1f900e41f80bcd587ae06d18978b8cfb9c8f1c93"
+        },
+        "otf/TongPixelSansMono14Small-Dot.otf": {
+          "bytes": 15728044,
+          "sha256": "c5e1565595811c03e902d105d6d0c7bb9953d62f29524d20cfcf97a636e24adb"
+        },
+        "otf/TongPixelSansMono14Small-Square.otf": {
+          "bytes": 6725596,
+          "sha256": "47b889a5bf09edd2bb2f74a81fdf1362ac0f7d9387a20ae7a9590b7afa5fb6fe"
+        },
+        "woff2/TongPixelSans14Large-Dot.woff2": {
+          "bytes": 805812,
+          "sha256": "9ab27409addf6a7e0b8b247666e3896a7d5027c7a9ca0bd4f69c3915709e8c94"
+        },
+        "woff2/TongPixelSans14Large-Square.woff2": {
+          "bytes": 1066968,
+          "sha256": "401098a94cd82490cf88995010a8fb2a0f26cabcd0c65f97982238d25e942f0a"
+        },
+        "woff2/TongPixelSans14Small-Dot.woff2": {
+          "bytes": 803212,
+          "sha256": "5a6d98a7ac47796b23498c68ea539ae290d8b4d869567136d074befab0bbeb64"
+        },
+        "woff2/TongPixelSans14Small-Square.woff2": {
+          "bytes": 1067260,
+          "sha256": "2f7a5baeeeec5ac568eb45586b8a145fea7885f5dbae9dd8018e7a2a7b3ac1d7"
+        },
+        "woff2/TongPixelSansMono14Large-Dot.woff2": {
+          "bytes": 797208,
+          "sha256": "3348b6c1a37329a69747fe7eedd52dab570b60df5f0ecb131258adb67df42a9b"
+        },
+        "woff2/TongPixelSansMono14Large-Square.woff2": {
+          "bytes": 1062972,
+          "sha256": "a3830937e70e47d591a287bcb5d76243d369b3d9d085720b33170049cd5fe8a6"
+        },
+        "woff2/TongPixelSansMono14Small-Dot.woff2": {
+          "bytes": 795784,
+          "sha256": "2546c171d3ca1693265f32aa972e5168dea03bac6b0a7c77830299a2b7931580"
+        },
+        "woff2/TongPixelSansMono14Small-Square.woff2": {
+          "bytes": 1059524,
+          "sha256": "62da0d3f3aea9bfbaed3cc0fd4472713bf7ce3dfee5570d4c7d5ee22309fa0c0"
+        }
+      }
+    },
+    {
+      "wall_seconds": 136.87378469599935,
+      "prepare_seconds": 39.14113810999697,
+      "vectors_woff2_seconds": 96.18943349199981,
+      "bitmaps_seconds": 1.3164809049994801,
+      "canonical_tables_verified": 44,
+      "source_and_pcf_bytes_verified": true,
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1136744,
+          "sha256": "e591070bff7087dbc3dd873e8da0458cd347f42f3e32004f630962e66837c86f"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1136676,
+          "sha256": "3907cdf17e5b9686e4a0a2c291ca3a59f3d740f5cb0f2c35e1e760d725530794"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 72384,
+          "sha256": "075100f9467ac0aaa8b1bd47166831f98e5c482cf655e53b5a50d69c4ae89df7"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1135888,
+          "sha256": "81830bf6aedcfab3c0cd4082249365fb9e80cd54bb3ca3bbdb97655359514997"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1136680,
+          "sha256": "ea3b953c6b1bbe53fe041a704f47e31a798da04677ee2a57b416bac92aa09240"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1132520,
+          "sha256": "9ad7e13fd2eb5eaeccbd9a0b2efc052401ab5d2b1dc9ec9f27e72e7ae6718784"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1132452,
+          "sha256": "e085440b15b6834a4c927376ebaa5dd9eea6058ba40c4f00ae63d742762a58b6"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 68312,
+          "sha256": "e9045ff81674a2ff10076bf01d29c3ee7469674f6ee13b6db2718f3ee93c166b"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1131664,
+          "sha256": "88a43f74d3dc196bcec06812ead38f8ab86e59b0d5e5fafe7a98384c5492c226"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1132456,
+          "sha256": "496025f0b2215350343ccb93cda45860e7bdaf8f5ef8cce2cff985700d6e1d52"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1132068,
+          "sha256": "d3067387b41215fcbfacc0dbfa3a6cf0c0cbe8b20e66715bb1a7bc22e1c4f359"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1132000,
+          "sha256": "d5c8195d44c0ab57f717055efc7c7061b3d4c92adfecf1d114b16dc7bb3cf06d"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 69216,
+          "sha256": "9201dd7c7cd557632b318b80fed2536c237b63a795f71a070a4bc3f5cc67e41d"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1131208,
+          "sha256": "596025271956033db0e96bd4f4a40bacfacf615052dfff5a2a50edbdf2c91bed"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1132000,
+          "sha256": "255ff39edb43d9e28bc281b58ac95ba1dd3ef1476d5fc194f9f2d3a0e69f070e"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1129356,
+          "sha256": "3c479b810531452b3f722fcb1c048819cb7a5713fe3ed451b3b784d4e65aebd5"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1129288,
+          "sha256": "64cc755f642593786dee4eef117fb417abe92d32a1be38e4c6ba446d81340727"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 66440,
+          "sha256": "4485dbd7c2e37d6f1cd5511f3fc22a771f71a3df1b7715341241675be38d05c5"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1128496,
+          "sha256": "a8608f723ec4f3cfa091a7a56cdfcee79e4d386a67ea1ae37742e35c1dc99ae4"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1129288,
+          "sha256": "05b3cb2ed6d2120b17d67e6e5fc844a914f562ac190b0f249714f3b94db7bd3a"
+        },
+        "ttf/TongPixelSans14Large-Dot.ttf": {
+          "bytes": 21995468,
+          "sha256": "ab258fd3f11eab0853c40936d1c885ffd6a0c43509d3d4fe978e96a2de8c33c2"
+        },
+        "ttf/TongPixelSans14Large-Square.ttf": {
+          "bytes": 9015400,
+          "sha256": "e9eeb684c9fb13fcbfce2dca6f8345038e6da99e52a95a0c0826d302cd614b44"
+        },
+        "ttf/TongPixelSans14Small-Dot.ttf": {
+          "bytes": 21940376,
+          "sha256": "e6caca91b0d3889e0789ba255dd4a2f17f2122edf2bc18afa6055301b71ab754"
+        },
+        "ttf/TongPixelSans14Small-Square.ttf": {
+          "bytes": 9002192,
+          "sha256": "137668f7f1913835073a7f6d32d0807352989171593d4a314a82f176207ffe55"
+        },
+        "ttf/TongPixelSansMono14Large-Dot.ttf": {
+          "bytes": 21882320,
+          "sha256": "654cc60f01c7bd39cca409fd167a8ace5d30fcd51eff64a72c211bf3ac45e385"
+        },
+        "ttf/TongPixelSansMono14Large-Square.ttf": {
+          "bytes": 8977856,
+          "sha256": "f71e592f11ef42996dfe23b0c87472e7e8a168fc79fb20c26b8d2ffe8f604b3f"
+        },
+        "ttf/TongPixelSansMono14Small-Dot.ttf": {
+          "bytes": 21848216,
+          "sha256": "a60806903b5e5f7fbf5c3c67f75c5e71978dfd7308ed9c047dc042a0a23458a5"
+        },
+        "ttf/TongPixelSansMono14Small-Square.ttf": {
+          "bytes": 8971248,
+          "sha256": "e7aafe9e226c569198d5de8ca96c6bad568d3e3e3c8cedb4c3e5388fb0749760"
+        },
+        "otf/TongPixelSans14Large-Dot.otf": {
+          "bytes": 15876872,
+          "sha256": "b7fddf00f5be69dbff9ae2bacf326a05608f2fd39eb2d855668c24f725a6c819"
+        },
+        "otf/TongPixelSans14Large-Square.otf": {
+          "bytes": 6764380,
+          "sha256": "cf0f4d4d71579d25285f0a6bd5e351841606ca7f47f44a7925ec11079d741aee"
+        },
+        "otf/TongPixelSans14Small-Dot.otf": {
+          "bytes": 15795284,
+          "sha256": "790e1352d35a57e73fb36119bc8b2110ea2f3205c5cd33c35a5c452af0701d30"
+        },
+        "otf/TongPixelSans14Small-Square.otf": {
+          "bytes": 6749912,
+          "sha256": "7f7924005812b40354a3e023a7868a53b6ee5748eaf9bc40b9d370113880f87a"
+        },
+        "otf/TongPixelSansMono14Large-Dot.otf": {
+          "bytes": 15795848,
+          "sha256": "5e7251784d19e5fc7849346c5056350833bcddf9ec61b79390d895f76958dabb"
+        },
+        "otf/TongPixelSansMono14Large-Square.otf": {
+          "bytes": 6735596,
+          "sha256": "cb94c106182d6713cedaf086370d9afa1a2843f361855a08c1d51b2361aa5eaf"
+        },
+        "otf/TongPixelSansMono14Small-Dot.otf": {
+          "bytes": 15728044,
+          "sha256": "d00709ac1ef0ce3c5b129518d8339024876717ebb479838eea1d39b44340ba9d"
+        },
+        "otf/TongPixelSansMono14Small-Square.otf": {
+          "bytes": 6725596,
+          "sha256": "0627ce241954c454b8d8f9bd35685b414a668ac86aa8b065ff5fcb88f8d7906b"
+        },
+        "woff2/TongPixelSans14Large-Dot.woff2": {
+          "bytes": 805748,
+          "sha256": "baa6b07cf9ccafaa6ebe41fa2d6c6effd6ba2d399834f9f616bda01113e5c3fa"
+        },
+        "woff2/TongPixelSans14Large-Square.woff2": {
+          "bytes": 1069744,
+          "sha256": "da56e4dad02ceb7c9d3b45a89ab12f5e29a5e7914556000c62b22295e8f1cc09"
+        },
+        "woff2/TongPixelSans14Small-Dot.woff2": {
+          "bytes": 803316,
+          "sha256": "2112ca85c5f030b271e5f0aa07a4f07e75c89a204cf47299c39e1951be1bbb7a"
+        },
+        "woff2/TongPixelSans14Small-Square.woff2": {
+          "bytes": 1063948,
+          "sha256": "bf38d1c9f6b3dc2c37503abe0e169f440a4a7ef57269a994b5abf8335c279d21"
+        },
+        "woff2/TongPixelSansMono14Large-Dot.woff2": {
+          "bytes": 797208,
+          "sha256": "5adbd186ace7b0d518646a4721a8927ee0968f36627c048bbdddd6213f8a509a"
+        },
+        "woff2/TongPixelSansMono14Large-Square.woff2": {
+          "bytes": 1060064,
+          "sha256": "e99601be0bceb302ed960740b97166a3d60ae4f3e1f887c4402589addbc8fcd8"
+        },
+        "woff2/TongPixelSansMono14Small-Dot.woff2": {
+          "bytes": 795784,
+          "sha256": "24428b3431b7c4ab053d3955b910e4e28f6c2b52f60fa8b13796727a4e57f144"
+        },
+        "woff2/TongPixelSansMono14Small-Square.woff2": {
+          "bytes": 1058996,
+          "sha256": "1df661a0f5a93de33b31423e4edbe6607e03fd60b243936ec5806c6ea0106120"
+        }
+      }
+    },
+    {
+      "wall_seconds": 101.74805331200332,
+      "prepare_seconds": 35.48989133699797,
+      "vectors_woff2_seconds": 65.17732526400505,
+      "bitmaps_seconds": 0.8753531580005074,
+      "canonical_tables_verified": 44,
+      "source_and_pcf_bytes_verified": true,
+      "outputs": {
+        "bdf/TongPixelSans14Large-JP.bdf": {
+          "bytes": 5741022,
+          "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+        },
+        "bdf/TongPixelSans14Large-KR.bdf": {
+          "bytes": 5741045,
+          "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+        },
+        "bdf/TongPixelSans14Large-Latin.bdf": {
+          "bytes": 418907,
+          "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+        },
+        "bdf/TongPixelSans14Large-SC.bdf": {
+          "bytes": 5741837,
+          "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+        },
+        "bdf/TongPixelSans14Large-TC.bdf": {
+          "bytes": 5741089,
+          "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+        },
+        "bdf/TongPixelSans14Small-JP.bdf": {
+          "bytes": 5728038,
+          "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+        },
+        "bdf/TongPixelSans14Small-KR.bdf": {
+          "bytes": 5728060,
+          "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+        },
+        "bdf/TongPixelSans14Small-Latin.bdf": {
+          "bytes": 405402,
+          "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+        },
+        "bdf/TongPixelSans14Small-SC.bdf": {
+          "bytes": 5728851,
+          "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+        },
+        "bdf/TongPixelSans14Small-TC.bdf": {
+          "bytes": 5728104,
+          "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+        },
+        "bdf/TongPixelSansMono14Large-JP.bdf": {
+          "bytes": 5728925,
+          "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+        },
+        "bdf/TongPixelSansMono14Large-KR.bdf": {
+          "bytes": 5728958,
+          "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+        },
+        "bdf/TongPixelSansMono14Large-Latin.bdf": {
+          "bytes": 410661,
+          "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+        },
+        "bdf/TongPixelSansMono14Large-SC.bdf": {
+          "bytes": 5729709,
+          "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+        },
+        "bdf/TongPixelSansMono14Large-TC.bdf": {
+          "bytes": 5728961,
+          "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+        },
+        "bdf/TongPixelSansMono14Small-JP.bdf": {
+          "bytes": 5718702,
+          "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+        },
+        "bdf/TongPixelSansMono14Small-KR.bdf": {
+          "bytes": 5718736,
+          "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+        },
+        "bdf/TongPixelSansMono14Small-Latin.bdf": {
+          "bytes": 399689,
+          "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+        },
+        "bdf/TongPixelSansMono14Small-SC.bdf": {
+          "bytes": 5719484,
+          "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+        },
+        "bdf/TongPixelSansMono14Small-TC.bdf": {
+          "bytes": 5718737,
+          "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+        },
+        "pcf/TongPixelSans14Large-JP.pcf": {
+          "bytes": 2991532,
+          "sha256": "8b2b3f4b640a964f7a516a334983b4a692831a395ef364ae237e199bb67908c7"
+        },
+        "pcf/TongPixelSans14Large-KR.pcf": {
+          "bytes": 2991552,
+          "sha256": "3e6f3a229eb566175836b0d7a438053c5a485aae150592cb599af938200dc73b"
+        },
+        "pcf/TongPixelSans14Large-Latin.pcf": {
+          "bytes": 353368,
+          "sha256": "3c81790d68dc6115079b0de20bb8571dee67d4c31d72e88cc4f9f22d80b3367a"
+        },
+        "pcf/TongPixelSans14Large-SC.pcf": {
+          "bytes": 2992180,
+          "sha256": "0d55982f4dc240d606a4296d79989a92a515e6ec8ba7d6252b7582b6b23cc3c7"
+        },
+        "pcf/TongPixelSans14Large-TC.pcf": {
+          "bytes": 2991588,
+          "sha256": "414cd520e9ec145495ae66c2ef1e1cbf426b736f8e378c9cd80d107e9711e863"
+        },
+        "pcf/TongPixelSans14Small-JP.pcf": {
+          "bytes": 2978672,
+          "sha256": "80a7fb3d9b74bdd7c93e531878fd308e296fff534f0aa6bac03caaa6675aaba7"
+        },
+        "pcf/TongPixelSans14Small-KR.pcf": {
+          "bytes": 2978692,
+          "sha256": "cab3d8f65dfad972a3231cc6689f549ab5ca4f0cc1c8dccf67563a1f911faade"
+        },
+        "pcf/TongPixelSans14Small-Latin.pcf": {
+          "bytes": 340324,
+          "sha256": "b46a1ab45adeb07d8f6dc6d7c46fb472b8ec5f84163108ec68287eb3cc7015ee"
+        },
+        "pcf/TongPixelSans14Small-SC.pcf": {
+          "bytes": 2979320,
+          "sha256": "09d405f18e6df40459a76cb675633674b137e83344f0cc2d1c6656c37b1521e3"
+        },
+        "pcf/TongPixelSans14Small-TC.pcf": {
+          "bytes": 2978728,
+          "sha256": "6f4863652f2d3e8efb1603cfbab6d713994495522046e394ee6cf459b05c7c73"
+        },
+        "pcf/TongPixelSansMono14Large-JP.pcf": {
+          "bytes": 2990580,
+          "sha256": "5e34f413ff0c8aeeadaa2ab51c78d0d4e98ef7ade40781db3b4c4a5d0e791f11"
+        },
+        "pcf/TongPixelSansMono14Large-KR.pcf": {
+          "bytes": 2990608,
+          "sha256": "bc1afd78ae9c1754637bcac2e0fa9fcfa1cbad2c1b50b3cd98be209bd8544efd"
+        },
+        "pcf/TongPixelSansMono14Large-Latin.pcf": {
+          "bytes": 352956,
+          "sha256": "1b1bcebc76aae9392c28cccd32f3dca4dfec00ae552bc3774812afce12af0d91"
+        },
+        "pcf/TongPixelSansMono14Large-SC.pcf": {
+          "bytes": 2991204,
+          "sha256": "de297d36f799e90e701f107c24e6d19a12d667d28bc4419900347f0f58a0d15f"
+        },
+        "pcf/TongPixelSansMono14Large-TC.pcf": {
+          "bytes": 2990612,
+          "sha256": "3e27c43af54e90f9d512e0c30cf484fcde1bd2805b8593878d6f913bf3243def"
+        },
+        "pcf/TongPixelSansMono14Small-JP.pcf": {
+          "bytes": 2977692,
+          "sha256": "b79dbfc893b69af092cacb1911527f8abd68691fab293c45b40a505a0d5f6503"
+        },
+        "pcf/TongPixelSansMono14Small-KR.pcf": {
+          "bytes": 2977720,
+          "sha256": "605f92ce142c6de4b2a1f14f9a76010d45196f0bb354a48fc72b7f16e1cf4457"
+        },
+        "pcf/TongPixelSansMono14Small-Latin.pcf": {
+          "bytes": 339952,
+          "sha256": "16e498ebde478e2590169dd905b9d725f17a86848186305420c934bcb9de0723"
+        },
+        "pcf/TongPixelSansMono14Small-SC.pcf": {
+          "bytes": 2978316,
+          "sha256": "0e7c85f1c2ae5a5dde39819f27031e428405ec62c7c2621a6b58940e4518c7f1"
+        },
+        "pcf/TongPixelSansMono14Small-TC.pcf": {
+          "bytes": 2977724,
+          "sha256": "be06a3b23b6d85599e7e3dd936780ec51a5ae46447a15af2e366983430810361"
+        },
+        "otb/TongPixelSans14Large-JP.otb": {
+          "bytes": 1136744,
+          "sha256": "61381efd106733f139d20e9e79cecbe4bd9c745909101518bc49675cc29d858a"
+        },
+        "otb/TongPixelSans14Large-KR.otb": {
+          "bytes": 1136676,
+          "sha256": "494d0b7060be765d6b7592ebb08601a5260e1a7f59d00234fa41faee0d4b3b90"
+        },
+        "otb/TongPixelSans14Large-Latin.otb": {
+          "bytes": 72384,
+          "sha256": "254f83c32c9a8af84bf234730fcd2253ad971af57da88840bec08cdc115246ee"
+        },
+        "otb/TongPixelSans14Large-SC.otb": {
+          "bytes": 1135888,
+          "sha256": "fd33193d26cdfd00fe925a717f15dec258f70d39edd7eea3d861cbb20ea37686"
+        },
+        "otb/TongPixelSans14Large-TC.otb": {
+          "bytes": 1136680,
+          "sha256": "f0850f183f199de607f8a24a8336c3292414b3ff4210731c608df71ad43bef9c"
+        },
+        "otb/TongPixelSans14Small-JP.otb": {
+          "bytes": 1132520,
+          "sha256": "798e72b130ae64d6df06f9a395514e3a14cb178f7a6983d7c4c6a69a1c93eb5e"
+        },
+        "otb/TongPixelSans14Small-KR.otb": {
+          "bytes": 1132452,
+          "sha256": "d552ae7659206d547298aaec3fdc7fc8318ad6ccef35fa7091c3cbb263192e9d"
+        },
+        "otb/TongPixelSans14Small-Latin.otb": {
+          "bytes": 68312,
+          "sha256": "628a00347f10f5bf17103ae4a8650a29801567f2bcb0de98d4861c19f652afcd"
+        },
+        "otb/TongPixelSans14Small-SC.otb": {
+          "bytes": 1131664,
+          "sha256": "78c5cc5a520388282ef0f27279d1c89780f8fe6016a6ae9f56df38beceb84526"
+        },
+        "otb/TongPixelSans14Small-TC.otb": {
+          "bytes": 1132456,
+          "sha256": "11d0fc8cbdf2e100ddc99a5e9259ce3ff455df8f8d8a3323f2579d90534e586b"
+        },
+        "otb/TongPixelSansMono14Large-JP.otb": {
+          "bytes": 1132068,
+          "sha256": "c69a30d3bbd237cac3b6a67430a0e906f31ea42d95c0b562d5cc248e645b4d8a"
+        },
+        "otb/TongPixelSansMono14Large-KR.otb": {
+          "bytes": 1132000,
+          "sha256": "d4367bc86d851863e117280bb88122d08b71b269f615b911bab491010796f023"
+        },
+        "otb/TongPixelSansMono14Large-Latin.otb": {
+          "bytes": 69216,
+          "sha256": "c2450248a1a1b6f80505e3b22339bf006ab9c770160e005dea4cf255ed221482"
+        },
+        "otb/TongPixelSansMono14Large-SC.otb": {
+          "bytes": 1131208,
+          "sha256": "c8dbd762c91624036ebecf789babafe33a1a7928c002ca3f76ad2940915966cf"
+        },
+        "otb/TongPixelSansMono14Large-TC.otb": {
+          "bytes": 1132000,
+          "sha256": "779eb18a3853b3d95de13076e3efa544ac69ac5efa75f5ae86b056d79646b76e"
+        },
+        "otb/TongPixelSansMono14Small-JP.otb": {
+          "bytes": 1129356,
+          "sha256": "3b3fe2920998b1cb3fb0681cb6c3dc5a7a339b1a06fa5fe53831a285e8aba9fb"
+        },
+        "otb/TongPixelSansMono14Small-KR.otb": {
+          "bytes": 1129288,
+          "sha256": "553f78de9c8e374055e9d7c508dcaa49b300812cfce0aec7d82055f86829f5de"
+        },
+        "otb/TongPixelSansMono14Small-Latin.otb": {
+          "bytes": 66440,
+          "sha256": "cfdeecd4b1ad29acc263ab37691390bdaea6187214a0118ea7e31457dd30e038"
+        },
+        "otb/TongPixelSansMono14Small-SC.otb": {
+          "bytes": 1128496,
+          "sha256": "edbbac7dfd775138a640131b777715aa00d7e8661565acdfb732e48d9f1377fa"
+        },
+        "otb/TongPixelSansMono14Small-TC.otb": {
+          "bytes": 1129288,
+          "sha256": "c630af75bffd84e2d4aaf1d95d119f51400bf93796f070c9cb217c14181bd877"
+        },
+        "ttf/TongPixelSans14Large-Dot.ttf": {
+          "bytes": 21995468,
+          "sha256": "740e45e0bedf70af7fcf7546af34534b470105b10edec7eb396033d4514b1d01"
+        },
+        "ttf/TongPixelSans14Large-Square.ttf": {
+          "bytes": 9015400,
+          "sha256": "fcf136beec892a052afd30857cdc92c29682750f7dae9f00c3e91d3fd10d3277"
+        },
+        "ttf/TongPixelSans14Small-Dot.ttf": {
+          "bytes": 21940376,
+          "sha256": "a66880412dd5eb4cea6024aa2e2d72d9baef6921f046fcc09939d583b0111bdd"
+        },
+        "ttf/TongPixelSans14Small-Square.ttf": {
+          "bytes": 9002192,
+          "sha256": "9d6161c175caf0720cf3ed893f1df2f0864b22fae478fa2760d3dcfe6fc50d26"
+        },
+        "ttf/TongPixelSansMono14Large-Dot.ttf": {
+          "bytes": 21882320,
+          "sha256": "fa68342ddd0a9439ef8c06255745109708848d88da30952618b32c3985e56663"
+        },
+        "ttf/TongPixelSansMono14Large-Square.ttf": {
+          "bytes": 8977856,
+          "sha256": "fcc99856031a3546b66daeb0cdcd7f4cf2e41e1580ca24c5942138da909b76aa"
+        },
+        "ttf/TongPixelSansMono14Small-Dot.ttf": {
+          "bytes": 21848216,
+          "sha256": "0bd6d433aa26009c8d759355751945bed1dc020ed9aed49cda328bbc79387904"
+        },
+        "ttf/TongPixelSansMono14Small-Square.ttf": {
+          "bytes": 8971248,
+          "sha256": "7f17579c7a5763aa70173e4811664e5bf3729ff900bd83f72f52dcb9542b3a80"
+        },
+        "otf/TongPixelSans14Large-Dot.otf": {
+          "bytes": 15876872,
+          "sha256": "dd41cd42d59463253061f1e8c24062386e968b82f9860ce897fb47800100e15b"
+        },
+        "otf/TongPixelSans14Large-Square.otf": {
+          "bytes": 6764380,
+          "sha256": "76c0d716c42ad01eb1d8f32e0c1b5edd8d0f965f0bf181f135ac7218f9c69376"
+        },
+        "otf/TongPixelSans14Small-Dot.otf": {
+          "bytes": 15795284,
+          "sha256": "5f2c2645965661325d8302afcd975f10fb4780c703c9f4488b9a5d9c7b5f8f2c"
+        },
+        "otf/TongPixelSans14Small-Square.otf": {
+          "bytes": 6749912,
+          "sha256": "f3f1ee676fa2f769d52dbae775aac754cbfb4b8eb00c8fc6ca02ce392d2afbe6"
+        },
+        "otf/TongPixelSansMono14Large-Dot.otf": {
+          "bytes": 15795848,
+          "sha256": "2dfa7c9cc6d5eaed065b5c7ee53234cce06e90d245283d14681bedbff062444d"
+        },
+        "otf/TongPixelSansMono14Large-Square.otf": {
+          "bytes": 6735596,
+          "sha256": "95987d0e27ee3ab77e8d8cfc14852f5765aac3116710c802ff021181e1d6f88f"
+        },
+        "otf/TongPixelSansMono14Small-Dot.otf": {
+          "bytes": 15728044,
+          "sha256": "fc5a7a8751f8f62817d0a7c5babf900ad105dc0debda4dbf4ff80b4dcad2a254"
+        },
+        "otf/TongPixelSansMono14Small-Square.otf": {
+          "bytes": 6725596,
+          "sha256": "1d287bcdce6df002908f0d8ea37d18b4e7bce3846e94057295834a2df0f6b011"
+        },
+        "woff2/TongPixelSans14Large-Dot.woff2": {
+          "bytes": 805788,
+          "sha256": "a7d00701a57b87e0cc727b742484fd113438ee923646743668625af1bcf8ed21"
+        },
+        "woff2/TongPixelSans14Large-Square.woff2": {
+          "bytes": 1067128,
+          "sha256": "1a8d62210add9a4604729685fa7a228ecd8c6105baf203e3bd48afab734d976f"
+        },
+        "woff2/TongPixelSans14Small-Dot.woff2": {
+          "bytes": 803348,
+          "sha256": "f2b0b1cc16f5fd6090ea90a6eb8f8f7e1a7cbdee7413882f298f581ee088e7a8"
+        },
+        "woff2/TongPixelSans14Small-Square.woff2": {
+          "bytes": 1066316,
+          "sha256": "40e2e938ff69b0a8d7b9b11ea5e5354e2128a9f72926d64de5895c3990059936"
+        },
+        "woff2/TongPixelSansMono14Large-Dot.woff2": {
+          "bytes": 797256,
+          "sha256": "e9120227c11a98d8a876e6f11c7974849831a8b6d0b2a1cb2bbe66094f55e3bd"
+        },
+        "woff2/TongPixelSansMono14Large-Square.woff2": {
+          "bytes": 1060360,
+          "sha256": "3e9957cb3b2de2c743ff991da8e8f4371599be87726f48a77471fabf5020d0b7"
+        },
+        "woff2/TongPixelSansMono14Small-Dot.woff2": {
+          "bytes": 795816,
+          "sha256": "758be5db41b079abd0e61cf44d835c9f0aea2575d6a4166048211e298029fdee"
+        },
+        "woff2/TongPixelSansMono14Small-Square.woff2": {
+          "bytes": 1060156,
+          "sha256": "82f79957759bc941adeb99f3411aca047def6a54e8c4ef39c801c3b1e397ef9e"
+        }
+      }
+    }
+  ],
+  "requested_runs": 5,
+  "expected_canonical_sha256": "74fdccfd874fcaa1dba85e2ba7c1f343a2f41a6c959eff5ea6915b8c7ffa35dc",
+  "expected_bitmaps_sha256": "fba281b6993bb6f32c4a918e294eb8f07b7dd07f5d57fef02de37f5b3ab1a58c",
+  "median_seconds": 134.56892625099863,
+  "binary_unchanged": true,
+  "total_bytes": 382104149,
+  "woff2_bytes": 7456168,
+  "woff2_bytes_samples": [
+    7454760,
+    7457056,
+    7458740,
+    7454808,
+    7456168
+  ],
+  "median_woff2_bytes": 7456168
+}

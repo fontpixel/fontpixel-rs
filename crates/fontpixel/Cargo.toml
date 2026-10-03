@@ -109,6 +109,10 @@ name = "sfnt_check"
 required-features = ["compat-bdfparser"]
 
 [[example]]
+name = "tong_export"
+required-features = ["bdf", "pcf", "otb", "ttf", "otf", "woff2"]
+
+[[example]]
 name = "glyf_check"
 required-features = ["sfnt"]
 

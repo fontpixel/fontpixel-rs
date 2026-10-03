@@ -955,6 +955,9 @@ struct VectorArguments {
     shape: Option<String>,
     #[arg(long)]
     dotsize: Option<f64>,
+    /// Native dot reuse; default patterns. Literal favors smaller webfonts.
+    #[arg(long,value_parser=["literal","rows","patterns"])]
+    dot_reuse: Option<String>,
     /// Design units per source pixel (default 100).
     #[arg(long)]
     ppu: Option<u16>,
@@ -976,6 +979,7 @@ impl VectorArguments {
     fn apply(&self, id: &str, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         let explicit = self.shape.is_some()
             || self.dotsize.is_some()
+            || self.dot_reuse.is_some()
             || self.ppu.is_some()
             || self.upm.is_some()
             || self.embed_bitmaps
@@ -986,6 +990,7 @@ impl VectorArguments {
         #[cfg(feature = "svg")]
         if id == "svg" {
             if self.upm.is_some()
+                || self.dot_reuse.is_some()
                 || self.embed_bitmaps
                 || self.woff2_source.is_some()
                 || self.woff2_quality.is_some()
@@ -1031,6 +1036,7 @@ impl VectorArguments {
                 1.
             });
             o.outline.units_per_pixel = self.ppu.unwrap_or(100);
+            o.outline.dot_reuse = opentype::dot_reuse(self.dot_reuse.as_deref());
             o.outline.units_per_em = self.upm;
             o.outline.embed_bitmaps = self.embed_bitmaps;
             o.outline.gray_threshold = self.gray_threshold;

@@ -1,0 +1,38 @@
+{
+  "glyphs": 70,
+  "max_component_depth": 2,
+  "ots": true,
+  "seeds": [
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-woff2/nested-pattern-dot.woff2",
+      "bytes": 2596,
+      "sha256": "1a3d5ea4b302e320f091c6e25d18d33e8cda2abbeac7d35d21acb25a7657b78e"
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-woff2/raw-transform",
+      "bytes": 4142,
+      "sha256": "587321b58fc8287aaff14fb656d6407dcde7d0918dbaa97e796a823c43f2ddae"
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-vector/nested-pattern-dot.ttf",
+      "bytes": 7364,
+      "sha256": "3802f2d0d6badd5c102fd8a93335c9f5d39a84d0077d96793f05e779eed79ae7"
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-vector/nested-pattern-dot.woff2",
+      "bytes": 2596,
+      "sha256": "1a3d5ea4b302e320f091c6e25d18d33e8cda2abbeac7d35d21acb25a7657b78e"
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-vector/tiny-nested-dot.ttf",
+      "bytes": 2876,
+      "sha256": "4ce0dc992328883d183bd488be4cce5e36ef919c040bcf39f1e1f28db23506f1"
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-phase2-work/fuzz-woff2/tiny-nested-dot.woff2",
+      "bytes": 1272,
+      "sha256": "1cbb0268c8673c4d3e9ce74567c315e1cfc45575bae08eaaa03848ac9144d414"
+    }
+  ],
+  "tiny_glyphs": 14
+}

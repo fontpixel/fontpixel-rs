@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "benchmark": "phase2-optimized-default.json",
+      "five_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "8_independently_decoded_webfont_streams_match_complete_oracles": true,
+      "ots_all_8": true,
+      "quality": 11,
+      "jobs": 8,
+      "compression_threads": 1,
+      "dot_reuse": "patterns"
+    },
+    {
+      "benchmark": "phase2-optimized-quality8.json",
+      "five_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "8_independently_decoded_webfont_streams_match_complete_oracles": true,
+      "ots_all_8": true,
+      "quality": 8,
+      "jobs": 8,
+      "compression_threads": 1,
+      "dot_reuse": "patterns"
+    },
+    {
+      "benchmark": "phase2-optimized-quality5.json",
+      "five_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "8_independently_decoded_webfont_streams_match_complete_oracles": true,
+      "ots_all_8": true,
+      "quality": 5,
+      "jobs": 8,
+      "compression_threads": 1,
+      "dot_reuse": "patterns"
+    }
+  ]
+}

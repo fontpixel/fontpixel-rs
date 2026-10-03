@@ -47,6 +47,39 @@ fn equivalent(original: &[u8], encoded: &[u8], is2: bool) {
     );
 }
 #[test]
+fn large_parallel_streams_are_deterministic_and_preserve_all_tables() {
+    let limits = Limits::default();
+    let payload = (0usize..160 * 1024)
+        .map(|i| ((i * 17 + i / 97) & 255) as u8)
+        .collect::<Vec<_>>();
+    let input = replace(FONT, *b"TEST", payload);
+    for quality in [2, 11] {
+        for threads in [1, 2, 4] {
+            let options = woff2::Options {
+                quality,
+                compression_threads: threads,
+                ..Default::default()
+            };
+            let encoded = woff2::encode(&input, &options, &limits).unwrap();
+            equivalent(&input, &encoded.bytes, true);
+            assert_eq!(encoded, woff2::encode(&input, &options, &limits).unwrap());
+        }
+    }
+    // The small-input fallback is based on bytes, not host CPU availability.
+    let encode_small = |threads| {
+        woff2::encode(
+            FONT,
+            &woff2::Options {
+                compression_threads: threads,
+                ..Default::default()
+            },
+            &limits,
+        )
+        .unwrap()
+    };
+    assert_eq!(encode_small(1), encode_small(4));
+}
+#[test]
 fn fixture_roundtrips_and_quality() {
     let l = Limits::default();
     for q in 0..=11 {

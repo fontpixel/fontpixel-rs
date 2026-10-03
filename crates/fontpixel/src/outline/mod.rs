@@ -3,6 +3,7 @@
 //! Geometry is independent of sfnt. TrueType encoding requires integral int16
 //! coordinates; composite flattening and rasterization can retain fractions.
 use crate::{Bitmap, Error, Result, bitmap::BitmapLimits};
+mod packed;
 pub mod path;
 mod spec;
 /// TrueType point `(x, y, on_curve)` in design units, with y upward.
@@ -112,6 +113,10 @@ pub fn contours(bitmap: &Bitmap, options: &Options, limits: &Limits) -> Result<V
         "outline pixels",
     )?;
     if options.shape == Shape::Square {
+        let vertices = (bitmap.width() as usize + 1).checked_mul(bitmap.height() as usize + 1);
+        if vertices.is_some_and(|n| n <= packed::MAX_VERTICES) {
+            return packed::square(bitmap, options, limits);
+        }
         let rows = (0..bitmap.height())
             .map(|y| {
                 (0..bitmap.width())

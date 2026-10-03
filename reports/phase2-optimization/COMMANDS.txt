@@ -1,0 +1,76 @@
+Run from /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance.
+Main remains reviewed W2.8. Do not merge or start W3 before independent review.
+reference/ and samples/ are read-only. No command below pushes a remote.
+
+source /workspace/scratch/ef9059dd510b/fontpixel-phase2-work/env.sh
+# env.sh selects the existing Rust/Python tools and shared normal Cargo target.
+# Native performance measurements must not overlap builds, fuzzing or oracles.
+work=/workspace/scratch/ef9059dd510b/fontpixel-phase2-work
+native=/tmp/fontpixel-phase2-optimized
+reference=/tmp/fontpixel-phase2-reference/out
+# These /tmp paths are preserved symlinks to WORK/disk-scratch; all file hashes
+# survived relocation from RAM-backed scratch. Protected sources were untouched.
+
+bash scripts/check.sh
+RUSTDOCFLAGS='-D warnings' cargo doc --offline --locked -p fontpixel --all-features --no-deps
+cargo deny --locked --manifest-path fuzz/Cargo.toml check
+CARGO_BUILD_JOBS=2 cargo build --offline --locked --release -p fontpixel-cli --all-features --bins
+CARGO_BUILD_JOBS=2 cargo build --offline --locked --release -p fontpixel --all-features --example tong_export --example woff_check --example raster_check --example svg_check
+# IMPORTANT: explicit --example selectors alone do not build CLI/parity bins.
+fontpixel="$CARGO_TARGET_DIR/release/fontpixel"
+woff="$CARGO_TARGET_DIR/release/examples/woff_check"
+raster="$CARGO_TARGET_DIR/release/examples/raster_check"
+exporter="$CARGO_TARGET_DIR/release/examples/tong_export"
+"$fontpixel" variants --help  # confirms --dot-reuse on the actual rebuilt CLI
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out "$work/parity-final"
+python3 -B tests/crosscheck/svg_final_outputs.py --binary "$fontpixel" --report reports/w2.8/crosscheck.json --output reports/phase2-optimization/svg-final-identical.json
+python3 -B tests/crosscheck/render_images.py --binary "$fontpixel" --output reports/phase2-optimization/render-images.json
+
+# Input preparation if rebuilding in a new workspace; never use active glyph edits.
+python3 -B tests/crosscheck/phase2_prepare.py --archive /workspace/scratch/ef9059dd510b/recovery-archives/tong-dot-package-2026-10-02.zip --work NEW_WORK_DIRECTORY
+# Existing frozen inputs here: WORK/bdf and WORK/tong-baseline.
+# Baseline_source_manifest and source-plan-equivalence record exact provenance.
+
+# Five complete runs per native profile, no simultaneous validation/build jobs.
+for profile in default quality8 quality5; do
+  quality=11; [ "$profile" != quality8 ] || quality=8; [ "$profile" != quality5 ] || quality=5
+  python3 -B benches/phase2_optimized.py --binary "$exporter" --bdf-dir "$work/bdf" --work "$native" --quality "$quality" --output "benches/results/phase2-optimized-$profile.json"
+  mkdir -p "$native/saved-phase2-optimized-$profile"
+  cp "$native"/woff2/*.woff2 "$native/saved-phase2-optimized-$profile/"
+done
+cp "$native"/saved-phase2-optimized-default/*.woff2 "$native/woff2/"
+
+# Run heavy fontTools matrices serially to keep memory headroom.
+python3 -B tests/crosscheck/phase2_exports_validate.py --native "$native" --reference "$reference" --source-root "$work/tong-baseline" --woff-driver "$woff" --output reports/phase2-optimization/full-export-validation.json
+python3 -B tests/crosscheck/phase2_vectors.py --binary "$fontpixel" --woff-driver "$woff" --bdf-dir "$work/bdf" --source-root "$work/tong-baseline" --work "$work/final-supplied-vectors" --output reports/phase2-optimization/supplied-vectors.json --only supplied-Large-prop
+python3 -B tests/crosscheck/phase2_woff1.py --native-exports "$native" --woff-driver "$woff" --output reports/phase2-optimization/woff1.json
+python3 -B tests/crosscheck/phase2_dot_policies.py --binary "$fontpixel" --bdf-dir "$work/bdf" --source-root "$work/tong-baseline" --reference "$reference" --baseline-benchmark benches/results/phase2-native-baseline.json --work "$work/final-dot-policies" --output reports/phase2-optimization/dot-policies.json
+python3 -B tests/crosscheck/phase2_subsets_raster.py --binary "$fontpixel" --raster-driver "$raster" --native "$native" --work "$work/final-subsets-raster" --output reports/phase2-optimization/subsets-raster.json
+python3 -B tests/crosscheck/phase2_optimized_validate.py --baseline-reports reports/phase2-acceptance --full-report reports/phase2-optimization/full-export-validation.json --native "$native" --benchmark benches/results/phase2-optimized-default.json --benchmark benches/results/phase2-optimized-quality8.json --benchmark benches/results/phase2-optimized-quality5.json --output reports/phase2-optimization/benchmark-validation.json
+
+# Fresh nested-pattern seeds: native CLI subset from the new full dot font,
+# and transformed glyf bytes prefixed 0xff for the WOFF2 direct-stream mode.
+# Sizes, hashes, glyph count and depth are recorded in fuzz-seeds.json.
+python3 -B tests/crosscheck/phase2_cff_seed.py --binary "$fontpixel" --work "$work/cff-axis-seed" --output reports/phase2-optimization/cff-axis-seed.json
+# It verifies five 40-operand axis runs with fontTools and OTS before fuzzing.
+normal_target="$CARGO_TARGET_DIR"
+export CARGO_TARGET_DIR="$normal_target/../fuzz/target"
+for target in woff2 vector_raster cff; do
+  CARGO_BUILD_JOBS=1 cargo +nightly fuzz build --codegen-units 16 "$target"
+done
+fuzz="$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release"
+ASAN_OPTIONS=detect_leaks=0 "$fuzz/woff2" "$work/fuzz-woff2" -max_total_time=611 -max_len=65536 -rss_limit_mb=768 -artifact_prefix="$work/fuzz-artifacts-woff2/"
+ASAN_OPTIONS=detect_leaks=0 "$fuzz/vector_raster" "$work/fuzz-vector" -max_total_time=611 -max_len=65536 -rss_limit_mb=1024 -artifact_prefix="$work/fuzz-artifacts-vector/"
+ASAN_OPTIONS=detect_leaks=0 "$fuzz/cff" "$work/fuzz-cff" -max_total_time=611 -max_len=65536 -rss_limit_mb=768 -artifact_prefix="$work/fuzz-artifacts-cff/"
+export CARGO_TARGET_DIR="$normal_target"
+
+# Native/reference performance comparisons and their output validation are
+# recorded separately in the benchmark report after isolated five-run intervals.
+# The original Rust exporter is an unchanged copy outside reference/.
+python3 -B benches/phase2_reference.py --help
+python3 -B benches/phase2_fonttools.py --help
+
+sha256sum -c reports/phase2-optimization/production-final.sha256
+sha256sum -c reports/phase2-optimization/binaries-final.sha256
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/phase2-optimization/protected-final.sha256
+cmp reports/phase2-acceptance/protected-before.sha256 reports/phase2-optimization/protected-final.sha256

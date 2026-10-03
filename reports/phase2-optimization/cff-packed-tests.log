@@ -1,0 +1,19 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-phase2-acceptance/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.72s
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/cff-d7916323bf6655a2)
+
+running 11 tests
+test cubic_bounds_and_fractional_advance ... ok
+test reject_numeric_names_and_unclosed_paths ... ok
+test enforce_resource_limits_before_expansion ... ok
+test alternating_axis_runs_split_and_reset_without_geometry_changes ... ok
+test sfnt_binding_requires_otto_head_and_matching_maxp ... ok
+test independent_fonttools_program_fixtures ... ok
+test square_dot_and_separate_roundtrip ... ok
+test truncation_and_mutation_are_bounded ... ok
+test all_3x3_square_masks ... ok
+test random_square_roundtrip ... ok
+test arbitrary_input_never_panics ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+

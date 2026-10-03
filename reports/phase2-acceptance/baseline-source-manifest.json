@@ -1,0 +1,4729 @@
+{
+  "archive": "tong-dot-package-2026-10-02.zip",
+  "archive_sha256": "0a355feaecb76809ac737c66923315b310d26be612e15a5fdebbea2567a574d9",
+  "files": [
+    {
+      "path": "tools/build.py",
+      "sha256": "ffe1ef41d0fd519557af5416421006952bbc033a1a5398db9511c1ddee06fbc6",
+      "bytes": 15784
+    },
+    {
+      "path": "build-data/coverage-required.txt",
+      "sha256": "3f8bceb727d389a77dd0af0101edd54262c79d0c3912617749624eb1c5a3a9f3",
+      "bytes": 1919
+    },
+    {
+      "path": "build-data/coverage/tw/big5-cichangyong.txt",
+      "sha256": "083ff06b8799e16366984a6bd75b3f2aca0e9d85743d04b96a8103ebe07f1e09",
+      "bytes": 31948
+    },
+    {
+      "path": "build-data/coverage/tw/tw-changyong-4808.txt",
+      "sha256": "9cd58fbdc70dbc886585fab829649bc36a7ea35295490e6e1fc9ef7570ecfe8d",
+      "bytes": 22921
+    },
+    {
+      "path": "build-data/coverage/tw/big5.txt",
+      "sha256": "366765ef9e87de86aa2dbf72ae6e932149a98503d3e034320a6300d58b495d6a",
+      "bytes": 33923
+    },
+    {
+      "path": "build-data/coverage/tw/tw-cichangyong-6343.txt",
+      "sha256": "4387112a672bf5eb031abf5fcbb3193714e0d05ebec17bf4ce1d4c9347cff9f2",
+      "bytes": 28212
+    },
+    {
+      "path": "build-data/coverage/tw/bopomofo.txt",
+      "sha256": "f1bfe23ba2a6c2ae16c2a95341719318fa84e6b7355c022e4920cb0e5d13e8dc",
+      "bytes": 539
+    },
+    {
+      "path": "build-data/coverage/tw/big5-changyong.txt",
+      "sha256": "2dba3a43db0ea3abc584a28344da56beb8167faf46e341ac5734a902aeeadbd9",
+      "bytes": 25252
+    },
+    {
+      "path": "build-data/coverage/kr/ksx1001-symbols.txt",
+      "sha256": "e2a132916766ae58250254a3b14ec0d6d38e4f096b65b78803396612ee496828",
+      "bytes": 1433
+    },
+    {
+      "path": "build-data/coverage/kr/hangul-jamo.txt",
+      "sha256": "e4bbb864d9fdec775e5abeb05f95688ab4f3ed4294c85b1bd6eeab2ebe84752d",
+      "bytes": 303
+    },
+    {
+      "path": "build-data/coverage/kr/hangul-syllables.txt",
+      "sha256": "3d5a42bb574ef2515436d94e11786035f488045815cac6dfd6d9b99535af8afe",
+      "bytes": 292
+    },
+    {
+      "path": "build-data/coverage/kr/hangul-compat-jamo.txt",
+      "sha256": "5783d5eb338b8000d0ec953aec8ee43ea4a12a7ff42ed8fdf8eb1fe39237a929",
+      "bytes": 279
+    },
+    {
+      "path": "build-data/coverage/kr/ksx1001-hangul.txt",
+      "sha256": "3a628e37d3923a019df22d2af4a44cf3fe8963eecbd98b6f1025116053959fdd",
+      "bytes": 11674
+    },
+    {
+      "path": "build-data/coverage/kr/ksx1001-hanja.txt",
+      "sha256": "b0fdfa05d3fc6afd8cddddcf834782147a75865a1ef80e787d9507a0eec1cba3",
+      "bytes": 21924
+    },
+    {
+      "path": "build-data/coverage/hk/hkscs.txt",
+      "sha256": "9527ec3caf7bf8b0bae0ecb6004066aca5fc3d0a4d4e8c772da27226fdd165a2",
+      "bytes": 23922
+    },
+    {
+      "path": "build-data/coverage/hk/hk-changyong.txt",
+      "sha256": "a57a6fe2202a782ed792c83c25dff58de895ba01aa9dd335338ec98bc21cb659",
+      "bytes": 22723
+    },
+    {
+      "path": "build-data/coverage/hk/hk-suppchara.txt",
+      "sha256": "4dc955c5bf285b30fff9604be8da82613e80fdae918848839e041d2fce4308e6",
+      "bytes": 6029
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0213-l4.txt",
+      "sha256": "0cf929ef174d5fbdf1170fcd5536810a332d662a071379d20285d8dade43d64e",
+      "bytes": 12551
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0208-nonkanji.txt",
+      "sha256": "950b462b35172980823e8e1eeaa690886e93d5684f6efbf8dd678b1c23ba6047",
+      "bytes": 1053
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0213-l3.txt",
+      "sha256": "01f6ad51bd91de6865268a5a5db29be10a1d229ed5059a22c50854c88cc06c44",
+      "bytes": 6436
+    },
+    {
+      "path": "build-data/coverage/jp/hiragana.txt",
+      "sha256": "b51ea20d8721b3232c5bf0914e38be6503a3b6717ed7a36708401201de23dd85",
+      "bytes": 338
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0208-kana.txt",
+      "sha256": "ede49791a05b9a0d1053deb0e31c748d1ae13f2537bd4348456f85378d54549a",
+      "bytes": 593
+    },
+    {
+      "path": "build-data/coverage/jp/halfwidth-kana.txt",
+      "sha256": "48b56d599f1aad0ce393a614cda3c106e41e09a08b11deeac3ae43dc968f4e27",
+      "bytes": 277
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0201.txt",
+      "sha256": "23fd2f868a8c0481b23ded0ffb64ca571cc899463a22ea66c9263988a48af595",
+      "bytes": 311
+    },
+    {
+      "path": "build-data/coverage/jp/katakana.txt",
+      "sha256": "dc3892a9d3b5084ec6db2d649e5488dd233bbeec69a97a6bd1bbe0d77e2d7022",
+      "bytes": 346
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0208-l1.txt",
+      "sha256": "8ef0f96b49dc5e20faf7f14e0c7a7f185be90d2a74bd229324f974e12d23f3d8",
+      "bytes": 14657
+    },
+    {
+      "path": "build-data/coverage/jp/jinmeiyo.txt",
+      "sha256": "abbc4ce8d583ceb36adfd5a8b9b8208099786e751c19501cba1ee1047e4d464e",
+      "bytes": 4658
+    },
+    {
+      "path": "build-data/coverage/jp/kyoiku.txt",
+      "sha256": "cce02cd37ab9f300f5b8553b5de4cff1ef939a43ba8cadc37fb8a71eec8f632b",
+      "bytes": 5512
+    },
+    {
+      "path": "build-data/coverage/jp/jisx0208-l2.txt",
+      "sha256": "683b8a71f5129b8dd0e052bd4d3ff0c623a4780b4dcfffdb95cda760a662da8a",
+      "bytes": 17045
+    },
+    {
+      "path": "build-data/coverage/jp/joyo.txt",
+      "sha256": "36c57995fa436371f4f7b9201b69481b7368fda32da37abf421fe05396c82fa7",
+      "bytes": 10848
+    },
+    {
+      "path": "build-data/coverage/jp/kana-marks.txt",
+      "sha256": "ecbea7936aff60696f67d1bfdfd05f06e88255d52142b1602d876274c27a7bd5",
+      "bytes": 504
+    },
+    {
+      "path": "build-data/coverage/prc-lit/kangxi-radicals.txt",
+      "sha256": "d9bb9f8635e66745b17ca70a91063065c291ab6c0f1a5bb08eb8b2b4f7450036",
+      "bytes": 258
+    },
+    {
+      "path": "build-data/coverage/prc-lit/tongyong-guifan-l1.txt",
+      "sha256": "045f434b5b013b4e5890797c0d8283f03b129714af0300e2f2d3c7ee69b00ef4",
+      "bytes": 16710
+    },
+    {
+      "path": "build-data/coverage/prc-lit/hanyi-jianfan.txt",
+      "sha256": "3f42f7b2aaa13711ba43c27442753c3c75c9bd3884e733d27b86423958d24f0e",
+      "bytes": 35360
+    },
+    {
+      "path": "build-data/coverage/prc-lit/tongyong-7000.txt",
+      "sha256": "661c530446fe6938dc45d05ed6e5f784b2d53dfdf52b1cb2dba2d0790372d3aa",
+      "bytes": 26510
+    },
+    {
+      "path": "build-data/coverage/prc-lit/changyong-2500.txt",
+      "sha256": "a676bb85352783ca706bb33fc249f9de81c643c29188bbfd5a46749b80f91f32",
+      "bytes": 12278
+    },
+    {
+      "path": "build-data/coverage/prc-lit/tongyong-guifan-l2.txt",
+      "sha256": "1ed6aaaf6e43dc12d99ddeca59b1e9cd216681785ba47bc3bc4d5952b6dea16d",
+      "bytes": 14814
+    },
+    {
+      "path": "build-data/coverage/prc-lit/fangzheng-jianfan.txt",
+      "sha256": "1607f1aa9b380c4bd14ee3cec8527f61f1c587170a484e0b9e77000616f2bd50",
+      "bytes": 36222
+    },
+    {
+      "path": "build-data/coverage/prc-lit/tongyong-guifan.txt",
+      "sha256": "cbe0e319eac78a530881a2205fd22adcc6feeda505539ad396be3cdaeb014c56",
+      "bytes": 29937
+    },
+    {
+      "path": "build-data/coverage/prc-lit/cichangyong-1000.txt",
+      "sha256": "87e82968c6aaa116287a86a6dfbf867c67b157a63d02953dc2d9a6629efcb6e8",
+      "bytes": 5391
+    },
+    {
+      "path": "build-data/coverage/prc-lit/guji-yinshua.txt",
+      "sha256": "e050a22b3134044058ee6831ca188da5c1eb833959f6c0ba006f040d5de1cdba",
+      "bytes": 45398
+    },
+    {
+      "path": "build-data/coverage/prc-lit/tongyong-guifan-l3.txt",
+      "sha256": "9b78f78e2e637583bf8027659a3a8c7513132dbd5a689ec5e57397585e27d58c",
+      "bytes": 8697
+    },
+    {
+      "path": "build-data/coverage/prc-lit/radicals-supplement.txt",
+      "sha256": "2ee1509bbc669aa568d5c6fa0d11558c1409786b775f5c54ef2f137d4fe3da77",
+      "bytes": 321
+    },
+    {
+      "path": "build-data/coverage/prc-lit/yijiao-3500.txt",
+      "sha256": "f54a1b6827e9a1beac1791d7c41ee1fcc25313e9b57149cd9fa9a433cf7e93c4",
+      "bytes": 16650
+    },
+    {
+      "path": "build-data/coverage/prc-lit/changyong-3500.txt",
+      "sha256": "49bf1b4c5e0128e2f6f0436943fc417b8e59427ed9f33e609131a68eb787d48c",
+      "bytes": 16757
+    },
+    {
+      "path": "build-data/coverage/intl/braille.txt",
+      "sha256": "89ad9fd800e9a86f7fe8f7634570332234ac23bb9ddf1d01391aac0b483828e6",
+      "bytes": 262
+    },
+    {
+      "path": "build-data/coverage/intl/unihan-core-2020.txt",
+      "sha256": "d2c41d332dd5197239c82ae4573da5c73d182eedb0fad9136e4b3fac6fca5964",
+      "bytes": 38316
+    },
+    {
+      "path": "build-data/coverage/intl/greek.txt",
+      "sha256": "6c0336252f7929eca150b3107e2be1ec6d815de7dece3a3a3ce5499b6d64fec5",
+      "bytes": 858
+    },
+    {
+      "path": "build-data/coverage/intl/cyrillic.txt",
+      "sha256": "bd570644d15657d1b601f312a4e63e42de79409749a0f8fb52e0ad38ff2da43c",
+      "bytes": 876
+    },
+    {
+      "path": "build-data/coverage/intl/viet-latin.txt",
+      "sha256": "696266931cda54db122758d73d8727a2ae760435f3408884fc971d05087c858a",
+      "bytes": 693
+    },
+    {
+      "path": "build-data/coverage/intl/latin1-supp.txt",
+      "sha256": "831c5086e43f5eae1d0bb6125a1b2d76e26c5c74439e0fe50e60128ed5631d52",
+      "bytes": 278
+    },
+    {
+      "path": "build-data/coverage/intl/box-drawing.txt",
+      "sha256": "520ad5c1340ce0ec7802d53f96f6c8d70df0546c3746b5e414f198d3c8ad840b",
+      "bytes": 261
+    },
+    {
+      "path": "build-data/coverage/intl/iicore.txt",
+      "sha256": "cf3ae76f98b5259394f9ec7e92fb2ca79112d758b3ec8391a3ca11d127d690ea",
+      "bytes": 39121
+    },
+    {
+      "path": "build-data/coverage/intl/latin-basic.txt",
+      "sha256": "5c9e83edda58bb6d35be3f3005517689c65683563dc2c7bc46fb8d7329d58794",
+      "bytes": 247
+    },
+    {
+      "path": "build-data/coverage/intl/wgl4.txt",
+      "sha256": "874b6758573fef1495e43073dbb4034bf86b47b39c9756d179244c6692de2b30",
+      "bytes": 1061
+    },
+    {
+      "path": "build-data/coverage/intl/cp437.txt",
+      "sha256": "04ed4c08be5bcc125c7bd433008abf43e47093cbe88e17485a06d44d27785f2c",
+      "bytes": 898
+    },
+    {
+      "path": "build-data/coverage/intl/latin-ext-b.txt",
+      "sha256": "62f596fdc16b3d88a5a2ea86b6aaf3d9d2e24923f8e12fe7e3eff9e57f7102ff",
+      "bytes": 221
+    },
+    {
+      "path": "build-data/coverage/intl/latin-ext-a.txt",
+      "sha256": "0253b94a78297c1d9551cf313a53b14af24333299f16475156d377544bf79e13",
+      "bytes": 290
+    },
+    {
+      "path": "build-data/coverage/intl/block-elements.txt",
+      "sha256": "15a81b04391ed468e35403e11bc81ffc911e1d5703939c1127e43580969910c9",
+      "bytes": 267
+    },
+    {
+      "path": "build-data/coverage/intl/arabic.txt",
+      "sha256": "c1cd8306d4cc39180700f4283a22c4612f61cee4fbece7ab8c898e56e09da0ad",
+      "bytes": 1172
+    },
+    {
+      "path": "build-data/coverage/intl/thai.txt",
+      "sha256": "68058845b958b52cb5a652f94c353c5bcd1203db6abed378d6a607070942652c",
+      "bytes": 1315
+    },
+    {
+      "path": "build-data/coverage/ucd/assigned-ranges.txt",
+      "sha256": "7347979a5f758391ca8b5759c147e9541767879cc6606431777d4708cc4cd1bc",
+      "bytes": 8664
+    },
+    {
+      "path": "build-data/coverage/ucd/Blocks.txt",
+      "sha256": "c0edefaf1a19771e830a82735472716af6bf3c3975f6c2a23ffbe2580fbbcb15",
+      "bytes": 11663
+    },
+    {
+      "path": "build-data/coverage/gb/gb2312-l2.txt",
+      "sha256": "5facf61b25ed67cb9460a07c432e9fa4660003dc0837314cd6b399604eca048a",
+      "bytes": 14601
+    },
+    {
+      "path": "build-data/coverage/gb/gb18030-2022-l2.txt",
+      "sha256": "2c29ebc43aff7510e4c4876b328c2d6cd6d000e96903058382e3d99445ecebeb",
+      "bytes": 1820
+    },
+    {
+      "path": "build-data/coverage/gb/gb2312.txt",
+      "sha256": "f978d5070dbb9b34db105222594c9bf47847c20b42195edcaeb2b05b25633e76",
+      "bytes": 26227
+    },
+    {
+      "path": "build-data/coverage/gb/gbk-hanzi.txt",
+      "sha256": "6a0988df7951be88d55aa676bcbdbc02653767254c17aa12873ee27d6a232bbb",
+      "bytes": 364
+    },
+    {
+      "path": "build-data/coverage/gb/gb18030-2022-l3.txt",
+      "sha256": "444df5051c05f3e5f79c03e0d694b45ae904102d62c36324f2d7e82affb31429",
+      "bytes": 723
+    },
+    {
+      "path": "build-data/coverage/gb/gb18030-2022-l1.txt",
+      "sha256": "f0863a388bdcb550b70999a02c067e6bae4c3c334ce8721e42c78209a2b613dc",
+      "bytes": 623
+    },
+    {
+      "path": "build-data/coverage/gb/gb12345.txt",
+      "sha256": "48ea25024dfbf87c37fee204c9c3261674a2b3e7ce9443550ee697f0caabe84f",
+      "bytes": 30825
+    },
+    {
+      "path": "build-data/coverage/gb/gb2312-l1.txt",
+      "sha256": "86388f47a558ee04a899735dabbc88d4e608ad13bd5756473668f3112dc8c25e",
+      "bytes": 17536
+    },
+    {
+      "path": "build-data/narrow-width.txt",
+      "sha256": "1aba2409a019affc2f7b012f36d3aa12e02b46cc682d10b5325a6368dae7c7f5",
+      "bytes": 3755
+    },
+    {
+      "path": "build-data/constants.txt",
+      "sha256": "ee7867d68857ac09c627a634717295d3348426a6e37bfeede96fe6a46d672dae",
+      "bytes": 105
+    },
+    {
+      "path": "build-data/coverage-exceptions.txt",
+      "sha256": "bd0e3e6676cd2ae740cbee4240a15856aad9c75ef1b9698efc89f76a36dfc4bb",
+      "bytes": 146
+    },
+    {
+      "path": "build-data/reference-fonts.sha256",
+      "sha256": "b7e2611c796a57de2c5c2025bb76be0a5fa0aca2aa33cc0dd3484028c938c06f",
+      "bytes": 1609
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL/E0xx.txt",
+      "sha256": "3576354e514f9bdf7f18bc383a34afc1bc399716c0c2dfe42fe5ba2efe953379",
+      "bytes": 4599
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL/28xx.txt",
+      "sha256": "178742d7b0742795bb30640caf5b8e8cbe316ad301d9db15d4a03d4ac09e04ee",
+      "bytes": 59391
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL/25xx.txt",
+      "sha256": "27bc0ab8283b7236db92d356e680405a004b10ba19c0193644559cc8092e35e6",
+      "bytes": 37119
+    },
+    {
+      "path": "glyphs/TC/9Axx.txt",
+      "sha256": "18c5c8a0a7f939e2f7e36fd3cdd5a94864edf67f2ba1cdf923b04951059999f9",
+      "bytes": 39530
+    },
+    {
+      "path": "glyphs/TC/75xx.txt",
+      "sha256": "2a43a6706ab98ff47b5b7c8b1dd0359fb3407b47ac57d255dbd6fcc77d05f589",
+      "bytes": 25156
+    },
+    {
+      "path": "glyphs/TC/207xx.txt",
+      "sha256": "eb803896ea7917f718c24cc18b3e4c23f05e80e2fbbbc0560cf9dc8ddbfcbc32",
+      "bytes": 782
+    },
+    {
+      "path": "glyphs/TC/74xx.txt",
+      "sha256": "55af96b08d551e261b2e8e5f7aaaeb99709e6bb48be5c56b36d07075f803cace",
+      "bytes": 33566
+    },
+    {
+      "path": "glyphs/TC/7Dxx.txt",
+      "sha256": "925cd443444074ce416bec86d81e2077f9700a057d8a9bfa8a255dd5d68156ca",
+      "bytes": 47950
+    },
+    {
+      "path": "glyphs/TC/27Axx.txt",
+      "sha256": "68ec2b20ca551b80bffe1bf4bf9dcc138a60124bccd3f2a7fec3a577a8283b36",
+      "bytes": 552
+    },
+    {
+      "path": "glyphs/TC/3Cxx.txt",
+      "sha256": "fed9233eb270e843bd791488d353bf18e8ff9150548efbd5cece0982c0ff6ca8",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/TC/35xx.txt",
+      "sha256": "e1631709bc7427177e359dc97c8f4bde9d021e7a31fcc916f34d8f96f0957e6c",
+      "bytes": 2471
+    },
+    {
+      "path": "glyphs/TC/29Dxx.txt",
+      "sha256": "208a83a340ca1ea3f555afca96e98b8da69714cf742bc209827695563fcda5ff",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/TC/9Bxx.txt",
+      "sha256": "42529b58ff064636006dcb4e5f82bb06b7bcc94f145e6c7e51a80699407ad366",
+      "bytes": 42199
+    },
+    {
+      "path": "glyphs/TC/264xx.txt",
+      "sha256": "10f2cb8d63cd317aa9138dc2e0c4e5497847d31b71226910148817fb446bb8e5",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/FFxx.txt",
+      "sha256": "c70523561a4935d3133250f4b5ddf27483f27daf0ce130736e93ec867366d7c0",
+      "bytes": 3774
+    },
+    {
+      "path": "glyphs/TC/7Fxx.txt",
+      "sha256": "0914982690d0ad67761be7f03b45f2b6922243293e11804977a19e8b59c4dd87",
+      "bytes": 30754
+    },
+    {
+      "path": "glyphs/TC/65xx.txt",
+      "sha256": "ed2e9ffc8e85a31f1e8332db066aa695c4c48aca85ed87d77a6e4b797cb6fc2e",
+      "bytes": 30285
+    },
+    {
+      "path": "glyphs/TC/48xx.txt",
+      "sha256": "d41764ca5dc6edfbdd8561a3947eb0a37fb5689fd416c7b50354047f44c675e6",
+      "bytes": 1354
+    },
+    {
+      "path": "glyphs/TC/3Bxx.txt",
+      "sha256": "ebfd47bb9d4937bcde8b71c5aca6d8155ea0c04ce3d0036fd1e0875ca4a97e7d",
+      "bytes": 3117
+    },
+    {
+      "path": "glyphs/TC/32xx.txt",
+      "sha256": "d93b3bc1cad1e38b4677b8da28e7043bb9503552beb5afbef27dc8e4e1fbaab1",
+      "bytes": 196
+    },
+    {
+      "path": "glyphs/TC/90xx.txt",
+      "sha256": "6e1b4159cec3895644d7171ab73efd71d697a43306bfd1389172d222c654b666",
+      "bytes": 39880
+    },
+    {
+      "path": "glyphs/TC/61xx.txt",
+      "sha256": "23c1b0599762a60a038fc92f78d83725b361d0394d964eef6a00e195d40b01b3",
+      "bytes": 40816
+    },
+    {
+      "path": "glyphs/TC/80xx.txt",
+      "sha256": "cec1c7e7361dd749c16b4ed4755695c791b0ff88ec8d97d43231b18594e73e1a",
+      "bytes": 39981
+    },
+    {
+      "path": "glyphs/TC/251xx.txt",
+      "sha256": "cbdd57cee27ce8465569a85270148bf9be0decd6c010aed5f264988697bda4bd",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/TC/55xx.txt",
+      "sha256": "6d1b72fd02972bb221fd7763cab3bf7815fb99c41dc37da4a7e2cf279e543c7a",
+      "bytes": 29742
+    },
+    {
+      "path": "glyphs/TC/8Fxx.txt",
+      "sha256": "54541e83fe54be1f616486b493bcf737a02b0524332efbbb33fd3d1635c888ff",
+      "bytes": 36629
+    },
+    {
+      "path": "glyphs/TC/79xx.txt",
+      "sha256": "5155b229347e2f895512403c26db55a8a203a092b8e389304ad106e80da76c96",
+      "bytes": 31704
+    },
+    {
+      "path": "glyphs/TC/72xx.txt",
+      "sha256": "67525d9f8a947e4173d83d796fe3126af1cce7fffd24e0b97c5320474ce18e5d",
+      "bytes": 32309
+    },
+    {
+      "path": "glyphs/TC/26xx.txt",
+      "sha256": "dfe4e57d468d3aab39b339e886901bdeb56e3420a905c0762220ec6ca9ffaf17",
+      "bytes": 606
+    },
+    {
+      "path": "glyphs/TC/24Dxx.txt",
+      "sha256": "0bd94ed7dfe921fefd3ecb1017c161a03d6b159a787affe2896341143d5636d9",
+      "bytes": 521
+    },
+    {
+      "path": "glyphs/TC/70xx.txt",
+      "sha256": "a193c5c5891b694e4635cc206780324bd7ab14e010f403997612a34ab9280aad",
+      "bytes": 36706
+    },
+    {
+      "path": "glyphs/TC/3Dxx.txt",
+      "sha256": "04b87a033b0d12da2977fa1a567edf581401f6e8451d16443f2fab69e11b7441",
+      "bytes": 1095
+    },
+    {
+      "path": "glyphs/TC/235xx.txt",
+      "sha256": "b9299f3f68dd5d882c0833c0e683f786aaaa3fbea9b192f80d8ad527d37e173a",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/00xx.txt",
+      "sha256": "bfc48ec9b1daf1d0b7808983408720f0e85cfcc32ea55b660f0960bf7e48c351",
+      "bytes": 848
+    },
+    {
+      "path": "glyphs/TC/83xx.txt",
+      "sha256": "84abeabc513802522f66f3dedd04e1b14820c6fd83f0221e409b542785d08a26",
+      "bytes": 44047
+    },
+    {
+      "path": "glyphs/TC/34xx.txt",
+      "sha256": "315732aa2e01ed8fc03ba68b2e6dca6a3cfff3f632ec9a589df417dd35c81ced",
+      "bytes": 1992
+    },
+    {
+      "path": "glyphs/TC/9Cxx.txt",
+      "sha256": "a3552fcda04132245acb1ad2cc16af4e55c086a95a883c9b8d310d8e15d7507e",
+      "bytes": 28687
+    },
+    {
+      "path": "glyphs/TC/40xx.txt",
+      "sha256": "b6424ed9e1984d44c61ace04dbe7941272e5d622d22dc3e1af83288a223be513",
+      "bytes": 1231
+    },
+    {
+      "path": "glyphs/TC/262xx.txt",
+      "sha256": "ad3d8a8a319c61c86340b423c3e7397ea5a09b7782da7f51b8cd818c431ed1d5",
+      "bytes": 305
+    },
+    {
+      "path": "glyphs/TC/21xx.txt",
+      "sha256": "2eef75c63056c33341d67e137d328e8eb973ff0ef934e856b9c60b5828986bd3",
+      "bytes": 2243
+    },
+    {
+      "path": "glyphs/TC/5Exx.txt",
+      "sha256": "6c9b0d06bae50430de954d3622f9219de9d0c6e5d6645012db056ef765237f5d",
+      "bytes": 29225
+    },
+    {
+      "path": "glyphs/TC/211xx.txt",
+      "sha256": "b135ed2b31fa563f1cf5346fb764e9a980cc65a3dbd2e3a04c23e50f5ffc6186",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/TC/52xx.txt",
+      "sha256": "8a1e5ef1d4025cda2528683ca07a864d7206fa4ed63b02917b8be1102dc87bd6",
+      "bytes": 25998
+    },
+    {
+      "path": "glyphs/TC/37xx.txt",
+      "sha256": "8bbb282931a1dd0c8181c1a4a4bb3f7b9aef4e885afa2c4d65e82d29f85d1756",
+      "bytes": 1733
+    },
+    {
+      "path": "glyphs/TC/20xx.txt",
+      "sha256": "438d9e327010703238d34d8bf01b286a5cde7f608e12d544482fd4bd0029502e",
+      "bytes": 1044
+    },
+    {
+      "path": "glyphs/TC/81xx.txt",
+      "sha256": "bd93983397f3768097e5d8716f5f3f2150b0988f18c02db70271c20e58cc784c",
+      "bytes": 41062
+    },
+    {
+      "path": "glyphs/TC/7Exx.txt",
+      "sha256": "69d7ced1ea3b36b9a264fa40c1b1eb0b1cb6c9945f96b14dab3b186fca196273",
+      "bytes": 31120
+    },
+    {
+      "path": "glyphs/TC/22xx.txt",
+      "sha256": "29ab64e0b11ee702b5094603460d626971a2d6dcc2af5c8ee9f780c116cda883",
+      "bytes": 2195
+    },
+    {
+      "path": "glyphs/TC/5Fxx.txt",
+      "sha256": "7c2faba29a813eaf8d01a75341ce235af303b06ff04feaed496b4d86be1ef697",
+      "bytes": 27554
+    },
+    {
+      "path": "glyphs/TC/43xx.txt",
+      "sha256": "7295d276d070fc1e7e102ab914995245a5e90aba380fc6b27250029a64eeff48",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/TC/20Exx.txt",
+      "sha256": "669fd6a6920763b86e5b39fa6baf667227977a9126ac90153cfd27b0ef614b42",
+      "bytes": 2502
+    },
+    {
+      "path": "glyphs/TC/50xx.txt",
+      "sha256": "36a81745bfcbb5b2d214e6db68174d115db05eb3f9d1cf92941801cc443d00f8",
+      "bytes": 36005
+    },
+    {
+      "path": "glyphs/TC/244xx.txt",
+      "sha256": "053a68a8e52f4638ce60659f62370030079303e9ba76192763fdbc157001ba62",
+      "bytes": 326
+    },
+    {
+      "path": "glyphs/TC/22Cxx.txt",
+      "sha256": "0c2ce6d2517b99a2e4765e583c6695b22b461af7e4ddfebacf320b425d289acc",
+      "bytes": 782
+    },
+    {
+      "path": "glyphs/TC/91xx.txt",
+      "sha256": "0a477fc928804831799411bae5b9545cc303a171b315a1cf502eebded5c4651d",
+      "bytes": 42146
+    },
+    {
+      "path": "glyphs/TC/3Fxx.txt",
+      "sha256": "d6d8f39929b0536fb0bf6ccbe7760b7331132ce5b47df82a6c54cd8ac776e281",
+      "bytes": 1733
+    },
+    {
+      "path": "glyphs/TC/20Dxx.txt",
+      "sha256": "564149f497e4846a55ad6680bad1eadd1f36097c34c5c7a25a75778ecb45c099",
+      "bytes": 825
+    },
+    {
+      "path": "glyphs/TC/33xx.txt",
+      "sha256": "7177590081b70e3c48095a88dc9752cdce3916d7e158d8d29993caf89c90a45b",
+      "bytes": 3170
+    },
+    {
+      "path": "glyphs/TC/FAxx.txt",
+      "sha256": "22975b4381d51d509501c29e4555148db87fc60e9e148c43ce81db8af7dfc67a",
+      "bytes": 1492
+    },
+    {
+      "path": "glyphs/TC/7Axx.txt",
+      "sha256": "39ee597562eebb1488e703ef0f77f53b1da47401c30d16cde2f7db965d0e95e2",
+      "bytes": 37901
+    },
+    {
+      "path": "glyphs/TC/66xx.txt",
+      "sha256": "8ee658621975b9573e9c11d3cf55ae60a9e6150af1e374ed19477ba015b93baa",
+      "bytes": 27669
+    },
+    {
+      "path": "glyphs/TC/5Axx.txt",
+      "sha256": "6af2ae1bef9691ef78387585fd7626c8d10dd61243af86cd1c67e563d82c02ec",
+      "bytes": 50147
+    },
+    {
+      "path": "glyphs/TC/5Bxx.txt",
+      "sha256": "523fc6ea28d7a215a1e8e4034e51abfbe5b545ca69954ef767c3f7d67d90f9a3",
+      "bytes": 29900
+    },
+    {
+      "path": "glyphs/TC/31xx.txt",
+      "sha256": "d6c3b031d8d26f77a3a186b42509367bce422a7de1de7b5e4e2a500bd2790d6d",
+      "bytes": 15396
+    },
+    {
+      "path": "glyphs/TC/58xx.txt",
+      "sha256": "5d0405b24572afcb2c963173b61e82a7c1fc6e4b6de324aca89d3045d36755eb",
+      "bytes": 33432
+    },
+    {
+      "path": "glyphs/TC/4Exx.txt",
+      "sha256": "a8eec9c39675beba20144427dbcb6ca63cbb4a5e279033954e8c5e72759383fb",
+      "bytes": 14357
+    },
+    {
+      "path": "glyphs/TC/22Exx.txt",
+      "sha256": "f530a7db676b7ca4f090244bad22b613de27c37df9d792dd6894b63d824c7a6f",
+      "bytes": 314
+    },
+    {
+      "path": "glyphs/TC/4Fxx.txt",
+      "sha256": "b780230398b5adb8b32daa8be6abdb6efce6788a02ecb295778e7823fe19554d",
+      "bytes": 21352
+    },
+    {
+      "path": "glyphs/TC/296xx.txt",
+      "sha256": "373e517fe936ee6bb0d8570f18a3054720c3728a5c20c0e017120b130addfe4f",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/20Cxx.txt",
+      "sha256": "27c2822f189d7bbb9a19c4f07fd0e4383a19357cbfb00381c2dc81bd0241a7f2",
+      "bytes": 1304
+    },
+    {
+      "path": "glyphs/TC/45xx.txt",
+      "sha256": "f3bf19bfa11815e3073df1bbb66bf57e136dbc6707fca919c537c3f5193f038e",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/TC/42xx.txt",
+      "sha256": "b41b7cecc470d3c2d09a98755967eca221b10c94e60b1441299bb75f2ea02542",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/TC/64xx.txt",
+      "sha256": "d8d2963402aaf2adce859f0f71c611d7371d72540a061e7d8521564679e58bd6",
+      "bytes": 37897
+    },
+    {
+      "path": "glyphs/TC/4Axx.txt",
+      "sha256": "9bf6508ded41b18b88ccb591e9f38754c7d70312bd1c9b1d8f0b3cb1a65fbe50",
+      "bytes": 1385
+    },
+    {
+      "path": "glyphs/TC/6Bxx.txt",
+      "sha256": "73bbb2119af968a1faeb4711353b493eb1dcdea97c96a5c919303a33f67267ea",
+      "bytes": 35627
+    },
+    {
+      "path": "glyphs/TC/267xx.txt",
+      "sha256": "d7013c28618d7b32e677643e30acc111120d4578c6e50fd332a62e671e96e29d",
+      "bytes": 308
+    },
+    {
+      "path": "glyphs/TC/227xx.txt",
+      "sha256": "ea30ed0a452f19fa29243ef7f6e979d829ebe1e5b83425018ecbe8efe52a8cef",
+      "bytes": 326
+    },
+    {
+      "path": "glyphs/TC/8Axx.txt",
+      "sha256": "2e6983bc5e98305dfd259fe4ae8495fe272c401d900f69cf89666445b48c08da",
+      "bytes": 45890
+    },
+    {
+      "path": "glyphs/TC/5Dxx.txt",
+      "sha256": "9cfb0eadbfa85cd649fca0d2d49978a90a05502b666efa8e5ff3462c0176a13b",
+      "bytes": 33106
+    },
+    {
+      "path": "glyphs/TC/68xx.txt",
+      "sha256": "e3bcad0073ffc83bf64d00b3c81fd0328f26c8a7d3cb627288fecfd1faa6883b",
+      "bytes": 27146
+    },
+    {
+      "path": "glyphs/TC/6Fxx.txt",
+      "sha256": "76e8afc4892c2a034cf5d22ddf47626fba25c3ec41e49fc2507816983ed9f792",
+      "bytes": 40588
+    },
+    {
+      "path": "glyphs/TC/84xx.txt",
+      "sha256": "69027090d60f32f770c70b328bd9a0197c849758566e1dc6522d02f44d492b30",
+      "bytes": 49958
+    },
+    {
+      "path": "glyphs/TC/28Axx.txt",
+      "sha256": "12f12b32cfc7f19c928cff42004a23548180e8a1c846d5e7a688e2859fd32191",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/25xx.txt",
+      "sha256": "3f6eb6f96df78e9f53cec864e579640da62433341e2840e336af269ab6e00e73",
+      "bytes": 1397
+    },
+    {
+      "path": "glyphs/TC/213xx.txt",
+      "sha256": "84f8afbfac91228f91f930b6e2662e8ac99e1b79dac409bdd2d771ee57c27c67",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/215xx.txt",
+      "sha256": "662839da6c9337bce39f7511eeb3610584b26730aa9b116a936c238a98525cc2",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/71xx.txt",
+      "sha256": "c601efba68653ce25c1f93aabaa9005ee91919bcd4ee8299c100f34436013b51",
+      "bytes": 41561
+    },
+    {
+      "path": "glyphs/TC/3Exx.txt",
+      "sha256": "7ca65468605c77762e93214b9a063b1d68d8e21964376daf38e080388d515071",
+      "bytes": 1739
+    },
+    {
+      "path": "glyphs/TC/30xx.txt",
+      "sha256": "a56cff574623a686744488918d0221b4d9fac0b244e4a54d8d08bfb3f4f6dd29",
+      "bytes": 4821
+    },
+    {
+      "path": "glyphs/TC/62xx.txt",
+      "sha256": "5ae5a0267a6abd3034302139f50a9e2bd6dec1108b277de7cffc7c709d113d23",
+      "bytes": 24610
+    },
+    {
+      "path": "glyphs/TC/54xx.txt",
+      "sha256": "51791f76ad3261f492a0bf865f75dce27adf73a5282dcdd95aa2fc9b09c20472",
+      "bytes": 19583
+    },
+    {
+      "path": "glyphs/TC/28Exx.txt",
+      "sha256": "9792720fa436312a3e55b9ab1b9e35e95bdf7b9aaa87653c6a7b6189b99da100",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/8Dxx.txt",
+      "sha256": "f66c5dd1bb02eab65a182389c735d238b0ad6ad25c4bfaa0d5b6aa832d29ee1e",
+      "bytes": 24269
+    },
+    {
+      "path": "glyphs/TC/5Cxx.txt",
+      "sha256": "bd27522ed4fe555646d1f902777186397e2da28e603ea94a38e2d198ec834c5c",
+      "bytes": 25037
+    },
+    {
+      "path": "glyphs/TC/41xx.txt",
+      "sha256": "2b1380e66ffb1974ff3e142524642753a729abc6756dd2b5dcd46856ace8aafc",
+      "bytes": 1125
+    },
+    {
+      "path": "glyphs/TC/60xx.txt",
+      "sha256": "f74fc143f347da608ad40193535672e3d3c642a246533b508289323e8d290a4e",
+      "bytes": 24791
+    },
+    {
+      "path": "glyphs/TC/23Cxx.txt",
+      "sha256": "a149459647719c217083d726fb99d4403992c05b6c2aadf008b59086fefe6201",
+      "bytes": 552
+    },
+    {
+      "path": "glyphs/TC/6Dxx.txt",
+      "sha256": "300d6900e1088573136767fcd83c15ef37a2b5aa88dc8c212743e4cbb38196f9",
+      "bytes": 23873
+    },
+    {
+      "path": "glyphs/TC/39xx.txt",
+      "sha256": "732a9dfe70ec4058d5db00840a230240007d06c9cdbc419657aabb39d399f502",
+      "bytes": 1113
+    },
+    {
+      "path": "glyphs/TC/28Cxx.txt",
+      "sha256": "bf4a86ef3e31953e4a9f2c131984ae6620d440c2e1bc6a18b8fed9c01cb24d53",
+      "bytes": 782
+    },
+    {
+      "path": "glyphs/TC/51xx.txt",
+      "sha256": "ef96a53f39cf5f202566f512e12c6e1bfd268e9f26fb8edeccbebbc5beded38a",
+      "bytes": 25667
+    },
+    {
+      "path": "glyphs/TC/22Axx.txt",
+      "sha256": "9578af6e463a087f73595f27b8eaa86ff59be151ab8415875b6fba230fda3059",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/TC/86xx.txt",
+      "sha256": "e30538aad2532321948e9f2988f0ed7c83ad127118d36332a15428ac02314665",
+      "bytes": 37518
+    },
+    {
+      "path": "glyphs/TC/44xx.txt",
+      "sha256": "b20fd4d49fb9bc4615198c69fef7451443c2583b814e367d34a4e690f11fd224",
+      "bytes": 2627
+    },
+    {
+      "path": "glyphs/TC/8Bxx.txt",
+      "sha256": "85b34681373ce5b3afc6fa65c155985cd21c5a5794dc4766e0292f9da9b7ef10",
+      "bytes": 33627
+    },
+    {
+      "path": "glyphs/TC/77xx.txt",
+      "sha256": "9aa47bd4728d9d442dd396e4326f98f4fff4f551d62f9cd4dda35a904d7aa899",
+      "bytes": 31253
+    },
+    {
+      "path": "glyphs/TC/96xx.txt",
+      "sha256": "e40621095f527a820f72671e626d768b88f70ac8ff382986292972031574e347",
+      "bytes": 28984
+    },
+    {
+      "path": "glyphs/TC/89xx.txt",
+      "sha256": "5dddc2aa87100847fa937a09d889cebd695efa1c6f3ab2a4a5aa2339dd0de1e5",
+      "bytes": 43986
+    },
+    {
+      "path": "glyphs/TC/4Bxx.txt",
+      "sha256": "2f8324914f0afa5555fb3efc3575f2c19f32cc4cfc1bce88d1380b827ab8f8bc",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/TC/03xx.txt",
+      "sha256": "c1276ef09c01b6464792e6023593d8ce9a7a747ce8fd0afa7e208e10f2b43ed4",
+      "bytes": 1103
+    },
+    {
+      "path": "glyphs/TC/263xx.txt",
+      "sha256": "c96d31658bc8353f2ea68491c2fc1cb4beaea01c5ded9e5dfaee436fe86ea3ba",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/47xx.txt",
+      "sha256": "058ef41c1023603a958bef7edffdf4f4bcb56278df5e66725308fe7d850b9b79",
+      "bytes": 1125
+    },
+    {
+      "path": "glyphs/TC/271xx.txt",
+      "sha256": "4a3f5d8de017e70e7495c876224b9d47deeca61ac30ace5523bb5aa073f3646e",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/237xx.txt",
+      "sha256": "db7b10c2d0a3e644d75af76aca6c451a8dd14d7d573b70c3d046ee2948d036a7",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/67xx.txt",
+      "sha256": "751f90d814972810a843e1dc8c944345d1f60b894e1e5f4357ca0928ff57f992",
+      "bytes": 26765
+    },
+    {
+      "path": "glyphs/TC/7Cxx.txt",
+      "sha256": "f70d2635f9316e983963a0ac63864fad537c1fb9394eb436cb47487806838708",
+      "bytes": 35458
+    },
+    {
+      "path": "glyphs/TC/25Exx.txt",
+      "sha256": "d475b0e095e1c3c7c89ee5bfa0b36ad4201c7e0a4e4d58bd6f172784f45c152d",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/99xx.txt",
+      "sha256": "d8337f3ace0a7d5b9232621b2fa873e0a17d1db87dd8defc1ea6b3692da25224",
+      "bytes": 37340
+    },
+    {
+      "path": "glyphs/TC/22Bxx.txt",
+      "sha256": "df51c589a9afe40cdde67a1ca92c56eed7ad54d51bf104dc1689cc53f90ab87c",
+      "bytes": 521
+    },
+    {
+      "path": "glyphs/TC/6Cxx.txt",
+      "sha256": "1c1fefbaec8ed752868b112d037e339f915129efb629206e3b4e5c1cc56b8727",
+      "bytes": 23806
+    },
+    {
+      "path": "glyphs/TC/6Axx.txt",
+      "sha256": "3e229bf4bcbbf98ae92d76598f57b371a2b51af9bd7560d35e96a6774657d0dd",
+      "bytes": 42088
+    },
+    {
+      "path": "glyphs/TC/57xx.txt",
+      "sha256": "1c810981594d9d5643f3adf04f0ce0bf09bbd4373638e78b6de94b94747140cb",
+      "bytes": 20854
+    },
+    {
+      "path": "glyphs/TC/95xx.txt",
+      "sha256": "e946c6c4ed330bbce2e9aa611c7d287c3c265171ceda523a1a6dc4db063e694a",
+      "bytes": 22711
+    },
+    {
+      "path": "glyphs/TC/7Bxx.txt",
+      "sha256": "fe8151852d653b4330844c6e3b0be3c405654aaf0805b90d786cab867399d205",
+      "bytes": 37858
+    },
+    {
+      "path": "glyphs/TC/9Dxx.txt",
+      "sha256": "6b0c142331b8f3f3b5d1a0e299dff914302d4d6e084fd9e2414d699456d41254",
+      "bytes": 53171
+    },
+    {
+      "path": "glyphs/TC/38xx.txt",
+      "sha256": "f2278f2bd5d38afd8da9618a1469c67aeead29c37f005044d3c3240c34e1a692",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/TC/269xx.txt",
+      "sha256": "d47b1a722fcd3b57a920e985f1e76f926126691c4b17285a3f78f6007020742b",
+      "bytes": 930
+    },
+    {
+      "path": "glyphs/TC/8Exx.txt",
+      "sha256": "5b660f55431250faa0a3320ccd04b63f3263463c882f7dbdbe6ec6999de78fad",
+      "bytes": 39478
+    },
+    {
+      "path": "glyphs/TC/282xx.txt",
+      "sha256": "072ceb0d23aca2b1336a3030eb071851954fbdce69c3dcdec2279ee69e1692ef",
+      "bytes": 584
+    },
+    {
+      "path": "glyphs/TC/289xx.txt",
+      "sha256": "59f5cc71a4ba6e85b84a7deed88281f1c62b9c4e8f8880f40496f7eadd0a6cba",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/22Dxx.txt",
+      "sha256": "a9e55bd6cd5d597d2b5ecbb2201acf93781b85d85cd8880e4f8f11235108bf3d",
+      "bytes": 909
+    },
+    {
+      "path": "glyphs/TC/FExx.txt",
+      "sha256": "519c3be52035bd3e32bf28b3583dc33fbf4948b2110cc1d744d86dfb0920e00a",
+      "bytes": 12942
+    },
+    {
+      "path": "glyphs/TC/88xx.txt",
+      "sha256": "ff6a0f1a67f032785085c27eb802412f62f8057ac399d6ed85e2f9991ea36dd3",
+      "bytes": 32399
+    },
+    {
+      "path": "glyphs/TC/9Exx.txt",
+      "sha256": "c6d5ac6848a991637054e34d199a255f4ae054876c9a21def49e8564976980b5",
+      "bytes": 32430
+    },
+    {
+      "path": "glyphs/TC/6Exx.txt",
+      "sha256": "538dec3d6fcbf93a42a31fa8e305a501797e8f0a7107e68c80a059b684f5d2b2",
+      "bytes": 30590
+    },
+    {
+      "path": "glyphs/TC/46xx.txt",
+      "sha256": "dcfd88b4dad31834ef62d759c4b47d6b4b42ccb08e370998d42a5ffcb0e1864f",
+      "bytes": 1492
+    },
+    {
+      "path": "glyphs/TC/281xx.txt",
+      "sha256": "dc97b277db6462ac7c099744b2569c0fd6770da8a1058d70eff8e799b96d6763",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/TC/9Fxx.txt",
+      "sha256": "089cc20e2fbda43d82d226eed2bb8bc25d99999bd50a6b071b785b5543233bcb",
+      "bytes": 31066
+    },
+    {
+      "path": "glyphs/TC/210xx.txt",
+      "sha256": "1b0ac48ed83ad93b89c6312c8c933a16b6ae72483c0969246d39f209c6784c11",
+      "bytes": 2141
+    },
+    {
+      "path": "glyphs/TC/98xx.txt",
+      "sha256": "652cd1ff4bac1f19eea7ccbff5abfce93a0d467bbf611e162832a353cd0a33f5",
+      "bytes": 37288
+    },
+    {
+      "path": "glyphs/TC/53xx.txt",
+      "sha256": "721ec199d36b033c4bf77ef6035cc6c188edc1662826f7b593b37d96c1f7c7da",
+      "bytes": 18752
+    },
+    {
+      "path": "glyphs/TC/63xx.txt",
+      "sha256": "942d08f44c231b7168ff69c54bc046e64df33492c96c8d8a9d1857145ad679bb",
+      "bytes": 30041
+    },
+    {
+      "path": "glyphs/TC/82xx.txt",
+      "sha256": "62cc8d05747eeda8714519a156b3b377395eefe92ac2bf08b31ba760b30196a2",
+      "bytes": 40230
+    },
+    {
+      "path": "glyphs/TC/4Cxx.txt",
+      "sha256": "37e29b3b1388e0460104f1ef1adacb0eb9bb68cc9f2955329ffd41183501bee0",
+      "bytes": 1730
+    },
+    {
+      "path": "glyphs/TC/4Dxx.txt",
+      "sha256": "06dda310c0f7220ca4a2041529cc2bcd1404aa6eebd92d0f442e1ade99aaf174",
+      "bytes": 896
+    },
+    {
+      "path": "glyphs/TC/8Cxx.txt",
+      "sha256": "9e908ebeb4b1f69734277286a4987fbd670d962bec44bad03cbca76ed87fa14c",
+      "bytes": 35189
+    },
+    {
+      "path": "glyphs/TC/73xx.txt",
+      "sha256": "b1d810128d1de970b9b255bf694115ff8ca2a8c9c72f53d646c67bc236b962dc",
+      "bytes": 31511
+    },
+    {
+      "path": "glyphs/TC/87xx.txt",
+      "sha256": "d4de8016a75d4d5d08991f197ffcf6da36a279f243c0469238376c3036b1e85d",
+      "bytes": 38502
+    },
+    {
+      "path": "glyphs/TC/02xx.txt",
+      "sha256": "6ca8177c1ed0580513bc79943cc68fd651103c7b86ed06c2e0efcea73791dd27",
+      "bytes": 750
+    },
+    {
+      "path": "glyphs/TC/85xx.txt",
+      "sha256": "962e0aeef960d8a356c4021655823f4e270aa16f5bb130eb6ac9fdfc62d1e06f",
+      "bytes": 56025
+    },
+    {
+      "path": "glyphs/TC/93xx.txt",
+      "sha256": "29b65286ba9517995c98d9031f5c9ec43a3a010c8194da42aa5713480928c26a",
+      "bytes": 49388
+    },
+    {
+      "path": "glyphs/TC/3Axx.txt",
+      "sha256": "f1ff1b8b43da60b1c34b51e32301bcc9a874edf7248db9b8e7628745abc5691a",
+      "bytes": 1158
+    },
+    {
+      "path": "glyphs/TC/49xx.txt",
+      "sha256": "cf714d24c32551836b49f29ff5d80436f8344231966b7c25f1c83f3bc504e04e",
+      "bytes": 836
+    },
+    {
+      "path": "glyphs/TC/97xx.txt",
+      "sha256": "16570df1854a59bd43ecbc52c1832f2712d8f4f127937d51063aaec91be85e8f",
+      "bytes": 41903
+    },
+    {
+      "path": "glyphs/TC/59xx.txt",
+      "sha256": "b0059109ce83489472c36311ef7a38f33f86c547a950f55f2e181a89504a4949",
+      "bytes": 41240
+    },
+    {
+      "path": "glyphs/TC/78xx.txt",
+      "sha256": "0c9ea6fde066b35a1465fec2a0f627ef410d2a409374ab836725d90e3a1796d3",
+      "bytes": 28609
+    },
+    {
+      "path": "glyphs/TC/56xx.txt",
+      "sha256": "9aee8fc1ae3b2e3e0142d67040a5b1d73ec83337facd7ecf13ca38bb295fb29a",
+      "bytes": 33497
+    },
+    {
+      "path": "glyphs/TC/220xx.txt",
+      "sha256": "a381f90c2d153eb53967c50cf9ac9ce80d5ca87400d4ed8ab231ae67d34da454",
+      "bytes": 326
+    },
+    {
+      "path": "glyphs/TC/36xx.txt",
+      "sha256": "e416f1b0ebfb9db822c0cf0a6758515b4817d35f970a7a3dcafc31fc07eeed59",
+      "bytes": 1352
+    },
+    {
+      "path": "glyphs/TC/92xx.txt",
+      "sha256": "86e2d894dbaefbb75fb6ae980df4b9640faeefcfa9604d7c580b05b92ba6305e",
+      "bytes": 45551
+    },
+    {
+      "path": "glyphs/TC/76xx.txt",
+      "sha256": "c493cb47991be57792e9a232f04829602fd90651c3f2c4f0fceebba1e69f4728",
+      "bytes": 31873
+    },
+    {
+      "path": "glyphs/TC/94xx.txt",
+      "sha256": "28317a168fcf836ddaf2b3b72d43164324069165202ca52821013d27ee6d06c5",
+      "bytes": 26289
+    },
+    {
+      "path": "glyphs/TC/20Fxx.txt",
+      "sha256": "1cdbb854b7fb2271174d119dfa26679642a93327b35f980833d5d361c37e4b68",
+      "bytes": 1733
+    },
+    {
+      "path": "glyphs/TC/69xx.txt",
+      "sha256": "e796fcc478bc156a0dfd0df00fa594206299727990867fd84a22d786b3cfa7ba",
+      "bytes": 32454
+    },
+    {
+      "path": "glyphs/JP/9Axx.txt",
+      "sha256": "a8edc896170a601f2d4554cea5b45d24b808b91bd57552c41e4722ecc19b3423",
+      "bytes": 12685
+    },
+    {
+      "path": "glyphs/JP/75xx.txt",
+      "sha256": "c654ced27ac470d8b6db1e3b734ae3270455031abead4641d8875d0f6d5af4e0",
+      "bytes": 21045
+    },
+    {
+      "path": "glyphs/JP/228xx.txt",
+      "sha256": "921cb8b8d60fe6e6ae2b4c98366af28376bb3de719b2f351a1dca4808af78f6a",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/29Axx.txt",
+      "sha256": "7e912a8300b0eb56a7a9a1f2850077f3f308e811c160eb29327b34785e456ce5",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/201xx.txt",
+      "sha256": "c25bef8a56a47c11367c65c12e2535404edaf24c016c42a9b2ddd69b02276ff3",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/200xx.txt",
+      "sha256": "e4220738f577be64648e37ee1b9e4e21203c18d26a6b43d6fb8003575478623b",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/JP/27Dxx.txt",
+      "sha256": "f4173e879098879db0ed1cb149131972adfa8e99824f555ff513e4fe74dd3fd2",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/219xx.txt",
+      "sha256": "16faeab3d3fff1049416adab58fe943e11a600965f4a22f7882499ceada0c6fe",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/28Dxx.txt",
+      "sha256": "65c3d5a04cc4d44ac6d911bc07047bbb0359c20c111467d65ad8c91f87a7a3df",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/207xx.txt",
+      "sha256": "7e04bee21f0a80afb1b8c7d0678ebcad88855b4ff2b6cf490213f0636ec9affa",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/203xx.txt",
+      "sha256": "72672829898f6e8377c90ff9bf5c0837359064c044c54628c7aedd426dc3e706",
+      "bytes": 1157
+    },
+    {
+      "path": "glyphs/JP/24Exx.txt",
+      "sha256": "85230dc8f9df2f0c51a1a840287390f40dbc68316cbaa0bb930e47fc69465ebf",
+      "bytes": 1158
+    },
+    {
+      "path": "glyphs/JP/214xx.txt",
+      "sha256": "d32d942bf47a86c6dda3f0409d90bd0c25947b85afbc1933bcee26f02e2e2739",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/28Fxx.txt",
+      "sha256": "9307fbfb8d4799ec216f389c3eb27f19deda72d60774a0703e5bb3b599c90a61",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/74xx.txt",
+      "sha256": "56d04851046271569b8ed344bc1d1b5f9a505113600fe1400cecb36555706ab6",
+      "bytes": 8862
+    },
+    {
+      "path": "glyphs/JP/7Dxx.txt",
+      "sha256": "deb125fd312cadc5d426476bb05ab824f21aca1adfacff0dbe33f5847c650de7",
+      "bytes": 36406
+    },
+    {
+      "path": "glyphs/JP/27Axx.txt",
+      "sha256": "c3f87dd99596e1aa39be6eb4f6bfaad4bf12e87c90e1030d5ccb71874054240d",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/3Cxx.txt",
+      "sha256": "7ba474c1907e7956a48e6708bc5c4f71cf0e9695a3a5d229f6084556401ae5ea",
+      "bytes": 1147
+    },
+    {
+      "path": "glyphs/JP/35xx.txt",
+      "sha256": "a669bf70b80d2c6e23eb52faabdb3034ab3ff77cf5fc7fffb98ba61b673eebe2",
+      "bytes": 2585
+    },
+    {
+      "path": "glyphs/JP/212xx.txt",
+      "sha256": "5e3d11a82e4eeabc437cc62453a0014d76fe0aac9e7f7aa42c80425650fa9cec",
+      "bytes": 2314
+    },
+    {
+      "path": "glyphs/JP/29Dxx.txt",
+      "sha256": "e9bbb66d28cc226a8ce11619f7f3aea55a6a2766fdec658854e2179f1451c7da",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/9Bxx.txt",
+      "sha256": "adf0ac2cf48eed4e4d72f5ce271a1fe9a8ed8e5cd4335f812b7f1ca4f890c71e",
+      "bytes": 17029
+    },
+    {
+      "path": "glyphs/JP/264xx.txt",
+      "sha256": "1ca416b1d1a575d24b1524f6677cdc396e7d1dabd3aee154ee913717b5521a66",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/FFxx.txt",
+      "sha256": "6ade3ef25cbbc7f5200e56138319b9e76b1e93db832ee7cfb3522cf82e8444e2",
+      "bytes": 2207
+    },
+    {
+      "path": "glyphs/JP/7Fxx.txt",
+      "sha256": "94f8132310bc79e57c8f71fe2a83b4735127e97bce20789579c6fc65dd602259",
+      "bytes": 12760
+    },
+    {
+      "path": "glyphs/JP/65xx.txt",
+      "sha256": "30506ba67b3306dcf76c60b32ed5fe40e831e6c005d5495ce738ae7dda3f994d",
+      "bytes": 18706
+    },
+    {
+      "path": "glyphs/JP/234xx.txt",
+      "sha256": "2f8ee1f3493a27d344a404ec66969a3bdf0d0b569d1914d8b438002622ce9742",
+      "bytes": 1444
+    },
+    {
+      "path": "glyphs/JP/250xx.txt",
+      "sha256": "eddfbb4bb29ed68e2deb6a73fe10b8be11dfe803e5bd18812ea04687403a4081",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/48xx.txt",
+      "sha256": "c9636e9662617f487d3f88ab35788c78b5ad002588b7798063f8460ab6e36828",
+      "bytes": 861
+    },
+    {
+      "path": "glyphs/JP/26Axx.txt",
+      "sha256": "8cad78139fecae59643407de4d5d8412e80cb3bee652a16c8b849f89692ce17f",
+      "bytes": 1445
+    },
+    {
+      "path": "glyphs/JP/3Bxx.txt",
+      "sha256": "c5e30490fe200af2667df12138c341b4fe3103753b921d8d7e2031fa45aadba1",
+      "bytes": 3443
+    },
+    {
+      "path": "glyphs/JP/27Bxx.txt",
+      "sha256": "09bde1b010b18b649cc90379816a043041aee45280891598da506f35d8c0a550",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/90xx.txt",
+      "sha256": "db59bae13a2da3169d6030d07bd4283e6ddf45daae4b45a4e97896f2cf355847",
+      "bytes": 27531
+    },
+    {
+      "path": "glyphs/JP/61xx.txt",
+      "sha256": "8eac0973480d2db3893948a502d706918c546c4d0aa6f335abb09f4b5383808b",
+      "bytes": 14575
+    },
+    {
+      "path": "glyphs/JP/80xx.txt",
+      "sha256": "199b5225f2f1f8182d83431f25ff3702777d271b45e932b7ea0b559bd30fa973",
+      "bytes": 13669
+    },
+    {
+      "path": "glyphs/JP/277xx.txt",
+      "sha256": "446fdcc1a2346bb5fc5f79ce36ddfa26a96cbe1314b91e0cfdd543285661c55c",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/205xx.txt",
+      "sha256": "bf6bd43ca34e2b7bdd19623cc30e4aab3e7a039dd5cca6cb508d9384cb408c4f",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/24Cxx.txt",
+      "sha256": "faf50cc0b1a1f17c7c5141e3212e36e6ed0fb9fb96ae037f9c2f8106a301a77d",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/252xx.txt",
+      "sha256": "1719d947d221e84ad065a1291c3370b12fa987bf83bbcb48e0c6d27a48335965",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/251xx.txt",
+      "sha256": "8d67a7ff819afa05cf3170cde6acb213310228d0059ba828121af0d2247601c7",
+      "bytes": 1156
+    },
+    {
+      "path": "glyphs/JP/55xx.txt",
+      "sha256": "8b761f72b7cf66dc85150a3a738072fdf96efc77c67911f8e9f15e1eafda0eaf",
+      "bytes": 11047
+    },
+    {
+      "path": "glyphs/JP/25Dxx.txt",
+      "sha256": "dda8b9a50acf10bca5ceaa9f5b977dc957832c57ba3fce02b6c435b3e6088ca3",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/8Fxx.txt",
+      "sha256": "56c72dcf010d485550227bb467ded8310a69c7bb66f8f16bab41e7933a683803",
+      "bytes": 15873
+    },
+    {
+      "path": "glyphs/JP/79xx.txt",
+      "sha256": "113bedcfdbc75e12c6ed01876d25e9f46f6ddd6dc953dad701394376198a8b1c",
+      "bytes": 16028
+    },
+    {
+      "path": "glyphs/JP/279xx.txt",
+      "sha256": "3213eda95f6b8bd9a8e5b8d398c6a2f87e3fda442d6ad5a40747a39d7eb99e81",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/208xx.txt",
+      "sha256": "b0155a7f81a4e50b5924f91e3e1a587a7c373ed7afe353b25d257bac18a5f1c3",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/JP/72xx.txt",
+      "sha256": "420f2927fd937cd20848ae3d4085a657ea47949b1a5d8395986da7b86898a180",
+      "bytes": 10300
+    },
+    {
+      "path": "glyphs/JP/26xx.txt",
+      "sha256": "2e9279b6aa03866c1f55475ce98919f811c50bd699610fac2147d8d83520e181",
+      "bytes": 749
+    },
+    {
+      "path": "glyphs/JP/255xx.txt",
+      "sha256": "8b8895bc6b79d81ad161222ca9dc6ddb25c0a52f7a6d2888597af59d6ba51d8b",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/24Dxx.txt",
+      "sha256": "bf4fa863b4d6f2557dd4e57fca8a4d967247926d49e6525567c60681f439680a",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/70xx.txt",
+      "sha256": "1c93def55f17172a3a864f9d27161a34e2b766735010dd5a960bb073b8259ea2",
+      "bytes": 7144
+    },
+    {
+      "path": "glyphs/JP/3Dxx.txt",
+      "sha256": "710f5aa23ff8e12de36d280fb9e695ab038b10f10d76c213b00a37db9446d1da",
+      "bytes": 1722
+    },
+    {
+      "path": "glyphs/JP/235xx.txt",
+      "sha256": "3041908abcc7b9556484a9eb1755d65e6d8babf380576c71c4bff3c8a12c5dcc",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/JP/00xx.txt",
+      "sha256": "c7ff687ce579bf2bc68f865714fd5cf3304711d67ef31e77b00776d03193f812",
+      "bytes": 888
+    },
+    {
+      "path": "glyphs/JP/83xx.txt",
+      "sha256": "4feda4fd83dd4f58b36f6aa472ecf0f1c9da2fd24fe2a1cb5f7169bdb3988968",
+      "bytes": 12534
+    },
+    {
+      "path": "glyphs/JP/34xx.txt",
+      "sha256": "3e6610a6357912657386b10232d0e3638249e346cee777f17e5b66c54f84c65e",
+      "bytes": 3449
+    },
+    {
+      "path": "glyphs/JP/280xx.txt",
+      "sha256": "9169046a7f92ed1fd86c741d070a069c9598cadac89888ea570b5b1c83f79fb5",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/268xx.txt",
+      "sha256": "b5e5913dd34793ecc26e5162e6d9a472a466ce3ae95cc050741a039a0b977c43",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/9Cxx.txt",
+      "sha256": "d4f21e58812a9b14dc72f3a9fcb204a9779536fe8830c2bbf3425951651c1bd3",
+      "bytes": 9537
+    },
+    {
+      "path": "glyphs/JP/40xx.txt",
+      "sha256": "d45bed099001c82f65afa9939f31c6e3f20a96e10e6005e46bc0519666a3c348",
+      "bytes": 860
+    },
+    {
+      "path": "glyphs/JP/262xx.txt",
+      "sha256": "fe88851da2360e0ec526447d97c82a4c49cc4a3706fd64d82c6901ecb5e4b24a",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/21xx.txt",
+      "sha256": "743e4e01844b87ea8331249f62f74dc4628d39fe25826957d2ef50dd76c6d6ba",
+      "bytes": 1003
+    },
+    {
+      "path": "glyphs/JP/5Exx.txt",
+      "sha256": "b8264b6d9efdd62ca84713638e9d8eee230c59aa80857115e40cbb52396b72d8",
+      "bytes": 16495
+    },
+    {
+      "path": "glyphs/JP/52xx.txt",
+      "sha256": "d6916fc09b705e2c97151ee43cc9e74d3270c896cb0e9e4fa3257da9d9af5593",
+      "bytes": 15767
+    },
+    {
+      "path": "glyphs/JP/37xx.txt",
+      "sha256": "ed5c444db8c059fdd9751b6bf7a2145bacc136888f8d650a931fb98a7d86fa22",
+      "bytes": 3160
+    },
+    {
+      "path": "glyphs/JP/297xx.txt",
+      "sha256": "65fb6fd6cbcab19b59b1aa32e6a217cfc99b5a83e56828df7dce8b58dea6224e",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/241xx.txt",
+      "sha256": "367a78ba301385887026551993e97ca7fca4fe4c52e9ee3e3123a40c846a4d8e",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/20xx.txt",
+      "sha256": "3ea0486252869224b20e3737d931dc424476498d5af3abb73d5a12bb482fcf01",
+      "bytes": 1063
+    },
+    {
+      "path": "glyphs/JP/81xx.txt",
+      "sha256": "c7800eee3be2ddc6b34c40845ca0f116b3e8bd99d00415c5aba28b197c2de4eb",
+      "bytes": 16658
+    },
+    {
+      "path": "glyphs/JP/25Cxx.txt",
+      "sha256": "a72797cd1b9f1d4f456e48701b50f28bf413e9def362cb37d6d40048498d2c38",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/7Exx.txt",
+      "sha256": "1b85ded2a112c1463149b6b3ba1a1a476803b1aeb7881ee305bf12d5e664d733",
+      "bytes": 15013
+    },
+    {
+      "path": "glyphs/JP/22xx.txt",
+      "sha256": "b5fc19d309af8ecb269ad486ef7a8cc7018e97c3bb4700f008c7a26bce394908",
+      "bytes": 4420
+    },
+    {
+      "path": "glyphs/JP/5Fxx.txt",
+      "sha256": "7ae0358fca86b813c183b839b05aac34884ebf218afbe98c32e2757202319962",
+      "bytes": 20856
+    },
+    {
+      "path": "glyphs/JP/43xx.txt",
+      "sha256": "f4826b1e42dd8b8aa74e6f295320af86de0080d69e207050e7833b6c59464f4b",
+      "bytes": 1438
+    },
+    {
+      "path": "glyphs/JP/20Exx.txt",
+      "sha256": "96bdd10c892c53c3ec221abc7a4c29fd477fa9dbff260d4730f1374e726b39ad",
+      "bytes": 868
+    },
+    {
+      "path": "glyphs/JP/50xx.txt",
+      "sha256": "8dd39541cd6e1c29533b298f867bb739887199a0b3cc3c3ef04d2e9b86b5be90",
+      "bytes": 13293
+    },
+    {
+      "path": "glyphs/JP/247xx.txt",
+      "sha256": "4b89e027c258c7c418f7ff1bb3577b762b254169c5b3801f49d8e08238fbd4a9",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/22Cxx.txt",
+      "sha256": "d50efed0fd4297065d38d7a91b12e9a6461467770337159b0fdc8452a7a9ab5f",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/91xx.txt",
+      "sha256": "19eedb98a97edc785f40aa55be6bf08b6c24a1d668d43aa0cafb2ec6290f7d98",
+      "bytes": 12179
+    },
+    {
+      "path": "glyphs/JP/3Fxx.txt",
+      "sha256": "7b547a0c994df7afae75590a5176d6c148480409a6dec7ce3836e90f09c958d6",
+      "bytes": 2010
+    },
+    {
+      "path": "glyphs/JP/206xx.txt",
+      "sha256": "a963ca497cc0ab07b0613031144eccbd17d81ed4802fddd03deccd6573a309ab",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/20Dxx.txt",
+      "sha256": "01ac56495d2d1e711de3c097152245cd1b50f6ee8faa4805fd0d0d431dbe83fb",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/26Cxx.txt",
+      "sha256": "6403f4d1a4d525f33ab53fd0de9228a94290be0435579b3397e837dac17e6ebe",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/283xx.txt",
+      "sha256": "1704525cfaa0f62e1c815b1fb03c9e89e2ac9dbcf32da48dd3d53bb13eb08fea",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/FAxx.txt",
+      "sha256": "5c0ed5870bb9e45132bb396106309e15877cb4515cf4c59befadd64ea00a0db0",
+      "bytes": 21282
+    },
+    {
+      "path": "glyphs/JP/7Axx.txt",
+      "sha256": "c6283fd494bcc135171dc3cf8995d3fbe18e28d8e18225ebcfca6d88d6809250",
+      "bytes": 24571
+    },
+    {
+      "path": "glyphs/JP/66xx.txt",
+      "sha256": "25c3d7cffa2e0a884ed6479d4f6966f12947f315d556e6d3438504a317c123e6",
+      "bytes": 12457
+    },
+    {
+      "path": "glyphs/JP/5Axx.txt",
+      "sha256": "b0c2367e6cf4f481fcb6a789f9a488adfe2069552d1602cbb5b39828af29beba",
+      "bytes": 8734
+    },
+    {
+      "path": "glyphs/JP/260xx.txt",
+      "sha256": "a72006db472ac9e56208286585b911c49576c1ac8d163bcbf62fa428d120ece1",
+      "bytes": 1156
+    },
+    {
+      "path": "glyphs/JP/5Bxx.txt",
+      "sha256": "a04a5eafa49122399b8cb614ce092e6233ea83244cd72ace8cade3b140a5f06c",
+      "bytes": 21637
+    },
+    {
+      "path": "glyphs/JP/231xx.txt",
+      "sha256": "a7b076ba840625891fa82fabddba8fc9c886ee7b89138945c7465b46ad09b634",
+      "bytes": 1156
+    },
+    {
+      "path": "glyphs/JP/31xx.txt",
+      "sha256": "44aead9bfade9f481497315505c4427d1773c4b791a8d23bb9d0732dc1066e1c",
+      "bytes": 3300
+    },
+    {
+      "path": "glyphs/JP/04xx.txt",
+      "sha256": "5e548b8e1e96314f4d673162d5b7bfdb17c1eed81ae3d650d57f94e7f6664cf4",
+      "bytes": 1517
+    },
+    {
+      "path": "glyphs/JP/58xx.txt",
+      "sha256": "5ece9e1873f0569a7994dbf6c955659898ac69bc91865da45df3a89d489a318e",
+      "bytes": 14443
+    },
+    {
+      "path": "glyphs/JP/4Exx.txt",
+      "sha256": "54739c8fe784527252abeb5ae8991e3d5a6f30401408e22f6f1e1f313a2c7494",
+      "bytes": 15743
+    },
+    {
+      "path": "glyphs/JP/238xx.txt",
+      "sha256": "89c2052bf5d2af7db55a5d8cc2016b71f8720980c5f52553dad8985607a17cfe",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/257xx.txt",
+      "sha256": "82bda01d8ae05f7b841b834eda86753f22581b869125bdd3e8ff2c7e0e74f6a0",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/23Dxx.txt",
+      "sha256": "b95010c7b1f69e254e6beccfa38214b6eeac8946dc15282bdd0de5ac58c7b740",
+      "bytes": 1733
+    },
+    {
+      "path": "glyphs/JP/226xx.txt",
+      "sha256": "c1b901142fd2f3aa01b5ad4aeebb069cfdbfaed1cb079ed89f56e99f88915d7a",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/4Fxx.txt",
+      "sha256": "00eca6a7d92fa55e5b89258bc82a5295452797e47b3a7a6efb42234aee213dc7",
+      "bytes": 9914
+    },
+    {
+      "path": "glyphs/JP/25Fxx.txt",
+      "sha256": "56fd046946b266e595a2dab42e6312c43a3f466db1a162cc34d601faf234823d",
+      "bytes": 1445
+    },
+    {
+      "path": "glyphs/JP/292xx.txt",
+      "sha256": "8d3642006acd82937329971d774a4062c84869415eca175a5277bcb2cbd45f43",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/296xx.txt",
+      "sha256": "7f7c8017e1b34dba87c4e6c2e4d1202633424f0adae3dfb1a5cc44ef0df035c6",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/45xx.txt",
+      "sha256": "cbfefa240081e9eb98e0d9d14532a636a9585ca87f97c1343a82fb2cd3392426",
+      "bytes": 2012
+    },
+    {
+      "path": "glyphs/JP/221xx.txt",
+      "sha256": "0e3c6d59d775598a9dca4015144e6c997c6bc7e08655ca84e5e04e488b42462a",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/295xx.txt",
+      "sha256": "14689e4dd4da867725b7302f04266f9e84c9d94e372f1decfca9d6184c7b9b82",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/42xx.txt",
+      "sha256": "e4fa6a41647484df447f53b4ed592c61431ddb92544fe1a3e39b7c3e4de5c3e2",
+      "bytes": 1722
+    },
+    {
+      "path": "glyphs/JP/64xx.txt",
+      "sha256": "e53ea1294f67be73c747ff72e1ba716732bf4385a1109a8a1f587119d125d181",
+      "bytes": 8334
+    },
+    {
+      "path": "glyphs/JP/243xx.txt",
+      "sha256": "391396991c9648f995e728b532bb1154e10fb9aad43c0d413fe1736f38741b60",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/4Axx.txt",
+      "sha256": "6ebbb0a50eff5e43247a524ad17346b5f02f44f95c7b44f5fe3342729975e509",
+      "bytes": 860
+    },
+    {
+      "path": "glyphs/JP/6Bxx.txt",
+      "sha256": "66ff0bcaa26eea6961083a3fac512282df7a5ea892b29656e24f093cb8926cf7",
+      "bytes": 18362
+    },
+    {
+      "path": "glyphs/JP/267xx.txt",
+      "sha256": "345c99acb72cb69e10e5085a4f473f5d092e9f4ee9bb1ed22cd38658cb9a6047",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/202xx.txt",
+      "sha256": "20da9dc64c8602b4cb5c21c6350a1074a1b4639ab2a7c0ad3f53f94be3c57446",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/8Axx.txt",
+      "sha256": "161459fcdc66f8f082932f5a06f9662c256e31ffdc895ee02ddaf1d67a87aa3a",
+      "bytes": 37476
+    },
+    {
+      "path": "glyphs/JP/5Dxx.txt",
+      "sha256": "80548f284dc19bf43c92cb2acdad34b58b9ecc663bd84029a50ba7757bb41ebd",
+      "bytes": 17199
+    },
+    {
+      "path": "glyphs/JP/233xx.txt",
+      "sha256": "c222ac3ff27004fe92ebcde0ec73cf8bd2b9b7b90d00ac086db54cb6cf873062",
+      "bytes": 2314
+    },
+    {
+      "path": "glyphs/JP/68xx.txt",
+      "sha256": "673435140323fbe143f7ff039849e0725f500b11b23c4524c59c9cb3769daa30",
+      "bytes": 10558
+    },
+    {
+      "path": "glyphs/JP/6Fxx.txt",
+      "sha256": "5c89b3d63467cd2460963ae458e2fef2bed542ecc5118c14307d38de75d5ecf2",
+      "bytes": 9030
+    },
+    {
+      "path": "glyphs/JP/28Bxx.txt",
+      "sha256": "8b1ed4429475f3c43d4d6ca2bb96b3adbfc252e098cf4f8e89f8408b21169c2c",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/25Axx.txt",
+      "sha256": "162ab52f5483066159beff6317ddc90362c7df998c59955db271c0aa138ad133",
+      "bytes": 868
+    },
+    {
+      "path": "glyphs/JP/84xx.txt",
+      "sha256": "b23be6f1d343acabd5509c8b0cc1f296445f3bab99d8d5419bed19f13f675966",
+      "bytes": 13820
+    },
+    {
+      "path": "glyphs/JP/254xx.txt",
+      "sha256": "daa861327db24bba334fce7e1f78fe8594f2ce5d747d320f7ad72bfdd80c7259",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/JP/27Fxx.txt",
+      "sha256": "7508c3870120606dafe859330568646909e7172ee6645fe6a74e6878268bbf10",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/28Axx.txt",
+      "sha256": "0842b12729bdf427822ab35a76c4c8fceb09c436fb9441da26f5f78f8d3877e2",
+      "bytes": 2312
+    },
+    {
+      "path": "glyphs/JP/25xx.txt",
+      "sha256": "5b8b164dd3935ccd7b337268822ebe4295dbf12dd3dcd9d4ac7474eea1939ca2",
+      "bytes": 460
+    },
+    {
+      "path": "glyphs/JP/2A0xx.txt",
+      "sha256": "f85c3dd8b97def9667db5307df9c7fc0d48b189a224c163ceb46256e2a1806a0",
+      "bytes": 1156
+    },
+    {
+      "path": "glyphs/JP/213xx.txt",
+      "sha256": "ccf6c907274be5fc306612d53cd981159dfe2cd72c533ab77ca1f4285c4ffdb9",
+      "bytes": 1157
+    },
+    {
+      "path": "glyphs/JP/215xx.txt",
+      "sha256": "9f17f6eb86504ba5d5f284881ea7626e0c647d5649bcd15a3f1f5df6a27f6008",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/71xx.txt",
+      "sha256": "cdc1a3fc77d8ddcc805dcc6307420020853b8d300ffa831a4c5316cce63044d9",
+      "bytes": 10185
+    },
+    {
+      "path": "glyphs/JP/216xx.txt",
+      "sha256": "10b7ccd53bbd0678de0404d0647404f24639c04021f9cc0084931ec81e5def4c",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/27Exx.txt",
+      "sha256": "8880a64510d705a648fdd766b930acc84401f2a6a8af9a6276b6cc484a4adee0",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/3Exx.txt",
+      "sha256": "ceb86be29bdab504aff5b7b5642c0bdce33b76c7e5b8d0aed645f9fa947a6671",
+      "bytes": 2009
+    },
+    {
+      "path": "glyphs/JP/30xx.txt",
+      "sha256": "0d007ad9574903ab5feca20893c3c2e86dc9b63b2c49ad4987987ac15e347353",
+      "bytes": 42026
+    },
+    {
+      "path": "glyphs/JP/62xx.txt",
+      "sha256": "b2ad5481ffc5af5026c2958a34adc561b9cd821a0b33828eceff4d6e131c1f91",
+      "bytes": 13344
+    },
+    {
+      "path": "glyphs/JP/54xx.txt",
+      "sha256": "a19c3b6f5cee64f07efd34adc1d500f9a6728918f0149003ba0266561be15e1f",
+      "bytes": 8515
+    },
+    {
+      "path": "glyphs/JP/28Exx.txt",
+      "sha256": "1136310a242ec6e47b8079b906d86c9f7a126de682c5c0f9e47d87f421b6de44",
+      "bytes": 1156
+    },
+    {
+      "path": "glyphs/JP/8Dxx.txt",
+      "sha256": "09d990c1c100a36d680cd9103c70a0a7d7ed6f4f758f5f86ad51579280a201a6",
+      "bytes": 3879
+    },
+    {
+      "path": "glyphs/JP/5Cxx.txt",
+      "sha256": "7abf9ea55b2b7077ed867763ac3d2f89bcf45b05f57992dd9d32b04863083bce",
+      "bytes": 16522
+    },
+    {
+      "path": "glyphs/JP/259xx.txt",
+      "sha256": "d69b7a24d5be44d096756f58f0280dc69407c75eb7470768c5a36c69dbcef6bb",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/41xx.txt",
+      "sha256": "3b3923f6fcaa2ed5c2265fa59fabcebf2ed8b801b68da59d035ef7810f7f5517",
+      "bytes": 2584
+    },
+    {
+      "path": "glyphs/JP/60xx.txt",
+      "sha256": "6f8edb55cc257483dabd62358eee8a8564c4acb5a75cdc1bc3425e683d1ca179",
+      "bytes": 11683
+    },
+    {
+      "path": "glyphs/JP/29Exx.txt",
+      "sha256": "ae53e06b799d5ec6580dc6a9c0c276651cfab737a858f54302c084b24816c4da",
+      "bytes": 2023
+    },
+    {
+      "path": "glyphs/JP/23Cxx.txt",
+      "sha256": "9884b1af0c9c231f9461970b5a4b97b59bf423017ae22580b5b9484114622637",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/24Axx.txt",
+      "sha256": "3e66b67a49c84a18a57fb25e0bc877800b5ec2f54c578c971069d07c0a29558d",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/218xx.txt",
+      "sha256": "1bce7ee9044de562c337512117f068f124d2fbf4329690e93ede4c3f28c65d17",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/24Bxx.txt",
+      "sha256": "2167a4d90042f9c2b6c65bc2874e6dc467971b683fa6edc3c2d5537b3e037b18",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/294xx.txt",
+      "sha256": "a9ce5e298e071b63576eb8d5b26929b6c8bcc39e703a03d4ca7322bcee84c4b3",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/6Dxx.txt",
+      "sha256": "eb54f2dfe86cd4c090d34064ce242cdc05f8e0a7b36134f2ddb49befc6c5a527",
+      "bytes": 8280
+    },
+    {
+      "path": "glyphs/JP/39xx.txt",
+      "sha256": "937a2ea944be2792545487cc43812444871a7a39d648625ff74c7937366df139",
+      "bytes": 862
+    },
+    {
+      "path": "glyphs/JP/222xx.txt",
+      "sha256": "a9afcde725f44d967884fa9d3a4a133e6f10cd88bbbd38fd6f82b2d4087d98d5",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/223xx.txt",
+      "sha256": "a87b8e86d5ed148b9742527ac7215897a05b6ea5fb35cdd25e500d006cdca16b",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/51xx.txt",
+      "sha256": "76cddf585e2a15b16a198e9e55b3e26ab833af73a553bd1d920dc2ec59e3fc41",
+      "bytes": 18595
+    },
+    {
+      "path": "glyphs/JP/22Axx.txt",
+      "sha256": "8f7d266431bb616da5ec6a3dca5a1590115d5830ff5f46a8d606e00e5932b69f",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/27Cxx.txt",
+      "sha256": "c43f33625b5688147e89cd72d998d3eb890a8c00e78594852840bf0163ac9a97",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/2A5xx.txt",
+      "sha256": "efa46800c8227f8f26421419aef1081e30ffa89752c4712252e62fcde37f7625",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/240xx.txt",
+      "sha256": "46227f9c37025dbe6e21c1777357eb9171d2c6959f60725775f21f09475c55d5",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/86xx.txt",
+      "sha256": "23579280677470536c28f279b353acbddc73b66316d2af2bebc3bde13ef10a7b",
+      "bytes": 11214
+    },
+    {
+      "path": "glyphs/JP/44xx.txt",
+      "sha256": "7dbf5368445f70cc0efdfe59ff3c49b7b0064c48a702f73c48d319860dcc1d3e",
+      "bytes": 3445
+    },
+    {
+      "path": "glyphs/JP/8Bxx.txt",
+      "sha256": "d0b4a0842461285e39cccd7a938d4ce9f4d596d96a4c9429d238b2354f950dcb",
+      "bytes": 18448
+    },
+    {
+      "path": "glyphs/JP/77xx.txt",
+      "sha256": "b18f1c4497f4d81984288015801e132b27563cc89c7d42f2a3059f8a2c70dbbe",
+      "bytes": 10536
+    },
+    {
+      "path": "glyphs/JP/26Fxx.txt",
+      "sha256": "8ad25df5b746667f30bab045e86b091d7936ea2eefcf5ffae6af24894e2abc37",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/JP/96xx.txt",
+      "sha256": "538bdb2965b9bf6ec42c64f2d55dee50627c8b0aa84bb2cdd76fd658da1f8db6",
+      "bytes": 16531
+    },
+    {
+      "path": "glyphs/JP/89xx.txt",
+      "sha256": "09620bdd4a96d9b11ac7e1079c074e653f41ff1cdcbc3a8a2742e1c326267089",
+      "bytes": 19243
+    },
+    {
+      "path": "glyphs/JP/4Bxx.txt",
+      "sha256": "bc9c0a02f81c05e492480bad24b62019ee7ba520bf3232f30c29006c04c6058b",
+      "bytes": 1435
+    },
+    {
+      "path": "glyphs/JP/23xx.txt",
+      "sha256": "6a2a6c84fcddc379cba928d3448d516240231c78f4e3e73790497f894f8c5b03",
+      "bytes": 23
+    },
+    {
+      "path": "glyphs/JP/03xx.txt",
+      "sha256": "c1276ef09c01b6464792e6023593d8ce9a7a747ce8fd0afa7e208e10f2b43ed4",
+      "bytes": 1103
+    },
+    {
+      "path": "glyphs/JP/263xx.txt",
+      "sha256": "20f13c383e51c97b293803ab6cfcd8b06606f02e086d36aadc4e64773642af93",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/298xx.txt",
+      "sha256": "c7d5360843f0c30978c12ccc85df54d5747cc7cdfbbc8422b33cebe266646ab4",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/29Fxx.txt",
+      "sha256": "3dc0363f7aecd1f304f8e67314f460fd12d71fa537b2b02fab0ad0eaab256e41",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/47xx.txt",
+      "sha256": "30b21608cc57b9de3304dc38e3bbc5dceab5c28458cb95cb777e7a09e87e6861",
+      "bytes": 861
+    },
+    {
+      "path": "glyphs/JP/236xx.txt",
+      "sha256": "e70cce27bfba230cc44eb69079e4744053b398f3159877d78676e2fe6356bdb9",
+      "bytes": 1157
+    },
+    {
+      "path": "glyphs/JP/271xx.txt",
+      "sha256": "2ed70252f77c0cf182a503443f0d7cba1838b8afce69ecc76f2e11d7c1a1742a",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/237xx.txt",
+      "sha256": "7e6510ce6dc3c0b1a9377c12f2cfe5dbc7b3dc35eb5b31a71e319b2e7e1f1448",
+      "bytes": 2022
+    },
+    {
+      "path": "glyphs/JP/67xx.txt",
+      "sha256": "44b7a57901d8632f9484db8100ebfb2990794ab2c8b9c549411ce54c78ee1425",
+      "bytes": 11653
+    },
+    {
+      "path": "glyphs/JP/7Cxx.txt",
+      "sha256": "1c98c0fb661dffdf3a1d6cd9612b133c00e98b0bfbf99a56e5b61c7b0b22c302",
+      "bytes": 17477
+    },
+    {
+      "path": "glyphs/JP/284xx.txt",
+      "sha256": "cd02fe7502c86cfd2b9a8b2b342c7946369700344311a2d6c8aaf8038eb100c4",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/25Exx.txt",
+      "sha256": "68ec831f13e6d4e9f0fce91e2635d57070d9df6ac5058dd23793fe5112bb1e16",
+      "bytes": 2023
+    },
+    {
+      "path": "glyphs/JP/99xx.txt",
+      "sha256": "e5ed64d521b03d10aaea532c321ed7557c7b91ccdf62cd78466128bf44bbcd2d",
+      "bytes": 13525
+    },
+    {
+      "path": "glyphs/JP/22Bxx.txt",
+      "sha256": "d9fb4617c9fb7d40aab2b58f110e5401987f1bffd8b12b368c08f756e12ef383",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/JP/6Cxx.txt",
+      "sha256": "188a3d6c4306652eb9a53357d456de547746106515530e9bf0d903b02e515f43",
+      "bytes": 8380
+    },
+    {
+      "path": "glyphs/JP/6Axx.txt",
+      "sha256": "dc31e36e96efc4c83b6d28dea65e2b777392ba0fb6488a1b1d40715c8b43c6a6",
+      "bytes": 10635
+    },
+    {
+      "path": "glyphs/JP/57xx.txt",
+      "sha256": "c30b845c032182c93afb9ff246dfce06e8b26f8aeba350ddaf3c8fda97897d09",
+      "bytes": 9817
+    },
+    {
+      "path": "glyphs/JP/95xx.txt",
+      "sha256": "564e3ca36219ec58f781197f4a1b6789e9bb426271461f9afb75d0a8e2c81f58",
+      "bytes": 5690
+    },
+    {
+      "path": "glyphs/JP/7Bxx.txt",
+      "sha256": "83f7fc67cee719206704d4ac2e9ade07ec67002565c9ba048ad10c744bc80c8d",
+      "bytes": 10697
+    },
+    {
+      "path": "glyphs/JP/9Dxx.txt",
+      "sha256": "9d5b3c9d79acb3245639363dc49482a54ecc1d7a0ae6d8bc023b6d528a2db1ae",
+      "bytes": 12743
+    },
+    {
+      "path": "glyphs/JP/38xx.txt",
+      "sha256": "442e28b623e60a6f75305c886812e657597ef3a5f2a4bfafa7fb1bf26f5e4fc4",
+      "bytes": 2009
+    },
+    {
+      "path": "glyphs/JP/26Exx.txt",
+      "sha256": "7230a9038fd497530f6dada427c7711524afcf65322c01f2a87e85231527aa08",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/20Axx.txt",
+      "sha256": "43aeba8efb0f03363b9dcdbd2fc75d3651e4679ea2e795c3c2231ead3763760a",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/269xx.txt",
+      "sha256": "0d478791eddb87df1195cc0d6ffae55f4a81484a241c072e730f324f050da160",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/JP/8Exx.txt",
+      "sha256": "bec9bcf8a0621f091e82207bae3117d99cef0da530a2945dbec23a3f1e53dc33",
+      "bytes": 13590
+    },
+    {
+      "path": "glyphs/JP/282xx.txt",
+      "sha256": "85e918629396599bcde5f116774bc3b46c17330f9021bf5b448862e9a94d4db9",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/289xx.txt",
+      "sha256": "bc57fcec9269b715c3c44bc26425cf3a6deafbbaf0d4407b9a8f5c81ea055f72",
+      "bytes": 2025
+    },
+    {
+      "path": "glyphs/JP/22Dxx.txt",
+      "sha256": "093d88d7e214fb221fbe29ed0bb50d1646da8f17db9d28843dba192a1d0feb96",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/FExx.txt",
+      "sha256": "9e6289f7b0b76b78e61c9558ee784d6a461ec9b5349aac4c63df853c5ee1cba4",
+      "bytes": 359
+    },
+    {
+      "path": "glyphs/JP/2A4xx.txt",
+      "sha256": "ee8ea3e8daea5c1362772c9a6fc79be7228d2b6bf06aaa703db7fa53cd61053b",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/270xx.txt",
+      "sha256": "7e9a8e811f8586c0c9651f94aceff3821c093064b927e055fa302b37ddbf4584",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/88xx.txt",
+      "sha256": "6816bf7a0b18c4919265d5d204637ea615d3b49aefb7b2cea52152853ecc02a4",
+      "bytes": 17002
+    },
+    {
+      "path": "glyphs/JP/9Exx.txt",
+      "sha256": "bd3434a582659aa6cfc4cdd6d4719794bd81f34c2211297845894a0120cf5f0a",
+      "bytes": 12945
+    },
+    {
+      "path": "glyphs/JP/6Exx.txt",
+      "sha256": "e346b9444a66326766b3e5cecd5b5503b9d795e4ca45fa9d79b8c00f201df795",
+      "bytes": 11219
+    },
+    {
+      "path": "glyphs/JP/46xx.txt",
+      "sha256": "996d610af222be8182488a289a07c4f536db1cf0b8f54641d742ee6051853435",
+      "bytes": 1436
+    },
+    {
+      "path": "glyphs/JP/9Fxx.txt",
+      "sha256": "bd25330d4cf57a07dbc09a97c49e6351675899481e225a88a8dc0216baf28692",
+      "bytes": 10146
+    },
+    {
+      "path": "glyphs/JP/229xx.txt",
+      "sha256": "892cc53a6dfb5762d4101c39092d4ee06613615d15d43d3b9f9439377de2617a",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/98xx.txt",
+      "sha256": "abff8428b072b169205c1b2618a23d7f352206584f65a43b5f2e5af5349989d9",
+      "bytes": 12431
+    },
+    {
+      "path": "glyphs/JP/53xx.txt",
+      "sha256": "1c49ebcafb1dc6c7d359b19aa9763291ebeefdc0e87c24e3a9106e972cb7e09d",
+      "bytes": 19484
+    },
+    {
+      "path": "glyphs/JP/25Bxx.txt",
+      "sha256": "8b2ff67b82d2e016d8db3d98aeb467632c6d24448a512cf403ed10d75bb2b080",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/63xx.txt",
+      "sha256": "6bf409cb3dbeeea986a13a80a1b7c52d9be42b88d5913b380b9b44508f105398",
+      "bytes": 11814
+    },
+    {
+      "path": "glyphs/JP/21Cxx.txt",
+      "sha256": "d930a644c42d34778c643a065d9a25401535b375d5133156e512ff8e7af22a33",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/82xx.txt",
+      "sha256": "a5a593bc6ae338b4a03474c33bd4401b2bb527c42a329047b5fc0bf893638c8b",
+      "bytes": 16698
+    },
+    {
+      "path": "glyphs/JP/246xx.txt",
+      "sha256": "cc83c202e791dad2990c3355513a86ac8d909881198aecdc4e046dbecdde7c7e",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/266xx.txt",
+      "sha256": "71b8cc06754c817ce08e43c128eb15dfbe025124db9bc31c53bdf9e92fe3ed83",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/21Dxx.txt",
+      "sha256": "a666c3a0b1b550a50b3b4aa64f774a36dc0b4394ae947a391e4a74e6318e30d3",
+      "bytes": 2603
+    },
+    {
+      "path": "glyphs/JP/273xx.txt",
+      "sha256": "99bd4001330b67dd57a662b585a13f48713a468334ba8679e3b098d77a95a280",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/JP/4Cxx.txt",
+      "sha256": "0e37569e78e704f4cbf05ad457707e160c09b84fed23051b140a4e11ab665fce",
+      "bytes": 1147
+    },
+    {
+      "path": "glyphs/JP/274xx.txt",
+      "sha256": "2ca1e1e84815ba6a697da589f447653039e425e73a341f3f1ed2a15b68e2cf24",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/285xx.txt",
+      "sha256": "21d4b8c2ea143998d31d591e29bd885e6942428a59e5c7eca7df6e9c54f3b880",
+      "bytes": 868
+    },
+    {
+      "path": "glyphs/JP/4Dxx.txt",
+      "sha256": "c596147fcf099d93b412a933b85bf68ef96133114c1c1bb0934ec84e04d62df4",
+      "bytes": 573
+    },
+    {
+      "path": "glyphs/JP/204xx.txt",
+      "sha256": "c22ae7f6d18b58009b2f2b744bbff6cb3ca9659bf99aa195225ca6c5b1cbf3d6",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/2A1xx.txt",
+      "sha256": "4b4c5b19deac9b6d19bc98eb2c395bd3152be2dc3ba2996df53abc2a2197d8b9",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/248xx.txt",
+      "sha256": "265394d88bd919ca3e0a754d4f6c21fcc10fe2b143d522d02aa7f7820c07f582",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/217xx.txt",
+      "sha256": "0ed7a3070092a9d562d871f17f29951a81a204b5f859a2f225d939b121475238",
+      "bytes": 579
+    },
+    {
+      "path": "glyphs/JP/23Axx.txt",
+      "sha256": "0b9acdb3136a71f81c182273462c13c1b7dcc55a6321595e3bb6a6eb4daadd41",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/21Fxx.txt",
+      "sha256": "0fe034fe582c447751096d4cb784de01e53064af132543ca633fa51ad5c5a344",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/8Cxx.txt",
+      "sha256": "8db8c9d3fda77601327584a3488ee83dedc0206e3876112afb239d2552649395",
+      "bytes": 10712
+    },
+    {
+      "path": "glyphs/JP/73xx.txt",
+      "sha256": "e0d3f886db3fe43f3bea03fd62c69dda2c4ccf5910c26d7da520aa804459b3a7",
+      "bytes": 8544
+    },
+    {
+      "path": "glyphs/JP/87xx.txt",
+      "sha256": "fda4ef283b60689fa47f8abb3a2611da95afade4f6b31f79947362a47c1a8a98",
+      "bytes": 10329
+    },
+    {
+      "path": "glyphs/JP/85xx.txt",
+      "sha256": "c050140e06a69968de7ba334b2f1b7f695a7085925635ec2edfcdfe82e2a6e97",
+      "bytes": 16709
+    },
+    {
+      "path": "glyphs/JP/93xx.txt",
+      "sha256": "d173b4d0d2be23b48dc8a25557a3081bf6ca8d40805bfcddf4d4dc2f1ac29e95",
+      "bytes": 12145
+    },
+    {
+      "path": "glyphs/JP/276xx.txt",
+      "sha256": "b94824e9367d2190abbea36d590ea9e0fc22014d8096bd58f0167e04cdcddd89",
+      "bytes": 1445
+    },
+    {
+      "path": "glyphs/JP/20Bxx.txt",
+      "sha256": "aa75c5a35d7be6d84ef689c4c1c1f49f9e93fc80c2776ba8ac9103fef3ab0f56",
+      "bytes": 550
+    },
+    {
+      "path": "glyphs/JP/3Axx.txt",
+      "sha256": "732c754dec9eac779ba0b3d82b6a1a2aa6e0d44778f4092c6d6880d5b3bc02f8",
+      "bytes": 574
+    },
+    {
+      "path": "glyphs/JP/49xx.txt",
+      "sha256": "1f783332ccf83056fa9380b5384e2f5860ebde004844f9d183b0a8263e65b618",
+      "bytes": 861
+    },
+    {
+      "path": "glyphs/JP/97xx.txt",
+      "sha256": "007ea279009202be28897ed9eb2e09db6907011c57398894a58655eceb5e1ba5",
+      "bytes": 17822
+    },
+    {
+      "path": "glyphs/JP/2A6xx.txt",
+      "sha256": "8fcc51c4b9c0a702c95b356272406ba6e4eed25575fcd08cbea250d5416f0982",
+      "bytes": 867
+    },
+    {
+      "path": "glyphs/JP/59xx.txt",
+      "sha256": "2c2e9bed3f3a2f3e734fbff9479727f3a7d971b59d45e66ef24cf85bb5bf8e13",
+      "bytes": 17167
+    },
+    {
+      "path": "glyphs/JP/78xx.txt",
+      "sha256": "bb579a963936785419c5ef8aed71c87f0ac265991344f2e694022011af3c210a",
+      "bytes": 8907
+    },
+    {
+      "path": "glyphs/JP/56xx.txt",
+      "sha256": "041369849582fd9339ade27ee78fda31d69515c2e35e7b379c935905ccdc25ff",
+      "bytes": 11936
+    },
+    {
+      "path": "glyphs/JP/23Fxx.txt",
+      "sha256": "6096cc8493681b415190544c5a2c266e63275b86086ea31cbb9d870aa4a0ca39",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/209xx.txt",
+      "sha256": "5f58c4ad7cdb23826fd91199874e5d3e4e327f987ad5072cc94a8878642e12c4",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/36xx.txt",
+      "sha256": "fff2f1c74a1fdbddc3f3a0a743fec32646bee667e7207a6c012e1a10300d49e2",
+      "bytes": 1724
+    },
+    {
+      "path": "glyphs/JP/92xx.txt",
+      "sha256": "83ff8fbd2c89d1a7c453781b3e5baa5037a70e217f348ee224c4a50822f78abc",
+      "bytes": 14507
+    },
+    {
+      "path": "glyphs/JP/76xx.txt",
+      "sha256": "eb1e1663fdf018bb7e4400dddccb20b3ed043831bb613cf1031b8023eeb17743",
+      "bytes": 14089
+    },
+    {
+      "path": "glyphs/JP/286xx.txt",
+      "sha256": "79e47ca17c3b07e0fdc3f86a2a026ef0c16289dec9d2ed1e44f48940723db101",
+      "bytes": 578
+    },
+    {
+      "path": "glyphs/JP/21Exx.txt",
+      "sha256": "80c12085b6bc2758d092b8c4c75dbc8a5cd34980bd829d9156b5cfc6d1b8b868",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/JP/94xx.txt",
+      "sha256": "4d88aa89ff51d3d2df3b5c2b7d35b2b423bce95c489058aaaa27bd5aace276fa",
+      "bytes": 5407
+    },
+    {
+      "path": "glyphs/JP/2A3xx.txt",
+      "sha256": "b50c53fd4d7fa623ad5294ab410a988d4b9c85e36af0de1d0066d42195d2d837",
+      "bytes": 288
+    },
+    {
+      "path": "glyphs/JP/20Fxx.txt",
+      "sha256": "9ce85b5552b68248d972ad0e8d5aedb97ee550b57fde25c76d99333ee554d643",
+      "bytes": 289
+    },
+    {
+      "path": "glyphs/JP/69xx.txt",
+      "sha256": "eb2e6baa8ee80cc15e517a025c4015627881a0fe2ab9c22fbb988fc6b2e21a1e",
+      "bytes": 14626
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL-L/E0xx.txt",
+      "sha256": "38c23822ef471608bd6f20004354596f77f1e56e4ba78b54915111220fd45934",
+      "bytes": 5799
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL-L/28xx.txt",
+      "sha256": "fd47561b348ac7d369f20b36e896232d01555e0591b4ae6e021fad3254f99a0e",
+      "bytes": 74751
+    },
+    {
+      "path": "glyphs/GEOMETRIC-FULL-L/25xx.txt",
+      "sha256": "de4b51d713514bbb1438780390828263763fd2ad884e9b104661abc4573b7cca",
+      "bytes": 46719
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF/E0xx.txt",
+      "sha256": "7313ed8fb9b9cb773a60b9f3d27e3c57413dbe1df6f9ea8e62efb071a303942c",
+      "bytes": 2639
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF/28xx.txt",
+      "sha256": "785093ef5f18df2c92c7efc959264c6d78c7f4161e2774105386f93eabb27925",
+      "bytes": 34303
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF/25xx.txt",
+      "sha256": "f0794958d8ae331f7c26c2afa8977f1c1bc556c2ba826d016f21b9cf8995bf9f",
+      "bytes": 21439
+    },
+    {
+      "path": "glyphs/HW/FBxx.txt",
+      "sha256": "131918ddf36b0538cadef8e2c3232bd2badb883cae24ed46cd9bb958c7431b24",
+      "bytes": 1489
+    },
+    {
+      "path": "glyphs/HW/24xx.txt",
+      "sha256": "6d163b7211b526732853ac16793e789171c451f4a6d6fe64b86d27113eead75f",
+      "bytes": 10497
+    },
+    {
+      "path": "glyphs/HW/FFxx.txt",
+      "sha256": "cfba48201d4961330f4bfaf9971c3c9e6f9294f812e48631293e203e1cbd5453",
+      "bytes": 10344
+    },
+    {
+      "path": "glyphs/HW/05xx.txt",
+      "sha256": "d008209189e5853fa23b08492566488800785567c8fa88dc4447ace038c56644",
+      "bytes": 25114
+    },
+    {
+      "path": "glyphs/HW/26xx.txt",
+      "sha256": "2d2a4750a074c983c43f9851b0aad7d8ad4976fdaa6373e02c7c97d53b004ecb",
+      "bytes": 4206
+    },
+    {
+      "path": "glyphs/HW/00xx.txt",
+      "sha256": "c3347aa8de96559d8734e27b5972e1c3e094d59c7dc27cfd2a990caf46b21904",
+      "bytes": 38641
+    },
+    {
+      "path": "glyphs/HW/21xx.txt",
+      "sha256": "7a5658f3d21f1409f1b9a5f9a1a4d2376f42cc7e50cb9043a16d1ee4695339e1",
+      "bytes": 41624
+    },
+    {
+      "path": "glyphs/HW/2Bxx.txt",
+      "sha256": "7dd7ae21d0db24eb81559ac7e5e93296b7210bf3974d58a1fef99b10c8378181",
+      "bytes": 4157
+    },
+    {
+      "path": "glyphs/HW/27xx.txt",
+      "sha256": "1007d6c3ec9eb5c5fbd2ddeda9a86a75b3ab58d41f5ceeeda167cf868e8e1e8d",
+      "bytes": 11650
+    },
+    {
+      "path": "glyphs/HW/20xx.txt",
+      "sha256": "9c45513f37e9b91d8114d804a09f969d851c32cd22bc894d4d8cc93d0c98c878",
+      "bytes": 26879
+    },
+    {
+      "path": "glyphs/HW/22xx.txt",
+      "sha256": "dda56f85529822ee6ebbbbc8b62bcd60160c4170bca926fb45b2a8fc23403d28",
+      "bytes": 17499
+    },
+    {
+      "path": "glyphs/HW/04xx.txt",
+      "sha256": "13512c497a720029704305eec19fbf9f5e18f51e240ddc939f3c606589731b80",
+      "bytes": 33004
+    },
+    {
+      "path": "glyphs/HW/01xx.txt",
+      "sha256": "7d9719b1a9bb58f24d0790bb9f07bc105cf161adeb33fb13e1c0d21581fcdb41",
+      "bytes": 71967
+    },
+    {
+      "path": "glyphs/HW/25xx.txt",
+      "sha256": "c8998a386ca69da3c7f49f956160ca9fde0f65b92a39be98ea153c80fd6d02e7",
+      "bytes": 12243
+    },
+    {
+      "path": "glyphs/HW/1Dxx.txt",
+      "sha256": "84d73fd0287f71a3ec15f3e16e8075bea02b854b6e3580c5571e6a2253b83f45",
+      "bytes": 39457
+    },
+    {
+      "path": "glyphs/HW/30xx.txt",
+      "sha256": "a2c7f2934b775cda9245d28f2a685b97a0969ca9e73ac421273e3c9eb5d78098",
+      "bytes": 387
+    },
+    {
+      "path": "glyphs/HW/10xx.txt",
+      "sha256": "9c4376506bdfa009bf42d2704c06c2afd85347dac83d65c1c555ce82146d9b9e",
+      "bytes": 17481
+    },
+    {
+      "path": "glyphs/HW/23xx.txt",
+      "sha256": "30cf5b0098b67db6473512e97ccbc09ccdd522698d950762b9cac71e0236b58d",
+      "bytes": 11313
+    },
+    {
+      "path": "glyphs/HW/03xx.txt",
+      "sha256": "dc42bb84d1298bc750e0655882c2b84f3bdfea684088533af09d82ef28b7e2db",
+      "bytes": 14922
+    },
+    {
+      "path": "glyphs/HW/1Exx.txt",
+      "sha256": "a1beabb6972ba93507bedb282bc3ef483d7c4b9d39ad0a141da2a11c0819d2a0",
+      "bytes": 66373
+    },
+    {
+      "path": "glyphs/HW/02xx.txt",
+      "sha256": "225988971be9d2af51cf0c0b54d1f55e3ef8e118b65d504da36c57761e0a5a75",
+      "bytes": 54939
+    },
+    {
+      "path": "glyphs/PR/FBxx.txt",
+      "sha256": "2d9eda244121800fb07ac0f9c954c910f67bd8b781b521bb5dca5e5affcd7438",
+      "bytes": 1752
+    },
+    {
+      "path": "glyphs/PR/24xx.txt",
+      "sha256": "4d61e2914fbf58030b6bfb159ac10317a9519fb6c48717b421c75882450145ba",
+      "bytes": 56414
+    },
+    {
+      "path": "glyphs/PR/FFxx.txt",
+      "sha256": "26bff4ea54a761436bc7398a23accd5d177d21f4c9c0a368ec0dbf3a7673f285",
+      "bytes": 1913
+    },
+    {
+      "path": "glyphs/PR/05xx.txt",
+      "sha256": "96aecbc1268bacac18e2a85b29f21665895f0a9bcdbd6880723cb36906c80cb6",
+      "bytes": 28002
+    },
+    {
+      "path": "glyphs/PR/26xx.txt",
+      "sha256": "f8ee526f76ba46b933a7acd5f21bf943baf4106734f380b011537e478a82925a",
+      "bytes": 12683
+    },
+    {
+      "path": "glyphs/PR/00xx.txt",
+      "sha256": "7cb940d6706e957e996b3b3126596a83538368b00ab786a14615aeffac6fb866",
+      "bytes": 46231
+    },
+    {
+      "path": "glyphs/PR/21xx.txt",
+      "sha256": "d791d8daf287fb1481a08ae2a93c5b7b55b2f900e6f857a9b870207f284a9c24",
+      "bytes": 55965
+    },
+    {
+      "path": "glyphs/PR/2Bxx.txt",
+      "sha256": "cc7bafcdcf6e8263b3139d289f0aa2fba502a42358f6ffcb3e644a3c0912e3fc",
+      "bytes": 4654
+    },
+    {
+      "path": "glyphs/PR/27xx.txt",
+      "sha256": "e403d34d0cc0fc5ffab541a1095e09647a57a98afaa965a72ec16bd589007576",
+      "bytes": 22958
+    },
+    {
+      "path": "glyphs/PR/06xx.txt",
+      "sha256": "f94100fae2ab8a896525eed1f9bdfbc0b63163d487151df29eeaed39f8d017fa",
+      "bytes": 14442
+    },
+    {
+      "path": "glyphs/PR/20xx.txt",
+      "sha256": "b30b718494ebc4c2cc90920194d519ec6cb503af3c5e04df06b3e4087d45cdf7",
+      "bytes": 27975
+    },
+    {
+      "path": "glyphs/PR/22xx.txt",
+      "sha256": "0369c742a7e28f31b844bfdfced4bea62b3c1c6307d61dff269a31947f55db1a",
+      "bytes": 30902
+    },
+    {
+      "path": "glyphs/PR/04xx.txt",
+      "sha256": "96deb719a6b94314333db8ab40b33259022a67cb73e8374889318acaef90d0ab",
+      "bytes": 37998
+    },
+    {
+      "path": "glyphs/PR/01xx.txt",
+      "sha256": "0a35e7064f28786abdf8c911ec03dc9e7ac181f3a7fb1031d3bfc0c795b5ee3b",
+      "bytes": 83851
+    },
+    {
+      "path": "glyphs/PR/25xx.txt",
+      "sha256": "7d73229fb06fc6b92bcc05d3501b912a245aa91a0410ebdac01206d3211083b0",
+      "bytes": 19350
+    },
+    {
+      "path": "glyphs/PR/1Dxx.txt",
+      "sha256": "68de37a339cc0e3b5cd4f739d91d408e89b1d75e7aab1b28ace61efe739a2674",
+      "bytes": 36629
+    },
+    {
+      "path": "glyphs/PR/30xx.txt",
+      "sha256": "51cab5df202c72c5a3fa35e8987db21d4baa12bfc6398d37dab7114b3e967f67",
+      "bytes": 1167
+    },
+    {
+      "path": "glyphs/PR/0Exx.txt",
+      "sha256": "b1b1a65ffe18041205bc218e959b7adee259c3061031507932d45f59a56353fb",
+      "bytes": 25265
+    },
+    {
+      "path": "glyphs/PR/10xx.txt",
+      "sha256": "60b33c3effd59addff3a2df38dec5ad36f4c19bcf4dd5b6de8053760f7b393e9",
+      "bytes": 18731
+    },
+    {
+      "path": "glyphs/PR/23xx.txt",
+      "sha256": "c3a685a2cc5ca59b52d9a694302bb37bf81f7bed9f790c3796a4dcd17aa0699e",
+      "bytes": 13336
+    },
+    {
+      "path": "glyphs/PR/03xx.txt",
+      "sha256": "3edaf8f892b9824f5ee41686e99b56bfa4fe707654e32803f2b6aae18f5ad731",
+      "bytes": 40202
+    },
+    {
+      "path": "glyphs/PR/FExx.txt",
+      "sha256": "fd387d026c1b84efa10016a325183b414719314212a7feae8ad2c834b514948f",
+      "bytes": 22493
+    },
+    {
+      "path": "glyphs/PR/1Exx.txt",
+      "sha256": "3a7b3f823446bc707e03995f85e223048a1dea596e0d0c3c2966bf0ee171dfad",
+      "bytes": 69136
+    },
+    {
+      "path": "glyphs/PR/02xx.txt",
+      "sha256": "a60d4a751e711d4a3a898f5e8c4ff367cc6bde64068fb78e4bfaf04c88433ad1",
+      "bytes": 57684
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF-L/E0xx.txt",
+      "sha256": "c2503a0997901bbabb3f8f2e1796e4c4a7486fddd2683e53682b4e12a00c14e4",
+      "bytes": 3279
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF-L/28xx.txt",
+      "sha256": "3f64734bc2b51e1bdafb923de7990e50c0ee2f853d8774c02fe416647d8c4b1f",
+      "bytes": 42495
+    },
+    {
+      "path": "glyphs/GEOMETRIC-HALF-L/25xx.txt",
+      "sha256": "90e65fb5271de95ce07fd1291e9eca674ff89b9351e75ea514f954a5078f8b04",
+      "bytes": 26559
+    },
+    {
+      "path": "glyphs/SC/9Axx.txt",
+      "sha256": "ac206e301411cecd5b34d46375ef09eda6b46595de25f50300578c7761b8b8bf",
+      "bytes": 47696
+    },
+    {
+      "path": "glyphs/SC/75xx.txt",
+      "sha256": "44c36b0890164ad1d2e633efb9e865f09f9e42e40dd47f9cd9d2e5d81a5e3209",
+      "bytes": 47872
+    },
+    {
+      "path": "glyphs/SC/29Axx.txt",
+      "sha256": "18609cea3c711d2d36807492bb77a90336cc3be23a4cfe0373f058d5a8652b2a",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/201xx.txt",
+      "sha256": "ce4ca8fec4124a73b4716ce4068d39fd414870bc31f90fb9d35654eaf9ad768f",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/2C6xx.txt",
+      "sha256": "eed0baf7528a0f7d9b7fa1b744b7683e05f09eb29686e0ccb0dd389ca06ff799",
+      "bytes": 2636
+    },
+    {
+      "path": "glyphs/SC/2A7xx.txt",
+      "sha256": "2def5549e898d70e0aa0b25bb2aa9a69dfe347e7ad884c9d7b25690ab328c977",
+      "bytes": 271
+    },
+    {
+      "path": "glyphs/SC/24Exx.txt",
+      "sha256": "f280302456b83668488d8a3cc8633cffa0b6d53f73df62057f801ff692afd847",
+      "bytes": 323
+    },
+    {
+      "path": "glyphs/SC/214xx.txt",
+      "sha256": "ea9b991631204881777072bfa8eac0639ddc2c1419dec90a3c6092ee7d3008ac",
+      "bytes": 253
+    },
+    {
+      "path": "glyphs/SC/74xx.txt",
+      "sha256": "4dc7843b0874c538e1ea8194c73295a9ea9d0832b2e8e5e6fe99c4c7062a6dc9",
+      "bytes": 49205
+    },
+    {
+      "path": "glyphs/SC/7Dxx.txt",
+      "sha256": "f7d6cc5fb0429bc75f08f31692b4644a631ca7ab78b526d02d75ae0be424bde4",
+      "bytes": 25693
+    },
+    {
+      "path": "glyphs/SC/2C3xx.txt",
+      "sha256": "c2531947f0cd35ea1a747fff8cd79ac1ae052d1efec0f7c84a137b80e0a3fbd2",
+      "bytes": 930
+    },
+    {
+      "path": "glyphs/SC/FBxx.txt",
+      "sha256": "bcd3bd654ef5ff56dae21664f79d30eed43770330aee834914e1752379bd3639",
+      "bytes": 523
+    },
+    {
+      "path": "glyphs/SC/3Cxx.txt",
+      "sha256": "f308c9edef840e19a52723750a8574afeac6cb2928dcc3fa951dd74c34054f28",
+      "bytes": 1851
+    },
+    {
+      "path": "glyphs/SC/35xx.txt",
+      "sha256": "800c5419064292018e49786ec9b3e9ca2f2c0f762e0c8e2465db00058e8ddf9e",
+      "bytes": 1385
+    },
+    {
+      "path": "glyphs/SC/2A9xx.txt",
+      "sha256": "e091fc3479ee65f830b228d9c68aa1860935ba92732cabc0c0feea44db79e425",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/SC/9Bxx.txt",
+      "sha256": "3dec29a45ebefb7b198e8b79cec6740b31b4dc040601851d5d5af8cdb4253ceb",
+      "bytes": 39434
+    },
+    {
+      "path": "glyphs/SC/264xx.txt",
+      "sha256": "55ff2d7613701048536a3810c6f116d467a9878082c6cd3597e8b4c642549eb7",
+      "bytes": 259
+    },
+    {
+      "path": "glyphs/SC/24xx.txt",
+      "sha256": "893dae0ba314a7f535315096b8331ceb429c1b130f6032a293a15c5c2afa2ada",
+      "bytes": 25276
+    },
+    {
+      "path": "glyphs/SC/FFxx.txt",
+      "sha256": "af1746c03a53fc14a8ccb4b41bcf26a2b4dfdd904ff9800c21e930cee4e46086",
+      "bytes": 22851
+    },
+    {
+      "path": "glyphs/SC/7Fxx.txt",
+      "sha256": "6e6123ce207892ac8392133b490614bebfc67248341398e95beb643931144a29",
+      "bytes": 52376
+    },
+    {
+      "path": "glyphs/SC/65xx.txt",
+      "sha256": "6c62ef8a37a5a2a04c1678102edef981065f3f95c35fee12988ed865c48c3ef6",
+      "bytes": 47634
+    },
+    {
+      "path": "glyphs/SC/2Fxx.txt",
+      "sha256": "18a1ee9b1b8d98afb878773a81feb0cc0f139c1c3c377dd67602d3084fc2d0cd",
+      "bytes": 11178
+    },
+    {
+      "path": "glyphs/SC/2B7xx.txt",
+      "sha256": "ca2dda3168be748287aabea5f02cd1a9a8c4b8d3e1d4034fa776c1bf386abc7f",
+      "bytes": 1125
+    },
+    {
+      "path": "glyphs/SC/48xx.txt",
+      "sha256": "c3ea89ebd45ab7db8955b0fcf691887b75206c45a8e717028498032b7dc25510",
+      "bytes": 1168
+    },
+    {
+      "path": "glyphs/SC/26Axx.txt",
+      "sha256": "336200becdce17182b17ef1fbf9c83b38d27b4bd3189a68aacfd72ba40f887fd",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/2C7xx.txt",
+      "sha256": "0bc9828543dd6eb06d3262ad30eb15263038d7bccfd0c9f869926dcf1c8dd03a",
+      "bytes": 1149
+    },
+    {
+      "path": "glyphs/SC/3Bxx.txt",
+      "sha256": "8e403bbcd241ab4ec1107e0ceb27b87779f092aab461e7d552d590f8dab04bf1",
+      "bytes": 4231
+    },
+    {
+      "path": "glyphs/SC/27Bxx.txt",
+      "sha256": "86796b19ef033683f2219b3ce9d7acfeb9d77ef11d38331ca6ebdc2b6d226b77",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/32xx.txt",
+      "sha256": "46dbc03c6ad65a7049c6c298574f5dcf08845d80e12d0ec1714a298cb241c43d",
+      "bytes": 53078
+    },
+    {
+      "path": "glyphs/SC/90xx.txt",
+      "sha256": "fad38c0c80a789ab88433f8e0f4f6650ff1ef2fed2323396e2c5b9f87492bf22",
+      "bytes": 62797
+    },
+    {
+      "path": "glyphs/SC/61xx.txt",
+      "sha256": "b657fdd6bb5ca682e8eb3603ec7d10168e581d3e5696730d1d5c9b55eb9e45bf",
+      "bytes": 40109
+    },
+    {
+      "path": "glyphs/SC/80xx.txt",
+      "sha256": "9f5505c37e5e0deab4b4632123f60270c93a35e1feaee672dc1b3eb7a7a0e165",
+      "bytes": 63050
+    },
+    {
+      "path": "glyphs/SC/251xx.txt",
+      "sha256": "02b53fe1600565449e6a2fa4c344a11ea93dc40cd6863e16eba072eb380320c4",
+      "bytes": 521
+    },
+    {
+      "path": "glyphs/SC/55xx.txt",
+      "sha256": "d0f1e186808e25810a490a146bd54076d42b2a1047b3af8fb7770fa8e70362db",
+      "bytes": 56953
+    },
+    {
+      "path": "glyphs/SC/22Fxx.txt",
+      "sha256": "a9898b4d2f245a6d45e75486a68759a1f2a279e2a76bbf9a95173ddf0371b752",
+      "bytes": 323
+    },
+    {
+      "path": "glyphs/SC/8Fxx.txt",
+      "sha256": "2ae9c66e8f8c8a01ee879d375178c10148739a267b6a767b19698c095081730a",
+      "bytes": 47809
+    },
+    {
+      "path": "glyphs/SC/2CAxx.txt",
+      "sha256": "58ddfe2fc0bff6a8369dce88fb5cf10557b16f37345126416575f99f2ee8c67e",
+      "bytes": 1001
+    },
+    {
+      "path": "glyphs/SC/79xx.txt",
+      "sha256": "8ffcdeaa4019698a4e0b39e2716b99ca907fcd801b7715497f1e0a3a056a0957",
+      "bytes": 46961
+    },
+    {
+      "path": "glyphs/SC/2C2xx.txt",
+      "sha256": "d4698f893660184ed773333b939a4319717b08f8f9044893e84fc83a3353df11",
+      "bytes": 596
+    },
+    {
+      "path": "glyphs/SC/72xx.txt",
+      "sha256": "620e5d80045839ffc72fb93c68bb6c475eae69a1a961166791aaf7e8b59389aa",
+      "bytes": 49291
+    },
+    {
+      "path": "glyphs/SC/26xx.txt",
+      "sha256": "560e1483278dea6b131a9c27e8fb36142819cc23bca122412f2467d797f4eff7",
+      "bytes": 5495
+    },
+    {
+      "path": "glyphs/SC/2BBxx.txt",
+      "sha256": "b4b2b9c62b09a1b843f5c0df734f85be3a358d21be592b8e2472cf622c4ef31d",
+      "bytes": 858
+    },
+    {
+      "path": "glyphs/SC/255xx.txt",
+      "sha256": "ebbc86bfb7eb2bcd0c27412e06b4a3292eef5313ec7a4ad55fd1df7b40f4ec91",
+      "bytes": 669
+    },
+    {
+      "path": "glyphs/SC/2CCxx.txt",
+      "sha256": "cdc64f6fb28a7d954b7cd808e32c7a4020f260f54d0d71e192807d3be4ead8fd",
+      "bytes": 1374
+    },
+    {
+      "path": "glyphs/SC/70xx.txt",
+      "sha256": "6a5feb21ab55188b68b71e2b2704609a6b2e029d908f86c3ddb389eaf8011dc2",
+      "bytes": 47394
+    },
+    {
+      "path": "glyphs/SC/3Dxx.txt",
+      "sha256": "6acdd029ca9d2ef464513d85fc612fd6949027738521c5db21a22df29354de68",
+      "bytes": 1231
+    },
+    {
+      "path": "glyphs/SC/235xx.txt",
+      "sha256": "930806e7802f1e7ca827c61033368e95994d4db5a319ee5914d03522e4c531f1",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/00xx.txt",
+      "sha256": "5fec16f0ebaabec732e2d69cc0de49e50c20087ae5fd1aa24613ca9719fd5897",
+      "bytes": 4719
+    },
+    {
+      "path": "glyphs/SC/83xx.txt",
+      "sha256": "fe32d544e8e91533639a522a27f9edad949cc3c391f28fce43e6de0f1185d2ba",
+      "bytes": 65576
+    },
+    {
+      "path": "glyphs/SC/34xx.txt",
+      "sha256": "f7ac0c2ca1592ba9a24666814b440c607fae82590e5607fd8894eca3352d829d",
+      "bytes": 2416
+    },
+    {
+      "path": "glyphs/SC/9Cxx.txt",
+      "sha256": "d9d0103219ad849176707ee3bfe06134c9591b8ec17a40824af19ad4a33aeab1",
+      "bytes": 42110
+    },
+    {
+      "path": "glyphs/SC/40xx.txt",
+      "sha256": "e71ce40b0ade0db1610d63a6ae0856c574ed4c3ca3528ba9053fccc952cbd61f",
+      "bytes": 1499
+    },
+    {
+      "path": "glyphs/SC/262xx.txt",
+      "sha256": "308a3a678733094466f4265d96a186b61dbabf356359fadd32f7dea2ec81617a",
+      "bytes": 265
+    },
+    {
+      "path": "glyphs/SC/21xx.txt",
+      "sha256": "dfdac424a3459b8aab1868f1f8c9c0cf4b9825686cedf407bc3cc50f08779086",
+      "bytes": 11300
+    },
+    {
+      "path": "glyphs/SC/2C1xx.txt",
+      "sha256": "eb24170db727887647890950e26ee398627a88189cc697eb6d74177fc29172e7",
+      "bytes": 785
+    },
+    {
+      "path": "glyphs/SC/5Exx.txt",
+      "sha256": "e38d628a9294c88286695f4da8a7afcd4b9c2349b3153580a99c326c41d19355",
+      "bytes": 45069
+    },
+    {
+      "path": "glyphs/SC/2Bxx.txt",
+      "sha256": "d9e090c3bc4fe55c7f55deadd74f3d1e3c6c389d003db12e2ce873bcc3d283b0",
+      "bytes": 1833
+    },
+    {
+      "path": "glyphs/SC/27xx.txt",
+      "sha256": "9f267d899ffa148135d5a4cb09b23e96d1fb81f13b7b839cd05410530d117af8",
+      "bytes": 8813
+    },
+    {
+      "path": "glyphs/SC/52xx.txt",
+      "sha256": "6b94ba6ead51b7aee7167ab6a2b2fc3f44c6b5f78b676eb732a6745728005fe2",
+      "bytes": 51026
+    },
+    {
+      "path": "glyphs/SC/37xx.txt",
+      "sha256": "e2a55ac0edd6770cec6902283bd596ba5b4ac3e34e38d02a4aeff564199818f4",
+      "bytes": 2508
+    },
+    {
+      "path": "glyphs/SC/241xx.txt",
+      "sha256": "24514c02cca4b0654b1bbef24022cbd74cda10c373153889534b648002c09222",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/20xx.txt",
+      "sha256": "6912171a37dd60ebc0a4f6842d9cd93930ac413bc4b32376a659527962e44a96",
+      "bytes": 4093
+    },
+    {
+      "path": "glyphs/SC/81xx.txt",
+      "sha256": "8ee83b58e74f339d7b036884fcde227500eb14614bfa55fc006fe4ee2ce9c049",
+      "bytes": 59296
+    },
+    {
+      "path": "glyphs/SC/7Exx.txt",
+      "sha256": "02505309e12d17df7e4386ba15847ff4bff6452672706a5cf211484288abad75",
+      "bytes": 42944
+    },
+    {
+      "path": "glyphs/SC/22xx.txt",
+      "sha256": "28c0a0bb9845ca22960d607e5e2c4b19d95d68aa303e8b6ae2f040945d351c59",
+      "bytes": 16244
+    },
+    {
+      "path": "glyphs/SC/5Fxx.txt",
+      "sha256": "5f3a4735e88c0cd1f7f68e080aaff1a34e6427ebd8ee49ceec3dc9ba716cb1e6",
+      "bytes": 53518
+    },
+    {
+      "path": "glyphs/SC/43xx.txt",
+      "sha256": "bb914dd375ad30bfdf436f2888919f136891afc87943b070f55d86ac98352a2b",
+      "bytes": 2760
+    },
+    {
+      "path": "glyphs/SC/20Exx.txt",
+      "sha256": "82da92f9a92b042ebc26d55d1e7fcdcd078900afe5573a95a729a70fcfdae0b4",
+      "bytes": 318
+    },
+    {
+      "path": "glyphs/SC/50xx.txt",
+      "sha256": "2a4230b4cd08923500e12df61c891b39392937f2cefc3ac651cc97bf02ac8041",
+      "bytes": 44608
+    },
+    {
+      "path": "glyphs/SC/2B4xx.txt",
+      "sha256": "7fb13de0636309e67fd0ab92ff57784c5eda0b1cad400fa871bc0d603cb05c42",
+      "bytes": 1724
+    },
+    {
+      "path": "glyphs/SC/247xx.txt",
+      "sha256": "62b77b806e4b1a0224fcfea4d56e40228be8b3a1e77f696d8012287ecec031c3",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/91xx.txt",
+      "sha256": "d20b373cdd2e7e0184e207bd36d66252613190e08afcb0562e38eb281e2a271b",
+      "bytes": 41116
+    },
+    {
+      "path": "glyphs/SC/2C4xx.txt",
+      "sha256": "5f696c26351edd6c24a8c5886c3e1045dfd36fe210dcb335faad6acb1c577f7f",
+      "bytes": 657
+    },
+    {
+      "path": "glyphs/SC/3Fxx.txt",
+      "sha256": "175e2a8153498856d01c42b8ccfa8b0e667b92be08ea7839c6e860b123f1dd7e",
+      "bytes": 2450
+    },
+    {
+      "path": "glyphs/SC/206xx.txt",
+      "sha256": "5d4547bd5769cfb18aeeab08f8d598029ec844ce6871b44f8759d60cedabbb3b",
+      "bytes": 522
+    },
+    {
+      "path": "glyphs/SC/26Cxx.txt",
+      "sha256": "45b85014bd20109c140aa4a847b94c8fb55caa41dac5833c313c851cd54f5d5b",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/33xx.txt",
+      "sha256": "609ce03dc19fc50c8c5de0b79d9ceb71a47ad7192ed140528131f1bb7381d84e",
+      "bytes": 23905
+    },
+    {
+      "path": "glyphs/SC/FAxx.txt",
+      "sha256": "0cedde63a028602ef7594674025a723ceed0e97922a48d65fecbea4bff8774dd",
+      "bytes": 3993
+    },
+    {
+      "path": "glyphs/SC/7Axx.txt",
+      "sha256": "3c79abdbcf240a28b1e40ac51d33b1f30881c27b81a6c0482edc42549e04785a",
+      "bytes": 53197
+    },
+    {
+      "path": "glyphs/SC/66xx.txt",
+      "sha256": "4904d81d4306f339bcb4112bfdc2519c4fe31d3ecdb26f38d24e8475f225f8d5",
+      "bytes": 46872
+    },
+    {
+      "path": "glyphs/SC/5Axx.txt",
+      "sha256": "ef6e9d0ca04c6cca6a84eb80db829605e0fd6f9d92c954a5f9357ca616df071e",
+      "bytes": 62642
+    },
+    {
+      "path": "glyphs/SC/5Bxx.txt",
+      "sha256": "dd45d4bc33b2914e2ac7cabba5518babd0ff4332e500154bfb6f0aa056bba871",
+      "bytes": 58474
+    },
+    {
+      "path": "glyphs/SC/31xx.txt",
+      "sha256": "63062f081402c31b732d6667f5f3b866c106b260dc92ac3a2e167879bf797239",
+      "bytes": 10247
+    },
+    {
+      "path": "glyphs/SC/04xx.txt",
+      "sha256": "6f06ea77c23d52f5e7287de78ee354aedab9f4f6df5673c3c68b53dc9dd57ffd",
+      "bytes": 11450
+    },
+    {
+      "path": "glyphs/SC/58xx.txt",
+      "sha256": "a39fc3d790504a8a452fa3e7c75ed7826d223cf817ccedd860503db49e1ede93",
+      "bytes": 40652
+    },
+    {
+      "path": "glyphs/SC/01xx.txt",
+      "sha256": "c993213742b105e27f691e910c7da2f6e89e4064b8b70ca5116d45c8676d0fb7",
+      "bytes": 2956
+    },
+    {
+      "path": "glyphs/SC/4Exx.txt",
+      "sha256": "24aaeca9f0597d93a125d4db36a695b58bac49df9e4d9468e4065541d1cd1ec1",
+      "bytes": 64682
+    },
+    {
+      "path": "glyphs/SC/2C0xx.txt",
+      "sha256": "dcc9c229775e9ce17a9e7e1419d6a7a9f5625172cd48a19576245422f0042b86",
+      "bytes": 928
+    },
+    {
+      "path": "glyphs/SC/23Exx.txt",
+      "sha256": "c13dc0f04fc76136a64572e18208579f4008cf986ab114757897c374115d0f44",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/226xx.txt",
+      "sha256": "23449dfbc8c2a55c397bd04b7d8858102131b29b7e1feeb174831316053c92e6",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/4Fxx.txt",
+      "sha256": "0b242db6ce2dfe2634b0728eb4cbf7b0c7109454b2d036d27fc0ccbb9cb7af4f",
+      "bytes": 58289
+    },
+    {
+      "path": "glyphs/SC/296xx.txt",
+      "sha256": "373e517fe936ee6bb0d8570f18a3054720c3728a5c20c0e017120b130addfe4f",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/SC/20Cxx.txt",
+      "sha256": "48e4cfca01afb3442726d7ee27eefba42ef75c70aae2c3a42092e269a835f450",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/45xx.txt",
+      "sha256": "f8ce7542b3dcf048237c68e9256c11f753341535d526e90834dfd4451c75d34e",
+      "bytes": 2183
+    },
+    {
+      "path": "glyphs/SC/42xx.txt",
+      "sha256": "b41b7cecc470d3c2d09a98755967eca221b10c94e60b1441299bb75f2ea02542",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/SC/64xx.txt",
+      "sha256": "3123980f7f3dc84d50109f55e85d288dcb1314d8ee4a41ded0ff15f953edbed6",
+      "bytes": 45385
+    },
+    {
+      "path": "glyphs/SC/4Axx.txt",
+      "sha256": "5ba10ca2f9eaea311e0538fd1a51664cfdab58c7d4d1e009ce1138a0cc6ec3f1",
+      "bytes": 866
+    },
+    {
+      "path": "glyphs/SC/6Bxx.txt",
+      "sha256": "acefd2e22311be19fbb35eb4e126f0b7b132d4c72370874b8c9a77ac75f6e803",
+      "bytes": 43624
+    },
+    {
+      "path": "glyphs/SC/267xx.txt",
+      "sha256": "6e85892ab6c814175cfba6a33df1098bc4628d808e2859a3d8d1ba8781ab3eec",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/202xx.txt",
+      "sha256": "b43d6a9e112c7f68ccaa0bf862e15b5ff5ef097931b6e0fdc6d71a549010600c",
+      "bytes": 320
+    },
+    {
+      "path": "glyphs/SC/8Axx.txt",
+      "sha256": "ecadd9d5e050559a90625ad0d10fbd9ca5b741e839bc893d75f0482fe685a4d4",
+      "bytes": 30846
+    },
+    {
+      "path": "glyphs/SC/5Dxx.txt",
+      "sha256": "0345f50a3a05698aadd2a87f73919932fc415093a29d5cc5165eba1aec678b82",
+      "bytes": 43977
+    },
+    {
+      "path": "glyphs/SC/68xx.txt",
+      "sha256": "037ff9585a5927ad650d515369a2a185976e39a7623d7c856165ce439db637b2",
+      "bytes": 48638
+    },
+    {
+      "path": "glyphs/SC/6Fxx.txt",
+      "sha256": "ab711aa50d1c5c75acd36972d79554023cb2824b103aa61110cb7d1b9acae81a",
+      "bytes": 38894
+    },
+    {
+      "path": "glyphs/SC/28Bxx.txt",
+      "sha256": "3dc93f9c1dd836ef0abf1fed7d7b6037d6b2ad7b303da62d6e271ba8f6bc313f",
+      "bytes": 277
+    },
+    {
+      "path": "glyphs/SC/84xx.txt",
+      "sha256": "d55277b3e432e8bf07eba6d0fb5b9611b5d2290de2d5764fa2e2121f91703553",
+      "bytes": 69438
+    },
+    {
+      "path": "glyphs/SC/27Fxx.txt",
+      "sha256": "9a40a13da4b50441908731e2e233ddb8bf9d828ae6c51047409811eb7a090fe8",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/SC/25xx.txt",
+      "sha256": "74ea6ad3cd2a0f3bec9cc318377fbe037776935418d6ad99c2e65422f13da818",
+      "bytes": 4554
+    },
+    {
+      "path": "glyphs/SC/26Dxx.txt",
+      "sha256": "346be54c4e1b162fce47db9b662ae83de2e9a674c750e0224483a4f636db5f35",
+      "bytes": 260
+    },
+    {
+      "path": "glyphs/SC/213xx.txt",
+      "sha256": "e176dbfc84a17923b9d659b4a725c7d13f04ae70268213cb00107fad1f78b7c6",
+      "bytes": 265
+    },
+    {
+      "path": "glyphs/SC/215xx.txt",
+      "sha256": "662839da6c9337bce39f7511eeb3610584b26730aa9b116a936c238a98525cc2",
+      "bytes": 291
+    },
+    {
+      "path": "glyphs/SC/71xx.txt",
+      "sha256": "cb2851b765a96ef00c4090f17f2ed24186d1a3721babeef998bde5cc7cf90d2f",
+      "bytes": 47881
+    },
+    {
+      "path": "glyphs/SC/3Exx.txt",
+      "sha256": "b8b120c50c6bd4df58831dd9428ff0007fe0b1601e33f7b2bfd1b269a045c195",
+      "bytes": 2120
+    },
+    {
+      "path": "glyphs/SC/2Exx.txt",
+      "sha256": "faa6cb064c69af362faf03e0534c7c84f2228a8a3b32293a17882cbfd2de59eb",
+      "bytes": 29631
+    },
+    {
+      "path": "glyphs/SC/30xx.txt",
+      "sha256": "04f12d661cbc59a316f466ef2c362707890dcfcfb56d05f4a883c58cd1b318a8",
+      "bytes": 15888
+    },
+    {
+      "path": "glyphs/SC/62xx.txt",
+      "sha256": "722ed23c4f73424726ddd6b298621c20e6654654a4d96be5041749b80f64c21e",
+      "bytes": 53326
+    },
+    {
+      "path": "glyphs/SC/54xx.txt",
+      "sha256": "4d7df2b61e7b5f2a0aaeb896759fbe0df0a00473f0f0aa7478c2a44d2a5c0bc8",
+      "bytes": 62685
+    },
+    {
+      "path": "glyphs/SC/28Exx.txt",
+      "sha256": "e51ee0b2ca1bb3f4866b5e54be4f9b7261cc4bea73516cbca0763c788682f8d6",
+      "bytes": 459
+    },
+    {
+      "path": "glyphs/SC/8Dxx.txt",
+      "sha256": "1aabae6ff42e0e4f77dc1c6d3635573eb0c13c17925dc5bcc5b1aa1e1364df0c",
+      "bytes": 51560
+    },
+    {
+      "path": "glyphs/SC/5Cxx.txt",
+      "sha256": "4545210f641781c796543361a809897916e61faf1cb2b5183b52f145f42fd426",
+      "bytes": 52492
+    },
+    {
+      "path": "glyphs/SC/41xx.txt",
+      "sha256": "7c6ce4de30255c9a0ee657661d3d5c12c3812176bf71ff5f12fc0c4346da6f08",
+      "bytes": 1678
+    },
+    {
+      "path": "glyphs/SC/2B1xx.txt",
+      "sha256": "51c898b861411b179b6b5f541d00a246af74b4326da65dd980d0674b98c3ff37",
+      "bytes": 1180
+    },
+    {
+      "path": "glyphs/SC/60xx.txt",
+      "sha256": "b2ed3754f4c1d68703e5fcd0dc9d022d1c8443e8871719ed97922b29b9d4cca7",
+      "bytes": 51357
+    },
+    {
+      "path": "glyphs/SC/2C9xx.txt",
+      "sha256": "3682ca4280f82f00b9a6e69fc6d0b51ded845c3ad95ab6554319e46b7b812a4f",
+      "bytes": 735
+    },
+    {
+      "path": "glyphs/SC/23Cxx.txt",
+      "sha256": "1e77f5f122bfb92cd82cdfe8c21b5a830944634e9659987d8e95c6d9b419966d",
+      "bytes": 709
+    },
+    {
+      "path": "glyphs/SC/287xx.txt",
+      "sha256": "03c37bf88f98c3cc068b097493ea7a6c541c8c134f639badd33ee30281cbe498",
+      "bytes": 271
+    },
+    {
+      "path": "glyphs/SC/24Axx.txt",
+      "sha256": "4c73b630e0adf31475cc66b6d25fc10e47b507ac5b91a850e32fab29767677f7",
+      "bytes": 564
+    },
+    {
+      "path": "glyphs/SC/6Dxx.txt",
+      "sha256": "35668f5787b72d81cb006ff9d8cbfda06f09638b60fcc18e8383cb081a941a39",
+      "bytes": 52405
+    },
+    {
+      "path": "glyphs/SC/39xx.txt",
+      "sha256": "2c58f4b5b7aa79231c75d45144ffb17f71b3c811d2d73b00a9c74402380bc061",
+      "bytes": 1562
+    },
+    {
+      "path": "glyphs/SC/28Cxx.txt",
+      "sha256": "9332aa1d46a960a73766f30ef7a8eb134b711d4220e9e653da51a27a9cfaad5f",
+      "bytes": 2032
+    },
+    {
+      "path": "glyphs/SC/2BExx.txt",
+      "sha256": "a3cfa1728e0e3e48d3ee6e666bc31015924412b9e294a3bd296704c53b48a152",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/SC/51xx.txt",
+      "sha256": "529c6113031ca9217b6ddd0ded2f7b9338543e2ae8d22d44b361d811f4e66394",
+      "bytes": 49841
+    },
+    {
+      "path": "glyphs/SC/86xx.txt",
+      "sha256": "5fba2f2c234297c2b0ead24caab818cf55fe6477bbace86a488e1bd209cc2e0a",
+      "bytes": 54558
+    },
+    {
+      "path": "glyphs/SC/44xx.txt",
+      "sha256": "d4345f29dbefbb488fa503d7a6457cd74e030afbd60217848e1d4e88d1e70877",
+      "bytes": 4313
+    },
+    {
+      "path": "glyphs/SC/8Bxx.txt",
+      "sha256": "13e5844bc5299c8b5e548d67d61b4c11eb0c302b56b9ec2842f0807e0f437ea6",
+      "bytes": 46938
+    },
+    {
+      "path": "glyphs/SC/77xx.txt",
+      "sha256": "4c4e1dae67941224ba63bc3567b180a90711baddfdb1b6709825358577dcb0c0",
+      "bytes": 49181
+    },
+    {
+      "path": "glyphs/SC/2A8xx.txt",
+      "sha256": "ece6ff3ecb52e2631af31bccef480ec6fd28e226805b737bcd22803aed1f6912",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/2C8xx.txt",
+      "sha256": "aed4801d4687c2f0f393bdaf964f84170a2c10881dafb4f62c8b990f01dc99b4",
+      "bytes": 984
+    },
+    {
+      "path": "glyphs/SC/96xx.txt",
+      "sha256": "4ffdb89d71b4e111f45f1f73cbe77601b0caa0253a4af89e735f483594c996e4",
+      "bytes": 51788
+    },
+    {
+      "path": "glyphs/SC/89xx.txt",
+      "sha256": "cd4e23eabbcc910252d6c1825c90afafa697d62a70b58b9b82f2d0636b061686",
+      "bytes": 44928
+    },
+    {
+      "path": "glyphs/SC/4Bxx.txt",
+      "sha256": "2f400ca96001aae9d45967a3be75bb5b92624aa79c6356a4f765bc6e28837164",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/SC/23xx.txt",
+      "sha256": "c95d29a22bb43f4880ba0f6f7c3bfcebb02013f0d4135aafcf5b1e61c0db5f7a",
+      "bytes": 2704
+    },
+    {
+      "path": "glyphs/SC/03xx.txt",
+      "sha256": "429a9458f6584c33cf3e044c7b647247bf7a6ab7ed792e98f4344afccad0b4aa",
+      "bytes": 9823
+    },
+    {
+      "path": "glyphs/SC/263xx.txt",
+      "sha256": "484fc4d9b1454df94e85f2c3744aaed997ac88bcf839db14e292dd636aff753d",
+      "bytes": 317
+    },
+    {
+      "path": "glyphs/SC/29Fxx.txt",
+      "sha256": "73d43de2bc2804c7493fd1fa24190dc75b4f827d63aa7aadd244fdcd2a2d5c80",
+      "bytes": 1382
+    },
+    {
+      "path": "glyphs/SC/47xx.txt",
+      "sha256": "4aa330036634b2602bd9b06805cce933104d9b1e77b838554963463560086eca",
+      "bytes": 1321
+    },
+    {
+      "path": "glyphs/SC/67xx.txt",
+      "sha256": "edd4975871f4043a7c35782c0ff3973b5ce2e125931bc4ea509180db681ebceb",
+      "bytes": 48903
+    },
+    {
+      "path": "glyphs/SC/7Cxx.txt",
+      "sha256": "1c62ca2d70b3f5f95889def714e6bde56c558820b8a31f521264d524ba0dc7d4",
+      "bytes": 45833
+    },
+    {
+      "path": "glyphs/SC/284xx.txt",
+      "sha256": "13098b6533ef0373e26417177b1fabdddbc1f866dcca0c82b5a4e55dfd53659e",
+      "bytes": 274
+    },
+    {
+      "path": "glyphs/SC/2B3xx.txt",
+      "sha256": "9444aa78fe84574e9ed91184201d3e399008c884323195e4db9991c45473e14f",
+      "bytes": 1228
+    },
+    {
+      "path": "glyphs/SC/25Exx.txt",
+      "sha256": "aad0885321eed504dd82b0162fa1e2e3b0cce1724c1d5606071247725fce0806",
+      "bytes": 262
+    },
+    {
+      "path": "glyphs/SC/99xx.txt",
+      "sha256": "208d5d6b268dfb05aeba48c5319e644e33654bb6667949d773bd9b81b41d0865",
+      "bytes": 48036
+    },
+    {
+      "path": "glyphs/SC/6Cxx.txt",
+      "sha256": "a6f9fa8d29d6d7dc8643670fd50d533c8ff62f254f08e912fa46a85b74302071",
+      "bytes": 55746
+    },
+    {
+      "path": "glyphs/SC/6Axx.txt",
+      "sha256": "a8516e07f4e2a1213204e263beb2adf5ffe10424cd0c8a7beb465596ea35baaa",
+      "bytes": 37779
+    },
+    {
+      "path": "glyphs/SC/57xx.txt",
+      "sha256": "505f6732a7c530e395f46aac106014060c4874647f1d3cfadff160c3d38fc7e2",
+      "bytes": 56167
+    },
+    {
+      "path": "glyphs/SC/2B5xx.txt",
+      "sha256": "5ec9139b53558c6c47c8f6a5a7e696f31e79f1d75ce0d63d09db974085a7e801",
+      "bytes": 2048
+    },
+    {
+      "path": "glyphs/SC/95xx.txt",
+      "sha256": "0559aea2c9c6dcaf2b6ec5e9c0c2435fc519f189e2b4e55a95ff8d135dc6d3fa",
+      "bytes": 48922
+    },
+    {
+      "path": "glyphs/SC/7Bxx.txt",
+      "sha256": "7b949b894d1449ab1201f1e7bb8b6f454c04edf19f34a8b70c39a4b091b90468",
+      "bytes": 47789
+    },
+    {
+      "path": "glyphs/SC/9Dxx.txt",
+      "sha256": "3848690df1b2ff21c3a9299d1964ff03501179a89cd1184d601805c4d833cffb",
+      "bytes": 20798
+    },
+    {
+      "path": "glyphs/SC/38xx.txt",
+      "sha256": "f3853cc8122260825d2ffddafa9ec77a9212d3e0da290917f7ed6f2b75a89256",
+      "bytes": 1665
+    },
+    {
+      "path": "glyphs/SC/26Exx.txt",
+      "sha256": "f6e5f9fc0d6d8c103cd585afa34d8c8db718d96f6aaef827c76b15a5effa896a",
+      "bytes": 317
+    },
+    {
+      "path": "glyphs/SC/8Exx.txt",
+      "sha256": "e3542699a176389ea2bbc085ec40fbbb1f8a6eb9e4ce5e265252e645bcab1599",
+      "bytes": 38749
+    },
+    {
+      "path": "glyphs/SC/2BCxx.txt",
+      "sha256": "a3e68d7434fe958e5e11d539864dddcd6c3d1c68fd7e127a3544d2eb0e0d42e8",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/2BDxx.txt",
+      "sha256": "ea6e56df75421c0bfa50745532915ad8d1b339a44a0b98f2831e1c5bc80a376c",
+      "bytes": 799
+    },
+    {
+      "path": "glyphs/SC/FExx.txt",
+      "sha256": "1ad5f09981e39e0204eebb559d4b6ac312c35271183121e31b693bdf3c8db650",
+      "bytes": 4673
+    },
+    {
+      "path": "glyphs/SC/2C5xx.txt",
+      "sha256": "1ba86cab5d81762ef9e1f44bdcf5abef2dce4888e38bebe2e415c767818c2400",
+      "bytes": 265
+    },
+    {
+      "path": "glyphs/SC/2CDxx.txt",
+      "sha256": "bdf9f1753e9f4f4bfc210aebb4a629e6a41113e3e832d73f07aab46bb2526061",
+      "bytes": 3090
+    },
+    {
+      "path": "glyphs/SC/2CBxx.txt",
+      "sha256": "a158da9ccacc827af4ecc71de35a8e9431e554c1fa9ebe5d95163cfd1a9637b3",
+      "bytes": 5585
+    },
+    {
+      "path": "glyphs/SC/88xx.txt",
+      "sha256": "4b78841711df1fae9303ee6bec47f7d654c3395c777e7d1050a9132c26675a17",
+      "bytes": 42433
+    },
+    {
+      "path": "glyphs/SC/9Exx.txt",
+      "sha256": "fa260c4aba113bd4911f624b7f9e310320e6e7ba225ab0ff374df3886f8ee2ee",
+      "bytes": 53665
+    },
+    {
+      "path": "glyphs/SC/6Exx.txt",
+      "sha256": "658840d89facf703644e6d1deb5e8293d3fca40077a4c6e02c36c9ef460c9716",
+      "bytes": 46697
+    },
+    {
+      "path": "glyphs/SC/46xx.txt",
+      "sha256": "d31577722cf1b453c44cb66d6821392172ffac98901a6bae29c4a776a222ac7a",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/SC/9Fxx.txt",
+      "sha256": "37f6674b3d78ce147e82d56dd9ab9150e3af7d4be2284377838de4a09de79d5f",
+      "bytes": 33335
+    },
+    {
+      "path": "glyphs/SC/98xx.txt",
+      "sha256": "18718f8edfac93af295b723beaf0bed5a74ad187680690813349e2bca81a3ece",
+      "bytes": 47835
+    },
+    {
+      "path": "glyphs/SC/53xx.txt",
+      "sha256": "b96019b230baaa8a37100a25f24750189291a335c721633a0e625e7a88a60665",
+      "bytes": 60435
+    },
+    {
+      "path": "glyphs/SC/63xx.txt",
+      "sha256": "973296b2e16bf7d469914a57c05cfd5fbe4c83b1c9463734bf537482941b4158",
+      "bytes": 46368
+    },
+    {
+      "path": "glyphs/SC/82xx.txt",
+      "sha256": "b292c23e1e5750af20dcd1dceb9883850caae4ae210d5cc7322b0cd0504e9367",
+      "bytes": 57442
+    },
+    {
+      "path": "glyphs/SC/266xx.txt",
+      "sha256": "0fefaa06b9e8c4d24d6d59c5dff3f71e35fa560157ae65c617fdf3dc529239cd",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/4Cxx.txt",
+      "sha256": "0fc96639aeb518de7723055d78ea5b0193e1d1f3827af291a4da03fea9835e0f",
+      "bytes": 1676
+    },
+    {
+      "path": "glyphs/SC/2AAxx.txt",
+      "sha256": "ada759a7fd9c297650b2dedeaf185c6ecdd6d4ecadac447e2d320a155b5f5d24",
+      "bytes": 736
+    },
+    {
+      "path": "glyphs/SC/F9xx.txt",
+      "sha256": "8c57675529f81cbb85d5a7bb683f968c88dc36c7f245694133c34592f65ac9bc",
+      "bytes": 521
+    },
+    {
+      "path": "glyphs/SC/4Dxx.txt",
+      "sha256": "df0a57cf4fb97fec2d7f7d7850b495ebe425c0eced0ad10dbfe5f6d191ce3f86",
+      "bytes": 2239
+    },
+    {
+      "path": "glyphs/SC/8Cxx.txt",
+      "sha256": "1eb4d2bebba05bba02d2618335c98052ebf9c521d0f772e486db9b0a1bd051ef",
+      "bytes": 40220
+    },
+    {
+      "path": "glyphs/SC/2CExx.txt",
+      "sha256": "7bb49598e64b0b380fbe538f00d7a62474acf4c3a7cae5a8214687957498699c",
+      "bytes": 2097
+    },
+    {
+      "path": "glyphs/SC/2BAxx.txt",
+      "sha256": "84241cc8b799793a180aacb2de6241068a00d4ac6a024145304a1a982c9e48af",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/SC/1Exx.txt",
+      "sha256": "05d27b84c7745c3b924e871e9b3a1faa56b53b1b5b0f6937751b721f2c889128",
+      "bytes": 519
+    },
+    {
+      "path": "glyphs/SC/2AFxx.txt",
+      "sha256": "7ede17d7f6de637205770c27243b566df5ca466703492f048f57408a81f28728",
+      "bytes": 261
+    },
+    {
+      "path": "glyphs/SC/73xx.txt",
+      "sha256": "2afae184fa6f6e09df1bcfc68af0adb429bed570a6b9b85dabb5ed869b9d116d",
+      "bytes": 46589
+    },
+    {
+      "path": "glyphs/SC/2B6xx.txt",
+      "sha256": "59a3b6cd4a7c2a19c425ada5626e47a5c44b1bb04ebf220702383bdfdce882d8",
+      "bytes": 2636
+    },
+    {
+      "path": "glyphs/SC/87xx.txt",
+      "sha256": "93a9ab5520c0f8e7e5635cd37809dcb8d3b8c75b540a1f54d51c97637edba899",
+      "bytes": 39681
+    },
+    {
+      "path": "glyphs/SC/02xx.txt",
+      "sha256": "b73aa43fe9e87124d397eb8ea2826074580fcb5aa3ec81b3d32c17631e6ec27e",
+      "bytes": 391
+    },
+    {
+      "path": "glyphs/SC/85xx.txt",
+      "sha256": "f58395d1121f5c50c060f4a8ac1cb13d084b2e23e0320f20aadd17d238437860",
+      "bytes": 68707
+    },
+    {
+      "path": "glyphs/SC/93xx.txt",
+      "sha256": "8a3173da1b7dbd4ca9aeb8a1e1d84b4c2da6b0c840c4ba5eb0957ce6824df0a9",
+      "bytes": 28633
+    },
+    {
+      "path": "glyphs/SC/3Axx.txt",
+      "sha256": "b4772d660cc47a4d2f6d66ccfa3935195594b475fcdb47ebe7aab0670fd58d16",
+      "bytes": 1091
+    },
+    {
+      "path": "glyphs/SC/49xx.txt",
+      "sha256": "550db68b8dccf6a77e880d7d2170d895e3c5962aa1b1a4c0bedc00072e30892a",
+      "bytes": 1552
+    },
+    {
+      "path": "glyphs/SC/97xx.txt",
+      "sha256": "f570eaf28e2bf5a8b29d2573304be4cf744ba8957330c7b7a26f95ef8b4203bf",
+      "bytes": 50885
+    },
+    {
+      "path": "glyphs/SC/2B8xx.txt",
+      "sha256": "a66c844741b66ee8258cba37b2a7d95d9fe7d6de27b4e975b2b41a054d64c168",
+      "bytes": 859
+    },
+    {
+      "path": "glyphs/SC/59xx.txt",
+      "sha256": "f5e820f2f723424cb463a9fca4ec6d570ce64d147d84a17d6052263aabb6cb63",
+      "bytes": 63384
+    },
+    {
+      "path": "glyphs/SC/78xx.txt",
+      "sha256": "a4112b69f5e764345cfdc322215700d120d6c78a0b7abb6d6e7dd9abde5c14ad",
+      "bytes": 47729
+    },
+    {
+      "path": "glyphs/SC/56xx.txt",
+      "sha256": "1a49cd96c7f2b7cd6f0bc8793711b337130b86a01bce861c9a1a0552a2b91c13",
+      "bytes": 49132
+    },
+    {
+      "path": "glyphs/SC/36xx.txt",
+      "sha256": "0db3e673f9c553eec4858a52babeaa7576377daf79955118e597576689f0d3cb",
+      "bytes": 2897
+    },
+    {
+      "path": "glyphs/SC/92xx.txt",
+      "sha256": "250cca513ef6e03f92ebdbf93908d8ea00a45c4203c7d82e91ac331f851bf24b",
+      "bytes": 25012
+    },
+    {
+      "path": "glyphs/SC/76xx.txt",
+      "sha256": "ca5feee5b9af6baa91808cd13aecfab454a3c4b910717f72c7c8f22b720228f6",
+      "bytes": 48254
+    },
+    {
+      "path": "glyphs/SC/286xx.txt",
+      "sha256": "b2f1166f7fc5fb1ec10bc15c83259ce5d059bdbe4d2646cfa22634be2a10827f",
+      "bytes": 397
+    },
+    {
+      "path": "glyphs/SC/26Bxx.txt",
+      "sha256": "4c283ab27b7b52c04812306440cce43328aaca18fa2d35e512e6514b865e3701",
+      "bytes": 459
+    },
+    {
+      "path": "glyphs/SC/94xx.txt",
+      "sha256": "7dfd07b9f216b22251bdfc21bac2b98c29b775f700143bf0fc68d92768455022",
+      "bytes": 51679
+    },
+    {
+      "path": "glyphs/SC/20Fxx.txt",
+      "sha256": "cad61e07b7d7c7edc77620a58941b3e372323d4c5669a985a10fd7fccb7770cd",
+      "bytes": 323
+    },
+    {
+      "path": "glyphs/SC/249xx.txt",
+      "sha256": "dfc4b56d6edba611a11e2f9a14ad87f5055e546d059036b0c4973aec05b99487",
+      "bytes": 198
+    },
+    {
+      "path": "glyphs/SC/69xx.txt",
+      "sha256": "7ca4faf83069355e5f48b5b42444911232fa9d6a7a6e636e92c12a49b98fac5a",
+      "bytes": 42064
+    },
+    {
+      "path": "glyphs/HW-L/FBxx.txt",
+      "sha256": "620231b5001417bab69c3ccc52b723b88b2ac4be2b74e42132252da4c61a923c",
+      "bytes": 1581
+    },
+    {
+      "path": "glyphs/HW-L/05xx.txt",
+      "sha256": "754df3afa930c5823ba21f144c0e51d30e3668d18589885f892b8618119fd0e3",
+      "bytes": 28738
+    },
+    {
+      "path": "glyphs/HW-L/00xx.txt",
+      "sha256": "9aa0a37a2f1d587b23bdbb7d26f0ae3c3c0a4d62899e8b4970e587ad447cd38a",
+      "bytes": 45212
+    },
+    {
+      "path": "glyphs/HW-L/21xx.txt",
+      "sha256": "80c32a9f8b0a7667e019c559488278d119e8432d186823cad1d28db7d014ac85",
+      "bytes": 24868
+    },
+    {
+      "path": "glyphs/HW-L/20xx.txt",
+      "sha256": "9742acacc163bc9964a55127666eeca2bb1de30795672afb4bf9f544403d9c5d",
+      "bytes": 32526
+    },
+    {
+      "path": "glyphs/HW-L/04xx.txt",
+      "sha256": "144d6bc8ef8e967296eddb33d8417f84fc6d7d4cf3d96b074e564537bcf25f9d",
+      "bytes": 36291
+    },
+    {
+      "path": "glyphs/HW-L/01xx.txt",
+      "sha256": "110bfbb92606b94cfa99207682dcb263e433b4103251881a0e7bff36476db69a",
+      "bytes": 58848
+    },
+    {
+      "path": "glyphs/HW-L/1Dxx.txt",
+      "sha256": "5612970a20489eb950b9d126831ef3c29c1535ed8a29d3ccf75943aa622069af",
+      "bytes": 46559
+    },
+    {
+      "path": "glyphs/HW-L/10xx.txt",
+      "sha256": "1d66d4f2e5915f85dc3ff53a4b5ed7bd872bc25e131bbaf0801bd15673daa9d9",
+      "bytes": 19950
+    },
+    {
+      "path": "glyphs/HW-L/03xx.txt",
+      "sha256": "6fa342f2b2355c69770f0741389bfb3d476c0730c2fe5440987ab4b70711cf55",
+      "bytes": 16870
+    },
+    {
+      "path": "glyphs/HW-L/1Exx.txt",
+      "sha256": "5f16d3228e3c5f4fba54c5963cd2112330e9ff84ecf4c8c75627aa130c96fcb9",
+      "bytes": 61736
+    },
+    {
+      "path": "glyphs/HW-L/02xx.txt",
+      "sha256": "e0416df642863acfd0ce006ff123abcb09df6e32babd693fa3ed1cebf095c44a",
+      "bytes": 57822
+    },
+    {
+      "path": "glyphs/PR-L/FBxx.txt",
+      "sha256": "88432181c9f148ffa536bf2658d605380b1605edca06f96ab842b68e1654a882",
+      "bytes": 1746
+    },
+    {
+      "path": "glyphs/PR-L/05xx.txt",
+      "sha256": "2466c07dd0d1ce516f1dd5b2b566b5ca2eaf987f230f804c5309a97c76903a77",
+      "bytes": 31243
+    },
+    {
+      "path": "glyphs/PR-L/00xx.txt",
+      "sha256": "80d2b30731e6db44c79f048a72fc86527c717294afecbea3e9e7780023f99e03",
+      "bytes": 38812
+    },
+    {
+      "path": "glyphs/PR-L/21xx.txt",
+      "sha256": "11231fdda5bddd9de79925fd2ad0016e6d28d0e124de541d53cf5cafa29f5397",
+      "bytes": 33281
+    },
+    {
+      "path": "glyphs/PR-L/06xx.txt",
+      "sha256": "fb9f2aeccc129f360cd3533fb8686b3ed9b38af73c3f3326775a70c3fabf0c03",
+      "bytes": 19989
+    },
+    {
+      "path": "glyphs/PR-L/20xx.txt",
+      "sha256": "f7bcd61558bf63b7fc99027bd624d7acc5689653b58bb216ec73968373ad9dce",
+      "bytes": 30046
+    },
+    {
+      "path": "glyphs/PR-L/04xx.txt",
+      "sha256": "d65ac00babb34e635d124c15c9d147d200a81c94fee315a1d8215077af06b6f1",
+      "bytes": 34773
+    },
+    {
+      "path": "glyphs/PR-L/01xx.txt",
+      "sha256": "88ac990e6ad063505a2cb13426c07017b29cd768906b8ff3cc31466c7a036c0d",
+      "bytes": 55330
+    },
+    {
+      "path": "glyphs/PR-L/1Dxx.txt",
+      "sha256": "f02388722156622035bab589c18e8d0299342e2a76252072f28169f7c64aa805",
+      "bytes": 40874
+    },
+    {
+      "path": "glyphs/PR-L/0Exx.txt",
+      "sha256": "3f17b26e3ecefab50c1cf941c31fc3af7297c3db1640ccc11f35c4398d837b90",
+      "bytes": 32346
+    },
+    {
+      "path": "glyphs/PR-L/10xx.txt",
+      "sha256": "2a2ab5a5a4111c283a096597b9fbf1322c5b019d5bde0cde985bef5506e33756",
+      "bytes": 21159
+    },
+    {
+      "path": "glyphs/PR-L/03xx.txt",
+      "sha256": "f449e6a8e70399cfe3d5281d48f550085ea94195fe148520d55619bffb93fc06",
+      "bytes": 33602
+    },
+    {
+      "path": "glyphs/PR-L/FExx.txt",
+      "sha256": "533801ebd39aa4b86203d02fae26b48dc0a5cb36fdc89136a2799dd87ce9dfd0",
+      "bytes": 33846
+    },
+    {
+      "path": "glyphs/PR-L/1Exx.txt",
+      "sha256": "9fc977a731192f190d95675a24cc06013a40716f20fd5cbbbf06c196cc64e1b7",
+      "bytes": 56033
+    },
+    {
+      "path": "glyphs/PR-L/02xx.txt",
+      "sha256": "88679588ce8070d8834da84c4a0711253e9f1cc6ef2db240aa29a9c4f78bba07",
+      "bytes": 49782
+    },
+    {
+      "path": "glyphs/KR/9Axx.txt",
+      "sha256": "bd4c6d98b46ad2d6d75099d697d20bcd91172df36cc7d49593e53a9d388a0811",
+      "bytes": 5195
+    },
+    {
+      "path": "glyphs/KR/75xx.txt",
+      "sha256": "3ae704c7dd9760bdc2656f26d577c3ae6d2895b778cf70dc0a16c0350145b826",
+      "bytes": 3816
+    },
+    {
+      "path": "glyphs/KR/74xx.txt",
+      "sha256": "448387fbfb8e7ef9976117e76b9500b015d3b9e31285c8923093798f8dcb4951",
+      "bytes": 2362
+    },
+    {
+      "path": "glyphs/KR/7Dxx.txt",
+      "sha256": "eefdf5c0d53da0b70b5e76a37e79b0c682ccbefcf7fa939217be01b27a45cda3",
+      "bytes": 5520
+    },
+    {
+      "path": "glyphs/KR/B6xx.txt",
+      "sha256": "2ef53da5ef3af6bee0c8ed0b3f91d1a613c54164d0102a65b297e5727474e154",
+      "bytes": 53621
+    },
+    {
+      "path": "glyphs/KR/D7xx.txt",
+      "sha256": "d2ca1ebb5e8df5d50285129666d40cd3ea93f852c636ac8297697cace383a713",
+      "bytes": 34169
+    },
+    {
+      "path": "glyphs/KR/9Bxx.txt",
+      "sha256": "3abbc6a7c7712c70b131c97bd72b8c1289c90ab760059560c0716103922fb42c",
+      "bytes": 4039
+    },
+    {
+      "path": "glyphs/KR/24xx.txt",
+      "sha256": "5780cecc2f7268082cc6b33c439f90c5cc7a79dd66fbfdb8ed3a0317845c19e3",
+      "bytes": 13640
+    },
+    {
+      "path": "glyphs/KR/FFxx.txt",
+      "sha256": "70dae7bc5861f893fba534a9cfbe38bca6d22258049865dde18c1362f5778acd",
+      "bytes": 2979
+    },
+    {
+      "path": "glyphs/KR/7Fxx.txt",
+      "sha256": "a5834b436cff6c9fe8a24c08e701aafdb035f1d2006ccf09e827ddfcf783e0e5",
+      "bytes": 2311
+    },
+    {
+      "path": "glyphs/KR/65xx.txt",
+      "sha256": "fa329846b2ad066b919009f8687664515262fc454caec4ea6961643ec5672611",
+      "bytes": 5310
+    },
+    {
+      "path": "glyphs/KR/D0xx.txt",
+      "sha256": "d18d675588f23d7b041fc8f4f312821842e0ad8271753c69adb99d8e0e3c27e8",
+      "bytes": 53441
+    },
+    {
+      "path": "glyphs/KR/32xx.txt",
+      "sha256": "8093dd6334b0f7960e77fbd0a7e84777193110a627c6e78dad417e8ea5373760",
+      "bytes": 13952
+    },
+    {
+      "path": "glyphs/KR/90xx.txt",
+      "sha256": "c3689ec02256eaaf48e1e070bc907c83e767e0099f58f9648082fedb95db7f7f",
+      "bytes": 3461
+    },
+    {
+      "path": "glyphs/KR/61xx.txt",
+      "sha256": "dc569e39c9e78567b1e2dabc2c3b8dbdd345cf2ddb289db6d0be43a504314991",
+      "bytes": 6531
+    },
+    {
+      "path": "glyphs/KR/80xx.txt",
+      "sha256": "677979749e5d56b9d2cfa15aef6a2ec3755946b16cdd1a334863c2d4a0f65677",
+      "bytes": 3792
+    },
+    {
+      "path": "glyphs/KR/55xx.txt",
+      "sha256": "4c953df1bd0481096866ddfa49926003ab9707df3a49683c307e82bb1a1c21f4",
+      "bytes": 2594
+    },
+    {
+      "path": "glyphs/KR/CCxx.txt",
+      "sha256": "1200f8544a520dfb68ee45fce11b940b18355656341512e4465225346fc6e460",
+      "bytes": 53417
+    },
+    {
+      "path": "glyphs/KR/8Fxx.txt",
+      "sha256": "4d84512d5f0e6ed9146822663b9e97fc06416254dabcd210ce1b70d96346606f",
+      "bytes": 3804
+    },
+    {
+      "path": "glyphs/KR/79xx.txt",
+      "sha256": "15c84c179c7332638afbccee51e9a35a202889f7e0bb7d29271738fed0cfb7f9",
+      "bytes": 3271
+    },
+    {
+      "path": "glyphs/KR/72xx.txt",
+      "sha256": "72a81b081e9185f577022cb786e0b2cfe43f2fd4aa0970c63786140eaa1c0b8e",
+      "bytes": 2919
+    },
+    {
+      "path": "glyphs/KR/26xx.txt",
+      "sha256": "5e634b906e2126123ce0dfb54cdfe05969d8309f14ee5c65bc446c0471132602",
+      "bytes": 3759
+    },
+    {
+      "path": "glyphs/KR/70xx.txt",
+      "sha256": "cf5368c4a14e9656e763992b17d97b9215d45799db6b1a2db2e594a9f4158748",
+      "bytes": 625
+    },
+    {
+      "path": "glyphs/KR/00xx.txt",
+      "sha256": "d15c977bcf414f81edb76874793f5455b8de09ad2e9fcbd4a9b6fae351f0631b",
+      "bytes": 4944
+    },
+    {
+      "path": "glyphs/KR/83xx.txt",
+      "sha256": "e208b1af07014dc04b7ce27f790ef45a08044b11ccd1730acf1067ae96244d38",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/KR/9Cxx.txt",
+      "sha256": "5081da5099cf6257cf2519a4176a6c851b976c54e858615020b0e872f9b2b41a",
+      "bytes": 1438
+    },
+    {
+      "path": "glyphs/KR/21xx.txt",
+      "sha256": "27f984dd945e324875f40727ac37e4852f744245af418f13677225ee59c1e131",
+      "bytes": 5076
+    },
+    {
+      "path": "glyphs/KR/5Exx.txt",
+      "sha256": "4a33251ff29dfb89abefcc98803759834deafafa52f582358d1369f5caabbecd",
+      "bytes": 3232
+    },
+    {
+      "path": "glyphs/KR/52xx.txt",
+      "sha256": "c9ecfe3c2eb8b148eb96c1c4093636afb309eb78e0b28fd0c3ca288c0c47022c",
+      "bytes": 4906
+    },
+    {
+      "path": "glyphs/KR/D5xx.txt",
+      "sha256": "c62f99c989d18b577b7bb5321cea7f5289bc576349d505f4257915d68587339f",
+      "bytes": 53453
+    },
+    {
+      "path": "glyphs/KR/20xx.txt",
+      "sha256": "4815e94d7bb9f57f3e91060465061990d02540dac2f1cd492dc86e92e1133097",
+      "bytes": 822
+    },
+    {
+      "path": "glyphs/KR/81xx.txt",
+      "sha256": "7a37fac45df25af2978e6be091f67844301a92e848a900d7f004a7a31d2a1589",
+      "bytes": 4045
+    },
+    {
+      "path": "glyphs/KR/B3xx.txt",
+      "sha256": "80401e37c310aba1e81ea54fc227bf3d8d37af2bc72586f817fe4ad82c7f70ed",
+      "bytes": 53411
+    },
+    {
+      "path": "glyphs/KR/CFxx.txt",
+      "sha256": "48a4cf57febec09eac879d00b102c9f1fb03376604d4a3efe444108e4b309194",
+      "bytes": 53483
+    },
+    {
+      "path": "glyphs/KR/7Exx.txt",
+      "sha256": "5639bd5ae4d56dc85cfa9fadc3049aba58fee80974b73cb47388641cfb341eb9",
+      "bytes": 1444
+    },
+    {
+      "path": "glyphs/KR/22xx.txt",
+      "sha256": "b00e8bd1eae14de07c2c268b64e3139c2588002ae6f55cdff6096d15622a4d84",
+      "bytes": 1567
+    },
+    {
+      "path": "glyphs/KR/5Fxx.txt",
+      "sha256": "7d7505592accc9c80dcc68810933c9e3d63c1ca040610420557d0d240f050d30",
+      "bytes": 2335
+    },
+    {
+      "path": "glyphs/KR/50xx.txt",
+      "sha256": "4fb1b2135d25f1bfaaf91087968e6b5a68df01fae9c832f96059bafcfe608362",
+      "bytes": 4406
+    },
+    {
+      "path": "glyphs/KR/B9xx.txt",
+      "sha256": "19053f24c5c6b4538f298df47819eca7ca4eb0b752d0ae1b8b65669f3cbc9a81",
+      "bytes": 53333
+    },
+    {
+      "path": "glyphs/KR/91xx.txt",
+      "sha256": "3ef3473b96f0992088652d32d6a1c0de77eacef48a9d5f98359e5d7b563acd37",
+      "bytes": 2624
+    },
+    {
+      "path": "glyphs/KR/C2xx.txt",
+      "sha256": "a1b1686943d1ffb639620219f812ccbae0d4812ae0ff356f56ad1f3ebba9932c",
+      "bytes": 53363
+    },
+    {
+      "path": "glyphs/KR/D1xx.txt",
+      "sha256": "a5af721a22069324cc08cad6bbf05fbbc2adff31bda0e57d14dda3b7ea97ec89",
+      "bytes": 53525
+    },
+    {
+      "path": "glyphs/KR/33xx.txt",
+      "sha256": "a16a6b1f21dbac48af080031bf82e7245c94b379e77ed758a28b4d9534a9cdd2",
+      "bytes": 20884
+    },
+    {
+      "path": "glyphs/KR/FAxx.txt",
+      "sha256": "ea94eec454d24f12a75292bcaafdcbe009fa9ab1c42f1176f07f0b84869af1d9",
+      "bytes": 1732
+    },
+    {
+      "path": "glyphs/KR/7Axx.txt",
+      "sha256": "8fb017714cc8e692faf2ab33318b6ed34e1d70d7557e0a4d58f44a9e9f623555",
+      "bytes": 5854
+    },
+    {
+      "path": "glyphs/KR/66xx.txt",
+      "sha256": "2fe02f7be2ae44fd2617306aa7cc8b815a7af80eb40964b9e430babc44fad213",
+      "bytes": 5520
+    },
+    {
+      "path": "glyphs/KR/5Axx.txt",
+      "sha256": "fab763b46692c356130dd8bea32d6da59ad92bcadcc32543c74f1a0a81d01959",
+      "bytes": 3202
+    },
+    {
+      "path": "glyphs/KR/5Bxx.txt",
+      "sha256": "db7c9b177873bc457da55f17c7571a80ebdb1f5a58439797d516e8b1ca4d1430",
+      "bytes": 5532
+    },
+    {
+      "path": "glyphs/KR/C5xx.txt",
+      "sha256": "2f14d2ae49469fd56b66f1531d2b328057b51bd65412ba44ef50d4791b94c612",
+      "bytes": 52967
+    },
+    {
+      "path": "glyphs/KR/31xx.txt",
+      "sha256": "346f8e5e90fde57ba928be63470c812990dcfcd59f114a5b3a077f5d8ae447e9",
+      "bytes": 20203
+    },
+    {
+      "path": "glyphs/KR/B7xx.txt",
+      "sha256": "2412d24448d89b9ca6b7027d6b98f674270320e7bfe0a75dfbfb738a316b5179",
+      "bytes": 53423
+    },
+    {
+      "path": "glyphs/KR/04xx.txt",
+      "sha256": "5e548b8e1e96314f4d673162d5b7bfdb17c1eed81ae3d650d57f94e7f6664cf4",
+      "bytes": 1517
+    },
+    {
+      "path": "glyphs/KR/58xx.txt",
+      "sha256": "0b5fb02230e30bf2043886d31b3deb0aecf1e29b3607630f3d0e6ff34faf7d8b",
+      "bytes": 2660
+    },
+    {
+      "path": "glyphs/KR/01xx.txt",
+      "sha256": "e94d5cb4a0ccc8bf164187d2175314bcb7736d44cb315cee18df4fc66f32d44f",
+      "bytes": 599
+    },
+    {
+      "path": "glyphs/KR/4Exx.txt",
+      "sha256": "4ece0564959d25215c854b822589dd840c205232f86364cbc1f5f38fe27fc4be",
+      "bytes": 3371
+    },
+    {
+      "path": "glyphs/KR/4Fxx.txt",
+      "sha256": "d8420cfcbb884fe39e2005bbd106cf34b2b530e7d425f0acb77ce6a5a6dcf06a",
+      "bytes": 2570
+    },
+    {
+      "path": "glyphs/KR/D2xx.txt",
+      "sha256": "008cb9af7b8659717bdd22176d78a41f8bea3a4fd1e0e1fa5b3c54385a5c5da7",
+      "bytes": 53423
+    },
+    {
+      "path": "glyphs/KR/64xx.txt",
+      "sha256": "ccc72cc34eb05f2ff83696f2f84dfa3626ac3e3327b2da48d83662e21a3b051f",
+      "bytes": 1805
+    },
+    {
+      "path": "glyphs/KR/ADxx.txt",
+      "sha256": "8a0e4bb965313c2fab06c0ba50cddbf4a8bc90b8ad51d89fc5564f15b1d91244",
+      "bytes": 53393
+    },
+    {
+      "path": "glyphs/KR/CExx.txt",
+      "sha256": "d7d80fd89c8ed0b2e17abcc4684217191c453b8761b3c23e42a7b7b6724c3fef",
+      "bytes": 53441
+    },
+    {
+      "path": "glyphs/KR/6Bxx.txt",
+      "sha256": "b628ab7496cd3d3a04432657f89e89759f2a344380145bba91bb3d469ee3026c",
+      "bytes": 3217
+    },
+    {
+      "path": "glyphs/KR/8Axx.txt",
+      "sha256": "6aebeeefae6fc7741e0ee6ca13329bdb04f68aac1e68378ce74b598d0e0a1f95",
+      "bytes": 6959
+    },
+    {
+      "path": "glyphs/KR/5Dxx.txt",
+      "sha256": "e9ee0b9ff84a9d31447299df28590c56a8d684a7efc3719e205d0a3cd2cc9cc3",
+      "bytes": 3178
+    },
+    {
+      "path": "glyphs/KR/68xx.txt",
+      "sha256": "ffd02ad77eda810f716af3d4a6c3e2ce760de53b584bb978870f47cddc62b1da",
+      "bytes": 1176
+    },
+    {
+      "path": "glyphs/KR/6Fxx.txt",
+      "sha256": "4c70c3ff9dfb601dfad680f245e91127bfdf6936eac873e46de26a2c8b58435e",
+      "bytes": 2344
+    },
+    {
+      "path": "glyphs/KR/84xx.txt",
+      "sha256": "f11492e814102e79902a84c8205fab6e0f76e052965a2d800c73139489820b01",
+      "bytes": 1125
+    },
+    {
+      "path": "glyphs/KR/25xx.txt",
+      "sha256": "8a2b9948cda5e4aef019668531f6287e1f910d07aed65f885268c791312cfc8a",
+      "bytes": 3846
+    },
+    {
+      "path": "glyphs/KR/71xx.txt",
+      "sha256": "534212d0460c928f03c3b3d182ea93e62bc7b7bd43c400ea6ee92dd0b4f56667",
+      "bytes": 914
+    },
+    {
+      "path": "glyphs/KR/B5xx.txt",
+      "sha256": "fa780a5fcebc9042c6496e6910e2939f360842835a6e3f58699c22aa0e4daa04",
+      "bytes": 53441
+    },
+    {
+      "path": "glyphs/KR/30xx.txt",
+      "sha256": "7c735e1a477c51f4779eb56a3f18f30cdcd910ab38ce147a5e5dcbfea29fea83",
+      "bytes": 4943
+    },
+    {
+      "path": "glyphs/KR/62xx.txt",
+      "sha256": "ed62b520d984b289509f87aed387c337749847ab033b2767ead6a80f32ea134e",
+      "bytes": 1480
+    },
+    {
+      "path": "glyphs/KR/B0xx.txt",
+      "sha256": "774aec824c8b0d60b9150d824614ef484183c85b881177f1e6a59154a50d8d55",
+      "bytes": 53393
+    },
+    {
+      "path": "glyphs/KR/BDxx.txt",
+      "sha256": "85d08fc5f2ea53f6826ac0ce710e0595a17cca509cb0d8726040cacad506ba6a",
+      "bytes": 53495
+    },
+    {
+      "path": "glyphs/KR/54xx.txt",
+      "sha256": "3ddfa1cdad56b911e6fb6fbbaa3e23c447d79d01a0797ff47a23a14711a83880",
+      "bytes": 1444
+    },
+    {
+      "path": "glyphs/KR/8Dxx.txt",
+      "sha256": "309de8c20a8944782a33bb672660f221f66adf559ca23fa7811b79b57d6f8546",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/KR/5Cxx.txt",
+      "sha256": "62a41b4d37880f67e6627a25c68eadb691bc12289c81b8e0b06ae9b620fdc083",
+      "bytes": 3082
+    },
+    {
+      "path": "glyphs/KR/60xx.txt",
+      "sha256": "98b7d9b46d5a5bf771aec850cb744490f2837290b6cbf0a9360d768c28c8a626",
+      "bytes": 4063
+    },
+    {
+      "path": "glyphs/KR/B1xx.txt",
+      "sha256": "8dae08c66ac6058688b8cdaa821543732bbabef68fa0abf93c1af1bae2a8d39d",
+      "bytes": 53381
+    },
+    {
+      "path": "glyphs/KR/C3xx.txt",
+      "sha256": "d882a747bfb3bb4e918787a2f9b6c1a386085048e857165b4487891e82d28b6f",
+      "bytes": 53519
+    },
+    {
+      "path": "glyphs/KR/C6xx.txt",
+      "sha256": "cb5e1d4d64180383ad96be1a72f874a11f417e27a580748178e959ab09ad0d6e",
+      "bytes": 53219
+    },
+    {
+      "path": "glyphs/KR/6Dxx.txt",
+      "sha256": "455b2555dc1bf149b1a72d06275a0832230fec8597568b469a2b1de29f7512c8",
+      "bytes": 1384
+    },
+    {
+      "path": "glyphs/KR/B4xx.txt",
+      "sha256": "198992e7b0a63df6f961d7eeb5c3f69568536e9262d937d376b54779fb29146a",
+      "bytes": 53495
+    },
+    {
+      "path": "glyphs/KR/C0xx.txt",
+      "sha256": "720246f552c4d413670764f7950b58b52b86c1b4c2d951c70827140a7cf35d48",
+      "bytes": 53483
+    },
+    {
+      "path": "glyphs/KR/BAxx.txt",
+      "sha256": "4e934e6926e66f33e10255f7899b4646fb81b6fb2fc2d3f138344f12a38ef4a3",
+      "bytes": 53465
+    },
+    {
+      "path": "glyphs/KR/51xx.txt",
+      "sha256": "a13cbc1a885b5fa3438dcf0dddf5bc735fadf8a2232d3b0e47118ba3f6926892",
+      "bytes": 5719
+    },
+    {
+      "path": "glyphs/KR/86xx.txt",
+      "sha256": "65b9a374e703b7a7eceeb25ce5ef78761a3918c46872597b9c5708d0b6fdd5b2",
+      "bytes": 2048
+    },
+    {
+      "path": "glyphs/KR/BCxx.txt",
+      "sha256": "4511adf872475d383ab3b269afe059b24e22bf64f0de1e583bec6fb88f65f60d",
+      "bytes": 53309
+    },
+    {
+      "path": "glyphs/KR/8Bxx.txt",
+      "sha256": "d88857c888737390aea73217fa587f7bb164f596ffe4b595f9cbb9595ce38b41",
+      "bytes": 1733
+    },
+    {
+      "path": "glyphs/KR/CDxx.txt",
+      "sha256": "a3d1aee4a814f0d899cf13ac0b728fb2a1a65cf4c66c5d3340e253fdb3692007",
+      "bytes": 53495
+    },
+    {
+      "path": "glyphs/KR/B2xx.txt",
+      "sha256": "ad63f678bb38f589e27f852ef5dd5e9a67ff0e7a0b3309ccf3eb70270ab909f9",
+      "bytes": 53357
+    },
+    {
+      "path": "glyphs/KR/77xx.txt",
+      "sha256": "833cf38511d70636ba4276b4ee92ab3c9c3e8792cd4081c9358fe1cb39dd052f",
+      "bytes": 2624
+    },
+    {
+      "path": "glyphs/KR/96xx.txt",
+      "sha256": "b3a6233646dba3005dcad1abbf9bbfb1e6c0045c956bde82e9e87ec0f840b8e6",
+      "bytes": 1444
+    },
+    {
+      "path": "glyphs/KR/89xx.txt",
+      "sha256": "25614296f29b362ef4183a5ff11d415831969cbfbdefb0c3751c828f0441a22f",
+      "bytes": 3491
+    },
+    {
+      "path": "glyphs/KR/23xx.txt",
+      "sha256": "6a2a6c84fcddc379cba928d3448d516240231c78f4e3e73790497f894f8c5b03",
+      "bytes": 23
+    },
+    {
+      "path": "glyphs/KR/03xx.txt",
+      "sha256": "c1276ef09c01b6464792e6023593d8ce9a7a747ce8fd0afa7e208e10f2b43ed4",
+      "bytes": 1103
+    },
+    {
+      "path": "glyphs/KR/BBxx.txt",
+      "sha256": "5620c944ffeeba49e8bd973ebce9f4131a6fb7ab5b98e8bd0830aa3f0615e4b6",
+      "bytes": 53471
+    },
+    {
+      "path": "glyphs/KR/C4xx.txt",
+      "sha256": "a9d34aa615b64ba2216e8183e68800e2c98973c740fc63ca520b7c7914befaa3",
+      "bytes": 53585
+    },
+    {
+      "path": "glyphs/KR/BExx.txt",
+      "sha256": "adc5a535f214f90c1168a496762c65808674bd1903cfa70c8308250f082019ba",
+      "bytes": 53435
+    },
+    {
+      "path": "glyphs/KR/CBxx.txt",
+      "sha256": "c9a596d4b46062cf2c41a321f455d0ec4c528753dc7d9ba2558d11e39ecf3134",
+      "bytes": 53609
+    },
+    {
+      "path": "glyphs/KR/67xx.txt",
+      "sha256": "14d6918f00990957ee4f4ddfcdd8788e7a0af3f65e5878d2bbd56af22dfc68b4",
+      "bytes": 2010
+    },
+    {
+      "path": "glyphs/KR/7Cxx.txt",
+      "sha256": "e897bbcb9ca12bc9cea01804c497818712c5ef7991342bec7db4d589c406b543",
+      "bytes": 4039
+    },
+    {
+      "path": "glyphs/KR/CAxx.txt",
+      "sha256": "34f8fed22cfff83c2204a51c45be238f567f986d1a8b837d2b1b7ee5118afabe",
+      "bytes": 53393
+    },
+    {
+      "path": "glyphs/KR/D6xx.txt",
+      "sha256": "fc42b94f1103a6bbcff60df12ff87984ff8f485d9d0d04cd96ba74545ba4fdb6",
+      "bytes": 53387
+    },
+    {
+      "path": "glyphs/KR/AExx.txt",
+      "sha256": "39d51e71c7b62cc70161adde4e32e7c346d6abaa49fcad671d09be5bb66b3930",
+      "bytes": 53381
+    },
+    {
+      "path": "glyphs/KR/99xx.txt",
+      "sha256": "a3e039a0e848675f09e30fda4cf18a2cb340cac4669f3ad2c0e81057ad15d65d",
+      "bytes": 2016
+    },
+    {
+      "path": "glyphs/KR/6Cxx.txt",
+      "sha256": "fd922b389c00417d0f4f6b097e8088f5e3a8a88156941a6ccd88047d324226a4",
+      "bytes": 577
+    },
+    {
+      "path": "glyphs/KR/6Axx.txt",
+      "sha256": "98f57a619514651bdb9f5a7cc352586b81ab8c005c35b1361e21472fa5010fde",
+      "bytes": 2672
+    },
+    {
+      "path": "glyphs/KR/57xx.txt",
+      "sha256": "cbfeda038e18c9ee18607abb807c07681bc39cd852d1d0bbfd95a8f19caab080",
+      "bytes": 2070
+    },
+    {
+      "path": "glyphs/KR/95xx.txt",
+      "sha256": "44b77f8b6cf1e9a614a381e802560e0ae649e2403304db4e20b176845719b146",
+      "bytes": 1155
+    },
+    {
+      "path": "glyphs/KR/7Bxx.txt",
+      "sha256": "723a1b0fa67dedbe4a93c8c0a7880d6ec5973c96a947a7353ad803e57015772c",
+      "bytes": 2010
+    },
+    {
+      "path": "glyphs/KR/9Dxx.txt",
+      "sha256": "caf5b310a5535d35fe1cf3e965e14a19474312bd5ed830a06acffc57ae3c2a66",
+      "bytes": 2859
+    },
+    {
+      "path": "glyphs/KR/B8xx.txt",
+      "sha256": "5949f204355da5c07386f1e3ac563eabe1d1bf5e9f1af39d2a5e685676533bd0",
+      "bytes": 53393
+    },
+    {
+      "path": "glyphs/KR/C9xx.txt",
+      "sha256": "1263ccdec1bed51fd710e5eaa6391d9c6d83f26beb4db349108eb5d49576769d",
+      "bytes": 53411
+    },
+    {
+      "path": "glyphs/KR/ACxx.txt",
+      "sha256": "3b61e3972139bee45ff0c5a292ecf9eff29b46c14d8e1a0458cf51146565fd40",
+      "bytes": 53213
+    },
+    {
+      "path": "glyphs/KR/8Exx.txt",
+      "sha256": "e8c673a374c0e01e79eb0f8a8e3eec6410246b75c16787dfea2369f9eabdfeed",
+      "bytes": 4334
+    },
+    {
+      "path": "glyphs/KR/FExx.txt",
+      "sha256": "9e6289f7b0b76b78e61c9558ee784d6a461ec9b5349aac4c63df853c5ee1cba4",
+      "bytes": 359
+    },
+    {
+      "path": "glyphs/KR/C1xx.txt",
+      "sha256": "fa5d3578c5821a0104a94f7c33a4ed475fdda6b7beb047cfc9fd718343862d6d",
+      "bytes": 53321
+    },
+    {
+      "path": "glyphs/KR/88xx.txt",
+      "sha256": "9bf68e6ce298f8eeee51b5b61e132a8971c235b4dd08dc0e9524236d96e940c8",
+      "bytes": 2046
+    },
+    {
+      "path": "glyphs/KR/9Exx.txt",
+      "sha256": "c7196706475f5a4c594e90519e3fbe247ea86f271a31c9433e0a73c27cb38981",
+      "bytes": 2889
+    },
+    {
+      "path": "glyphs/KR/6Exx.txt",
+      "sha256": "f753aa63989e957b8773bd4734b4373f231a00df6599343368d427c6327031c3",
+      "bytes": 1742
+    },
+    {
+      "path": "glyphs/KR/9Fxx.txt",
+      "sha256": "e579652a51c409b8e216da72cb6bb15c3bb644064083e11d8db4f9e01e350324",
+      "bytes": 5171
+    },
+    {
+      "path": "glyphs/KR/D3xx.txt",
+      "sha256": "589dc62a1651c25de81e04dddf8699ddca6a956d2a74e0ef37d024350ce3196a",
+      "bytes": 53381
+    },
+    {
+      "path": "glyphs/KR/98xx.txt",
+      "sha256": "f35bb73f460ee2decccdc7ab75fdbd975c4ee6e8294d318b2321a3e8cc3b551d",
+      "bytes": 2215
+    },
+    {
+      "path": "glyphs/KR/53xx.txt",
+      "sha256": "4437b51ea87d65ff8670858e238b7c4b26aac43780d63091d82225753d4cb46f",
+      "bytes": 6345
+    },
+    {
+      "path": "glyphs/KR/63xx.txt",
+      "sha256": "25a07f2e206898427df83b5cc5f2b240af578312e85f896601d3c3eb9e9d63b3",
+      "bytes": 2645
+    },
+    {
+      "path": "glyphs/KR/82xx.txt",
+      "sha256": "bf3fc707c368de63627e9d9ffde853feac3440215ddf0897d2f18d581c32bab8",
+      "bytes": 1781
+    },
+    {
+      "path": "glyphs/KR/BFxx.txt",
+      "sha256": "c50e0ae3d1b081ad07dd617bcab7e84e695b84dbf2ac1169d743c1bf5a4c004d",
+      "bytes": 53585
+    },
+    {
+      "path": "glyphs/KR/F9xx.txt",
+      "sha256": "f1f436b5fe3b6f068b14f3803d1cba256151572962afc7acf5373b04b585e6a1",
+      "bytes": 6143
+    },
+    {
+      "path": "glyphs/KR/8Cxx.txt",
+      "sha256": "da2af2f1c636e4cd0a368d4fb722ff76ff128b94bdb63e77cd4df5022eaa9fbf",
+      "bytes": 4045
+    },
+    {
+      "path": "glyphs/KR/11xx.txt",
+      "sha256": "0c16796eda05e29123e52c1d76fe2dca18c1f1ec2ebc49a3c8cf9aa881d95947",
+      "bytes": 67486
+    },
+    {
+      "path": "glyphs/KR/73xx.txt",
+      "sha256": "1908c3e27def67eeeb0ffc4412b5d432f7c85fc23333b0abcb9f1b5d87978040",
+      "bytes": 1781
+    },
+    {
+      "path": "glyphs/KR/87xx.txt",
+      "sha256": "ca6595a8e9c7808ea310be7ed5529faf87328039b999a38f4aac8bb57929277e",
+      "bytes": 2311
+    },
+    {
+      "path": "glyphs/KR/02xx.txt",
+      "sha256": "8f8ed2396ed3ace10f3ebff2e872cdf556c5415c7287c63dff3fb22f9000edfd",
+      "bytes": 45
+    },
+    {
+      "path": "glyphs/KR/85xx.txt",
+      "sha256": "63145e8ef23d37a7e5bb3a7433ea29747ffeae03b03874e231a6406f12a5d00f",
+      "bytes": 2046
+    },
+    {
+      "path": "glyphs/KR/93xx.txt",
+      "sha256": "b1ec465bf081b133f432c150fd81b57058d7ca7c6c853968e8f5f08ae9b57a1f",
+      "bytes": 3563
+    },
+    {
+      "path": "glyphs/KR/C8xx.txt",
+      "sha256": "e6064be8987e0a361218b3268721ab556de75c7c7dbcca4dc3900538ec594cab",
+      "bytes": 53387
+    },
+    {
+      "path": "glyphs/KR/97xx.txt",
+      "sha256": "a6e06af405453dd23c2cb9c11fb53fe3d095567b373e76c9713371dee56d6be2",
+      "bytes": 3491
+    },
+    {
+      "path": "glyphs/KR/59xx.txt",
+      "sha256": "32dcc910df9c7235595ca1a447a9ef030fcbf722d07e11c9d955c9975cb542e0",
+      "bytes": 5219
+    },
+    {
+      "path": "glyphs/KR/78xx.txt",
+      "sha256": "886720cc8fb7a85bf006b881082d7fc51fc87f72e0f2a99a6b768d24c6d88175",
+      "bytes": 2540
+    },
+    {
+      "path": "glyphs/KR/56xx.txt",
+      "sha256": "f863eb98a1c5a3a0fd7eafc8e3e1e494262050140f91768794eb06d831958cdd",
+      "bytes": 2022
+    },
+    {
+      "path": "glyphs/KR/C7xx.txt",
+      "sha256": "b2ec7e8139cd94e88789267063d6841370e484f6f8ef99e5829c41b9051c7963",
+      "bytes": 53237
+    },
+    {
+      "path": "glyphs/KR/92xx.txt",
+      "sha256": "2bd4c3a859ff97308b63621942b549e272befbdf7aee97e19c198738b1c7af6e",
+      "bytes": 5514
+    },
+    {
+      "path": "glyphs/KR/76xx.txt",
+      "sha256": "ca50f53ffe282cf562e378f61a81cd46136d3169551fbde0673ed4cf5f0bc228",
+      "bytes": 4328
+    },
+    {
+      "path": "glyphs/KR/94xx.txt",
+      "sha256": "a37b24d104c5df1bf4d4fbe047dd406378cf4e439c80c014ba502330771c1fbe",
+      "bytes": 1805
+    },
+    {
+      "path": "glyphs/KR/D4xx.txt",
+      "sha256": "716b20b913b9596ea59c5be445d86c323d5cb4f7ce3d7397ffe2f76987fb73a3",
+      "bytes": 53555
+    },
+    {
+      "path": "glyphs/KR/AFxx.txt",
+      "sha256": "fef8e1dbd636b44bc361b4ab81fd3220683cbd9f40d8548212e81328e8c5a9c7",
+      "bytes": 53459
+    },
+    {
+      "path": "glyphs/KR/69xx.txt",
+      "sha256": "e1f6b8d48c7af8b4725a12e0bdf268ba058eb5a7f1e98536ecee35a3828a9ddc",
+      "bytes": 1751
+    },
+    {
+      "path": "OFL.txt",
+      "sha256": "dc9f9ded816ae1a5accf456ab02a89eb2877e49274c6dc340570dc5872d7f718",
+      "bytes": 4559
+    }
+  ],
+  "builder_identical_to_task_reference": true,
+  "bdf_files": [
+    {
+      "name": "TongPixelSans14Large-JP.bdf",
+      "bytes": 5741022,
+      "sha256": "db17ef057fced011642085aaedd2c84802decae00d840524beb64d812a86660a"
+    },
+    {
+      "name": "TongPixelSans14Large-KR.bdf",
+      "bytes": 5741045,
+      "sha256": "e3379667d13e2ae73b8f8a181a21c9ece1a755343be6d943dbd0e9e9823f51b2"
+    },
+    {
+      "name": "TongPixelSans14Large-Latin.bdf",
+      "bytes": 418907,
+      "sha256": "c9f922c5389e26c7ca7a5534833dfbe2ec68a1d02d74895079e0b947a6631e46"
+    },
+    {
+      "name": "TongPixelSans14Large-SC.bdf",
+      "bytes": 5741837,
+      "sha256": "7ce3c267499e14307f44276b8b2eabb507702bf4e0677773c1b3d7c05c029a42"
+    },
+    {
+      "name": "TongPixelSans14Large-TC.bdf",
+      "bytes": 5741089,
+      "sha256": "2ca133d1e87d8edcf6f2dfb4a08b6a6083cbb01dd917f036d5427a2d47762f17"
+    },
+    {
+      "name": "TongPixelSans14Small-JP.bdf",
+      "bytes": 5728038,
+      "sha256": "d8df4eba5f9d6163f2aae292d884af76c2d5961ff224ff962c598a17e28fa333"
+    },
+    {
+      "name": "TongPixelSans14Small-KR.bdf",
+      "bytes": 5728060,
+      "sha256": "b32af10481b3f0fab4c57c95817bfa8a6aecb725edcd649826a2bd94af981bae"
+    },
+    {
+      "name": "TongPixelSans14Small-Latin.bdf",
+      "bytes": 405402,
+      "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f"
+    },
+    {
+      "name": "TongPixelSans14Small-SC.bdf",
+      "bytes": 5728851,
+      "sha256": "4e49833d5406569f02aa3a4dbd816a018fed951deda28138bf29267936dc21ee"
+    },
+    {
+      "name": "TongPixelSans14Small-TC.bdf",
+      "bytes": 5728104,
+      "sha256": "1344279d506f48f93c5625068db229d879a6becffe5c2abd95f933bb01a6cf21"
+    },
+    {
+      "name": "TongPixelSansMono14Large-JP.bdf",
+      "bytes": 5728925,
+      "sha256": "ead89d3c4469436b1fe398e4bc93554e2f747d63ef220767f86164135017f654"
+    },
+    {
+      "name": "TongPixelSansMono14Large-KR.bdf",
+      "bytes": 5728958,
+      "sha256": "a58839417cafcad3e9c471332fec040c57ed45a8787f45fb3409db18e60a6649"
+    },
+    {
+      "name": "TongPixelSansMono14Large-Latin.bdf",
+      "bytes": 410661,
+      "sha256": "3c69438f589a76fb3239959d5e74af14a20b2f026ff15cbca04888aa830a8650"
+    },
+    {
+      "name": "TongPixelSansMono14Large-SC.bdf",
+      "bytes": 5729709,
+      "sha256": "e82d7573f08504171c37758179f11e9f72f68fbfc268173dfbb5d517ad84192c"
+    },
+    {
+      "name": "TongPixelSansMono14Large-TC.bdf",
+      "bytes": 5728961,
+      "sha256": "eba3f1958e25d43e5cfdf38ed83057b04e2f496ce332870d03a309b3151fd6d7"
+    },
+    {
+      "name": "TongPixelSansMono14Small-JP.bdf",
+      "bytes": 5718702,
+      "sha256": "3cae322449c66f8e1d02e64aa1e2b40e542d35658251487067b57a23ffd2bf22"
+    },
+    {
+      "name": "TongPixelSansMono14Small-KR.bdf",
+      "bytes": 5718736,
+      "sha256": "c9f2578806b39648bef944895ea8eb04c935095ece355a455007612fac82205c"
+    },
+    {
+      "name": "TongPixelSansMono14Small-Latin.bdf",
+      "bytes": 399689,
+      "sha256": "0c7e86e6b8de8b3a88ba5772c607574e2e230e56e3d77d45ffa7a8ed1601c0e1"
+    },
+    {
+      "name": "TongPixelSansMono14Small-SC.bdf",
+      "bytes": 5719484,
+      "sha256": "114189fc9d1662e968abb718756324fe98325525618ef90e82c196e3158c6972"
+    },
+    {
+      "name": "TongPixelSansMono14Small-TC.bdf",
+      "bytes": 5718737,
+      "sha256": "e0ae6a2212055ff2669230f2c68ceff825fec21586ba4d3046e7c08eba5732fb"
+    }
+  ]
+}

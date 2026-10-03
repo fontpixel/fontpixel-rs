@@ -166,6 +166,9 @@ struct PathWriter<'a> {
     bounds: &'a mut Bounds,
     commands: usize,
     limits: &'a Limits,
+    // First axis operator and operand count in the current alternating run.
+    // Type 2 permits up to 48 stack entries; cap at 40 after width consumption.
+    line_run: Option<(u8, usize)>,
 }
 impl PathWriter<'_> {
     fn delta(&mut self, target: Point) -> Result<Point> {
@@ -185,6 +188,7 @@ impl PathWriter<'_> {
         )?;
         match c {
             Command::MoveTo(p) => {
+                self.line_run = None;
                 if self.open {
                     return Err(invalid("CFF path requires explicit Close before MoveTo"));
                 }
@@ -215,13 +219,23 @@ impl PathWriter<'_> {
                 coordinate(p.1)?;
                 let dx = fixed(p.0 - self.current.0)?;
                 let dy = fixed(p.1 - self.current.1)?;
-                if dx == 0. {
-                    number(&mut self.out, dy)?;
-                    self.out.push(7);
-                } else if dy == 0. {
-                    number(&mut self.out, dx)?;
-                    self.out.push(6);
+                if dx == 0. || dy == 0. {
+                    let (operator, value) = if dx == 0. { (7, dy) } else { (6, dx) };
+                    let run = self.line_run.filter(|&(first, count)| {
+                        count < 40 && operator == if count % 2 == 0 { first } else { 13 - first }
+                    });
+                    if let Some((first, count)) = run {
+                        self.out.pop(); // Replace the previous run terminator.
+                        number(&mut self.out, value)?;
+                        self.out.push(first);
+                        self.line_run = Some((first, count + 1));
+                    } else {
+                        number(&mut self.out, value)?;
+                        self.out.push(operator);
+                        self.line_run = Some((operator, 1));
+                    }
                 } else {
+                    self.line_run = None;
                     number(&mut self.out, dx)?;
                     number(&mut self.out, dy)?;
                     self.out.push(5);
@@ -230,6 +244,7 @@ impl PathWriter<'_> {
                 self.bounds.point(self.current);
             }
             Command::CurveTo(c, d, p) => {
+                self.line_run = None;
                 if !self.open {
                     return Err(invalid("CFF curve outside path"));
                 }
@@ -241,6 +256,7 @@ impl PathWriter<'_> {
                 curve_bounds(self.bounds, start, c, d, p);
             }
             Command::Close => {
+                self.line_run = None;
                 if !self.open {
                     return Err(invalid("CFF Close outside path"));
                 }
@@ -343,6 +359,7 @@ pub(super) fn encode(font: &Font, l: &Limits) -> Result<Encoded> {
             bounds: &mut bounds,
             commands: 0,
             limits: l,
+            line_run: None,
         };
         number(&mut w.out, g.advance)?;
         match &g.outline {

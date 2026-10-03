@@ -33,6 +33,95 @@ fn sample() -> Variants {
     v
 }
 #[test]
+fn dot_reuse_policies_preserve_geometry_and_metadata() {
+    use fontpixel::{outline::Shape, sfnt::glyf, variants::DotReuse};
+    let mut font = face("#\n#", 3);
+    for (cp, pattern) in [
+        (66, "##"),
+        (67, ".#\n##"),
+        (68, "#####...\n###..#..\n.#..#...\n..####..\n###...##"),
+    ] {
+        let mut glyph = Glyph::new(pattern.parse::<Bitmap>().unwrap());
+        glyph.codepoints = vec![Codepoint::Unicode(cp)];
+        glyph.metrics.advance = Some(Vector::new(10, 0));
+        font.add_glyph(glyph).unwrap();
+    }
+    let variants = Variants::new(font);
+    let mut baseline = None;
+    let mut outputs = Vec::new();
+    for policy in [DotReuse::Literal, DotReuse::Rows, DotReuse::Patterns] {
+        let encoded = variants::encode(
+            &variants,
+            &Options {
+                shape: Shape::Dot,
+                dot_size: 0.9,
+                dot_reuse: policy,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let sfnt = sfnt::Sfnt::parse(&encoded.bytes, &Default::default()).unwrap();
+        sfnt.validate_checksums().unwrap();
+        let table = glyf::GlyfTable::from_sfnt(&sfnt, &Default::default()).unwrap();
+        let mut contours = Vec::new();
+        for id in 0..table.glyphs.len() {
+            let mut glyph = table
+                .contours(id as u16, &Default::default())
+                .unwrap()
+                .into_iter()
+                .map(|c| format!("{c:?}"))
+                .collect::<Vec<_>>();
+            glyph.sort();
+            contours.push(glyph);
+        }
+        let metadata = [*b"cmap", *b"hmtx", *b"hhea", *b"OS/2", *b"name", *b"GSUB"]
+            .map(|tag| sfnt.table(tag).map(<[u8]>::to_vec));
+        let subset =
+            sfnt::subset::subset(&encoded.bytes, &sfnt::subset::Options::text("D")).unwrap();
+        let subfont = sfnt::Sfnt::parse(&subset.bytes, &Default::default()).unwrap();
+        let subglyphs = glyf::GlyfTable::from_sfnt(&subfont, &Default::default()).unwrap();
+        let mut retained = subglyphs
+            .contours(subset.glyph_mapping[&4], &Default::default())
+            .unwrap()
+            .into_iter()
+            .map(|c| format!("{c:?}"))
+            .collect::<Vec<_>>();
+        retained.sort();
+        assert_eq!(retained, contours[4]);
+        if let Some(expected) = &baseline {
+            assert_eq!(expected, &(contours, metadata));
+        } else {
+            baseline = Some((contours, metadata));
+        }
+        outputs.push(encoded.bytes);
+    }
+    assert_ne!(outputs[0], outputs[1]);
+    assert_ne!(outputs[1], outputs[2]);
+}
+#[test]
+fn prepared_variants_match_direct_encoding_and_preserve_budgets() {
+    let v = sample();
+    let options = Options::default();
+    let prepared = v.prepare(&options.limits).unwrap();
+    assert_eq!(
+        prepared.plan().glyphs.len(),
+        v.plan(&options.limits).unwrap().glyphs.len()
+    );
+    assert_eq!(
+        prepared.encode(&options).unwrap().bytes,
+        variants::encode(&v, &options).unwrap().bytes
+    );
+    let mut stricter = options.clone();
+    stricter.limits.max_records = 1;
+    assert!(prepared.encode(&stricter).is_err());
+    assert!(v.prepare(&stricter.limits).is_err());
+    std::thread::scope(|scope| {
+        let a = scope.spawn(|| prepared.encode(&options).unwrap().bytes);
+        let b = scope.spawn(|| prepared.encode(&options).unwrap().bytes);
+        assert_eq!(a.join().unwrap(), b.join().unwrap());
+    });
+}
+#[test]
 fn language_registry_and_regional_tags() {
     for (s, t) in [
         ("zh-Hant", *b"ZHT "),

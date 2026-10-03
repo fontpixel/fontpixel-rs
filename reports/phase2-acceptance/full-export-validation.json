@@ -1,0 +1,787 @@
+{
+  "partial": false,
+  "results": [
+    {
+      "case": "TongPixelSans14Large-square-ttf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 9061276,
+      "sha256": "00323c814f05baff08b25d4ee1be756dd84d8afe440c33dc324b6c88084a9941",
+      "reference_sha256": "41f100cba6fed1406bd52645073e8dad5a0ef57377fc79c5651e583ce82b454c",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-square-otf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 8845524,
+      "sha256": "64df0f18a84a84b0f4e0c08ef42701246e05118c3e211c9a7d6d3c7f2e1c6a2f",
+      "reference_sha256": "cb946f04768d2121f02123bb4e8d4cfe7f79ba524dd05a7ac8333c65bfae9813",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-square-native-woff2",
+      "glyphs": 44833,
+      "bytes": 1605016,
+      "sha256": "4bc34ec58fdecdce1b82d4f449ee3054d729d9c5d72d95489b682e7813b2be82",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Large-Square-reference-woff2",
+      "glyphs": 44833,
+      "bytes": 1067944,
+      "sha256": "5bb5da00be36edef80567e5f44e3a1c3674b2c902019bfff19cf00da00432459",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Large-dot-ttf",
+      "glyphs": 44834,
+      "shaping_batches": 912,
+      "bytes": 22035120,
+      "sha256": "46fe2f723b94c6995a42487f06b7d032e24d412facf6091cb29e4894320cf0fc",
+      "reference_sha256": "ebacc52d95444d82be7ebe3dd88f697734d42acd719ef8c4c94dbc2dd61a67fd",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-dot-otf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 13789336,
+      "sha256": "8ca99e31f198e5db3c4ed68349de88af387d1380f02e4cf0a4c8453c931cf26b",
+      "reference_sha256": "472a1e11395dade8975387a3ae7f9aec1277013c8feebf01da12d44918033a7b",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Large-dot-native-woff2",
+      "glyphs": 44834,
+      "bytes": 1255420,
+      "sha256": "b287631fe302a3d47389e41da6da5269e71f2776bb88c56bb79c52236f8c8a77",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Large-Dot-reference-woff2",
+      "glyphs": 44834,
+      "bytes": 805768,
+      "sha256": "d67c9f8c6af75457c5416c454bf7eaf2dceb1e57c85f0907d15040b9a8721dd4",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-square-ttf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 9022808,
+      "sha256": "8da885fd3d993d1e6b3aa28f3934713de05ad698c9df073be5c36a9cdb2ca4fb",
+      "reference_sha256": "54d67626291a8716e4a986d8b06323dff1a434366161db8939b6db23cc4bc677",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Large-square-otf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 8808780,
+      "sha256": "530aa87c5134b5df34e452d40ea7dc79087a7cb44f16c9c13d033077a8cdf6ba",
+      "reference_sha256": "ca855a4ea900fd3f89fae9373c51c5d5b7fef68c0475095e88e7679575518a0f",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Large-square-native-woff2",
+      "glyphs": 44642,
+      "bytes": 1604984,
+      "sha256": "c4c338a8a0f31fa77e0f44916cdd1124de65384ff5a4aa82324c9510daaa1214",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Square-reference-woff2",
+      "glyphs": 44642,
+      "bytes": 1060676,
+      "sha256": "0790537d97da1e32911545c9f8e5f9fc31fa9a76f9516d9dd1d9621c26ee123e",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-dot-ttf",
+      "glyphs": 44643,
+      "shaping_batches": 912,
+      "bytes": 21921128,
+      "sha256": "6bffc1d14227fcb78b93f63302b170097e51979cd035ddb48ea68fed56714176",
+      "reference_sha256": "4f456067bfc863e4f09e27756a4b2dcc22ab67c9073ac4f2186fa3612bab396e",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Large-dot-otf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 13719220,
+      "sha256": "f5801bf94c1c7bf62c16c4b9bc65c9f02add85eaf6102c8c8dc16fad90f1a731",
+      "reference_sha256": "67b143b31fae39cdb2cfaf6057b3cb7a35f3f14b2e0d7d89fe627d3e3bbd05ad",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Large-dot-native-woff2",
+      "glyphs": 44643,
+      "bytes": 1239216,
+      "sha256": "7f716fe118a281728814167baef0866a1b8c5e0d21e9a682d0660be5b165849d",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Large-Dot-reference-woff2",
+      "glyphs": 44643,
+      "bytes": 797264,
+      "sha256": "081616223f1d984d5378596d43e25f2daa162f014cb05628bcdadddcbd652dd6",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Small-square-ttf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 9048024,
+      "sha256": "51940cc1c71bcb1640e7d312eef330e525ddd2568fa0881a387e76d55277fd2e",
+      "reference_sha256": "43ff439af391bf00a5ec6113fd5dd2d4643457779a94e10a33e33bdf6dfa0240",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Small-square-otf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 8874388,
+      "sha256": "07932c00d71fa1e14dab8f8a6ea96578f09d81b0c146195a26255a8e929936a3",
+      "reference_sha256": "9751f8c49bb12d7628c4581447b38ede184335aa1e373f4071431e3de4732d51",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Small-square-native-woff2",
+      "glyphs": 44833,
+      "bytes": 1606168,
+      "sha256": "e98c0974a2962b232790bc95cd764ecdbd86171216a3ab26f55644c2fa9c5911",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Small-Square-reference-woff2",
+      "glyphs": 44833,
+      "bytes": 1067052,
+      "sha256": "a74ca5ceb413205994106afe66d764a474eba10646ab69ecc02d713b6744ee3e",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Small-dot-ttf",
+      "glyphs": 44834,
+      "shaping_batches": 912,
+      "bytes": 21980028,
+      "sha256": "49b6ed3c9eda1b7a7a003268cee004fed0d511b7126caf3b998e32e10589b953",
+      "reference_sha256": "969ae54dfdd347b81b8f3225243accdbd7c448ce31109594972c74396a957ab8",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Small-dot-otf",
+      "glyphs": 44833,
+      "shaping_batches": 912,
+      "bytes": 13713412,
+      "sha256": "98393d99e71724b00c5cb5dc82c450a44e91be8f5bc41b3d4f6a9cd874509b41",
+      "reference_sha256": "1f1f3274ddca02e531e00466cf8500c1619e40f93ddbecb3054d34aed2c18b0f",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSans14Small-dot-native-woff2",
+      "glyphs": 44834,
+      "bytes": 1249716,
+      "sha256": "791aa29498082522308d9012784db96b9e1fefa63870ac3aef1a47394fd22980",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSans14Small-Dot-reference-woff2",
+      "glyphs": 44834,
+      "bytes": 803340,
+      "sha256": "4ef08f68152bce5de6a246b140d41d9201417ef2c3bf2da7094f49a4a31c461a",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Small-square-ttf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 9015916,
+      "sha256": "ba9469005481ab05f72deb8c9b099c204128587592ad3f917edec66c484e7a39",
+      "reference_sha256": "dc46c253816e6844b2ce03b188ed38aa37e36b4104ab1f9f1ee6e22a9113d486",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Small-square-otf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 8843036,
+      "sha256": "46689f71a545d3c31e571bd43bf9b60d5863a95d1a0d6bcc67fd46b13f4273cb",
+      "reference_sha256": "fea1e5da5c858681fb5103164c268cc105d33b62adb8c917599149ab91aaf839",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Small-square-native-woff2",
+      "glyphs": 44642,
+      "bytes": 1605712,
+      "sha256": "bfb0396371accddc019a3a3e75ae977e531c2657243130dfb95176c83fda9060",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Small-Square-reference-woff2",
+      "glyphs": 44642,
+      "bytes": 1057260,
+      "sha256": "ceebd0e2abdc23f03fd8666776a5824245ccbe1f565ce2824ea8de3db7c2cc33",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Small-dot-ttf",
+      "glyphs": 44643,
+      "shaping_batches": 912,
+      "bytes": 21887024,
+      "sha256": "14c6666da73cfcb7cfc37a1496f57029b62cdd2109607ca316c6e390a0b4c96b",
+      "reference_sha256": "a4efd0da5c487d24809636bfa7b005acd4fb8058b741bec892cbe2d3c7c23a3a",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Small-dot-otf",
+      "glyphs": 44642,
+      "shaping_batches": 912,
+      "bytes": 13654788,
+      "sha256": "54ff775eaebc9e5c8a9a95008ecd3483ab8ed15f3d652a3ab323fc915f1935c7",
+      "reference_sha256": "acfe68910921235d185b55ff111bd0afaae68d29931d10b37cdcff5bc8d5d1c0",
+      "reference_engine": "original Tong Rust exporter"
+    },
+    {
+      "case": "TongPixelSansMono14Small-dot-native-woff2",
+      "glyphs": 44643,
+      "bytes": 1236956,
+      "sha256": "b025beb0d23d58c46046ab9fbbd50164a8237e19614875a806dc525d4bab3d4c",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": true,
+      "original_reference_ots_rejection": null,
+      "native_reader_full_tables": true
+    },
+    {
+      "case": "TongPixelSansMono14Small-Dot-reference-woff2",
+      "glyphs": 44643,
+      "bytes": 795776,
+      "sha256": "0b55e703e86f10a4ccd0757bae4bee699f35fe62ea0cc9ae0becb40674ece6e5",
+      "independent_full_glyphs": true,
+      "ots_full_pixels": false,
+      "original_reference_ots_rejection": "ERROR: Layout: DFLT script doesn't satisfy the spec. DefaultLangSys is NULL\nERROR: GSUB: Failed to parse script table 0\nERROR: GSUB: Failed to parse script list table\nERROR: GSUB: Failed to parse table",
+      "native_reader_full_tables": true
+    }
+  ],
+  "native_woff2_streams": {
+    "TongPixelSans14Large-square.woff2": {
+      "CFF ": {
+        "length": 8464846,
+        "transform": 0,
+        "sha256": "a4d08df3a4902bf60eeb7c991238449a46cebd141c7282510529687c5ed0e05b"
+      },
+      "GSUB": {
+        "length": 69370,
+        "transform": 0,
+        "sha256": "2283763fbad0e0bf0522e659252cbbb40801d71986e93ddb65bd0560b2af16ac"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "286ed858e8a20fbf74b732ce1abc3724d3f29cc28845f75e3188c9208df0935b"
+      },
+      "cmap": {
+        "length": 130010,
+        "transform": 0,
+        "sha256": "c94ba1eff1e412882e4747ef93c74430ed67bdd7e7524c276b80b403fe30e1f3"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "dc4cbabce3362beffe7efc1823242eed50de6522a3ce36f3b1021d64a5d7e730"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "f93214b1576d34fede68349ff106dbc10731cadee91af2415cb21341a426f703"
+      },
+      "hmtx": {
+        "length": 179332,
+        "transform": 0,
+        "sha256": "cae451c2e1d0b55e24c0d3b1020d08f9b42cef21e0903b23489f3dbc38ac0de9"
+      },
+      "maxp": {
+        "length": 6,
+        "transform": 0,
+        "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8"
+      },
+      "name": {
+        "length": 1536,
+        "transform": 0,
+        "sha256": "27e448fc3d7833d2bc97702f0d7d9137fce50508bc73985f6a85ba0d5e62f754"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSans14Large-dot.woff2": {
+      "GSUB": {
+        "length": 69370,
+        "transform": 0,
+        "sha256": "2283763fbad0e0bf0522e659252cbbb40801d71986e93ddb65bd0560b2af16ac"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "286ed858e8a20fbf74b732ce1abc3724d3f29cc28845f75e3188c9208df0935b"
+      },
+      "cmap": {
+        "length": 130010,
+        "transform": 0,
+        "sha256": "c94ba1eff1e412882e4747ef93c74430ed67bdd7e7524c276b80b403fe30e1f3"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "glyf": {
+        "length": 21529640,
+        "transform": 0,
+        "sha256": "efd7fa94d0f14264fc238774b22791d832aec4eb132db067a2ba8351898ea901"
+      },
+      "loca": {
+        "length": 179340,
+        "transform": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "1acbbc4492503f6a5153e5b97f63d846286c8bf1271e1ad2f95706f78ec4df54"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "ae2ec07c8aeda5632494514b804b94e966023d0b75906dd9d1761d7140b4c725"
+      },
+      "hmtx": {
+        "length": 179336,
+        "transform": 1,
+        "sha256": "e5c4e9ddb5b173c16fc01fe28e96e28e253e60d5c1c3a56eebf0697b768a0ba9"
+      },
+      "maxp": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "f97294c5edeeb7d8cad560d27a4c57206a2d3da32edc4e225c6b173d525781e6"
+      },
+      "name": {
+        "length": 1500,
+        "transform": 0,
+        "sha256": "f7f21b92e3c518b15fde46e72acaa6c87eddb1ea083eea9c76890ec93bab3a27"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSansMono14Large-square.woff2": {
+      "CFF ": {
+        "length": 8433366,
+        "transform": 0,
+        "sha256": "59e9af596860009f54bd9030d50adac80c4ab26cff60129f6d19375b1214ef21"
+      },
+      "GSUB": {
+        "length": 68418,
+        "transform": 0,
+        "sha256": "b4f25fb7b0c73f2003c3c31f2cdcb6b1aab898b2f0a3a2f41d2f928d922cf7ab"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "d739078731b88923c430277b6e568432c34b7da2aed1a66a1c75b9f1b2d10b93"
+      },
+      "cmap": {
+        "length": 126420,
+        "transform": 0,
+        "sha256": "8a84a30d016c8f512314a8eb21609de745db212b8e38b75a5e47b8c8d204b8c7"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "3e7ffdcd6b418933cfbdd7a3c8ed16aac3d2087480ef8fef9daebf2b1fc7f6e7"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "56a8b79cff1899f83e6383f419b90937f24a63cea0d4fbe11bad7d43a89cde3c"
+      },
+      "hmtx": {
+        "length": 178552,
+        "transform": 0,
+        "sha256": "fe74ded57b25df045bba836fc2b50a6c31c16a8876beaca82fe89f30518a91a7"
+      },
+      "maxp": {
+        "length": 6,
+        "transform": 0,
+        "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c"
+      },
+      "name": {
+        "length": 1593,
+        "transform": 0,
+        "sha256": "4f05920b4826189d253144cad4701ddca9808259101a7314760d053cf7eabc77"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSansMono14Large-dot.woff2": {
+      "GSUB": {
+        "length": 68418,
+        "transform": 0,
+        "sha256": "b4f25fb7b0c73f2003c3c31f2cdcb6b1aab898b2f0a3a2f41d2f928d922cf7ab"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "d739078731b88923c430277b6e568432c34b7da2aed1a66a1c75b9f1b2d10b93"
+      },
+      "cmap": {
+        "length": 126420,
+        "transform": 0,
+        "sha256": "8a84a30d016c8f512314a8eb21609de745db212b8e38b75a5e47b8c8d204b8c7"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "glyf": {
+        "length": 21421412,
+        "transform": 0,
+        "sha256": "300348dfb251f61445ac03974d32dd762101814c35be9dc4df68cd59b49a7a1c"
+      },
+      "loca": {
+        "length": 178576,
+        "transform": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "cc6918a9e706312224d24c5555c6df30ab574a00213907090e42b374499ab682"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "b1bfeb409d6582ed06ec16945712a1b5ab91103e327b2353545a75b3bc0b195a"
+      },
+      "hmtx": {
+        "length": 178572,
+        "transform": 1,
+        "sha256": "9501044d0105369c7f2d7010e4f7d44abc895b47778836acdc32ef99cd8cce35"
+      },
+      "maxp": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "6c926a8fdaf8c8721ebd4ec41d4e58bebb08a239cb2273e4f3295f473f0d90fb"
+      },
+      "name": {
+        "length": 1557,
+        "transform": 0,
+        "sha256": "756b7abc5d3e3080e277a5e0da468e959d3af255fe0060fb01bc4b6559b3a673"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSans14Small-square.woff2": {
+      "CFF ": {
+        "length": 8493711,
+        "transform": 0,
+        "sha256": "c4199560bef817fa2d68f5b3141219601b2b84c702adb7c9e9bd172689190e74"
+      },
+      "GSUB": {
+        "length": 69370,
+        "transform": 0,
+        "sha256": "2283763fbad0e0bf0522e659252cbbb40801d71986e93ddb65bd0560b2af16ac"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "1481ed6a52b0cbffa4160ed41441898953a5f342f63718be1c175c66e71af1ef"
+      },
+      "cmap": {
+        "length": 130010,
+        "transform": 0,
+        "sha256": "c94ba1eff1e412882e4747ef93c74430ed67bdd7e7524c276b80b403fe30e1f3"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "68c487db47a03ffd1cba22d445e669899d72f180b88ad999e749f2a1a5ef4f96"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "896f0abfa600f6575ec603fc21fef544e2c12e53c7b3858ef531ce4d2715061b"
+      },
+      "hmtx": {
+        "length": 179332,
+        "transform": 0,
+        "sha256": "0acba67bb746341c24cd2a72ff151bf232d70dfe84949987fdc2d4a9934dc9c0"
+      },
+      "maxp": {
+        "length": 6,
+        "transform": 0,
+        "sha256": "4ca1408a00d6e6018d8d003417fddff39d0325b21867c1337f777596744bcfb8"
+      },
+      "name": {
+        "length": 1536,
+        "transform": 0,
+        "sha256": "5c521440e2b8b4c5406e367c2bcfc419fd651a7089b36eb7f1ae478bb7d28004"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSans14Small-dot.woff2": {
+      "GSUB": {
+        "length": 69370,
+        "transform": 0,
+        "sha256": "2283763fbad0e0bf0522e659252cbbb40801d71986e93ddb65bd0560b2af16ac"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "1481ed6a52b0cbffa4160ed41441898953a5f342f63718be1c175c66e71af1ef"
+      },
+      "cmap": {
+        "length": 130010,
+        "transform": 0,
+        "sha256": "c94ba1eff1e412882e4747ef93c74430ed67bdd7e7524c276b80b403fe30e1f3"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "glyf": {
+        "length": 21480512,
+        "transform": 0,
+        "sha256": "cf019b565618767825674a8256b98cb5366afa7b3e2d9f864157ce16e7b887b4"
+      },
+      "loca": {
+        "length": 179340,
+        "transform": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "c91ca25555654adc1f00a785c3983333b90f389849ae628e808ee77f659296b7"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "9f93ea622eac91cf2b9fb97610cb5f2809be18f1507ee9516c5e7a2fd61bcac4"
+      },
+      "hmtx": {
+        "length": 179336,
+        "transform": 1,
+        "sha256": "5c607d95cb7c58a2d26468f46efe7ec85f8a18b3b5b1afcec9eae92455bcf740"
+      },
+      "maxp": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "1760fddff3c6690bf5045d6d60121ca291cb450d2a9beff46489a532b07d406c"
+      },
+      "name": {
+        "length": 1500,
+        "transform": 0,
+        "sha256": "5e58b7674d116b6573145b9f5baeb542b12b98d7e543196e0e89faa2cb19fbea"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSansMono14Small-square.woff2": {
+      "CFF ": {
+        "length": 8467621,
+        "transform": 0,
+        "sha256": "f617864e47799d623dfcda537b349b3bef99b61e768f5abbe2fe91e2c49ebb1a"
+      },
+      "GSUB": {
+        "length": 68418,
+        "transform": 0,
+        "sha256": "b4f25fb7b0c73f2003c3c31f2cdcb6b1aab898b2f0a3a2f41d2f928d922cf7ab"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "af4b5f0c4de607272c289a6c35bd657142ef7da681a3bb2f9e780c7fd08a0924"
+      },
+      "cmap": {
+        "length": 126420,
+        "transform": 0,
+        "sha256": "8a84a30d016c8f512314a8eb21609de745db212b8e38b75a5e47b8c8d204b8c7"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "bece4c80f28c03923d5a4c53f5f4e12f4e045bf41a673c2503a6ee8a783a6ae8"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "637a458cd6aaef2ce97aa88d0ebd04ab0fedc870757a61715d51561d86f4b4e9"
+      },
+      "hmtx": {
+        "length": 178552,
+        "transform": 0,
+        "sha256": "f7b000f2c591958297a7bfed154222147099cb52b22e80fbc91031778fa77e18"
+      },
+      "maxp": {
+        "length": 6,
+        "transform": 0,
+        "sha256": "f38352179239ac3eac95e601a48f184a199dcf4b9578e18e27869042f89bc99c"
+      },
+      "name": {
+        "length": 1593,
+        "transform": 0,
+        "sha256": "44e77fa96ccdd6827ee032ab0654bc1b803cff5c5ffd1126c9ff66ff56fb3191"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    },
+    "TongPixelSansMono14Small-dot.woff2": {
+      "GSUB": {
+        "length": 68418,
+        "transform": 0,
+        "sha256": "b4f25fb7b0c73f2003c3c31f2cdcb6b1aab898b2f0a3a2f41d2f928d922cf7ab"
+      },
+      "OS/2": {
+        "length": 96,
+        "transform": 0,
+        "sha256": "af4b5f0c4de607272c289a6c35bd657142ef7da681a3bb2f9e780c7fd08a0924"
+      },
+      "cmap": {
+        "length": 126420,
+        "transform": 0,
+        "sha256": "8a84a30d016c8f512314a8eb21609de745db212b8e38b75a5e47b8c8d204b8c7"
+      },
+      "gasp": {
+        "length": 8,
+        "transform": 0,
+        "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23"
+      },
+      "glyf": {
+        "length": 21393392,
+        "transform": 0,
+        "sha256": "c2669c438e5dfc420c19a42ffdd58af0dac30318b8838c9a3ae281e98cdb0e0c"
+      },
+      "loca": {
+        "length": 178576,
+        "transform": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "head": {
+        "length": 54,
+        "transform": 0,
+        "sha256": "e4ae5b4cd866908c889b77fd10bd054736b4b91c1fd29f4f4e0013b342d1ed4f"
+      },
+      "hhea": {
+        "length": 36,
+        "transform": 0,
+        "sha256": "e4ed8963694ac5d2a764559264ef54602410975dfa10f551d45c6312c28ac0df"
+      },
+      "hmtx": {
+        "length": 178572,
+        "transform": 1,
+        "sha256": "762e4d31cb4f6ee52da966f04199930865701d2683b9d9400dc4c7de806a05be"
+      },
+      "maxp": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "6c926a8fdaf8c8721ebd4ec41d4e58bebb08a239cb2273e4f3295f473f0d90fb"
+      },
+      "name": {
+        "length": 1557,
+        "transform": 0,
+        "sha256": "e2dcfce06565ab28f55c3050e06cc87f01595423708795b2c00fbea6e0021736"
+      },
+      "post": {
+        "length": 32,
+        "transform": 0,
+        "sha256": "0ad3d447862dce4449673ba242e96a0233c41be523d58d891af7c4be741468d8"
+      }
+    }
+  }
+}

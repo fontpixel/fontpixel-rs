@@ -1,0 +1,40 @@
+{
+  "native_profiles": [
+    {
+      "profile": "default",
+      "five_byte_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "eight_webfont_table_streams_match_complete_oracles": true,
+      "ots_all_eight": true
+    },
+    {
+      "profile": "intra4",
+      "five_byte_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "eight_webfont_table_streams_match_complete_oracles": true,
+      "ots_all_eight": true
+    },
+    {
+      "profile": "quality8",
+      "five_byte_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "eight_webfont_table_streams_match_complete_oracles": true,
+      "ots_all_eight": true
+    },
+    {
+      "profile": "quality5",
+      "five_byte_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "eight_webfont_table_streams_match_complete_oracles": true,
+      "ots_all_eight": true
+    },
+    {
+      "profile": "serial5",
+      "five_byte_identical_runs": true,
+      "76_nonweb_files_match_complete_oracles": true,
+      "eight_webfont_table_streams_match_complete_oracles": true,
+      "ots_all_eight": true
+    }
+  ],
+  "reference": null
+}
