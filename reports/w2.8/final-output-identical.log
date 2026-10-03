@@ -1,0 +1,1 @@
+PASS: all six final-code outputs are byte-identical to the exhaustive independent oracle inputs.
