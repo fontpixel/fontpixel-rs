@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 87, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 44, in main
+    run(a.driver,output,dump)
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 19, in run
+    if p.returncode:raise RuntimeError((args,p.stderr.decode()))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: (('../fontpixel-rs-w2.4-recovery/target/release/examples/svg_check', PosixPath('/tmp/fontpixel-w28-crosscheck/TongPixelSans14Large-SC-square-separate.svg'), PosixPath('/tmp/fontpixel-w28-crosscheck/TongPixelSans14Large-SC-square-separate.json')), 'Error: ResourceLimit { resource: "SVG geometry/model bytes", limit: 268435456 }\n')

@@ -1,0 +1,9 @@
+    Checking arrayvec v0.7.8
+    Checking smallvec v1.16.2
+    Checking siphasher v1.0.4
+    Checking roxmltree v0.21.1
+    Checking polycool v0.4.0
+    Checking kurbo v0.13.1
+    Checking svgtypes v0.16.1
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 1.99s

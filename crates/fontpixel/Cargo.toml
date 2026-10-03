@@ -38,7 +38,7 @@ woff2 = ["vector-raster", "dep:brotli"]
 ttc = ["vector-raster"]
 color = ["sfnt", "dep:png"]
 vector-raster = ["cff"]
-svg = []
+svg = ["dep:roxmltree", "dep:svgtypes", "dep:xmlparser"]
 bmfont = []
 image = []
 png = ["dep:flate2", "dep:crc32fast"]
@@ -67,6 +67,9 @@ serde = ["dep:serde"]
 sfnt = ["dep:read-fonts"]
 
 [dependencies]
+xmlparser = { version = "0.13.6", optional = true }
+roxmltree = { version = "0.21.1", optional = true }
+svgtypes = { version = "0.16.1", optional = true }
 png = { version = "0.18.1", optional = true }
 read-fonts = { version = "0.44.0", optional = true }
 serde_json = { workspace = true, optional = true, features = ["arbitrary_precision", "preserve_order"] }
@@ -124,3 +127,7 @@ required-features = ["woff", "woff2"]
 [[example]]
 name = "raster_check"
 required-features = ["ttc", "woff", "woff2"]
+
+[[example]]
+name = "svg_check"
+required-features = ["svg"]

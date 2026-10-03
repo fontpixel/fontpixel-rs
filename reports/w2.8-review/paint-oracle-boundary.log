@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/tests/crosscheck/svg_review.py", line 43, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/tests/crosscheck/svg_review.py", line 40, in main
+    assert g['bbox']==bbox and rows(g)==expected,(index,g['bbox'],bbox,rows(g),expected)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (4, [4, 2, 0, 0], [4, 2, 0, 0], ['0110', '1111'], ['0111', '1111'])

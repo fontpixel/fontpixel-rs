@@ -1,0 +1,5 @@
+{
+  "monobit": "0.54",
+  "error_type": "TypeError",
+  "error": "int() argument must be a string, a bytes-like object or a real number, not 'NoneType'"
+}

@@ -1,0 +1,36 @@
+{
+  "format": "svg",
+  "font_count": 1,
+  "fonts": [
+    {
+      "name": "-tong-Tong Pixel Sans 14 Large SC-medium-r-normal--14-140-75-75-p-140-iso10646-1",
+      "family": "Tong Pixel Sans 14 Large SC",
+      "glyph_count": 38653,
+      "encoded_count": 38653,
+      "unencoded_count": 0,
+      "distinct_codes": 38653,
+      "first_code": 32,
+      "last_code": 183955,
+      "pixel_size": 14,
+      "point_size": null,
+      "resolution": null,
+      "ascent": 14,
+      "descent": 4,
+      "bounds": [
+        32,
+        18,
+        -11,
+        -4
+      ],
+      "charset": "iso10646",
+      "charset_registry": null,
+      "charset_encoding": null,
+      "gl": null,
+      "headers": [],
+      "properties": []
+    }
+  ],
+  "report": {
+    "entries": []
+  }
+}

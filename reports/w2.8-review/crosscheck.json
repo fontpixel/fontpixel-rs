@@ -1,0 +1,48 @@
+{
+  "cairosvg": "2.9.1",
+  "cases": [
+    {
+      "source": "TongPixelSans14Large-Latin.bdf",
+      "shape": "square",
+      "glyphs": 3645,
+      "sha256": "3bc38a68447a563a9d1eaa65cd27a2f1bcd364f83a8a456546a0a628ea40f6e2"
+    },
+    {
+      "source": "TongPixelSans14Large-Latin.bdf",
+      "shape": "square-separate",
+      "glyphs": 3645,
+      "sha256": "88c8ee59e33abe040a0f1078866e29d6c66b23587649471a4c0ba817216e1942"
+    },
+    {
+      "source": "TongPixelSans14Large-Latin.bdf",
+      "shape": "dot",
+      "glyphs": 3645,
+      "sha256": "bb20e7d8070739ef851d2e5af739508fbf13c6a6a303f4f903fc41e6d81a336d"
+    },
+    {
+      "source": "TongPixelSans14Large-SC.bdf",
+      "shape": "square",
+      "glyphs": 38653,
+      "sha256": "914f0c71d0ade9f2924b0d745f7f57fb1599dc091c52526f2149f0e87c5a4961"
+    },
+    {
+      "source": "TongPixelSans14Large-SC.bdf",
+      "shape": "square-separate",
+      "glyphs": 38653,
+      "sha256": "a61a2946e4eb657494142a8b6763a51cb0ad0d8f66f7e7d6f6f22374cf5efe29"
+    },
+    {
+      "source": "TongPixelSans14Large-SC.bdf",
+      "shape": "dot",
+      "glyphs": 38653,
+      "sha256": "0c045a96856c42a448d2b7f12416cc508c3061fe0a3a032045a1d2c9727ace67"
+    }
+  ],
+  "native_glyph_comparisons": 126894,
+  "fonttools_path_parses": 126894,
+  "cairo_glyph_rasters": 126894,
+  "independent_python_font_glyphs": 3612,
+  "visual": "/tmp/fontpixel-w28-review-crosscheck/visual-proof.png",
+  "generic_curve_cases": 5,
+  "failures": 0
+}

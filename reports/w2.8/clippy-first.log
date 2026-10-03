@@ -1,0 +1,29 @@
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+error: manual implementation of `.is_multiple_of()`
+   --> crates/fontpixel/src/formats/svg/reader.rs:171:20
+    |
+171 |     if div == 0 || upem as u64 % div != 0 {
+    |                    ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `!(upem as u64).is_multiple_of(div)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of
+    = note: `-D clippy::manual-is-multiple-of` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_is_multiple_of)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> crates/fontpixel/src/formats/svg/reader.rs:264:5
+    |
+264 |     set.source_format = Some("svg".into());
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `model::FontSet { source_format: Some("svg".into()), ..Default::default() }` and removing relevant reassignments
+   --> crates/fontpixel/src/formats/svg/reader.rs:263:5
+    |
+263 |     let mut set = FontSet::default();
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+error: could not compile `fontpixel` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `fontpixel` (lib) due to 2 previous errors

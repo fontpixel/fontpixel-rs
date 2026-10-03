@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 2 in progress (through W2.7)
+## Current status: phase 2 in progress (through W2.8)
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -22,8 +22,8 @@ YAFF 1.0 supports single/multi-strike monochrome and grayscale fonts, with
 bounded gzip and lossless versioned native-metadata extensions for golden tests.
 See [YAFF contracts](docs/formats/yaff.md) and [W1.6 validation](reports/w1.6.md).
 
-Twelve format IDs now have native readers, eleven have writers (color writing
-is deferred); the remaining 34 IDs and Python/WASM bindings remain unimplemented
+Thirteen format IDs now have native readers, twelve have writers (color writing
+is deferred); the remaining 33 IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
@@ -221,3 +221,28 @@ See [raster contracts](docs/formats/vector-raster.md),
 [collection contracts and deployed-tool limits](docs/formats/ttc.md),
 and [W2.7 validation](reports/w2.7.md). W2.8 and the whole-phase completion gates
 are still outstanding.
+
+### SVG images and SVG 1.1 fonts
+
+With the `svg` feature (enabled in the CLI), `convert` writes path-based SVG
+fonts and reads their native pixel geometry back. `render` emits standalone SVG
+images that require no installed font. For a single glyph, render one character,
+or use `formats::svg::glyph_image` on its original bitmap rectangle.
+
+```sh
+fontpixel convert source.bdf -o font.svg
+fontpixel convert font.svg -o recovered.bdf
+fontpixel convert source.bdf -o dots.svg --shape dot --dotsize 0.9 --ppu 100
+fontpixel render source.bdf 'Hello, 世界' -o text.svg --scale 4 --shape square
+fontpixel render source.bdf '永' -o glyph.svg --mode ink --shape dot
+fontpixel info external.svg --ppem 16 --json
+```
+
+A generic off-grid SVG font requires explicit `--ppem`. SVG font collections use
+`--face-index`; default import retains all fonts. Only path-filled SVG glyphs are
+supported; scripts, external references, CSS, strokes and graphical effects are
+rejected. Full CJK dot documents may exceed the default 64 MiB input budget; the
+CLI supports `--max-input-bytes 268435456` to reopen those larger fonts; the
+library also exposes typed limits. SVG 1.1 font embedding
+has limited support in modern browsers; use path images for portable previews.
+See [the SVG format contract](docs/formats/svg.md) for metadata loss and bounds.

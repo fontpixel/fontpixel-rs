@@ -1,0 +1,31 @@
+Run from the W2.8 review worktree, then integrated main for its gates.
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export CARGO_INCREMENTAL=0 CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 PYTHONDONTWRITEBYTECODE=1
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/python-w2.8:/workspace/scratch/ef9059dd510b/toolchain/python-w2.5:/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+bash scripts/check.sh
+for features in svg bdf,svg; do cargo clippy --locked -p fontpixel --all-targets --no-default-features --features "$features" -- -D warnings; done
+cargo test --locked -p fontpixel --no-default-features --features svg --test svg
+cargo clippy --locked -p fontpixel-cli --no-default-features --features svg -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo build --locked --release -p fontpixel-cli --all-features
+cargo build --locked --release -p fontpixel --all-features --example svg_check
+python3 -B tests/crosscheck/svg_review.py --driver "$CARGO_TARGET_DIR/release/examples/svg_check" --work /tmp/fontpixel-w28-review-paints --output reports/w2.8-review/paint-oracle.json
+python3 -B tests/crosscheck/svg.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --driver "$CARGO_TARGET_DIR/release/examples/svg_check" --work /tmp/fontpixel-w28-review-crosscheck --output reports/w2.8-review/crosscheck.json
+python3 -B tests/crosscheck/render_images.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --output reports/w2.8-review/render-images.json
+"$CARGO_TARGET_DIR/release/fontpixel" info /tmp/fontpixel-w28-review-crosscheck/TongPixelSans14Large-SC-dot.svg --json --max-input-bytes 268435456
+python3 -B tests/crosscheck/svg_final_outputs.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --report reports/w2.8-review/crosscheck.json --output reports/w2.8-review/final-output-identical.json
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w28-review-parity
+
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target
+cargo +nightly fuzz build svg
+cargo deny --locked --manifest-path fuzz/Cargo.toml check
+# A separate corpus preserves the candidate run; add the new oracle SVG seeds.
+ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/svg" /tmp/fontpixel-w28-review-fuzz -max_total_time=611 -max_len=65536 -rss_limit_mb=768
+sha256sum -c reports/w2.8-review/fuzz-reader-final.sha256
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.8-review/protected-final.sha256
+cmp reports/w2.7-review/protected-before.sha256 reports/w2.8-review/protected-final.sha256
+
+# Merge review non-destructively only after acceptance; then run full check/parity.
+# Create an all-branches bundle and ordinary ZIP, excluding caches/large fonts.
+# Verify the bundle, restore it into a disposable bare repository and compare refs.

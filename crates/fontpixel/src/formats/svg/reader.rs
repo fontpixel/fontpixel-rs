@@ -1,0 +1,859 @@
+use super::*;
+use crate::{
+    Font,
+    bitmap::Bounds,
+    model::{Codepoint, Spacing, Vector},
+    outline::path::Edge,
+};
+use roxmltree::{Document, Node};
+use std::collections::BTreeMap;
+fn svg(n: Node<'_, '_>, name: &str) -> bool {
+    n.is_element()
+        && n.tag_name().name() == name
+        && matches!(n.tag_name().namespace(), None | Some(NS))
+}
+fn fp<'a>(n: Node<'a, '_>, name: &str) -> Option<&'a str> {
+    n.attribute((FP, name))
+}
+fn number(s: &str) -> Result<f64> {
+    let n: f64 = s.trim().parse().map_err(|_| invalid("invalid number"))?;
+    if !n.is_finite() || n.abs() > 1e9 {
+        return Err(invalid("nonfinite/excessive number"));
+    }
+    Ok(n)
+}
+fn num(n: Node<'_, '_>, key: &str, default: f64) -> Result<f64> {
+    n.attribute(key)
+        .map(number)
+        .transpose()
+        .map(|v| v.unwrap_or(default))
+}
+fn integer(s: &str) -> Result<i64> {
+    s.parse().map_err(|_| invalid("invalid native integer"))
+}
+fn native_bounds(s: &str) -> Result<Bounds> {
+    let mut fields = s.split_whitespace();
+    let mut v = [0; 4];
+    for value in &mut v {
+        *value = integer(
+            fields
+                .next()
+                .ok_or_else(|| invalid("native bounds need width height x y"))?,
+        )?;
+    }
+    if fields.next().is_some() {
+        return Err(invalid("native bounds need width height x y"));
+    }
+    let b = Bounds::new(
+        v[0].try_into().map_err(|_| invalid("bounds width"))?,
+        v[1].try_into().map_err(|_| invalid("bounds height"))?,
+        v[2],
+        v[3],
+    );
+    b.x.checked_add(i64::from(b.width))
+        .ok_or_else(|| invalid("bounds right overflow"))?;
+    b.y.checked_add(i64::from(b.height))
+        .ok_or_else(|| invalid("bounds top overflow"))?;
+    Ok(b)
+}
+fn vector(s: &str) -> Result<Vector> {
+    let mut fields = s.split_whitespace();
+    let mut v = [0; 2];
+    for value in &mut v {
+        *value = integer(
+            fields
+                .next()
+                .ok_or_else(|| invalid("native vector needs two integers"))?,
+        )?;
+    }
+    if fields.next().is_some() {
+        return Err(invalid("native vector needs two integers"));
+    }
+    Ok(Vector::new(v[0], v[1]))
+}
+fn preflight(s: &str, l: &Limits) -> Result<()> {
+    use xmlparser::{ElementEnd, Token};
+    let (mut depth, mut attributes, mut nodes, mut total_attributes) =
+        (0usize, 0usize, 1usize, 0usize);
+    for token in xmlparser::Tokenizer::from(s) {
+        match token.map_err(invalid)? {
+            Token::DtdStart { .. }
+            | Token::EmptyDtd { .. }
+            | Token::EntityDeclaration { .. }
+            | Token::DtdEnd { .. } => return Err(invalid("DTD is forbidden")),
+            Token::ProcessingInstruction { .. } => {
+                return Err(invalid("processing instructions are unsupported"));
+            }
+            Token::Declaration {
+                encoding: Some(e), ..
+            } if !e.as_str().eq_ignore_ascii_case("utf-8") => {
+                return Err(invalid("only UTF-8 XML is supported"));
+            }
+            Token::ElementStart { .. } => {
+                depth += 1;
+                attributes = 0;
+                nodes += 1;
+                bound(depth, l.max_depth, "SVG XML depth")?;
+            }
+            Token::ElementEnd {
+                end: ElementEnd::Close(..) | ElementEnd::Empty,
+                ..
+            } => {
+                depth = depth
+                    .checked_sub(1)
+                    .ok_or_else(|| invalid("unbalanced XML"))?;
+            }
+            Token::Attribute { value, .. } => {
+                attributes += 1;
+                total_attributes += 1;
+                bound(attributes, l.max_attributes, "SVG XML attributes")?;
+                bound(
+                    value.as_str().len(),
+                    l.resources.max_table_bytes,
+                    "SVG attribute bytes",
+                )?;
+            }
+            Token::Text { text } | Token::Cdata { text, .. } | Token::Comment { text, .. } => {
+                nodes += 1;
+                bound(
+                    text.as_str().len(),
+                    l.resources.max_table_bytes,
+                    "SVG text bytes",
+                )?;
+            }
+            _ => {}
+        }
+        bound(nodes, l.max_nodes as usize, "SVG XML nodes")?;
+        bound(
+            nodes.saturating_add(total_attributes).saturating_mul(64),
+            l.resources.max_total_bytes,
+            "SVG XML bookkeeping bytes",
+        )?;
+    }
+    Ok(())
+}
+fn document<'a>(bytes: &'a [u8], l: &Limits) -> Result<Document<'a>> {
+    bound(
+        bytes.len(),
+        l.resources.max_input_bytes.min(l.resources.max_total_bytes),
+        "SVG input bytes",
+    )?;
+    let s = std::str::from_utf8(bytes).map_err(invalid)?;
+    preflight(s, l)?;
+    let d = Document::parse_with_options(
+        s,
+        roxmltree::ParsingOptions {
+            allow_dtd: false,
+            nodes_limit: l.max_nodes,
+            entity_resolver: None,
+        },
+    )
+    .map_err(invalid)?;
+    if !svg(d.root_element(), "svg") {
+        return Err(invalid("root is not SVG"));
+    }
+    for n in d.descendants() {
+        bound(
+            n.ancestors().take(l.max_depth.saturating_add(2)).count(),
+            l.max_depth.saturating_add(1),
+            "SVG XML depth",
+        )?;
+        if n.is_pi() {
+            return Err(invalid("processing instructions are unsupported"));
+        }
+        if let Some(text) = n.text() {
+            bound(text.len(), l.resources.max_table_bytes, "SVG text bytes")?;
+        }
+        bound(n.attributes().len(), l.max_attributes, "SVG XML attributes")?;
+        for a in n.attributes() {
+            bound(
+                a.value().len(),
+                l.resources.max_table_bytes,
+                "SVG attribute bytes",
+            )?;
+        }
+    }
+    Ok(d)
+}
+pub(super) fn detect(bytes: &[u8], l: &Limits) -> Confidence {
+    match document(bytes, l) {
+        Ok(d) if d.descendants().any(|n| svg(n, "font")) => Confidence::Certain,
+        _ => Confidence::NoMatch,
+    }
+}
+fn semantics(n: Node<'_, '_>) -> Result<()> {
+    for a in n.attributes() {
+        if a.namespace() == Some(FP) {
+            continue;
+        }
+        if matches!(
+            a.name(),
+            "style"
+                | "class"
+                | "transform"
+                | "clip-path"
+                | "mask"
+                | "filter"
+                | "href"
+                | "lang"
+                | "arabic-form"
+                | "orientation"
+        ) || a.name().starts_with("on")
+            || a.name() == "fill-rule" && a.value() != "nonzero"
+            || a.name() == "fill" && !matches!(a.value(), "black" | "#000" | "#000000")
+            || a.name() == "stroke" && a.value() != "none"
+            || matches!(a.name(), "opacity" | "fill-opacity") && a.value() != "1"
+            || matches!(a.name(), "display" | "visibility")
+        {
+            return Err(invalid(format!(
+                "unsupported rendering/selection attribute {}",
+                a.name()
+            )));
+        }
+    }
+    Ok(())
+}
+fn gcd(mut a: u64, mut b: u64) -> u64 {
+    while b != 0 {
+        (a, b) = (b, a % b);
+    }
+    a
+}
+fn grid(
+    nodes: &[Node<'_, '_>],
+    origin: (f64, f64),
+    upem: f64,
+    l: &Limits,
+    total_edges: &mut usize,
+) -> Result<u16> {
+    if upem.fract() != 0. {
+        return Err(invalid("nonintegral em requires ppem"));
+    }
+    let mut div = 0;
+    for &n in nodes {
+        let record = record(n, origin, l)?;
+        charge(
+            total_edges,
+            record.edges.len(),
+            l.max_total_edges,
+            "SVG grid pass edges",
+        )?;
+        for e in &record.edges {
+            for (x, y) in e.points() {
+                for v in [x, y] {
+                    if !v.is_finite() || v.fract() != 0. || v.abs() > 1e9 {
+                        return Err(invalid("off-grid path requires explicit ppem"));
+                    }
+                    div = gcd(div, v.abs() as u64);
+                }
+            }
+        }
+    }
+    if div == 0 || !(upem as u64).is_multiple_of(div) {
+        return Err(invalid("no native grid; specify ppem"));
+    }
+    let ppem = upem as u64 / div;
+    if !(4..=64).contains(&ppem) {
+        return Err(invalid("native grid outside 4..64; specify ppem"));
+    }
+    Ok(ppem as u16)
+}
+fn signature<'a>(n: Node<'a, '_>) -> Vec<(Option<&'a str>, &'a str, &'a str)> {
+    let mut result = n
+        .attributes()
+        .filter(|a| {
+            a.name() != "unicode"
+                && !(a.namespace() == Some(FP) && matches!(a.name(), "id" | "mapping"))
+        })
+        .map(|a| (a.namespace(), a.name(), a.value()))
+        .collect::<Vec<_>>();
+    result.sort();
+    for c in n.children().filter(|n| svg(*n, "path")) {
+        result.push((None, "child-path", c.attribute("d").unwrap_or("")));
+    }
+    result
+}
+struct Record {
+    edges: Vec<Edge>,
+    // SVG child elements paint independently; winding is local to each path.
+    paints: Vec<std::ops::Range<usize>>,
+}
+fn record<'a, 'b>(n: Node<'a, 'b>, origin: (f64, f64), l: &Limits) -> Result<Record> {
+    semantics(n)?;
+    let mut edges = path::parse(n.attribute("d").unwrap_or(""), l)?;
+    let mut paints = Vec::new();
+    if !edges.is_empty() {
+        paints.push(0..edges.len());
+    }
+    for child in n.children().filter(Node::is_element) {
+        if svg(child, "path") {
+            semantics(child)?;
+            if n.attribute("d").is_some_and(|s| !s.is_empty()) {
+                return Err(invalid("glyph d plus graphical children is ambiguous"));
+            }
+            for a in child.attributes() {
+                if !matches!(a.name(), "d" | "id" | "fill" | "fill-rule" | "stroke") {
+                    return Err(invalid("unsupported child path attribute"));
+                }
+            }
+            if child.children().any(|n| n.is_element()) {
+                return Err(invalid("nested graphical glyph content"));
+            }
+            let d = child.attribute("d").unwrap_or("");
+            let e = path::parse(d, l)?;
+            bound(
+                edges.len().saturating_add(e.len()),
+                l.geometry.max_edges,
+                "SVG glyph edges",
+            )?;
+            if !e.is_empty() {
+                paints.push(edges.len()..edges.len() + e.len());
+            }
+            edges.extend(e);
+        } else if !svg(child, "title") && !svg(child, "desc") && !svg(child, "metadata") {
+            return Err(invalid("unsupported graphical glyph child"));
+        }
+    }
+    if paints.is_empty() {
+        paints.push(0..0);
+    }
+    path::shift(&mut edges, origin);
+    Ok(Record { edges, paints })
+}
+fn project(v: f64, scale: f64, rounded: &mut bool) -> Result<i64> {
+    let v = v / scale;
+    if !v.is_finite() || v.abs() > 1e9 {
+        return Err(invalid("projected metric out of range"));
+    }
+    *rounded |= (v - v.round()).abs() > 1e-9;
+    Ok(v.round() as i64)
+}
+/// Parse SVG 1.1 fonts without resolving any external resource.
+pub fn read(bytes: &[u8], o: &ReadOptions) -> Result<(FontSet, Report)> {
+    if o.ppem.is_some_and(|p| p == 0 || p > 4096) {
+        return Err(invalid("ppem must be 1..4096"));
+    }
+    let l = &o.limits;
+    let d = document(bytes, l)?;
+    let nodes = d
+        .descendants()
+        .filter(|n| svg(*n, "font"))
+        .collect::<Vec<_>>();
+    bound(nodes.len(), l.max_fonts, "SVG fonts")?;
+    if nodes.is_empty() {
+        return Err(invalid("document contains no SVG font"));
+    }
+    if o.font_index.is_some_and(|i| i >= nodes.len()) {
+        return Err(invalid("font index out of range"));
+    }
+    let mut report = Report::default();
+    let mut set = FontSet {
+        source_format: Some("svg".into()),
+        ..Default::default()
+    };
+    let (mut total_edges, mut total_pixels, mut total_glyphs, mut model_bytes) =
+        (0usize, 0usize, 0usize, 0usize);
+    // Active content cannot influence even a selected face.
+    for n in d.descendants().filter(Node::is_element) {
+        if matches!(
+            n.tag_name().name(),
+            "script"
+                | "style"
+                | "use"
+                | "image"
+                | "foreignObject"
+                | "font-face-uri"
+                | "animate"
+                | "animateColor"
+                | "animateMotion"
+                | "animateTransform"
+                | "set"
+                | "mpath"
+        ) {
+            return Err(invalid("active/external SVG content is unsupported"));
+        }
+    }
+    for (index, n) in nodes.into_iter().enumerate() {
+        if o.font_index.is_some_and(|i| i != index) {
+            continue;
+        }
+        let fi = set.fonts.len();
+        for a in n.ancestors().filter(Node::is_element) {
+            semantics(a)?;
+            if a != n && svg(a, "font") {
+                return Err(invalid("nested fonts"));
+            }
+        }
+        let faces = n
+            .children()
+            .filter(|n| svg(*n, "font-face"))
+            .collect::<Vec<_>>();
+        if faces.len() != 1 {
+            return Err(invalid("exactly one font-face required per font"));
+        }
+        let face = faces[0];
+        semantics(face)?;
+        let font_attrs = [
+            "id",
+            "horiz-origin-x",
+            "horiz-origin-y",
+            "horiz-adv-x",
+            "vert-origin-x",
+            "vert-origin-y",
+            "vert-adv-y",
+        ];
+        let fp_font_attrs = [
+            "ppem",
+            "bounds",
+            "line-gap",
+            "line-height",
+            "space-width",
+            "spacing",
+        ];
+        let face_attrs = [
+            "id",
+            "units-per-em",
+            "font-family",
+            "font-style",
+            "ascent",
+            "descent",
+            "underline-position",
+            "underline-thickness",
+        ];
+        let fp_face_attrs = [
+            "full",
+            "style",
+            "postscript",
+            "version",
+            "copyright",
+            "license",
+            "license-url",
+            "foundry",
+            "xlfd",
+        ];
+        for (node, plain, private) in [
+            (n, font_attrs.as_slice(), fp_font_attrs.as_slice()),
+            (face, face_attrs.as_slice(), fp_face_attrs.as_slice()),
+        ] {
+            if node.attributes().any(|a| {
+                if a.namespace() == Some(FP) {
+                    !private.contains(&a.name())
+                } else {
+                    a.namespace().is_some() || !plain.contains(&a.name())
+                }
+            }) {
+                loss(
+                    &mut report,
+                    "font-attributes",
+                    "Unrepresented font/face attributes are omitted",
+                    Some(fi),
+                    None,
+                );
+            }
+        }
+        if face.children().any(|n| n.is_element()) {
+            loss(
+                &mut report,
+                "face-content",
+                "Embedded font-face descriptive content is omitted",
+                Some(fi),
+                None,
+            );
+        }
+
+        let upem = num(face, "units-per-em", 1000.)?;
+        if upem <= 0. {
+            return Err(invalid("units-per-em must be positive"));
+        }
+        let origin = (num(n, "horiz-origin-x", 0.)?, num(n, "horiz-origin-y", 0.)?);
+        let mut records = Vec::new();
+        let mut ignored = false;
+        for child in n.children().filter(Node::is_element) {
+            if svg(child, "glyph") || svg(child, "missing-glyph") {
+                charge(
+                    &mut total_glyphs,
+                    1,
+                    l.resources.max_glyphs,
+                    "SVG glyph records",
+                )?;
+                bound(
+                    total_glyphs.saturating_mul(512),
+                    l.resources.max_total_bytes,
+                    "SVG model bookkeeping bytes",
+                )?;
+                // Account for retained names and UTF-32 mappings, including the
+                // glyph vector, lookup key and transient transactional copies,
+                // before decoding/allocating them. XML byte limits are not a
+                // sufficient bound for the expanded model.
+                let mapping_bytes = child
+                    .attribute("unicode")
+                    .map_or(0, |v| v.chars().count())
+                    .saturating_mul(12);
+                charge(
+                    &mut model_bytes,
+                    512usize
+                        .saturating_add(mapping_bytes)
+                        .saturating_add(child.attribute("glyph-name").map_or(0, str::len)),
+                    l.resources.max_total_bytes,
+                    "SVG model metadata bytes",
+                )?;
+                records.push(child);
+            } else if !svg(child, "font-face") {
+                ignored = true;
+            }
+        }
+        if ignored {
+            loss(
+                &mut report,
+                "unsupported-font-content",
+                "Kerning/descriptive or unknown font content is omitted",
+                Some(fi),
+                None,
+            );
+        }
+        let native = fp(n, "ppem")
+            .map(integer)
+            .transpose()?
+            .map(|p| u16::try_from(p).map_err(|_| invalid("native ppem out of range")))
+            .transpose()?;
+        if native.is_some_and(|p| p == 0 || p > 4096) {
+            return Err(invalid("native ppem must be 1..4096"));
+        }
+        let ppem = match o.ppem.or(native) {
+            Some(p) => p,
+            None => grid(&records, origin, upem, l, &mut total_edges)?,
+        };
+        let scale = upem / f64::from(ppem);
+        let native_exact = native == Some(ppem);
+        let mut rounded = false;
+        let mut f = Font::default();
+        f.source_format = Some("svg".into());
+        f.metrics.pixel_size = Some(u32::from(ppem));
+        f.names.family = face.attribute("font-family").map(str::to_owned);
+        f.names.style = fp(face, "style")
+            .or_else(|| face.attribute("font-style"))
+            .map(str::to_owned);
+        for (key, target) in [
+            ("full", &mut f.names.full),
+            ("postscript", &mut f.names.postscript),
+            ("version", &mut f.names.version),
+            ("copyright", &mut f.names.copyright),
+            ("license", &mut f.names.license),
+            ("license-url", &mut f.names.license_url),
+            ("foundry", &mut f.names.foundry),
+            ("xlfd", &mut f.names.xlfd),
+        ] {
+            *target = fp(face, key).map(str::to_owned);
+        }
+        for (key, target) in [
+            ("ascent", &mut f.metrics.ascent),
+            ("descent", &mut f.metrics.descent),
+            ("underline-position", &mut f.metrics.underline_position),
+            ("underline-thickness", &mut f.metrics.underline_thickness),
+        ] {
+            if let Some(s) = face.attribute(key) {
+                let mut v = project(number(s)?, scale, &mut rounded)?;
+                if key == "descent" && !native_exact {
+                    v = v.abs();
+                }
+                *target = Some(v);
+            }
+        }
+        if native_exact {
+            f.metrics.bounds = fp(n, "bounds").map(native_bounds).transpose()?;
+            for (key, target) in [
+                ("line-gap", &mut f.metrics.line_gap),
+                ("line-height", &mut f.metrics.line_height),
+                ("space-width", &mut f.metrics.space_width),
+            ] {
+                *target = fp(n, key).map(integer).transpose()?;
+            }
+            f.metrics.spacing = fp(n, "spacing")
+                .map(|s| match s {
+                    "p" => Ok(Spacing::Proportional),
+                    "m" => Ok(Spacing::Monospaced),
+                    "c" => Ok(Spacing::CharacterCell),
+                    _ => Err(invalid("invalid native spacing")),
+                })
+                .transpose()?;
+        }
+        let adv = num(n, "horiz-adv-x", 0.)?;
+        let asc = num(face, "ascent", upem)?;
+        let mut groups: BTreeMap<usize, (usize, Node<'_, '_>)> = BTreeMap::new();
+        // Build each alias group once before indexing it. Repeated edit_glyph
+        // calls clone/reindex an ever-growing mapping list quadratically.
+        let mut glyphs: Vec<Glyph> = Vec::new();
+        let mut default_glyph = None;
+        let mut missing = false;
+        for node in records {
+            let rec = record(node, origin, l)?;
+            charge(
+                &mut total_edges,
+                rec.edges.len(),
+                l.max_total_edges,
+                "SVG total edges",
+            )?;
+            bound(
+                rec.edges
+                    .len()
+                    .saturating_mul(std::mem::size_of::<Edge>())
+                    .saturating_add(total_glyphs.saturating_mul(512)),
+                l.resources.max_total_bytes,
+                "SVG geometry/model bytes",
+            )?;
+            let mut b = if native_exact {
+                fp(node, "bounds").map(native_bounds).transpose()?
+            } else {
+                None
+            };
+            let fixed = b.is_some();
+            if let Some(b) = b {
+                for e in &rec.edges {
+                    for (x, y) in e.points() {
+                        let (x, y) = (x / scale, y / scale);
+                        if x < b.x as f64 - 1e-7
+                            || y < b.y as f64 - 1e-7
+                            || x > b.x as f64 + f64::from(b.width) + 1e-7
+                            || y > b.y as f64 + f64::from(b.height) + 1e-7
+                        {
+                            return Err(invalid("native bounds clip glyph geometry"));
+                        }
+                    }
+                }
+            }
+            if b.is_none() {
+                if rec.edges.is_empty() {
+                    b = Some(Bounds::default());
+                } else {
+                    let (mut x0, mut y0, mut x1, mut y1) = (
+                        f64::INFINITY,
+                        f64::INFINITY,
+                        f64::NEG_INFINITY,
+                        f64::NEG_INFINITY,
+                    );
+                    for e in &rec.edges {
+                        for (x, y) in e.points() {
+                            x0 = x0.min(x / scale);
+                            y0 = y0.min(y / scale);
+                            x1 = x1.max(x / scale);
+                            y1 = y1.max(y / scale);
+                        }
+                    }
+                    if [x0, y0, x1, y1]
+                        .iter()
+                        .any(|v| !v.is_finite() || v.abs() > 1e9)
+                    {
+                        return Err(invalid("projected bounds out of range"));
+                    }
+                    b = Some(Bounds::new(
+                        (x1.ceil() - x0.floor()) as u32,
+                        (y1.ceil() - y0.floor()) as u32,
+                        x0.floor() as i64,
+                        y0.floor() as i64,
+                    ));
+                }
+            }
+            let b = b.ok_or_else(|| invalid("missing raster bounds"))?;
+            let pixels = (b.width as usize)
+                .saturating_mul(b.height as usize)
+                .saturating_add(b.height as usize);
+            bound(
+                pixels,
+                l.resources.max_pixels_per_glyph.min(l.geometry.max_pixels),
+                "SVG glyph pixels and rows",
+            )?;
+            charge(
+                &mut total_pixels,
+                pixels.saturating_mul(rec.paints.len()),
+                l.max_total_pixels,
+                "SVG total raster pixels",
+            )?;
+            let mut bitmap = outline::path::rasterize(
+                &rec.edges[rec.paints[0].clone()],
+                scale,
+                (b.x as f64, b.y as f64),
+                b.width,
+                b.height,
+                &l.geometry,
+            )?;
+            for paint in rec.paints.iter().skip(1).filter(|r| !r.is_empty()) {
+                let layer = outline::path::rasterize(
+                    &rec.edges[paint.clone()],
+                    scale,
+                    (b.x as f64, b.y as f64),
+                    b.width,
+                    b.height,
+                    &l.geometry,
+                )?;
+                bitmap.overlay(&layer);
+            }
+            let mut g = Glyph::new(bitmap);
+            g.metrics.bounds = b;
+            if !fixed {
+                let bitmap = g.bitmap.clone();
+                g.set_bitmap(bitmap, b.x, b.y, true)?;
+            }
+            g.name = node.attribute("glyph-name").map(str::to_owned);
+            let ax = project(num(node, "horiz-adv-x", adv)?, scale, &mut rounded)?;
+            let ay = if native_exact {
+                fp(node, "advance-y").map(integer).transpose()?.unwrap_or(0)
+            } else {
+                0
+            };
+            g.metrics.advance = Some(Vector::new(ax, ay));
+            let vertical_present =
+                node.attribute("vert-adv-y").is_some() || n.attribute("vert-adv-y").is_some();
+            if vertical_present {
+                g.metrics.vertical_advance = Some(Vector::new(
+                    0,
+                    -project(
+                        num(node, "vert-adv-y", num(n, "vert-adv-y", upem)?)?,
+                        scale,
+                        &mut rounded,
+                    )?,
+                ));
+            }
+            if native_exact && let Some(v) = fp(node, "vertical-advance") {
+                let v = vector(v)?;
+                if g.metrics.vertical_advance.is_some_and(|s| s.y != v.y) {
+                    return Err(invalid("inconsistent native vertical metric"));
+                }
+                g.metrics.vertical_advance = Some(v);
+            }
+            if (vertical_present && !native_exact)
+                || node.attribute("vert-origin-x").is_some()
+                || node.attribute("vert-origin-y").is_some()
+                || n.attribute("vert-origin-x").is_some()
+                || n.attribute("vert-origin-y").is_some()
+            {
+                let x = num(
+                    node,
+                    "vert-origin-x",
+                    num(n, "vert-origin-x", num(node, "horiz-adv-x", adv)? / 2.)?,
+                )? - origin.0;
+                let y = num(node, "vert-origin-y", num(n, "vert-origin-y", asc)?)? - origin.1;
+                g.metrics.vertical_origin = Some(Vector::new(
+                    project(x, scale, &mut rounded)?,
+                    project(y, scale, &mut rounded)?,
+                ));
+            }
+            let is_missing = svg(node, "missing-glyph");
+            if is_missing {
+                if missing {
+                    return Err(invalid("multiple missing-glyph elements"));
+                }
+                missing = true;
+            }
+            let mapping = node
+                .attribute("unicode")
+                .map(|s| s.chars().map(|c| c as u32).collect::<Vec<_>>());
+            if mapping.as_ref().is_some_and(Vec::is_empty) {
+                return Err(invalid("empty unicode mapping"));
+            }
+            if is_missing && mapping.is_some() {
+                return Err(invalid("missing-glyph cannot carry unicode"));
+            }
+            if fp(node, "mapping").is_some_and(|s| s != "sequence") {
+                return Err(invalid("unsupported native mapping kind"));
+            }
+            let group = fp(node, "id")
+                .map(|s| {
+                    s.parse::<usize>()
+                        .map_err(|_| invalid("invalid glyph identity"))
+                })
+                .transpose()?;
+            let append_mapping = |g: &mut Glyph| {
+                if let Some(s) = &mapping {
+                    if s.len() == 1 && fp(node, "mapping") != Some("sequence") {
+                        g.codepoints.push(Codepoint::Unicode(s[0]));
+                    } else {
+                        g.unicode_sequences.push(s.clone());
+                    }
+                }
+            };
+            let id = if let Some((id, first)) = group.and_then(|v| groups.get(&v)) {
+                let old = &glyphs[*id];
+                if old.bitmap != g.bitmap
+                    || old.metrics != g.metrics
+                    || old.name != g.name
+                    || signature(*first) != signature(node)
+                {
+                    return Err(invalid("inconsistent native alias identity"));
+                }
+                let id = *id;
+                append_mapping(&mut glyphs[id]);
+                id
+            } else {
+                append_mapping(&mut g);
+                let id = glyphs.len();
+                glyphs.push(g);
+                if let Some(group) = group {
+                    groups.insert(group, (id, node));
+                }
+                id
+            };
+            if is_missing {
+                default_glyph = Some(id);
+            }
+            let allowed = [
+                "id",
+                "glyph-name",
+                "unicode",
+                "d",
+                "horiz-adv-x",
+                "vert-adv-y",
+                "vert-origin-x",
+                "vert-origin-y",
+                "fill",
+                "fill-rule",
+                "stroke",
+            ];
+            let private = ["id", "bounds", "advance-y", "vertical-advance", "mapping"];
+            if node.attributes().any(|a| {
+                if a.namespace() == Some(FP) {
+                    !private.contains(&a.name())
+                } else {
+                    a.namespace().is_some() || !allowed.contains(&a.name())
+                }
+            }) {
+                loss(
+                    &mut report,
+                    "glyph-attributes",
+                    "Unsupported glyph attributes omitted",
+                    Some(fi),
+                    Some(id),
+                );
+            }
+        }
+        for (index, g) in glyphs.into_iter().enumerate() {
+            let id = f.add_glyph(g)?;
+            if default_glyph == Some(index) {
+                f.metrics.default_glyph = Some(id);
+            }
+        }
+        if f.metrics.bounds.is_none() {
+            f.update_bounds()?;
+        }
+        if rounded || o.ppem.is_some() && native.is_some() && !native_exact {
+            loss(
+                &mut report,
+                "raster-projection",
+                "Explicit raster projection rounds design metrics or changes native size",
+                Some(fi),
+                None,
+            );
+        }
+        if !native_exact {
+            loss(
+                &mut report,
+                "outline-projection",
+                "SVG vector outlines projected to monochrome pixel centers; original paths are not retained",
+                Some(fi),
+                None,
+            );
+        }
+        f.validate(&l.resources)?;
+        set.fonts.push(f);
+    }
+    Ok((set, report))
+}

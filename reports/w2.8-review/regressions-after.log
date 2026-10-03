@@ -1,0 +1,47 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 11.73s
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/svg-6e2449b6f93435b9)
+
+running 39 tests
+test alias_loss_locations_reference_retained_glyph ... ok
+test active_animation_is_rejected_and_unknown_native_fields_reported ... ok
+test aliases_must_match ... ok
+test common_registry_budgets_are_enforced ... ok
+test curves_arcs_and_smooth_commands ... ok
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test custom_registry_options_persist_independently ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test explicit_scale_rounding_and_origin ... ok
+test effective_defaults_zero_advances_and_negative_bearings ... ok
+test generic_child_paths ... ok
+test generic_grid_and_all_commands ... ok
+test budgets_are_effective ... ok
+test generic_metadata_loss_and_selected_font_locations ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test image_empty_and_limits ... ok
+test huge_arc_expansion_is_rejected_before_normalization ... ok
+test gray_requires_threshold ... ok
+test image_shapes_and_single_glyph ... ok
+test malformed_and_unsafe_xml ... ok
+test independent_child_paths_union_even_with_opposite_winding ... ok
+test loss_and_strict_are_atomic ... ok
+test malformed_numbers_paths ... ok
+test missing_glyph_and_blank_preserved ... ok
+test collection_and_select ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test native_vertical_advance_without_origin ... ok
+test arbitrary_style_names_are_not_invalid_svg_descriptors ... ok
+test native_roundtrip_all_shapes ... ok
+test xml_budgets_preflight_attributes_namespaces_and_depth ... ok
+test unicode_mapping_model_budget_is_preallocation ... ok
+test writer_counts_alias_records_and_generated_commands ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test rejects_unsupported_graphics ... ok
+test deterministic_truncations_and_byte_mutations_do_not_panic ... ok
+test repeated_glyph_geometry_is_streamed_under_model_budget ... ok
+test many_aliases_are_grouped_once_before_indexing ... ok
+test random_bitmap_font_roundtrip ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+

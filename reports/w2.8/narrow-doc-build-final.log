@@ -1,0 +1,52 @@
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 1.53s
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 2.83s
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.37s
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/svg-be0592fe5711036b)
+
+running 29 tests
+test exhaustive_grid_checks_late_glyph ... ok
+test explicit_scale_rounding_and_origin ... ok
+test custom_registry_options_persist_independently ... ok
+test aliases_must_match ... ok
+test generic_grid_and_all_commands ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test budgets_are_effective ... ok
+test image_empty_and_limits ... ok
+test gray_requires_threshold ... ok
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test collection_and_select ... ok
+test huge_arc_expansion_is_rejected_before_normalization ... ok
+test malformed_and_unsafe_xml ... ok
+test malformed_numbers_paths ... ok
+test loss_and_strict_are_atomic ... ok
+test image_shapes_and_single_glyph ... ok
+test generic_child_paths ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test native_vertical_advance_without_origin ... ok
+test curves_arcs_and_smooth_commands ... ok
+test missing_glyph_and_blank_preserved ... ok
+test writer_counts_alias_records_and_generated_commands ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test rejects_unsupported_graphics ... ok
+test xml_budgets_preflight_attributes_namespaces_and_depth ... ok
+test native_roundtrip_all_shapes ... ok
+test repeated_glyph_geometry_is_streamed_under_model_budget ... ok
+test random_bitmap_font_roundtrip ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Checking fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel-cli)
+    Finished `dev` profile [unoptimized] target(s) in 2.55s
+ Documenting fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 3.19s
+   Generated /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/doc/fontpixel/index.html
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+   Compiling fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel-cli)
+    Finished `release` profile [optimized] target(s) in 29.94s
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+    Finished `release` profile [optimized] target(s) in 27.36s

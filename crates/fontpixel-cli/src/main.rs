@@ -76,6 +76,12 @@ enum Command {
         /// Paper color, in the same syntax as --color.
         #[arg(long, default_value = "#ffffff")]
         background: fontpixel::render::Rgba,
+        /// SVG pixel shape (PNG uses square pixels).
+        #[arg(long, value_parser = ["square", "square-separate", "dot"])]
+        shape: Option<String>,
+        /// SVG dot diameter or separate-square side relative to one pixel.
+        #[arg(long)]
+        dotsize: Option<f64>,
     },
     /// Convert fonts with loss reporting and safe output replacement.
     Convert {
@@ -374,7 +380,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             raster.apply(&mut registry)?;
             let options = ReadOptions {
                 format: from,
-                ..ReadOptions::default()
+                limits: raster.input_limits(),
             };
             let bytes = read_primary(&input, &options.limits)?;
             let name = input.to_string_lossy();
@@ -429,6 +435,8 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             scale,
             color,
             background,
+            shape,
+            dotsize,
         } => {
             let kind = to
                 .or_else(|| {
@@ -451,6 +459,11 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     format: "png".into(),
                 });
             }
+            if kind != "svg" && (shape.is_some() || dotsize.is_some()) {
+                return Err(Error::InvalidInput(
+                    "--shape/--dotsize require SVG image output".into(),
+                ));
+            }
             let rendered = render_layout(&layout)?;
             let image_options = fontpixel::render::ImageOptions {
                 scale,
@@ -459,7 +472,35 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 limits: render_bitmap_limits(&layout),
             };
             let bytes = if kind == "svg" {
-                fontpixel::render::to_svg(&rendered.bitmap, &image_options)?.into_bytes()
+                #[cfg(feature = "svg")]
+                {
+                    let shape = svg_shape(shape.as_deref());
+                    fontpixel::formats::svg::image(
+                        &rendered.bitmap,
+                        &fontpixel::formats::svg::ImageOptions {
+                            image: image_options,
+                            shape,
+                            dot_size: dotsize.unwrap_or(
+                                if shape == fontpixel::outline::Shape::Dot {
+                                    0.9
+                                } else {
+                                    1.
+                                },
+                            ),
+                            ..Default::default()
+                        },
+                    )?
+                    .into_bytes()
+                }
+                #[cfg(not(feature = "svg"))]
+                {
+                    if shape.is_some() || dotsize.is_some() {
+                        return Err(Error::FeatureDisabled {
+                            format: "svg".into(),
+                        });
+                    }
+                    fontpixel::render::to_svg(&rendered.bitmap, &image_options)?.into_bytes()
+                }
             } else {
                 #[cfg(feature = "png")]
                 {
@@ -527,7 +568,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
                 format: from,
-                ..ReadOptions::default()
+                limits: raster.input_limits(),
             };
             let mut fonts = fontpixel::FontSet::default();
             let mut report = fontpixel::Report::default();
@@ -604,7 +645,7 @@ fn render_layout(args: &LayoutArguments) -> fontpixel::Result<fontpixel::render:
     use fontpixel::render::{GlyphOrder, MissingGlyph, RenderMode, RenderOptions};
     let read_options = ReadOptions {
         format: args.from.clone(),
-        ..Default::default()
+        limits: args.raster.input_limits(),
     };
     let bytes = read_primary(&args.input, &read_options.limits)?;
     let mut registry = fontpixel::registry();
@@ -844,6 +885,9 @@ fn main() -> ExitCode {
 
 #[derive(Args, Default)]
 struct RasterArguments {
+    /// Primary input byte budget (default 64 MiB); aggregate 256 MiB cap remains.
+    #[arg(long)]
+    max_input_bytes: Option<usize>,
     /// Explicit raster size for reviewed off-grid/curved outlines.
     #[arg(long)]
     ppem: Option<u16>,
@@ -863,7 +907,23 @@ struct RasterArguments {
     pixel_offset_y: f64,
 }
 impl RasterArguments {
+    fn input_limits(&self) -> ResourceLimits {
+        let mut limits = ResourceLimits::default();
+        if let Some(maximum) = self.max_input_bytes {
+            limits.max_input_bytes = maximum;
+        }
+        limits
+    }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        #[cfg(feature = "svg")]
+        registry.set_svg_read_options(fontpixel::formats::svg::ReadOptions {
+            ppem: self.ppem,
+            font_index: self.face_index,
+            limits: fontpixel::formats::svg::Limits {
+                resources: self.input_limits(),
+                ..Default::default()
+            },
+        });
         #[cfg(feature = "opentype")]
         registry.set_vector_read_options(fontpixel::formats::vector_raster::Options {
             ppem: self.ppem,
@@ -876,8 +936,7 @@ impl RasterArguments {
         #[cfg(not(feature = "opentype"))]
         {
             let _ = registry;
-            if self.ppem.is_some()
-                || self.face_index.is_some()
+            if (!cfg!(feature = "svg") && (self.ppem.is_some() || self.face_index.is_some()))
                 || self.no_embedded_bitmaps
                 || self.grid_units.is_some()
                 || self.pixel_offset_x != 0.
@@ -891,7 +950,7 @@ impl RasterArguments {
 }
 #[derive(Args, Default)]
 struct VectorArguments {
-    /// Outline shape for TTF/OTF/WOFF/WOFF2/TTC conversion.
+    /// Outline shape for SVG/TTF/OTF/WOFF/WOFF2/TTC conversion.
     #[arg(long,value_parser=["square","square-separate","dot"])]
     shape: Option<String>,
     #[arg(long)]
@@ -924,6 +983,34 @@ impl VectorArguments {
             || self.woff2_source.is_some()
             || self.woff2_quality.is_some()
             || self.collection_v2;
+        #[cfg(feature = "svg")]
+        if id == "svg" {
+            if self.upm.is_some()
+                || self.embed_bitmaps
+                || self.woff2_source.is_some()
+                || self.woff2_quality.is_some()
+                || self.collection_v2
+            {
+                return Err(Error::InvalidInput(
+                    "OpenType container options cannot apply to SVG output".into(),
+                ));
+            }
+            let shape = svg_shape(self.shape.as_deref());
+            registry.set_svg_write_options(fontpixel::formats::svg::WriteOptions {
+                units_per_pixel: self.ppu.unwrap_or(100),
+                shape,
+                dot_size: self
+                    .dotsize
+                    .unwrap_or(if shape == fontpixel::outline::Shape::Dot {
+                        0.9
+                    } else {
+                        1.
+                    }),
+                gray_threshold: self.gray_threshold,
+                ..Default::default()
+            });
+            return Ok(());
+        }
         if explicit && !["ttf", "otf", "woff", "woff2", "ttc", "vector-raster"].contains(&id) {
             return Err(Error::InvalidInput(
                 "outline options require an OpenType output".into(),
@@ -970,5 +1057,14 @@ impl VectorArguments {
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(feature = "svg")]
+fn svg_shape(shape: Option<&str>) -> fontpixel::outline::Shape {
+    match shape {
+        Some("dot") => fontpixel::outline::Shape::Dot,
+        Some("square-separate") => fontpixel::outline::Shape::SquareSeparate,
+        _ => fontpixel::outline::Shape::Square,
     }
 }

@@ -1,0 +1,24 @@
+    Updating crates.io index
+     Locking 11 packages to highest Rust 1.101.0-nightly compatible versions
+      Adding arrayvec v0.7.8
+      Adding autocfg v1.5.1
+      Adding euclid v0.22.14
+      Adding kurbo v0.13.1
+      Adding num-traits v0.2.19
+      Adding polycool v0.4.0
+      Adding roxmltree v0.21.1
+      Adding siphasher v1.0.4
+      Adding smallvec v1.16.2
+      Adding svgtypes v0.16.1
+      Adding xmlparser v0.13.6
+   Compiling arrayvec v0.7.8
+   Compiling smallvec v1.16.2
+   Compiling siphasher v1.0.4
+   Compiling roxmltree v0.21.1
+   Compiling xmlparser v0.13.6
+   Compiling polycool v0.4.0
+   Compiling kurbo v0.13.1
+   Compiling svgtypes v0.16.1
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2m 25s

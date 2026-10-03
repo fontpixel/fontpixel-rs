@@ -1,0 +1,62 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/crates/fontpixel)
+warning: missing documentation for the crate
+   --> crates/fontpixel/tests/svg.rs:1:1
+    |
+  1 | / #![cfg(feature = "svg")]
+  2 | | use fontpixel::{
+  3 | |     Bitmap, Font, FontSet, Glyph, Input,
+  4 | |     bitmap::Bounds,
+...   |
+446 | | proptest::proptest! {#[test] fn random_bitmap_font_roundtrip(data in proptest::collection::vec(proptest::prelude::any::<u8>(),0..256), w in 1u32..17,h in 0u32..17,x in -8i32..8,y in -8i32..8){let mut b:Bitmap=Bitmap::new(w,h).unwrap();for row in 0..h{for col in 0..w{if data.get(((row*w+col) as usize)%data.len().max(1)).is_some_and(|v|v&1!=0){b.set_pixel(col,row,1).unwrap();}}}let mut g=Glyph::new(b);g.metrics.bounds.x=i64::from(x);g.metrics.bounds.y=i64::from(y);g.metrics.advance=Some(Vector::new(9,0));let mut f=Font::default();f.metrics.pixel_size=Some(16);f.add_glyph(g).unwrap();for shape in [Shape::Square,Shape::Dot]{let d=svg::write(&FontSet::from(f.clone()),&WriteOptions{shape,..Default::default()}).unwrap().0;equal(&f,&svg::read(&d,&Default::default()).unwrap().0.fonts[0]);}}}
+    | |_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________^
+    |
+    = note: requested on the command line with `-W missing-docs`
+
+warning: `fontpixel` (test "svg") generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 10.25s
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/svg-a5a8df2f384ae5b4)
+
+running 25 tests
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test aliases_must_match ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test explicit_scale_rounding_and_origin ... ok
+test curves_arcs_and_smooth_commands ... ok
+test generic_grid_and_all_commands ... ok
+test generic_child_paths ... ok
+test custom_registry_options_persist_independently ... ok
+test image_empty_and_limits ... ok
+test gray_requires_threshold ... ok
+test malformed_and_unsafe_xml ... ok
+test image_shapes_and_single_glyph ... ok
+test generic_relative_multiple_open_subpaths_close ... FAILED
+test loss_and_strict_are_atomic ... ok
+test missing_glyph_and_blank_preserved ... ok
+test malformed_numbers_paths ... ok
+test budgets_are_effective ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test collection_and_select ... ok
+test rejects_unsupported_graphics ... ok
+test native_vertical_advance_without_origin ... ok
+test native_roundtrip_all_shapes ... ok
+test random_bitmap_font_roundtrip ... ok
+
+failures:
+
+---- generic_relative_multiple_open_subpaths_close stdout ----
+
+thread 'generic_relative_multiple_open_subpaths_close' (96) panicked at crates/fontpixel/tests/svg.rs:136:5:
+assertion `left == right` failed
+  left: Mono(Bitmap { width: 3, height: 2, data: [32, 128], limits: BitmapLimits { max_dimension: 1048576, max_pixels: 16777216, max_bytes: 67108864 }, format: PhantomData<fontpixel::bitmap::Mono> })
+ right: Mono(Bitmap { width: 3, height: 1, data: [160], limits: BitmapLimits { max_dimension: 1048576, max_pixels: 16777216, max_bytes: 67108864 }, format: PhantomData<fontpixel::bitmap::Mono> })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    generic_relative_multiple_open_subpaths_close
+
+test result: FAILED. 24 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+error: test failed, to rerun pass `-p fontpixel --test svg`

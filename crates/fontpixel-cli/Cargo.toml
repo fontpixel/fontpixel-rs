@@ -20,10 +20,11 @@ required-features = ["parity"]
 
 [features]
 parity = ["fontpixel/compat-bdfparser", "fontpixel/cjk-charsets", "dep:sha2", "dep:base64"]
-default = ["fontpixel/default", "pcf", "png", "opentype"]
+default = ["fontpixel/default", "pcf", "png", "opentype", "svg"]
 pcf = ["fontpixel/pcf"]
 png = ["fontpixel/png"]
-all-formats = ["fontpixel/all-formats", "pcf", "opentype"]
+svg = ["fontpixel/svg"]
+all-formats = ["fontpixel/all-formats", "pcf", "opentype", "svg"]
 opentype = ["fontpixel/ttf", "fontpixel/otf", "fontpixel/ttc", "fontpixel/cff", "fontpixel/woff", "fontpixel/woff2"]
 
 [dependencies]

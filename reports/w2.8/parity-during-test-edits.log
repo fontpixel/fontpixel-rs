@@ -1,0 +1,52 @@
+[parity] sources: {"python": {"head": "", "src_dirty": false, "src_sha256": "938d9ed560ef29ba"}, "rust": {"head": "83c34d1", "src_dirty": false, "src_sha256": "63d6070ab76796cc"}}
+[parity] Rust runner: /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/release/fontpixel-parity; jobs: 8; out: /tmp/fontpixel-w28-parity
+[tables] 67 charset tables compared, 0 differ (SPEC-v3 §11.1: tables must be exact, see README.md) (13.9s) -> /tmp/fontpixel-w28-parity/tables_report.txt
+[random] 2000 cases, 35941 ops, 0 divergence(s), 0 NEW (11.2s wall; slowest shard py 10.4s / js 4.4s)
+[random_all] 1000 cases, 17588 ops, 6 divergence(s), 0 NEW (6.1s wall; slowest shard py 5.6s / js 1.5s)
+          6  K12-ragged-bitmap
+[probes] 41 cases, 89 ops, 1 divergence(s), 0 NEW (0.3s wall; slowest shard py 0.1s / js 0.0s)
+          1  K12-ragged-bitmap
+      ok  R01-empty-draw                 agrees
+      ok  R02-stale-writeback            agrees
+      ok  K02-todata-empty-row           agrees
+      ok  K03-negative-size              agrees
+      ok  K04-overlay-size               agrees
+      ok  K05-bigint                     agrees
+      ok  K06a-numeric-prop-key          agrees
+      ok  K06b-proto-prop-key            agrees
+      ok  K06c-comment-prop-key          agrees
+      ok  K06d-comment-prop-crash        agrees
+      ok  K07-exotic-whitespace          agrees
+      ok  K08a-lenient-int               agrees
+      ok  K08b-version-inf               agrees
+      ok  K08c-version-hex               agrees
+      ok  K09-removeglyph-detached       agrees
+      ok  K10-gb18030-4byte              agrees
+      ok  K11-todata-precision           agrees
+      ok  K12-ragged-bitmap              still diverges
+      ok  K13a-gb2312                    agrees
+      ok  K13b-cp125x                    agrees
+      ok  K13c-iso8859-9-11              agrees
+      ok  K13d-koi8u                     agrees
+      ok  K13e-big5                      agrees
+      ok  K13f-shiftjis-eucjp            agrees
+      ok  K13g-euckr-uhc                 agrees
+      ok  K13h-python-char2cp-invalid    agrees
+      ok  K13i-js-only-codecs            agrees
+      ok  K14-charset-name               agrees
+      ok  K16-concatall-empty            agrees
+      ok  S01-int32-fields               agrees
+      ok  S02-prop-int-range             agrees
+      ok  S03-comment-in-bitmap          agrees
+      ok  S04-nonhex-row                 agrees
+      ok  S05-negative-bbx               agrees
+      ok  S06-ascii-whitespace           agrees
+      ok  S07-pcf-guards                 agrees
+      ok  S08-svgfont-charset            agrees
+      ok  S09-cmap-surrogates            agrees
+      ok  S10-new-codepages              agrees
+      ok  S11-pcf-without-fbb            agrees
+      ok  S12-bom-in-names               agrees
+[corpus] 251 cases, 5221 ops, 0 divergence(s), 0 NEW (69.0s wall; slowest shard py 68.8s / js 23.6s)
+[parity] WARNING: library sources changed while the harness was running; results may be inconsistent
+[parity] done in 103.8s: 0 NEW divergence(s). Reports: /tmp/fontpixel-w28-parity/*_report.txt

@@ -17,6 +17,8 @@ pub mod catalogue;
 pub mod embedded;
 #[cfg(feature = "pcf")]
 pub mod pcf;
+#[cfg(feature = "svg")]
+pub mod svg;
 #[cfg(feature = "vector-raster")]
 pub mod vector_raster;
 #[cfg(any(feature = "bdf", feature = "pcf"))]
@@ -526,6 +528,47 @@ impl Registry<crate::FontSet> {
                 codec.write_options = options.clone();
                 entry.writer = Some(Box::new(codec));
             }
+        }
+    }
+}
+
+#[cfg(feature = "svg")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_svg(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "svg") {
+            e.detector = Some(Box::new(svg::SvgCodec::default()));
+            e.reader = Some(Box::new(svg::SvgCodec::default()));
+            e.writer = Some(Box::new(svg::SvgCodec::default()));
+        }
+    }
+    /// Configure the SVG font reader/detector independently of its writer.
+    pub fn set_svg_read_options(&mut self, options: svg::ReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "svg" && e.reader.is_some())
+        {
+            e.detector = Some(Box::new(svg::SvgCodec {
+                read_options: options.clone(),
+                ..Default::default()
+            }));
+            e.reader = Some(Box::new(svg::SvgCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure deterministic SVG font output independently of its reader.
+    pub fn set_svg_write_options(&mut self, options: svg::WriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "svg" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(svg::SvgCodec {
+                write_options: options,
+                ..Default::default()
+            }));
         }
     }
 }
