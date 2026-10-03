@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 111, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.8/tests/crosscheck/svg.py", line 96, in main
+    assert actual['bbox']==bbox and rows(actual)==expected,('generic curve',i,actual['bbox'],bbox)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('generic curve', 4, [9, 7, 0, -2], [9, 7, 0, -2])

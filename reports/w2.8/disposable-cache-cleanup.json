@@ -1,0 +1,436 @@
+{
+  "scope": "Only old rebuildable Rust rlib/rmeta caches; no source, executable evidence or ZIP removed.",
+  "files": [
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-0223cbca5354217d.rmeta",
+      "size": 1089372,
+      "mtime": 1791023193.5977838
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-02c5a0e7b3b77b5c.rmeta",
+      "size": 0,
+      "mtime": 1791039194.9341257
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-039f796584296b6c.rlib",
+      "size": 16836536,
+      "mtime": 1791039384.1030505
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-039f796584296b6c.rmeta",
+      "size": 2251506,
+      "mtime": 1791039383.1869507
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-095a1c49b3ad9c30.rmeta",
+      "size": 674529,
+      "mtime": 1791023069.7399585
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-0d57e6c27bdd457b.rmeta",
+      "size": 0,
+      "mtime": 1791031352.273401
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-0fda719afc66980a.rmeta",
+      "size": 1465610,
+      "mtime": 1791039194.9341257
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-12a706dfa9e46fe3.rlib",
+      "size": 15925234,
+      "mtime": 1791031487.215749
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-12a706dfa9e46fe3.rmeta",
+      "size": 2984925,
+      "mtime": 1791031486.4665601
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-156d6c43ec99a3d3.rmeta",
+      "size": 4456068,
+      "mtime": 1791032810.7019727
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-16d49edd8df793e0.rmeta",
+      "size": 1224264,
+      "mtime": 1791031490.5079038
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-1cdfac6b9eed2e9e.rmeta",
+      "size": 672083,
+      "mtime": 1791031365.3420162
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-1d45451cff3d1ecd.rlib",
+      "size": 26140592,
+      "mtime": 1791023139.9272566
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-1d45451cff3d1ecd.rmeta",
+      "size": 1487475,
+      "mtime": 1791023138.7199507
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-1f905c53c85c7c34.rmeta",
+      "size": 0,
+      "mtime": 1791023193.5977838
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-24f6779bd9a5be22.rmeta",
+      "size": 0,
+      "mtime": 1791032818.4623377
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-264518644a9aeae5.rmeta",
+      "size": 0,
+      "mtime": 1791010932.9972014
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-2c1ce2c571c39a95.rmeta",
+      "size": 0,
+      "mtime": 1791031365.3420162
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-2d3b85c7afe718a9.rmeta",
+      "size": 0,
+      "mtime": 1791039176.157244
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-2d3d8f9f73480eb7.rlib",
+      "size": 32513894,
+      "mtime": 1791010102.7021372
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-2d3d8f9f73480eb7.rmeta",
+      "size": 1719591,
+      "mtime": 1791010100.9023967
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-372089ad82299c51.rlib",
+      "size": 34475656,
+      "mtime": 1791010174.0276837
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-372089ad82299c51.rmeta",
+      "size": 1760059,
+      "mtime": 1791010170.2805543
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-37c1a105aacfafd6.rmeta",
+      "size": 0,
+      "mtime": 1791031490.5079038
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-38809478805a6297.rmeta",
+      "size": 1131191,
+      "mtime": 1791023196.5179212
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3c66e85f56a31a49.rlib",
+      "size": 103846768,
+      "mtime": 1791029965.516184
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3c66e85f56a31a49.rmeta",
+      "size": 5922115,
+      "mtime": 1791029959.3421688
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3d84075b3389dc8d.rlib",
+      "size": 12406358,
+      "mtime": 1791031457.3743465
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3d84075b3389dc8d.rmeta",
+      "size": 1103863,
+      "mtime": 1791031456.6888337
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3e9eb56ae1c8c4ad.rmeta",
+      "size": 1554115,
+      "mtime": 1791039191.8899825
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-3f54814e9cf990a1.rmeta",
+      "size": 0,
+      "mtime": 1791023196.5179212
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-46a8f91ce918eedb.rlib",
+      "size": 76857972,
+      "mtime": 1791031434.6212769
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-46a8f91ce918eedb.rmeta",
+      "size": 3564940,
+      "mtime": 1791031428.8206244
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-491ac92aad199b54.rmeta",
+      "size": 1485192,
+      "mtime": 1791039182.7575533
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-49f8c30b1a9a7ff0.rlib",
+      "size": 32937392,
+      "mtime": 1791023115.4621055
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-49f8c30b1a9a7ff0.rmeta",
+      "size": 2365272,
+      "mtime": 1791023113.9814503
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-4f7cbc3c533f569e.rlib",
+      "size": 83053340,
+      "mtime": 1791025353.463315
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-4f7cbc3c533f569e.rmeta",
+      "size": 3420792,
+      "mtime": 1791025352.0372028
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-5411c3f2d9ab8ce0.rmeta",
+      "size": 1464719,
+      "mtime": 1791039179.0173788
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-5525c22030319466.rlib",
+      "size": 32513902,
+      "mtime": 1791010133.9236078
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-5525c22030319466.rmeta",
+      "size": 1719591,
+      "mtime": 1791010126.705338
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-56db59e31ea43efb.rmeta",
+      "size": 0,
+      "mtime": 1791039197.6702545
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-573e7d80e4e9a6b1.rlib",
+      "size": 58912936,
+      "mtime": 1791019149.9396214
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-573e7d80e4e9a6b1.rmeta",
+      "size": 2969454,
+      "mtime": 1791019147.9371355
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-5b33f49a92535d5b.rmeta",
+      "size": 1239800,
+      "mtime": 1791039176.157244
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-5d4f7da5a299b243.rmeta",
+      "size": 0,
+      "mtime": 1791025569.9774923
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-6afa7493b1f69020.rmeta",
+      "size": 1465610,
+      "mtime": 1791039200.5983922
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-6dd41ef61a26993f.rmeta",
+      "size": 0,
+      "mtime": 1791039179.0173788
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-801207f167851f21.rmeta",
+      "size": 0,
+      "mtime": 1791039182.7575533
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-841a3365e9547cec.rmeta",
+      "size": 0,
+      "mtime": 1791039200.5983922
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-852f6c3d2c8e9a6d.rmeta",
+      "size": 4057975,
+      "mtime": 1791010925.624854
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-8e49de60b13b8562.rmeta",
+      "size": 0,
+      "mtime": 1791010933.2332127
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-917eefd79b2b94a5.rmeta",
+      "size": 4374746,
+      "mtime": 1791031352.273401
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-91ebc04dcd173d4d.rmeta",
+      "size": 0,
+      "mtime": 1791039191.8899825
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-9719f385b4fb3e1f.rlib",
+      "size": 83511582,
+      "mtime": 1791025666.1380122
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-9719f385b4fb3e1f.rmeta",
+      "size": 3556888,
+      "mtime": 1791025664.4883792
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-aede44fbf67bf93e.rlib",
+      "size": 93872020,
+      "mtime": 1791023083.012581
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-aede44fbf67bf93e.rmeta",
+      "size": 5605956,
+      "mtime": 1791023079.0615592
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b078543430a50360.rlib",
+      "size": 24872714,
+      "mtime": 1791010083.3191164
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b078543430a50360.rmeta",
+      "size": 1612106,
+      "mtime": 1791010081.7709422
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b547617d5757175c.rlib",
+      "size": 39725264,
+      "mtime": 1791039120.9066381
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b547617d5757175c.rmeta",
+      "size": 6074201,
+      "mtime": 1791039118.4506767
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b6fdbbd507185cf8.rmeta",
+      "size": 4369598,
+      "mtime": 1791025569.9774923
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b7761a39cef9f2eb.rmeta",
+      "size": 4059060,
+      "mtime": 1791010191.1783001
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b8ab0e4cfe4349b4.rlib",
+      "size": 78909472,
+      "mtime": 1791010950.082007
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-b8ab0e4cfe4349b4.rmeta",
+      "size": 5425656,
+      "mtime": 1791010945.4621818
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-bbb64796d6f38d6c.rmeta",
+      "size": 0,
+      "mtime": 1791023068.7559123
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-bd62817dbb0fec12.rlib",
+      "size": 17376374,
+      "mtime": 1791023155.039968
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-bd62817dbb0fec12.rmeta",
+      "size": 2986468,
+      "mtime": 1791023154.3668673
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-bfe5817fdbd6cc19.rmeta",
+      "size": 1465610,
+      "mtime": 1791039197.6702545
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c43074dddcf088c9.rmeta",
+      "size": 1510358,
+      "mtime": 1791039188.6858315
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c489dc77b3e4708a.rlib",
+      "size": 103924848,
+      "mtime": 1791031383.5268724
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c489dc77b3e4708a.rmeta",
+      "size": 5922075,
+      "mtime": 1791031376.3317428
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c6b83c3044b151d5.rlib",
+      "size": 13846806,
+      "mtime": 1791023129.3747597
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c6b83c3044b151d5.rmeta",
+      "size": 1105400,
+      "mtime": 1791023128.8047569
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c8b9bc19738aa5c7.rlib",
+      "size": 23556114,
+      "mtime": 1791031469.2589054
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-c8b9bc19738aa5c7.rmeta",
+      "size": 1485742,
+      "mtime": 1791031467.5713787
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-ccba7b80af2047f3.rmeta",
+      "size": 0,
+      "mtime": 1791023069.7399585
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-d441d8d799e7e3f7.rmeta",
+      "size": 0,
+      "mtime": 1791031362.8979013
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-dbf06503ca6507f5.rmeta",
+      "size": 2096187,
+      "mtime": 1791024785.8760626
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-de969c8865a2c0e5.rmeta",
+      "size": 0,
+      "mtime": 1791010925.624854
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-e06c5e94e2dc568c.rlib",
+      "size": 112338100,
+      "mtime": 1791025662.0178182
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-e06c5e94e2dc568c.rmeta",
+      "size": 5914438,
+      "mtime": 1791025657.2899227
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-e4fa57533fc47c20.rmeta",
+      "size": 0,
+      "mtime": 1791023069.1159291
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-ef29c744b5f21283.rmeta",
+      "size": 0,
+      "mtime": 1791031362.6738906
+    },
+    {
+      "path": "/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target/debug/deps/libfontpixel-f20bbad888be9f6c.rmeta",
+      "size": 0,
+      "mtime": 1791039188.6858315
+    }
+  ],
+  "bytes": 1229168474
+}

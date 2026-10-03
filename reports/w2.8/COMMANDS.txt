@@ -1,0 +1,30 @@
+Run from fontpixel-rs-w2.8. No command modifies reference/samples or pushes.
+source /workspace/scratch/ef9059dd510b/toolchain/env.sh
+export CARGO_INCREMENTAL=0 CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/target
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH=/workspace/scratch/ef9059dd510b/toolchain/python-w2.8:/workspace/scratch/ef9059dd510b/toolchain/python-w2.5:/workspace/scratch/ef9059dd510b/toolchain/freetype-system:/workspace/scratch/ef9059dd510b/toolchain/python-w2.4:/workspace/scratch/ef9059dd510b/toolchain/python-packages
+
+bash scripts/check.sh
+for features in svg bdf,svg; do cargo clippy --locked -p fontpixel --all-targets --no-default-features --features "$features" -- -D warnings; done
+cargo test --locked -p fontpixel --no-default-features --features svg --test svg
+cargo clippy --locked -p fontpixel-cli --no-default-features --features svg -- -D warnings
+RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps
+cargo build --locked --release -p fontpixel-cli --all-features
+cargo build --locked --release -p fontpixel --all-features --example svg_check
+python3 -B tests/parity/run_all.py --rust "$CARGO_TARGET_DIR/release/fontpixel-parity" --out /tmp/fontpixel-w28-parity
+python3 -B tests/crosscheck/svg.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --driver "$CARGO_TARGET_DIR/release/examples/svg_check" --work /tmp/fontpixel-w28-crosscheck --output reports/w2.8/crosscheck.json
+python3 -B tests/crosscheck/render_images.py --binary "$CARGO_TARGET_DIR/release/fontpixel" --output reports/w2.8/render-images.json
+
+export CARGO_TARGET_DIR=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w2.4-recovery/fuzz/target
+cargo +nightly fuzz build svg
+cargo deny --locked --manifest-path fuzz/Cargo.toml check
+ASAN_OPTIONS=detect_leaks=0 "$CARGO_TARGET_DIR/x86_64-unknown-linux-gnu/release/svg" /tmp/fontpixel-w28-fuzz -max_total_time=611 -max_len=65536 -rss_limit_mb=768
+sha256sum -c reports/w2.8/fuzz-reader-final.sha256
+find ../reference ../samples -type f -print0 | sort -z | xargs -0 sha256sum > reports/w2.8/protected-final.sha256
+cmp reports/w2.7-review/protected-before.sha256 reports/w2.8/protected-final.sha256
+
+# First checkpoint and final delivery both contain all branches; no targets/large
+# generated fonts are included. Bundle and ZIP checks are saved separately.
+git bundle create /workspace/scratch/ef9059dd510b/w2.8-delivery/fontpixel-rs-delivery/w2.8/fontpixel-rs-w2.8.bundle --all
+git bundle verify /workspace/scratch/ef9059dd510b/w2.8-delivery/fontpixel-rs-delivery/w2.8/fontpixel-rs-w2.8.bundle
