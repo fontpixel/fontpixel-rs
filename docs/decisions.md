@@ -801,3 +801,27 @@ to select ZHS, including in Macao. Hong Kong continues to select ZHH.
 **Reason:** The promised registry-based BCP-47 conversion must distinguish the
 registered regional tags. Source: Microsoft's
 [language system registry](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags).
+
+## 2026-10-03 — W2.7 uses exhaustive grid checks and explicit raster overrides
+
+**Question:** The catalogue's importer samples at most 300 outlines and requires
+20 samples, while PLAN requires all coordinates on a common grid and bounded
+native OpenType integration.
+**Choice:** Examine all expanded geometry, accept small provable grid fonts, and
+require explicit ppem for non-grid outlines. Preserve physical bitmap strikes by
+default; exact requested-size strikes precede per-glyph outline fallback. Keep
+CFF cubic paths exact through center-sampling, rather than flattening them.
+**Reason:** Sampling could miss a late anomalous component or reject valid tiny
+fonts. Automatic grid recovery and reviewed arbitrary rasterization are distinct
+contracts; unsupported variation/hinting must stay explicit.
+
+## 2026-10-03 — Collections separate face packaging from bitmap projection
+
+**Question:** A FontSet can represent independent faces or bitmap strikes, and
+TTC shares tables rather than concatenating standalone sfnts.
+**Choice:** Expose a bounded TTC v1/v2 container API and deterministic same-tag
+byte sharing. Native TTC writes interpret each Font as one face. Extraction and
+reassembly remove stale DSIG and recompute standalone checksums; native readers
+annotate source face indices and preserve ordered face/strike expansion.
+**Reason:** Preserve useful low-level fidelity without guessing face groupings
+or claiming arbitrary OpenType layout survives bitmap projection.
