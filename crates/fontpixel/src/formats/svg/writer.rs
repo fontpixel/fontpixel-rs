@@ -471,7 +471,7 @@ pub fn write(fonts: &FontSet, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
             for cp in &g.codepoints {
                 let ch = match cp {
                     Codepoint::Unicode(v) => char::from_u32(*v),
-                    Codepoint::Legacy(v) => codec.as_ref().ok().and_then(|c| c.cp2char(*v)),
+                    Codepoint::Legacy(v) => codec.as_ref().map_err(invalid)?.cp2char(*v),
                 };
                 if let Some(c) = ch.filter(|c| valid_char(*c)) {
                     mappings.push((c.to_string(), false));

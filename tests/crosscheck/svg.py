@@ -60,6 +60,8 @@ def main():
                     assert got==expected,(source.name,shape,node.attrib.get('unicode'),'Cairo pixels')
                     raster_count+=1
             results.append(dict(source=source.name,shape=shape,glyphs=len(native['glyphs']),sha256=hashlib.sha256(output.read_bytes()).hexdigest()))
+            print(f'PASS {source.name} {shape}: {len(native["glyphs"])} native glyphs and independent visible paths',flush=True)
+            (a.work/'completed-cases.json').write_text(json.dumps(results,indent=2)+'\n')
     # Independent producer: supplied Python reference SVG font, including its
     # historical cell-based origin and synthetic .notdef. Compare to Cairo paths.
     f=Font(sources[0]);reference=a.work/'python-reference.svg';reference.write_text(f.tosvgfont())
@@ -85,7 +87,7 @@ def main():
         run(a.driver,p,j,16)
         actual=json.loads(j.read_text())['fonts'][0]['glyphs'][0]
         factor=64;left,bottom=-4,-5;w,h=22,20
-        doc=f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*factor}" height="{h*factor}" viewBox="0 0 {w} {h}"><g transform="matrix(.01 0 0 -.01 {-left} {h+bottom})"><path d="{path}"/></g></svg>'
+        doc=f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*factor}" height="{h*factor}" viewBox="{-0.5/factor} {-0.5/factor} {w} {h}"><g transform="matrix(.01 0 0 -.01 {-left} {h+bottom})"><path d="{path}"/></g></svg>'
         im=Image.open(io.BytesIO(cairosvg.svg2png(bytestring=doc.encode()))).convert('RGBA')
         points=[(x,y) for y in range(h) for x in range(w) if im.getpixel((x*factor+factor//2,y*factor+factor//2))[3]>=128]
         if points:

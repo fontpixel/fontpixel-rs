@@ -505,3 +505,87 @@ fn huge_arc_expansion_is_rejected_before_normalization() {
         assert!(read(&format!("<glyph d='{d}'/>")).is_err());
     }
 }
+
+#[test]
+fn effective_defaults_zero_advances_and_negative_bearings() {
+    let mut f = Font::default();
+    f.metrics.pixel_size = Some(8);
+    f.metrics.glyph_defaults.advance = Some(Vector::new(0, 1));
+    f.metrics.glyph_defaults.vertical_advance = Some(Vector::new(2, -9));
+    f.metrics.glyph_defaults.vertical_origin = Some(Vector::new(-3, 7));
+    let mut g = Glyph::new("#".parse::<Bitmap>().unwrap());
+    g.metrics.bounds = Bounds::new(1, 1, -4, -2);
+    f.add_glyph(g).unwrap();
+    let (d, r) = svg::write(&FontSet::from(f), &Default::default()).unwrap();
+    assert!(r.has_loss());
+    let (set, _) = svg::read(&d, &Default::default()).unwrap();
+    let g = set.fonts[0].glyphs().next().unwrap().1;
+    assert_eq!(g.metrics.advance, Some(Vector::new(0, 1)));
+    assert_eq!(g.metrics.vertical_advance, Some(Vector::new(2, -9)));
+    assert_eq!(g.metrics.vertical_origin, Some(Vector::new(-3, 7)));
+    assert_eq!(g.metrics.bounds, Bounds::new(1, 1, -4, -2));
+}
+#[test]
+fn generic_metadata_loss_and_selected_font_locations() {
+    let d=b"<svg><font><font-face units-per-em='800' font-weight='bold'/><glyph d='M0 0h100v100H0Z'/><hkern u1='A' u2='V' k='100'/></font><font><font-face units-per-em='800' font-weight='bold'/><glyph d='M0 0h100v100H0Z'/></font></svg>";
+    let (_, r) = svg::read(
+        d,
+        &ReadOptions {
+            font_index: Some(1),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert!(r.has_loss());
+    assert!(r.entries.iter().all(|e| e.location.font_index == Some(0)));
+}
+#[test]
+fn common_registry_budgets_are_enforced() {
+    let d = svg::write(&FontSet::from(font()), &Default::default())
+        .unwrap()
+        .0;
+    let mut o = fontpixel::ReadOptions {
+        format: Some("svg".into()),
+        ..Default::default()
+    };
+    o.limits.max_glyphs = 0;
+    assert!(matches!(
+        fontpixel::read(&d, &o),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+#[test]
+fn deterministic_truncations_and_byte_mutations_do_not_panic() {
+    let d = text("<glyph unicode='A' d='M0 0Q100 300 200 0T400 0Z'/>");
+    let o = ReadOptions {
+        ppem: Some(8),
+        ..Default::default()
+    };
+    for end in 0..d.len() {
+        let _ = svg::read(&d[..end], &o);
+    }
+    for i in 0..d.len() {
+        for byte in [0, 39, 60, 62, 255] {
+            let mut bytes = d.clone();
+            bytes[i] = byte;
+            let _ = svg::read(&bytes, &o);
+        }
+    }
+}
+
+#[cfg(not(feature = "cjk-charsets"))]
+#[test]
+fn legacy_conversion_requires_its_charset_feature() {
+    let mut f = Font::default();
+    f.metrics.pixel_size = Some(8);
+    f.charset.name = Some("gb2312".into());
+    let mut g = Glyph::new("#".parse::<Bitmap>().unwrap());
+    g.codepoints.push(Codepoint::Legacy(0x2121));
+    f.add_glyph(g).unwrap();
+    assert!(
+        svg::write(&FontSet::from(f), &Default::default())
+            .unwrap_err()
+            .to_string()
+            .contains("cjk-charsets")
+    );
+}
