@@ -1,0 +1,10 @@
+{
+  "format_count": 46,
+  "implemented_native_formats": [
+    "bdf",
+    "pcf",
+    "yaff"
+  ],
+  "opentype_native_codecs_registered": false,
+  "bdf_pcf_production_fontations_dependency": false
+}

@@ -1,0 +1,40 @@
+{
+  "date_utc": "2026-10-03",
+  "implementation_commit": "76ab7eb4833fe8875a8d8fd78a8bd9d838d92fb4",
+  "source_modified_during_acceptance": false,
+  "check_exit": 0,
+  "check_matrix_passed": 490,
+  "sfnt_only_tests": 29,
+  "sfnt_only_exit": 0,
+  "rustdoc_exit": 0,
+  "external_crosscheck_exit": 0,
+  "parity_exit": 0,
+  "parity_new_divergences": 0,
+  "parity_sources_unchanged": true,
+  "parity_harness_unchanged_from_phase1": true,
+  "fuzz": {
+    "exit": 0,
+    "seconds": 611,
+    "executions": 11865370,
+    "coverage_counters": 2876,
+    "feature_counters": 8546,
+    "corpus_entries": 774,
+    "corpus_kib_reported": 243,
+    "rss_mib_reported": 561,
+    "seed": 1590759725,
+    "asan_enabled": true,
+    "leak_detection_enabled": false,
+    "limits": {
+      "seconds_requested": 610,
+      "max_len": 65536,
+      "timeout_seconds": 10,
+      "rss_limit_mb": 2048
+    }
+  },
+  "protected_reference_sample_files": 690,
+  "protected_mismatches": 0,
+  "protected_unexpected_files": 0,
+  "fuzz_deny_exit": 0,
+  "new_native_codecs_registered": [],
+  "production_source_reused_without_rewrite": true
+}

@@ -1,0 +1,36 @@
+    Blocking waiting for file lock on build directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/sfnt.rs (target/debug/deps/sfnt-0357118956292a7b)
+
+running 29 tests
+test checksum_padding_uses_big_endian_words ... ok
+test cmap_bmp_supplementary_aliases_and_ffff ... ok
+test cmap_malformed_groups_offsets_order_and_budget ... ok
+test checksum_checks_are_explicit_and_cover_all_components ... ok
+test fuzz_regression_truncated_fontations_lazy_arrays ... ok
+test gasp_versions_ranges_and_reserved_flags ... ok
+test metrics_invalid_counts_truncation_and_extents ... ok
+test metrics_axes_compaction_and_empty_ink ... ok
+test multilingual_name_and_raw_encoding_roundtrip ... ok
+test golden_container_reassembly_is_byte_exact ... ok
+test native_post_names_follow_opentype_63_byte_alphabet ... ok
+test name_malformed_storage_language_and_utf16 ... ok
+test os2_unicode_ranges_and_average_are_not_heuristic_guesses ... ok
+test os2_codepages_require_full_printable_repertoire ... ok
+test old_vertical_header_and_post_standard_names_are_readable ... ok
+test post_bad_name_indexes_fail ... ok
+test os2_every_version_and_field_roundtrips ... ok
+test post_named_and_nameless_preserve_fields ... ok
+test raw_flags_are_not_silently_truncated_by_fontations ... ok
+test reads_legacy_and_trimmed_unicode_cmap_formats ... ok
+test structural_errors_are_rejected_before_access ... ok
+test writer_rejects_duplicates_missing_head_and_budgets ... ok
+test cmap_empty_and_dense_nonsequential_maps ... ok
+test unknown_tables_odd_lengths_and_stale_adjustment_repack ... ok
+test unicode_range_boundaries_match_fonttools ... ok
+test arbitrary_bytes_do_not_panic ... ok
+test metrics_roundtrip ... ok
+test cmap_oversized_bmp_falls_back_to_complete_format12 ... ok
+test cmap_roundtrip ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s

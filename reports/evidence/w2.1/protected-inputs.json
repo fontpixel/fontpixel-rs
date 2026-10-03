@@ -1,5 +1,7 @@
 {
   "manifest": "phase0-protected-manifest.sha256",
+  "manifest_sha256": "2e91f1883c5e61353ecaeeb6a565c2cddec5144fa7b96c8a4d56208d349ae7c1",
   "files": 690,
-  "mismatches": []
+  "mismatches": [],
+  "unexpected_files": []
 }

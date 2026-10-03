@@ -101,3 +101,32 @@ Timing excludes filesystem reads and BDF parse, and verifies exact native model
 roundtrip on each of five iterations. The complete default W1.5 differential gate
 is rerun unchanged, with matching start/end source fingerprints. See
 `reports/w1.6.md`, `tests/crosscheck/yaff-*-results.json` and `fuzz/README.md`.
+
+## sfnt common-table validation (W2.1)
+
+The public `sfnt` feature provides borrowed envelope parsing, deterministic
+assembly and common-table APIs; it does not enable a native TTF/OTF/OTB codec.
+The normal all-feature matrix exercises its 29 integration/property tests. A
+standalone build and the independent oracles can also be run explicitly:
+
+```sh
+cargo test --locked -p fontpixel --no-default-features --features sfnt --test sfnt
+cargo build --locked -p fontpixel --features compat-bdfparser --example sfnt_check
+PYTHONPATH=../../toolchain/python-packages python3 -B tools/gen_sfnt_data.py --check
+PYTHONPATH=../../toolchain/python-packages python3 -B tests/crosscheck/sfnt.py \
+  --output tests/crosscheck/sfnt-results.json
+cargo build --locked -p fontpixel-cli --release --features parity --bin fontpixel-parity
+python3 -B tests/parity/run_all.py --out tests/parity/out-w21
+```
+
+The external script requires fontTools, OTS, FreeType and HarfBuzz and fails if
+any is absent. It writes temporary generated fonts and edits, not reference
+files. W2.1's shaping/rendering cases concern the common tables and reuse the
+already-accepted compatibility outlines; full native outline, bitmap-strike,
+CFF, `locl` and Tong family checks remain later phase-2 work.
+
+Keep source files fixed while running parity and robustness acceptance; record
+matching start/end fingerprints and the process exit status. An interrupted log
+or a parity warning about changed sources is not a final pass. See
+`fuzz/README.md` for the documented local sfnt target and limits and
+`reports/w2.1.md` for the verified results and known scope boundaries.
