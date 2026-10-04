@@ -1,8 +1,11 @@
-# Phase 3 validation report
+# Phase 3 acceptance report
 
-2026-10-04. All five work items are implemented and their validation passes.
-Integration into `main` and its final aggregate check are being completed.
-Phases 4–9 remain unfinished.
+2026-10-04. All five work items are implemented, independently checked and
+integrated into `main` at `e4624e2ab47b602921eb671f0a7525091325df68`.
+The merged `scripts/check.sh` passes with **1,184 test executions**. All 177
+recorded Rust/manifest fingerprints match the tested candidate. Evidence is in
+`phase3-evidence/phase3-main-check.*` and `integrated-source.json`.
+**Phase 3 is complete. Phases 4–9 remain unfinished.**
 
 ## Scope and evidence
 

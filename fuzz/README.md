@@ -156,3 +156,29 @@ with each target, `-max_total_time=610 -max_len=65536 -timeout=10
 same sandbox-only LeakSanitizer exception. Each target limits inputs/tables to
 64 KiB, glyphs to 512, resources to 64 and aggregate working data to 8 MiB.
 Final counts, coverage and production-source hashes are in W3.2 evidence.
+
+## Image, C, KBITX, PBF and HBF (W3.3–W3.5)
+
+Generate original synthetic seed corpora with `fuzz/seed_image_c.py`,
+`fuzz/seed_kbitx.py`, `fuzz/seed_pbf.py` and `fuzz/seed_hbf.py`. Corpus mutations
+and artifacts remain ignored. Image/C use safe in-memory resource resolvers;
+HBF inputs contain a header/bitmap pair. XML, wire layouts, gray/mono,
+roundtrip stability, lossless model equality and same-limit reader/writer
+contracts are exercised by the corresponding targets.
+
+```sh
+cargo +nightly fuzz run image --no-default-features --features image-c -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=65536
+cargo +nightly fuzz run c --no-default-features --features image-c -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=65536
+cargo +nightly fuzz run kbitx --no-default-features --features kbitx-only -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=65536
+cargo +nightly fuzz run pbf --no-default-features --features pbf-only -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=65536
+cargo +nightly fuzz run hbf --no-default-features --features hbf-only -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=65536
+```
+
+The final local campaigns need no LeakSanitizer override; their exact commands,
+source identities, successful DONE records and counts are in phase 3 evidence.
+Earlier interrupted campaigns and build failures are not acceptance evidence.

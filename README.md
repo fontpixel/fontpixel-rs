@@ -4,7 +4,11 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 2 complete; phase 3 final validation
+## Current status: phases 0–3 complete
+
+Phase 3 is integrated and accepted; see [its validation report](reports/phase-3.md)
+for independent comparisons, fuzz, performance, CLI size and remaining scope.
+Phase 4 P2 formats are next. The complete project remains under development.
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,

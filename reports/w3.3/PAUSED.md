@@ -1,5 +1,8 @@
 # W3.3 paused checkpoint — 2026-10-04
 
+Historical handoff only. Superseded by [the completed implementation and review](../w3.3.md)
+and [integrated phase 3 validation](../phase-3.md).
+
 User reprioritized to a glyph round and permits only one software worker. W3.3
 paused immediately; W3.2 retains that slot. This is NOT a candidate for merge.
 
