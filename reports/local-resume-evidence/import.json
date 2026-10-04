@@ -1,0 +1,11 @@
+{
+  "verified_at": "2026-10-04T02:29:41.573313+00:00",
+  "delivered_files_sha256_verified": 27469,
+  "restored_refs": 52,
+  "accepted_main": "9e6510d1a8f255776d22d119e03631afa6acd285",
+  "accepted_source_files": 1587,
+  "original_package": "/home/chen/githubprojects/fontpixel/fontpixel-rs-local-handoff-2026-10-04",
+  "restored_package_root": "/home/chen/githubprojects/fontpixel",
+  "remote_urls": "",
+  "worktrees": "/home/chen/githubprojects/fontpixel/fontpixel-rs       9e6510d [main]\n/home/chen/githubprojects/fontpixel/fontpixel-rs-w3.2  8497b4c [w3.2-fnt-fon]\n/home/chen/githubprojects/fontpixel/fontpixel-rs-w3.3  b7faf03 [w3/image-c]\n/home/chen/githubprojects/fontpixel/fontpixel-rs-w3.4  0b7bd11 [w3.4-kbitx-pbf]\n/home/chen/githubprojects/fontpixel/fontpixel-rs-w3.5  c9ee2cf [w3.5-hbf]\n"
+}

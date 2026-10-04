@@ -19,6 +19,10 @@ mod console;
     feature = "vector-raster"
 ))]
 pub mod embedded;
+#[cfg(feature = "fnt")]
+pub mod fnt;
+#[cfg(feature = "fon")]
+pub mod fon;
 #[cfg(feature = "hex")]
 pub mod hex;
 #[cfg(feature = "pcf")]
@@ -659,6 +663,75 @@ impl Registry<crate::FontSet> {
     pub fn set_image_write_options(&mut self, options:image::ImageWriteOptions) {
         if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image" && e.writer.is_some()) {
             e.writer=Some(Box::new(image::ImageCodec{write_options:options,..Default::default()}));
+        }
+    }
+}
+
+#[cfg(feature = "fnt")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_fnt(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "fnt") {
+            e.detector = Some(Box::new(fnt::FntCodec::default()));
+            e.reader = Some(Box::new(fnt::FntCodec::default()));
+            e.writer = Some(Box::new(fnt::FntCodec::default()));
+        }
+    }
+    /// Set legacy charset interpretation on FNT and enabled FON readers.
+    pub fn set_fnt_read_options(&mut self, options: fnt::FntReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "fnt" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(fnt::FntCodec {
+                read_options: options.clone(),
+                ..Default::default()
+            }));
+        }
+        #[cfg(feature = "fon")]
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "fon" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(fon::FonCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Set version, encoding and limits on FNT and enabled FON writers.
+    pub fn set_fnt_write_options(&mut self, options: fnt::FntWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "fnt" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(fnt::FntCodec {
+                write_options: options.clone(),
+                ..Default::default()
+            }));
+        }
+        #[cfg(feature = "fon")]
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "fon" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(fon::FonCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+#[cfg(feature = "fon")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_fon(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "fon") {
+            e.detector = Some(Box::new(fon::FonCodec::default()));
+            e.reader = Some(Box::new(fon::FonCodec::default()));
+            e.writer = Some(Box::new(fon::FonCodec::default()));
         }
     }
 }

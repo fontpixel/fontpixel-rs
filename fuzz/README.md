@@ -144,3 +144,15 @@ pixels/glyph; HEX caps records at 8 KiB and 256 glyphs, PSF tables at 64 KiB and
 exit status and identical production-source fingerprints are recorded in the
 W3.1 report/evidence. The same sandbox-only LeakSanitizer exception applies;
 AddressSanitizer and Rust overflow/panic checks remain enabled.
+
+## Windows FNT and FON (W3.2)
+
+`fnt` exercises v1/v2/v3 reads and all three writers, asserting readable output
+and native model equality for no-loss writes. `fon` exercises NE/PE resources,
+NE writes and every returned font. Generate independent original seeds with
+`python3 -B tools/gen_windows_cases.py`. Use the normal nightly cargo-fuzz flow
+with each target, `-max_total_time=610 -max_len=65536 -timeout=10
+-rss_limit_mb=1536 -detect_leaks=0`, and `ASAN_OPTIONS=detect_leaks=0` for the
+same sandbox-only LeakSanitizer exception. Each target limits inputs/tables to
+64 KiB, glyphs to 512, resources to 64 and aggregate working data to 8 MiB.
+Final counts, coverage and production-source hashes are in W3.2 evidence.

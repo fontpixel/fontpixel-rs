@@ -362,7 +362,9 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
                 "vector-raster",
                 "svg",
                 "hex",
-                "psf"
+                "psf",
+                "fnt",
+                "fon"
             ]
             .contains(&f.format.id))
             .all(|f| !f.read && !f.write)
