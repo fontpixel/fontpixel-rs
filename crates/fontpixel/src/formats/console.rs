@@ -1,10 +1,13 @@
 //! Shared bounded cell-font support (HEX/PSF); not a public file format.
+#[cfg(any(feature = "hex", feature = "psf"))]
+use crate::Report;
 use crate::bitmap::{Bitmap, BitmapLimits, Bounds};
-use crate::model::{
-    Font, FontCharset, FontMetrics, FontNames, Glyph, GlyphBitmap, GlyphMetrics, Spacing, Vector,
-};
+#[cfg(any(feature = "hex", feature = "psf"))]
+use crate::model::{Font, FontCharset, FontNames};
+use crate::model::{FontMetrics, Glyph, GlyphBitmap, GlyphMetrics, Spacing, Vector};
+#[cfg(any(feature = "hex", feature = "psf"))]
 use crate::report::{Impact, Level, Location, ReportEntry};
-use crate::{Error, Report, ResourceLimits, Result};
+use crate::{Error, ResourceLimits, Result};
 use std::borrow::Cow;
 
 pub(super) fn invalid(s: impl Into<String>) -> Error {
@@ -80,6 +83,7 @@ pub(super) fn glyph_metrics(cell: Bounds) -> GlyphMetrics {
         ..Default::default()
     }
 }
+#[cfg(any(feature = "hex", feature = "psf"))]
 pub(super) fn diag(
     r: &mut Report,
     format: &str,
@@ -102,6 +106,7 @@ pub(super) fn diag(
         message: message.into(),
     });
 }
+#[cfg(any(feature = "hex", feature = "psf"))]
 pub(super) fn font_losses(
     font: &Font,
     expected: &FontMetrics,
@@ -198,6 +203,7 @@ pub(super) fn font_losses(
         );
     }
 }
+#[cfg(any(feature = "hex", feature = "psf"))]
 pub(super) fn glyph_losses(
     g: &Glyph,
     expected: &GlyphMetrics,
@@ -322,3 +328,7 @@ impl Output {
         Ok(())
     }
 }
+
+#[cfg(any(feature = "draw", feature = "raw", feature = "cpi"))]
+#[path = "raw/support.rs"]
+pub(super) mod w41;

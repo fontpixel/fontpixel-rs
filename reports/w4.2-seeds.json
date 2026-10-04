@@ -1,0 +1,128 @@
+[
+  {
+    "format": "pf2",
+    "seed": "authored-aliases",
+    "bytes": 100,
+    "sha256": "b9ba2e54bc32ee50df040bb368e9b06dc65c028d5040025a36377cc34383d63d"
+  },
+  {
+    "format": "pf2",
+    "seed": "authored-truncated",
+    "bytes": 99,
+    "sha256": "a5414a91f414666cfa7630c84f1fa90d1cd822cfabf8a201e03dad1d9d23a7e3"
+  },
+  {
+    "format": "pf2",
+    "seed": "authored-padding",
+    "bytes": 100,
+    "sha256": "b558162dda542324d8dac6a6123815deab93300e8060129f02f77934b05bfe1c"
+  },
+  {
+    "format": "pf2",
+    "seed": "authored-joining-variant",
+    "bytes": 100,
+    "sha256": "18ccddc39d68a8e2b78b34f367f9a067b480c68b1c549b1f1518d1f3f562683c"
+  },
+  {
+    "format": "pf2",
+    "seed": "authored-invalid-joining-base",
+    "bytes": 100,
+    "sha256": "2b5ffd7732d94aca0716a8af0f68c379d8ae600f96255dc7b7d142e097a72c6d"
+  },
+  {
+    "format": "pf2",
+    "seed": "authored-reserved-storage",
+    "bytes": 100,
+    "sha256": "15619c5064ba8a1e5332cb8a636fb46a2aba1442d660c58110d4d2b7309cc275"
+  },
+  {
+    "format": "fontx2",
+    "seed": "authored-single",
+    "bytes": 529,
+    "sha256": "64630507d64a8b50cd8ac1f36eddbe6074c1414de9e5430380dc5c0ad2f12bb0"
+  },
+  {
+    "format": "fontx2",
+    "seed": "authored-double",
+    "bytes": 38,
+    "sha256": "25aa7872c0f865145b46f6860eff67de452a14fe677e4ef85e539dedbe9aaec9"
+  },
+  {
+    "format": "fontx2",
+    "seed": "authored-truncated",
+    "bytes": 37,
+    "sha256": "965c0923c49310f158f89f56a0ba1aeefd9c296d105cb03cc0ebec600c92ef6b"
+  },
+  {
+    "format": "fontx2",
+    "seed": "authored-overlapping-blocks",
+    "bytes": 38,
+    "sha256": "b4148e469cbf6936b4f8bce3ee40e6971e1aba72b915f2cb3602b76bdd262a6c"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-0",
+    "bytes": 4,
+    "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-7",
+    "bytes": 4,
+    "sha256": "2881354beacdac05d359f54966b390a8a3660e666b01dc7fb1408cf3d6fd0554"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-23",
+    "bytes": 28,
+    "sha256": "3cb22c33cb6098152080bcf8004077c3649afc216d589ce18deac962ac45b48c"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-31",
+    "bytes": 13,
+    "sha256": "cff01d6c014dd031f9426e767dad3375a1007a8d18b5d9486c3216b8ea0040c5"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-64",
+    "bytes": 28,
+    "sha256": "b15475bb2a14440ccd3bdaf244903c18e5112630320d3ea48a3065660d21714c"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-95",
+    "bytes": 37,
+    "sha256": "9ed29746216fb36e87cad338285d94666855c60a9ede53d34b80a5bfed38aa01"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-128",
+    "bytes": 46,
+    "sha256": "86adcdd163390a6642342522517e45fa8277a09c3b08a4fab185f7366f7bff63"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-159",
+    "bytes": 46,
+    "sha256": "16424ac2ad3a27437ced554f5061618e968dbe50e6435d35c9c36defdd22d211"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-192",
+    "bytes": 85,
+    "sha256": "a17367301bc0daadaf76fb9a49d6f153659179008cbacbeb9a3a754886ecb6ff"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-223",
+    "bytes": 85,
+    "sha256": "504fdfd3aa8699fb0219162716ea84b00b998488fbf490b810ac2222824ab043"
+  },
+  {
+    "format": "hzk",
+    "seed": "authored-geometry-255",
+    "bytes": 97,
+    "sha256": "585fba85d01306639f3ee8f0318c98e8499551bb8a07465293a78a65262b7887"
+  }
+]

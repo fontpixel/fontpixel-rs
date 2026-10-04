@@ -1,0 +1,27 @@
+{
+  "state": "W4.3 final local freeze; root fuzz/perf/full integration pending",
+  "utc": "2026-10-04T06:10:42.371008+00:00",
+  "production_digest": "194273b3613a5320649776ead32f28b6faaece56311b1e7deba41e4b1f005af3",
+  "integration_tests": 28,
+  "oracle_checks": 135,
+  "clippy": "passed -D warnings",
+  "rustdoc": "passed -D warnings",
+  "fuzz_target_build": "passed nfnt-only",
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "sha256": {
+    "crates/fontpixel/examples/nfnt_timing.rs": "a3ac1d220882116c9b947c23f68025589f3d4bfa00d6348754ab01f6b7006bd6",
+    "crates/fontpixel/src/formats/nfnt/container.rs": "5c54123412a4fc0a61844569bc45b08074765ed0ff0af71bd9ad7eae8fb1eee5",
+    "crates/fontpixel/src/formats/nfnt/palette.rs": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53",
+    "crates/fontpixel/src/formats/nfnt/raster.rs": "9176d3c2745c449b9081da707c674949d299787d0fc714cdb3f1735320b0a5a5",
+    "crates/fontpixel/src/formats/nfnt/support.rs": "a651c64934d05c7f4f0e59736f469090a7d09a69eb0593ac7bd55422bef8e7b6",
+    "crates/fontpixel/src/formats/nfnt/writer.rs": "f664c8d3ca72996bba600208c74114e9fd507c3e06a78b2c736ea4fb5bef6b1a",
+    "crates/fontpixel/src/formats/nfnt.rs": "dcb5e76d89cc4578ed49c40ec53884c568e128b453391f3ae775c3992cedb491",
+    "crates/fontpixel/tests/nfnt.rs": "e889d35786ec7b0ed7c31cd1c1cd16d52b1f4292e1e7705b6c8d2d8ff2c8be6c",
+    "docs/formats/nfnt.md": "1b449d88c8233d6f4c8f033a7d5a8ad8cee41ed538a05bdbb8bab02172d70815",
+    "fuzz/fuzz_targets/nfnt.rs": "026a958c96bb1f9157297c1a63d17e6be0f19a81eaac38b18843fc8791e4a6c6",
+    "fuzz/seed_nfnt.py": "32c0897dd7a0b1bb266cae352bd6c30ad3e2dfee368dc1e33bbe0d37cb667c52",
+    "reports/w4.3-crosscheck.json": "617a7a2d673064783e65687fac8cffb7f398d5b39629dab0e2c11ed8c3ec6feb",
+    "reports/w4.3-nfnt.md": "4ea20c10f3bb98e9a0881205dc1bc3db149582ea83617fb4c2317e77d73d482d",
+    "tests/crosscheck/nfnt.py": "4c9597d5a5503431dccd87fcf3e8b5b04e0a6cbbffcd6d29110c07e559ecfd10"
+  }
+}

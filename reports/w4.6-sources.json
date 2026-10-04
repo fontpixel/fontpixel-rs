@@ -1,0 +1,57 @@
+[
+  {
+    "name": "amiga-text",
+    "url": "https://morphos-team.net/sdk/includes/graphics/text.html",
+    "sha256": "ebf6f5a8aa23e4ff9ab751b699b53cbec6a9618cc73c363b844736d153d1308f",
+    "bytes": 19459
+  },
+  {
+    "name": "amiga-diskfont",
+    "url": "https://morphos-team.net/sdk/includes/diskfont/diskfont.html",
+    "sha256": "604f193195133a2de59f188e24b763bd6cdb6750d7da2badc885f55e5369eb17",
+    "bytes": 10294
+  },
+  {
+    "name": "gem-vdi",
+    "url": "https://freemint.github.io/tos.hyp/en/vdi_structures.html",
+    "sha256": "388c86bc642867a51b972de72e744830ec023f1834f100d4c12e2cc037c77f0e",
+    "bytes": 21672
+  },
+  {
+    "name": "gem-filefmt",
+    "url": "https://www.seasip.info/Gem/filefmt.html",
+    "sha256": "f224dca56a7c16801c4c06133c63b329016df80fb71e294bf04430c34fa4bd7f",
+    "bytes": 10352
+  },
+  {
+    "name": "snfstr",
+    "url": "https://raw.githubusercontent.com/ArcticaProject/vcxsrv/master/libXfont/src/bitmap/snfstr.h",
+    "sha256": "5f5defe83338950f2b940a6d889ba14dce17d457cd4a14c0e9275de1fe8e7ebc",
+    "bytes": 7106
+  },
+  {
+    "name": "monobit-amiga",
+    "package": "monobit 0.54",
+    "license": "MIT",
+    "path": "storage/fontformats/amiga.py",
+    "sha256": "1ac619f943ba0fd92d2d7bc17c5ad68dccbb793b08494ce9b13789e89e2de943"
+  },
+  {
+    "name": "monobit-gem",
+    "package": "monobit 0.54",
+    "license": "MIT",
+    "path": "storage/fontformats/gdos.py",
+    "sha256": "76b0bf2e5208a1f29b518fa9eff3df0e3e577de04b315e18ed905b040e04739c"
+  },
+  {
+    "name": "monobit-license",
+    "path": "monobit-0.54.0.dist-info/licenses/LICENSE",
+    "sha256": "b810daca5fd70c0d069ed1af700b437ceedd018ea44d406fccc316df11a7ed77"
+  },
+  {
+    "name": "Tom Thumb",
+    "license": "MIT",
+    "path": "../samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+    "sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "manifest": "w4.1-sourcehash.json",
+    "checked_existing_files": 11,
+    "changed_non_source_files": []
+  },
+  {
+    "manifest": "w4.2-freeze.json",
+    "checked_existing_files": 18,
+    "changed_non_source_files": []
+  },
+  {
+    "manifest": "w4.3-freeze-final2.json",
+    "checked_existing_files": 15,
+    "changed_non_source_files": []
+  },
+  {
+    "manifest": "w4.4-freeze.json",
+    "checked_existing_files": 22,
+    "changed_non_source_files": []
+  },
+  {
+    "manifest": "w4.5-source-hashes.json",
+    "checked_existing_files": 23,
+    "changed_non_source_files": []
+  },
+  {
+    "manifest": "w4.6-freeze.json",
+    "checked_existing_files": 21,
+    "changed_non_source_files": []
+  }
+]

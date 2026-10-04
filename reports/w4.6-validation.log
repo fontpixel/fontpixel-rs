@@ -1,0 +1,171 @@
+$ cargo test -p fontpixel --no-default-features --features amiga,gem,snf --test amiga --test gem --test snf
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.88s
+     Running tests/amiga.rs (../local-work/target-w46/debug/deps/amiga-807b5d71a940cfb1)
+
+running 7 tests
+test cross_hunk_relocations_short_relocations_and_bss_are_data_only ... ok
+test independent_hunk_offsets_baseline_default_and_roundtrip ... ok
+test independent_color_planes_use_coverage_and_retain_source_indices ... ok
+test partial_omissions_keep_strike_coordinates_on_failure ... ok
+test tagged_multistrike_bundle_and_shared_budgets ... ok
+test malformed_hunks_resources_and_all_truncations ... ok
+test random_packed_rows_roundtrip ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/gem.rs (../local-work/target-w46/debug/deps/gem-3118abad92db1836)
+
+running 8 tests
+test explicit_order_controls_detection ... ok
+test budgets_and_fatal_mapping_report ... ok
+test metadata_aliases_slots_and_grayscale_are_diagnosed ... ok
+test partial_omissions_survive_later_failure_and_strict_returns_no_bytes ... ok
+test independent_byte_orders_and_zero_width ... ok
+test independent_compressed_zero_run_and_linked_sections ... ok
+test all_truncations_and_mutation_smoke ... ok
+test randomized_idempotent_fonts ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/snf.rs (../local-work/target-w46/debug/deps/snf-e98f6fbe1e747a04)
+
+running 4 tests
+test independent_endian_bitfields_and_ink_metrics ... ok
+test unrecorded_layout_is_not_guessed_and_default_output_is_portable ... ok
+test truncations_invalid_offsets_and_limits ... ok
+test random_sparse_rectangles ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+
+$ cargo clippy -p fontpixel --no-default-features --features amiga --lib --test amiga -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.79s
+
+$ cargo clippy -p fontpixel --no-default-features --features gem --lib --test gem -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.75s
+
+$ cargo clippy -p fontpixel --no-default-features --features snf --lib --test snf -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.72s
+
+$ cargo doc -p fontpixel --no-deps --no-default-features --features amiga,gem,snf
+ Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.35s
+   Generated /home/chen/githubprojects/fontpixel/fontpixel-rs/../local-work/target-w46/doc/fontpixel/index.html
+
+$ cargo build -p fontpixel --no-default-features --features bdf,amiga,gem,snf --example w46_timing
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 1.85s
+
+$ ../local-work/oracles/bin/python tests/crosscheck/w46.py --adapter ../local-work/target-w46/debug/examples/w46_timing --output reports/w4.6-crosscheck.json
+WARNING:root:Number of characters found does not match CHARS declaration.
+{
+  "monobit": "0.54",
+  "sample": "samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+  "sample_sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b",
+  "checks": [
+    {
+      "font": "original",
+      "format": "amiga",
+      "glyphs": 2,
+      "oracle_sha256": "8add26920da39aaa3dd7d3a4bfa74ba423c0c76dce7f979f0e24f1cff607321a",
+      "rust_sha256": "c7e6738c8daeb3fc71729b30bec7966de7b2b1e857f75908a0ed0547b6343684"
+    },
+    {
+      "font": "original",
+      "format": "gem",
+      "glyphs": 2,
+      "oracle_sha256": "992dbc62d1b005b9a7e6f23ff5f30ee33b3c91f35d9be3aa1ae3117380524827",
+      "rust_sha256": "992dbc62d1b005b9a7e6f23ff5f30ee33b3c91f35d9be3aa1ae3117380524827"
+    },
+    {
+      "font": "original",
+      "format": "snf",
+      "endian": "<",
+      "glyphs": 2,
+      "oracle_sha256": "86991a5b7b5efe40a6a0abd4796fd0a53955939f0b0541b366903403d368eebc",
+      "rust_sha256": "c915d763b8fede536e78eb1f702b50a23250fbf928c45ae4d732345d395cc4be"
+    },
+    {
+      "font": "original",
+      "format": "snf",
+      "endian": ">",
+      "glyphs": 2,
+      "oracle_sha256": "89fca8e5ad756149e5b8a34a6376ea9a85e8dcd07b2d0193210a1d647c64f0fb",
+      "rust_sha256": "c915d763b8fede536e78eb1f702b50a23250fbf928c45ae4d732345d395cc4be"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "amiga",
+      "glyphs": 95,
+      "oracle_sha256": "f30f750f61a1a7611bddb24402cc593515efdf9f44aba4f6da4e368d0dd75353",
+      "rust_sha256": "492cc9b339d3b36661d57fb354d3b77e1cccedc3cc9195feccf4866dcdee0085"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "gem",
+      "glyphs": 95,
+      "oracle_sha256": "c5418befefb15a34b22212e68b37ea11c79b5e3e098b5526d5dfba1767db6344",
+      "rust_sha256": "c5418befefb15a34b22212e68b37ea11c79b5e3e098b5526d5dfba1767db6344"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "snf",
+      "endian": "<",
+      "glyphs": 95,
+      "oracle_sha256": "0e1c2243d6e0f9478872b8ba068f4f82b85ce3e0c33ce799f93d164cc9865243",
+      "rust_sha256": "be01b270de08dd010539c834fac0bb64a0aa78661143e8b6527349ba88c94faf"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "snf",
+      "endian": ">",
+      "glyphs": 95,
+      "oracle_sha256": "1ed360a87d8740ec5c0fc1ea041b4d6198bbca2317a1e76efeca6933c1cdd00b",
+      "rust_sha256": "be01b270de08dd010539c834fac0bb64a0aa78661143e8b6527349ba88c94faf"
+    }
+  ]
+}
+
+$ cargo check --manifest-path fuzz/Cargo.toml --bin amiga --bin gem --bin snf
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Checking fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `dev` profile [unoptimized] target(s) in 5.32s
+
+$ rustfmt --check --edition 2024 crates/fontpixel/src/formats/amiga.rs crates/fontpixel/src/formats/gem.rs crates/fontpixel/src/formats/gem/common.rs crates/fontpixel/src/formats/snf.rs crates/fontpixel/tests/amiga.rs crates/fontpixel/tests/gem.rs crates/fontpixel/tests/snf.rs crates/fontpixel/examples/w46_timing.rs fuzz/fuzz_targets/amiga.rs fuzz/fuzz_targets/gem.rs fuzz/fuzz_targets/snf.rs
+
+
+Final typed color_depth=0 rejection regression and checks:
+$ cargo test -p fontpixel --no-default-features --features amiga --test amiga
+    Finished `test` profile [unoptimized] target(s) in 0.03s
+     Running tests/amiga.rs (../local-work/target-w46/debug/deps/amiga-51183acfde508c12)
+
+running 7 tests
+test cross_hunk_relocations_short_relocations_and_bss_are_data_only ... ok
+test partial_omissions_keep_strike_coordinates_on_failure ... ok
+test independent_color_planes_use_coverage_and_retain_source_indices ... ok
+test independent_hunk_offsets_baseline_default_and_roundtrip ... ok
+test tagged_multistrike_bundle_and_shared_budgets ... ok
+test malformed_hunks_resources_and_all_truncations ... ok
+test random_packed_rows_roundtrip ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+
+$ cargo clippy -p fontpixel --no-default-features --features amiga,gem,snf --lib --test amiga --test gem --test snf -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 1.04s
+
+$ cargo doc -p fontpixel --no-deps --no-default-features --features amiga,gem,snf
+ Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.39s
+   Generated /home/chen/githubprojects/fontpixel/fontpixel-rs/../local-work/target-w46/doc/fontpixel/index.html
+
+$ cargo check --manifest-path fuzz/Cargo.toml --bin amiga --bin gem --bin snf
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Checking fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `dev` profile [unoptimized] target(s) in 5.42s
+

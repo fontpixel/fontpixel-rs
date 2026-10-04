@@ -1,0 +1,55 @@
+{
+  "purpose": "Untimed functional default-limit checks; not formal performance evidence",
+  "source_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+  "binary_sha256": "3bc8226d157f6980d3711c255404a71bf2846e3d9c30bafc8b889bd0b759a2bf",
+  "checks": [
+    {
+      "format": "bmfont",
+      "glyphs": 38653,
+      "primary_bytes": 3549996,
+      "primary_sha256": "c0e8f3513b30ec54217ffcfd91518299b35f90d0bcf5e395c3f880464feaeaa3",
+      "command": [
+        "../local-work/target-w44/debug/fontpixel",
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "-o",
+        "../local-work/w44-large-freeze/large.fnt",
+        "--to",
+        "bmfont"
+      ],
+      "reread_exit": 0
+    },
+    {
+      "format": "sfd",
+      "glyphs": 38653,
+      "primary_bytes": 5081353,
+      "primary_sha256": "7d799d74f1cd93a932c267a3f6858ef57adeabdf9d5ea534137d892d14a2938a",
+      "command": [
+        "../local-work/target-w44/debug/fontpixel",
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "-o",
+        "../local-work/w44-large-freeze/large.sfd",
+        "--to",
+        "sfd"
+      ],
+      "reread_exit": 0
+    },
+    {
+      "format": "kbits",
+      "glyphs": 38653,
+      "primary_bytes": 8844721,
+      "primary_sha256": "c861bb51a8db12a4b465473258b7d6722a1940507ca6a3fbef62d8d6ed8267eb",
+      "command": [
+        "../local-work/target-w44/debug/fontpixel",
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "-o",
+        "../local-work/w44-large-freeze/large.kbits",
+        "--to",
+        "kbits"
+      ],
+      "reread_exit": 0
+    }
+  ]
+}

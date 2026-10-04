@@ -1,0 +1,194 @@
+{
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "command": [
+    "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/release/examples/w44_timing",
+    "/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+    "1"
+  ],
+  "binary_sha256": "c854dc35e8daa98dd53d6e4f8eabd31cc5be293971d9fd0dc53cb483783a12a9",
+  "source_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+  "runner_sha256": "6aa645e335f73ec4a5b2ebf52295eb7a6d9b247fd81ba574fb43447483e41ac2",
+  "runs": 5,
+  "method": "One in-memory whole-font read/write per process; no timed BDF parse or warmups",
+  "peak_rss_kib": 277720,
+  "summary": {
+    "bmfont": {
+      "glyphs": 38653,
+      "bytes": 4439568,
+      "loops": 1,
+      "read_ms": {
+        "median": 138.253085,
+        "min": 137.388989,
+        "max": 142.251596
+      },
+      "write_ms": {
+        "median": 550.3941,
+        "min": 544.041728,
+        "max": 574.6468
+      }
+    },
+    "sfd": {
+      "glyphs": 38653,
+      "bytes": 5081353,
+      "loops": 1,
+      "read_ms": {
+        "median": 42.233829,
+        "min": 40.256745,
+        "max": 42.880558
+      },
+      "write_ms": {
+        "median": 77.442091,
+        "min": 76.690879,
+        "max": 77.696592
+      }
+    },
+    "kbits": {
+      "glyphs": 38653,
+      "bytes": 8844721,
+      "loops": 1,
+      "read_ms": {
+        "median": 14.609662,
+        "min": 14.363862,
+        "max": 14.867022
+      },
+      "write_ms": {
+        "median": 51.484447,
+        "min": 50.029294,
+        "max": 53.24742
+      }
+    }
+  },
+  "records": [
+    {
+      "bmfont": {
+        "format": "bmfont",
+        "glyphs": 38653,
+        "bytes": 4439568,
+        "loops": 1,
+        "read_ns": 137388989,
+        "write_ns": 544041728
+      },
+      "sfd": {
+        "format": "sfd",
+        "glyphs": 38653,
+        "bytes": 5081353,
+        "loops": 1,
+        "read_ns": 42254076,
+        "write_ns": 76690879
+      },
+      "kbits": {
+        "format": "kbits",
+        "glyphs": 38653,
+        "bytes": 8844721,
+        "loops": 1,
+        "read_ns": 14363862,
+        "write_ns": 51484447
+      }
+    },
+    {
+      "bmfont": {
+        "format": "bmfont",
+        "glyphs": 38653,
+        "bytes": 4439568,
+        "loops": 1,
+        "read_ns": 137965272,
+        "write_ns": 548267828
+      },
+      "sfd": {
+        "format": "sfd",
+        "glyphs": 38653,
+        "bytes": 5081353,
+        "loops": 1,
+        "read_ns": 40256745,
+        "write_ns": 77200875
+      },
+      "kbits": {
+        "format": "kbits",
+        "glyphs": 38653,
+        "bytes": 8844721,
+        "loops": 1,
+        "read_ns": 14592782,
+        "write_ns": 51403579
+      }
+    },
+    {
+      "bmfont": {
+        "format": "bmfont",
+        "glyphs": 38653,
+        "bytes": 4439568,
+        "loops": 1,
+        "read_ns": 138253085,
+        "write_ns": 550394100
+      },
+      "sfd": {
+        "format": "sfd",
+        "glyphs": 38653,
+        "bytes": 5081353,
+        "loops": 1,
+        "read_ns": 42233829,
+        "write_ns": 77476929
+      },
+      "kbits": {
+        "format": "kbits",
+        "glyphs": 38653,
+        "bytes": 8844721,
+        "loops": 1,
+        "read_ns": 14867022,
+        "write_ns": 50029294
+      }
+    },
+    {
+      "bmfont": {
+        "format": "bmfont",
+        "glyphs": 38653,
+        "bytes": 4439568,
+        "loops": 1,
+        "read_ns": 139559921,
+        "write_ns": 550450504
+      },
+      "sfd": {
+        "format": "sfd",
+        "glyphs": 38653,
+        "bytes": 5081353,
+        "loops": 1,
+        "read_ns": 42155753,
+        "write_ns": 77442091
+      },
+      "kbits": {
+        "format": "kbits",
+        "glyphs": 38653,
+        "bytes": 8844721,
+        "loops": 1,
+        "read_ns": 14609662,
+        "write_ns": 52736147
+      }
+    },
+    {
+      "bmfont": {
+        "format": "bmfont",
+        "glyphs": 38653,
+        "bytes": 4439568,
+        "loops": 1,
+        "read_ns": 142251596,
+        "write_ns": 574646800
+      },
+      "sfd": {
+        "format": "sfd",
+        "glyphs": 38653,
+        "bytes": 5081353,
+        "loops": 1,
+        "read_ns": 42880558,
+        "write_ns": 77696592
+      },
+      "kbits": {
+        "format": "kbits",
+        "glyphs": 38653,
+        "bytes": 8844721,
+        "loops": 1,
+        "read_ns": 14688968,
+        "write_ns": 53247420
+      }
+    }
+  ],
+  "environment_note": "Task-owned builds, fuzzers and oracle processes stopped. Sequentially after the small-codec benchmark; unrelated desktop/browser processes retained on shared workstation."
+}

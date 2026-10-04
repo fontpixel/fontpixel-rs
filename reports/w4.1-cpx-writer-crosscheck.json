@@ -1,0 +1,137 @@
+{
+  "checks": [
+    {
+      "case": "positions",
+      "packed_bytes": 1165,
+      "plain_bytes": 4161,
+      "packed_sha256": "26e28b6ef3fa6c1ef0ffb52c503bea4a715ccc8b0272d67095f42ba56df874cf",
+      "plain_sha256": "0687a80dfda30631efa6ab6e54b145b919d9dffb5494d3ce290e45ca885ffbad",
+      "emulated_write_bytes": 12615,
+      "mode_consumer_write_bytes": 12650,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "long-runs",
+      "packed_bytes": 512,
+      "plain_bytes": 4161,
+      "packed_sha256": "63c4b09b76d2e7bb642f497cc1c144e6b0ef15219cab85c3a7fc93e59de49223",
+      "plain_sha256": "67ed0d7a22594b881654b4dce5c345c1e1377bc90c1a982b8dbf89ec0cbdf3b3",
+      "emulated_write_bytes": 4544,
+      "mode_consumer_write_bytes": 4579,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "short-matches",
+      "packed_bytes": 512,
+      "plain_bytes": 4161,
+      "packed_sha256": "678f5b22ed3ce780607bc793c61ea2c2882b245d88586d79e18a44f0a4712591",
+      "plain_sha256": "ef4f7818904d3ef6a95a620ec797a6f1a29cfee7df5aeb6edf475a5b840ac201",
+      "emulated_write_bytes": 4700,
+      "mode_consumer_write_bytes": 4735,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "header-references",
+      "packed_bytes": 512,
+      "plain_bytes": 4161,
+      "packed_sha256": "25636181e46a2a9de2bedf158cf99027c451278c9255773851556da2725d5584",
+      "plain_sha256": "626bf0b7d4d9b51831a42555097408fa7d4270428f97f03779b4ea754ea2c5e5",
+      "emulated_write_bytes": 4587,
+      "mode_consumer_write_bytes": 4622,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "dictionary",
+      "packed_bytes": 512,
+      "plain_bytes": 4161,
+      "packed_sha256": "725716752cb90004eb832af39199bbd8a89476a17a0ead8d58c69c8ecfaff6e9",
+      "plain_sha256": "56ccc2a6ae86d099281f02e6751bb24add254b20c71972e8105f2f7efd911eeb",
+      "emulated_write_bytes": 5340,
+      "mode_consumer_write_bytes": 5375,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "long-run-58k",
+      "packed_bytes": 512,
+      "plain_bytes": 57665,
+      "packed_sha256": "666aa59c014923376fae331aaec617ceb8fe9cce007ebe26b310e5811a126655",
+      "plain_sha256": "1c43b0d1bb9fa4e38803643f63866e3bce7704178475903c7d8fc5e1bae3729c",
+      "emulated_write_bytes": 58066,
+      "mode_consumer_write_bytes": 58101,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "ega",
+      "packed_bytes": 30661,
+      "plain_bytes": 58880,
+      "packed_sha256": "5d232053ae955e38db3207390cae96be96abccb932be55d5c4f6e1fe4b338d2d",
+      "plain_sha256": "bd0f28360748bf63df2fee960273642476c91a0c5c8f8dc1105ecb1a37e30718",
+      "emulated_write_bytes": 236152,
+      "mode_consumer_write_bytes": 236187,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    },
+    {
+      "case": "ega18",
+      "packed_bytes": 13526,
+      "plain_bytes": 29540,
+      "packed_sha256": "41ce9919989b3dbe8f259369526fa25249f2122857e0f0a093f861f2ec4ad4bb",
+      "plain_sha256": "a456bd2f7cb8e3d3220db2bb85b35cb3f22895a9e1e7b78f5384fb811fc17aae",
+      "emulated_write_bytes": 107887,
+      "mode_consumer_write_bytes": 107922,
+      "checks": [
+        "native reader",
+        "independent monobit pixels",
+        "UPX exact CPI bytes",
+        "8086 execution with MODE patch/far-call/stack/buffer contract",
+        "actual FreeDOS MODE cpx2cpi consumer executed"
+      ]
+    }
+  ],
+  "passed": 8,
+  "unicorn_version": "2.1.4",
+  "monobit_version": "0.54",
+  "mode_consumer_sha256": "541fe4d1e2f77ec1f98905ff364f4de45a17966d1c5ba8ff1b401e06cbbb0af9",
+  "original_stub_sha256": "4aff91114044dfe9ca25b154a5723875fafffa67600ef848bea762af5ae7d06a"
+}

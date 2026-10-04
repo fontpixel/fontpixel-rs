@@ -1,0 +1,220 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "amiga,gem,snf",
+      "--test",
+      "amiga",
+      "--test",
+      "gem",
+      "--test",
+      "snf"
+    ],
+    "exit": 0,
+    "seconds": 2.161
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "amiga",
+      "--lib",
+      "--test",
+      "amiga",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.851
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "gem",
+      "--lib",
+      "--test",
+      "gem",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.806
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "snf",
+      "--lib",
+      "--test",
+      "snf",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.783
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-deps",
+      "--no-default-features",
+      "--features",
+      "amiga,gem,snf"
+    ],
+    "exit": 0,
+    "seconds": 0.381
+  },
+  {
+    "command": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bdf,amiga,gem,snf",
+      "--example",
+      "w46_timing"
+    ],
+    "exit": 0,
+    "seconds": 1.895
+  },
+  {
+    "command": [
+      "../local-work/oracles/bin/python",
+      "tests/crosscheck/w46.py",
+      "--adapter",
+      "../local-work/target-w46/debug/examples/w46_timing",
+      "--output",
+      "reports/w4.6-crosscheck.json"
+    ],
+    "exit": 0,
+    "seconds": 5.19
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--manifest-path",
+      "fuzz/Cargo.toml",
+      "--bin",
+      "amiga",
+      "--bin",
+      "gem",
+      "--bin",
+      "snf"
+    ],
+    "exit": 0,
+    "seconds": 5.361
+  },
+  {
+    "command": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "crates/fontpixel/src/formats/amiga.rs",
+      "crates/fontpixel/src/formats/gem.rs",
+      "crates/fontpixel/src/formats/gem/common.rs",
+      "crates/fontpixel/src/formats/snf.rs",
+      "crates/fontpixel/tests/amiga.rs",
+      "crates/fontpixel/tests/gem.rs",
+      "crates/fontpixel/tests/snf.rs",
+      "crates/fontpixel/examples/w46_timing.rs",
+      "fuzz/fuzz_targets/amiga.rs",
+      "fuzz/fuzz_targets/gem.rs",
+      "fuzz/fuzz_targets/snf.rs"
+    ],
+    "exit": 0,
+    "seconds": 0.098
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "amiga",
+      "--test",
+      "amiga"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "amiga,gem,snf",
+      "--lib",
+      "--test",
+      "amiga",
+      "--test",
+      "gem",
+      "--test",
+      "snf",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-deps",
+      "--no-default-features",
+      "--features",
+      "amiga,gem,snf"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "check",
+      "--manifest-path",
+      "fuzz/Cargo.toml",
+      "--bin",
+      "amiga",
+      "--bin",
+      "gem",
+      "--bin",
+      "snf"
+    ],
+    "exit": 0
+  }
+]

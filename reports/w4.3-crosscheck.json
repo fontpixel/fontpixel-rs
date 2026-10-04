@@ -1,0 +1,818 @@
+{
+  "oracle": "0.54",
+  "checks": 135,
+  "palette_reader_limitation": "monobit 0.54 NFNT treats fctb flag as Lisa compression; ColorTable and Pillow checked independently",
+  "cases": [
+    {
+      "file": "generated-0.nfnt",
+      "sha256": "d953f410cf8d1b8f907c062d43356c15f107f69a2587cb93845eb7a8085c258a",
+      "fonts": 1,
+      "glyphs": 2
+    },
+    {
+      "file": "oracle-0.nfnt",
+      "sha256": "7b3c33c4f42101232f72567c8d3ff39a17216a5e870091c6a125afc87d6ea284",
+      "fonts": 1,
+      "glyphs": 2
+    },
+    {
+      "file": "native-0.bare",
+      "sha256": "d953f410cf8d1b8f907c062d43356c15f107f69a2587cb93845eb7a8085c258a",
+      "fonts": 1,
+      "glyphs": 2
+    },
+    {
+      "file": "native-0.dfont",
+      "sha256": "5ba5b01d39978af61fe957cdd82698886b8e0a42cd8d6840fde1740f6eb2a9b2",
+      "fonts": 1,
+      "glyphs": 2
+    },
+    {
+      "file": "native-0.font",
+      "sha256": "00bba9602549ba8ae7b4fe10a2692be193d13fa1977b0922f8085d4026d5e899",
+      "fonts": 1,
+      "glyphs": 2
+    },
+    {
+      "file": "generated-1.nfnt",
+      "sha256": "040d6ce968ee94593897faa971e29589f73b49978e18bd72a5f2c3398930a6ef",
+      "fonts": 1,
+      "glyphs": 3
+    },
+    {
+      "file": "oracle-1.nfnt",
+      "sha256": "09edd9a573b8a7d0e0cebde4286c153921bbbef909649f22dac167fe60d3bb22",
+      "fonts": 1,
+      "glyphs": 3
+    },
+    {
+      "file": "native-1.bare",
+      "sha256": "040d6ce968ee94593897faa971e29589f73b49978e18bd72a5f2c3398930a6ef",
+      "fonts": 1,
+      "glyphs": 3
+    },
+    {
+      "file": "native-1.dfont",
+      "sha256": "7822c1c5e91d551ea24924d49cdf815e7c92b2a56dc8656b8c400378132df73b",
+      "fonts": 1,
+      "glyphs": 3
+    },
+    {
+      "file": "native-1.font",
+      "sha256": "3bb11ce60263c17a6b34fd96410b9b1a808035ffb7311610a54c956044ef9553",
+      "fonts": 1,
+      "glyphs": 3
+    },
+    {
+      "file": "generated-2.nfnt",
+      "sha256": "1898d3f3728c3e16201b23dddc2bf7dd9fc68e2b0cc8b28e705ccd8febbdcdbb",
+      "fonts": 1,
+      "glyphs": 4
+    },
+    {
+      "file": "oracle-2.nfnt",
+      "sha256": "7977ec07860c0d89f1fa0fe312429330b96c31dece9ef200175f6e43ad19a509",
+      "fonts": 1,
+      "glyphs": 4
+    },
+    {
+      "file": "native-2.bare",
+      "sha256": "1898d3f3728c3e16201b23dddc2bf7dd9fc68e2b0cc8b28e705ccd8febbdcdbb",
+      "fonts": 1,
+      "glyphs": 4
+    },
+    {
+      "file": "native-2.dfont",
+      "sha256": "9961a7494ebc2f4b6594207b85a955dc9dd618edecd44b6eeb630ef9332634bf",
+      "fonts": 1,
+      "glyphs": 4
+    },
+    {
+      "file": "native-2.font",
+      "sha256": "55544fe2591b0ec4f6692e84b6d08b1a73a459a20d632457d064e3bfb3a8c07b",
+      "fonts": 1,
+      "glyphs": 4
+    },
+    {
+      "file": "generated-3.nfnt",
+      "sha256": "8979b866702540875e48a2313e07be5a0aebeb6eea6db1a4df9085306b9d41c5",
+      "fonts": 1,
+      "glyphs": 5
+    },
+    {
+      "file": "oracle-3.nfnt",
+      "sha256": "d611a3f95e4eeb34ef5dd52b95c40c2edec2d4c9ab86311405eeb3d13478615c",
+      "fonts": 1,
+      "glyphs": 5
+    },
+    {
+      "file": "native-3.bare",
+      "sha256": "8979b866702540875e48a2313e07be5a0aebeb6eea6db1a4df9085306b9d41c5",
+      "fonts": 1,
+      "glyphs": 5
+    },
+    {
+      "file": "native-3.dfont",
+      "sha256": "3a04c53e21e71a3768afe43e3ca02f98abecbf6a2f818996e50836d3fdba08aa",
+      "fonts": 1,
+      "glyphs": 5
+    },
+    {
+      "file": "native-3.font",
+      "sha256": "647a5d248d60d1b06a781f9ef9c15fd1a9f3f6634de89ba26d3b5645999e9888",
+      "fonts": 1,
+      "glyphs": 5
+    },
+    {
+      "file": "generated-4.nfnt",
+      "sha256": "3fc6b72669bada5c4f5f664a0466bd0595b94e11cce8a892d56c684cdd975f2f",
+      "fonts": 1,
+      "glyphs": 6
+    },
+    {
+      "file": "oracle-4.nfnt",
+      "sha256": "9084199e49da68ef3eef2819c0e409bdd5f5aa1799e7daf61156c01188412259",
+      "fonts": 1,
+      "glyphs": 6
+    },
+    {
+      "file": "native-4.bare",
+      "sha256": "3fc6b72669bada5c4f5f664a0466bd0595b94e11cce8a892d56c684cdd975f2f",
+      "fonts": 1,
+      "glyphs": 6
+    },
+    {
+      "file": "native-4.dfont",
+      "sha256": "afb1c24823188ce2258820a95457cde2da969b17f9516809f562d76a48522fbe",
+      "fonts": 1,
+      "glyphs": 6
+    },
+    {
+      "file": "native-4.font",
+      "sha256": "e3bed88a747aecc5fa373656b1642a7850b7537c6643be69a4778ac47587360b",
+      "fonts": 1,
+      "glyphs": 6
+    },
+    {
+      "file": "generated-5.nfnt",
+      "sha256": "6f29b09191bffa1827eecbb207379894c40ce0ed0440038a1211fcefa2992a08",
+      "fonts": 1,
+      "glyphs": 7
+    },
+    {
+      "file": "oracle-5.nfnt",
+      "sha256": "906a7f95713dd7f588cb62270b633ce98d5b5745b4953a14dee2c562d1995351",
+      "fonts": 1,
+      "glyphs": 7
+    },
+    {
+      "file": "native-5.bare",
+      "sha256": "6f29b09191bffa1827eecbb207379894c40ce0ed0440038a1211fcefa2992a08",
+      "fonts": 1,
+      "glyphs": 7
+    },
+    {
+      "file": "native-5.dfont",
+      "sha256": "93ec7b2e0de2df69eb574446bd5b4980ca91ae8b5d7ff5cec12c468718b47f19",
+      "fonts": 1,
+      "glyphs": 7
+    },
+    {
+      "file": "native-5.font",
+      "sha256": "1ab625bf912b4548cfb71ffaab72e166ea7d133d8b6375c6754d8dfc30305eae",
+      "fonts": 1,
+      "glyphs": 7
+    },
+    {
+      "file": "generated-6.nfnt",
+      "sha256": "6ff9eb7818b6341bd0463e8cf86b27ce21789aa0d6b96b2fa4b28ff985657790",
+      "fonts": 1,
+      "glyphs": 8
+    },
+    {
+      "file": "oracle-6.nfnt",
+      "sha256": "e4c0b159a76020e4480426a485defab4682dbad4d24bb3958b89e913ec7785ba",
+      "fonts": 1,
+      "glyphs": 8
+    },
+    {
+      "file": "native-6.bare",
+      "sha256": "6ff9eb7818b6341bd0463e8cf86b27ce21789aa0d6b96b2fa4b28ff985657790",
+      "fonts": 1,
+      "glyphs": 8
+    },
+    {
+      "file": "native-6.dfont",
+      "sha256": "5534dec8037aeddd1f54d9c7a7e9da91f5f26a071a9958db518ee51aa9017286",
+      "fonts": 1,
+      "glyphs": 8
+    },
+    {
+      "file": "native-6.font",
+      "sha256": "d6841b9d4efcf7b52f605ebcc31c3136caf4fa7413c2774d7af4d750fa685f06",
+      "fonts": 1,
+      "glyphs": 8
+    },
+    {
+      "file": "generated-7.nfnt",
+      "sha256": "24d1db89a9de70b7729e8c4ac07f539225d3cf853f4f66542865ecb0d42a6b23",
+      "fonts": 1,
+      "glyphs": 9
+    },
+    {
+      "file": "oracle-7.nfnt",
+      "sha256": "c59b3a22506b9e998b01cb0469626723d6a269bb4cadfdbc3814dfc324a26fda",
+      "fonts": 1,
+      "glyphs": 9
+    },
+    {
+      "file": "native-7.bare",
+      "sha256": "24d1db89a9de70b7729e8c4ac07f539225d3cf853f4f66542865ecb0d42a6b23",
+      "fonts": 1,
+      "glyphs": 9
+    },
+    {
+      "file": "native-7.dfont",
+      "sha256": "b07087be9f1dabea58e765ee4c720d06dfd787400c9342606e3fc728e990f664",
+      "fonts": 1,
+      "glyphs": 9
+    },
+    {
+      "file": "native-7.font",
+      "sha256": "2d3455c6a13e900e23330ee2c5bfc951a3e303505cce0fde8fa85a667ba1ed67",
+      "fonts": 1,
+      "glyphs": 9
+    },
+    {
+      "file": "generated-8.nfnt",
+      "sha256": "913221c8dcf3fafb85d43c6487552443856ae2dd88b77a419c19b1c31658845c",
+      "fonts": 1,
+      "glyphs": 10
+    },
+    {
+      "file": "oracle-8.nfnt",
+      "sha256": "b3d505d6cae157a5de0a100c4d1ba8370a1b48b7dfbd56c45b66be4def768b5d",
+      "fonts": 1,
+      "glyphs": 10
+    },
+    {
+      "file": "native-8.bare",
+      "sha256": "913221c8dcf3fafb85d43c6487552443856ae2dd88b77a419c19b1c31658845c",
+      "fonts": 1,
+      "glyphs": 10
+    },
+    {
+      "file": "native-8.dfont",
+      "sha256": "bdb006c0ea2bae4058d989ca43a6c78a68644895af53e4cd4e1ff6342a79e69e",
+      "fonts": 1,
+      "glyphs": 10
+    },
+    {
+      "file": "native-8.font",
+      "sha256": "1fe0b3c8225063f77e3cf5052fda7e8780c7a6c157e721e0a5ffe5b63c31244e",
+      "fonts": 1,
+      "glyphs": 10
+    },
+    {
+      "file": "generated-9.nfnt",
+      "sha256": "68bc47022dd2773b56bd22728b39f7f31b615085909f023483d89acee9e5773e",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "oracle-9.nfnt",
+      "sha256": "68b6d47b93a7933fd07bbbe70dbab3bc814b95ecfee0fc0c618cfea083fb4ea7",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "native-9.bare",
+      "sha256": "68bc47022dd2773b56bd22728b39f7f31b615085909f023483d89acee9e5773e",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "native-9.dfont",
+      "sha256": "ce79005f0eae0acb93fd5dee19ba8d39bf757ce02f87dbe1c5018b90a07d0432",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "native-9.font",
+      "sha256": "fc23a217c26f35edb0fbdc755ea273250bb81151354bce189e2eb732df0a8f63",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "generated-10.nfnt",
+      "sha256": "5c2ee83809d003d2506e16e2956ff1730e9f7032f3bfa8e9ee3534b7e5757a05",
+      "fonts": 1,
+      "glyphs": 12
+    },
+    {
+      "file": "oracle-10.nfnt",
+      "sha256": "775dce1fef3659f294458020e0527f48f9891b30f62796ab587a9dbfd8198be9",
+      "fonts": 1,
+      "glyphs": 12
+    },
+    {
+      "file": "native-10.bare",
+      "sha256": "5c2ee83809d003d2506e16e2956ff1730e9f7032f3bfa8e9ee3534b7e5757a05",
+      "fonts": 1,
+      "glyphs": 12
+    },
+    {
+      "file": "native-10.dfont",
+      "sha256": "f7aab68cb6d3493359de6aba8729b3ae2a37829b769e9fe9d1c84ccfc6c8268d",
+      "fonts": 1,
+      "glyphs": 12
+    },
+    {
+      "file": "native-10.font",
+      "sha256": "1bff3c7478a0a1db94fceef175b3ff37a5de1a319487ce9e39928b289e8b9822",
+      "fonts": 1,
+      "glyphs": 12
+    },
+    {
+      "file": "generated-11.nfnt",
+      "sha256": "f1016bd96ba90eb4cf0edc49ef903a96129c05a5e41e52c52258ee069a39a9bc",
+      "fonts": 1,
+      "glyphs": 13
+    },
+    {
+      "file": "oracle-11.nfnt",
+      "sha256": "23a5f33d7880abfef0c681b3eb681c65d0e991043bb4cba4333698da12b8cda6",
+      "fonts": 1,
+      "glyphs": 13
+    },
+    {
+      "file": "native-11.bare",
+      "sha256": "f1016bd96ba90eb4cf0edc49ef903a96129c05a5e41e52c52258ee069a39a9bc",
+      "fonts": 1,
+      "glyphs": 13
+    },
+    {
+      "file": "native-11.dfont",
+      "sha256": "fb64fe665d64f6579959e2bca10230891342b1996b60a5933a554c2f53f2dc14",
+      "fonts": 1,
+      "glyphs": 13
+    },
+    {
+      "file": "native-11.font",
+      "sha256": "fabaf156b7b18c4bc3a3a4a2828c9d859b4983b80f28e4a5eb444474dd6e4f29",
+      "fonts": 1,
+      "glyphs": 13
+    },
+    {
+      "file": "generated-12.nfnt",
+      "sha256": "0386b342d4026fbf643eaaf1bd976fecf01b67a9842baf745a14d9cb18d2f7a5",
+      "fonts": 1,
+      "glyphs": 14
+    },
+    {
+      "file": "oracle-12.nfnt",
+      "sha256": "7d8183720cca665e784135483254b42cd63e03814a7bb7bf38863d636c41d465",
+      "fonts": 1,
+      "glyphs": 14
+    },
+    {
+      "file": "native-12.bare",
+      "sha256": "0386b342d4026fbf643eaaf1bd976fecf01b67a9842baf745a14d9cb18d2f7a5",
+      "fonts": 1,
+      "glyphs": 14
+    },
+    {
+      "file": "native-12.dfont",
+      "sha256": "7b37876c146030104a43d7cb0577e6e254875e48754216d793db026fe48a94f4",
+      "fonts": 1,
+      "glyphs": 14
+    },
+    {
+      "file": "native-12.font",
+      "sha256": "09d600f43279a05d13e60c0c22cd2cd86f2869599232d8ed2efdf4de90c0bff5",
+      "fonts": 1,
+      "glyphs": 14
+    },
+    {
+      "file": "generated-13.nfnt",
+      "sha256": "eea5fbfe55b5b572a0428475986de29733022aa65b6f5e9ef4c5c36ddb7864a4",
+      "fonts": 1,
+      "glyphs": 15
+    },
+    {
+      "file": "oracle-13.nfnt",
+      "sha256": "412fea0bab10e28bcd648ce20ae955aad8db5e9fabf2892e1c01e52f955f5c2b",
+      "fonts": 1,
+      "glyphs": 15
+    },
+    {
+      "file": "native-13.bare",
+      "sha256": "eea5fbfe55b5b572a0428475986de29733022aa65b6f5e9ef4c5c36ddb7864a4",
+      "fonts": 1,
+      "glyphs": 15
+    },
+    {
+      "file": "native-13.dfont",
+      "sha256": "e47f7ec14cbf30332b3b09efc900594362ffd409e578c2f81ed2a4da86f0970f",
+      "fonts": 1,
+      "glyphs": 15
+    },
+    {
+      "file": "native-13.font",
+      "sha256": "862bbfa684703c7d2d7ed49120452adc34a24ff4cb6de3847d49068bda978bf3",
+      "fonts": 1,
+      "glyphs": 15
+    },
+    {
+      "file": "generated-14.nfnt",
+      "sha256": "462cd2865aaeaac3f9909f03092cb43df6096c4aa05209379ced7864dc518864",
+      "fonts": 1,
+      "glyphs": 16
+    },
+    {
+      "file": "oracle-14.nfnt",
+      "sha256": "b053fc32b79c8dc2e4d93ae793c57332302ba5f251c9998c3cb78945eb570f43",
+      "fonts": 1,
+      "glyphs": 16
+    },
+    {
+      "file": "native-14.bare",
+      "sha256": "462cd2865aaeaac3f9909f03092cb43df6096c4aa05209379ced7864dc518864",
+      "fonts": 1,
+      "glyphs": 16
+    },
+    {
+      "file": "native-14.dfont",
+      "sha256": "4be294f3fe9642967bde5e7111e1265a9907106920913f0783eaaa2c61081e50",
+      "fonts": 1,
+      "glyphs": 16
+    },
+    {
+      "file": "native-14.font",
+      "sha256": "b537f6a16af7cc1c18754ee60f8c631a01d183637323f4f01c34d6d8eec62449",
+      "fonts": 1,
+      "glyphs": 16
+    },
+    {
+      "file": "generated-15.nfnt",
+      "sha256": "9ac37de6fb5804a71c5d1c32f18f7df053751ed8c01834590c90040fd85693f5",
+      "fonts": 1,
+      "glyphs": 17
+    },
+    {
+      "file": "oracle-15.nfnt",
+      "sha256": "6b5ce3e7f5e1febfdc33c543c2b51be8fdbf38e35f7029663cfb03c63c86f0c0",
+      "fonts": 1,
+      "glyphs": 17
+    },
+    {
+      "file": "native-15.bare",
+      "sha256": "9ac37de6fb5804a71c5d1c32f18f7df053751ed8c01834590c90040fd85693f5",
+      "fonts": 1,
+      "glyphs": 17
+    },
+    {
+      "file": "native-15.dfont",
+      "sha256": "2c22a89335b9c6e94d9e04f228ae49dd88c1bb04f0b39353ff319b23dfe25edb",
+      "fonts": 1,
+      "glyphs": 17
+    },
+    {
+      "file": "native-15.font",
+      "sha256": "5112622643d4fefe07e018135630bb05053b85189c31b912185b9c3a5da7c87f",
+      "fonts": 1,
+      "glyphs": 17
+    },
+    {
+      "file": "generated-16.nfnt",
+      "sha256": "3698aa02aafa370f43a2276b2c6bc0543cc1662ab56e43898b66cf23432d0959",
+      "fonts": 1,
+      "glyphs": 18
+    },
+    {
+      "file": "oracle-16.nfnt",
+      "sha256": "d09a0a75ae182109dfa394f75cf05bcff0361e9c7602a4be931307ab5e811b6b",
+      "fonts": 1,
+      "glyphs": 18
+    },
+    {
+      "file": "native-16.bare",
+      "sha256": "3698aa02aafa370f43a2276b2c6bc0543cc1662ab56e43898b66cf23432d0959",
+      "fonts": 1,
+      "glyphs": 18
+    },
+    {
+      "file": "native-16.dfont",
+      "sha256": "215860f36302ba2034a4b8d186fc74677d8411e7b817e321e5a4f41f2ecc5f4d",
+      "fonts": 1,
+      "glyphs": 18
+    },
+    {
+      "file": "native-16.font",
+      "sha256": "c2d2cb044c54f940137b539e78b7eaeaefc81e30b7424b7e0faa6442d756bb19",
+      "fonts": 1,
+      "glyphs": 18
+    },
+    {
+      "file": "generated-17.nfnt",
+      "sha256": "f54eba1f8a151f9ca55bff1fa488865aacc766e3d873c8d10dc74ceb8ba0ea4f",
+      "fonts": 1,
+      "glyphs": 19
+    },
+    {
+      "file": "oracle-17.nfnt",
+      "sha256": "fbc3d2e89523a3b599d358048738435fcf23679ca7ba929e263eae378f0517af",
+      "fonts": 1,
+      "glyphs": 19
+    },
+    {
+      "file": "native-17.bare",
+      "sha256": "f54eba1f8a151f9ca55bff1fa488865aacc766e3d873c8d10dc74ceb8ba0ea4f",
+      "fonts": 1,
+      "glyphs": 19
+    },
+    {
+      "file": "native-17.dfont",
+      "sha256": "35835ec050e312b6563f907d0224f423027e328301fc75f148755b8759949e6f",
+      "fonts": 1,
+      "glyphs": 19
+    },
+    {
+      "file": "native-17.font",
+      "sha256": "b189a497bfcd8a6518617968ae794ec28de1ba858f6599fd15ecc7ffab37c6c5",
+      "fonts": 1,
+      "glyphs": 19
+    },
+    {
+      "file": "generated-18.nfnt",
+      "sha256": "07f1166694d89951ade89cbabf5e0537f8296e56a2c7111b15d980d5328b79fb",
+      "fonts": 1,
+      "glyphs": 20
+    },
+    {
+      "file": "oracle-18.nfnt",
+      "sha256": "81470a3134e12ed43e6047cd0316b81a8bf97664ab848db2181fe1f8e980a9e8",
+      "fonts": 1,
+      "glyphs": 20
+    },
+    {
+      "file": "native-18.bare",
+      "sha256": "07f1166694d89951ade89cbabf5e0537f8296e56a2c7111b15d980d5328b79fb",
+      "fonts": 1,
+      "glyphs": 20
+    },
+    {
+      "file": "native-18.dfont",
+      "sha256": "f7c2ce75373dfaf211fc21fcb858c91fee2c1d9ceb77fba5bf0cedcb3b37833b",
+      "fonts": 1,
+      "glyphs": 20
+    },
+    {
+      "file": "native-18.font",
+      "sha256": "718de01081057f1317590fc73a96b5ab321e010a5ceb4675619d7fcbb16581b7",
+      "fonts": 1,
+      "glyphs": 20
+    },
+    {
+      "file": "generated-19.nfnt",
+      "sha256": "626d2212a62dfbbb0bcfe2c3f513c44c519789dd818d6a793b287b3d1908b9d9",
+      "fonts": 1,
+      "glyphs": 21
+    },
+    {
+      "file": "oracle-19.nfnt",
+      "sha256": "649e3c6124c1ba8ba81096f173bfe9d890b5429c5323b0f7c70983dfd41bcfcb",
+      "fonts": 1,
+      "glyphs": 21
+    },
+    {
+      "file": "native-19.bare",
+      "sha256": "626d2212a62dfbbb0bcfe2c3f513c44c519789dd818d6a793b287b3d1908b9d9",
+      "fonts": 1,
+      "glyphs": 21
+    },
+    {
+      "file": "native-19.dfont",
+      "sha256": "80c97ea737c13d7599ad0f5887723b034ec77260e1948b9d9a77004b65626da8",
+      "fonts": 1,
+      "glyphs": 21
+    },
+    {
+      "file": "native-19.font",
+      "sha256": "052d97e81db64d036acba3d4363f96e6d6afe9aa38a14beef556d7df41d4588d",
+      "fonts": 1,
+      "glyphs": 21
+    },
+    {
+      "file": "generated-20.nfnt",
+      "sha256": "4322369874014c7fb23e1df2845743d34626b56b8f28252adb4e5d20164e8c25",
+      "fonts": 1,
+      "glyphs": 22
+    },
+    {
+      "file": "oracle-20.nfnt",
+      "sha256": "1aaa442396e2aec95115b87da689e2499accc14ac466c964929e92f50dcd6ebf",
+      "fonts": 1,
+      "glyphs": 22
+    },
+    {
+      "file": "native-20.bare",
+      "sha256": "4322369874014c7fb23e1df2845743d34626b56b8f28252adb4e5d20164e8c25",
+      "fonts": 1,
+      "glyphs": 22
+    },
+    {
+      "file": "native-20.dfont",
+      "sha256": "e5a1a22ed65337d5dcfa1177d322a0225ed89a1ebde7ed2ba2294a9d19ae0098",
+      "fonts": 1,
+      "glyphs": 22
+    },
+    {
+      "file": "native-20.font",
+      "sha256": "40cd9c54778ec2eeb6929f42cb9c13dc406f3b7ad36557865554944e1fec87e6",
+      "fonts": 1,
+      "glyphs": 22
+    },
+    {
+      "file": "generated-21.nfnt",
+      "sha256": "49d2a1a962611cd6bde13bb87ad98ed1b1c6a136f2bbd822ed20b58d3bd1d39a",
+      "fonts": 1,
+      "glyphs": 23
+    },
+    {
+      "file": "oracle-21.nfnt",
+      "sha256": "59d6249d889f15003abc50fec2214c1cb8005d5baa33b145c28467e72bf28096",
+      "fonts": 1,
+      "glyphs": 23
+    },
+    {
+      "file": "native-21.bare",
+      "sha256": "49d2a1a962611cd6bde13bb87ad98ed1b1c6a136f2bbd822ed20b58d3bd1d39a",
+      "fonts": 1,
+      "glyphs": 23
+    },
+    {
+      "file": "native-21.dfont",
+      "sha256": "8369b2cd3f3e913fa4c07fa782034b7fb044f9442217f863143a336bd709694c",
+      "fonts": 1,
+      "glyphs": 23
+    },
+    {
+      "file": "native-21.font",
+      "sha256": "f314f47d4e2daab64b95b71d78df68d8367fd1630e4134eb2d0e7aa021f572e8",
+      "fonts": 1,
+      "glyphs": 23
+    },
+    {
+      "file": "generated-22.nfnt",
+      "sha256": "c1f089307b9e597682f6f134403aa12a9ba0e39a598e4ab9483a14550550088e",
+      "fonts": 1,
+      "glyphs": 24
+    },
+    {
+      "file": "oracle-22.nfnt",
+      "sha256": "64194d478d5a769c64a333379c6e5b812e7c1e9cc571c7de130870d440f59fef",
+      "fonts": 1,
+      "glyphs": 24
+    },
+    {
+      "file": "native-22.bare",
+      "sha256": "c1f089307b9e597682f6f134403aa12a9ba0e39a598e4ab9483a14550550088e",
+      "fonts": 1,
+      "glyphs": 24
+    },
+    {
+      "file": "native-22.dfont",
+      "sha256": "02551b7de5c7d38ff1e689c50786b71133f13bc09875b8df4396902452baadfb",
+      "fonts": 1,
+      "glyphs": 24
+    },
+    {
+      "file": "native-22.font",
+      "sha256": "879d662f6a76513e12940821f21c6c4729ed55deb2355228310e67782c630566",
+      "fonts": 1,
+      "glyphs": 24
+    },
+    {
+      "file": "generated-23.nfnt",
+      "sha256": "cf904968a2111283c7a7adda8d0f7f99fbeb6381afab61c1facbfc5867e085e3",
+      "fonts": 1,
+      "glyphs": 25
+    },
+    {
+      "file": "oracle-23.nfnt",
+      "sha256": "1def7aac88f491cb6165aa2493788809acb9c95215950e055afd33b130c1c1d9",
+      "fonts": 1,
+      "glyphs": 25
+    },
+    {
+      "file": "native-23.bare",
+      "sha256": "cf904968a2111283c7a7adda8d0f7f99fbeb6381afab61c1facbfc5867e085e3",
+      "fonts": 1,
+      "glyphs": 25
+    },
+    {
+      "file": "native-23.dfont",
+      "sha256": "763e5117430bb1f6382af554b8d933b83d19a9f105432aa4e510ed28fac20f45",
+      "fonts": 1,
+      "glyphs": 25
+    },
+    {
+      "file": "native-23.font",
+      "sha256": "dd3100d3bf1e01f24693f4094ea49e3d51417d234ebe062b6d91020d59285d1f",
+      "fonts": 1,
+      "glyphs": 25
+    },
+    {
+      "file": "classic-font.suit",
+      "sha256": "486769ceaa31a7cfac786edf0e0c5e321ebad480b7e17e91aa46a7352f1a284d",
+      "fonts": 1,
+      "glyphs": 11
+    },
+    {
+      "file": "multi-strike.dfont",
+      "sha256": "b0ab4f6bfa2e7ade227a1086ea75d9ec2741bb98d2ed12a31ebcc9b25e1b21e3",
+      "fonts": 2,
+      "glyphs": 36
+    },
+    {
+      "file": "original.dfont",
+      "sha256": "46748fa3867e041af63970cc93af0cd11b072d7d7da312d35d73702ab1f49d85",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "macbinary-0",
+      "sha256": "2dbef9c017c53de4cd35c6451470c26b50706dc8ba214354844e008d7f6dfdae",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "macbinary-129",
+      "sha256": "ea5fc562213ad4a1b84450e80f51468c35eebf91b5b842ed7ac8edaacb2add07",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "macbinary-130",
+      "sha256": "6eafc2d1a072864c979ec64d49a71b8f9b41e31d63cda811823755f47c1b574a",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "apple-51600",
+      "sha256": "5af092c445a9487a2209bafe43cf307d64f0a1b2a9033856439330963dc887ea",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "apple-51607",
+      "sha256": "44b31cf998dabd8734f9cdf4b3ecbbeeafcca130db0f53ff611c460d81c771b8",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "apple-v1-51600",
+      "sha256": "f9f4bbbe910c506691881e72fe22d19cffdecec05152132721ff0fab7189bb3c",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "apple-v1-51607",
+      "sha256": "80b002b82aeb349e667cc4fddde2993bcdd1ea23b00c9149aed86b4becd58e84",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "apple-data",
+      "sha256": "c42226605837e4fa914bbdbb18c450fe4722e1e2823a1bc523b841695f6c9b2e",
+      "fonts": 1,
+      "glyphs": 33
+    },
+    {
+      "file": "4x6.dfont",
+      "sha256": "c5d4942ca1bb8ff567d354f2622d7fe9096c1db2b026d5b75cc20afb70e2ea5b",
+      "fonts": 1,
+      "glyphs": 195
+    },
+    {
+      "file": "4x6.bin",
+      "sha256": "cd269ae3018b571fbefb1d370b927cf8e457dba032c20b91d6787d365cf55b74",
+      "fonts": 1,
+      "glyphs": 195
+    },
+    {
+      "file": "4x6.dfont.as",
+      "sha256": "3dc6276059bf9e6f216443935e7f07d8e84427a1fec49715fa5b2e7dbda2776b",
+      "fonts": 1,
+      "glyphs": 195
+    },
+    {
+      "file": "indexed-color.dfont",
+      "sha256": "6f3839a948d088aed461f9544db76efb66b034179abafe956a14731c059c4aa1",
+      "fonts": 1,
+      "glyphs": 2,
+      "oracle": "monobit ColorTable + Pillow luminance"
+    }
+  ]
+}

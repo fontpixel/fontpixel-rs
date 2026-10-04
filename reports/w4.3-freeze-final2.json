@@ -1,0 +1,31 @@
+{
+  "state": "W4.3 final2 detector repair; root NFNT fuzz rerun/full integration pending",
+  "utc": "2026-10-04T06:54:35.469260+00:00",
+  "supersedes": "reports/w4.3-freeze.json",
+  "production_digest": "a7bb117d0a7ca1ce8b4e03ac1b3e4f8fa040a4b4245a2bce1030816fae230166",
+  "standalone_nfnt_tests": 30,
+  "all_feature_nfnt_tests": 31,
+  "all_feature_vector_raster_tests": 31,
+  "oracle_checks": 135,
+  "oracle_detection_checks": 135,
+  "clippy": "passed standalone and all-feature NFNT test -D warnings",
+  "rustdoc": "passed -D warnings",
+  "fuzz_target_build": "passed nfnt-only; detect is explicitly exercised",
+  "sha256": {
+    "crates/fontpixel/examples/nfnt_timing.rs": "03ccd4f1262be28647f5529fd46002155321c3397cfb70fb86d0f0783bf820f9",
+    "crates/fontpixel/src/formats/nfnt/container.rs": "916e0cf039b163c3440b083531a385780e1bd2c7ef26322c8b68c867bde1bfb9",
+    "crates/fontpixel/src/formats/nfnt/palette.rs": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53",
+    "crates/fontpixel/src/formats/nfnt/probe.rs": "28b8b36ee497297828de0269af5999226c9366a56b8da5a460bfdd1b449b8670",
+    "crates/fontpixel/src/formats/nfnt/raster.rs": "1ae009912997e63c88f1a640e88675dedad4ee9773eb5472125a9ecab4c25098",
+    "crates/fontpixel/src/formats/nfnt/support.rs": "a651c64934d05c7f4f0e59736f469090a7d09a69eb0593ac7bd55422bef8e7b6",
+    "crates/fontpixel/src/formats/nfnt/writer.rs": "f664c8d3ca72996bba600208c74114e9fd507c3e06a78b2c736ea4fb5bef6b1a",
+    "crates/fontpixel/src/formats/nfnt.rs": "47dc05bcea78db3b44071ebe7372254929560948f1a4a65e5ced18a1aa7adc2e",
+    "crates/fontpixel/tests/nfnt.rs": "4455a10c44bd4b2f87524aa0499cd32573899bd05a59453612367fe06988c8f9",
+    "docs/formats/nfnt.md": "0165dbf868451500d99b305a12d4eef28909a3961794a120c7c77629e16d54c9",
+    "fuzz/fuzz_targets/nfnt.rs": "bd92cc39b9d9bf5b0fcee3f0cfed66b06838897cca28f30acf4c62ed0d9d120a",
+    "fuzz/seed_nfnt.py": "d0ef1fd13c34ea6826da6c54f410b84762c4b1bd9e03e08e41d3d37dc92373be",
+    "reports/w4.3-crosscheck-final2.json": "fe19a96ad32a9ed174306ff3906c99b88b1b0284adbb09e7c0e08cc7bc3a0733",
+    "reports/w4.3-detector-final2.md": "bb98830ce99649c3b268652c665b301932b78c44962b1ced85b5ec23b5084abc",
+    "tests/crosscheck/nfnt.py": "d0d69defef37e910640a9aa751ea4a271d5d7baafe84ffcb765446959fae8825"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "checks": [
+    {
+      "check": "native pk -> monobit",
+      "glyphs": 128
+    },
+    {
+      "check": "native pk -> TeX -> gf -> native",
+      "glyphs": 128
+    },
+    {
+      "check": "native gf -> monobit",
+      "glyphs": 128
+    },
+    {
+      "check": "native gf -> TeX -> pk -> native",
+      "glyphs": 128
+    },
+    {
+      "check": "native Plan 9 -> Go",
+      "glyphs": 128
+    },
+    {
+      "check": "real CM PK + TeX GF + native roundtrip",
+      "name": "cmr10.300pk",
+      "glyphs": 128,
+      "sha256": "5f8c6ffc3564f9434b6e98abd8d14d375362dec4c8519e5da89023f8d504da0f"
+    },
+    {
+      "check": "real CM PK + TeX GF + native roundtrip",
+      "name": "cmr10.329pk",
+      "glyphs": 128,
+      "sha256": "24dd684471ca67fe41b376a316982dabff4554cdd333696e96c1e575071dae43"
+    },
+    {
+      "check": "real Plan 9 <-> native, Go both directions",
+      "name": "8x13.0000",
+      "glyphs": 256,
+      "sha256": "d7123170ba85c15aa37dab40413baceef9e59c13b267290b4ae67eec28f94d3d"
+    },
+    {
+      "check": "real Plan 9 <-> native, Go both directions",
+      "name": "4x6.0000",
+      "glyphs": 256,
+      "sha256": "11edb1337d70fe3bf4589be1616b0bcbf49b7d66f7d9cb396fb8c22660370faf"
+    }
+  ],
+  "monobit_version": "0.54",
+  "go_module": "golang.org/x/image v0.24.0 (BSD-3-Clause)",
+  "tex_version": "PKtype 2.3 (TeX Live 2023/Debian)",
+  "sources": {
+    "8x13.0000": {
+      "url": "https://raw.githubusercontent.com/9fans/plan9port/master/font/fixed/8x13.0000",
+      "sha256": "d7123170ba85c15aa37dab40413baceef9e59c13b267290b4ae67eec28f94d3d"
+    },
+    "4x6.0000": {
+      "url": "https://raw.githubusercontent.com/9fans/plan9port/master/font/fixed/4x6.0000",
+      "sha256": "11edb1337d70fe3bf4589be1616b0bcbf49b7d66f7d9cb396fb8c22660370faf"
+    },
+    "pk300.zip": {
+      "url": "https://mirrors.ibiblio.org/CTAN/fonts/cm/pk/pk300.zip",
+      "sha256": "a4c6dff0c08b815cb3b039afef57af8c0705a9cb3ce6d4172a35744cfdc73137"
+    }
+  },
+  "oracle_limits": [
+    "monobit 0.54 has no PK/GF writers or Plan 9 codec",
+    "monobit GF adds one blank right column; compare absolute ink + advance",
+    "monobit PK ignores preamble physical metrics; TeX tools validate those",
+    "Go Plan 9 oracle only supports compressed k1/k2; native raw/legacy/grayscale variants have independent wire tests"
+  ],
+  "licenses": {
+    "CM": "Donald Knuth font license, unmodified upstream bitmaps; https://ctan.org/pkg/cm",
+    "Plan 9 fixed": "public domain, https://raw.githubusercontent.com/9fans/plan9port/master/font/fixed/README"
+  },
+  "implementation_sha256": {
+    "crates/fontpixel/src/formats/pk.rs": "d47ba2219ee227c9b8e772bf05f3788342c3babc63ca84d598a973af720856b8",
+    "crates/fontpixel/src/formats/pk/common.rs": "6a26a77dfea1d567a53786b7659b46d16740dbb60b5b23a55a53f2cc11f1214b",
+    "crates/fontpixel/src/formats/pk/reader.rs": "ac8ae6660b6d21671634ca0f8d2963d0ad5e0d9c55dd81cfd88a5a4bdf6a2c48",
+    "crates/fontpixel/src/formats/pk/writer.rs": "b65eda940da32e70740cb2b691688420650fa0e2d2b1960e1cd437b9fc625e40",
+    "crates/fontpixel/src/formats/gf.rs": "a1f5bd5676df6040a5964b10017e1a1db16d505504cf2a89979426d6f541c767",
+    "crates/fontpixel/src/formats/gf/reader.rs": "34d14329d9441e889d86d25ff5051ed20b834e379f240eb9da4a2f5a24743f4b",
+    "crates/fontpixel/src/formats/gf/writer.rs": "f00ec211731d5d265dadf10877c6d3e96ca620ff383f1c15de7cb78b93111f6b",
+    "crates/fontpixel/src/formats/plan9.rs": "e9f8c77cca6e33436f0ee79ff0004984754ece6ef61f7e4b75bca0511dcebb8b",
+    "crates/fontpixel/src/formats/plan9/image.rs": "a7c2b5843053a4000a35b1d3516332d89669fafead8efb6b2166a604da844b05",
+    "crates/fontpixel/src/formats/plan9/reader.rs": "a7b772d633898d36f518e86bcae3975baa6de356243fb6b318328eee34123634",
+    "crates/fontpixel/src/formats/plan9/writer.rs": "1bbf258b26d94c54c9fe066b392f4eb43b0c4b1c9099cbc3809f7d1329255c4e"
+  }
+}

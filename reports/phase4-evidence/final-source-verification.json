@@ -1,0 +1,197 @@
+{
+  "final_reader_campaigns": [
+    {
+      "format": "pf2",
+      "campaign": "phase4-pf2-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/pf2.rs": "24d1bdfdd34e37e80e02b63f3458ff111ad95b874abb1960ed6c3a0991bb7574",
+        "crates/fontpixel/src/formats/pf2/common.rs": "ea574e8ec8df2e1b1484260f1320b22f75a7b935e033eb835a0615387b41094b",
+        "crates/fontpixel/src/formats/pf2/writer.rs": "74e369bca2268e530f91f63c0c609a2b4ab85774cbd7f0766da62c782831dcaa",
+        "fuzz/fuzz_targets/pf2.rs": "9ea02ee7aafb406c3d4970ba776cd648983b6fa2dd021c6ddc53b23454cb64eb"
+      }
+    },
+    {
+      "format": "fontx2",
+      "campaign": "phase4-fontx2-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/fontx2.rs": "60968bca1b3dcb49c8768a2e7f20e597438a6327011281592b2ddf8ef0c20f7c",
+        "crates/fontpixel/src/formats/pf2/common.rs": "ea574e8ec8df2e1b1484260f1320b22f75a7b935e033eb835a0615387b41094b",
+        "fuzz/fuzz_targets/fontx2.rs": "da8100f3c589ddd736a5171f640cc9bd74dfe13fbc18e11e030e77f377685678"
+      }
+    },
+    {
+      "format": "hzk",
+      "campaign": "phase4-hzk-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/hzk.rs": "fe9eb772d59d9a8a6276d759185555266133be132b31e980e22f6167a029378a",
+        "crates/fontpixel/src/formats/hzk/presets.rs": "624baa763fd467d0321d6d294b1adc14abac6a363b0b544ab990b0b57de2120d",
+        "crates/fontpixel/src/formats/pf2/common.rs": "ea574e8ec8df2e1b1484260f1320b22f75a7b935e033eb835a0615387b41094b",
+        "fuzz/fuzz_targets/hzk.rs": "62ee529b714730ca2abb8ad8c1d4dedbf0ad379940ccb833afc2795e3f69a626"
+      }
+    },
+    {
+      "format": "pk",
+      "campaign": "phase4-pk-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/pk.rs": "d47ba2219ee227c9b8e772bf05f3788342c3babc63ca84d598a973af720856b8",
+        "crates/fontpixel/src/formats/pk/common.rs": "6a26a77dfea1d567a53786b7659b46d16740dbb60b5b23a55a53f2cc11f1214b",
+        "crates/fontpixel/src/formats/pk/reader.rs": "ac8ae6660b6d21671634ca0f8d2963d0ad5e0d9c55dd81cfd88a5a4bdf6a2c48",
+        "crates/fontpixel/src/formats/pk/writer.rs": "b65eda940da32e70740cb2b691688420650fa0e2d2b1960e1cd437b9fc625e40",
+        "fuzz/fuzz_targets/pk.rs": "e7c9174c03d88544f9cd90268421030eee6073837dfec749cf3d7c302e47a1a4"
+      }
+    },
+    {
+      "format": "gf",
+      "campaign": "phase4-gf-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/gf.rs": "a1f5bd5676df6040a5964b10017e1a1db16d505504cf2a89979426d6f541c767",
+        "crates/fontpixel/src/formats/gf/reader.rs": "34d14329d9441e889d86d25ff5051ed20b834e379f240eb9da4a2f5a24743f4b",
+        "crates/fontpixel/src/formats/gf/writer.rs": "f00ec211731d5d265dadf10877c6d3e96ca620ff383f1c15de7cb78b93111f6b",
+        "crates/fontpixel/src/formats/pk/common.rs": "6a26a77dfea1d567a53786b7659b46d16740dbb60b5b23a55a53f2cc11f1214b",
+        "fuzz/fuzz_targets/gf.rs": "725a286239c3b8898a3fbcdb36152aef25bbc95e42705d773f1241ba62c29409"
+      }
+    },
+    {
+      "format": "plan9",
+      "campaign": "phase4-plan9-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/plan9.rs": "e9f8c77cca6e33436f0ee79ff0004984754ece6ef61f7e4b75bca0511dcebb8b",
+        "crates/fontpixel/src/formats/plan9/image.rs": "a7c2b5843053a4000a35b1d3516332d89669fafead8efb6b2166a604da844b05",
+        "crates/fontpixel/src/formats/plan9/reader.rs": "a7b772d633898d36f518e86bcae3975baa6de356243fb6b318328eee34123634",
+        "crates/fontpixel/src/formats/plan9/writer.rs": "1bbf258b26d94c54c9fe066b392f4eb43b0c4b1c9099cbc3809f7d1329255c4e",
+        "fuzz/fuzz_targets/plan9.rs": "57faaaf124d0aec39e175aced1f13574e53b1a845eef11489f41a29de264318c"
+      }
+    },
+    {
+      "format": "draw",
+      "campaign": "phase4-draw-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/console.rs": "4ae099193f3c90af9d4154de1629d248dc63aaa0d15a557e632941fc562c376d",
+        "crates/fontpixel/src/formats/draw.rs": "6e767227d64f20e26ede6236a4363f144b9c4e74e6ac49cb31098e47189450ba",
+        "fuzz/fuzz_targets/draw.rs": "8cc26e7e9b03b420887ddf7297806fca668c0a65e1969606ea03961f8a600a8c"
+      }
+    },
+    {
+      "format": "raw",
+      "campaign": "phase4-raw-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/console.rs": "4ae099193f3c90af9d4154de1629d248dc63aaa0d15a557e632941fc562c376d",
+        "crates/fontpixel/src/formats/raw.rs": "08efd5e2d268c6ff30ee9815435ecdb0dc1b9192c8bf6c99f753843fac36c40b",
+        "crates/fontpixel/src/formats/raw/support.rs": "d8a9a352bd1822e88c94bbe944cb51c7b80ff82fe821d0bd1d5349ebf49df94f",
+        "fuzz/fuzz_targets/raw.rs": "c565949c16e3f45e65fd57e7fc3ad98e4f281823818d796a21ae0921572a3906"
+      }
+    },
+    {
+      "format": "amiga",
+      "campaign": "phase4-amiga-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/amiga.rs": "30bdda283e7199b249ee17f60072fc8b9cd6b645188df45c4128058904cbf600",
+        "crates/fontpixel/src/formats/gem/common.rs": "a7c94c2402a5c668b9238f201e13175383bd963cc8fbe4584faf79fe464ae347",
+        "fuzz/fuzz_targets/amiga.rs": "a7b4ca80e72862e9b7f34fb017298b42a919689da4865c6de7909f74d4f76605"
+      }
+    },
+    {
+      "format": "gem",
+      "campaign": "phase4-gem-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/gem.rs": "c0f463a8d5927ea618f9a3bd4abc3c6fa139e6f5502a88c01c178000ea309ca4",
+        "crates/fontpixel/src/formats/gem/common.rs": "a7c94c2402a5c668b9238f201e13175383bd963cc8fbe4584faf79fe464ae347",
+        "fuzz/fuzz_targets/gem.rs": "9b1c0ff027d963844f54454458064b0d38e549a39c5fa923b490bf6dbb468df6"
+      }
+    },
+    {
+      "format": "snf",
+      "campaign": "phase4-snf-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/gem/common.rs": "a7c94c2402a5c668b9238f201e13175383bd963cc8fbe4584faf79fe464ae347",
+        "crates/fontpixel/src/formats/snf.rs": "8d562e18877c6dd747e0c70ac0ad12b79b70a0af73655356d8f54b7d24f23ad8",
+        "fuzz/fuzz_targets/snf.rs": "8b2d37ea32ac799209615c17df967f89f1b55d7ad8eab707e6f9bdbfb2b9993c"
+      }
+    },
+    {
+      "format": "bmfont",
+      "campaign": "phase4-bmfont-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/bmfont.rs": "0dc510fa01b99a5a692f86883fcee2eb3c671081bf1058edcccfc3c5b5b64d61",
+        "crates/fontpixel/src/formats/bmfont/fidelity.rs": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142",
+        "crates/fontpixel/src/formats/bmfont/reader.rs": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7",
+        "crates/fontpixel/src/formats/bmfont/wire.rs": "0fadec222be5aab44f9afb4600778e4ee2affc87227b41b3aa7b00fa584a26c1",
+        "crates/fontpixel/src/formats/bmfont/writer.rs": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219",
+        "fuzz/fuzz_targets/bmfont.rs": "7ea261acfe8bdfbcea5197c6e501ad7c40ae1ffcb4277164fe8109d0e4afb6a6"
+      }
+    },
+    {
+      "format": "sfd",
+      "campaign": "phase4-sfd-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/bmfont/fidelity.rs": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142",
+        "crates/fontpixel/src/formats/sfd.rs": "41694463b037940b906eabb66b179f4cb612f0246155928090bced40cd6241b7",
+        "crates/fontpixel/src/formats/sfd/ascii85.rs": "c60c9dcbc7c9479de2f137b64c1df7dcec2db41a8bc3ddd563a43757f0f113b3",
+        "crates/fontpixel/src/formats/sfd/writer.rs": "7739c6fccf812c279f19d7c7d0838d969d68179978648418036e779e6f0ee748",
+        "fuzz/fuzz_targets/sfd.rs": "4905332a0806adc87e555e65bd2f407ef7e41441734d5e21e60b31ab3f0407c9"
+      }
+    },
+    {
+      "format": "kbits",
+      "campaign": "phase4-kbits-fuzz-final",
+      "verified_files": {
+        "crates/fontpixel/src/formats/bmfont/fidelity.rs": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142",
+        "crates/fontpixel/src/formats/kbits.rs": "070838790f60694384889dc071dc90a18b7dcfe5cf19bf26e4cd21c1d669b292",
+        "crates/fontpixel/src/formats/kbits/wire.rs": "55c43a124ee55c4029a71e5a04bd95ce80dd3757d12b4a1c42e9783149a49b24",
+        "fuzz/fuzz_targets/kbits.rs": "71cb59b966cf8fe4a322e5c6c3e7d089c093510fc3662100ceeb86e22c5eb1ca"
+      }
+    },
+    {
+      "format": "nfnt",
+      "campaign": "phase4-nfnt-fuzz-final2",
+      "verified_files": {
+        "crates/fontpixel/src/formats/nfnt.rs": "47dc05bcea78db3b44071ebe7372254929560948f1a4a65e5ced18a1aa7adc2e",
+        "crates/fontpixel/src/formats/nfnt/container.rs": "916e0cf039b163c3440b083531a385780e1bd2c7ef26322c8b68c867bde1bfb9",
+        "crates/fontpixel/src/formats/nfnt/palette.rs": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53",
+        "crates/fontpixel/src/formats/nfnt/probe.rs": "28b8b36ee497297828de0269af5999226c9366a56b8da5a460bfdd1b449b8670",
+        "crates/fontpixel/src/formats/nfnt/raster.rs": "1ae009912997e63c88f1a640e88675dedad4ee9773eb5472125a9ecab4c25098",
+        "crates/fontpixel/src/formats/nfnt/support.rs": "a651c64934d05c7f4f0e59736f469090a7d09a69eb0593ac7bd55422bef8e7b6",
+        "crates/fontpixel/src/formats/nfnt/writer.rs": "f664c8d3ca72996bba600208c74114e9fd507c3e06a78b2c736ea4fb5bef6b1a",
+        "fuzz/fuzz_targets/nfnt.rs": "bd92cc39b9d9bf5b0fcee3f0cfed66b06838897cca28f30acf4c62ed0d9d120a"
+      }
+    },
+    {
+      "format": "cpi",
+      "campaign": "phase4-cpi-fuzz-final2",
+      "verified_files": {
+        "crates/fontpixel/src/formats/console.rs": "4ae099193f3c90af9d4154de1629d248dc63aaa0d15a557e632941fc562c376d",
+        "crates/fontpixel/src/formats/cpi.rs": "edbbb37fd7d2238cdea505d5844267f643b96c05da56dc708da291e66e9335c7",
+        "crates/fontpixel/src/formats/cpi/cpx.rs": "ed633b27803b1b98d4edf929389509ab22305beeb824736ef91c75996d900104",
+        "crates/fontpixel/src/formats/cpi/pack.rs": "2c048bc7c8062daaa9cf49e5eeb3cf362dabf0d5160ec3d0ff0a002f02b37aec",
+        "crates/fontpixel/src/formats/cpi/reader.rs": "3c193f79e50f53d14c1ca004af760acc1ca3796167a6d5b245ad928c588a7403",
+        "crates/fontpixel/src/formats/cpi/stub.asm": "c75b6c43ba5db4aeb27bba04b5b09ba253ad6432a90ad0751458fd9bb21db680",
+        "crates/fontpixel/src/formats/cpi/stub.rs": "396ff4196c153f5e88af58e5d7ae8432af1be9a51e0727378691b753ca3d7506",
+        "crates/fontpixel/src/formats/cpi/writer.rs": "1828aa9595eeef00843b74e3eadf9e5e325eb120ade92b7fe67bf17cf0249a3d",
+        "fuzz/fuzz_targets/cpi.rs": "2aabb3e74b26e0b59692088e4095fc7c8d51e6e22b48063739990565e1d450f3"
+      }
+    }
+  ],
+  "aggregate_and_build_gates": [
+    {
+      "label": "phase4-check-final2",
+      "verified_source_files": 401,
+      "exit_code": 0
+    },
+    {
+      "label": "phase4-extra-gates-final2",
+      "verified_source_files": 401,
+      "exit_code": 0
+    },
+    {
+      "label": "phase4-release-build-final2",
+      "verified_source_files": 401,
+      "exit_code": 0
+    },
+    {
+      "label": "phase4-large-editor-build",
+      "verified_source_files": 401,
+      "exit_code": 0
+    }
+  ],
+  "note": "Comparisons against final working source. CPI and NFNT earlier campaigns remain marked superseded; corpus generators are provenance, not linked production. Final reader-specific dependencies and harnesses are enumerated."
+}

@@ -1,0 +1,213 @@
+rustc 1.99.0 (b940084d7 2026-09-28)
+Environment: CARGO_TARGET_DIR=../local-work/target-w44 CARGO_BUILD_JOBS=2 CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0
+
+$ cargo test -p fontpixel --no-default-features --features bmfont --test bmfont
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 6.76s
+     Running tests/bmfont.rs (../local-work/target-w44/debug/deps/bmfont-00ae22fa7a637062)
+
+running 11 tests
+test explicit_threshold_and_glyph_limits ... ok
+test diagnostic_asset_names_share_the_total_budget ... ok
+test gray_png_alpha_alias_and_total_budget ... ok
+test rejects_xml_entities_and_mismatched_tree ... ok
+test nested_primary_bundle_is_readable ... ok
+test unsafe_paths_missing_pages_and_bad_rectangles_fail ... ok
+test sparse_slots_metrics_and_kerning_are_audited ... ok
+test packed_channels_and_color_losses ... ok
+test kerning_records_survive_every_descriptor_encoding ... ok
+test all_encodings_multipage_semantic_roundtrip ... ok
+test random_gray_atlas_roundtrip ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.84s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features bmfont --lib --test bmfont -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 3.61s
+EXIT 0
+
+$ cargo test -p fontpixel --no-default-features --features sfd --test sfd
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 6.47s
+     Running tests/sfd.rs (../local-work/target-w44/debug/deps/sfd-24daa4ebe5d693bd)
+
+running 9 tests
+test budgets_and_ascii85_padding ... ok
+test malformed_or_composite_is_fatal ... ok
+test multiple_strikes ... ok
+test native_strike_and_identity ... ok
+test outlines_are_explicit_loss ... ok
+test outline_widths_and_row_padding_are_not_silent ... ok
+test signed_extremes_fail_without_panicking ... ok
+test native_gray_depth_is_preserved_when_samples_fit ... ok
+test random_mono_roundtrip ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features sfd --lib --test sfd -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 4.41s
+EXIT 0
+
+$ cargo test -p fontpixel --no-default-features --features kbits --test kbits
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 7.12s
+     Running tests/kbits.rs (../local-work/target-w44/debug/deps/kbits-cdf83b7d17acbdbf)
+
+running 8 tests
+test counts_and_utf8_are_bounded ... ok
+test deeply_nested_caller_metadata_is_rejected_before_recursion ... ok
+test java_modified_utf8_nul_and_supplementary ... ok
+test lost_metadata_and_aliases_are_reported ... ok
+test native_gray_and_metrics_roundtrip ... ok
+test every_truncated_prefix_fails ... ok
+test result_is_readable_under_identical_small_limits ... ok
+test random_gray_native_roundtrip ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features kbits --lib --test kbits -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 5.61s
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features bdf,bmfont,sfd,kbits --example w44_timing -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 5.85s
+EXIT 0
+
+$ cargo doc -p fontpixel --no-default-features --features bmfont,sfd,kbits --no-deps
+ Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.85s
+   Generated /home/chen/githubprojects/fontpixel/fontpixel-rs/../local-work/target-w44/doc/fontpixel/index.html
+EXIT 0
+
+$ cargo check --manifest-path fuzz/Cargo.toml --no-default-features --features bmfont-only,sfd-only,kbits-only --bin bmfont --bin sfd --bin kbits
+   Compiling jobserver v0.1.35
+    Checking alloc-no-stdlib v3.0.0
+    Checking alloc-stdlib v0.3.0
+    Checking brotli-decompressor v6.0.1
+   Compiling cc v1.5.1
+    Checking arbitrary v1.4.2
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling libfuzzer-sys v0.4.13
+    Checking brotli v9.0.0
+    Checking fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `dev` profile [unoptimized] target(s) in 13.52s
+EXIT 0
+
+$ cargo build -p fontpixel-cli --no-default-features --features bmfont,sfd,kbits,kbitx,fontpixel/bdf,fontpixel/yaff
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-cli v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel-cli)
+    Finished `dev` profile [unoptimized] target(s) in 5.16s
+EXIT 0
+
+FINAL RECHECK AFTER BOUNDED FATAL REPORTS
+
+$ cargo test -p fontpixel --no-default-features --features bmfont --test bmfont
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 6.10s
+     Running tests/bmfont.rs (../local-work/target-w44/debug/deps/bmfont-00ae22fa7a637062)
+
+running 12 tests
+test failed_write_retains_every_glyph_and_alias_location ... ok
+test gray_png_alpha_alias_and_total_budget ... ok
+test diagnostic_asset_names_share_the_total_budget ... ok
+test rejects_xml_entities_and_mismatched_tree ... ok
+test kerning_records_survive_every_descriptor_encoding ... ok
+test explicit_threshold_and_glyph_limits ... ok
+test sparse_slots_metrics_and_kerning_are_audited ... ok
+test nested_primary_bundle_is_readable ... ok
+test unsafe_paths_missing_pages_and_bad_rectangles_fail ... ok
+test packed_channels_and_color_losses ... ok
+test all_encodings_multipage_semantic_roundtrip ... ok
+test random_gray_atlas_roundtrip ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.87s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features bmfont --lib --test bmfont -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 2.40s
+EXIT 0
+
+$ cargo test -p fontpixel --no-default-features --features sfd --test sfd
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 4.27s
+     Running tests/sfd.rs (../local-work/target-w44/debug/deps/sfd-24daa4ebe5d693bd)
+
+running 10 tests
+test budgets_and_ascii85_padding ... ok
+test failed_name_write_retains_source_aliases ... ok
+test malformed_or_composite_is_fatal ... ok
+test multiple_strikes ... ok
+test outlines_are_explicit_loss ... ok
+test native_strike_and_identity ... ok
+test outline_widths_and_row_padding_are_not_silent ... ok
+test signed_extremes_fail_without_panicking ... ok
+test native_gray_depth_is_preserved_when_samples_fit ... ok
+test random_mono_roundtrip ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features sfd --lib --test sfd -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 2.35s
+EXIT 0
+
+$ cargo test -p fontpixel --no-default-features --features kbits --test kbits
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.59s
+     Running tests/kbits.rs (../local-work/target-w44/debug/deps/kbits-cdf83b7d17acbdbf)
+
+running 9 tests
+test counts_and_utf8_are_bounded ... ok
+test deeply_nested_caller_metadata_is_rejected_before_recursion ... ok
+test failed_mapping_retains_source_aliases ... ok
+test java_modified_utf8_nul_and_supplementary ... ok
+test lost_metadata_and_aliases_are_reported ... ok
+test native_gray_and_metrics_roundtrip ... ok
+test result_is_readable_under_identical_small_limits ... ok
+test every_truncated_prefix_fails ... ok
+test random_gray_native_roundtrip ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features kbits --lib --test kbits -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.78s
+EXIT 0
+
+$ cargo clippy -p fontpixel --no-default-features --features bdf,bmfont,sfd,kbits --example w44_timing -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 1.17s
+EXIT 0
+
+$ cargo doc -p fontpixel --no-default-features --features bmfont,sfd,kbits --no-deps
+ Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.40s
+   Generated /home/chen/githubprojects/fontpixel/fontpixel-rs/../local-work/target-w44/doc/fontpixel/index.html
+EXIT 0
+
+$ cargo check --manifest-path fuzz/Cargo.toml --no-default-features --features bmfont-only,sfd-only,kbits-only --bin bmfont --bin sfd --bin kbits
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Checking fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `dev` profile [unoptimized] target(s) in 1.03s
+EXIT 0
+
+$ cargo build -p fontpixel-cli --no-default-features --features bmfont,sfd,kbits,kbitx,fontpixel/bdf,fontpixel/yaff
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-cli v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel-cli)
+    Finished `dev` profile [unoptimized] target(s) in 4.16s
+EXIT 0

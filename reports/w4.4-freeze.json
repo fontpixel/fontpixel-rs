@@ -1,0 +1,48 @@
+{
+  "state": "W4.4 implementation frozen; parent long fuzz, formal performance and full integration pending",
+  "utc": "2026-10-04T06:46:36.624857+00:00",
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "integration_tests": {
+    "bmfont": 12,
+    "sfd": 10,
+    "kbits": 9
+  },
+  "standalone_features": [
+    "bmfont",
+    "sfd",
+    "kbits"
+  ],
+  "clippy": "passed -D warnings for each standalone feature and timing example",
+  "rustdoc": "passed -D warnings",
+  "fuzz_target_check": "passed bmfont-only,sfd-only,kbits-only",
+  "crosscheck_groups": 11,
+  "large_functional_glyphs": 38653,
+  "binary_sha256": "3bc8226d157f6980d3711c255404a71bf2846e3d9c30bafc8b889bd0b759a2bf",
+  "digest_convention": "SHA256 of sorted lines: file SHA256, two spaces, repository-relative path, newline; reports excluded",
+  "production_digest": "91b67af9a00f75df6fda7d6d4e78e2fffad29192a07a0869464353b2475e23ea",
+  "owned_digest": "3aaf53f13b82fb7a0ceef151076ca7ac2fdf60067da18805bf1cdda4aad92be1",
+  "sha256": {
+    "crates/fontpixel/examples/w44_timing.rs": "94b142f7e7f2875102e15aaeb2301274bd336f9894122ebb995ce34b16ecd7da",
+    "crates/fontpixel/src/formats/bmfont/fidelity.rs": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142",
+    "crates/fontpixel/src/formats/bmfont/reader.rs": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7",
+    "crates/fontpixel/src/formats/bmfont/wire.rs": "0fadec222be5aab44f9afb4600778e4ee2affc87227b41b3aa7b00fa584a26c1",
+    "crates/fontpixel/src/formats/bmfont/writer.rs": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219",
+    "crates/fontpixel/src/formats/bmfont.rs": "0dc510fa01b99a5a692f86883fcee2eb3c671081bf1058edcccfc3c5b5b64d61",
+    "crates/fontpixel/src/formats/kbits/wire.rs": "55c43a124ee55c4029a71e5a04bd95ce80dd3757d12b4a1c42e9783149a49b24",
+    "crates/fontpixel/src/formats/kbits.rs": "070838790f60694384889dc071dc90a18b7dcfe5cf19bf26e4cd21c1d669b292",
+    "crates/fontpixel/src/formats/sfd/ascii85.rs": "c60c9dcbc7c9479de2f137b64c1df7dcec2db41a8bc3ddd563a43757f0f113b3",
+    "crates/fontpixel/src/formats/sfd/writer.rs": "7739c6fccf812c279f19d7c7d0838d969d68179978648418036e779e6f0ee748",
+    "crates/fontpixel/src/formats/sfd.rs": "41694463b037940b906eabb66b179f4cb612f0246155928090bced40cd6241b7",
+    "crates/fontpixel/tests/bmfont.rs": "1646e2b8cd319f6953c1b321d68f364a522c0e825dbbe1355a13d403ad4eedac",
+    "crates/fontpixel/tests/kbits.rs": "5216a0d1c7a3a2920c56d2600299962874605040cfc8d5b1cd64a721d51a3fb6",
+    "crates/fontpixel/tests/sfd.rs": "d654ea7748472e440ebdbd910b97a9231b7c0e4c867db4872567f0ab05d15ebf",
+    "docs/formats/bmfont.md": "6fe4942a12095cad6c142aa5b826bf358c5d6ff7ffe652270b40987512313880",
+    "docs/formats/kbits.md": "d8911fc2ecb4912139ce65af113a3e44a167999087df55e1d76eca088fe2247e",
+    "docs/formats/sfd.md": "fb91772481d8311ddd41d3464a87eaf2caf3a11e1197b0289b8e48e027ec6475",
+    "fuzz/fuzz_targets/bmfont.rs": "7ea261acfe8bdfbcea5197c6e501ad7c40ae1ffcb4277164fe8109d0e4afb6a6",
+    "fuzz/fuzz_targets/kbits.rs": "71cb59b966cf8fe4a322e5c6c3e7d089c093510fc3662100ceeb86e22c5eb1ca",
+    "fuzz/fuzz_targets/sfd.rs": "4905332a0806adc87e555e65bd2f407ef7e41441734d5e21e60b31ab3f0407c9",
+    "fuzz/seed_w44.py": "2cab1364599b8706c5f19a28a9bbb45c41044105cb446224a054dc4fdff6e7d9",
+    "tests/crosscheck/w44.py": "cb01aba783beaa497786f709912b21b0f17884c0ecb4df48418e6087459c7044"
+  }
+}

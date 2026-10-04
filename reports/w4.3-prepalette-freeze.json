@@ -1,0 +1,11 @@
+{
+  "state": "20 tests,99 oracle cases; prior to fctb addition",
+  "sha256": {
+    "crates/fontpixel/src/formats/nfnt/container.rs": "d079bdca7afc17789e18e070883053272e9029894b5202b256cf541a2f25dc74",
+    "crates/fontpixel/src/formats/nfnt/raster.rs": "3eb1878619d3e43a8a5938b6ad17ecfb2f6d0f7fb457d16a15cb015456b731dc",
+    "crates/fontpixel/src/formats/nfnt/support.rs": "5356200370bb877d42c9243c52a5ec562159ea2035dca45b48023014d5c5fb7f",
+    "crates/fontpixel/src/formats/nfnt/writer.rs": "25f7066ce114916998230b3bfe758848cead89e18491573417874844689a631d",
+    "crates/fontpixel/src/formats/nfnt.rs": "f00cf9a936511647f29cc5b6b10f87468ad6e9b71f069f6f871350721c6d9b8b",
+    "crates/fontpixel/tests/nfnt.rs": "0cc80b9f107b803d6009baf4e2cfefd695a26bde970a08383f7fe486f67b91cd"
+  }
+}

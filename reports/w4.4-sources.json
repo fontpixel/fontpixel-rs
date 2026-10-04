@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-04",
+  "sources": [
+    {
+      "name": "AngelCode BMFont specification",
+      "url": "https://www.angelcode.com/products/bmfont/doc/file_format.html",
+      "license": "Public format documentation; no implementation copied",
+      "use": "Wire research, read using browser tool before implementation",
+      "sha256": null,
+      "hash_limitation": "HTML download failed: HTTP Error 406: Not Acceptable; browser-extracted documentation was read, no substitute hash invented"
+    },
+    {
+      "name": "FontForge SFD specification",
+      "url": "https://fontforge.org/docs/techref/sfdformat.html",
+      "license": "Public format documentation; no implementation copied",
+      "use": "Wire research, read using browser tool before implementation",
+      "sha256": "f37c4c13b4d67250c89f6340d25561ef5ecaa324c9c23f0098f7df6e8fd57bbf"
+    },
+    {
+      "name": "KbitsBitmapFontImporter.java",
+      "project": "https://github.com/kreativekorp/bitsnpicas",
+      "sha256": "908c6b14db259458aaff62e2392fadfe3ed4ca34e6cee5aa31eab9d18d1cbf0d",
+      "license": "MPL 1.1 with LGPL alternative",
+      "use": "Public wire research only; original Rust implementation, no implementation copied"
+    },
+    {
+      "name": "KbitsBitmapFontExporter.java",
+      "project": "https://github.com/kreativekorp/bitsnpicas",
+      "sha256": "c9131135ca12b73d279ca7a14f29ffd2ded1d0b5b37e0d9b60a5451f065c872e",
+      "license": "MPL 1.1 with LGPL alternative",
+      "use": "Public wire research only; original Rust implementation, no implementation copied"
+    },
+    {
+      "name": "BitsNPicas.jar",
+      "path": "../local-work/w44-oracles/BitsNPicas.jar",
+      "sha256": "22685a52bc1a7f26680f80197548e74dc61a9f58eb083d6f700220a48a1165a6",
+      "license": "MPL 1.1 with LGPL alternative",
+      "use": "Independent black-box oracle; not linked or vendored"
+    },
+    {
+      "name": "fontforge",
+      "path": "../local-work/fontforge-oracle/usr/bin/fontforge",
+      "sha256": "e9acfebb55a4042c725f90058243730ea0abd4be10cdea62e057f4a212bd27d7",
+      "license": "GPL, external executable only",
+      "use": "Independent black-box oracle; no GPL implementation source read"
+    },
+    {
+      "name": "TongPixelSans14Small-Latin.bdf",
+      "path": "../samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+      "license": "SIL OFL 1.1",
+      "use": "Read-only supplied sample; no font files vendored"
+    },
+    {
+      "name": "TongPixelSans14Large-SC.bdf",
+      "path": "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+      "sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "license": "SIL OFL 1.1",
+      "use": "Read-only supplied sample; no font files vendored"
+    },
+    {
+      "name": "OFL.txt",
+      "path": "../samples/tong-pixel-sans/OFL.txt",
+      "sha256": "dc9f9ded816ae1a5accf456ab02a89eb2877e49274c6dc340570dc5872d7f718",
+      "license": "SIL OFL 1.1",
+      "use": "Read-only supplied sample; no font files vendored"
+    }
+  ]
+}

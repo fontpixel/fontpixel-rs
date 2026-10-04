@@ -1,0 +1,372 @@
+{
+  "checks": [
+    {
+      "case": "wire.draw",
+      "format": "draw",
+      "glyphs": 2,
+      "sha256": "bc255f1faf338f38f882e6f3889278f10151b26d7f22d43da862f58813729cdc",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-vga8.raw",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "ebdf6e5999be272c66881adf12358e341385ec8f291cecaf293af9fb8b166c54",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-vga14.raw",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "50acdf2ad7ba0c780931e0692ff0a5cd2ce312ed803c2cdd6a3529f0caae5d2e",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-vga16.raw",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "4e441a3533bb2c10cd5649981d395744213e09a336746b5a3458fee4057205ec",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-ch8.raw",
+      "format": "raw",
+      "glyphs": 128,
+      "sha256": "ffbad8f947474cfdd5b2bb22d7e0bf5ee8ba2b7af859d0c2bb28622db6a4be47",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-msx.raw",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "ebdf6e5999be272c66881adf12358e341385ec8f291cecaf293af9fb8b166c54",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-c64.raw",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "ebdf6e5999be272c66881adf12358e341385ec8f291cecaf293af9fb8b166c54",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-spectrum.raw",
+      "format": "raw",
+      "glyphs": 96,
+      "sha256": "d7ebc933020e865955801fee2b9caae0b153f6736fa6aa4bd6c8f4a324233d8c",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-64.64c",
+      "format": "raw",
+      "glyphs": 64,
+      "sha256": "25f8230e57b61bf36d9e0a310ff0e8eed345ea123cd4232f075169e5e87127d5",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-256.64c",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "f313043c3a8a8ce9955b5e785e87da27a1ae220e71da91111a5d8a04e4b7bd7e",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "gallery-64-ace_1.64c",
+      "format": "raw",
+      "glyphs": 64,
+      "sha256": "a32a58fc7e2fc225fa178d8aa55e06023999051f572d438dcd003842b8f227a7",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "gallery-256-5x5.64c",
+      "format": "raw",
+      "glyphs": 256,
+      "sha256": "a47c4b18aabd296c100a1814e2d7474ac4354508f49f5b18f2e1d91bd1da8878",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "wire-437-8.cp",
+      "format": "cp",
+      "glyphs": 256,
+      "sha256": "70e227a4b4cab5d5167b9b9ee9693835b183de91a2dc8cb3a3fb4a585787c93e",
+      "checks": [
+        "native reads monobit",
+        "monobit reads native",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "FONT",
+      "fonts": 4,
+      "glyphs": 1024,
+      "checks": [
+        "multi-page multi-size monobit bidirectional"
+      ]
+    },
+    {
+      "case": "FONT.NT",
+      "fonts": 4,
+      "glyphs": 1024,
+      "checks": [
+        "multi-page multi-size monobit bidirectional"
+      ]
+    },
+    {
+      "case": "DRFONT",
+      "fonts": 1,
+      "glyphs": 256,
+      "checks": [
+        "single-page single-size monobit bidirectional"
+      ]
+    },
+    {
+      "case": "DRFONT multi-page multi-size",
+      "fonts": 4,
+      "glyphs": 1024,
+      "checks": [
+        "native writer to independent monobit reader"
+      ],
+      "oracle_limitation": "monobit writer next pointer misses 28-byte entry and writes bitmap tables in page order",
+      "original_sha256": "910d384d2713a16bb66c9a6957053396a86bd7135682965af21a91dfcbb66fe5"
+    },
+    {
+      "case": "../samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+      "glyphs": 204,
+      "checks": [
+        "actual catalogue raster equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA.CPX",
+      "sha256": "8c903b7a9e35715d38ee29a3ed42be3975c0840dbfd4fc5f9f028632bf28758d",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA10.CPX",
+      "sha256": "847c835ef80284704ef3594032cfffde4d22958eb8bc154c5a282ee3c07e920a",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA11.CPX",
+      "sha256": "1793d99f8cd9d6017e6a0dd14a679080ba60e46fb9b59c344b5df986c50973ee",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA12.CPX",
+      "sha256": "02751b3aa18225c197e9b0fdadbbd5989b6e76b13aec19c350956f64c3b2910a",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA13.CPX",
+      "sha256": "287073ea7ad566d57b3c82ad84e079a7268a699dca863c2132f9c3faa02ac02e",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA14.CPX",
+      "sha256": "76a8f3737a198961750783f74cb3b5f5054aa8491a36f33ba5c410528e97de22",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA15.CPX",
+      "sha256": "26a2395cd6651a715ce78f4e70ae4d2b959e32aca775241a3bb094ae7efe9fee",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA16.CPX",
+      "sha256": "e8ad25e433e3213609d44d25e690aee046192f4f91b3ee705ac28a0643b4da74",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA17.CPX",
+      "sha256": "a53f84a041014a3815f489b71336a0a1253f853c6fc10d1c7c60020d9453c717",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA18.CPX",
+      "sha256": "11944b119a838656de3fc795521e90bbc610b000fe603f95f8c685ee21216b1f",
+      "fonts": 9,
+      "glyphs": 2304,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA2.CPX",
+      "sha256": "60a4b001c05eb5c21ec4463fe5a31d890a566cd9ef3309d61b56f671f1c454fc",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA3.CPX",
+      "sha256": "84ba78e35a0b3b2a55c829c26a25aca27ff1bdd07e3f918d0a93e6f5bb218a4a",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA4.CPX",
+      "sha256": "3bb7958d837e00639c5d97943bcc9073b579eba2e9f2730a2d65ffc4da34be30",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA5.CPX",
+      "sha256": "15726b1ee4b2deb48f4b93f5e209b486db7cbe8cf0223692466b7aa1dd3b8743",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA6.CPX",
+      "sha256": "4791297678611ab4900f137853002233a12e2c0387f9db5259df33e0213ff0ff",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA7.CPX",
+      "sha256": "fe5b927dccd2c5c8f792d827b871248b06ff79b20d9d1807eced5b89122dcc04",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA8.CPX",
+      "sha256": "30a37619137f93fff9b8ab35e7cb7ab573bf411e575046ae468e0c884df4c936",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    },
+    {
+      "case": "CPI/EGA9.CPX",
+      "sha256": "cb7615db6ae6b9bf2e12d9bea079126478ea1b0ff48e4bd378c538d7a077f987",
+      "fonts": 18,
+      "glyphs": 4608,
+      "checks": [
+        "native CPX to monobit CPI",
+        "external UPX pixel/metric equality"
+      ]
+    }
+  ],
+  "passed": 36,
+  "monobit_version": "0.54",
+  "cpidos_url": "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/cpidos.zip",
+  "cpidos_license": "GPL-2.0, downloaded test oracle only"
+}

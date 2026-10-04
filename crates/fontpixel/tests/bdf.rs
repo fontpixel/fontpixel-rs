@@ -54,7 +54,23 @@ fn detect_registry_and_feature_capabilities() {
                 "c",
                 "kbitx",
                 "pbf",
-                "hbf"
+                "hbf",
+                "draw",
+                "raw",
+                "cpi",
+                "pf2",
+                "fontx2",
+                "hzk",
+                "nfnt",
+                "bmfont",
+                "sfd",
+                "kbits",
+                "pk",
+                "gf",
+                "plan9",
+                "amiga",
+                "gem",
+                "snf",
             ]
             .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)

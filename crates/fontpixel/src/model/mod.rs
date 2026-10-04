@@ -716,15 +716,9 @@ impl Font {
         }
         Ok(font)
     }
-    #[cfg(any(
-        feature = "yaff",
-        feature = "image",
-        feature = "c",
-        feature = "kbitx",
-        feature = "pbf",
-        feature = "hbf"
-    ))]
-    pub(crate) fn slot_count(&self) -> usize {
+    /// Number of allocated glyph IDs, including holes left by removed glyphs.
+    /// Codecs use this to preserve stable IDs or report compaction explicitly.
+    pub const fn slot_count(&self) -> usize {
         self.glyphs.len()
     }
     /// Number of live glyphs, including unencoded glyphs and duplicate codes.

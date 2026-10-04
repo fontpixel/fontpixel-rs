@@ -1,0 +1,315 @@
+{
+  "checks": [
+    {
+      "oracle": "monobit",
+      "format": "bmfont",
+      "encoding": "text",
+      "directions": 2,
+      "glyphs": 3,
+      "known_difference": "monobit BMFont reader ignores base=9 and uses raster.top=5; exact y difference -4 independently asserted"
+    },
+    {
+      "oracle": "monobit",
+      "format": "bmfont",
+      "encoding": "xml",
+      "directions": 2,
+      "glyphs": 3,
+      "known_difference": "monobit BMFont reader ignores base=9 and uses raster.top=5; exact y difference -4 independently asserted"
+    },
+    {
+      "oracle": "monobit",
+      "format": "bmfont",
+      "encoding": "binary",
+      "directions": 2,
+      "glyphs": 3,
+      "known_difference": "monobit BMFont reader ignores base=9 and uses raster.top=5; exact y difference -4 independently asserted"
+    },
+    {
+      "oracle": "BitsNPicas 2.2.2 + frozen catalogue",
+      "format": "sfd",
+      "source": "/home/chen/githubprojects/fontpixel/local-work/w44-crosscheck-freeze/original.bdf",
+      "sha256": "8a139fd93b4824cf336ec130a66c832d16b8ab011799e8a4ac010883ef37ed79",
+      "glyphs": 3
+    },
+    {
+      "oracle": "BitsNPicas 2.2.2 + frozen catalogue",
+      "format": "kbits",
+      "source": "/home/chen/githubprojects/fontpixel/local-work/w44-crosscheck-freeze/original.bdf",
+      "sha256": "8a139fd93b4824cf336ec130a66c832d16b8ab011799e8a4ac010883ef37ed79",
+      "glyphs": 3
+    },
+    {
+      "oracle": "BitsNPicas 2.2.2 + frozen catalogue",
+      "format": "sfd",
+      "source": "../samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+      "glyphs": 3645
+    },
+    {
+      "oracle": "BitsNPicas 2.2.2 + frozen catalogue",
+      "format": "kbits",
+      "source": "../samples/tong-pixel-sans/TongPixelSans14Small-Latin.bdf",
+      "sha256": "d24a627899fdc70216055136c780315a0dec6fdf94f54ad161cd18e426b2639f",
+      "glyphs": 3645
+    },
+    {
+      "oracle": "independent Python ASCII85/bit packer",
+      "format": "sfd",
+      "depth": 2
+    },
+    {
+      "oracle": "independent Python ASCII85/bit packer",
+      "format": "sfd",
+      "depth": 4
+    },
+    {
+      "oracle": "independent Python ASCII85/bit packer",
+      "format": "sfd",
+      "depth": 8
+    },
+    {
+      "oracle": "FontForge 20230101 Ubuntu official binary",
+      "format": "sfd",
+      "directions": 2,
+      "forward_glyphs": 3,
+      "reverse_glyphs": 3,
+      "fontforge_sha256": "e9acfebb55a4042c725f90058243730ea0abd4be10cdea62e057f4a212bd27d7",
+      "known_difference": "BDF importer uses UCS-2; reverse fixture is BMP, forward SFD includes U+20000"
+    }
+  ],
+  "jar_url": "https://github.com/kreativekorp/bitsnpicas/releases/download/v2.2.2/BitsNPicas.jar",
+  "jar_sha256": "22685a52bc1a7f26680f80197548e74dc61a9f58eb083d6f700220a48a1165a6",
+  "binary_sha256": "3bc8226d157f6980d3711c255404a71bf2846e3d9c30bafc8b889bd0b759a2bf",
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "monobit": "0.54",
+  "limitations": [
+    "monobit has no SFD/Kbits handler",
+    "BitsNPicas has no SFD writer; reverse SFD wire fixtures are original Python ASCII85"
+  ],
+  "artifacts": {
+    "rust-xml_0002.png": {
+      "bytes": 97,
+      "sha256": "1826831545b28d638f1057f068b06f9af113f86ad509c7e18087352740527fb6"
+    },
+    "source-0.kbits": {
+      "bytes": 345,
+      "sha256": "053c2e859b8b962be74dc7027f9bb63faa37b52d8464de26214c5aaad7a91df1"
+    },
+    "depth-8.kbits": {
+      "bytes": 98,
+      "sha256": "304f0967e946d6a40197c5df8c3730e9e6eb139f96f7c52966ef8e4611e791ae"
+    },
+    "fontforge-export-12.bdf": {
+      "bytes": 1062,
+      "sha256": "72fdfd29f0bc8a28f4272f11ec8b2983af2b3c565877f84400f7417e0c941c98"
+    },
+    "bits-source-0-sfd.kbits": {
+      "bytes": 604,
+      "sha256": "606177efbbba09447bea8b0438b1d8d49243a1289f11a954d5db3f07cdaa1ebd"
+    },
+    "monobit-text-read.kbits": {
+      "bytes": 345,
+      "sha256": "a1fc119898784ef9d0926b83af57dec16ae3e66e84da196ead24e8cd46cbeba9"
+    },
+    "rust-binary_0001.png": {
+      "bytes": 95,
+      "sha256": "651424ba4991c83bce8a08d67d9d2aaff82c5b0a6a1f701defc8b89f73509fb4"
+    },
+    "bits-source-1-kbits.kbits": {
+      "bytes": 412361,
+      "sha256": "bcd83044a4fbef71c24b5957a10087095250148098c605ec9afd16b5a1b7e7b9"
+    },
+    "rust-text_0000.png": {
+      "bytes": 99,
+      "sha256": "ecfef8b598255df510d51265b3125081f1ed4d148e5d39c1c745e2c94182a905"
+    },
+    "rust-xml.fnt": {
+      "bytes": 833,
+      "sha256": "3e0c5a18785e5452d3eac567e309df467031a39028ac883e842520c019ba2b7d"
+    },
+    "bits-source-1-sfd-read.kbits": {
+      "bytes": 412400,
+      "sha256": "b8885e9b4a92ce437598acd2f50414b176743b1eb3037d7e136cc8105013a08f"
+    },
+    "rust-xml-read.kbits": {
+      "bytes": 345,
+      "sha256": "bdce35fd9c9f4b2548ff160eb453c80020c1efd58b83d74c048cf3ac4680f862"
+    },
+    "rust-text_0001.png": {
+      "bytes": 95,
+      "sha256": "651424ba4991c83bce8a08d67d9d2aaff82c5b0a6a1f701defc8b89f73509fb4"
+    },
+    "monobit-text.bdf": {
+      "bytes": 856,
+      "sha256": "36b0ea845ffae439e9fed9b9144163829d941d41031e3fbdf8d1696c7af979f5"
+    },
+    "rust-binary-read.kbits": {
+      "bytes": 345,
+      "sha256": "bdce35fd9c9f4b2548ff160eb453c80020c1efd58b83d74c048cf3ac4680f862"
+    },
+    "depth-4.sfd": {
+      "bytes": 215,
+      "sha256": "cda8b5ccc45348a5143ed01ecd59db3703fce0d1ac60a7e23b2ae98b4eb09173"
+    },
+    "monobit-xml-read.kbits": {
+      "bytes": 345,
+      "sha256": "a1fc119898784ef9d0926b83af57dec16ae3e66e84da196ead24e8cd46cbeba9"
+    },
+    "fontforge-resaved-read.kbits": {
+      "bytes": 359,
+      "sha256": "0080e396ee9ed0b4bade8d5aebaaedfab680c3d3e427b660ab4dfa4037dd7c08"
+    },
+    "monobit-xml.bdf": {
+      "bytes": 856,
+      "sha256": "36b0ea845ffae439e9fed9b9144163829d941d41031e3fbdf8d1696c7af979f5"
+    },
+    "rust-binary_0002.png": {
+      "bytes": 97,
+      "sha256": "1826831545b28d638f1057f068b06f9af113f86ad509c7e18087352740527fb6"
+    },
+    "catalogue-source-0-sfd.kbitx": {
+      "bytes": 508,
+      "sha256": "a22dffc3d7594df2d5c6c27f1ffc9ffcfa3982efee0da76217418f683f70e47d"
+    },
+    "depth-2.sfd": {
+      "bytes": 215,
+      "sha256": "21a3ac0d0276f2b158a19a3b08176f9403661c66e5f28055033361d9c30c35a2"
+    },
+    "fontforge-from-bdf-read.kbits": {
+      "bytes": 475,
+      "sha256": "43dd00bcd73bdfeff27e00f7bd4d06d4632bd774bc54cec037d82df3835e9149"
+    },
+    "bits-source-0-sfd-read.kbits": {
+      "bytes": 604,
+      "sha256": "606177efbbba09447bea8b0438b1d8d49243a1289f11a954d5db3f07cdaa1ebd"
+    },
+    "rust-text.fnt": {
+      "bytes": 622,
+      "sha256": "6f8847796afcfe387029c53791bab996ccf1d3baf5e1be2cd33e65cd06fe0aeb"
+    },
+    "source-1.kbits": {
+      "bytes": 412113,
+      "sha256": "6b6b29507864de38bef28e4bb71ba5d0bbb6926488fc56f75af247a062324beb"
+    },
+    "monobit-binary-read.kbits": {
+      "bytes": 345,
+      "sha256": "a1fc119898784ef9d0926b83af57dec16ae3e66e84da196ead24e8cd46cbeba9"
+    },
+    "rust-xml_0000.png": {
+      "bytes": 99,
+      "sha256": "ecfef8b598255df510d51265b3125081f1ed4d148e5d39c1c745e2c94182a905"
+    },
+    "depth-8.sfd": {
+      "bytes": 215,
+      "sha256": "98bfa9eaedd7aa133e0de2a160dfe92b13f418f33164eb212e4e05fffee3afa0"
+    },
+    "catalogue-source-0-kbits.kbitx": {
+      "bytes": 508,
+      "sha256": "802cda633019f7d30ca519e3e36a6a7a1cb916a8fd0202269fc9eecb65a22f30"
+    },
+    "depth-2.kbits": {
+      "bytes": 98,
+      "sha256": "bffa63e7aaf37f72f55faae71e2318a46db48666fc10036329119e030647c225"
+    },
+    "catalogue-source-1-kbits.kbitx": {
+      "bytes": 259543,
+      "sha256": "9b609ae097c97863371d21af5829939675fccc13214b6ed34354e6431b5b72cc"
+    },
+    "source-1.sfd": {
+      "bytes": 381744,
+      "sha256": "42d663c16ac7a714951ec44b518c249acc666ff51bb325bb5b4349ed1f528b72"
+    },
+    "fontforge-from-bdf.sfd": {
+      "bytes": 1607,
+      "sha256": "c1c316fce2b644940328c49153484ee92e06efe955e40c793f05a765175d4391"
+    },
+    "fontforge-original-bmp.bdf": {
+      "bytes": 560,
+      "sha256": "189eb1a9728cda91bba830e82e1621ca3fbd3fbad895905361c9b1bcb9004d84"
+    },
+    "monobit-text.fnt": {
+      "bytes": 584,
+      "sha256": "c10594335c8a1543bcd2af08e63d5a0f2e7ea17b83e5f9751fa0bc6a6c2cb165"
+    },
+    "monobit-xml.fnt": {
+      "bytes": 777,
+      "sha256": "5415ac1f5feab310c066570c348dbe4a2b46c10c1ab68f1c862d75666b98f44c"
+    },
+    "bits-source-1-sfd.kbits": {
+      "bytes": 412400,
+      "sha256": "b8885e9b4a92ce437598acd2f50414b176743b1eb3037d7e136cc8105013a08f"
+    },
+    "monobit-binary.fnt": {
+      "bytes": 168,
+      "sha256": "22b14dd113cc7028c1d1dddf09b15905e23c83c37f7c57ca4f467da56909b8f4"
+    },
+    "depth-4.kbits": {
+      "bytes": 98,
+      "sha256": "00d738002da9d6636033c968e819b97d3bf02188dde06a5f9162d945d5f95f8a"
+    },
+    "monobit-binary.bdf": {
+      "bytes": 856,
+      "sha256": "36b0ea845ffae439e9fed9b9144163829d941d41031e3fbdf8d1696c7af979f5"
+    },
+    "rust-binary.fnt": {
+      "bytes": 189,
+      "sha256": "395ab56c22dc35b8b100bb620f536cf0adcf2220d7f800bf9f89889c23016ba8"
+    },
+    "rust-binary_0000.png": {
+      "bytes": 99,
+      "sha256": "ecfef8b598255df510d51265b3125081f1ed4d148e5d39c1c745e2c94182a905"
+    },
+    "rust-text_0002.png": {
+      "bytes": 97,
+      "sha256": "1826831545b28d638f1057f068b06f9af113f86ad509c7e18087352740527fb6"
+    },
+    "rust-xml_0001.png": {
+      "bytes": 95,
+      "sha256": "651424ba4991c83bce8a08d67d9d2aaff82c5b0a6a1f701defc8b89f73509fb4"
+    },
+    "bits-source-1-kbits-read.kbits": {
+      "bytes": 412361,
+      "sha256": "bcd83044a4fbef71c24b5957a10087095250148098c605ec9afd16b5a1b7e7b9"
+    },
+    "rust-text-read.kbits": {
+      "bytes": 345,
+      "sha256": "bdce35fd9c9f4b2548ff160eb453c80020c1efd58b83d74c048cf3ac4680f862"
+    },
+    "bits-source-0-kbits-read.kbits": {
+      "bytes": 604,
+      "sha256": "1b285ed990dbae6bb164cf27db28b9c6a902f9cbd513dfbdab7b76e3edfc35fa"
+    },
+    "bits-source-0-kbits.kbits": {
+      "bytes": 604,
+      "sha256": "1b285ed990dbae6bb164cf27db28b9c6a902f9cbd513dfbdab7b76e3edfc35fa"
+    },
+    "source-0.sfd": {
+      "bytes": 501,
+      "sha256": "719515c68990176d0876f07fd50809b8c898166a766bd383eb0d78c3ef7d8b1f"
+    },
+    "fontforge-resaved.sfd": {
+      "bytes": 1160,
+      "sha256": "42b5a4e1161f0adb7c254b9f04257cefe8dca0a49658fcd562d92d7110541708"
+    },
+    "original.bdf": {
+      "bytes": 567,
+      "sha256": "8a139fd93b4824cf336ec130a66c832d16b8ab011799e8a4ac010883ef37ed79"
+    },
+    "catalogue-source-1-sfd.kbitx": {
+      "bytes": 299575,
+      "sha256": "ec16fb62f6a8aa091c5da8a1764b7367788d0f896db9f5cbfd03231efa8a2053"
+    },
+    "W44 Original/W44_Original_12_0.png": {
+      "bytes": 119,
+      "sha256": "34783cbe24f47b8e262d7c413461bab7de83a236970dd2d08aee59c5bb1a49c6"
+    },
+    "W44 Original/W44_Original_12_0.1.png": {
+      "bytes": 119,
+      "sha256": "34783cbe24f47b8e262d7c413461bab7de83a236970dd2d08aee59c5bb1a49c6"
+    },
+    "W44 Original/W44_Original_12_0.0.png": {
+      "bytes": 119,
+      "sha256": "34783cbe24f47b8e262d7c413461bab7de83a236970dd2d08aee59c5bb1a49c6"
+    }
+  }
+}
