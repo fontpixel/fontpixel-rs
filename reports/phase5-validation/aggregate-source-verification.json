@@ -1,0 +1,27 @@
+{
+  "current_commit": "81b577b135a39dbab4120549454e2c108b702615",
+  "source_count": 718,
+  "checks": [
+    {
+      "label": "phase5-check-candidate-final1",
+      "exit_code": 0,
+      "matching_source_count": 718,
+      "differences": [],
+      "not_recorded": []
+    },
+    {
+      "label": "phase5-extra-gates-final1",
+      "exit_code": 0,
+      "matching_source_count": 718,
+      "differences": [],
+      "not_recorded": []
+    },
+    {
+      "label": "phase5-cli-release-confirmed",
+      "exit_code": 0,
+      "matching_source_count": 718,
+      "differences": [],
+      "not_recorded": []
+    }
+  ]
+}
