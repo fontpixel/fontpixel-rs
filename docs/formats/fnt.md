@@ -95,5 +95,8 @@ standalone FNT feature. Exact Unicode conversion for those pages requires
 Zero-advance source glyphs are explicitly omitted with per-code and per-glyph
 loss entries, because zero-width FNT slots represent absence. If no representable
 nonzero-width mapping remains, writing fails rather than creating an empty font.
-The final large-source accounting adjustment is paused at focused validation;
-see `reports/w3.2-HANDOFF.md` before treating this branch as accepted.
+An entirely unrepresentable source returns `ReportedErrors` with every omission
+and `fnt.no_representable_glyphs`, without output bytes. Container properties
+share the source/model/diagnostic budget even through the registry API. Final
+local review, full checks, external crosschecks, Tong verification, fuzz and
+timing are recorded in [W3.2 review](../../reports/w3.2-review.md).

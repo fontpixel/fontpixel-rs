@@ -32,6 +32,12 @@ and face strings; resource lengths describe only that resource plus padding.
 A FON can contain multiple sizes/styles and each FNT writer reports its own loss
 with the corresponding font index. The FNT options also govern FON payloads.
 
+Writer accounting preflights the entire collection's source models and diagnostic
+reservations, plus container metadata. Each FNT operation receives only its share
+of the remaining aggregate budget. Aligned FONT and FONTDIR sizes must fit the
+resource cap; FONTDIR's named-resource offset must fit 15 bits. A fatal FNT
+omission report retains its collection font index and preceding diagnostics.
+
 Input bytes, font count, cumulative glyph count, retained model data, resource
 and table bytes all share caller limits. Every RVA and shifted file range must
 be backed by bytes. PE directory depth is fixed to the standard three levels;

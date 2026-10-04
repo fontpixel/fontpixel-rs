@@ -1,0 +1,38 @@
+{
+  "result": "pass",
+  "command": [
+    "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs-w3.2/release/fontpixel",
+    "convert",
+    "/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+    "-o",
+    "../local-work/results/fontpixel-rs-w3.2/tong-reviewed/tong.fnt",
+    "--to",
+    "fnt",
+    "--report",
+    "json"
+  ],
+  "source_sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+  "binary_sha256": "459ad5a91cfc25f292b713a05814b342c111bad4a224e5b167c928e202b1b4ed",
+  "input_glyphs": 38653,
+  "output_glyphs": 218,
+  "output_bytes": 5709,
+  "output_sha256": "fbe2a0f1212b5386f34641531edc893cebc0406a0a95e08cbee42080e5800623",
+  "report_entries": 77994,
+  "counts_by_code": {
+    "fnt.unmapped_code": 38237,
+    "fnt.omitted_glyph": 38435,
+    "fnt.zero_width_code": 198,
+    "fnt.glyph_name": 218,
+    "fnt.glyph_property": 436,
+    "fnt.bounds": 218,
+    "fnt.glyph_metric": 218,
+    "fnt.string": 1,
+    "fnt.name": 3,
+    "fnt.localized_names": 1,
+    "fnt.font_metric": 3,
+    "fnt.header": 10,
+    "fnt.property": 15,
+    "fnt.charset_metadata": 1
+  },
+  "verification": "All CP1252 glyph pixels/metrics checked against the independent catalogue BDF parser and monobit; every unmapped/zero-width code checked against Python cp1252; strict preserves existing and absent outputs"
+}
