@@ -43,7 +43,7 @@ bmfont = []
 image = ["dep:image-codec", "dep:serde", "dep:serde_json", "dep:toml"]
 png = ["dep:flate2", "dep:crc32fast"]
 c = ["dep:serde", "dep:serde_json"]
-kbitx = []
+kbitx = ["dep:roxmltree", "dep:xmlparser"]
 kbits = []
 pbf = []
 sfd = []
@@ -151,3 +151,7 @@ required-features = ["fnt", "fon"]
 [[example]]
 name = "image_c_timing"
 required-features = ["image", "c"]
+
+[[example]]
+name = "p1_timing"
+required-features = ["kbitx", "pbf", "hbf"]

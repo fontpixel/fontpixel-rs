@@ -1,0 +1,11 @@
+{
+  "crates/fontpixel/tests/image.rs": "d06acb8ef7852d98961f52e04557e3d77f915a702d550288bca2778d177ceaf7",
+  "crates/fontpixel/tests/c.rs": "acf0d98db3090007fa2f708db8e9c12d9f07693bdaf0c28eb78425a7f7929171",
+  "crates/fontpixel/src/render/image.rs": "9d72bdb3ee775554e6fc0444adf9fbeb804af83af3f98675bf93b29f3c45739b",
+  "crates/fontpixel/src/formats/image.rs": "d6ac57b2d3c8df9bd42af5522609243c2aa7f6a3631b2c807e4e53b91957b868",
+  "crates/fontpixel/src/formats/c.rs": "d8fd7ec0b3b6bfb8bda215f98d5511e51aff848f6dd8a6fb842191b028155f8d",
+  "crates/fontpixel/src/formats/c/lexer.rs": "79d94260880af91c3c0135523fe367c3e86e7dc164a8a695cae145e3a5cf2296",
+  "crates/fontpixel/src/formats/c/writer.rs": "55780c97fb474a50001b675db4df4a082913e724f10531b709759c18c52b1ae3",
+  "crates/fontpixel/src/formats/image/budget.rs": "25f9b009c591bcdca29025150d565959bcddc9b518f83706d6bff877ada7ac87",
+  "crates/fontpixel-cli/src/assets.rs": "ceb842047ac9f54dd9bd1a9f68bc31125c67d6570e7e8b7b7d38d3e61a733a74"
+}

@@ -53,3 +53,8 @@ options. A font8x8 Unicode range belongs to the declaration following its commen
 with preceding declarations forming a boundary. Explicit array selection applies
 across includes and must resolve to exactly one declaration. C output reports a
 stable glyph ID reorder even if the total number of slots is unchanged.
+
+If automatic output-range inference has no encodable glyph, the error retains
+all per-glyph omission diagnostics and adds `c.write.no_representable_glyphs`.
+No output is returned. An explicit inclusive range may still produce empty cells,
+with losses for both omitted source glyphs and added empty positions.

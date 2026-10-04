@@ -184,7 +184,10 @@ impl<'a> ReadContext<'a> {
         feature = "psf",
         feature = "fnt",
         feature = "image",
-        feature = "c"
+        feature = "c",
+        feature = "kbitx",
+        feature = "hbf",
+        feature = "pbf"
     ))]
     pub(crate) fn retained_input_bytes(&self) -> usize {
         self.total_bytes

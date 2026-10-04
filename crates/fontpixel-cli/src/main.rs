@@ -1,6 +1,7 @@
 //! Font inspection and conversion through the feature-gated real codec registry.
 #![forbid(unsafe_code)]
 mod assets;
+mod extra_formats;
 #[cfg(feature = "opentype")]
 mod opentype;
 use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
@@ -114,7 +115,9 @@ enum Command {
         #[command(flatten)]
         c: COutputArguments,
         #[command(flatten)]
-        raster: RasterArguments,
+        extra: extra_formats::WriteArguments,
+        #[command(flatten)]
+        raster: Box<RasterArguments>,
         #[command(flatten)]
         vector: VectorArguments,
     },
@@ -656,6 +659,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             console,
             image,
             c,
+            extra,
             raster,
             vector,
         } => {
@@ -684,6 +688,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             console.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
             image.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
             c.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
+            extra.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
             // Check the target before doing work, and never create/truncate output.
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
@@ -1023,6 +1028,8 @@ fn main() -> ExitCode {
 
 #[derive(Args, Default)]
 struct RasterArguments {
+    #[command(flatten)]
+    extra: extra_formats::ReadArguments,
     /// C header dialect (default auto).
     #[arg(long, value_parser = ["auto", "font8x8", "tmat", "generic", "gfx"])]
     c_read_family: Option<String>,
@@ -1088,6 +1095,7 @@ impl RasterArguments {
         limits
     }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        self.extra.apply(registry)?;
         #[cfg(feature = "c")]
         registry.set_c_read_options(fontpixel::formats::c::CReadOptions {
             family: c_family(self.c_read_family.as_deref().unwrap_or("auto")),
@@ -1203,7 +1211,7 @@ impl VectorArguments {
             || self.upm.is_some()
             || self.embed_bitmaps
             || (self.gray_threshold.is_some()
-                && !["hex", "psf", "fnt", "fon", "image", "c"].contains(&id))
+                && !["hex", "psf", "fnt", "fon", "image", "c", "pbf", "hbf"].contains(&id))
             || self.woff2_source.is_some()
             || self.woff2_quality.is_some()
             || self.collection_v2;

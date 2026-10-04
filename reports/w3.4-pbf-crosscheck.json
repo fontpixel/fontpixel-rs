@@ -1,0 +1,431 @@
+{
+  "checks": [
+    {
+      "fixture": "v1-raw-2-2",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v2-raw-2-4",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v2-raw-4-4",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v3-raw-2-2",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v3-raw-4-4",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v3-rle-2-2",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "fixture": "v3-rle-4-4",
+      "mappings": 3,
+      "glyphs": 2
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_14.pbf",
+      "mappings": 10978,
+      "sha256": "210380c79ba8453c3d9d701194aa3576bddc838bd44b7dcb13499104a45100c4",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_14_BOLD.pbf",
+      "mappings": 10978,
+      "sha256": "60801564fca8c63949394bb96c7191fcdcfdf1882dad17066c4e2acda16433d7",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_18.pbf",
+      "mappings": 10978,
+      "sha256": "618afb9f3206720fda6965e79299fb4be67ac9624275abdbde62f095cd0569d6",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_18_BOLD.pbf",
+      "mappings": 10978,
+      "sha256": "f9aa633031246943237c86a1c53995771d279f8dbaba18ade58b1eddeab9e102",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_24.pbf",
+      "mappings": 10978,
+      "sha256": "6f2877b5b57c4476f9c9abd7056797e4ae07677810c5207638999f40b7b8aaa9",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_24_BOLD.pbf",
+      "mappings": 10978,
+      "sha256": "3ff4fc035dbe0a08cdf4aee041e65f42218f8693b13f17617bfa51c0faf8dd53",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_28.pbf",
+      "mappings": 10978,
+      "sha256": "020bd99468bce2ef8a3fae7a2b4389c07c186e745f6f107dc4b58159d7dc0373",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_28_BOLD.pbf",
+      "mappings": 10978,
+      "sha256": "b058aa07c123ad732eb4b8f312e6969747762949a9047e60e41c3b0789bc3913",
+      "rle_tail_losses": 7829
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_36.pbf",
+      "mappings": 10978,
+      "sha256": "8c14563aec8613ca6e3b32d11260a034824241a17ffd1d89b4df79377dfb7ce1",
+      "rle_tail_losses": 0
+    },
+    {
+      "oracle": "MIT catalogue convert_pbf",
+      "file": "TUMBLED_36_BOLD.pbf",
+      "mappings": 10978,
+      "sha256": "1d5062368c3cc1cf261ed0422a2169c65e2bcbb6f051082d56043483e9197d9a",
+      "rle_tail_losses": 0
+    }
+  ],
+  "artifacts": {
+    "TUMBLED_14-trim.json": {
+      "bytes": 2361343,
+      "sha256": "15c4fd37b60cc6fe5f49698196ed8abd9930b09597694a1d413b5e5c8ebbc889"
+    },
+    "TUMBLED_14-trim.png": {
+      "bytes": 341880,
+      "sha256": "0775fad69b857aa5d7238382ae5826ca8a7dec3da60164144147f1565439e33f"
+    },
+    "TUMBLED_14_BOLD-trim.json": {
+      "bytes": 2362180,
+      "sha256": "55bed45d3d394b5b4c0bba293b3985d1a2209669e5f103de1f47f9c8b73823cd"
+    },
+    "TUMBLED_14_BOLD-trim.png": {
+      "bytes": 333301,
+      "sha256": "a0ab620bf43123b8c4f40eda9084ed5848b2958362d882b478258a7bfc97ed1a"
+    },
+    "TUMBLED_18-trim.json": {
+      "bytes": 2365501,
+      "sha256": "8dd8b075ab1b5c830e84d23e9cf602722360c2c04ba1df7f4a4a243608faca3f"
+    },
+    "TUMBLED_18-trim.png": {
+      "bytes": 571138,
+      "sha256": "d61ae42902ae9c95a8e840fad9d0a728051322bf093f46e3c2074794f5e6e848"
+    },
+    "TUMBLED_18_BOLD-trim.json": {
+      "bytes": 2365570,
+      "sha256": "fcc73a0bc8b48d09b96c7137016e9515b24608ab63f31167eea70fb186510f25"
+    },
+    "TUMBLED_18_BOLD-trim.png": {
+      "bytes": 574020,
+      "sha256": "d1189c13dcc12bbadb99ac819b437352531ce76679947ce30b6e96b500590219"
+    },
+    "TUMBLED_24-trim.json": {
+      "bytes": 2362025,
+      "sha256": "1019950ddfbe57ff43846a446c90b15b091a791c13bea202bf11b041b6c9142b"
+    },
+    "TUMBLED_24-trim.png": {
+      "bytes": 570545,
+      "sha256": "11780fde56ec76018df00ca07c7d5ae1b0eb9ae4029f42d997caffd7ef1d186f"
+    },
+    "TUMBLED_24_BOLD-trim.json": {
+      "bytes": 2362773,
+      "sha256": "d0c6f6ca86190a6c28398ff662b353d40ecabd7b1c0d28ea8417f7e4150b2021"
+    },
+    "TUMBLED_24_BOLD-trim.png": {
+      "bytes": 582274,
+      "sha256": "084864e407c981c0795878363c97e7bfe6a63c6c78705a8d88cde76528dc2ecc"
+    },
+    "TUMBLED_28-trim.json": {
+      "bytes": 2369429,
+      "sha256": "906beacead7dd4ef130dc63cb455a499e47c028521a7097e237388620d561811"
+    },
+    "TUMBLED_28-trim.png": {
+      "bytes": 829106,
+      "sha256": "0f1208d5e16c5a7268c7e8860bda5911d0e22f226b261c38f8c39ea31c3b1b4c"
+    },
+    "TUMBLED_28_BOLD-trim.json": {
+      "bytes": 2362591,
+      "sha256": "864e89cac87c93ae593c3dbbe756145a09acedda643afd0f41c4b506af89c4b5"
+    },
+    "TUMBLED_28_BOLD-trim.png": {
+      "bytes": 802814,
+      "sha256": "93db714292d1cd32d5fda6bea61e6571ad88d8673e61cb978a0d0dd5b65fce61"
+    },
+    "TUMBLED_36-trim.json": {
+      "bytes": 2371999,
+      "sha256": "fbececbc7d9eb1178aa640b19742ee54bbf693998bb835cbeed0087d33cab3ae"
+    },
+    "TUMBLED_36-trim.png": {
+      "bytes": 1072757,
+      "sha256": "ff4e24b37e085e4c1b84ebe558227163b435f6b50a82397617f4f1e251014fd0"
+    },
+    "TUMBLED_36_BOLD-trim.json": {
+      "bytes": 2372214,
+      "sha256": "9a1b0a5fb9b5e74e2fc725f35187a6d33259eea5cfff8f5b26c369e5555b9446"
+    },
+    "TUMBLED_36_BOLD-trim.png": {
+      "bytes": 1008057,
+      "sha256": "9a65fe9fac8a410f290fbe990b416daf2a31f3d2718ab2d764787187add8be4a"
+    },
+    "v1-raw-2-2-out1-raw.pbf": {
+      "bytes": 46,
+      "sha256": "045819c9cdca2862f959620f24e6458e6301ea01f2d8384fb2db680860e69458"
+    },
+    "v1-raw-2-2-out2-raw.pbf": {
+      "bytes": 1068,
+      "sha256": "b0b14ccccca5d39905c385ceab57683381536804a8bbe781691b58c350b3e728"
+    },
+    "v1-raw-2-2-out3-raw.pbf": {
+      "bytes": 1064,
+      "sha256": "fd3d3b6e66a07d11346ba177e2bf72a00328892b9aaa9793b2154c5c5c470f93"
+    },
+    "v1-raw-2-2-out3-rle.pbf": {
+      "bytes": 1068,
+      "sha256": "e73e5337cf1fdcb61afba7732d59216449ed498500e79bf744440f40e5dd21b1"
+    },
+    "v1-raw-2-2.json": {
+      "bytes": 988,
+      "sha256": "b6374d71956a2b77ade08d1d6eef1c276eb327f1876c73e5dfae92c7ec47fd4b"
+    },
+    "v1-raw-2-2.pbf": {
+      "bytes": 46,
+      "sha256": "045819c9cdca2862f959620f24e6458e6301ea01f2d8384fb2db680860e69458"
+    },
+    "v1-raw-2-2.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v2-raw-2-4-out1-raw.pbf": {
+      "bytes": 46,
+      "sha256": "045819c9cdca2862f959620f24e6458e6301ea01f2d8384fb2db680860e69458"
+    },
+    "v2-raw-2-4-out2-raw.pbf": {
+      "bytes": 1068,
+      "sha256": "b0b14ccccca5d39905c385ceab57683381536804a8bbe781691b58c350b3e728"
+    },
+    "v2-raw-2-4-out3-raw.pbf": {
+      "bytes": 1064,
+      "sha256": "fd3d3b6e66a07d11346ba177e2bf72a00328892b9aaa9793b2154c5c5c470f93"
+    },
+    "v2-raw-2-4-out3-rle.pbf": {
+      "bytes": 1068,
+      "sha256": "e73e5337cf1fdcb61afba7732d59216449ed498500e79bf744440f40e5dd21b1"
+    },
+    "v2-raw-2-4.json": {
+      "bytes": 988,
+      "sha256": "877e8aaadf105578405f1a19f7f3dcf7205c6e3af87ef572ba3670124ce9fa42"
+    },
+    "v2-raw-2-4.pbf": {
+      "bytes": 50,
+      "sha256": "906488ee349352036da7b8a8c3e589940e97112894c889e284741609e25088dd"
+    },
+    "v2-raw-2-4.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v2-raw-4-4-out2-raw.pbf": {
+      "bytes": 1074,
+      "sha256": "e483b6cf23d55eefd5ca705efc7285295b0fc0662a13e4a1b4f5d15f749a2780"
+    },
+    "v2-raw-4-4-out3-raw.pbf": {
+      "bytes": 1070,
+      "sha256": "d9eeff2aa36e93259a7177a0eab4d17b89f41e972e01a6bc04cb7e5b004cd580"
+    },
+    "v2-raw-4-4-out3-rle.pbf": {
+      "bytes": 1074,
+      "sha256": "20d5b0ae15e7394b838714d22ad5e115caea960aaf027d43e3b6fd7b7fbb006e"
+    },
+    "v2-raw-4-4.json": {
+      "bytes": 992,
+      "sha256": "5aac72190704b4996531028aef0741eade9fad113b1df55d83b7b8db556005f6"
+    },
+    "v2-raw-4-4.pbf": {
+      "bytes": 56,
+      "sha256": "f79aea6bb68c95cb005a01a81215db3de2666f96163018af41db9f4c7608d9dd"
+    },
+    "v2-raw-4-4.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v3-raw-2-2-out1-raw.pbf": {
+      "bytes": 46,
+      "sha256": "045819c9cdca2862f959620f24e6458e6301ea01f2d8384fb2db680860e69458"
+    },
+    "v3-raw-2-2-out2-raw.pbf": {
+      "bytes": 1068,
+      "sha256": "b0b14ccccca5d39905c385ceab57683381536804a8bbe781691b58c350b3e728"
+    },
+    "v3-raw-2-2-out3-raw.pbf": {
+      "bytes": 1064,
+      "sha256": "fd3d3b6e66a07d11346ba177e2bf72a00328892b9aaa9793b2154c5c5c470f93"
+    },
+    "v3-raw-2-2-out3-rle.pbf": {
+      "bytes": 1068,
+      "sha256": "e73e5337cf1fdcb61afba7732d59216449ed498500e79bf744440f40e5dd21b1"
+    },
+    "v3-raw-2-2.json": {
+      "bytes": 988,
+      "sha256": "50d7a40758d2c0a09ba0c05fa4e83432d0668a528df29a99caec98d16cd09c45"
+    },
+    "v3-raw-2-2.pbf": {
+      "bytes": 46,
+      "sha256": "92e8e37ae4cab38c46342958f9239bd0ed4002b17e42da233c84416f447cdc85"
+    },
+    "v3-raw-2-2.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v3-raw-4-4-out2-raw.pbf": {
+      "bytes": 1074,
+      "sha256": "e483b6cf23d55eefd5ca705efc7285295b0fc0662a13e4a1b4f5d15f749a2780"
+    },
+    "v3-raw-4-4-out3-raw.pbf": {
+      "bytes": 1070,
+      "sha256": "d9eeff2aa36e93259a7177a0eab4d17b89f41e972e01a6bc04cb7e5b004cd580"
+    },
+    "v3-raw-4-4-out3-rle.pbf": {
+      "bytes": 1074,
+      "sha256": "20d5b0ae15e7394b838714d22ad5e115caea960aaf027d43e3b6fd7b7fbb006e"
+    },
+    "v3-raw-4-4.json": {
+      "bytes": 992,
+      "sha256": "35e6ad0dbee54fa02f064cc24fc4fb4dcfe743c99839e9781154349db5ff483f"
+    },
+    "v3-raw-4-4.pbf": {
+      "bytes": 58,
+      "sha256": "d24026279fd47e2e0a8b4f4c88133344b08487e4f05e2af87679e9c8528d4e38"
+    },
+    "v3-raw-4-4.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v3-rle-2-2-out1-raw.pbf": {
+      "bytes": 46,
+      "sha256": "045819c9cdca2862f959620f24e6458e6301ea01f2d8384fb2db680860e69458"
+    },
+    "v3-rle-2-2-out2-raw.pbf": {
+      "bytes": 1068,
+      "sha256": "b0b14ccccca5d39905c385ceab57683381536804a8bbe781691b58c350b3e728"
+    },
+    "v3-rle-2-2-out3-raw.pbf": {
+      "bytes": 1064,
+      "sha256": "fd3d3b6e66a07d11346ba177e2bf72a00328892b9aaa9793b2154c5c5c470f93"
+    },
+    "v3-rle-2-2-out3-rle.pbf": {
+      "bytes": 1068,
+      "sha256": "e73e5337cf1fdcb61afba7732d59216449ed498500e79bf744440f40e5dd21b1"
+    },
+    "v3-rle-2-2.json": {
+      "bytes": 988,
+      "sha256": "f42d8d9a0b1c0be11b1d0a8333af55755d6b6fc4d852f536d64d6faf2b4ed4d1"
+    },
+    "v3-rle-2-2.pbf": {
+      "bytes": 49,
+      "sha256": "2c7b6781f19564a5bcfa0ea45fb28bff7fbf0e3d61bf80fc02f6de153df3d28e"
+    },
+    "v3-rle-2-2.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    },
+    "v3-rle-4-4-out2-raw.pbf": {
+      "bytes": 1074,
+      "sha256": "e483b6cf23d55eefd5ca705efc7285295b0fc0662a13e4a1b4f5d15f749a2780"
+    },
+    "v3-rle-4-4-out3-raw.pbf": {
+      "bytes": 1070,
+      "sha256": "d9eeff2aa36e93259a7177a0eab4d17b89f41e972e01a6bc04cb7e5b004cd580"
+    },
+    "v3-rle-4-4-out3-rle.pbf": {
+      "bytes": 1074,
+      "sha256": "20d5b0ae15e7394b838714d22ad5e115caea960aaf027d43e3b6fd7b7fbb006e"
+    },
+    "v3-rle-4-4.json": {
+      "bytes": 992,
+      "sha256": "29c256e4e4be879648cd309f2035f367d5cdac6fc24839b00866d0043bd8a8f3"
+    },
+    "v3-rle-4-4.pbf": {
+      "bytes": 61,
+      "sha256": "0603afd24ba346e77ac7b4bd5176e00db2fc9e698610afa688dd33d84ba01afb"
+    },
+    "v3-rle-4-4.png": {
+      "bytes": 125,
+      "sha256": "8861618096764ac6e4b2d4cab8e5eff32c014f5afa89d0792b604557fe1254bd"
+    }
+  },
+  "upstream": {
+    "url": "https://github.com/TsFreddie/TUMBLED/releases/download/v1.11/PBF_TUMBLED.zip",
+    "zip_sha256": "046f6d5d0cb9e6f587fdb2b9f146313d8c148350fbf5246644b31b7be227c8a4",
+    "files": [
+      {
+        "file": "TUMBLED_14.pbf",
+        "bytes": 295396,
+        "sha256": "210380c79ba8453c3d9d701194aa3576bddc838bd44b7dcb13499104a45100c4"
+      },
+      {
+        "file": "TUMBLED_14_BOLD.pbf",
+        "bytes": 332840,
+        "sha256": "60801564fca8c63949394bb96c7191fcdcfdf1882dad17066c4e2acda16433d7"
+      },
+      {
+        "file": "TUMBLED_18.pbf",
+        "bytes": 381904,
+        "sha256": "618afb9f3206720fda6965e79299fb4be67ac9624275abdbde62f095cd0569d6"
+      },
+      {
+        "file": "TUMBLED_18_BOLD.pbf",
+        "bytes": 415308,
+        "sha256": "f9aa633031246943237c86a1c53995771d279f8dbaba18ade58b1eddeab9e102"
+      },
+      {
+        "file": "TUMBLED_24.pbf",
+        "bytes": 445644,
+        "sha256": "6f2877b5b57c4476f9c9abd7056797e4ae07677810c5207638999f40b7b8aaa9"
+      },
+      {
+        "file": "TUMBLED_24_BOLD.pbf",
+        "bytes": 453624,
+        "sha256": "3ff4fc035dbe0a08cdf4aee041e65f42218f8693b13f17617bfa51c0faf8dd53"
+      },
+      {
+        "file": "TUMBLED_28.pbf",
+        "bytes": 672360,
+        "sha256": "020bd99468bce2ef8a3fae7a2b4389c07c186e745f6f107dc4b58159d7dc0373"
+      },
+      {
+        "file": "TUMBLED_28_BOLD.pbf",
+        "bytes": 665432,
+        "sha256": "b058aa07c123ad732eb4b8f312e6969747762949a9047e60e41c3b0789bc3913"
+      },
+      {
+        "file": "TUMBLED_36.pbf",
+        "bytes": 986708,
+        "sha256": "8c14563aec8613ca6e3b32d11260a034824241a17ffd1d89b4df79377dfb7ce1"
+      },
+      {
+        "file": "TUMBLED_36_BOLD.pbf",
+        "bytes": 1048860,
+        "sha256": "1d5062368c3cc1cf261ed0422a2169c65e2bcbb6f051082d56043483e9197d9a"
+      }
+    ]
+  }
+}

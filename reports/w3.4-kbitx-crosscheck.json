@@ -1,0 +1,85 @@
+{
+  "checks": [
+    {
+      "oracle": "frozen MIT catalogue kbitx importer",
+      "source": "/home/chen/githubprojects/fontpixel/local-work/kbitx-crosscheck-final/synthetic.kbitx",
+      "sha256": "78286ccb9d53de28018fa5c6fd24e13e3c40e9fd82a7ea4a6a6d2be56416a0b4",
+      "glyphs": 9,
+      "source_bytes": 671,
+      "output_bytes": 747,
+      "catalogue_warnings": [],
+      "strict_native_roundtrip": true
+    },
+    {
+      "oracle": "frozen MIT catalogue kbitx importer",
+      "source": "/home/chen/githubprojects/fontpixel/local-work/kbitx-oracle/MuzaiPixel.kbitx",
+      "sha256": "a0c3e472657c7c987475a70476b3a169cdc427894196bc18598bba3e91bb5b55",
+      "glyphs": 15932,
+      "source_bytes": 1620798,
+      "output_bytes": 1537257,
+      "catalogue_warnings": [],
+      "strict_native_roundtrip": true
+    }
+  ],
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "binary_sha256": "e0441bcf98e4610d244d8adc3e2fff8c7bc224b9ef8e8e54589ceeaa5ce5461c",
+  "oracle_sha256": "d6e7edc277337c436ad7cbf57b1d60623728c583cb476cb0679ea7fed54d1f0f",
+  "artifacts": {
+    "case-0-again.kbitx": {
+      "bytes": 747,
+      "sha256": "3329e44b117c3f32e6acb6f91903fc4e78a3b551c79ec849b95b68c93610681f"
+    },
+    "case-0.bdf": {
+      "bytes": 1950,
+      "sha256": "b1ad1a96015772449aa4b712c7aa8fe014f0dac417d1676a7371629f63c27471"
+    },
+    "case-0.kbitx": {
+      "bytes": 747,
+      "sha256": "3329e44b117c3f32e6acb6f91903fc4e78a3b551c79ec849b95b68c93610681f"
+    },
+    "case-1-again.kbitx": {
+      "bytes": 1537257,
+      "sha256": "1f3e4b623e8899ac6670c97ac4ee4b8cd33dd73571f2de3db4f30190fd7a6ce1"
+    },
+    "case-1.bdf": {
+      "bytes": 1676448,
+      "sha256": "3f818305c0d6108e67a5841e1e998ef1b10cd4b4e8bfe9b9df6c5ebbd4261f6e"
+    },
+    "case-1.kbitx": {
+      "bytes": 1537257,
+      "sha256": "1f3e4b623e8899ac6670c97ac4ee4b8cd33dd73571f2de3db4f30190fd7a6ce1"
+    },
+    "synthetic.kbitx": {
+      "bytes": 671,
+      "sha256": "78286ccb9d53de28018fa5c6fd24e13e3c40e9fd82a7ea4a6a6d2be56416a0b4"
+    }
+  },
+  "upstream_fixture": {
+    "url": "https://raw.githubusercontent.com/DWNfonts/MuzaiPixel/59e79de047d344c7675944424e56bb9a1ab5503c/MuzaiPixel.kbitx",
+    "commit": "59e79de047d344c7675944424e56bb9a1ab5503c",
+    "bytes": 1620798,
+    "sha256": "a0c3e472657c7c987475a70476b3a169cdc427894196bc18598bba3e91bb5b55",
+    "license": "SIL Open Font License 1.1 (reserved name MuzaiPixel)",
+    "license_url": "https://raw.githubusercontent.com/DWNfonts/MuzaiPixel/59e79de047d344c7675944424e56bb9a1ab5503c/LICENSE.md",
+    "license_sha256": "1acdf645c71a905883946b82fa4a8bbca1625627426260a46465ea7657f9392e"
+  },
+  "source_sha256": {
+    "crates/fontpixel/src/formats/kbitx.rs": "c99bc817258e4ebef94b67dc03a6fce8eeefad5584ea9c84c4f732f548fc39c9",
+    "crates/fontpixel/src/formats/kbitx/reader.rs": "15b8585e28bdb2b8c99d9ec547adef3928461101caa5826362be331e8d8c76a6",
+    "crates/fontpixel/src/formats/kbitx/wire.rs": "5a58a7f8a83f1026a58915c37b33b90e9074f85a68c8fd766d742d2d4e53c1ce",
+    "crates/fontpixel/src/formats/kbitx/writer.rs": "9d91e89ba568a353eabc13b52750624b6d69802b68476fbde91dbbb3f600fd06",
+    "crates/fontpixel/tests/kbitx.rs": "4af0dbe775da3a41f322c77055ad6d3832777940638be47ef5029f4c7da3bcc9",
+    "fuzz/fuzz_targets/kbitx.rs": "23a0054e29e138f709ba4a9e00c7b611194d70622c3626bbf9931c8bfe7cd6b2",
+    "tests/crosscheck/kbitx.py": "7cdf4e3afb1d6f4d92240ab099e6a18be1a68cd55e9796defd856cef7f43ecc9"
+  },
+  "seed_sha256": {
+    "fuzz/corpus/kbitx/empty.xml": "158ff6c2b7b978895077f9b46ef801c1e789feb3729a7bdbcbfc8bda88f32c9a",
+    "fuzz/corpus/kbitx/gray.xml": "d37a89eee36ccdb623dd94512ab668642a5144da6a7c02e4c6cb692a6d56cd15",
+    "fuzz/corpus/kbitx/long-literal.xml": "71c0e45c6f651066ced37221d378a2221f1eb0254595de5e25989f4b04ec2fba",
+    "fuzz/corpus/kbitx/long-repeat.xml": "4158a2e8f66ea01305909752026defabae72618442cac3b30911aaf142443cf9",
+    "fuzz/corpus/kbitx/long-zero.xml": "6c4ba705a4072fac4671b7e702f842ad65de432b3abc28ed03fca2f12d4ba796",
+    "fuzz/corpus/kbitx/metadata.xml": "4b25aaebbbefb5f3ab1e08c4c01e8324dcf9b7e3b4098fcb563097b84adaab9d",
+    "fuzz/corpus/kbitx/mono.xml": "9c7b3ae0bc6c3656433b221b71da16787aeeeaf7417ff30404c82d1dc1c29b86",
+    "fuzz/corpus/kbitx/wide.xml": "6c1cdb74548b6e97072b5483c348baefeb266c7c12a59dce7f4d8c0d23e637a9"
+  }
+}

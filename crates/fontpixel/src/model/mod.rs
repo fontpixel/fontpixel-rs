@@ -716,7 +716,14 @@ impl Font {
         }
         Ok(font)
     }
-    #[cfg(any(feature = "yaff", feature = "image", feature = "c", feature = "kbitx", feature = "pbf"))]
+    #[cfg(any(
+        feature = "yaff",
+        feature = "image",
+        feature = "c",
+        feature = "kbitx",
+        feature = "pbf",
+        feature = "hbf"
+    ))]
     pub(crate) fn slot_count(&self) -> usize {
         self.glyphs.len()
     }

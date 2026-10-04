@@ -366,7 +366,10 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
                 "fnt",
                 "fon",
                 "image",
-                "c"
+                "c",
+                "kbitx",
+                "pbf",
+                "hbf"
             ]
             .contains(&f.format.id))
             .all(|f| !f.read && !f.write)

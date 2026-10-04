@@ -51,7 +51,10 @@ fn detect_registry_and_feature_capabilities() {
                 "fnt",
                 "fon",
                 "image",
-                "c"
+                "c",
+                "kbitx",
+                "pbf",
+                "hbf"
             ]
             .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)

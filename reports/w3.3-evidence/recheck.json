@@ -1,0 +1,118 @@
+{
+  "binary": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/release/fontpixel",
+  "sha256": "3c5d5ca0ec8151a03694f66981b38d56114c42a004193914ead61833cface732",
+  "results": [
+    {
+      "name": "stable IDs strict",
+      "ok": true,
+      "args": [
+        "convert",
+        "../local-work/w33-review/ordered.png",
+        "-o",
+        "../local-work/w33-review/reordered.h",
+        "--to",
+        "c",
+        "--strict",
+        "--report",
+        "json"
+      ],
+      "returncode": 3,
+      "stdout": "",
+      "stderr": "{\n  \"error\": {\n    \"message\": \"strict mode rejected information loss; no output assets returned\",\n    \"exit_code\": 3\n  },\n  \"report\": {\n    \"entries\": [\n      {\n        \"level\": \"warning\",\n        \"impact\": \"loss\",\n        \"code\": \"c.write.glyph_slots\",\n        \"location\": {\n          \"font_index\": 0,\n          \"glyph_index\": null,\n          \"codepoint\": null,\n          \"asset\": null\n        },\n        \"message\": \"C target changed stable glyph slots or removed holes\"\n      }\n    ]\n  }\n}\n"
+    },
+    {
+      "name": "array selects basic",
+      "ok": true,
+      "args": [
+        "info",
+        "../local-work/third-party/font8x8/font8x8.h",
+        "--c-array",
+        "font8x8_basic",
+        "--json"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"format\": \"c\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 128,\n      \"encoded_count\": 128,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 128,\n      \"first_code\": 0,\n      \"last_code\": 127,\n      \"pixel_size\": 8,\n      \"point_size\": {\n        \"numerator\": 8,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 7,\n      \"descent\": 1,\n      \"bounds\": [\n        8,\n        8,\n        0,\n        -1\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "array missing fails",
+      "ok": true,
+      "args": [
+        "info",
+        "../local-work/third-party/font8x8/font8x8.h",
+        "--c-array",
+        "DOES_NOT_EXIST",
+        "--json"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "{\n  \"error\": {\n    \"message\": \"requested font8x8 array is missing or ambiguous\",\n    \"exit_code\": 1\n  },\n  \"report\": null\n}\n"
+    },
+    {
+      "name": "generic prefixed name write",
+      "ok": true,
+      "args": [
+        "convert",
+        "../local-work/w33-review/ordered.h",
+        "-o",
+        "../local-work/w33-review/font8x8_named.h",
+        "--to",
+        "c",
+        "--c-name",
+        "font8x8_custom",
+        "--strict",
+        "--report",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"output\": \"../local-work/w33-review/font8x8_named.h\",\n  \"format\": \"c\",\n  \"bytes\": 214,\n  \"assets\": [\n    {\n      \"path\": \"font8x8_named.h\",\n      \"bytes\": 214\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "generic prefixed name read",
+      "ok": true,
+      "args": [
+        "info",
+        "../local-work/w33-review/font8x8_named.h",
+        "--json"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"format\": \"c\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 1,\n      \"point_size\": {\n        \"numerator\": 1,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 1,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        1,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "second array range",
+      "ok": true,
+      "args": [
+        "info",
+        "../local-work/w33-review/multiple8.h",
+        "--c-read-family",
+        "font8x8",
+        "--c-array",
+        "font8x8_second",
+        "--json"
+      ],
+      "returncode": 0,
+      "stdout": "{\n  \"format\": \"c\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 1,\n      \"encoded_count\": 1,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 1,\n      \"first_code\": 66,\n      \"last_code\": 66,\n      \"pixel_size\": 8,\n      \"point_size\": {\n        \"numerator\": 8,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 7,\n      \"descent\": 1,\n      \"bounds\": [\n        8,\n        8,\n        0,\n        -1\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "unknown nested metric rejected",
+      "ok": true,
+      "args": [
+        "convert",
+        "../local-work/w33-review/extra.json",
+        "-o",
+        "../local-work/w33-review/extra-back.png",
+        "--to",
+        "image",
+        "--strict",
+        "--report",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "{\n  \"error\": {\n    \"message\": \"image JSON: unknown field `customAdvance`, expected one of `bounds`, `advance`, `scalable_advance`, `vertical_advance`, `vertical_scalable_advance`, `vertical_origin`, `abc`, `left_bearing`, `right_bearing`, `image_offset` at line 1 column 267\",\n    \"exit_code\": 1\n  },\n  \"report\": null\n}\n"
+    }
+  ]
+}

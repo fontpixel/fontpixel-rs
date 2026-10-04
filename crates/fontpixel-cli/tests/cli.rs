@@ -52,6 +52,9 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("fon\t")
                 && !line.starts_with("image\t")
                 && !line.starts_with("c\t")
+                && !line.starts_with("kbitx\t")
+                && !line.starts_with("pbf\t")
+                && !line.starts_with("hbf\t")
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
@@ -89,6 +92,9 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "fon"
                 && entry["format"]["id"] != "image"
                 && entry["format"]["id"] != "c"
+                && entry["format"]["id"] != "kbitx"
+                && entry["format"]["id"] != "pbf"
+                && entry["format"]["id"] != "hbf"
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
@@ -1389,4 +1395,157 @@ fn c_cli_explicit_geometry_gfx_output_and_strict_loss_protection() {
             .contains("GFXfont")
     );
     assert!(run(&["info", target.to_str().unwrap()]).status.success());
+}
+
+#[cfg(all(feature = "kbitx", feature = "pbf", feature = "hbf"))]
+#[test]
+fn kbitx_pbf_hbf_cli_options_resources_and_output_protection() {
+    let dir = TempDir::new();
+    let input = dir.0.join("source.bdf");
+    fs::write(&input, BDF).unwrap();
+    let pbf = dir.0.join("font.pbf");
+    for version in ["1", "2", "3"] {
+        let result = run(&[
+            "convert",
+            input.to_str().unwrap(),
+            "-o",
+            pbf.to_str().unwrap(),
+            "--pbf-version",
+            version,
+        ]);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        assert_eq!(fs::read(&pbf).unwrap()[0].to_string(), version);
+        assert!(
+            run(&["info", pbf.to_str().unwrap(), "--pbf-trim", "--json"])
+                .status
+                .success()
+        );
+    }
+    let before = fs::read(&pbf).unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        pbf.to_str().unwrap(),
+        "--pbf-version",
+        "2",
+        "--pbf-compression",
+        "rle4",
+    ]);
+    assert!(!result.status.success());
+    assert_eq!(fs::read(&pbf).unwrap(), before);
+    let kbitx = dir.0.join("font.kbitx");
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        kbitx.to_str().unwrap(),
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert!(
+        run(&[
+            "info",
+            kbitx.to_str().unwrap(),
+            "--kbitx-read-threshold",
+            "128",
+            "--json"
+        ])
+        .status
+        .success()
+    );
+    let header = dir.0.join("source.hbf");
+    let bitmap = dir.0.join("source.bin");
+    fs::write(&header, "HBF_START_FONT 1.1\nHBF_CODE_SCHEME Unicode 1.1\nFONT synthetic\nSIZE 2 72 72\nHBF_BITMAP_BOUNDING_BOX 8 2 0 0\nFONTBOUNDINGBOX 8 2 0 0\nSTARTPROPERTIES 1\nDEFAULT_CHAR 65\nENDPROPERTIES\nCHARS 2\nHBF_START_CODE_RANGES 1\nHBF_CODE_RANGE 0x41-0x42 source.bin 0\nHBF_END_CODE_RANGES\nHBF_END_FONT\n").unwrap();
+    fs::write(&bitmap, [128, 64, 64, 128]).unwrap();
+    let info = run(&["info", header.to_str().unwrap(), "--json"]);
+    assert!(
+        info.status.success(),
+        "{}",
+        String::from_utf8_lossy(&info.stderr)
+    );
+    let out = dir.0.join("out.hbf");
+    let result = run(&[
+        "convert",
+        header.to_str().unwrap(),
+        "-o",
+        out.to_str().unwrap(),
+        "--hbf-glyphs-per-file",
+        "1",
+        "--report",
+        "json",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let report: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(report["assets"].as_array().unwrap().len(), 3);
+    assert!(
+        run(&["info", out.to_str().unwrap(), "--json"])
+            .status
+            .success()
+    );
+    let original_header = fs::read(&header).unwrap();
+    let original_bitmap = fs::read(&bitmap).unwrap();
+    let result = run(&[
+        "convert",
+        header.to_str().unwrap(),
+        "-o",
+        header.to_str().unwrap(),
+        "--hbf-bitmap-name",
+        "source.bin",
+    ]);
+    assert!(!result.status.success());
+    assert_eq!(fs::read(&header).unwrap(), original_header);
+    assert_eq!(fs::read(&bitmap).unwrap(), original_bitmap);
+}
+
+#[cfg(feature = "pbf")]
+#[test]
+fn partial_pbf_rle_input_strict_loss_preserves_destination() {
+    let dir = TempDir::new();
+    let input = dir.0.join("partial.pbf");
+    let target = dir.0.join("protected.pbf");
+    // One RLE nibble emits eight ink pixels: two full 3-pixel rows and a tail.
+    let bytes = [
+        3, 2, 1, 0, 65, 0, 1, 2, 10, 3, 0, 1, 0, 0, 65, 0, 4, 0, 0, 0, 0, 0, 3, 1, 0, 0, 3, 15,
+    ];
+    fs::write(&input, bytes).unwrap();
+    fs::write(&target, b"keep original").unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert_eq!(
+        result.status.code(),
+        Some(3),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert_eq!(fs::read(&target).unwrap(), b"keep original");
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
 }

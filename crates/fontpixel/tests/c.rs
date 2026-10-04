@@ -303,6 +303,127 @@ fn sparse_c_output_reports_added_slots_and_glyph_metadata_loss() {
 }
 
 #[test]
+fn automatic_range_failure_retains_every_unmapped_glyph_and_a_fatal_diagnostic() {
+    for legacy in [false, true] {
+        let (mut source, _) = read(ARRAY, generic()).unwrap();
+        if legacy {
+            source.fonts[0].charset.name = Some("cp437".into());
+        }
+        let ids: Vec<_> = source.fonts[0].glyphs().map(|(id, _)| id).collect();
+        for id in &ids {
+            source.fonts[0]
+                .edit_glyph(*id, |g| {
+                    g.codepoints = if legacy {
+                        vec![Codepoint::Legacy(65 + id.index() as u32)]
+                    } else {
+                        Vec::new()
+                    };
+                    Ok(())
+                })
+                .unwrap();
+        }
+        // Explicit generic geometry supplies first_code, but still needs an
+        // encodable glyph to infer the last code. Exercise both failure paths.
+        let options = if legacy {
+            vec![CWriteOptions {
+                family: Family::Gfx,
+                ..Default::default()
+            }]
+        } else {
+            vec![
+                CWriteOptions::default(),
+                CWriteOptions {
+                    generic: Some(geometry()),
+                    ..Default::default()
+                },
+            ]
+        };
+        for write_options in options {
+            let error = CCodec {
+                write_options,
+                ..Default::default()
+            }
+            .write(
+                &source,
+                &WriteOptions::new(ResourcePath::new("font.h").unwrap()),
+            )
+            .unwrap_err();
+            let fontpixel::Error::ReportedErrors(report) = error else {
+                panic!("omission report was discarded: {error}");
+            };
+            assert_eq!(report.entries.len(), ids.len() + 1);
+            for (entry, id) in report.entries.iter().zip(&ids) {
+                assert_eq!(entry.code, "c.write.unmapped");
+                assert_eq!(entry.level, fontpixel::report::Level::Warning);
+                assert_eq!(entry.impact, fontpixel::report::Impact::Loss);
+                assert_eq!(entry.location.font_index, Some(0));
+                assert_eq!(entry.location.glyph_index, Some(id.index()));
+            }
+            let fatal = report.entries.last().unwrap();
+            assert_eq!(fatal.code, "c.write.no_representable_glyphs");
+            assert_eq!(fatal.level, fontpixel::report::Level::Error);
+            assert_eq!(fatal.impact, fontpixel::report::Impact::None);
+            assert_eq!(fatal.location.font_index, Some(0));
+            assert_eq!(fatal.location.glyph_index, None);
+        }
+    }
+}
+
+#[test]
+fn explicit_range_still_generates_empty_glyphs_when_source_is_unmapped() {
+    let (mut source, _) = read(ARRAY, generic()).unwrap();
+    let ids: Vec<_> = source.fonts[0].glyphs().map(|(id, _)| id).collect();
+    for id in ids {
+        source.fonts[0]
+            .edit_glyph(id, |g| {
+                g.codepoints.clear();
+                Ok(())
+            })
+            .unwrap();
+    }
+    for family in [Family::Generic, Family::Gfx] {
+        let written = CCodec {
+            write_options: CWriteOptions {
+                family,
+                range: Some((32, 33)),
+                ..Default::default()
+            },
+            ..Default::default()
+        }
+        .write(
+            &source,
+            &WriteOptions::new(ResourcePath::new("font.h").unwrap()),
+        )
+        .unwrap();
+        assert!(!written.report.has_errors());
+        for code in ["c.write.unmapped", "c.write.added_empty"] {
+            assert_eq!(
+                written
+                    .report
+                    .entries
+                    .iter()
+                    .filter(|e| e.code == code)
+                    .count(),
+                2
+            );
+        }
+        let bytes = written.output.into_single().unwrap();
+        let (back, _) = read(
+            std::str::from_utf8(&bytes).unwrap(),
+            CReadOptions::default(),
+        )
+        .unwrap();
+        assert_eq!(back.fonts[0].len(), 2);
+        for cp in 32..=33 {
+            let glyph = back.fonts[0]
+                .glyph_for_codepoint(Codepoint::Unicode(cp))
+                .unwrap();
+            assert!(glyph.bitmap.as_bytes().iter().all(|&b| b == 0));
+        }
+    }
+}
+
+#[test]
 fn c_integer_suffixes_follow_literal_grammar() {
     for suffix in ["", "u", "U", "l", "L", "ll", "LL", "uLL", "llU"] {
         let source = format!("const uint8_t bits[1][1] = {{{{128{suffix}}}}};");

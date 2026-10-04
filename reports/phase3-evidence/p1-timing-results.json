@@ -1,0 +1,338 @@
+{
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "binary": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/release/examples/p1_timing",
+  "binary_sha256": "b2e57958197e4f02282f682af0253a62c2a71cb1a1bc56e731390d01d66309b5",
+  "runs": 5,
+  "elapsed_seconds": 6.769994947942905,
+  "peak_rss_kib": 19020,
+  "timings": {
+    "kbitx": {
+      "read_us": {
+        "median": 458.39565999999996,
+        "min": 445.2578649999999,
+        "max": 479.88479
+      },
+      "write_us": {
+        "median": 296.6537,
+        "min": 292.680745,
+        "max": 314.90153
+      },
+      "bytes": {
+        "median": 32935,
+        "min": 32935,
+        "max": 32935
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "kbitx_1000_1_threads_ms": 464.795611,
+    "kbitx_1000_2_threads_ms": 244.017672,
+    "kbitx_1000_4_threads_ms": 142.76298500000001,
+    "pbf": {
+      "read_us": {
+        "median": 90.29757500000001,
+        "min": 84.14787999999999,
+        "max": 96.43959999999998
+      },
+      "write_us": {
+        "median": 117.48301,
+        "min": 110.282415,
+        "max": 131.591265
+      },
+      "bytes": {
+        "median": 7434,
+        "min": 7434,
+        "max": 7434
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "pbf_1000_1_threads_ms": 94.482603,
+    "pbf_1000_2_threads_ms": 52.152774,
+    "pbf_1000_4_threads_ms": 30.68692,
+    "hbf": {
+      "read_us": {
+        "median": 40.41128,
+        "min": 37.912325,
+        "max": 53.27349999999999
+      },
+      "write_us": {
+        "median": 12.889375,
+        "min": 12.474870000000001,
+        "max": 13.1304
+      },
+      "bytes": {
+        "median": 4469,
+        "min": 4469,
+        "max": 4469
+      },
+      "assets": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "write_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "hbf_1000_1_threads_ms": 40.099162,
+    "hbf_1000_2_threads_ms": 25.633661,
+    "hbf_1000_4_threads_ms": 15.017306
+  },
+  "records": [
+    {
+      "glyphs": 256,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 200,
+      "parallel_reads": 1000,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "kbitx": {
+          "read_us": 473.0996,
+          "write_us": 314.90153,
+          "bytes": 32935,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "kbitx_1000_1_threads_ms": 476.192353,
+        "kbitx_1000_2_threads_ms": 242.470048,
+        "kbitx_1000_4_threads_ms": 179.838059,
+        "pbf": {
+          "read_us": 92.48186,
+          "write_us": 131.591265,
+          "bytes": 7434,
+          "assets": 1,
+          "write_losses": 2,
+          "read_losses": 0
+        },
+        "pbf_1000_1_threads_ms": 97.864954,
+        "pbf_1000_2_threads_ms": 52.152774,
+        "pbf_1000_4_threads_ms": 30.68692,
+        "hbf": {
+          "read_us": 40.41128,
+          "write_us": 12.912015000000002,
+          "bytes": 4469,
+          "assets": 2,
+          "write_losses": 0,
+          "read_losses": 0
+        },
+        "hbf_1000_1_threads_ms": 38.536012,
+        "hbf_1000_2_threads_ms": 21.3325,
+        "hbf_1000_4_threads_ms": 14.936036999999999
+      }
+    },
+    {
+      "glyphs": 256,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 200,
+      "parallel_reads": 1000,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "kbitx": {
+          "read_us": 458.04220000000004,
+          "write_us": 296.6537,
+          "bytes": 32935,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "kbitx_1000_1_threads_ms": 462.360836,
+        "kbitx_1000_2_threads_ms": 246.7771,
+        "kbitx_1000_4_threads_ms": 136.322252,
+        "pbf": {
+          "read_us": 90.29757500000001,
+          "write_us": 122.12373,
+          "bytes": 7434,
+          "assets": 1,
+          "write_losses": 2,
+          "read_losses": 0
+        },
+        "pbf_1000_1_threads_ms": 94.482603,
+        "pbf_1000_2_threads_ms": 50.233038,
+        "pbf_1000_4_threads_ms": 31.726822000000002,
+        "hbf": {
+          "read_us": 37.912325,
+          "write_us": 12.50818,
+          "bytes": 4469,
+          "assets": 2,
+          "write_losses": 0,
+          "read_losses": 0
+        },
+        "hbf_1000_1_threads_ms": 41.709813,
+        "hbf_1000_2_threads_ms": 28.137307,
+        "hbf_1000_4_threads_ms": 14.371920999999999
+      }
+    },
+    {
+      "glyphs": 256,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 200,
+      "parallel_reads": 1000,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "kbitx": {
+          "read_us": 445.2578649999999,
+          "write_us": 293.0868,
+          "bytes": 32935,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "kbitx_1000_1_threads_ms": 464.795611,
+        "kbitx_1000_2_threads_ms": 238.56007400000001,
+        "kbitx_1000_4_threads_ms": 142.76298500000001,
+        "pbf": {
+          "read_us": 84.14787999999999,
+          "write_us": 110.282415,
+          "bytes": 7434,
+          "assets": 1,
+          "write_losses": 2,
+          "read_losses": 0
+        },
+        "pbf_1000_1_threads_ms": 92.486203,
+        "pbf_1000_2_threads_ms": 52.215754000000004,
+        "pbf_1000_4_threads_ms": 28.792726000000002,
+        "hbf": {
+          "read_us": 38.875665,
+          "write_us": 12.474870000000001,
+          "bytes": 4469,
+          "assets": 2,
+          "write_losses": 0,
+          "read_losses": 0
+        },
+        "hbf_1000_1_threads_ms": 38.21713999999999,
+        "hbf_1000_2_threads_ms": 20.319924999999998,
+        "hbf_1000_4_threads_ms": 15.017306
+      }
+    },
+    {
+      "glyphs": 256,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 200,
+      "parallel_reads": 1000,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "kbitx": {
+          "read_us": 458.39565999999996,
+          "write_us": 292.680745,
+          "bytes": 32935,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "kbitx_1000_1_threads_ms": 464.35686,
+        "kbitx_1000_2_threads_ms": 244.017672,
+        "kbitx_1000_4_threads_ms": 129.63469999999998,
+        "pbf": {
+          "read_us": 96.43959999999998,
+          "write_us": 117.48301,
+          "bytes": 7434,
+          "assets": 1,
+          "write_losses": 2,
+          "read_losses": 0
+        },
+        "pbf_1000_1_threads_ms": 89.933319,
+        "pbf_1000_2_threads_ms": 47.689969,
+        "pbf_1000_4_threads_ms": 30.507288,
+        "hbf": {
+          "read_us": 41.60545499999999,
+          "write_us": 12.889375,
+          "bytes": 4469,
+          "assets": 2,
+          "write_losses": 0,
+          "read_losses": 0
+        },
+        "hbf_1000_1_threads_ms": 40.099162,
+        "hbf_1000_2_threads_ms": 25.633661,
+        "hbf_1000_4_threads_ms": 15.125309999999999
+      }
+    },
+    {
+      "glyphs": 256,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 200,
+      "parallel_reads": 1000,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "kbitx": {
+          "read_us": 479.88479,
+          "write_us": 310.956435,
+          "bytes": 32935,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "kbitx_1000_1_threads_ms": 466.320737,
+        "kbitx_1000_2_threads_ms": 248.360263,
+        "kbitx_1000_4_threads_ms": 149.483166,
+        "pbf": {
+          "read_us": 88.3117,
+          "write_us": 113.63600999999998,
+          "bytes": 7434,
+          "assets": 1,
+          "write_losses": 2,
+          "read_losses": 0
+        },
+        "pbf_1000_1_threads_ms": 97.928775,
+        "pbf_1000_2_threads_ms": 53.116006,
+        "pbf_1000_4_threads_ms": 31.030033,
+        "hbf": {
+          "read_us": 53.27349999999999,
+          "write_us": 13.1304,
+          "bytes": 4469,
+          "assets": 2,
+          "write_losses": 0,
+          "read_losses": 0
+        },
+        "hbf_1000_1_threads_ms": 46.741021,
+        "hbf_1000_2_threads_ms": 31.891388,
+        "hbf_1000_4_threads_ms": 18.176354
+      }
+    }
+  ],
+  "environment_note": "All task-owned builds, fuzz and oracles stopped; unrelated desktop and fontcarver browser activity left running."
+}

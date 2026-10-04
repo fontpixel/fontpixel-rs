@@ -1,0 +1,23 @@
+W3.3 independent image/C correctness review
+2026-10-04. Read-only production review; reproduction assets are isolated in this directory.
+
+Five reproduced correctness findings were reported to the parent:
+1. C strict loss omitted stable glyph ID reordering when source/target slot counts match. ordered.png/ordered.json reverses source code order (66,65); old conversion to reordered.h (65,66) succeeded with an empty report. Parent reports fixed with regression; not independently recompiled here.
+2. Font8x8 ignored array_name, including nonexistent selection, and returned all 599 wrapper glyphs. Parent reports fixed with selection/nonexistent regressions; not independently recompiled here.
+3. C auto family detection overrides the native generic geometry comment whenever source contains font8x8_. Converting ordered.h with --c-name font8x8_custom --strict creates font8x8_named.h successfully, but ordinary info on that output fails with eight-byte-row error. c.rs around family selection. Explicit geometry/native generic declaration should take precedence over substring detection.
+4. font8x8 Unicode range discovery scans the entire file with split_once, so an explicitly selected second declaration inherits the first declaration range. multiple8.h contains two one-glyph tables declared for U+0041 and U+0042; selecting font8x8_second reports U+0041, with zero loss. c.rs header8. Bind range evidence to the declaration or reject ambiguous association.
+5. Image nested model deserialization silently ignores unsupported fields although native wrapper structs reject them. extra.json adds cells[0].native.metrics.customAdvance=999; image->image --strict succeeds with empty report and extra-back.json drops the field. The schema must reject/diagnose unknown nested metadata to meet docs/formats/image.md. Reused model serde structures need scrutiny, not only NativeGlyph/NativeMetadata.
+
+Additional verification: inspected native image rectangle/depth/metrics validation, threshold diagnostics, C generic and GFX pixel packing/field comparison. Manually generated a 9x2 C glyph with rows 100000001 and 010000000 and baseline 1. wide-gfx.h correctly stores continuous packed bytes 80 A0 00, GFX record {0,9,2,9,0,-1}; readback BBX is 9x2 at (0,-1), ascent/descent 1/1. Conversion reports changed font metrics. Top-level native unknown metadata is correctly rejected.
+
+Review is not a complete proof. No new production builds/fuzz were started, and no production files, staging state, branch, or worktrees were changed. Final validation of parent fixes remains with parent.
+
+RECHECK against supplied release binary, W3.3 d2c66be (2026-10-04):
+PASS stable IDs strict
+PASS array selects basic
+PASS array missing fails
+PASS generic prefixed name write
+PASS generic prefixed name read
+PASS second array range
+PASS unknown nested metric rejected
+All five original findings now pass their independent reproductions. Failed strict conversions also preserve their preexisting output bytes. Recheck command/output and binary SHA256: recheck.json. No new compilation or fuzz performed.

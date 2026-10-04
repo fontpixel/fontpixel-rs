@@ -192,13 +192,25 @@ pub(super) fn write(set: &FontSet, o: &CWriteOptions) -> Result<(Vec<u8>, Report
         .range
         .map(|r| r.0)
         .or_else(|| o.generic.as_ref().map(|g| g.first_code))
-        .or_else(|| selected.first_key_value().map(|(&cp, _)| cp))
-        .ok_or_else(|| invalid("C output has no encodable glyphs"))?;
+        .or_else(|| selected.first_key_value().map(|(&cp, _)| cp));
     let last = o
         .range
         .map(|r| r.1)
-        .or_else(|| selected.last_key_value().map(|(&cp, _)| cp))
-        .ok_or_else(|| invalid("C output has no encodable glyphs"))?;
+        .or_else(|| selected.last_key_value().map(|(&cp, _)| cp));
+    let (Some(first), Some(last)) = (first, last) else {
+        report.push(ReportEntry {
+            level: Level::Error,
+            impact: Impact::None,
+            code: "c.write.no_representable_glyphs".into(),
+            location: Location {
+                font_index: Some(0),
+                ..Default::default()
+            },
+            message: "No glyph is encodable in the selected C charset; cannot infer output range"
+                .into(),
+        });
+        return Err(Error::ReportedErrors(report));
+    };
     let count = last
         .checked_sub(first)
         .and_then(|n| n.checked_add(1))

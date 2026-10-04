@@ -1,0 +1,13 @@
+PBF read-only correctness review (2026-10-04; implementation in progress)
+
+Static findings sent to parent and /root/pbf; no PBF compilation or executable reproduction performed:
+
+1. Special-property loss exemptions are too broad. v3 pbf.header_extra=Bytes([]) serializes no extension and reader does not recreate the property; v1 pbf.v1_padding=Bytes([0,0,0]) similarly disappears. Both properties can carry raw source bytes, which are dropped by wire encoding/reconstruction. Current loss loops skip these properties solely by name/version. Agent acknowledged and is fixing with regressions.
+
+2. trim=true only compares pre/post bitmap width/height. An already 0x0 glyph with a nonzero bearing retains that bearing, whereas the catalogue importer canonicalizes every inkless glyph to default zero bounds. Compare complete target bounds or normalize all empty rasters, reporting only actual changes.
+
+3. Effective advance improvement: writer falls back from absent glyph advance straight to bitmap width, ignoring font.metrics.glyph_defaults.advance, which the native renderer honors. Expand the inherited advance into the representable PBF advance field. A generic glyph_defaults loss already exists, so this is avoidable non-strict layout change, not a strict-loss bypass.
+
+Inspected raw LSB-first continuous pixel packing and RLE low-nibble run packing; v1 word offsets/eight-byte headers versus v2/v3 byte offsets/five-byte headers; alias groups and record identity; wildcard fallback; bounds/descent construction. These paths appeared internally consistent on static inspection. Existing independent fixture tests and full crosscheck/fuzz results remain the implementation agent's responsibility; no complete correctness claim.
+
+Update: /root/pbf reports all three findings fixed with targeted regressions; trim issue also occurred on real TUMBLED U+3000. Full ten-file crosscheck is being rerun by that agent. Fixes not independently executed in this review.
