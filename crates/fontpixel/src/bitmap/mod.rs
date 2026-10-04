@@ -111,7 +111,10 @@ pub(crate) fn zeros(len: usize, maximum: usize) -> Result<Vec<u8>> {
 
 /// Bottom-left, y-up rectangle. Width and height are unsigned; offsets may be negative.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct Bounds {
     /// Width in pixels.
     pub width: u32,

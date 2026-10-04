@@ -30,7 +30,10 @@ pub use properties::{Properties, Property, PropertyValue};
 /// U+10FFFF, are retained for tolerant BDF/SPEC parity. Use `scalar()` to validate
 /// scalar interpretation; writers must report unsupported codes rather than drop them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Codepoint {
     /// Number declared to use Unicode, possibly invalid in a malformed source.
     Unicode(u32),
@@ -56,7 +59,10 @@ impl Codepoint {
 
 /// A signed two-dimensional font-space vector (y up).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct Vector {
     /// Horizontal component.
     pub x: i64,
@@ -73,7 +79,10 @@ impl Vector {
 /// Exact rational metric, avoiding float rounding and preserving equality.
 /// Unreduced fractions are allowed so the source's scale remains expressible.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct Rational {
     numerator: i64,
     denominator: u32,
@@ -110,7 +119,10 @@ impl Rational {
 
 /// FNT-style A/B/C widths, independently preserved even if redundant with BBX.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct AbcWidths {
     /// Signed left space.
     pub a: i64,
@@ -122,7 +134,10 @@ pub struct AbcWidths {
 
 /// Glyph metrics. `None` means absent, distinct from an explicit zero vector.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct GlyphMetrics {
     /// Ink rectangle dimensions must match the bitmap; offsets are relative to origin.
     pub bounds: Bounds,
@@ -387,7 +402,10 @@ impl Glyph {
 
 /// Spacing classification (BDF P/M/C), without inventing a default when absent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Spacing {
     /// Proportional advances.
     Proportional,
@@ -400,7 +418,10 @@ pub enum Spacing {
 /// Stable glyph-table index, assigned in original file order.
 /// Removing glyphs leaves holes rather than silently retargeting saved IDs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct GlyphId(usize);
 impl GlyphId {
     /// Numerical table index. Use `Font::glyph` to check whether it is still live.
@@ -411,7 +432,10 @@ impl GlyphId {
 
 /// Per-strike metrics; absence is distinct from a specified value of zero.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct FontMetrics {
     /// Nominal pixel size.
     #[cfg_attr(
@@ -521,7 +545,10 @@ pub struct FontMetrics {
 
 /// Names and human-readable metadata, without discarding their original properties.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct FontNames {
     /// Family name.
     #[cfg_attr(
@@ -592,7 +619,10 @@ pub struct FontNames {
 /// Charset identity and source metadata. Glyph legacy codes belong to this charset;
 /// Unicode aliases are independently tagged and never implicitly remapped.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(any(feature = "yaff", feature = "image"), derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct FontCharset {
     /// Original CHARSET_REGISTRY spelling/value.
     #[cfg_attr(
@@ -679,7 +709,7 @@ impl Font {
         }
         Ok(font)
     }
-    #[cfg(any(feature = "yaff", feature = "image"))]
+    #[cfg(any(feature = "yaff", feature = "image", feature = "c"))]
     pub(crate) fn slot_count(&self) -> usize {
         self.glyphs.len()
     }

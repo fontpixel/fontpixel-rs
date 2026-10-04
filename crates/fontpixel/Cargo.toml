@@ -147,3 +147,7 @@ required-features = ["hex", "psf"]
 [[example]]
 name = "windows_timing"
 required-features = ["fnt", "fon"]
+
+[[example]]
+name = "image_c_timing"
+required-features = ["image", "c"]

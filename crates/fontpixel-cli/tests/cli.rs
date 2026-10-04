@@ -50,6 +50,8 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("psf\t")
                 && !line.starts_with("fnt\t")
                 && !line.starts_with("fon\t")
+                && !line.starts_with("image\t")
+                && !line.starts_with("c\t")
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
@@ -85,6 +87,8 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "psf"
                 && entry["format"]["id"] != "fnt"
                 && entry["format"]["id"] != "fon"
+                && entry["format"]["id"] != "image"
+                && entry["format"]["id"] != "c"
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
@@ -1206,4 +1210,183 @@ fn windows_fatal_omissions_return_json_without_overwriting() {
         fs::remove_file(output).unwrap();
     }
     assert_eq!(fs::read_dir(&dir.0).unwrap().count(), 1);
+}
+
+#[cfg(feature = "image")]
+#[test]
+fn image_bundle_cli_roundtrip_sidecar_info_and_failure_protection() {
+    let dir = TempDir::new();
+    let input = dir.0.join("input.bdf");
+    let image = dir.0.join("atlas.png");
+    let mapping = dir.0.join("atlas.toml");
+    let back = dir.0.join("back.bdf");
+    fs::write(&input, BDF).unwrap();
+    let output = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        image.to_str().unwrap(),
+        "--to",
+        "image",
+        "--image-mapping-format",
+        "toml",
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(report["assets"].as_array().unwrap().len(), 2);
+    assert!(mapping.is_file());
+    for source in [&image, &mapping] {
+        let info = run(&["info", source.to_str().unwrap(), "--json"]);
+        assert!(
+            info.status.success(),
+            "{}",
+            String::from_utf8_lossy(&info.stderr)
+        );
+        let result = run(&[
+            "convert",
+            source.to_str().unwrap(),
+            "-o",
+            back.to_str().unwrap(),
+            "--strict",
+        ]);
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        assert_eq!(fs::read(&back).unwrap(), BDF.as_bytes());
+    }
+    let before = fs::read(&image).unwrap();
+    let before_map = fs::read(&mapping).unwrap();
+    let result = run(&[
+        "convert",
+        mapping.to_str().unwrap(),
+        "-o",
+        image.to_str().unwrap(),
+        "--to",
+        "image",
+        "--image-mapping-format",
+        "toml",
+    ]);
+    assert_eq!(result.status.code(), Some(1));
+    assert_eq!(fs::read(&image).unwrap(), before);
+    assert_eq!(fs::read(&mapping).unwrap(), before_map);
+    // A directory at any target stops the whole transaction before replacement.
+    fs::create_dir(dir.0.join("atlas.json")).unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        image.to_str().unwrap(),
+        "--to",
+        "image",
+    ]);
+    assert_eq!(result.status.code(), Some(1));
+    assert_eq!(fs::read(&image).unwrap(), before);
+}
+
+#[cfg(feature = "c")]
+#[test]
+fn c_cli_explicit_geometry_gfx_output_and_strict_loss_protection() {
+    let dir = TempDir::new();
+    let input = dir.0.join("raw.h");
+    let target = dir.0.join("out.h");
+    fs::write(
+        &input,
+        "const uint8_t Cells[2][2]={{0xA0,0x40},{0x40,0xA0}};",
+    )
+    .unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--to",
+        "c",
+        "--c-width",
+        "3",
+        "--c-height",
+        "2",
+        "--c-first",
+        "U+0041",
+        "--c-charset",
+        "unicode",
+        "--c-baseline",
+        "1",
+        "--strict",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert!(
+        run(&["info", target.to_str().unwrap(), "--json"])
+            .status
+            .success()
+    );
+    let before = fs::read(&target).unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--to",
+        "c",
+        "--c-family",
+        "gfx",
+        "--c-width",
+        "3",
+        "--c-height",
+        "2",
+        "--c-first",
+        "U+0041",
+        "--c-charset",
+        "unicode",
+        "--c-baseline",
+        "1",
+        "--strict",
+        "--report",
+        "json",
+    ]);
+    assert_eq!(result.status.code(), Some(3));
+    assert_eq!(fs::read(&target).unwrap(), before);
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--to",
+        "c",
+        "--c-family",
+        "gfx",
+        "--c-width",
+        "3",
+        "--c-height",
+        "2",
+        "--c-first",
+        "U+0041",
+        "--c-charset",
+        "unicode",
+        "--c-baseline",
+        "1",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert!(
+        String::from_utf8(fs::read(&target).unwrap())
+            .unwrap()
+            .contains("GFXfont")
+    );
+    assert!(run(&["info", target.to_str().unwrap()]).status.success());
 }

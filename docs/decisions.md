@@ -1249,3 +1249,33 @@ slot survives; FON errors retain the actual font index and earlier diagnostics.
 **Reason:** A multi-font operation must not repeatedly spend the same memory
 allowance. Generated resources must honor their reader's resource limits, and
 failed conversions still need actionable loss details without returning bytes.
+
+## W3.3 CLI resources and output bundles (2026-10-04, before implementation)
+
+The CLI grants each codec a `cap_std::fs::Dir` rooted at the primary input's
+containing directory. Relative sidecars are opened through that directory handle,
+with bounded reads; symlink traversal cannot grant access outside it. The explicitly
+selected primary itself may be a symlink. Its spelling's parent establishes the
+sidecar root. Successfully opened primary and sidecar file identities remain held
+through conversion so output aliases (including hard links) can be rejected.
+
+Bundle output preflights all paths and existing file identities, stages and syncs
+all bytes before replacing anything, then commits with saved originals and rollback
+on ordinary I/O failure. The primary is committed last. Output symlinks and symlink
+parents are rejected. Newly created empty directories and staging files are removed
+on failure. This is a recoverable multi-file operation, not a promise of filesystem
+crash atomicity or isolation from another process modifying the same destination.
+The single-file `persist` API remains for existing rendering/OpenType commands.
+
+Directory-handle API: https://docs.rs/cap-std/4.0.3/cap_std/fs/struct.Dir.html
+
+Existing single-file conversion deliberately accepts `convert a.bdf -o a.bdf`.
+Keep that compatibility only for one input, one output, exactly the same spelled
+path and no resolved sidecars. All other input/sidecar aliases are rejected.
+
+The CLI's `cap-std 4.0.3` dependency introduces `winx` under Apache-2.0 WITH
+LLVM-exception (an Apache-family permissive license allowed by PLAN §3).
+`deny.toml` admits that exact expression. Version-pinned duplicate allowances
+cover only io-lifetimes 2.0.4 and the Windows ABI crates required by cap-std's
+current adapters; cargo-deny advisories, sources and all other duplicate checks
+remain active. The library retains zero filesystem dependencies.

@@ -37,8 +37,8 @@ library users enable `fnt` or `fon` (which also enables `fnt`).
 See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
 [W3.2 independent validation](reports/w3.2-review.md).
 
-Seventeen format IDs now have native readers, sixteen have writers (color writing
-is deferred); the remaining 29 IDs and Python/WASM bindings remain unimplemented
+Nineteen format IDs now have native readers, eighteen have writers (color writing
+is deferred); the remaining 27 IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
@@ -77,6 +77,25 @@ fontpixel convert source.bdf -o latin.fnt --to fnt --fnt-version 3 --fnt-charset
 fontpixel convert small.fnt large.fnt -o family.fon --strict
 fontpixel info legacy.fon --fnt-read-code-page cp437 --json
 ```
+
+Image atlases preserve exact glyph metadata in a JSON or TOML sidecar. Keep both
+files together; either the image or mapping can be the input entry point. PNG,
+BMP, GIF, TGA, PBM and PGM output are supported. External images need an explicit
+character map. C headers support font8x8, t-mat, explicitly described byte arrays
+and Adafruit GFX; generic and GFX output report metadata and mapping losses.
+
+```sh
+fontpixel convert source.bdf -o atlas.png --to image --strict
+fontpixel convert source.bdf -o atlas.pgm --to image --image-mapping-format toml --strict
+fontpixel convert atlas.json -o restored.bdf --strict
+fontpixel info external.png --image-mapping external.json --json
+fontpixel convert font8x8.h -o imported.bdf
+fontpixel convert source.bdf -o font.h --to c --c-family gfx --c-range U+0020-U+007F
+fontpixel info cells.h --c-width 8 --c-height 16 --c-first U+0020 --c-charset unicode --json
+```
+
+Library features are `image` and `c`. See [image maps](docs/formats/image.md)
+and [C arrays](docs/formats/c.md) for geometry, limits and loss behavior.
 
 ## Build and inspect
 

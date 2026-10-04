@@ -180,7 +180,9 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "image",
         name: "Image atlas and mapping",
-        extensions: &["png", "bmp", "gif", "tga", "pbm", "pgm"],
+        extensions: &[
+            "png", "bmp", "gif", "tga", "pbm", "pgm", "pnm", "json", "toml",
+        ],
         feature_enabled: cfg!(feature = "image"),
     },
     FormatInfo {

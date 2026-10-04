@@ -47,3 +47,31 @@ reported. Gray8 through monochrome PBM or binary GIF requires an explicit thresh
 and reports every affected glyph. Source container provenance is not font content.
 Unsupported metadata must never be silently discarded. Coded colors beyond the
 monochrome/grayscale model are reduced according to the requested foreground rule.
+
+### Native TOML envelope (2026-10-04, before implementation)
+
+Native TOML output uses `fontpixel_image = 1` and `payload_json = "..."`.
+The payload is the same complete JSON mapping as native JSON output. This avoids
+TOML's signed-integer ceiling and restrictions on heterogeneous arrays of enum
+properties; in particular `PropertyValue::Unsigned(u64::MAX)` stays exact.
+External catalogue TOML continues to use ordinary grid/cell fields. The envelope
+accepts exactly these two keys, requires version 1, and cannot contain another
+envelope. Both serializations are streamed into bounded sinks; no intermediate
+unbounded TOML tree is constructed. The JSON-string escaping emitted here is also
+valid TOML basic-string escaping.
+
+Native TGA output uses uncompressed 8-bit grayscale. `image 0.25.10`'s default
+RLE writer emits packets across scanlines; a real 128×304 atlas roundtripped in
+Rust but failed Pillow 12.3 with "buffer overrun". The uncompressed variant also
+avoids a four-channel scratch copy. Independent Pillow checks cover this choice.
+
+### Aggregate memory accounting
+
+Native reads move glyph metadata directly into stable font slots, avoiding a
+second glyph vector. JSON preflight charges vector element sizes by schema key;
+raw byte properties are charged as bytes, not as full property enums per sample.
+Encoder scratch depends on the selected format, and metadata clones are released
+before encoding. Encoder and reader peak budgets are checked separately. This
+allows the full 38,653-glyph Tong SC font to roundtrip at the default 256 MiB
+aggregate limit. A 4,000-glyph regression also checks a 32 MiB limit with retained
+raw bitmap properties. Output sinks cap vector growth before allocating.

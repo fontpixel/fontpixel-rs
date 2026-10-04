@@ -49,7 +49,9 @@ fn detect_registry_and_feature_capabilities() {
                 "hex",
                 "psf",
                 "fnt",
-                "fon"
+                "fon",
+                "image",
+                "c"
             ]
             .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)

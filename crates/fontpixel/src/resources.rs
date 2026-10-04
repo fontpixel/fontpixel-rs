@@ -179,7 +179,13 @@ impl<'a> ReadContext<'a> {
     }
 
     /// Bytes retained by the input context, including both gzip wire and decoded data.
-    #[cfg(any(feature = "hex", feature = "psf", feature = "fnt", feature = "image", feature = "c"))]
+    #[cfg(any(
+        feature = "hex",
+        feature = "psf",
+        feature = "fnt",
+        feature = "image",
+        feature = "c"
+    ))]
     pub(crate) fn retained_input_bytes(&self) -> usize {
         self.total_bytes
     }
@@ -196,6 +202,11 @@ impl<'a> ReadContext<'a> {
 
     /// Resolve a sidecar and account for every returned byte, including repeats.
     pub fn resource(&mut self, path: &ResourcePath) -> Result<Vec<u8>> {
+        self.resource_limited(path, usize::MAX)
+    }
+
+    /// Resolve with an additional codec allowance for retained model and scratch bytes.
+    pub fn resource_limited(&mut self, path: &ResourcePath, max_bytes: usize) -> Result<Vec<u8>> {
         if self.resource_count >= self.limits.max_resources {
             return Err(Error::ResourceLimit {
                 resource: "resource count",
@@ -204,7 +215,7 @@ impl<'a> ReadContext<'a> {
         }
         self.resource_count += 1;
         let remaining = self.limits.max_total_bytes - self.total_bytes;
-        let budget = self.limits.max_resource_bytes.min(remaining);
+        let budget = self.limits.max_resource_bytes.min(remaining).min(max_bytes);
         let bytes = self.input.resolver.resolve(path, budget)?;
         if bytes.len() > budget {
             return Err(Error::ResourceLimit {

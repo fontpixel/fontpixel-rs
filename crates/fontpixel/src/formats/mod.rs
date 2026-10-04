@@ -7,9 +7,9 @@ use crate::{Error, Operation, Report, Result};
 
 #[cfg(feature = "bdf")]
 pub mod bdf;
+#[cfg(feature = "c")]
+pub mod c;
 pub mod catalogue;
-#[cfg(feature = "image")]
-pub mod image;
 #[cfg(any(feature = "hex", feature = "psf"))]
 mod console;
 #[cfg(any(
@@ -25,6 +25,8 @@ pub mod fnt;
 pub mod fon;
 #[cfg(feature = "hex")]
 pub mod hex;
+#[cfg(feature = "image")]
+pub mod image;
 #[cfg(feature = "pcf")]
 pub mod pcf;
 #[cfg(feature = "psf")]
@@ -647,22 +649,36 @@ impl Registry<crate::FontSet> {
 #[cfg(feature = "image")]
 impl Registry<crate::FontSet> {
     pub(crate) fn install_image(&mut self) {
-        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image") {
-            e.detector=Some(Box::new(image::ImageCodec::default()));
-            e.reader=Some(Box::new(image::ImageCodec::default()));
-            e.writer=Some(Box::new(image::ImageCodec::default()));
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "image") {
+            e.detector = Some(Box::new(image::ImageCodec::default()));
+            e.reader = Some(Box::new(image::ImageCodec::default()));
+            e.writer = Some(Box::new(image::ImageCodec::default()));
         }
     }
     /// Select an explicit image mapping or caller-scoped mapping asset.
-    pub fn set_image_read_options(&mut self, options:image::ImageReadOptions) {
-        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image" && e.reader.is_some()) {
-            e.reader=Some(Box::new(image::ImageCodec{read_options:options,..Default::default()}));
+    pub fn set_image_read_options(&mut self, options: image::ImageReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "image" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(image::ImageCodec {
+                read_options: options,
+                ..Default::default()
+            }));
         }
     }
     /// Configure atlas image container, packing and mapping serialization.
-    pub fn set_image_write_options(&mut self, options:image::ImageWriteOptions) {
-        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image" && e.writer.is_some()) {
-            e.writer=Some(Box::new(image::ImageCodec{write_options:options,..Default::default()}));
+    pub fn set_image_write_options(&mut self, options: image::ImageWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "image" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(image::ImageCodec {
+                write_options: options,
+                ..Default::default()
+            }));
         }
     }
 }
@@ -732,6 +748,43 @@ impl Registry<crate::FontSet> {
             e.detector = Some(Box::new(fon::FonCodec::default()));
             e.reader = Some(Box::new(fon::FonCodec::default()));
             e.writer = Some(Box::new(fon::FonCodec::default()));
+        }
+    }
+}
+
+#[cfg(feature = "c")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_c(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "c") {
+            e.detector = Some(Box::new(c::CCodec::default()));
+            e.reader = Some(Box::new(c::CCodec::default()));
+            e.writer = Some(Box::new(c::CCodec::default()));
+        }
+    }
+    /// Configure literal C input dialect and explicit geometry.
+    pub fn set_c_read_options(&mut self, options: c::CReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "c" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(c::CCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure portable generic or Adafruit GFX output.
+    pub fn set_c_write_options(&mut self, options: c::CWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "c" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(c::CCodec {
+                write_options: options,
+                ..Default::default()
+            }));
         }
     }
 }

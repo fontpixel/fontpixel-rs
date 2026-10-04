@@ -139,3 +139,15 @@ directory. `console_timing` generates 38,653 synthetic 16×16 cells. All are
 original test/performance data covered by this project's MIT license. External
 crosschecks temporarily invoke monobit and the supplied catalogue mini BDF
 fixture, which stays in the read-only reference package and is not redistributed.
+
+## W3.3 image / C fixtures
+
+- `crates/fontpixel/tests/{image,c}.rs` constructs original synthetic images,
+  C declarations, metadata and malformed inputs in memory under this project's MIT
+  license. No third-party raster or C implementation is embedded.
+- `c-upstream-sources.json` pins 10 public-domain dhepper/font8x8 headers at
+  revision `8e279d2d864e79128e96188a6b9526cfa3fbfef9`, including SHA-256 hashes.
+  `python3 tests/data/fetch_c_headers.py OUTPUT_DIRECTORY` downloads and verifies
+  these external samples; font data is not committed. The crosscheck compares all
+  mappings/pixels against the supplied MIT catalogue converter, then compiles
+  generated C11 headers and reads GFX output with monobit.
