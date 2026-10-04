@@ -262,6 +262,7 @@ impl FormatReader<FontSet> for CCodec {
         let mut f = Font::default();
         let mut report = Report::default();
         let mut merged = BTreeMap::<u32, Glyph>::new();
+        let mut selected_arrays = 0usize;
         while let Some((name, text)) = pending.pop() {
             check(text.len(), l.max_table_bytes, "C header bytes")?;
             let t = lexer::lex(&text, &mut b)?;
@@ -289,7 +290,15 @@ impl FormatReader<FontSet> for CCodec {
                         }
                     }
                 }
-                for d in ds.iter().filter(|d| d.name.starts_with("font8x8_")) {
+                for d in ds.iter().filter(|d| {
+                    d.name.starts_with("font8x8_")
+                        && self
+                            .read_options
+                            .array_name
+                            .as_deref()
+                            .is_none_or(|name| name == d.name)
+                }) {
+                    selected_arrays += 1;
                     header8((&text, &t), d, false, &mut merged, &mut report, l, &mut b)?;
                 }
             } else {
@@ -335,6 +344,12 @@ impl FormatReader<FontSet> for CCodec {
                     }
                 }
             }
+        }
+        if family == Family::Font8x8
+            && self.read_options.array_name.is_some()
+            && selected_arrays != 1
+        {
+            return Err(invalid("requested font8x8 array is missing or ambiguous"));
         }
         if !merged.is_empty() {
             let o = ArrayOptions {

@@ -335,3 +335,52 @@ fn c_integer_suffixes_follow_literal_grammar() {
         assert!(read(&source, options).is_err(), "{suffix}");
     }
 }
+
+#[test]
+fn reordering_equal_slot_counts_is_a_strict_loss() {
+    let (mut set, _) = read(ARRAY, generic()).unwrap();
+    let glyphs: Vec<_> = set.fonts[0]
+        .glyphs()
+        .map(|(id, g)| (id, g.clone()))
+        .collect();
+    set.fonts[0]
+        .replace_glyph(glyphs[0].0, glyphs[1].1.clone())
+        .unwrap();
+    set.fonts[0]
+        .replace_glyph(glyphs[1].0, glyphs[0].1.clone())
+        .unwrap();
+    let mut options = WriteOptions::new(ResourcePath::new("font.h").unwrap());
+    let written = fontpixel::registry().write(&set, "c", &options).unwrap();
+    assert!(
+        written
+            .report
+            .entries
+            .iter()
+            .any(|e| e.code == "c.write.glyph_slots")
+    );
+    options.strict = true;
+    assert!(fontpixel::registry().write(&set, "c", &options).is_err());
+}
+
+#[test]
+fn font8x8_array_selection_filters_and_requires_one_match() {
+    let source = "char font8x8_a[1][8]={{1,0,0,0,0,0,0,0}, // U+0041\n};\nchar font8x8_b[1][8]={{2,0,0,0,0,0,0,0}, // U+0042\n};";
+    let (all, _) = read(source, CReadOptions::default()).unwrap();
+    assert_eq!(all.fonts[0].len(), 2);
+    let options = CReadOptions {
+        array_name: Some("font8x8_b".into()),
+        ..Default::default()
+    };
+    let (selected, _) = read(source, options).unwrap();
+    assert_eq!(selected.fonts[0].len(), 1);
+    assert!(
+        selected.fonts[0]
+            .glyph_for_codepoint(Codepoint::Unicode(66))
+            .is_some()
+    );
+    let options = CReadOptions {
+        array_name: Some("missing".into()),
+        ..Default::default()
+    };
+    assert!(read(source, options).is_err());
+}

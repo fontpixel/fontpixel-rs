@@ -462,7 +462,13 @@ fn compare(
     last: u32,
     r: &mut Report,
 ) {
-    if source.slot_count() != target.slot_count() {
+    let reordered = selected.range(first..=last).any(|(&cp, (id, _))| {
+        target
+            .glyph_id(Codepoint::Unicode(cp))
+            .or_else(|| target.glyph_id(Codepoint::Legacy(cp)))
+            .is_some_and(|back| back.index() != *id)
+    });
+    if source.slot_count() != target.slot_count() || reordered {
         loss(
             r,
             "write.glyph_slots",
