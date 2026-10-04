@@ -1161,3 +1161,27 @@ the LF delimiter is outside the text-record limit, matching the reader.
 consume the same aggregate allowance. All record types must honor the selected
 output record cap. Four regressions establish rejection and exact inclusive
 boundaries for both codecs without changing valid font or mapping bytes.
+
+## 2026-10-04 — Schedule authorized font merge features without interrupting implementation
+
+**Question:** The owner added a font merge library/CLI, WASM interface and a pure
+client-side merge page while the existing implementation phase is in progress.
+**Choice:** Preserve the complete owner message verbatim in
+[`plan-addendum-merge.md`](plan-addendum-merge.md), including its opening and
+closing scheduling instructions. Add W6.5/W6.6 to Stage 6, W8.3 to Stage 8 and
+Stage 9 (W9.1–W9.3) after Stage 8 and before final wrap-up. Preserve every existing
+plan item, phase order and acceptance gate. The narrowly scoped Stage 9 page is
+an explicit addition to the original no-GUI scope; it does not authorize editing
+or deploying the catalogue website. This change records future work only and
+does not interrupt W3.2 or implement any merge feature now.
+**Reason:** The full addendum retains all selection, spacing, fallback, metadata,
+licensing/reserved-name, benchmark and browser acceptance details without losing
+requirements in a summary. Native CLI and browser output must be byte-identical;
+font processing remains client-side with no font uploads. Catalogue file URLs
+must be relative or same-origin. All later implementations and stage reports must
+follow the complete addendum, including its benchmark and browser gates.
+
+**Source integrity:** Owner message `Sentinel_8661c50a2db88191a8062e1b3713b52b`,
+retrieved by the coordinator. The exact UTF-8 text is 9,356 bytes, has no added
+final newline, and has SHA-256
+`f2ea3e31c183eebe1979b507f8a3748674b5dc47eabdfa8a04b9d2c9af1cd376`.

@@ -5,6 +5,8 @@
 本文件是规格加实施计划。格式清单在 `FORMATS.md`，执行流程（怎么分批、怎么交付）在 `DOT-README.md`。
 三份文件冲突时，以 `DOT-README.md` 的流程规定和本文件的技术规定为准，`FORMATS.md` 的格式细节以各格式的公开规格为准。
 
+2026-10-04 追加规格：[拼合功能完整原文](docs/plan-addendum-merge.md)。追加工作项只在第 6、8、9 阶段执行，不打断当前阶段；现有阶段顺序、完成标准和工作项保留。第 9 阶段的纯客户端拼合网页是 §1.3「不做图形界面」的明确追加范围，收录站仓库修改与部署仍不在本任务内。
+
 ---
 
 ## 1. 目标
@@ -397,6 +399,8 @@ fontpixel batch JOBS.toml [--jobs N]            # 批量任务并行执行（收
 - W6.2 文档：README（安装、快速上手、每个命令的例子）、API 文档（`cargo doc` 无警告，公共项都有说明和例子）、`docs/formats/*` 齐全、迁移说明（§11）。
 - W6.3 测速报告（§10）定稿。
 - W6.4 模糊测试与健壮性（§9.6）收尾。
+- W6.5 拼合（库）：`fontpixel::merge`；完整接口、选择、取字、对齐、间距、命名、许可证、报告与测试要求按[追加规格 W6.5–W6.6](docs/plan-addendum-merge.md)。
+- W6.6 拼合（命令行）：`fontpixel merge`、多格式输出、`batch` 接入与帮助文档；完整语法、通格等价测试和约 5.7 万字原生拼合写 BDF 在 1 秒内的测速要求按[追加规格 W6.6](docs/plan-addendum-merge.md)。
 
 ### 第 7 阶段：Python 绑定（`fontpixel-py`）
 
@@ -412,6 +416,16 @@ fontpixel batch JOBS.toml [--jobs N]            # 批量任务并行执行（收
 - wasm-bindgen，npm 包名 `fontpixel`，API 同第 7 阶段两层（兼容 API 对应 bdfparser-js）。
 - 用适配器跑 `reference/bdfparser-js/test/` 并通过（同上，不能通过的说明原因）。
 - 测速：与纯 JS bdfparser-js 在 Node 和浏览器（headless Chrome）里逐类对比；报告 WASM 文件大小（含与不含 WOFF2/brotli、CJK 字符集等 feature 的几种组合）、初始化时间。
+- W8.3 wasm 的拼合接口：`info`、`merge`、预览 `render`、Web Worker 与进度回调；Node/headless Chrome 与原生命令行输出逐字节相同，feature 组合大小和初始化时间按[追加规格 W8.3](docs/plan-addendum-merge.md)验证。
+
+### 第 9 阶段：拼合网页（`web/merge/`）
+
+本阶段在第 8 阶段全部完成并通过原有及追加验收后执行；完整要求见[追加规格第 9 阶段](docs/plan-addendum-merge.md)。纯客户端、字体不上传服务器；静态网页不使用前端框架，加载后可离线使用。
+
+- W9.1 页面：本地文件/字体目录选取、像素预览与等宽提示、拼合选项、必填家族名和保留字体名校验、许可证提示、浏览器内下载/ZIP、中文与英文界面，逐项按追加规格实现。
+- W9.2 字体目录格式：在 `docs/web-merge.md` 定义 `catalogue.json` 及接入步骤；文件 URL 仅相对或同源，样例仅用获许可的 samples 字体；不修改收录站仓库、不部署。
+- W9.3 测试与交付：浏览器端等宽/比例拼合输出 BDF/WOFF2 与原生命令行逐字节比较；验证等宽错误提示、保留字体名限制、5 万字页面响应，并报告 wasm 大小/加载时间及 Chrome、Firefox、Safari 最近两个大版本兼容范围和已知限制。
+- 完成标准与每阶段报告要求均按追加规格全文；不得用本计划中的工作项摘要替代其详细要求。
 
 ### 收尾
 
