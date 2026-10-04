@@ -498,3 +498,233 @@ fn large_unicode_sources_report_omissions_with_default_budget() {
         38653
     );
 }
+
+#[test]
+fn wholly_unrepresentable_fonts_keep_mapping_diagnostics() {
+    for zero_width in [false, true] {
+        let mut f = Font::default();
+        let mut g = Glyph::new("#".parse::<Bitmap>().unwrap());
+        g.codepoints = vec![Codepoint::Unicode(65), Codepoint::Unicode(0x4e00)];
+        if zero_width {
+            g.metrics.advance = Some(Vector::new(0, 0));
+        } else {
+            g.codepoints.remove(0);
+        }
+        f.add_glyph(g).unwrap();
+        let error = fnt::write(&f, &Default::default()).unwrap_err();
+        let report = error
+            .report()
+            .expect("fatal conversion preserves omissions");
+        assert!(report.has_errors());
+        for cp in if zero_width {
+            vec![65, 0x4e00]
+        } else {
+            vec![0x4e00]
+        } {
+            assert!(
+                report
+                    .entries
+                    .iter()
+                    .any(|e| e.location.codepoint == Some(cp))
+            );
+        }
+        assert!(report.entries.iter().any(|e| e.code == "fnt.omitted_glyph"));
+        assert!(
+            report
+                .entries
+                .iter()
+                .any(|e| e.code == "fnt.no_representable_glyphs")
+        );
+    }
+}
+
+#[test]
+fn container_metadata_cannot_bypass_fnt_budget() {
+    let mut set = FontSet::from(sample());
+    set.properties
+        .push(Property::new("x".repeat(1024 * 1024), "value"));
+    let mut registry = fontpixel::registry();
+    registry.set_fnt_write_options(FntWriteOptions {
+        limits: ResourceLimits {
+            max_total_bytes: 128 * 1024,
+            ..Default::default()
+        },
+        ..Default::default()
+    });
+    let options = fontpixel::WriteOptions::new(fontpixel::ResourcePath::new("font.fnt").unwrap());
+    assert!(matches!(
+        registry.write(&set, "fnt", &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+    #[cfg(feature = "fon")]
+    assert!(matches!(
+        registry.write(&set, "fon", &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[cfg(feature = "fon")]
+#[test]
+fn fon_retained_sources_and_reports_share_one_budget() {
+    use fontpixel::formats::fon;
+    let mut f = sample();
+    f.headers.push(Property::new("x".repeat(20_000), "omitted"));
+    let options = FntWriteOptions {
+        limits: ResourceLimits {
+            max_total_bytes: 256 * 1024,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    assert!(fon::write(&FontSet::from(f.clone()), &options).is_ok());
+    let set = FontSet {
+        fonts: vec![f; 16],
+        ..Default::default()
+    };
+    assert!(matches!(
+        fon::write(&set, &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[cfg(feature = "fon")]
+#[test]
+fn fon_payload_and_alignment_obey_reader_resource_cap() {
+    use fontpixel::formats::fon;
+    let set = FontSet::from(sample());
+    let (out, _) = fon::write(&set, &Default::default()).unwrap();
+    // First FONT entry starts at resource table + 30; its size includes padding.
+    let table = 192;
+    let shift = u16::from_le_bytes(out[table..table + 2].try_into().unwrap());
+    let size = usize::from(u16::from_le_bytes(
+        out[table + 32..table + 34].try_into().unwrap(),
+    )) << shift;
+    let options = FntWriteOptions {
+        limits: ResourceLimits {
+            max_resource_bytes: size - 1,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    assert!(matches!(
+        fon::write(&set, &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+    let options = FntWriteOptions {
+        limits: ResourceLimits {
+            max_resource_bytes: size,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    let (out, _) = fon::write(&set, &options).unwrap();
+    assert!(fon::read(&out, &Default::default(), &options.limits).is_ok());
+}
+
+#[cfg(feature = "fon")]
+#[test]
+fn fon_failed_font_preserves_index_and_prior_losses() {
+    let mut first = sample();
+    first.names.license = Some("MIT".into());
+    let mut second = sample();
+    for id in second.glyphs().map(|(id, _)| id).collect::<Vec<_>>() {
+        second
+            .edit_glyph(id, |g| {
+                g.metrics.advance = Some(Vector::new(0, 0));
+                Ok(())
+            })
+            .unwrap();
+    }
+    let set = FontSet {
+        fonts: vec![first, second],
+        ..Default::default()
+    };
+    let error = fontpixel::formats::fon::write(&set, &Default::default()).unwrap_err();
+    let report = error.report().expect("font failure keeps report");
+    assert!(
+        report
+            .entries
+            .iter()
+            .any(|e| e.location.font_index == Some(0))
+    );
+    assert!(
+        report
+            .entries
+            .iter()
+            .any(|e| e.code == "fnt.no_representable_glyphs" && e.location.font_index == Some(1))
+    );
+}
+
+#[cfg(feature = "fon")]
+#[test]
+fn repeated_ne_payloads_still_consume_glyph_budget() {
+    use fontpixel::formats::fon;
+    let set = FontSet {
+        fonts: vec![sample(), sample()],
+        ..Default::default()
+    };
+    let (mut bytes, _) = fon::write(&set, &Default::default()).unwrap();
+    // Make two separate resource entries refer to the same encoded FONT.
+    let first = bytes[222..226].to_vec();
+    bytes[234..238].copy_from_slice(&first);
+    assert_eq!(
+        fon::read(&bytes, &Default::default(), &Default::default())
+            .unwrap()
+            .0
+            .fonts
+            .len(),
+        2
+    );
+    assert!(matches!(
+        fon::read(
+            &bytes,
+            &Default::default(),
+            &ResourceLimits {
+                max_glyphs: 3,
+                ..Default::default()
+            }
+        ),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
+fn full_byte_range_aliases_are_readable_and_strict_reports_identity() {
+    let mut font = Font::default();
+    font.charset.name = Some("unknown".into());
+    font.charset.windows_charset = Some(255);
+    let mut glyph = Glyph::new("#".parse::<Bitmap>().unwrap());
+    glyph.codepoints = (0..=255).map(Codepoint::Legacy).collect();
+    font.add_glyph(glyph).unwrap();
+    for version in [Version::One, Version::Two, Version::Three] {
+        let (bytes, report) = fnt::write(
+            &font,
+            &FntWriteOptions {
+                version: Some(version),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            fnt::read_default(&bytes, &Default::default())
+                .unwrap()
+                .0
+                .len(),
+            256
+        );
+        assert!(
+            report
+                .entries
+                .iter()
+                .any(|e| e.code == "fnt.alias_identity")
+        );
+    }
+    let options = fontpixel::WriteOptions {
+        strict: true,
+        ..fontpixel::WriteOptions::new(fontpixel::ResourcePath::new("font.fnt").unwrap())
+    };
+    assert!(matches!(
+        fontpixel::registry().write(&FontSet::from(font), "fnt", &options),
+        Err(fontpixel::Error::StrictLoss(_))
+    ));
+}

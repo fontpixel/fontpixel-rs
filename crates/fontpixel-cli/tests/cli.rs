@@ -1165,3 +1165,45 @@ fn windows_options_multifont_and_strict_preserve_destination() {
     ]);
     assert!(!result.status.success());
 }
+
+#[cfg(all(feature = "fnt", feature = "fon"))]
+#[test]
+fn windows_fatal_omissions_return_json_without_overwriting() {
+    let dir = TempDir::new();
+    let input = dir.0.join("zero.bdf");
+    fs::write(&input, BDF.replace("BBX 1 1", "DWIDTH 0 0\nBBX 1 1")).unwrap();
+    for format in ["fnt", "fon"] {
+        let output = dir.0.join(format!("existing.{format}"));
+        fs::write(&output, b"PROTECTED").unwrap();
+        for strict in [false, true] {
+            let mut args = vec![
+                "convert",
+                input.to_str().unwrap(),
+                "-o",
+                output.to_str().unwrap(),
+                "--to",
+                format,
+                "--report",
+                "json",
+            ];
+            if strict {
+                args.push("--strict");
+            }
+            let result = run(&args);
+            assert_eq!(result.status.code(), Some(1));
+            assert_eq!(fs::read(&output).unwrap(), b"PROTECTED");
+            assert!(result.stdout.is_empty());
+            let json: serde_json::Value = serde_json::from_slice(&result.stderr).unwrap();
+            assert!(json["report"]["entries"].as_array().unwrap().iter().any(|e| e["code"] == "fnt.zero_width_code" && e["location"]["codepoint"] == 65));
+            assert!(
+                json["report"]["entries"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|e| e["code"] == "fnt.no_representable_glyphs")
+            );
+        }
+        fs::remove_file(output).unwrap();
+    }
+    assert_eq!(fs::read_dir(&dir.0).unwrap().count(), 1);
+}

@@ -381,10 +381,20 @@ pub fn write(font: &Font, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
             );
         }
     }
-    let mut first = slots
-        .iter()
-        .position(Option::is_some)
-        .ok_or_else(|| invalid("No glyph fits selected FNT charset"))?;
+    let Some(mut first) = slots.iter().position(Option::is_some) else {
+        report.push(crate::report::ReportEntry {
+            level: crate::report::Level::Error,
+            impact: crate::report::Impact::None,
+            code: "fnt.no_representable_glyphs".into(),
+            location: crate::report::Location {
+                font_index: Some(0),
+                ..Default::default()
+            },
+            message: "No nonzero-width glyph fits the selected FNT charset; no output produced"
+                .into(),
+        });
+        return Err(crate::Error::ReportedErrors(report));
+    };
     let mut last = slots
         .iter()
         .rposition(Option::is_some)

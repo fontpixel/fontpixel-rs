@@ -178,7 +178,7 @@ pub(crate) fn cstr<'a>(b: &'a [u8], at: usize, l: &ResourceLimits) -> Result<&'a
 
 // Charge metadata and potential diagnostics before iterating user-built models.
 // Recursive PropertyValue trees are bounded independently of the input's origin.
-pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
+pub(crate) fn properties_cost(p: &crate::model::Properties, l: &ResourceLimits) -> Result<usize> {
     fn value(v: &PropertyValue, depth: usize, b: &mut Budget, l: &ResourceLimits) -> Result<()> {
         if depth > 32 {
             return Err(invalid("FNT source property nesting exceeds 32"));
@@ -217,6 +217,12 @@ pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
         }
         Ok(())
     }
+    let mut b = Budget::new(0, l)?;
+    props(p, &mut b, l)?;
+    Ok(b.used)
+}
+
+pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
     let mut b = Budget::new(std::mem::size_of::<Font>(), l)?;
     // Font-level diagnostics plus normalization diagnostics for at most 256
     // exportable byte positions. Omitted source glyphs only need mapping and
@@ -247,9 +253,15 @@ pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
     for s in &f.names.xlfd_fields {
         b.add(s.len())?;
     }
-    props(&f.names.localized, &mut b, l)?;
-    props(&f.headers, &mut b, l)?;
-    props(&f.properties, &mut b, l)?;
+    b.add(properties_cost(&f.names.localized, l)?)?;
+    b.add(properties_cost(&f.headers, l)?)?;
+    b.add(properties_cost(&f.properties, l)?)?;
+    b.add(
+        f.charset
+            .code_ranges
+            .len()
+            .saturating_mul(std::mem::size_of::<(u32, u32)>()),
+    )?;
     for (_, g) in f.glyphs() {
         b.add(std::mem::size_of::<crate::Glyph>() + 512)?;
         b.add(g.bitmap.as_bytes().len().saturating_mul(3))?;
@@ -260,7 +272,7 @@ pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
         for seq in &g.unicode_sequences {
             b.add(seq.len().saturating_mul(4) + 64)?;
         }
-        props(&g.properties, &mut b, l)?;
+        b.add(properties_cost(&g.properties, l)?)?;
     }
     Ok(b.used)
 }

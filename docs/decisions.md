@@ -1195,3 +1195,20 @@ large CJK sources before their unmappable characters can be reported. A focused
 38,653-supplementary-glyph regression and the supplied Tong SC probe pass.
 The owner requested a safe handoff immediately afterward: this final change has
 focused validation only, not renewed full/fuzz/performance acceptance.
+
+## 2026-10-04 — Local W3.2 review: cumulative output budgets and fatal reports
+
+**Question:** FON writing deducted prior encoded bytes but not retained source
+models or accumulated diagnostics from the next font's budget. Container
+properties bypassed metadata accounting, and FONT payloads were not checked
+against the resource cap used by the reader. An entirely unrepresentable FNT
+discarded its detailed omission report when returning `InvalidInput`.
+**Choice:** Preflight all source/model/diagnostic reservations and container
+properties against one aggregate budget. Give each FNT writer only the budget
+left after other sources and retained output, and cap aligned NE resources and
+the FONTDIR name offset before allocation. Return `ReportedErrors` with the
+per-mapping omissions and a fatal `fnt.no_representable_glyphs` entry when no
+slot survives; FON errors retain the actual font index and earlier diagnostics.
+**Reason:** A multi-font operation must not repeatedly spend the same memory
+allowance. Generated resources must honor their reader's resource limits, and
+failed conversions still need actionable loss details without returning bytes.

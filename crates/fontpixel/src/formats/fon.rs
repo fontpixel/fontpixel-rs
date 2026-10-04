@@ -395,24 +395,50 @@ pub fn write(set: &FontSet, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
         "FON resource count",
     )?;
     check(set.fonts.len(), 32767, "NE font ordinal range")?;
+    set.validate(&o.limits)?;
+    let n = set.fonts.len();
+    let table_len = 2 + 8 + 12 + 8 + n * 12 + 2 + 8 + 1;
+    check(
+        table_len,
+        o.limits.max_table_bytes,
+        "NE resource table bytes",
+    )?;
+    check(table_len - 9, 0x7fff, "NE FONTDIR name offset")?;
+    // Retain all source models and their diagnostic reservations while encoding
+    // each font. The current font's reservation is charged inside fnt::write;
+    // subtract only that reservation when computing its remaining allowance.
+    let mut budget = Budget::new(properties_cost(&set.properties, &o.limits)?, &o.limits)?;
+    budget.add(std::mem::size_of::<FontSet>() + n * (std::mem::size_of::<Vec<u8>>() + 32) + 2)?;
+    let mut source_costs = Vec::with_capacity(n);
+    for font in &set.fonts {
+        let cost = model_cost(font, &o.limits)?;
+        budget.add(cost)?;
+        source_costs.push(cost);
+    }
     let mut report = Report::default();
     let mut fonts = Vec::new();
     let mut fontdir = Vec::new();
     fontdir.extend_from_slice(&(set.fonts.len() as u16).to_le_bytes());
-    let mut work = 0usize;
-    let mut glyphs = 0usize;
+    let mut work = budget.used;
     for (index, font) in set.fonts.iter().enumerate() {
-        glyphs = glyphs
-            .checked_add(font.len())
-            .ok_or_else(|| invalid("FON glyph count overflow"))?;
-        check(glyphs, o.limits.max_glyphs, "FON aggregate glyphs")?;
         let mut opts = o.clone();
         opts.limits.max_total_bytes = opts
             .limits
             .max_total_bytes
-            .checked_sub(work)
+            .checked_sub(work - source_costs[index])
             .ok_or_else(|| invalid("FON aggregate memory exhausted"))?;
-        let (b, mut r) = fnt::write(font, &opts)?;
+        opts.max_output_bytes = opts.max_output_bytes.min(o.limits.max_resource_bytes);
+        let (b, mut r) = match fnt::write(font, &opts) {
+            Ok(result) => result,
+            Err(crate::Error::ReportedErrors(mut failed)) => {
+                for e in &mut failed.entries {
+                    e.location.font_index = Some(index);
+                }
+                report.extend(failed);
+                return Err(crate::Error::ReportedErrors(report));
+            }
+            Err(error) => return Err(error),
+        };
         for e in &mut r.entries {
             e.location.font_index = Some(index);
         }
@@ -449,13 +475,6 @@ pub fn write(set: &FontSet, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
             format!("Container property {:?} has no generated NE field", p.name),
         );
     }
-    let n = fonts.len();
-    let table_len = 2 + 8 + 12 + 8 + n * 12 + 2 + 8 + 1;
-    check(
-        table_len,
-        o.limits.max_table_bytes,
-        "NE resource table bytes",
-    )?;
     let resident = b"\x07FONTLIB\0\0\0";
     let nonresident = b"\x11FONTRES fontpixel\0\0\0";
     let ne = 128usize;
@@ -483,6 +502,13 @@ pub fn write(set: &FontSet, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
             return Err(invalid("FON exceeds NE aligned offset range"));
         }
     };
+    for resource in starts.windows(2) {
+        check(
+            resource[1] - resource[0],
+            o.limits.max_resource_bytes,
+            "NE aligned resource bytes",
+        )?;
+    }
     check(total, o.max_output_bytes, "FON output bytes")?;
     check(
         work.saturating_add(total),

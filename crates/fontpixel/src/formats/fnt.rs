@@ -108,7 +108,11 @@ impl FormatReader<FontSet> for FntCodec {
 }
 impl FormatWriter<FontSet> for FntCodec {
     fn write(&self, set: &FontSet, o: &WriteOptions) -> Result<Written> {
-        let (bytes, mut report) = write(set.single()?, &self.write_options)?;
+        let font = set.single()?;
+        let mut options = self.write_options.clone();
+        let container_cost = properties_cost(&set.properties, &options.limits)?;
+        options.limits.max_total_bytes -= container_cost;
+        let (bytes, mut report) = write(font, &options)?;
         for p in set.properties.iter() {
             loss(
                 &mut report,

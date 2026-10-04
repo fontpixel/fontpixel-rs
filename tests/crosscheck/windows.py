@@ -4,6 +4,7 @@ import argparse,importlib.metadata,json,struct,subprocess,sys,tempfile
 from pathlib import Path
 sys.dont_write_bytecode=True
 import monobit
+import freetype
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 from gen_windows_cases import fnt,pe
@@ -47,18 +48,16 @@ def main():
         for plus in (False,True):
             src=d/f'pe{64 if plus else 32}.fon';src.write_bytes(pe(fnt(2),plus));convert(a.binary,src,rust,'--to','fon','--strict');assert signature(monobit.load(rust,format='mzfon')[0])==signature(pack[0]);results.append({'case':f'PE{64 if plus else 32}','result':'independent tree/section fixture to NE pass'})
         # FreeType is an independent real font loader; it does not support Windows v1.
-        try:
-            import freetype
-            for path,index in ((d/'rust-v2.fnt',0),(d/'rust-v3.fnt',0),(rust,0),(multi,0),(multi,1)):
-                face=freetype.Face(str(path),index=index);face.select_size(0);face.set_charmap(face.charmaps[0])
-                expected=monobit.load(path,format='mzfon' if path.suffix=='.fon' else 'win')[index]
-                for g in expected.glyphs:
-                    code=int.from_bytes(bytes(g.codepoint),'big');face.load_char(code,freetype.FT_LOAD_RENDER|freetype.FT_LOAD_MONOCHROME)
-                    slot=face.glyph;assert slot.bitmap.width==g.width and slot.bitmap.rows==g.height
-                    rows=bytes(slot.bitmap.buffer);stride=(g.width+7)//8;packed=b''.join(rows[y*abs(slot.bitmap.pitch):y*abs(slot.bitmap.pitch)+stride] for y in range(g.height));assert packed==g.as_bytes()
-                    assert slot.advance.x//64==g.advance_width
-            results.append({'case':'FreeType','result':'FNT2/FNT3 and NE glyph pixels/advances pass'})
-        except ImportError:results.append({'case':'FreeType','result':'unavailable'})
+        for path,index in ((d/'rust-v2.fnt',0),(d/'rust-v3.fnt',0),(rust,0),(multi,0),(multi,1)):
+            face=freetype.Face(str(path),index=index);face.select_size(0);face.set_charmap(face.charmaps[0])
+            expected=monobit.load(path,format='mzfon' if path.suffix=='.fon' else 'win')[index]
+            for g in expected.glyphs:
+                code=int.from_bytes(bytes(g.codepoint),'big');face.load_char(code,freetype.FT_LOAD_RENDER|freetype.FT_LOAD_MONOCHROME)
+                slot=face.glyph;assert slot.bitmap.width==g.width and slot.bitmap.rows==g.height
+                rows=bytes(slot.bitmap.buffer);stride=(g.width+7)//8;packed=b''.join(rows[y*abs(slot.bitmap.pitch):y*abs(slot.bitmap.pitch)+stride] for y in range(g.height));assert packed==g.as_bytes()
+                assert slot.advance.x//64==g.advance_width
+                assert (slot.bitmap_left,slot.bitmap_top)==(g.left_bearing,g.height+g.shift_up)
+        results.append({'case':'FreeType','result':'FNT2/FNT3 and NE glyph pixels/advances pass'})
         mini=REFERENCE/'tests/fixtures/mini.bdf';before=parse_bdf(mini,'mini')
         source_a=next(g for g in before.glyphs if g.cp==65)
         for version in (1,2,3):
@@ -71,6 +70,6 @@ def main():
         results.append({'case':'catalogue mini.bdf to FNT1/2/3 and back','result':'actual importer pixels/normalized metrics; CJK and unencoded omission reported'})
         # No direct FNT/FON importer exists in supplied ingest/run.py; its real BDF parser above is the supported boundary.
         run=(REFERENCE/'opf/ingest/run.py').read_text();assert 'convert_fnt(' not in run and 'convert_fon(' not in run
-    result={'result':'pass','monobit_version':importlib.metadata.version('monobit'),'checks':results,'catalogue_direct_importer':'absent; actual supplied BDF parser exercised','scope':'PE fixtures independent; no claim of Windows OS installation test','catalogue_limitation':'Supplied Python parser rejects MICROSOFT/CP1252 BDF charset spelling; raw legacy-code mode is used explicitly at the BDF boundary. Unicode mapping is independently checked by Rust and monobit.'}
+    result={'result':'pass','monobit_version':importlib.metadata.version('monobit'),'freetype_py_version':importlib.metadata.version('freetype-py'),'freetype_version':freetype.version(),'checks':results,'catalogue_direct_importer':'absent; actual supplied BDF parser exercised','scope':'PE fixtures independent; no claim of Windows OS installation test','catalogue_limitation':'Supplied Python parser rejects MICROSOFT/CP1252 BDF charset spelling; raw legacy-code mode is used explicitly at the BDF boundary. Unicode mapping is independently checked by Rust and monobit.'}
     a.output.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 if __name__=='__main__':main()
