@@ -3,6 +3,9 @@
 Status: source reconstruction after workspace replacement. The restored Rust
 implementation and examples are uncompiled; Cargo dependency access is blocked.
 No new formal measurement exists. Historical results cannot validate restored code.
+Pinned Python/JS oracle setup and external-only valid-font fixtures now pass;
+see [the setup evidence](phase6-oracle-setup/README.md). Native build, paired
+correctness and all formal performance acceptance remain pending.
 
 ## Required complete cases
 
@@ -82,7 +85,7 @@ Intended unified build, including core fea:
 
 ```
 cargo build --locked --release --all-features -p fontpixel -p fontpixel-cli \
-  --bin fontpixel --example phase6_timing --example tong_export \
+  --bin fontpixel --example phase6_timing --example phase6_tong_export \
   --example phase6_catalogue_export_name
 ```
 
@@ -106,3 +109,39 @@ PYTHONDONTWRITEBYTECODE=1 python benches/phase6_catalogue_test.py
 These tests do not compile or exercise production Rust and cannot satisfy the
 full performance/correctness gate. All actual outputs and locl/outline/pixel/
 metadata/notice/merge checks remain required before final acceptance.
+
+## Independent validation entry points
+
+Run these only after native binaries, copied references and pinned consumers are
+available and the coordinator releases a correctness slot. Every validator
+consumes real outputs and writes a partial proof until every check passes.
+
+- `phase6_validate.py codec`: Rust native/compatibility plus original Python/Node
+  complete byte parity, all source glyphs with FreeType, full YAFF with monobit.
+- `phase6_validate.py tong`: exact 84-file coverage, 20 BDF copies, every PCF/OTB
+  mapped glyph, all 16 sfnts' exact decomposed outlines/metrics/pixels/names,
+  exhaustive script/language shaping, and both engines' 8 WOFF2 files. The sole
+  historical reference-only null-DFLT OTS exception is re-proved on actual bytes;
+  native output receives no exception.
+- `phase6_validate.py vector` and `web`: full same-input vector and same-sfnt
+  compression comparisons, including every outline, metric, glyph pixel and locl.
+- `phase6_validate.py merge`: independently read all 57,106 glyph records against
+  the exact Latin-first/Unifont union. Native source/report/name tests remain a
+  separate requirement; a byte hash alone is not a full provenance proof.
+- `phase6_catalogue_validate.py`: all 173 fonts and 8 ZIPs, explicit original app
+  names/copyright/version, common metric profile, every encoded pixel/advance at
+  actual strikes and 1x/2x vector ppem, BDF/PCF unencoded records and export-name/
+  notice properties, and archive licence/member linkage. Additional sfnt glyph
+  identities/default-policy differences are fully inventoried; their inventory
+  alone is not a pixel proof for those additional glyphs.
+
+The reconstructed contour comparator allows only cyclic contour start and
+contour order changes. It preserves winding, every line/curve/control point and
+component decomposition. A discovered remaining geometric discrepancy must be
+investigated rather than silently waived or replaced with a pixel-only claim.
+
+`phase6_perf_setup.py` can copy supplied references into a fresh writable work
+folder and records per-file source/copy identities. Its default action only
+inventories prerequisite paths and installed versions. It never downloads,
+installs, compiles or authorizes formal measurements. Missing pinned dependencies
+must be resolved through approved environment setup before any actual gate.

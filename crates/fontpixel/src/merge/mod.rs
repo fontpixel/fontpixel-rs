@@ -269,27 +269,85 @@ fn pad(glyph:&mut Glyph,width:i64,key:GroupKey,codes:&[u32],options:&MergeOption
     }
     report.adjustments.push(SpacingAdjustment{part_index:key.part,glyph_index:key.id.index(),codepoints:codes.to_vec(),kind:AdjustmentKind::Padded,original_advance:Some(advance.x),target_advance:Some(target),left_padding:left,right_padding:right,reason:"blank advance space; original raster preserved; odd extra pixel placed on right".into()});Ok(())
 }
+// Count formatting without allocating, then write only within that reservation.
+// In particular, Debug formatting may expand every byte in a property name.
+struct AuditTextSize { bytes: usize, maximum: usize }
+impl std::fmt::Write for AuditTextSize {
+    fn write_str(&mut self, text: &str) -> std::fmt::Result {
+        self.bytes = self.bytes.checked_add(text.len())
+            .filter(|bytes| *bytes <= self.maximum).ok_or(std::fmt::Error)?;
+        Ok(())
+    }
+}
+struct AuditText<'a> { text: &'a mut String, maximum: usize }
+impl std::fmt::Write for AuditText<'_> {
+    fn write_str(&mut self, text: &str) -> std::fmt::Result {
+        self.text.len().checked_add(text.len())
+            .filter(|bytes| *bytes <= self.maximum).ok_or(std::fmt::Error)?;
+        self.text.push_str(text);
+        Ok(())
+    }
+}
+fn audit_entry(
+    report: &mut Report,
+    budget: &mut Budget,
+    index: usize,
+    code: &str,
+    message: std::fmt::Arguments<'_>,
+) -> Result<()> {
+    let maximum = budget.max;
+    let error = || Error::ResourceLimit { resource: "merge working bytes", limit: maximum };
+    let mut measured = AuditTextSize { bytes: 0, maximum };
+    std::fmt::write(&mut measured, message).map_err(|_| error())?;
+    let target = if report.entries.len() == report.entries.capacity() {
+        report.entries.capacity().checked_mul(2)
+            .and_then(|capacity| report.entries.len().checked_add(1).map(|len| capacity.max(len).max(4)))
+            .ok_or_else(error)?
+    } else { 0 };
+    // Existing entries remain charged. Reserve the complete new array, not
+    // only its added slots, so old/new arrays can coexist during reallocation.
+    let array_bytes = target.checked_mul(std::mem::size_of::<ReportEntry>()).ok_or_else(error)?;
+    let bytes = measured.bytes.checked_add(code.len())
+        .and_then(|bytes| bytes.checked_add(array_bytes)).ok_or_else(error)?;
+    budget.charge(bytes)?;
+    let mut text = String::new();
+    text.try_reserve_exact(measured.bytes).map_err(|_| error())?;
+    budget.charge(text.capacity().checked_sub(measured.bytes).ok_or_else(error)?)?;
+    std::fmt::write(&mut AuditText { text: &mut text, maximum: measured.bytes }, message)
+        .map_err(|_| error())?;
+    let mut owned_code = String::new();
+    owned_code.try_reserve_exact(code.len()).map_err(|_| error())?;
+    budget.charge(owned_code.capacity().checked_sub(code.len()).ok_or_else(error)?)?;
+    owned_code.push_str(code);
+    if target != 0 {
+        report.entries.try_reserve_exact(target - report.entries.len()).map_err(|_| error())?;
+        let extra = report.entries.capacity().checked_sub(target)
+            .and_then(|slots| slots.checked_mul(std::mem::size_of::<ReportEntry>())).ok_or_else(error)?;
+        budget.charge(extra)?;
+    }
+    report.push(ReportEntry { level: Level::Info, impact: Impact::None, code: owned_code,
+        location: Location { font_index: Some(index), ..Location::default() }, message: text });
+    Ok(())
+}
 fn audit_global_metadata(parts:&[MergePart<'_>],font:&Font,report:&mut Report,budget:&mut Budget)->Result<()>{
     for (index,part) in parts.iter().enumerate(){
         let a=&part.font.metrics;let b=&font.metrics;
         macro_rules! metric{($($field:ident),* $(,)?)=>{$({
             if a.$field!=b.$field{
-                let message=format!("Global {} from part {}: {:?} -> {:?}",stringify!($field),index,a.$field,b.$field);
-                budget.charge(message.len().saturating_add(256))?;
-                report.push(ReportEntry{level:Level::Info,impact:Impact::None,code:format!("merge.metrics.{}",stringify!($field)),location:Location{font_index:Some(index),..Location::default()},message});
+                audit_entry(report,budget,index,concat!("merge.metrics.",stringify!($field)),
+                    format_args!("Global {} from part {}: {:?} -> {:?}",stringify!($field),index,a.$field,b.$field))?;
             }
         })*};}
         metric!(pixel_size,ppem_x,ppem_y,point_size,resolution,ascent,descent,bounds,line_gap,line_height,underline_position,underline_thickness,default_character,space_width,spacing,metrics_set);
         if a.default_glyph.is_some()||a.glyph_defaults!=GlyphMetrics::default(){
-            let message=format!("Part {index} glyph defaults materialized per glyph; default glyph {:?} -> {:?} (output IDs are reassigned)",a.default_glyph,b.default_glyph);
-            budget.charge(message.len().saturating_add(256))?;
-            report.push(ReportEntry{level:Level::Info,impact:Impact::None,code:"merge.metrics.defaults".into(),location:Location{font_index:Some(index),..Location::default()},message});
+            audit_entry(report,budget,index,"merge.metrics.defaults",
+                format_args!("Part {index} glyph defaults materialized per glyph; default glyph {:?} -> {:?} (output IDs are reassigned)",a.default_glyph,b.default_glyph))?;
         }
         for (kind,props) in [("header",&part.font.headers),("property",&part.font.properties),("localized_name",&part.font.names.localized)]{
             for property in props.iter(){
                 if kind=="property"&&["COPYRIGHT","LICENSE","LICENSE_TEXT","LICENSE_URL","SPDX_LICENSE_IDENTIFIER"].iter().any(|k|property.name.eq_ignore_ascii_case(k)){continue;}
-                budget.charge(property.name.len().saturating_add(512))?;
-                report.push(ReportEntry{level:Level::Info,impact:Impact::None,code:"merge.metadata.source_record".into(),location:Location{font_index:Some(index),..Location::default()},message:format!("Part {index} source {kind} {:?} is not copied into regenerated global metadata; selected glyph properties are retained",property.name)});
+                audit_entry(report,budget,index,"merge.metadata.source_record",
+                    format_args!("Part {index} source {kind} {:?} is not copied into regenerated global metadata; selected glyph properties are retained",property.name))?;
             }
         }
     }
@@ -398,4 +456,101 @@ pub fn merge(parts:&[MergePart<'_>],options:&MergeOptions)->Result<MergeResult>{
     font.validate(&options.limits)?;font.retained_usage(options.limits.max_total_bytes)?;
     if options.strict&&report.diagnostics.has_loss(){return Err(Error::StrictLoss(report.diagnostics));}
     Ok(MergeResult{font,report})
+}
+
+#[cfg(test)]
+mod audit_budget_tests {
+    use super::*;
+    use std::fmt::Write;
+
+    #[test]
+    fn escaped_diagnostic_has_exact_and_one_byte_short_boundaries() {
+        for name in ["plain".to_owned(), "\n\0\"\\\u{7f}é".repeat(1000)] {
+            let expected = format!("Name {name:?}");
+            let code = "merge.test.audit";
+            let mut measured = Budget { used: 0, max: usize::MAX };
+            let mut report = Report::default();
+            audit_entry(&mut report, &mut measured, 2, code, format_args!("Name {name:?}")).unwrap();
+            assert_eq!(report.entries[0].message, expected);
+            assert_eq!(report.entries[0].code, code);
+            assert_eq!(report.entries[0].location.font_index, Some(2));
+            assert_eq!(report.entries[0].impact, Impact::None);
+            assert_eq!(measured.used, report.entries.capacity() * std::mem::size_of::<ReportEntry>()
+                + report.entries[0].code.capacity() + report.entries[0].message.capacity());
+            let mut exact = Budget { used: 0, max: measured.used };
+            let mut copy = Report::default();
+            audit_entry(&mut copy, &mut exact, 2, code, format_args!("Name {name:?}")).unwrap();
+            assert_eq!(copy, report);
+            let mut short = Budget { used: 0, max: measured.used - 1 };
+            let mut rejected = Report::default();
+            assert!(audit_entry(&mut rejected, &mut short, 2, code, format_args!("Name {name:?}")).is_err());
+            assert_eq!(rejected.entries.capacity(), 0);
+            assert!(rejected.entries.is_empty());
+        }
+    }
+
+    fn full_report() -> Report {
+        let mut entries = Vec::with_capacity(1);
+        entries.push(ReportEntry { level: Level::Info, impact: Impact::None,
+            code: String::new(), location: Location::default(), message: String::new() });
+        Report { entries }
+    }
+
+    #[test]
+    fn diagnostic_growth_reserves_both_old_and_new_arrays() {
+        let mut report = full_report();
+        let before = report.clone();
+        let old = report.entries.capacity() * std::mem::size_of::<ReportEntry>();
+        let mut measured = Budget { used: old, max: usize::MAX };
+        audit_entry(&mut report, &mut measured, 0, "audit", format_args!("message")).unwrap();
+        let entry = &report.entries[1];
+        assert_eq!(measured.used, old + report.entries.capacity() * std::mem::size_of::<ReportEntry>()
+            + entry.code.capacity() + entry.message.capacity());
+        assert_eq!(report.entries[0], before.entries[0]);
+        let mut exact = Budget { used: old, max: measured.used };
+        audit_entry(&mut full_report(), &mut exact, 0, "audit", format_args!("message")).unwrap();
+        let mut short = Budget { used: old, max: measured.used - 1 };
+        let mut rejected = full_report();
+        assert!(audit_entry(&mut rejected, &mut short, 0, "audit", format_args!("message")).is_err());
+        assert_eq!(rejected, before);
+        assert_eq!(rejected.entries.capacity(), 1);
+    }
+
+    #[test]
+    fn header_and_localized_audit_preserve_text_and_source_at_boundary() {
+        let name = "\n\0\"\\".repeat(1000);
+        let mut source = Font::default();
+        source.headers.push(crate::model::Property::new(name.clone(), PropertyValue::Flag));
+        source.names.localized.push(crate::model::Property::new(name.clone(), "value"));
+        let before = source.clone();
+        let target = Font::default();
+        let parts = [MergePart::new(&source, Selection::parse("U+0041").unwrap())];
+        let retained = source.retained_usage(usize::MAX).unwrap().bytes
+            + target.retained_usage(usize::MAX).unwrap().bytes;
+        let mut measured = Budget { used: retained, max: usize::MAX };
+        let mut report = Report::default();
+        audit_global_metadata(&parts, &target, &mut report, &mut measured).unwrap();
+        assert_eq!(report.entries.len(), 2);
+        for (entry, kind) in report.entries.iter().zip(["header", "localized_name"]) {
+            assert_eq!(entry.message, format!("Part 0 source {kind} {name:?} is not copied into regenerated global metadata; selected glyph properties are retained"));
+            assert_eq!(entry.code, "merge.metadata.source_record");
+        }
+        let mut exact = Budget { used: retained, max: measured.used };
+        let mut copy = Report::default();
+        audit_global_metadata(&parts, &target, &mut copy, &mut exact).unwrap();
+        assert_eq!(copy, report);
+        let mut short = Budget { used: retained, max: measured.used - 1 };
+        assert!(audit_global_metadata(&parts, &target, &mut Report::default(), &mut short).is_err());
+        assert_eq!(source, before);
+    }
+
+    #[test]
+    fn audit_measurement_and_total_addition_reject_overflow() {
+        let mut text = AuditTextSize { bytes: usize::MAX, maximum: usize::MAX };
+        assert!(text.write_str("x").is_err());
+        let mut budget = Budget { used: usize::MAX, max: usize::MAX };
+        let mut report = Report::default();
+        assert!(audit_entry(&mut report, &mut budget, 0, "audit", format_args!("message")).is_err());
+        assert_eq!(report.entries.capacity(), 0);
+    }
 }

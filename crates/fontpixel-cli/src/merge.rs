@@ -286,6 +286,40 @@ fn reserve<T>(values: &mut Vec<T>, count: usize, maximum: usize) -> Result<()> {
     if bytes > maximum { return Err(limit_error(maximum)); }
     values.try_reserve_exact(count).map_err(|_| limit_error(maximum))
 }
+fn input_staging(
+    parts: usize,
+    limits: &fontpixel::ResourceLimits,
+) -> Result<(Vec<Font>, Vec<Report>, fontpixel::ResourceLimits)> {
+    let maximum = limits.max_total_bytes;
+    let headers = size_of::<Vec<Font>>() + size_of::<Vec<Report>>();
+    let requested = parts.checked_mul(size_of::<Font>() + size_of::<Report>())
+        .and_then(|bytes| bytes.checked_add(headers)).ok_or_else(|| limit_error(maximum))?;
+    if requested > maximum { return Err(limit_error(maximum)); }
+    // Check the joint request before either allocation. The actual first array
+    // remains charged while reserving the second, including unexpected spare.
+    let mut retained = headers;
+    let mut fonts = Vec::new();
+    reserve(&mut fonts, parts, maximum - retained)?;
+    vector_bytes(&fonts, &mut retained, maximum)?;
+    let mut reports = Vec::new();
+    reserve(&mut reports, parts, maximum - retained)?;
+    vector_bytes(&reports, &mut retained, maximum)?;
+    let mut available = limits.clone();
+    available.max_total_bytes = maximum - retained;
+    // InputBudget keeps this deduction through decoding and library merge.
+    // Its existing generic reserves/dead-strike charges remain conservative.
+    Ok((fonts, reports, available))
+}
+fn writer_limits(limits: &fontpixel::ResourceLimits, retained: usize) -> Result<fontpixel::formats::TransportLimits> {
+    let available = limits.max_total_bytes.checked_sub(retained)
+        .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+    let mut resources = limits.clone();
+    // The caller still owns the model, reports and earlier bundles. No public
+    // codec contract identifies an identical source reservation to credit back.
+    // Some writers may therefore count source storage conservatively again.
+    resources.max_total_bytes = available;
+    Ok(fontpixel::formats::TransportLimits { resources, max_output_bytes: available })
+}
 fn combined_error(error: Error, reads: Vec<Report>, merge: Option<Report>) -> Error {
     let (strict, mut last) = match error {
         Error::StrictLoss(report) => (true, report),
@@ -398,11 +432,8 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
         drop(writer_registry(&raw, id, &spec.destination, any_vector)?);
     }
     let sources = batch::sources();
-    let mut input_budget = InputBudget::new(limits.clone());
-    let mut selected_fonts: Vec<Font> = Vec::new();
-    let mut read_reports: Vec<Report> = Vec::new();
-    reserve(&mut selected_fonts, parts.len(), limits.max_total_bytes)?;
-    reserve(&mut read_reports, parts.len(), limits.max_total_bytes)?;
+    let (mut selected_fonts, mut read_reports, read_limits) = input_staging(parts.len(), &limits)?;
+    let mut input_budget = InputBudget::new(read_limits);
     let mut registry = fontpixel::registry();
     raw.raster.apply(&mut registry)?;
     let mut selected_bytes = 0usize;
@@ -491,12 +522,7 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
             .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
         let mut write_options = fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
         write_options.strict = raw.strict;
-        let available = limits.max_total_bytes.checked_sub(retained).ok_or_else(|| limit_error(limits.max_total_bytes))?;
-        let mut resources = limits.clone();
-        resources.max_total_bytes = available.checked_add(model_bytes).ok_or_else(|| limit_error(limits.max_total_bytes))?;
-        write_options.transport_limits = Some(fontpixel::formats::TransportLimits {
-            resources, max_output_bytes: available,
-        });
+        write_options.transport_limits = Some(writer_limits(&limits, retained)?);
         let registry = writer_registry(&raw, id, &spec.destination, any_vector)?;
         let written = match registry.write(&fonts, id, &write_options) {
             Ok(written) => written,
@@ -551,4 +577,125 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod writer_budget_tests {
+    use super::*;
+
+    #[test]
+    fn writer_allowance_keeps_all_live_owners_reserved() {
+        let limits = fontpixel::ResourceLimits { max_total_bytes: 1024, max_glyphs: 17,
+            max_input_bytes: 8192, ..Default::default() };
+        let retained_model = 256;
+        let retained_reports = 128;
+        let prior_bundles = 512;
+        let allowance = writer_limits(&limits, retained_model + retained_reports + prior_bundles).unwrap();
+        assert_eq!(allowance.resources.max_total_bytes, 128);
+        assert_eq!(allowance.max_output_bytes, 128);
+        let mut expected = limits.clone();
+        expected.max_total_bytes = 128;
+        assert_eq!(allowance.resources, expected);
+    }
+
+    #[test]
+    fn writer_allowance_has_exact_and_one_byte_short_boundaries() {
+        let limits = fontpixel::ResourceLimits { max_total_bytes: 4096, ..Default::default() };
+        assert_eq!(writer_limits(&limits, 4095).unwrap().max_output_bytes, 1);
+        assert_eq!(writer_limits(&limits, 4096).unwrap().resources.max_total_bytes, 0);
+        assert!(matches!(writer_limits(&limits, 4097), Err(Error::ResourceLimit {
+            resource: "retained merge CLI bytes", limit: 4096
+        })));
+        assert!(writer_limits(&limits, usize::MAX).is_err());
+    }
+
+    #[test]
+    fn spare_model_capacity_is_not_given_back_to_a_writer() {
+        let mut font = Font::default();
+        let mut family = String::with_capacity(65536);
+        family.push('x');
+        font.names.family = Some(family);
+        let fonts = FontSet::from(font);
+        let model = fonts.retained_usage(usize::MAX).unwrap().bytes;
+        let limits = fontpixel::ResourceLimits { max_total_bytes: model + 31, ..Default::default() };
+        let allowance = writer_limits(&limits, model).unwrap();
+        assert_eq!(allowance.resources.max_total_bytes, 31);
+        assert_eq!(allowance.max_output_bytes, 31);
+    }
+}
+
+#[cfg(test)]
+mod input_staging_tests {
+    use super::*;
+
+    fn requested(parts: usize) -> usize {
+        size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
+            + parts * (size_of::<Font>() + size_of::<Report>())
+    }
+
+    #[test]
+    fn staging_arrays_have_exact_and_one_byte_short_boundaries() {
+        for parts in [0, 1, 3, 4, 5, 33] {
+            let probe_limits = fontpixel::ResourceLimits { max_total_bytes: 1_000_000, ..Default::default() };
+            let (fonts, reports, available) = input_staging(parts, &probe_limits).unwrap();
+            assert!(fonts.is_empty() && reports.is_empty());
+            assert!(fonts.capacity() >= parts && reports.capacity() >= parts);
+            let actual = size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
+                + fonts.capacity() * size_of::<Font>() + reports.capacity() * size_of::<Report>();
+            assert_eq!(probe_limits.max_total_bytes - available.max_total_bytes, actual);
+            drop((fonts, reports));
+            let exact = fontpixel::ResourceLimits { max_total_bytes: actual, ..Default::default() };
+            let (_, _, remaining) = input_staging(parts, &exact).unwrap();
+            assert_eq!(remaining.max_total_bytes, 0);
+            let short = fontpixel::ResourceLimits { max_total_bytes: actual - 1, ..Default::default() };
+            assert!(input_staging(parts, &short).is_err());
+            let one = fontpixel::ResourceLimits { max_total_bytes: actual + 1, ..Default::default() };
+            assert_eq!(input_staging(parts, &one).unwrap().2.max_total_bytes, 1);
+        }
+    }
+
+    #[test]
+    fn individually_fitting_arrays_must_fit_together() {
+        let parts = 5;
+        let headers = size_of::<Vec<Font>>() + size_of::<Vec<Report>>();
+        let fonts = parts * size_of::<Font>();
+        let reports = parts * size_of::<Report>();
+        let limit = headers + fonts.max(reports);
+        assert!(headers + fonts <= limit && headers + reports <= limit);
+        assert!(headers + fonts + reports > limit);
+        let limits = fontpixel::ResourceLimits { max_total_bytes: limit, ..Default::default() };
+        assert!(matches!(input_staging(parts, &limits), Err(Error::ResourceLimit {
+            resource: "retained merge CLI bytes", ..
+        })));
+    }
+
+    #[test]
+    fn first_decoder_receives_only_post_staging_bytes() {
+        let limits = fontpixel::ResourceLimits { max_total_bytes: requested(3) + 37,
+            max_input_bytes: 99, max_resource_bytes: 50, max_decompressed_bytes: 19,
+            max_table_bytes: 11, max_glyphs: 7, max_resources: 9, ..Default::default() };
+        let (fonts, reports, available) = input_staging(3, &limits).unwrap();
+        let budget = InputBudget::new(available);
+        let reader = budget.remaining_limits().unwrap();
+        let actual = size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
+            + fonts.capacity() * size_of::<Font>() + reports.capacity() * size_of::<Report>();
+        assert_eq!(reader.max_total_bytes, limits.max_total_bytes - actual);
+        assert_eq!(reader.max_input_bytes, reader.max_total_bytes.min(99));
+        assert_eq!(reader.max_resource_bytes, reader.max_total_bytes.min(50));
+        assert_eq!(reader.max_decompressed_bytes, reader.max_total_bytes.min(19));
+        assert_eq!(reader.max_table_bytes, reader.max_total_bytes.min(11));
+        assert_eq!(reader.max_glyphs, 7);
+        assert_eq!(reader.max_resources, 9);
+        assert_eq!(reader.max_pixels_per_glyph, limits.max_pixels_per_glyph);
+    }
+
+    #[test]
+    fn zero_cap_and_staging_size_overflow_reject_without_reads() {
+        let zero = fontpixel::ResourceLimits { max_total_bytes: 0, ..Default::default() };
+        assert!(input_staging(0, &zero).is_err());
+        assert!(input_staging(1, &zero).is_err());
+        assert!(input_staging(usize::MAX, &fontpixel::ResourceLimits {
+            max_total_bytes: usize::MAX, ..Default::default()
+        }).is_err());
+    }
 }

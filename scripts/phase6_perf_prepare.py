@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""UNTESTED RECOVERY of complete case preparation, not historical raw evidence."""
+"""Reconstructed complete case preparation, not historical raw evidence."""
 import argparse
 import json
 from pathlib import Path
@@ -25,27 +25,27 @@ def main():
     sample = ROOT.parent / 'samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf'
     baseline = ROOT.parent / 'validation-inputs/phase2/bdf'; reference = work / 'reference'
     cli = target / 'release/fontpixel'; driver = target / 'release/examples/phase6_timing'
-    tong = target / 'release/examples/tong_export'; original = target / 'release/tong-export'
+    tong = target / 'release/examples/phase6_tong_export'; original = target / 'release/tong-export'
     rename = target / 'release/examples/phase6_catalogue_export_name'
     cases = []
     def add(section, name, engine, command, **kwargs):
         if a.section not in ['all', section]: return
         cases.append({'id': name, 'engine': engine, 'command': list(map(str, command)), **kwargs})
     for mode, engine in [('native', 'rust-native'), ('compat', 'rust-compat')]:
-        add('codec', 'tong38653.drawall-mode1.bdf', engine, [driver, mode, sample, '{output}'])
-    add('codec', 'tong38653.drawall-mode1.bdf', 'python', [py, ROOT / 'benches/phase6_bdfparser.py', reference / 'bdfparser', sample, '{output}'])
-    add('codec', 'tong38653.drawall-mode1.bdf', 'node', [node, '--expose-gc', ROOT / 'benches/phase6_bdfparser.mjs', work / 'bdfparser.mjs', sample, '{output}'])
+        add('codec', 'tong38653.drawall-mode1.reconstructed-v2.bdf', engine, [driver, mode, sample, '{output}'])
+    add('codec', 'tong38653.drawall-mode1.reconstructed-v2.bdf', 'python', [py, ROOT / 'benches/phase6_bdfparser.py', reference / 'bdfparser', sample, '{output}'])
+    add('codec', 'tong38653.drawall-mode1.reconstructed-v2.bdf', 'node', [node, '--expose-gc', ROOT / 'benches/phase6_bdfparser.mjs', work / 'bdfparser.mjs', sample, '{output}'])
     common = ['--reference-root', work, '--bdf', baseline, '--output', '{output}']
     for label, options in [('default', []), ('quality8', ['--quality', '8']), ('quality5', ['--quality', '5']),
                            ('serial11', ['--jobs', '1']), ('intra4', ['--jobs', '2', '--threads', '4']),
                            ('literal11', ['--dot-reuse', 'literal']), ('rows11', ['--dot-reuse', 'rows'])]:
-        add('tong', 'tong-full.' + label, 'rust-native-api', [py, ROOT / 'benches/phase6_tong.py', 'native', '--binary', tong, *common, *options])
+        add('tong', 'tong-full.reconstructed-v2.' + label, 'rust-native-api', [py, ROOT / 'benches/phase6_tong.py', 'native', '--binary', tong, *common, *options])
     cli_label = 'default' if a.tong_cli_variant_bytes == 0 else 'cli-' + str(a.tong_cli_variant_bytes // (1024 * 1024)) + 'MiB'
     cli_extra = [] if a.tong_cli_variant_bytes == 0 else ['--variant-max-total-bytes', a.tong_cli_variant_bytes]
-    add('tong', 'tong-full.' + cli_label, 'rust-batch-cli', [py, ROOT / 'benches/phase6_tong.py', 'batch', '--binary', cli, *common, *cli_extra])
-    add('tong', 'tong-full.default', 'original-export-rs', [py, ROOT / 'benches/phase6_tong.py', 'reference', '--binary', original, *common])
+    add('tong', 'tong-full.reconstructed-v2.' + cli_label, 'rust-batch-cli', [py, ROOT / 'benches/phase6_tong.py', 'batch', '--binary', cli, *common, *cli_extra])
+    add('tong', 'tong-full.reconstructed-v2.default', 'original-export-rs', [py, ROOT / 'benches/phase6_tong.py', 'reference', '--binary', original, *common])
     for engine, label in [('python', 'original-python-fonttools'), ('native', 'rust-batch-cli-with-native-helper')]:
-        add('catalogue', 'catalogue-all181', label, [py, ROOT / 'benches/phase6_catalogue.py', engine,
+        add('catalogue', 'catalogue-all181.explicit-metadata-v2', label, [py, ROOT / 'benches/phase6_catalogue.py', engine,
             '--reference', reference, '--samples', ROOT.parent / 'samples/fontpixel-catalogue',
             '--binary', cli, '--rename-binary', rename, '--plan', a.catalogue_plan.resolve(), '--output', '{output}'])
     for mode, engine in [('vector-native', 'rust-cli'), ('vector-fonttools', 'original-tong-fonttools')]:
@@ -60,6 +60,13 @@ def main():
     add('merge', 'unifont57086-plus-latin.bdf', 'rust-cli', [cli, 'merge', '--family', 'Unifont Western Mix',
         '--part', latin, '--take', 'western', '--part', unifont, '--take', 'all', '--spacing', 'prop',
         '-o', '{output}/merged.bdf', '--report', 'json'], internal_json=False)
+    for case in cases:
+        if case['id'].startswith('tong38653.drawall-mode1'):
+            case['expected_stdout'] = {'glyphs': 38653, 'input_bytes': 5746021, 'profile': 'reconstructed-full-input-v2'}
+        elif case['id'].startswith('tong-full.'):
+            case['expected_stdout'] = {'artifact_count': 84, 'export_count': 64, 'source_bdf_copies': 20}
+        elif case['id'].startswith('catalogue-all181'):
+            case['expected_stdout'] = {'source_fonts': 34, 'families': 8, 'download_files': 181}
     identities = [py.resolve(), node, bdftopcf, driver, tong, cli, original, rename,
                   work / 'bdfparser.mjs', work / 'js-tools/package-lock.json', reference,
                   ROOT.parent / 'samples', baseline, a.catalogue_plan.resolve(),
@@ -81,7 +88,7 @@ print(json.dumps({'python':sys.version,'packages':{name:importlib.metadata.versi
                                    'default_profile': a.tong_cli_variant_bytes == 0,
                                    'default_probe_evidence': 'see separately retained final-binary correctness probe; earlier candidates may differ'},
               'identity_paths': list(map(str, identities)),
-              'rust_build_command': 'cargo build --locked --release --all-features -p fontpixel -p fontpixel-cli --bin fontpixel --example phase6_timing --example tong_export --example phase6_catalogue_export_name',
+              'rust_build_command': 'cargo build --locked --release --all-features -p fontpixel -p fontpixel-cli --bin fontpixel --example phase6_timing --example phase6_tong_export --example phase6_catalogue_export_name',
               'original_build_command': 'cargo build --locked --release --manifest-path local-work/phase6-performance/reference/tong-pixel-sans/tools/export-rs/Cargo.toml',
               'reference_vector_limit': 'Supplied catalogue production opf_vector extension absent; original _build_vector_ttf_reference is explicit replacement, never production extension throughput.'}
     a.output.parent.mkdir(parents=True, exist_ok=True)

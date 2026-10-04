@@ -1,4 +1,5 @@
-//! Explicit options for Korean components, IIgs, terminal and color fonts.
+//! Explicit options for embedded bitmaps, Korean components, IIgs, terminal and color fonts.
+//! Phase-6 embedded-option reconstruction remains pending compilation.
 mod device;
 mod historical;
 mod native_console;
@@ -227,6 +228,15 @@ pub(crate) struct WriteArguments {
     /// Color bitmap table family; both encode black pixels with coverage alpha.
     #[arg(long, value_parser = ["cbdt", "sbix"])]
     color_flavor: Option<String>,
+    /// Explicit OTB/bdat design units per em; absent preserves automatic scaling.
+    #[arg(long, value_parser = clap::value_parser!(u16).range(16..=16384))]
+    otb_upm: Option<u16>,
+    /// OTB/bdat metric source: first, largest y-ppem, or a zero-based strike index.
+    #[arg(long, value_parser = embedded_reference)]
+    otb_reference: Option<String>,
+    /// OTB/bdat pixel-to-design rounding; absent preserves native half-away rounding.
+    #[arg(long, value_parser = ["half-away", "ties-even"])]
+    otb_rounding: Option<String>,
     /// DRCS output cell width; requires --drcs-cell-height.
     #[arg(long, requires = "drcs_cell_height", value_parser = clap::value_parser!(u32).range(1..))]
     drcs_cell_width: Option<u32>,
@@ -259,6 +269,46 @@ impl WriteArguments {
         threshold: Option<u8>,
         registry: &mut FontRegistry,
     ) -> Result<()> {
+        let embedded_requested = self.otb_upm.is_some()
+            || self.otb_reference.is_some()
+            || self.otb_rounding.is_some();
+        if embedded_requested {
+            if !matches!(id, "otb" | "bdat") {
+                return Err(Error::InvalidInput(
+                    "--otb-upm, --otb-reference and --otb-rounding require otb or bdat output".into(),
+                ));
+            }
+            feature(
+                true,
+                if id == "otb" { cfg!(feature = "otb") } else { cfg!(feature = "bdat") },
+                id,
+            )?;
+        }
+        #[cfg(any(feature = "otb", feature = "bdat"))]
+        if embedded_requested {
+            use fontpixel::formats::embedded::{
+                EmbeddedReferenceStrike, EmbeddedRounding, EmbeddedWriteOptions,
+            };
+            let reference_strike = match self.otb_reference.as_deref() {
+                None | Some("first") => EmbeddedReferenceStrike::First,
+                Some("largest") => EmbeddedReferenceStrike::LargestPpem,
+                Some(index) => EmbeddedReferenceStrike::Index(index.parse().map_err(|_| {
+                    Error::InvalidInput("invalid zero-based OTB/bdat strike index".into())
+                })?),
+            };
+            let mut options = EmbeddedWriteOptions {
+                units_per_em: self.otb_upm,
+                reference_strike,
+                rounding: if self.otb_rounding.as_deref() == Some("ties-even") {
+                    EmbeddedRounding::NearestTiesEven
+                } else {
+                    EmbeddedRounding::NearestTiesAwayFromZero
+                },
+                ..Default::default()
+            };
+            options.limits.sfnt.resources = limits.clone();
+            registry.set_embedded_write_options(options);
+        }
         self.portable.apply(
             id,
             limits,
@@ -718,4 +768,18 @@ fn parse_uid(value: &str) -> std::result::Result<u32, String> {
         value.parse()
     }
     .map_err(|_| "GDR collection UID must fit an unsigned 32-bit number".into())
+}
+
+// Keep parsing available in feature-disabled builds so valid explicit controls
+// receive the normal FeatureDisabled error rather than an unknown-option error.
+fn embedded_reference(value: &str) -> std::result::Result<String, String> {
+    if matches!(value, "first" | "largest")
+        || (!value.is_empty()
+            && value.bytes().all(|byte| byte.is_ascii_digit())
+            && value.parse::<usize>().is_ok())
+    {
+        Ok(value.to_owned())
+    } else {
+        Err("expected first, largest, or a zero-based strike index".into())
+    }
 }

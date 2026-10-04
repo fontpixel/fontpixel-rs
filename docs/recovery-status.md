@@ -5,6 +5,13 @@ untested**. The earlier workspace disappeared at approximately 18:33 UTC. The
 phase-5 baseline was restored separately, then recovered and reconstructed phase-6
 files were added. No historical pass is current-source acceptance.
 
+The final continuation entry is [the local Codex handoff](LOCAL-CODEX-HANDOFF.zh.md)
+and its [copyable prompt](PROMPT-FOR-LOCAL-CODEX.zh.md). The final package manifest
+identifies the delivered commit, refs, source and evidence. Online fontpixel
+implementation stops at this handoff; subsequent software work belongs to the
+local continuation. A separately authorized western-rest glyph task is outside
+this software package.
+
 ## Provenance
 
 The three examples `batch.toml`, `tong_batch.py` and `check_documentation.py` were
@@ -28,25 +35,57 @@ large-report spooling correctness. All affected gates need renewed evidence.
 
 ## Open migration and source gaps
 
-The catalogue comparison omitted bitmap family, style and copyright. The
-inventory of implicit FontTools defaults and metric differences remains pending.
-Do not claim semantic replacement from the earlier glyph/strike/package checks.
-Reconstructed normalized name overrides are present in source, but their presence
-does not prove that catalogue adapters populate the right values or preserve all
-metadata, table flags, defaults and metrics. Inspect and compare those separately.
+The earlier catalogue comparison omitted bitmap family, style and copyright.
+Reference-side policy inspection has since identified app naming/copyright,
+UPM1000/largest-strike/ties-even bitmap metrics and implicit FontTools defaults
+including fsType=4, fsSelection=0 and usBreakChar=32. Corrected plan-v2 adapters,
+normalized naming controls and explicit embedded metric flags are now in source.
+Fresh original-Python output checks confirm 181 files and the expected app fields
+in all 105 sfnts; see [external-only evidence](../benches/phase6-oracle-setup/README.md).
+This supersedes the earlier statement that this policy inventory had not begun.
+It does not establish reconstructed native parity. Full paired names/defaults/
+metrics/encoded and unencoded glyphs/notices/ZIP verification remains pending;
+source controls alone do not prove an adapter uses them correctly. The implicit
+FontTools fields are library defaults, not source-author permission statements.
 The original production `opf_vector` extension was absent from the supplied
 reference; a pure fontTools oracle is a specifically labelled alternative baseline.
 
-Read-only source inspection during this documentation restoration found `--each`
-absent, `vectorize` registered as a hidden alias, and no
-`bdf.write.notice_line_breaks` writer handling. These are restoration gaps observed
-around 19:24 UTC, not executed test failures. Their intended contracts remain in
-the restored guides; source owners may restore them subsequently. A current build
-and focused tests must establish their actual status before removing this note.
+Source inspection around19:42 UTC found that `--each`, visible `vectorize` and
+`bdf.write.notice_line_breaks` handling have now been restored, superseding the
+missing-source observations at19:24. They remain uncompiled/untested. The new
+api_quickstart example is a rewrite against current declarations, not the lost
+byte-identical example. Its native assertions have not run.
+
+Batch retained transaction accounting now covers prepared outputs plus shared
+source identities under the same default512MiB cap. Identity admission failures
+make protection incomplete and prevent every commit. Job/path/task and report/
+working bounds remain separate; disk-backed temporary storage is required for
+report spooling to reduce whole-system retained RAM. None of these limits is an
+RSS guarantee. Runtime stress, source-alias and failure tests remain pending.
+
+## Latest source and validation boundary
+
+Final source-only review records fixes for explicit-format validation, returned
+resolver capacity, shared writer limits, plain aggregate output length, complete
+caller-model/report reservations, merge staging and escaped audit messages.
+Known scope gaps remain: standalone source identities lack batch's aggregate
+ledger; core Variants/export transients and subset read/selection are not fully
+accounted; conservative zero-credit writers can change default-workload admission.
+The W6.6 real Tong regional CJK+Latin merge-equivalence fixture still needs both
+implementation and execution, separately from Tong variants/locl and Unifont union.
+
+The 20:41 UTC snapshot parsed 600 Rust files with no syntax diagnostics, but did
+not type-check, expand macros, resolve Cargo features, build or execute tests.
+The 20:46 coordinator rerun passed the static API checker and 9+4+6 standard-library
+performance-tool tests. External Python/Node/consumer fixture checks are fresh;
+there is still no reconstructed Rust output proof or formal timing. Final Cargo,
+libstd, formatter/Clippy, ordinary gates, independent native oracles, performance
+and local final-source ASAN remain outstanding. Earlier checkpoint notes saying
+no syntax review existed or oracle dependencies were missing are historical.
 
 ## Scope and acceptance
 
-Finish and deliver phase 6 with truthful outstanding-gate reporting, then continue
+Complete phase-6 implementation, gates and delivery locally, then continue
 phase 7 followed by phase 8. Python and WASM/JS both require complete native public
 developer APIs plus separate bdfparser/bdfparser-js compatibility APIs. Coverage
 must map every operation/type/option/feature to a binding and independent native

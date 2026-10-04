@@ -1,6 +1,8 @@
 //! Reconstructed structural validator; pending compilation and renewed acceptance.
 //! Every allocating decoder receives limits derived from remaining owned storage.
-use super::{FaceValidation, ValidateArgs, Validation, charge, invalid, limit_error, report_bytes, strict};
+use super::{FaceValidation, ValidateArgs, Validation, charge, invalid, limit_error, strict};
+#[cfg(feature="opentype")]
+use super::report_bytes;
 use crate::{assets,batch};
 use fontpixel::{Error,Report,ResourceLimits,Result,sfnt};
 use std::{io::Write,mem::size_of};
@@ -18,12 +20,30 @@ fn limits(resources:&ResourceLimits,allowance:usize)->sfnt::Limits {
 fn sfnt_magic(data:&[u8])->bool {data.starts_with(b"\0\x01\0\0")||data.starts_with(b"OTTO")||data.starts_with(b"true")||data.starts_with(b"ttcf")||data.starts_with(b"wOFF")||data.starts_with(b"wOF2")}
 pub(super) fn try_validate(args:&ValidateArgs,out:&mut dyn Write)->Result<bool>{
     if args.from.as_deref().is_some_and(|id|!matches!(id,"ttf"|"otf"|"ttc"|"woff"|"woff2")){return Ok(false);}
+    if let Some(id)=args.from.as_deref(){
+        let registry=fontpixel::registry();
+        let status=registry.formats().find(|status|status.format.id==id).ok_or_else(||Error::UnknownFormat(id.into()))?;
+        if !status.format.feature_enabled{return Err(Error::FeatureDisabled{format:id.into()});}
+        if !status.read{return Err(Error::NotImplemented{format:id.into(),operation:fontpixel::Operation::Read});}
+    }
     let resources=args.raster.input_limits();
     let file=assets::FileInput::open(&args.input,&resources,batch::sources())?;
     let input=file.input();let context=fontpixel::resources::ReadContext::new(&input,&resources)?;
-    let data=context.bytes();if !sfnt_magic(data){return Ok(false);}
+    let data=context.bytes();
+    if let Some(id)=args.from.as_deref(){
+        let matches=match id{
+            "ttf"=>data.starts_with(b"\0\x01\0\0")||data.starts_with(b"true"),
+            "otf"=>data.starts_with(b"OTTO"),"ttc"=>data.starts_with(b"ttcf"),
+            "woff"=>data.starts_with(b"wOFF"),"woff2"=>data.starts_with(b"wOF2"),_=>false,
+        };
+        if !matches{return Err(invalid(format!("input container does not match explicit --from {id}")));}
+    }
+    if !sfnt_magic(data){return Ok(false);}
     let allowance=sub(resources.max_total_bytes,context.retained_input_bytes())?;
+    #[cfg(feature="opentype")]
     let mut report=Report::default();
+    #[cfg(not(feature="opentype"))]
+    let report=Report::default();
     let (format,faces)=if data.starts_with(b"wOFF")||data.starts_with(b"wOF2") {
         #[cfg(feature="opentype")]
         {

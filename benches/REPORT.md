@@ -6,7 +6,7 @@ raw timing logs and generated output archives are unavailable. Reconstructed
 source and historical summaries cannot validate this restored implementation.
 
 The benchmark recorder, independent auditor and corrected catalogue task adapter
-are being restored. Standard-library contract tests cover unique dotted case IDs,
+are restored as source. Standard-library contract tests cover unique dotted case IDs,
 five observations, immutable identities, archive members, independent medians,
 full report retention and explicit application metadata. These are tooling tests,
 not the PLAN §10 performance gate or codec correctness acceptance.
@@ -21,6 +21,21 @@ Current contracts, dependencies and reproduction steps are in
 [phase6-README.md](phase6-README.md). Complete native and independent-oracle
 validation followed by five fresh processes per case is required after the
 restored source builds. No older result is labelled an acceptance of this code.
+
+Fresh external oracle preparation on 2026-10-04 has now passed independently of
+Rust. All nine handoff-pinned Python packages and lock-pinned esbuild 0.27.7 are
+installed in local-work. Python and Node produce identical seven-artifact output
+for the complete 38,653-glyph SC input. FreeType verifies every encoded PCF/TTF
+pixel and advance; OTS, fontTools, HarfBuzz, Brotli and monobit pass the documented
+valid-font fixtures. The original catalogue creates all 181 downloads, with all
+105 sfnt application names/copyright/version/UPM checked and all 8 ZIPs hashed.
+These are external-only correctness fixtures, not formal timing or native parity.
+The [setup record](phase6-oracle-setup/README.md),
+[complete evidence](phase6-oracle-setup/oracle-setup-evidence.zip) and
+[archive member SHA index](phase6-oracle-setup/oracle-setup-evidence.index.json)
+retain exact versions, source/input identities, commands, logs and readback scope.
+The absent production opf_vector extension is explicitly replaced by its supplied
+fontTools oracle; Bun and native Rust validation remain unperformed.
 
 The historical reports below retain their original source, machine and scope.
 

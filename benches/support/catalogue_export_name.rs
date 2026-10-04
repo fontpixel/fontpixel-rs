@@ -330,4 +330,28 @@ mod tests {
         assert!(budget.charge(1).is_err()); assert!(budget.array::<String>(usize::MAX).is_err());
         let mut digits = [0; 20]; assert_eq!(decimal(i64::MIN, &mut digits), "-9223372036854775808");
     }
+    #[test]
+    fn exact_case_last_record_updates_preserve_other_records_and_raw_notices() {
+        let mut font = source();
+        font.properties.push(Property { name: "FAMILY_NAME".into(), value: "Last old family".into(), raw: Some(b"FAMILY_NAME \"Last old family\"\r\n".to_vec()) });
+        font.properties.push(Property { name: "copyright".into(), value: "Second preserved notice".into(), raw: Some(b"copyright \"Second preserved notice\"\r\n".to_vec()) });
+        let original = font.clone();
+        apply(&mut font, &descriptor(), &Default::default()).unwrap();
+        let old_records: Vec<_> = original.properties.iter().filter(|p| p.name == "FAMILY_NAME").collect();
+        let new_records: Vec<_> = font.properties.iter().filter(|p| p.name == "FAMILY_NAME").collect();
+        assert_eq!(old_records.len(), new_records.len()); assert_eq!(new_records[0], old_records[0]);
+        assert_eq!(new_records.last().unwrap().value, PropertyValue::Text("New Family".into()));
+        assert!(new_records.last().unwrap().raw.is_none());
+        assert_eq!(font.properties.iter().last(), original.properties.iter().last());
+    }
+    #[test]
+    fn pcf_uses_last_font_property_and_preserves_original_xlfd_fields_other_than_family() {
+        let mut font = source(); font.source_format = Some("pcf".into());
+        font.properties.push(Property::new("FONT", "-vendor-Actual-bold-i-condensed--9-90-72-72-p-90-iso8859-1"));
+        font.headers.set("FONT", "stale synthesized header");
+        apply(&mut font, &descriptor(), &Default::default()).unwrap();
+        let expected = "-vendor-New Family-bold-i-condensed--9-90-72-72-p-90-iso8859-1";
+        assert_eq!(text(&font.headers, "FONT"), expected); assert_eq!(text(&font.properties, "FONT"), expected);
+        assert_eq!(font.names.xlfd.as_deref(), Some(expected));
+    }
 }

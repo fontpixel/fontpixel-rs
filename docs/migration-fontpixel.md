@@ -162,3 +162,18 @@ They change normalized names with a structured audit; original raw properties,
 XLFD and provenance remain separate. Explicit family/style changes clear stale
 derived full/PostScript names unless replacements are provided. Do not infer
 weight, permissions, raw-record rewriting or complete catalogue parity from them.
+
+Variants also has distinct legacy subfamily/full/PostScript controls; embedded
+OTB/bdat output has typed upem/reference-strike/rounding controls through
+`EmbeddedWriteOptions`, exposed by `convert` and `merge` as `--otb-upm 16..16384`,
+`--otb-reference first|largest|N` and `--otb-rounding half-away|ties-even`.
+Batch scalar options are `otb_upm`, `otb_reference` and `otb_rounding`.
+Defaults remain automatic upem, first-strike priority and half-away rounding.
+Explicit flags require OTB/bdat with the corresponding feature; color and other
+outputs reject them. A numeric reference is a zero-based writer FontSet index,
+not a catalogue file index or a strike-selection operation. See the
+[native guide](api.md#explicit-output-names-and-embedded-metrics) and
+[CLI example](w6.1-cli.md#conversion-naming-and-metric-controls) for exact priority
+and range semantics. These source-present controls remain uncompiled/untested.
+Their existence is not a completed comparison of FontTools defaults, name IDs,
+scaling, rounding or metrics across catalogue outputs.

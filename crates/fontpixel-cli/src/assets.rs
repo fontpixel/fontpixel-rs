@@ -86,6 +86,13 @@ impl IdentityTable {
     fn allocate(capacity: usize, limit: usize) -> Result<Vec<Option<FileIdentity>>> {
         let mut slots = Vec::new();
         slots.try_reserve_exact(capacity).map_err(|_| identity_limit(limit))?;
+        Self::initialize_allocation(slots, capacity, limit)
+    }
+    fn initialize_allocation(
+        mut slots: Vec<Option<FileIdentity>>,
+        capacity: usize,
+        limit: usize,
+    ) -> Result<Vec<Option<FileIdentity>>> {
         // Vec promises at least the requested capacity, not an exact upper
         // bound. Never retain an unexpectedly enlarged allocation uncharged.
         if slots.capacity() != capacity {
@@ -184,7 +191,9 @@ struct SourceState {
 }
 impl SourceState {
     fn retained_bytes(&self, limit: usize) -> Result<usize> {
-        std::mem::size_of::<Self>().checked_add(self.identities.bytes(limit)?)
+        // The shared allocation stores Mutex<SourceState>, so include its
+        // measurable synchronization payload as well as the table itself.
+        std::mem::size_of::<Mutex<Self>>().checked_add(self.identities.bytes(limit)?)
             .ok_or_else(|| identity_limit(limit))
     }
     fn ensure_complete(&self) -> Result<()> {
@@ -314,29 +323,65 @@ fn parent(path: &Path) -> &Path {
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."))
 }
-fn bounded(mut file: File, maximum: usize) -> Result<Vec<u8>> {
+fn input_limit(maximum: usize) -> Error {
+    Error::ResourceLimit { resource: "input asset bytes", limit: maximum }
+}
+fn bounded(file: File, maximum: usize) -> Result<Vec<u8>> {
     let metadata = file.metadata()?;
     if !metadata.is_file() {
         return Err(invalid("font input must be a regular file"));
     }
     if metadata.len() > maximum as u64 {
-        return Err(Error::ResourceLimit {
-            resource: "input asset bytes",
-            limit: maximum,
-        });
+        return Err(input_limit(maximum));
     }
-    let mut bytes = Vec::with_capacity((metadata.len() as usize).min(maximum));
-    (&mut file)
-        .take((maximum as u64).saturating_add(1))
-        .read_to_end(&mut bytes)?;
-    if bytes.len() > maximum {
-        return Err(Error::ResourceLimit {
-            resource: "input asset bytes",
-            limit: maximum,
-        });
-    }
-    Ok(bytes)
+    read_bounded(file, metadata.len() as usize, maximum)
 }
+// The metadata length is only an allocation hint: a file can grow before or
+// during reading. Avoid Read::read_to_end's unconstrained spare capacity so the
+// resolver returns both a length and an allocation capacity <= maximum.
+fn read_bounded(mut reader: impl Read, initial: usize, maximum: usize) -> Result<Vec<u8>> {
+    if initial > maximum {
+        return Err(input_limit(maximum));
+    }
+    let mut bytes = Vec::new();
+    if initial != 0 {
+        bytes.try_reserve_exact(initial).map_err(|_| input_limit(maximum))?;
+        if bytes.capacity() > maximum {
+            return Err(input_limit(maximum));
+        }
+    }
+    let mut chunk = [0_u8; 8192];
+    loop {
+        // Read one byte beyond the remaining allowance to distinguish EOF from
+        // an oversized source, without retaining that byte in the output Vec.
+        let allowance = maximum.saturating_sub(bytes.len())
+            .saturating_add(1).min(chunk.len());
+        let count = match reader.read(&mut chunk[..allowance]) {
+            Ok(count) => count,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
+            Err(error) => return Err(error.into()),
+        };
+        if count == 0 {
+            return Ok(bytes);
+        }
+        let required = bytes.len().checked_add(count)
+            .filter(|length| *length <= maximum)
+            .ok_or_else(|| input_limit(maximum))?;
+        if required > bytes.capacity() {
+            let capacity = bytes.capacity().saturating_mul(2)
+                .max(required).min(maximum);
+            bytes.try_reserve_exact(capacity - bytes.len())
+                .map_err(|_| input_limit(maximum))?;
+            // Allocators/Vec are not assumed to honor an exact requested upper
+            // bound. Reject excess reported capacity before retaining bytes.
+            if bytes.capacity() > maximum {
+                return Err(input_limit(maximum));
+            }
+        }
+        bytes.extend_from_slice(&chunk[..count]);
+    }
+}
+
 pub(crate) struct FileInput {
     bytes: Vec<u8>,
     name: String,
@@ -737,6 +782,7 @@ fn preflight_directory(
     Ok(())
 }
 
+#[cfg(test)]
 pub(crate) fn persist_bundle(
     destination: &Path,
     bundle: &OutputBundle,
@@ -751,6 +797,7 @@ pub(crate) fn persist_bundles(outputs: &[PendingOutput], sources: &Sources) -> R
         |_| Ok(()),
     )
 }
+#[cfg(test)]
 fn persist_impl(
     destination: &Path,
     bundle: &OutputBundle,
@@ -1541,6 +1588,382 @@ mod tests {
         assert_eq!(std::fs::read(t.0.join("outside")).unwrap(), b"old outside");
         assert_eq!(std::fs::read(t.0.join("font/keep")).unwrap(), b"external");
         assert_no_temporaries(&t.0);
+    }
+
+    fn source_storage(slots: usize) -> usize {
+        std::mem::size_of::<Mutex<SourceState>>()
+            + slots * std::mem::size_of::<Option<FileIdentity>>()
+    }
+    fn source_files(root: &Path, count: usize) -> Vec<PathBuf> {
+        (0..count).map(|index| {
+            let path = root.join(format!("source-{index}"));
+            std::fs::write(&path, index.to_string()).unwrap();
+            path
+        }).collect()
+    }
+    #[test]
+    fn source_budget_attachment_charges_once_and_last_owner_releases() {
+        let t = Temp::new();
+        let files = source_files(&t.0, 1);
+        let sources = Sources::default();
+        sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let external = 37;
+        let used = Arc::new(Mutex::new(external));
+        let limit = external + bytes;
+        sources.set_retained_budget(Arc::clone(&used), limit).unwrap();
+        assert_eq!(*used.lock().unwrap(), limit);
+        let clone = sources.clone();
+        clone.set_retained_budget(Arc::clone(&used), limit).unwrap();
+        assert_eq!(*used.lock().unwrap(), limit);
+        assert!(clone.set_retained_budget(Arc::new(Mutex::new(0)), limit).is_err());
+        assert!(clone.set_retained_budget(Arc::clone(&used), limit + 1).is_err());
+        assert!(clone.contains(File::open(&files[0]).unwrap()).unwrap());
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), limit);
+        drop(clone);
+        assert_eq!(*used.lock().unwrap(), external);
+    }
+    #[test]
+    fn source_budget_attachment_below_exact_storage_fails_closed() {
+        let t = Temp::new();
+        let files = source_files(&t.0, 1);
+        let sources = Sources::default();
+        sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let used = Arc::new(Mutex::new(11));
+        assert!(sources.set_retained_budget(Arc::clone(&used), 11 + bytes - 1).is_err());
+        assert_eq!(*used.lock().unwrap(), 11);
+        assert!(sources.ensure_complete().is_err());
+        assert!(!sources.is_single_primary());
+        assert!(sources.0.lock().unwrap().identities.contains(&FileIdentity::of(&File::open(&files[0]).unwrap()).unwrap()));
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), 11);
+    }
+    #[test]
+    fn duplicate_source_reads_fit_a_full_budget_without_another_charge() {
+        let t = Temp::new();
+        let files = source_files(&t.0, 1);
+        let sources = Sources::default();
+        sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let used = Arc::new(Mutex::new(0));
+        sources.set_retained_budget(Arc::clone(&used), bytes).unwrap();
+        for _ in 0..100 {
+            sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        }
+        assert_eq!(*used.lock().unwrap(), bytes);
+        assert_eq!(sources.0.lock().unwrap().identities.len, 1);
+        assert_eq!(sources.0.lock().unwrap().reads, 101);
+        assert!(sources.contains(File::open(&files[0]).unwrap()).unwrap());
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), 0);
+    }
+    #[test]
+    fn every_identity_growth_boundary_admits_old_plus_new_storage() {
+        let t = Temp::new();
+        let files = source_files(&t.0, 33);
+        for previous_count in [0, 1, 2, 4, 8, 16, 32] {
+            for below_boundary in [true, false] {
+                let sources = Sources::default();
+                for path in files.iter().take(previous_count) {
+                    sources.remember(&File::open(path).unwrap()).unwrap();
+                }
+                let old_slots = sources.0.lock().unwrap().identities.slots.capacity();
+                let new_slots = ((previous_count + 1) * 2).next_power_of_two();
+                let external = 43;
+                let peak = external + source_storage(old_slots)
+                    + IdentityTable::bytes_for(new_slots, usize::MAX).unwrap();
+                let limit = peak - usize::from(below_boundary);
+                let used = Arc::new(Mutex::new(external));
+                sources.set_retained_budget(Arc::clone(&used), limit).unwrap();
+                let before = *used.lock().unwrap();
+                let result = sources.remember(&File::open(&files[previous_count]).unwrap());
+                let state = sources.0.lock().unwrap();
+                if below_boundary {
+                    assert!(matches!(result, Err(Error::ResourceLimit { .. })));
+                    assert_eq!(state.identities.len, previous_count);
+                    assert_eq!(state.identities.slots.capacity(), old_slots);
+                    assert_eq!(*used.lock().unwrap(), before);
+                    assert!(state.incomplete);
+                } else {
+                    result.unwrap();
+                    assert_eq!(state.identities.len, previous_count + 1);
+                    assert_eq!(state.identities.slots.capacity(), new_slots);
+                    assert_eq!(*used.lock().unwrap(), external + source_storage(new_slots));
+                    assert!(!state.incomplete);
+                }
+                for path in files.iter().take(previous_count) {
+                    assert!(state.identities.contains(&FileIdentity::of(&File::open(path).unwrap()).unwrap()));
+                }
+                drop(state);
+                drop(sources);
+                assert_eq!(*used.lock().unwrap(), external);
+            }
+        }
+    }
+    #[test]
+    fn identity_capacity_arithmetic_and_allocation_rejection_leave_reservations_intact() {
+        assert!(IdentityTable::bytes_for(usize::MAX, 1).is_err());
+        let full = IdentityTable { len: usize::MAX, ..IdentityTable::default() };
+        assert!(full.next_capacity(1).is_err());
+        let used = Arc::new(Mutex::new(30));
+        let budget = IdentityBudget { used: Arc::clone(&used), limit: 100 };
+        {
+            let reservation = budget.reserve(40, 12, 20).unwrap();
+            assert_eq!(*reservation.used, 70);
+            assert!(IdentityTable::allocate(usize::MAX, 100).is_err());
+            // Oversized public Vec capacity is rejected before it is retained.
+            let oversized = Vec::with_capacity(8);
+            assert!(IdentityTable::initialize_allocation(oversized, 2, 100).is_err());
+            drop(reservation);
+        }
+        assert_eq!(*used.lock().unwrap(), 30);
+        budget.reserve(40, 12, 20).unwrap().commit();
+        assert_eq!(*used.lock().unwrap(), 58);
+        assert!(budget.reserve(43, 0, 20).is_err());
+        assert_eq!(*used.lock().unwrap(), 58);
+        assert!(budget.reserve(0, 21, 20).is_err());
+        assert!(budget.reserve(0, 0, 59).is_err());
+        assert_eq!(*used.lock().unwrap(), 58);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn identity_table_matches_hashset_for_dedup_and_repeated_growth() {
+        let mut state = SourceState::default();
+        let mut expected = HashSet::new();
+        for index in 0..4096_u64 {
+            let inode = (index * 53) % 1009;
+            state.remember_identity(FileIdentity(7, inode), false).unwrap();
+            expected.insert(FileIdentity(7, inode));
+            assert_eq!(state.identities.len, expected.len());
+            assert!(state.identities.slots.len().is_power_of_two());
+            assert!(state.identities.len * 2 <= state.identities.slots.len());
+            for candidate in [inode, (inode + 1) % 1009, 2000 + index] {
+                let identity = FileIdentity(7, candidate);
+                assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+            }
+        }
+        for inode in 0..2000 {
+            let identity = FileIdentity(7, inode);
+            assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+        }
+    }
+    #[cfg(unix)]
+    #[test]
+    fn identity_table_matches_hashset_under_randomized_hash_collisions() {
+        let mut state = SourceState::default();
+        let mut expected = HashSet::new();
+        let mut values = Vec::new();
+        // Construct collisions against this table's actual randomized hash;
+        // no hard-coded hasher seed or deterministic production hash is used.
+        for inode in 0..1_000_000_u64 {
+            let identity = FileIdentity(17, inode);
+            if state.identities.index(&identity, 256) == 7 {
+                values.push(inode);
+                if values.len() == 65 {
+                    break;
+                }
+            }
+        }
+        assert_eq!(values.len(), 65, "could not construct the collision fixture");
+        for inode in values.iter().take(64) {
+            state.remember_identity(FileIdentity(17, *inode), false).unwrap();
+            state.remember_identity(FileIdentity(17, *inode), false).unwrap();
+            expected.insert(FileIdentity(17, *inode));
+            assert_eq!(state.identities.len, expected.len());
+            for candidate in &values {
+                let identity = FileIdentity(17, *candidate);
+                assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+            }
+        }
+        assert_eq!(state.identities.slots.len(), 128);
+        assert!(!state.identities.contains(&FileIdentity(17, values[64])));
+    }
+    #[test]
+    fn concurrent_source_clones_share_one_capacity_charge_and_deduplicate() {
+        let t = Temp::new();
+        let files = source_files(&t.0, 32);
+        let sources = Sources::default();
+        let used = Arc::new(Mutex::new(0));
+        // Largest growth is from 32 to 64 slots, with both arrays live.
+        let peak = source_storage(32 + 64);
+        sources.set_retained_budget(Arc::clone(&used), peak).unwrap();
+        std::thread::scope(|scope| {
+            for _ in 0..4 {
+                let clone = sources.clone();
+                let files = &files;
+                scope.spawn(move || {
+                    for path in files {
+                        clone.remember(&File::open(path).unwrap()).unwrap();
+                    }
+                });
+            }
+        });
+        assert_eq!(sources.0.lock().unwrap().identities.len, 32);
+        assert_eq!(sources.0.lock().unwrap().reads, 128);
+        assert_eq!(*used.lock().unwrap(), source_storage(64));
+        for path in files {
+            assert!(sources.contains(File::open(path).unwrap()).unwrap());
+        }
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), 0);
+    }
+    #[test]
+    fn directory_source_uses_the_same_budget_and_keeps_renamed_provenance() {
+        let t = Temp::new();
+        std::fs::create_dir(t.0.join("source")).unwrap();
+        let sources = Sources::default();
+        let used = Arc::new(Mutex::new(0));
+        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
+        let input = FileInput::open(&t.0.join("source"), &ResourceLimits::default(), sources.clone()).unwrap();
+        assert_eq!(*used.lock().unwrap(), source_storage(2));
+        std::fs::rename(t.0.join("source"), t.0.join("moved")).unwrap();
+        assert!(persist_bundles(&[pending(t.0.join("moved/new"), b"new")], &sources).is_err());
+        assert!(!t.0.join("moved/new").exists());
+        assert_eq!(*used.lock().unwrap(), source_storage(2));
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), source_storage(2));
+        drop(input);
+        assert_eq!(*used.lock().unwrap(), 0);
+    }
+    #[test]
+    fn failed_identity_retention_prevents_all_outputs_before_staging() {
+        let a = Temp::new();
+        let b = Temp::new();
+        let files = source_files(&a.0, 2);
+        std::fs::write(a.0.join("first"), b"old first").unwrap();
+        std::fs::write(b.0.join("second"), b"old second").unwrap();
+        let sources = Sources::default();
+        let used = Arc::new(Mutex::new(0));
+        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
+        sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        assert!(sources.remember(&File::open(&files[1]).unwrap()).is_err());
+        let outputs = [pending(a.0.join("first"), b"new"), pending(b.0.join("second"), b"new")];
+        let mut attempts = 0;
+        assert!(run_group(&outputs, &sources, |_| { attempts += 1; Ok(()) }).is_err());
+        assert_eq!(attempts, 0);
+        assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"old first");
+        assert_eq!(std::fs::read(b.0.join("second")).unwrap(), b"old second");
+        assert_eq!(std::fs::read(&files[1]).unwrap(), b"1");
+        assert_no_temporaries(&a.0);
+        assert_no_temporaries(&b.0);
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), 0);
+    }
+    #[test]
+    fn identity_failure_after_first_publish_rolls_back_all_roots() {
+        let a = Temp::new();
+        let b = Temp::new();
+        let files = source_files(&a.0, 2);
+        std::fs::write(a.0.join("first"), b"old first").unwrap();
+        std::fs::write(b.0.join("second"), b"old second").unwrap();
+        let sources = Sources::default();
+        let used = Arc::new(Mutex::new(0));
+        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
+        sources.remember(&File::open(&files[0]).unwrap()).unwrap();
+        let outputs = [pending(a.0.join("first"), b"new"), pending(b.0.join("second"), b"new")];
+        assert!(run_group(&outputs, &sources, |index| {
+            if index == 1 {
+                assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"new");
+                assert!(sources.remember(&File::open(&files[1]).unwrap()).is_err());
+                // Even an ignored task-level failure must fail the group.
+            }
+            Ok(())
+        }).is_err());
+        assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"old first");
+        assert_eq!(std::fs::read(b.0.join("second")).unwrap(), b"old second");
+        assert_eq!(std::fs::read(&files[1]).unwrap(), b"1");
+        assert_no_temporaries(&a.0);
+        assert_no_temporaries(&b.0);
+        drop(sources);
+        assert_eq!(*used.lock().unwrap(), 0);
+    }
+
+    struct ChunkedReader<R> {
+        reader: R,
+        width: usize,
+        interrupt_once: bool,
+    }
+    impl<R: Read> Read for ChunkedReader<R> {
+        fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+            if std::mem::take(&mut self.interrupt_once) {
+                return Err(io::Error::from(io::ErrorKind::Interrupted));
+            }
+            let count = buffer.len().min(self.width);
+            self.reader.read(&mut buffer[..count])
+        }
+    }
+    #[test]
+    fn bounded_reader_caps_allocation_as_well_as_length_for_small_chunks() {
+        for maximum in [0, 1, 3, 17, 31, 63, 127, 8193] {
+            let content = vec![b'a'; maximum];
+            for width in [1, 3, 7, 64, 8192] {
+                for initial in [0, maximum / 2, maximum] {
+                    let reader = ChunkedReader {
+                        reader: io::Cursor::new(&content), width, interrupt_once: false,
+                    };
+                    let bytes = read_bounded(reader, initial, maximum).unwrap();
+                    assert_eq!(bytes, content);
+                    assert!(bytes.capacity() <= maximum);
+                }
+            }
+        }
+    }
+    #[test]
+    fn bounded_reader_retries_interrupted_reads_and_rejects_one_excess_byte() {
+        let reader = ChunkedReader {
+            reader: io::Cursor::new(b"abc"), width: 1, interrupt_once: true,
+        };
+        assert_eq!(read_bounded(reader, 0, 3).unwrap(), b"abc");
+        for maximum in [0, 1, 3, 17, 31] {
+            let content = vec![b'a'; maximum + 1];
+            assert!(matches!(read_bounded(io::Cursor::new(content), 0, maximum),
+                Err(Error::ResourceLimit { resource: "input asset bytes", limit }) if limit == maximum));
+        }
+        assert!(read_bounded(io::Cursor::new(b""), 2, 1).is_err());
+    }
+    #[test]
+    fn bounded_file_growth_after_metadata_keeps_returned_capacity_within_limit() {
+        let t = Temp::new();
+        let path = t.0.join("source");
+        std::fs::write(&path, b"a").unwrap();
+        let file = File::open(&path).unwrap();
+        let metadata_length = file.metadata().unwrap().len() as usize;
+        let mut append = std::fs::OpenOptions::new().append(true).open(&path).unwrap();
+        append.write_all(&[b'x'; 30]).unwrap();
+        drop(append);
+        // Exercise the same stale metadata hint passed by bounded().
+        let bytes = read_bounded(file, metadata_length, 31).unwrap();
+        assert_eq!(bytes.len(), 31);
+        assert!(bytes.capacity() <= 31);
+        assert_eq!(bytes, std::fs::read(&path).unwrap());
+    }
+    #[test]
+    fn bounded_file_growth_past_limit_is_rejected_without_changing_source() {
+        let t = Temp::new();
+        let path = t.0.join("source");
+        std::fs::write(&path, b"a").unwrap();
+        let file = File::open(&path).unwrap();
+        let metadata_length = file.metadata().unwrap().len() as usize;
+        let mut append = std::fs::OpenOptions::new().append(true).open(&path).unwrap();
+        append.write_all(&[b'x'; 31]).unwrap();
+        drop(append);
+        assert!(read_bounded(file, metadata_length, 31).is_err());
+        assert_eq!(std::fs::metadata(&path).unwrap().len(), 32);
+        assert!(bounded(File::open(&path).unwrap(), 31).is_err());
+    }
+    #[test]
+    fn sidecar_resolver_returns_capacity_within_its_declared_allowance() {
+        let t = Temp::new();
+        std::fs::write(t.0.join("source"), b"source").unwrap();
+        std::fs::write(t.0.join("sidecar"), [b'x'; 31]).unwrap();
+        let input = FileInput::open(&t.0.join("source"), &ResourceLimits::default(), Sources::default()).unwrap();
+        let resource = ResourcePath::new("sidecar").unwrap();
+        let bytes = input.resolve(&resource, 31).unwrap();
+        assert_eq!(bytes.len(), 31);
+        assert!(bytes.capacity() <= 31);
+        assert!(input.resolve(&resource, 30).is_err());
     }
 
 }

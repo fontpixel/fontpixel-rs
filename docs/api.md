@@ -6,6 +6,13 @@ This is a semantic reconstruction. The recovered crate-root examples are in `api
 contract is in [bitmap-model.md](bitmap-model.md). Reconcile this guide with recovered source
 before integration; no examples were executed during recovery.
 
+The rewritten [api_quickstart.rs](../crates/fontpixel/examples/api_quickstart.rs)
+constructs its own small font and performs no filesystem I/O. Its model/name,
+atomic-error, rendering/charset and merge checks require no format feature.
+YAFF, PCF, atlas sidecars, OTB metric controls, regional/subset and WOFF2 portions
+are guarded by their actual Cargo features. All code remains uncompiled/untested;
+the source-reference checklist is [api-example-contracts.json](api-example-contracts.json).
+
 ## Registry, model and reports
 
 Format IDs are strings such as `bdf`, `pcf`, `yaff`, not an invented Format enum.
@@ -61,6 +68,19 @@ per glyph, 64 MiB per table. Native codecs also bound model/geometry/output stor
 Common writer limits can tighten typed limits, not enlarge them. These are owned
 allocation/work budgets, not RSS guarantees.
 
+When `WriteOptions.transport_limits` is `Some(common)`, plain registry output
+also checks the aggregate serialized asset lengths against
+`common.max_output_bytes`. This includes primary, sidecar and directory assets;
+it counts byte lengths, not spare allocation capacity or report storage. Checked
+addition rejects overflow, and a sum exactly at the limit is allowed. This check
+runs after combined error/strict diagnostics and before returning assets. A codec
+without its own native output cap may finish encoding under its resource budget
+before this check; it is not a universal preallocation or peak-memory guard.
+`None` preserves existing typed writer limits without adding a plain aggregate
+cap. A typed per-asset cap remains distinct. `TransportLimits::default()` still
+has a 64 MiB output cap, applied only when supplied as common options or used by
+the existing transport path; gzip envelope/replay budgets and defaults are unchanged.
+
 Font/FontSet retained_usage counts headers/capacities/indexes/deleted slots without
 cloning. Font.cloned_usage preflights a second owned strike; the source remains
 charged. The exact Rust 1.99.0 commit/target audit permits a proven B-tree occupancy
@@ -96,6 +116,40 @@ without bitmap projection; TTC/OTC collection operations preserve face structure
 WOFF2 defaults quality 11 and two bounded workers; encode_many also bounds retained
 bytes/count. Literal/rows/patterns dot encodings preserve geometry.
 
+## Explicit output names and embedded metrics
+
+Current `variants::Options` exposes family, style, legacy_style, full_name,
+postscript_name, version, vendor and notice fields. With generated names, style
+sets typographic subfamily ID17, legacy_style sets ID2 (default Regular), and
+full_name/postscript_name override IDs4/6 exactly. An exact supplied `names` table
+takes precedence over generated-name controls. These choices do not establish
+the original catalogue's implicit FontTools defaults; that comparison is open.
+
+`formats::embedded::EmbeddedWriteOptions` controls OTB/bdat design metrics:
+
+- `units_per_em: Some(value)` explicitly selects 16..=16384; None keeps automatic
+  scaling.
+- `EmbeddedReferenceStrike::First` is the default; `LargestPpem` chooses the
+  greatest effective y-ppem, with the last original input winning ties and the
+  same descending priority for missing glyphs. `Index(n)` selects a zero-based
+  source then falls back in original order. Physical strike order is unchanged.
+- `EmbeddedRounding::NearestTiesAwayFromZero` is the default pixel-to-design rule;
+  `NearestTiesEven` uses exact rational arithmetic. This does not change the
+  separate OS/2 average-width rounding rule.
+
+Install these through `Registry::set_embedded_write_options`. The shared CLI
+writer options expose the same controls for `convert` and `merge`:
+`--otb-upm 16..16384`, `--otb-reference first|largest|N` and
+`--otb-rounding half-away|ties-even`. `N` is a zero-based index into the FontSet
+passed to the writer; it chooses metric priority without dropping or reordering
+physical strikes. Batch tasks pass `otb_upm`, `otb_reference` and `otb_rounding`
+through their scalar `options`. Explicit flags require OTB/bdat output and the
+corresponding enabled feature; color and other outputs reject them, even when
+the requested value matches a default. Vector `--upm` remains a separate control.
+See the [CLI examples](w6.1-cli.md#conversion-naming-and-metric-controls).
+These reconstructed paths and the feature-gated Rust quickstart remain
+uncompiled and unexecuted.
+
 ## Merge API
 
 `merge(&[MergePart::new(&font, Selection::parse("western")?)], &MergeOptions {
@@ -124,11 +178,11 @@ even if unassigned, rather than only the union of supplied mappings.
 Family is required and known reserved-name substrings are checked case-insensitively.
 PartLicense can supplement notices/permissions. Recognition is bounded metadata
 assessment. Unknown/prohibited licence states reject strict mode. Full ordered
-source notices plus merge provenance remain in names. The intended phase-6 BDF
-notice contract remains a known recovery gap: retain multiline notices as COMMENTs
-plus a flattened property, with bdf.write.notice_line_breaks loss, and refuse that
-boundary in strict mode. Current source inspection did not find that writer path;
-it must be restored and tested before this behavior is claimed. Report supports complete Display,
+source notices plus merge provenance remain in names. Reconstructed BDF source now
+contains the notice projection: multiline COMMENTs plus a flattened property,
+with bdf.write.notice_line_breaks loss and strict refusal. This supersedes the
+earlier missing-source finding; compilation and runtime checks remain pending.
+Report supports complete Display,
 dependency-free to_json and optional serde.
 
 The SPEC compatibility facade remains separate. Python/WASM must expose all native

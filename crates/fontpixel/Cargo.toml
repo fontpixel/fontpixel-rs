@@ -308,3 +308,13 @@ required-features = ["raw", "gzip"]
 [[example]]
 name = "phase6_timing"
 required-features = ["bdf", "pcf", "yaff", "otb", "ttf", "woff2", "compat-bdfparser", "serde"]
+
+[[example]]
+name = "phase6_tong_export"
+required-features = ["bdf", "pcf", "otb", "ttf", "otf", "woff2", "serde"]
+test = true
+
+[[example]]
+name = "phase6_catalogue_export_name"
+required-features = ["bdf", "pcf", "serde"]
+test = true

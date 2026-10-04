@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""UNTESTED RECOVERY: complete catalogue adapter reconstructed after workspace loss.
+"""Complete catalogue adapter reconstructed after workspace loss.
 
 The handoff does not contain opf_vector's source or binary. The Python comparison
 uses the original explicitly named fontTools vector oracle, never the throughput
 of the missing production extension. This file is not asserted byte-identical to
-the unavailable old source. Its pending metadata flags require the missing core
-and CLI implementations to be recovered/completed first.
+the unavailable old source. Its metadata flags require the reconstructed core and CLI to compile and pass
+actual complete-workload validation; only standard-library contracts are tested.
 """
 from __future__ import annotations
 import argparse

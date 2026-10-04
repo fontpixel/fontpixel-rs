@@ -384,10 +384,10 @@ fontpixel merge --family 'Example Mix' --part cjk.bdf --take cjk --part latin.bd
 fontpixel batch examples/batch.toml --jobs 2 > report.json
 ```
 
-The intended phase-6 interface makes `vectorize` a visible alias of convert.
-The currently reconstructed source has a hidden alias; help visibility is pending. Native conversion is through the bitmap
+Current reconstructed source registers `vectorize` as a visible alias of convert;
+runtime help verification remains pending. Native conversion is through the bitmap
 model; it is not a table-preserving wrapper conversion. Select an explicit
-`--font-index` for a multi-font input when needed. The documented `--each` restoration is still pending in current source. Its intended contract needs explicit `--to`
+`--font-index` for a multi-font input when needed. Reconstructed `--each` needs explicit `--to`
 and an existing output directory; all outputs share one normal-error rollback
 transaction and duplicate stems fail. `--each --font-index` selects per input.
 `--woff2-threads` controls within-font compression separately from batch jobs.
@@ -397,15 +397,18 @@ from the TOML file. Output parents must exist. Independent tasks may prepare
 successfully after another task fails, but all successful writes enter one
 protected transaction after all input/sidecar identities are known. It has no
 dependency graph. Consult the reconstructed batch contract for worker/report
-spooling details and their limits.
+spooling details and their limits. `max_pending_bytes` covers prepared outputs
+plus the shared source-identity table; job/path/task caps, working reservations
+and report quotas are separate, and none is an RSS promise.
 
 `merge` requires a new family, a selection per ordered part and at least one
 output. Scoped `--take`, `--dy`, `--from`, `--font-index` bind to the preceding
 part; `--to` binds to the preceding output. Positive dy raises ink. Geometric
 half/full is a width policy separate from source selection. Full preserves
-supplied geometry metrics; it does not synthesize a fullwidth glyph. The intended strict BDF notice projection is also pending reconstruction. Once restored, strict BDF
+supplied geometry metrics; it does not synthesize a fullwidth glyph. Reconstructed strict BDF
 merge rejects multiline-notice projection even with known licences; YAFF can
-retain the model's full names directly.
+retain the model's full names directly. Those restored code paths are still
+uncompiled/untested; historical results do not validate them.
 
 Strictness checks accumulated reader/transformation/writer loss. Warning severity
 alone does not determine loss. Respect all sidecar assets, resource budgets and
@@ -417,3 +420,10 @@ Read [the native API guide](docs/api.md), [Tong migration](docs/migration-tong.m
 [catalogue migration and open gaps](docs/migration-fontpixel.md), and the
 [batch/inspection contract](docs/w6.1-cli.md). The commands here are unexecuted
 restoration examples; all output directories must be created explicitly.
+
+The filesystem-free [API quickstart](crates/fontpixel/examples/api_quickstart.rs)
+has been rewritten against current source signatures, including names, retained
+budgets, merge, sidecars, embedded metrics, regional names, subsets and WOFF2.
+Its assertions and the [crate-root guide](docs/api-rustdoc.md) are uncompiled and
+unexecuted. [Static documentation checks](examples/check_api_documentation.py)
+inspect files and declarations only; they do not compile Rust or invoke the CLI.

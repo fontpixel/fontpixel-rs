@@ -17,6 +17,16 @@ this restoration. Historical passes are not current acceptance. See
   recovery execution gate is closed; source-inventory checks are not runtime
   font equivalence tests.
 
-The original complete api_quickstart.rs example has not been restored from this
-worker's context. Do not substitute remembered pass counts for its source or new
-feature-matrix verification.
+The original complete api_quickstart.rs was not recovered byte-for-byte. A new
+[api_quickstart.rs](../crates/fontpixel/examples/api_quickstart.rs) is now written
+against current public declarations, with common model/name/render/charset/merge
+checks and feature-gated codecs, sidecars, embedded metrics, variants/subset and
+WOFF2. It writes no files and prints all conversion reports. It is uncompiled and
+untested; remembered passes apply only to the lost original example.
+
+`check_api_documentation.py` uses Python's standard library to inspect source
+declarations, feature names, local links and rustdoc linkage. It neither imports
+project modules nor runs Cargo, the CLI, Rust examples or a font conversion. Its
+source-reference checks are lexical checks, not a Rust type checker or native
+acceptance test. `--require-rustdoc-link` makes missing crate-root inclusion an
+error; without it the result reports any pending linkage explicitly.

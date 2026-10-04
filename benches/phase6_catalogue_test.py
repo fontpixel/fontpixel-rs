@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""UNTESTED RECOVERY of six lightweight catalogue adapter regressions.
-Restore module name phase6_catalogue.py and review before running these tests.
+"""Six lightweight reconstructed catalogue adapter regressions.
+These do not execute production codecs or independent font consumers.
 """
 import json
 from pathlib import Path

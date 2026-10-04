@@ -28,7 +28,8 @@ use std::{
 #[command(
     name = "fontpixel",
     version,
-    about = "Bitmap font inspection and conversion"
+    about = "Bitmap font inspection and conversion",
+    after_help = "Examples:\n  fontpixel info font.bdf --json\n  fontpixel convert font.bdf -o font.pcf\n  fontpixel batch exports.toml > report.json"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -54,12 +55,14 @@ enum Command {
     #[cfg(feature = "opentype")]
     Subset(opentype::SubsetArgs),
     /// List all planned formats and their actual implementation status.
+    #[command(after_help="Example: fontpixel formats --json")]
     Formats {
         /// Emit machine-readable metadata and capability flags.
         #[arg(long)]
         json: bool,
     },
     /// Inspect a font, including its metrics, properties and diagnostics.
+    #[command(after_help="Example: fontpixel info font.bdf --json")]
     Info {
         /// Primary input asset.
         input: PathBuf,
@@ -73,6 +76,7 @@ enum Command {
         raster: RasterArguments,
     },
     /// Render text (or --all) as terminal character art.
+    #[command(after_help="Example: fontpixel preview font.bdf Hello --chars '#.'")]
     Preview {
         #[command(flatten)]
         layout: LayoutArguments,
@@ -81,6 +85,7 @@ enum Command {
         chars: String,
     },
     /// Render text (or --all) to a PNG or SVG image.
+    #[command(after_help="Example: fontpixel render font.bdf Hello -o hello.svg")]
     Render {
         #[command(flatten)]
         layout: LayoutArguments,
@@ -727,7 +732,11 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 None=>infer_output_format(&registry,&destination)?,
             };
             registry.ensure_writable(&id)?;
-            let groups=conversion_groups(&inputs,&destination,&id,each)?;
+            let groups=conversion_groups(&inputs,&destination,&id,each,limits.max_total_bytes)?;
+            let slots=groups.len().checked_mul(std::mem::size_of::<assets::PendingOutput>()+std::mem::size_of::<ConversionSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
+            let mut reservation=groups.capacity().checked_mul(std::mem::size_of::<ConversionGroup>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
+            for group in &groups{conversion_charge(&mut reservation,group.output.capacity(),limits.max_total_bytes)?;}
+            conversion_charge(&mut reservation,slots,limits.max_total_bytes)?;
             let mut pending=Vec::new();pending.try_reserve_exact(groups.len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
             let mut summaries=Vec::new();summaries.try_reserve_exact(groups.len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
             let mut retained=groups.capacity().checked_mul(std::mem::size_of::<ConversionGroup>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
@@ -768,9 +777,11 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 metadata::apply(&mut fonts,&names,&mut report,&group_limits)?;
                 let filename=group.output.file_name().and_then(|s|s.to_str()).ok_or_else(||Error::InvalidInput("output must have a UTF-8 filename".into()))?;
                 let mut write_options=fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);write_options.strict=strict;
-                // Native writers charge the borrowed model themselves. Reserve
-                // earlier read diagnostics only; do not charge that model twice.
-                let writer_limits=conversion_remaining(&group_limits,conversion_report_bytes(&report,group_limits.max_total_bytes)?)?;
+                // Reserve this live model and incoming diagnostics in addition
+                // to earlier --each outputs/reports already removed from group_limits.
+                // Native source estimates receive no guessed credit; see the
+                // shared helper's explicit conservative-double-counting contract.
+                let (writer_limits,report)=commands::caller_writer_limits(&fonts,&group_limits,report,strict)?;
                 write_options.transport_limits=Some(fontpixel::formats::TransportLimits{max_output_bytes:writer_limits.max_total_bytes,resources:writer_limits});
                 let written=registry.write_with_report(&fonts,&id,&write_options,report)?;
                 drop(fonts);
@@ -785,7 +796,13 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 let mut assets=Vec::new();assets.try_reserve_exact(written.output.assets().len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
                 assets.extend(written.output.assets().iter().map(|a|AssetSummary{bytes:a.bytes.len(),path:a.path.as_str().to_owned()}));
                 let summary=ConversionSummary{assets,bytes,format:id.clone(),output:group.output.clone(),report:written.report};
-                pending.push(assets::PendingOutput{destination:group.output.clone(),bundle:written.output});summaries.push(summary);
+                let destination=group.output.clone();
+                let estimated=path_bytes.checked_add(summary_slots).and_then(|n|n.checked_add(group.output.as_os_str().len()*2+id.len())).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
+                let mut actual=summary.assets.capacity().checked_mul(std::mem::size_of::<AssetSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
+                for asset in &summary.assets{conversion_charge(&mut actual,asset.path.capacity(),limits.max_total_bytes)?;}
+                conversion_charge(&mut actual,summary.format.capacity(),limits.max_total_bytes)?;conversion_charge(&mut actual,summary.output.capacity(),limits.max_total_bytes)?;conversion_charge(&mut actual,destination.capacity(),limits.max_total_bytes)?;
+                if actual>estimated{conversion_charge(&mut retained,actual-estimated,limits.max_total_bytes)?;}
+                pending.push(assets::PendingOutput{destination,bundle:written.output});summaries.push(summary);
             }
             let protection=if allow_single_in_place{assets::Sources::default()}else{sources};
             batch::persist_outputs(pending,&protection)?;
@@ -818,11 +835,22 @@ fn conversion_report_bytes(report:&fontpixel::Report,limit:usize)->fontpixel::Re
 fn infer_output_format(registry:&fontpixel::FontRegistry,destination:&Path)->fontpixel::Result<String>{
     Ok(match destination.extension().and_then(|e|e.to_str()).map(str::to_ascii_lowercase).as_deref(){Some("ttf")=>"ttf",Some("otf")=>"otf",Some("ttc"|"otc")=>"ttc",Some("woff")=>"woff",Some("woff2")=>"woff2",_=>registry.format_from_name(&destination.to_string_lossy())?.id}.into())
 }
-fn conversion_groups(inputs:&[PathBuf],destination:&Path,id:&str,each:bool)->fontpixel::Result<Vec<ConversionGroup>>{
-    if !each{return Ok(vec![ConversionGroup{start:0,end:inputs.len(),output:destination.to_owned()}]);}
+fn conversion_groups(inputs:&[PathBuf],destination:&Path,id:&str,each:bool,limit:usize)->fontpixel::Result<Vec<ConversionGroup>>{
+    if !each{
+        let mut used=std::mem::size_of::<ConversionGroup>();conversion_charge(&mut used,destination.as_os_str().len(),limit)?;
+        return Ok(vec![ConversionGroup{start:0,end:inputs.len(),output:destination.to_owned()}]);
+    }
     if !destination.is_dir(){return Err(Error::InvalidInput("--each output must be an existing directory".into()));}
     let extension=fontpixel::formats::catalogue::CATALOGUE.iter().find(|f|f.id==id).and_then(|f|f.extensions.first()).copied().unwrap_or(id);
-    let mut paths=std::collections::BTreeSet::new();let mut groups=Vec::new();groups.try_reserve_exact(inputs.len()).map_err(|_|conversion_limit(1024))?;
+    // Check repeated parent/path copies and collision-set scratch before building
+    // any destination. A long output parent multiplied by many inputs is bounded.
+    let mut planned=inputs.len().checked_mul(std::mem::size_of::<ConversionGroup>()+128).ok_or_else(||conversion_limit(limit))?;
+    for input in inputs {
+        let name=input.file_name().ok_or_else(||Error::InvalidInput("--each input requires a filename".into()))?;
+        let path_bytes=destination.as_os_str().len().checked_add(name.len()).and_then(|n|n.checked_add(extension.len()+2)).and_then(|n|n.checked_mul(6)).ok_or_else(||conversion_limit(limit))?;
+        conversion_charge(&mut planned,path_bytes,limit)?;
+    }
+    let mut paths=std::collections::BTreeSet::new();let mut groups=Vec::new();groups.try_reserve_exact(inputs.len()).map_err(|_|conversion_limit(limit))?;
     for(index,input)in inputs.iter().enumerate(){
         let filename=input.file_name().and_then(|s|s.to_str()).ok_or_else(||Error::InvalidInput("--each input requires a UTF-8 filename".into()))?;
         let filename=filename.strip_suffix(".gz").unwrap_or(filename);

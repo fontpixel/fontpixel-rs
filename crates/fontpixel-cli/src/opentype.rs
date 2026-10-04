@@ -2,14 +2,15 @@
 use super::{ReportStyle, emit_render_report, input_budget::InputBudget, persist, read_primary};
 use clap::Args;
 use fontpixel::{
-    Error, Font, ReadOptions, Report, ResourceLimits, Result, Variants,
+    Error, Font, ReadOptions, Report, ReportEntry, ResourceLimits, Result, Variants,
     outline::Shape,
     sfnt,
     variants::{self, Options, OutlineFlavor, ScriptVariant},
     woff,
 };
-use std::{collections::BTreeSet, io::Write, path::PathBuf};
+use std::{collections::BTreeSet, io::Write, mem::size_of, path::PathBuf};
 #[derive(Args)]
+#[command(after_help = "Example: fontpixel variants --base base.bdf --lang ja=jp.bdf -o regional.ttf\nExample: fontpixel variants --base base.bdf --shape dot -o dots.woff2 --max-total-bytes 536870912")]
 pub(super) struct VariantsArgs {
     /// Default Unicode bitmap font.
     #[arg(long)]
@@ -129,7 +130,141 @@ impl ResourceArguments {
 fn sfnt_limits(resources: &ResourceLimits) -> sfnt::Limits {
     sfnt::Limits { resources: resources.clone(), ..Default::default() }
 }
+// New reconstruction correction: reserve caller-owned overlap between codecs.
+// These checks cover retained CLI storage, not every codec transient or process RSS.
+// Immutable argument/Options strings are caller-owned configuration and excluded;
+// any copies created by codecs remain subject to those codecs' own budgets.
+fn retained_error(limit: usize) -> Error {
+    Error::ResourceLimit { resource: "OpenType CLI retained bytes", limit }
+}
+fn charge(used: &mut usize, bytes: usize, limit: usize) -> Result<()> {
+    *used = used.checked_add(bytes).filter(|n| *n <= limit)
+        .ok_or_else(|| retained_error(limit))?;
+    Ok(())
+}
+fn array_bytes<T>(count: usize, limit: usize) -> Result<usize> {
+    count.checked_mul(size_of::<T>()).filter(|n| *n <= limit)
+        .ok_or_else(|| retained_error(limit))
+}
+fn report_bytes(report: &Report, limit: usize) -> Result<usize> {
+    let mut used = size_of::<Report>();
+    charge(&mut used, array_bytes::<ReportEntry>(report.entries.capacity(), limit)?, limit)?;
+    for entry in &report.entries {
+        charge(&mut used, entry.code.capacity(), limit)?;
+        charge(&mut used, entry.message.capacity(), limit)?;
+        charge(&mut used, entry.location.asset.as_ref().map_or(0, String::capacity), limit)?;
+    }
+    // Check the empty report header too.
+    charge(&mut used, 0, limit)?;
+    Ok(used)
+}
+fn auxiliary_bytes(aux: &woff::Auxiliary, limit: usize) -> Result<usize> {
+    let mut used = size_of::<woff::Auxiliary>();
+    for bytes in [&aux.metadata, &aux.private_data].into_iter().flatten() {
+        charge(&mut used, bytes.capacity(), limit)?;
+    }
+    charge(&mut used, 0, limit)?;
+    Ok(used)
+}
+fn variants_bytes(value: &Variants, limit: usize) -> Result<usize> {
+    let mut used = size_of::<Variants>();
+    charge(&mut used, array_bytes::<variants::LanguageVariant>(value.languages.capacity(), limit)?, limit)?;
+    charge(&mut used, array_bytes::<ScriptVariant>(value.scripts.capacity(), limit)?, limit)?;
+    for tags in value.languages.iter().map(|v| &v.scripts)
+        .chain(value.scripts.iter().map(|v| &v.scripts))
+    {
+        charge(&mut used, array_bytes::<[u8; 4]>(tags.capacity(), limit)?, limit)?;
+    }
+    for font in std::iter::once(&value.base)
+        .chain(value.languages.iter().map(|v| &v.font))
+        .chain(value.scripts.iter().map(|v| &v.font))
+    {
+        // Each inline Font header is already in Variants or its route array.
+        let heap = font.retained_usage(limit)?.bytes.checked_sub(size_of::<Font>())
+            .ok_or_else(|| retained_error(limit))?;
+        charge(&mut used, heap, limit)?;
+    }
+    Ok(used)
+}
+fn codec_limits(limits: &ResourceLimits, retained: usize) -> Result<ResourceLimits> {
+    let mut available = limits.clone();
+    available.max_total_bytes = available.max_total_bytes.checked_sub(retained)
+        .ok_or_else(|| retained_error(limits.max_total_bytes))?;
+    // Already-admitted glyphs and borrowed codec input are not new CLI input.
+    // Preserve their validation ceilings; reduce the codec allocation/output cap.
+    Ok(available)
+}
+fn variants_limits(value: &Variants, report: &Report, limits: &ResourceLimits) -> Result<ResourceLimits> {
+    let mut retained = variants_bytes(value, limits.max_total_bytes)?;
+    charge(&mut retained, report_bytes(report, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    codec_limits(limits, retained)
+}
+fn output_retained(capacity: usize, report: &Report, limit: usize) -> Result<usize> {
+    let mut retained = capacity;
+    charge(&mut retained, report_bytes(report, limit)?, limit)?;
+    Ok(retained)
+}
+fn append_report(report: &mut Report, incoming: Report, owned: usize, limit: usize) -> Result<()> {
+    if incoming.entries.is_empty() {
+        // An empty result may retain a large array. Release it before checking
+        // the storage that survives this merge; no diagnostics need moving.
+        drop(incoming);
+        output_retained(owned, report, limit)?;
+        return Ok(());
+    }
+    let mut retained = owned;
+    charge(&mut retained, report_bytes(report, limit)?, limit)?;
+    charge(&mut retained, report_bytes(&incoming, limit)?, limit)?;
+    let count = report.entries.len().checked_add(incoming.entries.len())
+        .ok_or_else(|| retained_error(limit))?;
+    if count > report.entries.capacity() {
+        // During growth the old receiving and incoming arrays can both coexist
+        // with the new receiving array. Entry strings are moved, not cloned.
+        charge(&mut retained, array_bytes::<ReportEntry>(count, limit)?, limit)?;
+    }
+    report.entries.try_reserve_exact(incoming.entries.len())
+        .map_err(|_| retained_error(limit))?;
+    let mut actual = owned;
+    charge(&mut actual, report_bytes(report, limit)?, limit)?;
+    charge(&mut actual, report_bytes(&incoming, limit)?, limit)?;
+    report.extend(incoming);
+    Ok(())
+}
+fn auxiliary_removed(report: &mut Report, owned: usize, limit: usize) -> Result<()> {
+    const CODE: &str = "subset.web_auxiliary_removed";
+    const MESSAGE: &str = "sfnt cannot retain WOFF metadata/private blocks";
+    let count = report.entries.len().checked_add(1).ok_or_else(|| retained_error(limit))?;
+    let mut retained = owned;
+    charge(&mut retained, report_bytes(report, limit)?, limit)?;
+    charge(&mut retained, CODE.len(), limit)?;
+    charge(&mut retained, MESSAGE.len(), limit)?;
+    if count > report.entries.capacity() {
+        charge(&mut retained, array_bytes::<ReportEntry>(count, limit)?, limit)?;
+    }
+    let copy = |value: &str| -> Result<String> {
+        let mut result = String::new();
+        result.try_reserve_exact(value.len()).map_err(|_| retained_error(limit))?;
+        result.push_str(value);
+        Ok(result)
+    };
+    let code = copy(CODE)?;
+    let message = copy(MESSAGE)?;
+    report.entries.try_reserve_exact(1).map_err(|_| retained_error(limit))?;
+    let mut actual = owned;
+    charge(&mut actual, report_bytes(report, limit)?, limit)?;
+    charge(&mut actual, code.capacity(), limit)?;
+    charge(&mut actual, message.capacity(), limit)?;
+    report.push(ReportEntry {
+        level: fontpixel::report::Level::Warning,
+        impact: fontpixel::report::Impact::Loss,
+        code,
+        location: Default::default(),
+        message,
+    });
+    Ok(())
+}
 #[derive(Args)]
+#[command(after_help = "Example: fontpixel subset regional.ttf --text Hello -o hello.woff2\nExample: fontpixel subset regional.ttf --unicodes U+0020-007E -o ascii.ttf")]
 pub(super) struct SubsetArgs {
     /// sfnt, WOFF or WOFF2 input font.
     input: PathBuf,
@@ -193,58 +328,62 @@ impl Output {
         out: &mut dyn Write,
     ) -> Result<()> {
         let kind = self.kind()?;
-        let sfnt_limits = sfnt_limits(resources);
-        let woff_limits = woff::Limits {
-            sfnt: sfnt_limits.clone(),
-            ..Default::default()
-        };
+        let limit = resources.max_total_bytes;
+        let mut retained = output_retained(sfnt.capacity(), &report, limit)?;
+        charge(&mut retained, auxiliary_bytes(&aux, limit)?, limit)?;
         let bytes = match kind.as_str() {
-            "woff" => {
-                let e = woff::woff1::encode(
-                    &sfnt,
-                    &woff::woff1::Options {
-                        auxiliary: aux,
-                        ..Default::default()
-                    },
-                    &woff_limits,
-                )?;
-                report.extend(e.report);
-                e.bytes
-            }
-            "woff2" => {
-                let e = woff::woff2::encode(
-                    &sfnt,
-                    &woff::woff2::Options {
-                        quality: self.woff2_quality,
-                        compression_threads: self.woff2_threads,
-                        auxiliary: aux,
-                        ..Default::default()
-                    },
-                    &woff_limits,
-                )?;
-                report.extend(e.report);
+            "woff" | "woff2" => {
+                // The codec borrows sfnt and auxiliary buffers while producing
+                // a distinct output. Earlier reports remain owned by the CLI.
+                let available = codec_limits(resources, retained)?;
+                let woff_limits = woff::Limits {
+                    sfnt: sfnt_limits(&available),
+                    ..Default::default()
+                };
+                let e = if kind == "woff" {
+                    woff::woff1::encode(
+                        &sfnt,
+                        &woff::woff1::Options {
+                            auxiliary: aux,
+                            ..Default::default()
+                        },
+                        &woff_limits,
+                    )?
+                } else {
+                    woff::woff2::encode(
+                        &sfnt,
+                        &woff::woff2::Options {
+                            quality: self.woff2_quality,
+                            compression_threads: self.woff2_threads,
+                            auxiliary: aux,
+                            ..Default::default()
+                        },
+                        &woff_limits,
+                    )?
+                };
+                drop(sfnt);
+                append_report(&mut report, e.report, e.bytes.capacity(), limit)?;
                 e.bytes
             }
             _ => {
-                let f = sfnt::Sfnt::parse(&sfnt, &sfnt_limits)?;
+                let f = sfnt::Sfnt::parse(&sfnt, &sfnt_limits(resources))?;
                 if (kind == "otf") != (f.flavor() == sfnt::Flavor::Cff)
                     || (kind == "otb"
                         && (f.table(*b"glyf").is_some() || f.table(*b"CFF ").is_some()))
                 {
                     return Err(Error::InvalidInput("output extension does not match source outline flavor; use .woff/.woff2 or its sfnt flavor".into()));
                 }
-                if aux.metadata.is_some() || aux.private_data.is_some() {
-                    report.push(fontpixel::ReportEntry {
-                        level: fontpixel::report::Level::Warning,
-                        impact: fontpixel::report::Impact::Loss,
-                        code: "subset.web_auxiliary_removed".into(),
-                        location: Default::default(),
-                        message: "sfnt cannot retain WOFF metadata/private blocks".into(),
-                    });
+                drop(f);
+                let loses_auxiliary = aux.metadata.is_some() || aux.private_data.is_some();
+                drop(aux);
+                if loses_auxiliary {
+                    auxiliary_removed(&mut report, sfnt.capacity(), limit)?;
                 }
+                // Ownership moves directly to persistence; no second sfnt copy.
                 sfnt
             }
         };
+        output_retained(bytes.capacity(), &report, limit)?;
         if self.strict && report.has_loss() {
             return Err(Error::StrictLoss(report));
         }
@@ -362,6 +501,7 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
     if !a.vendor.bytes().all(|v| (32..=126).contains(&v)) {
         return Err(Error::InvalidInput("vendor must be printable ASCII".into()));
     }
+    let encode_limits = variants_limits(&v, &report, &limits)?;
     let o = Options {
         shape,
         dot_reuse: dot_reuse(Some(&a.dot_reuse)),
@@ -384,13 +524,15 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
         license: a.license,
         license_url: a.license_url,
         limits: sfnt::gsub::LayoutLimits {
-            sfnt: sfnt_limits(&limits),
+            sfnt: sfnt_limits(&encode_limits),
             ..Default::default()
         },
         ..Default::default()
     };
     let e = variants::encode(&v, &o)?;
-    report.extend(e.report);
+    drop(v);
+    drop(o);
+    append_report(&mut report, e.report, e.bytes.capacity(), limits.max_total_bytes)?;
     a.output.save(e.bytes, report, Default::default(), &limits, out)
 }
 pub(super) fn dot_reuse(value: Option<&str>) -> variants::DotReuse {
@@ -404,9 +546,13 @@ pub(super) fn subset(a: SubsetArgs, out: &mut dyn Write) -> Result<()> {
     let limits = fontpixel::ResourceLimits::default();
     let data = read_primary(&a.input, &limits)?;
     let decoded = if data.starts_with(b"wOFF") {
-        woff::woff1::decode(&data, &Default::default())?
+        let decoded = woff::woff1::decode(&data, &Default::default())?;
+        drop(data);
+        decoded
     } else if data.starts_with(b"wOF2") {
-        woff::woff2::decode(&data, &Default::default())?
+        let decoded = woff::woff2::decode(&data, &Default::default())?;
+        drop(data);
+        decoded
     } else {
         woff::Decoded {
             sfnt: data,
@@ -443,8 +589,11 @@ pub(super) fn subset(a: SubsetArgs, out: &mut dyn Write) -> Result<()> {
             ..Default::default()
         },
     )?;
+    drop(decoded.sfnt);
     let mut report = decoded.report;
-    report.extend(e.report);
+    let mut retained = e.bytes.capacity();
+    charge(&mut retained, auxiliary_bytes(&decoded.auxiliary, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    append_report(&mut report, e.report, retained, limits.max_total_bytes)?;
     a.output.save(e.bytes, report, decoded.auxiliary, &limits, out)
 }
 fn unicodes(s: &str) -> Result<BTreeSet<u32>> {
@@ -706,4 +855,191 @@ mod tests {
             assert!(report.is_empty());
         }
     }
+
+    fn loss_report(code: &str) -> Report {
+        let mut report = Report { entries: Vec::with_capacity(1) };
+        report.push(ReportEntry {
+            level: fontpixel::report::Level::Warning,
+            impact: fontpixel::report::Impact::Loss,
+            code: code.into(),
+            location: Default::default(),
+            message: "retained diagnostic".into(),
+        });
+        report
+    }
+
+    fn encoded_fixture() -> Vec<u8> {
+        let mut font = Font::default();
+        let mut glyph = Glyph::new("#".parse::<Bitmap>().unwrap());
+        glyph.codepoints.push(fontpixel::model::Codepoint::Unicode(65));
+        font.add_glyph(glyph).unwrap();
+        variants::encode(&Variants::new(font), &Options::default()).unwrap().bytes
+    }
+
+    fn strict_output(filename: &str) -> Output {
+        ParseVariants::try_parse_from([
+            "fontpixel", "--base", "base.bdf", "-o", filename, "--strict",
+        ]).unwrap().args.output
+    }
+
+    #[test]
+    fn encoder_reservation_counts_metadata_and_spare_route_storage_once() {
+        let mut variants = Variants::new(Font::default());
+        let before = variants_bytes(&variants, usize::MAX).unwrap();
+        let mut copyright = String::with_capacity(4096);
+        copyright.push('x');
+        let added = copyright.capacity();
+        variants.base.names.copyright = Some(copyright);
+        assert_eq!(variants_bytes(&variants, usize::MAX).unwrap(), before + added);
+        variants.languages.try_reserve_exact(3).unwrap();
+        let route_capacity = variants.languages.capacity();
+        assert_eq!(variants_bytes(&variants, usize::MAX).unwrap(),
+            before + added + route_capacity * size_of::<variants::LanguageVariant>());
+        variants.add_language("ja", Font::default()).unwrap();
+        let route_before = variants_bytes(&variants, usize::MAX).unwrap();
+        let tags = &mut variants.languages[0].scripts;
+        let old_capacity = tags.capacity();
+        tags.try_reserve_exact(30).unwrap();
+        let tag_growth = (tags.capacity() - old_capacity) * size_of::<[u8; 4]>();
+        assert_eq!(variants_bytes(&variants, usize::MAX).unwrap(), route_before + tag_growth);
+        let report = loss_report("source.notice");
+        let exact = variants_bytes(&variants, usize::MAX).unwrap()
+            + report_bytes(&report, usize::MAX).unwrap();
+        let limits = ResourceLimits { max_total_bytes: exact + 17, ..Default::default() };
+        let available = variants_limits(&variants, &report, &limits).unwrap();
+        let mut expected = limits.clone();
+        expected.max_total_bytes = 17;
+        assert_eq!(available, expected);
+        assert_eq!(variants_limits(&variants, &report,
+            &ResourceLimits { max_total_bytes: exact, ..limits.clone() }).unwrap().max_total_bytes, 0);
+        assert!(matches!(variants_limits(&variants, &report,
+            &ResourceLimits { max_total_bytes: exact - 1, ..limits }), Err(Error::ResourceLimit { .. })));
+    }
+
+    #[test]
+    fn report_growth_has_an_exact_boundary_and_preserves_order() {
+        const OWNED: usize = 73;
+        for succeeds in [false, true] {
+            let mut earlier = loss_report("read.first");
+            let incoming = loss_report("encode.second");
+            let before = earlier.clone();
+            let capacity = earlier.entries.capacity();
+            let count = earlier.entries.len() + incoming.entries.len();
+            let exact = OWNED + report_bytes(&earlier, usize::MAX).unwrap()
+                + report_bytes(&incoming, usize::MAX).unwrap()
+                + count * size_of::<ReportEntry>();
+            let result = append_report(&mut earlier, incoming, OWNED,
+                if succeeds { exact } else { exact - 1 });
+            if succeeds {
+                result.unwrap();
+                assert_eq!(earlier.entries.iter().map(|e| e.code.as_str()).collect::<Vec<_>>(),
+                    ["read.first", "encode.second"]);
+            } else {
+                assert!(matches!(result, Err(Error::ResourceLimit { .. })));
+                assert_eq!(earlier, before);
+                assert_eq!(earlier.entries.capacity(), capacity);
+            }
+        }
+    }
+
+    #[test]
+    fn empty_incoming_report_releases_spare_capacity_before_retained_check() {
+        let mut earlier = loss_report("read.first");
+        let before = earlier.clone();
+        let earlier_capacity = earlier.entries.capacity();
+        let incoming = Report { entries: Vec::with_capacity(1024) };
+        let owned = 73;
+        let exact = owned + report_bytes(&earlier, usize::MAX).unwrap();
+        assert!(report_bytes(&incoming, usize::MAX).unwrap() > exact);
+        append_report(&mut earlier, incoming, owned, exact).unwrap();
+        assert_eq!(earlier, before);
+        assert_eq!(earlier.entries.capacity(), earlier_capacity);
+    }
+
+    #[test]
+    fn report_reservation_counts_string_capacity_and_location_assets() {
+        let mut report = loss_report("source.notice");
+        let before = report_bytes(&report, usize::MAX).unwrap();
+        let old = report.entries[0].message.capacity();
+        report.entries[0].message.try_reserve_exact(1024).unwrap();
+        let growth = report.entries[0].message.capacity() - old;
+        let mut asset = String::with_capacity(2048);
+        asset.push_str("source.bdf");
+        let asset_capacity = asset.capacity();
+        report.entries[0].location.asset = Some(asset);
+        let exact = before + growth + asset_capacity;
+        assert_eq!(report_bytes(&report, exact).unwrap(), exact);
+        assert!(matches!(report_bytes(&report, exact - 1), Err(Error::ResourceLimit { .. })));
+    }
+
+    #[test]
+    fn webfont_allowance_reserves_original_sfnt_report_and_auxiliary() {
+        for filename in ["must-not-exist.woff", "must-not-exist.woff2"] {
+            let bytes = encoded_fixture();
+            let report = loss_report("source.notice");
+            let mut metadata = Vec::with_capacity(512);
+            metadata.extend_from_slice(b"<metadata/>");
+            let aux = woff::Auxiliary { metadata: Some(metadata), ..Default::default() };
+            let retained = bytes.capacity() + report_bytes(&report, usize::MAX).unwrap()
+                + auxiliary_bytes(&aux, usize::MAX).unwrap();
+            let limits = ResourceLimits { max_total_bytes: retained, ..Default::default() };
+            let available = codec_limits(&limits, retained).unwrap();
+            assert_eq!(available.max_total_bytes, 0);
+            assert_eq!(available.max_input_bytes, limits.max_input_bytes);
+            assert_eq!(available.max_glyphs, limits.max_glyphs);
+            let mut emitted = Vec::new();
+            let result = strict_output(filename).save(bytes, report, aux, &limits, &mut emitted);
+            // No output/working allowance remains, even though the source itself
+            // fits. Resource failure precedes an already known strict loss.
+            assert!(matches!(result, Err(Error::ResourceLimit { .. })));
+            assert!(emitted.is_empty());
+        }
+    }
+
+    #[test]
+    fn direct_sfnt_is_counted_once_and_codec_errors_precede_strict_loss() {
+        let bytes = encoded_fixture();
+        let report = loss_report("source.notice");
+        let aux = woff::Auxiliary::default();
+        let exact = bytes.capacity() + report_bytes(&report, usize::MAX).unwrap()
+            + auxiliary_bytes(&aux, usize::MAX).unwrap();
+        let limits = ResourceLimits { max_total_bytes: exact, ..Default::default() };
+        let mut emitted = Vec::new();
+        assert!(matches!(strict_output("must-not-exist.ttf").save(
+            bytes, report, aux, &limits, &mut emitted), Err(Error::StrictLoss(_))));
+        assert!(emitted.is_empty());
+        for filename in ["must-not-exist.ttf", "must-not-exist.woff", "must-not-exist.woff2"] {
+            let result = strict_output(filename).save(b"bad".to_vec(), loss_report("source.notice"),
+                Default::default(), &ResourceLimits::default(), &mut emitted);
+            assert!(matches!(result, Err(Error::InvalidInput(_))));
+            assert!(emitted.is_empty());
+        }
+    }
+
+    #[test]
+    fn opentype_help_examples_are_parsable() {
+        use clap::CommandFactory;
+        #[derive(Parser)]
+        struct ParseSubset {
+            #[command(flatten)]
+            args: SubsetArgs,
+        }
+        for args in [
+            vec!["fontpixel", "--base", "base.bdf", "--lang", "ja=jp.bdf", "-o", "regional.ttf"],
+            vec!["fontpixel", "--base", "base.bdf", "--shape", "dot", "-o", "dots.woff2",
+                "--max-total-bytes", "536870912"],
+        ] {
+            ParseVariants::try_parse_from(args).unwrap();
+        }
+        for args in [
+            ["fontpixel", "regional.ttf", "--text", "Hello", "-o", "hello.woff2"],
+            ["fontpixel", "regional.ttf", "--unicodes", "U+0020-007E", "-o", "ascii.ttf"],
+        ] {
+            let parsed = ParseSubset::try_parse_from(args).unwrap();
+            assert_eq!(parsed.args.input, PathBuf::from("regional.ttf"));
+        }
+        assert!(ParseVariants::command().render_long_help().to_string().contains("Example:"));
+        assert!(ParseSubset::command().render_long_help().to_string().contains("Example:"));
+    }
+
 }

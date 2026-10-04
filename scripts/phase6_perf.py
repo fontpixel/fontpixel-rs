@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""UNTESTED RECOVERY of phase-6 recorder, reconstructed from visible source.
+"""Reconstructed phase-6 recorder; standard-library contracts tested.
 
-Not asserted byte-identical to the unavailable historical recorder. Restore as
-scripts/phase6_perf.py only after review and regression tests. A formal label
+Not asserted byte-identical to the unavailable historical recorder. Restored
+production font workloads remain uncompiled/unvalidated. A formal label
 requires the coordinator's explicit fresh quiet authorization. No historical raw
 observations may be regenerated from summaries or filled with invented values.
 """
@@ -194,7 +194,9 @@ def summarize(records, runs):
 def freeze(args):
     config = json.loads(args.config.read_text())
     unique = [(c['id'], c['engine']) for c in config['cases']]
-    if len(unique) != len(set(unique)): raise ValueError('duplicate case/engine')
+    if not unique or len(unique) != len(set(unique)): raise ValueError('empty or duplicate case/engine')
+    stems = [case + '-' + engine for case, engine in unique]
+    if len(stems) != len(set(stems)): raise ValueError('case/engine IDs collide in emitted raw filename stem')
     for case in config['cases']:
         for value in (case['id'], case['engine']):
             if not value or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in value):
@@ -227,6 +229,11 @@ def measure(args):
             with (args.directory / 'progress.jsonl').open('a') as out: out.write(json.dumps(record) + '\n')
             if record['exit']: raise RuntimeError('benchmark child failed: ' + json.dumps(record))
             record['metrics_ns'] = metrics_from_log(record)
+            if case.get('expected_stdout'):
+                raw = json.loads(Path(record['stdout']).read_text())
+                for key, expected in case['expected_stdout'].items():
+                    if raw.get(key) != expected:
+                        raise ValueError('unexpected complete-workload metadata: ' + key)
             archive = args.directory / 'outputs' / (ident + '.zip'); archive.parent.mkdir(exist_ok=True)
             record['outputs'] = archive_outputs(work, archive); verify_archive(record)
             shutil.rmtree(work)  # Only this runner's freshly created, verified-archived output.

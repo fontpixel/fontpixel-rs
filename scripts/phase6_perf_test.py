@@ -29,6 +29,15 @@ class RecorderTests(unittest.TestCase):
             Path(records[0]['stdout']).write_text('tampered')
             with self.assertRaises(ValueError): p.verify_logs(records)
 
+    def test_ambiguous_case_engine_stems_fail_before_freezing(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); config = root / 'config.json'
+            config.write_text(json.dumps({'cases': [{'id': 'a-b', 'engine': 'c'}, {'id': 'a', 'engine': 'b-c'}]}))
+            with self.assertRaisesRegex(ValueError, 'collide'):
+                p.freeze(SimpleNamespace(config=config, output=root / 'manifest.json'))
+            self.assertFalse((root / 'manifest.json').exists())
+
     def test_existing_stderr_is_rejected_without_truncating_stdout(self):
         with tempfile.TemporaryDirectory() as temporary:
             stem = Path(temporary) / 'case.sfn'

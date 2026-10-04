@@ -31,6 +31,26 @@ ordinary lookup chooses the last source glyph. [`model::Codepoint::Legacy`]
 requires the owning font's charset. A Unicode-tagged integer is not automatically
 a valid scalar; use [`model::Codepoint::scalar`].
 
+## Edit normalized names deliberately
+
+```
+use fontpixel::{Font, FontSet, ResourceLimits};
+use fontpixel::metadata::{NameOverrides, apply_names};
+let mut fonts = FontSet::from(Font::default());
+let audit = apply_names(&mut fonts, &NameOverrides {
+    family: Some("Example Family".into()),
+    ..Default::default()
+}, &ResourceLimits::default())?;
+assert_eq!(fonts.single()?.names.family.as_deref(), Some("Example Family"));
+assert!(!audit.has_loss());
+# Ok::<(), fontpixel::Error>(())
+```
+
+Intentional normalized edits return an audit report. Raw properties, XLFD and
+other provenance remain separate; editing a notice does not establish permission.
+Changing family/style clears stale generated full/PostScript names unless supplied.
+The reconstructed example and this doctest remain uncompiled and untested.
+
 ## Read and write with complete reports
 
 ```

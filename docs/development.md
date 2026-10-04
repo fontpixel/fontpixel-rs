@@ -148,3 +148,30 @@ On storage-constrained workers, `CARGO_PROFILE_DEV_DEBUG=0`,
 `CARGO_PROFILE_TEST_DEBUG=0`, `CARGO_INCREMENTAL=0`, and `CARGO_BUILD_JOBS=4`
 reduce disposable build-cache size. They change neither test coverage nor
 release settings. An interrupted/full-disk run is never counted as passing.
+
+## Reconstructed API documentation checks
+
+The filesystem-free `api_quickstart` example has been rewritten against current
+declarations. It is uncompiled/untested. A safe source-only check is:
+
+```sh
+python3 -B examples/check_api_documentation.py --require-rustdoc-link
+```
+
+This standard-library script reads files and reports lexical references, features,
+local links and the crate-root include. It executes no project code. It does not
+replace the later, separately authorized checks below:
+
+```sh
+RUSTDOCFLAGS='-D warnings' cargo doc --locked --workspace --all-features --no-deps
+cargo test --locked -p fontpixel --all-features --doc
+cargo test --locked -p fontpixel --no-default-features --doc
+cargo run --locked -p fontpixel --example api_quickstart
+cargo run --locked -p fontpixel --no-default-features --example api_quickstart
+cargo run --locked -p fontpixel --all-features --example api_quickstart
+cargo clippy --locked -p fontpixel --all-features --example api_quickstart -- -D warnings
+```
+
+Do not run these native commands while the recovery execution gate is closed.
+Record new source/toolchain/binary/log hashes after approval. No test count or
+historical archive proves this replacement example compiles or behaves correctly.

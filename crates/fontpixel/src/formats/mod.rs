@@ -768,6 +768,10 @@ pub struct WriteOptions {
     /// setting cannot silently enlarge a codec budget. Built-in native wrappers
     /// validate the model and restrict their codec before writing; compressed
     /// output also enforces the applicable envelope and replay budgets.
+    /// Plain output additionally checks the sum of all returned asset lengths
+    /// against `max_output_bytes`, after error/strict diagnostics. Codecs without
+    /// a native output cap may encode under their resource budget before this
+    /// returned-output check. A typed per-asset cap is not an aggregate cap.
     pub transport_limits: Option<TransportLimits>,
 }
 
@@ -1151,6 +1155,18 @@ impl<M> Registry<M> {
             }
             output
         } else {
+            if let Some(common) = &options.transport_limits {
+                let maximum = common.max_output_bytes;
+                written.output.assets().iter().try_fold(0usize, |total, asset| {
+                    total
+                        .checked_add(asset.bytes.len())
+                        .filter(|bytes| *bytes <= maximum)
+                        .ok_or(Error::ResourceLimit {
+                            resource: "plain output asset bytes",
+                            limit: maximum,
+                        })
+                })?;
+            }
             written.output
         };
         Ok(Written { output, report })

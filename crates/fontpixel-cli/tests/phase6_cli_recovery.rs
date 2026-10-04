@@ -51,7 +51,7 @@ fn batch_report_exhaustion_after_spilling_cleans_up_before_commit(){
 
 #[test]
 fn reconstructed_commands_have_help_examples(){
-    let w=Work::new();for command in ["batch","diff","validate","charset"] {let o=w.run(&[command,"--help"]);success(&o);let text=String::from_utf8(o.stdout).unwrap();assert!(text.contains("Example"));}
+    let w=Work::new();for command in ["batch","diff","validate","charset","convert","formats","info","preview","render"] {let o=w.run(&[command,"--help"]);success(&o);let text=String::from_utf8(o.stdout).unwrap();assert!(text.contains("Example"));}
 }
 #[test]
 fn native_validate_reports_scope_and_honors_input_budget(){
@@ -171,4 +171,172 @@ fn convert_each_collisions_and_font_index_fail_before_writes(){
 fn info_borrows_properties_and_reports_unicode_block_counts(){
     let w=Work::new();w.write("input.bdf",bdf(&[65,66,0x4e00]));let o=w.run(&["info","input.bdf","--json"]);success(&o);let j=json(&o);assert_eq!(j["fonts"][0]["distinct_codes"],3);let blocks=j["fonts"][0]["unicode_blocks"].as_array().unwrap();assert!(blocks.iter().any(|b|b["name"]=="Basic Latin"&&b["count"]==2));assert!(blocks.iter().any(|b|b["name"]=="CJK Unified Ideographs"&&b["count"]==1));
     let o=w.run(&["--help"]);success(&o);assert!(String::from_utf8_lossy(&o.stdout).contains("vectorize"));
+}
+
+#[cfg(feature="bmfont")]
+#[test]
+fn identity_budget_failure_blocks_an_already_prepared_sidecar_overwrite(){
+    let w=Work::new();w.write("input.bdf",bdf(&[65]));
+    let o=w.run(&["convert","input.bdf","-o","font.fnt","--to","bmfont","--bmfont-page-width","4","--bmfont-page-height","4","--report","json"]);success(&o);
+    let j=json(&o);let atlas=j["assets"].as_array().unwrap().iter().map(|a|a["path"].as_str().unwrap()).find(|p|p.ends_with(".png")).unwrap();let original=fs::read(w.0.join(atlas)).unwrap();
+    let text=fs::read_to_string(w.0.join("font.fnt")).unwrap();let mut descriptor=String::new();
+    for line in text.lines(){if line.starts_with("page "){continue;}descriptor.push_str(&line.replace("pages=1","pages=80"));descriptor.push('\n');}
+    for index in 0..80{w.write(&format!("page-{index}.png"),&original);descriptor.push_str(&format!("page id={index} file=\"page-{index}.png\"\n"));}
+    w.write("many.fnt",descriptor);
+    // First prepare an output targeting a page the second task has not reached.
+    // The failed remember must latch incomplete protection across the transaction.
+    let tasks=format!("{}[[tasks]]\nid='read-many-pages'\nkind='convert'\ninputs=['many.fnt']\nfrom='bmfont'\noutput='read.bdf'\nto='bdf'\n",batch_task("prepared","input.bdf","page-79.png"));
+    w.write("jobs.toml",format!("version=1\njobs=1\nmax_pending_bytes=4096\n{tasks}"));
+    let o=w.run(&["batch","jobs.toml"]);assert_eq!(o.status.code(),Some(1));let j=json(&o);assert_eq!(j["summary"]["committed"],0);assert_eq!(fs::read(w.0.join("page-79.png")).unwrap(),original);assert!(!w.0.join("read.bdf").exists());
+    assert!(j["tasks"].as_array().unwrap().iter().any(|task|task["error"].as_str().is_some_and(|e|e.contains("identity")||e.contains("protection"))));
+}
+
+#[cfg(feature="opentype")]
+#[test]
+fn structural_validation_enforces_explicit_container(){
+    let w=Work::new();let _=sfnt_fixture(&w);
+    for format in ["otf","ttc","woff","woff2"]{
+        let o=w.run(&["validate","font.ttf","--from",format,"--json"]);assert_eq!(o.status.code(),Some(1));assert!(String::from_utf8_lossy(&o.stderr).contains("explicit --from"));
+    }
+    success(&w.run(&["validate","font.ttf","--from","ttf","--json"]));
+}
+#[cfg(not(feature="opentype"))]
+#[test]
+fn structural_validation_does_not_enable_disabled_readers(){
+    let w=Work::new();w.write("font.bdf",bdf(&[65]));let o=w.run(&["validate","font.bdf","--from","ttf","--json"]);assert_eq!(o.status.code(),Some(1));assert!(String::from_utf8_lossy(&o.stderr).contains("disabled"));
+}
+
+#[cfg(feature="opentype")]
+#[test]
+fn opentype_commands_have_help_examples(){let w=Work::new();for command in ["variants","subset"]{let o=w.run(&[command,"--help"]);success(&o);assert!(String::from_utf8_lossy(&o.stdout).contains("Example"));}}
+
+#[cfg(any(feature = "otb", feature = "bdat"))]
+#[test]
+fn embedded_controls_match_public_writer_and_batch_and_preserve_defaults() {
+    use fontpixel::formats::embedded::{EmbeddedReferenceStrike, EmbeddedRounding, EmbeddedWriteOptions};
+    let w = Work::new();
+    let small = bdf(&[65]);
+    let large = small.replace("SIZE 2 75 75", "SIZE 4 75 75")
+        .replace("FONTBOUNDINGBOX 2 2 0 0", "FONTBOUNDINGBOX 2 4 0 0")
+        .replace("FONT_ASCENT 2", "FONT_ASCENT 4")
+        .replace("BBX 2 2 0 0", "BBX 2 4 0 0")
+        .replace("BITMAP\n80\nC0", "BITMAP\n80\nC0\n80\nC0");
+    w.write("small.bdf", &small); w.write("large.bdf", &large);
+    let mut fonts = fontpixel::FontSet::default();
+    let mut registry = fontpixel::registry();
+    for (name, data) in [("small.bdf", &small), ("large.bdf", &large)] {
+        let loaded = registry.read(&fontpixel::Input::new(data.as_bytes()).with_name(name), &Default::default()).unwrap();
+        fonts.fonts.extend(loaded.fonts.fonts);
+    }
+    registry.set_embedded_write_options(EmbeddedWriteOptions {
+        units_per_em: Some(1000), reference_strike: EmbeddedReferenceStrike::LargestPpem,
+        rounding: EmbeddedRounding::NearestTiesEven, ..Default::default()
+    });
+    let formats: &[&str] = &[
+        #[cfg(feature = "otb")] "otb",
+        #[cfg(feature = "bdat")] "bdat",
+    ];
+    for id in formats {
+        let output = format!("explicit.{id}");
+        let expected = registry.write(&fonts, id, &fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(&output).unwrap())).unwrap();
+        success(&w.run(&["convert", "small.bdf", "large.bdf", "--to", id, "-o", &output,
+            "--otb-upm", "1000", "--otb-reference", "largest", "--otb-rounding", "ties-even"]));
+        let actual = fs::read(w.0.join(&output)).unwrap();
+        assert_eq!(actual, expected.output.into_single().unwrap());
+        let font = fontpixel::sfnt::Sfnt::parse(&actual, &Default::default()).unwrap();
+        assert_eq!(&font.table(*b"head").unwrap()[18..20], &1000u16.to_be_bytes());
+        let batch_output = format!("batch.{id}");
+        w.write("jobs.toml", format!("version=1\n[[tasks]]\nid='embedded'\nkind='convert'\ninputs=['small.bdf','large.bdf']\nfrom='bdf'\nto='{id}'\noutput='{batch_output}'\n[tasks.options]\notb_upm=1000\notb_reference='largest'\notb_rounding='ties-even'\n"));
+        success(&w.run(&["batch", "jobs.toml"]));
+        assert_eq!(fs::read(w.0.join(batch_output)).unwrap(), actual);
+        let implicit = format!("implicit.{id}"); let explicit = format!("defaults.{id}");
+        success(&w.run(&["convert", "small.bdf", "large.bdf", "--to", id, "-o", &implicit]));
+        success(&w.run(&["convert", "small.bdf", "large.bdf", "--to", id, "-o", &explicit,
+            "--otb-reference", "first", "--otb-rounding", "half-away"]));
+        assert_eq!(fs::read(w.0.join(implicit)).unwrap(), fs::read(w.0.join(explicit)).unwrap());
+        // Index refers to the input FontSet, independent of physical strike sorting.
+        let indexed = format!("indexed.{id}");
+        success(&w.run(&["convert", "small.bdf", "large.bdf", "--to", id, "-o", &indexed,
+            "--otb-upm", "1000", "--otb-reference", "1", "--otb-rounding", "ties-even"]));
+        assert_eq!(fs::read(w.0.join(indexed)).unwrap(), actual);
+        w.write(&output, "existing output");
+        assert_eq!(w.run(&["convert", "small.bdf", "--to", id, "-o", &output, "--otb-reference", "1"]).status.code(), Some(1));
+        assert_eq!(fs::read_to_string(w.0.join(output)).unwrap(), "existing output");
+    }
+}
+
+#[test]
+fn embedded_controls_reject_invalid_values_and_wrong_output_without_writes() {
+    let w = Work::new(); w.write("input.bdf", bdf(&[65])); w.write("out.bdf", "existing output");
+    for (flag, value) in [("--otb-upm", "15"), ("--otb-upm", "16385"),
+        ("--otb-reference", "-1"), ("--otb-reference", "+1"),
+        ("--otb-reference", "largest-ish"), ("--otb-rounding", "floor")] {
+        assert_eq!(w.run(&["convert", "input.bdf", "--to", "bdf", "-o", "out.bdf", flag, value]).status.code(), Some(2));
+    }
+    for (flag, value) in [("--otb-upm", "1000"), ("--otb-reference", "largest"), ("--otb-rounding", "ties-even")] {
+        let output = w.run(&["convert", "input.bdf", "--to", "bdf", "-o", "out.bdf", flag, value]);
+        assert_eq!(output.status.code(), Some(1));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("require otb or bdat"));
+    }
+    assert_eq!(fs::read_to_string(w.0.join("out.bdf")).unwrap(), "existing output");
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn embedded_controls_do_not_silently_change_color_policy() {
+    let w = Work::new(); w.write("input.bdf", bdf(&[65]));
+    let output = w.run(&["convert", "input.bdf", "--to", "color", "-o", "out.ttf", "--otb-upm", "1000"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("require otb or bdat"));
+    assert!(!w.0.join("out.ttf").exists());
+}
+
+#[cfg(not(feature = "otb"))]
+#[test]
+fn embedded_controls_remain_recognized_when_otb_feature_is_disabled() {
+    let w = Work::new(); w.write("input.bdf", bdf(&[65]));
+    let output = w.run(&["convert", "input.bdf", "--to", "otb", "-o", "out.otb", "--otb-upm", "1000"]);
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("feature"));
+    assert!(!w.0.join("out.otb").exists());
+}
+
+#[cfg(feature = "otb")]
+#[test]
+fn charset_strict_loss_precedes_native_writer_limit_and_preserves_existing_output() {
+    let w = Work::new(); w.write("input.bdf", bdf(&[65, 0x1f600])); w.write("out.otb", "existing output");
+    let args = ["charset", "input.bdf", "--to", "cp1252", "--format", "otb", "-o", "out.otb", "--max-table-bytes", "1", "--report", "json"];
+    let mut strict_args = args.to_vec(); strict_args.push("--strict");
+    let strict = w.run(&strict_args); assert_eq!(strict.status.code(), Some(3));
+    let report: serde_json::Value = serde_json::from_slice(&strict.stderr).unwrap();
+    assert!(report["report"]["entries"].as_array().unwrap().iter().any(|entry| entry["code"] == "charset.unmappable_code"));
+    let permissive = w.run(&args); assert_eq!(permissive.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&permissive.stderr).contains("limit"));
+    assert_eq!(fs::read_to_string(w.0.join("out.otb")).unwrap(), "existing output");
+}
+
+#[test]
+fn convert_each_keeps_prepared_outputs_and_reports_in_the_next_writer_budget() {
+    let w = Work::new();
+    let source = bdf(&[65]).replace("COPYRIGHT \"CC0\"", &format!("COPYRIGHT \"{}\"", "author notice ".repeat(4096)));
+    w.write("a.bdf", &source); w.write("b.bdf", &source);
+    let succeeds = |limit: usize| {
+        w.run(&["convert", "a.bdf", "-o", "single.bdf", "--to", "bdf", "--max-total-bytes", &limit.to_string()]).status.success()
+    };
+    let mut low = 0;
+    let mut high = 16 * 1024 * 1024;
+    assert!(succeeds(high));
+    while high - low > 1 {
+        let middle = low + (high - low) / 2;
+        if succeeds(middle) { high = middle; } else { low = middle; }
+    }
+    assert!(succeeds(high)); assert!(!succeeds(high - 1));
+    fs::create_dir(w.0.join("out")).unwrap();
+    w.write("out/a.bdf", "existing first output"); w.write("out/b.bdf", "existing second output");
+    let failed = w.run(&["convert", "a.bdf", "b.bdf", "--each", "--to", "bdf", "-o", "out", "--max-total-bytes", &high.to_string()]);
+    assert_eq!(failed.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&failed.stderr).contains("limit"));
+    assert_eq!(fs::read_to_string(w.0.join("out/a.bdf")).unwrap(), "existing first output");
+    assert_eq!(fs::read_to_string(w.0.join("out/b.bdf")).unwrap(), "existing second output");
+    assert_eq!(fs::read_to_string(w.0.join("a.bdf")).unwrap(), source);
 }

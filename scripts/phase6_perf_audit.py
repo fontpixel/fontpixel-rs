@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""UNTESTED RECOVERY of independent verifier; no recorder imports.
+"""Reconstructed independent verifier; no recorder imports.
 Reconstruct five-run medians from raw logs, verify every frozen file and every
 archive member. No raw evidence is supplied by this recovery packet.
 """
@@ -46,6 +46,10 @@ def main():
             metrics.update(raw['metrics_ns'])
         assert all(not isinstance(n, bool) and isinstance(n, (int, float)) and math.isfinite(n) and n >= 0 for n in metrics.values())
         assert metrics == record['metrics_ns']
+        case = next(c for c in manifest['config']['cases'] if c['id'] == record['case'] and c['engine'] == record['engine'])
+        if case.get('expected_stdout'):
+            raw = json.loads(Path(record['stdout']).read_text())
+            assert all(raw.get(key) == value for key, value in case['expected_stdout'].items()), 'workload metadata differs'
         archive = record['outputs']
         assert sha(archive['path']) == archive['sha256']
         with zipfile.ZipFile(archive['path']) as zipped:

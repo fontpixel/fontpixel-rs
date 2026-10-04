@@ -78,7 +78,7 @@ impl Default for ResourceLimits {
     }
 }
 
-/// Budgets for a registry-applied output envelope such as gzip.
+/// Additional native-write and registry-applied envelope budgets.
 ///
 /// These include the encoded bytes, their uncompressed representation and
 /// retained diagnostics. Built-in writers expose their actual typed limits;
@@ -87,7 +87,11 @@ impl Default for ResourceLimits {
 pub struct TransportLimits {
     /// Limits used by the matching reader and native writer validation.
     pub resources: ResourceLimits,
-    /// Maximum serialized envelope size, including its header and trailer.
+    /// Maximum sum of serialized asset lengths for plain output, or maximum
+    /// serialized envelope size including its header and trailer for gzip.
+    /// Plain output is checked before returning assets, after error/strict
+    /// diagnostics. A format without a native output cap may finish encoding
+    /// under its resource budget before this aggregate returned-output check.
     pub max_output_bytes: usize,
 }
 

@@ -32,6 +32,31 @@ fn report_bytes(report: &Report, limit: usize) -> Result<usize> {
     Ok(used)
 }
 fn strict(report: &Report, requested: bool) -> bool { requested && report.has_loss() }
+/// Reserve the actual caller-owned model and incoming diagnostics before native
+/// encoding. No credit is guessed for a codec's internal source estimate: some
+/// codecs may conservatively charge the model again. This reconstruction policy
+/// preserves default limits, but default-workload acceptance needs real testing;
+/// it is not a complete codec-transient or process-RSS proof.
+/// Reported errors and strict losses precede accounting without report clones.
+pub(crate) fn caller_writer_limits(
+    fonts: &FontSet,
+    limits: &ResourceLimits,
+    report: Report,
+    strict: bool,
+) -> Result<(ResourceLimits, Report)> {
+    if report.has_errors() { return Err(Error::ReportedErrors(report)); }
+    if strict && report.has_loss() { return Err(Error::StrictLoss(report)); }
+    let mut retained = fonts.retained_usage(limits.max_total_bytes)?.bytes;
+    charge(&mut retained, report_bytes(&report, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    let mut remaining = limits.clone();
+    remaining.max_total_bytes = remaining.max_total_bytes.checked_sub(retained)
+        .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+    remaining.max_input_bytes = remaining.max_input_bytes.min(remaining.max_total_bytes);
+    remaining.max_resource_bytes = remaining.max_resource_bytes.min(remaining.max_total_bytes);
+    remaining.max_decompressed_bytes = remaining.max_decompressed_bytes.min(remaining.max_total_bytes);
+    remaining.max_table_bytes = remaining.max_table_bytes.min(remaining.max_total_bytes);
+    Ok((remaining, report))
+}
 fn load(input: &std::path::Path, from: Option<String>, raster: &RasterArguments, budget: &mut InputBudget) -> Result<fontpixel::formats::Loaded<FontSet>> {
     let mut registry=fontpixel::registry(); raster.apply(&mut registry)?;
     let options=ReadOptions{format:from,limits:budget.remaining_limits()?};
@@ -256,13 +281,149 @@ pub(crate) fn charset(args:CharsetArgs,out:&mut dyn Write)->Result<()> {
         let updated=font.retained_usage(limits.max_total_bytes)?.bytes;
         retained=retained.checked_sub(strike).and_then(|n|n.checked_add(updated)).filter(|n|*n<=limits.max_total_bytes).ok_or_else(||limit_error(limits.max_total_bytes))?;
     }
-    if strict(&loaded.report,args.strict){return Err(Error::StrictLoss(loaded.report));}
+    let (writer_limits, report) = caller_writer_limits(&loaded.fonts, &limits, loaded.report, args.strict)?;
     loaded.fonts.validate(&limits)?;
     let filename=args.output.file_name().and_then(|n|n.to_str()).ok_or_else(||invalid("output requires a UTF-8 filename"))?;
     let mut options=fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);options.strict=args.strict;
-    options.transport_limits=Some(fontpixel::formats::TransportLimits{max_output_bytes:limits.max_total_bytes,resources:limits});
-    let written=registry.write_with_report(&loaded.fonts,&id,&options,loaded.report)?;
+    options.transport_limits=Some(fontpixel::formats::TransportLimits{max_output_bytes:writer_limits.max_total_bytes,resources:writer_limits});
+    let written=registry.write_with_report(&loaded.fonts,&id,&options,report)?;
     let font_count=loaded.fonts.fonts.len();drop(loaded.fonts);
     let sources=batch::sources();batch::persist_outputs(vec![assets::PendingOutput{destination:args.output.clone(),bundle:written.output}],&sources)?;
     match args.report {ReportStyle::Json=>crate::emit_json(out,&CharsetDocument{output:&args.output,format:&id,charset:target.name(),font_count,report:&written.report}),ReportStyle::Text=>{write!(out,"{}",written.report)?;writeln!(out,"Wrote {font_count} font(s) with charset {}",target.name())?;Ok(())}}
+}
+
+#[cfg(test)]
+mod budget_tests {
+    use super::*;
+
+    fn metadata_heavy_model() -> FontSet {
+        let mut font = Font::default();
+        let mut copyright = String::with_capacity(128 * 1024);
+        copyright.push_str("Original author notice");
+        font.names.copyright = Some(copyright);
+        let mut property = String::with_capacity(64 * 1024);
+        property.push_str("preserved metadata");
+        font.properties.set("EXTRA_NOTE", property);
+        let mut glyph = Glyph::new("#".parse::<fontpixel::Bitmap>().unwrap());
+        glyph.codepoints.push(Codepoint::Legacy(0));
+        glyph.metrics.advance = Some(fontpixel::model::Vector::new(1, 0));
+        font.add_glyph(glyph).unwrap();
+        let mut fonts = FontSet::from(font);
+        fonts.fonts.reserve_exact(3);
+        fonts
+    }
+
+    fn diagnostic(level: Level, impact: Impact) -> Report {
+        let mut report = Report { entries: Vec::with_capacity(8) };
+        let mut code = String::with_capacity(256);
+        code.push_str("test.retained");
+        let mut message = String::with_capacity(1024);
+        message.push_str("retained diagnostic text");
+        let mut asset = String::with_capacity(512);
+        asset.push_str("source.bdf");
+        report.push(ReportEntry {
+            level, impact, code, message,
+            location: Location { asset: Some(asset), ..Default::default() },
+        });
+        report
+    }
+
+    #[test]
+    fn caller_writer_reserves_full_model_and_diagnostic_capacities() {
+        let report = diagnostic(Level::Warning, Impact::Repair);
+        let expected = size_of::<Report>()
+            + report.entries.capacity() * size_of::<ReportEntry>()
+            + report.entries[0].code.capacity()
+            + report.entries[0].message.capacity()
+            + report.entries[0].location.asset.as_ref().unwrap().capacity();
+        let fonts = metadata_heavy_model();
+        let model = fonts.retained_usage(usize::MAX).unwrap().bytes;
+        let limits = ResourceLimits { max_total_bytes: model + expected + 4096, ..Default::default() };
+        let (writer, report) = caller_writer_limits(&fonts, &limits, report, false).unwrap();
+        assert_eq!(writer.max_total_bytes, 4096);
+        assert_eq!(writer.max_input_bytes, limits.max_input_bytes.min(4096));
+        assert_eq!(writer.max_resource_bytes, limits.max_resource_bytes.min(4096));
+        assert_eq!(writer.max_decompressed_bytes, limits.max_decompressed_bytes.min(4096));
+        assert_eq!(writer.max_table_bytes, limits.max_table_bytes.min(4096));
+        assert_eq!(writer.max_glyphs, limits.max_glyphs);
+        assert_eq!(report.entries[0].message, "retained diagnostic text");
+    }
+
+    #[test]
+    fn charset_writer_rejects_report_reservation_overflow_before_encoding() {
+        let report = diagnostic(Level::Info, Impact::None);
+        let fonts = metadata_heavy_model();
+        let retained = fonts.retained_usage(usize::MAX).unwrap().bytes + report_bytes(&report, usize::MAX).unwrap();
+        let limits = ResourceLimits { max_total_bytes: retained - 1, ..Default::default() };
+        assert!(matches!(caller_writer_limits(&fonts, &limits, report, false), Err(Error::ResourceLimit { .. })));
+        let report = diagnostic(Level::Info, Impact::None);
+        let limits = ResourceLimits { max_total_bytes: retained, ..Default::default() };
+        assert_eq!(caller_writer_limits(&fonts, &limits, report, false).unwrap().0.max_total_bytes, 0);
+    }
+
+    #[test]
+    fn charset_writer_preserves_error_and_strict_precedence_without_cloning_reports() {
+        let limits = ResourceLimits { max_total_bytes: 0, ..Default::default() };
+        let fonts = metadata_heavy_model();
+        let error = caller_writer_limits(&fonts, &limits, diagnostic(Level::Error, Impact::Loss), true).unwrap_err();
+        assert!(matches!(error, Error::ReportedErrors(_)));
+        let error = caller_writer_limits(&fonts, &limits, diagnostic(Level::Warning, Impact::Loss), true).unwrap_err();
+        assert!(matches!(error, Error::StrictLoss(_)));
+        let error = caller_writer_limits(&fonts, &limits, diagnostic(Level::Warning, Impact::Loss), false).unwrap_err();
+        assert!(matches!(error, Error::ResourceLimit { .. }));
+    }
+
+    #[cfg(any(feature = "bdf", feature = "raw"))]
+    fn native_caller_budget_boundary(id: &str) {
+        let fonts = metadata_heavy_model();
+        let before = fonts.retained_usage(usize::MAX).unwrap();
+        let retained = before.bytes
+            + report_bytes(&diagnostic(Level::Info, Impact::None), usize::MAX).unwrap();
+        let registry = fontpixel::registry();
+        let attempt = |total| {
+            let limits = ResourceLimits { max_total_bytes: total, ..Default::default() };
+            let (work, report) = caller_writer_limits(
+                &fonts, &limits, diagnostic(Level::Info, Impact::None), false,
+            )?;
+            let mut options = fontpixel::WriteOptions::new(
+                fontpixel::ResourcePath::new(format!("font.{id}"))?,
+            );
+            options.transport_limits = Some(fontpixel::formats::TransportLimits {
+                max_output_bytes: work.max_total_bytes, resources: work,
+            });
+            registry.write_with_report(&fonts, id, &options, report)
+        };
+        let mut low = retained;
+        let mut high = 8 * 1024 * 1024;
+        let expected = attempt(high).unwrap().output.into_single().unwrap();
+        assert!(attempt(low).is_err());
+        // Find this writer's actual admission boundary instead of inventing or
+        // refunding a heuristic source charge. Only bounded tiny-font calls run.
+        while high - low > 1 {
+            let middle = low + (high - low) / 2;
+            if attempt(middle).is_ok() { high = middle; } else { low = middle; }
+        }
+        assert_eq!(attempt(high).unwrap().output.into_single().unwrap(), expected);
+        assert!(attempt(high - 1).is_err());
+        let limits = ResourceLimits { max_total_bytes: high, ..Default::default() };
+        let (work, _) = caller_writer_limits(
+            &fonts, &limits, diagnostic(Level::Info, Impact::None), false,
+        ).unwrap();
+        assert_eq!(work.max_total_bytes, high - retained);
+        assert_eq!(fonts.retained_usage(usize::MAX).unwrap(), before);
+        assert_eq!(fonts.fonts[0].names.copyright.as_deref(), Some("Original author notice"));
+    }
+
+    #[cfg(feature = "bdf")]
+    #[test]
+    fn caller_reservation_exact_boundary_for_metadata_heavy_bdf_writer() {
+        native_caller_budget_boundary("bdf");
+    }
+
+    #[cfg(feature = "raw")]
+    #[test]
+    fn caller_reservation_exact_boundary_for_metadata_heavy_raw_writer() {
+        native_caller_budget_boundary("raw");
+    }
+
 }

@@ -1,0 +1,320 @@
+{
+  "status": "source-reference checklist only; not compiler/runtime validation or exhaustive binding coverage",
+  "example": "crates/fontpixel/examples/api_quickstart.rs",
+  "rustdoc": "docs/api-rustdoc.md",
+  "rustdoc_include": "#![doc = include_str!(\"../../../docs/api-rustdoc.md\")]",
+  "features": [
+    "yaff",
+    "pcf",
+    "image",
+    "otb",
+    "sfnt",
+    "woff2"
+  ],
+  "minimum_rustdoc_examples": 5,
+  "references": [
+    {
+      "capability": "model editing",
+      "source": "crates/fontpixel/src/model/mod.rs",
+      "declarations": [
+        "pub fn from_glyphs",
+        "pub fn edit_glyph",
+        "pub fn glyph_for_codepoint",
+        "pub fn single"
+      ]
+    },
+    {
+      "capability": "retained/clone accounting",
+      "source": "crates/fontpixel/src/model/budget.rs",
+      "declarations": [
+        "pub fn retained_usage",
+        "pub fn cloned_usage"
+      ]
+    },
+    {
+      "capability": "normalized name edits",
+      "source": "crates/fontpixel/src/metadata.rs",
+      "declarations": [
+        "pub struct NameOverrides",
+        "pub fn apply_names"
+      ]
+    },
+    {
+      "capability": "render and SVG",
+      "source": "crates/fontpixel/src/render/image.rs",
+      "declarations": [
+        "pub fn to_svg"
+      ]
+    },
+    {
+      "capability": "charset",
+      "source": "crates/fontpixel/src/charset/mod.rs",
+      "declarations": [
+        "pub fn new(name: &str",
+        "pub fn known",
+        "pub fn cp2char",
+        "pub fn char2cp"
+      ]
+    },
+    {
+      "capability": "merge",
+      "source": "crates/fontpixel/src/merge/mod.rs",
+      "declarations": [
+        "pub struct MergePart",
+        "pub struct MergeOptions",
+        "pub fn merge"
+      ]
+    },
+    {
+      "capability": "merge reporting",
+      "source": "crates/fontpixel/src/merge/report.rs",
+      "declarations": [
+        "pub diagnostics: Report",
+        "pub fn to_json"
+      ]
+    },
+    {
+      "capability": "registry writes/options",
+      "source": "crates/fontpixel/src/formats/mod.rs",
+      "declarations": [
+        "pub fn write_with_report",
+        "pub fn set_pcf_write_options",
+        "pub fn set_embedded_write_options"
+      ]
+    },
+    {
+      "capability": "resources/assets",
+      "source": "crates/fontpixel/src/resources.rs",
+      "declarations": [
+        "pub trait ResourceResolver",
+        "pub fn with_resources",
+        "pub fn assets",
+        "pub fn primary",
+        "pub fn into_single"
+      ]
+    },
+    {
+      "capability": "typed PCF",
+      "source": "crates/fontpixel/src/formats/pcf.rs",
+      "declarations": [
+        "pub enum Order",
+        "pub struct PcfWriteOptions"
+      ]
+    },
+    {
+      "capability": "embedded metrics",
+      "source": "crates/fontpixel/src/formats/embedded.rs",
+      "declarations": [
+        "pub struct EmbeddedWriteOptions",
+        "pub enum EmbeddedReferenceStrike",
+        "pub enum EmbeddedRounding"
+      ]
+    },
+    {
+      "capability": "prepared variants",
+      "source": "crates/fontpixel/src/variants.rs",
+      "declarations": [
+        "pub struct ScriptVariant",
+        "pub fn prepare",
+        "pub fn add_language",
+        "pub fn plan",
+        "pub fn encode"
+      ]
+    },
+    {
+      "capability": "regional names",
+      "source": "crates/fontpixel/src/variants/export.rs",
+      "declarations": [
+        "pub legacy_style: Option<String>",
+        "pub full_name: Option<String>",
+        "pub postscript_name: Option<String>"
+      ]
+    },
+    {
+      "capability": "sfnt names",
+      "source": "crates/fontpixel/src/sfnt/name.rs",
+      "declarations": [
+        "pub fn text",
+        "pub fn decode"
+      ]
+    },
+    {
+      "capability": "subset",
+      "source": "crates/fontpixel/src/sfnt/subset.rs",
+      "declarations": [
+        "pub fn text",
+        "pub fn subset",
+        "pub glyph_mapping"
+      ]
+    },
+    {
+      "capability": "WOFF2",
+      "source": "crates/fontpixel/src/woff/woff2.rs",
+      "declarations": [
+        "pub compression_threads: usize",
+        "pub fn encode",
+        "pub fn decode"
+      ]
+    },
+    {
+      "capability": "CLI grouped conversion",
+      "source": "crates/fontpixel-cli/src/main.rs",
+      "declarations": [
+        "visible_alias = \"vectorize\"",
+        "each: bool",
+        "font_index: Option<usize>",
+        "conversion_groups",
+        "p3: Box<p3_formats::WriteArguments>",
+        "p3.apply(&id,"
+      ]
+    },
+    {
+      "capability": "CLI naming",
+      "source": "crates/fontpixel-cli/src/metadata.rs",
+      "declarations": [
+        "struct NameArguments",
+        "full_name: Option<String>",
+        "postscript_name: Option<String>"
+      ]
+    },
+    {
+      "capability": "CLI regional naming",
+      "source": "crates/fontpixel-cli/src/opentype.rs",
+      "declarations": [
+        "legacy_style: Option<String>",
+        "full_name: Option<String>",
+        "postscript_name: Option<String>"
+      ]
+    },
+    {
+      "capability": "batch identity ledger",
+      "source": "crates/fontpixel-cli/src/batch.rs",
+      "declarations": [
+        "sources.set_retained_budget",
+        "max_pending_bytes",
+        "100_000"
+      ]
+    },
+    {
+      "capability": "sticky source protection",
+      "source": "crates/fontpixel-cli/src/assets.rs",
+      "declarations": [
+        "incomplete: bool",
+        "state.incomplete = true",
+        "input identity protection is incomplete"
+      ]
+    },
+    {
+      "capability": "CLI embedded metric controls",
+      "source": "crates/fontpixel-cli/src/p3_formats.rs",
+      "declarations": [
+        "otb_upm: Option<u16>",
+        "otb_reference: Option<String>",
+        "otb_rounding: Option<String>",
+        "clap::value_parser!(u16).range(16..=16384)",
+        "fn embedded_reference",
+        "if !matches!(id, \"otb\" | \"bdat\")",
+        "EmbeddedReferenceStrike::LargestPpem",
+        "EmbeddedReferenceStrike::Index",
+        "EmbeddedRounding::NearestTiesEven",
+        "registry.set_embedded_write_options(options)"
+      ]
+    },
+    {
+      "capability": "merge shared embedded writer options",
+      "source": "crates/fontpixel-cli/src/merge.rs",
+      "declarations": [
+        "p3: Box<p3_formats::WriteArguments>",
+        "raw.p3.apply(id,"
+      ]
+    },
+    {
+      "capability": "plain aggregate returned-output bound",
+      "source": "crates/fontpixel/src/formats/mod.rs",
+      "declarations": [
+        "let maximum = common.max_output_bytes;",
+        ".checked_add(asset.bytes.len())",
+        ".filter(|bytes| *bytes <= maximum)",
+        "resource: \"plain output asset bytes\""
+      ]
+    },
+    {
+      "capability": "plain output cap regression source (unexecuted)",
+      "source": "crates/fontpixel/tests/phase6_plain_output_budget.rs",
+      "declarations": [
+        "fn aggregate_bound_covers_sidecars_and_directory_assets_at_exact_length",
+        "fn incoming_error_and_strict_loss_precede_writer_and_plain_output_check",
+        "fn writer_error_and_strict_loss_precede_plain_output_check",
+        "fn non_strict_loss_still_obeys_the_plain_output_cap",
+        "fn otb_common_zero_short_exact_and_default_caps"
+      ]
+    }
+  ],
+  "documentation_contracts": [
+    {
+      "source": "docs/api.md",
+      "required": [
+        "--otb-upm 16..16384",
+        "--otb-reference first|largest|N",
+        "--otb-rounding half-away|ties-even",
+        "aggregate serialized asset lengths",
+        "common.max_output_bytes",
+        "after combined error/strict diagnostics",
+        "not a universal preallocation or peak-memory guard",
+        "typed per-asset cap remains distinct",
+        "gzip envelope/replay budgets and defaults are unchanged"
+      ],
+      "forbidden": [
+        "Current CLI source has no matching flags"
+      ]
+    },
+    {
+      "source": "docs/w6.1-cli.md",
+      "required": [
+        "--otb-upm 16..16384",
+        "--otb-reference first|largest|N",
+        "--otb-rounding half-away|ties-even",
+        "otb_upm = 1000",
+        "otb_reference = \"largest\"",
+        "otb_rounding = \"ties-even\"",
+        "w6.1-writer-budget.md",
+        "aggregate serialized asset lengths",
+        "after error/strict diagnostics",
+        "does not promise universal preallocation prevention",
+        "typed limits stay in force; gzip budgets and defaults are unchanged"
+      ],
+      "forbidden": [
+        "Current CLI source has no corresponding embedded metric flags"
+      ]
+    },
+    {
+      "source": "docs/migration-fontpixel.md",
+      "required": [
+        "--otb-upm 16..16384",
+        "--otb-reference first|largest|N",
+        "--otb-rounding half-away|ties-even",
+        "otb_upm",
+        "otb_reference",
+        "otb_rounding",
+        "remain uncompiled/untested"
+      ],
+      "forbidden": [
+        "Embedded controls are not currently CLI flags"
+      ]
+    }
+  ],
+  "toml_examples": [
+    {
+      "source": "docs/w6.1-cli.md",
+      "task_id": "embedded-metrics",
+      "version": 1,
+      "kind": "convert",
+      "format": "otb",
+      "options": {
+        "otb_upm": 1000,
+        "otb_reference": "largest",
+        "otb_rounding": "ties-even"
+      }
+    }
+  ]
+}
