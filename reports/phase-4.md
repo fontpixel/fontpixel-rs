@@ -2,8 +2,11 @@
 
 2026-10-04. Six parallel work items implement all sixteen P2 format IDs on top
 of accepted phase 3 commit `cbbaa359c7bad120a3da6dc11c189b46cb4601f7`.
-The implementation candidate passes all phase 4 gates. The local integration
-record identifies the resulting main commit and backup separately.
+Phase 4 is integrated and accepted at main commit
+`f1a0191c1d4eb0525b9b644fc43ff526cfe15b6a`. The merged `scripts/check.sh` also passes
+with 1,536 test executions in 273 suites; all 402 source fingerprints
+match the tested snapshot. See `phase4-evidence/integrated-source.json` and
+`phase4-main-check.*`. The verified local backup is recorded separately.
 Phases 5–9 remain work to do; this is not whole-project completion.
 
 ## Scope and independent validation
