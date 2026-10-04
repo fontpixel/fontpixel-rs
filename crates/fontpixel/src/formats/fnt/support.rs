@@ -218,6 +218,11 @@ pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
         Ok(())
     }
     let mut b = Budget::new(std::mem::size_of::<Font>(), l)?;
+    // Font-level diagnostics plus normalization diagnostics for at most 256
+    // exportable byte positions. Omitted source glyphs only need mapping and
+    // omission diagnostics; charging normalization for all CJK input glyphs
+    // spuriously rejects ordinary large sources under the default budget.
+    b.add(16384 + f.len().min(256) * 4096)?;
     for s in [
         &f.names.family,
         &f.names.style,
@@ -246,7 +251,7 @@ pub(crate) fn model_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {
     props(&f.headers, &mut b, l)?;
     props(&f.properties, &mut b, l)?;
     for (_, g) in f.glyphs() {
-        b.add(std::mem::size_of::<crate::Glyph>() + 4096)?;
+        b.add(std::mem::size_of::<crate::Glyph>() + 512)?;
         b.add(g.bitmap.as_bytes().len().saturating_mul(3))?;
         if let Some(name) = &g.name {
             b.add(name.len())?;

@@ -1180,3 +1180,18 @@ feature. Source FNT character-range endpoints are retained so absent leading or
 trailing slots and relative break/default indexes are not silently retargeted.
 Metadata names use byte-preserving Latin-1 because historical Windows strings
 are not universally tagged with the glyph charset.
+
+## 2026-10-04 — Bound FNT normalization work by exportable byte positions
+
+**Question:** A final Tong SC probe hit the 256 MiB default aggregate budget
+because the writer charged worst-case normalization diagnostics for all 38,653
+source glyphs, although no more than 256 can be exported.
+**Choice:** Keep per-source bitmap, metadata, mapping and omission charges;
+charge normalization diagnostics for at most 256 glyphs, plus a font-level
+reserve. Explicitly omit zero-advance mappings with loss entries because a
+zero-width FNT table slot means an absent glyph.
+**Reason:** The bound stays conservative without spuriously refusing ordinary
+large CJK sources before their unmappable characters can be reported. A focused
+38,653-supplementary-glyph regression and the supplied Tong SC probe pass.
+The owner requested a safe handoff immediately afterward: this final change has
+focused validation only, not renewed full/fuzz/performance acceptance.

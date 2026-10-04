@@ -91,3 +91,9 @@ monobit. The reference code and samples are unchanged.
 Already encoded single-byte glyphs under a DBCS charset can roundtrip with the
 standalone FNT feature. Exact Unicode conversion for those pages requires
 `cjk-charsets`; absent tables cause an error, never an approximate mapping.
+
+Zero-advance source glyphs are explicitly omitted with per-code and per-glyph
+loss entries, because zero-width FNT slots represent absence. If no representable
+nonzero-width mapping remains, writing fails rather than creating an empty font.
+The final large-source accounting adjustment is paused at focused validation;
+see `reports/w3.2-HANDOFF.md` before treating this branch as accepted.

@@ -451,3 +451,50 @@ fn malformed_deserialized_rational_is_rejected_without_panic() {
         Some(serde_json::from_str(r#"{"numerator":12,"denominator":0}"#).unwrap());
     assert!(fnt::write(&f, &Default::default()).is_err());
 }
+
+#[test]
+fn zero_advance_mapping_is_reported_without_blocking_other_glyphs() {
+    let mut f = sample();
+    let mut g = Glyph::new("#".parse::<Bitmap>().unwrap());
+    g.codepoints.push(Codepoint::Unicode(67));
+    g.metrics.advance = Some(Vector::new(0, 0));
+    f.add_glyph(g).unwrap();
+    let (b, r) = fnt::write(&f, &Default::default()).unwrap();
+    assert!(
+        r.entries
+            .iter()
+            .any(|e| e.code == "fnt.zero_width_code" && e.location.codepoint == Some(67))
+    );
+    assert_eq!(
+        fnt::read_default(&b, &Default::default()).unwrap().0.len(),
+        2
+    );
+}
+
+#[test]
+fn large_unicode_sources_report_omissions_with_default_budget() {
+    let mut f = sample();
+    for cp in 0x10000..0x10000 + 38653 {
+        if char::from_u32(cp).is_none() {
+            continue;
+        }
+        let mut g = Glyph::new("#".parse::<Bitmap>().unwrap());
+        g.codepoints.push(Codepoint::Unicode(cp));
+        f.add_glyph(g).unwrap();
+    }
+    let (bytes, r) = fnt::write(&f, &Default::default()).unwrap();
+    assert_eq!(
+        fnt::read_default(&bytes, &Default::default())
+            .unwrap()
+            .0
+            .len(),
+        2
+    );
+    assert_eq!(
+        r.entries
+            .iter()
+            .filter(|e| e.code == "fnt.unmapped_code")
+            .count(),
+        38653
+    );
+}

@@ -311,6 +311,29 @@ pub fn write(font: &Font, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
     let mut slots: [Option<GlyphId>; 256] = [None; 256];
     let mut seen = BTreeSet::new();
     for (id, g) in font.glyphs() {
+        if g.metrics
+            .advance
+            .map_or(i64::from(g.metrics.bounds.width), |v| v.x)
+            == 0
+        {
+            for cp in &g.codepoints {
+                loss(
+                    &mut report,
+                    "zero_width_code",
+                    Some(id.index()),
+                    Some(cp.value()),
+                    "FNT zero-width slots denote missing characters; this mapping is omitted",
+                );
+            }
+            loss(
+                &mut report,
+                "omitted_glyph",
+                Some(id.index()),
+                None,
+                "Zero-advance glyph cannot be represented in raster FNT",
+            );
+            continue;
+        }
         let mut mapped = 0;
         for &cp in &g.codepoints {
             if let Some(n) = map_code(cp, &source_name, target.as_ref(), raw) {
