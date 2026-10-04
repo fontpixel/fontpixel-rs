@@ -1402,3 +1402,23 @@ feature. BDF-based P2 integration tests require it explicitly, while the raw to
 NFNT container test also runs without a BDF reader. Clap parameter groups are
 disabled for the flattened P2 argument structs so equal Rust type names cannot
 create duplicate command-line groups.
+
+## 2026-10-04 — Keep the phase 5 survey as concrete required scope
+
+**Question:** The original 46 IDs do not cover all general bitmap formats in the
+versioned independent tool catalogues.
+**Choice:** Add 53 canonical wire families from the reproducible W5.1 survey,
+for 99 planned IDs. Group aliases and related native variants under one ID,
+while recording existing-family extensions separately. Register unimplemented
+entries honestly as planned; do not advertise codecs merely because their
+feature or catalogue slot exists. Format-specific native readers and writers,
+loss reports, independent validation, fuzz and performance remain required.
+**Reason:** The original task explicitly requires this survey and its resulting
+implementations. Missing upstream writers or freely redistributable historical
+artwork are not reasons to omit an otherwise documented general format.
+
+The boundary is the pinned monobit release/master, Bits’N’Picas catalogue and
+the listed original developer sources, not every unknown or future format.
+Generic compression/transport utilities and pure-outline formats are classified
+separately from bitmap wire families; game-specific private formats remain
+excluded by PLAN §1.3. See `reports/w5.1-survey.md` and its coverage check.

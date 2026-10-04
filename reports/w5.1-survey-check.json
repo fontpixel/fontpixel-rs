@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "inventory_sha256": "2c5152cd791c62db47478f4ee0589623ed69ee7c6c2b4c6f8c6afa9f61544004",
+  "scope": "survey coverage only; not codec acceptance",
+  "original_ids": 46,
+  "new_ids": 53,
+  "monobit_bitmap_rows": 91,
+  "monobit_wrapper_rows": 33,
+  "monobit_stroke_rows": 8,
+  "native_sample_hash_records": 29,
+  "offline_validation": "pass",
+  "installed_oracle_validation": "pass",
+  "oracle_source_files_hashed": 108,
+  "pinned_upstream_catalogue_validation": "pass"
+}
