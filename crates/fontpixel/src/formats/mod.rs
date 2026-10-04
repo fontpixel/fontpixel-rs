@@ -7,6 +7,8 @@ use crate::{Error, Operation, Report, Result};
 
 #[cfg(feature = "bdf")]
 pub mod bdf;
+#[cfg(feature = "c")]
+pub mod c;
 pub mod catalogue;
 #[cfg(any(feature = "hex", feature = "psf"))]
 mod console;
@@ -21,8 +23,16 @@ pub mod embedded;
 pub mod fnt;
 #[cfg(feature = "fon")]
 pub mod fon;
+#[cfg(feature = "hbf")]
+pub mod hbf;
 #[cfg(feature = "hex")]
 pub mod hex;
+#[cfg(feature = "image")]
+pub mod image;
+#[cfg(feature = "kbitx")]
+pub mod kbitx;
+#[cfg(feature = "pbf")]
+pub mod pbf;
 #[cfg(feature = "pcf")]
 pub mod pcf;
 #[cfg(feature = "psf")]
@@ -642,6 +652,43 @@ impl Registry<crate::FontSet> {
     }
 }
 
+#[cfg(feature = "image")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_image(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "image") {
+            e.detector = Some(Box::new(image::ImageCodec::default()));
+            e.reader = Some(Box::new(image::ImageCodec::default()));
+            e.writer = Some(Box::new(image::ImageCodec::default()));
+        }
+    }
+    /// Select an explicit image mapping or caller-scoped mapping asset.
+    pub fn set_image_read_options(&mut self, options: image::ImageReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "image" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(image::ImageCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure atlas image container, packing and mapping serialization.
+    pub fn set_image_write_options(&mut self, options: image::ImageWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "image" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(image::ImageCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+
 #[cfg(feature = "fnt")]
 impl Registry<crate::FontSet> {
     pub(crate) fn install_fnt(&mut self) {
@@ -707,6 +754,140 @@ impl Registry<crate::FontSet> {
             e.detector = Some(Box::new(fon::FonCodec::default()));
             e.reader = Some(Box::new(fon::FonCodec::default()));
             e.writer = Some(Box::new(fon::FonCodec::default()));
+        }
+    }
+}
+
+#[cfg(feature = "c")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_c(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "c") {
+            e.detector = Some(Box::new(c::CCodec::default()));
+            e.reader = Some(Box::new(c::CCodec::default()));
+            e.writer = Some(Box::new(c::CCodec::default()));
+        }
+    }
+    /// Configure literal C input dialect and explicit geometry.
+    pub fn set_c_read_options(&mut self, options: c::CReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "c" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(c::CCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure portable generic or Adafruit GFX output.
+    pub fn set_c_write_options(&mut self, options: c::CWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "c" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(c::CCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+
+#[cfg(feature = "kbitx")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_kbitx(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "kbitx") {
+            e.detector = Some(Box::new(kbitx::KbitxCodec::default()));
+            e.reader = Some(Box::new(kbitx::KbitxCodec::default()));
+            e.writer = Some(Box::new(kbitx::KbitxCodec::default()));
+        }
+    }
+    /// Configure Kbitx input interpretation.
+    pub fn set_kbitx_read_options(&mut self, options: kbitx::KbitxReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "kbitx" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(kbitx::KbitxCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure Kbitx output and resource limits.
+    pub fn set_kbitx_write_options(&mut self, options: kbitx::KbitxWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "kbitx" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(kbitx::KbitxCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+
+#[cfg(feature = "pbf")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_pbf(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "pbf") {
+            e.detector = Some(Box::new(pbf::PbfCodec::default()));
+            e.reader = Some(Box::new(pbf::PbfCodec::default()));
+            e.writer = Some(Box::new(pbf::PbfCodec::default()));
+        }
+    }
+    /// Configure Pbf input interpretation.
+    pub fn set_pbf_read_options(&mut self, options: pbf::PbfReadOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "pbf" && e.reader.is_some())
+        {
+            e.reader = Some(Box::new(pbf::PbfCodec {
+                read_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+    /// Configure Pbf output and resource limits.
+    pub fn set_pbf_write_options(&mut self, options: pbf::PbfWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "pbf" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(pbf::PbfCodec {
+                write_options: options,
+                ..Default::default()
+            }));
+        }
+    }
+}
+
+#[cfg(feature = "hbf")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_hbf(&mut self) {
+        if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "hbf") {
+            e.detector = Some(Box::new(hbf::HbfCodec::default()));
+            e.reader = Some(Box::new(hbf::HbfCodec::default()));
+            e.writer = Some(Box::new(hbf::HbfCodec::default()));
+        }
+    }
+    /// Configure Hbf output and resource limits.
+    pub fn set_hbf_write_options(&mut self, options: hbf::HbfWriteOptions) {
+        if let Some(e) = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "hbf" && e.writer.is_some())
+        {
+            e.writer = Some(Box::new(hbf::HbfCodec {
+                write_options: options,
+            }));
         }
     }
 }

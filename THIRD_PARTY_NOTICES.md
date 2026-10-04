@@ -311,3 +311,58 @@ notice also credits mkwinfont (Simon Tatham, 2001) and dewinfont (2001, 2017).
 No implementation code was copied; format layouts and public Microsoft
 specifications informed an independent bounded Rust implementation. See
 `docs/formats/fnt.md` and `docs/formats/fon.md` for sources.
+
+## W3.3 image/C format references and dependencies
+
+Image-map semantics and C header conventions were checked against the supplied
+MIT catalogue's `spritesheet.py` and `header8x8.py`. The bounded Rust codecs,
+native metadata extension, C literal lexer and synthetic fixtures are original.
+`tests/crosscheck/spritesheet.py` adapts the MIT catalogue's synthetic spritesheet
+test semantics and invokes its importer unchanged; its complete MIT notice is
+retained in the script, and source hashes are in the crosscheck evidence.
+The public-domain dhepper/font8x8 headers are downloaded only for independent
+validation; the pinned revision and hashes are in
+`tests/data/c-upstream-sources.json`. Adafruit's BSD GFX declarations/consumer
+serve as format documentation, with no implementation copied.
+
+`image` 0.25.10 (MIT OR Apache-2.0), with only PNG/BMP/GIF/TGA/PNM codecs, and
+`toml` 1.1.6+spec-1.1.0 (MIT OR Apache-2.0) provide container parsing/encoding. Transitive
+crate licenses remain with their packages and are checked by cargo-deny.
+CLI-only `cap-std` 4.0.3 (Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT)
+provides directory capabilities; `same-file` 1.0.6 (Unlicense OR MIT, MIT selected)
+provides identity comparisons. Their exact resolved dependency licenses are
+authoritatively recorded in Cargo metadata and checked by the dependency policy.
+
+## W3.4 KBITX / Pebble PBF format references
+
+The Rust codecs, WIB/RLE/base64 handling, generated tests and fuzz seeds are
+original implementation. The supplied MIT catalogue importers are independent
+test-time oracles and format-semantics references:
+
+- `kbitx.py`, SHA-256
+  `d6e7edc277337c436ad7cbf57b1d60623728c583cb476cb0679ea7fed54d1f0f`
+- `pebble.py`, SHA-256
+  `67c2e5170e600f7d86b53b7acd02d89e505e1fcab3b76fe894d5fa2ed8fbd890`
+
+Bits'N'Picas importer/exporter/DTD (Rebecca G. Bettencourt / Kreative Software,
+MPL 1.1 with LGPL alternative) were consulted only as format evidence; none of
+that implementation was copied. Google's Pebble font generator/runtime sources
+(copyright 2024 Google LLC, Apache-2.0) establish the wire layouts and runtime
+semantics; no implementation was copied. Source links are in the format documents.
+KBITX reuses the already credited roxmltree and xmlparser dependencies.
+
+MuzaiPixel and TUMBLED v1.11 fonts are OFL 1.1 and remain outside the repository
+under `local-work`. Their source/license URLs and hashes are recorded in
+`reports/w3.4-kbitx-crosscheck.json` and `reports/w3.4-pbf-upstream.json`.
+No font binary is redistributed here. monobit has no KBITX/PBF handler and is
+not claimed as an oracle for these formats.
+
+## W3.5 HBF specification and oracle
+
+The codec is an original implementation of the public Hanzi Bitmap Font 1.1
+specification (September 1994), linked in `docs/formats/hbf.md`. MIT monobit 0.54
+(Rob Hagemans) is invoked as an external bidirectional oracle; no implementation
+was copied. Header/bitmap fixtures and fuzz seeds are original synthetic data.
+The oracle adapter preserves raw artifacts and changes only the missing
+HBF_END_FONT terminator and absolute bitmap path. HBF adds no production
+dependency or third-party font artwork.

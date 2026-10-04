@@ -1,0 +1,66 @@
+{
+  "license": "Public Domain",
+  "revision": "8e279d2d864e79128e96188a6b9526cfa3fbfef9",
+  "files": [
+    {
+      "name": "font8x8.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8.h",
+      "sha256": "7ce4fc037a13552d3f0bb8e7aff4ada477ad2f167e56358945fa788e7c1d50f7",
+      "bytes": 494
+    },
+    {
+      "name": "font8x8_basic.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_basic.h",
+      "sha256": "49d8df366296b203ca3211bc0672cf2a762135bf12710735b6292756b19dffd5",
+      "bytes": 9596
+    },
+    {
+      "name": "font8x8_control.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_control.h",
+      "sha256": "66c10295de288722d4c9384d5bf84e2c82c1a07f8ad020d2e3c0588e80dd1f9e",
+      "bytes": 2780
+    },
+    {
+      "name": "font8x8_ext_latin.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_ext_latin.h",
+      "sha256": "e0582e9a6b3f85dbb983c72d95c9a50c3547ad5e895d16ef167e20777d053f1b",
+      "bytes": 8116
+    },
+    {
+      "name": "font8x8_greek.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_greek.h",
+      "sha256": "e80e7b27948f7729bd8d0fae4110124a812516ea65bae2d82d8c16fbf40b9ffd",
+      "bytes": 5046
+    },
+    {
+      "name": "font8x8_misc.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_misc.h",
+      "sha256": "01a77242dc9e623b359e1b262fdc02110de1a6834432b7167534196b769f23e5",
+      "bytes": 1372
+    },
+    {
+      "name": "font8x8_box.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_box.h",
+      "sha256": "f7171735837d05bdfd943b0f54f72100a065d0bc0e50385edc7319ae65b0e2b6",
+      "bytes": 12041
+    },
+    {
+      "name": "font8x8_block.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_block.h",
+      "sha256": "a6b97a0819fa79fbba259f69e7dc2e34586703151648d68889e2a8b71831342f",
+      "bytes": 3241
+    },
+    {
+      "name": "font8x8_hiragana.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_hiragana.h",
+      "sha256": "7559eef34d546e2f13f5b1136294464c335b668406f53e3d6ce9cee5f64a072a",
+      "bytes": 8392
+    },
+    {
+      "name": "font8x8_sga.h",
+      "url": "https://raw.githubusercontent.com/dhepper/font8x8/8e279d2d864e79128e96188a6b9526cfa3fbfef9/font8x8_sga.h",
+      "sha256": "087e177080f6e87a08766936984995cfb209411613419c3384a2ac9a15db6e00",
+      "bytes": 2477
+    }
+  ]
+}

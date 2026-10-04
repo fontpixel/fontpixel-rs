@@ -1,0 +1,258 @@
+{
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "binary_sha256": "ef40390ca945bd4c71f9bf0088879a209dedb282fc7655471b804ad5b83d3195",
+  "glyphs": 256,
+  "cell": [
+    9,
+    16
+  ],
+  "runs": 5,
+  "iterations": 200,
+  "formats": {
+    "png": {
+      "read_us": {
+        "median": 1106.0270699999999,
+        "min": 1091.64464,
+        "max": 1124.479385
+      },
+      "write_us": {
+        "median": 808.445615,
+        "min": 779.681155,
+        "max": 811.95816
+      },
+      "bytes": {
+        "median": 65258,
+        "min": 65258,
+        "max": 65258
+      }
+    },
+    "pgm": {
+      "read_us": {
+        "median": 1016.8119,
+        "min": 952.94593,
+        "max": 1028.225255
+      },
+      "write_us": {
+        "median": 700.3220999999999,
+        "min": 674.5162000000001,
+        "max": 719.44879
+      },
+      "bytes": {
+        "median": 90393,
+        "min": 90393,
+        "max": 90393
+      }
+    },
+    "generic": {
+      "read_us": {
+        "median": 360.837715,
+        "min": 340.17521,
+        "max": 371.14257
+      },
+      "write_us": {
+        "median": 898.86179,
+        "min": 857.5731350000001,
+        "max": 914.979665
+      },
+      "bytes": {
+        "median": 52429,
+        "min": 52429,
+        "max": 52429
+      }
+    },
+    "gfx": {
+      "read_us": {
+        "median": 333.51060000000007,
+        "min": 322.18882499999995,
+        "max": 348.343995
+      },
+      "write_us": {
+        "median": 1190.63073,
+        "min": 1148.015695,
+        "max": 1205.019865
+      },
+      "bytes": {
+        "median": 31230,
+        "min": 31230,
+        "max": 31230
+      }
+    }
+  },
+  "batch_1000_reads_ms": {
+    "generic": {
+      "1": 363.42136800000003,
+      "2": 189.636634,
+      "4": 106.078958
+    },
+    "gfx": {
+      "1": 335.375916,
+      "2": 173.04093600000002,
+      "4": 96.06788800000001
+    }
+  },
+  "elapsed_seconds": 12.939245276967995,
+  "peak_rss_kib": 17684,
+  "records": [
+    {
+      "glyphs": 256,
+      "iterations": 200,
+      "timings": {
+        "png": {
+          "read_us": 1098.95932,
+          "write_us": 797.74274,
+          "bytes": 65258
+        },
+        "pgm": {
+          "read_us": 952.94593,
+          "write_us": 674.5162000000001,
+          "bytes": 90393
+        },
+        "generic": {
+          "read_us": 340.17521,
+          "write_us": 857.5731350000001,
+          "bytes": 52429
+        },
+        "generic_1000_1_threads_ms": 363.42136800000003,
+        "generic_1000_2_threads_ms": 186.768366,
+        "generic_1000_4_threads_ms": 118.194228,
+        "gfx": {
+          "read_us": 336.87411999999995,
+          "write_us": 1190.63073,
+          "bytes": 31230
+        },
+        "gfx_1000_1_threads_ms": 327.841471,
+        "gfx_1000_2_threads_ms": 170.05719,
+        "gfx_1000_4_threads_ms": 101.989791
+      }
+    },
+    {
+      "glyphs": 256,
+      "iterations": 200,
+      "timings": {
+        "png": {
+          "read_us": 1124.479385,
+          "write_us": 809.8662550000001,
+          "bytes": 65258
+        },
+        "pgm": {
+          "read_us": 1016.8119,
+          "write_us": 700.3220999999999,
+          "bytes": 90393
+        },
+        "generic": {
+          "read_us": 360.837715,
+          "write_us": 908.3770550000002,
+          "bytes": 52429
+        },
+        "generic_1000_1_threads_ms": 349.494057,
+        "generic_1000_2_threads_ms": 184.02057499999998,
+        "generic_1000_4_threads_ms": 103.09261599999999,
+        "gfx": {
+          "read_us": 348.343995,
+          "write_us": 1188.588045,
+          "bytes": 31230
+        },
+        "gfx_1000_1_threads_ms": 335.375916,
+        "gfx_1000_2_threads_ms": 178.401021,
+        "gfx_1000_4_threads_ms": 95.071605
+      }
+    },
+    {
+      "glyphs": 256,
+      "iterations": 200,
+      "timings": {
+        "png": {
+          "read_us": 1121.26908,
+          "write_us": 811.95816,
+          "bytes": 65258
+        },
+        "pgm": {
+          "read_us": 1028.225255,
+          "write_us": 719.44879,
+          "bytes": 90393
+        },
+        "generic": {
+          "read_us": 371.14257,
+          "write_us": 914.979665,
+          "bytes": 52429
+        },
+        "generic_1000_1_threads_ms": 358.995161,
+        "generic_1000_2_threads_ms": 206.82773600000002,
+        "generic_1000_4_threads_ms": 106.078958,
+        "gfx": {
+          "read_us": 328.33883000000003,
+          "write_us": 1148.015695,
+          "bytes": 31230
+        },
+        "gfx_1000_1_threads_ms": 331.529781,
+        "gfx_1000_2_threads_ms": 173.04093600000002,
+        "gfx_1000_4_threads_ms": 91.02673
+      }
+    },
+    {
+      "glyphs": 256,
+      "iterations": 200,
+      "timings": {
+        "png": {
+          "read_us": 1091.64464,
+          "write_us": 779.681155,
+          "bytes": 65258
+        },
+        "pgm": {
+          "read_us": 994.3399949999999,
+          "write_us": 687.8067,
+          "bytes": 90393
+        },
+        "generic": {
+          "read_us": 346.16709000000003,
+          "write_us": 861.7077800000001,
+          "bytes": 52429
+        },
+        "generic_1000_1_threads_ms": 365.803504,
+        "generic_1000_2_threads_ms": 189.636634,
+        "generic_1000_4_threads_ms": 113.329156,
+        "gfx": {
+          "read_us": 333.51060000000007,
+          "write_us": 1205.019865,
+          "bytes": 31230
+        },
+        "gfx_1000_1_threads_ms": 340.72532,
+        "gfx_1000_2_threads_ms": 167.915508,
+        "gfx_1000_4_threads_ms": 110.761723
+      }
+    },
+    {
+      "glyphs": 256,
+      "iterations": 200,
+      "timings": {
+        "png": {
+          "read_us": 1106.0270699999999,
+          "write_us": 808.445615,
+          "bytes": 65258
+        },
+        "pgm": {
+          "read_us": 1021.6328450000001,
+          "write_us": 704.685825,
+          "bytes": 90393
+        },
+        "generic": {
+          "read_us": 362.744125,
+          "write_us": 898.86179,
+          "bytes": 52429
+        },
+        "generic_1000_1_threads_ms": 371.735474,
+        "generic_1000_2_threads_ms": 193.64488,
+        "generic_1000_4_threads_ms": 100.085502,
+        "gfx": {
+          "read_us": 322.18882499999995,
+          "write_us": 1201.045215,
+          "bytes": 31230
+        },
+        "gfx_1000_1_threads_ms": 339.78333100000003,
+        "gfx_1000_2_threads_ms": 181.177562,
+        "gfx_1000_4_threads_ms": 96.06788800000001
+      }
+    }
+  ],
+  "environment_note": "All task-owned builds, fuzz and large crosschecks stopped; unrelated desktop and fontcarver browser tests left running."
+}

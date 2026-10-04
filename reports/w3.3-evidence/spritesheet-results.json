@@ -1,0 +1,629 @@
+{
+  "oracle": "Unmodified MIT catalogue convert_spritesheet; catalogue BDF parser reads CLI output",
+  "attribution": "Copyright (c) 2026 Tom Chen; fixture semantics adapted from test_spritesheet.py",
+  "environment": {
+    "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+    "pillow": "12.3.0",
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39"
+  },
+  "binary": {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/release/fontpixel",
+    "bytes": 9532040,
+    "sha256": "110b9537b07647687ec1c0d6654d418b2c678df259b18c7045e55ac5f15ab6f7"
+  },
+  "sources": {
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/LICENSE": {
+      "bytes": 1065,
+      "sha256": "71b6f6018f0e141f2aee1b299d21e36b0492d1d0bc8c01578562e790d5e512b7"
+    },
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/pipeline/tests/test_spritesheet.py": {
+      "bytes": 3462,
+      "sha256": "379a43daa69aeeae60a7eb0b3956756e946566f2325b1aa7f7db8a8821857b36"
+    },
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/pipeline/opf/ingest/spritesheet.py": {
+      "bytes": 4153,
+      "sha256": "9796080eac741ed4bedb13782a688323fcf1554a8805fa91d75c930f65a18cfa"
+    },
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/pipeline/opf/model.py": {
+      "bytes": 1225,
+      "sha256": "076ae4677581d850672537d3ff2ae49b8f4d374c37d45780a5d240282184bf0e"
+    },
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/pipeline/opf/parsers/bdf.py": {
+      "bytes": 10290,
+      "sha256": "bba2945669e89c4fac486f3f3d5d28ded6906c7adcb8ec0a779e4464e2b46528"
+    },
+    "/home/chen/githubprojects/fontpixel/reference/fontpixel/pipeline/opf/parsers/charset_map.py": {
+      "bytes": 3731,
+      "sha256": "ecb561613a9abf11c6dba5f9fc0fc7d7d417bf4b12507d3a2fbb443b95278bf3"
+    },
+    "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/spritesheet.py": {
+      "bytes": 12183,
+      "sha256": "4a5b7e09952477168b84b2cf3484bfbfec980e1d11149f7cbc1c57441bdfd9b4"
+    }
+  },
+  "checks": [
+    {
+      "case": "wide-palette-baseline",
+      "status": "passed",
+      "glyphs": 2,
+      "unencoded": 0,
+      "omissions": 0,
+      "entrypoints": [
+        "png",
+        "json"
+      ],
+      "compared": [
+        "all packed pixel rows",
+        "code",
+        "name",
+        "advance",
+        "BBX",
+        "pixel_size",
+        "ascent",
+        "descent",
+        "font bounds"
+      ]
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "status": "passed",
+      "glyphs": 1,
+      "unencoded": 1,
+      "omissions": 1,
+      "entrypoints": [
+        "png",
+        "json"
+      ],
+      "compared": [
+        "all packed pixel rows",
+        "code",
+        "name",
+        "advance",
+        "BBX",
+        "pixel_size",
+        "ascent",
+        "descent",
+        "font bounds"
+      ]
+    },
+    {
+      "case": "irregular-bearing-advance",
+      "status": "passed",
+      "glyphs": 2,
+      "unencoded": 0,
+      "omissions": 0,
+      "entrypoints": [
+        "png",
+        "json"
+      ],
+      "compared": [
+        "all packed pixel rows",
+        "code",
+        "name",
+        "advance",
+        "BBX",
+        "pixel_size",
+        "ascent",
+        "descent",
+        "font bounds"
+      ]
+    },
+    {
+      "case": "visible-unmapped",
+      "status": "passed",
+      "oracle_rejection": "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/visible-unmapped/sheet.png: visible cell 1 has no character mapping",
+      "entrypoints": [
+        "png",
+        "json"
+      ]
+    },
+    {
+      "case": "duplicate-unicode",
+      "status": "passed",
+      "oracle_rejection": "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/duplicate-unicode/sheet.png: duplicate mapping U+0041",
+      "entrypoints": [
+        "png",
+        "json"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "case": "wide-palette-baseline",
+      "label": "png-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/sheet.png",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "wide-palette-baseline",
+      "label": "png-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/rust-png.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "wide-palette-baseline",
+      "label": "json-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/sheet.json",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "wide-palette-baseline",
+      "label": "json-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/sheet.json",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/wide-palette-baseline/rust-json.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "label": "png-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/sheet.png",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "label": "png-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/rust-png.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "label": "json-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/sheet.json",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "label": "json-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/sheet.json",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/rust-json.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "omit-blank-space-unencoded",
+      "label": "strict-omission",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/omit-blank-space-unencoded/strict-rejected.bdf",
+        "--strict",
+        "--report",
+        "json"
+      ],
+      "exit_code": 3
+    },
+    {
+      "case": "irregular-bearing-advance",
+      "label": "png-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/sheet.png",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "irregular-bearing-advance",
+      "label": "png-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/rust-png.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "irregular-bearing-advance",
+      "label": "json-info",
+      "args": [
+        "info",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/sheet.json",
+        "--from",
+        "image",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "irregular-bearing-advance",
+      "label": "json-convert",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/sheet.json",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/irregular-bearing-advance/rust-json.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "visible-unmapped",
+      "label": "png",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/visible-unmapped/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/visible-unmapped/rejected-png.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "visible-unmapped",
+      "label": "json",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/visible-unmapped/sheet.json",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/visible-unmapped/rejected-json.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "duplicate-unicode",
+      "label": "png",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/duplicate-unicode/sheet.png",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/duplicate-unicode/rejected-png.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "duplicate-unicode",
+      "label": "json",
+      "args": [
+        "convert",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/duplicate-unicode/sheet.json",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w33-spritesheet-catalogue/duplicate-unicode/rejected-json.bdf",
+        "--from",
+        "image",
+        "--to",
+        "bdf",
+        "--report",
+        "json"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "metric_scope": "Compare all ParsedFont metrics (pixel size, ascent, descent, bounds). Native point size equals pixel size at 72 dpi, checked separately; ParsedFont carries no point-size/resolution fields.",
+  "binary_unchanged": true,
+  "artifacts": {
+    "duplicate-unicode/json.stderr": {
+      "bytes": 108,
+      "sha256": "c00a01d31295e619e72d9e708ece46810a9386e37f0e56cc35c408f5b9b2d84d"
+    },
+    "duplicate-unicode/json.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "duplicate-unicode/png.stderr": {
+      "bytes": 108,
+      "sha256": "c00a01d31295e619e72d9e708ece46810a9386e37f0e56cc35c408f5b9b2d84d"
+    },
+    "duplicate-unicode/png.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "duplicate-unicode/sheet.json": {
+      "bytes": 103,
+      "sha256": "579743a17baaf2e0b8a199373fa30a2e373b16a7cfd319defc24a4fa0874f029"
+    },
+    "duplicate-unicode/sheet.png": {
+      "bytes": 74,
+      "sha256": "f9cd14267465cf42282993d2aa8e6cdae13b26b561f38ae38d33358f832e7771"
+    },
+    "irregular-bearing-advance/catalogue.json": {
+      "bytes": 530,
+      "sha256": "94ff16a35303d8e27ff09a2c13d725cbed3a04c3f1cc03259e5542b097aca498"
+    },
+    "irregular-bearing-advance/json-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "irregular-bearing-advance/json-convert.stdout": {
+      "bytes": 284,
+      "sha256": "60ebd790720c23fe65eec238bb2f61362d7e36efd5afd7507fb49ae8ef25b2e2"
+    },
+    "irregular-bearing-advance/json-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "irregular-bearing-advance/json-info.stdout": {
+      "bytes": 728,
+      "sha256": "6cb25a3d625433642fa417a76b2c9b18b905b9d5511fc7f956ca0f99f72b1d91"
+    },
+    "irregular-bearing-advance/png-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "irregular-bearing-advance/png-convert.stdout": {
+      "bytes": 282,
+      "sha256": "7715e03e8648f2d9d8078d09cb3cfdc84fafe7f1d743b5c0a47fc009f4f557a8"
+    },
+    "irregular-bearing-advance/png-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "irregular-bearing-advance/png-info.stdout": {
+      "bytes": 728,
+      "sha256": "6cb25a3d625433642fa417a76b2c9b18b905b9d5511fc7f956ca0f99f72b1d91"
+    },
+    "irregular-bearing-advance/rust-json.bdf": {
+      "bytes": 359,
+      "sha256": "2353d81910fc6c0e9f687a83c3cf4448c07bc914973f99adca6e4fcd164fb1d2"
+    },
+    "irregular-bearing-advance/rust-json.json": {
+      "bytes": 530,
+      "sha256": "94ff16a35303d8e27ff09a2c13d725cbed3a04c3f1cc03259e5542b097aca498"
+    },
+    "irregular-bearing-advance/rust-png.bdf": {
+      "bytes": 359,
+      "sha256": "2353d81910fc6c0e9f687a83c3cf4448c07bc914973f99adca6e4fcd164fb1d2"
+    },
+    "irregular-bearing-advance/rust-png.json": {
+      "bytes": 530,
+      "sha256": "94ff16a35303d8e27ff09a2c13d725cbed3a04c3f1cc03259e5542b097aca498"
+    },
+    "irregular-bearing-advance/sheet.json": {
+      "bytes": 506,
+      "sha256": "61bc26e28d47d01d506b366e4b05dc2cb2962ee6189ceb3ad81d990301e1238c"
+    },
+    "irregular-bearing-advance/sheet.png": {
+      "bytes": 109,
+      "sha256": "8ef17dc07391a96a47120fba521647c35bf91635cf73b89363caa90d9f604daa"
+    },
+    "omit-blank-space-unencoded/catalogue.json": {
+      "bytes": 515,
+      "sha256": "a8e052270e755363f4a56de3d65dbacd8a8281afb291e3cb59785dbd8704616e"
+    },
+    "omit-blank-space-unencoded/json-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "omit-blank-space-unencoded/json-convert.stdout": {
+      "bytes": 601,
+      "sha256": "807ce6cec23c98f6b984a5522a7dc4735a81e6d59c4f6a5762a19a47cd6a7fae"
+    },
+    "omit-blank-space-unencoded/json-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "omit-blank-space-unencoded/json-info.stdout": {
+      "bytes": 1040,
+      "sha256": "c943c00231a75029afbb8e29a3331f604a6b8f2143135c39d3826ce7710d8c6a"
+    },
+    "omit-blank-space-unencoded/png-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "omit-blank-space-unencoded/png-convert.stdout": {
+      "bytes": 599,
+      "sha256": "192d2ec8c6ec73d38c23b72fb4a302563167887a72552f57302533d54658ed1a"
+    },
+    "omit-blank-space-unencoded/png-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "omit-blank-space-unencoded/png-info.stdout": {
+      "bytes": 1040,
+      "sha256": "c943c00231a75029afbb8e29a3331f604a6b8f2143135c39d3826ce7710d8c6a"
+    },
+    "omit-blank-space-unencoded/rust-json.bdf": {
+      "bytes": 339,
+      "sha256": "e7c4bab7e49e9a975419caaa448f295d773b8dd5a1f0ff7946525e99ad564075"
+    },
+    "omit-blank-space-unencoded/rust-json.json": {
+      "bytes": 515,
+      "sha256": "a8e052270e755363f4a56de3d65dbacd8a8281afb291e3cb59785dbd8704616e"
+    },
+    "omit-blank-space-unencoded/rust-png.bdf": {
+      "bytes": 339,
+      "sha256": "e7c4bab7e49e9a975419caaa448f295d773b8dd5a1f0ff7946525e99ad564075"
+    },
+    "omit-blank-space-unencoded/rust-png.json": {
+      "bytes": 515,
+      "sha256": "a8e052270e755363f4a56de3d65dbacd8a8281afb291e3cb59785dbd8704616e"
+    },
+    "omit-blank-space-unencoded/sheet.json": {
+      "bytes": 389,
+      "sha256": "9d5b7055716df2455d07f9f2cb57f101ff586a0f01d836c5cc8845a42eddcc8c"
+    },
+    "omit-blank-space-unencoded/sheet.png": {
+      "bytes": 73,
+      "sha256": "f5405290a73fc8f895c84ae169a5ed22ea238e0f4736042af3cd8fe35b59ab79"
+    },
+    "omit-blank-space-unencoded/strict-omission.stderr": {
+      "bytes": 476,
+      "sha256": "d562acf6b25d781bbef002ba27f2572b30a49c2cdab860c49409a5b6d51494e0"
+    },
+    "omit-blank-space-unencoded/strict-omission.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "visible-unmapped/json.stderr": {
+      "bytes": 123,
+      "sha256": "adee694a95df93770ae0fe3493dfab14c1881e0b88973f823362f2491ef44eb4"
+    },
+    "visible-unmapped/json.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "visible-unmapped/png.stderr": {
+      "bytes": 123,
+      "sha256": "adee694a95df93770ae0fe3493dfab14c1881e0b88973f823362f2491ef44eb4"
+    },
+    "visible-unmapped/png.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "visible-unmapped/sheet.json": {
+      "bytes": 102,
+      "sha256": "464b5e13b4ef861728462b70ebc68dbd52a98e15397cb23cb1e5ab1a2dd6abdd"
+    },
+    "visible-unmapped/sheet.png": {
+      "bytes": 74,
+      "sha256": "f9cd14267465cf42282993d2aa8e6cdae13b26b561f38ae38d33358f832e7771"
+    },
+    "wide-palette-baseline/catalogue.json": {
+      "bytes": 537,
+      "sha256": "72df54828c97a3ee2a8e7e09ba1f5c5d15319784642d245d9edcb92ce21104f4"
+    },
+    "wide-palette-baseline/json-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "wide-palette-baseline/json-convert.stdout": {
+      "bytes": 280,
+      "sha256": "fe7de429238bde951a6e8bbd767feda2af17acaa0c3d81c5e269942bc55c322f"
+    },
+    "wide-palette-baseline/json-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "wide-palette-baseline/json-info.stdout": {
+      "bytes": 727,
+      "sha256": "a0d702d1e958ae0ea9082b64ff4cefcad154fc8ef898fee46422c700cdeb54db"
+    },
+    "wide-palette-baseline/png-convert.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "wide-palette-baseline/png-convert.stdout": {
+      "bytes": 278,
+      "sha256": "c114ac789b746b3e29dd700dd078d3394704454ded8e3639addc5a3cfc02e38e"
+    },
+    "wide-palette-baseline/png-info.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "wide-palette-baseline/png-info.stdout": {
+      "bytes": 727,
+      "sha256": "a0d702d1e958ae0ea9082b64ff4cefcad154fc8ef898fee46422c700cdeb54db"
+    },
+    "wide-palette-baseline/rust-json.bdf": {
+      "bytes": 367,
+      "sha256": "a30ff0f3cece0b7c6c20a3c54b0689f7a768bbd288af358c787d5603256eda23"
+    },
+    "wide-palette-baseline/rust-json.json": {
+      "bytes": 537,
+      "sha256": "72df54828c97a3ee2a8e7e09ba1f5c5d15319784642d245d9edcb92ce21104f4"
+    },
+    "wide-palette-baseline/rust-png.bdf": {
+      "bytes": 367,
+      "sha256": "a30ff0f3cece0b7c6c20a3c54b0689f7a768bbd288af358c787d5603256eda23"
+    },
+    "wide-palette-baseline/rust-png.json": {
+      "bytes": 537,
+      "sha256": "72df54828c97a3ee2a8e7e09ba1f5c5d15319784642d245d9edcb92ce21104f4"
+    },
+    "wide-palette-baseline/sheet.json": {
+      "bytes": 188,
+      "sha256": "a50c713156e05a91dfeb34e0fbd30d222459ecb700ffae53bffd3b79b0a704b1"
+    },
+    "wide-palette-baseline/sheet.png": {
+      "bytes": 90,
+      "sha256": "ab11853984ba8dc289485bb8a0383cd7a7aec34bf99dd480933d24ccefac5362"
+    }
+  },
+  "status": "passed"
+}

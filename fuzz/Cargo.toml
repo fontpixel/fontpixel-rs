@@ -9,7 +9,7 @@ cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.4"
 brotli = { version = "9.0.0", default-features = false, features = ["std"] }
-fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff", "sfnt", "cff", "compat-bdfparser", "otb", "bdat", "color", "woff", "woff2", "ttc", "ttf", "otf", "vector-raster", "svg", "hex", "psf", "fnt", "fon"] }
+fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = [] }
 [workspace]
 members = ["."]
 [[bin]]
@@ -146,6 +146,49 @@ bench = false
 [[bin]]
 name = "fon"
 path = "fuzz_targets/fon.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "image"
+path = "fuzz_targets/image.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "c"
+path = "fuzz_targets/c.rs"
+test = false
+doc = false
+bench = false
+
+[features]
+kbitx-only = ["fontpixel/kbitx"]
+pbf-only = ["fontpixel/pbf"]
+hbf-only = ["fontpixel/hbf"]
+default = ["baseline"]
+baseline = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/sfnt", "fontpixel/cff", "fontpixel/compat-bdfparser", "fontpixel/otb", "fontpixel/bdat", "fontpixel/color", "fontpixel/woff", "fontpixel/woff2", "fontpixel/ttc", "fontpixel/ttf", "fontpixel/otf", "fontpixel/vector-raster", "fontpixel/svg", "fontpixel/hex", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/image", "fontpixel/c", "fontpixel/kbitx", "fontpixel/pbf", "fontpixel/hbf"]
+image-c = ["fontpixel/image", "fontpixel/c"]
+
+[[bin]]
+name = "kbitx"
+path = "fuzz_targets/kbitx.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pbf"
+path = "fuzz_targets/pbf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hbf"
+path = "fuzz_targets/hbf.rs"
 test = false
 doc = false
 bench = false

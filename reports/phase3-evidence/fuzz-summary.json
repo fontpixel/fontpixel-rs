@@ -1,0 +1,117 @@
+[
+  {
+    "format": "image",
+    "label": "w33-image-fuzz-reviewed2",
+    "executions": 3110723,
+    "seconds": 611,
+    "final_status": "#3110723\tDONE   cov: 11762 ft: 37335 corp: 4962/3272Kb lim: 18265 exec/s: 5091 rss: 624Mb",
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "image",
+      "--no-default-features",
+      "--features",
+      "image-c",
+      "--",
+      "-max_total_time=610",
+      "-timeout=10",
+      "-rss_limit_mb=1024",
+      "-max_len=65536"
+    ]
+  },
+  {
+    "format": "c",
+    "label": "w33-c-fuzz-final3",
+    "executions": 2031619,
+    "seconds": 611,
+    "final_status": "#2031619\tDONE   cov: 3959 ft: 14815 corp: 1829/1800Kb lim: 15369 exec/s: 3325 rss: 548Mb",
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "c",
+      "--no-default-features",
+      "--features",
+      "image-c",
+      "--",
+      "-max_total_time=610",
+      "-timeout=10",
+      "-rss_limit_mb=1024",
+      "-max_len=65536"
+    ]
+  },
+  {
+    "format": "kbitx",
+    "label": "w34-kbitx-fuzz-final2",
+    "executions": 7186705,
+    "seconds": 611,
+    "final_status": "#7186705\tDONE   cov: 4976 ft: 18915 corp: 3836/2727Kb lim: 16058 exec/s: 11762 rss: 518Mb",
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "kbitx",
+      "--no-default-features",
+      "--features",
+      "kbitx-only",
+      "--",
+      "-max_total_time=610",
+      "-timeout=10",
+      "-rss_limit_mb=1024",
+      "-max_len=65536"
+    ]
+  },
+  {
+    "format": "pbf",
+    "label": "w34-pbf-fuzz-final",
+    "executions": 4917140,
+    "seconds": 611,
+    "final_status": "#4917140\tDONE   cov: 1571 ft: 6126 corp: 786/89Kb lim: 38764 exec/s: 8047 rss: 488Mb",
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "pbf",
+      "--no-default-features",
+      "--features",
+      "pbf-only",
+      "--",
+      "-max_total_time=610",
+      "-timeout=10",
+      "-rss_limit_mb=1024",
+      "-max_len=65536"
+    ]
+  },
+  {
+    "format": "hbf",
+    "label": "w35-hbf-fuzz-final2",
+    "executions": 20805036,
+    "seconds": 611,
+    "final_status": "#20805036\tDONE   cov: 2598 ft: 7448 corp: 1177/422Kb lim: 65536 exec/s: 34050 rss: 523Mb",
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "hbf",
+      "--no-default-features",
+      "--features",
+      "hbf-only",
+      "--",
+      "-max_total_time=610",
+      "-timeout=10",
+      "-rss_limit_mb=1024",
+      "-max_len=65536"
+    ]
+  }
+]

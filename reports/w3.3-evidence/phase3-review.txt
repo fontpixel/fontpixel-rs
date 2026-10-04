@@ -1,0 +1,14 @@
+HBF / KBITX independent read-only correctness review
+2026-10-04. Sources were in progress. All findings below are STATIC, not independently executed. No compilation, tests, fuzz, file-permission checks, or production edits were performed.
+
+HBF findings sent to parent and implementation agent:
+1. Missing ppem loss: metadata_losses omits FontMetrics.ppem_x and ppem_y while reader never reconstructs them, allowing strict output to silently discard these values.
+2. Property representation loss: cloned_properties removes raw bytes with Property::new but emits no loss. Recognized native headers are also exempted solely by key, losing raw bytes; repeated code_scheme/byte2/byte3 headers collapse to get(last), and non-Text code_scheme is ignored without a loss. Lower-valued Unsigned properties serialize as decimal and read back as Integer, silently changing the typed value.
+3. Non-reopenable SIZE: if point_size=None and pixel_size=Some(0), writer fallback emits SIZE 0 even though the reader requires strictly positive SIZE. Normal positive glyph/font bounds do not prevent this valid model configuration. Enforce the selected fallback before output.
+
+KBITX finding sent to parent and implementation agent:
+4. Numeric name IDs were parsed for validity but projected/selected by raw text. A lone name id=+01 did not project family, and id=1 Earlier followed by id=+01 Later retained Earlier rather than last numeric ID. The existing +01 Earlier / 1 Later test would not expose this. Agent reports canonical integer name IDs implemented and single/noncanonical-last assertions being added; independent execution still pending.
+
+Checked without additional findings: HBF dense ranks skip sparse low-byte gaps and invert consistently for 1/2/3-byte code spaces; split bitmap ranges use per-chunk offsets and break at sparse discontinuities. Legacy tags remain legacy and mixed GL/GR standard codes are rejected. Uniform bitmap bounds, per-row gray threshold packing, glyph order changes, alias rejection and sidecar ranges appeared consistent. KBITX WIB multiplied long-run lengths, literal/repeat packing, row stride, 0/255 Mono normalization, explicit grayscale threshold diagnostics, alias expansion loss, native raw-property loss and normalized name/property updates were inspected.
+
+This is a focused correctness review, not a complete proof or a replacement for the agents' independent oracle checks.

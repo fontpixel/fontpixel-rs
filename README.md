@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 2 complete; phase 3 started (W3.1–W3.2)
+## Current status: phase 2 complete; phase 3 final validation
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -37,8 +37,8 @@ library users enable `fnt` or `fon` (which also enables `fnt`).
 See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
 [W3.2 independent validation](reports/w3.2-review.md).
 
-Seventeen format IDs now have native readers, sixteen have writers (color writing
-is deferred); the remaining 29 IDs and Python/WASM bindings remain unimplemented
+Twenty-two format IDs now have native readers, twenty-one have writers (color writing
+is deferred); the remaining 24 IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
@@ -76,6 +76,52 @@ selected code page's single-byte range):
 fontpixel convert source.bdf -o latin.fnt --to fnt --fnt-version 3 --fnt-charset 0
 fontpixel convert small.fnt large.fnt -o family.fon --strict
 fontpixel info legacy.fon --fnt-read-code-page cp437 --json
+```
+
+Image atlases preserve exact glyph metadata in a JSON or TOML sidecar. Keep both
+files together; either the image or mapping can be the input entry point. PNG,
+BMP, GIF, TGA, PBM and PGM output are supported. External images need an explicit
+character map. C headers support font8x8, t-mat, explicitly described byte arrays
+and Adafruit GFX; generic and GFX output report metadata and mapping losses.
+
+```sh
+fontpixel convert source.bdf -o atlas.png --to image --strict
+fontpixel convert source.bdf -o atlas.pgm --to image --image-mapping-format toml --strict
+fontpixel convert atlas.json -o restored.bdf --strict
+fontpixel info external.png --image-mapping external.json --json
+fontpixel convert font8x8.h -o imported.bdf
+fontpixel convert source.bdf -o font.h --to c --c-family gfx --c-range U+0020-U+007F
+fontpixel info cells.h --c-width 8 --c-height 16 --c-first U+0020 --c-charset unicode --json
+```
+
+Library features are `image` and `c`. See [image maps](docs/formats/image.md)
+and [C arrays](docs/formats/c.md) for geometry, limits and loss behavior.
+
+KBITX retains native grayscale, names and supported metadata. Pebble PBF supports
+v1/v2/v3 and v3 RLE4; legacy files with partial RLE rows report the discarded tail.
+The CLI exposes explicit threshold, trim, compression and wire-version choices.
+
+```sh
+fontpixel info source.kbitx --json
+fontpixel convert source.kbitx -o mono.bdf --kbitx-read-threshold 128
+fontpixel convert source.bdf -o watch.pbf --pbf-version 3 --pbf-compression rle4
+fontpixel info watch.pbf --pbf-trim --json
+```
+
+Library features are `kbitx` and `pbf`; see [KBITX](docs/formats/kbitx.md) and
+[PBF](docs/formats/pbf.md) for metadata, geometry and loss behavior.
+
+HBF 1.1 reads and writes a text header plus one or more bitmap files. Keep all
+assets together. Legacy codes retain their declared charset, including CNS
+planes; no Unicode remapping is inferred. Output requires uniform positive
+glyph bounds and one code per glyph. Gray8 conversion requires
+`--gray-threshold` and reports loss. Library users enable `hbf`; see
+[HBF contracts](docs/formats/hbf.md).
+
+```sh
+fontpixel info font.hbf --json
+fontpixel convert fixed.bdf -o font.hbf
+fontpixel convert font.hbf -o split.hbf --hbf-glyphs-per-file 4096 --strict
 ```
 
 ## Build and inspect
@@ -120,7 +166,8 @@ Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-b
   `ReadContext` validates primary, sidecar, aggregate-byte, and resource-count
   limits, shared between detection and decoding
 - `ResourcePath` rejects absolute/parent/current/noncanonical path components.
-  A future filesystem resolver must additionally enforce a symlink-safe root
+  Library callers provide the resolver; the CLI resolves sidecars through a
+  directory handle rooted at the primary input's parent, with bounded reads
 - Writers return an in-memory `OutputBundle` with a primary entry point and all
   sidecar assets. Names are validated, duplicate/file-directory collisions are
   rejected, and traversal is deterministic. `into_single()` refuses multi-assets
@@ -139,9 +186,9 @@ is not evidence for any of the 46 font formats.
 Exact generated tables and public conversion helpers live in
 `crates/fontpixel/src/charset/`. Regenerate/check with `tools/gen_charsets.py`;
 use `tools/check_charsets.py` for complete cross-language mapping comparison.
-The compatibility facade and YAFF codec now use the shared model and established
-BDF/PCF contracts. Phase 2 adds general OpenType codecs and their independent
-validation; its scope remains broader than the exact compatibility TTF/SVG paths.
+The compatibility facade and YAFF codec use the shared model and established
+BDF/PCF contracts. General OpenType codecs and independent validation are covered
+by the [phase 2 acceptance report](reports/phase-2.md).
 PCF options are available through
 `PcfWriteOptions`, `PcfCodec` and `FontRegistry::set_pcf_write_options`. BDF's `source_rows` and `validate_bitmap` make raw raster
 provenance explicit; other consumers must not silently render invalid-source
@@ -181,7 +228,7 @@ existing TTF/OTF builders. Registry/CLI use the same native implementation.
 
 See `docs/formats/otb.md`, `bdat.md`, and `color.md` for limits, loss reporting,
 unsupported Apple Huffman/JPEG/TIFF cases and independent-tool caveats. General
-outline FontSet conversion, collections and wrapper formats remain later work.
+outline conversion and collections are covered below.
 
 ### Regional OpenType fonts and web subsets (W2.6)
 
@@ -217,7 +264,7 @@ nondefault legacy CFF encoding, UVS and non-Unicode cmap records fail explicitly
 An exact unsupported table can be discarded with `--drop-table TAG`, generating
 a loss report; `--strict` rejects that loss before replacing the destination.
 A TTF subset remains TrueType and a CFF subset remains CFF; both can be wrapped
-as WOFF or WOFF2. This does not implement W2.7's general raster reader or TTC.
+as WOFF or WOFF2. General raster reading and TTC support are described below.
 
 Rust API: `Variants::new`, `add_language`, configurable `LanguageVariant` and
 `ScriptVariant`, `Variants::plan`, `variants::encode`, `sfnt::gsub::Gsub` and
@@ -253,8 +300,8 @@ unrepresentable source information. General hint execution, variable instances,
 CFF2, and sparse anisotropic fallback remain explicit unsupported cases.
 See [raster contracts](docs/formats/vector-raster.md),
 [collection contracts and deployed-tool limits](docs/formats/ttc.md),
-and [W2.7 validation](reports/w2.7.md). W2.8 and the whole-phase completion gates
-are still outstanding.
+and [W2.7 validation](reports/w2.7.md). The [phase 2 report](reports/phase-2.md)
+records the complete phase's acceptance.
 
 ### SVG images and SVG 1.1 fonts
 

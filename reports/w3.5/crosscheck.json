@@ -1,0 +1,137 @@
+{
+  "oracle": "monobit 0.54",
+  "checks": [
+    {
+      "case": "two-byte",
+      "glyphs": 5,
+      "checks": [
+        "spec bytes",
+        "monobit read",
+        "monobit BDF boundary",
+        "native strict bundle"
+      ]
+    },
+    {
+      "case": "three-byte",
+      "glyphs": 3,
+      "checks": [
+        "spec bytes",
+        "monobit read",
+        "monobit BDF boundary",
+        "native strict bundle"
+      ]
+    },
+    {
+      "case": "unicode",
+      "glyphs": 3,
+      "checks": [
+        "spec bytes",
+        "monobit read",
+        "monobit BDF boundary",
+        "native strict bundle"
+      ]
+    },
+    {
+      "case": "monobit writer to Rust",
+      "glyphs": 3,
+      "repairs": [
+        "replace monobit absolute bitmap path with same-directory basename",
+        "append mandatory HBF_END_FONT omitted by monobit 0.54"
+      ]
+    }
+  ],
+  "artifacts": {
+    "three-byte/a.bin": {
+      "bytes": 15,
+      "sha256": "516ec3a392190fb70726d9b81b016305ae71effff59bfd74f90e2a1935fdbd17"
+    },
+    "three-byte/native.bin": {
+      "bytes": 12,
+      "sha256": "54fe605619b6249313151a01e446b3c3dc10583e3f99bd14f035ec77f8a4df42"
+    },
+    "three-byte/native.hbf": {
+      "bytes": 529,
+      "sha256": "810ff06cda5c6f946a859ccc109455916c0206e3fc348e259c476301243650c9"
+    },
+    "three-byte/restored.bdf": {
+      "bytes": 484,
+      "sha256": "6db7b935b53342e354905be1182cddb635c8558f1c1e69aa98cda1ce6309de4c"
+    },
+    "three-byte/rust.bdf": {
+      "bytes": 484,
+      "sha256": "6db7b935b53342e354905be1182cddb635c8558f1c1e69aa98cda1ce6309de4c"
+    },
+    "three-byte/spec.hbf": {
+      "bytes": 518,
+      "sha256": "992a5478bc93ef5b8b02eee11b7bd35c4b9b7044ba2c8ec4890b571e88ef6bcc"
+    },
+    "two-byte/a.bin": {
+      "bytes": 19,
+      "sha256": "74b3e10a84208af8c28f76a00c02fb4baf436ddb2178673a3eb72294e1a6e193"
+    },
+    "two-byte/b.bin": {
+      "bytes": 9,
+      "sha256": "563e75e95e8893ddab5ad2c9a7c1662230064640e8b0b8e22f420ddc1c9a425f"
+    },
+    "two-byte/native.bin": {
+      "bytes": 20,
+      "sha256": "aae742ada491665e211f7f43bb438b59e9a7ce1c6372768bfa5d4542fcb3fdbe"
+    },
+    "two-byte/native.hbf": {
+      "bytes": 495,
+      "sha256": "0d75c9c351c20d02a02e4eb939bcae16b8a4bd9a233ba32fb25e7682bd969afc"
+    },
+    "two-byte/restored.bdf": {
+      "bytes": 649,
+      "sha256": "4e7740a94812be1b7013f61524a8bfd8b2c7a5166a2e81aa86fb55a43ea82ded"
+    },
+    "two-byte/rust.bdf": {
+      "bytes": 649,
+      "sha256": "4e7740a94812be1b7013f61524a8bfd8b2c7a5166a2e81aa86fb55a43ea82ded"
+    },
+    "two-byte/spec.hbf": {
+      "bytes": 484,
+      "sha256": "24f0c9e7c1c8ba570682e95f0469823ddf20669578d727609491791662043cbd"
+    },
+    "unicode/a.bin": {
+      "bytes": 15,
+      "sha256": "516ec3a392190fb70726d9b81b016305ae71effff59bfd74f90e2a1935fdbd17"
+    },
+    "unicode/external.bdf": {
+      "bytes": 820,
+      "sha256": "1ffdbebaacb2089ea8e974c8f7d98dfd64eaa23634c4cc17fff6a8b933f7e1e8"
+    },
+    "unicode/monobit-unrepaired.hbf.txt": {
+      "bytes": 859,
+      "sha256": "367a881d5cd63b01e06dada5835c86961e66bf001c857d8a359067c87dbbc146"
+    },
+    "unicode/monobit.hbf": {
+      "bytes": 796,
+      "sha256": "156f4dc27b458c1dbbe7ab2f4f1bcaaf4233a66b6defd2e269044b2debc6a154"
+    },
+    "unicode/monobit.hbf.bin": {
+      "bytes": 12,
+      "sha256": "54fe605619b6249313151a01e446b3c3dc10583e3f99bd14f035ec77f8a4df42"
+    },
+    "unicode/native.bin": {
+      "bytes": 12,
+      "sha256": "54fe605619b6249313151a01e446b3c3dc10583e3f99bd14f035ec77f8a4df42"
+    },
+    "unicode/native.hbf": {
+      "bytes": 422,
+      "sha256": "cc294412cd9ac2e3438c1c60e49a6d372e6a24eec273f942eb180c2787128bf2"
+    },
+    "unicode/restored.bdf": {
+      "bytes": 483,
+      "sha256": "a298f26c1a9b2448937a4c8c7da51f70ffc5509a14d9882982799ed2c03219fd"
+    },
+    "unicode/rust.bdf": {
+      "bytes": 483,
+      "sha256": "a298f26c1a9b2448937a4c8c7da51f70ffc5509a14d9882982799ed2c03219fd"
+    },
+    "unicode/spec.hbf": {
+      "bytes": 416,
+      "sha256": "7e4ff9cd616184dddb723c55d351bc7094bb1aa48e5b96ee81f501f4570089b7"
+    }
+  }
+}

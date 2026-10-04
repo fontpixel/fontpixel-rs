@@ -69,10 +69,21 @@ pub fn registry() -> FontRegistry {
     registry.install_hex();
     #[cfg(feature = "psf")]
     registry.install_psf();
+    #[cfg(feature = "c")]
+    registry.install_c();
+    #[cfg(feature = "image")]
+    registry.install_image();
+
     #[cfg(feature = "fnt")]
     registry.install_fnt();
     #[cfg(feature = "fon")]
     registry.install_fon();
+    #[cfg(feature = "kbitx")]
+    registry.install_kbitx();
+    #[cfg(feature = "pbf")]
+    registry.install_pbf();
+    #[cfg(feature = "hbf")]
+    registry.install_hbf();
     registry
 }
 

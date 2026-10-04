@@ -1,0 +1,60 @@
+{
+  "url": "https://github.com/TsFreddie/TUMBLED/releases/download/v1.11/PBF_TUMBLED.zip",
+  "zip_sha256": "046f6d5d0cb9e6f587fdb2b9f146313d8c148350fbf5246644b31b7be227c8a4",
+  "files": [
+    {
+      "file": "TUMBLED_14.pbf",
+      "bytes": 295396,
+      "sha256": "210380c79ba8453c3d9d701194aa3576bddc838bd44b7dcb13499104a45100c4"
+    },
+    {
+      "file": "TUMBLED_14_BOLD.pbf",
+      "bytes": 332840,
+      "sha256": "60801564fca8c63949394bb96c7191fcdcfdf1882dad17066c4e2acda16433d7"
+    },
+    {
+      "file": "TUMBLED_18.pbf",
+      "bytes": 381904,
+      "sha256": "618afb9f3206720fda6965e79299fb4be67ac9624275abdbde62f095cd0569d6"
+    },
+    {
+      "file": "TUMBLED_18_BOLD.pbf",
+      "bytes": 415308,
+      "sha256": "f9aa633031246943237c86a1c53995771d279f8dbaba18ade58b1eddeab9e102"
+    },
+    {
+      "file": "TUMBLED_24.pbf",
+      "bytes": 445644,
+      "sha256": "6f2877b5b57c4476f9c9abd7056797e4ae07677810c5207638999f40b7b8aaa9"
+    },
+    {
+      "file": "TUMBLED_24_BOLD.pbf",
+      "bytes": 453624,
+      "sha256": "3ff4fc035dbe0a08cdf4aee041e65f42218f8693b13f17617bfa51c0faf8dd53"
+    },
+    {
+      "file": "TUMBLED_28.pbf",
+      "bytes": 672360,
+      "sha256": "020bd99468bce2ef8a3fae7a2b4389c07c186e745f6f107dc4b58159d7dc0373"
+    },
+    {
+      "file": "TUMBLED_28_BOLD.pbf",
+      "bytes": 665432,
+      "sha256": "b058aa07c123ad732eb4b8f312e6969747762949a9047e60e41c3b0789bc3913"
+    },
+    {
+      "file": "TUMBLED_36.pbf",
+      "bytes": 986708,
+      "sha256": "8c14563aec8613ca6e3b32d11260a034824241a17ffd1d89b4df79377dfb7ce1"
+    },
+    {
+      "file": "TUMBLED_36_BOLD.pbf",
+      "bytes": 1048860,
+      "sha256": "1d5062368c3cc1cf261ed0422a2169c65e2bcbb6f051082d56043483e9197d9a"
+    }
+  ],
+  "license": "SIL Open Font License 1.1",
+  "license_url": "https://raw.githubusercontent.com/TsFreddie/TUMBLED/v1.11/LICENSE_OFL",
+  "license_sha256": "b7e8b9d8656d5216a61f48c7e62704b8aec50e8af8ca410b28fb04ea32e0f220",
+  "distribution": "Fonts downloaded only into ../local-work/third-party/pbf-tumbled-v1.11; no font binaries copied into the repository."
+}

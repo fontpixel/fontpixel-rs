@@ -1,0 +1,8 @@
+{
+  "crates/fontpixel/src/formats/pbf.rs": "11345a57553e3c909e4606aa089e30874fb5f3462148da99fc1f94e704733716",
+  "crates/fontpixel/src/formats/pbf/writer.rs": "0f3064f37feb293f5b4f17921273a1616cffdbbcb1bbb56cd64810d133707740",
+  "crates/fontpixel/tests/pbf.rs": "fd33c7dbf89d42e6ab7875be731a86b889327711c1b789130d394c9bcdc27aa7",
+  "fuzz/fuzz_targets/pbf.rs": "8f4bea1589075015c8793d6d1458b785a152f0b018db6a212301521cb79699b9",
+  "tests/crosscheck/pbf.py": "cae26ade00354dd4f4a7ab378732ad4b71c611cf4e58733402f105b7fa3f95b9",
+  "docs/formats/pbf.md": "bd5d996c1be0fc1997a2864af3e07f7da77d2cf4db4adbdab050279e343062e6"
+}

@@ -1,0 +1,35 @@
+{
+  "status": "implementation and focused validation complete; long fuzz, global gates and performance acceptance pending",
+  "source_sha256": {
+    "crates/fontpixel/src/formats/hbf.rs": "122aa2f29af9f079b75f9303f4b9248e0ef355d31e734e7b58982ef870dbe513",
+    "crates/fontpixel/src/formats/hbf/header.rs": "f5dfed655838949c4ff62cc050c059b939734c002123998bcb8e1ec2d622bbb2",
+    "crates/fontpixel/src/formats/hbf/metadata.rs": "d1eb4885390c7c1b8036c9699790a614652fc7a93b9a21d9f0d06abd07d52cce",
+    "crates/fontpixel/src/formats/hbf/writer.rs": "d336fdfc856cdcabc30bfec52b71e4d6ebfc37667deb02066ea44463ebe1542e",
+    "crates/fontpixel/tests/hbf.rs": "c4df5f3a12797965f104256b153cda4d66032412aa7522a33ffeea0127e93dc7",
+    "fuzz/fuzz_targets/hbf.rs": "c137a884767fc04957198c9260d700cc393de674a273cc70efdc35f837a3028f",
+    "fuzz/seed_hbf.py": "1daa2afca45be709631b58d49a91c3fd360a10ddaa25d89329717b82be13abf3",
+    "tests/crosscheck/hbf.py": "70a80376c947041d624c356c11d9730a5c536ed29e4e6348d26f6273752476c4",
+    "docs/formats/hbf.md": "d2ad0d8c10fd66964231d84bd6eb2aa3f0816ecdc6357a1c46b72595db4d52c2"
+  },
+  "commands": [
+    {
+      "command": "cargo test -p fontpixel --no-default-features --features hbf --test hbf --target-dir ../local-work/target-w35-hbf",
+      "exit_code": 0,
+      "tests_passed": 12
+    },
+    {
+      "command": "cargo clippy -p fontpixel --no-default-features --features hbf --all-targets --target-dir ../local-work/target-w35-hbf -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "RUSTDOCFLAGS='-D warnings' cargo doc -p fontpixel --no-default-features --features hbf --no-deps --target-dir ../local-work/target-w35-hbf-doc",
+      "exit_code": 0
+    },
+    {
+      "command": "python tests/crosscheck/hbf.py --binary ../local-work/target-w35-hbf/debug/fontpixel --output-dir ../local-work/w35-crosscheck-final",
+      "exit_code": 0
+    }
+  ],
+  "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "oracle_binary_sha256": "fe1118a318b437a74e344649feb017b3dfab8a7472e21239c8904b1959a7eeb1"
+}

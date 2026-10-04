@@ -30,7 +30,10 @@ pub use properties::{Properties, Property, PropertyValue};
 /// U+10FFFF, are retained for tolerant BDF/SPEC parity. Use `scalar()` to validate
 /// scalar interpretation; writers must report unsupported codes rather than drop them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Codepoint {
     /// Number declared to use Unicode, possibly invalid in a malformed source.
     Unicode(u32),
@@ -56,7 +59,11 @@ impl Codepoint {
 
 /// A signed two-dimensional font-space vector (y up).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Vector {
     /// Horizontal component.
     pub x: i64,
@@ -73,7 +80,11 @@ impl Vector {
 /// Exact rational metric, avoiding float rounding and preserving equality.
 /// Unreduced fractions are allowed so the source's scale remains expressible.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Rational {
     numerator: i64,
     denominator: u32,
@@ -110,7 +121,11 @@ impl Rational {
 
 /// FNT-style A/B/C widths, independently preserved even if redundant with BBX.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct AbcWidths {
     /// Signed left space.
     pub a: i64,
@@ -122,61 +137,65 @@ pub struct AbcWidths {
 
 /// Glyph metrics. `None` means absent, distinct from an explicit zero vector.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct GlyphMetrics {
     /// Ink rectangle dimensions must match the bitmap; offsets are relative to origin.
     pub bounds: Bounds,
     /// Horizontal device advance (BDF DWIDTH).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub advance: Option<Vector>,
     /// Horizontal scalable advance (BDF SWIDTH, normally per 1000 units).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub scalable_advance: Option<Vector>,
     /// Vertical device advance (BDF DWIDTH1).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub vertical_advance: Option<Vector>,
     /// Vertical scalable advance (BDF SWIDTH1).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub vertical_scalable_advance: Option<Vector>,
     /// BDF VVECTOR (vector from horizontal to vertical origin).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub vertical_origin: Option<Vector>,
     /// Optional independent FNT ABC spacing.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub abc: Option<AbcWidths>,
     /// Other formats' left side bearing, when explicitly supplied.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub left_bearing: Option<i64>,
     /// Other formats' right side bearing, when explicitly supplied.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub right_bearing: Option<i64>,
     /// Top-left image-relative offset (e.g. BMFont); not confused with y-up BBX.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub image_offset: Option<Vector>,
@@ -387,7 +406,10 @@ impl Glyph {
 
 /// Spacing classification (BDF P/M/C), without inventing a default when absent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub enum Spacing {
     /// Proportional advances.
     Proportional,
@@ -400,7 +422,10 @@ pub enum Spacing {
 /// Stable glyph-table index, assigned in original file order.
 /// Removing glyphs leaves holes rather than silently retargeting saved IDs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct GlyphId(usize);
 impl GlyphId {
     /// Numerical table index. Use `Font::glyph` to check whether it is still live.
@@ -411,101 +436,105 @@ impl GlyphId {
 
 /// Per-strike metrics; absence is distinct from a specified value of zero.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontMetrics {
     /// Nominal pixel size.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub pixel_size: Option<u32>,
     /// Horizontal pixels per em.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub ppem_x: Option<u32>,
     /// Vertical pixels per em.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub ppem_y: Option<u32>,
     /// Exact typographic point size.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub point_size: Option<Rational>,
     /// Horizontal/vertical dots per inch.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub resolution: Option<Vector>,
     /// Baseline-to-top distance.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub ascent: Option<i64>,
     /// Baseline-to-bottom distance (usually positive).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub descent: Option<i64>,
     /// Font cell/ink bounds, exactly as supplied by the source.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub bounds: Option<Bounds>,
     /// Additional line gap.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub line_gap: Option<i64>,
     /// Explicit baseline-to-baseline distance, independent of line gap.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub line_height: Option<i64>,
     /// Underline position relative to baseline.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub underline_position: Option<i64>,
     /// Underline thickness.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub underline_thickness: Option<i64>,
     /// Default glyph ID in this font (if separately specified).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub default_glyph: Option<GlyphId>,
     /// Default code in its explicit encoding domain.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub default_character: Option<Codepoint>,
     /// Space advance if separately specified.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub space_width: Option<i64>,
     /// P/M/C spacing classification.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub spacing: Option<Spacing>,
@@ -513,7 +542,7 @@ pub struct FontMetrics {
     pub glyph_defaults: GlyphMetrics,
     /// BDF METRICSSET (0, 1 or 2); unknown source values remain in raw headers.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub metrics_set: Option<u8>,
@@ -521,65 +550,69 @@ pub struct FontMetrics {
 
 /// Names and human-readable metadata, without discarding their original properties.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontNames {
     /// Family name.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub family: Option<String>,
     /// Style/subfamily name.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub style: Option<String>,
     /// Full display name.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub full: Option<String>,
     /// PostScript name.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub postscript: Option<String>,
     /// Version string.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub version: Option<String>,
     /// Copyright statement.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub copyright: Option<String>,
     /// License text or identifier.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub license: Option<String>,
     /// License URL if separate from the text.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub license_url: Option<String>,
     /// Foundry/vendor name.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub foundry: Option<String>,
     /// Original BDF FONT/XLFD name (not regenerated from normalized names).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub xlfd: Option<String>,
@@ -592,41 +625,45 @@ pub struct FontNames {
 /// Charset identity and source metadata. Glyph legacy codes belong to this charset;
 /// Unicode aliases are independently tagged and never implicitly remapped.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "yaff", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "yaff", feature = "image"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontCharset {
     /// Original CHARSET_REGISTRY spelling/value.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub registry: Option<String>,
     /// Original CHARSET_ENCODING spelling/value.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub encoding: Option<String>,
     /// Optional explicit codec override (canonicalization performed by CharsetCodec).
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub name: Option<String>,
     /// Explicit GL interpretation when the source establishes it.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub gl: Option<bool>,
     /// Original Windows/FNT character-set byte, if present.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub windows_charset: Option<u8>,
     /// Explicit source code page when supplied.
     #[cfg_attr(
-        feature = "yaff",
+        any(feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub code_page: Option<u32>,
@@ -679,7 +716,14 @@ impl Font {
         }
         Ok(font)
     }
-    #[cfg(feature = "yaff")]
+    #[cfg(any(
+        feature = "yaff",
+        feature = "image",
+        feature = "c",
+        feature = "kbitx",
+        feature = "pbf",
+        feature = "hbf"
+    ))]
     pub(crate) fn slot_count(&self) -> usize {
         self.glyphs.len()
     }

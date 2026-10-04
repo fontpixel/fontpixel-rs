@@ -1162,6 +1162,19 @@ consume the same aggregate allowance. All record types must honor the selected
 output record cap. Four regressions establish rejection and exact inclusive
 boundaries for both codecs without changing valid font or mapping bytes.
 
+## 2026-10-04 — W3.3 explicit atlas maps and safe C literals
+
+**Question:** Image atlases and C arrays do not intrinsically carry character maps,
+full metrics, or safe filesystem authority; the plan requires faithful roundtrips.
+**Choice:** Versioned JSON/TOML atlas sidecars retain native model metadata while
+catalogue-compatible maps retain their documented pixel/baseline rules. Reject any
+visible unmapped image region. C uses a bounded non-executing literal parser,
+authoritative font8x8 spans, explicit generic geometry/charset, and standard
+Adafruit fields with complete loss reporting. Resolving sidecars stays in the
+caller-supplied resource boundary. CLI resources are scoped to the primary folder.
+**Reason:** No silent character guessing, hidden C execution, clipped pixels,
+charset conversion, or uncontrolled path access is acceptable.
+
 ## 2026-10-04 — Schedule authorized font merge features without interrupting implementation
 
 **Question:** The owner added a font merge library/CLI, WASM interface and a pure
@@ -1236,3 +1249,97 @@ slot survives; FON errors retain the actual font index and earlier diagnostics.
 **Reason:** A multi-font operation must not repeatedly spend the same memory
 allowance. Generated resources must honor their reader's resource limits, and
 failed conversions still need actionable loss details without returning bytes.
+
+## W3.3 CLI resources and output bundles (2026-10-04, before implementation)
+
+The CLI grants each codec a `cap_std::fs::Dir` rooted at the primary input's
+containing directory. Relative sidecars are opened through that directory handle,
+with bounded reads; symlink traversal cannot grant access outside it. The explicitly
+selected primary itself may be a symlink. Its spelling's parent establishes the
+sidecar root. Successfully opened primary and sidecar file identities remain held
+through conversion so output aliases (including hard links) can be rejected.
+
+Bundle output preflights all paths and existing file identities, stages and syncs
+all bytes before replacing anything, then commits with saved originals and rollback
+on ordinary I/O failure. The primary is committed last. Output symlinks and symlink
+parents are rejected. Newly created empty directories and staging files are removed
+on failure. This is a recoverable multi-file operation, not a promise of filesystem
+crash atomicity or isolation from another process modifying the same destination.
+The single-file `persist` API remains for existing rendering/OpenType commands.
+
+Directory-handle API: https://docs.rs/cap-std/4.0.3/cap_std/fs/struct.Dir.html
+
+Existing single-file conversion deliberately accepts `convert a.bdf -o a.bdf`.
+Keep that compatibility only for one input, one output, exactly the same spelled
+path and no resolved sidecars. All other input/sidecar aliases are rejected.
+
+The CLI's `cap-std 4.0.3` dependency introduces `winx` under Apache-2.0 WITH
+LLVM-exception (an Apache-family permissive license allowed by PLAN §3).
+`deny.toml` admits that exact expression. Version-pinned duplicate allowances
+cover only io-lifetimes 2.0.4 and the Windows ABI crates required by cap-std's
+current adapters; cargo-deny advisories, sources and all other duplicate checks
+remain active. The library retains zero filesystem dependencies.
+
+## 2026-10-04 — Native image metadata and portable C declarations
+
+Native JSON/TOML sidecars retain stable glyph slots, aliases, sequences, complete
+metrics and ordered properties. All nested metadata rejects unknown fields so
+strict conversion cannot silently erase a future extension. TOML wraps the same
+JSON schema to retain unsigned values and heterogeneous property lists. TGA
+output is uncompressed L8: the dependency's cross-scanline RLE output failed
+independent Pillow decoding. Reader/encoder peaks are budgeted separately, with
+schema-aware metadata accounting and format-specific scratch reservations.
+
+C input uses a bounded literal lexer; no expressions, macros or source code are
+executed. Real declarations/comments select a family, and Unicode range comments
+belong to their following declaration. An explicit array name selects exactly one
+declaration across included resources. C writes report stable-ID reordering and
+retain per-glyph omissions when automatic output-range inference fails. Explicit
+ranges keep their documented empty-cell generation behavior.
+
+## 2026-10-04 — KBITX grayscale, scalar identity and XML boundaries
+
+Retain exact Gray8 by default; catalogue-compatible reduction requires an explicit
+threshold. Keep native scalar records and inert kerning/feature/PUAA XML. Permit
+the standard external DOCTYPE as inert syntax, without entity resolution; reject
+internal DTDs/entities. Numeric name IDs canonicalize before duplicate precedence
+is applied, and output reports retained-metadata reordering. Pixel em height maps
+to point size at 72 dpi for reproducible BDF conversion. Writers preflight escaped
+XML, WIB and model allocations against the same limits as the reader.
+
+## 2026-10-04 — Pebble v1 follows the runtime layout
+
+The official Pebble `text_resources.c` and `text_resources.h` establish v1's
+six-byte header, absent hash table, u16 codepoints/u16 word offsets and eight-byte
+glyph headers with advance at byte seven. V2/v3 use byte offsets and five-byte
+glyph headers. Implementations follow those runtime structures.
+
+## 2026-10-04 — Report incomplete Pebble RLE rows as loss
+
+TUMBLED v1.11's 28-point bold font contains 7,829 incomplete final RLE rows.
+The runtime and catalogue render only complete rows. Decode that same geometry,
+discard residual pixels with per-glyph `pbf.read.rle_tail` loss diagnostics and
+let strict conversion prevent output. Nonempty zero-width RLE remains invalid.
+
+## 2026-10-04 — PBF writes remain readable under identical limits
+
+Cap generated bytes by both the writer output limit and reader input limit.
+Share allocation-free reader budget accounting with the writer, including
+alias-heavy mapping tables, glyph storage, rasters and preserved properties.
+Successful writes must decode under the same ResourceLimits; fuzz uses that
+contract without increasing its reread budget.
+
+## 2026-10-04 — Explicit HBF charsets and bounded bitmap bundles
+
+Preserve legacy codes and explicit charset identity, validate GB/JIS/KSC GL/GR
+ranges, and never substitute GBK or prefix CNS planes. Use dense ranks to skip
+forbidden bytes. Resolve bounded bitmap resources through ReadContext and return
+a header plus bitmap assets through OutputBundle. Gray8 requires an explicit
+threshold, packs directly into output rows, and reports loss. Compare complete
+target metadata structures for unsupported fields. This preserves glyph meaning,
+keeps work proportional to actual glyphs and enforces one resource allowance.
+
+monobit 0.54 remains an independent oracle. Its writer omits HBF_END_FONT and
+emits absolute bitmap paths that its own loader cannot reliably reopen. The
+crosscheck preserves raw output and changes only the missing terminator and
+verified same-directory basename; codes, metrics and pixels remain untouched.

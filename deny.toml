@@ -5,14 +5,31 @@ version = 2
 [licenses]
 version = 2
 # Expand only when an actual dependency needs another PLAN-approved license.
-allow = ["MIT", "Apache-2.0", "Unicode-3.0", "BSD-3-Clause"]
+allow = ["MIT", "Apache-2.0", "Unicode-3.0", "BSD-3-Clause", "Apache-2.0 WITH LLVM-exception"]
 confidence-threshold = 0.93
 
 [bans]
 # png 0.18.1 directly requires miniz_oxide ^0.8; the pre-existing flate2
 # requires ^0.9. Keep current security fixes rather than downgrade either.
-# This one exact duplicate is allowed; all advisories/licenses remain checked.
-skip = [{ name = "miniz_oxide", version = "=0.8.9" }]
+# cap-std 4.0.3 uses io-lifetimes 3; its fs-set-times dependency still uses 2.
+# Its Windows adapters likewise require distinct windows-sys 0.59/0.60 ABIs.
+# Bound these transitive duplicates to their reviewed exact versions; no advisory
+# checks are suppressed and no implementation dependency is downgraded.
+skip = [
+    { name = "miniz_oxide", version = "=0.8.9" },
+    { name = "io-lifetimes", version = "=2.0.4" },
+    { name = "windows-sys", version = "=0.59.0" },
+    { name = "windows-sys", version = "=0.60.2" },
+    { name = "windows-targets", version = "=0.52.6" },
+    { name = "windows_aarch64_gnullvm", version = "=0.52.6" },
+    { name = "windows_aarch64_msvc", version = "=0.52.6" },
+    { name = "windows_i686_gnu", version = "=0.52.6" },
+    { name = "windows_i686_gnullvm", version = "=0.52.6" },
+    { name = "windows_i686_msvc", version = "=0.52.6" },
+    { name = "windows_x86_64_gnu", version = "=0.52.6" },
+    { name = "windows_x86_64_gnullvm", version = "=0.52.6" },
+    { name = "windows_x86_64_msvc", version = "=0.52.6" },
+]
 multiple-versions = "deny"
 wildcards = "deny"
 

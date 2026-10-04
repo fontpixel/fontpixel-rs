@@ -1,0 +1,163 @@
+{
+  "checks": [
+    {
+      "oracle": "catalogue font8x8",
+      "glyphs": 599,
+      "omissions": 7
+    },
+    {
+      "oracle": "C11 compiler + monobit GFX",
+      "glyphs": 96
+    },
+    {
+      "oracle": "Pillow png + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "Pillow bmp + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "Pillow gif + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "Pillow tga + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "Pillow pbm + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "Pillow pgm + canonical BDF",
+      "glyphs": 599
+    },
+    {
+      "oracle": "full Tong canonical BDF roundtrip",
+      "glyphs": 38653
+    }
+  ],
+  "artifacts": {
+    "atlas-bmp.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-bmp.bmp": {
+      "bytes": 155770,
+      "sha256": "70ce9ea6965a0da35bf3f495759e98b4e20ce912e8b64eead38629f05d9888a3"
+    },
+    "atlas-bmp.json": {
+      "bytes": 235883,
+      "sha256": "6fca84ab7b34cd5c1708a8b016c0613f60ac899898588ce8270fb29bab6c1f48"
+    },
+    "atlas-gif.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-gif.gif": {
+      "bytes": 3731,
+      "sha256": "185529ac00b95a86971aa38708484e9f7828938618d099f97a9411c39631144d"
+    },
+    "atlas-gif.json": {
+      "bytes": 235883,
+      "sha256": "a69b7dddf18e3996ed4fed0d72a93eee0d5fdc5abd73592543f7308a22f4a65d"
+    },
+    "atlas-pbm.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-pbm.json": {
+      "bytes": 235883,
+      "sha256": "2f149ed77bb9f5ccf6f886bce1f6342db4d83a4743b52ad71a1167ef4e62bd44"
+    },
+    "atlas-pbm.pbm": {
+      "bytes": 4875,
+      "sha256": "a081b31ceee242ff3ad85e3f23c5e5268af04c4af73d8e4a44c2dd01130e96d8"
+    },
+    "atlas-pgm.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-pgm.json": {
+      "bytes": 235883,
+      "sha256": "a17f98dd92a73f670d85ce4ba82d8d62e8e7bcbd24a70eba9a89a47bb6cc5cc0"
+    },
+    "atlas-pgm.pgm": {
+      "bytes": 38927,
+      "sha256": "757b7ed1abc4fe4546ac7d33ab9abb17386d7965acda7a702b1c7eda432adcdb"
+    },
+    "atlas-png.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-png.json": {
+      "bytes": 235883,
+      "sha256": "442f026748a1eea66ea8fb4d478035013eb02e0a97ce245da81d812f1333f1ff"
+    },
+    "atlas-png.png": {
+      "bytes": 6373,
+      "sha256": "33f11bed2a47b6461d5b90e430a859b7ed3cbde48c94c6bd75c3063c2428dbeb"
+    },
+    "atlas-tga.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "atlas-tga.json": {
+      "bytes": 235883,
+      "sha256": "8a17859eca35614b15af611ad6b6dfe84dc7024420de68d7e401a4020a851eb6"
+    },
+    "atlas-tga.tga": {
+      "bytes": 38930,
+      "sha256": "2c5ac8274f846559addd5baf99b1ca55cad7671530ea221c0f676efb5e2f30e5"
+    },
+    "font8x8.bdf": {
+      "bytes": 56913,
+      "sha256": "c415099347cd76a0a98c925b91db05a08ea4bf72f2e9fcf3fc27fda4adfee3d8"
+    },
+    "generic-check": {
+      "bytes": 16040,
+      "sha256": "f4426fc7dfa37b229147ccb9eb772f7466f308a843be19bd3327853be3067870"
+    },
+    "generic-check.c": {
+      "bytes": 126,
+      "sha256": "b16eac0e880b8f076b1ea962450ed63d6d8abb977fb718ecea21e62cc8c9073c"
+    },
+    "generic.h": {
+      "bytes": 5929,
+      "sha256": "4f9735d6c981bee0d42bc43482af554665b4fd05f031728db967103da4692e01"
+    },
+    "gfx-check": {
+      "bytes": 15960,
+      "sha256": "75f983ecc88ffc204390f83f3b3a373526d3bd12269f88704cb5867f71bd2991"
+    },
+    "gfx-check.c": {
+      "bytes": 141,
+      "sha256": "0a88672dc88a4ab8620661bc5a7ac5e465e75db5789be2409ae8c273055f44cc"
+    },
+    "gfx.h": {
+      "bytes": 6588,
+      "sha256": "59fe1f1133ce9534c822137f8fe97ceb2701357d8e5a8cdcf800a8a5ff333439"
+    },
+    "gfxfont.h": {
+      "bytes": 228,
+      "sha256": "58bd8734949bcf8cf4cc655978dfbeac3c27834c6db218a1f6470a40090195fd"
+    },
+    "tong-canonical.bdf": {
+      "bytes": 5746025,
+      "sha256": "021b098d2c4b33f1d66c42fc3b52578e3b94286e3562c537db433903a595f19f"
+    },
+    "tong-restored.bdf": {
+      "bytes": 5746025,
+      "sha256": "021b098d2c4b33f1d66c42fc3b52578e3b94286e3562c537db433903a595f19f"
+    },
+    "tong.json": {
+      "bytes": 20600374,
+      "sha256": "49ce4940f649fbb128b488d1ed7fba2b6081c382d9efdb4b14b26a537540042c"
+    },
+    "tong.png": {
+      "bytes": 1845339,
+      "sha256": "16ccddfd5e0bb26ff18bb1004863ba4853995b57f3d5a239c656a63fde811a80"
+    }
+  }
+}

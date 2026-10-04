@@ -2,7 +2,7 @@
 use super::{ReportStyle, emit_render_report, persist, read_primary};
 use clap::Args;
 use fontpixel::{
-    Error, Font, Input, ReadOptions, Report, Result, Variants,
+    Error, Font, ReadOptions, Report, Result, Variants,
     outline::Shape,
     sfnt,
     variants::{self, Options, OutlineFlavor, ScriptVariant},
@@ -195,9 +195,8 @@ fn assignment(s: &str) -> Result<(&str, &str)> {
 }
 fn load(path: PathBuf, report: &mut Report) -> Result<Font> {
     let o = ReadOptions::default();
-    let data = read_primary(&path, &o.limits)?;
-    let f =
-        fontpixel::registry().read(&Input::new(&data).with_name(&path.to_string_lossy()), &o)?;
+    let file = super::assets::FileInput::open(&path, &o.limits, super::assets::Sources::default())?;
+    let f = fontpixel::registry().read(&file.input(), &o)?;
     report.extend(f.report);
     f.fonts.into_single()
 }
