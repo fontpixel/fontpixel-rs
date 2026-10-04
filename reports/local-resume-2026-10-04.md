@@ -51,8 +51,10 @@ Machine-readable command/source/exit records and compressed logs are in
 W3.2 is the first continuation item. Local review reproduced and repaired
 cumulative FON source/report accounting, container property accounting, aligned
 resource bounds, and lost omission diagnostics on fatal FNT conversion. Its
-final acceptance and integration are recorded separately in `w3.2-review.md`
-when complete; this restoration report alone does not accept that branch.
+final acceptance and integration are recorded separately in
+[W3.2 review](w3.2-review.md). It is now accepted and merged at `deee074`, with
+the main aggregate gate passing again. This restoration report's baseline
+results remain tied to the original restored main, not the later implementation.
 
 W3.3, W3.4 and W3.5 remain unaccepted drafts. Phase 3 must finish and pass its
 aggregate gate before phase 4. The updated main PLAN and verbatim merge addendum
