@@ -47,7 +47,9 @@ fn detect_registry_and_feature_capabilities() {
                 "vector-raster",
                 "svg",
                 "hex",
-                "psf"
+                "psf",
+                "fnt",
+                "fon"
             ]
             .contains(&s.format.id))
             .all(|s| !s.read && !s.write && !s.detect)

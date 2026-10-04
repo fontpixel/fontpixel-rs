@@ -1161,3 +1161,22 @@ the LF delimiter is outside the text-record limit, matching the reader.
 consume the same aggregate allowance. All record types must honor the selected
 output record cap. Four regressions establish rejection and exact inclusive
 boundaries for both codecs without changing valid font or mapping bytes.
+
+## 2026-10-04 — W3.2 FNT legacy encoding and FON container scope
+
+**Question:** Windows byte charsets, historical ANSI variants and memory-only
+flags have no unambiguous universal Unicode meaning; FON wraps executable headers.
+**Choice:** Keep input codes legacy with explicit charset labels, preserve named
+FNT metadata, use modern cp1252 for ANSI, and require an explicit page for OEM or
+symbol Unicode conversion. Support raster v1/v2/v3 and NE writes/NE+PE reads.
+Reject unsupported vector/color/ABC layouts instead of misreading their bytes.
+Read executable containers only as bounded resources, never run embedded code.
+**Reason:** Preserve original mappings and safety while allowing explicit exact
+charset conversion. FONT resources are authoritative over advisory FONTDIR.
+
+The writer preserves already encoded legacy CJK byte values without opening
+large conversion tables. Actual Unicode conversion still requires the exact CJK
+feature. Source FNT character-range endpoints are retained so absent leading or
+trailing slots and relative break/default indexes are not silently retargeted.
+Metadata names use byte-preserving Latin-1 because historical Windows strings
+are not universally tagged with the glyph charset.

@@ -302,3 +302,12 @@ MIT `reference/fontpixel/pipeline/tests/test_bdf.py` and invokes the unmodified
 catalogue parser. The source checkout and mini fixture stay outside the new
 repository. No new font data is redistributed; all native unit/fuzz/performance
 fixtures are algorithmically generated under this project's MIT license.
+
+## W3.2 Windows FNT/FON format research
+
+The Windows FNT/NE structures and interoperability behavior were checked against
+monobit's MIT-licensed Windows format module (Rob Hagemans, 2019–2026), whose
+notice also credits mkwinfont (Simon Tatham, 2001) and dewinfont (2001, 2017).
+No implementation code was copied; format layouts and public Microsoft
+specifications informed an independent bounded Rust implementation. See
+`docs/formats/fnt.md` and `docs/formats/fon.md` for sources.

@@ -290,6 +290,15 @@ struct ConsoleArguments {
     /// PSF Unicode table policy (default auto).
     #[arg(long, value_parser=["auto","include","omit"])]
     psf_unicode_table: Option<String>,
+    /// Windows raster output version; defaults to source version or 2.
+    #[arg(long, value_parser=["1","2","3"])]
+    fnt_version: Option<String>,
+    /// Windows dfCharSet identifier, 0..255 (ANSI=0, OEM=255).
+    #[arg(long)]
+    fnt_charset: Option<u8>,
+    /// Explicit target page for OEM, symbol, or historical Windows mappings.
+    #[arg(long)]
+    fnt_code_page: Option<String>,
 }
 impl ConsoleArguments {
     fn apply(
@@ -299,6 +308,35 @@ impl ConsoleArguments {
         threshold: Option<u8>,
         registry: &mut fontpixel::FontRegistry,
     ) -> fontpixel::Result<()> {
+        let fnt_requested = self.fnt_version.is_some()
+            || self.fnt_charset.is_some()
+            || self.fnt_code_page.is_some();
+        if fnt_requested && !["fnt", "fon"].contains(&id) {
+            return Err(Error::InvalidInput(
+                "FNT options require --to fnt or fon".into(),
+            ));
+        }
+        #[cfg(feature = "fnt")]
+        if ["fnt", "fon"].contains(&id) {
+            use fontpixel::formats::fnt::{FntWriteOptions, Version};
+            registry.set_fnt_write_options(FntWriteOptions {
+                version: self.fnt_version.as_deref().map(|v| match v {
+                    "1" => Version::One,
+                    "3" => Version::Three,
+                    _ => Version::Two,
+                }),
+                charset: self.fnt_charset,
+                code_page: self.fnt_code_page.clone(),
+                gray_threshold: threshold,
+                ..Default::default()
+            });
+        }
+        #[cfg(not(feature = "fnt"))]
+        if fnt_requested {
+            return Err(Error::FeatureDisabled {
+                format: "fnt".into(),
+            });
+        }
         let requested = self.psf_version.is_some()
             || self.psf1_count.is_some()
             || self.psf_unicode_table.is_some();
@@ -962,6 +1000,9 @@ struct RasterArguments {
     /// HEX baseline-to-bottom distance (default 0).
     #[arg(long)]
     hex_descent: Option<u32>,
+    /// Explicit source FNT/FON legacy code page (does not remap byte positions).
+    #[arg(long)]
+    fnt_read_code_page: Option<String>,
     /// Primary input byte budget (default 64 MiB); aggregate 256 MiB cap remains.
     #[arg(long)]
     max_input_bytes: Option<usize>,
@@ -992,6 +1033,16 @@ impl RasterArguments {
         limits
     }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
+        #[cfg(feature = "fnt")]
+        registry.set_fnt_read_options(fontpixel::formats::fnt::FntReadOptions {
+            code_page: self.fnt_read_code_page.clone(),
+        });
+        #[cfg(not(feature = "fnt"))]
+        if self.fnt_read_code_page.is_some() {
+            return Err(Error::FeatureDisabled {
+                format: "fnt".into(),
+            });
+        }
         #[cfg(feature = "hex")]
         registry.set_hex_read_options(fontpixel::formats::hex::HexReadOptions {
             height: self.hex_height.unwrap_or(16),
@@ -1071,7 +1122,7 @@ impl VectorArguments {
             || self.ppu.is_some()
             || self.upm.is_some()
             || self.embed_bitmaps
-            || (self.gray_threshold.is_some() && !["hex", "psf"].contains(&id))
+            || (self.gray_threshold.is_some() && !["hex", "psf", "fnt", "fon"].contains(&id))
             || self.woff2_source.is_some()
             || self.woff2_quality.is_some()
             || self.collection_v2;

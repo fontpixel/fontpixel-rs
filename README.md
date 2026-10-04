@@ -4,7 +4,7 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase 2 complete; phase 3 started (W3.1)
+## Current status: phase 2 complete; phase 3 started (W3.1–W3.2)
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -29,8 +29,16 @@ The CLI includes both; library users enable `hex` and/or `psf` explicitly.
 See [HEX](docs/formats/hex.md), [PSF](docs/formats/psf.md) and
 [W3.1 validation](reports/w3.1.md).
 
-Fifteen format IDs now have native readers, fourteen have writers (color writing
-is deferred); the remaining 31 IDs and Python/WASM bindings remain unimplemented
+Windows raster FNT v1/v2/v3 and NE FON support bounded deterministic read/write;
+PE32/PE32+ FON resources can also be read. FON keeps multiple strikes. Legacy
+byte charsets remain explicit; Unicode export uses exact selected code pages,
+with loss reports for unsupported mappings and metadata. The CLI includes both;
+library users enable `fnt` or `fon` (which also enables `fnt`).
+See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
+[W3.2 validation](reports/w3.2.md).
+
+Seventeen format IDs now have native readers, sixteen have writers (color writing
+is deferred); the remaining 29 IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
@@ -59,6 +67,15 @@ fontpixel convert source.hex -o console.psf --psf-version 1 --psf1-count 512
 fontpixel info eight-row.hex --hex-height 8 --json
 fontpixel convert source.bdf -o unifont.hex --hex-height 16 --hex-descent 2
 fontpixel convert source.psf -o restored.psf --strict
+```
+
+Windows examples (FNT cannot retain every BDF field or characters beyond the
+selected code page's single-byte range):
+
+```sh
+fontpixel convert source.bdf -o latin.fnt --to fnt --fnt-version 3 --fnt-charset 0
+fontpixel convert small.fnt large.fnt -o family.fon --strict
+fontpixel info legacy.fon --fnt-read-code-page cp437 --json
 ```
 
 ## Build and inspect

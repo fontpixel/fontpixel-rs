@@ -48,6 +48,8 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("yaff\t")
                 && !line.starts_with("hex\t")
                 && !line.starts_with("psf\t")
+                && !line.starts_with("fnt\t")
+                && !line.starts_with("fon\t")
                 && !line.starts_with("otb\t")
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
@@ -81,6 +83,8 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "yaff"
                 && entry["format"]["id"] != "hex"
                 && entry["format"]["id"] != "psf"
+                && entry["format"]["id"] != "fnt"
+                && entry["format"]["id"] != "fon"
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
@@ -164,10 +168,10 @@ fn info_reports_missing_inputs_and_ambiguous_extensions() {
     let output = run(&["info", input.to_str().unwrap()]);
     assert_eq!(output.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&output.stderr).contains("ambiguous format"));
-    let explicit = run(&["info", input.to_str().unwrap(), "--from", "fnt"]);
+    let explicit = run(&["info", input.to_str().unwrap(), "--from", "snf"]);
     assert!(
         String::from_utf8_lossy(&explicit.stderr)
-            .contains("read for format 'fnt' is not implemented")
+            .contains("read for format 'snf' is not implemented")
     );
 }
 
@@ -219,12 +223,12 @@ fn convert_dispatch_accepts_multiple_inputs_and_explicit_target() {
         "--from",
         "bdf",
         "--to",
-        "fnt",
+        "snf",
     ]);
     assert_eq!(output.status.code(), Some(1));
     assert!(
         String::from_utf8_lossy(&output.stderr)
-            .contains("write for format 'fnt' is not implemented")
+            .contains("write for format 'snf' is not implemented")
     );
     assert!(!target.exists());
 }
@@ -1092,4 +1096,72 @@ fn hex_psf_cli_variants_and_strict_atomic_failure() {
         "1",
     ]);
     assert!(!o.status.success());
+}
+
+#[cfg(all(feature = "fnt", feature = "fon"))]
+#[test]
+fn windows_options_multifont_and_strict_preserve_destination() {
+    let dir = TempDir::new();
+    let input = dir.0.join("input.bdf");
+    fs::write(&input, BDF).unwrap();
+    let target = dir.0.join("font.fnt");
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--to",
+        "fnt",
+        "--fnt-version",
+        "3",
+        "--fnt-charset",
+        "0",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert_eq!(&fs::read(&target).unwrap()[..2], b"\0\x03");
+    let ne = dir.0.join("pair.fon");
+    let result = run(&[
+        "convert",
+        target.to_str().unwrap(),
+        target.to_str().unwrap(),
+        "-o",
+        ne.to_str().unwrap(),
+        "--to",
+        "fon",
+        "--strict",
+    ]);
+    assert!(
+        result.status.success(),
+        "{}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let result = run(&["info", ne.to_str().unwrap(), "--json"]);
+    assert!(result.status.success());
+    let j: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(j["font_count"], 2);
+    fs::write(&target, b"PROTECTED").unwrap();
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        target.to_str().unwrap(),
+        "--to",
+        "fnt",
+        "--strict",
+    ]);
+    assert_eq!(result.status.code(), Some(3));
+    assert_eq!(fs::read(&target).unwrap(), b"PROTECTED");
+    let result = run(&[
+        "convert",
+        input.to_str().unwrap(),
+        "-o",
+        dir.0.join("x.bdf").to_str().unwrap(),
+        "--fnt-version",
+        "3",
+    ]);
+    assert!(!result.status.success());
 }

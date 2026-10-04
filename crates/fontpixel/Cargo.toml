@@ -22,7 +22,7 @@ raw = []
 yaff = ["gzip", "dep:serde", "dep:serde_json"]
 pf2 = []
 fnt = []
-fon = []
+fon = ["fnt"]
 fontx2 = []
 hzk = []
 hbf = []
@@ -141,3 +141,7 @@ required-features = ["svg"]
 [[example]]
 name = "console_timing"
 required-features = ["hex", "psf"]
+
+[[example]]
+name = "windows_timing"
+required-features = ["fnt", "fon"]
