@@ -50,7 +50,8 @@ struct IdentityTable {
 }
 impl IdentityTable {
     fn bytes_for(capacity: usize, limit: usize) -> Result<usize> {
-        capacity.checked_mul(std::mem::size_of::<Option<FileIdentity>>())
+        capacity
+            .checked_mul(std::mem::size_of::<Option<FileIdentity>>())
             .ok_or_else(|| identity_limit(limit))
     }
     fn bytes(&self, limit: usize) -> Result<usize> {
@@ -74,18 +75,24 @@ impl IdentityTable {
         }
     }
     fn next_capacity(&self, limit: usize) -> Result<Option<usize>> {
-        let required = self.len.checked_add(1)
+        let required = self
+            .len
+            .checked_add(1)
             .and_then(|len| len.checked_mul(2))
             .ok_or_else(|| identity_limit(limit))?;
         if required <= self.slots.len() {
             return Ok(None);
         }
-        required.checked_next_power_of_two().map(Some)
+        required
+            .checked_next_power_of_two()
+            .map(Some)
             .ok_or_else(|| identity_limit(limit))
     }
     fn allocate(capacity: usize, limit: usize) -> Result<Vec<Option<FileIdentity>>> {
         let mut slots = Vec::new();
-        slots.try_reserve_exact(capacity).map_err(|_| identity_limit(limit))?;
+        slots
+            .try_reserve_exact(capacity)
+            .map_err(|_| identity_limit(limit))?;
         Self::initialize_allocation(slots, capacity, limit)
     }
     fn initialize_allocation(
@@ -130,7 +137,10 @@ impl IdentityTable {
     }
 }
 fn identity_limit(limit: usize) -> Error {
-    Error::ResourceLimit { resource: "retained input identity bytes", limit }
+    Error::ResourceLimit {
+        resource: "retained input identity bytes",
+        limit,
+    }
 }
 #[derive(Clone)]
 struct IdentityBudget {
@@ -154,17 +164,28 @@ impl IdentityBudget {
         released: usize,
         existing_charge: usize,
     ) -> Result<IdentityReservation<'_>> {
-        let mut used = self.used.lock().map_err(|_| invalid("retained identity budget lock poisoned"))?;
+        let mut used = self
+            .used
+            .lock()
+            .map_err(|_| invalid("retained identity budget lock poisoned"))?;
         if *used < existing_charge || released > existing_charge {
             return Err(invalid("retained identity accounting is inconsistent"));
         }
         let previous = *used;
-        let peak = previous.checked_add(additional)
+        let peak = previous
+            .checked_add(additional)
             .filter(|bytes| *bytes <= self.limit)
             .ok_or_else(|| identity_limit(self.limit))?;
-        let retained = peak.checked_sub(released).ok_or_else(|| identity_limit(self.limit))?;
+        let retained = peak
+            .checked_sub(released)
+            .ok_or_else(|| identity_limit(self.limit))?;
         *used = peak;
-        Ok(IdentityReservation { used, previous, retained, committed: false })
+        Ok(IdentityReservation {
+            used,
+            previous,
+            retained,
+            committed: false,
+        })
     }
 }
 impl IdentityReservation<'_> {
@@ -193,15 +214,21 @@ impl SourceState {
     fn retained_bytes(&self, limit: usize) -> Result<usize> {
         // The shared allocation stores Mutex<SourceState>, so include its
         // measurable synchronization payload as well as the table itself.
-        std::mem::size_of::<Mutex<Self>>().checked_add(self.identities.bytes(limit)?)
+        std::mem::size_of::<Mutex<Self>>()
+            .checked_add(self.identities.bytes(limit)?)
             .ok_or_else(|| identity_limit(limit))
     }
     fn ensure_complete(&self) -> Result<()> {
         if self.incomplete {
-            return Err(invalid("input identity protection is incomplete; no outputs can be committed"));
+            return Err(invalid(
+                "input identity protection is incomplete; no outputs can be committed",
+            ));
         }
         if let Some(budget) = &self.budget {
-            let used = budget.used.lock().map_err(|_| invalid("retained identity budget lock poisoned"))?;
+            let used = budget
+                .used
+                .lock()
+                .map_err(|_| invalid("retained identity budget lock poisoned"))?;
             if *used < self.charged || *used > budget.limit {
                 return Err(invalid("retained identity accounting is inconsistent"));
             }
@@ -211,19 +238,24 @@ impl SourceState {
     fn remember_identity(&mut self, identity: FileIdentity, directory: bool) -> Result<()> {
         self.ensure_complete()?;
         if !self.identities.contains(&identity) {
-            let limit = self.budget.as_ref().map_or(usize::MAX, |budget| budget.limit);
+            let limit = self
+                .budget
+                .as_ref()
+                .map_or(usize::MAX, |budget| budget.limit);
             if let Some(capacity) = self.identities.next_capacity(limit)? {
                 let old_bytes = self.identities.bytes(limit)?;
                 let new_bytes = IdentityTable::bytes_for(capacity, limit)?;
                 let charged = if self.budget.is_some() {
-                    self.charged.checked_add(new_bytes)
+                    self.charged
+                        .checked_add(new_bytes)
                         .and_then(|bytes| bytes.checked_sub(old_bytes))
                         .ok_or_else(|| identity_limit(limit))?
                 } else {
                     0
                 };
                 let budget = self.budget.clone();
-                let reservation = budget.as_ref()
+                let reservation = budget
+                    .as_ref()
                     .map(|budget| budget.reserve(new_bytes, old_bytes, self.charged))
                     .transpose()?;
                 let slots = IdentityTable::allocate(capacity, limit)?;
@@ -259,15 +291,18 @@ impl Drop for SourceState {
 pub(crate) struct Sources(Arc<Mutex<SourceState>>);
 impl Sources {
     pub fn is_single_primary(&self) -> bool {
-        self.0.lock().is_ok_and(|state| {
-            state.reads == 1 && !state.has_directory && !state.incomplete
-        })
+        self.0
+            .lock()
+            .is_ok_and(|state| state.reads == 1 && !state.has_directory && !state.incomplete)
     }
     /// Attach the batch's retained ledger once, before declarations/workers.
     /// The initial TOML identity is charged here. Standalone scopes deliberately
     /// have no new implicit cap; callers may attach a command-derived ledger.
     pub(crate) fn set_retained_budget(&self, used: Arc<Mutex<usize>>, limit: usize) -> Result<()> {
-        let mut state = self.0.lock().map_err(|_| invalid("input identity lock poisoned"))?;
+        let mut state = self
+            .0
+            .lock()
+            .map_err(|_| invalid("input identity lock poisoned"))?;
         state.ensure_complete()?;
         if let Some(existing) = &state.budget {
             if Arc::ptr_eq(&existing.used, &used) && existing.limit == limit {
@@ -290,7 +325,10 @@ impl Sources {
         result
     }
     pub(crate) fn remember(&self, file: &File) -> Result<()> {
-        let mut state = self.0.lock().map_err(|_| invalid("input identity lock poisoned"))?;
+        let mut state = self
+            .0
+            .lock()
+            .map_err(|_| invalid("input identity lock poisoned"))?;
         let result = (|| {
             let identity = FileIdentity::of(file)?;
             let directory = file.metadata()?.is_dir();
@@ -304,12 +342,17 @@ impl Sources {
         result
     }
     fn ensure_complete(&self) -> Result<()> {
-        self.0.lock().map_err(|_| invalid("input identity lock poisoned"))?
+        self.0
+            .lock()
+            .map_err(|_| invalid("input identity lock poisoned"))?
             .ensure_complete()
     }
     fn contains(&self, file: File) -> Result<bool> {
         let identity = FileIdentity::of(&file)?;
-        let state = self.0.lock().map_err(|_| invalid("input identity lock poisoned"))?;
+        let state = self
+            .0
+            .lock()
+            .map_err(|_| invalid("input identity lock poisoned"))?;
         state.ensure_complete()?;
         Ok(state.identities.contains(&identity))
     }
@@ -324,7 +367,10 @@ fn parent(path: &Path) -> &Path {
         .unwrap_or(Path::new("."))
 }
 fn input_limit(maximum: usize) -> Error {
-    Error::ResourceLimit { resource: "input asset bytes", limit: maximum }
+    Error::ResourceLimit {
+        resource: "input asset bytes",
+        limit: maximum,
+    }
 }
 fn bounded(file: File, maximum: usize) -> Result<Vec<u8>> {
     let metadata = file.metadata()?;
@@ -345,7 +391,9 @@ fn read_bounded(mut reader: impl Read, initial: usize, maximum: usize) -> Result
     }
     let mut bytes = Vec::new();
     if initial != 0 {
-        bytes.try_reserve_exact(initial).map_err(|_| input_limit(maximum))?;
+        bytes
+            .try_reserve_exact(initial)
+            .map_err(|_| input_limit(maximum))?;
         if bytes.capacity() > maximum {
             return Err(input_limit(maximum));
         }
@@ -354,8 +402,10 @@ fn read_bounded(mut reader: impl Read, initial: usize, maximum: usize) -> Result
     loop {
         // Read one byte beyond the remaining allowance to distinguish EOF from
         // an oversized source, without retaining that byte in the output Vec.
-        let allowance = maximum.saturating_sub(bytes.len())
-            .saturating_add(1).min(chunk.len());
+        let allowance = maximum
+            .saturating_sub(bytes.len())
+            .saturating_add(1)
+            .min(chunk.len());
         let count = match reader.read(&mut chunk[..allowance]) {
             Ok(count) => count,
             Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
@@ -364,13 +414,19 @@ fn read_bounded(mut reader: impl Read, initial: usize, maximum: usize) -> Result
         if count == 0 {
             return Ok(bytes);
         }
-        let required = bytes.len().checked_add(count)
+        let required = bytes
+            .len()
+            .checked_add(count)
             .filter(|length| *length <= maximum)
             .ok_or_else(|| input_limit(maximum))?;
         if required > bytes.capacity() {
-            let capacity = bytes.capacity().saturating_mul(2)
-                .max(required).min(maximum);
-            bytes.try_reserve_exact(capacity - bytes.len())
+            let capacity = bytes
+                .capacity()
+                .saturating_mul(2)
+                .max(required)
+                .min(maximum);
+            bytes
+                .try_reserve_exact(capacity - bytes.len())
                 .map_err(|_| input_limit(maximum))?;
             // Allocators/Vec are not assumed to honor an exact requested upper
             // bound. Reject excess reported capacity before retaining bytes.
@@ -558,7 +614,9 @@ fn entry_identity(dir: &Dir, name: &Path) -> Result<Option<FileIdentity>> {
     match dir.symlink_metadata(name) {
         Ok(metadata) => {
             if metadata.is_symlink() || !metadata.is_file() {
-                return Err(invalid("output target must be a regular file, not a symlink"));
+                return Err(invalid(
+                    "output target must be a regular file, not a symlink",
+                ));
             }
             let file = dir.open(name)?.into_std();
             if !file.metadata()?.is_file() {
@@ -571,9 +629,7 @@ fn entry_identity(dir: &Dir, name: &Path) -> Result<Option<FileIdentity>> {
     }
 }
 fn remove_owned_file(dir: &Dir, name: &str, identity: &FileIdentity) {
-    if entry_identity(dir, Path::new(name))
-        .is_ok_and(|found| found.as_ref() == Some(identity))
-    {
+    if entry_identity(dir, Path::new(name)).is_ok_and(|found| found.as_ref() == Some(identity)) {
         let _ = dir.remove_file(name);
     }
 }
@@ -609,9 +665,13 @@ impl Drop for Transaction {
             for created in self.created.iter().rev() {
                 // The pathname might have been replaced since creation. Only
                 // remove the exact empty directory made by this transaction.
-                let matches = created.parent.symlink_metadata(&created.name)
+                let matches = created
+                    .parent
+                    .symlink_metadata(&created.name)
                     .is_ok_and(|metadata| metadata.is_dir() && !metadata.is_symlink())
-                    && created.parent.open_dir(&created.name)
+                    && created
+                        .parent
+                        .open_dir(&created.name)
                         .ok()
                         .and_then(|dir| directory_identity(&dir).ok())
                         .is_some_and(|identity| identity == created.identity);
@@ -663,7 +723,9 @@ fn checked_directory(path: &Path, sources: &Sources) -> Result<Dir> {
         }
         let dir = Dir::open_ambient_dir(&prefix, ambient_authority())?;
         if sources.contains(dir.open_dir(".")?.into_std_file())? {
-            return Err(invalid("output overlaps a primary input or sidecar directory"));
+            return Err(invalid(
+                "output overlaps a primary input or sidecar directory",
+            ));
         }
         last = Some(dir);
     }
@@ -685,9 +747,14 @@ struct Target<'a> {
 }
 fn insert_file_target(paths: &mut BTreeSet<PathBuf>, path: PathBuf) -> Result<()> {
     if path.ancestors().any(|ancestor| paths.contains(ancestor))
-        || paths.range(path.clone()..).next().is_some_and(|next| next.starts_with(&path))
+        || paths
+            .range(path.clone()..)
+            .next()
+            .is_some_and(|next| next.starts_with(&path))
     {
-        return Err(invalid("output paths are duplicates or overlap an ancestor target"));
+        return Err(invalid(
+            "output paths are duplicates or overlap an ancestor target",
+        ));
     }
     paths.insert(path);
     Ok(())
@@ -714,7 +781,9 @@ fn preflight(
                         return Err(invalid("output parent is not a directory"));
                     }
                     if sources.contains(root.open_dir(&prefix)?.into_std_file())? {
-                        return Err(invalid("output overlaps a primary input or sidecar directory"));
+                        return Err(invalid(
+                            "output overlaps a primary input or sidecar directory",
+                        ));
                     }
                 } else {
                     if !metadata.is_file() {
@@ -740,10 +809,7 @@ fn preflight(
 // A directory is a complete font, so unrelated old members cannot be merged
 // into it. During the post-staging check only our exact staging files are
 // exempted; their identities are checked separately before publication.
-fn preflight_directory(
-    prepared: &PreparedBundle<'_>,
-    staging: &BTreeSet<PathBuf>,
-) -> Result<()> {
+fn preflight_directory(prepared: &PreparedBundle<'_>, staging: &BTreeSet<PathBuf>) -> Result<()> {
     let bundle = prepared.bundle;
     if !bundle.is_directory() {
         return Ok(());
@@ -753,9 +819,16 @@ fn preflight_directory(
     for asset in bundle.assets() {
         let mut path = Path::new(asset.path.as_str());
         while path != base {
-            let name = path.file_name().ok_or_else(|| invalid("invalid directory asset"))?;
-            let directory = path.parent().ok_or_else(|| invalid("invalid directory asset parent"))?;
-            expected.entry(directory.to_owned()).or_default().insert(name.to_owned());
+            let name = path
+                .file_name()
+                .ok_or_else(|| invalid("invalid directory asset"))?;
+            let directory = path
+                .parent()
+                .ok_or_else(|| invalid("invalid directory asset parent"))?;
+            expected
+                .entry(directory.to_owned())
+                .or_default()
+                .insert(name.to_owned());
             path = directory;
         }
     }
@@ -792,7 +865,9 @@ pub(crate) fn persist_bundle(
 }
 pub(crate) fn persist_bundles(outputs: &[PendingOutput], sources: &Sources) -> Result<()> {
     persist_group(
-        outputs.iter().map(|output| (output.destination.as_path(), &output.bundle)),
+        outputs
+            .iter()
+            .map(|output| (output.destination.as_path(), &output.bundle)),
         sources,
         |_| Ok(()),
     )
@@ -825,8 +900,11 @@ fn persist_group<'a>(
     let mut prepared = Vec::new();
     let mut destinations = BTreeSet::new();
     for (destination, bundle) in outputs {
-        if destination.file_name().and_then(|name| name.to_str()) != Some(bundle.primary().as_str()) {
-            return Err(invalid("output bundle entry point differs from destination"));
+        if destination.file_name().and_then(|name| name.to_str()) != Some(bundle.primary().as_str())
+        {
+            return Err(invalid(
+                "output bundle entry point differs from destination",
+            ));
         }
         let root = Arc::new(checked_directory(parent(destination), sources)?);
         let root_path = normalized(parent(destination))?;
@@ -843,7 +921,10 @@ fn persist_group<'a>(
     let mut directory_claims = BTreeMap::new();
     for (index, output) in prepared.iter().enumerate() {
         if output.bundle.is_directory() {
-            directory_claims.insert(output.root_path.join(output.bundle.primary().as_str()), index);
+            directory_claims.insert(
+                output.root_path.join(output.bundle.primary().as_str()),
+                index,
+            );
         }
     }
     let mut targets = Vec::new();
@@ -854,10 +935,16 @@ fn persist_group<'a>(
             let absolute = output.root_path.join(path);
             insert_file_target(&mut output_paths, absolute.clone())?;
             if absolute.ancestors().any(|ancestor| {
-                directory_claims.get(ancestor).is_some_and(|owner| *owner != index)
-            }) || directory_claims.range(absolute.clone()..).next().is_some_and(|(directory, owner)| {
-                *owner != index && directory.starts_with(&absolute)
-            }) {
+                directory_claims
+                    .get(ancestor)
+                    .is_some_and(|owner| *owner != index)
+            }) || directory_claims
+                .range(absolute.clone()..)
+                .next()
+                .is_some_and(|(directory, owner)| {
+                    *owner != index && directory.starts_with(&absolute)
+                })
+            {
                 return Err(invalid("output overlaps another output font directory"));
             }
             targets.push(Target {
@@ -908,7 +995,9 @@ fn persist_group<'a>(
                 }
                 let opened = dir.open_dir(name)?;
                 if sources.contains(opened.open_dir(".")?.into_std_file())? {
-                    return Err(invalid("output overlaps a primary input or sidecar directory"));
+                    return Err(invalid(
+                        "output overlaps a primary input or sidecar directory",
+                    ));
                 }
                 Ok(opened)
             })();
@@ -933,13 +1022,19 @@ fn persist_group<'a>(
         if self::directory_identity(&current)? != directory_identity {
             return Err(invalid("output parent changed during preparation"));
         }
-        let name = target.path.file_name().and_then(|name| name.to_str())
-            .ok_or_else(|| invalid("invalid output filename"))?.to_owned();
+        let name = target
+            .path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .ok_or_else(|| invalid("invalid output filename"))?
+            .to_owned();
         if entry_identity(&dir, Path::new(&name))? != target.original {
             return Err(invalid("output target changed during preparation"));
         }
         let (temp, mut file) = temporary(&dir, "stage")?;
-        let temp_identity = match file.try_clone().map_err(Error::from)
+        let temp_identity = match file
+            .try_clone()
+            .map_err(Error::from)
             .and_then(|file| FileIdentity::of(&file.into_std()))
         {
             Ok(identity) => identity,
@@ -981,8 +1076,15 @@ fn persist_group<'a>(
         if entry_identity(&stage.dir, Path::new(&stage.target))? != stage.original {
             return Err(invalid("output target changed before replacement"));
         }
-        preflight(&stage.dir, Path::new(&stage.target), sources, &mut HashSet::new())?;
-        if entry_identity(&stage.dir, Path::new(&stage.temp))?.as_ref() != Some(&stage.temp_identity) {
+        preflight(
+            &stage.dir,
+            Path::new(&stage.target),
+            sources,
+            &mut HashSet::new(),
+        )?;
+        if entry_identity(&stage.dir, Path::new(&stage.temp))?.as_ref()
+            != Some(&stage.temp_identity)
+        {
             return Err(invalid("output staging file changed before replacement"));
         }
         if stage.original.is_some() {
@@ -1266,7 +1368,10 @@ mod tests {
     fn pending(destination: PathBuf, bytes: &[u8]) -> PendingOutput {
         let name = destination.file_name().unwrap().to_str().unwrap();
         let bundle = OutputBundle::single(ResourcePath::new(name).unwrap(), bytes.to_vec());
-        PendingOutput { destination, bundle }
+        PendingOutput {
+            destination,
+            bundle,
+        }
     }
     fn run_group(
         outputs: &[PendingOutput],
@@ -1274,7 +1379,9 @@ mod tests {
         hook: impl FnMut(usize) -> Result<()>,
     ) -> Result<()> {
         persist_group(
-            outputs.iter().map(|output| (output.destination.as_path(), &output.bundle)),
+            outputs
+                .iter()
+                .map(|output| (output.destination.as_path(), &output.bundle)),
             sources,
             hook,
         )
@@ -1282,7 +1389,12 @@ mod tests {
     fn assert_no_temporaries(path: &Path) {
         for entry in std::fs::read_dir(path).unwrap() {
             let entry = entry.unwrap();
-            assert!(!entry.file_name().to_string_lossy().starts_with(".fontpixel-"));
+            assert!(
+                !entry
+                    .file_name()
+                    .to_string_lossy()
+                    .starts_with(".fontpixel-")
+            );
             if entry.file_type().unwrap().is_dir() {
                 assert_no_temporaries(&entry.path());
             }
@@ -1303,15 +1415,31 @@ mod tests {
                 }
             }
             let outputs = [
-                PendingOutput { destination: a.0.join("font.json"), bundle: bundle() },
-                PendingOutput { destination: b.0.join("font.json"), bundle: bundle() },
+                PendingOutput {
+                    destination: a.0.join("font.json"),
+                    bundle: bundle(),
+                },
+                PendingOutput {
+                    destination: b.0.join("font.json"),
+                    bundle: bundle(),
+                },
             ];
-            assert!(run_group(&outputs, &Sources::default(), |index| {
-                if index == fail_after { Err(invalid("injected group failure")) } else { Ok(()) }
-            }).is_err());
+            assert!(
+                run_group(&outputs, &Sources::default(), |index| {
+                    if index == fail_after {
+                        Err(invalid("injected group failure"))
+                    } else {
+                        Ok(())
+                    }
+                })
+                .is_err()
+            );
             for root in [&a.0, &b.0] {
                 for name in ["font.json", "font.png"] {
-                    assert_eq!(std::fs::read(root.join(name)).unwrap(), format!("old {name}").as_bytes());
+                    assert_eq!(
+                        std::fs::read(root.join(name)).unwrap(),
+                        format!("old {name}").as_bytes()
+                    );
                 }
                 assert!(!root.join("nested").exists());
                 assert_eq!(std::fs::read_dir(root).unwrap().count(), 2);
@@ -1326,24 +1454,43 @@ mod tests {
             std::fs::write(root.join("font.json"), b"old primary").unwrap();
         }
         let outputs = [
-            PendingOutput { destination: a.0.join("font.json"), bundle: bundle() },
-            PendingOutput { destination: b.0.join("font.json"), bundle: bundle() },
+            PendingOutput {
+                destination: a.0.join("font.json"),
+                bundle: bundle(),
+            },
+            PendingOutput {
+                destination: b.0.join("font.json"),
+                bundle: bundle(),
+            },
         ];
         let mut checked = false;
         run_group(&outputs, &Sources::default(), |index| {
             if index == 4 {
                 for root in [&a.0, &b.0] {
-                    assert_eq!(std::fs::read(root.join("font.json")).unwrap(), b"old primary");
-                    assert_eq!(std::fs::read(root.join("font.png")).unwrap(), b"new font.png");
-                    assert_eq!(std::fs::read(root.join("nested/extra.bin")).unwrap(), b"new nested/extra.bin");
+                    assert_eq!(
+                        std::fs::read(root.join("font.json")).unwrap(),
+                        b"old primary"
+                    );
+                    assert_eq!(
+                        std::fs::read(root.join("font.png")).unwrap(),
+                        b"new font.png"
+                    );
+                    assert_eq!(
+                        std::fs::read(root.join("nested/extra.bin")).unwrap(),
+                        b"new nested/extra.bin"
+                    );
                 }
                 checked = true;
             }
             Ok(())
-        }).unwrap();
+        })
+        .unwrap();
         assert!(checked);
         for root in [&a.0, &b.0] {
-            assert_eq!(std::fs::read(root.join("font.json")).unwrap(), b"new font.json");
+            assert_eq!(
+                std::fs::read(root.join("font.json")).unwrap(),
+                b"new font.json"
+            );
             assert_no_temporaries(root);
         }
     }
@@ -1353,8 +1500,14 @@ mod tests {
         let b = Temp::new();
         std::fs::write(a.0.join("font.json"), b"old").unwrap();
         let outputs = [
-            PendingOutput { destination: a.0.join("font.json"), bundle: bundle() },
-            PendingOutput { destination: b.0.join("wrong.json"), bundle: bundle() },
+            PendingOutput {
+                destination: a.0.join("font.json"),
+                bundle: bundle(),
+            },
+            PendingOutput {
+                destination: b.0.join("wrong.json"),
+                bundle: bundle(),
+            },
         ];
         assert!(persist_bundles(&outputs, &Sources::default()).is_err());
         assert_eq!(std::fs::read(a.0.join("font.json")).unwrap(), b"old");
@@ -1381,14 +1534,25 @@ mod tests {
             let make = |name: &str, sidecar: &str| {
                 OutputBundle::new(
                     ResourcePath::new(name).unwrap(),
-                    [name, sidecar].into_iter().map(|path| OutputAsset {
-                        path: ResourcePath::new(path).unwrap(), bytes: b"new".to_vec(),
-                    }).collect(),
-                ).unwrap()
+                    [name, sidecar]
+                        .into_iter()
+                        .map(|path| OutputAsset {
+                            path: ResourcePath::new(path).unwrap(),
+                            bytes: b"new".to_vec(),
+                        })
+                        .collect(),
+                )
+                .unwrap()
             };
             let outputs = [
-                PendingOutput { destination: t.0.join("a.json"), bundle: make("a.json", "shared") },
-                PendingOutput { destination: t.0.join("b.json"), bundle: make("b.json", second) },
+                PendingOutput {
+                    destination: t.0.join("a.json"),
+                    bundle: make("a.json", "shared"),
+                },
+                PendingOutput {
+                    destination: t.0.join("b.json"),
+                    bundle: make("b.json", second),
+                },
             ];
             assert!(persist_bundles(&outputs, &Sources::default()).is_err());
             assert_eq!(std::fs::read_dir(&t.0).unwrap().count(), 0);
@@ -1399,17 +1563,32 @@ mod tests {
         let t = Temp::new();
         let directory = OutputBundle::directory(
             ResourcePath::new("font").unwrap(),
-            vec![OutputAsset { path: ResourcePath::new("font/a").unwrap(), bytes: vec![1] }],
-        ).unwrap();
+            vec![OutputAsset {
+                path: ResourcePath::new("font/a").unwrap(),
+                bytes: vec![1],
+            }],
+        )
+        .unwrap();
         let other = OutputBundle::new(
             ResourcePath::new("outside").unwrap(),
-            ["outside", "font/b"].into_iter().map(|path| OutputAsset {
-                path: ResourcePath::new(path).unwrap(), bytes: vec![2],
-            }).collect(),
-        ).unwrap();
+            ["outside", "font/b"]
+                .into_iter()
+                .map(|path| OutputAsset {
+                    path: ResourcePath::new(path).unwrap(),
+                    bytes: vec![2],
+                })
+                .collect(),
+        )
+        .unwrap();
         let outputs = [
-            PendingOutput { destination: t.0.join("font"), bundle: directory },
-            PendingOutput { destination: t.0.join("outside"), bundle: other },
+            PendingOutput {
+                destination: t.0.join("font"),
+                bundle: directory,
+            },
+            PendingOutput {
+                destination: t.0.join("outside"),
+                bundle: other,
+            },
         ];
         assert!(persist_bundles(&outputs, &Sources::default()).is_err());
         assert_eq!(std::fs::read_dir(&t.0).unwrap().count(), 0);
@@ -1420,7 +1599,10 @@ mod tests {
         let b = Temp::new();
         std::fs::write(a.0.join("a.bin"), b"old").unwrap();
         std::fs::hard_link(a.0.join("a.bin"), b.0.join("b.bin")).unwrap();
-        let outputs = [pending(a.0.join("a.bin"), b"a"), pending(b.0.join("b.bin"), b"b")];
+        let outputs = [
+            pending(a.0.join("a.bin"), b"a"),
+            pending(b.0.join("b.bin"), b"b"),
+        ];
         assert!(persist_bundles(&outputs, &Sources::default()).is_err());
         assert_eq!(std::fs::read(a.0.join("a.bin")).unwrap(), b"old");
         assert_eq!(std::fs::read(b.0.join("b.bin")).unwrap(), b"old");
@@ -1452,7 +1634,12 @@ mod tests {
         std::fs::write(source.join("nested/a"), b"source").unwrap();
         let sources = Sources::default();
         let input = FileInput::open(&source, &ResourceLimits::default(), sources.clone()).unwrap();
-        assert_eq!(input.resolve(&ResourcePath::new("nested/a").unwrap(), 100).unwrap(), b"source");
+        assert_eq!(
+            input
+                .resolve(&ResourcePath::new("nested/a").unwrap(), 100)
+                .unwrap(),
+            b"source"
+        );
         let moved = t.0.join("moved");
         std::fs::rename(source.join("nested"), &moved).unwrap();
         assert!(persist_bundles(&[pending(moved.join("new.bin"), b"new")], &sources).is_err());
@@ -1467,9 +1654,19 @@ mod tests {
         std::fs::write(a.0.join("sidecar"), b"sidecar").unwrap();
         std::fs::hard_link(a.0.join("sidecar"), b.0.join("target")).unwrap();
         let sources = Sources::default();
-        let input = FileInput::open(&a.0.join("source"), &ResourceLimits::default(), sources.clone()).unwrap();
-        input.resolve(&ResourcePath::new("sidecar").unwrap(), 100).unwrap();
-        let outputs = [pending(a.0.join("new"), b"new"), pending(b.0.join("target"), b"bad")];
+        let input = FileInput::open(
+            &a.0.join("source"),
+            &ResourceLimits::default(),
+            sources.clone(),
+        )
+        .unwrap();
+        input
+            .resolve(&ResourcePath::new("sidecar").unwrap(), 100)
+            .unwrap();
+        let outputs = [
+            pending(a.0.join("new"), b"new"),
+            pending(b.0.join("target"), b"bad"),
+        ];
         assert!(persist_bundles(&outputs, &sources).is_err());
         assert!(!a.0.join("new").exists());
         assert_eq!(std::fs::read(b.0.join("target")).unwrap(), b"sidecar");
@@ -1483,14 +1680,22 @@ mod tests {
         std::fs::write(a.0.join("first"), b"old first").unwrap();
         std::fs::write(a.0.join("source"), b"source").unwrap();
         let sources = Sources::default();
-        sources.remember(&File::open(a.0.join("source")).unwrap()).unwrap();
-        let outputs = [pending(a.0.join("first"), b"new"), pending(b.0.join("second"), b"new")];
-        assert!(run_group(&outputs, &sources, |index| {
-            if index == 1 {
-                std::fs::hard_link(a.0.join("source"), b.0.join("second"))?;
-            }
-            Ok(())
-        }).is_err());
+        sources
+            .remember(&File::open(a.0.join("source")).unwrap())
+            .unwrap();
+        let outputs = [
+            pending(a.0.join("first"), b"new"),
+            pending(b.0.join("second"), b"new"),
+        ];
+        assert!(
+            run_group(&outputs, &sources, |index| {
+                if index == 1 {
+                    std::fs::hard_link(a.0.join("source"), b.0.join("second"))?;
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"old first");
         assert_eq!(std::fs::read(a.0.join("source")).unwrap(), b"source");
         assert_eq!(std::fs::read(b.0.join("second")).unwrap(), b"source");
@@ -1504,11 +1709,19 @@ mod tests {
             std::fs::write(t.0.join(name), b"old").unwrap();
         }
         let sources = Sources::default();
-        let outputs = [pending(t.0.join("a"), b"new"), pending(t.0.join("b"), b"new")];
-        assert!(run_group(&outputs, &sources, |index| {
-            if index == 1 { sources.remember(&File::open(t.0.join("b"))?)?; }
-            Ok(())
-        }).is_err());
+        let outputs = [
+            pending(t.0.join("a"), b"new"),
+            pending(t.0.join("b"), b"new"),
+        ];
+        assert!(
+            run_group(&outputs, &sources, |index| {
+                if index == 1 {
+                    sources.remember(&File::open(t.0.join("b"))?)?;
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         for name in ["a", "b"] {
             assert_eq!(std::fs::read(t.0.join(name)).unwrap(), b"old");
         }
@@ -1535,14 +1748,20 @@ mod tests {
             std::fs::create_dir(t.0.join(dir)).unwrap();
             std::fs::write(t.0.join(dir).join("font.bin"), b"old").unwrap();
         }
-        let outputs = [pending(t.0.join("a/font.bin"), b"a"), pending(t.0.join("b/font.bin"), b"b")];
-        assert!(run_group(&outputs, &Sources::default(), |index| {
-            if index == 1 {
-                std::fs::rename(t.0.join("b"), t.0.join("moved"))?;
-                std::os::unix::fs::symlink(&outside.0, t.0.join("b"))?;
-            }
-            Ok(())
-        }).is_err());
+        let outputs = [
+            pending(t.0.join("a/font.bin"), b"a"),
+            pending(t.0.join("b/font.bin"), b"b"),
+        ];
+        assert!(
+            run_group(&outputs, &Sources::default(), |index| {
+                if index == 1 {
+                    std::fs::rename(t.0.join("b"), t.0.join("moved"))?;
+                    std::os::unix::fs::symlink(&outside.0, t.0.join("b"))?;
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(std::fs::read(t.0.join("a/font.bin")).unwrap(), b"old");
         assert_eq!(std::fs::read(t.0.join("moved/font.bin")).unwrap(), b"old");
         assert_eq!(std::fs::read_dir(&outside.0).unwrap().count(), 0);
@@ -1551,15 +1770,21 @@ mod tests {
     #[test]
     fn cleanup_preserves_replacements_of_transaction_created_directories() {
         let t = Temp::new();
-        let outputs = [PendingOutput { destination: t.0.join("font.json"), bundle: bundle() }];
-        assert!(run_group(&outputs, &Sources::default(), |index| {
-            if index == 0 {
-                std::fs::rename(t.0.join("nested"), t.0.join("moved"))?;
-                std::fs::create_dir(t.0.join("nested"))?;
-                std::fs::write(t.0.join("nested/keep"), b"external")?;
-            }
-            Ok(())
-        }).is_err());
+        let outputs = [PendingOutput {
+            destination: t.0.join("font.json"),
+            bundle: bundle(),
+        }];
+        assert!(
+            run_group(&outputs, &Sources::default(), |index| {
+                if index == 0 {
+                    std::fs::rename(t.0.join("nested"), t.0.join("moved"))?;
+                    std::fs::create_dir(t.0.join("nested"))?;
+                    std::fs::write(t.0.join("nested/keep"), b"external")?;
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(std::fs::read(t.0.join("nested/keep")).unwrap(), b"external");
         assert!(!t.0.join("font.json").exists());
         assert!(!t.0.join("font.png").exists());
@@ -1574,16 +1799,28 @@ mod tests {
         std::fs::write(t.0.join("outside"), b"old outside").unwrap();
         let directory = OutputBundle::directory(
             ResourcePath::new("font").unwrap(),
-            vec![OutputAsset { path: ResourcePath::new("font/a").unwrap(), bytes: b"new a".to_vec() }],
-        ).unwrap();
+            vec![OutputAsset {
+                path: ResourcePath::new("font/a").unwrap(),
+                bytes: b"new a".to_vec(),
+            }],
+        )
+        .unwrap();
         let outputs = [
-            PendingOutput { destination: t.0.join("font"), bundle: directory },
+            PendingOutput {
+                destination: t.0.join("font"),
+                bundle: directory,
+            },
             pending(t.0.join("outside"), b"new outside"),
         ];
-        assert!(run_group(&outputs, &Sources::default(), |index| {
-            if index == 1 { std::fs::write(t.0.join("font/keep"), b"external")?; }
-            Ok(())
-        }).is_err());
+        assert!(
+            run_group(&outputs, &Sources::default(), |index| {
+                if index == 1 {
+                    std::fs::write(t.0.join("font/keep"), b"external")?;
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(std::fs::read(t.0.join("font/a")).unwrap(), b"old a");
         assert_eq!(std::fs::read(t.0.join("outside")).unwrap(), b"old outside");
         assert_eq!(std::fs::read(t.0.join("font/keep")).unwrap(), b"external");
@@ -1595,11 +1832,13 @@ mod tests {
             + slots * std::mem::size_of::<Option<FileIdentity>>()
     }
     fn source_files(root: &Path, count: usize) -> Vec<PathBuf> {
-        (0..count).map(|index| {
-            let path = root.join(format!("source-{index}"));
-            std::fs::write(&path, index.to_string()).unwrap();
-            path
-        }).collect()
+        (0..count)
+            .map(|index| {
+                let path = root.join(format!("source-{index}"));
+                std::fs::write(&path, index.to_string()).unwrap();
+                path
+            })
+            .collect()
     }
     #[test]
     fn source_budget_attachment_charges_once_and_last_owner_releases() {
@@ -1607,17 +1846,32 @@ mod tests {
         let files = source_files(&t.0, 1);
         let sources = Sources::default();
         sources.remember(&File::open(&files[0]).unwrap()).unwrap();
-        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let bytes = sources
+            .0
+            .lock()
+            .unwrap()
+            .retained_bytes(usize::MAX)
+            .unwrap();
         let external = 37;
         let used = Arc::new(Mutex::new(external));
         let limit = external + bytes;
-        sources.set_retained_budget(Arc::clone(&used), limit).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), limit)
+            .unwrap();
         assert_eq!(*used.lock().unwrap(), limit);
         let clone = sources.clone();
         clone.set_retained_budget(Arc::clone(&used), limit).unwrap();
         assert_eq!(*used.lock().unwrap(), limit);
-        assert!(clone.set_retained_budget(Arc::new(Mutex::new(0)), limit).is_err());
-        assert!(clone.set_retained_budget(Arc::clone(&used), limit + 1).is_err());
+        assert!(
+            clone
+                .set_retained_budget(Arc::new(Mutex::new(0)), limit)
+                .is_err()
+        );
+        assert!(
+            clone
+                .set_retained_budget(Arc::clone(&used), limit + 1)
+                .is_err()
+        );
         assert!(clone.contains(File::open(&files[0]).unwrap()).unwrap());
         drop(sources);
         assert_eq!(*used.lock().unwrap(), limit);
@@ -1630,13 +1884,29 @@ mod tests {
         let files = source_files(&t.0, 1);
         let sources = Sources::default();
         sources.remember(&File::open(&files[0]).unwrap()).unwrap();
-        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let bytes = sources
+            .0
+            .lock()
+            .unwrap()
+            .retained_bytes(usize::MAX)
+            .unwrap();
         let used = Arc::new(Mutex::new(11));
-        assert!(sources.set_retained_budget(Arc::clone(&used), 11 + bytes - 1).is_err());
+        assert!(
+            sources
+                .set_retained_budget(Arc::clone(&used), 11 + bytes - 1)
+                .is_err()
+        );
         assert_eq!(*used.lock().unwrap(), 11);
         assert!(sources.ensure_complete().is_err());
         assert!(!sources.is_single_primary());
-        assert!(sources.0.lock().unwrap().identities.contains(&FileIdentity::of(&File::open(&files[0]).unwrap()).unwrap()));
+        assert!(
+            sources
+                .0
+                .lock()
+                .unwrap()
+                .identities
+                .contains(&FileIdentity::of(&File::open(&files[0]).unwrap()).unwrap())
+        );
         drop(sources);
         assert_eq!(*used.lock().unwrap(), 11);
     }
@@ -1646,9 +1916,16 @@ mod tests {
         let files = source_files(&t.0, 1);
         let sources = Sources::default();
         sources.remember(&File::open(&files[0]).unwrap()).unwrap();
-        let bytes = sources.0.lock().unwrap().retained_bytes(usize::MAX).unwrap();
+        let bytes = sources
+            .0
+            .lock()
+            .unwrap()
+            .retained_bytes(usize::MAX)
+            .unwrap();
         let used = Arc::new(Mutex::new(0));
-        sources.set_retained_budget(Arc::clone(&used), bytes).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), bytes)
+            .unwrap();
         for _ in 0..100 {
             sources.remember(&File::open(&files[0]).unwrap()).unwrap();
         }
@@ -1672,11 +1949,14 @@ mod tests {
                 let old_slots = sources.0.lock().unwrap().identities.slots.capacity();
                 let new_slots = ((previous_count + 1) * 2).next_power_of_two();
                 let external = 43;
-                let peak = external + source_storage(old_slots)
+                let peak = external
+                    + source_storage(old_slots)
                     + IdentityTable::bytes_for(new_slots, usize::MAX).unwrap();
                 let limit = peak - usize::from(below_boundary);
                 let used = Arc::new(Mutex::new(external));
-                sources.set_retained_budget(Arc::clone(&used), limit).unwrap();
+                sources
+                    .set_retained_budget(Arc::clone(&used), limit)
+                    .unwrap();
                 let before = *used.lock().unwrap();
                 let result = sources.remember(&File::open(&files[previous_count]).unwrap());
                 let state = sources.0.lock().unwrap();
@@ -1694,7 +1974,11 @@ mod tests {
                     assert!(!state.incomplete);
                 }
                 for path in files.iter().take(previous_count) {
-                    assert!(state.identities.contains(&FileIdentity::of(&File::open(path).unwrap()).unwrap()));
+                    assert!(
+                        state
+                            .identities
+                            .contains(&FileIdentity::of(&File::open(path).unwrap()).unwrap())
+                    );
                 }
                 drop(state);
                 drop(sources);
@@ -1705,10 +1989,16 @@ mod tests {
     #[test]
     fn identity_capacity_arithmetic_and_allocation_rejection_leave_reservations_intact() {
         assert!(IdentityTable::bytes_for(usize::MAX, 1).is_err());
-        let full = IdentityTable { len: usize::MAX, ..IdentityTable::default() };
+        let full = IdentityTable {
+            len: usize::MAX,
+            ..IdentityTable::default()
+        };
         assert!(full.next_capacity(1).is_err());
         let used = Arc::new(Mutex::new(30));
-        let budget = IdentityBudget { used: Arc::clone(&used), limit: 100 };
+        let budget = IdentityBudget {
+            used: Arc::clone(&used),
+            limit: 100,
+        };
         {
             let reservation = budget.reserve(40, 12, 20).unwrap();
             assert_eq!(*reservation.used, 70);
@@ -1734,19 +2024,27 @@ mod tests {
         let mut expected = HashSet::new();
         for index in 0..4096_u64 {
             let inode = (index * 53) % 1009;
-            state.remember_identity(FileIdentity(7, inode), false).unwrap();
+            state
+                .remember_identity(FileIdentity(7, inode), false)
+                .unwrap();
             expected.insert(FileIdentity(7, inode));
             assert_eq!(state.identities.len, expected.len());
             assert!(state.identities.slots.len().is_power_of_two());
             assert!(state.identities.len * 2 <= state.identities.slots.len());
             for candidate in [inode, (inode + 1) % 1009, 2000 + index] {
                 let identity = FileIdentity(7, candidate);
-                assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+                assert_eq!(
+                    state.identities.contains(&identity),
+                    expected.contains(&identity)
+                );
             }
         }
         for inode in 0..2000 {
             let identity = FileIdentity(7, inode);
-            assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+            assert_eq!(
+                state.identities.contains(&identity),
+                expected.contains(&identity)
+            );
         }
     }
     #[cfg(unix)]
@@ -1766,15 +2064,26 @@ mod tests {
                 }
             }
         }
-        assert_eq!(values.len(), 65, "could not construct the collision fixture");
+        assert_eq!(
+            values.len(),
+            65,
+            "could not construct the collision fixture"
+        );
         for inode in values.iter().take(64) {
-            state.remember_identity(FileIdentity(17, *inode), false).unwrap();
-            state.remember_identity(FileIdentity(17, *inode), false).unwrap();
+            state
+                .remember_identity(FileIdentity(17, *inode), false)
+                .unwrap();
+            state
+                .remember_identity(FileIdentity(17, *inode), false)
+                .unwrap();
             expected.insert(FileIdentity(17, *inode));
             assert_eq!(state.identities.len, expected.len());
             for candidate in &values {
                 let identity = FileIdentity(17, *candidate);
-                assert_eq!(state.identities.contains(&identity), expected.contains(&identity));
+                assert_eq!(
+                    state.identities.contains(&identity),
+                    expected.contains(&identity)
+                );
             }
         }
         assert_eq!(state.identities.slots.len(), 128);
@@ -1788,7 +2097,9 @@ mod tests {
         let used = Arc::new(Mutex::new(0));
         // Largest growth is from 32 to 64 slots, with both arrays live.
         let peak = source_storage(32 + 64);
-        sources.set_retained_budget(Arc::clone(&used), peak).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), peak)
+            .unwrap();
         std::thread::scope(|scope| {
             for _ in 0..4 {
                 let clone = sources.clone();
@@ -1815,8 +2126,15 @@ mod tests {
         std::fs::create_dir(t.0.join("source")).unwrap();
         let sources = Sources::default();
         let used = Arc::new(Mutex::new(0));
-        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
-        let input = FileInput::open(&t.0.join("source"), &ResourceLimits::default(), sources.clone()).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), source_storage(2))
+            .unwrap();
+        let input = FileInput::open(
+            &t.0.join("source"),
+            &ResourceLimits::default(),
+            sources.clone(),
+        )
+        .unwrap();
         assert_eq!(*used.lock().unwrap(), source_storage(2));
         std::fs::rename(t.0.join("source"), t.0.join("moved")).unwrap();
         assert!(persist_bundles(&[pending(t.0.join("moved/new"), b"new")], &sources).is_err());
@@ -1836,12 +2154,23 @@ mod tests {
         std::fs::write(b.0.join("second"), b"old second").unwrap();
         let sources = Sources::default();
         let used = Arc::new(Mutex::new(0));
-        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), source_storage(2))
+            .unwrap();
         sources.remember(&File::open(&files[0]).unwrap()).unwrap();
         assert!(sources.remember(&File::open(&files[1]).unwrap()).is_err());
-        let outputs = [pending(a.0.join("first"), b"new"), pending(b.0.join("second"), b"new")];
+        let outputs = [
+            pending(a.0.join("first"), b"new"),
+            pending(b.0.join("second"), b"new"),
+        ];
         let mut attempts = 0;
-        assert!(run_group(&outputs, &sources, |_| { attempts += 1; Ok(()) }).is_err());
+        assert!(
+            run_group(&outputs, &sources, |_| {
+                attempts += 1;
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(attempts, 0);
         assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"old first");
         assert_eq!(std::fs::read(b.0.join("second")).unwrap(), b"old second");
@@ -1860,17 +2189,25 @@ mod tests {
         std::fs::write(b.0.join("second"), b"old second").unwrap();
         let sources = Sources::default();
         let used = Arc::new(Mutex::new(0));
-        sources.set_retained_budget(Arc::clone(&used), source_storage(2)).unwrap();
+        sources
+            .set_retained_budget(Arc::clone(&used), source_storage(2))
+            .unwrap();
         sources.remember(&File::open(&files[0]).unwrap()).unwrap();
-        let outputs = [pending(a.0.join("first"), b"new"), pending(b.0.join("second"), b"new")];
-        assert!(run_group(&outputs, &sources, |index| {
-            if index == 1 {
-                assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"new");
-                assert!(sources.remember(&File::open(&files[1]).unwrap()).is_err());
-                // Even an ignored task-level failure must fail the group.
-            }
-            Ok(())
-        }).is_err());
+        let outputs = [
+            pending(a.0.join("first"), b"new"),
+            pending(b.0.join("second"), b"new"),
+        ];
+        assert!(
+            run_group(&outputs, &sources, |index| {
+                if index == 1 {
+                    assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"new");
+                    assert!(sources.remember(&File::open(&files[1]).unwrap()).is_err());
+                    // Even an ignored task-level failure must fail the group.
+                }
+                Ok(())
+            })
+            .is_err()
+        );
         assert_eq!(std::fs::read(a.0.join("first")).unwrap(), b"old first");
         assert_eq!(std::fs::read(b.0.join("second")).unwrap(), b"old second");
         assert_eq!(std::fs::read(&files[1]).unwrap(), b"1");
@@ -1901,7 +2238,9 @@ mod tests {
             for width in [1, 3, 7, 64, 8192] {
                 for initial in [0, maximum / 2, maximum] {
                     let reader = ChunkedReader {
-                        reader: io::Cursor::new(&content), width, interrupt_once: false,
+                        reader: io::Cursor::new(&content),
+                        width,
+                        interrupt_once: false,
                     };
                     let bytes = read_bounded(reader, initial, maximum).unwrap();
                     assert_eq!(bytes, content);
@@ -1913,7 +2252,9 @@ mod tests {
     #[test]
     fn bounded_reader_retries_interrupted_reads_and_rejects_one_excess_byte() {
         let reader = ChunkedReader {
-            reader: io::Cursor::new(b"abc"), width: 1, interrupt_once: true,
+            reader: io::Cursor::new(b"abc"),
+            width: 1,
+            interrupt_once: true,
         };
         assert_eq!(read_bounded(reader, 0, 3).unwrap(), b"abc");
         for maximum in [0, 1, 3, 17, 31] {
@@ -1930,7 +2271,10 @@ mod tests {
         std::fs::write(&path, b"a").unwrap();
         let file = File::open(&path).unwrap();
         let metadata_length = file.metadata().unwrap().len() as usize;
-        let mut append = std::fs::OpenOptions::new().append(true).open(&path).unwrap();
+        let mut append = std::fs::OpenOptions::new()
+            .append(true)
+            .open(&path)
+            .unwrap();
         append.write_all(&[b'x'; 30]).unwrap();
         drop(append);
         // Exercise the same stale metadata hint passed by bounded().
@@ -1946,7 +2290,10 @@ mod tests {
         std::fs::write(&path, b"a").unwrap();
         let file = File::open(&path).unwrap();
         let metadata_length = file.metadata().unwrap().len() as usize;
-        let mut append = std::fs::OpenOptions::new().append(true).open(&path).unwrap();
+        let mut append = std::fs::OpenOptions::new()
+            .append(true)
+            .open(&path)
+            .unwrap();
         append.write_all(&[b'x'; 31]).unwrap();
         drop(append);
         assert!(read_bounded(file, metadata_length, 31).is_err());
@@ -1958,12 +2305,16 @@ mod tests {
         let t = Temp::new();
         std::fs::write(t.0.join("source"), b"source").unwrap();
         std::fs::write(t.0.join("sidecar"), [b'x'; 31]).unwrap();
-        let input = FileInput::open(&t.0.join("source"), &ResourceLimits::default(), Sources::default()).unwrap();
+        let input = FileInput::open(
+            &t.0.join("source"),
+            &ResourceLimits::default(),
+            Sources::default(),
+        )
+        .unwrap();
         let resource = ResourcePath::new("sidecar").unwrap();
         let bytes = input.resolve(&resource, 31).unwrap();
         assert_eq!(bytes.len(), 31);
         assert!(bytes.capacity() <= 31);
         assert!(input.resolve(&resource, 30).is_err());
     }
-
 }

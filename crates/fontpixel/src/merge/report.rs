@@ -53,7 +53,11 @@ pub struct PartReport {
 }
 /// Spacing adjustment type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize), serde(rename_all = "snake_case"))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize),
+    serde(rename_all = "snake_case")
+)]
 pub enum AdjustmentKind {
     /// Blank advance-space was added.
     Padded,
@@ -170,93 +174,354 @@ fn quote(out: &mut String, value: &str) {
     out.push('"');
     for c in value.chars() {
         match c {
-            '"' => out.push_str("\\\""), '\\' => out.push_str("\\\\"),
-            '\n' => out.push_str("\\n"), '\r' => out.push_str("\\r"), '\t' => out.push_str("\\t"),
-            c if c < '\u{20}' => { let _ = write!(out, "\\u{:04x}", c as u32); }
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c < '\u{20}' => {
+                let _ = write!(out, "\\u{:04x}", c as u32);
+            }
             c => out.push(c),
         }
     }
     out.push('"');
 }
-fn text(out: &mut String, key: &str, value: &str) { quote(out, key); out.push(':'); quote(out, value); }
+fn text(out: &mut String, key: &str, value: &str) {
+    quote(out, key);
+    out.push(':');
+    quote(out, value);
+}
 fn opt_text(out: &mut String, key: &str, value: &Option<String>) {
-    quote(out, key); out.push(':');
-    if let Some(value) = value { quote(out, value); } else { out.push_str("null"); }
+    quote(out, key);
+    out.push(':');
+    if let Some(value) = value {
+        quote(out, value);
+    } else {
+        out.push_str("null");
+    }
 }
 fn number(out: &mut String, key: &str, value: impl fmt::Display) {
-    quote(out, key); let _ = write!(out, ":{value}");
+    quote(out, key);
+    let _ = write!(out, ":{value}");
 }
 fn optional(out: &mut String, key: &str, value: Option<i64>) {
-    quote(out, key); out.push(':');
-    if let Some(value) = value { let _ = write!(out, "{value}"); } else { out.push_str("null"); }
+    quote(out, key);
+    out.push(':');
+    if let Some(value) = value {
+        let _ = write!(out, "{value}");
+    } else {
+        out.push_str("null");
+    }
 }
 fn list<T>(out: &mut String, values: &[T], f: impl Fn(&mut String, &T)) {
     out.push('[');
-    for (index, value) in values.iter().enumerate() { if index != 0 { out.push(','); } f(out, value); }
+    for (index, value) in values.iter().enumerate() {
+        if index != 0 {
+            out.push(',');
+        }
+        f(out, value);
+    }
     out.push(']');
 }
 impl MergeReport {
     /// Full deterministic JSON without optional dependencies.
     pub fn to_json(&self) -> String {
         let mut out = String::new();
-        out.push('{'); text(&mut out, "unicode_version", &self.unicode_version);
-        out.push(','); text(&mut out, "family", &self.family);
-        out.push(','); text(&mut out, "requested_spacing", self.requested_spacing.as_str());
-        out.push(','); text(&mut out, "effective_spacing", self.effective_spacing.as_str());
-        out.push(','); optional(&mut out, "full_width", self.full_width);
-        out.push(','); text(&mut out,"geometric_width",self.geometric_width.as_str());
+        out.push('{');
+        text(&mut out, "unicode_version", &self.unicode_version);
+        out.push(',');
+        text(&mut out, "family", &self.family);
+        out.push(',');
+        text(
+            &mut out,
+            "requested_spacing",
+            self.requested_spacing.as_str(),
+        );
+        out.push(',');
+        text(
+            &mut out,
+            "effective_spacing",
+            self.effective_spacing.as_str(),
+        );
+        out.push(',');
+        optional(&mut out, "full_width", self.full_width);
+        out.push(',');
+        text(&mut out, "geometric_width", self.geometric_width.as_str());
         out.push_str(",\"parts\":");
         list(&mut out, &self.parts, |o, p| {
-            o.push('{'); number(o, "index", p.index); o.push(','); text(o, "label", &p.label);
-            o.push(','); text(o, "selection", &p.selection); o.push(','); number(o, "dy", p.dy);
-            for (k,v) in [("taken_glyphs",p.taken_glyphs),("taken_codepoints",p.taken_codepoints),("taken_sequences",p.taken_sequences),("fallback_codepoints",p.fallback_codepoints),("fallback_sequences",p.fallback_sequences),("omitted_legacy_mappings",p.omitted_legacy_mappings),("omitted_invalid_mappings",p.omitted_invalid_mappings),("omitted_unencoded_glyphs",p.omitted_unencoded_glyphs)] {o.push(',');number(o,k,v);}
-            o.push(',');number(o,"selected_missing",p.selected_missing);
-            o.push_str(",\"missing_ranges\":");list(o,&p.missing_ranges,|o,r|{o.push('{');number(o,"start",r.start);o.push(',');number(o,"end",r.end);o.push('}');});
-            o.push_str(",\"missing_blocks\":");list(o,&p.missing_blocks,|o,b|{o.push('{');text(o,"block",&b.block);o.push(',');number(o,"first",b.first);o.push(',');number(o,"last",b.last);o.push(',');number(o,"count",b.count);o.push('}');});
+            o.push('{');
+            number(o, "index", p.index);
+            o.push(',');
+            text(o, "label", &p.label);
+            o.push(',');
+            text(o, "selection", &p.selection);
+            o.push(',');
+            number(o, "dy", p.dy);
+            for (k, v) in [
+                ("taken_glyphs", p.taken_glyphs),
+                ("taken_codepoints", p.taken_codepoints),
+                ("taken_sequences", p.taken_sequences),
+                ("fallback_codepoints", p.fallback_codepoints),
+                ("fallback_sequences", p.fallback_sequences),
+                ("omitted_legacy_mappings", p.omitted_legacy_mappings),
+                ("omitted_invalid_mappings", p.omitted_invalid_mappings),
+                ("omitted_unencoded_glyphs", p.omitted_unencoded_glyphs),
+            ] {
+                o.push(',');
+                number(o, k, v);
+            }
+            o.push(',');
+            number(o, "selected_missing", p.selected_missing);
+            o.push_str(",\"missing_ranges\":");
+            list(o, &p.missing_ranges, |o, r| {
+                o.push('{');
+                number(o, "start", r.start);
+                o.push(',');
+                number(o, "end", r.end);
+                o.push('}');
+            });
+            o.push_str(",\"missing_blocks\":");
+            list(o, &p.missing_blocks, |o, b| {
+                o.push('{');
+                text(o, "block", &b.block);
+                o.push(',');
+                number(o, "first", b.first);
+                o.push(',');
+                number(o, "last", b.last);
+                o.push(',');
+                number(o, "count", b.count);
+                o.push('}');
+            });
             o.push('}');
         });
         out.push_str(",\"adjustments\":");
-        list(&mut out,&self.adjustments,|o,a| {
-            o.push('{');number(o,"part_index",a.part_index);o.push(',');number(o,"glyph_index",a.glyph_index);
-            o.push_str(",\"codepoints\":");list(o,&a.codepoints,|o,c|{let _=write!(o,"{c}");});
-            o.push(',');text(o,"kind",match a.kind{AdjustmentKind::Padded=>"padded",AdjustmentKind::Misaligned=>"misaligned"});
-            o.push(',');optional(o,"original_advance",a.original_advance);o.push(',');optional(o,"target_advance",a.target_advance);
-            o.push(',');number(o,"left_padding",a.left_padding);o.push(',');number(o,"right_padding",a.right_padding);o.push(',');text(o,"reason",&a.reason);o.push('}');
+        list(&mut out, &self.adjustments, |o, a| {
+            o.push('{');
+            number(o, "part_index", a.part_index);
+            o.push(',');
+            number(o, "glyph_index", a.glyph_index);
+            o.push_str(",\"codepoints\":");
+            list(o, &a.codepoints, |o, c| {
+                let _ = write!(o, "{c}");
+            });
+            o.push(',');
+            text(
+                o,
+                "kind",
+                match a.kind {
+                    AdjustmentKind::Padded => "padded",
+                    AdjustmentKind::Misaligned => "misaligned",
+                },
+            );
+            o.push(',');
+            optional(o, "original_advance", a.original_advance);
+            o.push(',');
+            optional(o, "target_advance", a.target_advance);
+            o.push(',');
+            number(o, "left_padding", a.left_padding);
+            o.push(',');
+            number(o, "right_padding", a.right_padding);
+            o.push(',');
+            text(o, "reason", &a.reason);
+            o.push('}');
         });
-        let m=&self.metrics;out.push_str(",\"metrics\":{");
-        number(&mut out,"natural_ascent",m.natural_ascent);out.push(',');number(&mut out,"natural_descent",m.natural_descent);
-        out.push(',');number(&mut out,"ascent",m.ascent);out.push(',');number(&mut out,"descent",m.descent);
-        out.push(',');number(&mut out,"ascent_overridden",m.ascent_overridden);out.push(',');number(&mut out,"descent_overridden",m.descent_overridden);
-        out.push_str(",\"parts\":");list(&mut out,&m.parts,|o,p|{o.push('{');number(o,"part_index",p.part_index);o.push(',');optional(o,"original_ascent",p.original_ascent);o.push(',');optional(o,"original_descent",p.original_descent);o.push(',');number(o,"shifted_ascent",p.shifted_ascent);o.push(',');number(o,"shifted_descent",p.shifted_descent);o.push('}');});out.push('}');
-        out.push_str(",\"licenses\":");list(&mut out,&self.licenses,|o,l|{
-            o.push('{');number(o,"part_index",l.part_index);o.push(',');text(o,"label",&l.label);
-            o.push(',');opt_text(o,"copyright",&l.copyright);o.push(',');opt_text(o,"license",&l.license);o.push(',');opt_text(o,"license_url",&l.license_url);
-            o.push(',');text(o,"modification",l.modification.as_str());o.push(',');text(o,"provenance",&l.provenance);
-            o.push_str(",\"reserved_names\":");list(o,&l.reserved_names,|o,s|quote(o,s));o.push('}');
+        let m = &self.metrics;
+        out.push_str(",\"metrics\":{");
+        number(&mut out, "natural_ascent", m.natural_ascent);
+        out.push(',');
+        number(&mut out, "natural_descent", m.natural_descent);
+        out.push(',');
+        number(&mut out, "ascent", m.ascent);
+        out.push(',');
+        number(&mut out, "descent", m.descent);
+        out.push(',');
+        number(&mut out, "ascent_overridden", m.ascent_overridden);
+        out.push(',');
+        number(&mut out, "descent_overridden", m.descent_overridden);
+        out.push_str(",\"parts\":");
+        list(&mut out, &m.parts, |o, p| {
+            o.push('{');
+            number(o, "part_index", p.part_index);
+            o.push(',');
+            optional(o, "original_ascent", p.original_ascent);
+            o.push(',');
+            optional(o, "original_descent", p.original_descent);
+            o.push(',');
+            number(o, "shifted_ascent", p.shifted_ascent);
+            o.push(',');
+            number(o, "shifted_descent", p.shifted_descent);
+            o.push('}');
         });
-        out.push_str(",\"diagnostics\":{\"entries\":");list(&mut out,&self.diagnostics.entries,|o,e|{
-            o.push('{');text(o,"level",match e.level{crate::report::Level::Info=>"info",crate::report::Level::Warning=>"warning",crate::report::Level::Error=>"error"});
-            o.push(',');text(o,"impact",match e.impact{crate::report::Impact::None=>"none",crate::report::Impact::Repair=>"repair",crate::report::Impact::Loss=>"loss"});
-            o.push(',');text(o,"code",&e.code);o.push_str(",\"location\":{");
-            for (index,(key,v)) in [("font_index",e.location.font_index),("glyph_index",e.location.glyph_index),("codepoint",e.location.codepoint.map(|v|v as usize))].into_iter().enumerate(){if index!=0{o.push(',');}quote(o,key);o.push(':');if let Some(v)=v{let _=write!(o,"{v}");}else{o.push_str("null");}}
-            o.push(',');opt_text(o,"asset",&e.location.asset);o.push('}');o.push(',');text(o,"message",&e.message);o.push('}');
-        });out.push_str("}}");out
+        out.push('}');
+        out.push_str(",\"licenses\":");
+        list(&mut out, &self.licenses, |o, l| {
+            o.push('{');
+            number(o, "part_index", l.part_index);
+            o.push(',');
+            text(o, "label", &l.label);
+            o.push(',');
+            opt_text(o, "copyright", &l.copyright);
+            o.push(',');
+            opt_text(o, "license", &l.license);
+            o.push(',');
+            opt_text(o, "license_url", &l.license_url);
+            o.push(',');
+            text(o, "modification", l.modification.as_str());
+            o.push(',');
+            text(o, "provenance", &l.provenance);
+            o.push_str(",\"reserved_names\":");
+            list(o, &l.reserved_names, |o, s| quote(o, s));
+            o.push('}');
+        });
+        out.push_str(",\"diagnostics\":{\"entries\":");
+        list(&mut out, &self.diagnostics.entries, |o, e| {
+            o.push('{');
+            text(
+                o,
+                "level",
+                match e.level {
+                    crate::report::Level::Info => "info",
+                    crate::report::Level::Warning => "warning",
+                    crate::report::Level::Error => "error",
+                },
+            );
+            o.push(',');
+            text(
+                o,
+                "impact",
+                match e.impact {
+                    crate::report::Impact::None => "none",
+                    crate::report::Impact::Repair => "repair",
+                    crate::report::Impact::Loss => "loss",
+                },
+            );
+            o.push(',');
+            text(o, "code", &e.code);
+            o.push_str(",\"location\":{");
+            for (index, (key, v)) in [
+                ("font_index", e.location.font_index),
+                ("glyph_index", e.location.glyph_index),
+                ("codepoint", e.location.codepoint.map(|v| v as usize)),
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                if index != 0 {
+                    o.push(',');
+                }
+                quote(o, key);
+                o.push(':');
+                if let Some(v) = v {
+                    let _ = write!(o, "{v}");
+                } else {
+                    o.push_str("null");
+                }
+            }
+            o.push(',');
+            opt_text(o, "asset", &e.location.asset);
+            o.push('}');
+            o.push(',');
+            text(o, "message", &e.message);
+            o.push('}');
+        });
+        out.push_str("}}");
+        out
     }
 }
 impl fmt::Display for MergeReport {
-    fn fmt(&self,f:&mut fmt::Formatter<'_>)->fmt::Result {
-        writeln!(f,"Merged family: {}\nUnicode: {}\nSpacing: {} -> {} (full width: {:?})",self.family,self.unicode_version,self.requested_spacing.as_str(),self.effective_spacing.as_str(),self.full_width)?;
-        writeln!(f,"Geometric width: {}",self.geometric_width.as_str())?;
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(
+            f,
+            "Merged family: {}\nUnicode: {}\nSpacing: {} -> {} (full width: {:?})",
+            self.family,
+            self.unicode_version,
+            self.requested_spacing.as_str(),
+            self.effective_spacing.as_str(),
+            self.full_width
+        )?;
+        writeln!(f, "Geometric width: {}", self.geometric_width.as_str())?;
         for p in &self.parts {
-            writeln!(f,"Part {} [{}], take {}, dy {}: {} glyphs, {} scalars, {} sequences; fallback {} scalars/{} sequences; selected missing {}",p.index,p.label,p.selection,p.dy,p.taken_glyphs,p.taken_codepoints,p.taken_sequences,p.fallback_codepoints,p.fallback_sequences,p.selected_missing)?;
-            for b in &p.missing_blocks{writeln!(f,"  Missing {}: {} (U+{:04X}..U+{:04X})",b.block,b.count,b.first,b.last)?;}
-            for r in &p.missing_ranges{writeln!(f,"  Missing range U+{:04X}..U+{:04X}",r.start,r.end)?;}
-            writeln!(f,"  Omitted legacy {}, invalid {}, unencoded {}",p.omitted_legacy_mappings,p.omitted_invalid_mappings,p.omitted_unencoded_glyphs)?;
+            writeln!(
+                f,
+                "Part {} [{}], take {}, dy {}: {} glyphs, {} scalars, {} sequences; fallback {} scalars/{} sequences; selected missing {}",
+                p.index,
+                p.label,
+                p.selection,
+                p.dy,
+                p.taken_glyphs,
+                p.taken_codepoints,
+                p.taken_sequences,
+                p.fallback_codepoints,
+                p.fallback_sequences,
+                p.selected_missing
+            )?;
+            for b in &p.missing_blocks {
+                writeln!(
+                    f,
+                    "  Missing {}: {} (U+{:04X}..U+{:04X})",
+                    b.block, b.count, b.first, b.last
+                )?;
+            }
+            for r in &p.missing_ranges {
+                writeln!(f, "  Missing range U+{:04X}..U+{:04X}", r.start, r.end)?;
+            }
+            writeln!(
+                f,
+                "  Omitted legacy {}, invalid {}, unencoded {}",
+                p.omitted_legacy_mappings, p.omitted_invalid_mappings, p.omitted_unencoded_glyphs
+            )?;
         }
-        for a in &self.adjustments{writeln!(f,"Spacing {:?}: part {}, glyph {}, codes {:?}; {:?} -> {:?}, padding {}/{}: {}",a.kind,a.part_index,a.glyph_index,a.codepoints,a.original_advance,a.target_advance,a.left_padding,a.right_padding,a.reason)?;}
-        writeln!(f,"Metrics: ascent {} -> {} (override {}), descent {} -> {} (override {})",self.metrics.natural_ascent,self.metrics.ascent,self.metrics.ascent_overridden,self.metrics.natural_descent,self.metrics.descent,self.metrics.descent_overridden)?;
-        for p in &self.metrics.parts{writeln!(f,"  Part {}: ascent {:?} -> {}, descent {:?} -> {}",p.part_index,p.original_ascent,p.shifted_ascent,p.original_descent,p.shifted_descent)?;}
-        for l in &self.licenses{writeln!(f,"License part {} [{}]: {} ({})\n  Copyright: {}\n  License: {}\n  URL: {}\n  Reserved names: {}",l.part_index,l.label,l.modification.as_str(),l.provenance,l.copyright.as_deref().unwrap_or("unknown"),l.license.as_deref().unwrap_or("unknown"),l.license_url.as_deref().unwrap_or("none"),l.reserved_names.join(", "))?;}
-        write!(f,"{}",self.diagnostics)
+        for a in &self.adjustments {
+            writeln!(
+                f,
+                "Spacing {:?}: part {}, glyph {}, codes {:?}; {:?} -> {:?}, padding {}/{}: {}",
+                a.kind,
+                a.part_index,
+                a.glyph_index,
+                a.codepoints,
+                a.original_advance,
+                a.target_advance,
+                a.left_padding,
+                a.right_padding,
+                a.reason
+            )?;
+        }
+        writeln!(
+            f,
+            "Metrics: ascent {} -> {} (override {}), descent {} -> {} (override {})",
+            self.metrics.natural_ascent,
+            self.metrics.ascent,
+            self.metrics.ascent_overridden,
+            self.metrics.natural_descent,
+            self.metrics.descent,
+            self.metrics.descent_overridden
+        )?;
+        for p in &self.metrics.parts {
+            writeln!(
+                f,
+                "  Part {}: ascent {:?} -> {}, descent {:?} -> {}",
+                p.part_index,
+                p.original_ascent,
+                p.shifted_ascent,
+                p.original_descent,
+                p.shifted_descent
+            )?;
+        }
+        for l in &self.licenses {
+            writeln!(
+                f,
+                "License part {} [{}]: {} ({})\n  Copyright: {}\n  License: {}\n  URL: {}\n  Reserved names: {}",
+                l.part_index,
+                l.label,
+                l.modification.as_str(),
+                l.provenance,
+                l.copyright.as_deref().unwrap_or("unknown"),
+                l.license.as_deref().unwrap_or("unknown"),
+                l.license_url.as_deref().unwrap_or("none"),
+                l.reserved_names.join(", ")
+            )?;
+        }
+        write!(f, "{}", self.diagnostics)
     }
 }

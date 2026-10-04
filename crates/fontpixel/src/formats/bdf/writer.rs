@@ -166,7 +166,8 @@ fn write_multiline_notice(
     // No per-line vector, escaped copy or joined notice string is allocated.
     let maximum = out.max;
     let add = |total: &mut usize, amount: usize| -> Result<()> {
-        *total = total.checked_add(amount)
+        *total = total
+            .checked_add(amount)
             .filter(|size| *size <= maximum)
             .ok_or(Error::ResourceLimit {
                 resource: "BDF output bytes",
@@ -181,7 +182,10 @@ fn write_multiline_notice(
         add(&mut total, 11)?;
         add(&mut total, line.len())?;
         add(&mut total, line.len())?;
-        add(&mut total, line.bytes().filter(|byte| *byte == b'"').count())?;
+        add(
+            &mut total,
+            line.bytes().filter(|byte| *byte == b'"').count(),
+        )?;
         if index != 0 {
             add(&mut total, 3)?;
         }

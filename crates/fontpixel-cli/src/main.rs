@@ -4,10 +4,10 @@
 mod assets;
 mod batch;
 mod commands;
-mod merge;
-mod metadata;
 mod image_formats;
 mod input_budget;
+mod merge;
+mod metadata;
 use image_formats::WriteArguments as ImageArguments;
 mod extra_formats;
 #[cfg(feature = "opentype")]
@@ -55,14 +55,14 @@ enum Command {
     #[cfg(feature = "opentype")]
     Subset(opentype::SubsetArgs),
     /// List all planned formats and their actual implementation status.
-    #[command(after_help="Example: fontpixel formats --json")]
+    #[command(after_help = "Example: fontpixel formats --json")]
     Formats {
         /// Emit machine-readable metadata and capability flags.
         #[arg(long)]
         json: bool,
     },
     /// Inspect a font, including its metrics, properties and diagnostics.
-    #[command(after_help="Example: fontpixel info font.bdf --json")]
+    #[command(after_help = "Example: fontpixel info font.bdf --json")]
     Info {
         /// Primary input asset.
         input: PathBuf,
@@ -76,7 +76,7 @@ enum Command {
         raster: RasterArguments,
     },
     /// Render text (or --all) as terminal character art.
-    #[command(after_help="Example: fontpixel preview font.bdf Hello --chars '#.'")]
+    #[command(after_help = "Example: fontpixel preview font.bdf Hello --chars '#.'")]
     Preview {
         #[command(flatten)]
         layout: LayoutArguments,
@@ -85,7 +85,7 @@ enum Command {
         chars: String,
     },
     /// Render text (or --all) to a PNG or SVG image.
-    #[command(after_help="Example: fontpixel render font.bdf Hello -o hello.svg")]
+    #[command(after_help = "Example: fontpixel render font.bdf Hello -o hello.svg")]
     Render {
         #[command(flatten)]
         layout: LayoutArguments,
@@ -112,7 +112,10 @@ enum Command {
         dotsize: Option<f64>,
     },
     /// Convert fonts with loss reporting and safe output replacement.
-    #[command(visible_alias = "vectorize", after_help="Examples:\n  fontpixel convert input.bdf -o output.pcf\n  fontpixel convert one.bdf two.bdf --each --to pcf -o existing-directory\n  fontpixel vectorize input.bdf -o output.ttf --shape square") ]
+    #[command(
+        visible_alias = "vectorize",
+        after_help = "Examples:\n  fontpixel convert input.bdf -o output.pcf\n  fontpixel convert one.bdf two.bdf --each --to pcf -o existing-directory\n  fontpixel vectorize input.bdf -o output.ttf --shape square"
+    )]
     Convert {
         /// One or more inputs, combined as ordered strikes in a FontSet.
         #[arg(required = true, num_args = 1..)]
@@ -552,21 +555,62 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 format: from,
                 limits: raster.input_limits(),
             };
-            let file =
-                assets::FileInput::open(&input, &options.limits, batch::sources())?;
+            let file = assets::FileInput::open(&input, &options.limits, batch::sources())?;
             let loaded = registry.read(&file.input(), &options)?;
             drop(file);
-            let mut retained=loaded.fonts.retained_usage(options.limits.max_total_bytes)?.bytes;
-            conversion_charge(&mut retained,conversion_report_bytes(&loaded.report,options.limits.max_total_bytes)?,options.limits.max_total_bytes)?;
-            let name_scratch=loaded.fonts.fonts.iter().map(|f|f.charset.registry.as_ref().map_or(0,String::len).saturating_add(f.charset.encoding.as_ref().map_or(0,String::len)).saturating_add(f.charset.name.as_ref().map_or(0,String::len))).max().unwrap_or(0);
-            conversion_charge(&mut retained,name_scratch.saturating_mul(4),options.limits.max_total_bytes)?;
-            conversion_charge(&mut retained,fontpixel::charset::merge_categories::UNICODE_BLOCKS.len().saturating_mul(std::mem::size_of::<usize>()),options.limits.max_total_bytes)?;
+            let mut retained = loaded
+                .fonts
+                .retained_usage(options.limits.max_total_bytes)?
+                .bytes;
+            conversion_charge(
+                &mut retained,
+                conversion_report_bytes(&loaded.report, options.limits.max_total_bytes)?,
+                options.limits.max_total_bytes,
+            )?;
+            let name_scratch = loaded
+                .fonts
+                .fonts
+                .iter()
+                .map(|f| {
+                    f.charset
+                        .registry
+                        .as_ref()
+                        .map_or(0, String::len)
+                        .saturating_add(f.charset.encoding.as_ref().map_or(0, String::len))
+                        .saturating_add(f.charset.name.as_ref().map_or(0, String::len))
+                })
+                .max()
+                .unwrap_or(0);
+            conversion_charge(
+                &mut retained,
+                name_scratch.saturating_mul(4),
+                options.limits.max_total_bytes,
+            )?;
+            conversion_charge(
+                &mut retained,
+                fontpixel::charset::merge_categories::UNICODE_BLOCKS
+                    .len()
+                    .saturating_mul(std::mem::size_of::<usize>()),
+                options.limits.max_total_bytes,
+            )?;
             if json {
-                emit_json(output,&InfoSummary{font_count:loaded.fonts.fonts.len(),fonts:FontInfos(&loaded.fonts.fonts),format:loaded.format,report:&loaded.report})
+                emit_json(
+                    output,
+                    &InfoSummary {
+                        font_count: loaded.fonts.fonts.len(),
+                        fonts: FontInfos(&loaded.fonts.fonts),
+                        format: loaded.format,
+                        report: &loaded.report,
+                    },
+                )
             } else {
-                writeln!(output,"Format: {}",loaded.format)?;writeln!(output,"Fonts: {}",loaded.fonts.fonts.len())?;
-                for font in &loaded.fonts.fonts {emit_json(output,&FontInfo(font))?;}
-                write!(output,"{}",loaded.report)?;Ok(())
+                writeln!(output, "Format: {}", loaded.format)?;
+                writeln!(output, "Fonts: {}", loaded.fonts.fonts.len())?;
+                for font in &loaded.fonts.fonts {
+                    emit_json(output, &FontInfo(font))?;
+                }
+                write!(output, "{}", loaded.report)?;
+                Ok(())
             }
         }
 
@@ -687,9 +731,28 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             match layout.report {
                 ReportStyle::Json => {
                     #[derive(serde::Serialize)]
-                    struct RenderSummary<'a>{bytes:usize,format:&'a str,height:u32,output:&'a Path,report:&'a fontpixel::Report,scale:u32,width:u32}
-                    emit_json(output,&RenderSummary{bytes:byte_count,format:&kind,height:rendered.bitmap.height(),output:&destination,report:&rendered.report,scale,width:rendered.bitmap.width()})
-                },
+                    struct RenderSummary<'a> {
+                        bytes: usize,
+                        format: &'a str,
+                        height: u32,
+                        output: &'a Path,
+                        report: &'a fontpixel::Report,
+                        scale: u32,
+                        width: u32,
+                    }
+                    emit_json(
+                        output,
+                        &RenderSummary {
+                            bytes: byte_count,
+                            format: &kind,
+                            height: rendered.bitmap.height(),
+                            output: &destination,
+                            report: &rendered.report,
+                            scale,
+                            width: rendered.bitmap.width(),
+                        },
+                    )
+                }
                 ReportStyle::Text => {
                     write!(output, "{}", rendered.report)?;
                     writeln!(
@@ -723,142 +786,471 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             vector,
         } => {
             // Reconstructed phase-6 grouped conversion; pending compiler validation.
-            if inputs.len()>1024 {return Err(Error::InvalidInput("convert accepts at most 1024 inputs".into()));}
-            let names=names.into_overrides();
-            let limits=raster.input_limits();
-            let id=match to {
-                Some(id)=>id,
-                None if each=>return Err(Error::InvalidInput("--each requires an explicit --to format".into())),
-                None=>infer_output_format(&registry,&destination)?,
+            if inputs.len() > 1024 {
+                return Err(Error::InvalidInput(
+                    "convert accepts at most 1024 inputs".into(),
+                ));
+            }
+            let names = names.into_overrides();
+            let limits = raster.input_limits();
+            let id = match to {
+                Some(id) => id,
+                None if each => {
+                    return Err(Error::InvalidInput(
+                        "--each requires an explicit --to format".into(),
+                    ));
+                }
+                None => infer_output_format(&registry, &destination)?,
             };
             registry.ensure_writable(&id)?;
-            let groups=conversion_groups(&inputs,&destination,&id,each,limits.max_total_bytes)?;
-            let slots=groups.len().checked_mul(std::mem::size_of::<assets::PendingOutput>()+std::mem::size_of::<ConversionSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-            let mut reservation=groups.capacity().checked_mul(std::mem::size_of::<ConversionGroup>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-            for group in &groups{conversion_charge(&mut reservation,group.output.capacity(),limits.max_total_bytes)?;}
-            conversion_charge(&mut reservation,slots,limits.max_total_bytes)?;
-            let mut pending=Vec::new();pending.try_reserve_exact(groups.len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
-            let mut summaries=Vec::new();summaries.try_reserve_exact(groups.len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
-            let mut retained=groups.capacity().checked_mul(std::mem::size_of::<ConversionGroup>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-            conversion_charge(&mut retained,pending.capacity().checked_mul(std::mem::size_of::<assets::PendingOutput>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?,limits.max_total_bytes)?;
-            conversion_charge(&mut retained,summaries.capacity().checked_mul(std::mem::size_of::<ConversionSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?,limits.max_total_bytes)?;
-            for group in &groups {conversion_charge(&mut retained,group.output.capacity(),limits.max_total_bytes)?;}
-            let sources=batch::sources();let mut allow_single_in_place=false;
+            let groups =
+                conversion_groups(&inputs, &destination, &id, each, limits.max_total_bytes)?;
+            let slots = groups
+                .len()
+                .checked_mul(
+                    std::mem::size_of::<assets::PendingOutput>()
+                        + std::mem::size_of::<ConversionSummary>(),
+                )
+                .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+            let mut reservation = groups
+                .capacity()
+                .checked_mul(std::mem::size_of::<ConversionGroup>())
+                .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
             for group in &groups {
-                let group_limits=conversion_remaining(&limits,retained)?;
-                let mut registry=fontpixel::registry();
-                pcf.apply(&id,&mut registry)?;raster.apply(&mut registry)?;vector.apply(&id,&mut registry)?;
-                console.apply(&id,&raster,vector.gray_threshold,&mut registry)?;
-                image.apply(&id,&raster,vector.gray_threshold,&mut registry)?;
-                c.apply(&id,&raster,vector.gray_threshold,&mut registry)?;
-                extra.apply(&id,&raster,vector.gray_threshold,&mut registry)?;
-                p2.apply(&id,&group.output,&raster.p2,&group_limits,vector.gray_threshold,&mut registry)?;
-                p3.apply(&id,&raster.p3,&group_limits,vector.gray_threshold,&mut registry)?;
+                conversion_charge(
+                    &mut reservation,
+                    group.output.capacity(),
+                    limits.max_total_bytes,
+                )?;
+            }
+            conversion_charge(&mut reservation, slots, limits.max_total_bytes)?;
+            let mut pending = Vec::new();
+            pending
+                .try_reserve_exact(groups.len())
+                .map_err(|_| conversion_limit(limits.max_total_bytes))?;
+            let mut summaries = Vec::new();
+            summaries
+                .try_reserve_exact(groups.len())
+                .map_err(|_| conversion_limit(limits.max_total_bytes))?;
+            let mut retained = groups
+                .capacity()
+                .checked_mul(std::mem::size_of::<ConversionGroup>())
+                .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+            conversion_charge(
+                &mut retained,
+                pending
+                    .capacity()
+                    .checked_mul(std::mem::size_of::<assets::PendingOutput>())
+                    .ok_or_else(|| conversion_limit(limits.max_total_bytes))?,
+                limits.max_total_bytes,
+            )?;
+            conversion_charge(
+                &mut retained,
+                summaries
+                    .capacity()
+                    .checked_mul(std::mem::size_of::<ConversionSummary>())
+                    .ok_or_else(|| conversion_limit(limits.max_total_bytes))?,
+                limits.max_total_bytes,
+            )?;
+            for group in &groups {
+                conversion_charge(
+                    &mut retained,
+                    group.output.capacity(),
+                    limits.max_total_bytes,
+                )?;
+            }
+            let sources = batch::sources();
+            let mut allow_single_in_place = false;
+            for group in &groups {
+                let group_limits = conversion_remaining(&limits, retained)?;
+                let mut registry = fontpixel::registry();
+                pcf.apply(&id, &mut registry)?;
+                raster.apply(&mut registry)?;
+                vector.apply(&id, &mut registry)?;
+                console.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
+                image.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
+                c.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
+                extra.apply(&id, &raster, vector.gray_threshold, &mut registry)?;
+                p2.apply(
+                    &id,
+                    &group.output,
+                    &raster.p2,
+                    &group_limits,
+                    vector.gray_threshold,
+                    &mut registry,
+                )?;
+                p3.apply(
+                    &id,
+                    &raster.p3,
+                    &group_limits,
+                    vector.gray_threshold,
+                    &mut registry,
+                )?;
                 registry.ensure_writable(&id)?;
-                let mut fonts=fontpixel::FontSet::default();let mut report=fontpixel::Report::default();
-                let mut input_budget=input_budget::InputBudget::new(group_limits.clone());
+                let mut fonts = fontpixel::FontSet::default();
+                let mut report = fontpixel::Report::default();
+                let mut input_budget = input_budget::InputBudget::new(group_limits.clone());
                 for input in &inputs[group.start..group.end] {
-                    let options=ReadOptions{format:from.clone(),limits:input_budget.remaining_limits()?};
-                    let file=assets::FileInput::open(input,&options.limits,sources.clone())?;
-                    let mut loaded=registry.read(&file.input(),&options)?;drop(file);input_budget.admit(&loaded)?;
+                    let options = ReadOptions {
+                        format: from.clone(),
+                        limits: input_budget.remaining_limits()?,
+                    };
+                    let file = assets::FileInput::open(input, &options.limits, sources.clone())?;
+                    let mut loaded = registry.read(&file.input(), &options)?;
+                    drop(file);
+                    input_budget.admit(&loaded)?;
                     for entry in &mut loaded.report.entries {
-                        if let Some(index)=&mut entry.location.font_index {*index=index.checked_add(fonts.fonts.len()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;}
+                        if let Some(index) = &mut entry.location.font_index {
+                            *index = index
+                                .checked_add(fonts.fonts.len())
+                                .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+                        }
                     }
                     report.extend(loaded.report);
-                    if group.end-group.start==1 {fonts.source_format=loaded.fonts.source_format.take();}
+                    if group.end - group.start == 1 {
+                        fonts.source_format = loaded.fonts.source_format.take();
+                    }
                     fonts.fonts.extend(loaded.fonts.fonts);
-                    for property in loaded.fonts.properties.into_vec(){fonts.properties.push(property);}
+                    for property in loaded.fonts.properties.into_vec() {
+                        fonts.properties.push(property);
+                    }
                 }
-                if let Some(index)=font_index {
-                    if index>=fonts.fonts.len(){return Err(Error::InvalidInput(format!("font index {index} is out of range for {}",group.output.display())));}
-                    let selected=fonts.fonts.into_iter().nth(index).ok_or_else(||Error::InvalidInput("selected font is unavailable".into()))?;
-                    fonts.fonts=vec![selected];
+                if let Some(index) = font_index {
+                    if index >= fonts.fonts.len() {
+                        return Err(Error::InvalidInput(format!(
+                            "font index {index} is out of range for {}",
+                            group.output.display()
+                        )));
+                    }
+                    let selected = fonts.fonts.into_iter().nth(index).ok_or_else(|| {
+                        Error::InvalidInput("selected font is unavailable".into())
+                    })?;
+                    fonts.fonts = vec![selected];
                 }
-                metadata::apply(&mut fonts,&names,&mut report,&group_limits)?;
-                let filename=group.output.file_name().and_then(|s|s.to_str()).ok_or_else(||Error::InvalidInput("output must have a UTF-8 filename".into()))?;
-                let mut write_options=fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);write_options.strict=strict;
+                metadata::apply(&mut fonts, &names, &mut report, &group_limits)?;
+                let filename = group
+                    .output
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .ok_or_else(|| {
+                        Error::InvalidInput("output must have a UTF-8 filename".into())
+                    })?;
+                let mut write_options =
+                    fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
+                write_options.strict = strict;
                 // Reserve this live model and incoming diagnostics in addition
                 // to earlier --each outputs/reports already removed from group_limits.
                 // Native source estimates receive no guessed credit; see the
                 // shared helper's explicit conservative-double-counting contract.
-                let (writer_limits,report)=commands::caller_writer_limits(&fonts,&group_limits,report,strict)?;
-                write_options.transport_limits=Some(fontpixel::formats::TransportLimits{max_output_bytes:writer_limits.max_total_bytes,resources:writer_limits});
-                let written=registry.write_with_report(&fonts,&id,&write_options,report)?;
+                let (writer_limits, report) =
+                    commands::caller_writer_limits(&fonts, &group_limits, report, strict)?;
+                write_options.transport_limits = Some(fontpixel::formats::TransportLimits {
+                    max_output_bytes: writer_limits.max_total_bytes,
+                    resources: writer_limits,
+                });
+                let written = registry.write_with_report(&fonts, &id, &write_options, report)?;
                 drop(fonts);
-                let bytes=written.output.assets().iter().try_fold(0usize,|n,a|n.checked_add(a.bytes.len()).ok_or_else(||conversion_limit(limits.max_total_bytes)))?;
-                allow_single_in_place=!batch::is_active()&&!each&&inputs.len()==1&&inputs[0]==group.output&&!written.output.is_directory()&&written.output.assets().len()==1&&sources.is_single_primary();
-                conversion_charge(&mut retained,written.output.retained_bytes(limits.max_total_bytes)?.saturating_sub(std::mem::size_of::<fontpixel::OutputBundle>()),limits.max_total_bytes)?;
-                conversion_charge(&mut retained,conversion_report_bytes(&written.report,limits.max_total_bytes)?.saturating_sub(std::mem::size_of::<fontpixel::Report>()),limits.max_total_bytes)?;
-                let path_bytes=written.output.assets().iter().try_fold(0usize,|n,a|n.checked_add(a.path.as_str().len()).ok_or_else(||conversion_limit(limits.max_total_bytes)))?;
-                let summary_slots=written.output.assets().len().checked_mul(std::mem::size_of::<AssetSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-                conversion_charge(&mut retained,path_bytes.checked_add(summary_slots).ok_or_else(||conversion_limit(limits.max_total_bytes))?,limits.max_total_bytes)?;
-                conversion_charge(&mut retained,group.output.as_os_str().len().checked_mul(2).and_then(|n|n.checked_add(id.len())).ok_or_else(||conversion_limit(limits.max_total_bytes))?,limits.max_total_bytes)?;
-                let mut assets=Vec::new();assets.try_reserve_exact(written.output.assets().len()).map_err(|_|conversion_limit(limits.max_total_bytes))?;
-                assets.extend(written.output.assets().iter().map(|a|AssetSummary{bytes:a.bytes.len(),path:a.path.as_str().to_owned()}));
-                let summary=ConversionSummary{assets,bytes,format:id.clone(),output:group.output.clone(),report:written.report};
-                let destination=group.output.clone();
-                let estimated=path_bytes.checked_add(summary_slots).and_then(|n|n.checked_add(group.output.as_os_str().len()*2+id.len())).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-                let mut actual=summary.assets.capacity().checked_mul(std::mem::size_of::<AssetSummary>()).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-                for asset in &summary.assets{conversion_charge(&mut actual,asset.path.capacity(),limits.max_total_bytes)?;}
-                conversion_charge(&mut actual,summary.format.capacity(),limits.max_total_bytes)?;conversion_charge(&mut actual,summary.output.capacity(),limits.max_total_bytes)?;conversion_charge(&mut actual,destination.capacity(),limits.max_total_bytes)?;
-                if actual>estimated{conversion_charge(&mut retained,actual-estimated,limits.max_total_bytes)?;}
-                pending.push(assets::PendingOutput{destination,bundle:written.output});summaries.push(summary);
+                let bytes = written.output.assets().iter().try_fold(0usize, |n, a| {
+                    n.checked_add(a.bytes.len())
+                        .ok_or_else(|| conversion_limit(limits.max_total_bytes))
+                })?;
+                allow_single_in_place = !batch::is_active()
+                    && !each
+                    && inputs.len() == 1
+                    && inputs[0] == group.output
+                    && !written.output.is_directory()
+                    && written.output.assets().len() == 1
+                    && sources.is_single_primary();
+                conversion_charge(
+                    &mut retained,
+                    written
+                        .output
+                        .retained_bytes(limits.max_total_bytes)?
+                        .saturating_sub(std::mem::size_of::<fontpixel::OutputBundle>()),
+                    limits.max_total_bytes,
+                )?;
+                conversion_charge(
+                    &mut retained,
+                    conversion_report_bytes(&written.report, limits.max_total_bytes)?
+                        .saturating_sub(std::mem::size_of::<fontpixel::Report>()),
+                    limits.max_total_bytes,
+                )?;
+                let path_bytes = written.output.assets().iter().try_fold(0usize, |n, a| {
+                    n.checked_add(a.path.as_str().len())
+                        .ok_or_else(|| conversion_limit(limits.max_total_bytes))
+                })?;
+                let summary_slots = written
+                    .output
+                    .assets()
+                    .len()
+                    .checked_mul(std::mem::size_of::<AssetSummary>())
+                    .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+                conversion_charge(
+                    &mut retained,
+                    path_bytes
+                        .checked_add(summary_slots)
+                        .ok_or_else(|| conversion_limit(limits.max_total_bytes))?,
+                    limits.max_total_bytes,
+                )?;
+                conversion_charge(
+                    &mut retained,
+                    group
+                        .output
+                        .as_os_str()
+                        .len()
+                        .checked_mul(2)
+                        .and_then(|n| n.checked_add(id.len()))
+                        .ok_or_else(|| conversion_limit(limits.max_total_bytes))?,
+                    limits.max_total_bytes,
+                )?;
+                let mut assets = Vec::new();
+                assets
+                    .try_reserve_exact(written.output.assets().len())
+                    .map_err(|_| conversion_limit(limits.max_total_bytes))?;
+                assets.extend(written.output.assets().iter().map(|a| AssetSummary {
+                    bytes: a.bytes.len(),
+                    path: a.path.as_str().to_owned(),
+                }));
+                let summary = ConversionSummary {
+                    assets,
+                    bytes,
+                    format: id.clone(),
+                    output: group.output.clone(),
+                    report: written.report,
+                };
+                let destination = group.output.clone();
+                let estimated = path_bytes
+                    .checked_add(summary_slots)
+                    .and_then(|n| n.checked_add(group.output.as_os_str().len() * 2 + id.len()))
+                    .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+                let mut actual = summary
+                    .assets
+                    .capacity()
+                    .checked_mul(std::mem::size_of::<AssetSummary>())
+                    .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+                for asset in &summary.assets {
+                    conversion_charge(&mut actual, asset.path.capacity(), limits.max_total_bytes)?;
+                }
+                conversion_charge(
+                    &mut actual,
+                    summary.format.capacity(),
+                    limits.max_total_bytes,
+                )?;
+                conversion_charge(
+                    &mut actual,
+                    summary.output.capacity(),
+                    limits.max_total_bytes,
+                )?;
+                conversion_charge(&mut actual, destination.capacity(), limits.max_total_bytes)?;
+                if actual > estimated {
+                    conversion_charge(&mut retained, actual - estimated, limits.max_total_bytes)?;
+                }
+                pending.push(assets::PendingOutput {
+                    destination,
+                    bundle: written.output,
+                });
+                summaries.push(summary);
             }
-            let protection=if allow_single_in_place{assets::Sources::default()}else{sources};
-            batch::persist_outputs(pending,&protection)?;
+            let protection = if allow_single_in_place {
+                assets::Sources::default()
+            } else {
+                sources
+            };
+            batch::persist_outputs(pending, &protection)?;
             match style {
-                ReportStyle::Json if each=>emit_json(output,&ConversionList{outputs:&summaries}),
-                ReportStyle::Json=>emit_json(output,&summaries[0]),
-                ReportStyle::Text=>{for summary in &summaries {write!(output,"{}",summary.report)?;writeln!(output,"Wrote {} bytes to {}",summary.bytes,summary.output.display())?;}Ok(())}
+                ReportStyle::Json if each => emit_json(
+                    output,
+                    &ConversionList {
+                        outputs: &summaries,
+                    },
+                ),
+                ReportStyle::Json => emit_json(output, &summaries[0]),
+                ReportStyle::Text => {
+                    for summary in &summaries {
+                        write!(output, "{}", summary.report)?;
+                        writeln!(
+                            output,
+                            "Wrote {} bytes to {}",
+                            summary.bytes,
+                            summary.output.display()
+                        )?;
+                    }
+                    Ok(())
+                }
             }
         }
     }
 }
 
 #[derive(serde::Serialize)]
-struct AssetSummary { bytes:usize,path:String }
+struct AssetSummary {
+    bytes: usize,
+    path: String,
+}
 #[derive(serde::Serialize)]
-struct ConversionSummary {assets:Vec<AssetSummary>,bytes:usize,format:String,output:PathBuf,report:fontpixel::Report}
+struct ConversionSummary {
+    assets: Vec<AssetSummary>,
+    bytes: usize,
+    format: String,
+    output: PathBuf,
+    report: fontpixel::Report,
+}
 #[derive(serde::Serialize)]
-struct ConversionList<'a>{outputs:&'a[ConversionSummary]}
-struct ConversionGroup{start:usize,end:usize,output:PathBuf}
-fn conversion_limit(limit:usize)->Error{Error::ResourceLimit{resource:"retained conversion output/report bytes",limit}}
-fn conversion_charge(used:&mut usize,bytes:usize,limit:usize)->fontpixel::Result<()>{*used=used.checked_add(bytes).filter(|n|*n<=limit).ok_or_else(||conversion_limit(limit))?;Ok(())}
-fn conversion_remaining(limits:&ResourceLimits,used:usize)->fontpixel::Result<ResourceLimits>{
-    let mut remaining=limits.clone();remaining.max_total_bytes=remaining.max_total_bytes.checked_sub(used).ok_or_else(||conversion_limit(limits.max_total_bytes))?;
-    remaining.max_input_bytes=remaining.max_input_bytes.min(remaining.max_total_bytes);remaining.max_resource_bytes=remaining.max_resource_bytes.min(remaining.max_total_bytes);remaining.max_decompressed_bytes=remaining.max_decompressed_bytes.min(remaining.max_total_bytes);remaining.max_table_bytes=remaining.max_table_bytes.min(remaining.max_total_bytes);Ok(remaining)
+struct ConversionList<'a> {
+    outputs: &'a [ConversionSummary],
 }
-fn conversion_report_bytes(report:&fontpixel::Report,limit:usize)->fontpixel::Result<usize>{
-    let mut bytes=std::mem::size_of::<fontpixel::Report>();conversion_charge(&mut bytes,report.entries.capacity().checked_mul(std::mem::size_of::<fontpixel::ReportEntry>()).ok_or_else(||conversion_limit(limit))?,limit)?;
-    for entry in &report.entries {conversion_charge(&mut bytes,entry.code.capacity(),limit)?;conversion_charge(&mut bytes,entry.message.capacity(),limit)?;conversion_charge(&mut bytes,entry.location.asset.as_ref().map_or(0,String::capacity),limit)?;}Ok(bytes)
+struct ConversionGroup {
+    start: usize,
+    end: usize,
+    output: PathBuf,
 }
-fn infer_output_format(registry:&fontpixel::FontRegistry,destination:&Path)->fontpixel::Result<String>{
-    Ok(match destination.extension().and_then(|e|e.to_str()).map(str::to_ascii_lowercase).as_deref(){Some("ttf")=>"ttf",Some("otf")=>"otf",Some("ttc"|"otc")=>"ttc",Some("woff")=>"woff",Some("woff2")=>"woff2",_=>registry.format_from_name(&destination.to_string_lossy())?.id}.into())
-}
-fn conversion_groups(inputs:&[PathBuf],destination:&Path,id:&str,each:bool,limit:usize)->fontpixel::Result<Vec<ConversionGroup>>{
-    if !each{
-        let mut used=std::mem::size_of::<ConversionGroup>();conversion_charge(&mut used,destination.as_os_str().len(),limit)?;
-        return Ok(vec![ConversionGroup{start:0,end:inputs.len(),output:destination.to_owned()}]);
+fn conversion_limit(limit: usize) -> Error {
+    Error::ResourceLimit {
+        resource: "retained conversion output/report bytes",
+        limit,
     }
-    if !destination.is_dir(){return Err(Error::InvalidInput("--each output must be an existing directory".into()));}
-    let extension=fontpixel::formats::catalogue::CATALOGUE.iter().find(|f|f.id==id).and_then(|f|f.extensions.first()).copied().unwrap_or(id);
+}
+fn conversion_charge(used: &mut usize, bytes: usize, limit: usize) -> fontpixel::Result<()> {
+    *used = used
+        .checked_add(bytes)
+        .filter(|n| *n <= limit)
+        .ok_or_else(|| conversion_limit(limit))?;
+    Ok(())
+}
+fn conversion_remaining(limits: &ResourceLimits, used: usize) -> fontpixel::Result<ResourceLimits> {
+    let mut remaining = limits.clone();
+    remaining.max_total_bytes = remaining
+        .max_total_bytes
+        .checked_sub(used)
+        .ok_or_else(|| conversion_limit(limits.max_total_bytes))?;
+    remaining.max_input_bytes = remaining.max_input_bytes.min(remaining.max_total_bytes);
+    remaining.max_resource_bytes = remaining.max_resource_bytes.min(remaining.max_total_bytes);
+    remaining.max_decompressed_bytes = remaining
+        .max_decompressed_bytes
+        .min(remaining.max_total_bytes);
+    remaining.max_table_bytes = remaining.max_table_bytes.min(remaining.max_total_bytes);
+    Ok(remaining)
+}
+fn conversion_report_bytes(report: &fontpixel::Report, limit: usize) -> fontpixel::Result<usize> {
+    let mut bytes = std::mem::size_of::<fontpixel::Report>();
+    conversion_charge(
+        &mut bytes,
+        report
+            .entries
+            .capacity()
+            .checked_mul(std::mem::size_of::<fontpixel::ReportEntry>())
+            .ok_or_else(|| conversion_limit(limit))?,
+        limit,
+    )?;
+    for entry in &report.entries {
+        conversion_charge(&mut bytes, entry.code.capacity(), limit)?;
+        conversion_charge(&mut bytes, entry.message.capacity(), limit)?;
+        conversion_charge(
+            &mut bytes,
+            entry.location.asset.as_ref().map_or(0, String::capacity),
+            limit,
+        )?;
+    }
+    Ok(bytes)
+}
+fn infer_output_format(
+    registry: &fontpixel::FontRegistry,
+    destination: &Path,
+) -> fontpixel::Result<String> {
+    Ok(match destination
+        .extension()
+        .and_then(|e| e.to_str())
+        .map(str::to_ascii_lowercase)
+        .as_deref()
+    {
+        Some("ttf") => "ttf",
+        Some("otf") => "otf",
+        Some("ttc" | "otc") => "ttc",
+        Some("woff") => "woff",
+        Some("woff2") => "woff2",
+        _ => {
+            registry
+                .format_from_name(&destination.to_string_lossy())?
+                .id
+        }
+    }
+    .into())
+}
+fn conversion_groups(
+    inputs: &[PathBuf],
+    destination: &Path,
+    id: &str,
+    each: bool,
+    limit: usize,
+) -> fontpixel::Result<Vec<ConversionGroup>> {
+    if !each {
+        let mut used = std::mem::size_of::<ConversionGroup>();
+        conversion_charge(&mut used, destination.as_os_str().len(), limit)?;
+        return Ok(vec![ConversionGroup {
+            start: 0,
+            end: inputs.len(),
+            output: destination.to_owned(),
+        }]);
+    }
+    if !destination.is_dir() {
+        return Err(Error::InvalidInput(
+            "--each output must be an existing directory".into(),
+        ));
+    }
+    let extension = fontpixel::formats::catalogue::CATALOGUE
+        .iter()
+        .find(|f| f.id == id)
+        .and_then(|f| f.extensions.first())
+        .copied()
+        .unwrap_or(id);
     // Check repeated parent/path copies and collision-set scratch before building
     // any destination. A long output parent multiplied by many inputs is bounded.
-    let mut planned=inputs.len().checked_mul(std::mem::size_of::<ConversionGroup>()+128).ok_or_else(||conversion_limit(limit))?;
+    let mut planned = inputs
+        .len()
+        .checked_mul(std::mem::size_of::<ConversionGroup>() + 128)
+        .ok_or_else(|| conversion_limit(limit))?;
     for input in inputs {
-        let name=input.file_name().ok_or_else(||Error::InvalidInput("--each input requires a filename".into()))?;
-        let path_bytes=destination.as_os_str().len().checked_add(name.len()).and_then(|n|n.checked_add(extension.len()+2)).and_then(|n|n.checked_mul(6)).ok_or_else(||conversion_limit(limit))?;
-        conversion_charge(&mut planned,path_bytes,limit)?;
+        let name = input
+            .file_name()
+            .ok_or_else(|| Error::InvalidInput("--each input requires a filename".into()))?;
+        let path_bytes = destination
+            .as_os_str()
+            .len()
+            .checked_add(name.len())
+            .and_then(|n| n.checked_add(extension.len() + 2))
+            .and_then(|n| n.checked_mul(6))
+            .ok_or_else(|| conversion_limit(limit))?;
+        conversion_charge(&mut planned, path_bytes, limit)?;
     }
-    let mut paths=std::collections::BTreeSet::new();let mut groups=Vec::new();groups.try_reserve_exact(inputs.len()).map_err(|_|conversion_limit(limit))?;
-    for(index,input)in inputs.iter().enumerate(){
-        let filename=input.file_name().and_then(|s|s.to_str()).ok_or_else(||Error::InvalidInput("--each input requires a UTF-8 filename".into()))?;
-        let filename=filename.strip_suffix(".gz").unwrap_or(filename);
-        let stem=Path::new(filename).file_stem().and_then(|s|s.to_str()).filter(|s|!s.is_empty()).ok_or_else(||Error::InvalidInput("--each cannot derive an output filename".into()))?;
-        let output=destination.join(format!("{stem}.{extension}"));
-        if !paths.insert(output.clone()){return Err(Error::InvalidInput("--each inputs produce duplicate destination names".into()));}
-        groups.push(ConversionGroup{start:index,end:index+1,output});
-    }Ok(groups)
+    let mut paths = std::collections::BTreeSet::new();
+    let mut groups = Vec::new();
+    groups
+        .try_reserve_exact(inputs.len())
+        .map_err(|_| conversion_limit(limit))?;
+    for (index, input) in inputs.iter().enumerate() {
+        let filename = input
+            .file_name()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| Error::InvalidInput("--each input requires a UTF-8 filename".into()))?;
+        let filename = filename.strip_suffix(".gz").unwrap_or(filename);
+        let stem = Path::new(filename)
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .filter(|s| !s.is_empty())
+            .ok_or_else(|| Error::InvalidInput("--each cannot derive an output filename".into()))?;
+        let output = destination.join(format!("{stem}.{extension}"));
+        if !paths.insert(output.clone()) {
+            return Err(Error::InvalidInput(
+                "--each inputs produce duplicate destination names".into(),
+            ));
+        }
+        groups.push(ConversionGroup {
+            start: index,
+            end: index + 1,
+            output,
+        });
+    }
+    Ok(groups)
 }
 
 fn parse_code(value: &str) -> fontpixel::Result<u32> {
@@ -887,11 +1279,7 @@ fn render_layout(args: &LayoutArguments) -> fontpixel::Result<fontpixel::render:
         format: args.from.clone(),
         limits: args.raster.input_limits(),
     };
-    let file = assets::FileInput::open(
-        &args.input,
-        &read_options.limits,
-        batch::sources(),
-    )?;
+    let file = assets::FileInput::open(&args.input, &read_options.limits, batch::sources())?;
     let mut registry = fontpixel::registry();
     args.raster.apply(&mut registry)?;
     let loaded = registry.read(&file.input(), &read_options)?;
@@ -1007,9 +1395,12 @@ fn emit_render_report(
 ) -> fontpixel::Result<()> {
     match style {
         ReportStyle::Json => {
-            #[derive(serde::Serialize)] struct ReportSummary<'a>{report:&'a fontpixel::Report}
-            emit_json(output,&ReportSummary{report})
-        },
+            #[derive(serde::Serialize)]
+            struct ReportSummary<'a> {
+                report: &'a fontpixel::Report,
+            }
+            emit_json(output, &ReportSummary { report })
+        }
         ReportStyle::Text => {
             write!(output, "{report}")?;
             Ok(())
@@ -1019,86 +1410,203 @@ fn emit_render_report(
 
 // Borrow the model and report rather than cloning arbitrarily large JSON trees.
 struct PropertyValueRef<'a>(&'a fontpixel::model::PropertyValue);
-impl serde::Serialize for PropertyValueRef<'_>{
-    fn serialize<S:serde::Serializer>(&self,serializer:S)->Result<S::Ok,S::Error>{
-        use fontpixel::model::PropertyValue::*;use serde::ser::{SerializeSeq,SerializeStruct};
+impl serde::Serialize for PropertyValueRef<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use fontpixel::model::PropertyValue::*;
+        use serde::ser::{SerializeSeq, SerializeStruct};
         match self.0 {
-            Integer(v)=>serializer.serialize_i64(*v),Unsigned(v)=>serializer.serialize_u64(*v),Decimal(v)|Text(v)=>serializer.serialize_str(v),Flag=>serializer.serialize_none(),
-            Bytes(v)=>{let mut map=serializer.serialize_struct("Bytes",1)?;map.serialize_field("bytes",v)?;map.end()},
-            List(v)=>{let mut seq=serializer.serialize_seq(Some(v.len()))?;for value in v{seq.serialize_element(&PropertyValueRef(value))?;}seq.end()},
+            Integer(v) => serializer.serialize_i64(*v),
+            Unsigned(v) => serializer.serialize_u64(*v),
+            Decimal(v) | Text(v) => serializer.serialize_str(v),
+            Flag => serializer.serialize_none(),
+            Bytes(v) => {
+                let mut map = serializer.serialize_struct("Bytes", 1)?;
+                map.serialize_field("bytes", v)?;
+                map.end()
+            }
+            List(v) => {
+                let mut seq = serializer.serialize_seq(Some(v.len()))?;
+                for value in v {
+                    seq.serialize_element(&PropertyValueRef(value))?;
+                }
+                seq.end()
+            }
         }
     }
 }
 struct PropertiesRef<'a>(&'a fontpixel::model::Properties);
-impl serde::Serialize for PropertiesRef<'_>{
-    fn serialize<S:serde::Serializer>(&self,serializer:S)->Result<S::Ok,S::Error>{
+impl serde::Serialize for PropertiesRef<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeSeq;
-        #[derive(serde::Serialize)]struct PropertyRef<'a>{name:&'a str,value:PropertyValueRef<'a>}
-        let mut seq=serializer.serialize_seq(None)?;
-        for property in self.0.iter().filter(|p|!p.name.starts_with("bdf.")){seq.serialize_element(&PropertyRef{name:&property.name,value:PropertyValueRef(&property.value)})?;}seq.end()
+        #[derive(serde::Serialize)]
+        struct PropertyRef<'a> {
+            name: &'a str,
+            value: PropertyValueRef<'a>,
+        }
+        let mut seq = serializer.serialize_seq(None)?;
+        for property in self.0.iter().filter(|p| !p.name.starts_with("bdf.")) {
+            seq.serialize_element(&PropertyRef {
+                name: &property.name,
+                value: PropertyValueRef(&property.value),
+            })?;
+        }
+        seq.end()
     }
 }
 struct UnicodeBlocks<'a>(&'a fontpixel::Font);
-impl serde::Serialize for UnicodeBlocks<'_>{
-    fn serialize<S:serde::Serializer>(&self,serializer:S)->Result<S::Ok,S::Error>{
-        use serde::ser::SerializeSeq;use fontpixel::charset::merge_categories::{UNICODE_BLOCKS,unicode_block};
-        #[derive(serde::Serialize)]struct Block {count:usize,end:u32,name:&'static str,start:u32}
-        let mut counts=vec![0usize;UNICODE_BLOCKS.len()];let codec=self.0.charset.codec().ok().filter(|c|c.known());
-        for(cp,_)in self.0.codepoints(){let scalar=match cp{fontpixel::model::Codepoint::Unicode(value)=>char::from_u32(value).map(|c|c as u32),fontpixel::model::Codepoint::Legacy(value)=>codec.as_ref().and_then(|c|c.cp2unicode(value))};
-            if let Some(block)=scalar.and_then(unicode_block){if let Ok(index)=UNICODE_BLOCKS.binary_search_by_key(&block.start,|b|b.start){counts[index]+=1;}}
+impl serde::Serialize for UnicodeBlocks<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use fontpixel::charset::merge_categories::{UNICODE_BLOCKS, unicode_block};
+        use serde::ser::SerializeSeq;
+        #[derive(serde::Serialize)]
+        struct Block {
+            count: usize,
+            end: u32,
+            name: &'static str,
+            start: u32,
         }
-        let mut seq=serializer.serialize_seq(None)?;for(block,count)in UNICODE_BLOCKS.iter().zip(counts){if count!=0{seq.serialize_element(&Block{count,end:block.end,name:block.name,start:block.start})?;}}seq.end()
+        let mut counts = vec![0usize; UNICODE_BLOCKS.len()];
+        let codec = self.0.charset.codec().ok().filter(|c| c.known());
+        for (cp, _) in self.0.codepoints() {
+            let scalar = match cp {
+                fontpixel::model::Codepoint::Unicode(value) => {
+                    char::from_u32(value).map(|c| c as u32)
+                }
+                fontpixel::model::Codepoint::Legacy(value) => {
+                    codec.as_ref().and_then(|c| c.cp2unicode(value))
+                }
+            };
+            if let Some(block) = scalar.and_then(unicode_block) {
+                if let Ok(index) = UNICODE_BLOCKS.binary_search_by_key(&block.start, |b| b.start) {
+                    counts[index] += 1;
+                }
+            }
+        }
+        let mut seq = serializer.serialize_seq(None)?;
+        for (block, count) in UNICODE_BLOCKS.iter().zip(counts) {
+            if count != 0 {
+                seq.serialize_element(&Block {
+                    count,
+                    end: block.end,
+                    name: block.name,
+                    start: block.start,
+                })?;
+            }
+        }
+        seq.end()
     }
 }
 struct FontInfo<'a>(&'a fontpixel::Font);
-impl serde::Serialize for FontInfo<'_>{
-    fn serialize<S:serde::Serializer>(&self,serializer:S)->Result<S::Ok,S::Error>{
+impl serde::Serialize for FontInfo<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeStruct;
-        #[derive(serde::Serialize)]struct Fraction {denominator:u32,numerator:i64}
-        let font=self.0;let unencoded=font.glyphs().filter(|(_,g)|g.codepoints.is_empty()).count();
-        let count=font.codepoints().count();let first=font.codepoints().next().map(|(cp,_)|cp.value());let last=font.codepoints().next_back().map(|(cp,_)|cp.value());
-        let bounds=font.metrics.bounds.map(|b|[i64::from(b.width),i64::from(b.height),b.x,b.y]);
-        let mut map=serializer.serialize_struct("FontInfo",21)?;
-        map.serialize_field("ascent",&font.metrics.ascent)?;map.serialize_field("bounds",&bounds)?;
-        map.serialize_field("charset",&font.charset.canonical_name())?;map.serialize_field("charset_encoding",&font.charset.encoding)?;map.serialize_field("charset_registry",&font.charset.registry)?;
-        map.serialize_field("descent",&font.metrics.descent)?;map.serialize_field("distinct_codes",&count)?;map.serialize_field("encoded_count",&(font.len()-unencoded))?;
-        map.serialize_field("family",&font.names.family)?;map.serialize_field("first_code",&first)?;map.serialize_field("gl",&font.charset.gl)?;map.serialize_field("glyph_count",&font.len())?;
-        map.serialize_field("headers",&PropertiesRef(&font.headers))?;map.serialize_field("last_code",&last)?;map.serialize_field("name",&font.names.xlfd)?;map.serialize_field("pixel_size",&font.metrics.pixel_size)?;
-        map.serialize_field("point_size",&font.metrics.point_size.map(|v|Fraction{denominator:v.denominator(),numerator:v.numerator()}))?;
-        map.serialize_field("properties",&PropertiesRef(&font.properties))?;map.serialize_field("resolution",&font.metrics.resolution.map(|v|[v.x,v.y]))?;
-        map.serialize_field("unencoded_count",&unencoded)?;map.serialize_field("unicode_blocks",&UnicodeBlocks(font))?;map.end()
+        #[derive(serde::Serialize)]
+        struct Fraction {
+            denominator: u32,
+            numerator: i64,
+        }
+        let font = self.0;
+        let unencoded = font
+            .glyphs()
+            .filter(|(_, g)| g.codepoints.is_empty())
+            .count();
+        let count = font.codepoints().count();
+        let first = font.codepoints().next().map(|(cp, _)| cp.value());
+        let last = font.codepoints().next_back().map(|(cp, _)| cp.value());
+        let bounds = font
+            .metrics
+            .bounds
+            .map(|b| [i64::from(b.width), i64::from(b.height), b.x, b.y]);
+        let mut map = serializer.serialize_struct("FontInfo", 21)?;
+        map.serialize_field("ascent", &font.metrics.ascent)?;
+        map.serialize_field("bounds", &bounds)?;
+        map.serialize_field("charset", &font.charset.canonical_name())?;
+        map.serialize_field("charset_encoding", &font.charset.encoding)?;
+        map.serialize_field("charset_registry", &font.charset.registry)?;
+        map.serialize_field("descent", &font.metrics.descent)?;
+        map.serialize_field("distinct_codes", &count)?;
+        map.serialize_field("encoded_count", &(font.len() - unencoded))?;
+        map.serialize_field("family", &font.names.family)?;
+        map.serialize_field("first_code", &first)?;
+        map.serialize_field("gl", &font.charset.gl)?;
+        map.serialize_field("glyph_count", &font.len())?;
+        map.serialize_field("headers", &PropertiesRef(&font.headers))?;
+        map.serialize_field("last_code", &last)?;
+        map.serialize_field("name", &font.names.xlfd)?;
+        map.serialize_field("pixel_size", &font.metrics.pixel_size)?;
+        map.serialize_field(
+            "point_size",
+            &font.metrics.point_size.map(|v| Fraction {
+                denominator: v.denominator(),
+                numerator: v.numerator(),
+            }),
+        )?;
+        map.serialize_field("properties", &PropertiesRef(&font.properties))?;
+        map.serialize_field("resolution", &font.metrics.resolution.map(|v| [v.x, v.y]))?;
+        map.serialize_field("unencoded_count", &unencoded)?;
+        map.serialize_field("unicode_blocks", &UnicodeBlocks(font))?;
+        map.end()
     }
 }
-struct FontInfos<'a>(&'a[fontpixel::Font]);
-impl serde::Serialize for FontInfos<'_>{
-    fn serialize<S:serde::Serializer>(&self,serializer:S)->Result<S::Ok,S::Error>{use serde::ser::SerializeSeq;let mut seq=serializer.serialize_seq(Some(self.0.len()))?;for font in self.0{seq.serialize_element(&FontInfo(font))?;}seq.end()}
+struct FontInfos<'a>(&'a [fontpixel::Font]);
+impl serde::Serialize for FontInfos<'_> {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        use serde::ser::SerializeSeq;
+        let mut seq = serializer.serialize_seq(Some(self.0.len()))?;
+        for font in self.0 {
+            seq.serialize_element(&FontInfo(font))?;
+        }
+        seq.end()
+    }
 }
 #[derive(serde::Serialize)]
-struct InfoSummary<'a>{font_count:usize,fonts:FontInfos<'a>,format:&'a str,report:&'a fontpixel::Report}
+struct InfoSummary<'a> {
+    font_count: usize,
+    fonts: FontInfos<'a>,
+    format: &'a str,
+    report: &'a fontpixel::Report,
+}
 
 fn persist(destination: &Path, bytes: Vec<u8>) -> fontpixel::Result<()> {
-    let name = destination.file_name().and_then(|name| name.to_str())
+    let name = destination
+        .file_name()
+        .and_then(|name| name.to_str())
         .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
-    let bundle = fontpixel::resources::OutputBundle::single(
-        fontpixel::ResourcePath::new(name)?, bytes,
-    );
-    batch::persist_outputs(vec![assets::PendingOutput {
-        destination: destination.to_owned(), bundle,
-    }], &batch::sources())
+    let bundle =
+        fontpixel::resources::OutputBundle::single(fontpixel::ResourcePath::new(name)?, bytes);
+    batch::persist_outputs(
+        vec![assets::PendingOutput {
+            destination: destination.to_owned(),
+            bundle,
+        }],
+        &batch::sources(),
+    )
 }
 
 fn emit_error(error: &Error, style: ReportStyle, output: &mut dyn Write) -> fontpixel::Result<()> {
     match style {
         ReportStyle::Json => {
             #[derive(serde::Serialize)]
-            struct ErrorDetails { exit_code: u8, message: String }
+            struct ErrorDetails {
+                exit_code: u8,
+                message: String,
+            }
             #[derive(serde::Serialize)]
-            struct ErrorSummary<'a> { error: ErrorDetails, report: Option<&'a fontpixel::Report> }
-            emit_json(output, &ErrorSummary {
-                error: ErrorDetails { exit_code: error.exit_code(), message: error.to_string() },
-                report: error.report(),
-            })
-        },
+            struct ErrorSummary<'a> {
+                error: ErrorDetails,
+                report: Option<&'a fontpixel::Report>,
+            }
+            emit_json(
+                output,
+                &ErrorSummary {
+                    error: ErrorDetails {
+                        exit_code: error.exit_code(),
+                        message: error.to_string(),
+                    },
+                    report: error.report(),
+                },
+            )
+        }
         ReportStyle::Text => {
             writeln!(output, "fontpixel: {error}")?;
             if let Some(report) = error.report() {
@@ -1427,7 +1935,7 @@ impl VectorArguments {
                 || self.embed_bitmaps
                 || self.woff2_source.is_some()
                 || self.woff2_quality.is_some()
-            || self.woff2_threads.is_some()
+                || self.woff2_threads.is_some()
                 || self.collection_v2
             {
                 return Err(Error::InvalidInput(

@@ -375,7 +375,13 @@ pub(super) fn decode_with(
         let cached = &mut physicals[index].parsed;
         if cached.is_none() {
             *cached = Some(physical(
-                bytes(b, off, size)?, b, h, off, budget, l, dialect,
+                bytes(b, off, size)?,
+                b,
+                h,
+                off,
+                budget,
+                l,
+                dialect,
             )?);
         }
         let phy = cached

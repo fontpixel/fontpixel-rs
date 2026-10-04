@@ -26,7 +26,12 @@ fn append(out: &mut Vec<u8>, size: usize, value: usize) {
 // Character entries are independently assembled: 16-bit code/advance, followed
 // by 8-bit outline size and 16-bit GPS offset. Each bitmap table still names
 // only code 65, so physical-table work is separable from real output work.
-fn fixture(references: &[usize], characters: usize, outlines: bool, dialect: PfrDialect) -> Vec<u8> {
+fn fixture(
+    references: &[usize],
+    characters: usize,
+    outlines: bool,
+    dialect: PfrDialect,
+) -> Vec<u8> {
     assert!(!references.is_empty() && (66..=4096).contains(&characters));
     let original_off = number(SOURCE, 27, 3);
     let original_size = number(SOURCE, 22, 2);
@@ -44,7 +49,16 @@ fn fixture(references: &[usize], characters: usize, outlines: bool, dialect: Pfr
     // Its single BCT offset is relative to physical start for DAVIC and end
     // for FreeType; the immutable cache must honor the selected dialect.
     let physical_len = physical.len();
-    put(&mut physical, 28, 2, if dialect == PfrDialect::Davic { physical_len } else { 0 });
+    put(
+        &mut physical,
+        28,
+        2,
+        if dialect == PfrDialect::Davic {
+            physical_len
+        } else {
+            0
+        },
+    );
     let bct = &SOURCE[original_off + original_size..original_gps];
     let gps = &SOURCE[original_gps..SOURCE.len() - 8];
     let records = references.iter().copied().max().unwrap() + 1;
@@ -57,12 +71,22 @@ fn fixture(references: &[usize], characters: usize, outlines: bool, dialect: Pfr
     let original_logical = number(SOURCE, 19, 3);
     let mut out = SOURCE[..58].to_vec();
     for (at, size, value) in [
-        (10, 2, directory_len), (12, 2, 58), (14, 2, logical_size),
-        (16, 3, references.len() * logical_size), (19, 3, logical_start),
-        (22, 2, physical.len()), (24, 3, physical_size), (27, 3, physical_start),
-        (30, 2, gps.len()), (32, 3, gps.len()), (35, 3, gps_start),
-        (43, 3, bct.len() * records), (46, 3, bct.len()), (49, 3, bct.len()),
-        (52, 2, references.len()), (56, 2, records),
+        (10, 2, directory_len),
+        (12, 2, 58),
+        (14, 2, logical_size),
+        (16, 3, references.len() * logical_size),
+        (19, 3, logical_start),
+        (22, 2, physical.len()),
+        (24, 3, physical_size),
+        (27, 3, physical_start),
+        (30, 2, gps.len()),
+        (32, 3, gps.len()),
+        (35, 3, gps_start),
+        (43, 3, bct.len() * records),
+        (46, 3, bct.len()),
+        (49, 3, bct.len()),
+        (52, 2, references.len()),
+        (56, 2, records),
     ] {
         put(&mut out, at, size, value);
     }
@@ -74,7 +98,11 @@ fn fixture(references: &[usize], characters: usize, outlines: bool, dialect: Pfr
     for &reference in references {
         out.extend_from_slice(&SOURCE[original_logical..original_logical + 13]);
         append(&mut out, 2, physical.len());
-        append(&mut out, 3, physical_start + reference * (physical.len() + bct.len()));
+        append(
+            &mut out,
+            3,
+            physical_start + reference * (physical.len() + bct.len()),
+        );
     }
     for _ in 0..records {
         out.extend_from_slice(&physical);
@@ -87,7 +115,11 @@ fn fixture(references: &[usize], characters: usize, outlines: bool, dialect: Pfr
     assert_eq!(out.len(), total);
     out
 }
-fn load(bytes: &[u8], limits: &ResourceLimits, dialect: Option<PfrDialect>) -> fontpixel::Result<(FontSet, Report)> {
+fn load(
+    bytes: &[u8],
+    limits: &ResourceLimits,
+    dialect: Option<PfrDialect>,
+) -> fontpixel::Result<(FontSet, Report)> {
     let input = Input::new(bytes);
     let mut context = ReadContext::new(&input, limits)?;
     pfr::read(&mut context, &PfrReadOptions { dialect })
@@ -101,7 +133,8 @@ fn shared_and_distinct_physical_records_have_identical_models() {
             let separate = fixture(&(0..count).collect::<Vec<_>>(), 512, false, dialect);
             for choice in [None, Some(dialect)] {
                 let (actual, report) = load(&shared, &ResourceLimits::default(), choice).unwrap();
-                let (expected, other) = load(&separate, &ResourceLimits::default(), choice).unwrap();
+                let (expected, other) =
+                    load(&separate, &ResourceLimits::default(), choice).unwrap();
                 assert_eq!(actual, expected);
                 assert_eq!(report, other);
                 assert!(!report.has_loss());
@@ -115,8 +148,16 @@ fn shared_and_distinct_physical_records_have_identical_models() {
 #[test]
 fn repeated_physical_storage_is_charged_once_but_outputs_are_not_free() {
     let shared = fixture(&[0; 16], 2048, false, PfrDialect::FreeType);
-    let distinct = fixture(&(0..16).collect::<Vec<_>>(), 2048, false, PfrDialect::FreeType);
-    let limits = ResourceLimits { max_total_bytes: 256 * 1024, ..ResourceLimits::default() };
+    let distinct = fixture(
+        &(0..16).collect::<Vec<_>>(),
+        2048,
+        false,
+        PfrDialect::FreeType,
+    );
+    let limits = ResourceLimits {
+        max_total_bytes: 256 * 1024,
+        ..ResourceLimits::default()
+    };
     let (set, report) = load(&shared, &limits, None).unwrap();
     assert_eq!(set.fonts.len(), 16);
     assert!(!report.has_loss());
@@ -126,13 +167,28 @@ fn repeated_physical_storage_is_charged_once_but_outputs_are_not_free() {
         max_total_bytes: limits.max_total_bytes + distinct.len() - shared.len(),
         ..limits.clone()
     };
-    assert!(matches!(load(&distinct, &distinct_limits, None), Err(Error::ResourceLimit { .. })));
+    assert!(matches!(
+        load(&distinct, &distinct_limits, None),
+        Err(Error::ResourceLimit { .. })
+    ));
     for limits in [
-        ResourceLimits { max_glyphs: 15, ..limits.clone() },
-        ResourceLimits { max_resources: 15, ..limits.clone() },
-        ResourceLimits { max_total_bytes: shared.len() + 64, ..limits },
+        ResourceLimits {
+            max_glyphs: 15,
+            ..limits.clone()
+        },
+        ResourceLimits {
+            max_resources: 15,
+            ..limits.clone()
+        },
+        ResourceLimits {
+            max_total_bytes: shared.len() + 64,
+            ..limits
+        },
     ] {
-        assert!(matches!(load(&shared, &limits, None), Err(Error::ResourceLimit { .. })));
+        assert!(matches!(
+            load(&shared, &limits, None),
+            Err(Error::ResourceLimit { .. })
+        ));
     }
 }
 
@@ -141,10 +197,24 @@ fn shared_outline_loss_keeps_every_logical_location_and_order() {
     let bytes = fixture(&[0, 0, 1, 0, 1], 128, true, PfrDialect::FreeType);
     let (set, report) = load(&bytes, &ResourceLimits::default(), None).unwrap();
     assert_eq!(set.fonts.len(), 5);
-    let losses = report.entries.iter().filter(|e| e.code == "pfr.outlines-omitted").collect::<Vec<_>>();
+    let losses = report
+        .entries
+        .iter()
+        .filter(|e| e.code == "pfr.outlines-omitted")
+        .collect::<Vec<_>>();
     assert_eq!(losses.len(), 5);
-    assert_eq!(losses.iter().map(|e| e.location.font_index).collect::<Vec<_>>(), (0..5).map(Some).collect::<Vec<_>>());
-    assert!(losses.iter().all(|e| e.message == "1 outline glyph programs are not bitmap strikes"));
+    assert_eq!(
+        losses
+            .iter()
+            .map(|e| e.location.font_index)
+            .collect::<Vec<_>>(),
+        (0..5).map(Some).collect::<Vec<_>>()
+    );
+    assert!(
+        losses
+            .iter()
+            .all(|e| e.message == "1 outline glyph programs are not bitmap strikes")
+    );
 }
 
 #[test]
@@ -164,17 +234,28 @@ fn cache_is_call_local_and_explicit_dialect_remains_authoritative() {
     let limits = ResourceLimits::default();
     let first = load(&bytes, &limits, Some(PfrDialect::FreeType)).unwrap();
     assert!(load(&bytes, &limits, Some(PfrDialect::Davic)).is_err());
-    assert_eq!(first, load(&bytes, &limits, Some(PfrDialect::FreeType)).unwrap());
+    assert_eq!(
+        first,
+        load(&bytes, &limits, Some(PfrDialect::FreeType)).unwrap()
+    );
 }
 
 #[test]
 fn every_shared_bitmap_output_counts_against_the_glyph_limit() {
     let bytes = fixture(&[0; 80], 66, false, PfrDialect::FreeType);
     let limits = ResourceLimits {
-        max_glyphs: 66, max_resources: 96, max_total_bytes: 4 * 1024 * 1024,
+        max_glyphs: 66,
+        max_resources: 96,
+        max_total_bytes: 4 * 1024 * 1024,
         ..ResourceLimits::default()
     };
-    assert!(matches!(load(&bytes, &limits, None), Err(Error::ResourceLimit { resource: "PFR total glyphs", limit: 66 })));
+    assert!(matches!(
+        load(&bytes, &limits, None),
+        Err(Error::ResourceLimit {
+            resource: "PFR total glyphs",
+            limit: 66
+        })
+    ));
 }
 
 #[test]
@@ -186,7 +267,12 @@ fn cached_absent_strikes_keep_logical_loss_locations() {
     bytes[first_physical + 17] = 7;
     let (set, report) = load(&bytes, &ResourceLimits::default(), None).unwrap();
     assert_eq!(set.fonts.len(), 2);
-    let locations = report.entries.iter().filter(|e| e.code == "pfr.no-bitmap-strike").map(|e| e.location.font_index).collect::<Vec<_>>();
+    let locations = report
+        .entries
+        .iter()
+        .filter(|e| e.code == "pfr.no-bitmap-strike")
+        .map(|e| e.location.font_index)
+        .collect::<Vec<_>>();
     assert_eq!(locations, [Some(0), Some(2)]);
 }
 
@@ -205,5 +291,11 @@ fn sorted_cache_preserves_logical_order_and_distinct_record_identity() {
     }
     let (set, report) = load(&bytes, &ResourceLimits::default(), None).unwrap();
     assert!(!report.has_loss());
-    assert_eq!(set.fonts.iter().map(|font| font.names.family.as_deref().unwrap().as_bytes()[0]).collect::<Vec<_>>(), references.map(|record| b'A' + record as u8));
+    assert_eq!(
+        set.fonts
+            .iter()
+            .map(|font| font.names.family.as_deref().unwrap().as_bytes()[0])
+            .collect::<Vec<_>>(),
+        references.map(|record| b'A' + record as u8)
+    );
 }

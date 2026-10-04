@@ -168,29 +168,32 @@ fn changes<'a>(
     set: &'a FontSet,
     overrides: &'a NameOverrides,
 ) -> impl Iterator<Item = PlannedEdit<'a>> {
-    set.fonts.iter().enumerate().flat_map(move |(font_index, font)| {
-        let identity_changed = [Field::Family, Field::Style].iter().any(|field| {
-            field
-                .input(overrides)
-                .as_ref()
-                .is_some_and(|value| field.value(&font.names).as_ref() != Some(value))
-        });
-        Field::ALL.into_iter().filter_map(move |field| {
-            let previous = field.value(&font.names).as_deref();
-            let replacement = if let Some(value) = field.input(overrides).as_deref() {
-                (previous != Some(value)).then_some(Some(value))
-            } else if identity_changed && matches!(field, Field::Full | Field::Postscript) {
-                previous.map(|_| None)
-            } else {
-                None
-            };
-            replacement.map(|value| PlannedEdit {
-                font_index,
-                field,
-                value,
+    set.fonts
+        .iter()
+        .enumerate()
+        .flat_map(move |(font_index, font)| {
+            let identity_changed = [Field::Family, Field::Style].iter().any(|field| {
+                field
+                    .input(overrides)
+                    .as_ref()
+                    .is_some_and(|value| field.value(&font.names).as_ref() != Some(value))
+            });
+            Field::ALL.into_iter().filter_map(move |field| {
+                let previous = field.value(&font.names).as_deref();
+                let replacement = if let Some(value) = field.input(overrides).as_deref() {
+                    (previous != Some(value)).then_some(Some(value))
+                } else if identity_changed && matches!(field, Field::Full | Field::Postscript) {
+                    previous.map(|_| None)
+                } else {
+                    None
+                };
+                replacement.map(|value| PlannedEdit {
+                    font_index,
+                    field,
+                    value,
+                })
             })
         })
-    })
 }
 
 #[derive(Clone, Copy)]
@@ -213,7 +216,11 @@ impl Budget {
         Ok(())
     }
     fn array<T>(&mut self, count: usize) -> Result<()> {
-        self.charge(count.checked_mul(size_of::<T>()).ok_or_else(|| self.error())?)
+        self.charge(
+            count
+                .checked_mul(size_of::<T>())
+                .ok_or_else(|| self.error())?,
+        )
     }
     fn vector<T>(&mut self, count: usize) -> Result<Vec<T>> {
         self.array::<T>(count)?;
@@ -344,19 +351,40 @@ mod tests {
 
     #[test]
     fn budget_checked_add_and_multiply_fail_without_allocating() {
-        let mut addition = Budget { used: usize::MAX, maximum: usize::MAX };
-        assert!(matches!(addition.charge(1), Err(Error::ResourceLimit { .. })));
-        let mut multiplication = Budget { used: 0, maximum: usize::MAX };
-        assert!(matches!(multiplication.vector::<StagedEdit>(usize::MAX), Err(Error::ResourceLimit { .. })));
+        let mut addition = Budget {
+            used: usize::MAX,
+            maximum: usize::MAX,
+        };
+        assert!(matches!(
+            addition.charge(1),
+            Err(Error::ResourceLimit { .. })
+        ));
+        let mut multiplication = Budget {
+            used: 0,
+            maximum: usize::MAX,
+        };
+        assert!(matches!(
+            multiplication.vector::<StagedEdit>(usize::MAX),
+            Err(Error::ResourceLimit { .. })
+        ));
     }
 
     #[test]
     fn budget_reserves_and_charges_all_actual_string_and_vector_capacity() {
-        let mut budget = Budget { used: 0, maximum: 1024 };
+        let mut budget = Budget {
+            used: 0,
+            maximum: 1024,
+        };
         let values = budget.vector::<usize>(7).unwrap();
         let text = budget.string("metadata").unwrap();
-        assert_eq!(budget.used, values.capacity() * size_of::<usize>() + text.capacity());
-        let mut empty = Budget { used: 0, maximum: 0 };
+        assert_eq!(
+            budget.used,
+            values.capacity() * size_of::<usize>() + text.capacity()
+        );
+        let mut empty = Budget {
+            used: 0,
+            maximum: 0,
+        };
         assert!(empty.vector::<StagedEdit>(0).unwrap().is_empty());
         assert!(empty.string("").unwrap().is_empty());
         assert_eq!(empty.used, 0);

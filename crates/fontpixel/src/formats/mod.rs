@@ -1157,15 +1157,19 @@ impl<M> Registry<M> {
         } else {
             if let Some(common) = &options.transport_limits {
                 let maximum = common.max_output_bytes;
-                written.output.assets().iter().try_fold(0usize, |total, asset| {
-                    total
-                        .checked_add(asset.bytes.len())
-                        .filter(|bytes| *bytes <= maximum)
-                        .ok_or(Error::ResourceLimit {
-                            resource: "plain output asset bytes",
-                            limit: maximum,
-                        })
-                })?;
+                written
+                    .output
+                    .assets()
+                    .iter()
+                    .try_fold(0usize, |total, asset| {
+                        total
+                            .checked_add(asset.bytes.len())
+                            .filter(|bytes| *bytes <= maximum)
+                            .ok_or(Error::ResourceLimit {
+                                resource: "plain output asset bytes",
+                                limit: maximum,
+                            })
+                    })?;
             }
             written.output
         };
@@ -1258,7 +1262,11 @@ impl Registry<crate::FontSet> {
             ("otb", crate::sfnt::bitmap::Kind::OpenType),
             ("bdat", crate::sfnt::bitmap::Kind::Apple),
         ] {
-            if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == id && e.writer.is_some()) {
+            if let Some(entry) = self
+                .entries
+                .iter_mut()
+                .find(|e| e.format.id == id && e.writer.is_some())
+            {
                 let mut codec = embedded::EmbeddedCodec::new(kind);
                 codec.write_options = options.clone();
                 entry.writer = Some(transport::writer(codec));

@@ -64,15 +64,17 @@ fn model_and_metadata() -> Result<FontSet> {
 
     // An invalid explicit identity must fail atomically.
     let before = fonts.clone();
-    assert!(apply_names(
-        &mut fonts,
-        &NameOverrides {
-            family: Some("   ".into()),
-            ..Default::default()
-        },
-        &limits,
-    )
-    .is_err());
+    assert!(
+        apply_names(
+            &mut fonts,
+            &NameOverrides {
+                family: Some("   ".into()),
+                ..Default::default()
+            },
+            &limits,
+        )
+        .is_err()
+    );
     assert_eq!(fonts, before);
     Ok(fonts)
 }
@@ -140,7 +142,11 @@ fn typed_pcf(fonts: &FontSet) -> Result<()> {
         byte_order: Order::Lsb,
         ..Default::default()
     })?;
-    let written = registry.write(fonts, "pcf", &WriteOptions::new(ResourcePath::new("example.pcf")?))?;
+    let written = registry.write(
+        fonts,
+        "pcf",
+        &WriteOptions::new(ResourcePath::new("example.pcf")?),
+    )?;
     show_report("PCF write (metadata may be lost)", &written.report);
     let bytes = written.output.into_single()?;
     let loaded = registry.read(
@@ -151,9 +157,14 @@ fn typed_pcf(fonts: &FontSet) -> Result<()> {
         },
     )?;
     show_report("PCF read", &loaded.report);
-    let original = fonts.single()?.glyph_for_codepoint(Codepoint::Unicode(65))
+    let original = fonts
+        .single()?
+        .glyph_for_codepoint(Codepoint::Unicode(65))
         .ok_or_else(|| missing("source A is missing"))?;
-    let decoded = loaded.fonts.single()?.glyph_for_codepoint(Codepoint::Unicode(65))
+    let decoded = loaded
+        .fonts
+        .single()?
+        .glyph_for_codepoint(Codepoint::Unicode(65))
         .ok_or_else(|| missing("PCF A is missing"))?;
     assert_eq!(decoded.bitmap, original.bitmap);
     assert_eq!(decoded.metrics.advance, original.metrics.advance);
@@ -163,12 +174,18 @@ fn typed_pcf(fonts: &FontSet) -> Result<()> {
 #[cfg(feature = "image")]
 mod atlas {
     use super::*;
-    use fontpixel::{Input, OutputBundle, ReadOptions, ResourcePath, ResourceResolver, WriteOptions};
+    use fontpixel::{
+        Input, OutputBundle, ReadOptions, ResourcePath, ResourceResolver, WriteOptions,
+    };
 
     struct Assets<'a>(&'a OutputBundle);
     impl ResourceResolver for Assets<'_> {
         fn resolve(&self, path: &ResourcePath, maximum: usize) -> Result<Vec<u8>> {
-            let asset = self.0.assets().iter().find(|asset| &asset.path == path)
+            let asset = self
+                .0
+                .assets()
+                .iter()
+                .find(|asset| &asset.path == path)
                 .ok_or_else(|| Error::MissingResource(path.to_string()))?;
             let limit_error = || Error::ResourceLimit {
                 resource: "example sidecar allocation",
@@ -178,7 +195,8 @@ mod atlas {
                 return Err(limit_error());
             }
             let mut copy = Vec::new();
-            copy.try_reserve_exact(asset.bytes.len()).map_err(|_| limit_error())?;
+            copy.try_reserve_exact(asset.bytes.len())
+                .map_err(|_| limit_error())?;
             if copy.capacity() > maximum {
                 return Err(limit_error());
             }
@@ -195,16 +213,22 @@ mod atlas {
         assert!(!written.report.has_loss());
         assert!(written.output.assets().len() >= 2);
         let resources = Assets(&written.output);
-        let primary = written.output.assets().iter()
+        let primary = written
+            .output
+            .assets()
+            .iter()
             .find(|asset| &asset.path == written.output.primary())
             .ok_or_else(|| missing("atlas primary asset is missing"))?;
         let input = Input::new(&primary.bytes)
             .with_name(primary.path.as_str())
             .with_resources(&resources);
-        let loaded = registry.read(&input, &ReadOptions {
-            format: Some("image".into()),
-            ..Default::default()
-        })?;
+        let loaded = registry.read(
+            &input,
+            &ReadOptions {
+                format: Some("image".into()),
+                ..Default::default()
+            },
+        )?;
         assert_eq!(&loaded.fonts, fonts);
         show_report("atlas read", &loaded.report);
         // A host persistence layer must deliver every asset, not just the PNG.
@@ -214,7 +238,9 @@ mod atlas {
 
 #[cfg(feature = "otb")]
 fn embedded_metrics(fonts: &FontSet) -> Result<()> {
-    use fontpixel::formats::embedded::{EmbeddedReferenceStrike, EmbeddedRounding, EmbeddedWriteOptions};
+    use fontpixel::formats::embedded::{
+        EmbeddedReferenceStrike, EmbeddedRounding, EmbeddedWriteOptions,
+    };
     use fontpixel::{ResourcePath, WriteOptions};
     let mut registry = fontpixel::registry();
     registry.set_embedded_write_options(EmbeddedWriteOptions {
@@ -223,7 +249,11 @@ fn embedded_metrics(fonts: &FontSet) -> Result<()> {
         rounding: EmbeddedRounding::NearestTiesEven,
         ..Default::default()
     });
-    let written = registry.write(fonts, "otb", &WriteOptions::new(ResourcePath::new("example.otb")?))?;
+    let written = registry.write(
+        fonts,
+        "otb",
+        &WriteOptions::new(ResourcePath::new("example.otb")?),
+    )?;
     show_report("OTB write", &written.report);
     let bytes = written.output.into_single()?;
     let parsed = fontpixel::sfnt::Sfnt::parse(&bytes, &Default::default())?;
@@ -238,7 +268,8 @@ fn regional_subset(font: &Font) -> Result<()> {
     use fontpixel::variants::{Options, ScriptVariant, Variants, script_tag};
     let mut variants = Variants::new(font.clone());
     let mut japanese = font.clone();
-    let a = japanese.glyph_id(Codepoint::Unicode(65))
+    let a = japanese
+        .glyph_id(Codepoint::Unicode(65))
         .ok_or_else(|| missing("regional A is missing"))?;
     japanese.edit_glyph(a, |glyph| glyph.shift(1, 0))?;
     japanese.update_bounds()?;
@@ -261,10 +292,15 @@ fn regional_subset(font: &Font) -> Result<()> {
     show_report("regional output", &encoded.report);
     let parsed = sfnt::Sfnt::parse(&encoded.bytes, &options.limits.sfnt)?;
     let names = NameTable::decode(
-        parsed.table(*b"name").ok_or_else(|| missing("name table is missing"))?,
+        parsed
+            .table(*b"name")
+            .ok_or_else(|| missing("name table is missing"))?,
         &options.limits.sfnt,
     )?;
-    let full_name = names.records.iter().find(|record| record.platform_id == 3 && record.name_id == 4)
+    let full_name = names
+        .records
+        .iter()
+        .find(|record| record.platform_id == 3 && record.name_id == 4)
         .ok_or_else(|| missing("full-name record is missing"))?;
     assert_eq!(full_name.text()?.as_deref(), Some("API Regional Square"));
     let subset = sfnt::subset::subset(&encoded.bytes, &sfnt::subset::Options::text("A"))?;
@@ -280,10 +316,14 @@ fn regional_subset(font: &Font) -> Result<()> {
 fn webfont(sfnt: &[u8]) -> Result<()> {
     use fontpixel::woff::{Limits, woff2};
     let limits = Limits::default();
-    let encoded = woff2::encode(sfnt, &woff2::Options {
-        compression_threads: 1,
-        ..Default::default()
-    }, &limits)?;
+    let encoded = woff2::encode(
+        sfnt,
+        &woff2::Options {
+            compression_threads: 1,
+            ..Default::default()
+        },
+        &limits,
+    )?;
     show_report("WOFF2 encode", &encoded.report);
     let decoded = woff2::decode(&encoded.bytes, &limits)?;
     show_report("WOFF2 decode", &decoded.report);

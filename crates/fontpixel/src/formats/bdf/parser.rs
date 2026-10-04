@@ -139,7 +139,11 @@ impl<'a> Parser<'a> {
         for part in (commas && value.starts_with(','))
             .then_some("")
             .into_iter()
-            .chain(value.split(|c| ws(c) || commas && c == ',').filter(|s| !s.is_empty()))
+            .chain(
+                value
+                    .split(|c| ws(c) || commas && c == ',')
+                    .filter(|s| !s.is_empty()),
+            )
             .chain((commas && value.ends_with(',')).then_some(""))
             .take(n)
         {
@@ -216,7 +220,10 @@ impl<'a> Parser<'a> {
         }
         let code = self.pending.code.filter(|&n| n >= 0).map(|n| n as u32);
         let cp = code.map(|n| {
-            if *self.unicode.get_or_insert_with(|| known_unicode(&self.font)) {
+            if *self
+                .unicode
+                .get_or_insert_with(|| known_unicode(&self.font))
+            {
                 Codepoint::Unicode(n)
             } else {
                 Codepoint::Legacy(n)
@@ -313,18 +320,61 @@ impl<'a> Parser<'a> {
         save_bitmap(&mut glyph, std::mem::take(&mut self.pending.rows));
         let index = self.glyphs - 1;
         if count < b.height as usize {
-            let message = format!("Glyph \"{}\" (codepoint {}): {} source rows for height {}; zero-padded core view, original rows retained", self.pending.name, code.map_or(-1, i64::from), count, b.height);
+            let message = format!(
+                "Glyph \"{}\" (codepoint {}): {} source rows for height {}; zero-padded core view, original rows retained",
+                self.pending.name,
+                code.map_or(-1, i64::from),
+                count,
+                b.height
+            );
             self.charge(message.len() + 160)?;
-            diagnostic(&mut self.bitmap_report, Level::Info, Impact::Repair, "bdf.bitmap.missing_rows", Some((index, cp.map(Codepoint::value))), message);
+            diagnostic(
+                &mut self.bitmap_report,
+                Level::Info,
+                Impact::Repair,
+                "bdf.bitmap.missing_rows",
+                Some((index, cp.map(Codepoint::value))),
+                message,
+            );
         }
         for (condition, code, message) in [
-            (count > b.height as usize, "bdf.bitmap.extra_rows", "Extra bitmap rows excluded from the core rectangle; source rows retained"),
-            (short, "bdf.bitmap.short_row", "Short bitmap rows zero-padded in the core rectangle; source rows retained"),
-            (long, "bdf.bitmap.long_row", "Long bitmap rows clipped in the core rectangle; source rows retained"),
-            (dirty, "bdf.bitmap.padding", "Nonzero right padding cleared in the core rectangle; source rows retained"),
-            (invalid, "bdf.bitmap.invalid_hex", "Non-hex bitmap rows retained; core placeholder rows are zero. validate_bitmap rejects drawing this glyph"),
+            (
+                count > b.height as usize,
+                "bdf.bitmap.extra_rows",
+                "Extra bitmap rows excluded from the core rectangle; source rows retained",
+            ),
+            (
+                short,
+                "bdf.bitmap.short_row",
+                "Short bitmap rows zero-padded in the core rectangle; source rows retained",
+            ),
+            (
+                long,
+                "bdf.bitmap.long_row",
+                "Long bitmap rows clipped in the core rectangle; source rows retained",
+            ),
+            (
+                dirty,
+                "bdf.bitmap.padding",
+                "Nonzero right padding cleared in the core rectangle; source rows retained",
+            ),
+            (
+                invalid,
+                "bdf.bitmap.invalid_hex",
+                "Non-hex bitmap rows retained; core placeholder rows are zero. validate_bitmap rejects drawing this glyph",
+            ),
         ] {
-            if condition { self.charge(message.len() + 160)?; diagnostic(&mut self.bitmap_report, Level::Info, Impact::Repair, code, Some((index, cp.map(Codepoint::value))), message.into()); }
+            if condition {
+                self.charge(message.len() + 160)?;
+                diagnostic(
+                    &mut self.bitmap_report,
+                    Level::Info,
+                    Impact::Repair,
+                    code,
+                    Some((index, cp.map(Codepoint::value))),
+                    message.into(),
+                );
+            }
         }
         self.font.add_glyph(glyph)?;
         Ok(())
@@ -658,7 +708,9 @@ impl<'a> Parser<'a> {
                 }
                 self.header(
                     key,
-                    PropertyValue::List(v.into_iter().take(n).map(PropertyValue::Integer).collect()),
+                    PropertyValue::List(
+                        v.into_iter().take(n).map(PropertyValue::Integer).collect(),
+                    ),
                     line,
                 )?;
             }

@@ -1,7 +1,9 @@
 //! Phase-6 reconstruction from recorded edits; pending compilation.
 //! Explicit, budgeted normalized naming changes shared by conversion commands.
 use clap::Args;
-use fontpixel::{Error, FontSet, Report, ReportEntry, ResourceLimits, Result, metadata::NameOverrides};
+use fontpixel::{
+    Error, FontSet, Report, ReportEntry, ResourceLimits, Result, metadata::NameOverrides,
+};
 use std::mem::size_of;
 
 fn identity(value: &str) -> std::result::Result<String, String> {
@@ -59,19 +61,37 @@ impl NameArguments {
     }
 }
 fn add(total: &mut usize, amount: usize, limit: usize) -> Result<()> {
-    *total = total.checked_add(amount).filter(|value| *value <= limit).ok_or(Error::ResourceLimit {
-        resource: "CLI metadata and retained diagnostics",
-        limit,
-    })?;
+    *total = total
+        .checked_add(amount)
+        .filter(|value| *value <= limit)
+        .ok_or(Error::ResourceLimit {
+            resource: "CLI metadata and retained diagnostics",
+            limit,
+        })?;
     Ok(())
 }
 fn report_bytes(report: &Report, limit: usize) -> Result<usize> {
     let mut bytes = size_of::<Report>();
-    add(&mut bytes, report.entries.capacity().checked_mul(size_of::<ReportEntry>()).ok_or(Error::ResourceLimit { resource: "CLI metadata report entries", limit })?, limit)?;
+    add(
+        &mut bytes,
+        report
+            .entries
+            .capacity()
+            .checked_mul(size_of::<ReportEntry>())
+            .ok_or(Error::ResourceLimit {
+                resource: "CLI metadata report entries",
+                limit,
+            })?,
+        limit,
+    )?;
     for entry in &report.entries {
         add(&mut bytes, entry.code.capacity(), limit)?;
         add(&mut bytes, entry.message.capacity(), limit)?;
-        add(&mut bytes, entry.location.asset.as_ref().map_or(0, String::capacity), limit)?;
+        add(
+            &mut bytes,
+            entry.location.asset.as_ref().map_or(0, String::capacity),
+            limit,
+        )?;
     }
     Ok(bytes)
 }
@@ -87,27 +107,51 @@ pub(crate) fn apply(
     }
     let existing_report = report_bytes(report, limits.max_total_bytes)?;
     let mut available = limits.clone();
-    available.max_total_bytes = available.max_total_bytes.checked_sub(existing_report).ok_or(Error::ResourceLimit {
-        resource: "CLI metadata and retained diagnostics", limit: limits.max_total_bytes,
-    })?;
+    available.max_total_bytes = available
+        .max_total_bytes
+        .checked_sub(existing_report)
+        .ok_or(Error::ResourceLimit {
+            resource: "CLI metadata and retained diagnostics",
+            limit: limits.max_total_bytes,
+        })?;
     let audit = fontpixel::metadata::apply_names(fonts, names, &available)?;
     // The library accounts model, staging and its returned report. The CLI also
     // owns earlier read diagnostics and must reserve the receiving Vec before
     // combining them. Failure here still precedes every writer/persistence call.
     let mut retained = existing_report;
-    add(&mut retained, report_bytes(&audit, limits.max_total_bytes)?, limits.max_total_bytes)?;
-    let count = report.entries.len().checked_add(audit.entries.len()).ok_or(Error::ResourceLimit {
-        resource: "CLI metadata report entries", limit: limits.max_total_bytes,
-    })?;
+    add(
+        &mut retained,
+        report_bytes(&audit, limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
+    let count = report
+        .entries
+        .len()
+        .checked_add(audit.entries.len())
+        .ok_or(Error::ResourceLimit {
+            resource: "CLI metadata report entries",
+            limit: limits.max_total_bytes,
+        })?;
     if count > report.entries.capacity() {
-        add(&mut retained, count.checked_mul(size_of::<ReportEntry>()).ok_or(Error::ResourceLimit {
-            resource: "CLI metadata report entries", limit: limits.max_total_bytes,
-        })?, limits.max_total_bytes)?;
+        add(
+            &mut retained,
+            count
+                .checked_mul(size_of::<ReportEntry>())
+                .ok_or(Error::ResourceLimit {
+                    resource: "CLI metadata report entries",
+                    limit: limits.max_total_bytes,
+                })?,
+            limits.max_total_bytes,
+        )?;
     }
     fonts.retained_usage(limits.max_total_bytes - retained)?;
-    report.entries.try_reserve_exact(audit.entries.len()).map_err(|_| Error::ResourceLimit {
-        resource: "CLI metadata report allocation", limit: limits.max_total_bytes,
-    })?;
+    report
+        .entries
+        .try_reserve_exact(audit.entries.len())
+        .map_err(|_| Error::ResourceLimit {
+            resource: "CLI metadata report allocation",
+            limit: limits.max_total_bytes,
+        })?;
     report.extend(audit);
     Ok(())
 }

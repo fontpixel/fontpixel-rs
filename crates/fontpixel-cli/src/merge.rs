@@ -1,23 +1,34 @@
 //! Ordered multi-part merge CLI with typed diagnostics and transactional output.
 //! Reconstructed after the 2026-10-04 workspace replacement; validation pending.
+use crate::{
+    COutputArguments, ConsoleArguments, ImageArguments, PcfArguments, RasterArguments, ReportStyle,
+    VectorArguments, extra_formats, format_parser, p2_formats, p3_formats,
+};
+use crate::{assets, batch, input_budget::InputBudget};
 use clap::{ArgAction, ArgMatches, Args, Command, FromArgMatches, error::ErrorKind};
 use fontpixel::merge::{GeometricWidth, MergeSpacing, Selection};
-use std::{io::Write, mem::size_of, path::{Path, PathBuf}};
-use fontpixel::{Error, Font, FontSet, ReadOptions, Report, ReportEntry, Result};
 use fontpixel::merge::{MergeOptions, MergePart, MergeReport};
 use fontpixel::report::{Impact, Level, Location};
-use serde::{Serialize, Serializer, ser::{SerializeSeq, SerializeStruct}};
-use crate::{assets, batch, input_budget::InputBudget};
-use crate::{COutputArguments, ConsoleArguments, ImageArguments, PcfArguments,
-    RasterArguments, ReportStyle, VectorArguments, extra_formats, format_parser,
-    p2_formats, p3_formats};
+use fontpixel::{Error, Font, FontSet, ReadOptions, Report, ReportEntry, Result};
+use serde::{
+    Serialize, Serializer,
+    ser::{SerializeSeq, SerializeStruct},
+};
+use std::{
+    io::Write,
+    mem::size_of,
+    path::{Path, PathBuf},
+};
 
 const HELP: &str = "Each --take, --dy, --from and --font-index applies to the immediately preceding --part. Each part requires --take. Each --to applies to the immediately preceding -o/--output.\n\nExamples:\n  fontpixel merge --family Mix --part CJK.bdf --take cjk --part Latin.bdf --take western,geometric --dy=-1 -o Mix.bdf -o Mix.woff2 --spacing prop\n  fontpixel merge --family Mix --part input.bdf --take all -o ambiguous.dat --to pcf";
 
 fn family_parser(value: &str) -> std::result::Result<String, String> {
     let value = value.trim();
-    if value.is_empty() { Err("--family must not be empty".into()) }
-    else { Ok(value.to_owned()) }
+    if value.is_empty() {
+        Err("--family must not be empty".into())
+    } else {
+        Ok(value.to_owned())
+    }
 }
 
 #[derive(Args)]
@@ -92,7 +103,9 @@ pub(crate) struct MergeArgs {
     outputs: Vec<OutputArgument>,
 }
 impl Args for MergeArgs {
-    fn augment_args(command: Command) -> Command { RawMergeArgs::augment_args(command) }
+    fn augment_args(command: Command) -> Command {
+        RawMergeArgs::augment_args(command)
+    }
     fn augment_args_for_update(command: Command) -> Command {
         RawMergeArgs::augment_args_for_update(command)
     }
@@ -111,15 +124,24 @@ impl FromArgMatches for MergeArgs {
         drop(std::mem::take(&mut raw.font_index));
         drop(std::mem::take(&mut raw.outputs));
         drop(std::mem::take(&mut raw.to));
-        Ok(Self { raw, parts, outputs })
+        Ok(Self {
+            raw,
+            parts,
+            outputs,
+        })
     }
-    fn update_from_arg_matches(&mut self, matches: &ArgMatches) -> std::result::Result<(), clap::Error> {
+    fn update_from_arg_matches(
+        &mut self,
+        matches: &ArgMatches,
+    ) -> std::result::Result<(), clap::Error> {
         *self = Self::from_arg_matches(matches)?;
         Ok(())
     }
 }
 impl MergeArgs {
-    pub(crate) fn report_style(&self) -> ReportStyle { self.raw.report }
+    pub(crate) fn report_style(&self) -> ReportStyle {
+        self.raw.report
+    }
     fn spacing(&self) -> MergeSpacing {
         match self.raw.spacing.as_str() {
             "mono" => MergeSpacing::Mono,
@@ -147,7 +169,11 @@ fn indexed<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, id: &str) -> 
     }
 }
 enum PartEvent {
-    Part(PathBuf), Take(String), Dy(i64), From(String), FontIndex(usize),
+    Part(PathBuf),
+    Take(String),
+    Dy(i64),
+    From(String),
+    FontIndex(usize),
 }
 #[derive(Default)]
 struct PendingPart {
@@ -161,86 +187,165 @@ impl PendingPart {
     fn finish(self) -> std::result::Result<PartArgument, clap::Error> {
         Ok(PartArgument {
             input: self.input,
-            selection: self.take.ok_or_else(|| usage("every --part requires --take"))?,
-            dy: self.dy.unwrap_or(0), from: self.from, font_index: self.font_index,
+            selection: self
+                .take
+                .ok_or_else(|| usage("every --part requires --take"))?,
+            dy: self.dy.unwrap_or(0),
+            from: self.from,
+            font_index: self.font_index,
         })
     }
 }
 fn parse_parts(matches: &ArgMatches) -> std::result::Result<Vec<PartArgument>, clap::Error> {
     let mut events = Vec::new();
-    events.extend(indexed::<PathBuf>(matches, "parts").into_iter().map(|(i,v)| (i, PartEvent::Part(v))));
-    events.extend(indexed::<String>(matches, "take").into_iter().map(|(i,v)| (i, PartEvent::Take(v))));
-    events.extend(indexed::<i64>(matches, "dy").into_iter().map(|(i,v)| (i, PartEvent::Dy(v))));
-    events.extend(indexed::<String>(matches, "from").into_iter().map(|(i,v)| (i, PartEvent::From(v))));
-    events.extend(indexed::<usize>(matches, "font_index").into_iter().map(|(i,v)| (i, PartEvent::FontIndex(v))));
+    events.extend(
+        indexed::<PathBuf>(matches, "parts")
+            .into_iter()
+            .map(|(i, v)| (i, PartEvent::Part(v))),
+    );
+    events.extend(
+        indexed::<String>(matches, "take")
+            .into_iter()
+            .map(|(i, v)| (i, PartEvent::Take(v))),
+    );
+    events.extend(
+        indexed::<i64>(matches, "dy")
+            .into_iter()
+            .map(|(i, v)| (i, PartEvent::Dy(v))),
+    );
+    events.extend(
+        indexed::<String>(matches, "from")
+            .into_iter()
+            .map(|(i, v)| (i, PartEvent::From(v))),
+    );
+    events.extend(
+        indexed::<usize>(matches, "font_index")
+            .into_iter()
+            .map(|(i, v)| (i, PartEvent::FontIndex(v))),
+    );
     events.sort_by_key(|(index, _)| *index);
     let mut result = Vec::new();
     let mut pending: Option<PendingPart> = None;
     for (_, event) in events {
         if let PartEvent::Part(input) = event {
-            if let Some(previous) = pending.take() { result.push(previous.finish()?); }
-            pending = Some(PendingPart { input, ..Default::default() });
+            if let Some(previous) = pending.take() {
+                result.push(previous.finish()?);
+            }
+            pending = Some(PendingPart {
+                input,
+                ..Default::default()
+            });
             continue;
         }
-        let part = pending.as_mut().ok_or_else(|| usage("--take, --dy, --from and --font-index require a preceding --part"))?;
+        let part = pending.as_mut().ok_or_else(|| {
+            usage("--take, --dy, --from and --font-index require a preceding --part")
+        })?;
         match event {
             PartEvent::Take(value) => {
-                if part.take.is_some() { return Err(usage("--take may occur once per --part")); }
+                if part.take.is_some() {
+                    return Err(usage("--take may occur once per --part"));
+                }
                 part.take = Some(Selection::parse(&value).map_err(|e| usage(e.to_string()))?);
             }
             PartEvent::Dy(value) => {
-                if part.dy.replace(value).is_some() { return Err(usage("--dy may occur once per --part")); }
+                if part.dy.replace(value).is_some() {
+                    return Err(usage("--dy may occur once per --part"));
+                }
             }
             PartEvent::From(value) => {
-                if part.from.replace(value).is_some() { return Err(usage("--from may occur once per --part")); }
+                if part.from.replace(value).is_some() {
+                    return Err(usage("--from may occur once per --part"));
+                }
             }
             PartEvent::FontIndex(value) => {
-                if part.font_index.replace(value).is_some() { return Err(usage("--font-index may occur once per --part")); }
+                if part.font_index.replace(value).is_some() {
+                    return Err(usage("--font-index may occur once per --part"));
+                }
             }
             PartEvent::Part(_) => unreachable!(),
         }
     }
-    if let Some(part) = pending { result.push(part.finish()?); }
-    if result.is_empty() { return Err(usage("at least one --part is required")); }
+    if let Some(part) = pending {
+        result.push(part.finish()?);
+    }
+    if result.is_empty() {
+        return Err(usage("at least one --part is required"));
+    }
     Ok(result)
 }
 fn parse_outputs(matches: &ArgMatches) -> std::result::Result<Vec<OutputArgument>, clap::Error> {
-    enum Event { Output(PathBuf), Format(String) }
+    enum Event {
+        Output(PathBuf),
+        Format(String),
+    }
     let mut events = Vec::new();
-    events.extend(indexed::<PathBuf>(matches, "outputs").into_iter().map(|(i,v)| (i, Event::Output(v))));
-    events.extend(indexed::<String>(matches, "to").into_iter().map(|(i,v)| (i, Event::Format(v))));
+    events.extend(
+        indexed::<PathBuf>(matches, "outputs")
+            .into_iter()
+            .map(|(i, v)| (i, Event::Output(v))),
+    );
+    events.extend(
+        indexed::<String>(matches, "to")
+            .into_iter()
+            .map(|(i, v)| (i, Event::Format(v))),
+    );
     events.sort_by_key(|(index, _)| *index);
     let mut result: Vec<OutputArgument> = Vec::new();
     for (_, event) in events {
         match event {
-            Event::Output(destination) => result.push(OutputArgument { destination, format: None }),
+            Event::Output(destination) => result.push(OutputArgument {
+                destination,
+                format: None,
+            }),
             Event::Format(format) => {
-                let last = result.last_mut().ok_or_else(|| usage("--to requires a preceding -o/--output"))?;
-                if last.format.replace(format).is_some() { return Err(usage("--to may occur once per output")); }
+                let last = result
+                    .last_mut()
+                    .ok_or_else(|| usage("--to requires a preceding -o/--output"))?;
+                if last.format.replace(format).is_some() {
+                    return Err(usage("--to may occur once per output"));
+                }
             }
         }
     }
-    if result.is_empty() { return Err(usage("at least one -o/--output is required")); }
+    if result.is_empty() {
+        return Err(usage("at least one -o/--output is required"));
+    }
     Ok(result)
 }
 
 fn limit_error(limit: usize) -> Error {
-    Error::ResourceLimit { resource: "retained merge CLI bytes", limit }
+    Error::ResourceLimit {
+        resource: "retained merge CLI bytes",
+        limit,
+    }
 }
 fn add_bytes(total: &mut usize, bytes: usize, limit: usize) -> Result<()> {
     *total = total.checked_add(bytes).ok_or_else(|| limit_error(limit))?;
-    if *total > limit { return Err(limit_error(limit)); }
+    if *total > limit {
+        return Err(limit_error(limit));
+    }
     Ok(())
 }
 fn vector_bytes<T>(values: &Vec<T>, total: &mut usize, limit: usize) -> Result<()> {
-    add_bytes(total, values.capacity().checked_mul(size_of::<T>()).ok_or_else(|| limit_error(limit))?, limit)
+    add_bytes(
+        total,
+        values
+            .capacity()
+            .checked_mul(size_of::<T>())
+            .ok_or_else(|| limit_error(limit))?,
+        limit,
+    )
 }
 fn report_allocations(report: &Report, total: &mut usize, limit: usize) -> Result<()> {
     vector_bytes(&report.entries, total, limit)?;
     for entry in &report.entries {
         add_bytes(total, entry.code.capacity(), limit)?;
         add_bytes(total, entry.message.capacity(), limit)?;
-        add_bytes(total, entry.location.asset.as_ref().map_or(0, String::capacity), limit)?;
+        add_bytes(
+            total,
+            entry.location.asset.as_ref().map_or(0, String::capacity),
+            limit,
+        )?;
     }
     Ok(())
 }
@@ -254,7 +359,9 @@ fn merge_report_bytes(report: &MergeReport, limit: usize) -> Result<usize> {
         add_bytes(&mut total, part.selection.capacity(), limit)?;
         vector_bytes(&part.missing_ranges, &mut total, limit)?;
         vector_bytes(&part.missing_blocks, &mut total, limit)?;
-        for block in &part.missing_blocks { add_bytes(&mut total, block.block.capacity(), limit)?; }
+        for block in &part.missing_blocks {
+            add_bytes(&mut total, block.block.capacity(), limit)?;
+        }
     }
     vector_bytes(&report.adjustments, &mut total, limit)?;
     for adjustment in &report.adjustments {
@@ -267,10 +374,16 @@ fn merge_report_bytes(report: &MergeReport, limit: usize) -> Result<usize> {
         add_bytes(&mut total, license.label.capacity(), limit)?;
         add_bytes(&mut total, license.provenance.capacity(), limit)?;
         for value in [&license.copyright, &license.license, &license.license_url] {
-            add_bytes(&mut total, value.as_ref().map_or(0, String::capacity), limit)?;
+            add_bytes(
+                &mut total,
+                value.as_ref().map_or(0, String::capacity),
+                limit,
+            )?;
         }
         vector_bytes(&license.reserved_names, &mut total, limit)?;
-        for name in &license.reserved_names { add_bytes(&mut total, name.capacity(), limit)?; }
+        for name in &license.reserved_names {
+            add_bytes(&mut total, name.capacity(), limit)?;
+        }
     }
     report_allocations(&report.diagnostics, &mut total, limit)?;
     Ok(total)
@@ -278,13 +391,21 @@ fn merge_report_bytes(report: &MergeReport, limit: usize) -> Result<usize> {
 fn reports_bytes(reports: &Vec<Report>, limit: usize) -> Result<usize> {
     let mut total = size_of::<Vec<Report>>();
     vector_bytes(reports, &mut total, limit)?;
-    for report in reports { report_allocations(report, &mut total, limit)?; }
+    for report in reports {
+        report_allocations(report, &mut total, limit)?;
+    }
     Ok(total)
 }
 fn reserve<T>(values: &mut Vec<T>, count: usize, maximum: usize) -> Result<()> {
-    let bytes = count.checked_mul(size_of::<T>()).ok_or_else(|| limit_error(maximum))?;
-    if bytes > maximum { return Err(limit_error(maximum)); }
-    values.try_reserve_exact(count).map_err(|_| limit_error(maximum))
+    let bytes = count
+        .checked_mul(size_of::<T>())
+        .ok_or_else(|| limit_error(maximum))?;
+    if bytes > maximum {
+        return Err(limit_error(maximum));
+    }
+    values
+        .try_reserve_exact(count)
+        .map_err(|_| limit_error(maximum))
 }
 fn input_staging(
     parts: usize,
@@ -292,9 +413,13 @@ fn input_staging(
 ) -> Result<(Vec<Font>, Vec<Report>, fontpixel::ResourceLimits)> {
     let maximum = limits.max_total_bytes;
     let headers = size_of::<Vec<Font>>() + size_of::<Vec<Report>>();
-    let requested = parts.checked_mul(size_of::<Font>() + size_of::<Report>())
-        .and_then(|bytes| bytes.checked_add(headers)).ok_or_else(|| limit_error(maximum))?;
-    if requested > maximum { return Err(limit_error(maximum)); }
+    let requested = parts
+        .checked_mul(size_of::<Font>() + size_of::<Report>())
+        .and_then(|bytes| bytes.checked_add(headers))
+        .ok_or_else(|| limit_error(maximum))?;
+    if requested > maximum {
+        return Err(limit_error(maximum));
+    }
     // Check the joint request before either allocation. The actual first array
     // remains charged while reserving the second, including unexpected spare.
     let mut retained = headers;
@@ -310,15 +435,23 @@ fn input_staging(
     // Its existing generic reserves/dead-strike charges remain conservative.
     Ok((fonts, reports, available))
 }
-fn writer_limits(limits: &fontpixel::ResourceLimits, retained: usize) -> Result<fontpixel::formats::TransportLimits> {
-    let available = limits.max_total_bytes.checked_sub(retained)
+fn writer_limits(
+    limits: &fontpixel::ResourceLimits,
+    retained: usize,
+) -> Result<fontpixel::formats::TransportLimits> {
+    let available = limits
+        .max_total_bytes
+        .checked_sub(retained)
         .ok_or_else(|| limit_error(limits.max_total_bytes))?;
     let mut resources = limits.clone();
     // The caller still owns the model, reports and earlier bundles. No public
     // codec contract identifies an identical source reservation to credit back.
     // Some writers may therefore count source storage conservatively again.
     resources.max_total_bytes = available;
-    Ok(fontpixel::formats::TransportLimits { resources, max_output_bytes: available })
+    Ok(fontpixel::formats::TransportLimits {
+        resources,
+        max_output_bytes: available,
+    })
 }
 fn combined_error(error: Error, reads: Vec<Report>, merge: Option<Report>) -> Error {
     let (strict, mut last) = match error {
@@ -327,52 +460,118 @@ fn combined_error(error: Error, reads: Vec<Report>, merge: Option<Report>) -> Er
         other => return other,
     };
     let mut report = Report::default();
-    for read in reads { report.extend(read); }
-    if let Some(merge) = merge { report.extend(merge); }
+    for read in reads {
+        report.extend(read);
+    }
+    if let Some(merge) = merge {
+        report.extend(merge);
+    }
     report.entries.append(&mut last.entries);
-    if strict { Error::StrictLoss(report) } else { Error::ReportedErrors(report) }
+    if strict {
+        Error::StrictLoss(report)
+    } else {
+        Error::ReportedErrors(report)
+    }
 }
 fn output_format(output: &OutputArgument) -> Result<String> {
-    if let Some(format) = &output.format { return Ok(format.clone()); }
-    let extension = output.destination.extension().and_then(|value| value.to_str()).map(str::to_ascii_lowercase);
+    if let Some(format) = &output.format {
+        return Ok(format.clone());
+    }
+    let extension = output
+        .destination
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(str::to_ascii_lowercase);
     let special = match extension.as_deref() {
-        Some("ttf") => Some("ttf"), Some("otf") => Some("otf"),
-        Some("ttc" | "otc") => Some("ttc"), Some("woff") => Some("woff"),
-        Some("woff2") => Some("woff2"), _ => None,
+        Some("ttf") => Some("ttf"),
+        Some("otf") => Some("otf"),
+        Some("ttc" | "otc") => Some("ttc"),
+        Some("woff") => Some("woff"),
+        Some("woff2") => Some("woff2"),
+        _ => None,
     };
-    if let Some(id) = special { return Ok(id.into()); }
-    Ok(fontpixel::registry().format_from_name(&output.destination.to_string_lossy())?.id.into())
+    if let Some(id) = special {
+        return Ok(id.into());
+    }
+    Ok(fontpixel::registry()
+        .format_from_name(&output.destination.to_string_lossy())?
+        .id
+        .into())
 }
 fn is_vector(id: &str) -> bool {
-    matches!(id, "svg" | "ttf" | "otf" | "ttc" | "woff" | "woff2" | "vector-raster")
+    matches!(
+        id,
+        "svg" | "ttf" | "otf" | "ttc" | "woff" | "woff2" | "vector-raster"
+    )
 }
-fn writer_registry(raw: &RawMergeArgs, id: &str, destination: &Path, any_vector: bool) -> Result<fontpixel::FontRegistry> {
+fn writer_registry(
+    raw: &RawMergeArgs,
+    id: &str,
+    destination: &Path,
+    any_vector: bool,
+) -> Result<fontpixel::FontRegistry> {
     let mut registry = fontpixel::registry();
     raw.pcf.apply(id, &mut registry)?;
     raw.raster.apply(&mut registry)?;
     // Full vector settings govern vector members in a mixed output group. With
     // no vector target, retain convert's rejection of inapplicable settings.
-    if is_vector(id) || !any_vector { raw.vector.apply(id, &mut registry)?; }
-    raw.console.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
-    raw.image.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
-    raw.c.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
-    raw.extra.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
-    raw.p2.apply(id, destination, &raw.raster.p2, &raw.raster.input_limits(), raw.vector.gray_threshold, &mut registry)?;
-    raw.p3.apply(id, &raw.raster.p3, &raw.raster.input_limits(), raw.vector.gray_threshold, &mut registry)?;
+    if is_vector(id) || !any_vector {
+        raw.vector.apply(id, &mut registry)?;
+    }
+    raw.console
+        .apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.image
+        .apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.c
+        .apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.extra
+        .apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.p2.apply(
+        id,
+        destination,
+        &raw.raster.p2,
+        &raw.raster.input_limits(),
+        raw.vector.gray_threshold,
+        &mut registry,
+    )?;
+    raw.p3.apply(
+        id,
+        &raw.raster.p3,
+        &raw.raster.input_limits(),
+        raw.vector.gray_threshold,
+        &mut registry,
+    )?;
     registry.ensure_writable(id)?;
     Ok(registry)
 }
 
 #[derive(Serialize)]
-struct AssetSummary { path: String, bytes: usize }
-struct OutputSummary { bytes: usize, assets: Vec<AssetSummary>, report: Report }
-struct CombinedReport<'a> { reads: &'a [Report], merge: &'a Report, written: &'a Report }
+struct AssetSummary {
+    path: String,
+    bytes: usize,
+}
+struct OutputSummary {
+    bytes: usize,
+    assets: Vec<AssetSummary>,
+    report: Report,
+}
+struct CombinedReport<'a> {
+    reads: &'a [Report],
+    merge: &'a Report,
+    written: &'a Report,
+}
 struct CombinedEntries<'a>(&'a CombinedReport<'a>);
 impl Serialize for CombinedEntries<'_> {
     fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
         let mut sequence = serializer.serialize_seq(None)?;
-        for entry in self.0.reads.iter().flat_map(|r| &r.entries)
-            .chain(&self.0.merge.entries).chain(&self.0.written.entries) {
+        for entry in self
+            .0
+            .reads
+            .iter()
+            .flat_map(|r| &r.entries)
+            .chain(&self.0.merge.entries)
+            .chain(&self.0.written.entries)
+        {
             sequence.serialize_element(entry)?;
         }
         sequence.end()
@@ -387,20 +586,33 @@ impl Serialize for CombinedReport<'_> {
 }
 #[derive(Serialize)]
 struct OutputReport<'a> {
-    output: &'a Path, format: &'a str, bytes: usize,
-    assets: &'a [AssetSummary], report: CombinedReport<'a>,
+    output: &'a Path,
+    format: &'a str,
+    bytes: usize,
+    assets: &'a [AssetSummary],
+    report: CombinedReport<'a>,
 }
 struct OutputReports<'a> {
-    specs: &'a [OutputArgument], formats: &'a [String], summaries: &'a [OutputSummary],
-    reads: &'a [Report], merge: &'a Report,
+    specs: &'a [OutputArgument],
+    formats: &'a [String],
+    summaries: &'a [OutputSummary],
+    reads: &'a [Report],
+    merge: &'a Report,
 }
 impl Serialize for OutputReports<'_> {
     fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
         let mut sequence = serializer.serialize_seq(Some(self.summaries.len()))?;
         for ((spec, format), summary) in self.specs.iter().zip(self.formats).zip(self.summaries) {
             sequence.serialize_element(&OutputReport {
-                output: &spec.destination, format, bytes: summary.bytes, assets: &summary.assets,
-                report: CombinedReport { reads: self.reads, merge: self.merge, written: &summary.report },
+                output: &spec.destination,
+                format,
+                bytes: summary.bytes,
+                assets: &summary.assets,
+                report: CombinedReport {
+                    reads: self.reads,
+                    merge: self.merge,
+                    written: &summary.report,
+                },
             })?;
         }
         sequence.end()
@@ -408,26 +620,41 @@ impl Serialize for OutputReports<'_> {
 }
 #[derive(Serialize)]
 struct CompleteReport<'a> {
-    family: &'a str, glyphs: usize, merge: &'a MergeReport, outputs: OutputReports<'a>,
+    family: &'a str,
+    glyphs: usize,
+    merge: &'a MergeReport,
+    outputs: OutputReports<'a>,
 }
 
 pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
     let spacing = args.spacing();
     let geometric_width = args.geometric_width();
-    let MergeArgs { raw, parts, outputs } = args;
+    let MergeArgs {
+        raw,
+        parts,
+        outputs,
+    } = args;
     let limits = raw.raster.input_limits();
     if parts.len() > limits.max_resources || outputs.len() > limits.max_resources {
-        return Err(Error::ResourceLimit { resource: "merge parts/outputs", limit: limits.max_resources });
+        return Err(Error::ResourceLimit {
+            resource: "merge parts/outputs",
+            limit: limits.max_resources,
+        });
     }
     // Resolve every writer before any input work. No file is opened for output.
     let formats: Vec<String> = outputs.iter().map(output_format).collect::<Result<_>>()?;
     let any_vector = formats.iter().any(|id| is_vector(id));
     for (spec, id) in outputs.iter().zip(&formats) {
-        let filename = spec.destination.file_name().and_then(|v| v.to_str())
+        let filename = spec
+            .destination
+            .file_name()
+            .and_then(|v| v.to_str())
             .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
         fontpixel::ResourcePath::new(filename)?;
         if matches!(raw.report, ReportStyle::Json) && spec.destination.to_str().is_none() {
-            return Err(Error::InvalidInput("JSON output paths must be valid UTF-8".into()));
+            return Err(Error::InvalidInput(
+                "JSON output paths must be valid UTF-8".into(),
+            ));
         }
         drop(writer_registry(&raw, id, &spec.destination, any_vector)?);
     }
@@ -440,14 +667,32 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
     for (part_index, part) in parts.iter().enumerate() {
         let remaining = input_budget.remaining_limits()?;
         let file = assets::FileInput::open(&part.input, &remaining, sources.clone())?;
-        let mut loaded = registry.read(&file.input(), &ReadOptions { format: part.from.clone(), limits: remaining.clone() })?;
+        let mut loaded = registry.read(
+            &file.input(),
+            &ReadOptions {
+                format: part.from.clone(),
+                limits: remaining.clone(),
+            },
+        )?;
         drop(file);
         let index = match (part.font_index, loaded.fonts.fonts.len()) {
             (Some(index), count) if index < count => index,
             (None, 1) => 0,
-            (None, 0) => return Err(Error::InvalidInput(format!("part {part_index} contains no fonts"))),
-            (None, count) => return Err(Error::InvalidInput(format!("part {part_index} contains {count} fonts; select one with --font-index"))),
-            (Some(index), count) => return Err(Error::InvalidInput(format!("part {part_index} --font-index {index} is outside {count} fonts"))),
+            (None, 0) => {
+                return Err(Error::InvalidInput(format!(
+                    "part {part_index} contains no fonts"
+                )));
+            }
+            (None, count) => {
+                return Err(Error::InvalidInput(format!(
+                    "part {part_index} contains {count} fonts; select one with --font-index"
+                )));
+            }
+            (Some(index), count) => {
+                return Err(Error::InvalidInput(format!(
+                    "part {part_index} --font-index {index} is outside {count} fonts"
+                )));
+            }
         };
         if !loaded.fonts.properties.is_empty() {
             loaded.report.push(ReportEntry {
@@ -459,43 +704,94 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
         // Check missing provenance string storage before duplicating it. Actual
         // capacities, including diagnostics and reserve arrays, are admitted next.
         let label = part.input.to_string_lossy();
-        let labels = loaded.report.entries.iter().filter(|entry| entry.location.asset.is_none()).count();
-        let mut decoded_bytes = loaded.fonts.retained_usage(remaining.max_total_bytes)?.bytes;
-        report_allocations(&loaded.report, &mut decoded_bytes, remaining.max_total_bytes)?;
-        add_bytes(&mut decoded_bytes, labels.checked_mul(label.len()).ok_or_else(|| limit_error(remaining.max_total_bytes))?, remaining.max_total_bytes)?;
+        let labels = loaded
+            .report
+            .entries
+            .iter()
+            .filter(|entry| entry.location.asset.is_none())
+            .count();
+        let mut decoded_bytes = loaded
+            .fonts
+            .retained_usage(remaining.max_total_bytes)?
+            .bytes;
+        report_allocations(
+            &loaded.report,
+            &mut decoded_bytes,
+            remaining.max_total_bytes,
+        )?;
+        add_bytes(
+            &mut decoded_bytes,
+            labels
+                .checked_mul(label.len())
+                .ok_or_else(|| limit_error(remaining.max_total_bytes))?,
+            remaining.max_total_bytes,
+        )?;
         for entry in &mut loaded.report.entries {
-            if entry.location.asset.is_none() { entry.location.asset = Some(label.to_string()); }
+            if entry.location.asset.is_none() {
+                entry.location.asset = Some(label.to_string());
+            }
         }
         input_budget.admit(&loaded)?;
-        let font = loaded.fonts.fonts.into_iter().nth(index)
+        let font = loaded
+            .fonts
+            .fonts
+            .into_iter()
+            .nth(index)
             .ok_or_else(|| Error::InvalidInput("selected merge part disappeared".into()))?;
-        add_bytes(&mut selected_bytes, font.retained_usage(limits.max_total_bytes)?.bytes, limits.max_total_bytes)?;
+        add_bytes(
+            &mut selected_bytes,
+            font.retained_usage(limits.max_total_bytes)?.bytes,
+            limits.max_total_bytes,
+        )?;
         selected_fonts.push(font);
         read_reports.push(loaded.report);
     }
     drop(registry);
     if read_reports.iter().any(Report::has_errors) {
-        return Err(combined_error(Error::ReportedErrors(Report::default()), read_reports, None));
+        return Err(combined_error(
+            Error::ReportedErrors(Report::default()),
+            read_reports,
+            None,
+        ));
     }
     if raw.strict && read_reports.iter().any(Report::has_loss) {
-        return Err(combined_error(Error::StrictLoss(Report::default()), read_reports, None));
+        return Err(combined_error(
+            Error::StrictLoss(Report::default()),
+            read_reports,
+            None,
+        ));
     }
     // The library charges the borrowed selected models itself. Restore exactly
     // those already-admitted bytes and original aggregate glyph allowance for
     // its invocation; reader reports and other read reserves stay deducted.
     let remaining = input_budget.remaining_limits()?;
     let mut merge_limits = limits.clone();
-    merge_limits.max_total_bytes = remaining.max_total_bytes.checked_add(selected_bytes)
-        .filter(|n| *n <= limits.max_total_bytes).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+    merge_limits.max_total_bytes = remaining
+        .max_total_bytes
+        .checked_add(selected_bytes)
+        .filter(|n| *n <= limits.max_total_bytes)
+        .ok_or_else(|| limit_error(limits.max_total_bytes))?;
     let merged = {
-        let merge_parts: Vec<_> = parts.into_iter().zip(&selected_fonts).map(|(part, font)| {
-            let mut source = MergePart::new(font, part.selection);
-            source.dy = part.dy;
-            source
-        }).collect();
-        let options = MergeOptions { family: raw.family.clone(), spacing, geometric_width,
-            allow_misaligned: raw.allow_misaligned, fallback: raw.fallback,
-            ascent: raw.ascent, descent: raw.descent, strict: raw.strict, limits: merge_limits };
+        let merge_parts: Vec<_> = parts
+            .into_iter()
+            .zip(&selected_fonts)
+            .map(|(part, font)| {
+                let mut source = MergePart::new(font, part.selection);
+                source.dy = part.dy;
+                source
+            })
+            .collect();
+        let options = MergeOptions {
+            family: raw.family.clone(),
+            spacing,
+            geometric_width,
+            allow_misaligned: raw.allow_misaligned,
+            fallback: raw.fallback,
+            ascent: raw.ascent,
+            descent: raw.descent,
+            strict: raw.strict,
+            limits: merge_limits,
+        };
         match fontpixel::merge::merge(&merge_parts, &options) {
             Ok(merged) => merged,
             Err(error) => return Err(combined_error(error, read_reports, None)),
@@ -507,72 +803,149 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
     let fonts = FontSet::from(merged.font);
     let model_bytes = fonts.retained_usage(limits.max_total_bytes)?.bytes;
     let mut retained = model_bytes;
-    add_bytes(&mut retained, merge_report_bytes(&merged.report, limits.max_total_bytes)?, limits.max_total_bytes)?;
-    add_bytes(&mut retained, reports_bytes(&read_reports, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    add_bytes(
+        &mut retained,
+        merge_report_bytes(&merged.report, limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
+    add_bytes(
+        &mut retained,
+        reports_bytes(&read_reports, limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
     let mut pending: Vec<assets::PendingOutput> = Vec::new();
     let mut summaries: Vec<OutputSummary> = Vec::new();
-    add_bytes(&mut retained, size_of::<Vec<assets::PendingOutput>>(), limits.max_total_bytes)?;
-    add_bytes(&mut retained, size_of::<Vec<OutputSummary>>(), limits.max_total_bytes)?;
-    reserve(&mut pending, outputs.len(), limits.max_total_bytes.saturating_sub(retained))?;
+    add_bytes(
+        &mut retained,
+        size_of::<Vec<assets::PendingOutput>>(),
+        limits.max_total_bytes,
+    )?;
+    add_bytes(
+        &mut retained,
+        size_of::<Vec<OutputSummary>>(),
+        limits.max_total_bytes,
+    )?;
+    reserve(
+        &mut pending,
+        outputs.len(),
+        limits.max_total_bytes.saturating_sub(retained),
+    )?;
     vector_bytes(&pending, &mut retained, limits.max_total_bytes)?;
-    reserve(&mut summaries, outputs.len(), limits.max_total_bytes.saturating_sub(retained))?;
+    reserve(
+        &mut summaries,
+        outputs.len(),
+        limits.max_total_bytes.saturating_sub(retained),
+    )?;
     vector_bytes(&summaries, &mut retained, limits.max_total_bytes)?;
     for (spec, id) in outputs.iter().zip(&formats) {
-        let filename = spec.destination.file_name().and_then(|v| v.to_str())
+        let filename = spec
+            .destination
+            .file_name()
+            .and_then(|v| v.to_str())
             .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
-        let mut write_options = fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
+        let mut write_options =
+            fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
         write_options.strict = raw.strict;
         write_options.transport_limits = Some(writer_limits(&limits, retained)?);
         let registry = writer_registry(&raw, id, &spec.destination, any_vector)?;
         let written = match registry.write(&fonts, id, &write_options) {
             Ok(written) => written,
-            Err(error) => return Err(combined_error(error, read_reports, Some(merged.report.diagnostics))),
+            Err(error) => {
+                return Err(combined_error(
+                    error,
+                    read_reports,
+                    Some(merged.report.diagnostics),
+                ));
+            }
         };
         drop(registry);
         // PendingOutput's inline bundle is already in pending's charged slots.
-        let bundle_heap = written.output.retained_bytes(limits.max_total_bytes)?
-            .checked_sub(size_of::<fontpixel::OutputBundle>()).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+        let bundle_heap = written
+            .output
+            .retained_bytes(limits.max_total_bytes)?
+            .checked_sub(size_of::<fontpixel::OutputBundle>())
+            .ok_or_else(|| limit_error(limits.max_total_bytes))?;
         add_bytes(&mut retained, bundle_heap, limits.max_total_bytes)?;
         report_allocations(&written.report, &mut retained, limits.max_total_bytes)?;
         let mut assets = Vec::new();
-        reserve(&mut assets, written.output.assets().len(), limits.max_total_bytes.saturating_sub(retained))?;
+        reserve(
+            &mut assets,
+            written.output.assets().len(),
+            limits.max_total_bytes.saturating_sub(retained),
+        )?;
         vector_bytes(&assets, &mut retained, limits.max_total_bytes)?;
         let mut bytes = 0usize;
         for asset in written.output.assets() {
             // String::from copies exactly the visible validated asset path;
             // reserve its bytes before allocation, then charge actual capacity.
             let remaining = limits.max_total_bytes.saturating_sub(retained);
-            if asset.path.as_str().len() > remaining { return Err(limit_error(limits.max_total_bytes)); }
+            if asset.path.as_str().len() > remaining {
+                return Err(limit_error(limits.max_total_bytes));
+            }
             let path = asset.path.as_str().to_owned();
             add_bytes(&mut retained, path.capacity(), limits.max_total_bytes)?;
-            bytes = bytes.checked_add(asset.bytes.len()).ok_or_else(|| limit_error(limits.max_total_bytes))?;
-            assets.push(AssetSummary { path, bytes: asset.bytes.len() });
+            bytes = bytes
+                .checked_add(asset.bytes.len())
+                .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+            assets.push(AssetSummary {
+                path,
+                bytes: asset.bytes.len(),
+            });
         }
         if spec.destination.as_os_str().len() > limits.max_total_bytes.saturating_sub(retained) {
             return Err(limit_error(limits.max_total_bytes));
         }
         let destination = spec.destination.clone();
-        add_bytes(&mut retained, destination.capacity(), limits.max_total_bytes)?;
-        summaries.push(OutputSummary { bytes, assets, report: written.report });
-        pending.push(assets::PendingOutput { destination, bundle: written.output });
+        add_bytes(
+            &mut retained,
+            destination.capacity(),
+            limits.max_total_bytes,
+        )?;
+        summaries.push(OutputSummary {
+            bytes,
+            assets,
+            report: written.report,
+        });
+        pending.push(assets::PendingOutput {
+            destination,
+            bundle: written.output,
+        });
     }
     // Complete every writer and strict check before handing off the output group.
     // Batch defers this call; standalone execution commits the same transaction.
     batch::persist_outputs(pending, &sources)?;
     match raw.report {
         ReportStyle::Json => {
-            crate::emit_json(output, &CompleteReport {
-                family: &raw.family, glyphs: fonts.fonts[0].len(), merge: &merged.report,
-                outputs: OutputReports { specs: &outputs, formats: &formats, summaries: &summaries,
-                    reads: &read_reports, merge: &merged.report.diagnostics },
-            })?;
+            crate::emit_json(
+                output,
+                &CompleteReport {
+                    family: &raw.family,
+                    glyphs: fonts.fonts[0].len(),
+                    merge: &merged.report,
+                    outputs: OutputReports {
+                        specs: &outputs,
+                        formats: &formats,
+                        summaries: &summaries,
+                        reads: &read_reports,
+                        merge: &merged.report.diagnostics,
+                    },
+                },
+            )?;
         }
         ReportStyle::Text => {
-            for report in &read_reports { write!(output, "{report}")?; }
+            for report in &read_reports {
+                write!(output, "{report}")?;
+            }
             write!(output, "{}", merged.report)?;
             for ((spec, id), summary) in outputs.iter().zip(&formats).zip(&summaries) {
                 write!(output, "{}", summary.report)?;
-                writeln!(output, "Wrote {} bytes as {} to {}", summary.bytes, id, spec.destination.display())?;
+                writeln!(
+                    output,
+                    "Wrote {} bytes as {} to {}",
+                    summary.bytes,
+                    id,
+                    spec.destination.display()
+                )?;
             }
         }
     }
@@ -585,12 +958,17 @@ mod writer_budget_tests {
 
     #[test]
     fn writer_allowance_keeps_all_live_owners_reserved() {
-        let limits = fontpixel::ResourceLimits { max_total_bytes: 1024, max_glyphs: 17,
-            max_input_bytes: 8192, ..Default::default() };
+        let limits = fontpixel::ResourceLimits {
+            max_total_bytes: 1024,
+            max_glyphs: 17,
+            max_input_bytes: 8192,
+            ..Default::default()
+        };
         let retained_model = 256;
         let retained_reports = 128;
         let prior_bundles = 512;
-        let allowance = writer_limits(&limits, retained_model + retained_reports + prior_bundles).unwrap();
+        let allowance =
+            writer_limits(&limits, retained_model + retained_reports + prior_bundles).unwrap();
         assert_eq!(allowance.resources.max_total_bytes, 128);
         assert_eq!(allowance.max_output_bytes, 128);
         let mut expected = limits.clone();
@@ -600,12 +978,25 @@ mod writer_budget_tests {
 
     #[test]
     fn writer_allowance_has_exact_and_one_byte_short_boundaries() {
-        let limits = fontpixel::ResourceLimits { max_total_bytes: 4096, ..Default::default() };
+        let limits = fontpixel::ResourceLimits {
+            max_total_bytes: 4096,
+            ..Default::default()
+        };
         assert_eq!(writer_limits(&limits, 4095).unwrap().max_output_bytes, 1);
-        assert_eq!(writer_limits(&limits, 4096).unwrap().resources.max_total_bytes, 0);
-        assert!(matches!(writer_limits(&limits, 4097), Err(Error::ResourceLimit {
-            resource: "retained merge CLI bytes", limit: 4096
-        })));
+        assert_eq!(
+            writer_limits(&limits, 4096)
+                .unwrap()
+                .resources
+                .max_total_bytes,
+            0
+        );
+        assert!(matches!(
+            writer_limits(&limits, 4097),
+            Err(Error::ResourceLimit {
+                resource: "retained merge CLI bytes",
+                limit: 4096
+            })
+        ));
         assert!(writer_limits(&limits, usize::MAX).is_err());
     }
 
@@ -617,7 +1008,10 @@ mod writer_budget_tests {
         font.names.family = Some(family);
         let fonts = FontSet::from(font);
         let model = fonts.retained_usage(usize::MAX).unwrap().bytes;
-        let limits = fontpixel::ResourceLimits { max_total_bytes: model + 31, ..Default::default() };
+        let limits = fontpixel::ResourceLimits {
+            max_total_bytes: model + 31,
+            ..Default::default()
+        };
         let allowance = writer_limits(&limits, model).unwrap();
         assert_eq!(allowance.resources.max_total_bytes, 31);
         assert_eq!(allowance.max_output_bytes, 31);
@@ -629,27 +1023,45 @@ mod input_staging_tests {
     use super::*;
 
     fn requested(parts: usize) -> usize {
-        size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
+        size_of::<Vec<Font>>()
+            + size_of::<Vec<Report>>()
             + parts * (size_of::<Font>() + size_of::<Report>())
     }
 
     #[test]
     fn staging_arrays_have_exact_and_one_byte_short_boundaries() {
         for parts in [0, 1, 3, 4, 5, 33] {
-            let probe_limits = fontpixel::ResourceLimits { max_total_bytes: 1_000_000, ..Default::default() };
+            let probe_limits = fontpixel::ResourceLimits {
+                max_total_bytes: 1_000_000,
+                ..Default::default()
+            };
             let (fonts, reports, available) = input_staging(parts, &probe_limits).unwrap();
             assert!(fonts.is_empty() && reports.is_empty());
             assert!(fonts.capacity() >= parts && reports.capacity() >= parts);
-            let actual = size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
-                + fonts.capacity() * size_of::<Font>() + reports.capacity() * size_of::<Report>();
-            assert_eq!(probe_limits.max_total_bytes - available.max_total_bytes, actual);
+            let actual = size_of::<Vec<Font>>()
+                + size_of::<Vec<Report>>()
+                + fonts.capacity() * size_of::<Font>()
+                + reports.capacity() * size_of::<Report>();
+            assert_eq!(
+                probe_limits.max_total_bytes - available.max_total_bytes,
+                actual
+            );
             drop((fonts, reports));
-            let exact = fontpixel::ResourceLimits { max_total_bytes: actual, ..Default::default() };
+            let exact = fontpixel::ResourceLimits {
+                max_total_bytes: actual,
+                ..Default::default()
+            };
             let (_, _, remaining) = input_staging(parts, &exact).unwrap();
             assert_eq!(remaining.max_total_bytes, 0);
-            let short = fontpixel::ResourceLimits { max_total_bytes: actual - 1, ..Default::default() };
+            let short = fontpixel::ResourceLimits {
+                max_total_bytes: actual - 1,
+                ..Default::default()
+            };
             assert!(input_staging(parts, &short).is_err());
-            let one = fontpixel::ResourceLimits { max_total_bytes: actual + 1, ..Default::default() };
+            let one = fontpixel::ResourceLimits {
+                max_total_bytes: actual + 1,
+                ..Default::default()
+            };
             assert_eq!(input_staging(parts, &one).unwrap().2.max_total_bytes, 1);
         }
     }
@@ -663,26 +1075,45 @@ mod input_staging_tests {
         let limit = headers + fonts.max(reports);
         assert!(headers + fonts <= limit && headers + reports <= limit);
         assert!(headers + fonts + reports > limit);
-        let limits = fontpixel::ResourceLimits { max_total_bytes: limit, ..Default::default() };
-        assert!(matches!(input_staging(parts, &limits), Err(Error::ResourceLimit {
-            resource: "retained merge CLI bytes", ..
-        })));
+        let limits = fontpixel::ResourceLimits {
+            max_total_bytes: limit,
+            ..Default::default()
+        };
+        assert!(matches!(
+            input_staging(parts, &limits),
+            Err(Error::ResourceLimit {
+                resource: "retained merge CLI bytes",
+                ..
+            })
+        ));
     }
 
     #[test]
     fn first_decoder_receives_only_post_staging_bytes() {
-        let limits = fontpixel::ResourceLimits { max_total_bytes: requested(3) + 37,
-            max_input_bytes: 99, max_resource_bytes: 50, max_decompressed_bytes: 19,
-            max_table_bytes: 11, max_glyphs: 7, max_resources: 9, ..Default::default() };
+        let limits = fontpixel::ResourceLimits {
+            max_total_bytes: requested(3) + 37,
+            max_input_bytes: 99,
+            max_resource_bytes: 50,
+            max_decompressed_bytes: 19,
+            max_table_bytes: 11,
+            max_glyphs: 7,
+            max_resources: 9,
+            ..Default::default()
+        };
         let (fonts, reports, available) = input_staging(3, &limits).unwrap();
         let budget = InputBudget::new(available);
         let reader = budget.remaining_limits().unwrap();
-        let actual = size_of::<Vec<Font>>() + size_of::<Vec<Report>>()
-            + fonts.capacity() * size_of::<Font>() + reports.capacity() * size_of::<Report>();
+        let actual = size_of::<Vec<Font>>()
+            + size_of::<Vec<Report>>()
+            + fonts.capacity() * size_of::<Font>()
+            + reports.capacity() * size_of::<Report>();
         assert_eq!(reader.max_total_bytes, limits.max_total_bytes - actual);
         assert_eq!(reader.max_input_bytes, reader.max_total_bytes.min(99));
         assert_eq!(reader.max_resource_bytes, reader.max_total_bytes.min(50));
-        assert_eq!(reader.max_decompressed_bytes, reader.max_total_bytes.min(19));
+        assert_eq!(
+            reader.max_decompressed_bytes,
+            reader.max_total_bytes.min(19)
+        );
         assert_eq!(reader.max_table_bytes, reader.max_total_bytes.min(11));
         assert_eq!(reader.max_glyphs, 7);
         assert_eq!(reader.max_resources, 9);
@@ -691,11 +1122,21 @@ mod input_staging_tests {
 
     #[test]
     fn zero_cap_and_staging_size_overflow_reject_without_reads() {
-        let zero = fontpixel::ResourceLimits { max_total_bytes: 0, ..Default::default() };
+        let zero = fontpixel::ResourceLimits {
+            max_total_bytes: 0,
+            ..Default::default()
+        };
         assert!(input_staging(0, &zero).is_err());
         assert!(input_staging(1, &zero).is_err());
-        assert!(input_staging(usize::MAX, &fontpixel::ResourceLimits {
-            max_total_bytes: usize::MAX, ..Default::default()
-        }).is_err());
+        assert!(
+            input_staging(
+                usize::MAX,
+                &fontpixel::ResourceLimits {
+                    max_total_bytes: usize::MAX,
+                    ..Default::default()
+                }
+            )
+            .is_err()
+        );
     }
 }

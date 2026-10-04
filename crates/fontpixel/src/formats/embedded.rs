@@ -81,7 +81,10 @@ impl From<&EmbeddedWriteOptions> for DesignOptions {
 }
 impl DesignOptions {
     fn validate(self, fonts: usize, kind: sbit::Kind) -> Result<()> {
-        if self.units_per_em.is_some_and(|upem| !(16..=16384).contains(&upem)) {
+        if self
+            .units_per_em
+            .is_some_and(|upem| !(16..=16384).contains(&upem))
+        {
             return Err(invalid("units_per_em must be in 16..=16384"));
         }
         if let EmbeddedReferenceStrike::Index(index) = self.reference_strike
@@ -90,23 +93,38 @@ impl DesignOptions {
             return Err(invalid("reference strike index is outside FontSet"));
         }
         if kind == sbit::Kind::Color && self != Self::default() {
-            return Err(invalid("custom embedded metric controls require otb or bdat"));
+            return Err(invalid(
+                "custom embedded metric controls require otb or bdat",
+            ));
         }
         Ok(())
     }
     fn priority(self, strikes: &[DesignStrike], limits: &sfnt::Limits) -> Result<Vec<usize>> {
-        if matches!(self.reference_strike, EmbeddedReferenceStrike::First | EmbeddedReferenceStrike::Index(0)) {
+        if matches!(
+            self.reference_strike,
+            EmbeddedReferenceStrike::First | EmbeddedReferenceStrike::Index(0)
+        ) {
             return Ok(Vec::new());
         }
-        let bytes = strikes.len().checked_mul(std::mem::size_of::<usize>())
+        let bytes = strikes
+            .len()
+            .checked_mul(std::mem::size_of::<usize>())
             .ok_or_else(|| invalid("metric-order size overflow"))?;
-        sfnt::bounded(bytes, limits.resources.max_total_bytes, "embedded metric-order bytes")?;
+        sfnt::bounded(
+            bytes,
+            limits.resources.max_total_bytes,
+            "embedded metric-order bytes",
+        )?;
         let mut order = Vec::new();
-        order.try_reserve_exact(strikes.len()).map_err(|_| invalid("metric-order allocation failed"))?;
+        order
+            .try_reserve_exact(strikes.len())
+            .map_err(|_| invalid("metric-order allocation failed"))?;
         order.extend(0..strikes.len());
         match self.reference_strike {
             EmbeddedReferenceStrike::LargestPpem => {
-                order.sort_unstable_by_key(|&index| std::cmp::Reverse((strikes[index].ppem[1], index)));
+                order.sort_unstable_by_key(|&index| {
+                    std::cmp::Reverse((strikes[index].ppem[1], index))
+                });
             }
             EmbeddedReferenceStrike::Index(index) => order[..=index].rotate_right(1),
             EmbeddedReferenceStrike::First => unreachable!(),
@@ -121,9 +139,9 @@ fn round_design(numerator: i128, denominator: i128, rounding: EmbeddedRounding) 
     let quotient = numerator / denominator;
     let remainder = numerator % denominator;
     let twice = remainder.abs() * 2;
-    let up = twice > denominator || (twice == denominator && (
-        rounding == EmbeddedRounding::NearestTiesAwayFromZero || quotient % 2 != 0
-    ));
+    let up = twice > denominator
+        || (twice == denominator
+            && (rounding == EmbeddedRounding::NearestTiesAwayFromZero || quotient % 2 != 0));
     quotient + if up { numerator.signum() } else { 0 }
 }
 /// Native color bitmap container, with black RGB and exact coverage alpha.
@@ -1384,7 +1402,8 @@ fn write_impl(
                     entry
                 }
                 Entry::Vacant(entry) => {
-                    let gid = u16::try_from(next_id).map_err(|_| invalid("too many sfnt glyphs"))?;
+                    let gid =
+                        u16::try_from(next_id).map_err(|_| invalid("too many sfnt glyphs"))?;
                     if gid == u16::MAX {
                         return Err(invalid("sfnt requires at most 65535 glyphs"));
                     }
@@ -1969,11 +1988,13 @@ fn common_design_tables(
     } else {
         (16384 / ppem).max(1)
     };
-    let upem = options.units_per_em.unwrap_or((ppem * scale).min(16384) as u16);
+    let upem = options
+        .units_per_em
+        .unwrap_or((ppem * scale).min(16384) as u16);
     let global = |n: i64| -> Result<i16> {
         let value = i128::from(n) * i128::from(upem);
         i16::try_from(round_design(value, i128::from(ppem), options.rounding))
-        .map_err(|_| invalid("design metric does not fit int16"))
+            .map_err(|_| invalid("design metric does not fit int16"))
     };
     let mut horizontal = vec![metrics::LongMetric::default(); count as usize];
     let mut ink = vec![None; count as usize];
@@ -1994,10 +2015,20 @@ fn common_design_tables(
                     // fast arithmetic on the default per-glyph path.
                     let value = n * i64::from(upem);
                     let denominator = i64::from(ppem);
-                    return Ok((value + if value >= 0 { denominator / 2 } else { -(denominator / 2) }) / denominator);
+                    return Ok((value
+                        + if value >= 0 {
+                            denominator / 2
+                        } else {
+                            -(denominator / 2)
+                        })
+                        / denominator);
                 }
-                i64::try_from(round_design(i128::from(n) * i128::from(upem), i128::from(ppem), options.rounding))
-                    .map_err(|_| invalid("design metric overflow"))
+                i64::try_from(round_design(
+                    i128::from(n) * i128::from(upem),
+                    i128::from(ppem),
+                    options.rounding,
+                ))
+                .map_err(|_| invalid("design metric overflow"))
             };
             let sx = |n: i64| scaled(n, source.ppem[0]);
             let sy = |n: i64| scaled(n, source.ppem[1]);
@@ -2133,16 +2164,42 @@ mod key_tests {
     #[test]
     fn design_rounding_preserves_legacy_and_handles_signed_exact_ties() {
         use EmbeddedRounding::{NearestTiesAwayFromZero as Away, NearestTiesEven as Even};
-        for value in [i64::MIN, i64::MIN + 1, -1001, -52, -1, 0, 1, 52, 1001, i64::MAX] {
+        for value in [
+            i64::MIN,
+            i64::MIN + 1,
+            -1001,
+            -52,
+            -1,
+            0,
+            1,
+            52,
+            1001,
+            i64::MAX,
+        ] {
             for upem in [16, 1000, 16384] {
                 let numerator = i128::from(value) * upem;
                 for denominator in 1..=255 {
-                    let legacy = (numerator + if numerator >= 0 { denominator / 2 } else { -(denominator / 2) }) / denominator;
+                    let legacy = (numerator
+                        + if numerator >= 0 {
+                            denominator / 2
+                        } else {
+                            -(denominator / 2)
+                        })
+                        / denominator;
                     assert_eq!(round_design(numerator, denominator, Away), legacy);
                 }
             }
         }
-        for (numerator, even, away) in [(1, 0, 1), (3, 2, 2), (5, 2, 3), (7, 4, 4), (-1, 0, -1), (-3, -2, -2), (-5, -2, -3), (-7, -4, -4)] {
+        for (numerator, even, away) in [
+            (1, 0, 1),
+            (3, 2, 2),
+            (5, 2, 3),
+            (7, 4, 4),
+            (-1, 0, -1),
+            (-3, -2, -2),
+            (-5, -2, -3),
+            (-7, -4, -4),
+        ] {
             assert_eq!(round_design(numerator, 2, Even), even);
             assert_eq!(round_design(numerator, 2, Away), away);
         }
@@ -2226,7 +2283,9 @@ mod key_tests {
     fn inline_key_btree_overwrite_and_duplicate_identity_match_old_keys() {
         for reverse in [false, true] {
             let mut keys = keys();
-            if reverse { keys.reverse(); }
+            if reverse {
+                keys.reverse();
+            }
             let mut map = BTreeMap::new();
             let mut old_map = BTreeMap::new();
             let mut seen = BTreeSet::new();
@@ -2234,38 +2293,68 @@ mod key_tests {
             for (value, key) in keys.into_iter().enumerate() {
                 let old_key = old(&key);
                 assert_eq!(seen.insert(key.clone()), old_seen.insert(old_key.clone()));
-                assert_eq!(map.insert(key.clone(), value), old_map.insert(old_key, value));
+                assert_eq!(
+                    map.insert(key.clone(), value),
+                    old_map.insert(old_key, value)
+                );
                 assert_eq!(map.get(&key), old_map.get(&old(&key)));
             }
-            assert_eq!(map.iter().map(|(key, value)| (old(key), *value)).collect::<Vec<_>>(), old_map.into_iter().collect::<Vec<_>>());
-            assert_eq!(seen.iter().map(old).collect::<Vec<_>>(), old_seen.into_iter().collect::<Vec<_>>());
+            assert_eq!(
+                map.iter()
+                    .map(|(key, value)| (old(key), *value))
+                    .collect::<Vec<_>>(),
+                old_map.into_iter().collect::<Vec<_>>()
+            );
+            assert_eq!(
+                seen.iter().map(old).collect::<Vec<_>>(),
+                old_seen.into_iter().collect::<Vec<_>>()
+            );
         }
     }
 
     fn old_key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> OldKey {
         let mut cps = Vec::new();
         for cp in &g.codepoints {
-            if let Codepoint::Unicode(cp) = cp && char::from_u32(*cp).is_some() {
+            if let Codepoint::Unicode(cp) = cp
+                && char::from_u32(*cp).is_some()
+            {
                 cps.push(*cp);
             } else {
-                loss(report, "codepoint", Some(fi), Some(index), format!("Cannot put {cp:?} in a Unicode cmap"));
+                loss(
+                    report,
+                    "codepoint",
+                    Some(fi),
+                    Some(index),
+                    format!("Cannot put {cp:?} in a Unicode cmap"),
+                );
             }
         }
         cps.sort_unstable();
         cps.dedup();
-        if !cps.is_empty() { OldKey::Codes(cps) }
-        else if g.name.as_deref() == Some(".notdef") { OldKey::Notdef }
-        else if let Some(name) = &g.name { OldKey::Name(name.clone()) }
-        else { OldKey::Slot(index) }
+        if !cps.is_empty() {
+            OldKey::Codes(cps)
+        } else if g.name.as_deref() == Some(".notdef") {
+            OldKey::Notdef
+        } else if let Some(name) = &g.name {
+            OldKey::Name(name.clone())
+        } else {
+            OldKey::Slot(index)
+        }
     }
 
     #[test]
     fn inline_key_selection_preserves_filtering_notdef_and_diagnostics() {
         use Codepoint::{Legacy as L, Unicode as U};
         for codes in [
-            vec![], vec![U(0)], vec![U(65)], vec![U(0x10ffff)],
-            vec![U(65), U(65)], vec![U(66), U(65), U(66)],
-            vec![L(65)], vec![U(0xd800)], vec![U(0x110000)],
+            vec![],
+            vec![U(0)],
+            vec![U(65)],
+            vec![U(0x10ffff)],
+            vec![U(65), U(65)],
+            vec![U(66), U(65), U(66)],
+            vec![L(65)],
+            vec![U(0xd800)],
+            vec![U(0x110000)],
             vec![L(65), U(65), U(0xd800), U(65), U(0x110000)],
         ] {
             for name in [None, Some(".notdef"), Some(""), Some("A"), Some("bad/name")] {
@@ -2278,12 +2367,16 @@ mod key_tests {
                     let actual = key(&glyph, 42, 3, &mut actual_report);
                     let expected = old_key(&glyph, 42, 3, &mut expected_report);
                     assert_eq!(old(&actual), expected);
-                    if let [U(cp)] = codes.as_slice() && char::from_u32(*cp).is_some() {
+                    if let [U(cp)] = codes.as_slice()
+                        && char::from_u32(*cp).is_some()
+                    {
                         assert!(matches!(actual, Key::Code(_)));
                     }
                     match (actual_report.finish(), expected_report.finish()) {
                         (Ok(actual), Ok(expected)) => assert_eq!(actual, expected),
-                        (Err(actual), Err(expected)) => assert_eq!(actual.to_string(), expected.to_string()),
+                        (Err(actual), Err(expected)) => {
+                            assert_eq!(actual.to_string(), expected.to_string())
+                        }
                         pair => panic!("diagnostic budget mismatch: {pair:?}"),
                     }
                 }

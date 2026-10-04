@@ -488,11 +488,13 @@ impl OutputBundle {
     pub fn retained_bytes(&self, max_bytes: usize) -> Result<usize> {
         fn add(total: &mut usize, amount: usize, limit: usize) -> Result<()> {
             *total = total.checked_add(amount).ok_or(Error::ResourceLimit {
-                resource: "retained output bundle bytes", limit,
+                resource: "retained output bundle bytes",
+                limit,
             })?;
             if *total > limit {
                 return Err(Error::ResourceLimit {
-                    resource: "retained output bundle bytes", limit,
+                    resource: "retained output bundle bytes",
+                    limit,
                 });
             }
             Ok(())
@@ -500,10 +502,13 @@ impl OutputBundle {
         let mut total = 0;
         add(&mut total, std::mem::size_of::<Self>(), max_bytes)?;
         add(&mut total, self.primary.0.capacity(), max_bytes)?;
-        let slots = self.assets.capacity()
+        let slots = self
+            .assets
+            .capacity()
             .checked_mul(std::mem::size_of::<OutputAsset>())
             .ok_or(Error::ResourceLimit {
-                resource: "retained output bundle bytes", limit: max_bytes,
+                resource: "retained output bundle bytes",
+                limit: max_bytes,
             })?;
         add(&mut total, slots, max_bytes)?;
         for asset in &self.assets {

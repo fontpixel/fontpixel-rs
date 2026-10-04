@@ -3,7 +3,10 @@
 use fontpixel::{
     Bitmap, Font, Glyph, Variants,
     model::{Codepoint, Vector},
-    sfnt::{Sfnt, name::{NameRecord, NameTable}},
+    sfnt::{
+        Sfnt,
+        name::{NameRecord, NameTable},
+    },
     variants::{self, Options},
 };
 fn sample() -> Variants {
@@ -22,7 +25,14 @@ fn names(bytes: &[u8]) -> NameTable {
     NameTable::decode(font.table(*b"name").unwrap(), &Default::default()).unwrap()
 }
 fn name(table: &NameTable, id: u16) -> String {
-    table.records.iter().find(|r| r.name_id == id && r.platform_id == 3).unwrap().text().unwrap().unwrap()
+    table
+        .records
+        .iter()
+        .find(|r| r.name_id == id && r.platform_id == 3)
+        .unwrap()
+        .text()
+        .unwrap()
+        .unwrap()
 }
 #[test]
 fn default_legacy_style_is_byte_identical_to_explicit_regular() {
@@ -30,7 +40,14 @@ fn default_legacy_style_is_byte_identical_to_explicit_regular() {
     let defaults = Options::default();
     assert!(defaults.legacy_style.is_none());
     let a = variants::encode(&sample, &defaults).unwrap();
-    let b = variants::encode(&sample, &Options { legacy_style: Some("Regular".into()), ..defaults }).unwrap();
+    let b = variants::encode(
+        &sample,
+        &Options {
+            legacy_style: Some("Regular".into()),
+            ..defaults
+        },
+    )
+    .unwrap();
     assert_eq!(a.bytes, b.bytes);
     assert_eq!(a.report, b.report);
     assert_eq!(name(&names(&a.bytes), 2), "Regular");
@@ -39,9 +56,19 @@ fn default_legacy_style_is_byte_identical_to_explicit_regular() {
 #[test]
 fn explicit_legacy_style_changes_only_name_id_two() {
     let sample = sample();
-    let options = Options { style: Some("SquareMedium".into()), ..Default::default() };
+    let options = Options {
+        style: Some("SquareMedium".into()),
+        ..Default::default()
+    };
     let original = variants::encode(&sample, &options).unwrap();
-    let replaced = variants::encode(&sample, &Options { legacy_style: Some("Medium".into()), ..options }).unwrap();
+    let replaced = variants::encode(
+        &sample,
+        &Options {
+            legacy_style: Some("Medium".into()),
+            ..options
+        },
+    )
+    .unwrap();
     let mut a = names(&original.bytes);
     let mut b = names(&replaced.bytes);
     assert_eq!(name(&b, 2), "Medium");
@@ -49,7 +76,9 @@ fn explicit_legacy_style_changes_only_name_id_two() {
     a.records.retain(|r| r.name_id != 2);
     b.records.retain(|r| r.name_id != 2);
     assert_eq!(a, b);
-    for tag in [*b"glyf", *b"loca", *b"hmtx", *b"hhea", *b"cmap", *b"OS/2", *b"post", *b"maxp"] {
+    for tag in [
+        *b"glyf", *b"loca", *b"hmtx", *b"hhea", *b"cmap", *b"OS/2", *b"post", *b"maxp",
+    ] {
         let a = Sfnt::parse(&original.bytes, &Default::default()).unwrap();
         let b = Sfnt::parse(&replaced.bytes, &Default::default()).unwrap();
         assert_eq!(a.table(tag), b.table(tag));
@@ -58,11 +87,32 @@ fn explicit_legacy_style_changes_only_name_id_two() {
 }
 #[test]
 fn exact_name_table_keeps_precedence_over_legacy_style() {
-    let table = NameTable { records: vec![NameRecord::unicode(2, 0x409, "Exact"), NameRecord::unicode(17, 0x409, "Exact Typographic")], language_tags: Vec::new() };
+    let table = NameTable {
+        records: vec![
+            NameRecord::unicode(2, 0x409, "Exact"),
+            NameRecord::unicode(17, 0x409, "Exact Typographic"),
+        ],
+        language_tags: Vec::new(),
+    };
     let sample = sample();
-    let a = variants::encode(&sample, &Options { names: Some(table.clone()), ..Default::default() }).unwrap();
+    let a = variants::encode(
+        &sample,
+        &Options {
+            names: Some(table.clone()),
+            ..Default::default()
+        },
+    )
+    .unwrap();
     for legacy in ["Ignored", "", " \t"] {
-        let b = variants::encode(&sample, &Options { names: Some(table.clone()), legacy_style: Some(legacy.into()), ..Default::default() }).unwrap();
+        let b = variants::encode(
+            &sample,
+            &Options {
+                names: Some(table.clone()),
+                legacy_style: Some(legacy.into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
         assert_eq!(a.bytes, b.bytes);
         assert_eq!(name(&names(&b.bytes), 2), "Exact");
         assert_eq!(name(&names(&b.bytes), 17), "Exact Typographic");
@@ -72,25 +122,52 @@ fn exact_name_table_keeps_precedence_over_legacy_style() {
 fn invalid_or_oversized_legacy_style_fails_before_generation() {
     let sample = sample();
     for value in ["", " \n\t", "\u{2003}"] {
-        let error = variants::encode(&sample, &Options { legacy_style: Some(value.into()), ..Default::default() }).unwrap_err();
+        let error = variants::encode(
+            &sample,
+            &Options {
+                legacy_style: Some(value.into()),
+                ..Default::default()
+            },
+        )
+        .unwrap_err();
         assert!(matches!(error, fontpixel::Error::InvalidInput(_)));
     }
-    let mut options = Options { legacy_style: Some("Longer".into()), ..Default::default() };
+    let mut options = Options {
+        legacy_style: Some("Longer".into()),
+        ..Default::default()
+    };
     options.limits.sfnt.resources.max_table_bytes = 5;
     let error = variants::encode(&sample, &options).unwrap_err();
-    assert!(matches!(error, fontpixel::Error::ResourceLimit { resource: "legacy style bytes", limit: 5 }));
+    assert!(matches!(
+        error,
+        fontpixel::Error::ResourceLimit {
+            resource: "legacy style bytes",
+            limit: 5
+        }
+    ));
 }
 
 #[test]
 fn explicit_full_and_postscript_names_preserve_exact_text() {
     let sample = sample();
-    let original = variants::encode(&sample, &Options { style: Some("Heavy Extended".into()), ..Default::default() }).unwrap();
-    let changed = variants::encode(&sample, &Options {
-        style: Some("Heavy Extended".into()),
-        full_name: Some(" Catalogue Full Name ".into()),
-        postscript_name: Some("Catalogue-HeavyExtended".into()),
-        ..Default::default()
-    }).unwrap();
+    let original = variants::encode(
+        &sample,
+        &Options {
+            style: Some("Heavy Extended".into()),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let changed = variants::encode(
+        &sample,
+        &Options {
+            style: Some("Heavy Extended".into()),
+            full_name: Some(" Catalogue Full Name ".into()),
+            postscript_name: Some("Catalogue-HeavyExtended".into()),
+            ..Default::default()
+        },
+    )
+    .unwrap();
     let mut a = names(&original.bytes);
     let mut b = names(&changed.bytes);
     assert_eq!(name(&b, 4), " Catalogue Full Name ");
@@ -99,11 +176,23 @@ fn explicit_full_and_postscript_names_preserve_exact_text() {
     a.records.retain(|r| ![4, 6].contains(&r.name_id));
     b.records.retain(|r| ![4, 6].contains(&r.name_id));
     assert_eq!(a, b);
-    let table = NameTable { records: vec![NameRecord::unicode(4, 0x409, "Raw Full"), NameRecord::unicode(6, 0x409, "RawPS")], language_tags: Vec::new() };
-    let exact = variants::encode(&sample, &Options {
-        full_name: Some(String::new()), postscript_name: Some(String::new()),
-        names: Some(table), ..Default::default()
-    }).unwrap();
+    let table = NameTable {
+        records: vec![
+            NameRecord::unicode(4, 0x409, "Raw Full"),
+            NameRecord::unicode(6, 0x409, "RawPS"),
+        ],
+        language_tags: Vec::new(),
+    };
+    let exact = variants::encode(
+        &sample,
+        &Options {
+            full_name: Some(String::new()),
+            postscript_name: Some(String::new()),
+            names: Some(table),
+            ..Default::default()
+        },
+    )
+    .unwrap();
     assert_eq!(name(&names(&exact.bytes), 4), "Raw Full");
     assert_eq!(name(&names(&exact.bytes), 6), "RawPS");
 }
@@ -119,12 +208,18 @@ fn empty_and_oversized_full_or_postscript_names_are_rejected() {
         for value in ["", " \n\t"] {
             let mut options = Options::default();
             set(&mut options, value.into());
-            assert!(matches!(variants::encode(&sample, &options), Err(fontpixel::Error::InvalidInput(_))));
+            assert!(matches!(
+                variants::encode(&sample, &options),
+                Err(fontpixel::Error::InvalidInput(_))
+            ));
         }
         let mut options = Options::default();
         set(&mut options, "Longer".into());
         options.limits.sfnt.resources.max_table_bytes = 5;
-        assert!(matches!(variants::encode(&sample, &options), Err(fontpixel::Error::ResourceLimit { limit: 5, .. })));
+        assert!(matches!(
+            variants::encode(&sample, &options),
+            Err(fontpixel::Error::ResourceLimit { limit: 5, .. })
+        ));
     }
 }
 
@@ -165,9 +260,18 @@ fn every_export_entry_rejects_empty_direct_identity_options() {
     for set in setters {
         let mut options = Options::default();
         set(&mut options);
-        assert!(matches!(variants::encode(&sample, &options), Err(fontpixel::Error::InvalidInput(_))));
-        assert!(matches!(variants::encode_single(&sample.base, &options), Err(fontpixel::Error::InvalidInput(_))));
-        assert!(matches!(prepared.encode(&options), Err(fontpixel::Error::InvalidInput(_))));
+        assert!(matches!(
+            variants::encode(&sample, &options),
+            Err(fontpixel::Error::InvalidInput(_))
+        ));
+        assert!(matches!(
+            variants::encode_single(&sample.base, &options),
+            Err(fontpixel::Error::InvalidInput(_))
+        ));
+        assert!(matches!(
+            prepared.encode(&options),
+            Err(fontpixel::Error::InvalidInput(_))
+        ));
     }
 }
 
@@ -189,7 +293,8 @@ fn cff_direct_names_agree_with_the_name_table_without_silent_sanitization() {
     // The native CFF writer assigns SID 391 to FullName. Inspect that actual
     // CFF string in addition to the independent OpenType name table.
     assert_eq!(
-        cff.fontations().string(read_fonts::ps::string::Sid::new(391)),
+        cff.fontations()
+            .string(read_fonts::ps::string::Sid::new(391)),
         Some(b"Catalogue Heavy Extended".as_slice()),
     );
     // CFF1's first INDEX after its header contains exactly one PostScript name.
@@ -199,21 +304,32 @@ fn cff_direct_names_agree_with_the_name_table_without_silent_sanitization() {
     assert_eq!(u16::from_be_bytes([data[start], data[start + 1]]), 1);
     let width = usize::from(data[start + 2]);
     let offset = |bytes: &[u8]| {
-        bytes.iter().fold(0usize, |value, byte| value * 256 + usize::from(*byte))
+        bytes
+            .iter()
+            .fold(0usize, |value, byte| value * 256 + usize::from(*byte))
     };
     let first = offset(&data[start + 3..start + 3 + width]);
     let last = offset(&data[start + 3 + width..start + 3 + 2 * width]);
     let storage = start + 3 + 2 * width;
-    assert_eq!(&data[storage + first - 1..storage + last - 1], b"Catalogue-HeavyExtended");
+    assert_eq!(
+        &data[storage + first - 1..storage + last - 1],
+        b"Catalogue-HeavyExtended"
+    );
     let table = names(&encoded.bytes);
     assert_eq!(name(&table, 4), "Catalogue Heavy Extended");
     assert_eq!(name(&table, 6), "Catalogue-HeavyExtended");
     let mut invalid = options.clone();
     invalid.postscript_name = Some("Contains Space".into());
-    assert!(matches!(variants::encode(&sample, &invalid), Err(fontpixel::Error::InvalidInput(_))));
+    assert!(matches!(
+        variants::encode(&sample, &invalid),
+        Err(fontpixel::Error::InvalidInput(_))
+    ));
     invalid = options;
     invalid.full_name = Some("Explicit 名称".into());
-    assert!(matches!(variants::encode(&sample, &invalid), Err(fontpixel::Error::InvalidInput(_))));
+    assert!(matches!(
+        variants::encode(&sample, &invalid),
+        Err(fontpixel::Error::InvalidInput(_))
+    ));
 }
 
 #[cfg(feature = "cff")]
@@ -234,12 +350,16 @@ fn cff_exact_name_table_ignores_all_new_direct_name_options() {
         ..Default::default()
     };
     let expected = variants::encode(&sample, &baseline).unwrap();
-    let actual = variants::encode(&sample, &Options {
-        legacy_style: Some(String::new()),
-        full_name: Some("Ignored 名称".into()),
-        postscript_name: Some("Ignored Invalid Name".into()),
-        ..baseline
-    }).unwrap();
+    let actual = variants::encode(
+        &sample,
+        &Options {
+            legacy_style: Some(String::new()),
+            full_name: Some("Ignored 名称".into()),
+            postscript_name: Some("Ignored Invalid Name".into()),
+            ..baseline
+        },
+    )
+    .unwrap();
     assert_eq!(expected.bytes, actual.bytes);
     assert_eq!(expected.report, actual.report);
 }

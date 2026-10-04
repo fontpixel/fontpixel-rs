@@ -117,12 +117,28 @@ fn validate_names(o: &Options) -> Result<()> {
         return Ok(());
     }
     for (value, resource, missing) in [
-        (&o.legacy_style, "legacy style bytes", "legacy_style requires nonempty identity text"),
-        (&o.full_name, "full name bytes", "full_name requires nonempty identity text"),
-        (&o.postscript_name, "PostScript name bytes", "postscript_name requires nonempty identity text"),
+        (
+            &o.legacy_style,
+            "legacy style bytes",
+            "legacy_style requires nonempty identity text",
+        ),
+        (
+            &o.full_name,
+            "full name bytes",
+            "full_name requires nonempty identity text",
+        ),
+        (
+            &o.postscript_name,
+            "PostScript name bytes",
+            "postscript_name requires nonempty identity text",
+        ),
     ] {
         if let Some(value) = value {
-            sfnt::bounded(value.len(), o.limits.sfnt.resources.max_table_bytes, resource)?;
+            sfnt::bounded(
+                value.len(),
+                o.limits.sfnt.resources.max_table_bytes,
+                resource,
+            )?;
             if value.trim().is_empty() {
                 return Err(invalid(missing));
             }
@@ -243,14 +259,26 @@ fn encode_planned(
         Shape::SquareSeparate => "SquareSeparate",
         Shape::Dot => "Dot",
     });
-    let fullname = o.full_name.as_ref().filter(|_| o.names.is_none()).cloned().unwrap_or_else(|| format!("{family} {style}"));
-    let psname = o.postscript_name.as_ref().filter(|_| o.names.is_none()).cloned().unwrap_or_else(|| format!(
-        "{}-{style}",
-        family
-            .chars()
-            .filter(|c| c.is_ascii_alphanumeric() || *c == '-')
-            .collect::<String>()
-    ));
+    let fullname = o
+        .full_name
+        .as_ref()
+        .filter(|_| o.names.is_none())
+        .cloned()
+        .unwrap_or_else(|| format!("{family} {style}"));
+    let psname = o
+        .postscript_name
+        .as_ref()
+        .filter(|_| o.names.is_none())
+        .cloned()
+        .unwrap_or_else(|| {
+            format!(
+                "{}-{style}",
+                family
+                    .chars()
+                    .filter(|c| c.is_ascii_alphanumeric() || *c == '-')
+                    .collect::<String>()
+            )
+        });
     let mut report = Report::default();
     let retain_names = source_notdef.is_some();
     let notdef = source_notdef.map_or_else(notdef, Ok)?;

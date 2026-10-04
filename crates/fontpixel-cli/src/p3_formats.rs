@@ -269,18 +269,22 @@ impl WriteArguments {
         threshold: Option<u8>,
         registry: &mut FontRegistry,
     ) -> Result<()> {
-        let embedded_requested = self.otb_upm.is_some()
-            || self.otb_reference.is_some()
-            || self.otb_rounding.is_some();
+        let embedded_requested =
+            self.otb_upm.is_some() || self.otb_reference.is_some() || self.otb_rounding.is_some();
         if embedded_requested {
             if !matches!(id, "otb" | "bdat") {
                 return Err(Error::InvalidInput(
-                    "--otb-upm, --otb-reference and --otb-rounding require otb or bdat output".into(),
+                    "--otb-upm, --otb-reference and --otb-rounding require otb or bdat output"
+                        .into(),
                 ));
             }
             feature(
                 true,
-                if id == "otb" { cfg!(feature = "otb") } else { cfg!(feature = "bdat") },
+                if id == "otb" {
+                    cfg!(feature = "otb")
+                } else {
+                    cfg!(feature = "bdat")
+                },
                 id,
             )?;
         }

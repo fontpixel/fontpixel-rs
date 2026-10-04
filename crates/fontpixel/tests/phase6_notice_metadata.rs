@@ -11,25 +11,44 @@ use fontpixel::{
 const SOURCE: &str = "STARTFONT 2.1\nFONT notice-test\nSIZE 8 75 75\nFONTBOUNDINGBOX 1 1 0 0\nCOMMENT \"source header notice\"\nSTARTPROPERTIES 3\nCOMMENT \"source property notice\"\nCOPYRIGHT \"original copyright\"\nLICENSE \"original license\"\nLICENSE_URL \"https://example.org/original\"\nENDPROPERTIES\nCHARS 0\nENDFONT\n";
 
 fn source() -> Font {
-    bdf::read(SOURCE.as_bytes(), &ResourceLimits::default()).unwrap().0
+    bdf::read(SOURCE.as_bytes(), &ResourceLimits::default())
+        .unwrap()
+        .0
 }
 fn write(font: &Font) -> (Vec<u8>, Report) {
     bdf::write(font, &BdfWriteOptions::default()).unwrap()
 }
 fn read(bytes: &[u8]) -> Font {
     let (font, report) = bdf::read(bytes, &ResourceLimits::default()).unwrap();
-    assert!(!report.entries.iter().any(|entry| entry.code == "bdf.parse.property_count"));
+    assert!(
+        !report
+            .entries
+            .iter()
+            .any(|entry| entry.code == "bdf.parse.property_count")
+    );
     font
 }
 fn comments(font: &Font) -> Vec<&str> {
-    font.properties.iter().filter_map(|property| {
-        if property.name.eq_ignore_ascii_case("COMMENT") {
-            match &property.value { PropertyValue::Text(value) => Some(value.as_str()), _ => None }
-        } else { None }
-    }).collect()
+    font.properties
+        .iter()
+        .filter_map(|property| {
+            if property.name.eq_ignore_ascii_case("COMMENT") {
+                match &property.value {
+                    PropertyValue::Text(value) => Some(value.as_str()),
+                    _ => None,
+                }
+            } else {
+                None
+            }
+        })
+        .collect()
 }
 fn notices(report: &Report) -> usize {
-    report.entries.iter().filter(|entry| entry.code == "bdf.write.notice_line_breaks").count()
+    report
+        .entries
+        .iter()
+        .filter(|entry| entry.code == "bdf.write.notice_line_breaks")
+        .count()
 }
 
 #[test]
@@ -47,15 +66,28 @@ fn every_line_break_form_has_one_delimiter_and_preserves_each_line() {
             let (bytes, report) = write(&font);
             assert_eq!(font, before);
             assert_eq!(notices(&report), 1);
-            let entry = report.entries.iter().find(|entry| entry.code == "bdf.write.notice_line_breaks").unwrap();
+            let entry = report
+                .entries
+                .iter()
+                .find(|entry| entry.code == "bdf.write.notice_line_breaks")
+                .unwrap();
             assert_eq!(entry.level, Level::Warning);
             assert_eq!(entry.impact, Impact::Loss);
             assert!(entry.message.contains(field));
             assert!(entry.message.contains("does not establish"));
             let decoded = read(&bytes);
-            assert_eq!(decoded.properties.get(field), Some(&PropertyValue::Text("first | second".into())));
-            assert_eq!(comments(&decoded), ["source property notice", "first", "second"]);
-            assert_eq!(decoded.headers.get("COMMENT"), Some(&PropertyValue::Text("source header notice".into())));
+            assert_eq!(
+                decoded.properties.get(field),
+                Some(&PropertyValue::Text("first | second".into()))
+            );
+            assert_eq!(
+                comments(&decoded),
+                ["source property notice", "first", "second"]
+            );
+            assert_eq!(
+                decoded.headers.get("COMMENT"),
+                Some(&PropertyValue::Text("source header notice".into()))
+            );
         }
     }
 }
@@ -91,18 +123,39 @@ fn all_three_notices_project_once_in_effective_property_order() {
     font.names.license_url = Some("https://example.org/one\r\nhttps://example.org/two".into());
     let (bytes, report) = write(&font);
     assert_eq!(notices(&report), 3);
-    let projected: Vec<_> = report.entries.iter().filter(|entry| entry.code == "bdf.write.notice_line_breaks").collect();
+    let projected: Vec<_> = report
+        .entries
+        .iter()
+        .filter(|entry| entry.code == "bdf.write.notice_line_breaks")
+        .collect();
     assert!(projected[0].message.starts_with("COPYRIGHT "));
     assert!(projected[1].message.starts_with("LICENSE "));
     assert!(projected[2].message.starts_with("LICENSE_URL "));
     let decoded = read(&bytes);
-    assert_eq!(comments(&decoded), [
-        "source property notice", "copyright one", "copyright two", "license one", "license two",
-        "https://example.org/one", "https://example.org/two",
-    ]);
-    assert_eq!(decoded.names.copyright.as_deref(), Some("copyright one | copyright two"));
-    assert_eq!(decoded.names.license.as_deref(), Some("license one | license two"));
-    assert_eq!(decoded.names.license_url.as_deref(), Some("https://example.org/one | https://example.org/two"));
+    assert_eq!(
+        comments(&decoded),
+        [
+            "source property notice",
+            "copyright one",
+            "copyright two",
+            "license one",
+            "license two",
+            "https://example.org/one",
+            "https://example.org/two",
+        ]
+    );
+    assert_eq!(
+        decoded.names.copyright.as_deref(),
+        Some("copyright one | copyright two")
+    );
+    assert_eq!(
+        decoded.names.license.as_deref(),
+        Some("license one | license two")
+    );
+    assert_eq!(
+        decoded.names.license_url.as_deref(),
+        Some("https://example.org/one | https://example.org/two")
+    );
 }
 
 #[test]
@@ -141,7 +194,10 @@ fn arbitrary_multiline_fields_and_existing_comment_values_still_fail() {
         let mut font = source();
         edit(&mut font);
         let before = font.clone();
-        assert!(matches!(bdf::write(&font, &BdfWriteOptions::default()), Err(Error::InvalidInput(_))));
+        assert!(matches!(
+            bdf::write(&font, &BdfWriteOptions::default()),
+            Err(Error::InvalidInput(_))
+        ));
         assert_eq!(font, before);
     }
 }
@@ -152,25 +208,42 @@ fn raw_property_edits_and_duplicate_precedence_remain_authoritative() {
     font.properties.set("COPYRIGHT", "raw first\nraw second");
     let (bytes, report) = write(&font);
     assert_eq!(notices(&report), 1);
-    assert_eq!(read(&bytes).names.copyright.as_deref(), Some("raw first | raw second"));
+    assert_eq!(
+        read(&bytes).names.copyright.as_deref(),
+        Some("raw first | raw second")
+    );
     // Normalized text still equals the source snapshot, so the raw edit wins.
     assert_eq!(font.names.copyright.as_deref(), Some("original copyright"));
-    font.properties.push(Property::new("copyright", "discarded first\ndiscarded second"));
-    font.properties.push(Property::new("CoPyRiGhT", "effective first\reffective second"));
+    font.properties.push(Property::new(
+        "copyright",
+        "discarded first\ndiscarded second",
+    ));
+    font.properties.push(Property::new(
+        "CoPyRiGhT",
+        "effective first\reffective second",
+    ));
     let (bytes, report) = write(&font);
     let text = std::str::from_utf8(&bytes).unwrap();
     assert!(text.contains("CoPyRiGhT \"effective first | effective second\""));
     assert!(!text.contains("discarded first"));
     assert!(!text.contains("COMMENT \"raw first\""));
     assert_eq!(notices(&report), 1);
-    assert!(report.entries.iter().any(|entry| entry.code == "bdf.write.duplicate_property"));
+    assert!(
+        report
+            .entries
+            .iter()
+            .any(|entry| entry.code == "bdf.write.duplicate_property")
+    );
     // A genuine normalized change still supersedes the raw value under the
     // existing reconciliation contract, without mutating source properties.
     font.names.copyright = Some("normalized first\nnormalized second".into());
     let before = font.clone();
     let (bytes, report) = write(&font);
     assert_eq!(notices(&report), 1);
-    assert_eq!(read(&bytes).names.copyright.as_deref(), Some("normalized first | normalized second"));
+    assert_eq!(
+        read(&bytes).names.copyright.as_deref(),
+        Some("normalized first | normalized second")
+    );
     assert_eq!(font, before);
 }
 
@@ -184,7 +257,11 @@ fn unchanged_single_line_and_empty_notice_bytes_keep_existing_behavior() {
     empty.names.copyright = Some(String::new());
     let (bytes, report) = write(&empty);
     assert_eq!(notices(&report), 0);
-    assert!(std::str::from_utf8(&bytes).unwrap().contains("COPYRIGHT \"\"\n"));
+    assert!(
+        std::str::from_utf8(&bytes)
+            .unwrap()
+            .contains("COPYRIGHT \"\"\n")
+    );
     assert_eq!(comments(&read(&bytes)), ["source property notice"]);
 }
 
@@ -193,13 +270,34 @@ fn exact_output_limit_counts_comment_wrappers_quotes_and_utf8_bytes() {
     let mut font = source();
     font.names.license = Some("\r\n\"quote\"😀\r\n\nlast\n".into());
     let (expected, expected_report) = write(&font);
-    let options = BdfWriteOptions { max_output_bytes: expected.len(), ..Default::default() };
+    let options = BdfWriteOptions {
+        max_output_bytes: expected.len(),
+        ..Default::default()
+    };
     let (actual, report) = bdf::write(&font, &options).unwrap();
     assert_eq!(actual, expected);
     assert_eq!(report, expected_report);
-    let short = BdfWriteOptions { max_output_bytes: expected.len() - 1, ..Default::default() };
-    assert!(matches!(bdf::write(&font, &short), Err(Error::ResourceLimit { resource: "BDF output bytes", .. })));
+    let short = BdfWriteOptions {
+        max_output_bytes: expected.len() - 1,
+        ..Default::default()
+    };
+    assert!(matches!(
+        bdf::write(&font, &short),
+        Err(Error::ResourceLimit {
+            resource: "BDF output bytes",
+            ..
+        })
+    ));
     font.names.license = Some("\n".repeat(1000));
-    let small = BdfWriteOptions { max_output_bytes: 256, ..Default::default() };
-    assert!(matches!(bdf::write(&font, &small), Err(Error::ResourceLimit { resource: "BDF output bytes", limit: 256 })));
+    let small = BdfWriteOptions {
+        max_output_bytes: 256,
+        ..Default::default()
+    };
+    assert!(matches!(
+        bdf::write(&font, &small),
+        Err(Error::ResourceLimit {
+            resource: "BDF output bytes",
+            limit: 256
+        })
+    ));
 }
