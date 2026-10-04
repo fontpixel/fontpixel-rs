@@ -25,7 +25,8 @@ empty sequences and trailing bytes are rejected. Extended PSF2 headers are
 skipped with a loss diagnostic (not interpreted as pixels). Nonzero unused row
 padding bits are normalized with a repair diagnostic.
 
-No table means positional **legacy** codes, never guessed Unicode. With a table,
+No table means positional **legacy** codes with explicitly unknown charset,
+never guessed Unicode (the generic model's missing-charset fallback is avoided). With a table,
 only actual Unicode mappings are added; position is file order, so an empty
 entry remains unencoded. Baseline is zero, advance=cell width, ascent=height.
 

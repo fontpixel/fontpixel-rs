@@ -210,9 +210,7 @@ fn parse(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
     let mut font = Font::default();
     font.source_format = Some("psf".into());
     font.metrics = metrics(h.width, h.height, 0);
-    if h.table {
-        font.charset.name = Some("unicode".into());
-    }
+    font.charset.name = Some(if h.table { "unicode" } else { "unknown" }.into());
     let mut report = Report::default();
     if h.offset > 32 {
         diag(
@@ -602,6 +600,7 @@ pub fn write(font: &Font, options: &PsfWriteOptions) -> Result<(Vec<u8>, Report)
         "psf",
         &mut report,
         false,
+        table,
     );
     Ok((out.bytes, report))
 }

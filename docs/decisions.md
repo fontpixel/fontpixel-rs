@@ -1143,3 +1143,7 @@ and document the absent direct importer rather than inventing a passing test.
 The native console readers derive point size = cell height at 72 dpi so the
 existing BDF writer has a complete SIZE header. This introduces no claimed source
 physical measurement, and is documented as an explicit conversion convention.
+
+Table-less PSF explicitly sets charset `unknown`, because the generic BDF-oriented
+missing-charset fallback is Unicode. Legacy code tags and unknown charset together
+prevent downstream charset operations from accidentally inferring Unicode.

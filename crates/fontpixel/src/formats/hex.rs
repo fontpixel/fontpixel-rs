@@ -374,6 +374,7 @@ pub fn write(font: &Font, options: &HexWriteOptions) -> Result<(Vec<u8>, Report)
         "hex",
         &mut report,
         true,
+        true,
     );
     Ok((out.bytes, report))
 }

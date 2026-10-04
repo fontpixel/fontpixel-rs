@@ -108,6 +108,7 @@ pub(super) fn font_losses(
     format: &str,
     r: &mut Report,
     keep_comments: bool,
+    unicode: bool,
 ) {
     if font.names != FontNames::default() {
         diag(
@@ -120,11 +121,11 @@ pub(super) fn font_losses(
             "Font names, copyright and license metadata have no target fields",
         );
     }
-    let unicode = FontCharset {
-        name: Some("unicode".into()),
+    let charset = FontCharset {
+        name: Some(if unicode { "unicode" } else { "unknown" }.into()),
         ..Default::default()
     };
-    if font.charset != FontCharset::default() && font.charset != unicode {
+    if font.charset != FontCharset::default() && font.charset != charset {
         diag(
             r,
             format,

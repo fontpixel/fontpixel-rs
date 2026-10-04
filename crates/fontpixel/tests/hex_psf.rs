@@ -255,6 +255,8 @@ fn psf1_modes_counts_and_true_little_endian_sequence_markers() {
 fn psf_without_table_never_invents_unicode_and_unencoded_auto_has_table() {
     let b = psf2(1, 1, &[vec![0x80], vec![0]], None);
     let f = read_psf(&b);
+    assert_eq!(f.charset.name.as_deref(), Some("unknown"));
+    assert!(!f.charset.codec().unwrap().known());
     assert_eq!(
         f.glyphs().next().unwrap().1.codepoints,
         [Codepoint::Legacy(0)]
