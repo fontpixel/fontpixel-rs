@@ -68,7 +68,11 @@ impl FormatDetector for PsfCodec {
 }
 impl FormatReader<FontSet> for PsfCodec {
     fn read(&self, c: &mut ReadContext<'_>, _: &ReadOptions) -> Result<(FontSet, Report)> {
-        let (font, mut report) = parse(c.bytes(), c.limits())?;
+        let (font, mut report) = parse(
+            c.bytes(),
+            c.limits(),
+            Budget::new(c.retained_input_bytes(), c.limits())?,
+        )?;
         for e in &mut report.entries {
             e.location.asset = c.name().map(str::to_owned);
         }
@@ -165,11 +169,10 @@ fn header(bytes: &[u8]) -> Result<Header> {
 /// Read strict PSF geometry and Unicode grammar without guessing an encoding.
 pub fn read(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
     check(bytes.len(), limits.max_input_bytes, "PSF input bytes")?;
-    parse(bytes, limits)
+    parse(bytes, limits, Budget::new(bytes.len(), limits)?)
 }
 
-fn parse(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
-    let mut budget = Budget::new(bytes, limits)?;
+fn parse(bytes: &[u8], limits: &ResourceLimits, mut budget: Budget) -> Result<(Font, Report)> {
     let h = header(bytes)?;
     if h.count == 0 {
         return Err(invalid("PSF requires at least one glyph"));

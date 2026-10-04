@@ -38,7 +38,9 @@ explicit threshold and reports conversion. Empty fonts produce empty HEX and
 need an explicit format or filename hint when read.
 
 Input, text-record, glyph, pixel, cumulative decoded/model-memory and output
-budgets are checked before allocations. No per-glyph threads are created:
+budgets are checked before allocations. Comment output is subject to the same
+per-record cap as raster records. When gzip transport is enabled, retained
+compressed bytes, decoded bytes and model charges share one aggregate budget. No per-glyph threads are created:
 these tiny records are a linear byte task; independent fonts can be converted
 concurrently with the same immutable codec.
 

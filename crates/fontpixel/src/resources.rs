@@ -178,6 +178,12 @@ impl<'a> ReadContext<'a> {
         self.decoded.as_deref().unwrap_or(self.input.bytes)
     }
 
+    /// Bytes retained by the input context, including both gzip wire and decoded data.
+    #[cfg(any(feature = "hex", feature = "psf"))]
+    pub(crate) fn retained_input_bytes(&self) -> usize {
+        self.total_bytes
+    }
+
     /// Optional filename hint.
     pub fn name(&self) -> Option<&str> {
         self.input.name

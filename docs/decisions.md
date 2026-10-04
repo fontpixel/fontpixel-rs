@@ -1147,3 +1147,17 @@ physical measurement, and is documented as an explicit conversion convention.
 Table-less PSF explicitly sets charset `unknown`, because the generic BDF-oriented
 missing-charset fallback is Unicode. Legacy code tags and unknown charset together
 prevent downstream charset operations from accidentally inferring Unicode.
+
+## 2026-10-04 — Include retained gzip bytes and HEX comments in console budgets
+
+**Question:** Independent W3.1 review reproduced two boundary gaps: compressed
+input was checked by the transport but not included in the console model's
+aggregate charge, and HEX comment output bypassed the per-record cap.
+**Choice:** Seed the console read budget from all bytes retained by the read
+context (wire plus decoded input). Direct readers still charge their raw input
+once. Check each generated comment record, including its `#`, before writing;
+the LF delimiter is outside the text-record limit, matching the reader.
+**Reason:** Independently valid transport and model allocations must not each
+consume the same aggregate allowance. All record types must honor the selected
+output record cap. Four regressions establish rejection and exact inclusive
+boundaries for both codecs without changing valid font or mapping bytes.

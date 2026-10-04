@@ -135,7 +135,7 @@ or a parity warning about changed sources is not a final pass. See
 
 `hex` and `psf` are independent library features; the CLI enables both by default.
 No production dependency is added (`psf` uses the existing gzip transport).
-The focused test binary requires both features and runs 19 tests including 400
+The focused test binary requires both features and runs 23 tests including 400
 proptest cases. Use the complete matrix as usual, plus individual feature builds:
 
 ```sh

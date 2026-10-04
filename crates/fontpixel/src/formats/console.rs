@@ -25,12 +25,12 @@ pub(super) struct Budget {
     max: usize,
 }
 impl Budget {
-    pub fn new(input: &[u8], limits: &ResourceLimits) -> Result<Self> {
+    pub fn new(input_bytes: usize, limits: &ResourceLimits) -> Result<Self> {
         let mut out = Self {
             used: 0,
             max: limits.max_total_bytes,
         };
-        out.add(input.len())?;
+        out.add(input_bytes)?;
         Ok(out)
     }
     pub fn add(&mut self, bytes: usize) -> Result<()> {

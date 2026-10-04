@@ -49,6 +49,8 @@ strict mode rejects loss before any destination is replaced.
 
 Readers account for glyph bookkeeping, decoded pixels and mapping/sequence
 indexes against cumulative memory limits, separately from wire table limits.
+For gzip input, both the retained compressed data and decoded data contribute
+to that aggregate charge; the primary wire and decompression caps stay independent.
 Writers validate counts and output size before raster/table construction. Codecs
 are immutable and safe to call concurrently; no per-cell thread overhead.
 

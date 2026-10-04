@@ -748,3 +748,138 @@ fn embedded_carriage_return_in_hex_comment_is_lossless() {
         font
     );
 }
+
+#[test]
+fn review_hex_comment_records_obey_writer_table_limit() {
+    let mut font = Font::default();
+    font.headers
+        .push(Property::new("hex.comment", "x".repeat(256)));
+    let options = HexWriteOptions {
+        limits: ResourceLimits {
+            max_table_bytes: 64,
+            ..limits()
+        },
+        ..Default::default()
+    };
+    assert!(matches!(
+        hex::write(&font, &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
+fn review_gzip_model_budget_includes_retained_compressed_input() {
+    let plain = psf2(8, 16, &[vec![0; 16]], Some(b"A\xff"));
+    let font = read_psf(&plain);
+    let compressed = fontpixel::write(
+        &FontSet::from(font),
+        "psf",
+        &WriteOptions::new(ResourcePath::new("font.psf.gz").unwrap()),
+    )
+    .unwrap()
+    .output
+    .into_single()
+    .unwrap();
+    // Exact logical charge: decoded bytes + glyph bookkeeping + raster + alias.
+    let charged = plain.len() + 1024 + 16 + 128;
+    assert!(
+        psf::read(
+            &plain,
+            &ResourceLimits {
+                max_total_bytes: charged,
+                ..limits()
+            }
+        )
+        .is_ok()
+    );
+    let options = ReadOptions {
+        limits: ResourceLimits {
+            max_total_bytes: charged,
+            ..limits()
+        },
+        ..Default::default()
+    };
+    assert!(matches!(
+        fontpixel::read(&compressed, &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+    let options = ReadOptions {
+        limits: ResourceLimits {
+            max_total_bytes: charged + compressed.len(),
+            ..limits()
+        },
+        ..Default::default()
+    };
+    assert!(fontpixel::read(&compressed, &options).is_ok());
+}
+
+#[test]
+fn review_hex_gzip_budget_matches_exact_raw_and_transport_boundaries() {
+    let plain = hx(65, 8, 16).into_bytes();
+    let compressed = fontpixel::write(
+        &FontSet::from(read_hex(&plain)),
+        "hex",
+        &WriteOptions::new(ResourcePath::new("font.hex.gz").unwrap()),
+    )
+    .unwrap()
+    .output
+    .into_single()
+    .unwrap();
+    let charged = plain.len() + 1152 + 16;
+    let limits = ResourceLimits {
+        max_total_bytes: charged,
+        ..limits()
+    };
+    assert!(hex::read(&plain, &HexReadOptions::default(), &limits).is_ok());
+    assert!(matches!(
+        fontpixel::read(
+            &compressed,
+            &ReadOptions {
+                limits: limits.clone(),
+                ..Default::default()
+            }
+        ),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+    assert!(
+        fontpixel::read(
+            &compressed,
+            &ReadOptions {
+                limits: ResourceLimits {
+                    max_total_bytes: charged + compressed.len(),
+                    ..limits
+                },
+                ..Default::default()
+            }
+        )
+        .is_ok()
+    );
+}
+
+#[test]
+fn review_hex_comment_record_limit_is_inclusive_and_counts_hash() {
+    let mut font = Font::default();
+    font.headers
+        .push(Property::new("hex.comment", "x".repeat(63)));
+    let options = HexWriteOptions {
+        limits: ResourceLimits {
+            max_table_bytes: 64,
+            ..limits()
+        },
+        ..Default::default()
+    };
+    let bytes = hex::write(&font, &options).unwrap().0;
+    assert_eq!(bytes.len(), 65); // The 64-byte record plus its LF delimiter.
+    assert!(hex::read(&bytes, &options.geometry, &options.limits).is_ok());
+    let options = HexWriteOptions {
+        limits: ResourceLimits {
+            max_table_bytes: 63,
+            ..limits()
+        },
+        ..Default::default()
+    };
+    assert!(matches!(
+        hex::write(&font, &options),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}

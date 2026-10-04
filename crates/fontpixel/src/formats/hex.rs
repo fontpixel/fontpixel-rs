@@ -60,7 +60,12 @@ impl FormatDetector for HexCodec {
 }
 impl FormatReader<FontSet> for HexCodec {
     fn read(&self, c: &mut ReadContext<'_>, _: &ReadOptions) -> Result<(FontSet, Report)> {
-        let (font, mut report) = parse(c.bytes(), &self.read_options, c.limits())?;
+        let (font, mut report) = parse(
+            c.bytes(),
+            &self.read_options,
+            c.limits(),
+            Budget::new(c.retained_input_bytes(), c.limits())?,
+        )?;
         for e in &mut report.entries {
             e.location.asset = c.name().map(str::to_owned);
         }
@@ -139,16 +144,16 @@ pub fn read(
     limits: &ResourceLimits,
 ) -> Result<(Font, Report)> {
     check(bytes.len(), limits.max_input_bytes, "HEX input bytes")?;
-    parse(bytes, options, limits)
+    parse(bytes, options, limits, Budget::new(bytes.len(), limits)?)
 }
 
 fn parse(
     bytes: &[u8],
     options: &HexReadOptions,
     limits: &ResourceLimits,
+    mut budget: Budget,
 ) -> Result<(Font, Report)> {
     geometry(options)?;
-    let mut budget = Budget::new(bytes, limits)?;
     cell_size(8, options.height, limits)?;
     let text = std::str::from_utf8(bytes.strip_prefix(b"\xef\xbb\xbf").unwrap_or(bytes))
         .map_err(|_| invalid("HEX is not UTF-8"))?;
@@ -255,6 +260,15 @@ pub fn write(font: &Font, options: &HexWriteOptions) -> Result<(Vec<u8>, Report)
                 );
             }
             for line in text.split('\n') {
+                let record_bytes = line
+                    .len()
+                    .checked_add(1)
+                    .ok_or_else(|| limit("HEX output record", options.limits.max_table_bytes))?;
+                check(
+                    record_bytes,
+                    options.limits.max_table_bytes,
+                    "HEX output record",
+                )?;
                 out.add(b"#")?;
                 out.add(line.as_bytes())?;
                 out.add(b"\n")?;
