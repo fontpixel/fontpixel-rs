@@ -1,0 +1,554 @@
+//! Ordered multi-part merge CLI with typed diagnostics and transactional output.
+//! Reconstructed after the 2026-10-04 workspace replacement; validation pending.
+use clap::{ArgAction, ArgMatches, Args, Command, FromArgMatches, error::ErrorKind};
+use fontpixel::merge::{GeometricWidth, MergeSpacing, Selection};
+use std::{io::Write, mem::size_of, path::{Path, PathBuf}};
+use fontpixel::{Error, Font, FontSet, ReadOptions, Report, ReportEntry, Result};
+use fontpixel::merge::{MergeOptions, MergePart, MergeReport};
+use fontpixel::report::{Impact, Level, Location};
+use serde::{Serialize, Serializer, ser::{SerializeSeq, SerializeStruct}};
+use crate::{assets, batch, input_budget::InputBudget};
+use crate::{COutputArguments, ConsoleArguments, ImageArguments, PcfArguments,
+    RasterArguments, ReportStyle, VectorArguments, extra_formats, format_parser,
+    p2_formats, p3_formats};
+
+const HELP: &str = "Each --take, --dy, --from and --font-index applies to the immediately preceding --part. Each part requires --take. Each --to applies to the immediately preceding -o/--output.\n\nExamples:\n  fontpixel merge --family Mix --part CJK.bdf --take cjk --part Latin.bdf --take western,geometric --dy=-1 -o Mix.bdf -o Mix.woff2 --spacing prop\n  fontpixel merge --family Mix --part input.bdf --take all -o ambiguous.dat --to pcf";
+
+fn family_parser(value: &str) -> std::result::Result<String, String> {
+    let value = value.trim();
+    if value.is_empty() { Err("--family must not be empty".into()) }
+    else { Ok(value.to_owned()) }
+}
+
+#[derive(Args)]
+#[command(after_long_help = HELP)]
+struct RawMergeArgs {
+    #[arg(long = "part", required = true, action = ArgAction::Append)]
+    parts: Vec<PathBuf>,
+    #[arg(long, action = ArgAction::Append)]
+    take: Vec<String>,
+    #[arg(long, action = ArgAction::Append, allow_hyphen_values = true)]
+    dy: Vec<i64>,
+    #[arg(long, action = ArgAction::Append, value_parser = format_parser())]
+    from: Vec<String>,
+    #[arg(long, action = ArgAction::Append)]
+    font_index: Vec<usize>,
+    #[arg(short = 'o', long = "output", required = true, action = ArgAction::Append)]
+    outputs: Vec<PathBuf>,
+    #[arg(long, action = ArgAction::Append, value_parser = format_parser())]
+    to: Vec<String>,
+    #[arg(long, required = true, value_parser = family_parser)]
+    family: String,
+    #[arg(long, default_value = "auto", value_parser = ["auto", "mono", "prop"])]
+    spacing: String,
+    #[arg(long, default_value = "half", value_parser = ["half", "full"])]
+    geometric_width: String,
+    #[arg(long)]
+    allow_misaligned: bool,
+    #[arg(long)]
+    fallback: bool,
+    #[arg(long, value_parser = clap::value_parser!(i64).range(0..))]
+    ascent: Option<i64>,
+    #[arg(long, value_parser = clap::value_parser!(i64).range(0..))]
+    descent: Option<i64>,
+    #[arg(long)]
+    strict: bool,
+    #[arg(long, value_enum, default_value = "text")]
+    report: ReportStyle,
+    #[command(flatten)]
+    pcf: PcfArguments,
+    #[command(flatten)]
+    console: ConsoleArguments,
+    #[command(flatten)]
+    image: ImageArguments,
+    #[command(flatten)]
+    c: COutputArguments,
+    #[command(flatten)]
+    extra: extra_formats::WriteArguments,
+    #[command(flatten)]
+    p2: Box<p2_formats::WriteArguments>,
+    #[command(flatten)]
+    p3: Box<p3_formats::WriteArguments>,
+    #[command(flatten)]
+    raster: Box<RasterArguments>,
+    #[command(flatten)]
+    vector: VectorArguments,
+}
+
+struct PartArgument {
+    input: PathBuf,
+    selection: Selection,
+    dy: i64,
+    from: Option<String>,
+    font_index: Option<usize>,
+}
+struct OutputArgument {
+    destination: PathBuf,
+    format: Option<String>,
+}
+pub(crate) struct MergeArgs {
+    raw: RawMergeArgs,
+    parts: Vec<PartArgument>,
+    outputs: Vec<OutputArgument>,
+}
+impl Args for MergeArgs {
+    fn augment_args(command: Command) -> Command { RawMergeArgs::augment_args(command) }
+    fn augment_args_for_update(command: Command) -> Command {
+        RawMergeArgs::augment_args_for_update(command)
+    }
+}
+impl FromArgMatches for MergeArgs {
+    fn from_arg_matches(matches: &ArgMatches) -> std::result::Result<Self, clap::Error> {
+        let parts = parse_parts(matches)?;
+        let outputs = parse_outputs(matches)?;
+        let mut raw = RawMergeArgs::from_arg_matches(matches)?;
+        // Ordering has been reconstructed into typed parts/outputs; discard
+        // clap's parallel value arrays instead of retaining duplicate strings.
+        drop(std::mem::take(&mut raw.parts));
+        drop(std::mem::take(&mut raw.take));
+        drop(std::mem::take(&mut raw.dy));
+        drop(std::mem::take(&mut raw.from));
+        drop(std::mem::take(&mut raw.font_index));
+        drop(std::mem::take(&mut raw.outputs));
+        drop(std::mem::take(&mut raw.to));
+        Ok(Self { raw, parts, outputs })
+    }
+    fn update_from_arg_matches(&mut self, matches: &ArgMatches) -> std::result::Result<(), clap::Error> {
+        *self = Self::from_arg_matches(matches)?;
+        Ok(())
+    }
+}
+impl MergeArgs {
+    pub(crate) fn report_style(&self) -> ReportStyle { self.raw.report }
+    fn spacing(&self) -> MergeSpacing {
+        match self.raw.spacing.as_str() {
+            "mono" => MergeSpacing::Mono,
+            "prop" => MergeSpacing::Prop,
+            _ => MergeSpacing::Auto,
+        }
+    }
+    fn geometric_width(&self) -> GeometricWidth {
+        match self.raw.geometric_width.as_str() {
+            "full" => GeometricWidth::Full,
+            _ => GeometricWidth::Half,
+        }
+    }
+}
+fn usage(message: impl Into<String>) -> clap::Error {
+    clap::Error::raw(ErrorKind::InvalidValue, message.into())
+}
+
+// The original module used this ordered-index approach. Exact original local
+// type names and implementation bytes have not survived.
+fn indexed<T: Clone + Send + Sync + 'static>(matches: &ArgMatches, id: &str) -> Vec<(usize, T)> {
+    match (matches.indices_of(id), matches.get_many::<T>(id)) {
+        (Some(indices), Some(values)) => indices.zip(values.cloned()).collect(),
+        _ => Vec::new(),
+    }
+}
+enum PartEvent {
+    Part(PathBuf), Take(String), Dy(i64), From(String), FontIndex(usize),
+}
+#[derive(Default)]
+struct PendingPart {
+    input: PathBuf,
+    take: Option<Selection>,
+    dy: Option<i64>,
+    from: Option<String>,
+    font_index: Option<usize>,
+}
+impl PendingPart {
+    fn finish(self) -> std::result::Result<PartArgument, clap::Error> {
+        Ok(PartArgument {
+            input: self.input,
+            selection: self.take.ok_or_else(|| usage("every --part requires --take"))?,
+            dy: self.dy.unwrap_or(0), from: self.from, font_index: self.font_index,
+        })
+    }
+}
+fn parse_parts(matches: &ArgMatches) -> std::result::Result<Vec<PartArgument>, clap::Error> {
+    let mut events = Vec::new();
+    events.extend(indexed::<PathBuf>(matches, "parts").into_iter().map(|(i,v)| (i, PartEvent::Part(v))));
+    events.extend(indexed::<String>(matches, "take").into_iter().map(|(i,v)| (i, PartEvent::Take(v))));
+    events.extend(indexed::<i64>(matches, "dy").into_iter().map(|(i,v)| (i, PartEvent::Dy(v))));
+    events.extend(indexed::<String>(matches, "from").into_iter().map(|(i,v)| (i, PartEvent::From(v))));
+    events.extend(indexed::<usize>(matches, "font_index").into_iter().map(|(i,v)| (i, PartEvent::FontIndex(v))));
+    events.sort_by_key(|(index, _)| *index);
+    let mut result = Vec::new();
+    let mut pending: Option<PendingPart> = None;
+    for (_, event) in events {
+        if let PartEvent::Part(input) = event {
+            if let Some(previous) = pending.take() { result.push(previous.finish()?); }
+            pending = Some(PendingPart { input, ..Default::default() });
+            continue;
+        }
+        let part = pending.as_mut().ok_or_else(|| usage("--take, --dy, --from and --font-index require a preceding --part"))?;
+        match event {
+            PartEvent::Take(value) => {
+                if part.take.is_some() { return Err(usage("--take may occur once per --part")); }
+                part.take = Some(Selection::parse(&value).map_err(|e| usage(e.to_string()))?);
+            }
+            PartEvent::Dy(value) => {
+                if part.dy.replace(value).is_some() { return Err(usage("--dy may occur once per --part")); }
+            }
+            PartEvent::From(value) => {
+                if part.from.replace(value).is_some() { return Err(usage("--from may occur once per --part")); }
+            }
+            PartEvent::FontIndex(value) => {
+                if part.font_index.replace(value).is_some() { return Err(usage("--font-index may occur once per --part")); }
+            }
+            PartEvent::Part(_) => unreachable!(),
+        }
+    }
+    if let Some(part) = pending { result.push(part.finish()?); }
+    if result.is_empty() { return Err(usage("at least one --part is required")); }
+    Ok(result)
+}
+fn parse_outputs(matches: &ArgMatches) -> std::result::Result<Vec<OutputArgument>, clap::Error> {
+    enum Event { Output(PathBuf), Format(String) }
+    let mut events = Vec::new();
+    events.extend(indexed::<PathBuf>(matches, "outputs").into_iter().map(|(i,v)| (i, Event::Output(v))));
+    events.extend(indexed::<String>(matches, "to").into_iter().map(|(i,v)| (i, Event::Format(v))));
+    events.sort_by_key(|(index, _)| *index);
+    let mut result: Vec<OutputArgument> = Vec::new();
+    for (_, event) in events {
+        match event {
+            Event::Output(destination) => result.push(OutputArgument { destination, format: None }),
+            Event::Format(format) => {
+                let last = result.last_mut().ok_or_else(|| usage("--to requires a preceding -o/--output"))?;
+                if last.format.replace(format).is_some() { return Err(usage("--to may occur once per output")); }
+            }
+        }
+    }
+    if result.is_empty() { return Err(usage("at least one -o/--output is required")); }
+    Ok(result)
+}
+
+fn limit_error(limit: usize) -> Error {
+    Error::ResourceLimit { resource: "retained merge CLI bytes", limit }
+}
+fn add_bytes(total: &mut usize, bytes: usize, limit: usize) -> Result<()> {
+    *total = total.checked_add(bytes).ok_or_else(|| limit_error(limit))?;
+    if *total > limit { return Err(limit_error(limit)); }
+    Ok(())
+}
+fn vector_bytes<T>(values: &Vec<T>, total: &mut usize, limit: usize) -> Result<()> {
+    add_bytes(total, values.capacity().checked_mul(size_of::<T>()).ok_or_else(|| limit_error(limit))?, limit)
+}
+fn report_allocations(report: &Report, total: &mut usize, limit: usize) -> Result<()> {
+    vector_bytes(&report.entries, total, limit)?;
+    for entry in &report.entries {
+        add_bytes(total, entry.code.capacity(), limit)?;
+        add_bytes(total, entry.message.capacity(), limit)?;
+        add_bytes(total, entry.location.asset.as_ref().map_or(0, String::capacity), limit)?;
+    }
+    Ok(())
+}
+fn merge_report_bytes(report: &MergeReport, limit: usize) -> Result<usize> {
+    let mut total = size_of::<MergeReport>();
+    add_bytes(&mut total, report.unicode_version.capacity(), limit)?;
+    add_bytes(&mut total, report.family.capacity(), limit)?;
+    vector_bytes(&report.parts, &mut total, limit)?;
+    for part in &report.parts {
+        add_bytes(&mut total, part.label.capacity(), limit)?;
+        add_bytes(&mut total, part.selection.capacity(), limit)?;
+        vector_bytes(&part.missing_ranges, &mut total, limit)?;
+        vector_bytes(&part.missing_blocks, &mut total, limit)?;
+        for block in &part.missing_blocks { add_bytes(&mut total, block.block.capacity(), limit)?; }
+    }
+    vector_bytes(&report.adjustments, &mut total, limit)?;
+    for adjustment in &report.adjustments {
+        vector_bytes(&adjustment.codepoints, &mut total, limit)?;
+        add_bytes(&mut total, adjustment.reason.capacity(), limit)?;
+    }
+    vector_bytes(&report.metrics.parts, &mut total, limit)?;
+    vector_bytes(&report.licenses, &mut total, limit)?;
+    for license in &report.licenses {
+        add_bytes(&mut total, license.label.capacity(), limit)?;
+        add_bytes(&mut total, license.provenance.capacity(), limit)?;
+        for value in [&license.copyright, &license.license, &license.license_url] {
+            add_bytes(&mut total, value.as_ref().map_or(0, String::capacity), limit)?;
+        }
+        vector_bytes(&license.reserved_names, &mut total, limit)?;
+        for name in &license.reserved_names { add_bytes(&mut total, name.capacity(), limit)?; }
+    }
+    report_allocations(&report.diagnostics, &mut total, limit)?;
+    Ok(total)
+}
+fn reports_bytes(reports: &Vec<Report>, limit: usize) -> Result<usize> {
+    let mut total = size_of::<Vec<Report>>();
+    vector_bytes(reports, &mut total, limit)?;
+    for report in reports { report_allocations(report, &mut total, limit)?; }
+    Ok(total)
+}
+fn reserve<T>(values: &mut Vec<T>, count: usize, maximum: usize) -> Result<()> {
+    let bytes = count.checked_mul(size_of::<T>()).ok_or_else(|| limit_error(maximum))?;
+    if bytes > maximum { return Err(limit_error(maximum)); }
+    values.try_reserve_exact(count).map_err(|_| limit_error(maximum))
+}
+fn combined_error(error: Error, reads: Vec<Report>, merge: Option<Report>) -> Error {
+    let (strict, mut last) = match error {
+        Error::StrictLoss(report) => (true, report),
+        Error::ReportedErrors(report) => (false, report),
+        other => return other,
+    };
+    let mut report = Report::default();
+    for read in reads { report.extend(read); }
+    if let Some(merge) = merge { report.extend(merge); }
+    report.entries.append(&mut last.entries);
+    if strict { Error::StrictLoss(report) } else { Error::ReportedErrors(report) }
+}
+fn output_format(output: &OutputArgument) -> Result<String> {
+    if let Some(format) = &output.format { return Ok(format.clone()); }
+    let extension = output.destination.extension().and_then(|value| value.to_str()).map(str::to_ascii_lowercase);
+    let special = match extension.as_deref() {
+        Some("ttf") => Some("ttf"), Some("otf") => Some("otf"),
+        Some("ttc" | "otc") => Some("ttc"), Some("woff") => Some("woff"),
+        Some("woff2") => Some("woff2"), _ => None,
+    };
+    if let Some(id) = special { return Ok(id.into()); }
+    Ok(fontpixel::registry().format_from_name(&output.destination.to_string_lossy())?.id.into())
+}
+fn is_vector(id: &str) -> bool {
+    matches!(id, "svg" | "ttf" | "otf" | "ttc" | "woff" | "woff2" | "vector-raster")
+}
+fn writer_registry(raw: &RawMergeArgs, id: &str, destination: &Path, any_vector: bool) -> Result<fontpixel::FontRegistry> {
+    let mut registry = fontpixel::registry();
+    raw.pcf.apply(id, &mut registry)?;
+    raw.raster.apply(&mut registry)?;
+    // Full vector settings govern vector members in a mixed output group. With
+    // no vector target, retain convert's rejection of inapplicable settings.
+    if is_vector(id) || !any_vector { raw.vector.apply(id, &mut registry)?; }
+    raw.console.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.image.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.c.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.extra.apply(id, &raw.raster, raw.vector.gray_threshold, &mut registry)?;
+    raw.p2.apply(id, destination, &raw.raster.p2, &raw.raster.input_limits(), raw.vector.gray_threshold, &mut registry)?;
+    raw.p3.apply(id, &raw.raster.p3, &raw.raster.input_limits(), raw.vector.gray_threshold, &mut registry)?;
+    registry.ensure_writable(id)?;
+    Ok(registry)
+}
+
+#[derive(Serialize)]
+struct AssetSummary { path: String, bytes: usize }
+struct OutputSummary { bytes: usize, assets: Vec<AssetSummary>, report: Report }
+struct CombinedReport<'a> { reads: &'a [Report], merge: &'a Report, written: &'a Report }
+struct CombinedEntries<'a>(&'a CombinedReport<'a>);
+impl Serialize for CombinedEntries<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
+        let mut sequence = serializer.serialize_seq(None)?;
+        for entry in self.0.reads.iter().flat_map(|r| &r.entries)
+            .chain(&self.0.merge.entries).chain(&self.0.written.entries) {
+            sequence.serialize_element(entry)?;
+        }
+        sequence.end()
+    }
+}
+impl Serialize for CombinedReport<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
+        let mut record = serializer.serialize_struct("Report", 1)?;
+        record.serialize_field("entries", &CombinedEntries(self))?;
+        record.end()
+    }
+}
+#[derive(Serialize)]
+struct OutputReport<'a> {
+    output: &'a Path, format: &'a str, bytes: usize,
+    assets: &'a [AssetSummary], report: CombinedReport<'a>,
+}
+struct OutputReports<'a> {
+    specs: &'a [OutputArgument], formats: &'a [String], summaries: &'a [OutputSummary],
+    reads: &'a [Report], merge: &'a Report,
+}
+impl Serialize for OutputReports<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
+        let mut sequence = serializer.serialize_seq(Some(self.summaries.len()))?;
+        for ((spec, format), summary) in self.specs.iter().zip(self.formats).zip(self.summaries) {
+            sequence.serialize_element(&OutputReport {
+                output: &spec.destination, format, bytes: summary.bytes, assets: &summary.assets,
+                report: CombinedReport { reads: self.reads, merge: self.merge, written: &summary.report },
+            })?;
+        }
+        sequence.end()
+    }
+}
+#[derive(Serialize)]
+struct CompleteReport<'a> {
+    family: &'a str, glyphs: usize, merge: &'a MergeReport, outputs: OutputReports<'a>,
+}
+
+pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
+    let spacing = args.spacing();
+    let geometric_width = args.geometric_width();
+    let MergeArgs { raw, parts, outputs } = args;
+    let limits = raw.raster.input_limits();
+    if parts.len() > limits.max_resources || outputs.len() > limits.max_resources {
+        return Err(Error::ResourceLimit { resource: "merge parts/outputs", limit: limits.max_resources });
+    }
+    // Resolve every writer before any input work. No file is opened for output.
+    let formats: Vec<String> = outputs.iter().map(output_format).collect::<Result<_>>()?;
+    let any_vector = formats.iter().any(|id| is_vector(id));
+    for (spec, id) in outputs.iter().zip(&formats) {
+        let filename = spec.destination.file_name().and_then(|v| v.to_str())
+            .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
+        fontpixel::ResourcePath::new(filename)?;
+        if matches!(raw.report, ReportStyle::Json) && spec.destination.to_str().is_none() {
+            return Err(Error::InvalidInput("JSON output paths must be valid UTF-8".into()));
+        }
+        drop(writer_registry(&raw, id, &spec.destination, any_vector)?);
+    }
+    let sources = batch::sources();
+    let mut input_budget = InputBudget::new(limits.clone());
+    let mut selected_fonts: Vec<Font> = Vec::new();
+    let mut read_reports: Vec<Report> = Vec::new();
+    reserve(&mut selected_fonts, parts.len(), limits.max_total_bytes)?;
+    reserve(&mut read_reports, parts.len(), limits.max_total_bytes)?;
+    let mut registry = fontpixel::registry();
+    raw.raster.apply(&mut registry)?;
+    let mut selected_bytes = 0usize;
+    for (part_index, part) in parts.iter().enumerate() {
+        let remaining = input_budget.remaining_limits()?;
+        let file = assets::FileInput::open(&part.input, &remaining, sources.clone())?;
+        let mut loaded = registry.read(&file.input(), &ReadOptions { format: part.from.clone(), limits: remaining.clone() })?;
+        drop(file);
+        let index = match (part.font_index, loaded.fonts.fonts.len()) {
+            (Some(index), count) if index < count => index,
+            (None, 1) => 0,
+            (None, 0) => return Err(Error::InvalidInput(format!("part {part_index} contains no fonts"))),
+            (None, count) => return Err(Error::InvalidInput(format!("part {part_index} contains {count} fonts; select one with --font-index"))),
+            (Some(index), count) => return Err(Error::InvalidInput(format!("part {part_index} --font-index {index} is outside {count} fonts"))),
+        };
+        if !loaded.fonts.properties.is_empty() {
+            loaded.report.push(ReportEntry {
+                level: Level::Warning, impact: Impact::Loss, code: "merge.container_properties".into(),
+                location: Location { font_index: Some(index), ..Location::default() },
+                message: "Container properties cannot be assigned to the selected merge part and are omitted".into(),
+            });
+        }
+        // Check missing provenance string storage before duplicating it. Actual
+        // capacities, including diagnostics and reserve arrays, are admitted next.
+        let label = part.input.to_string_lossy();
+        let labels = loaded.report.entries.iter().filter(|entry| entry.location.asset.is_none()).count();
+        let mut decoded_bytes = loaded.fonts.retained_usage(remaining.max_total_bytes)?.bytes;
+        report_allocations(&loaded.report, &mut decoded_bytes, remaining.max_total_bytes)?;
+        add_bytes(&mut decoded_bytes, labels.checked_mul(label.len()).ok_or_else(|| limit_error(remaining.max_total_bytes))?, remaining.max_total_bytes)?;
+        for entry in &mut loaded.report.entries {
+            if entry.location.asset.is_none() { entry.location.asset = Some(label.to_string()); }
+        }
+        input_budget.admit(&loaded)?;
+        let font = loaded.fonts.fonts.into_iter().nth(index)
+            .ok_or_else(|| Error::InvalidInput("selected merge part disappeared".into()))?;
+        add_bytes(&mut selected_bytes, font.retained_usage(limits.max_total_bytes)?.bytes, limits.max_total_bytes)?;
+        selected_fonts.push(font);
+        read_reports.push(loaded.report);
+    }
+    drop(registry);
+    if read_reports.iter().any(Report::has_errors) {
+        return Err(combined_error(Error::ReportedErrors(Report::default()), read_reports, None));
+    }
+    if raw.strict && read_reports.iter().any(Report::has_loss) {
+        return Err(combined_error(Error::StrictLoss(Report::default()), read_reports, None));
+    }
+    // The library charges the borrowed selected models itself. Restore exactly
+    // those already-admitted bytes and original aggregate glyph allowance for
+    // its invocation; reader reports and other read reserves stay deducted.
+    let remaining = input_budget.remaining_limits()?;
+    let mut merge_limits = limits.clone();
+    merge_limits.max_total_bytes = remaining.max_total_bytes.checked_add(selected_bytes)
+        .filter(|n| *n <= limits.max_total_bytes).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+    let merged = {
+        let merge_parts: Vec<_> = parts.into_iter().zip(&selected_fonts).map(|(part, font)| {
+            let mut source = MergePart::new(font, part.selection);
+            source.dy = part.dy;
+            source
+        }).collect();
+        let options = MergeOptions { family: raw.family.clone(), spacing, geometric_width,
+            allow_misaligned: raw.allow_misaligned, fallback: raw.fallback,
+            ascent: raw.ascent, descent: raw.descent, strict: raw.strict, limits: merge_limits };
+        match fontpixel::merge::merge(&merge_parts, &options) {
+            Ok(merged) => merged,
+            Err(error) => return Err(combined_error(error, read_reports, None)),
+        }
+    };
+    // No writer borrows the originals. Release them before computing the exact
+    // remaining live-model/report/output allowance, rather than charging dead data.
+    drop(selected_fonts);
+    let fonts = FontSet::from(merged.font);
+    let model_bytes = fonts.retained_usage(limits.max_total_bytes)?.bytes;
+    let mut retained = model_bytes;
+    add_bytes(&mut retained, merge_report_bytes(&merged.report, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    add_bytes(&mut retained, reports_bytes(&read_reports, limits.max_total_bytes)?, limits.max_total_bytes)?;
+    let mut pending: Vec<assets::PendingOutput> = Vec::new();
+    let mut summaries: Vec<OutputSummary> = Vec::new();
+    add_bytes(&mut retained, size_of::<Vec<assets::PendingOutput>>(), limits.max_total_bytes)?;
+    add_bytes(&mut retained, size_of::<Vec<OutputSummary>>(), limits.max_total_bytes)?;
+    reserve(&mut pending, outputs.len(), limits.max_total_bytes.saturating_sub(retained))?;
+    vector_bytes(&pending, &mut retained, limits.max_total_bytes)?;
+    reserve(&mut summaries, outputs.len(), limits.max_total_bytes.saturating_sub(retained))?;
+    vector_bytes(&summaries, &mut retained, limits.max_total_bytes)?;
+    for (spec, id) in outputs.iter().zip(&formats) {
+        let filename = spec.destination.file_name().and_then(|v| v.to_str())
+            .ok_or_else(|| Error::InvalidInput("output must have a UTF-8 filename".into()))?;
+        let mut write_options = fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
+        write_options.strict = raw.strict;
+        let available = limits.max_total_bytes.checked_sub(retained).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+        let mut resources = limits.clone();
+        resources.max_total_bytes = available.checked_add(model_bytes).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+        write_options.transport_limits = Some(fontpixel::formats::TransportLimits {
+            resources, max_output_bytes: available,
+        });
+        let registry = writer_registry(&raw, id, &spec.destination, any_vector)?;
+        let written = match registry.write(&fonts, id, &write_options) {
+            Ok(written) => written,
+            Err(error) => return Err(combined_error(error, read_reports, Some(merged.report.diagnostics))),
+        };
+        drop(registry);
+        // PendingOutput's inline bundle is already in pending's charged slots.
+        let bundle_heap = written.output.retained_bytes(limits.max_total_bytes)?
+            .checked_sub(size_of::<fontpixel::OutputBundle>()).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+        add_bytes(&mut retained, bundle_heap, limits.max_total_bytes)?;
+        report_allocations(&written.report, &mut retained, limits.max_total_bytes)?;
+        let mut assets = Vec::new();
+        reserve(&mut assets, written.output.assets().len(), limits.max_total_bytes.saturating_sub(retained))?;
+        vector_bytes(&assets, &mut retained, limits.max_total_bytes)?;
+        let mut bytes = 0usize;
+        for asset in written.output.assets() {
+            // String::from copies exactly the visible validated asset path;
+            // reserve its bytes before allocation, then charge actual capacity.
+            let remaining = limits.max_total_bytes.saturating_sub(retained);
+            if asset.path.as_str().len() > remaining { return Err(limit_error(limits.max_total_bytes)); }
+            let path = asset.path.as_str().to_owned();
+            add_bytes(&mut retained, path.capacity(), limits.max_total_bytes)?;
+            bytes = bytes.checked_add(asset.bytes.len()).ok_or_else(|| limit_error(limits.max_total_bytes))?;
+            assets.push(AssetSummary { path, bytes: asset.bytes.len() });
+        }
+        if spec.destination.as_os_str().len() > limits.max_total_bytes.saturating_sub(retained) {
+            return Err(limit_error(limits.max_total_bytes));
+        }
+        let destination = spec.destination.clone();
+        add_bytes(&mut retained, destination.capacity(), limits.max_total_bytes)?;
+        summaries.push(OutputSummary { bytes, assets, report: written.report });
+        pending.push(assets::PendingOutput { destination, bundle: written.output });
+    }
+    // Complete every writer and strict check before handing off the output group.
+    // Batch defers this call; standalone execution commits the same transaction.
+    batch::persist_outputs(pending, &sources)?;
+    match raw.report {
+        ReportStyle::Json => {
+            crate::emit_json(output, &CompleteReport {
+                family: &raw.family, glyphs: fonts.fonts[0].len(), merge: &merged.report,
+                outputs: OutputReports { specs: &outputs, formats: &formats, summaries: &summaries,
+                    reads: &read_reports, merge: &merged.report.diagnostics },
+            })?;
+        }
+        ReportStyle::Text => {
+            for report in &read_reports { write!(output, "{report}")?; }
+            write!(output, "{}", merged.report)?;
+            for ((spec, id), summary) in outputs.iter().zip(&formats).zip(&summaries) {
+                write!(output, "{}", summary.report)?;
+                writeln!(output, "Wrote {} bytes as {} to {}", summary.bytes, id, spec.destination.display())?;
+            }
+        }
+    }
+    Ok(())
+}

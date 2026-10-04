@@ -224,3 +224,22 @@ fn cli_rejects_cumulative_inputs_before_replacing_an_existing_output() {
     );
     assert_eq!(std::fs::read(&target).unwrap(), b"original output");
 }
+
+#[test]
+#[cfg(feature = "opentype")]
+fn language_route_clones_reserve_before_allocation_and_fail_atomically() {
+    let input = loaded();
+    let mut budget = InputBudget::new(ResourceLimits {
+        max_glyphs: 2,
+        max_total_bytes: 100_000,
+        ..Default::default()
+    });
+    budget.admit(&input).unwrap();
+    let before = budget.remaining_limits().unwrap();
+    budget.reserve_font_clone(&input.fonts.fonts[0]).unwrap();
+    let after = budget.remaining_limits().unwrap();
+    assert_eq!(after.max_glyphs, 0);
+    assert!(after.max_total_bytes < before.max_total_bytes);
+    assert!(budget.reserve_font_clone(&input.fonts.fonts[0]).is_err());
+    assert_eq!(budget.remaining_limits().unwrap(), after);
+}

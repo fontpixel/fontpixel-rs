@@ -54,6 +54,15 @@ pub struct Options {
     pub family: Option<String>,
     /// Style name; default Square/SquareSeparate/Dot.
     pub style: Option<String>,
+    /// Legacy subfamily (name ID 2); absent preserves `Regular`, independent of ID 17.
+    /// Ignored when an exact `names` table is supplied.
+    pub legacy_style: Option<String>,
+    /// Exact full display name; absent retains family/style generation.
+    /// Ignored when an exact `names` table is supplied.
+    pub full_name: Option<String>,
+    /// Exact PostScript name; absent retains existing generation.
+    /// Ignored when an exact `names` table is supplied.
+    pub postscript_name: Option<String>,
     /// Deterministic version text without the `Version ` prefix.
     pub version: String,
     /// Four-byte vendor identifier.
@@ -82,6 +91,9 @@ impl Default for Options {
             gray_threshold: None,
             family: None,
             style: None,
+            legacy_style: None,
+            full_name: None,
+            postscript_name: None,
             version: "1.0".into(),
             vendor: *b"NONE",
             copyright: None,
@@ -99,6 +111,24 @@ pub struct Encoded {
     pub bytes: Vec<u8>,
     /// Source information that could not be represented.
     pub report: Report,
+}
+fn validate_names(o: &Options) -> Result<()> {
+    if o.names.is_some() {
+        return Ok(());
+    }
+    for (value, resource, missing) in [
+        (&o.legacy_style, "legacy style bytes", "legacy_style requires nonempty identity text"),
+        (&o.full_name, "full name bytes", "full_name requires nonempty identity text"),
+        (&o.postscript_name, "PostScript name bytes", "postscript_name requires nonempty identity text"),
+    ] {
+        if let Some(value) = value {
+            sfnt::bounded(value.len(), o.limits.sfnt.resources.max_table_bytes, resource)?;
+            if value.trim().is_empty() {
+                return Err(invalid(missing));
+            }
+        }
+    }
+    Ok(())
 }
 fn i16n(v: i64) -> Result<i16> {
     i16::try_from(v).map_err(|_| invalid("metric exceeds signed 16-bit range"))
@@ -152,6 +182,7 @@ fn notdef() -> Result<Glyph> {
 }
 /// Vectorize planned variants using the native, independently checked table codecs.
 pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
+    validate_names(o)?;
     if !(o.dot_size > 0. && o.dot_size <= 1.5) || (o.shape == Shape::Square && o.dot_size != 1.) {
         return Err(invalid("invalid dot size for the chosen outline shape"));
     }
@@ -171,6 +202,7 @@ fn encode_planned(
         return Err(invalid("invalid dot size for the chosen outline shape"));
     }
     let l = &o.limits.sfnt;
+    validate_names(o)?;
     let scale = i64::from(o.units_per_pixel);
     if scale == 0 {
         return Err(invalid("units_per_pixel must be positive"));
@@ -211,14 +243,14 @@ fn encode_planned(
         Shape::SquareSeparate => "SquareSeparate",
         Shape::Dot => "Dot",
     });
-    let fullname = format!("{family} {style}");
-    let psname = format!(
+    let fullname = o.full_name.as_ref().filter(|_| o.names.is_none()).cloned().unwrap_or_else(|| format!("{family} {style}"));
+    let psname = o.postscript_name.as_ref().filter(|_| o.names.is_none()).cloned().unwrap_or_else(|| format!(
         "{}-{style}",
         family
             .chars()
             .filter(|c| c.is_ascii_alphanumeric() || *c == '-')
             .collect::<String>()
-    );
+    ));
     let mut report = Report::default();
     let retain_names = source_notdef.is_some();
     let notdef = source_notdef.map_or_else(notdef, Ok)?;
@@ -551,7 +583,9 @@ fn encode_planned(
             {
                 let f = sfnt::cff::Font {
                     postscript_name: psname.clone(),
-                    full_name: if fullname.is_ascii() {
+                    full_name: if fullname.is_ascii()
+                        || (o.names.is_none() && o.full_name.is_some())
+                    {
                         fullname.clone()
                     } else {
                         psname.clone()
@@ -678,7 +712,7 @@ fn encode_planned(
     } else {
         let mut values = vec![
             (1, family.to_owned()),
-            (2, "Regular".into()),
+            (2, o.legacy_style.as_deref().unwrap_or("Regular").into()),
             (3, format!("{family} {style} {}", o.version)),
             (4, fullname),
             (5, format!("Version {}", o.version)),
@@ -769,6 +803,7 @@ fn encode_planned(
 /// Vectorize one complete Font while retaining aliases and unencoded glyphs.
 /// Unlike regional planning this preserves physical glyph identity and order.
 pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
+    validate_names(o)?;
     font.validate(&o.limits.sfnt.resources)?;
     let mut native_bytes = 0usize;
     for (_, g) in font.glyphs() {

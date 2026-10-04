@@ -1,0 +1,863 @@
+{
+  "record_type": "read-only source inventory; no targets or project code executed",
+  "observed_at_utc": "2026-10-04T19:18:53.444212+00:00",
+  "catalogue_count": 99,
+  "fuzz_binary_count": 104,
+  "same_name_count": 82,
+  "reader_targets": {
+    "bdf": [
+      "bdf"
+    ],
+    "pcf": [
+      "pcf"
+    ],
+    "snf": [
+      "snf"
+    ],
+    "hex": [
+      "hex"
+    ],
+    "draw": [
+      "draw"
+    ],
+    "psf": [
+      "psf"
+    ],
+    "cpi": [
+      "cpi"
+    ],
+    "raw": [
+      "raw"
+    ],
+    "yaff": [
+      "yaff"
+    ],
+    "pf2": [
+      "pf2"
+    ],
+    "fnt": [
+      "fnt"
+    ],
+    "fon": [
+      "fon"
+    ],
+    "fontx2": [
+      "fontx2"
+    ],
+    "hzk": [
+      "hzk"
+    ],
+    "hbf": [
+      "hbf"
+    ],
+    "hanfont": [
+      "hanfont"
+    ],
+    "nfnt": [
+      "nfnt"
+    ],
+    "bdat": [
+      "embedded_bitmap"
+    ],
+    "iigs": [
+      "iigs"
+    ],
+    "otb": [
+      "embedded_bitmap"
+    ],
+    "ttf": [
+      "vector_raster",
+      "glyf",
+      "sfnt"
+    ],
+    "otf": [
+      "vector_raster",
+      "cff",
+      "sfnt"
+    ],
+    "woff": [
+      "woff1",
+      "vector_raster"
+    ],
+    "woff2": [
+      "woff2"
+    ],
+    "ttc": [
+      "collection",
+      "vector_raster"
+    ],
+    "color": [
+      "color_bitmap"
+    ],
+    "vector-raster": [
+      "vector_raster"
+    ],
+    "svg": [
+      "svg"
+    ],
+    "bmfont": [
+      "bmfont"
+    ],
+    "image": [
+      "image"
+    ],
+    "c": [
+      "c"
+    ],
+    "kbitx": [
+      "kbitx"
+    ],
+    "kbits": [
+      "kbits"
+    ],
+    "pbf": [
+      "pbf"
+    ],
+    "sfd": [
+      "sfd"
+    ],
+    "pk": [
+      "pk"
+    ],
+    "gf": [
+      "gf"
+    ],
+    "plan9": [
+      "plan9"
+    ],
+    "amiga": [
+      "amiga"
+    ],
+    "gem": [
+      "gem"
+    ],
+    "vfont": [
+      "vfont"
+    ],
+    "fzx": [
+      "fzx"
+    ],
+    "figlet": [
+      "figlet"
+    ],
+    "palm": [
+      "palm"
+    ],
+    "gdr": [
+      "gdr"
+    ],
+    "drcs": [
+      "drcs"
+    ],
+    "bbc": [
+      "bbc"
+    ],
+    "beos": [
+      "beos"
+    ],
+    "catalyst": [
+      "catalyst"
+    ],
+    "chiwriter": [
+      "chiwriter"
+    ],
+    "comfont": [
+      "comfont"
+    ],
+    "consoleet": [
+      "consoleet"
+    ],
+    "daisy": [
+      "daisy"
+    ],
+    "dashen": [
+      "dashen"
+    ],
+    "dosstart": [
+      "dosstart"
+    ],
+    "drhalo": [
+      "drhalo"
+    ],
+    "edwin": [
+      "edwin"
+    ],
+    "fbit": [
+      "fbit"
+    ],
+    "geos": [
+      "geos"
+    ],
+    "gpi": [
+      "gpi"
+    ],
+    "grasp": [
+      "grasp"
+    ],
+    "hppcl": [
+      "hppcl"
+    ],
+    "hrcg": [
+      "hrcg"
+    ],
+    "lisa": [
+      "lisa"
+    ],
+    "mgtk": [
+      "mgtk"
+    ],
+    "mkwinfont": [
+      "mkwinfont"
+    ],
+    "oberon": [
+      "oberon"
+    ],
+    "pcgeos": [
+      "pcgeos"
+    ],
+    "pcr": [
+      "pcr"
+    ],
+    "pilfont": [
+      "pilfont_bitmap"
+    ],
+    "plus3dos": [
+      "plus3dos"
+    ],
+    "psf2txt": [
+      "psf2txt"
+    ],
+    "polyprint": [
+      "polyprint"
+    ],
+    "prebuilt": [
+      "prebuilt"
+    ],
+    "printshop": [
+      "printshop"
+    ],
+    "pxl": [
+      "pxl"
+    ],
+    "riscos": [
+      "riscos"
+    ],
+    "sfont": [
+      "sfont_bitmap"
+    ],
+    "signum": [
+      "signum"
+    ],
+    "symbos": [
+      "symbos"
+    ],
+    "tasprint": [
+      "tasprint"
+    ],
+    "vtfont": [
+      "vtfont"
+    ],
+    "writeon": [
+      "writeon"
+    ],
+    "wsfont": [
+      "wsfont"
+    ],
+    "wyse": [
+      "wyse"
+    ],
+    "xbin": [
+      "xbin"
+    ],
+    "xerox": [
+      "xerox"
+    ],
+    "zapfont": [
+      "zapfont"
+    ],
+    "rockbox": [
+      "rockbox_bitmap"
+    ],
+    "u8m": [
+      "u8m_bitmap"
+    ],
+    "cybiko": [
+      "cybiko_bitmap"
+    ],
+    "playdate": [
+      "playdate_bitmap"
+    ],
+    "hmzk": [
+      "hmzk_bitmap"
+    ],
+    "sbf": [
+      "sbf_bitmap"
+    ],
+    "qpf": [
+      "qpf"
+    ],
+    "qpf2": [
+      "qpf2"
+    ],
+    "ssfn": [
+      "ssfn"
+    ],
+    "vlw": [
+      "vlw_bitmap"
+    ],
+    "pfr": [
+      "pfr"
+    ]
+  },
+  "targets": [
+    {
+      "name": "bdf",
+      "path": "fuzz_targets/bdf.rs",
+      "required_features": []
+    },
+    {
+      "name": "pcf",
+      "path": "fuzz_targets/pcf.rs",
+      "required_features": []
+    },
+    {
+      "name": "yaff",
+      "path": "fuzz_targets/yaff.rs",
+      "required_features": []
+    },
+    {
+      "name": "sfnt",
+      "path": "fuzz_targets/sfnt.rs",
+      "required_features": []
+    },
+    {
+      "name": "glyf",
+      "path": "fuzz_targets/glyf.rs",
+      "required_features": []
+    },
+    {
+      "name": "compat_ttf",
+      "path": "fuzz_targets/compat_ttf.rs",
+      "required_features": []
+    },
+    {
+      "name": "cff",
+      "path": "fuzz_targets/cff.rs",
+      "required_features": []
+    },
+    {
+      "name": "embedded_bitmap",
+      "path": "fuzz_targets/embedded_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "color_bitmap",
+      "path": "fuzz_targets/color_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "woff1",
+      "path": "fuzz_targets/woff1.rs",
+      "required_features": []
+    },
+    {
+      "name": "woff2",
+      "path": "fuzz_targets/woff2.rs",
+      "required_features": []
+    },
+    {
+      "name": "gsub",
+      "path": "fuzz_targets/gsub.rs",
+      "required_features": []
+    },
+    {
+      "name": "subset",
+      "path": "fuzz_targets/subset.rs",
+      "required_features": []
+    },
+    {
+      "name": "vector_raster",
+      "path": "fuzz_targets/vector_raster.rs",
+      "required_features": []
+    },
+    {
+      "name": "collection",
+      "path": "fuzz_targets/collection.rs",
+      "required_features": []
+    },
+    {
+      "name": "svg",
+      "path": "fuzz_targets/svg.rs",
+      "required_features": []
+    },
+    {
+      "name": "hex",
+      "path": "fuzz_targets/hex.rs",
+      "required_features": []
+    },
+    {
+      "name": "psf",
+      "path": "fuzz_targets/psf.rs",
+      "required_features": []
+    },
+    {
+      "name": "fnt",
+      "path": "fuzz_targets/fnt.rs",
+      "required_features": []
+    },
+    {
+      "name": "fon",
+      "path": "fuzz_targets/fon.rs",
+      "required_features": []
+    },
+    {
+      "name": "image",
+      "path": "fuzz_targets/image.rs",
+      "required_features": []
+    },
+    {
+      "name": "c",
+      "path": "fuzz_targets/c.rs",
+      "required_features": []
+    },
+    {
+      "name": "kbitx",
+      "path": "fuzz_targets/kbitx.rs",
+      "required_features": []
+    },
+    {
+      "name": "pbf",
+      "path": "fuzz_targets/pbf.rs",
+      "required_features": []
+    },
+    {
+      "name": "hbf",
+      "path": "fuzz_targets/hbf.rs",
+      "required_features": []
+    },
+    {
+      "name": "draw",
+      "path": "fuzz_targets/draw.rs",
+      "required_features": []
+    },
+    {
+      "name": "raw",
+      "path": "fuzz_targets/raw.rs",
+      "required_features": []
+    },
+    {
+      "name": "cpi",
+      "path": "fuzz_targets/cpi.rs",
+      "required_features": []
+    },
+    {
+      "name": "pf2",
+      "path": "fuzz_targets/pf2.rs",
+      "required_features": []
+    },
+    {
+      "name": "fontx2",
+      "path": "fuzz_targets/fontx2.rs",
+      "required_features": []
+    },
+    {
+      "name": "hzk",
+      "path": "fuzz_targets/hzk.rs",
+      "required_features": []
+    },
+    {
+      "name": "nfnt",
+      "path": "fuzz_targets/nfnt.rs",
+      "required_features": []
+    },
+    {
+      "name": "bmfont",
+      "path": "fuzz_targets/bmfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "sfd",
+      "path": "fuzz_targets/sfd.rs",
+      "required_features": []
+    },
+    {
+      "name": "kbits",
+      "path": "fuzz_targets/kbits.rs",
+      "required_features": []
+    },
+    {
+      "name": "pk",
+      "path": "fuzz_targets/pk.rs",
+      "required_features": []
+    },
+    {
+      "name": "gf",
+      "path": "fuzz_targets/gf.rs",
+      "required_features": []
+    },
+    {
+      "name": "plan9",
+      "path": "fuzz_targets/plan9.rs",
+      "required_features": []
+    },
+    {
+      "name": "amiga",
+      "path": "fuzz_targets/amiga.rs",
+      "required_features": []
+    },
+    {
+      "name": "gem",
+      "path": "fuzz_targets/gem.rs",
+      "required_features": []
+    },
+    {
+      "name": "snf",
+      "path": "fuzz_targets/snf.rs",
+      "required_features": []
+    },
+    {
+      "name": "vfont",
+      "path": "fuzz_targets/vfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "fzx",
+      "path": "fuzz_targets/fzx.rs",
+      "required_features": []
+    },
+    {
+      "name": "figlet",
+      "path": "fuzz_targets/figlet.rs",
+      "required_features": []
+    },
+    {
+      "name": "hanfont",
+      "path": "fuzz_targets/hanfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "iigs",
+      "path": "fuzz_targets/iigs.rs",
+      "required_features": []
+    },
+    {
+      "name": "drcs",
+      "path": "fuzz_targets/drcs.rs",
+      "required_features": []
+    },
+    {
+      "name": "palm",
+      "path": "fuzz_targets/palm.rs",
+      "required_features": []
+    },
+    {
+      "name": "gdr",
+      "path": "fuzz_targets/gdr.rs",
+      "required_features": []
+    },
+    {
+      "name": "dosstart",
+      "path": "fuzz_targets/dosstart.rs",
+      "required_features": []
+    },
+    {
+      "name": "edwin",
+      "path": "fuzz_targets/edwin.rs",
+      "required_features": []
+    },
+    {
+      "name": "mkwinfont",
+      "path": "fuzz_targets/mkwinfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "psf2txt",
+      "path": "fuzz_targets/psf2txt.rs",
+      "required_features": []
+    },
+    {
+      "name": "pcr",
+      "path": "fuzz_targets/pcr.rs",
+      "required_features": []
+    },
+    {
+      "name": "plus3dos",
+      "path": "fuzz_targets/plus3dos.rs",
+      "required_features": []
+    },
+    {
+      "name": "drhalo",
+      "path": "fuzz_targets/drhalo.rs",
+      "required_features": []
+    },
+    {
+      "name": "writeon",
+      "path": "fuzz_targets/writeon.rs",
+      "required_features": []
+    },
+    {
+      "name": "daisy",
+      "path": "fuzz_targets/daisy.rs",
+      "required_features": []
+    },
+    {
+      "name": "polyprint",
+      "path": "fuzz_targets/polyprint.rs",
+      "required_features": []
+    },
+    {
+      "name": "printshop",
+      "path": "fuzz_targets/printshop.rs",
+      "required_features": []
+    },
+    {
+      "name": "tasprint",
+      "path": "fuzz_targets/tasprint.rs",
+      "required_features": []
+    },
+    {
+      "name": "pxl",
+      "path": "fuzz_targets/pxl.rs",
+      "required_features": []
+    },
+    {
+      "name": "signum",
+      "path": "fuzz_targets/signum.rs",
+      "required_features": []
+    },
+    {
+      "name": "rockbox_bitmap",
+      "path": "fuzz_targets/rockbox_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "u8m_bitmap",
+      "path": "fuzz_targets/u8m_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "cybiko_bitmap",
+      "path": "fuzz_targets/cybiko_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "playdate_bitmap",
+      "path": "fuzz_targets/playdate_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "hmzk_bitmap",
+      "path": "fuzz_targets/hmzk_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "sbf_bitmap",
+      "path": "fuzz_targets/sbf_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "fbit",
+      "path": "fuzz_targets/fbit.rs",
+      "required_features": []
+    },
+    {
+      "name": "lisa",
+      "path": "fuzz_targets/lisa.rs",
+      "required_features": []
+    },
+    {
+      "name": "mgtk",
+      "path": "fuzz_targets/mgtk.rs",
+      "required_features": []
+    },
+    {
+      "name": "qpf",
+      "path": "fuzz_targets/qpf.rs",
+      "required_features": []
+    },
+    {
+      "name": "qpf2",
+      "path": "fuzz_targets/qpf2.rs",
+      "required_features": []
+    },
+    {
+      "name": "beos",
+      "path": "fuzz_targets/beos.rs",
+      "required_features": []
+    },
+    {
+      "name": "oberon",
+      "path": "fuzz_targets/oberon.rs",
+      "required_features": []
+    },
+    {
+      "name": "symbos",
+      "path": "fuzz_targets/symbos.rs",
+      "required_features": []
+    },
+    {
+      "name": "wsfont",
+      "path": "fuzz_targets/wsfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "bbc",
+      "path": "fuzz_targets/bbc.rs",
+      "required_features": []
+    },
+    {
+      "name": "wyse",
+      "path": "fuzz_targets/wyse.rs",
+      "required_features": []
+    },
+    {
+      "name": "grasp",
+      "path": "fuzz_targets/grasp.rs",
+      "required_features": []
+    },
+    {
+      "name": "hrcg",
+      "path": "fuzz_targets/hrcg.rs",
+      "required_features": []
+    },
+    {
+      "name": "xbin",
+      "path": "fuzz_targets/xbin.rs",
+      "required_features": []
+    },
+    {
+      "name": "consoleet",
+      "path": "fuzz_targets/consoleet.rs",
+      "required_features": []
+    },
+    {
+      "name": "zapfont",
+      "path": "fuzz_targets/zapfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "comfont",
+      "path": "fuzz_targets/comfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "vtfont",
+      "path": "fuzz_targets/vtfont.rs",
+      "required_features": []
+    },
+    {
+      "name": "geos",
+      "path": "fuzz_targets/geos.rs",
+      "required_features": []
+    },
+    {
+      "name": "gpi",
+      "path": "fuzz_targets/gpi.rs",
+      "required_features": []
+    },
+    {
+      "name": "pcgeos",
+      "path": "fuzz_targets/pcgeos.rs",
+      "required_features": []
+    },
+    {
+      "name": "pilfont_bitmap",
+      "path": "fuzz_targets/pilfont_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "sfont_bitmap",
+      "path": "fuzz_targets/sfont_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "vlw_bitmap",
+      "path": "fuzz_targets/vlw_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "imageset_bitmap",
+      "path": "fuzz_targets/imageset_bitmap.rs",
+      "required_features": []
+    },
+    {
+      "name": "ssfn",
+      "path": "fuzz_targets/ssfn.rs",
+      "required_features": []
+    },
+    {
+      "name": "pfr",
+      "path": "fuzz_targets/pfr.rs",
+      "required_features": []
+    },
+    {
+      "name": "catalyst",
+      "path": "fuzz_targets/catalyst.rs",
+      "required_features": []
+    },
+    {
+      "name": "chiwriter",
+      "path": "fuzz_targets/chiwriter.rs",
+      "required_features": []
+    },
+    {
+      "name": "dashen",
+      "path": "fuzz_targets/dashen.rs",
+      "required_features": []
+    },
+    {
+      "name": "hppcl",
+      "path": "fuzz_targets/hppcl.rs",
+      "required_features": []
+    },
+    {
+      "name": "prebuilt",
+      "path": "fuzz_targets/prebuilt.rs",
+      "required_features": []
+    },
+    {
+      "name": "riscos",
+      "path": "fuzz_targets/riscos.rs",
+      "required_features": []
+    },
+    {
+      "name": "xerox",
+      "path": "fuzz_targets/xerox.rs",
+      "required_features": []
+    },
+    {
+      "name": "transport",
+      "path": "fuzz_targets/transport.rs",
+      "required_features": []
+    }
+  ],
+  "proptest_integration_files": [
+    "crates/fontpixel/tests/amiga.rs",
+    "crates/fontpixel/tests/bdf_properties.rs",
+    "crates/fontpixel/tests/bmfont.rs",
+    "crates/fontpixel/tests/cff.rs",
+    "crates/fontpixel/tests/cpi.rs",
+    "crates/fontpixel/tests/draw.rs",
+    "crates/fontpixel/tests/embedded_bitmap.rs",
+    "crates/fontpixel/tests/gem.rs",
+    "crates/fontpixel/tests/glyf.rs",
+    "crates/fontpixel/tests/hex_psf.rs",
+    "crates/fontpixel/tests/kbits.rs",
+    "crates/fontpixel/tests/kbitx.rs",
+    "crates/fontpixel/tests/outlines.rs",
+    "crates/fontpixel/tests/pcf_properties.rs",
+    "crates/fontpixel/tests/raw.rs",
+    "crates/fontpixel/tests/sfd.rs",
+    "crates/fontpixel/tests/sfnt.rs",
+    "crates/fontpixel/tests/snf.rs",
+    "crates/fontpixel/tests/svg.rs",
+    "crates/fontpixel/tests/windows.rs",
+    "crates/fontpixel/tests/woff.rs",
+    "crates/fontpixel/tests/yaff_properties.rs"
+  ],
+  "limitations": [
+    "Harness correspondence is not variant, option, registry or CLI path execution evidence.",
+    "No new merge/batch target is asserted by this inventory.",
+    "Final integrated-source execution acceptance is pending."
+  ]
+}

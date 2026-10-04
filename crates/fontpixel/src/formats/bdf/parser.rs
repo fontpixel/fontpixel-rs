@@ -3,7 +3,31 @@ use super::*;
 use crate::bitmap::Bounds;
 use crate::charset::{charset_table, detect_gl};
 use crate::model::{Codepoint, GlyphMetrics, Properties, Property, Vector};
-use std::collections::BTreeSet;
+
+// Only these seven fields participate in first-value-wins glyph parsing.
+// Unknown fields and duplicate records still retain their original properties.
+#[derive(Default)]
+struct UsedFields(u8);
+impl UsedFields {
+    fn bit(key: &str) -> u8 {
+        match key {
+            "ENCODING" => 1,
+            "BBX" => 2,
+            "SWIDTH" => 4,
+            "DWIDTH" => 8,
+            "SWIDTH1" => 16,
+            "DWIDTH1" => 32,
+            "VVECTOR" => 64,
+            _ => 0,
+        }
+    }
+    fn contains(&self, key: &str) -> bool {
+        self.0 & Self::bit(key) != 0
+    }
+    fn insert(&mut self, key: &str) {
+        self.0 |= Self::bit(key);
+    }
+}
 
 #[derive(Default)]
 struct Pending {
@@ -11,7 +35,7 @@ struct Pending {
     code: Option<i32>,
     alt: Option<i32>,
     metrics: GlyphMetrics,
-    used: BTreeSet<String>,
+    used: UsedFields,
     rows: String,
     properties: Properties,
     start: usize,
@@ -30,6 +54,9 @@ struct Parser<'a> {
     pending: Pending,
     budget: usize,
     bitmap_bytes: usize,
+    // Once glyph parsing starts, no transition returns to headers/properties.
+    // Memoize the projected charset only when the first encoded glyph needs it.
+    unicode: Option<bool>,
 }
 impl<'a> Parser<'a> {
     fn new(limits: &'a ResourceLimits) -> Self {
@@ -49,6 +76,7 @@ impl<'a> Parser<'a> {
             pending: Pending::default(),
             budget: 0,
             bitmap_bytes: 0,
+            unicode: None,
         }
     }
     fn charge(&mut self, bytes: usize) -> Result<()> {
@@ -100,27 +128,32 @@ impl<'a> Parser<'a> {
             ))
         })
     }
-    fn ints(&self, value: &str, n: usize, key: &str) -> Result<Vec<i64>> {
+    fn ints(&self, value: &str, n: usize, key: &str) -> Result<[i64; 4]> {
+        // Every caller requests at most four numbers. Gather before parsing so
+        // too few tokens still takes precedence over a malformed earlier token.
+        debug_assert!(n <= 4);
+        let mut parts = [""; 4];
+        let mut count = 0;
         // VVECTOR strips whitespace but not commas; a leading/trailing comma is a token.
-        let parts: Vec<_> = if key == "VVECTOR" {
-            value
-                .starts_with(',')
-                .then_some("")
-                .into_iter()
-                .chain(value.split(|c| ws(c) || c == ',').filter(|s| !s.is_empty()))
-                .chain(value.ends_with(',').then_some(""))
-                .take(n)
-                .collect()
-        } else {
-            value.split(ws).filter(|s| !s.is_empty()).take(n).collect()
-        };
-        if parts.len() < n {
+        let commas = key == "VVECTOR";
+        for part in (commas && value.starts_with(','))
+            .then_some("")
+            .into_iter()
+            .chain(value.split(|c| ws(c) || commas && c == ',').filter(|s| !s.is_empty()))
+            .chain((commas && value.ends_with(',')).then_some(""))
+            .take(n)
+        {
+            parts[count] = part;
+            count += 1;
+        }
+        if count < n {
             return Err(self.error(format!("{key} needs {n} numbers, got {}", py_repr(value))));
         }
-        parts[..n]
-            .iter()
-            .map(|token| self.num(token, key, value).map(i64::from))
-            .collect()
+        let mut values = [0; 4];
+        for (out, token) in values.iter_mut().zip(&parts).take(n) {
+            *out = i64::from(self.num(token, key, value)?);
+        }
+        Ok(values)
     }
     fn header(&mut self, key: &str, value: PropertyValue, line: &str) -> Result<()> {
         self.charge(std::mem::size_of::<Property>() + key.len() + line.len() * 2 + 64)?;
@@ -183,7 +216,7 @@ impl<'a> Parser<'a> {
         }
         let code = self.pending.code.filter(|&n| n >= 0).map(|n| n as u32);
         let cp = code.map(|n| {
-            if known_unicode(&self.font) {
+            if *self.unicode.get_or_insert_with(|| known_unicode(&self.font)) {
                 Codepoint::Unicode(n)
             } else {
                 Codepoint::Legacy(n)
@@ -279,15 +312,19 @@ impl<'a> Parser<'a> {
         }
         save_bitmap(&mut glyph, std::mem::take(&mut self.pending.rows));
         let index = self.glyphs - 1;
+        if count < b.height as usize {
+            let message = format!("Glyph \"{}\" (codepoint {}): {} source rows for height {}; zero-padded core view, original rows retained", self.pending.name, code.map_or(-1, i64::from), count, b.height);
+            self.charge(message.len() + 160)?;
+            diagnostic(&mut self.bitmap_report, Level::Info, Impact::Repair, "bdf.bitmap.missing_rows", Some((index, cp.map(Codepoint::value))), message);
+        }
         for (condition, code, message) in [
-            (count < b.height as usize, "bdf.bitmap.missing_rows", format!("Glyph \"{}\" (codepoint {}): {} source rows for height {}; zero-padded core view, original rows retained", self.pending.name, code.map_or(-1, i64::from), count, b.height)),
-            (count > b.height as usize, "bdf.bitmap.extra_rows", "Extra bitmap rows excluded from the core rectangle; source rows retained".into()),
-            (short, "bdf.bitmap.short_row", "Short bitmap rows zero-padded in the core rectangle; source rows retained".into()),
-            (long, "bdf.bitmap.long_row", "Long bitmap rows clipped in the core rectangle; source rows retained".into()),
-            (dirty, "bdf.bitmap.padding", "Nonzero right padding cleared in the core rectangle; source rows retained".into()),
-            (invalid, "bdf.bitmap.invalid_hex", "Non-hex bitmap rows retained; core placeholder rows are zero. validate_bitmap rejects drawing this glyph".into()),
+            (count > b.height as usize, "bdf.bitmap.extra_rows", "Extra bitmap rows excluded from the core rectangle; source rows retained"),
+            (short, "bdf.bitmap.short_row", "Short bitmap rows zero-padded in the core rectangle; source rows retained"),
+            (long, "bdf.bitmap.long_row", "Long bitmap rows clipped in the core rectangle; source rows retained"),
+            (dirty, "bdf.bitmap.padding", "Nonzero right padding cleared in the core rectangle; source rows retained"),
+            (invalid, "bdf.bitmap.invalid_hex", "Non-hex bitmap rows retained; core placeholder rows are zero. validate_bitmap rejects drawing this glyph"),
         ] {
-            if condition { self.charge(message.len() + 160)?; diagnostic(&mut self.bitmap_report, Level::Info, Impact::Repair, code, Some((index, cp.map(Codepoint::value))), message); }
+            if condition { self.charge(message.len() + 160)?; diagnostic(&mut self.bitmap_report, Level::Info, Impact::Repair, code, Some((index, cp.map(Codepoint::value))), message.into()); }
         }
         self.font.add_glyph(glyph)?;
         Ok(())
@@ -380,15 +417,15 @@ impl<'a> Parser<'a> {
         if self.state == 4 {
             match key {
                 "ENCODING" if !self.pending.used.contains(key) => {
-                    let parts: Vec<_> = value.split(ws).filter(|s| !s.is_empty()).take(2).collect();
-                    if parts.is_empty() {
+                    let mut parts = value.split(ws).filter(|s| !s.is_empty());
+                    let Some(first) = parts.next() else {
                         return Err(self.error("ENCODING needs a number".into()));
-                    }
-                    let code = self.num(parts[0], key, value)?;
-                    let alt = parts.get(1).map(|n| self.num(n, key, value)).transpose()?;
+                    };
+                    let code = self.num(first, key, value)?;
+                    let alt = parts.next().map(|n| self.num(n, key, value)).transpose()?;
                     self.pending.code = Some(code);
                     self.pending.alt = if code < 0 { alt } else { None };
-                    self.pending.used.insert(key.into());
+                    self.pending.used.insert(key);
                 }
                 "BBX" if !self.pending.used.contains(key) => {
                     let v = self.ints(value, 4, key)?;
@@ -408,12 +445,12 @@ impl<'a> Parser<'a> {
                         })?;
                     bitmap_limits(self.limits).check(bounds.width, bounds.height, size)?;
                     self.pending.metrics.bounds = bounds;
-                    self.pending.used.insert(key.into());
+                    self.pending.used.insert(key);
                 }
                 key if METRICS.contains(&key) && !self.pending.used.contains(key) => {
                     let v = self.ints(value, 2, key)?;
                     set_vector(&mut self.pending.metrics, key, Vector::new(v[0], v[1]));
-                    self.pending.used.insert(key.into());
+                    self.pending.used.insert(key);
                 }
                 "ENCODING" | "BBX" | "SWIDTH" | "DWIDTH" | "SWIDTH1" | "DWIDTH1" | "VVECTOR" => {
                     self.charge(line.len() + 128)?;
@@ -621,7 +658,7 @@ impl<'a> Parser<'a> {
                 }
                 self.header(
                     key,
-                    PropertyValue::List(v.into_iter().map(PropertyValue::Integer).collect()),
+                    PropertyValue::List(v.into_iter().take(n).map(PropertyValue::Integer).collect()),
                     line,
                 )?;
             }
@@ -726,6 +763,19 @@ pub(super) fn read(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Repor
                 resource: "BDF line bytes",
                 limit: limits.max_table_bytes,
             });
+        }
+        if parser.state == 5 {
+            // Ordinary unindented hex rows need no keyword/whitespace scan.
+            // CRLF bookkeeping and raw-line limits above still run first;
+            // every control, empty, indented or malformed line falls through.
+            let row = raw
+                .strip_suffix('\n')
+                .or_else(|| raw.strip_suffix('\r'))
+                .unwrap_or(raw);
+            if !row.is_empty() && row.bytes().all(|b| b.is_ascii_hexdigit()) {
+                parser.row(row)?;
+                continue;
+            }
         }
         let line = raw.trim_matches(ws);
         if line.is_empty() {

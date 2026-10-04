@@ -1,0 +1,25 @@
+# Run from any directory; paths resolve relative to this file.
+# First create ../local-work/docs-example-output from the repository root.
+version = 1
+jobs = 2
+
+[[tasks]]
+id = "mini-yaff"
+kind = "convert"
+inputs = ["../tests/data/compat/mini.bdf"]
+output = "../../local-work/docs-example-output/mini.yaff"
+to = "yaff"
+strict = true
+
+[[tasks]]
+id = "mini-square"
+kind = "convert"
+inputs = ["../tests/data/compat/mini.bdf"]
+output = "../../local-work/docs-example-output/mini.ttf"
+to = "ttf"
+options = { shape = "square", ppu = 100 }
+
+[[tasks]]
+id = "mini-validation"
+kind = "validate"
+inputs = ["../tests/data/compat/mini.bdf"]

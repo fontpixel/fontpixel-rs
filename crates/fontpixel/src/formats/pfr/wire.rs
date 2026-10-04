@@ -136,16 +136,31 @@ struct Physical<'a> {
     strikes: Vec<Strike>,
     vertical: bool,
     family: Option<String>,
+    outlines: usize,
 }
-#[allow(clippy::too_many_arguments)] // Native section context, dialect, limits and diagnostics are explicit.
+// Fixed-capacity indices are charged before their fallible allocation. A sorted
+// cache gives logarithmic lookup without hidden tree-node allocation or a scan
+// through all previously encountered physical records for every logical font.
+struct CachedPhysical<'a> {
+    span: (usize, usize),
+    parsed: Option<Physical<'a>>,
+}
+fn reserved<T>(n: usize, budget: &mut Budget) -> Result<Vec<T>> {
+    budget.items::<T>(n)?;
+    let mut v = Vec::new();
+    v.try_reserve_exact(n)
+        .map_err(|_| crate::Error::ResourceLimit {
+            resource: "PFR allocation",
+            limit: budget.max,
+        })?;
+    Ok(v)
+}
 fn physical<'a>(
     data: &'a [u8],
     all: &[u8],
     h: Header,
     off: usize,
     budget: &mut Budget,
-    rpt: &mut Report,
-    fi: usize,
     l: &ResourceLimits,
     dialect: Option<PfrDialect>,
 ) -> Result<Physical<'a>> {
@@ -269,8 +284,7 @@ fn physical<'a>(
     let tail = &data[tail_start..r.at];
     let n = r.u(2)? as usize;
     check(n, l.max_glyphs, "PFR character count")?;
-    budget.items::<Char>(n)?;
-    let mut chars = Vec::with_capacity(n);
+    let mut chars = reserved::<Char>(n, budget)?;
     let mut previous = None;
     let mut outlines = 0usize;
     for _ in 0..n {
@@ -289,16 +303,6 @@ fn physical<'a>(
         chars.push(Char { code, width, ascii });
     }
     r.end()?;
-    if outlines != 0 {
-        budget.loss(
-            rpt,
-            "pfr",
-            "outlines-omitted",
-            Some(fi),
-            None,
-            format!("{outlines} outline glyph programs are not bitmap strikes"),
-        )?;
-    }
     Ok(Physical {
         base,
         extras,
@@ -307,6 +311,7 @@ fn physical<'a>(
         strikes,
         vertical: flags & 1 != 0,
         family,
+        outlines,
     })
 }
 fn metadata(p: &Physical<'_>, budget: &mut Budget) -> Result<Vec<u8>> {
@@ -346,20 +351,51 @@ pub(super) fn decode_with(
         source_format: Some("pfr".into()),
         ..Default::default()
     };
+    // Every logical descriptor is validated once. Deduplicate only complete
+    // physical spans: equal offsets with different sizes are distinct records.
+    // Header/input identity and the explicit dialect are constant for this
+    // decode call, and no cached data escapes it.
+    let mut logicals = reserved::<(&[u8], usize, usize)>(n, budget)?;
+    let mut physicals = reserved::<CachedPhysical<'_>>(n, budget)?;
+    for i in 0..n {
+        let record = logical(b, h, i)?;
+        physicals.push(CachedPhysical {
+            span: (record.1, record.2),
+            parsed: None,
+        });
+        logicals.push(record);
+    }
+    physicals.sort_unstable_by_key(|p| p.span);
+    physicals.dedup_by_key(|p| p.span);
     let mut total_glyphs = 0usize;
-    for logical_index in 0..n {
-        let (prefix, off, size) = logical(b, h, logical_index)?;
-        let phy = physical(
-            bytes(b, off, size)?,
-            b,
-            h,
-            off,
-            budget,
-            rpt,
-            logical_index,
-            l,
-            dialect,
-        )?;
+    for (logical_index, &(prefix, off, size)) in logicals.iter().enumerate() {
+        let index = physicals
+            .binary_search_by_key(&(off, size), |p| p.span)
+            .map_err(|_| invalid("internal PFR physical index"))?;
+        let cached = &mut physicals[index].parsed;
+        if cached.is_none() {
+            *cached = Some(physical(
+                bytes(b, off, size)?, b, h, off, budget, l, dialect,
+            )?);
+        }
+        let phy = cached
+            .as_ref()
+            .ok_or_else(|| invalid("internal PFR physical cache"))?;
+        // Physical parsing is shared; losses belong to each logical font and
+        // remain independently charged, ordered and located as before.
+        if phy.outlines != 0 {
+            budget.loss(
+                rpt,
+                "pfr",
+                "outlines-omitted",
+                Some(logical_index),
+                None,
+                format!(
+                    "{} outline glyph programs are not bitmap strikes",
+                    phy.outlines
+                ),
+            )?;
+        }
         if phy.strikes.is_empty() {
             budget.loss(
                 rpt,
@@ -398,7 +434,7 @@ pub(super) fn decode_with(
                 V::Integer(i64::from(st.x)),
                 budget,
             )?;
-            let meta = metadata(&phy, budget)?;
+            let meta = metadata(phy, budget)?;
             property(
                 &mut font.properties,
                 "pfr.physical-metadata",

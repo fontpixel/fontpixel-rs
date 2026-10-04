@@ -763,9 +763,11 @@ pub struct WriteOptions {
     pub strict: bool,
     /// Primary relative output name; codecs may add sibling/nested sidecars.
     pub primary_name: ResourcePath,
-    /// Additional gzip/envelope budgets. `None` uses the typed writer's limits.
-    /// Present limits are intersected with them, so a common setting cannot
-    /// silently enlarge a codec's budget. Native directory outputs are unchanged.
+    /// Additional native-write and gzip/envelope budgets. `None` preserves the
+    /// typed writer's limits. Present limits intersect those limits, so a common
+    /// setting cannot silently enlarge a codec budget. Built-in native wrappers
+    /// validate the model and restrict their codec before writing; compressed
+    /// output also enforces the applicable envelope and replay budgets.
     pub transport_limits: Option<TransportLimits>,
 }
 
@@ -1231,6 +1233,19 @@ impl Registry<crate::FontSet> {
             entry.reader = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
             if write {
                 entry.writer = Some(transport::writer(embedded::EmbeddedCodec::new(kind)));
+            }
+        }
+    }
+    /// Configure installed OTB/bdat writers without changing readers or color output.
+    pub fn set_embedded_write_options(&mut self, options: embedded::EmbeddedWriteOptions) {
+        for (id, kind) in [
+            ("otb", crate::sfnt::bitmap::Kind::OpenType),
+            ("bdat", crate::sfnt::bitmap::Kind::Apple),
+        ] {
+            if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == id && e.writer.is_some()) {
+                let mut codec = embedded::EmbeddedCodec::new(kind);
+                codec.write_options = options.clone();
+                entry.writer = Some(transport::writer(codec));
             }
         }
     }

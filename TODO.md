@@ -1,3 +1,60 @@
+# Phase 6 reconstruction — 2026-10-04 19:35 UTC
+
+The execution workspace became unavailable around 18:33 UTC. This checkout was
+freshly restored from the verified original phase-6 handoff archive: phase-5 main
+`12710057e9787318d1db70db41a60fca016ad53c` and all 54 original refs. The missing
+later local commits have NOT been restored as Git objects. Recovered code is being
+reapplied or rewritten with the owner's explicit authorization at 19:09 UTC.
+
+## Current acceptance boundary
+
+- Phase 6 is **not accepted or delivered**. Restored/reconstructed Rust source is
+  uncompiled and untested in this environment. Historical passing logs are lost;
+  their recorded summaries do not establish present correctness.
+- The original input ZIP and all prior verified glyph backup bytes remain intact.
+- Source recovery packets and coherent reconstruction checkpoints are externally
+  backed up in Library before subsequent major iterations. The evolving recovery
+  packet is not a complete runnable release or acceptance deliverable.
+- Cargo toolchain download from the official host is network-policy blocked,
+  including a supported elevated retry. Only rustc installation partly completed;
+  no alternate access bypass is authorized or attempted.
+- Source reconstruction is active with six engineering workers. Pending shared
+  integration, tests and workload tools are explicitly tracked in each packet.
+- The prior OTB/YAFF/Tong performance misses remain unresolved. Full performance
+  gates are not waived; any new implementation needs fresh five-run evidence.
+- Long final-source ASAN remains explicitly deferred to the owner's computer,
+  as previously approved. Do not run a blocked action through another route.
+
+
+## Full source checkpoint freeze — 19:35 UTC
+
+All active source owners confirmed a safe write freeze. A new explicitly
+unvalidated WIP main commit and full source/history archive are being prepared.
+The original later phase-6 commit IDs remain missing; this is a new reconstruction.
+
+Known incomplete work includes new identity-ledger tests, the catalogue native
+companion executable, several full-workload comparison adapters, final integration
+review, toolchain restoration and every required Rust/compiler/oracle/performance
+acceptance gate. Do not interpret frozen source or archive integrity as correctness.
+
+## Next required milestones
+
+- [ ] Finish source reconstruction, inspect every gap and conflict, retain exact
+  provenance labels for byte-identical recoveries versus reimplementations.
+- [ ] Restore permitted tooling, run formatting and full compiler/feature tests,
+  fix failures, perform independent output and compatibility oracles.
+- [ ] Complete phase-6 performance targets, fresh evidence and final source audit.
+- [ ] Produce a verified all-ref bundle and complete single ZIP, externally save
+  it and report actual remaining limitations before claiming phase acceptance.
+- [ ] Only after phase-6 delivery, continue authorized phase 7 then phase 8 with
+  full native Python/WASM/JS APIs plus separate bdfparser compatibility coverage.
+  No phase 9, remote push, package publication or site deployment.
+
+The older handoff text below is baseline provenance and does not override the
+owner's later continuation, full-API or reconstruction instructions.
+
+---
+
 # 开发进度与接续入口
 
 ## 停止点

@@ -93,6 +93,35 @@ impl InputBudget {
             .ok_or_else(|| self.byte_error())?;
         self.add_bytes(total, reserve)
     }
+    /// Reserve an additional owned strike before cloning it for a language route.
+    #[cfg(feature = "opentype")]
+    pub(crate) fn reserve_font_clone(&mut self, font: &Font) -> Result<()> {
+        let usage = font.cloned_usage(
+            self.limits
+                .max_total_bytes
+                .saturating_sub(self.retained_bytes),
+        )?;
+        let glyphs = self
+            .glyphs
+            .checked_add(usage.glyphs)
+            .ok_or_else(|| self.glyph_error())?;
+        let slots = self
+            .glyph_slots
+            .checked_add(usage.glyph_slots)
+            .ok_or_else(|| self.glyph_error())?;
+        if glyphs > self.limits.max_glyphs || slots > self.limits.max_glyphs {
+            return Err(self.glyph_error());
+        }
+        let fonts = self.fonts.checked_add(1).ok_or_else(|| self.byte_error())?;
+        let mut bytes = self.retained_bytes;
+        self.add_bytes(&mut bytes, usage.bytes)?;
+        self.merge_reserve::<Font>(&mut bytes, 1)?;
+        self.retained_bytes = bytes;
+        self.glyphs = glyphs;
+        self.glyph_slots = slots;
+        self.fonts = fonts;
+        Ok(())
+    }
     /// Check a newly decoded input before moving any part into the aggregate.
     /// On failure this object is unchanged, so an error cannot consume budget.
     pub(crate) fn admit(&mut self, loaded: &Loaded<FontSet>) -> Result<()> {

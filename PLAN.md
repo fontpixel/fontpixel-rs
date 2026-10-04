@@ -405,15 +405,25 @@ fontpixel batch JOBS.toml [--jobs N]            # 批量任务并行执行（收
 ### 第 7 阶段：Python 绑定（`fontpixel-py`）
 
 - pyo3、abi3（Python ≥ 3.10），模块名 `fontpixel`。两层：
-  1. 原生 API：`read`、`write`、`convert`、`variants`、`subset`、`batch` 等整批操作（这类收益最大）；
+  1. 完整原生开发 API：覆盖 fontpixel-rs 全部公共能力，包括整批操作和细粒度模型/字形/bitmap 编辑；不能只提供少量入口或以兼容 API 代替；
   2. bdfparser 兼容 API：`fontpixel.compat.bdfparser` 提供与 bdfparser 相同的 `Font`/`Glyph`/`Bitmap`；数据留在 Rust 一侧，Python 只拿句柄，取像素时才转换。
 - 用适配器让 `reference/bdfparser/tests/` 的测试跑在兼容 API 上并通过（不能通过的逐条说明原因）。
 - 测速：每类操作（整批、单个小操作）与纯 Python bdfparser 对比，写进报告，**明确哪些操作更快、哪些不快甚至更慢**，供用户决定 bdfparser 要不要把它做成可选加速。
 - 能构建 manylinux wheel（本地构建成功即可，不发布）。
 
+- 用户追加要求：Python 与 WASM/JS 都必须提供完整 fontpixel-rs 原生 API，并分别保留 bdfparser/bdfparser-js 兼容 API。完整要求见 [绑定范围](docs/bindings-scope.md)。这些是未来实现/验收要求，不是恢复源码已完成或通过的声明。
+- 建立逐公共模块、类型、构造/操作、选项、返回/错误类型与 feature 条件的 Rust → Python → WASM/JS 映射；每项有绑定入口、平台差异和覆盖测试，新增公共能力不能静默漏映射。
+- 覆盖现有全部格式注册表/查询/检测/读写及 typed options，FontSet/Font/Glyph/bitmap/名称与度量编辑，渲染/轮廓/矢量化/栅格化，OpenType 表与容器/WOFF/WOFF2、variants/locl、subset、charset、merge、batch、validate、diff、完整报告/错误/strict 和资源/sidecar/多资产语义。摘要不限制其他公共能力。
+- 当前 CLI 编排能力须复用或抽取为可调用 API，不能用外部 CLI 子进程补齐原生接口。原生覆盖测试独立于兼容测试，逐操作/格式验证结果、边界/错误、strict/资源限制及完整工作流。
+- 明确 bytes/缓冲区、具名文件/资源集合、句柄寿命/复制、整数范围与同步/异步适配；真正平台不可用项须可查询、明确失败并附原因/证据/替代方案。未实现仍是未完成，不能冒充平台限制或返回空成功。
+- 当前授权是第 6 阶段交付后依次继续第 7、8 阶段；不启动第 9 阶段，不 push/publish/deploy。阶段 6 恢复源码尚未编译/测试，阻塞的长 ASAN 仍明确交给用户本机，不因后续授权而视为通过。
+
+
 ### 第 8 阶段：WASM 绑定（`fontpixel-wasm`）
 
-- wasm-bindgen，npm 包名 `fontpixel`，API 同第 7 阶段两层（兼容 API 对应 bdfparser-js）。
+- wasm-bindgen，npm 包名 `fontpixel`，完整原生 API 与独立 bdfparser-js 兼容 API 两层；第 7 阶段全部能力映射和原生覆盖验收同样适用，不能只提供 W8.3 的几个入口。
+- Node/浏览器与完整/精简 feature 组合分别记录入口、类型定义、覆盖测试、真实不可用项；供 JS/TypeScript 独立开发。浏览器用 Uint8Array/ArrayBuffer、具名资源集合与显式解析器代替任意文件路径，异步读取由 Promise/Worker 适配层处理，不能隐式读文件/网络。
+- 测试线程/同步异步/进度取消、句柄释放/复制、Number/BigInt 精度及资源边界；保持原生结果、strict/报告和适用事务语义。浏览器内存 bundle 不等于磁盘事务，兼容通过不等于全原生 API 覆盖。
 - 用适配器跑 `reference/bdfparser-js/test/` 并通过（同上，不能通过的说明原因）。
 - 测速：与纯 JS bdfparser-js 在 Node 和浏览器（headless Chrome）里逐类对比；报告 WASM 文件大小（含与不含 WOFF2/brotli、CJK 字符集等 feature 的几种组合）、初始化时间。
 - W8.3 wasm 的拼合接口：`info`、`merge`、预览 `render`、Web Worker 与进度回调；Node/headless Chrome 与原生命令行输出逐字节相同，feature 组合大小和初始化时间按[追加规格 W8.3](docs/plan-addendum-merge.md)验证。

@@ -4,15 +4,27 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The requirements and surveyed 99-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phases 0–5 accepted; local development stopped
+## Current status: phase-6 recovery, not acceptance
 
-Phase 5 implements the remaining formats and the additions from its wider survey.
-All 99 IDs have native readers and writers for the documented variants. Aggregate
-gates, long fuzz campaigns and five-run native performance are recorded in the
-[phase 5 acceptance report](reports/phase-5.md). See [TODO.md](TODO.md) for the
-current stop point and [the online handoff](docs/ONLINE-DOT-HANDOFF.md) for phase 6.
-CLI completion and merging, Python/WASM bindings and the offline merge page
-remain later stages; the online task is authorized for phase 6 only.
+The phase-5 baseline and its historical reports are retained. The phase-6
+workspace disappeared; the current phase-6 source and documentation are being
+reconstructed and are **uncompiled and untested**. Old observed passes do not
+validate this source. Read [recovery status](docs/recovery-status.md) before using
+historical results or the restored phase-6 commands below.
+
+The baseline catalogue still contains the same 99 IDs and documented profiles.
+No format was added by this restoration. Catalogue semantic replacement remains
+open: bitmap family/style/copyright were omitted from an earlier comparison,
+and implicit FontTools defaults and metric differences still need inventory.
+
+After phase-6 delivery, work is authorized through phase 7 then phase 8, with
+full native Python and WASM/JS APIs plus separate legacy compatibility APIs.
+Phase 9, remote push, publication and deployment are excluded. Blocked long ASAN
+validation remains explicitly deferred to the user's local computer. This scope
+change is not phase-6 acceptance. Root-owned [TODO.md](TODO.md) tracks integration.
+
+The baseline functionality and historical evidence below are preserved as context;
+they are not fresh tests of the reconstructed changes.
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -338,3 +350,70 @@ CLI supports `--max-input-bytes 268435456` to reopen those larger fonts; the
 library also exposes typed limits. SVG 1.1 font embedding
 has limited support in modern browsers; use path images for portable previews.
 See [the SVG format contract](docs/formats/svg.md) for metadata loss and bounds.
+
+
+## Restored phase-6 quickstart and command reference
+
+The project used pinned Rust 1.99.0. Once the recovered project is independently
+reviewed and execution authorized, use its rust-toolchain file and lockfile.
+`scripts/local-env.sh` places disposable artifacts outside the source checkout.
+Do not hardcode the disappeared cloud toolchain path into public installation docs.
+
+```sh
+source scripts/local-env.sh
+cargo install --locked --path crates/fontpixel-cli --all-features --bin fontpixel
+```
+
+This describes source installation, not a published crates.io release.
+
+## Every command
+
+```sh
+fontpixel formats --json
+fontpixel info font.bdf --json
+fontpixel convert font.bdf -o font.yaff --strict --report json
+fontpixel preview font.bdf 'ABC' --chars '#.'
+fontpixel render font.bdf 'ABC' -o preview.png --scale 4 --report json
+fontpixel vectorize font.bdf -o font.ttf --shape square --report json
+fontpixel variants --base SC.bdf --lang zh-Hant,zh-HK=TC.bdf --lang ja=JP.bdf --lang ko=KR.bdf --script latn,grek,cyrl=Latin.bdf --family 'Example Regional' -o regional.woff2
+fontpixel subset regional.woff2 --text 'ABC' -o subset.woff2
+fontpixel diff before.bdf after.bdf --json
+fontpixel validate font.ttf --json
+fontpixel charset font.bdf --to cp1252 -o cp1252.bdf --report json
+fontpixel merge --family 'Example Mix' --part cjk.bdf --take cjk --part latin.bdf --take western --spacing prop -o merged.yaff --report json
+fontpixel batch examples/batch.toml --jobs 2 > report.json
+```
+
+The intended phase-6 interface makes `vectorize` a visible alias of convert.
+The currently reconstructed source has a hidden alias; help visibility is pending. Native conversion is through the bitmap
+model; it is not a table-preserving wrapper conversion. Select an explicit
+`--font-index` for a multi-font input when needed. The documented `--each` restoration is still pending in current source. Its intended contract needs explicit `--to`
+and an existing output directory; all outputs share one normal-error rollback
+transaction and duplicate stems fail. `--each --font-index` selects per input.
+`--woff2-threads` controls within-font compression separately from batch jobs.
+
+`batch` always emits JSON and does not take `--report`. Relative paths resolve
+from the TOML file. Output parents must exist. Independent tasks may prepare
+successfully after another task fails, but all successful writes enter one
+protected transaction after all input/sidecar identities are known. It has no
+dependency graph. Consult the reconstructed batch contract for worker/report
+spooling details and their limits.
+
+`merge` requires a new family, a selection per ordered part and at least one
+output. Scoped `--take`, `--dy`, `--from`, `--font-index` bind to the preceding
+part; `--to` binds to the preceding output. Positive dy raises ink. Geometric
+half/full is a width policy separate from source selection. Full preserves
+supplied geometry metrics; it does not synthesize a fullwidth glyph. The intended strict BDF notice projection is also pending reconstruction. Once restored, strict BDF
+merge rejects multiline-notice projection even with known licences; YAFF can
+retain the model's full names directly.
+
+Strictness checks accumulated reader/transformation/writer loss. Warning severity
+alone does not determine loss. Respect all sidecar assets, resource budgets and
+format profiles. Caller-owned filesystem resolvers need symlink and source-alias
+protection in addition to lexical ResourcePath validation.
+
+
+Read [the native API guide](docs/api.md), [Tong migration](docs/migration-tong.md),
+[catalogue migration and open gaps](docs/migration-fontpixel.md), and the
+[batch/inspection contract](docs/w6.1-cli.md). The commands here are unexecuted
+restoration examples; all output directories must be created explicitly.

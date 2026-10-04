@@ -1,0 +1,46 @@
+{
+  "record_type": "reconstructed historical observation; not raw evidence and not a fresh test result",
+  "workspace_loss_reported": "2026-10-04 18:33 UTC",
+  "original_logs_available": false,
+  "original_source_hash_manifest_available": false,
+  "reconstructed_source_tested": false,
+  "historical_toolchain": {
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "clippy": "clippy 0.1.99 (b940084d7e 2026-09-28)"
+  },
+  "historical_test_observation": {
+    "command": "cargo test --locked -p fontpixel --no-default-features --features pfr --test pfr --test pfr_shared_physical",
+    "exit_code": 0,
+    "passed": 17,
+    "existing": 9,
+    "new": 8,
+    "observed_at_utc": "2026-10-04 12:30:29",
+    "jobs": 2
+  },
+  "historical_clippy_observation": {
+    "command": "cargo clippy --locked -p fontpixel --no-default-features --features pfr --lib --test pfr --test pfr_shared_physical -- -D warnings",
+    "exit_code": 0,
+    "observed_at_utc": "2026-10-04 12:30:51"
+  },
+  "historical_formatting_observation": "rustfmt --edition 2024 --check on wire.rs and pfr_shared_physical.rs passed before loss; not rerun during recovery",
+  "historical_failed_attempts": [
+    {
+      "exit_code": 101,
+      "reason": "Parent-owned merge_categories feature attribute accidentally gated module behind cjk-charsets; parent corrected it."
+    },
+    {
+      "exit_code": 101,
+      "reason": "New test imported ReadContext from crate root; corrected to fontpixel::resources::ReadContext."
+    }
+  ],
+  "lost_original_artifacts": [
+    "pfr-focused-validation.json",
+    "pfr-tests.log.gz",
+    "pfr-tests-after-gate-fix.log.gz",
+    "pfr-tests-final.log.gz",
+    "pfr-clippy-final.log.gz"
+  ],
+  "long_asan_status": "unperformed; user accepted local continuation recorded in TODO; no retry during recovery",
+  "acceptance": "W6.4 and reconstructed-source integration acceptance remain pending"
+}

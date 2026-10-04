@@ -304,3 +304,7 @@ required-features = ["catalyst", "chiwriter", "dashen", "hppcl", "prebuilt", "ri
 [[example]]
 name = "transport_timing"
 required-features = ["raw", "gzip"]
+
+[[example]]
+name = "phase6_timing"
+required-features = ["bdf", "pcf", "yaff", "otb", "ttf", "woff2", "compat-bdfparser", "serde"]

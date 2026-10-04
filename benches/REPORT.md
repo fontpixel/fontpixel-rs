@@ -1,3 +1,31 @@
+# Phase 6 recovery status
+
+**The restored phase 6 implementation has not been compiled or measured.**
+The earlier working environment was replaced on 2026-10-04. Its native binaries,
+raw timing logs and generated output archives are unavailable. Reconstructed
+source and historical summaries cannot validate this restored implementation.
+
+The benchmark recorder, independent auditor and corrected catalogue task adapter
+are being restored. Standard-library contract tests cover unique dotted case IDs,
+five observations, immutable identities, archive members, independent medians,
+full report retention and explicit application metadata. These are tooling tests,
+not the PLAN §10 performance gate or codec correctness acceptance.
+
+The latest historical native medians were direct BDF parse 113.54 ms, public read
+98.89 ms, PCF conversion 194.90 ms, OTB 249.72 ms, YAFF 278.59 ms and square TTF
+793.06 ms. These are unavailable-evidence historical observations only. OTB, YAFF
+and direct parse had not passed their targets. The complete comparison suite,
+including the actual catalogue with corrected metadata, remained unfinished.
+
+Current contracts, dependencies and reproduction steps are in
+[phase6-README.md](phase6-README.md). Complete native and independent-oracle
+validation followed by five fresh processes per case is required after the
+restored source builds. No older result is labelled an acceptance of this code.
+
+The historical reports below retain their original source, machine and scope.
+
+---
+
 # W1.1 core benchmark report
 
 Later-stage complete-family measurements are in [PHASE2-REPORT.md](PHASE2-REPORT.md).

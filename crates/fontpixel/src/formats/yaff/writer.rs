@@ -6,15 +6,29 @@ impl serde_json::ser::Formatter for AsciiJson {
         writer: &mut W,
         fragment: &str,
     ) -> std::io::Result<()> {
-        for c in fragment.chars() {
+        // serde_json separates C0 controls, quotes and backslashes before this
+        // callback. DEL remains in fragments and still needs our ASCII escape.
+        if fragment.is_ascii() && !fragment.as_bytes().contains(&0x7f) {
+            return writer.write_all(fragment.as_bytes());
+        }
+        let mut start = 0;
+        for (index, c) in fragment.char_indices() {
             if c.is_ascii() && !c.is_control() {
-                writer.write_all(&[c as u8])?;
-            } else {
-                let mut utf16 = [0_u16; 2];
-                for value in c.encode_utf16(&mut utf16) {
-                    write!(writer, "\\u{value:04x}")?;
-                }
+                continue;
             }
+            // Keep unchanged ASCII together so bounded output checks happen per
+            // run, rather than once for every metadata byte.
+            if start < index {
+                writer.write_all(&fragment.as_bytes()[start..index])?;
+            }
+            let mut utf16 = [0_u16; 2];
+            for value in c.encode_utf16(&mut utf16) {
+                write!(writer, "\\u{value:04x}")?;
+            }
+            start = index + c.len_utf8();
+        }
+        if start < fragment.len() {
+            writer.write_all(&fragment.as_bytes()[start..])?;
         }
         Ok(())
     }
@@ -25,6 +39,7 @@ struct Output {
     record_max: usize,
 }
 impl std::io::Write for Output {
+    #[inline(always)]
     fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
         if bytes.len() > self.max.saturating_sub(self.bytes.len()) {
             return Err(std::io::Error::other("YAFF output limit"));
@@ -34,6 +49,10 @@ impl std::io::Write for Output {
             .map_err(std::io::Error::other)?;
         self.bytes.extend_from_slice(bytes);
         Ok(bytes.len())
+    }
+    #[inline(always)]
+    fn write_all(&mut self, bytes: &[u8]) -> std::io::Result<()> {
+        self.write(bytes).map(|_| ())
     }
     fn flush(&mut self) -> std::io::Result<()> {
         Ok(())
@@ -292,4 +311,87 @@ fn raster(
             .map_err(|_| limit("YAFF output bytes", out.max))?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn output(max: usize, record_max: usize) -> Output {
+        Output {
+            bytes: Vec::new(),
+            max,
+            record_max,
+        }
+    }
+
+    #[test]
+    fn write_all_matches_whole_slice_write_at_output_boundaries() {
+        for maximum in [0, 1, 3, 4, 8] {
+            let mut actual = output(maximum, usize::MAX);
+            let mut previous = output(maximum, usize::MAX);
+            for fragment in [b"".as_slice(), b"a", b"bc", b"d", b"", b"efgh"] {
+                let result = actual.write_all(fragment);
+                let expected = previous.write(fragment).map(|length| {
+                    assert_eq!(length, fragment.len());
+                });
+                assert_eq!(
+                    result.err().map(|e| (e.kind(), e.to_string())),
+                    expected.err().map(|e| (e.kind(), e.to_string())),
+                    "cap {maximum}, fragment {fragment:?}"
+                );
+                assert_eq!(actual.bytes, previous.bytes);
+                assert!(actual.bytes.len() <= maximum);
+            }
+        }
+    }
+
+    // Retain the previous default Write::write_all loop as an independent
+    // reference while using the unchanged whole-slice write implementation.
+    struct PreviousWriteAll(Output);
+    impl std::io::Write for PreviousWriteAll {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            self.0.write(bytes)
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            self.0.flush()
+        }
+    }
+
+    #[test]
+    fn bounded_json_fragments_match_previous_write_all_loop() {
+        for value in ["", "plain ASCII", "\u{7f}", "A\0\n\t\"\\é\u{7f}😀Z"] {
+            let mut reference = Vec::new();
+            value
+                .serialize(&mut serde_json::Serializer::with_formatter(
+                    &mut reference,
+                    AsciiJson,
+                ))
+                .unwrap();
+            for record_max in 0..=reference.len() + 1 {
+                for maximum in [0, reference.len() - 1, reference.len(), usize::MAX] {
+                    let mut actual = output(maximum, record_max);
+                    let mut previous = PreviousWriteAll(output(maximum, record_max));
+                    // The same record-local bound used while Output::json serializes.
+                    actual.max = actual.max.min(actual.record_max);
+                    previous.0.max = previous.0.max.min(previous.0.record_max);
+                    let result = value.serialize(&mut serde_json::Serializer::with_formatter(
+                        &mut actual,
+                        AsciiJson,
+                    ));
+                    let expected = value.serialize(&mut serde_json::Serializer::with_formatter(
+                        &mut previous,
+                        AsciiJson,
+                    ));
+                    assert_eq!(
+                        result.err().map(|e| e.to_string()),
+                        expected.err().map(|e| e.to_string()),
+                        "output cap {maximum}, record cap {record_max}, value {value:?}"
+                    );
+                    assert_eq!(actual.bytes, previous.0.bytes);
+                    assert!(actual.bytes.len() <= maximum.min(record_max));
+                }
+            }
+        }
+    }
 }

@@ -476,6 +476,39 @@ impl OutputBundle {
         &self.assets
     }
 
+    /// Count this bundle's owned storage, including spare vector/string capacity.
+    ///
+    /// Includes the inline bundle, entry-point string, asset vector and each
+    /// asset's path and byte buffer. Allocator bookkeeping and shared external
+    /// storage are outside this owned-storage estimate. No allocation occurs.
+    pub fn retained_bytes(&self, max_bytes: usize) -> Result<usize> {
+        fn add(total: &mut usize, amount: usize, limit: usize) -> Result<()> {
+            *total = total.checked_add(amount).ok_or(Error::ResourceLimit {
+                resource: "retained output bundle bytes", limit,
+            })?;
+            if *total > limit {
+                return Err(Error::ResourceLimit {
+                    resource: "retained output bundle bytes", limit,
+                });
+            }
+            Ok(())
+        }
+        let mut total = 0;
+        add(&mut total, std::mem::size_of::<Self>(), max_bytes)?;
+        add(&mut total, self.primary.0.capacity(), max_bytes)?;
+        let slots = self.assets.capacity()
+            .checked_mul(std::mem::size_of::<OutputAsset>())
+            .ok_or(Error::ResourceLimit {
+                resource: "retained output bundle bytes", limit: max_bytes,
+            })?;
+        add(&mut total, slots, max_bytes)?;
+        for asset in &self.assets {
+            add(&mut total, asset.path.0.capacity(), max_bytes)?;
+            add(&mut total, asset.bytes.capacity(), max_bytes)?;
+        }
+        Ok(total)
+    }
+
     /// Move the assets to a persistence layer after strict validation succeeds.
     pub fn into_assets(self) -> Vec<OutputAsset> {
         self.assets

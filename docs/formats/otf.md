@@ -5,11 +5,15 @@ outline-table reader/encoder documented in [cff.md](cff.md), with native bitmap
 outline generation and one shared cubic circle subroutine. Feature `otf` enables
 `cff`, which enables `sfnt`; `cff` can also be selected directly.
 
-There is intentionally no native `otf` registry read/write hook yet. Embedded
-bitmap strikes belong to W2.4, and pixel-grid detection/raster/FontSet projection
-to W2.7. Neither a borrowed sfnt parser nor a CFF outline table is represented as
-a completed FontSet codec. Independent tests assemble real OTF containers using
-the production CFF and W2.1 table/container APIs.
+The restored baseline already registers the native `otf` reader/writer through
+`formats::vector_raster`; registry installation is guarded by the `otf` feature.
+It projects supported CFF outlines/embedded strikes into the bitmap model and
+writes CFF OpenType from the model. This corrects the earlier W2.3-only status;
+it adds no codec or dialect. Low-level CFF/sfnt APIs remain available separately.
+See [vector-raster.md](vector-raster.md), [cff.md](cff.md) and [ttc.md](ttc.md)
+for geometry, table-preservation and collection boundaries. Variable CFF2 and
+hint interpreter execution are not implied. Phase-6 recovery changes remain
+uncompiled/untested, as recorded in [recovery status](../recovery-status.md).
 
 Native CFF axis-aligned paths pack alternating hlineto/vlineto operands in runs
 of at most 40 (below the Type 2 48-entry stack limit), splitting at other command

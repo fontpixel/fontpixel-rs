@@ -1552,3 +1552,23 @@ Git refs, original inputs and complete Tong baseline, while excluding toolchain
 installs/build caches and duplicate historical generated outputs. The new worker
 prompt limits the next task to W6.1–W6.6 and requires truthful reporting when fast
 mode is unavailable or cannot be verified.
+
+## 2026-10-04 — Workspace recovery and reconstruction
+
+At about 18:33 UTC the active project/toolchain disappeared from the available
+workspace. The cause is unknown. Original baseline archive was re-downloaded,
+SHA-verified and restored in a fresh parent; no overlay onto old files occurred.
+The owner explicitly authorized rebuilding/rewriting missing phase-6 work and
+using all six available worker slots. Save each coherent reconstruction checkpoint
+externally before further major changes; local Git is not an external backup.
+
+Recovered source may be exact when a prior hash matches, or reconstructed from
+retained patches/specifications. Record the distinction and rerun validation.
+Do not manufacture lost logs, restore missing commit IDs as if their objects
+survived, or reuse historical pass counts as current acceptance. Toolchain access
+is incomplete and current reconstructed Rust code has not been compiled/tested.
+
+Normalized metadata edits, optional variants naming overrides and explicit embedded
+UPM/reference-strike/rounding controls preserve prior defaults. Catalogue omissions
+must be fixed; implicit FontTools defaults such as fsType are not user license
+instructions and must not be blindly copied. Document remaining differences.

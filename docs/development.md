@@ -1,32 +1,20 @@
 # Development tools and test scope
 
-Rust 1.99.0 is pinned in rust-toolchain.toml. Install rustfmt and clippy through
-rustup and cargo-deny 0.20.2 through crates.io (`cargo install cargo-deny --version
-0.20.2 --locked`). These are the only installed tools required for W0.1.
+The present phase-6 reconstruction is uncompiled and untested. Historical checks
+below describe their original source snapshots, not this recovery. Commands are
+for later authorized verification; none was run during documentation restoration.
 
-In the original task workspace, the isolated reusable installation is adjacent
-to `extracted/`, under `fontpixel-rs-package/toolchain/`. From this repository:
-
-```bash
-source ../../toolchain/activate.sh
-scripts/check.sh
-```
-
-The activation script changes `CARGO_HOME`, `RUSTUP_HOME`, and `PATH` only in the
-current shell. No global shell startup file or user tool configuration is changed.
-The installation came from static.rust-lang.org (rustup-init's published SHA-256
-was verified), then official stable toolchain manifests. cargo-deny came from
-crates.io with its locked dependency graph. A monobit 0.54.0 wheel was downloaded
-from PyPI and verified against its published SHA-256 only to establish package
-access; it was not installed or used as a font correctness check.
-
-The isolated tool directory is not part of git or deliverable bundles. New
-machines install their own toolchain from the pinned versions above. Package
-downloads, build targets, and installation logs must stay out of deliveries.
+Rust 1.99.0 is pinned in rust-toolchain.toml. Install the official toolchain with
+rustfmt/clippy and cargo-deny 0.20.2 from crates.io. Do not depend on an old
+machine-specific toolchain path. Before a coordinated build, source
+`scripts/local-env.sh`; set `CARGO_BUILD_JOBS=2` for this recovery session as
+directed by the coordinator. Build caches and oracle outputs belong in sibling
+`local-work`, while original references, samples and validation-inputs stay read-only.
+Do not run builds or benchmarks until the coordinator opens the execution gate.
 
 Run `scripts/check.sh` for all mandatory local checks. Test counts differ when
 serde is disabled because JSON serialization only exists behind that feature.
-The CLI tests execute a real built binary, parse JSON, assert the 46-format list,
+The CLI tests execute a real built binary, parse JSON, inspect the current 99-format catalogue,
 check errors/exit codes, and verify failed conversion leaves existing files intact.
 Library contract tests use explicitly synthetic byte fixtures, including a real
 sidecar-resource/multi-asset roundtrip. None substitutes for future font-codec

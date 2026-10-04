@@ -127,6 +127,97 @@ fn unique<'a>(properties: &'a Properties, report: &mut Report) -> Vec<&'a Proper
     }
     result
 }
+fn is_notice(name: &str) -> bool {
+    ["COPYRIGHT", "LICENSE", "LICENSE_URL"]
+        .iter()
+        .any(|notice| name.eq_ignore_ascii_case(notice))
+}
+// Unlike str::lines(), keep empty final lines and treat a lone CR as a break.
+// CRLF is one delimiter. Every yielded slice borrows the effective property.
+fn notice_lines(value: &str) -> impl Iterator<Item = &str> {
+    let mut remaining = Some(value);
+    std::iter::from_fn(move || {
+        let text = remaining?;
+        if let Some(index) = text.find(['\r', '\n']) {
+            let delimiter = if text.as_bytes()[index] == b'\r'
+                && text.as_bytes().get(index + 1) == Some(&b'\n')
+            {
+                2
+            } else {
+                1
+            };
+            remaining = Some(&text[index + delimiter..]);
+            Some(&text[..index])
+        } else {
+            remaining = None;
+            Some(text)
+        }
+    })
+}
+fn write_multiline_notice(
+    out: &mut Sink,
+    property: &Property,
+    value: &str,
+    report: &mut Report,
+) -> Result<()> {
+    // Count the exact extra wire bytes before emitting any part of this notice:
+    // each COMMENT wrapper is 11 bytes; the property wrapper is name.len()+4;
+    // its quote escaping adds one byte per quote, and joins add three bytes.
+    // No per-line vector, escaped copy or joined notice string is allocated.
+    let maximum = out.max;
+    let add = |total: &mut usize, amount: usize| -> Result<()> {
+        *total = total.checked_add(amount)
+            .filter(|size| *size <= maximum)
+            .ok_or(Error::ResourceLimit {
+                resource: "BDF output bytes",
+                limit: maximum,
+            })?;
+        Ok(())
+    };
+    let mut total = out.text.len();
+    add(&mut total, property.name.len())?;
+    add(&mut total, 4)?;
+    for (index, line) in notice_lines(value).enumerate() {
+        add(&mut total, 11)?;
+        add(&mut total, line.len())?;
+        add(&mut total, line.len())?;
+        add(&mut total, line.bytes().filter(|byte| *byte == b'"').count())?;
+        if index != 0 {
+            add(&mut total, 3)?;
+        }
+    }
+    for line in notice_lines(value) {
+        // Match write_comment exactly: its quoted wrapper does not double
+        // interior quotes, and the reader strips only the outside wrapper.
+        out.append("COMMENT \"")?;
+        out.append(line)?;
+        out.line("\"")?;
+    }
+    out.append(&property.name)?;
+    out.append(" \"")?;
+    for (index, line) in notice_lines(value).enumerate() {
+        if index != 0 {
+            out.append(" | ")?;
+        }
+        for (quote_index, fragment) in line.split('"').enumerate() {
+            if quote_index != 0 {
+                out.append("\"\"")?;
+            }
+            out.append(fragment)?;
+        }
+    }
+    out.line("\"")?;
+    loss(
+        report,
+        "bdf.write.notice_line_breaks",
+        None,
+        format!(
+            "{} notice line breaks were preserved as COMMENT lines and projected to ' | ' in the property; this does not establish modification or distribution permission",
+            property.name,
+        ),
+    );
+    Ok(())
+}
 fn write_properties(out: &mut Sink, properties: &Properties, report: &mut Report) -> Result<()> {
     let props = unique(properties, report);
     let comments: Vec<_> = properties
@@ -145,6 +236,13 @@ fn write_properties(out: &mut Sink, properties: &Properties, report: &mut Report
             return Err(Error::InvalidInput(
                 "Cannot write BDF: property name must be a nonempty token".into(),
             ));
+        }
+        if let PropertyValue::Text(value) | PropertyValue::Decimal(value) = &p.value
+            && is_notice(&p.name)
+            && value.contains(['\n', '\r'])
+        {
+            write_multiline_notice(out, p, value, report)?;
+            continue;
         }
         let line = match &p.value {
             PropertyValue::Flag => p.name.clone(),

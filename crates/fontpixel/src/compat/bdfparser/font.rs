@@ -5,7 +5,7 @@ use crate::charset::{
     CharsetCodec, canonical_charset, charset_props, detect_gl, is_unicode_charset,
 };
 use crate::formats::{bdf, pcf, x11};
-use crate::model::{Font as CoreFont, GlyphId, Property};
+use crate::model::{Codepoint, Font as CoreFont, GlyphId, Property};
 use crate::render::{MissingGlyph, RenderMode, RenderOptions, WritingDirection};
 use crate::{Report, ReportEntry, ResourceLimits, Result};
 use serde_json::{Map, Value as V, json};
@@ -969,9 +969,12 @@ impl Font {
             ..RenderOptions::default()
         };
         let codes = cps.iter().map(|n| {
-            core.codepoints()
-                .find(|(cp, _)| i64::from(cp.value()) == *n)
-                .map(|(cp, _)| cp)
+            let n = u32::try_from(*n).ok()?;
+            // Match codepoints()' derived domain order, including raw Unicode
+            // numbers: Unicode precedes Legacy, regardless of insertion order.
+            [Codepoint::Unicode(n), Codepoint::Legacy(n)]
+                .into_iter()
+                .find(|cp| core.glyph_id(*cp).is_some())
         });
         let rendered = core.draw_codepoints(codes, &options)?;
         Ok(Bitmap::from_raster(rendered.bitmap.to_gray8_palette(0, 1)?))

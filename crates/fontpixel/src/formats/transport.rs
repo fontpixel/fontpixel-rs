@@ -45,7 +45,13 @@ trait Budget: FormatWriter<FontSet> + Clone {
 struct NativeWriter<C>(C);
 impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
     fn write(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
-        self.0.write(fonts, options)
+        if let Some(common) = &options.transport_limits {
+            let limits = self.0.budget().intersect(common);
+            fonts.validate(&limits.resources)?;
+            self.0.restricted(&limits).write(fonts, options)
+        } else {
+            self.0.write(fonts, options)
+        }
     }
     fn transport_limits(&self) -> TransportLimits {
         self.0.budget()

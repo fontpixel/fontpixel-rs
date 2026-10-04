@@ -19,11 +19,13 @@ doc = false
 required-features = ["parity"]
 
 [features]
-parity = ["fontpixel/compat-bdfparser", "fontpixel/cjk-charsets", "dep:sha2", "dep:base64"]
-default = ["bdf", "yaff", "fontpixel/default", "pcf", "png", "opentype", "svg", "hex", "psf", "fnt", "fon", "image", "c", "kbitx", "pbf", "hbf", "draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfont", "sfd", "kbits", "pk", "gf", "plan9", "amiga", "gem", "snf", "hanfont", "iigs", "vfont", "fzx", "figlet", "palm", "gdr", "drcs", "color", "bbc", "beos", "catalyst", "chiwriter", "comfont", "consoleet", "daisy", "dashen", "dosstart", "drhalo", "edwin", "fbit", "geos", "gpi", "grasp", "hppcl", "hrcg", "lisa", "mgtk", "mkwinfont", "oberon", "pcgeos", "pcr", "pilfont", "plus3dos", "psf2txt", "polyprint", "prebuilt", "printshop", "pxl", "riscos", "sfont", "signum", "symbos", "tasprint", "vtfont", "writeon", "wsfont", "wyse", "xbin", "xerox", "zapfont", "rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf", "qpf", "qpf2", "ssfn", "vlw", "pfr"]
+parity = ["fontpixel/compat-bdfparser", "fontpixel/cjk-charsets", "dep:base64"]
+default = ["bdf", "yaff", "fontpixel/default", "pcf", "otb", "bdat", "png", "opentype", "svg", "hex", "psf", "fnt", "fon", "image", "c", "kbitx", "pbf", "hbf", "draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfont", "sfd", "kbits", "pk", "gf", "plan9", "amiga", "gem", "snf", "hanfont", "iigs", "vfont", "fzx", "figlet", "palm", "gdr", "drcs", "color", "bbc", "beos", "catalyst", "chiwriter", "comfont", "consoleet", "daisy", "dashen", "dosstart", "drhalo", "edwin", "fbit", "geos", "gpi", "grasp", "hppcl", "hrcg", "lisa", "mgtk", "mkwinfont", "oberon", "pcgeos", "pcr", "pilfont", "plus3dos", "psf2txt", "polyprint", "prebuilt", "printshop", "pxl", "riscos", "sfont", "signum", "symbos", "tasprint", "vtfont", "writeon", "wsfont", "wyse", "xbin", "xerox", "zapfont", "rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf", "qpf", "qpf2", "ssfn", "vlw", "pfr"]
 bdf = ["fontpixel/bdf"]
 yaff = ["fontpixel/yaff"]
 pcf = ["fontpixel/pcf"]
+otb = ["fontpixel/otb"]
+bdat = ["fontpixel/bdat"]
 hex = ["fontpixel/hex"]
 psf = ["fontpixel/psf"]
 fnt = ["fontpixel/fnt"]
@@ -113,15 +115,17 @@ pfr = ["fontpixel/pfr"]
 image = ["fontpixel/image"]
 png = ["fontpixel/png"]
 svg = ["fontpixel/svg"]
-all-formats = ["yaff", "bdf", "fontpixel/all-formats", "pcf", "opentype", "svg", "hex", "psf", "fnt", "fon", "image", "c", "kbitx", "pbf", "hbf", "draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfont", "sfd", "kbits", "pk", "gf", "plan9", "amiga", "gem", "snf", "hanfont", "iigs", "vfont", "fzx", "figlet", "palm", "gdr", "drcs", "color", "bbc", "beos", "catalyst", "chiwriter", "comfont", "consoleet", "daisy", "dashen", "dosstart", "drhalo", "edwin", "fbit", "geos", "gpi", "grasp", "hppcl", "hrcg", "lisa", "mgtk", "mkwinfont", "oberon", "pcgeos", "pcr", "pilfont", "plus3dos", "psf2txt", "polyprint", "prebuilt", "printshop", "pxl", "riscos", "sfont", "signum", "symbos", "tasprint", "vtfont", "writeon", "wsfont", "wyse", "xbin", "xerox", "zapfont", "rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf", "qpf", "qpf2", "ssfn", "vlw", "pfr"]
+all-formats = ["yaff", "bdf", "fontpixel/all-formats", "pcf", "otb", "bdat", "opentype", "svg", "hex", "psf", "fnt", "fon", "image", "c", "kbitx", "pbf", "hbf", "draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfont", "sfd", "kbits", "pk", "gf", "plan9", "amiga", "gem", "snf", "hanfont", "iigs", "vfont", "fzx", "figlet", "palm", "gdr", "drcs", "color", "bbc", "beos", "catalyst", "chiwriter", "comfont", "consoleet", "daisy", "dashen", "dosstart", "drhalo", "edwin", "fbit", "geos", "gpi", "grasp", "hppcl", "hrcg", "lisa", "mgtk", "mkwinfont", "oberon", "pcgeos", "pcr", "pilfont", "plus3dos", "psf2txt", "polyprint", "prebuilt", "printshop", "pxl", "riscos", "sfont", "signum", "symbos", "tasprint", "vtfont", "writeon", "wsfont", "wyse", "xbin", "xerox", "zapfont", "rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf", "qpf", "qpf2", "ssfn", "vlw", "pfr"]
 opentype = ["fontpixel/ttf", "fontpixel/otf", "fontpixel/ttc", "fontpixel/cff", "fontpixel/woff", "fontpixel/woff2"]
 
 [dependencies]
-sha2 = { version = "0.10", optional = true }
+sha2 = "0.10"
 base64 = { version = "0.22", optional = true }
 fontpixel = { workspace = true, features = ["serde"] }
 clap.workspace = true
-serde_json.workspace = true
+serde.workspace = true
+serde_json = { workspace = true, features = ["raw_value"] }
+toml = "=1.1.6"
 cap-std = "4"
 same-file = "1"
 

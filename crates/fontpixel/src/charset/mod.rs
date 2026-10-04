@@ -26,6 +26,9 @@ mod cjk;
 mod core;
 mod registry;
 
+/// Unicode categories and width metadata used by font merging.
+pub mod merge_categories;
+
 /// Permitted per-glyph code lengths, independent of a text-stream encoding.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Kind {

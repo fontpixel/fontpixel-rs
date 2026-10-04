@@ -822,18 +822,32 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
                 let stride = (g.bitmap.width() as usize * depth).div_ceil(8);
                 let header = encoded.len();
                 encoded.resize(header + stride * g.bitmap.height() as usize, 0);
-                let step = 255 / ((1u16 << depth) - 1) as u8;
-                for y in 0..g.bitmap.height() {
-                    for x in 0..g.bitmap.width() {
-                        let v = sample(&g.bitmap, x, y)?;
-                        if !v.is_multiple_of(step) {
-                            return Err(invalid(
-                                "bitmap gray value cannot be represented at requested depth",
-                            ));
+                match (&g.bitmap, depth) {
+                    // Canonical storage has the same top-down, byte-aligned
+                    // rows as formats 1/6: Mono is MSB-left with zero padding,
+                    // and Gray8 stores one exact coverage byte per pixel.
+                    // Metrics, dimensions and work budgets were checked above.
+                    (GlyphBitmap::Mono(b), 1) => {
+                        encoded[header..].copy_from_slice(b.as_bytes());
+                    }
+                    (GlyphBitmap::Gray8(b), 8) => {
+                        encoded[header..].copy_from_slice(b.as_bytes());
+                    }
+                    _ => {
+                        let step = 255 / ((1u16 << depth) - 1) as u8;
+                        for y in 0..g.bitmap.height() {
+                            for x in 0..g.bitmap.width() {
+                                let v = sample(&g.bitmap, x, y)?;
+                                if !v.is_multiple_of(step) {
+                                    return Err(invalid(
+                                        "bitmap gray value cannot be represented at requested depth",
+                                    ));
+                                }
+                                let bit = x as usize * depth;
+                                encoded[header + y as usize * stride + bit / 8] |=
+                                    (v / step) << (8 - depth - bit % 8);
+                            }
                         }
-                        let bit = x as usize * depth;
-                        encoded[header + y as usize * stride + bit / 8] |=
-                            (v / step) << (8 - depth - bit % 8);
                     }
                 }
                 format

@@ -1,9 +1,11 @@
-# Bitmap and model API (W1.1)
+# Bitmap and model API
+
+**Recovery status (2026-10-04):** this phase-6 documentation/source reconstruction is uncompiled and untested. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
 
 This is the core used by readers, writers, rendering, and compatibility
-adapters. W1.2 now registers actual feature-gated BDF hooks in
-`fontpixel::registry()` (`Registry<FontSet>`); other catalogue entries remain
-honestly unimplemented. Custom readers
+adapters. `fontpixel::registry()` (`Registry<FontSet>`) installs the enabled
+native codecs; all 99 canonical IDs have documented reader/writer profiles.
+`Registry::new()` alone creates metadata entries without codec hooks. Custom readers
 and writers implement the existing `FormatReader<FontSet>` and
 `FormatWriter<FontSet>` contracts, including sidecars and combined strict reports.
 
@@ -48,8 +50,8 @@ clip correctly rather than wrapping. A zero-ink `trim()` returns precisely 0×0.
 
 Geometry/effects that change dimensions return a new bitmap; source data is not
 mutated. `paste`, `overlay`, `composite`, `invert`, `replace`, and `set_pixel` are
-in place. There is no trait-based `+`/`*` hiding fallible allocation. The later
-compatibility facade will expose SPEC's mutating/chaining method signatures.
+in place. There is no trait-based `+`/`*` hiding fallible allocation. The optional
+compatibility facade exposes SPEC's mutating/chaining method signatures.
 
 The compositing kernel works a row/byte at a time, not by pixel. Packed full-byte
 runs select operation and alignment once; aligned copies use slice copies, and
@@ -80,20 +82,21 @@ explicit label raster** with byte values 0, 1 and 2:
 
 The 3,841 checked-in Python-oracle cases exercise the shared operations and exact
 pixel labels, plus ink bounds. Byte/string conversion edge cases have direct
-Rust tests. Boundaries for W1.5 adapters are deliberate and documented:
+Rust tests. The compatibility boundaries are deliberate and documented:
 
 1. Python represents `W×0` as an empty row list and therefore loses W; core keeps it
 2. Python `enlarge` factors <=1 are no-ops; its adapter uses `max(factor,1)`
-3. Core rejects ragged pattern-replacement output. If full compatibility cases
-   require transient ragged legacy rows, W1.5 must preserve them in its adapter
-   (e.g. as individually validated rows), rather than substitute an error for a
-   successful reference operation or corrupt a rectangular Glyph bitmap
+3. Core rejects ragged pattern-replacement output. The compatibility adapter rejects invalid ragged construction/replacement
+   transactionally (the narrowly matched K12 known issue); it does not corrupt
+   a rectangular Glyph bitmap or exempt otherwise valid cases
 4. Core `overlay` is silent about size mismatch; compatibility attaches warnings
 5. `to_row_values` supports <=64 bits; arbitrary-width exact rows use numeric hex,
-   with no truncation. Binding/JSON numeric representation belongs to W1.5/W7/W8
+   with no truncation. The Rust compatibility JSON runner preserves arbitrary-width integers;
+   Python/WASM binding transport belongs to phases 7/8
 6. Pillow mode-1 export's mapped background/padding semantics are adapter-level;
    core font wire bytes always start with zero padding before order transforms
-7. `tosvg`/outlines belong to phase 2; JS-only canvas drawing belongs to bindings
+7. Native and compatibility SVG/outline APIs are implemented; JS-only canvas
+   drawing belongs to future bindings
 
 ## Wire bytes and text
 
@@ -157,5 +160,57 @@ per-glyph properties keep their respective source order independently.
 read diagnostics and format identity alongside the extracted `Font`. `validate`
 checks references, glyph consistency, aggregate glyph count/bitmap bytes and
 per-glyph pixel budgets; it does not replace parse-time allocation guards.
+
+## Retained-storage and clone preflight accounting
+
+`Font::retained_usage(max_bytes)` and `FontSet::retained_usage(max_bytes)` inspect
+the existing model without cloning or serializing it. `ModelUsage` reports bytes,
+font count, live glyph count and assigned glyph slots, including deleted slots.
+The byte charge includes model headers, allocated vector/string/bitmap capacities,
+property trees and both codepoint/sequence indexes. Checked arithmetic or a charge
+above `max_bytes` fails; property-list traversal is limited to 128 levels. This is
+an owned-storage budget. It excludes allocator bookkeeping, stack and process-wide
+library state, and must not be interpreted as process RSS or a peak-memory cap.
+
+Index accounting reserves, per B-tree node,
+`16 * (size_of::<K>() + size_of::<V>() + size_of::<usize>()) + 128` bytes. This
+exceeds the audited standard library's 11-key/12-edge node layout. In that
+implementation a completed non-root node contains at least five keys and a
+nonempty root at least one. Therefore a map with `n > 0` entries has at most
+`1 + floor((n - 1) / 5)` nodes. An empty map is charged one possible retained
+leaf. The model's private indexes are inspected only between completed mutations;
+temporary insertion/removal states do not use this occupancy proof.
+
+The tighter node bound is **toolchain-specific**, not a stable Rust ABI promise.
+`crates/fontpixel/build.rs` and `build_support.rs` enable it only when a successful
+`rustc -vV` has valid UTF-8 and unambiguous, well-formed metadata with all of:
+
+- banner `rustc 1.99.0 (b940084d7 2026-09-28)`;
+- binary `rustc`, release `1.99.0`, and full commit
+  `b940084d7eb6a299eb4bfeb8e34901bc051e7ac4`;
+- compiler host and Cargo target both `x86_64-unknown-linux-gnu`.
+
+An unavailable compiler, failed/malformed/duplicate metadata or another
+compiler/target uses the previous `n + 1` node charge. So do explicit custom-std
+indicators: `--sysroot` or `-Z` in `RUSTFLAGS`/`CARGO_ENCODED_RUSTFLAGS`, or a set
+`CARGO_UNSTABLE_BUILD_STD`/`RUSTC_BOOTSTRAP`. The audited assumption is the official
+bundled standard library; compiler metadata does not authenticate a manually
+replaced sysroot or a compiler wrapper that hides a substitution. Custom builds
+must not force the private `fontpixel_verified_btree_1_99` configuration.
+
+`Font::cloned_usage(max_bytes)` preflights a new owned clone without allocating it.
+Under the same guard, Rust's `Vec::clone` allocates the initialized outer
+glyph-slot length, so this one array is charged `slot_count()`, including holes,
+instead of the source's spare capacity. Every nested allocation keeps its
+conservative source-capacity charge. On unverified builds the outer array also
+keeps the full source-capacity charge. `retained_usage` always charges the source's
+actual capacity: clone preflight never releases or discounts a live source.
+
+Neither refinement raises an actual limit. `ResourceLimits::max_total_bytes`
+still defaults to 268,435,456 bytes (256 MiB), primary input to 64 MiB, and all
+other reader, bitmap, glyph, table and output policies remain in force. The CLI
+reserves retained models, diagnostics and additional language-route clones before
+reading/cloning another input. Known larger inputs can use explicit per-command
+limits; a smaller bound must still fail before the corresponding allocation.
 
 See [benchmark results](../benches/REPORT.md) and [decisions](decisions.md).

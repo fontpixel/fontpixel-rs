@@ -15,7 +15,7 @@ use crate::sfnt::{
     self, Flavor, Sfnt, SfntBuilder, bitmap as sbit, cmap, metrics, name, os2, post,
 };
 use crate::{Report, Result};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
 
 /// Options for bitmap FontSet extraction.
 #[derive(Clone, Debug, Default)]
@@ -34,6 +34,97 @@ pub struct EmbeddedWriteOptions {
     pub limits: sbit::Limits,
     /// Explicit EBSC instructions; an empty list uses retained source EBSC, if any.
     pub scaling: Vec<sbit::Scale>,
+    /// Explicit design units per em in 16..=16384; None preserves automatic scaling.
+    /// Supported for OTB/bdat, not color output.
+    pub units_per_em: Option<u16>,
+    /// Source priority for common design metrics; physical strike order is unchanged.
+    pub reference_strike: EmbeddedReferenceStrike,
+    /// Pixel-to-design scaling only; the OS/2 average retains ties-up rounding.
+    pub rounding: EmbeddedRounding,
+}
+/// Source of shared design metrics for native OTB/bdat output.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedReferenceStrike {
+    /// Use the first source strike, then original input order for missing glyphs.
+    #[default]
+    First,
+    /// Greatest effective y-ppem, with the last original input winning ties.
+    /// Missing glyphs use descending y-ppem, then descending original input index.
+    LargestPpem,
+    /// Zero-based FontSet strike index, then all other strikes in original order.
+    Index(usize),
+}
+/// Rounding of signed pixel metrics scaled into design units.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedRounding {
+    /// Nearest integer; exact halfway values go away from zero (existing default).
+    #[default]
+    NearestTiesAwayFromZero,
+    /// Nearest integer; exact halfway values go to the even integer.
+    /// Uses exact rational arithmetic, not floating-point intermediate values.
+    NearestTiesEven,
+}
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
+struct DesignOptions {
+    units_per_em: Option<u16>,
+    reference_strike: EmbeddedReferenceStrike,
+    rounding: EmbeddedRounding,
+}
+impl From<&EmbeddedWriteOptions> for DesignOptions {
+    fn from(options: &EmbeddedWriteOptions) -> Self {
+        Self {
+            units_per_em: options.units_per_em,
+            reference_strike: options.reference_strike,
+            rounding: options.rounding,
+        }
+    }
+}
+impl DesignOptions {
+    fn validate(self, fonts: usize, kind: sbit::Kind) -> Result<()> {
+        if self.units_per_em.is_some_and(|upem| !(16..=16384).contains(&upem)) {
+            return Err(invalid("units_per_em must be in 16..=16384"));
+        }
+        if let EmbeddedReferenceStrike::Index(index) = self.reference_strike
+            && index >= fonts
+        {
+            return Err(invalid("reference strike index is outside FontSet"));
+        }
+        if kind == sbit::Kind::Color && self != Self::default() {
+            return Err(invalid("custom embedded metric controls require otb or bdat"));
+        }
+        Ok(())
+    }
+    fn priority(self, strikes: &[DesignStrike], limits: &sfnt::Limits) -> Result<Vec<usize>> {
+        if matches!(self.reference_strike, EmbeddedReferenceStrike::First | EmbeddedReferenceStrike::Index(0)) {
+            return Ok(Vec::new());
+        }
+        let bytes = strikes.len().checked_mul(std::mem::size_of::<usize>())
+            .ok_or_else(|| invalid("metric-order size overflow"))?;
+        sfnt::bounded(bytes, limits.resources.max_total_bytes, "embedded metric-order bytes")?;
+        let mut order = Vec::new();
+        order.try_reserve_exact(strikes.len()).map_err(|_| invalid("metric-order allocation failed"))?;
+        order.extend(0..strikes.len());
+        match self.reference_strike {
+            EmbeddedReferenceStrike::LargestPpem => {
+                order.sort_unstable_by_key(|&index| std::cmp::Reverse((strikes[index].ppem[1], index)));
+            }
+            EmbeddedReferenceStrike::Index(index) => order[..=index].rotate_right(1),
+            EmbeddedReferenceStrike::First => unreachable!(),
+        }
+        Ok(order)
+    }
+}
+// Positive denominators come from validated physical ppem. Remainders, unlike
+// the numerator's absolute value, remain safe even for the most negative i128.
+fn round_design(numerator: i128, denominator: i128, rounding: EmbeddedRounding) -> i128 {
+    debug_assert!(denominator > 0);
+    let quotient = numerator / denominator;
+    let remainder = numerator % denominator;
+    let twice = remainder.abs() * 2;
+    let up = twice > denominator || (twice == denominator && (
+        rounding == EmbeddedRounding::NearestTiesAwayFromZero || quotient % 2 != 0
+    ));
+    quotient + if up { numerator.signum() } else { 0 }
 }
 /// Native color bitmap container, with black RGB and exact coverage alpha.
 #[cfg(feature = "color")]
@@ -797,14 +888,81 @@ fn read_sbix(
     Ok(())
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug)]
 enum Key {
     Notdef,
+    Code(u32),
     Codes(Vec<u32>),
     Name(String),
     Slot(usize),
 }
+impl Key {
+    fn codepoints(&self) -> Option<&[u32]> {
+        match self {
+            Self::Code(cp) => Some(std::slice::from_ref(cp)),
+            Self::Codes(cps) => Some(cps),
+            _ => None,
+        }
+    }
+}
+impl Ord for Key {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        use std::cmp::Ordering::{Equal, Greater, Less};
+        // Preserve the former derived order: Notdef < Codes < Name < Slot.
+        // An inline code is a one-element sequence, not a separate category.
+        match (self, other) {
+            (Self::Notdef, Self::Notdef) => Equal,
+            (Self::Notdef, _) => Less,
+            (_, Self::Notdef) => Greater,
+            (Self::Code(a), Self::Code(b)) => a.cmp(b),
+            (Self::Code(a), Self::Codes(b)) => std::slice::from_ref(a).cmp(b.as_slice()),
+            (Self::Codes(a), Self::Code(b)) => a.as_slice().cmp(std::slice::from_ref(b)),
+            (Self::Codes(a), Self::Codes(b)) => a.cmp(b),
+            (Self::Code(_) | Self::Codes(_), _) => Less,
+            (_, Self::Code(_) | Self::Codes(_)) => Greater,
+            (Self::Name(a), Self::Name(b)) => a.cmp(b),
+            (Self::Name(_), Self::Slot(_)) => Less,
+            (Self::Slot(_), Self::Name(_)) => Greater,
+            (Self::Slot(a), Self::Slot(b)) => a.cmp(b),
+        }
+    }
+}
+impl PartialOrd for Key {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl PartialEq for Key {
+    fn eq(&self, other: &Self) -> bool {
+        self.cmp(other).is_eq()
+    }
+}
+impl Eq for Key {}
+// Internal sfnt IDs are bounded by u16. Unlike a Key tree, this set neither
+// clones Unicode alias vectors/names nor allocates one tree node per group.
+// Even the largest possible ID needs at most 1024 words (8 KiB).
+#[derive(Default)]
+struct GlyphIdSet(Vec<u64>);
+impl GlyphIdSet {
+    fn insert(&mut self, gid: u16) -> bool {
+        let word = usize::from(gid) / 64;
+        if self.0.len() <= word {
+            // Power-of-two lengths also bound Vec's geometric capacity growth
+            // when a sparse strike first encounters a large existing ID.
+            self.0.resize((word + 1).next_power_of_two(), 0);
+        }
+        let mask = 1u64 << (gid % 64);
+        let fresh = self.0[word] & mask == 0;
+        self.0[word] |= mask;
+        fresh
+    }
+}
 fn key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> Key {
+    if let [Codepoint::Unicode(cp)] = g.codepoints.as_slice()
+        && char::from_u32(*cp).is_some()
+    {
+        return Key::Code(*cp);
+    }
     let mut cps = Vec::new();
     for cp in &g.codepoints {
         if let Codepoint::Unicode(cp) = cp
@@ -1128,7 +1286,7 @@ pub fn write_color(fonts: &FontSet, options: &ColorWriteOptions) -> Result<(Vec<
         sbit::Kind::Color,
         &EmbeddedWriteOptions {
             limits: options.limits.clone(),
-            scaling: Vec::new(),
+            ..Default::default()
         },
         options.flavor == ColorFlavor::Sbix,
     )?;
@@ -1156,6 +1314,8 @@ fn write_impl(
     if kind == sbit::Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color writing requires the color feature"));
     }
+    let design_options = DesignOptions::from(options);
+    design_options.validate(fonts.fonts.len(), kind)?;
     let limits = &options.limits;
     write_preflight(fonts, &limits.sfnt)?;
     #[cfg(feature = "color")]
@@ -1200,52 +1360,59 @@ fn write_impl(
             return Err(invalid("bitmap model/glyph budget exceeded"));
         }
         let mut selected = Vec::new();
-        let mut seen = BTreeSet::new();
+        let mut seen = GlyphIdSet::default();
         for (id, g) in f.glyphs() {
             let key = key(g, id.index(), fi, &mut report);
-            if !seen.insert(key.clone()) {
-                return Err(invalid("ambiguous duplicate glyph labels within strike"));
-            }
-            let gid = if let Some(gid) = ids.get(&key) {
-                if kind == sbit::Kind::Color
-                    && g.name.as_ref().is_some_and(|n| n != &names[*gid as usize])
-                {
-                    loss(
-                        &mut report,
-                        "strike_glyph_name",
-                        Some(fi),
-                        Some(id.index()),
-                        "Shared post name comes from the first strike containing this glyph",
-                    );
+            let next_id = ids.len();
+            let entry = match ids.entry(key) {
+                Entry::Occupied(entry) => {
+                    let gid = *entry.get();
+                    if !seen.insert(gid) {
+                        return Err(invalid("ambiguous duplicate glyph labels within strike"));
+                    }
+                    if kind == sbit::Kind::Color
+                        && g.name.as_ref().is_some_and(|n| n != &names[gid as usize])
+                    {
+                        loss(
+                            &mut report,
+                            "strike_glyph_name",
+                            Some(fi),
+                            Some(id.index()),
+                            "Shared post name comes from the first strike containing this glyph",
+                        );
+                    }
+                    entry
                 }
-                *gid
-            } else {
-                let gid = u16::try_from(ids.len()).map_err(|_| invalid("too many sfnt glyphs"))?;
-                if gid == u16::MAX {
-                    return Err(invalid("sfnt requires at most 65535 glyphs"));
+                Entry::Vacant(entry) => {
+                    let gid = u16::try_from(next_id).map_err(|_| invalid("too many sfnt glyphs"))?;
+                    if gid == u16::MAX {
+                        return Err(invalid("sfnt requires at most 65535 glyphs"));
+                    }
+                    let entry = entry.insert_entry(gid);
+                    // A newly allocated ID cannot have appeared in this strike.
+                    seen.insert(gid);
+                    let name = g.name.as_deref().filter(|n| {
+                        !n.is_empty()
+                            && n.len() <= 63
+                            && n.bytes()
+                                .all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_')
+                    });
+                    if g.name.is_some() && name.is_none() {
+                        loss(
+                            &mut report,
+                            "glyph_name",
+                            Some(fi),
+                            Some(id.index()),
+                            "Glyph name cannot be encoded in post format 2",
+                        );
+                    }
+                    names.push(name.map_or_else(|| format!("glyph{gid}"), str::to_owned));
+                    entry
                 }
-                ids.insert(key.clone(), gid);
-                let fallback = format!("glyph{gid}");
-                let name = g.name.as_deref().filter(|n| {
-                    !n.is_empty()
-                        && n.len() <= 63
-                        && n.bytes()
-                            .all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'_')
-                });
-                if g.name.is_some() && name.is_none() {
-                    loss(
-                        &mut report,
-                        "glyph_name",
-                        Some(fi),
-                        Some(id.index()),
-                        "Glyph name cannot be encoded in post format 2",
-                    );
-                }
-                names.push(name.unwrap_or(&fallback).to_owned());
-                gid
             };
-            if let Key::Codes(cps) = key {
-                for cp in cps {
+            let gid = *entry.get();
+            if let Some(cps) = entry.key().codepoints() {
+                for &cp in cps {
                     if let Some(old) = mapping.insert(cp, gid)
                         && old != gid
                     {
@@ -1398,13 +1565,14 @@ fn write_impl(
     }
     common_tables(
         &mut builder,
-        first,
+        &fonts.fonts,
         &strikes,
         count,
         &mapping,
         names,
         &limits.sfnt,
         &mut report,
+        design_options,
     )?;
     let report = report.finish()?;
     Ok((builder.build(&limits.sfnt)?, report))
@@ -1655,13 +1823,14 @@ fn write_native_sbix(
     builder.insert(*b"sbix", sbit::color::encode_sbix(&sbix, count, limits)?)?;
     common_design_tables(
         &mut builder,
-        &fonts.fonts[0],
+        &fonts.fonts,
         &design,
         count,
         mapping,
         names,
         &limits.sfnt,
         &mut report,
+        DesignOptions::default(),
     )?;
     let bytes = builder.build(&limits.sfnt)?;
     let font = Sfnt::parse(&bytes, &limits.sfnt)?;
@@ -1730,13 +1899,14 @@ struct DesignStrike {
 #[allow(clippy::too_many_arguments)]
 fn common_tables(
     builder: &mut SfntBuilder,
-    f: &Font,
+    fonts: &[Font],
     strikes: &[sbit::Strike],
     count: u16,
     mapping: &cmap::Mapping,
     glyph_names: Vec<String>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
+    options: DesignOptions,
 ) -> Result<()> {
     let design: Vec<_> = strikes
         .iter()
@@ -1763,27 +1933,34 @@ fn common_tables(
         .collect();
     common_design_tables(
         builder,
-        f,
+        fonts,
         &design,
         count,
         mapping,
         glyph_names,
         limits,
         report,
+        options,
     )
 }
 #[allow(clippy::too_many_arguments)]
 fn common_design_tables(
     builder: &mut SfntBuilder,
-    f: &Font,
+    fonts: &[Font],
     strikes: &[DesignStrike],
     count: u16,
     mapping: &cmap::Mapping,
     glyph_names: Vec<String>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
+    options: DesignOptions,
 ) -> Result<()> {
-    let strike = &strikes[0];
+    let order = options.priority(strikes, limits)?;
+    let reference = order.first().copied().unwrap_or(0);
+    let strike = &strikes[reference];
+    let metric_font = &fonts[reference];
+    // Names retain their original first-font provenance, independently of metrics.
+    let f = &fonts[0];
     let ppem = i64::from(strike.ppem[1]);
     let scale = if ppem <= 163 {
         100
@@ -1792,48 +1969,38 @@ fn common_design_tables(
     } else {
         (16384 / ppem).max(1)
     };
-    let upem = (ppem * scale).min(16384) as u16;
+    let upem = options.units_per_em.unwrap_or((ppem * scale).min(16384) as u16);
     let global = |n: i64| -> Result<i16> {
         let value = i128::from(n) * i128::from(upem);
-        i16::try_from(
-            (value
-                + if value >= 0 {
-                    i128::from(ppem / 2)
-                } else {
-                    -i128::from(ppem / 2)
-                })
-                / i128::from(ppem),
-        )
+        i16::try_from(round_design(value, i128::from(ppem), options.rounding))
         .map_err(|_| invalid("design metric does not fit int16"))
     };
     let mut horizontal = vec![metrics::LongMetric::default(); count as usize];
     let mut ink = vec![None; count as usize];
-    let mut seen = BTreeSet::new();
+    let mut seen = GlyphIdSet::default();
     let (mut left, mut bottom, mut right, mut top) = (0i64, 0i64, 0i64, 0i64);
-    for source in strikes {
+    for index in 0..strikes.len() {
+        let source = &strikes[order.get(index).copied().unwrap_or(index)];
         for g in &source.glyphs {
             let gid = g.id;
             if !seen.insert(gid) {
                 continue;
             }
-            let sx = |n: i64| {
-                (n * upem as i64
-                    + if n >= 0 {
-                        source.ppem[0] as i64 / 2
-                    } else {
-                        -(source.ppem[0] as i64 / 2)
-                    })
-                    / source.ppem[0] as i64
+            let scaled = |n: i64, ppem: u32| {
+                if options.rounding == EmbeddedRounding::NearestTiesAwayFromZero {
+                    // Glyph coordinates/advances were bounded before reaching
+                    // DesignGlyph (sbits: int8/uint8; sbix: int16/int32/uint32).
+                    // Their products with a legal UPM fit i64. Keep the existing
+                    // fast arithmetic on the default per-glyph path.
+                    let value = n * i64::from(upem);
+                    let denominator = i64::from(ppem);
+                    return Ok((value + if value >= 0 { denominator / 2 } else { -(denominator / 2) }) / denominator);
+                }
+                i64::try_from(round_design(i128::from(n) * i128::from(upem), i128::from(ppem), options.rounding))
+                    .map_err(|_| invalid("design metric overflow"))
             };
-            let sy = |n: i64| {
-                (n * upem as i64
-                    + if n >= 0 {
-                        source.ppem[1] as i64 / 2
-                    } else {
-                        -(source.ppem[1] as i64 / 2)
-                    })
-                    / source.ppem[1] as i64
-            };
+            let sx = |n: i64| scaled(n, source.ppem[0]);
+            let sy = |n: i64| scaled(n, source.ppem[1]);
             let m = g;
             if let Some(h) = m.horizontal {
                 if [h[2], h[0], m.width as i64]
@@ -1849,20 +2016,20 @@ fn common_design_tables(
                     );
                 }
                 horizontal[gid as usize] = metrics::LongMetric {
-                    advance: u16::try_from(sx(h[2]))
+                    advance: u16::try_from(sx(h[2])?)
                         .map_err(|_| invalid("design advance overflow"))?,
-                    bearing: int16(sx(h[0]), "design bearing")?,
+                    bearing: int16(sx(h[0])?, "design bearing")?,
                 };
             }
             if let Some(h) = m.horizontal.or(m.vertical) {
-                left = left.min(sx(h[0]));
-                right = right.max(sx(h[0] + m.width as i64));
-                bottom = bottom.min(sy(h[1] - m.height as i64));
-                top = top.max(sy(h[1]));
+                left = left.min(sx(h[0])?);
+                right = right.max(sx(h[0] + m.width as i64)?);
+                bottom = bottom.min(sy(h[1] - m.height as i64)?);
+                top = top.max(sy(h[1])?);
             }
             if m.width > 0 && m.height > 0 {
                 ink[gid as usize] = Some(
-                    u16::try_from(sx(m.width as i64))
+                    u16::try_from(sx(m.width as i64)?)
                         .map_err(|_| invalid("design width overflow"))?,
                 );
             }
@@ -1876,7 +2043,7 @@ fn common_design_tables(
             .checked_neg()
             .ok_or_else(|| invalid("descent overflow"))?,
     )?;
-    header.line_gap = global(f.metrics.line_gap.unwrap_or(0))?;
+    header.line_gap = global(metric_font.metrics.line_gap.unwrap_or(0))?;
     header.recompute(&horizontal, &ink)?;
     let hm = metrics::encode(
         metrics::Axis::Horizontal,
@@ -1939,11 +2106,11 @@ fn common_design_tables(
         ..Default::default()
     };
     post.header.is_fixed_pitch = u32::from(matches!(
-        f.metrics.spacing,
+        metric_font.metrics.spacing,
         Some(Spacing::Monospaced | Spacing::CharacterCell)
     ));
-    post.header.underline_position = global(f.metrics.underline_position.unwrap_or(0))?;
-    post.header.underline_thickness = global(f.metrics.underline_thickness.unwrap_or(0))?;
+    post.header.underline_position = global(metric_font.metrics.underline_position.unwrap_or(0))?;
+    post.header.underline_thickness = global(metric_font.metrics.underline_thickness.unwrap_or(0))?;
     builder.insert(*b"post", post.encode(count, limits)?)?;
     if strikes
         .iter()
@@ -1958,4 +2125,169 @@ fn common_design_tables(
         );
     }
     Ok(())
+}
+#[cfg(test)]
+mod key_tests {
+    use super::*;
+
+    #[test]
+    fn design_rounding_preserves_legacy_and_handles_signed_exact_ties() {
+        use EmbeddedRounding::{NearestTiesAwayFromZero as Away, NearestTiesEven as Even};
+        for value in [i64::MIN, i64::MIN + 1, -1001, -52, -1, 0, 1, 52, 1001, i64::MAX] {
+            for upem in [16, 1000, 16384] {
+                let numerator = i128::from(value) * upem;
+                for denominator in 1..=255 {
+                    let legacy = (numerator + if numerator >= 0 { denominator / 2 } else { -(denominator / 2) }) / denominator;
+                    assert_eq!(round_design(numerator, denominator, Away), legacy);
+                }
+            }
+        }
+        for (numerator, even, away) in [(1, 0, 1), (3, 2, 2), (5, 2, 3), (7, 4, 4), (-1, 0, -1), (-3, -2, -2), (-5, -2, -3), (-7, -4, -4)] {
+            assert_eq!(round_design(numerator, 2, Even), even);
+            assert_eq!(round_design(numerator, 2, Away), away);
+        }
+        assert_eq!(round_design(52000, 64, Even), 812);
+        assert_eq!(round_design(-52000, 64, Even), -812);
+        assert_eq!(round_design(i128::MIN, 1, Even), i128::MIN);
+        assert_eq!(round_design(i128::MAX, 1, Away), i128::MAX);
+        assert_eq!(round_design(i128::MAX, 2, Even), 1i128 << 126);
+        assert_eq!(round_design(i128::MIN + 1, 2, Even), -(1i128 << 126));
+    }
+
+    #[test]
+    fn glyph_id_bitset_matches_tree_at_every_id_and_sparse_growth_boundary() {
+        for first in [0, 63, 64, 127, 128, 1023, 32767, 64000, u16::MAX] {
+            let mut seen = GlyphIdSet::default();
+            let mut tree = BTreeSet::new();
+            assert_eq!(seen.insert(first), tree.insert(first));
+            for gid in 0..=u16::MAX {
+                assert_eq!(seen.insert(gid), tree.insert(gid));
+            }
+            for gid in (0..=u16::MAX).rev() {
+                assert_eq!(seen.insert(gid), tree.insert(gid));
+            }
+            assert!(seen.0.len() <= 1024);
+            assert!(seen.0.capacity() <= 1024);
+        }
+    }
+
+    // The exact former representation and derived category/sequence ordering.
+    #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+    enum OldKey {
+        Notdef,
+        Codes(Vec<u32>),
+        Name(String),
+        Slot(usize),
+    }
+    fn old(key: &Key) -> OldKey {
+        match key {
+            Key::Notdef => OldKey::Notdef,
+            Key::Code(cp) => OldKey::Codes(vec![*cp]),
+            Key::Codes(cps) => OldKey::Codes(cps.clone()),
+            Key::Name(name) => OldKey::Name(name.clone()),
+            Key::Slot(index) => OldKey::Slot(*index),
+        }
+    }
+    fn keys() -> Vec<Key> {
+        let mut keys = vec![Key::Notdef, Key::Codes(Vec::new())];
+        for cp in [0, 1, 2, 65, 66, 0xd7ff, 0xe000, 0x10000, 0x10ffff, u32::MAX] {
+            keys.push(Key::Code(cp));
+            keys.push(Key::Codes(vec![cp]));
+            keys.push(Key::Codes(vec![cp, cp]));
+            if cp < u32::MAX {
+                keys.push(Key::Codes(vec![cp, cp + 1]));
+            }
+        }
+        for name in ["", ".notdef", "A", "a", "bad/name", "永"] {
+            keys.push(Key::Name(name.into()));
+        }
+        for index in [0, 1, 65535, usize::MAX] {
+            keys.push(Key::Slot(index));
+        }
+        keys
+    }
+
+    #[test]
+    fn inline_key_pairwise_order_and_equality_match_old_derived_order() {
+        let keys = keys();
+        for a in &keys {
+            for b in &keys {
+                assert_eq!(a.cmp(b), old(a).cmp(&old(b)), "{a:?} versus {b:?}");
+                assert_eq!(a.partial_cmp(b), Some(a.cmp(b)));
+                assert_eq!(a == b, old(a) == old(b), "{a:?} versus {b:?}");
+            }
+        }
+        assert_eq!(Key::Code(65), Key::Codes(vec![65]));
+        assert!(Key::Code(65) < Key::Codes(vec![65, 66]));
+        assert!(Key::Codes(vec![2, 9]) < Key::Code(3));
+    }
+
+    #[test]
+    fn inline_key_btree_overwrite_and_duplicate_identity_match_old_keys() {
+        for reverse in [false, true] {
+            let mut keys = keys();
+            if reverse { keys.reverse(); }
+            let mut map = BTreeMap::new();
+            let mut old_map = BTreeMap::new();
+            let mut seen = BTreeSet::new();
+            let mut old_seen = BTreeSet::new();
+            for (value, key) in keys.into_iter().enumerate() {
+                let old_key = old(&key);
+                assert_eq!(seen.insert(key.clone()), old_seen.insert(old_key.clone()));
+                assert_eq!(map.insert(key.clone(), value), old_map.insert(old_key, value));
+                assert_eq!(map.get(&key), old_map.get(&old(&key)));
+            }
+            assert_eq!(map.iter().map(|(key, value)| (old(key), *value)).collect::<Vec<_>>(), old_map.into_iter().collect::<Vec<_>>());
+            assert_eq!(seen.iter().map(old).collect::<Vec<_>>(), old_seen.into_iter().collect::<Vec<_>>());
+        }
+    }
+
+    fn old_key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> OldKey {
+        let mut cps = Vec::new();
+        for cp in &g.codepoints {
+            if let Codepoint::Unicode(cp) = cp && char::from_u32(*cp).is_some() {
+                cps.push(*cp);
+            } else {
+                loss(report, "codepoint", Some(fi), Some(index), format!("Cannot put {cp:?} in a Unicode cmap"));
+            }
+        }
+        cps.sort_unstable();
+        cps.dedup();
+        if !cps.is_empty() { OldKey::Codes(cps) }
+        else if g.name.as_deref() == Some(".notdef") { OldKey::Notdef }
+        else if let Some(name) = &g.name { OldKey::Name(name.clone()) }
+        else { OldKey::Slot(index) }
+    }
+
+    #[test]
+    fn inline_key_selection_preserves_filtering_notdef_and_diagnostics() {
+        use Codepoint::{Legacy as L, Unicode as U};
+        for codes in [
+            vec![], vec![U(0)], vec![U(65)], vec![U(0x10ffff)],
+            vec![U(65), U(65)], vec![U(66), U(65), U(66)],
+            vec![L(65)], vec![U(0xd800)], vec![U(0x110000)],
+            vec![L(65), U(65), U(0xd800), U(65), U(0x110000)],
+        ] {
+            for name in [None, Some(".notdef"), Some(""), Some("A"), Some("bad/name")] {
+                let mut glyph = Glyph::new(Bitmap::<crate::bitmap::Mono>::default());
+                glyph.codepoints = codes.clone();
+                glyph.name = name.map(str::to_owned);
+                for budget in [0, 1024, 16 * 1024 * 1024] {
+                    let mut actual_report = Diagnostics::new(budget);
+                    let mut expected_report = Diagnostics::new(budget);
+                    let actual = key(&glyph, 42, 3, &mut actual_report);
+                    let expected = old_key(&glyph, 42, 3, &mut expected_report);
+                    assert_eq!(old(&actual), expected);
+                    if let [U(cp)] = codes.as_slice() && char::from_u32(*cp).is_some() {
+                        assert!(matches!(actual, Key::Code(_)));
+                    }
+                    match (actual_report.finish(), expected_report.finish()) {
+                        (Ok(actual), Ok(expected)) => assert_eq!(actual, expected),
+                        (Err(actual), Err(expected)) => assert_eq!(actual.to_string(), expected.to_string()),
+                        pair => panic!("diagnostic budget mismatch: {pair:?}"),
+                    }
+                }
+            }
+        }
+    }
 }

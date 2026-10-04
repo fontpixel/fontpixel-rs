@@ -487,8 +487,10 @@ dependencies = [
  "clap",
  "fontpixel",
  "same-file",
+ "serde",
  "serde_json",
  "sha2",
+ "toml",
 ]
 
 [[package]]
