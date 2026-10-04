@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-04T01:38:06Z",
+  "exec_session_id": 30134,
+  "termination": "write_stdin Ctrl-C",
+  "reported_exit_code": 130,
+  "note": "Both fuzz workers belonged to this command session. No completed DONE line or per-target success is claimed. Log sizes remained unchanged in repeated checks after interruption. Full check/feature/doc session 17008 completed with CHECK_EXIT:0 and EXTRA_EXIT:0; focused probe session 78797 completed with PROBE_EXIT:0. No new build/fuzz/benchmark was started after owner stop instruction."
+}

@@ -35,7 +35,8 @@ byte charsets remain explicit; Unicode export uses exact selected code pages,
 with loss reports for unsupported mappings and metadata. The CLI includes both;
 library users enable `fnt` or `fon` (which also enables `fnt`).
 See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
-[W3.2 validation](reports/w3.2.md).
+[W3.2 handoff status](reports/w3.2.md). This candidate is paused and has not
+been independently accepted.
 
 Seventeen format IDs now have native readers, sixteen have writers (color writing
 is deferred); the remaining 29 IDs and Python/WASM bindings remain unimplemented

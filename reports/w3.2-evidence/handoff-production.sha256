@@ -1,0 +1,5 @@
+3649fbf5795dfa37541e9203817b93c0de0ac3c7ad0e6575965351ab879531ec  crates/fontpixel/src/formats/fnt.rs
+a081cd1296986ab3c097e72a0a3e4a3405afd6030e2407250e894b62644463ba  crates/fontpixel/src/formats/fnt/reader.rs
+545af90f056e6524e3b5bd457f293a8272efcfeea18b387525577c1be1cc4499  crates/fontpixel/src/formats/fnt/support.rs
+c5ad1c846748d0b3d2b5164c9b8743cef365d5a24f3bbf88b976f29abac1aaaf  crates/fontpixel/src/formats/fnt/writer.rs
+b1c3a49677c3238147d885ef258dd86eb2927ee1818274dac80508e804846746  crates/fontpixel/src/formats/fon.rs

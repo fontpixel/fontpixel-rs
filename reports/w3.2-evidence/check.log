@@ -1,0 +1,2032 @@
+Verified 53 non-Unicode keys; 35 core + 12 CJK unique tables; 207 GB18030 ranges (1,087,996 four-byte mappings); CPython 3.12.14
+BDF printability: 712 ranges
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+    Checking fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-wasm)
+    Checking fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-py)
+    Checking fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-cli)
+    Finished `dev` profile [unoptimized] target(s) in 12.54s
+    Checking fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.13s
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+   Compiling fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-py)
+   Compiling fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-wasm)
+   Compiling fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-cli)
+    Finished `test` profile [unoptimized] target(s) in 24.18s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-e0802474c7bafcd6)
+
+running 23 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test sfnt::cff::read::tests::index_offsets_and_header_are_checked ... ok
+test sfnt::cff::validate::tests::flex_axis_distances_cannot_wrap_even_when_points_fit ... ok
+test sfnt::cff::validate::tests::hints_and_cross_call_operand_stacks ... ok
+test sfnt::cff::validate::tests::point_sums_cannot_wrap ... ok
+test sfnt::cff::validate::tests::malformed_type2_is_not_recovered ... ok
+test sfnt::cff::read::tests::private_fractional_widths_are_not_grid_rounded ... ok
+test sfnt::cff::read::tests::private_width_overflow_and_bad_dict_are_errors ... ok
+test sfnt::cff::validate::tests::cyclic_and_missing_subroutines_fail ... ok
+test sfnt::cff::validate::tests::repeated_empty_calls_consume_budget ... ok
+test variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours ... ok
+test variants::dot_rows::tests::patterned_rows_cover_ink_once_and_keep_original_work_limits ... ok
+test variants::dot_rows::tests::unrepresentable_helper_translation_uses_direct_circles ... ok
+test woff::woff2::tests::basic_roundtrip ... ok
+test woff::woff2::transform::tests::horizontal_metrics_arrays ... ok
+test woff::woff2::transform::tests::triplet_classes_and_boundaries ... ok
+test woff::woff2::tests::auxiliary_and_parallel ... ok
+test woff::woff2::tests::woff1_roundtrip ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test woff::woff2::tests::integers ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test variants::dot_rows::tests::small_two_dimensional_patterns_preserve_every_3x3_mask ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf-73cff679d7ac9e33)
+
+running 13 tests
+test detect_registry_and_feature_capabilities ... ok
+test fresh_models_round_trip_without_source_cache ... ok
+test direct_property_edits_and_deletions_are_not_overridden_by_stale_views ... ok
+test malformed_rasters_preserve_source_but_guard_drawing ... ok
+test duplicate_unencoded_and_out_of_unicode_codes_remain_inspectable ... ok
+test changed_charset_properties_recompute_inferred_gl ... ok
+test rejects_malformed_numbers_and_enforces_all_resource_limits ... ok
+test edits_override_only_changed_source_fields ... ok
+test source_metadata_charset_and_vertical_metrics ... ok
+test reports_all_unrepresentable_fields_and_gray_requires_threshold ... ok
+test reserved_source_names_cannot_mask_unknown_field_loss ... ok
+test bounded_gzip_transport_is_deterministic_and_codec_independent ... ok
+test trailing_numeric_tokens_do_not_allocate_a_token_vector ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/bdf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_properties-7faf2eb9acf013d3)
+
+running 1 test
+test authored_model_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+
+     Running tests/bdf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_reference-ca24dbbb9505cc96)
+
+running 2 tests
+test licensed_real_font_goldens ... ok
+test python_generated_bdf_parity ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running tests/bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap-9f2ac2b2d55540e8)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test checked_geometry_and_label_effects ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test zero_dimensions_are_explicit ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+
+     Running tests/bitmap_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap_reference-cc9a2957b6107bff)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cff-e778b7e91447c3f9)
+
+running 11 tests
+test cubic_bounds_and_fractional_advance ... ok
+test enforce_resource_limits_before_expansion ... ok
+test sfnt_binding_requires_otto_head_and_matching_maxp ... ok
+test reject_numeric_names_and_unclosed_paths ... ok
+test alternating_axis_runs_split_and_reset_without_geometry_changes ... ok
+test independent_fonttools_program_fixtures ... ok
+test square_dot_and_separate_roundtrip ... ok
+test truncation_and_mutation_are_bounded ... ok
+test arbitrary_input_never_panics ... ok
+test all_3x3_square_masks ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/charsets.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/charsets-0dd9050e7c4de6a2)
+
+running 11 tests
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test strict_cjk_edge_cases_and_encoder_preferences ... ok
+test canonicalization_matches_reference_fixture ... ok
+test all_gb18030_four_byte_sequences_and_unicode_reverse_mappings ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.35s
+
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/collection-b8bed1a625817045)
+
+running 10 tests
+test checksum_validation_is_explicit ... ok
+test duplicate_tags_and_limits ... ok
+test invalid_writer_limits ... ok
+test signatures_removed_not_forged ... ok
+test malformed_directories_offsets_and_versions ... ok
+test rejects_partial_alias_and_directory_overlap ... ok
+test truncated_every_byte ... ok
+test deterministic_and_smaller ... ok
+test v2_signature_bounded_and_lossy_on_extract ... ok
+test versions_mixed_flavors_shared_tables ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/compat_bdfparser-3d1bec5edc425d30)
+
+running 13 tests
+test empty_shapes_and_fromstring_whitespace ... ok
+test invalid_ragged_input_is_rejected_without_changing_raster ... ok
+test clones_and_subsets_own_independent_native_models ... ok
+test outline_holes_pinches_and_pixel_centres_match_reference ... ok
+test integer_rows_are_exact_beyond_64_bits ... ok
+test unknown_charset_warns_once_and_surrogates_have_numeric_access ... ok
+test stale_handles_merge_changed_fields_and_do_not_delete_replacements ... ok
+test io_byte_palettes_and_custom_encoding ... ok
+test encoding_override_is_not_a_pcf_property_edit ... ok
+test detached_clone_removal_follows_python_reference ... ok
+test bounded_corrupt_true_type_and_option_errors ... ok
+test exact_reference_bdf_svg_and_ttf_goldens ... ok
+test ttf_metadata_cumulative_zero_width_rows_are_bounded ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.17s
+
+     Running tests/contracts.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/contracts-f2c9176cfd146065)
+
+running 21 tests
+test content_evidence_precedes_wrong_extensions ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test feature_state_matches_the_compiled_build ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test read_error_diagnostics_are_never_success ... ok
+test report_json_is_structured_and_roundtrips ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/embedded_bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/embedded_bitmap-e12afc2779e7042c)
+
+running 15 tests
+test ebsc_roundtrip_and_validation ... ok
+test exact_gray_depths_and_vertical_small_metrics ... ok
+test composite_pixels_cycles_and_bounds ... ok
+test canonical_roundtrip_sparse_multistrike_and_empty ... ok
+test diagnostics_are_bounded_before_returning_assets ... ok
+test every_truncation_mutation_and_tight_budget_is_bounded ... ok
+test gray_composite_overlap_is_bitwise_or_not_max ... ok
+test native_capability_flags_remain_honest ... ok
+test every_valid_index_and_direct_image_format ... ok
+test native_registry_multistrike_aliases_and_strict_loss ... ok
+test native_sparse_sizes_gray_vertical_metrics_and_limits ... ok
+test cbdt_png_formats_and_bgra_alpha_darkness ... ok
+test sbix_png_duplicate_metrics_cycles_and_budget ... ok
+test property_random_bitmap_roundtrip ... ok
+test independent_native_color_fixtures_and_structural_mutations ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s
+
+     Running tests/glyf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/glyf-697a0fd74c6babcc)
+
+running 11 tests
+test circles_share_one_glyph ... ok
+test instructions_overlap_empty_contours_and_zero_records ... ok
+test cycles_depth_visits_and_budget_enforcement ... ok
+test malformed_slices_flags_endpoints_and_loca ... ok
+test transforms_point_attachment_nested_and_flags ... ok
+test simple_compound_and_both_loca_roundtrip ... ok
+test truncated_composite_instructions_and_invalid_flags_fail ... ok
+test all_existing_spec_fonts_decode_reencode ... ok
+test random_bitmap_glyph_roundtrip ... ok
+test arbitrary_glyph_bytes_do_not_panic ... ok
+test long_loca_selection_and_explicit_short_overflow ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/hex_psf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/hex_psf-c86b56892ae0e19c)
+
+running 23 tests
+test embedded_carriage_return_in_hex_comment_is_lossless ... ok
+test cell_alignment_keeps_negative_bearings_and_descent_pixels ... ok
+test hex_height_is_explicit_not_guessed ... ok
+test output_totals_alias_expansion_and_edited_comment_loss ... ok
+test hex_all_widths_crlf_comments_duplicates_and_scalars ... ok
+test psf2_arbitrary_width_padding_and_extended_header ... ok
+test psf2_all_aliases_multiple_sequences_sequence_only_and_noncharacters ... ok
+test metadata_mapping_gray_and_psf1_losses_are_explicit ... ok
+test hex_rejects_bad_records_and_invalid_geometry ... ok
+test gzip_wire_and_decompressed_limits_are_independent ... ok
+test read_resource_budgets_cover_wire_model_tables_pixels_and_mappings ... ok
+test psf_without_table_never_invents_unicode_and_unencoded_auto_has_table ... ok
+test psf_rejects_bad_headers_utf8_sequences_and_trailing_bytes ... ok
+test review_hex_comment_record_limit_is_inclusive_and_counts_hash ... ok
+test review_hex_comment_records_obey_writer_table_limit ... ok
+test writer_limits_empty_psf_multiple_fonts_and_unrepresentable_geometry ... ok
+test review_hex_gzip_budget_matches_exact_raw_and_transport_boundaries ... ok
+test registry_detection_gzip_strict_and_repeatable_output ... ok
+test review_gzip_model_budget_includes_retained_compressed_input ... ok
+test psf1_modes_counts_and_true_little_endian_sequence_markers ... ok
+test hex_native_roundtrip ... ok
+test psf2_native_roundtrip ... ok
+test psf_rejects_all_truncations_except_complete_headerless_tables ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/model.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/model-41719c08fe5101ab)
+
+running 5 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+test model_preserves_every_source_field ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/outlines-40b5a27ed8012288)
+
+running 5 tests
+test limits_and_invalid_geometry ... ok
+test holes_corners_separate_and_dots ... ok
+test implicit_quadratics_and_tangent_edges ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf-aee236520c0da048)
+
+running 15 tests
+test conflicting_x11_headers_and_properties_report_all_losses ... ok
+test core_aliases_and_unencoded_records_survive ... ok
+test gray_threshold_and_uncompressed_ink_tables ... ok
+test all_resource_budgets_apply ... ok
+test malformed_bdf_hex_uses_lenient_nibbles_then_edited_pixels ... ok
+test metrics_attributes_and_ink_provenance_are_preserved_or_reported ... ok
+test accelerator_loss_cannot_hide_behind_byte_order_changes ... ok
+test optional_tables_have_spec_fallbacks ... ok
+test semantic_and_property_edits_win_over_provenance ... ok
+test source_tables_strings_partial_units_and_sentinels_are_honest ... ok
+test strict_loss_combines_read_and_write_and_refuses_collections ... ok
+test unknown_pcf_charset_stays_legacy_for_fallback_names_and_default ... ok
+test truncation_counts_offsets_formats_and_negative_sizes_fail ... ok
+test empty_zero_area_and_large_uncompressed_metrics ... ok
+test registry_gzip_and_layouts_are_real ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_properties-32b277aeda578992)
+
+running 1 test
+test fresh_fonts_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/pcf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_reference-08d751b7b5f73d1d)
+
+running 1 test
+test python_pcf_writer_and_reader_byte_parity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s
+
+     Running tests/render.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render-6d2cce005b88e710)
+
+running 12 tests
+test directions_and_missing_are_explicit ... ok
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test gray_conversion_is_explicit_and_reported ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test invalid_bdf_source_never_renders_placeholder_pixels ... ok
+test png_roundtrips_bits_dimensions_alpha_and_limits ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/render_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render_reference-97775a863cb0c4a5)
+
+running 1 test
+test synthetic_python_rendering_oracle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+     Running tests/sfnt.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/sfnt-fa6dd04d31404638)
+
+running 29 tests
+test checksum_padding_uses_big_endian_words ... ok
+test checksum_checks_are_explicit_and_cover_all_components ... ok
+test cmap_bmp_supplementary_aliases_and_ffff ... ok
+test cmap_malformed_groups_offsets_order_and_budget ... ok
+test fuzz_regression_truncated_fontations_lazy_arrays ... ok
+test gasp_versions_ranges_and_reserved_flags ... ok
+test metrics_axes_compaction_and_empty_ink ... ok
+test golden_container_reassembly_is_byte_exact ... ok
+test multilingual_name_and_raw_encoding_roundtrip ... ok
+test cmap_empty_and_dense_nonsequential_maps ... ok
+test metrics_invalid_counts_truncation_and_extents ... ok
+test native_post_names_follow_opentype_63_byte_alphabet ... ok
+test os2_unicode_ranges_and_average_are_not_heuristic_guesses ... ok
+test os2_codepages_require_full_printable_repertoire ... ok
+test name_malformed_storage_language_and_utf16 ... ok
+test old_vertical_header_and_post_standard_names_are_readable ... ok
+test os2_every_version_and_field_roundtrips ... ok
+test post_bad_name_indexes_fail ... ok
+test raw_flags_are_not_silently_truncated_by_fontations ... ok
+test structural_errors_are_rejected_before_access ... ok
+test reads_legacy_and_trimmed_unicode_cmap_formats ... ok
+test unknown_tables_odd_lengths_and_stale_adjustment_repack ... ok
+test writer_rejects_duplicates_missing_head_and_budgets ... ok
+test post_named_and_nameless_preserve_fields ... ok
+test unicode_range_boundaries_match_fonttools ... ok
+test arbitrary_bytes_do_not_panic ... ok
+test metrics_roundtrip ... ok
+test cmap_oversized_bmp_falls_back_to_complete_format12 ... ok
+test cmap_roundtrip ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/svg-bbc0953655f0fed4)
+
+running 42 tests
+test child_paths_keep_documented_exact_center_boundary_rule ... ok
+test alias_loss_locations_reference_retained_glyph ... ok
+test active_animation_is_rejected_and_unknown_native_fields_reported ... ok
+test aliases_must_match ... ok
+test budgets_are_effective ... ok
+test arbitrary_style_names_are_not_invalid_svg_descriptors ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test common_registry_budgets_are_enforced ... ok
+test effective_defaults_zero_advances_and_negative_bearings ... ok
+test curves_arcs_and_smooth_commands ... ok
+test custom_registry_options_persist_independently ... ok
+test common_registry_model_budget_reaches_explicit_svg_reader ... ok
+test explicit_scale_rounding_and_origin ... ok
+test generic_grid_and_all_commands ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test generic_child_paths ... ok
+test generic_metadata_loss_and_selected_font_locations ... ok
+test gray_requires_threshold ... ok
+test image_empty_and_limits ... ok
+test huge_arc_expansion_is_rejected_before_normalization ... ok
+test malformed_and_unsafe_xml ... ok
+test image_shapes_and_single_glyph ... ok
+test independent_child_paths_union_even_with_opposite_winding ... ok
+test loss_and_strict_are_atomic ... ok
+test malformed_numbers_paths ... ok
+test missing_glyph_and_blank_preserved ... ok
+test negative_horizontal_advances_cannot_emit_invalid_svg ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test collection_and_select ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test native_vertical_advance_without_origin ... ok
+test rejects_unsupported_graphics ... ok
+test unicode_mapping_model_budget_is_preallocation ... ok
+test writer_counts_alias_records_and_generated_commands ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test xml_budgets_preflight_attributes_namespaces_and_depth ... ok
+test native_roundtrip_all_shapes ... ok
+test deterministic_truncations_and_byte_mutations_do_not_panic ... ok
+test repeated_glyph_geometry_is_streamed_under_model_budget ... ok
+test many_aliases_are_grouped_once_before_indexing ... ok
+test random_bitmap_font_roundtrip ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/variants-64c308a8c73db46e)
+
+running 23 tests
+test language_registry_and_regional_tags ... ok
+test alternative_only_characters_become_defaults ... ok
+test dedup_uses_bitmap_and_all_metrics ... ok
+test alternate_missing_metrics_do_not_inherit_base_font_defaults ... ok
+test embedded_variants_preserve_vertical_metrics ... ok
+test cff_subset_preserves_raw_programs ... ok
+test dot_reuse_policies_preserve_geometry_and_metadata ... ok
+test selected_glyph_closure_handles_chains_and_cycles ... ok
+test script_defaults_and_explicit_empty_routes ... ok
+test subset_preserves_explicit_truetype_bbox_bytes ... ok
+test maximum_context_matches_actual_layout_presence ... ok
+test subset_rejects_unpaired_vertical_metric_drops ... ok
+test source_limits_and_metric_overflow_are_errors ... ok
+test subset_prunes_scaling_for_removed_sparse_strikes ... ok
+test writer_repairs_missing_dflt_default_without_changing_language_routing ... ok
+test vertical_metrics_survive_variant_export_and_subset ... ok
+test unsupported_tables_fail_or_report_explicit_loss ... ok
+test subset_cff_cid_hints_subroutines_and_font_matrices ... ok
+test prepared_variants_match_direct_encoding_and_preserve_budgets ... ok
+test variants_resolve_each_source_fonts_metric_defaults_before_deduplication ... ok
+test variants_and_subsets_keep_names_cmap_dependencies ... ok
+test malformed_layout_never_panics ... ok
+test large_extension_offsets_roundtrip ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/vector_raster-dbcba94985cff710)
+
+running 31 tests
+test embedded_priority_skips_bad_outlines ... ok
+test embedded_outline_detection_not_ambiguous ... ok
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test bounded_pixels_points_and_model ... ok
+test collection_diagnostics_use_flattened_font_indices ... ok
+test explicit_offset_translation ... ok
+test grid_and_roundtrip_quadratic ... ok
+test explicit_grid_override ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test cff_vertical_origin_vorg_overrides_top_bearing ... ok
+test grid_and_roundtrip_cubic ... ok
+test embedded_scaling_survives_projection_and_is_scoped_per_face ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test review_native_blank_vertical_origin_survives ... ok
+test review_embedded_detection_tracks_available_outline_codecs ... ok
+test preserves_aliases_unencoded_notdef_names ... ok
+test review_native_notdef_rejects_unrepresentable_vertical_origin ... ok
+test collection_native_faces_selected_and_all ... ok
+test nongrid_requires_explicit_ppem ... ok
+test review_native_font_underline_metrics_survive ... ok
+test review_native_notdef_preserves_ink_origin_and_metrics ... ok
+test invalid_options_and_truncations ... ok
+test review_zero_font_budget_rejects_outline_projection ... ok
+test source_name_cannot_collide_with_generated_dot_component ... ok
+test writer_invalid_geometry_never_succeeds ... ok
+test true_type_phantom_origin_and_use_my_metrics ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test review_selected_embedded_diagnostics_use_output_font_indices ... ok
+test wrong_embedded_size_falls_back ... ok
+test woff2_shared_mixed_collection_and_native_projection ... ok
+test all_native_registry_wrappers ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-97a21cfd9cda1e6f)
+
+running 15 tests
+test cp1252_maps_euro_and_reports_nonrepresentable_aliases ... ok
+test containers::independently_built_pe32_and_pe64_resources ... ok
+test containers::ne_multifont_and_fontdir_structure ... ok
+test containers::cumulative_limits_and_shift_overflow ... ok
+test edits_and_aliases_have_honest_reports ... ok
+test cjk_legacy_bytes_roundtrip_without_conversion_tables ... ok
+test foreign_metadata_gray_and_strict_loss ... ok
+test budgets_precede_allocations ... ok
+test source_metadata_and_output_work_are_bounded ... ok
+test malformed_deserialized_rational_is_rejected_without_panic ... ok
+test unknown_charset_is_legacy_and_never_unicode_guessed ... ok
+test unsupported_layouts_offsets_and_truncations_fail ... ok
+test write_versions_mapping_and_geometry ... ok
+test independent_versions_and_lossless_native_roundtrips ... ok
+test generated_byte_cells_roundtrip ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/woff-3f3f5a01d21952c4)
+
+running 16 tests
+test invalid_options_and_collections ... ok
+test limits_precede_decompression ... ok
+test metadata_errors_and_auxiliary_limits ... ok
+test signature_loss_is_explicit ... ok
+test batch_budgets_and_distinct_input_order ... ok
+test woff1_rejects_bad_source_checksums_and_missing_final_padding ... ok
+test woff2_advisory_sizes_reserved_and_null_transform ... ok
+test woff2_always_marks_lossless_modification ... ok
+test woff1_preserves_physical_table_order_and_reports_invalidated_signatures ... ok
+test fixture_roundtrips_and_quality ... ok
+test arbitrary_bytes_are_safe ... ok
+test normalized_short_loca_upgrades_without_losing_glyphs ... ok
+test random_simple_glyph_transform_roundtrip ... ok
+test opaque_table_roundtrip ... ok
+test truncation_and_mutation_never_panic ... ok
+test large_parallel_streams_are_deterministic_and_preserve_all_tables ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.76s
+
+     Running tests/yaff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff-e8b496d1f05191cd)
+
+running 11 tests
+test malformed_and_bounded ... ok
+test glyph_resize_recomputes_visible_advance ... ok
+test duplicate_properties_and_empty_multiline_values ... ok
+test multiline_record_budget_and_schema_validation ... ok
+test punctuation_tags_zero_defaults_and_noncharacters ... ok
+test committed_canonical_golden ... ok
+test standard_labels_metrics_and_multiline ... ok
+test exact_rich_model_and_editing ... ok
+test registered_detection_gzip ... ok
+test gray_levels_and_empty_dimensions ... ok
+test bdf_exact_model_roundtrips ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running tests/yaff_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff_properties-e795d452afc0e122)
+
+running 1 test
+test exact_native_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests examples/tong_export.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/examples/tong_export-ce8c919f78beb79f)
+
+running 6 tests
+test tests::file_and_directory_symlink_aliases_are_rejected ... ok
+test tests::hard_link_from_any_output_to_any_input_is_rejected ... ok
+test tests::dangling_output_symlink_cannot_alias_a_future_output ... ok
+test tests::outputs_must_not_alias_each_other ... ok
+test tests::identical_input_and_output_is_rejected_without_modification ... ok
+test tests::separate_new_and_existing_outputs_are_allowed ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-6bb983aea8427dde)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/parity.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel_parity-1a12f3270c504e2c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cli-55e1b364d0ea8514)
+
+running 22 tests
+test convert_dispatch_accepts_multiple_inputs_and_explicit_target ... ok
+test formats_lists_all_46_and_marks_actual_codecs ... ok
+test info_does_not_claim_success_for_truncated_bdf ... ok
+test ambiguous_target_is_not_selected_by_catalogue_order ... ok
+test failed_conversion_never_creates_or_overwrites_output ... ok
+test formats_json_is_parseable_and_honest ... ok
+test info_reports_missing_inputs_and_ambiguous_extensions ... ok
+test bdf_info_and_convert_are_real_and_output_is_stable ... ok
+test malformed_loss_multi_font_and_filesystem_errors_leave_outputs_untouched ... ok
+test render_png_and_empty_input_behavior ... ok
+test preview_keeps_art_on_stdout_and_reports_on_stderr ... ok
+test pcf_conversion_layout_gzip_and_strict_reporting ... ok
+test help_and_version_succeed_but_invalid_usage_returns_two ... ok
+test native_dot_reuse_cli_policies_and_validation ... ok
+test render_svg_drawall_controls_and_atomic_failure ... ok
+test svg_convert_render_and_atomic_errors ... ok
+test hex_psf_cli_variants_and_strict_atomic_failure ... ok
+test yaff_collection_and_gzip_roundtrip ... ok
+test svg_explicit_input_budget_applies_to_inspection_conversion_and_rendering ... ok
+test windows_options_multifont_and_strict_preserve_destination ... ok
+test raster_collection_cli_and_atomic_failures ... ok
+test variants_subset_cli_all_containers_and_selectors ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/parity.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/parity-37ca1cfc50ebb92a)
+
+running 1 test
+test synthetic_reference_scripts_match_every_result_and_error_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.44s
+
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel_py-ad9435c698a21d16)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel_wasm-21adb8395e3fa760)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel
+
+running 5 tests
+test crates/fontpixel/src/bitmap/mod.rs - bitmap (line 8) ... ok
+test crates/fontpixel/src/charset/mod.rs - charset (line 14) ... ok
+test crates/fontpixel/src/render/mod.rs - render (line 8) ... ok
+test crates/fontpixel/src/model/mod.rs - model (line 8) ... ok
+test crates/fontpixel/src/formats/bdf.rs - formats::bdf (line 3) ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.39s; merged doctests compilation took 0.39s
+   Doc-tests fontpixel_py
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel_wasm
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+   Compiling fontpixel-py v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-py)
+   Compiling fontpixel-wasm v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-wasm)
+   Compiling fontpixel-cli v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel-cli)
+    Finished `test` profile [unoptimized] target(s) in 21.61s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-6938e4639ca38f05)
+
+running 23 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test sfnt::cff::read::tests::private_fractional_widths_are_not_grid_rounded ... ok
+test sfnt::cff::read::tests::private_width_overflow_and_bad_dict_are_errors ... ok
+test sfnt::cff::read::tests::index_offsets_and_header_are_checked ... ok
+test sfnt::cff::validate::tests::cyclic_and_missing_subroutines_fail ... ok
+test sfnt::cff::validate::tests::flex_axis_distances_cannot_wrap_even_when_points_fit ... ok
+test sfnt::cff::validate::tests::hints_and_cross_call_operand_stacks ... ok
+test sfnt::cff::validate::tests::point_sums_cannot_wrap ... ok
+test sfnt::cff::validate::tests::repeated_empty_calls_consume_budget ... ok
+test variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours ... ok
+test sfnt::cff::validate::tests::malformed_type2_is_not_recovered ... ok
+test variants::dot_rows::tests::unrepresentable_helper_translation_uses_direct_circles ... ok
+test variants::dot_rows::tests::patterned_rows_cover_ink_once_and_keep_original_work_limits ... ok
+test woff::woff2::tests::auxiliary_and_parallel ... ok
+test woff::woff2::tests::woff1_roundtrip ... ok
+test woff::woff2::tests::basic_roundtrip ... ok
+test woff::woff2::transform::tests::horizontal_metrics_arrays ... ok
+test woff::woff2::transform::tests::triplet_classes_and_boundaries ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test woff::woff2::tests::integers ... ok
+test variants::dot_rows::tests::small_two_dimensional_patterns_preserve_every_3x3_mask ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf-3f1f85a4d6ce130c)
+
+running 12 tests
+test detect_registry_and_feature_capabilities ... ok
+test direct_property_edits_and_deletions_are_not_overridden_by_stale_views ... ok
+test duplicate_unencoded_and_out_of_unicode_codes_remain_inspectable ... ok
+test edits_override_only_changed_source_fields ... ok
+test rejects_malformed_numbers_and_enforces_all_resource_limits ... ok
+test reports_all_unrepresentable_fields_and_gray_requires_threshold ... ok
+test fresh_models_round_trip_without_source_cache ... ok
+test source_metadata_charset_and_vertical_metrics ... ok
+test malformed_rasters_preserve_source_but_guard_drawing ... ok
+test reserved_source_names_cannot_mask_unknown_field_loss ... ok
+test bounded_gzip_transport_is_deterministic_and_codec_independent ... ok
+test trailing_numeric_tokens_do_not_allocate_a_token_vector ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/bdf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_properties-b0f9194c1de832ca)
+
+running 1 test
+test authored_model_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/bdf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_reference-840abdd80c2a79c4)
+
+running 2 tests
+test licensed_real_font_goldens ... ok
+test python_generated_bdf_parity ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap-9ca608a9e00a767b)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test checked_geometry_and_label_effects ... ok
+test zero_dimensions_are_explicit ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/bitmap_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap_reference-ffe360f2369fb866)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cff-2a432206dbb15d33)
+
+running 11 tests
+test cubic_bounds_and_fractional_advance ... ok
+test enforce_resource_limits_before_expansion ... ok
+test reject_numeric_names_and_unclosed_paths ... ok
+test alternating_axis_runs_split_and_reset_without_geometry_changes ... ok
+test sfnt_binding_requires_otto_head_and_matching_maxp ... ok
+test independent_fonttools_program_fixtures ... ok
+test square_dot_and_separate_roundtrip ... ok
+test truncation_and_mutation_are_bounded ... ok
+test all_3x3_square_masks ... ok
+test random_square_roundtrip ... ok
+test arbitrary_input_never_panics ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/charsets.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/charsets-2f695b3a541c1745)
+
+running 9 tests
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test canonicalization_matches_reference_fixture ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.37s
+
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/collection-935b46cfbd736d91)
+
+running 10 tests
+test duplicate_tags_and_limits ... ok
+test invalid_writer_limits ... ok
+test malformed_directories_offsets_and_versions ... ok
+test rejects_partial_alias_and_directory_overlap ... ok
+test deterministic_and_smaller ... ok
+test checksum_validation_is_explicit ... ok
+test signatures_removed_not_forged ... ok
+test v2_signature_bounded_and_lossy_on_extract ... ok
+test versions_mixed_flavors_shared_tables ... ok
+test truncated_every_byte ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/compat_bdfparser-66b3bf4f8fd21227)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contracts.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/contracts-409d3b43c03ab547)
+
+running 21 tests
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test feature_state_matches_the_compiled_build ... ok
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test read_error_diagnostics_are_never_success ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test report_json_is_structured_and_roundtrips ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/embedded_bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/embedded_bitmap-3253d2aa071fbbdb)
+
+running 7 tests
+test composite_pixels_cycles_and_bounds ... ok
+test ebsc_roundtrip_and_validation ... ok
+test canonical_roundtrip_sparse_multistrike_and_empty ... ok
+test exact_gray_depths_and_vertical_small_metrics ... ok
+test every_truncation_mutation_and_tight_budget_is_bounded ... ok
+test every_valid_index_and_direct_image_format ... ok
+test property_random_bitmap_roundtrip ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/glyf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/glyf-4a822c7557d21676)
+
+running 11 tests
+test instructions_overlap_empty_contours_and_zero_records ... ok
+test cycles_depth_visits_and_budget_enforcement ... ok
+test circles_share_one_glyph ... ok
+test simple_compound_and_both_loca_roundtrip ... ok
+test all_existing_spec_fonts_decode_reencode ... ok
+test malformed_slices_flags_endpoints_and_loca ... ok
+test transforms_point_attachment_nested_and_flags ... ok
+test truncated_composite_instructions_and_invalid_flags_fail ... ok
+test arbitrary_glyph_bytes_do_not_panic ... ok
+test random_bitmap_glyph_roundtrip ... ok
+test long_loca_selection_and_explicit_short_overflow ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/hex_psf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/hex_psf-18414d1df67b1b7f)
+
+running 23 tests
+test embedded_carriage_return_in_hex_comment_is_lossless ... ok
+test cell_alignment_keeps_negative_bearings_and_descent_pixels ... ok
+test hex_height_is_explicit_not_guessed ... ok
+test hex_rejects_bad_records_and_invalid_geometry ... ok
+test hex_all_widths_crlf_comments_duplicates_and_scalars ... ok
+test psf2_arbitrary_width_padding_and_extended_header ... ok
+test output_totals_alias_expansion_and_edited_comment_loss ... ok
+test psf_without_table_never_invents_unicode_and_unencoded_auto_has_table ... ok
+test psf2_all_aliases_multiple_sequences_sequence_only_and_noncharacters ... ok
+test metadata_mapping_gray_and_psf1_losses_are_explicit ... ok
+test read_resource_budgets_cover_wire_model_tables_pixels_and_mappings ... ok
+test gzip_wire_and_decompressed_limits_are_independent ... ok
+test review_hex_comment_record_limit_is_inclusive_and_counts_hash ... ok
+test review_hex_comment_records_obey_writer_table_limit ... ok
+test writer_limits_empty_psf_multiple_fonts_and_unrepresentable_geometry ... ok
+test review_gzip_model_budget_includes_retained_compressed_input ... ok
+test registry_detection_gzip_strict_and_repeatable_output ... ok
+test review_hex_gzip_budget_matches_exact_raw_and_transport_boundaries ... ok
+test psf_rejects_bad_headers_utf8_sequences_and_trailing_bytes ... ok
+test psf1_modes_counts_and_true_little_endian_sequence_markers ... ok
+test hex_native_roundtrip ... ok
+test psf2_native_roundtrip ... ok
+test psf_rejects_all_truncations_except_complete_headerless_tables ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/model.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/model-b5208ce8c52bb326)
+
+running 5 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+test model_preserves_every_source_field ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/outlines-81d9c8c2bf1f6099)
+
+running 5 tests
+test limits_and_invalid_geometry ... ok
+test holes_corners_separate_and_dots ... ok
+test implicit_quadratics_and_tangent_edges ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf-478e571cf6df1944)
+
+running 15 tests
+test conflicting_x11_headers_and_properties_report_all_losses ... ok
+test gray_threshold_and_uncompressed_ink_tables ... ok
+test core_aliases_and_unencoded_records_survive ... ok
+test all_resource_budgets_apply ... ok
+test metrics_attributes_and_ink_provenance_are_preserved_or_reported ... ok
+test accelerator_loss_cannot_hide_behind_byte_order_changes ... ok
+test strict_loss_combines_read_and_write_and_refuses_collections ... ok
+test malformed_bdf_hex_uses_lenient_nibbles_then_edited_pixels ... ok
+test optional_tables_have_spec_fallbacks ... ok
+test semantic_and_property_edits_win_over_provenance ... ok
+test source_tables_strings_partial_units_and_sentinels_are_honest ... ok
+test truncation_counts_offsets_formats_and_negative_sizes_fail ... ok
+test unknown_pcf_charset_stays_legacy_for_fallback_names_and_default ... ok
+test empty_zero_area_and_large_uncompressed_metrics ... ok
+test registry_gzip_and_layouts_are_real ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_properties-758c139eea92733b)
+
+running 1 test
+test fresh_fonts_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/pcf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_reference-9bf55027bd198cad)
+
+running 1 test
+test python_pcf_writer_and_reader_byte_parity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.91s
+
+     Running tests/render.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render-fd0a0079c577cacc)
+
+running 12 tests
+test directions_and_missing_are_explicit ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test invalid_bdf_source_never_renders_placeholder_pixels ... ok
+test gray_conversion_is_explicit_and_reported ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test png_roundtrips_bits_dimensions_alpha_and_limits ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/render_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render_reference-101572aff917ee53)
+
+running 1 test
+test synthetic_python_rendering_oracle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/sfnt.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/sfnt-7c7e6f3a6c5311f1)
+
+running 29 tests
+test checksum_padding_uses_big_endian_words ... ok
+test cmap_bmp_supplementary_aliases_and_ffff ... ok
+test checksum_checks_are_explicit_and_cover_all_components ... ok
+test cmap_malformed_groups_offsets_order_and_budget ... ok
+test cmap_empty_and_dense_nonsequential_maps ... ok
+test fuzz_regression_truncated_fontations_lazy_arrays ... ok
+test gasp_versions_ranges_and_reserved_flags ... ok
+test metrics_axes_compaction_and_empty_ink ... ok
+test metrics_invalid_counts_truncation_and_extents ... ok
+test multilingual_name_and_raw_encoding_roundtrip ... ok
+test golden_container_reassembly_is_byte_exact ... ok
+test native_post_names_follow_opentype_63_byte_alphabet ... ok
+test name_malformed_storage_language_and_utf16 ... ok
+test os2_unicode_ranges_and_average_are_not_heuristic_guesses ... ok
+test os2_codepages_require_full_printable_repertoire ... ok
+test os2_every_version_and_field_roundtrips ... ok
+test post_bad_name_indexes_fail ... ok
+test post_named_and_nameless_preserve_fields ... ok
+test raw_flags_are_not_silently_truncated_by_fontations ... ok
+test structural_errors_are_rejected_before_access ... ok
+test old_vertical_header_and_post_standard_names_are_readable ... ok
+test reads_legacy_and_trimmed_unicode_cmap_formats ... ok
+test writer_rejects_duplicates_missing_head_and_budgets ... ok
+test unknown_tables_odd_lengths_and_stale_adjustment_repack ... ok
+test unicode_range_boundaries_match_fonttools ... ok
+test arbitrary_bytes_do_not_panic ... ok
+test metrics_roundtrip ... ok
+test cmap_oversized_bmp_falls_back_to_complete_format12 ... ok
+test cmap_roundtrip ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/svg-f1f2f74ec05f4458)
+
+running 43 tests
+test active_animation_is_rejected_and_unknown_native_fields_reported ... ok
+test alias_loss_locations_reference_retained_glyph ... ok
+test common_registry_model_budget_reaches_explicit_svg_reader ... ok
+test common_registry_budgets_are_enforced ... ok
+test aliases_must_match ... ok
+test child_paths_keep_documented_exact_center_boundary_rule ... ok
+test curves_arcs_and_smooth_commands ... ok
+test detection_distinguishes_font_image_and_foreign_xml ... ok
+test budgets_are_effective ... ok
+test custom_registry_options_persist_independently ... ok
+test collection_and_select ... ok
+test exhaustive_grid_checks_late_glyph ... ok
+test explicit_scale_rounding_and_origin ... ok
+test generic_metadata_loss_and_selected_font_locations ... ok
+test generic_child_paths ... ok
+test gray_requires_threshold ... ok
+test generic_relative_multiple_open_subpaths_close ... ok
+test generic_grid_and_all_commands ... ok
+test image_empty_and_limits ... ok
+test huge_arc_expansion_is_rejected_before_normalization ... ok
+test effective_defaults_zero_advances_and_negative_bearings ... ok
+test image_shapes_and_single_glyph ... ok
+test arbitrary_style_names_are_not_invalid_svg_descriptors ... ok
+test legacy_conversion_requires_its_charset_feature ... ok
+test missing_glyph_and_blank_preserved ... ok
+test independent_child_paths_union_even_with_opposite_winding ... ok
+test native_metadata_does_not_hide_clipped_path ... ok
+test loss_and_strict_are_atomic ... ok
+test output_budget_invalid_sizes_and_xml ... ok
+test negative_horizontal_advances_cannot_emit_invalid_svg ... ok
+test native_vertical_advance_without_origin ... ok
+test malformed_and_unsafe_xml ... ok
+test native_roundtrip_all_shapes ... ok
+test malformed_numbers_paths ... ok
+test xml_budgets_preflight_attributes_namespaces_and_depth ... ok
+test writer_counts_alias_records_and_generated_commands ... ok
+test unicode_mapping_model_budget_is_preallocation ... ok
+test xml_entities_and_namespace_prefixes ... ok
+test rejects_unsupported_graphics ... ok
+test deterministic_truncations_and_byte_mutations_do_not_panic ... ok
+test repeated_glyph_geometry_is_streamed_under_model_budget ... ok
+test many_aliases_are_grouped_once_before_indexing ... ok
+test random_bitmap_font_roundtrip ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/variants-5144dc4af413e16b)
+
+running 23 tests
+test language_registry_and_regional_tags ... ok
+test alternative_only_characters_become_defaults ... ok
+test alternate_missing_metrics_do_not_inherit_base_font_defaults ... ok
+test embedded_variants_preserve_vertical_metrics ... ok
+test dedup_uses_bitmap_and_all_metrics ... ok
+test maximum_context_matches_actual_layout_presence ... ok
+test cff_subset_preserves_raw_programs ... ok
+test dot_reuse_policies_preserve_geometry_and_metadata ... ok
+test selected_glyph_closure_handles_chains_and_cycles ... ok
+test script_defaults_and_explicit_empty_routes ... ok
+test source_limits_and_metric_overflow_are_errors ... ok
+test subset_prunes_scaling_for_removed_sparse_strikes ... ok
+test subset_cff_cid_hints_subroutines_and_font_matrices ... ok
+test subset_preserves_explicit_truetype_bbox_bytes ... ok
+test unsupported_tables_fail_or_report_explicit_loss ... ok
+test variants_resolve_each_source_fonts_metric_defaults_before_deduplication ... ok
+test writer_repairs_missing_dflt_default_without_changing_language_routing ... ok
+test vertical_metrics_survive_variant_export_and_subset ... ok
+test prepared_variants_match_direct_encoding_and_preserve_budgets ... ok
+test subset_rejects_unpaired_vertical_metric_drops ... ok
+test variants_and_subsets_keep_names_cmap_dependencies ... ok
+test malformed_layout_never_panics ... ok
+test large_extension_offsets_roundtrip ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/vector_raster-f6d1f2f34321830c)
+
+running 29 tests
+test exact_cubic_nonzero_holes_and_monotonic_extrema ... ok
+test bounded_pixels_points_and_model ... ok
+test cff_vertical_origin_vorg_overrides_top_bearing ... ok
+test embedded_scaling_survives_projection_and_is_scoped_per_face ... ok
+test collection_diagnostics_use_flattened_font_indices ... ok
+test explicit_offset_translation ... ok
+test embedded_priority_skips_bad_outlines ... ok
+test dot_requires_override_then_recovers_pixels ... ok
+test grid_and_roundtrip_cubic ... ok
+test grid_and_roundtrip_quadratic ... ok
+test explicit_grid_override ... ok
+test rejects_variations_instead_of_ignoring ... ok
+test review_native_blank_vertical_origin_survives ... ok
+test nongrid_requires_explicit_ppem ... ok
+test preserves_aliases_unencoded_notdef_names ... ok
+test collection_native_faces_selected_and_all ... ok
+test review_native_font_underline_metrics_survive ... ok
+test review_selected_embedded_diagnostics_use_output_font_indices ... ok
+test invalid_options_and_truncations ... ok
+test review_native_notdef_rejects_unrepresentable_vertical_origin ... ok
+test sparse_embedded_fills_missing_outline ... ok
+test true_type_phantom_origin_and_use_my_metrics ... ok
+test writer_invalid_geometry_never_succeeds ... ok
+test review_zero_font_budget_rejects_outline_projection ... ok
+test source_name_cannot_collide_with_generated_dot_component ... ok
+test review_native_notdef_preserves_ink_origin_and_metrics ... ok
+test wrong_embedded_size_falls_back ... ok
+test woff2_shared_mixed_collection_and_native_projection ... ok
+test all_native_registry_wrappers ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-43b16bb74cc66d36)
+
+running 15 tests
+test containers::independently_built_pe32_and_pe64_resources ... ok
+test budgets_precede_allocations ... ok
+test cp1252_maps_euro_and_reports_nonrepresentable_aliases ... ok
+test containers::cumulative_limits_and_shift_overflow ... ok
+test edits_and_aliases_have_honest_reports ... ok
+test containers::ne_multifont_and_fontdir_structure ... ok
+test foreign_metadata_gray_and_strict_loss ... ok
+test cjk_legacy_bytes_roundtrip_without_conversion_tables ... ok
+test malformed_deserialized_rational_is_rejected_without_panic ... ok
+test source_metadata_and_output_work_are_bounded ... ok
+test unsupported_layouts_offsets_and_truncations_fail ... ok
+test unknown_charset_is_legacy_and_never_unicode_guessed ... ok
+test write_versions_mapping_and_geometry ... ok
+test independent_versions_and_lossless_native_roundtrips ... ok
+test generated_byte_cells_roundtrip ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/woff-dafe30468352446c)
+
+running 16 tests
+test invalid_options_and_collections ... ok
+test limits_precede_decompression ... ok
+test metadata_errors_and_auxiliary_limits ... ok
+test batch_budgets_and_distinct_input_order ... ok
+test signature_loss_is_explicit ... ok
+test woff1_rejects_bad_source_checksums_and_missing_final_padding ... ok
+test woff2_advisory_sizes_reserved_and_null_transform ... ok
+test woff2_always_marks_lossless_modification ... ok
+test woff1_preserves_physical_table_order_and_reports_invalidated_signatures ... ok
+test fixture_roundtrips_and_quality ... ok
+test random_simple_glyph_transform_roundtrip ... ok
+test arbitrary_bytes_are_safe ... ok
+test normalized_short_loca_upgrades_without_losing_glyphs ... ok
+test truncation_and_mutation_never_panic ... ok
+test opaque_table_roundtrip ... ok
+test large_parallel_streams_are_deterministic_and_preserve_all_tables ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.29s
+
+     Running tests/yaff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff-4c6c274ce164c59c)
+
+running 11 tests
+test glyph_resize_recomputes_visible_advance ... ok
+test malformed_and_bounded ... ok
+test multiline_record_budget_and_schema_validation ... ok
+test committed_canonical_golden ... ok
+test exact_rich_model_and_editing ... ok
+test punctuation_tags_zero_defaults_and_noncharacters ... ok
+test registered_detection_gzip ... ok
+test standard_labels_metrics_and_multiline ... ok
+test gray_levels_and_empty_dimensions ... ok
+test duplicate_properties_and_empty_multiline_values ... ok
+test bdf_exact_model_roundtrips ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/yaff_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff_properties-a1ed01a558c5a1f7)
+
+running 1 test
+test exact_native_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running unittests src/main.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-5c0bcb9f126cb3a1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cli-282b9ab7e04f14fc)
+
+running 22 tests
+test info_does_not_claim_success_for_truncated_bdf ... ok
+test ambiguous_target_is_not_selected_by_catalogue_order ... ok
+test formats_lists_all_46_and_marks_actual_codecs ... ok
+test convert_dispatch_accepts_multiple_inputs_and_explicit_target ... ok
+test formats_json_is_parseable_and_honest ... ok
+test failed_conversion_never_creates_or_overwrites_output ... ok
+test info_reports_missing_inputs_and_ambiguous_extensions ... ok
+test bdf_info_and_convert_are_real_and_output_is_stable ... ok
+test render_png_and_empty_input_behavior ... ok
+test malformed_loss_multi_font_and_filesystem_errors_leave_outputs_untouched ... ok
+test pcf_conversion_layout_gzip_and_strict_reporting ... ok
+test help_and_version_succeed_but_invalid_usage_returns_two ... ok
+test preview_keeps_art_on_stdout_and_reports_on_stderr ... ok
+test render_svg_drawall_controls_and_atomic_failure ... ok
+test hex_psf_cli_variants_and_strict_atomic_failure ... ok
+test native_dot_reuse_cli_policies_and_validation ... ok
+test yaff_collection_and_gzip_roundtrip ... ok
+test svg_convert_render_and_atomic_errors ... ok
+test svg_explicit_input_budget_applies_to_inspection_conversion_and_rendering ... ok
+test windows_options_multifont_and_strict_preserve_destination ... ok
+test variants_subset_cli_all_containers_and_selectors ... ok
+test raster_collection_cli_and_atomic_failures ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/parity.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/parity-3d7f1d93d357ff44)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel_py-e162afbb07255ef5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel_wasm-f900adfbbf5d5f0f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel
+
+running 5 tests
+test crates/fontpixel/src/model/mod.rs - model (line 8) ... ok
+test crates/fontpixel/src/bitmap/mod.rs - bitmap (line 8) ... ok
+test crates/fontpixel/src/charset/mod.rs - charset (line 14) ... ok
+test crates/fontpixel/src/render/mod.rs - render (line 8) ... ok
+test crates/fontpixel/src/formats/bdf.rs - formats::bdf (line 3) ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.32s; merged doctests compilation took 0.31s
+   Doc-tests fontpixel_py
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel_wasm
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `test` profile [unoptimized] target(s) in 0.05s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-aef30b0d07a132ac)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf-3348d3a1035d6f83)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_properties-b47bfd539d362f37)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_reference-3df044a2e2204289)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap-0d2f20ef1f0f18a8)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test checked_geometry_and_label_effects ... ok
+test zero_dimensions_are_explicit ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+     Running tests/bitmap_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap_reference-725608ff3e0ed810)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cff-9b90c9d1e4fa6ed0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/charsets.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/charsets-7b46fdb54219de52)
+
+running 9 tests
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test canonicalization_matches_reference_fixture ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.09s
+
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/collection-49ebd3af540bbcd4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/compat_bdfparser-3567c4a4c8c49170)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contracts.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/contracts-57779fac5e120c65)
+
+running 20 tests
+test feature_state_matches_the_compiled_build ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test read_error_diagnostics_are_never_success ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/embedded_bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/embedded_bitmap-d5b7462307f0dfea)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/glyf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/glyf-e74539b235c4885a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hex_psf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/hex_psf-0c3bc917fb68622f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/model-b5e0fb2a88086c7b)
+
+running 5 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+test model_preserves_every_source_field ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/outlines-a02880f416c70831)
+
+running 5 tests
+test limits_and_invalid_geometry ... ok
+test implicit_quadratics_and_tangent_edges ... ok
+test holes_corners_separate_and_dots ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/pcf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf-ded34763aa588b14)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_properties-00438fe96be435f6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_reference-4568f62d335ed8e4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/render.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render-3cc5fd3a9592c295)
+
+running 10 tests
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test directions_and_missing_are_explicit ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test gray_conversion_is_explicit_and_reported ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/render_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render_reference-8036fd6dfbefab22)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfnt.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/sfnt-5ba94f234f625488)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/svg-eddfb8d27ff9a8df)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/variants-f87be73f55416527)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/vector_raster-8d1f04268c1a71e9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-d1099b0b7b0856c0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/woff-cebe0b2a69b0c3df)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff-eee085499618905b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff_properties-466a2509cc3bd468)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel
+
+running 4 tests
+test crates/fontpixel/src/bitmap/mod.rs - bitmap (line 8) ... ok
+test crates/fontpixel/src/model/mod.rs - model (line 8) ... ok
+test crates/fontpixel/src/charset/mod.rs - charset (line 14) ... ok
+test crates/fontpixel/src/render/mod.rs - render (line 8) ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.23s; merged doctests compilation took 0.22s
+    Finished `test` profile [unoptimized] target(s) in 0.06s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-dfdebea8277699f0)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf-2eda6274ee3d43d1)
+
+running 12 tests
+test detect_registry_and_feature_capabilities ... ok
+test malformed_rasters_preserve_source_but_guard_drawing ... ok
+test duplicate_unencoded_and_out_of_unicode_codes_remain_inspectable ... ok
+test direct_property_edits_and_deletions_are_not_overridden_by_stale_views ... ok
+test fresh_models_round_trip_without_source_cache ... ok
+test rejects_malformed_numbers_and_enforces_all_resource_limits ... ok
+test reports_all_unrepresentable_fields_and_gray_requires_threshold ... ok
+test reserved_source_names_cannot_mask_unknown_field_loss ... ok
+test edits_override_only_changed_source_fields ... ok
+test source_metadata_charset_and_vertical_metrics ... ok
+test bounded_gzip_transport_is_deterministic_and_codec_independent ... ok
+test trailing_numeric_tokens_do_not_allocate_a_token_vector ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/bdf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_properties-c990c94b36c3c985)
+
+running 1 test
+test authored_model_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/bdf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_reference-a6701ff9506b8829)
+
+running 2 tests
+test licensed_real_font_goldens ... ok
+test python_generated_bdf_parity ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+     Running tests/bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap-60d6984a6b6b48c3)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test checked_geometry_and_label_effects ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test zero_dimensions_are_explicit ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+
+     Running tests/bitmap_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap_reference-ab5495f7c935625c)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cff-1b821c48e0d28611)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/charsets.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/charsets-2c1bd549dfe73fc7)
+
+running 9 tests
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test canonicalization_matches_reference_fixture ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.01s
+
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/collection-2595aa2e24f428d6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/compat_bdfparser-a5b3f202f4441ccf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contracts.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/contracts-88abe2abc2cf319b)
+
+running 20 tests
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test feature_state_matches_the_compiled_build ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test read_error_diagnostics_are_never_success ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/embedded_bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/embedded_bitmap-8af86a01a10f780e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/glyf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/glyf-72c4d99c80d807e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hex_psf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/hex_psf-a5e23a97f510907f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/model-1bac7fa03c48f005)
+
+running 5 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+test model_preserves_every_source_field ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/outlines-055a55a9236c8874)
+
+running 5 tests
+test limits_and_invalid_geometry ... ok
+test holes_corners_separate_and_dots ... ok
+test implicit_quadratics_and_tangent_edges ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf-071a87549bbc355f)
+
+running 15 tests
+test conflicting_x11_headers_and_properties_report_all_losses ... ok
+test malformed_bdf_hex_uses_lenient_nibbles_then_edited_pixels ... ok
+test core_aliases_and_unencoded_records_survive ... ok
+test gray_threshold_and_uncompressed_ink_tables ... ok
+test all_resource_budgets_apply ... ok
+test accelerator_loss_cannot_hide_behind_byte_order_changes ... ok
+test optional_tables_have_spec_fallbacks ... ok
+test metrics_attributes_and_ink_provenance_are_preserved_or_reported ... ok
+test semantic_and_property_edits_win_over_provenance ... ok
+test strict_loss_combines_read_and_write_and_refuses_collections ... ok
+test unknown_pcf_charset_stays_legacy_for_fallback_names_and_default ... ok
+test source_tables_strings_partial_units_and_sentinels_are_honest ... ok
+test truncation_counts_offsets_formats_and_negative_sizes_fail ... ok
+test registry_gzip_and_layouts_are_real ... ok
+test empty_zero_area_and_large_uncompressed_metrics ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/pcf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_properties-de46a1a1441aa37a)
+
+running 1 test
+test fresh_fonts_roundtrip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/pcf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_reference-527aa3b34abab575)
+
+running 1 test
+test python_pcf_writer_and_reader_byte_parity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+
+     Running tests/render.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render-ddc19c986b8cc32c)
+
+running 11 tests
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test directions_and_missing_are_explicit ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test gray_conversion_is_explicit_and_reported ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test invalid_bdf_source_never_renders_placeholder_pixels ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/render_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render_reference-0f36070f78ab6b85)
+
+running 1 test
+test synthetic_python_rendering_oracle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/sfnt.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/sfnt-ae50fa6df189a6c6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/svg-e7bd3160c0c8030a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/variants-869eb7d37db7ba9a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/vector_raster-08e82528ef1b3e8e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-eae7d7781b83841b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/woff-6556a45e76a039e1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff-2d3f2a42fee8698e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff_properties-d72f6790120cb025)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel
+
+running 5 tests
+test crates/fontpixel/src/bitmap/mod.rs - bitmap (line 8) ... ok
+test crates/fontpixel/src/model/mod.rs - model (line 8) ... ok
+test crates/fontpixel/src/charset/mod.rs - charset (line 14) ... ok
+test crates/fontpixel/src/formats/bdf.rs - formats::bdf (line 3) ... ok
+test crates/fontpixel/src/render/mod.rs - render (line 8) ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.25s; merged doctests compilation took 0.24s
+    Finished `test` profile [unoptimized] target(s) in 0.06s
+     Running unittests src/lib.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/fontpixel-4cb4f25b2a025b46)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/bdf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf-b6b790aebba836cc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_properties-77d1bac1d4da3a20)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bdf_reference-6cea6d0055dcc3a4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap-5a59f8d1e8ccedc5)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test checked_geometry_and_label_effects ... ok
+test zero_dimensions_are_explicit ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/bitmap_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/bitmap_reference-1a48bb1ba45ee39e)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/cff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/cff-361a1615acc43a5d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/charsets.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/charsets-269b940b45892780)
+
+running 11 tests
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test strict_cjk_edge_cases_and_encoder_preferences ... ok
+test canonicalization_matches_reference_fixture ... ok
+test all_gb18030_four_byte_sequences_and_unicode_reverse_mappings ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.86s
+
+     Running tests/collection.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/collection-27b6002523b79e05)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/compat_bdfparser-410e6fdf08473e6e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contracts.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/contracts-5e17ba8e53027db9)
+
+running 20 tests
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test feature_state_matches_the_compiled_build ... ok
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test read_error_diagnostics_are_never_success ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/embedded_bitmap.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/embedded_bitmap-977841962050b5ab)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/glyf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/glyf-d1b5465644b84f01)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hex_psf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/hex_psf-596ca60ae3dfded8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/model-6f7c50f75c9f5d8e)
+
+running 5 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test model_preserves_every_source_field ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/outlines-43f576eba60a0a3c)
+
+running 5 tests
+test limits_and_invalid_geometry ... ok
+test implicit_quadratics_and_tangent_edges ... ok
+test holes_corners_separate_and_dots ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pcf.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf-a93c16d308398064)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_properties-e18813b3791e2538)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/pcf_reference-bec24bf8c880bca4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/render.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render-a41e38a0ecadf8ac)
+
+running 10 tests
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test gray_conversion_is_explicit_and_reported ... ok
+test directions_and_missing_are_explicit ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/render_reference.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/render_reference-c51f5b956d31610f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfnt.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/sfnt-fe1b163bc2ece531)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/svg.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/svg-0ecf67a819148509)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/variants.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/variants-d521a057638e5989)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vector_raster.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/vector_raster-f203f1e46f01a3cb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-54e30838c79d890b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/woff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/woff-1a1e3cfae3e93d39)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff-a779820ef7f609b7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff_properties.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/yaff_properties-c37a49c3edc9f52b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fontpixel
+
+running 4 tests
+test crates/fontpixel/src/charset/mod.rs - charset (line 14) ... ok
+test crates/fontpixel/src/bitmap/mod.rs - bitmap (line 8) ... ok
+test crates/fontpixel/src/model/mod.rs - model (line 8) ... ok
+test crates/fontpixel/src/render/mod.rs - render (line 8) ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.34s; merged doctests compilation took 0.33s
+advisories ok, bans ok, licenses ok, sources ok

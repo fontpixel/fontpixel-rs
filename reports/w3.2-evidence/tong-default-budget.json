@@ -1,0 +1,28 @@
+{
+  "command": "fontpixel convert ../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf -o /tmp/fontpixel-w32-ft/tong.fnt --to fnt --report json",
+  "exit_code": 0,
+  "input_glyphs": 38653,
+  "output_bytes": 5709,
+  "output_sha256": "fbe2a0f1212b5386f34641531edc893cebc0406a0a95e08cbee42080e5800623",
+  "original_report_bytes": 25905345,
+  "original_report_sha256": "e39cb179e7c9d0c357393332bdde8007414a18fa95a40fb086ca6c7e0ed785e2",
+  "report_entry_count": 77994,
+  "counts_by_code": {
+    "fnt.unmapped_code": 38237,
+    "fnt.omitted_glyph": 38435,
+    "fnt.zero_width_code": 198,
+    "fnt.glyph_name": 218,
+    "fnt.glyph_property": 436,
+    "fnt.bounds": 218,
+    "fnt.glyph_metric": 218,
+    "fnt.string": 1,
+    "fnt.name": 3,
+    "fnt.localized_names": 1,
+    "fnt.font_metric": 3,
+    "fnt.header": 10,
+    "fnt.property": 15,
+    "fnt.charset_metadata": 1
+  },
+  "note": "Full per-code report retained as deterministic gzip to keep the handoff small. Output font bytes are reproducible from the supplied OFL sample and command; only their checksum is retained. No external loader/full regression rerun after the final change is claimed.",
+  "full_report": "tong-loss-report.json.gz"
+}

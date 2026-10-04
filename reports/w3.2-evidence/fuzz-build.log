@@ -1,0 +1,53 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling libc v0.2.189
+   Compiling syn v3.0.6
+   Compiling simd-adler32 v0.3.10
+   Compiling crc32fast v1.5.2
+   Compiling adler2 v2.0.1
+   Compiling serde_core v1.0.229
+   Compiling jobserver v0.1.35
+   Compiling bytemuck_derive v1.12.1
+   Compiling arrayvec v0.7.8
+   Compiling alloc-no-stdlib v3.0.0
+   Compiling find-msvc-tools v0.1.14
+   Compiling cfg-if v1.0.5
+   Compiling zmij v1.0.23
+   Compiling shlex v2.0.1
+   Compiling cc v1.5.1
+   Compiling bytemuck v1.25.2
+   Compiling alloc-stdlib v0.3.0
+   Compiling polycool v0.4.0
+   Compiling miniz_oxide v0.9.1
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling hashbrown v0.17.1
+   Compiling serde_json v1.0.151
+   Compiling equivalent v1.0.2
+   Compiling smallvec v1.16.2
+   Compiling kurbo v0.13.1
+   Compiling indexmap v2.14.2
+   Compiling flate2 v1.1.10
+   Compiling libfuzzer-sys v0.4.13
+   Compiling brotli-decompressor v6.0.1
+   Compiling font-types v0.12.5
+   Compiling serde_derive v1.0.229
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling siphasher v1.0.4
+   Compiling itoa v1.0.18
+   Compiling bitflags v2.13.2
+   Compiling once_cell v1.21.4
+   Compiling read-fonts v0.44.0
+   Compiling png v0.18.1
+   Compiling svgtypes v0.16.1
+   Compiling brotli v9.0.0
+   Compiling roxmltree v0.21.1
+   Compiling arbitrary v1.4.2
+   Compiling xmlparser v0.13.6
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 3m 11s
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 1.48s
