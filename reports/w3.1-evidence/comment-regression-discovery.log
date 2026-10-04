@@ -1,0 +1,80 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2m 04s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+     Running `fuzz/target/x86_64-unknown-linux-gnu/release/hex -artifact_prefix=/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/artifacts/hex/ -max_total_time=610 -timeout=10 -rss_limit_mb=1536 -max_len=65536 -detect_leaks=0 /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/corpus/hex`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2293891194
+INFO: Loaded 1 modules   (7407 inline 8-bit counters): 7407 [0x55d1a933cc20, 0x55d1a933e90f), 
+INFO: Loaded 1 PC tables (7407 PCs): 7407 [0x55d1a933e910,0x55d1a935b800), 
+INFO:      495 files found in /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/corpus/hex
+INFO: seed corpus: files: 495 min: 1b max: 10946b total: 236644b rss: 31Mb
+
+thread '<unnamed>' (180) panicked at fuzz_targets/hex.rs:10:17:
+assertion failed: !report.has_loss()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+==180== ERROR: libFuzzer: deadly signal
+    #0 0x55d1a9219231  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x13c231) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #1 0x55d1a92acaea  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x1cfaea) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #2 0x55d1a92676a5  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x18a6a5) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #3 0x7f97458dcd6f  (/lib/x86_64-linux-gnu/libc.so.6+0x3fd6f) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #4 0x7f974593169b  (/lib/x86_64-linux-gnu/libc.so.6+0x9469b) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #5 0x7f97458dcc41  (/lib/x86_64-linux-gnu/libc.so.6+0x3fc41) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #6 0x7f97458c54ab  (/lib/x86_64-linux-gnu/libc.so.6+0x284ab) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #7 0x55d1a93126d9  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x2356d9) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #8 0x55d1a93113b8  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x2343b8) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #9 0x55d1a92600b4  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x1830b4) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #10 0x55d1a9311641  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x234641) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #11 0x55d1a92ff513  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x222513) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #12 0x55d1a92f9ac8  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x21cac8) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #13 0x55d1a92ffbcc  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x222bcc) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #14 0x55d1a9324f0b  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x247f0b) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #15 0x55d1a9324ed1  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x247ed1) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #16 0x55d1a924dee6  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x170ee6) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #17 0x55d1a925ed15  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x181d15) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #18 0x55d1a925fc44  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x182c44) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #19 0x55d1a9260888  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x183888) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #20 0x55d1a925f33d  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x18233d) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #21 0x55d1a9267c14  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x18ac14) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #22 0x55d1a926e86f  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x19186f) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #23 0x55d1a92700e6  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x1930e6) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #24 0x55d1a9270680  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x193680) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #25 0x55d1a928201e  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x1a501e) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #26 0x55d1a92a53e2  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x1c83e2) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+    #27 0x7f97458c6ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #28 0x7f97458c6d64  (/lib/x86_64-linux-gnu/libc.so.6+0x29d64) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #29 0x55d1a917a7e0  (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex+0x9d7e0) (BuildId: 5ce8c2d71ca2a7b8d3cc2ef6c56379a35fe1cc6b)
+
+NOTE: libFuzzer has rudimentary signal handlers.
+      Combine libFuzzer with AddressSanitizer or similar for better crash reports.
+SUMMARY: libFuzzer: deadly signal
+MS: 0 ; base unit: 0000000000000000000000000000000000000000
+0x23,0x24,0x0,0x0,0xd,0x23,0x35,0x41,0x35,0x41,0x35,0x1,0x0,0x0,0x24,0x24,0x0,0x0,0x0,0x67,0xa,0xa,0xd,0x23,0x35,0x41,0x35,0x41,0x0,0x0,0x0,0x0,0x0,0x1,0x22,0x23,0x24,0x24,0x0,0x0,0x0,0x67,0xa,0xa,0xd,0x23,0x35,0x41,0x35,0x41,0x35,0x0,0x1,0x2,0x0,0x0,0x0,0x0,0x22,0x54,0x24,0x24,0x0,0x24,0x0,0x0,0x0,0x67,0xa,0xa,0xd,0x23,0x35,0x41,0x35,0x41,0x35,0x41,0x35,0x1,0x0,0x0,0x24,0x24,0x0,0x0,0x0,0x67,0xa,0xa,0xd,0x23,0x36,0x41,0x35,0x41,0x35,0x14,0x9,0x0,0x0,0x0,0x41,0x7a,0x32,0x41,0x35,0x67,0xa,0xa,0xd,0x23,0x35,0x41,0x35,0x41,0x35,0x41,0x37,0x1,0x0,0x0,0x24,0x24,0x0,0x0,0x0,0x67,0xa,0xa,0x23,0xd,0xd,0x41,0x35,0x41,0x35,0x41,0x35,0x1,0x41,0x35,0x41,0xa,
+#$\000\000\015#5A5A5\001\000\000$$\000\000\000g\012\012\015#5A5A\000\000\000\000\000\001\"#$$\000\000\000g\012\012\015#5A5A5\000\001\002\000\000\000\000\"T$$\000$\000\000\000g\012\012\015#5A5A5A5\001\000\000$$\000\000\000g\012\012\015#6A5A5\024\011\000\000\000Az2A5g\012\012\015#5A5A5A7\001\000\000$$\000\000\000g\012\012#\015\015A5A5A5\001A5A\012
+artifact_prefix='/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/artifacts/hex/'; Test unit written to /workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1/fuzz/artifacts/hex/crash-3e57f654b1313695f30692c2710def2a3175671a
+Base64: IyQAAA0jNUE1QTUBAAAkJAAAAGcKCg0jNUE1QQAAAAAAASIjJCQAAABnCgoNIzVBNUE1AAECAAAAACJUJCQAJAAAAGcKCg0jNUE1QTVBNQEAACQkAAAAZwoKDSM2QTVBNRQJAAAAQXoyQTVnCgoNIzVBNUE1QTcBAAAkJAAAAGcKCiMNDUE1QTVBNQFBNUEK
+
+────────────────────────────────────────────────────────────────────────────────
+
+Failing input:
+
+	fuzz/artifacts/hex/crash-3e57f654b1313695f30692c2710def2a3175671a
+
+Output of `std::fmt::Debug`:
+
+	[35, 36, 0, 0, 13, 35, 53, 65, 53, 65, 53, 1, 0, 0, 36, 36, 0, 0, 0, 103, 10, 10, 13, 35, 53, 65, 53, 65, 0, 0, 0, 0, 0, 1, 34, 35, 36, 36, 0, 0, 0, 103, 10, 10, 13, 35, 53, 65, 53, 65, 53, 0, 1, 2, 0, 0, 0, 0, 34, 84, 36, 36, 0, 36, 0, 0, 0, 103, 10, 10, 13, 35, 53, 65, 53, 65, 53, 65, 53, 1, 0, 0, 36, 36, 0, 0, 0, 103, 10, 10, 13, 35, 54, 65, 53, 65, 53, 20, 9, 0, 0, 0, 65, 122, 50, 65, 53, 103, 10, 10, 13, 35, 53, 65, 53, 65, 53, 65, 55, 1, 0, 0, 36, 36, 0, 0, 0, 103, 10, 10, 35, 13, 13, 65, 53, 65, 53, 65, 53, 1, 65, 53, 65, 10]
+
+Reproduce with:
+
+	cargo fuzz run hex fuzz/artifacts/hex/crash-3e57f654b1313695f30692c2710def2a3175671a
+
+Minimize test case with:
+
+	cargo fuzz tmin hex fuzz/artifacts/hex/crash-3e57f654b1313695f30692c2710def2a3175671a
+
+────────────────────────────────────────────────────────────────────────────────
+
+Error: Fuzz target exited with exit status: 77

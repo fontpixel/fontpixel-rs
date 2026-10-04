@@ -1,0 +1,12 @@
+{
+  "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "logical_cpus": 9,
+  "affinity": 9,
+  "cpu_model": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+  "memory": {
+    "MemTotal": "10206504 kB",
+    "MemAvailable": "5105224 kB"
+  },
+  "note": "Five-run wall-clock medians; native timed sections exclude disk I/O and use fresh allocations. Measurements began after both verified fuzz runs completed."
+}

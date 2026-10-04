@@ -1,0 +1,26 @@
+{
+  "source_commit": "52c88bc",
+  "sources_unchanged": true,
+  "fuzz": {
+    "hex": {
+      "executions": 4612845,
+      "seconds": 611,
+      "coverage_counters": 936,
+      "features": 4748,
+      "peak_rss_mib": 470,
+      "exit": 0
+    },
+    "psf": {
+      "executions": 582918,
+      "seconds": 611,
+      "coverage_counters": 1272,
+      "features": 5505,
+      "peak_rss_mib": 468,
+      "exit": 0
+    }
+  },
+  "aggregate_passed_test_invocations": 968,
+  "focused_tests": 19,
+  "proptest_cases_per_focused_run": 400,
+  "external_groups": 9
+}
