@@ -1161,3 +1161,16 @@ the LF delimiter is outside the text-record limit, matching the reader.
 consume the same aggregate allowance. All record types must honor the selected
 output record cap. Four regressions establish rejection and exact inclusive
 boundaries for both codecs without changing valid font or mapping bytes.
+
+## 2026-10-04 — W3.3 explicit atlas maps and safe C literals
+
+**Question:** Image atlases and C arrays do not intrinsically carry character maps,
+full metrics, or safe filesystem authority; the plan requires faithful roundtrips.
+**Choice:** Versioned JSON/TOML atlas sidecars retain native model metadata while
+catalogue-compatible maps retain their documented pixel/baseline rules. Reject any
+visible unmapped image region. C uses a bounded non-executing literal parser,
+authoritative font8x8 spans, explicit generic geometry/charset, and standard
+Adafruit fields with complete loss reporting. Resolving sidecars stays in the
+caller-supplied resource boundary. CLI resources are scoped to the primary folder.
+**Reason:** No silent character guessing, hidden C execution, clipped pixels,
+charset conversion, or uncontrolled path access is acceptable.

@@ -69,6 +69,8 @@ pub fn registry() -> FontRegistry {
     registry.install_hex();
     #[cfg(feature = "psf")]
     registry.install_psf();
+    #[cfg(feature = "image")]
+    registry.install_image();
     registry
 }
 

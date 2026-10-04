@@ -40,9 +40,9 @@ color = ["sfnt", "dep:png"]
 vector-raster = ["cff"]
 svg = ["dep:roxmltree", "dep:svgtypes", "dep:xmlparser"]
 bmfont = []
-image = []
+image = ["dep:image-codec", "dep:serde", "dep:serde_json", "dep:toml"]
 png = ["dep:flate2", "dep:crc32fast"]
-c = []
+c = ["dep:serde", "dep:serde_json"]
 kbitx = []
 kbits = []
 pbf = []
@@ -67,6 +67,8 @@ serde = ["dep:serde"]
 sfnt = ["dep:read-fonts"]
 
 [dependencies]
+image-codec = { package = "image", version = "0.25.8", default-features = false, features = ["png", "bmp", "gif", "tga", "pnm"], optional = true }
+toml = { version = "1.1.2", default-features = false, features = ["parse", "display", "serde"], optional = true }
 xmlparser = { version = "0.13.6", optional = true }
 roxmltree = { version = "0.21.1", optional = true }
 svgtypes = { version = "0.16.1", optional = true }

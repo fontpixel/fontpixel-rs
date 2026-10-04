@@ -8,6 +8,8 @@ use crate::{Error, Operation, Report, Result};
 #[cfg(feature = "bdf")]
 pub mod bdf;
 pub mod catalogue;
+#[cfg(feature = "image")]
+pub mod image;
 #[cfg(any(feature = "hex", feature = "psf"))]
 mod console;
 #[cfg(any(
@@ -634,6 +636,29 @@ impl Registry<crate::FontSet> {
             e.writer = Some(Box::new(psf::PsfCodec {
                 write_options: options,
             }));
+        }
+    }
+}
+
+#[cfg(feature = "image")]
+impl Registry<crate::FontSet> {
+    pub(crate) fn install_image(&mut self) {
+        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image") {
+            e.detector=Some(Box::new(image::ImageCodec::default()));
+            e.reader=Some(Box::new(image::ImageCodec::default()));
+            e.writer=Some(Box::new(image::ImageCodec::default()));
+        }
+    }
+    /// Select an explicit image mapping or caller-scoped mapping asset.
+    pub fn set_image_read_options(&mut self, options:image::ImageReadOptions) {
+        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image" && e.reader.is_some()) {
+            e.reader=Some(Box::new(image::ImageCodec{read_options:options,..Default::default()}));
+        }
+    }
+    /// Configure atlas image container, packing and mapping serialization.
+    pub fn set_image_write_options(&mut self, options:image::ImageWriteOptions) {
+        if let Some(e)=self.entries.iter_mut().find(|e|e.format.id=="image" && e.writer.is_some()) {
+            e.writer=Some(Box::new(image::ImageCodec{write_options:options,..Default::default()}));
         }
     }
 }

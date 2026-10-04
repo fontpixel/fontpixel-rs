@@ -179,7 +179,7 @@ impl<'a> ReadContext<'a> {
     }
 
     /// Bytes retained by the input context, including both gzip wire and decoded data.
-    #[cfg(any(feature = "hex", feature = "psf"))]
+    #[cfg(any(feature = "hex", feature = "psf", feature = "image", feature = "c"))]
     pub(crate) fn retained_input_bytes(&self) -> usize {
         self.total_bytes
     }
