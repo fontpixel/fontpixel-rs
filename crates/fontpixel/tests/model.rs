@@ -369,7 +369,23 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
                 "c",
                 "kbitx",
                 "pbf",
-                "hbf"
+                "hbf",
+                "draw",
+                "raw",
+                "cpi",
+                "pf2",
+                "fontx2",
+                "hzk",
+                "nfnt",
+                "bmfont",
+                "sfd",
+                "kbits",
+                "pk",
+                "gf",
+                "plan9",
+                "amiga",
+                "gem",
+                "snf",
             ]
             .contains(&f.format.id))
             .all(|f| !f.read && !f.write)
@@ -430,5 +446,75 @@ fn real_model_registry_preserves_reports_sidecars_and_strictness() -> Result<()>
         registry.write(&set, "test-model", &write),
         Err(fontpixel::Error::StrictLoss(_))
     ));
+    Ok(())
+}
+
+#[test]
+fn registry_preserves_read_diagnostics_when_a_writer_returns_a_report_error() -> Result<()> {
+    use fontpixel::formats::*;
+    use fontpixel::report::*;
+    use fontpixel::resources::*;
+
+    struct RejectingWriter;
+    impl FormatWriter<FontSet> for RejectingWriter {
+        fn write(&self, _: &FontSet, options: &WriteOptions) -> Result<Written> {
+            let mut report = Report::default();
+            report.push(ReportEntry {
+                level: if options.strict {
+                    Level::Warning
+                } else {
+                    Level::Error
+                },
+                impact: Impact::Loss,
+                code: "writer.rejected".into(),
+                location: Location::default(),
+                message: "The writer rejected the requested projection".into(),
+            });
+            Err(if options.strict {
+                fontpixel::Error::StrictLoss(report)
+            } else {
+                fontpixel::Error::ReportedErrors(report)
+            })
+        }
+    }
+    let mut registry = fontpixel::registry();
+    registry.register(Registration {
+        format: FormatInfo {
+            id: "rejecting-writer",
+            name: "Rejecting writer test",
+            extensions: &[],
+            feature_enabled: true,
+        },
+        detector: None,
+        reader: None,
+        writer: Some(Box::new(RejectingWriter)),
+    })?;
+    let fonts: FontSet = Font::from_glyphs([glyph(65, "#")])?.into();
+    for strict in [false, true] {
+        let mut earlier = Report::default();
+        earlier.push(ReportEntry {
+            level: Level::Info,
+            impact: Impact::Repair,
+            code: "reader.repaired".into(),
+            location: Location::default(),
+            message: "The reader repaired source metadata".into(),
+        });
+        let mut options = WriteOptions::new(ResourcePath::new("out.bin")?);
+        options.strict = strict;
+        let error = registry
+            .write_with_report(&fonts, "rejecting-writer", &options, earlier)
+            .unwrap_err();
+        assert_eq!(matches!(error, fontpixel::Error::StrictLoss(_)), strict);
+        assert_eq!(
+            error
+                .report()
+                .unwrap()
+                .entries
+                .iter()
+                .map(|e| e.code.as_str())
+                .collect::<Vec<_>>(),
+            ["reader.repaired", "writer.rejected"]
+        );
+    }
     Ok(())
 }

@@ -1,0 +1,630 @@
+{
+  "formats": [
+    {
+      "format": {
+        "id": "bdf",
+        "name": "Glyph Bitmap Distribution Format",
+        "extensions": [
+          "bdf",
+          "bdf.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pcf",
+        "name": "X11 Portable Compiled Format",
+        "extensions": [
+          "pcf",
+          "pcf.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "snf",
+        "name": "X11 Server Natural Format",
+        "extensions": [
+          "snf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hex",
+        "name": "GNU Unifont hex",
+        "extensions": [
+          "hex"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "draw",
+        "name": "Unifont hexdraw",
+        "extensions": [
+          "txt",
+          "draw"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "psf",
+        "name": "Linux PSF1 / PSF2",
+        "extensions": [
+          "psf",
+          "psfu",
+          "psf.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "cpi",
+        "name": "DOS / FreeDOS CPI, CP, CPX",
+        "extensions": [
+          "cpi",
+          "cp",
+          "cpx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "raw",
+        "name": "Raw fixed-cell bitmap",
+        "extensions": [
+          "f08",
+          "f14",
+          "f16",
+          "ch8",
+          "64c",
+          "rom",
+          "bin"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "yaff",
+        "name": "monobit YAFF",
+        "extensions": [
+          "yaff",
+          "yaffs",
+          "yaff.gz",
+          "yaffs.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pf2",
+        "name": "GRUB PF2",
+        "extensions": [
+          "pf2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fnt",
+        "name": "Windows bitmap FNT",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fon",
+        "name": "Windows FON resources",
+        "extensions": [
+          "fon"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fontx2",
+        "name": "DOS/V FONTX2",
+        "extensions": [
+          "fnt",
+          "f16",
+          "fx2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hzk",
+        "name": "UCDOS HZK / ASC",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hbf",
+        "name": "Hanzi Bitmap Font",
+        "extensions": [
+          "hbf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hanfont",
+        "name": "Korean DOS component fonts",
+        "extensions": [
+          "han"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "nfnt",
+        "name": "Mac NFNT / FONT / FOND containers",
+        "extensions": [
+          "dfont",
+          "bin"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "bdat",
+        "name": "Apple embedded bdat / bloc",
+        "extensions": [
+          "ttf",
+          "dfont"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "iigs",
+        "name": "Apple IIgs QuickDraw II",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "otb",
+        "name": "Bitmap-only OpenType",
+        "extensions": [
+          "otb"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "ttf",
+        "name": "TrueType outlines",
+        "extensions": [
+          "ttf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "otf",
+        "name": "OpenType CFF",
+        "extensions": [
+          "otf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "woff",
+        "name": "WOFF 1.0",
+        "extensions": [
+          "woff"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "woff2",
+        "name": "WOFF 2.0",
+        "extensions": [
+          "woff2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "ttc",
+        "name": "TrueType / OpenType collection",
+        "extensions": [
+          "ttc",
+          "otc"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "color",
+        "name": "Color bitmap CBDT / sbix",
+        "extensions": [
+          "ttf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "vector-raster",
+        "name": "Pixel-vector import strategy",
+        "extensions": [
+          "ttf",
+          "otf",
+          "woff",
+          "woff2",
+          "ttc",
+          "otc"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "svg",
+        "name": "SVG images / glyphs / fonts",
+        "extensions": [
+          "svg"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "bmfont",
+        "name": "AngelCode BMFont",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "image",
+        "name": "Image atlas and mapping",
+        "extensions": [
+          "png",
+          "bmp",
+          "gif",
+          "tga",
+          "pbm",
+          "pgm",
+          "pnm",
+          "json",
+          "toml"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "c",
+        "name": "C / C++ bitmap arrays",
+        "extensions": [
+          "h",
+          "c"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "kbitx",
+        "name": "Bits'n'Picas kbitx",
+        "extensions": [
+          "kbitx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "kbits",
+        "name": "Bits'n'Picas kbits",
+        "extensions": [
+          "kbits"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pbf",
+        "name": "PebbleOS PBF",
+        "extensions": [
+          "pbf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "sfd",
+        "name": "FontForge SFD bitmap strikes",
+        "extensions": [
+          "sfd"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pk",
+        "name": "TeX packed font",
+        "extensions": [
+          "pk"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gf",
+        "name": "TeX generic font",
+        "extensions": [
+          "gf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "plan9",
+        "name": "Plan 9 font / subfont",
+        "extensions": [
+          "font"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "amiga",
+        "name": "Amiga diskfont",
+        "extensions": [
+          "font"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gem",
+        "name": "Atari GEM / GDOS",
+        "extensions": [
+          "fnt",
+          "gem"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "vfont",
+        "name": "Berkeley vfont",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "fzx",
+        "name": "ZX Spectrum FZX",
+        "extensions": [
+          "fzx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "figlet",
+        "name": "FIGlet",
+        "extensions": [
+          "flf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "palm",
+        "name": "Palm OS font resources",
+        "extensions": [
+          "pdb"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "gdr",
+        "name": "Psion / EPOC GDR",
+        "extensions": [
+          "gdr"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    },
+    {
+      "format": {
+        "id": "drcs",
+        "name": "DEC DRCS soft fonts",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": false,
+      "write": false
+    }
+  ]
+}

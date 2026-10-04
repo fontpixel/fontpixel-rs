@@ -1,0 +1,1938 @@
+{
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "binary": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/release/examples/p2_timing",
+  "binary_sha256": "0912bbccd56269e63d6c5123b18fdc35335ecb24b4326c63b294f67e7038ed90",
+  "runs": 5,
+  "elapsed_seconds": 7.735335462959483,
+  "peak_rss_kib": 18824,
+  "timings": {
+    "draw": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 129.34065,
+        "min": 125.77388,
+        "max": 177.82148
+      },
+      "write_us": {
+        "median": 233.19141000000002,
+        "min": 227.49355,
+        "max": 265.79532
+      },
+      "bytes": {
+        "median": 21248,
+        "min": 21248,
+        "max": 21248
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 3,
+        "min": 3,
+        "max": 3
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "draw_400_1_threads_ms": 51.112887,
+    "draw_400_2_threads_ms": 30.840099,
+    "draw_400_4_threads_ms": 18.47069,
+    "raw": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 23.008830000000003,
+        "min": 22.483040000000003,
+        "max": 35.9826
+      },
+      "write_us": {
+        "median": 33.128119999999996,
+        "min": 31.92746,
+        "max": 36.60122
+      },
+      "bytes": {
+        "median": 2048,
+        "min": 2048,
+        "max": 2048
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 3,
+        "min": 3,
+        "max": 3
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "raw_400_1_threads_ms": 10.465775,
+    "raw_400_2_threads_ms": 7.304015,
+    "raw_400_4_threads_ms": 3.835013,
+    "cpi": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 17.24844,
+        "min": 16.96229,
+        "max": 17.58507
+      },
+      "write_us": {
+        "median": 24.42562,
+        "min": 23.995340000000002,
+        "max": 27.17838
+      },
+      "bytes": {
+        "median": 2113,
+        "min": 2113,
+        "max": 2113
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 5,
+        "min": 5,
+        "max": 5
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "cpi_400_1_threads_ms": 8.182255,
+    "cpi_400_2_threads_ms": 5.616931,
+    "cpi_400_4_threads_ms": 3.015551,
+    "cpx": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 20.51489,
+        "min": 20.21088,
+        "max": 20.91234
+      },
+      "write_us": {
+        "median": 34.43251,
+        "min": 34.006330000000005,
+        "max": 36.86276
+      },
+      "bytes": {
+        "median": 1109,
+        "min": 1109,
+        "max": 1109
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "cpx_400_1_threads_ms": 10.597717,
+    "cpx_400_2_threads_ms": 5.74419,
+    "cpx_400_4_threads_ms": 3.5206299999999997,
+    "pf2": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 32.799189999999996,
+        "min": 31.90968,
+        "max": 33.58315
+      },
+      "write_us": {
+        "median": 53.224560000000004,
+        "min": 51.50304,
+        "max": 56.63152999999999
+      },
+      "bytes": {
+        "median": 4574,
+        "min": 4574,
+        "max": 4574
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 3,
+        "min": 3,
+        "max": 3
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "pf2_400_1_threads_ms": 13.385298,
+    "pf2_400_2_threads_ms": 9.333954,
+    "pf2_400_4_threads_ms": 4.8370940000000004,
+    "fontx2": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 256,
+        "min": 256,
+        "max": 256
+      },
+      "read_us": {
+        "median": 35.604099999999995,
+        "min": 33.73087,
+        "max": 36.68294
+      },
+      "write_us": {
+        "median": 27.22496,
+        "min": 27.027910000000002,
+        "max": 27.69498
+      },
+      "bytes": {
+        "median": 4113,
+        "min": 4113,
+        "max": 4113
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 5,
+        "min": 5,
+        "max": 5
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "fontx2_400_1_threads_ms": 16.084105,
+    "fontx2_400_2_threads_ms": 10.808150000000001,
+    "fontx2_400_4_threads_ms": 6.075692,
+    "hzk": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 17.76116,
+        "min": 16.95776,
+        "max": 18.2989
+      },
+      "write_us": {
+        "median": 24.0401,
+        "min": 23.38268,
+        "max": 24.75654
+      },
+      "bytes": {
+        "median": 2048,
+        "min": 2048,
+        "max": 2048
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "hzk_400_1_threads_ms": 8.801995999999999,
+    "hzk_400_2_threads_ms": 5.163996,
+    "hzk_400_4_threads_ms": 2.851695,
+    "nfnt": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 25.6781,
+        "min": 24.24535,
+        "max": 26.292370000000002
+      },
+      "write_us": {
+        "median": 43.510259999999995,
+        "min": 42.18353,
+        "max": 44.87744
+      },
+      "bytes": {
+        "median": 2988,
+        "min": 2988,
+        "max": 2988
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 12,
+        "min": 12,
+        "max": 12
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "nfnt_400_1_threads_ms": 12.381195,
+    "nfnt_400_2_threads_ms": 7.851189,
+    "nfnt_400_4_threads_ms": 4.180016,
+    "bmfont": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 469.18622000000005,
+        "min": 448.74966,
+        "max": 532.48232
+      },
+      "write_us": {
+        "median": 1613.0832500000001,
+        "min": 1565.51291,
+        "max": 1677.3766500000002
+      },
+      "bytes": {
+        "median": 13847,
+        "min": 13847,
+        "max": 13847
+      },
+      "assets": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "write_losses": {
+        "median": 389,
+        "min": 389,
+        "max": 389
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "bmfont_400_1_threads_ms": 191.082297,
+    "bmfont_400_2_threads_ms": 97.704291,
+    "bmfont_400_4_threads_ms": 54.37853,
+    "sfd": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 135.4856,
+        "min": 129.45971,
+        "max": 142.2737
+      },
+      "write_us": {
+        "median": 200.57634000000002,
+        "min": 189.10502,
+        "max": 223.55436999999998
+      },
+      "bytes": {
+        "median": 13343,
+        "min": 13343,
+        "max": 13343
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 262,
+        "min": 262,
+        "max": 262
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "sfd_400_1_threads_ms": 52.59083,
+    "sfd_400_2_threads_ms": 27.941232,
+    "sfd_400_4_threads_ms": 18.310404,
+    "kbits": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 42.40402,
+        "min": 40.634190000000004,
+        "max": 45.931869999999996
+      },
+      "write_us": {
+        "median": 88.46395000000001,
+        "min": 87.516,
+        "max": 91.99677
+      },
+      "bytes": {
+        "median": 28200,
+        "min": 28200,
+        "max": 28200
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 132,
+        "min": 132,
+        "max": 132
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "kbits_400_1_threads_ms": 18.575546,
+    "kbits_400_2_threads_ms": 13.404171,
+    "kbits_400_4_threads_ms": 6.95577,
+    "pk": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 51.4501,
+        "min": 48.15545,
+        "max": 78.31981999999999
+      },
+      "write_us": {
+        "median": 106.80356,
+        "min": 100.98279999999998,
+        "max": 118.87204
+      },
+      "bytes": {
+        "median": 3476,
+        "min": 3476,
+        "max": 3476
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 263,
+        "min": 263,
+        "max": 263
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "pk_400_1_threads_ms": 21.683493000000002,
+    "pk_400_2_threads_ms": 12.100392999999999,
+    "pk_400_4_threads_ms": 7.732985,
+    "gf": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 99.16616,
+        "min": 97.84952,
+        "max": 101.58037999999999
+      },
+      "write_us": {
+        "median": 213.52884999999998,
+        "min": 202.54108,
+        "max": 220.63807
+      },
+      "bytes": {
+        "median": 17856,
+        "min": 17856,
+        "max": 17856
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 263,
+        "min": 263,
+        "max": 263
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "gf_400_1_threads_ms": 40.882461,
+    "gf_400_2_threads_ms": 24.625096,
+    "gf_400_4_threads_ms": 16.216451,
+    "plan9": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 91.56882999999999,
+        "min": 89.75749,
+        "max": 95.1325
+      },
+      "write_us": {
+        "median": 135.10559,
+        "min": 128.04220999999998,
+        "max": 141.21720000000002
+      },
+      "bytes": {
+        "median": 2957,
+        "min": 2957,
+        "max": 2957
+      },
+      "assets": {
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "write_losses": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "plan9_400_1_threads_ms": 40.284749000000005,
+    "plan9_400_2_threads_ms": 24.283643,
+    "plan9_400_4_threads_ms": 12.796734,
+    "amiga": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 129,
+        "min": 129,
+        "max": 129
+      },
+      "read_us": {
+        "median": 26.813290000000002,
+        "min": 26.63342,
+        "max": 36.811930000000004
+      },
+      "write_us": {
+        "median": 44.801970000000004,
+        "min": 42.618320000000004,
+        "max": 47.08205
+      },
+      "bytes": {
+        "median": 3268,
+        "min": 3268,
+        "max": 3268
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 11,
+        "min": 11,
+        "max": 11
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "amiga_400_1_threads_ms": 10.744057,
+    "amiga_400_2_threads_ms": 8.196982,
+    "amiga_400_4_threads_ms": 4.31376,
+    "gem": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 23.831299999999995,
+        "min": 23.33386,
+        "max": 25.400919999999996
+      },
+      "write_us": {
+        "median": 43.74916,
+        "min": 42.351549999999996,
+        "max": 44.61879
+      },
+      "bytes": {
+        "median": 2650,
+        "min": 2650,
+        "max": 2650
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 8,
+        "min": 8,
+        "max": 8
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "gem_400_1_threads_ms": 11.176335,
+    "gem_400_2_threads_ms": 7.432497,
+    "gem_400_4_threads_ms": 3.949833,
+    "snf": {
+      "source_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "decoded_glyphs": {
+        "median": 128,
+        "min": 128,
+        "max": 128
+      },
+      "read_us": {
+        "median": 45.66059,
+        "min": 44.73813,
+        "max": 46.135169999999995
+      },
+      "write_us": {
+        "median": 90.23244999999999,
+        "min": 87.9151,
+        "max": 92.86226
+      },
+      "bytes": {
+        "median": 10389,
+        "min": 10389,
+        "max": 10389
+      },
+      "assets": {
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "write_losses": {
+        "median": 135,
+        "min": 135,
+        "max": 135
+      },
+      "read_losses": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "snf_400_1_threads_ms": 20.01203,
+    "snf_400_2_threads_ms": 13.908867,
+    "snf_400_4_threads_ms": 7.446999
+  },
+  "records": [
+    {
+      "source_glyphs": 128,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 100,
+      "parallel_reads": 400,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "draw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 177.82148,
+          "write_us": 265.79532,
+          "bytes": 21248,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "draw_400_1_threads_ms": 50.905794,
+        "draw_400_2_threads_ms": 29.387608,
+        "draw_400_4_threads_ms": 18.34885,
+        "raw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 22.483040000000003,
+          "write_us": 32.191720000000004,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "raw_400_1_threads_ms": 9.931465000000001,
+        "raw_400_2_threads_ms": 7.406911,
+        "raw_400_4_threads_ms": 3.808677,
+        "cpi": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 17.24844,
+          "write_us": 24.190610000000003,
+          "bytes": 2113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "cpi_400_1_threads_ms": 9.655329,
+        "cpi_400_2_threads_ms": 5.3783650000000005,
+        "cpi_400_4_threads_ms": 3.0615040000000002,
+        "cpx": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 20.21088,
+          "write_us": 34.82508,
+          "bytes": 1109,
+          "assets": 1,
+          "write_losses": 6,
+          "read_losses": 0
+        },
+        "cpx_400_1_threads_ms": 9.57209,
+        "cpx_400_2_threads_ms": 5.391573,
+        "cpx_400_4_threads_ms": 3.8345990000000003,
+        "pf2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 33.58315,
+          "write_us": 55.69663,
+          "bytes": 4574,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "pf2_400_1_threads_ms": 13.385298,
+        "pf2_400_2_threads_ms": 9.200825,
+        "pf2_400_4_threads_ms": 4.84342,
+        "fontx2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 256,
+          "read_us": 36.68294,
+          "write_us": 27.042440000000003,
+          "bytes": 4113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "fontx2_400_1_threads_ms": 16.51886,
+        "fontx2_400_2_threads_ms": 10.223899,
+        "fontx2_400_4_threads_ms": 5.925027999999999,
+        "hzk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 18.2989,
+          "write_us": 24.75654,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "hzk_400_1_threads_ms": 7.5421000000000005,
+        "hzk_400_2_threads_ms": 5.480458,
+        "hzk_400_4_threads_ms": 2.922088,
+        "nfnt": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 25.6781,
+          "write_us": 42.18353,
+          "bytes": 2988,
+          "assets": 1,
+          "write_losses": 12,
+          "read_losses": 0
+        },
+        "nfnt_400_1_threads_ms": 15.47639,
+        "nfnt_400_2_threads_ms": 7.9048,
+        "nfnt_400_4_threads_ms": 4.224351,
+        "bmfont": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 532.48232,
+          "write_us": 1677.3766500000002,
+          "bytes": 13847,
+          "assets": 2,
+          "write_losses": 389,
+          "read_losses": 0
+        },
+        "bmfont_400_1_threads_ms": 183.075711,
+        "bmfont_400_2_threads_ms": 96.356063,
+        "bmfont_400_4_threads_ms": 55.525835,
+        "sfd": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 129.45971,
+          "write_us": 189.10502,
+          "bytes": 13343,
+          "assets": 1,
+          "write_losses": 262,
+          "read_losses": 0
+        },
+        "sfd_400_1_threads_ms": 50.889841999999994,
+        "sfd_400_2_threads_ms": 26.456317,
+        "sfd_400_4_threads_ms": 18.310404,
+        "kbits": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 42.40402,
+          "write_us": 88.82968,
+          "bytes": 28200,
+          "assets": 1,
+          "write_losses": 132,
+          "read_losses": 0
+        },
+        "kbits_400_1_threads_ms": 18.466528999999998,
+        "kbits_400_2_threads_ms": 14.895911,
+        "kbits_400_4_threads_ms": 6.917146,
+        "pk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 78.31981999999999,
+          "write_us": 118.87204,
+          "bytes": 3476,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "pk_400_1_threads_ms": 21.683493000000002,
+        "pk_400_2_threads_ms": 10.88095,
+        "pk_400_4_threads_ms": 8.02562,
+        "gf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 101.58037999999999,
+          "write_us": 202.54108,
+          "bytes": 17856,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "gf_400_1_threads_ms": 40.882461,
+        "gf_400_2_threads_ms": 23.713971,
+        "gf_400_4_threads_ms": 12.468006,
+        "plan9": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 95.1325,
+          "write_us": 135.10559,
+          "bytes": 2957,
+          "assets": 2,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "plan9_400_1_threads_ms": 39.52639,
+        "plan9_400_2_threads_ms": 26.109638,
+        "plan9_400_4_threads_ms": 15.453191,
+        "amiga": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 129,
+          "read_us": 26.813290000000002,
+          "write_us": 43.55316,
+          "bytes": 3268,
+          "assets": 1,
+          "write_losses": 11,
+          "read_losses": 0
+        },
+        "amiga_400_1_threads_ms": 10.573172000000001,
+        "amiga_400_2_threads_ms": 7.096173,
+        "amiga_400_4_threads_ms": 4.372536,
+        "gem": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.33386,
+          "write_us": 44.61879,
+          "bytes": 2650,
+          "assets": 1,
+          "write_losses": 8,
+          "read_losses": 0
+        },
+        "gem_400_1_threads_ms": 10.317511,
+        "gem_400_2_threads_ms": 6.7902379999999996,
+        "gem_400_4_threads_ms": 4.150188,
+        "snf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 45.66059,
+          "write_us": 92.49123,
+          "bytes": 10389,
+          "assets": 1,
+          "write_losses": 135,
+          "read_losses": 0
+        },
+        "snf_400_1_threads_ms": 20.01203,
+        "snf_400_2_threads_ms": 10.634132,
+        "snf_400_4_threads_ms": 7.461061
+      }
+    },
+    {
+      "source_glyphs": 128,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 100,
+      "parallel_reads": 400,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "draw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 125.77388,
+          "write_us": 227.49355,
+          "bytes": 21248,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "draw_400_1_threads_ms": 50.547353,
+        "draw_400_2_threads_ms": 30.011028,
+        "draw_400_4_threads_ms": 18.47069,
+        "raw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.008830000000003,
+          "write_us": 31.92746,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "raw_400_1_threads_ms": 11.176633,
+        "raw_400_2_threads_ms": 7.196343,
+        "raw_400_4_threads_ms": 3.837645,
+        "cpi": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 17.16941,
+          "write_us": 24.42562,
+          "bytes": 2113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "cpi_400_1_threads_ms": 8.685698,
+        "cpi_400_2_threads_ms": 5.616931,
+        "cpi_400_4_threads_ms": 3.015551,
+        "cpx": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 20.51489,
+          "write_us": 34.43251,
+          "bytes": 1109,
+          "assets": 1,
+          "write_losses": 6,
+          "read_losses": 0
+        },
+        "cpx_400_1_threads_ms": 8.512769,
+        "cpx_400_2_threads_ms": 5.74419,
+        "cpx_400_4_threads_ms": 3.4349480000000003,
+        "pf2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 31.90968,
+          "write_us": 53.224560000000004,
+          "bytes": 4574,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "pf2_400_1_threads_ms": 13.372689,
+        "pf2_400_2_threads_ms": 9.347071999999999,
+        "pf2_400_4_threads_ms": 4.8370940000000004,
+        "fontx2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 256,
+          "read_us": 33.73087,
+          "write_us": 27.22496,
+          "bytes": 4113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "fontx2_400_1_threads_ms": 17.53324,
+        "fontx2_400_2_threads_ms": 11.136801,
+        "fontx2_400_4_threads_ms": 5.881165,
+        "hzk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 16.9723,
+          "write_us": 23.38268,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "hzk_400_1_threads_ms": 7.6896189999999995,
+        "hzk_400_2_threads_ms": 4.902966,
+        "hzk_400_4_threads_ms": 2.836731,
+        "nfnt": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 25.824499999999997,
+          "write_us": 43.510259999999995,
+          "bytes": 2988,
+          "assets": 1,
+          "write_losses": 12,
+          "read_losses": 0
+        },
+        "nfnt_400_1_threads_ms": 13.211382,
+        "nfnt_400_2_threads_ms": 7.851703,
+        "nfnt_400_4_threads_ms": 4.143904,
+        "bmfont": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 467.22502000000003,
+          "write_us": 1608.2416999999998,
+          "bytes": 13847,
+          "assets": 2,
+          "write_losses": 389,
+          "read_losses": 0
+        },
+        "bmfont_400_1_threads_ms": 191.082297,
+        "bmfont_400_2_threads_ms": 97.471015,
+        "bmfont_400_4_threads_ms": 54.079279,
+        "sfd": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 142.16388999999998,
+          "write_us": 216.71189,
+          "bytes": 13343,
+          "assets": 1,
+          "write_losses": 262,
+          "read_losses": 0
+        },
+        "sfd_400_1_threads_ms": 52.59083,
+        "sfd_400_2_threads_ms": 27.941232,
+        "sfd_400_4_threads_ms": 18.514605,
+        "kbits": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 45.931869999999996,
+          "write_us": 88.46395000000001,
+          "bytes": 28200,
+          "assets": 1,
+          "write_losses": 132,
+          "read_losses": 0
+        },
+        "kbits_400_1_threads_ms": 17.832664,
+        "kbits_400_2_threads_ms": 10.312091,
+        "kbits_400_4_threads_ms": 6.95577,
+        "pk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 48.15545,
+          "write_us": 104.46775,
+          "bytes": 3476,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "pk_400_1_threads_ms": 23.960915999999997,
+        "pk_400_2_threads_ms": 12.100392999999999,
+        "pk_400_4_threads_ms": 8.134832999999999,
+        "gf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 97.84952,
+          "write_us": 213.52884999999998,
+          "bytes": 17856,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "gf_400_1_threads_ms": 40.617391000000005,
+        "gf_400_2_threads_ms": 22.194872,
+        "gf_400_4_threads_ms": 16.216451,
+        "plan9": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 90.15831,
+          "write_us": 137.59406,
+          "bytes": 2957,
+          "assets": 2,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "plan9_400_1_threads_ms": 44.85118,
+        "plan9_400_2_threads_ms": 24.36483,
+        "plan9_400_4_threads_ms": 15.303080999999999,
+        "amiga": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 129,
+          "read_us": 36.811930000000004,
+          "write_us": 45.455479999999994,
+          "bytes": 3268,
+          "assets": 1,
+          "write_losses": 11,
+          "read_losses": 0
+        },
+        "amiga_400_1_threads_ms": 10.744057,
+        "amiga_400_2_threads_ms": 8.196982,
+        "amiga_400_4_threads_ms": 4.426719,
+        "gem": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.831299999999995,
+          "write_us": 42.351549999999996,
+          "bytes": 2650,
+          "assets": 1,
+          "write_losses": 8,
+          "read_losses": 0
+        },
+        "gem_400_1_threads_ms": 11.309389,
+        "gem_400_2_threads_ms": 7.478649000000001,
+        "gem_400_4_threads_ms": 3.949833,
+        "snf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 46.135169999999995,
+          "write_us": 92.86226,
+          "bytes": 10389,
+          "assets": 1,
+          "write_losses": 135,
+          "read_losses": 0
+        },
+        "snf_400_1_threads_ms": 18.482598,
+        "snf_400_2_threads_ms": 14.225473000000001,
+        "snf_400_4_threads_ms": 7.649381
+      }
+    },
+    {
+      "source_glyphs": 128,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 100,
+      "parallel_reads": 400,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "draw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 129.34065,
+          "write_us": 233.19141000000002,
+          "bytes": 21248,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "draw_400_1_threads_ms": 53.068315999999996,
+        "draw_400_2_threads_ms": 33.873464,
+        "draw_400_4_threads_ms": 24.152823,
+        "raw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 35.9826,
+          "write_us": 36.60122,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "raw_400_1_threads_ms": 9.965468999999999,
+        "raw_400_2_threads_ms": 7.2517450000000006,
+        "raw_400_4_threads_ms": 3.9121879999999996,
+        "cpi": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 17.55168,
+          "write_us": 23.995340000000002,
+          "bytes": 2113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "cpi_400_1_threads_ms": 7.141997,
+        "cpi_400_2_threads_ms": 5.768943999999999,
+        "cpi_400_4_threads_ms": 2.912349,
+        "cpx": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 20.91234,
+          "write_us": 36.86276,
+          "bytes": 1109,
+          "assets": 1,
+          "write_losses": 6,
+          "read_losses": 0
+        },
+        "cpx_400_1_threads_ms": 12.225783,
+        "cpx_400_2_threads_ms": 4.573707,
+        "cpx_400_4_threads_ms": 3.5206299999999997,
+        "pf2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 33.24994,
+          "write_us": 56.63152999999999,
+          "bytes": 4574,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "pf2_400_1_threads_ms": 12.787817,
+        "pf2_400_2_threads_ms": 6.687767,
+        "pf2_400_4_threads_ms": 4.850603,
+        "fontx2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 256,
+          "read_us": 36.08086,
+          "write_us": 27.393539999999998,
+          "bytes": 4113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "fontx2_400_1_threads_ms": 15.457637,
+        "fontx2_400_2_threads_ms": 10.808150000000001,
+        "fontx2_400_4_threads_ms": 6.075692,
+        "hzk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 17.76116,
+          "write_us": 23.52161,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "hzk_400_1_threads_ms": 8.801995999999999,
+        "hzk_400_2_threads_ms": 5.163996,
+        "hzk_400_4_threads_ms": 3.196277,
+        "nfnt": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 26.292370000000002,
+          "write_us": 44.70437,
+          "bytes": 2988,
+          "assets": 1,
+          "write_losses": 12,
+          "read_losses": 0
+        },
+        "nfnt_400_1_threads_ms": 11.500326999999999,
+        "nfnt_400_2_threads_ms": 7.851189,
+        "nfnt_400_4_threads_ms": 4.180016,
+        "bmfont": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 448.74966,
+          "write_us": 1565.51291,
+          "bytes": 13847,
+          "assets": 2,
+          "write_losses": 389,
+          "read_losses": 0
+        },
+        "bmfont_400_1_threads_ms": 185.19365,
+        "bmfont_400_2_threads_ms": 97.704291,
+        "bmfont_400_4_threads_ms": 52.629998,
+        "sfd": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 135.4856,
+          "write_us": 200.57634000000002,
+          "bytes": 13343,
+          "assets": 1,
+          "write_losses": 262,
+          "read_losses": 0
+        },
+        "sfd_400_1_threads_ms": 48.45475,
+        "sfd_400_2_threads_ms": 29.562012,
+        "sfd_400_4_threads_ms": 17.848817999999998,
+        "kbits": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 43.91151,
+          "write_us": 87.81357,
+          "bytes": 28200,
+          "assets": 1,
+          "write_losses": 132,
+          "read_losses": 0
+        },
+        "kbits_400_1_threads_ms": 18.575546,
+        "kbits_400_2_threads_ms": 13.404171,
+        "kbits_400_4_threads_ms": 6.951424,
+        "pk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 51.4501,
+          "write_us": 106.80356,
+          "bytes": 3476,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "pk_400_1_threads_ms": 20.33413,
+        "pk_400_2_threads_ms": 14.465423999999999,
+        "pk_400_4_threads_ms": 7.732985,
+        "gf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 99.16616,
+          "write_us": 217.89683000000002,
+          "bytes": 17856,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "gf_400_1_threads_ms": 39.921532,
+        "gf_400_2_threads_ms": 27.100223,
+        "gf_400_4_threads_ms": 14.771087,
+        "plan9": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 93.73753,
+          "write_us": 132.95322,
+          "bytes": 2957,
+          "assets": 2,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "plan9_400_1_threads_ms": 42.976224,
+        "plan9_400_2_threads_ms": 23.767674999999997,
+        "plan9_400_4_threads_ms": 11.138743,
+        "amiga": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 129,
+          "read_us": 26.72074,
+          "write_us": 44.801970000000004,
+          "bytes": 3268,
+          "assets": 1,
+          "write_losses": 11,
+          "read_losses": 0
+        },
+        "amiga_400_1_threads_ms": 10.230513,
+        "amiga_400_2_threads_ms": 8.394817,
+        "amiga_400_4_threads_ms": 4.296801,
+        "gem": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 25.400919999999996,
+          "write_us": 43.33602,
+          "bytes": 2650,
+          "assets": 1,
+          "write_losses": 8,
+          "read_losses": 0
+        },
+        "gem_400_1_threads_ms": 11.176335,
+        "gem_400_2_threads_ms": 7.432497,
+        "gem_400_4_threads_ms": 3.991451,
+        "snf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 45.96272999999999,
+          "write_us": 90.23244999999999,
+          "bytes": 10389,
+          "assets": 1,
+          "write_losses": 135,
+          "read_losses": 0
+        },
+        "snf_400_1_threads_ms": 20.964596,
+        "snf_400_2_threads_ms": 11.909912,
+        "snf_400_4_threads_ms": 6.088006
+      }
+    },
+    {
+      "source_glyphs": 128,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 100,
+      "parallel_reads": 400,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "draw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 140.45909,
+          "write_us": 234.75606,
+          "bytes": 21248,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "draw_400_1_threads_ms": 53.076263,
+        "draw_400_2_threads_ms": 34.510605999999996,
+        "draw_400_4_threads_ms": 17.072212999999998,
+        "raw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 22.7108,
+          "write_us": 33.128119999999996,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "raw_400_1_threads_ms": 13.653416,
+        "raw_400_2_threads_ms": 7.36263,
+        "raw_400_4_threads_ms": 3.835013,
+        "cpi": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 16.96229,
+          "write_us": 24.61817,
+          "bytes": 2113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "cpi_400_1_threads_ms": 8.182255,
+        "cpi_400_2_threads_ms": 5.886315,
+        "cpi_400_4_threads_ms": 2.9256719999999996,
+        "cpx": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 20.312300000000004,
+          "write_us": 34.17989,
+          "bytes": 1109,
+          "assets": 1,
+          "write_losses": 6,
+          "read_losses": 0
+        },
+        "cpx_400_1_threads_ms": 10.597717,
+        "cpx_400_2_threads_ms": 6.520687,
+        "cpx_400_4_threads_ms": 3.488901,
+        "pf2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 32.799189999999996,
+          "write_us": 51.50304,
+          "bytes": 4574,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "pf2_400_1_threads_ms": 13.469603,
+        "pf2_400_2_threads_ms": 9.417228999999999,
+        "pf2_400_4_threads_ms": 4.787963,
+        "fontx2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 256,
+          "read_us": 34.48026,
+          "write_us": 27.69498,
+          "bytes": 4113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "fontx2_400_1_threads_ms": 14.971863,
+        "fontx2_400_2_threads_ms": 11.827529,
+        "fontx2_400_4_threads_ms": 6.161472000000001,
+        "hzk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 18.19576,
+          "write_us": 24.3667,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "hzk_400_1_threads_ms": 10.81273,
+        "hzk_400_2_threads_ms": 4.151936999999999,
+        "hzk_400_4_threads_ms": 2.851695,
+        "nfnt": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 25.156100000000002,
+          "write_us": 42.225559999999994,
+          "bytes": 2988,
+          "assets": 1,
+          "write_losses": 12,
+          "read_losses": 0
+        },
+        "nfnt_400_1_threads_ms": 12.381195,
+        "nfnt_400_2_threads_ms": 7.840711000000001,
+        "nfnt_400_4_threads_ms": 4.1658479999999996,
+        "bmfont": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 481.86616000000004,
+          "write_us": 1613.0832500000001,
+          "bytes": 13847,
+          "assets": 2,
+          "write_losses": 389,
+          "read_losses": 0
+        },
+        "bmfont_400_1_threads_ms": 194.16764,
+        "bmfont_400_2_threads_ms": 101.18571,
+        "bmfont_400_4_threads_ms": 54.37853,
+        "sfd": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 133.65944,
+          "write_us": 195.82865,
+          "bytes": 13343,
+          "assets": 1,
+          "write_losses": 262,
+          "read_losses": 0
+        },
+        "sfd_400_1_threads_ms": 54.631063,
+        "sfd_400_2_threads_ms": 30.060071,
+        "sfd_400_4_threads_ms": 18.289532,
+        "kbits": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 41.96816,
+          "write_us": 87.516,
+          "bytes": 28200,
+          "assets": 1,
+          "write_losses": 132,
+          "read_losses": 0
+        },
+        "kbits_400_1_threads_ms": 19.046457,
+        "kbits_400_2_threads_ms": 10.905152,
+        "kbits_400_4_threads_ms": 7.432272,
+        "pk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 48.62933,
+          "write_us": 100.98279999999998,
+          "bytes": 3476,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "pk_400_1_threads_ms": 21.754776,
+        "pk_400_2_threads_ms": 12.566238,
+        "pk_400_4_threads_ms": 7.709405,
+        "gf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 98.01654,
+          "write_us": 202.57101999999998,
+          "bytes": 17856,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "gf_400_1_threads_ms": 40.944404,
+        "gf_400_2_threads_ms": 24.625096,
+        "gf_400_4_threads_ms": 16.445584999999998,
+        "plan9": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 89.75749,
+          "write_us": 128.04220999999998,
+          "bytes": 2957,
+          "assets": 2,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "plan9_400_1_threads_ms": 38.576283000000004,
+        "plan9_400_2_threads_ms": 20.369038,
+        "plan9_400_4_threads_ms": 12.656198999999999,
+        "amiga": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 129,
+          "read_us": 26.63342,
+          "write_us": 47.08205,
+          "bytes": 3268,
+          "assets": 1,
+          "write_losses": 11,
+          "read_losses": 0
+        },
+        "amiga_400_1_threads_ms": 11.588543999999999,
+        "amiga_400_2_threads_ms": 8.200366,
+        "amiga_400_4_threads_ms": 4.3025850000000005,
+        "gem": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.7031,
+          "write_us": 43.74916,
+          "bytes": 2650,
+          "assets": 1,
+          "write_losses": 8,
+          "read_losses": 0
+        },
+        "gem_400_1_threads_ms": 11.665221,
+        "gem_400_2_threads_ms": 7.395024,
+        "gem_400_4_threads_ms": 3.901839,
+        "snf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 45.444810000000004,
+          "write_us": 87.9151,
+          "bytes": 10389,
+          "assets": 1,
+          "write_losses": 135,
+          "read_losses": 0
+        },
+        "snf_400_1_threads_ms": 22.972759,
+        "snf_400_2_threads_ms": 14.20627,
+        "snf_400_4_threads_ms": 7.403696
+      }
+    },
+    {
+      "source_glyphs": 128,
+      "width": 8,
+      "height": 16,
+      "warmup": 5,
+      "iterations": 100,
+      "parallel_reads": 400,
+      "parallel_thread_creation_timed": false,
+      "timings": {
+        "draw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 126.79231,
+          "write_us": 227.62768,
+          "bytes": 21248,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "draw_400_1_threads_ms": 51.112887,
+        "draw_400_2_threads_ms": 30.840099,
+        "draw_400_4_threads_ms": 18.661621,
+        "raw": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.47295,
+          "write_us": 33.76059,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "raw_400_1_threads_ms": 10.465775,
+        "raw_400_2_threads_ms": 7.304015,
+        "raw_400_4_threads_ms": 3.7394160000000003,
+        "cpi": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 17.58507,
+          "write_us": 27.17838,
+          "bytes": 2113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "cpi_400_1_threads_ms": 7.963102999999999,
+        "cpi_400_2_threads_ms": 5.562967,
+        "cpi_400_4_threads_ms": 3.1192699999999998,
+        "cpx": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 20.52039,
+          "write_us": 34.006330000000005,
+          "bytes": 1109,
+          "assets": 1,
+          "write_losses": 6,
+          "read_losses": 0
+        },
+        "cpx_400_1_threads_ms": 11.065811,
+        "cpx_400_2_threads_ms": 6.956305,
+        "cpx_400_4_threads_ms": 3.7861000000000002,
+        "pf2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 32.29515,
+          "write_us": 53.14156,
+          "bytes": 4574,
+          "assets": 1,
+          "write_losses": 3,
+          "read_losses": 0
+        },
+        "pf2_400_1_threads_ms": 17.945576000000003,
+        "pf2_400_2_threads_ms": 9.333954,
+        "pf2_400_4_threads_ms": 4.754726,
+        "fontx2": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 256,
+          "read_us": 35.604099999999995,
+          "write_us": 27.027910000000002,
+          "bytes": 4113,
+          "assets": 1,
+          "write_losses": 5,
+          "read_losses": 0
+        },
+        "fontx2_400_1_threads_ms": 16.084105,
+        "fontx2_400_2_threads_ms": 10.607808,
+        "fontx2_400_4_threads_ms": 6.0757959999999995,
+        "hzk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 16.95776,
+          "write_us": 24.0401,
+          "bytes": 2048,
+          "assets": 1,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "hzk_400_1_threads_ms": 8.860575,
+        "hzk_400_2_threads_ms": 5.417511,
+        "hzk_400_4_threads_ms": 2.818224,
+        "nfnt": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 24.24535,
+          "write_us": 44.87744,
+          "bytes": 2988,
+          "assets": 1,
+          "write_losses": 12,
+          "read_losses": 0
+        },
+        "nfnt_400_1_threads_ms": 10.324865,
+        "nfnt_400_2_threads_ms": 6.347956,
+        "nfnt_400_4_threads_ms": 4.486750000000001,
+        "bmfont": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 469.18622000000005,
+          "write_us": 1622.3603100000003,
+          "bytes": 13847,
+          "assets": 2,
+          "write_losses": 389,
+          "read_losses": 0
+        },
+        "bmfont_400_1_threads_ms": 194.491364,
+        "bmfont_400_2_threads_ms": 108.39117900000001,
+        "bmfont_400_4_threads_ms": 54.851267,
+        "sfd": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 142.2737,
+          "write_us": 223.55436999999998,
+          "bytes": 13343,
+          "assets": 1,
+          "write_losses": 262,
+          "read_losses": 0
+        },
+        "sfd_400_1_threads_ms": 53.669573,
+        "sfd_400_2_threads_ms": 27.227849,
+        "sfd_400_4_threads_ms": 19.209094,
+        "kbits": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 40.634190000000004,
+          "write_us": 91.99677,
+          "bytes": 28200,
+          "assets": 1,
+          "write_losses": 132,
+          "read_losses": 0
+        },
+        "kbits_400_1_threads_ms": 18.703355000000002,
+        "kbits_400_2_threads_ms": 13.465248,
+        "kbits_400_4_threads_ms": 6.964013,
+        "pk": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 55.67295,
+          "write_us": 111.34449,
+          "bytes": 3476,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "pk_400_1_threads_ms": 20.887287,
+        "pk_400_2_threads_ms": 11.559142999999999,
+        "pk_400_4_threads_ms": 7.619174,
+        "gf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 100.73273,
+          "write_us": 220.63807,
+          "bytes": 17856,
+          "assets": 1,
+          "write_losses": 263,
+          "read_losses": 0
+        },
+        "gf_400_1_threads_ms": 42.815871,
+        "gf_400_2_threads_ms": 26.18338,
+        "gf_400_4_threads_ms": 16.24896,
+        "plan9": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 91.56882999999999,
+          "write_us": 141.21720000000002,
+          "bytes": 2957,
+          "assets": 2,
+          "write_losses": 1,
+          "read_losses": 0
+        },
+        "plan9_400_1_threads_ms": 40.284749000000005,
+        "plan9_400_2_threads_ms": 24.283643,
+        "plan9_400_4_threads_ms": 12.796734,
+        "amiga": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 129,
+          "read_us": 27.4249,
+          "write_us": 42.618320000000004,
+          "bytes": 3268,
+          "assets": 1,
+          "write_losses": 11,
+          "read_losses": 0
+        },
+        "amiga_400_1_threads_ms": 10.838522,
+        "amiga_400_2_threads_ms": 8.097638,
+        "amiga_400_4_threads_ms": 4.31376,
+        "gem": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 23.99009,
+          "write_us": 43.91845,
+          "bytes": 2650,
+          "assets": 1,
+          "write_losses": 8,
+          "read_losses": 0
+        },
+        "gem_400_1_threads_ms": 9.628478,
+        "gem_400_2_threads_ms": 8.315681,
+        "gem_400_4_threads_ms": 3.8572010000000003,
+        "snf": {
+          "source_glyphs": 128,
+          "decoded_glyphs": 128,
+          "read_us": 44.73813,
+          "write_us": 88.36142,
+          "bytes": 10389,
+          "assets": 1,
+          "write_losses": 135,
+          "read_losses": 0
+        },
+        "snf_400_1_threads_ms": 17.709322999999998,
+        "snf_400_2_threads_ms": 13.908867,
+        "snf_400_4_threads_ms": 7.446999
+      }
+    }
+  ],
+  "environment_note": "Task-owned builds, fuzzers and oracle processes stopped. Unrelated desktop/browser processes retained; shared Linux workstation, not an isolated benchmark host."
+}

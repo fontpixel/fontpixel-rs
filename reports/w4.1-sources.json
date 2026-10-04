@@ -1,0 +1,110 @@
+{
+  "retdec_commit": "9450585772e6f1c18e5f0b2ad5518a18d6bce71e",
+  "retdec_license": "MIT, Copyright (c) 2017 Avast Software",
+  "retdec_files": [
+    {
+      "url": "https://raw.githubusercontent.com/avast/retdec/9450585772e6f1c18e5f0b2ad5518a18d6bce71e/LICENSE",
+      "sha256": "dee0b9cc91d1b22acc4db49e5beef35f0e98d407f8edcb2abdcb64d1c45886f1"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/avast/retdec/9450585772e6f1c18e5f0b2ad5518a18d6bce71e/src/unpacker/decompression/nrv/nrv2b_data.cpp",
+      "sha256": "1ee9bbadf5a6ba79c1ccd33ea95d3ae6d178482c577aa3d2c30e852fe546a4cb"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/avast/retdec/9450585772e6f1c18e5f0b2ad5518a18d6bce71e/src/unpackertool/plugins/upx/upx_stub.cpp",
+      "sha256": "16316362fc1f751aaf6c334b54e8a3209e319dc14e8af0bf513fd6219301de15"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/avast/retdec/9450585772e6f1c18e5f0b2ad5518a18d6bce71e/src/unpackertool/plugins/upx/unfilter.cpp",
+      "sha256": "5586bc5acb7950e78667ce8462fb834f2e95f5cad431bf70f32f65b76e2b0319"
+    }
+  ],
+  "primary_format_sources": [
+    "https://www.seasip.info/DOS/CPI/cpi.html",
+    "https://sourceforge.net/p/freedos/mailman/message/7492824/",
+    "https://unifoundry.com/unifont/doc/unifont.pdf",
+    "https://worldofspectrum.org/ZXBasicManual/",
+    "https://github.com/Konamiman/MSX2-Technical-Handbook",
+    "https://vice-emu.sourceforge.io/vice_17.html",
+    "https://home-2002.code-cop.org/c64/"
+  ],
+  "cpidos_url": "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/cpidos.zip",
+  "cpidos_sha256": "02baf45c4173958be283602085ec560e2a7bebe31976b8dde9adebce06309c38",
+  "cpidos_license": "GPL-2.0; downloaded external test inputs only, no bytes committed",
+  "upx_test_binary_url": "https://github.com/upx/upx/releases/download/v5.2.1/upx-5.2.1-amd64_linux.tar.xz",
+  "upx_test_archive_sha256": "402162aad30af47e60dbd767fb2e64ca394ace9727ba1f40283641f1d1b91657",
+  "c64_gallery_url": "https://home-2002.code-cop.org/c64/download/all_64c.zip",
+  "c64_gallery_sha256": "49a7bde696a84b28614b214126ace74397bb491772289a461f3491b0336fc776",
+  "c64_gallery_license": "varied original artwork rights; external test inputs only, no bytes committed",
+  "c64_gallery_prefixes": {
+    "0000": 1,
+    "0020": 152,
+    "0028": 15,
+    "0030": 30,
+    "0038": 374,
+    "0040": 5,
+    "0048": 1,
+    "0050": 1,
+    "0058": 3,
+    "0060": 5,
+    "0068": 3,
+    "0070": 1,
+    "0080": 1,
+    "0088": 3,
+    "00a8": 1,
+    "00b8": 1,
+    "00c0": 4,
+    "00c8": 5,
+    "00e0": 3,
+    "1800": 3,
+    "3000": 1,
+    "6000": 1,
+    "e7e7": 1
+  },
+  "c64_gallery_files": 615,
+  "cpx_writer_primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/upx/upx/b4bdabf638ab6e3715a292182a9c613a4716d7c5/src/p_com.cpp",
+      "sha256": "a4508b07f4871bd2287fb2bd0ee48f90b71decbb944716dba49fbe31d544a0c4",
+      "use": "consumer wire constraints only; no implementation copied"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/upx/upx/b4bdabf638ab6e3715a292182a9c613a4716d7c5/src/packhead.cpp",
+      "sha256": "f1a193bbe2ee8e8faadd5a43d5488a3ea4efd8f4b35e92b68cae1843c0dc0984",
+      "use": "consumer wire constraints only; no implementation copied"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/upx/upx/b4bdabf638ab6e3715a292182a9c613a4716d7c5/src/work.cpp",
+      "sha256": "52dce59b46a3cbdf7e966362097095d23872c289cac778aafd62b4054e3d33ed",
+      "use": "consumer wire constraints only; no implementation copied"
+    }
+  ],
+  "mode_oracle": {
+    "url": "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.4/base/mode.zip",
+    "archive_sha256": "c92e07e9bea8f132437c542184c0cadc7fbabe3543174209c2799407ab671bdb",
+    "source": "SOURCE/MODE/CPITRICK.ASM",
+    "source_sha256": "c436f3827c6ce651587761686105dc855ecef6553800cbc31f05f70431ff744f",
+    "binary_sha256": "541fe4d1e2f77ec1f98905ff364f4de45a17966d1c5ba8ff1b401e06cbbb0af9",
+    "license": "GPL-2.0-or-later; external unmodified test oracle only, no source or binary bytes committed"
+  },
+  "original_fontpixel_stub": {
+    "license": "MIT, original project code",
+    "source": "crates/fontpixel/src/formats/cpi/stub.asm",
+    "embedded": "crates/fontpixel/src/formats/cpi/stub.rs",
+    "assembled_sha256": "4aff91114044dfe9ca25b154a5723875fafffa67600ef848bea762af5ae7d06a",
+    "bootstrap_bytes": 39,
+    "decoder_bytes": 96,
+    "build_dependency": false
+  },
+  "nasm_oracle": {
+    "url": "https://archive.ubuntu.com/ubuntu/pool/universe/n/nasm/nasm_2.16.01-1build1_amd64.deb",
+    "sha256": "22eede0f2dd62343b0298182f62f7485704fe02f166395b02c92a8883377e0b3",
+    "checksum_source": "https://packages.ubuntu.com/noble/amd64/nasm/download",
+    "version": "NASM version 2.16.01\n"
+  },
+  "unicorn_oracle": {
+    "version": "2.1.4",
+    "url": "https://github.com/unicorn-engine/unicorn",
+    "use": "external test emulator only, no production dependency"
+  }
+}

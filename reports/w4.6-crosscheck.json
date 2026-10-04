@@ -1,0 +1,67 @@
+{
+  "monobit": "0.54",
+  "sample": "samples/fontpixel-catalogue/tom-thumb/tom-thumb.bdf",
+  "sample_sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b",
+  "checks": [
+    {
+      "font": "original",
+      "format": "amiga",
+      "glyphs": 2,
+      "oracle_sha256": "8add26920da39aaa3dd7d3a4bfa74ba423c0c76dce7f979f0e24f1cff607321a",
+      "rust_sha256": "c7e6738c8daeb3fc71729b30bec7966de7b2b1e857f75908a0ed0547b6343684"
+    },
+    {
+      "font": "original",
+      "format": "gem",
+      "glyphs": 2,
+      "oracle_sha256": "992dbc62d1b005b9a7e6f23ff5f30ee33b3c91f35d9be3aa1ae3117380524827",
+      "rust_sha256": "992dbc62d1b005b9a7e6f23ff5f30ee33b3c91f35d9be3aa1ae3117380524827"
+    },
+    {
+      "font": "original",
+      "format": "snf",
+      "endian": "<",
+      "glyphs": 2,
+      "oracle_sha256": "86991a5b7b5efe40a6a0abd4796fd0a53955939f0b0541b366903403d368eebc",
+      "rust_sha256": "c915d763b8fede536e78eb1f702b50a23250fbf928c45ae4d732345d395cc4be"
+    },
+    {
+      "font": "original",
+      "format": "snf",
+      "endian": ">",
+      "glyphs": 2,
+      "oracle_sha256": "89fca8e5ad756149e5b8a34a6376ea9a85e8dcd07b2d0193210a1d647c64f0fb",
+      "rust_sha256": "c915d763b8fede536e78eb1f702b50a23250fbf928c45ae4d732345d395cc4be"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "amiga",
+      "glyphs": 95,
+      "oracle_sha256": "f30f750f61a1a7611bddb24402cc593515efdf9f44aba4f6da4e368d0dd75353",
+      "rust_sha256": "492cc9b339d3b36661d57fb354d3b77e1cccedc3cc9195feccf4866dcdee0085"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "gem",
+      "glyphs": 95,
+      "oracle_sha256": "c5418befefb15a34b22212e68b37ea11c79b5e3e098b5526d5dfba1767db6344",
+      "rust_sha256": "c5418befefb15a34b22212e68b37ea11c79b5e3e098b5526d5dfba1767db6344"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "snf",
+      "endian": "<",
+      "glyphs": 95,
+      "oracle_sha256": "0e1c2243d6e0f9478872b8ba068f4f82b85ce3e0c33ce799f93d164cc9865243",
+      "rust_sha256": "be01b270de08dd010539c834fac0bb64a0aa78661143e8b6527349ba88c94faf"
+    },
+    {
+      "font": "tom-thumb",
+      "format": "snf",
+      "endian": ">",
+      "glyphs": 95,
+      "oracle_sha256": "1ed360a87d8740ec5c0fc1ea041b4d6198bbca2317a1e76efeca6933c1cdd00b",
+      "rust_sha256": "be01b270de08dd010539c834fac0bb64a0aa78661143e8b6527349ba88c94faf"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "license": "Original fixtures, project MIT license",
+  "envelope": "BMFont: u32le descriptor length, descriptor, one PNG shared by all referenced page paths",
+  "seeds": {
+    "bmfont/binary": {
+      "bytes": 195,
+      "sha256": "a4cb40eb6a2fa8dbde08a9747cd6a6a26b4bf8cb7d81da12fd7d5e91d15da29d"
+    },
+    "bmfont/text-1": {
+      "bytes": 503,
+      "sha256": "5251bbf6e60281f0cf656a17a9e092bebdad63975cb61ba052b294ecf47ce7c0"
+    },
+    "bmfont/text-15": {
+      "bytes": 504,
+      "sha256": "bd7f525cd8b7317c1212ca1714c903b773dbe7853988ad1c382d949e592da9e1"
+    },
+    "bmfont/text-2": {
+      "bytes": 503,
+      "sha256": "98bb90a83ca9d2008f1abf6388c62ed8632f507c347e10c6c40a4adb48539e80"
+    },
+    "bmfont/text-4": {
+      "bytes": 503,
+      "sha256": "390ea247c2462e2ec265e37d9e35e0cd332bbcfe7b11e25e321d8c1aae645747"
+    },
+    "bmfont/text-8": {
+      "bytes": 503,
+      "sha256": "df875300ad29addf9f723adbb3962371c0eb50e5764f9beef74e65291634b1d2"
+    },
+    "bmfont/xml": {
+      "bytes": 400,
+      "sha256": "b4345d2100676aadde74edc7c129775ff72b1200584da1f51d798aedad41f322"
+    },
+    "kbits/gray-names": {
+      "bytes": 105,
+      "sha256": "4bc1cfcb154f57111ad1564eadd221c7a518a0d209026d3e00b1e557d889abd2"
+    },
+    "sfd/depth-1": {
+      "bytes": 213,
+      "sha256": "57914094d5571af7b18235dfa630250b81d9f02b623205826baf9f8673efb278"
+    },
+    "sfd/depth-2": {
+      "bytes": 213,
+      "sha256": "83a560fc5157ec46e9599fa680683ec6e8943e9fbd3675732a5f028e2ce07dcc"
+    },
+    "sfd/depth-4": {
+      "bytes": 213,
+      "sha256": "0b4d283d2b0702e3f22adc298270f03f18d984b711c19cb628e90de4696b9486"
+    },
+    "sfd/depth-8": {
+      "bytes": 213,
+      "sha256": "a7b05239f01fb372e7eb4a8282093c730fd28a5a558cc1d2143aeea4b6a9a9bb"
+    }
+  }
+}

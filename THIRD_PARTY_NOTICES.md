@@ -366,3 +366,69 @@ was copied. Header/bitmap fixtures and fuzz seeds are original synthetic data.
 The oracle adapter preserves raw artifacts and changes only the missing
 HBF_END_FONT terminator and absolute bitmap path. HBF adds no production
 dependency or third-party font artwork.
+
+## W4.1 DOS, draw and raw format references
+
+Unifont's public hexdraw description and John Elliott's CPI specification inform
+the original draw/raw/CPI codecs. FreeDOS CPX files and external UPX are used
+only as interoperability oracles outside the repository; their executable stubs
+are neither imported nor executed by the library. The bounded native NRV2B
+decoder was checked against Avast RetDec's MIT implementation, copyright 2017
+Avast Software. Its complete notice is retained in `LICENSES/RetDec-MIT.txt`.
+Source links, supported UPX methods and test artifacts are documented in
+`docs/formats/cpi.md` and the W4.1 report. Unit/fuzz fixtures are original.
+The CPX writer's NRV encoder and 8086 loader are original MIT project code;
+the assembly and embedded bytes remain reviewable and reproducible with NASM.
+NASM, Unicorn, and FreeDOS MODE's GPL consumer source are external development
+or interoperability tools only. No FreeDOS consumer code or UPX stub is included
+in the library, and CPX conversion has no runtime dependency on those tools.
+
+## W4.2 PF2, FONTX2 and HZK references
+
+PF2 follows published GRUB file-format declarations and documentation; no GPL
+implementation is copied. Installed GRUB tools and fonts serve only as external
+test oracles. FONTX2/HZK use public layouts and independent CPython charset and
+grid checks, with monobit as a separate FONTX/raw oracle. The author's Misaki
+FONTX distribution has the M+ unrestricted use/copy/modify/distribute license;
+its pinned URL, archive hash and license link appear in
+`reports/w4.2-validation.md`. Downloads stay outside this repository. Supplied
+OFL Tong fonts and MIT catalogue parsers remain read-only external inputs.
+
+## W4.3 Macintosh references
+
+Apple's Inside Macintosh, AppleSingle/Double and the published MacBinary
+specifications establish the NFNT/FONT/FOND, ColorTable and container layouts.
+The Rust implementation and fixtures are original. MIT monobit is an independent
+oracle (Rob Hagemans, 2019–2026; its NFNT writer also credits Kelvin Sherlock,
+2023). Pillow independently checks color-to-coverage projection. Public-domain
+ufond and CiderPress2 fixtures are fetched only for validation, with provenance
+and hashes recorded by the W4.3 crosscheck. None is bundled as production data.
+
+## W4.4 editor format references
+
+AngelCode's BMFont specification and FontForge's SFD format documentation define
+the public wire layouts. Bits'N'Picas' MPL-licensed Kbits/SFD tooling is used as
+format evidence and an independent executable oracle; no MPL implementation is
+copied. FontForge and monobit provide separate black-box checks, with differences
+from the published prose recorded explicitly. BMFont reuses the previously
+credited `png` and `xmlparser` dependencies. The bounded parser, atlas writer,
+modified UTF-8, ASCII85 and original wire/fuzz fixtures are project code.
+
+## W4.5 TeX and Plan 9 references
+
+Knuth's published PK/GF format descriptions and Plan 9's font/image manuals
+establish the original Rust codecs. TeX Live executables are test-only oracles;
+no TeX or GPL implementation is included. Plan 9's public-domain fixed font and
+the BSD-licensed Go `golang.org/x/image/font/plan9font` reader provide independent
+interoperability checks outside the production dependency graph. Exact artifacts
+and source links are retained in the format documents and W4.5 evidence.
+
+## W4.6 Amiga, GEM and SNF references
+
+Published Amiga/MorphOS header declarations, Atari VDI FONT_HDR documentation
+and permissive X11/DEC SNF declarations establish field layouts. MIT monobit is
+an independent Amiga/GEM oracle; authored Python SNF wire encoders/decoders check
+machine layouts. Rust implementation and fixtures are original; no Amiga, Atari
+or GPL runtime is embedded. The supplied MIT Tom Thumb sample is read-only
+validation input. Per-format source links and any oracle limitations are in
+`docs/formats/{amiga,gem,snf}.md` and the W4.6 report.

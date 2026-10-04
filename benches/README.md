@@ -25,3 +25,31 @@ image/C example with a different output name. These Linux measurements include
 binary identity, peak RSS, raw records and medians; they do not substitute for
 full-font or whole-catalogue benchmarks. Final measurements and exact fixture
 dimensions are in `reports/phase-3.md` and `reports/phase3-evidence/`.
+
+Phase 4 uses `p2_timing` for sixteen formats plus CPX: 128 original 8×16 glyphs,
+five warmups, 100 reads/writes and 400 independent reads on 1/2/4 threads per
+process. Before timing, every original raster and code mapping is checked.
+The separate `w44_timing` example measures the complete 38,653-glyph Tong SC
+font in BMFont, SFD and Kbits. Its five-process runner measures one read/write
+per process, without explicit warmups; BDF parsing stays outside the timers.
+
+```sh
+source scripts/local-env.sh
+cargo build --locked --release -p fontpixel --all-features \
+  --example p2_timing --example w44_timing
+python3 benches/codec_timing.py \
+  --binary "$CARGO_TARGET_DIR/release/examples/p2_timing" \
+  --output "$FONTPIXEL_WORK_ROOT/p2-timing-new.json" \
+  --environment-note 'Describe other active processes and machine conditions'
+python3 benches/editor_timing.py \
+  --binary "$CARGO_TARGET_DIR/release/examples/w44_timing" \
+  --font ../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf \
+  --output "$FONTPIXEL_WORK_ROOT/editor-large-timing-new.json" \
+  --environment-note 'Describe other active processes and machine conditions'
+```
+
+Run the measurements sequentially with task-owned builds, fuzz and oracle jobs
+stopped. Exact source/binary identities, raw runs, min/max values and ordinary
+peak process RSS are in `reports/phase4-evidence/`; medians and limits are in
+`reports/phase-4.md`. Process RSS includes retained input/model/output data;
+these measurements do not substitute for final whole-catalogue benchmarks.

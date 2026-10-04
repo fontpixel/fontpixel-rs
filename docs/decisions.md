@@ -1,5 +1,13 @@
 # Design decisions
 
+## 2026-10-04 — Keep decoding diagnostics when a writer rejects output
+
+`Registry::write_with_report` appends a writer's `ReportedErrors` or `StrictLoss`
+report to the preceding read report before returning it. Early read-loss strict
+rejection still happens before calling the writer. Other typed errors retain
+their existing identity. A regression exercises both writer error variants and
+checks that the earlier repair appears first; no output reaches persistence.
+
 ## 2026-10-02 — Phase 0 has two sequential work items
 
 **Question:** PLAN §12 calls phase 0 one work item but lists W0.1 and W0.2.
@@ -1343,3 +1351,54 @@ monobit 0.54 remains an independent oracle. Its writer omits HBF_END_FONT and
 emits absolute bitmap paths that its own loader cannot reliably reopen. The
 crosscheck preserves raw output and changes only the missing terminator and
 verified same-directory basename; codes, metrics and pixels remain untouched.
+
+## 2026-10-04 — Explicit P2 layouts and native DOS decompression
+
+Headerless raw/HZK bytes have no content detector: callers declare a preset or
+complete geometry. CLI options configure the reader and writer consistently,
+including transposition, padding and bit order. CPI retains legacy code-page
+slots and multiple strikes. CPX import decodes bounded NRV2B natively without
+running its executable stub. CPX export uses native compression and an original
+DOS stub. Final acceptance verifies UPX decompression and executes the external
+FreeDOS MODE loader in an emulator, checking return state and guarded memory.
+The independent CPX review and bounded-source fuzz evidence are linked from
+`reports/phase-4.md`.
+The CLI defaults `.cpx` to CPX and `.cp` to standalone CP,
+and otherwise defaults to FONT. FONT.NT and DRFONT are explicit choices.
+
+## 2026-10-04 — Preserve PF2 variants and exact CJK mapping
+
+GRUB joining variants use published high-bit tags. Retain those raw identities
+without pretending that they are Unicode scalars; validate the underlying scalar
+and permitted flags. FONTX2/HZK preserve legacy source codes and require exact
+declared charsets for Unicode conversion. CJK tables remain an optional feature.
+All 25 HZK/ASC presets can be overridden with explicit geometry. Interoperability
+uses independently decoded pixels and font coordinates where external tools
+normalize glyph bounding boxes.
+
+## 2026-10-04 — Macintosh resource identities and indexed coverage
+
+Support the listed resource-fork, dfont, suitcase, MacBinary and Apple containers
+through the existing resolver/output bundle interface. Preserve opaque FOND and
+other resources once at collection level. Classic FONT IDs encode family and
+size; size-zero records are names, not rasters. Indexed `fctb` resources project
+to Gray8 ink coverage using documented RGB luminance and explicit default port
+colors, with loss diagnostics. Keep original records for unchanged native
+roundtrips. Synthetic and Lisa-compressed resources fail explicitly. Unicode
+codes require explicit charset conversion before writing legacy FONT/NFNT.
+
+## 2026-10-04 — Independent P2 validation and performance conditions
+
+Each worker owns its codecs, specification, tests and external comparisons; the
+coordinator owns shared registration and CLI integration. Freeze manifests bind
+final source to fuzz evidence. A unified benchmark checks mappings and pixels,
+then measures complete in-memory reads/writes and 400 independent reads on
+one/two/four threads. Thread creation and warmup precede timing. Five release
+runs are taken only after task-owned fuzz/build/oracle processes have stopped;
+debug smoke checks and concurrent measurements are not performance evidence.
+
+The CLI now exposes a local `bdf` feature as well as its library dependency
+feature. BDF-based P2 integration tests require it explicitly, while the raw to
+NFNT container test also runs without a BDF reader. Clap parameter groups are
+disabled for the flattened P2 argument structs so equal Rust type names cannot
+create duplicate command-line groups.

@@ -84,6 +84,38 @@ pub fn registry() -> FontRegistry {
     registry.install_pbf();
     #[cfg(feature = "hbf")]
     registry.install_hbf();
+    #[cfg(feature = "pf2")]
+    registry.install_pf2();
+    #[cfg(feature = "fontx2")]
+    registry.install_fontx2();
+    #[cfg(feature = "hzk")]
+    registry.install_hzk();
+    #[cfg(feature = "draw")]
+    registry.install_draw();
+    #[cfg(feature = "raw")]
+    registry.install_raw();
+    #[cfg(feature = "cpi")]
+    registry.install_cpi();
+    #[cfg(feature = "nfnt")]
+    registry.install_nfnt();
+    #[cfg(feature = "bmfont")]
+    registry.install_bmfont();
+    #[cfg(feature = "sfd")]
+    registry.install_sfd();
+    #[cfg(feature = "kbits")]
+    registry.install_kbits();
+    #[cfg(feature = "pk")]
+    registry.install_pk();
+    #[cfg(feature = "gf")]
+    registry.install_gf();
+    #[cfg(feature = "plan9")]
+    registry.install_plan9();
+    #[cfg(feature = "amiga")]
+    registry.install_amiga();
+    #[cfg(feature = "gem")]
+    registry.install_gem();
+    #[cfg(feature = "snf")]
+    registry.install_snf();
     registry
 }
 

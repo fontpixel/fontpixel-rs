@@ -4,11 +4,12 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phases 0–3 complete
+## Current status: phases 0–4 complete
 
-Phase 3 is integrated and accepted; see [its validation report](reports/phase-3.md)
+Phase 4 is integrated and accepted; see [its validation report](reports/phase-4.md)
 for independent comparisons, fuzz, performance, CLI size and remaining scope.
-Phase 4 P2 formats are next. The complete project remains under development.
+Phase 5 covers the remaining formats and a wider format survey. The complete
+project remains under development.
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -41,8 +42,8 @@ library users enable `fnt` or `fon` (which also enables `fnt`).
 See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
 [W3.2 independent validation](reports/w3.2-review.md).
 
-Twenty-two format IDs now have native readers, twenty-one have writers (color writing
-is deferred); the remaining 24 IDs and Python/WASM bindings remain unimplemented
+Thirty-eight format IDs now have native readers, thirty-seven have writers (color writing
+is deferred); the remaining eight IDs and Python/WASM bindings remain unimplemented
 and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),

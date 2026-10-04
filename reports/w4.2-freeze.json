@@ -1,0 +1,80 @@
+{
+  "sha256": "cb41678faeb1a7a7a5764bad3686382530cc9929158995003ae9cbea8a6c0fae",
+  "hash_convention": "SHA256 of ordered sha256sum-style UTF-8 lines: individual_sha256 + two spaces + path + newline",
+  "files": [
+    {
+      "path": "crates/fontpixel/src/formats/pf2.rs",
+      "sha256": "24d1bdfdd34e37e80e02b63f3458ff111ad95b874abb1960ed6c3a0991bb7574"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/pf2/writer.rs",
+      "sha256": "74e369bca2268e530f91f63c0c609a2b4ab85774cbd7f0766da62c782831dcaa"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/pf2/common.rs",
+      "sha256": "ea574e8ec8df2e1b1484260f1320b22f75a7b935e033eb835a0615387b41094b"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/fontx2.rs",
+      "sha256": "60968bca1b3dcb49c8768a2e7f20e597438a6327011281592b2ddf8ef0c20f7c"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/hzk.rs",
+      "sha256": "fe9eb772d59d9a8a6276d759185555266133be132b31e980e22f6167a029378a"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/hzk/presets.rs",
+      "sha256": "624baa763fd467d0321d6d294b1adc14abac6a363b0b544ab990b0b57de2120d"
+    },
+    {
+      "path": "crates/fontpixel/tests/pf2.rs",
+      "sha256": "d1bd06fb26d0c149c56228428a04d9bb88d1aea6f53f7d3f25ad0381988ea761"
+    },
+    {
+      "path": "crates/fontpixel/tests/fontx2.rs",
+      "sha256": "ff6af09470476f0a79773403c31edf510632b15bf8c323c36d712c5a44b7fc32"
+    },
+    {
+      "path": "crates/fontpixel/tests/hzk.rs",
+      "sha256": "1b4b2d84f222d9bbc30a9cf19c010b663e9106b3520b406958329c3dcfa71a64"
+    },
+    {
+      "path": "docs/formats/pf2.md",
+      "sha256": "41405316ae5b51ecf76f47a36bdee7f806248a3601f2e13c8ca175d6ad409fd6"
+    },
+    {
+      "path": "docs/formats/fontx2.md",
+      "sha256": "185d3934cd5b0b4d671de80c421658d1f71c36d69e59cc372115f643af0308f6"
+    },
+    {
+      "path": "docs/formats/hzk.md",
+      "sha256": "012b89ded7761c4c3448fe44c354b09b67f09ead55944b08fd33d1271f5ad0b7"
+    },
+    {
+      "path": "fuzz/fuzz_targets/pf2.rs",
+      "sha256": "9ea02ee7aafb406c3d4970ba776cd648983b6fa2dd021c6ddc53b23454cb64eb"
+    },
+    {
+      "path": "fuzz/fuzz_targets/fontx2.rs",
+      "sha256": "da8100f3c589ddd736a5171f640cc9bd74dfe13fbc18e11e030e77f377685678"
+    },
+    {
+      "path": "fuzz/fuzz_targets/hzk.rs",
+      "sha256": "62ee529b714730ca2abb8ad8c1d4dedbf0ad379940ccb833afc2795e3f69a626"
+    },
+    {
+      "path": "fuzz/seed_w42.py",
+      "sha256": "335a7281f792b928bf1225f78fa63bfcfc0f69c533ad8f61d3757cbb64e21a0e"
+    },
+    {
+      "path": "tests/crosscheck/w42.py",
+      "sha256": "049376b8ef163c9b210814d33fff6e8d2da9e9b6773209d91d1fb63de111033f"
+    },
+    {
+      "path": "crates/fontpixel/examples/w42_timing.rs",
+      "sha256": "931a167b2de09702707d81c19d750227d895d6f95961b4ec7c27278e873ec0cf"
+    }
+  ],
+  "toolchain": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "example_binary_sha256": "7478893ac4c016b994032ab0b75a9b5f45532537fdc241d824daa2f6b3db92d1"
+}

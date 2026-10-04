@@ -165,12 +165,29 @@ doc = false
 bench = false
 
 [features]
+draw-only = ["fontpixel/draw"]
+raw-only = ["fontpixel/raw"]
+cpi-only = ["fontpixel/cpi"]
+pf2-only = ["fontpixel/pf2"]
+fontx2-only = ["fontpixel/fontx2"]
+hzk-only = ["fontpixel/hzk"]
+nfnt-only = ["fontpixel/nfnt"]
+bmfont-only = ["fontpixel/bmfont"]
+sfd-only = ["fontpixel/sfd"]
+kbits-only = ["fontpixel/kbits"]
+pk-only = ["fontpixel/pk"]
+gf-only = ["fontpixel/gf"]
+plan9-only = ["fontpixel/plan9"]
+amiga-only = ["fontpixel/amiga"]
+gem-only = ["fontpixel/gem"]
+snf-only = ["fontpixel/snf"]
 kbitx-only = ["fontpixel/kbitx"]
 pbf-only = ["fontpixel/pbf"]
 hbf-only = ["fontpixel/hbf"]
-default = ["baseline"]
+default = ["baseline", "phase4"]
 baseline = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/sfnt", "fontpixel/cff", "fontpixel/compat-bdfparser", "fontpixel/otb", "fontpixel/bdat", "fontpixel/color", "fontpixel/woff", "fontpixel/woff2", "fontpixel/ttc", "fontpixel/ttf", "fontpixel/otf", "fontpixel/vector-raster", "fontpixel/svg", "fontpixel/hex", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/image", "fontpixel/c", "fontpixel/kbitx", "fontpixel/pbf", "fontpixel/hbf"]
 image-c = ["fontpixel/image", "fontpixel/c"]
+phase4 = ["fontpixel/draw", "fontpixel/raw", "fontpixel/cpi", "fontpixel/pf2", "fontpixel/fontx2", "fontpixel/hzk", "fontpixel/nfnt", "fontpixel/bmfont", "fontpixel/sfd", "fontpixel/kbits", "fontpixel/pk", "fontpixel/gf", "fontpixel/plan9", "fontpixel/amiga", "fontpixel/gem", "fontpixel/snf"]
 
 [[bin]]
 name = "kbitx"
@@ -189,6 +206,118 @@ bench = false
 [[bin]]
 name = "hbf"
 path = "fuzz_targets/hbf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "draw"
+path = "fuzz_targets/draw.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "raw"
+path = "fuzz_targets/raw.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cpi"
+path = "fuzz_targets/cpi.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pf2"
+path = "fuzz_targets/pf2.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fontx2"
+path = "fuzz_targets/fontx2.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hzk"
+path = "fuzz_targets/hzk.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "nfnt"
+path = "fuzz_targets/nfnt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "bmfont"
+path = "fuzz_targets/bmfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sfd"
+path = "fuzz_targets/sfd.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "kbits"
+path = "fuzz_targets/kbits.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pk"
+path = "fuzz_targets/pk.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gf"
+path = "fuzz_targets/gf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "plan9"
+path = "fuzz_targets/plan9.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "amiga"
+path = "fuzz_targets/amiga.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gem"
+path = "fuzz_targets/gem.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "snf"
+path = "fuzz_targets/snf.rs"
 test = false
 doc = false
 bench = false

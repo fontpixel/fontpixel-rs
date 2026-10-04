@@ -59,9 +59,33 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                 && !line.starts_with("bdat\t")
                 && !line.starts_with("color\t")
                 && !line.starts_with("svg\t")
-                && !["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
-                    .iter()
-                    .any(|id| line.starts_with(&format!("{id}\t"))))
+                && ![
+                    "svg",
+                    "ttf",
+                    "otf",
+                    "woff",
+                    "woff2",
+                    "ttc",
+                    "vector-raster",
+                    "draw",
+                    "raw",
+                    "cpi",
+                    "pf2",
+                    "fontx2",
+                    "hzk",
+                    "nfnt",
+                    "bmfont",
+                    "sfd",
+                    "kbits",
+                    "pk",
+                    "gf",
+                    "plan9",
+                    "amiga",
+                    "gem",
+                    "snf"
+                ]
+                .iter()
+                .any(|id| line.starts_with(&format!("{id}\t"))))
             .all(|line| line.contains("\tnot implemented\tnot implemented\t"))
     );
     for id in ["bdf", "pcf", "hbf", "pk", "gf", "vector-raster", "drcs"] {
@@ -98,14 +122,62 @@ fn formats_json_is_parseable_and_honest() {
                 && entry["format"]["id"] != "otb"
                 && entry["format"]["id"] != "bdat"
                 && entry["format"]["id"] != "color"
-                && !["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"]
-                    .iter()
-                    .any(|id| entry["format"]["id"] == *id))
+                && ![
+                    "svg",
+                    "ttf",
+                    "otf",
+                    "woff",
+                    "woff2",
+                    "ttc",
+                    "vector-raster",
+                    "draw",
+                    "raw",
+                    "cpi",
+                    "pf2",
+                    "fontx2",
+                    "hzk",
+                    "nfnt",
+                    "bmfont",
+                    "sfd",
+                    "kbits",
+                    "pk",
+                    "gf",
+                    "plan9",
+                    "amiga",
+                    "gem",
+                    "snf"
+                ]
+                .iter()
+                .any(|id| entry["format"]["id"] == *id))
             .all(|entry| entry["read"] == false
                 && entry["write"] == false
                 && entry["detect"] == false)
     );
-    for id in ["svg", "ttf", "otf", "woff", "woff2", "ttc", "vector-raster"] {
+    for id in [
+        "svg",
+        "ttf",
+        "otf",
+        "woff",
+        "woff2",
+        "ttc",
+        "vector-raster",
+        "draw",
+        "raw",
+        "cpi",
+        "pf2",
+        "fontx2",
+        "hzk",
+        "nfnt",
+        "bmfont",
+        "sfd",
+        "kbits",
+        "pk",
+        "gf",
+        "plan9",
+        "amiga",
+        "gem",
+        "snf",
+    ] {
         let entry = formats
             .iter()
             .find(|entry| entry["format"]["id"] == id)
@@ -113,7 +185,10 @@ fn formats_json_is_parseable_and_honest() {
         let enabled = entry["format"]["feature_enabled"].as_bool().unwrap();
         assert_eq!(entry["read"], enabled);
         assert_eq!(entry["write"], enabled);
-        assert_eq!(entry["detect"], enabled && id != "vector-raster");
+        assert_eq!(
+            entry["detect"],
+            enabled && !["vector-raster", "raw", "hzk"].contains(&id)
+        );
     }
     for id in ["otb", "bdat", "color"] {
         let entry = formats
@@ -178,10 +253,10 @@ fn info_reports_missing_inputs_and_ambiguous_extensions() {
     let output = run(&["info", input.to_str().unwrap()]);
     assert_eq!(output.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&output.stderr).contains("ambiguous format"));
-    let explicit = run(&["info", input.to_str().unwrap(), "--from", "snf"]);
+    let explicit = run(&["info", input.to_str().unwrap(), "--from", "drcs"]);
     assert!(
         String::from_utf8_lossy(&explicit.stderr)
-            .contains("read for format 'snf' is not implemented")
+            .contains("read for format 'drcs' is not implemented")
     );
 }
 
@@ -233,12 +308,12 @@ fn convert_dispatch_accepts_multiple_inputs_and_explicit_target() {
         "--from",
         "bdf",
         "--to",
-        "snf",
+        "drcs",
     ]);
     assert_eq!(output.status.code(), Some(1));
     assert!(
         String::from_utf8_lossy(&output.stderr)
-            .contains("write for format 'snf' is not implemented")
+            .contains("write for format 'drcs' is not implemented")
     );
     assert!(!target.exists());
 }

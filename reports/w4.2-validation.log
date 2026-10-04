@@ -1,0 +1,128 @@
+$ cargo test -p fontpixel --no-default-features --features pf2 --test pf2
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.13s
+     Running tests/pf2.rs (../local-work/target-w42/debug/deps/pf2-c20879b09a25d134)
+
+running 11 tests
+test independent_bit_packing_and_metrics ... ok
+test independent_native_alias_roundtrip ... ok
+test located_losses_and_fatal_omissions_survive ... ok
+test limits_and_same_limit_writer_readback ... ok
+test malformed_source_metric_has_report_not_panic ... ok
+test missing_gray_threshold_reports_every_alias_before_failure ... ok
+test retained_properties_are_budgeted_before_serializing ... ok
+test native_grub_joining_variants_are_not_discarded ... ok
+test source_property_duplicates_and_spelling_have_loss ... ok
+test truncation_and_storage_flags_fail ... ok
+test randomized_continuous_bit_rows ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+$ cargo clippy -p fontpixel --no-default-features --features pf2 --lib --test pf2 -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.63s
+$ cargo test -p fontpixel --no-default-features --features fontx2 --test fontx2
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.05s
+     Running tests/fontx2.rs (../local-work/target-w42/debug/deps/fontx2-a0056249673e8e53)
+
+running 10 tests
+test all_truncations_and_overlapping_blocks_fail ... ok
+test every_unrepresentable_raster_survives_fatal_report ... ok
+test limits_writer_readback ... ok
+test source_metadata_and_diagnostics_share_budget ... ok
+test mutation_smoke_no_panic ... ok
+test ordered_duplicate_metadata_is_never_silent ... ok
+test sparse_single_byte_inserts_blanks_with_report ... ok
+test exact_ank_charset_is_explicit ... ok
+test fragmented_codes_coarsen_with_located_loss_and_valid_output ... ok
+test independent_layouts_and_native_exact_roundtrip ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+$ cargo clippy -p fontpixel --no-default-features --features fontx2 --lib --test fontx2 -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.59s
+$ cargo test -p fontpixel --no-default-features --features hzk --test hzk
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.05s
+     Running tests/hzk.rs (../local-work/target-w42/debug/deps/hzk-826c9cb5ba81f7dd)
+
+running 9 tests
+test every_unrepresentable_raster_survives_fatal_report ... ok
+test no_header_means_no_structural_detection ... ok
+test gb2312_raw_does_not_require_tables_and_omissions_survive ... ok
+test independent_nonsquare_transpose ... ok
+test malformed_and_limits ... ok
+test source_metadata_and_output_share_budget ... ok
+test tiny_table_limit_is_irrelevant_to_headerless_data ... ok
+test all_presets_have_native_roundtrip ... ok
+test random_small_geometry_roundtrips ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+$ cargo clippy -p fontpixel --no-default-features --features hzk --lib --test hzk -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.59s
+$ cargo test -p fontpixel --no-default-features --features pf2,fontx2,hzk,cjk-charsets --test pf2 --test fontx2 --test hzk
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.31s
+     Running tests/fontx2.rs (../local-work/target-w42/debug/deps/fontx2-3ea420f0cf1e2d83)
+
+running 10 tests
+test all_truncations_and_overlapping_blocks_fail ... ok
+test every_unrepresentable_raster_survives_fatal_report ... ok
+test limits_writer_readback ... ok
+test source_metadata_and_diagnostics_share_budget ... ok
+test sparse_single_byte_inserts_blanks_with_report ... ok
+test mutation_smoke_no_panic ... ok
+test ordered_duplicate_metadata_is_never_silent ... ok
+test exact_ank_charset_is_explicit ... ok
+test fragmented_codes_coarsen_with_located_loss_and_valid_output ... ok
+test independent_layouts_and_native_exact_roundtrip ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/hzk.rs (../local-work/target-w42/debug/deps/hzk-31cf48880d89566f)
+
+running 10 tests
+test every_unrepresentable_raster_survives_fatal_report ... ok
+test no_header_means_no_structural_detection ... ok
+test gb2312_raw_does_not_require_tables_and_omissions_survive ... ok
+test malformed_and_limits ... ok
+test independent_nonsquare_transpose ... ok
+test source_metadata_and_output_share_budget ... ok
+test tiny_table_limit_is_irrelevant_to_headerless_data ... ok
+test unicode_to_gb2312_is_exact ... ok
+test all_presets_have_native_roundtrip ... ok
+test random_small_geometry_roundtrips ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/pf2.rs (../local-work/target-w42/debug/deps/pf2-80adbf9148149a82)
+
+running 11 tests
+test independent_bit_packing_and_metrics ... ok
+test missing_gray_threshold_reports_every_alias_before_failure ... ok
+test independent_native_alias_roundtrip ... ok
+test located_losses_and_fatal_omissions_survive ... ok
+test limits_and_same_limit_writer_readback ... ok
+test malformed_source_metric_has_report_not_panic ... ok
+test retained_properties_are_budgeted_before_serializing ... ok
+test native_grub_joining_variants_are_not_discarded ... ok
+test source_property_duplicates_and_spelling_have_loss ... ok
+test truncation_and_storage_flags_fail ... ok
+test randomized_continuous_bit_rows ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+$ cargo clippy -p fontpixel --no-default-features --features bdf,pf2,fontx2,hzk,cjk-charsets --lib --example w42_timing --test pf2 --test fontx2 --test hzk -- -D warnings
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 2.37s
+$ cargo doc -p fontpixel --no-default-features --features pf2,fontx2,hzk,cjk-charsets --no-deps
+ Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 0.76s
+   Generated /home/chen/githubprojects/fontpixel/fontpixel-rs/../local-work/target-w42/doc/fontpixel/index.html
+$ cargo build -p fontpixel --no-default-features --features bdf,pf2,fontx2,hzk,cjk-charsets --example w42_timing
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `dev` profile [unoptimized] target(s) in 2.50s

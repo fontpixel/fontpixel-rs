@@ -1,0 +1,42 @@
+{
+  "base_head": "cbbaa359c7bad120a3da6dc11c189b46cb4601f7",
+  "aggregation": "SHA256 of sorted path + NUL + file SHA256 + newline records",
+  "production_sha256": "9cc3dd70b61c472925e11a0f10bdbc01c3f031ecccd145ff47eae18c4e915b3b",
+  "production_files": [
+    {
+      "path": "crates/fontpixel/src/formats/console.rs",
+      "sha256": "4ae099193f3c90af9d4154de1629d248dc63aaa0d15a557e632941fc562c376d"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/cpi.rs",
+      "sha256": "f396c1e1b745985164007de350d012fba16554a3788e8f560a274d735ecdf69d"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/cpi/cpx.rs",
+      "sha256": "9710145907124fb10af1d0c286a0d0916ec1924a0cf793ae1834509e52859fb0"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/cpi/reader.rs",
+      "sha256": "3c193f79e50f53d14c1ca004af760acc1ca3796167a6d5b245ad928c588a7403"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/cpi/writer.rs",
+      "sha256": "7a070156f0fe07e2396e0e01eb96a5cecf29f1c7ea24a3ac3594be33ed9c47f5"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/draw.rs",
+      "sha256": "6e767227d64f20e26ede6236a4363f144b9c4e74e6ac49cb31098e47189450ba"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/raw.rs",
+      "sha256": "08efd5e2d268c6ff30ee9815435ecdb0dc1b9192c8bf6c99f753843fac36c40b"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/raw/support.rs",
+      "sha256": "d8a9a352bd1822e88c94bbe944cb51c7b80ff82fe821d0bd1d5349ebf49df94f"
+    }
+  ],
+  "fuzz_seed_directory": "../local-work/w41/seeds",
+  "crosscheck": "reports/w4.1-crosscheck.json",
+  "crosscheck_artifact_directory": "../local-work/w41/crosscheck-final3"
+}

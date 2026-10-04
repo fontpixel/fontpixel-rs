@@ -1,0 +1,42 @@
+{
+  "frozen_at": "2026-10-04T06:30:47.686219+00:00",
+  "worker": "w46_legacy",
+  "files": {
+    "crates/fontpixel/src/formats/amiga.rs": "30bdda283e7199b249ee17f60072fc8b9cd6b645188df45c4128058904cbf600",
+    "crates/fontpixel/tests/amiga.rs": "2b9ca1b21d9e27320136d5f8421d06367b8a718b87e802ec71b5240e10c48145",
+    "docs/formats/amiga.md": "3b39c0b003bfdcb63413a44f2854b2a965a8b7d3970f54936b62aac06095149d",
+    "fuzz/fuzz_targets/amiga.rs": "a7b4ca80e72862e9b7f34fb017298b42a919689da4865c6de7909f74d4f76605",
+    "crates/fontpixel/src/formats/gem.rs": "c0f463a8d5927ea618f9a3bd4abc3c6fa139e6f5502a88c01c178000ea309ca4",
+    "crates/fontpixel/tests/gem.rs": "f70acbd30c1dba90258047870bb14ca78980359cc72b12c97c7d41cef2ee5b2e",
+    "docs/formats/gem.md": "397da97246ffefabb52ce8d73c213af6d29839327406f2f6d18802b31136688a",
+    "fuzz/fuzz_targets/gem.rs": "9b1c0ff027d963844f54454458064b0d38e549a39c5fa923b490bf6dbb468df6",
+    "crates/fontpixel/src/formats/snf.rs": "8d562e18877c6dd747e0c70ac0ad12b79b70a0af73655356d8f54b7d24f23ad8",
+    "crates/fontpixel/tests/snf.rs": "23799e0c16fcb6c182198ccf601360e0cbde9075844d8fbbcf83932cc2a61390",
+    "docs/formats/snf.md": "1ebecb08c7f653db0ca2d5f8642779ef7c84f3c4d403e7eac682fffa6db73628",
+    "fuzz/fuzz_targets/snf.rs": "8b2d37ea32ac799209615c17df967f89f1b55d7ad8eab707e6f9bdbfb2b9993c",
+    "crates/fontpixel/src/formats/gem/common.rs": "a7c94c2402a5c668b9238f201e13175383bd963cc8fbe4584faf79fe464ae347",
+    "crates/fontpixel/examples/w46_timing.rs": "cf04cd42eadc1a2e03d184caee6baa9bd65d4ad292c3058b47565e66b053b02a",
+    "fuzz/seed_w46.py": "cae0920d1f9c00f0b3388532f4c38aa3e3d97d302d546ffd167db7d194b639df",
+    "tests/crosscheck/w46.py": "3e22fd118c18bf8959693c4e19b450c624d1b5b61e273b2e2389886a614a7a66",
+    "reports/w4.6.md": "b8cfe32dbf9ac5b59a65bd65564a79969ca64aca5886cbe4dc1cd1f79aea421b",
+    "reports/w4.6-crosscheck.json": "71cf99e01e99f2e4664fc420b2fb870373ff8d3a785e0cfd0a7ba9280f243ed6",
+    "reports/w4.6-sources.json": "f5a86bc1f80282937f21357f455fbea98723e6981dd14b173b9051447f0f8dcf",
+    "reports/w4.6-validation.json": "325c77f4ceaa0690b623eb882715c784f2d208c964941479e3cb65736ff2802c",
+    "reports/w4.6-validation.log": "bfa9e35459024a630e4876f9164ec048c7a044f985f3d4b85db7d4faa25c0a3c"
+  },
+  "seeds": {
+    "amiga/contents-with-sidecar": "f3dbf3c3b3554de8339520d31f180879937091f988b313fb39acb4ddc4578208",
+    "amiga/hunk": "bdf909d279503dbe067250c5a568a6ff164df23671e94c0c85d3c2056456352e",
+    "gem/be-0": "0483c080e96dc4a99b311dc3a2fefa0eedaaa4b4a72b5062ddbf5a88e45af056",
+    "gem/be-1": "b7114df73bfc9fd8d3947897fc5fc566588c399f2feadb764687385078933c4e",
+    "gem/be-compressed": "2951bc918bf83f4e5d2933e2bcd02fc8d68e92713a4ea39a6d6ab5d6dc273609",
+    "gem/le-0": "1efdf4a127173cb1b69a57fc69b9c30da275956552da80d87e7b65e73cbcedc8",
+    "gem/le-1": "b150b65b773b5f22ed9b0e1463f796bdb17e64e039eccf3bf4f48a9856e6f861",
+    "gem/le-compressed": "336ba7a184f9bc79f361c5f0bcdfcae851342691a14d9c0fc0d7bf0f693e12d5",
+    "snf/be-pad1": "0ffedb307e965649243a4dc2b2e13d3856432f0ad5aa3975485e32285c237d1b",
+    "snf/be-pad4": "fbb7224a873e83012b62f5004f4d567f0d7bf8be1444afc71157b26afb5919fa",
+    "snf/le-pad1": "be6e94f4820b5e784ae952f374401983e45c054a788808df03b0d5e686511248",
+    "snf/le-pad4": "58f751a9111958e9de5ccc2f58b101085e62fa8b3284d17d57b61bae82edac75"
+  },
+  "formal_fuzz_and_performance": "pending parent integration"
+}

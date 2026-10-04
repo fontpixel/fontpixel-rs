@@ -39,7 +39,7 @@ ttc = ["vector-raster"]
 color = ["sfnt", "dep:png"]
 vector-raster = ["cff"]
 svg = ["dep:roxmltree", "dep:svgtypes", "dep:xmlparser"]
-bmfont = []
+bmfont = ["dep:png", "dep:xmlparser"]
 image = ["dep:image-codec", "dep:serde", "dep:serde_json", "dep:toml"]
 png = ["dep:flate2", "dep:crc32fast"]
 c = ["dep:serde", "dep:serde_json"]
@@ -155,3 +155,31 @@ required-features = ["image", "c"]
 [[example]]
 name = "p1_timing"
 required-features = ["kbitx", "pbf", "hbf"]
+
+[[example]]
+name = "w42_timing"
+required-features = ["bdf", "pf2", "fontx2", "hzk"]
+
+[[example]]
+name = "w41_timing"
+required-features = ["bdf", "draw", "raw", "cpi"]
+
+[[example]]
+name = "nfnt_timing"
+required-features = ["nfnt"]
+
+[[example]]
+name = "w44_timing"
+required-features = ["bdf", "bmfont", "sfd", "kbits"]
+
+[[example]]
+name = "w46_timing"
+required-features = ["bdf", "amiga", "gem", "snf"]
+
+[[example]]
+name = "p2_timing"
+required-features = ["draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfont", "sfd", "kbits", "pk", "gf", "plan9", "amiga", "gem", "snf"]
+
+[[example]]
+name = "w45_timing"
+required-features = ["pk", "gf", "plan9"]

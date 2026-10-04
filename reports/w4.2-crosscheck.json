@@ -1,0 +1,311 @@
+{
+  "checks": [
+    {
+      "case": "wire-0",
+      "format": "fontx2",
+      "glyphs": 256,
+      "sha256": "550c99525e6a8b2072d1bb666cada3d106fecef1009c0231942067414519f111",
+      "checks": [
+        "monobit reads native",
+        "native reads monobit",
+        "independent BDF catalogue parser"
+      ]
+    },
+    {
+      "case": "wire-1",
+      "format": "fontx2",
+      "glyphs": 3,
+      "sha256": "00d9398b75278df9d3932fa3a8ea58139ff47571f8e2e5f9100a203b2629d784",
+      "checks": [
+        "monobit reads native",
+        "native reads monobit",
+        "independent BDF catalogue parser"
+      ]
+    },
+    {
+      "case": "4x8",
+      "format": "fontx2",
+      "glyphs": 256,
+      "sha256": "37719172879113849c6d69871a37d45ab3dc2815e1dcc042efb49554eec1637b",
+      "checks": [
+        "monobit reads native",
+        "native reads monobit",
+        "independent BDF catalogue parser"
+      ]
+    },
+    {
+      "case": "misaki",
+      "format": "fontx2",
+      "glyphs": 6962,
+      "sha256": "286bd63a0faa37c0ea30b8003e6efad55b852209892795458ae983c69c4650ba",
+      "checks": [
+        "monobit reads native",
+        "native reads monobit",
+        "independent BDF catalogue parser"
+      ]
+    },
+    {
+      "case": "misakimn",
+      "format": "fontx2",
+      "glyphs": 6962,
+      "sha256": "286bd63a0faa37c0ea30b8003e6efad55b852209892795458ae983c69c4650ba",
+      "checks": [
+        "monobit reads native",
+        "native reads monobit",
+        "independent BDF catalogue parser"
+      ]
+    },
+    {
+      "case": "hzk12",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk14",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk16",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk24s",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk24t",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk32",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk40",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "hzk48",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc12",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc16",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc24",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc32",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc40",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "asc48",
+      "format": "hzk",
+      "glyphs": 100,
+      "checks": [
+        "independent grid",
+        "monobit raw raster",
+        "native bytes roundtrip",
+        "catalogue BDF parser"
+      ]
+    },
+    {
+      "case": "/usr/share/grub/ascii.pf2",
+      "format": "pf2",
+      "glyphs": 159,
+      "sha256": "556e49a42fc9c8b18a31472d2ca74c17f6159040147d2433025692617f39848c",
+      "checks": [
+        "independent PF2 wire",
+        "native roundtrip"
+      ]
+    },
+    {
+      "case": "/usr/share/grub/euro.pf2",
+      "format": "pf2",
+      "glyphs": 1823,
+      "sha256": "13f59e8f99e222080697b99d8b09b3578be5ee51e8a1939adba9346b8c700ff7",
+      "checks": [
+        "independent PF2 wire",
+        "native roundtrip"
+      ]
+    },
+    {
+      "case": "/usr/share/grub/unicode.pf2",
+      "format": "pf2",
+      "glyphs": 57248,
+      "sha256": "662eb86fc1ea89635e4bba8413590b79eb714ade5a2b5a5aa3dc5cf5f53a4463",
+      "checks": [
+        "independent PF2 wire",
+        "native roundtrip"
+      ]
+    },
+    {
+      "case": "tom-thumb/tom-thumb.bdf",
+      "format": "pf2",
+      "glyphs": 204,
+      "sha256": "d07edd9d110a5106d6a19c6bac4897650f1b1a0fba2c6923b75e51dcc2b7ea0b",
+      "checks": [
+        "catalogue BDF parser",
+        "native PF2 wire",
+        "grub-mkfont ink equivalence"
+      ]
+    },
+    {
+      "case": "terminus/ter-u12n.bdf",
+      "format": "pf2",
+      "glyphs": 891,
+      "sha256": "0a7e9ca5a5dd29114f0514cacdf197700018fc05028d4dde28b049deca472a90",
+      "checks": [
+        "catalogue BDF parser",
+        "native PF2 wire",
+        "grub-mkfont ink equivalence"
+      ]
+    },
+    {
+      "case": "TongPixelSans14Large-SC.bdf",
+      "format": "hzk",
+      "glyphs": 8178,
+      "mapped_source_glyphs": 7445,
+      "sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "checks": [
+        "full OFL source",
+        "CPython strict charset conversion",
+        "independent font-space clipping",
+        "all emitted slots"
+      ]
+    },
+    {
+      "case": "TongPixelSans14Large-SC.bdf",
+      "format": "fontx2",
+      "glyphs": 7037,
+      "mapped_source_glyphs": 7037,
+      "sha256": "bade3cb87d44a55e55b7e846ee3cc03d4e89ff5c22406fc8c16c965a8e19372b",
+      "checks": [
+        "full OFL source",
+        "CPython strict charset conversion",
+        "independent font-space clipping",
+        "all emitted slots"
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "url": "https://littlelimit.net/arc/misaki/misaki_fontx_2012-06-03.zip",
+      "sha256": "30453aec50689f24fc4eb87a2cd3e89c62fcc7e8fc4f18916cfafeb908afc760",
+      "license": "M+ FONTS unrestricted use/copy/modify/distribute",
+      "license_url": "https://littlelimit.net/font.htm#license"
+    }
+  ],
+  "monobit": "0.54",
+  "limitations": [
+    "monobit has no PF2/HZK plugin; PF2 uses public-spec decoder and grub-mkfont, HZK uses raw decoder and independent transpose",
+    "No proprietary UCDOS binaries redistributed or used as licensed fixtures",
+    "Formal fuzz and five-round performance are coordinated after source freeze"
+  ],
+  "native_binary_sha256": "7478893ac4c016b994032ab0b75a9b5f45532537fdc241d824daa2f6b3db92d1",
+  "source_manifest_sha256": "cb41678faeb1a7a7a5764bad3686382530cc9929158995003ae9cbea8a6c0fae",
+  "command": "../local-work/oracles/bin/python tests/crosscheck/w42.py --binary ../local-work/target-w42/debug/examples/w42_timing --output-dir ../local-work/w42-crosscheck-freeze --fetch-misaki",
+  "grub_mkfont": "grub-mkfont (GRUB) 2.12-1ubuntu7.3",
+  "passed_cases": 26,
+  "verified_glyph_slots": 91379
+}
