@@ -9,7 +9,7 @@ mod rename;
 mod enabled {
     use super::rename::{self, Budget};
     use fontpixel::formats::{Confidence, bdf, pcf};
-    use fontpixel::model::{GlyphBitmap, Properties, PropertyValue};
+    use fontpixel::model::{GlyphBitmap, PropertyValue};
     use fontpixel::{Error, Font, Input, Report, ReportEntry, ResourceLimits};
     use serde::de::{self, DeserializeSeed, MapAccess, SeqAccess, Visitor};
     use serde::ser::{SerializeSeq, SerializeStruct};

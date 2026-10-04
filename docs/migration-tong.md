@@ -89,11 +89,15 @@ toolchains retain conservative fallback estimates; a known larger case can opt
 into `--max-total-bytes 536870912` or batch options.max_total_bytes. Do not raise
 the default or use budget overrides to hide an accounting bug.
 
-The original `tong_export.rs` example parsed 20 BDFs once, prepared four regional
-plans, encoded both shapes/flavors, reused sfnt for WOFF2 and emitted PCF/OTB plus
-byte-copied BDFs. Its positional arguments were BDF directory, output directory,
-font jobs, quality, compressor threads, version, dot reuse. That example's source
-is not reconstructed here; recover it separately rather than invent its internals.
+The baseline [tong_export.rs](../crates/fontpixel/examples/tong_export.rs) example
+is present in the repository. It parses 20 BDFs once, prepares four regional
+plans, encodes both shapes/flavors, reuses sfnt for WOFF2 and emits PCF/OTB plus
+byte-copied BDFs. Its positional arguments are BDF directory, output directory,
+font jobs, quality, compressor threads, version, dot reuse. The reconstructed
+[phase6_tong_export.rs](../crates/fontpixel/examples/phase6_tong_export.rs) adds the
+full-report workflow, with report construction and file I/O inside its timing.
+Both require validation against the current source. Their shared-plan API workflow
+does not replace the default full CLI batch correctness or performance gate.
 
 For website subsetting, retain page-text extraction, CSS unicode-range, naming,
 cache stamps and byte-size accounting in the site builder; replace the fontTools

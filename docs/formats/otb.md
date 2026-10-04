@@ -81,6 +81,11 @@ Global metric design scale is 100 units per reference pixel, or 64 for a referen
 ppem above 163 so unitsPerEm stays legal. Sparse glyphs absent from the first
 strike take their design metrics from the first strike containing that glyph;
 anisotropic/scaled inexact conversions are reported. Pixel data remains exact.
+Those are the default metric policies. Explicit UPM, reference-strike priority
+and pixel-to-design rounding are available through `EmbeddedWriteOptions` and
+the shared CLI `--otb-*` controls; see the [API contract](../api.md#explicit-output-names-and-embedded-metrics).
+Metric-reference selection does not change the codec's physical strike ordering;
+Apple/bdat retains its separate canonical ppem sort.
 The native reader preserves original table bytes as `sfnt.table.*` container
 provenance; a rewrite reports their replacement instead of allowing stale bytes
 to override edited model fields. This is not a byte-identical arbitrary-sfnt

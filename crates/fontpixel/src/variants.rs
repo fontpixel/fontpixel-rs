@@ -123,8 +123,14 @@ impl Variants {
         }
         let mut records = BTreeMap::<String, Glyph>::new();
         let mut cmap = BTreeMap::<u32, String>::new();
-        for (cp, g) in effective(&self.base)? {
+        for entry in effective(&self.base) {
+            let (cp, g) = entry?;
             limits.sfnt.glyphs(records.len().saturating_add(2))?;
+            sfnt::bounded(
+                cmap.len().saturating_add(1),
+                limits.sfnt.max_cmap_mappings,
+                "variant Unicode mappings",
+            )?;
             let name = gname(cp);
             cmap.insert(cp, name.clone());
             records.insert(name, planned_glyph(&self.base, g));
@@ -147,8 +153,17 @@ impl Variants {
             }))
         {
             let mut substitutions = BTreeMap::new();
-            for (cp, g) in effective(font)? {
-                let g = planned_glyph(font, g);
+            for entry in effective(font) {
+                let (cp, source) = entry?;
+                if !cmap.contains_key(&cp) {
+                    limits.sfnt.glyphs(records.len().saturating_add(2))?;
+                    sfnt::bounded(
+                        cmap.len().saturating_add(1),
+                        limits.sfnt.max_cmap_mappings,
+                        "variant Unicode mappings",
+                    )?;
+                }
+                let g = planned_glyph(font, source);
                 let name = if let Some(n) = cmap.get(&cp) {
                     n.clone()
                 } else {
@@ -175,6 +190,7 @@ impl Variants {
                 let replacement = if let Some(n) = existing {
                     n
                 } else {
+                    limits.sfnt.glyphs(records.len().saturating_add(2))?;
                     let mut n = format!("{}.{label}", gname(cp));
                     let mut suffix = 1;
                     while records.contains_key(&n) {
@@ -308,22 +324,20 @@ pub struct Plan {
 fn invalid(s: &str) -> Error {
     Error::InvalidInput(format!("variants: {s}"))
 }
-fn effective(font: &Font) -> Result<Vec<(u32, &Glyph)>> {
-    font.codepoints()
-        .map(|(cp, id)| {
-            let Codepoint::Unicode(cp) = cp else {
-                return Err(invalid("variants require Unicode input"));
-            };
-            if char::from_u32(cp).is_none() {
-                return Err(invalid("non-scalar variant codepoint"));
-            }
-            Ok((
-                cp,
-                font.glyph(id)
-                    .ok_or_else(|| invalid("invalid glyph index"))?,
-            ))
-        })
-        .collect()
+fn effective(font: &Font) -> impl Iterator<Item = Result<(u32, &Glyph)>> {
+    font.codepoints().map(|(cp, id)| {
+        let Codepoint::Unicode(cp) = cp else {
+            return Err(invalid("variants require Unicode input"));
+        };
+        if char::from_u32(cp).is_none() {
+            return Err(invalid("non-scalar variant codepoint"));
+        }
+        Ok((
+            cp,
+            font.glyph(id)
+                .ok_or_else(|| invalid("invalid glyph index"))?,
+        ))
+    })
 }
 fn planned_glyph(font: &Font, g: &Glyph) -> Glyph {
     // Defaults belong to each source face, not to the eventual combined font.

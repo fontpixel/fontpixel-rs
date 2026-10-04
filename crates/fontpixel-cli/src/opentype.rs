@@ -132,7 +132,7 @@ impl ResourceArguments {
             max_pixels_per_glyph,
             max_table_bytes,
         );
-        limits
+        super::batch::standalone_working_limits(limits)
     }
 }
 fn sfnt_limits(resources: &ResourceLimits) -> sfnt::Limits {
@@ -143,8 +143,9 @@ fn sfnt_limits(resources: &ResourceLimits) -> sfnt::Limits {
 }
 // New reconstruction correction: reserve caller-owned overlap between codecs.
 // These checks cover retained CLI storage, not every codec transient or process RSS.
-// Immutable argument/Options strings are caller-owned configuration and excluded;
-// any copies created by codecs remain subject to those codecs' own budgets.
+// Immutable variants argument/Options strings are caller-owned configuration and
+// excluded; copies created by codecs remain subject to their own budgets. Subset
+// selection strings/arrays are explicitly reserved until they are dropped.
 fn retained_error(limit: usize) -> Error {
     Error::ResourceLimit {
         resource: "OpenType CLI retained bytes",
@@ -626,66 +627,174 @@ pub(super) fn dot_reuse(value: Option<&str>) -> variants::DotReuse {
         _ => variants::DotReuse::Patterns,
     }
 }
-pub(super) fn subset(a: SubsetArgs, out: &mut dyn Write) -> Result<()> {
-    let limits = fontpixel::ResourceLimits::default();
-    let data = read_primary(&a.input, &limits)?;
-    let decoded = if data.starts_with(b"wOFF") {
-        let decoded = woff::woff1::decode(&data, &Default::default())?;
+fn decode_subset_input(data: Vec<u8>, limits: &ResourceLimits) -> Result<woff::Decoded> {
+    if data.starts_with(b"wOFF") || data.starts_with(b"wOF2") {
+        let available = codec_limits(limits, data.capacity())?;
+        let web_limits = woff::Limits {
+            sfnt: sfnt_limits(&available),
+            ..Default::default()
+        };
+        let decoded = if data.starts_with(b"wOFF") {
+            woff::woff1::decode(&data, &web_limits)?
+        } else {
+            woff::woff2::decode(&data, &web_limits)?
+        };
         drop(data);
-        decoded
-    } else if data.starts_with(b"wOF2") {
-        let decoded = woff::woff2::decode(&data, &Default::default())?;
-        drop(data);
-        decoded
+        Ok(decoded)
     } else {
-        woff::Decoded {
+        Ok(woff::Decoded {
             sfnt: data,
             auxiliary: Default::default(),
             report: Default::default(),
-        }
-    };
-    let codepoints = if let Some(text) = a.text {
-        text.chars().map(u32::from).collect()
-    } else if let Some(path) = a.text_file {
-        String::from_utf8(read_primary(&path, &limits)?)
-            .map_err(|_| Error::InvalidInput("text file must be UTF-8".into()))?
-            .chars()
-            .map(u32::from)
-            .collect()
-    } else {
-        unicodes(a.unicodes.as_deref().unwrap_or(""))?
-    };
-    let drops = a
-        .drop_tables
-        .iter()
-        .map(|s| {
-            let t = s.as_bytes().try_into().map_err(|_| {
-                Error::InvalidInput("table tag must have exactly four ASCII bytes".into())
-            })?;
-            Ok(t)
         })
-        .collect::<Result<_>>()?;
-    let e = sfnt::subset::subset(
-        &decoded.sfnt,
-        &sfnt::subset::Options {
-            codepoints,
-            drop_tables: drops,
+    }
+}
+fn subset_input_bytes(decoded: &woff::Decoded, limit: usize) -> Result<usize> {
+    let mut retained = output_retained(decoded.sfnt.capacity(), &decoded.report, limit)?;
+    charge(
+        &mut retained,
+        auxiliary_bytes(&decoded.auxiliary, limit)?,
+        limit,
+    )?;
+    Ok(retained)
+}
+// Match the shared model's conservative B-tree fallback rather than relying on
+// private capacity/occupancy details: charge n+1 possible nodes, each with room
+// for 16 keys/edges plus 128 bytes. Keys here are fixed-size scalars/table tags.
+fn selection_bytes<T>(count: usize, limit: usize) -> Result<usize> {
+    let node = size_of::<T>()
+        .checked_add(size_of::<usize>())
+        .and_then(|n| n.checked_mul(16))
+        .and_then(|n| n.checked_add(128))
+        .ok_or_else(|| retained_error(limit))?;
+    count
+        .checked_add(1)
+        .and_then(|n| n.checked_mul(node))
+        .and_then(|n| n.checked_add(size_of::<BTreeSet<T>>()))
+        .filter(|n| *n <= limit)
+        .ok_or_else(|| retained_error(limit))
+}
+fn selection_insert<T: Ord>(
+    set: &mut BTreeSet<T>,
+    value: T,
+    other: usize,
+    limit: usize,
+) -> Result<()> {
+    if !set.contains(&value) {
+        let count = set
+            .len()
+            .checked_add(1)
+            .ok_or_else(|| retained_error(limit))?;
+        let mut retained = other;
+        charge(&mut retained, selection_bytes::<T>(count, limit)?, limit)?;
+        set.insert(value);
+    }
+    Ok(())
+}
+fn subset_text_selection(text: &str, other: usize, limit: usize) -> Result<BTreeSet<u32>> {
+    let mut retained = other;
+    charge(&mut retained, selection_bytes::<u32>(0, limit)?, limit)?;
+    let mut set = BTreeSet::new();
+    for cp in text.chars().map(u32::from) {
+        selection_insert(&mut set, cp, other, limit)?;
+    }
+    Ok(set)
+}
+fn subset_selection_argument_bytes(args: &SubsetArgs, limit: usize) -> Result<usize> {
+    let mut retained = array_bytes::<String>(args.drop_tables.capacity(), limit)?;
+    for text in args
+        .text
+        .iter()
+        .chain(args.unicodes.iter())
+        .chain(args.drop_tables.iter())
+    {
+        charge(&mut retained, text.capacity(), limit)?;
+    }
+    Ok(retained)
+}
+pub(super) fn subset(a: SubsetArgs, out: &mut dyn Write) -> Result<()> {
+    let limits = super::batch::standalone_working_limits(fontpixel::ResourceLimits::default());
+    let argument_bytes = subset_selection_argument_bytes(&a, limits.max_total_bytes)?;
+    let input_limits = codec_limits(&limits, argument_bytes)?;
+    let data = read_primary(&a.input, &input_limits)?;
+    let decoded = decode_subset_input(data, &input_limits)?;
+    let decoded_storage = subset_input_bytes(&decoded, limits.max_total_bytes)?;
+    let mut retained = decoded_storage;
+    charge(&mut retained, argument_bytes, limits.max_total_bytes)?;
+    let codepoints = if let Some(text) = a.text {
+        subset_text_selection(&text, retained, limits.max_total_bytes)?
+    } else if let Some(path) = a.text_file {
+        let read_limits = codec_limits(&limits, retained)?;
+        let text = String::from_utf8(read_primary(&path, &read_limits)?)
+            .map_err(|_| Error::InvalidInput("text file must be UTF-8".into()))?;
+        let mut with_text = retained;
+        charge(&mut with_text, text.capacity(), limits.max_total_bytes)?;
+        subset_text_selection(&text, with_text, limits.max_total_bytes)?
+    } else {
+        unicodes(
+            a.unicodes.as_deref().unwrap_or(""),
+            retained,
+            limits.max_total_bytes,
+        )?
+    };
+    let mut with_codepoints = retained;
+    charge(
+        &mut with_codepoints,
+        selection_bytes::<u32>(codepoints.len(), limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
+    let mut drops = BTreeSet::<[u8; 4]>::new();
+    for s in &a.drop_tables {
+        let tag = s.as_bytes().try_into().map_err(|_| {
+            Error::InvalidInput("table tag must have exactly four ASCII bytes".into())
+        })?;
+        selection_insert(&mut drops, tag, with_codepoints, limits.max_total_bytes)?;
+    }
+    // Text/range/drop-table arguments remain conservatively reserved throughout
+    // selection construction, including a text-file's separate live contents.
+    // Release their exact owners before restoring that allowance for the codec.
+    drop(a.unicodes);
+    drop(a.drop_tables);
+    let mut with_selection = decoded_storage;
+    charge(
+        &mut with_selection,
+        selection_bytes::<u32>(codepoints.len(), limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
+    charge(
+        &mut with_selection,
+        selection_bytes::<[u8; 4]>(drops.len(), limits.max_total_bytes)?,
+        limits.max_total_bytes,
+    )?;
+    let available = codec_limits(&limits, with_selection)?;
+    let options = sfnt::subset::Options {
+        codepoints,
+        drop_tables: drops,
+        limits: sfnt::gsub::LayoutLimits {
+            sfnt: sfnt_limits(&available),
             ..Default::default()
         },
-    )?;
+    };
+    let sfnt::subset::Subset {
+        bytes,
+        glyph_mapping,
+        report: incoming,
+    } = sfnt::subset::subset(&decoded.sfnt, &options)?;
+    drop(options);
+    drop(glyph_mapping);
     drop(decoded.sfnt);
     let mut report = decoded.report;
-    let mut retained = e.bytes.capacity();
+    let mut retained = bytes.capacity();
     charge(
         &mut retained,
         auxiliary_bytes(&decoded.auxiliary, limits.max_total_bytes)?,
         limits.max_total_bytes,
     )?;
-    append_report(&mut report, e.report, retained, limits.max_total_bytes)?;
+    append_report(&mut report, incoming, retained, limits.max_total_bytes)?;
     a.output
-        .save(e.bytes, report, decoded.auxiliary, &limits, out)
+        .save(bytes, report, decoded.auxiliary, &limits, out)
 }
-fn unicodes(s: &str) -> Result<BTreeSet<u32>> {
+fn unicodes(s: &str, other: usize, limit: usize) -> Result<BTreeSet<u32>> {
     if s.is_empty() {
         return Err(Error::InvalidInput("empty Unicode range selection".into()));
     }
@@ -696,6 +805,8 @@ fn unicodes(s: &str) -> Result<BTreeSet<u32>> {
         )
         .map_err(|_| Error::InvalidInput("invalid hexadecimal Unicode value".into()))
     };
+    let mut retained = other;
+    charge(&mut retained, selection_bytes::<u32>(0, limit)?, limit)?;
     let mut set = BTreeSet::new();
     for part in s.split(',') {
         let (a, b) = if let Some((a, b)) = part.split_once('-') {
@@ -713,13 +824,16 @@ fn unicodes(s: &str) -> Result<BTreeSet<u32>> {
                     "Unicode ranges cannot contain surrogates".into(),
                 ));
             }
-            set.insert(cp);
+            selection_insert(&mut set, cp, other, limit)?;
         }
     }
     Ok(set)
 }
 
 impl VariantsArgs {
+    pub(super) fn source_identity_total_bytes(&self) -> usize {
+        self.resources.limits().max_total_bytes
+    }
     pub(super) fn report_style(&self) -> ReportStyle {
         self.output.report
     }
@@ -1049,6 +1163,140 @@ mod tests {
         variants::encode(&Variants::new(font), &Options::default())
             .unwrap()
             .bytes
+    }
+
+    #[test]
+    fn subset_selection_admits_unique_nodes_before_insertion() {
+        let retained = 73;
+        let exact = retained + selection_bytes::<u32>(1, usize::MAX).unwrap();
+        assert_eq!(
+            subset_text_selection("AAAA", retained, exact).unwrap(),
+            BTreeSet::from([65])
+        );
+        assert!(matches!(
+            subset_text_selection("A", retained, exact - 1),
+            Err(Error::ResourceLimit { .. })
+        ));
+        let mut selected = BTreeSet::from([65_u32]);
+        let before = selected.clone();
+        assert!(matches!(
+            selection_insert(&mut selected, 66, retained, exact),
+            Err(Error::ResourceLimit { .. })
+        ));
+        assert_eq!(selected, before);
+        selection_insert(&mut selected, 65, retained, exact).unwrap();
+        assert_eq!(selected, before);
+        assert!(selection_bytes::<u32>(usize::MAX, usize::MAX).is_err());
+    }
+
+    #[test]
+    fn subset_selection_arguments_include_text_ranges_and_spare_array_storage() {
+        #[derive(Parser)]
+        struct ParseSubset {
+            #[command(flatten)]
+            args: SubsetArgs,
+        }
+        for flag in ["--text", "--unicodes"] {
+            let value = if flag == "--text" { "A" } else { "U+0041" };
+            let mut args = ParseSubset::try_parse_from([
+                "fontpixel",
+                "source.ttf",
+                flag,
+                value,
+                "--drop-table",
+                "DSIG",
+                "-o",
+                "out.ttf",
+            ])
+            .unwrap()
+            .args;
+            args.drop_tables.try_reserve_exact(8).unwrap();
+            args.drop_tables[0].try_reserve_exact(1024).unwrap();
+            let text = if flag == "--text" {
+                &mut args.text
+            } else {
+                &mut args.unicodes
+            };
+            text.as_mut().unwrap().try_reserve_exact(2048).unwrap();
+            let expected = args.drop_tables.capacity() * size_of::<String>()
+                + args.drop_tables[0].capacity()
+                + args.text.as_ref().map_or(0, String::capacity)
+                + args.unicodes.as_ref().map_or(0, String::capacity);
+            assert_eq!(
+                subset_selection_argument_bytes(&args, expected).unwrap(),
+                expected
+            );
+            assert!(matches!(
+                subset_selection_argument_bytes(&args, expected - 1),
+                Err(Error::ResourceLimit { .. })
+            ));
+        }
+    }
+
+    #[test]
+    fn subset_ranges_deduplicate_within_budget_and_keep_unicode_boundaries() {
+        let retained = 113;
+        let exact = retained + selection_bytes::<u32>(2, usize::MAX).unwrap();
+        assert_eq!(
+            unicodes("U+0041-0042,U+0041", retained, exact).unwrap(),
+            BTreeSet::from([65, 66])
+        );
+        assert!(matches!(
+            unicodes("U+0041-0042", retained, exact - 1),
+            Err(Error::ResourceLimit { .. })
+        ));
+        for value in ["U+D800", "U+D7FF-E000", "U+110000", "U+0042-0041", ""] {
+            assert!(matches!(
+                unicodes(value, retained, usize::MAX),
+                Err(Error::InvalidInput(_))
+            ));
+        }
+        assert_eq!(
+            unicodes("U+D7FF,U+E000,U+10FFFF", retained, usize::MAX).unwrap(),
+            BTreeSet::from([0xd7ff, 0xe000, 0x10ffff])
+        );
+    }
+
+    #[test]
+    fn subset_web_decode_reserves_the_live_wire_allocation() {
+        let sfnt = encoded_fixture();
+        let woff = woff::woff1::encode(&sfnt, &Default::default(), &Default::default()).unwrap();
+        let woff2 = woff::woff2::encode(&sfnt, &Default::default(), &Default::default()).unwrap();
+        for mut wire in [woff.bytes, woff2.bytes] {
+            wire.try_reserve_exact(1024).unwrap();
+            let limits = ResourceLimits {
+                max_total_bytes: wire.capacity(),
+                ..Default::default()
+            };
+            assert!(matches!(
+                decode_subset_input(wire, &limits),
+                Err(Error::ResourceLimit { .. })
+            ));
+        }
+    }
+
+    #[test]
+    fn subset_retention_includes_decoded_sfnt_auxiliary_and_diagnostics() {
+        let mut sfnt = encoded_fixture();
+        sfnt.try_reserve_exact(1024).unwrap();
+        let mut metadata = Vec::with_capacity(2048);
+        metadata.extend_from_slice(b"<metadata/>");
+        let decoded = woff::Decoded {
+            sfnt,
+            auxiliary: woff::Auxiliary {
+                metadata: Some(metadata),
+                ..Default::default()
+            },
+            report: loss_report("subset.incoming"),
+        };
+        let exact = decoded.sfnt.capacity()
+            + report_bytes(&decoded.report, usize::MAX).unwrap()
+            + auxiliary_bytes(&decoded.auxiliary, usize::MAX).unwrap();
+        assert_eq!(subset_input_bytes(&decoded, exact).unwrap(), exact);
+        assert!(matches!(
+            subset_input_bytes(&decoded, exact - 1),
+            Err(Error::ResourceLimit { .. })
+        ));
     }
 
     fn strict_output(filename: &str) -> Output {

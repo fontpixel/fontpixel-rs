@@ -142,6 +142,9 @@ impl MergeArgs {
     pub(crate) fn report_style(&self) -> ReportStyle {
         self.raw.report
     }
+    pub(crate) fn source_identity_total_bytes(&self) -> usize {
+        self.raw.raster.input_limits().max_total_bytes
+    }
     fn spacing(&self) -> MergeSpacing {
         match self.raw.spacing.as_str() {
             "mono" => MergeSpacing::Mono,

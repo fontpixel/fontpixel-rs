@@ -4,7 +4,6 @@
 //! outlines or imply that a FontSet projection is available for every sfnt.
 use crate::report::{Impact, Level};
 use crate::{Error, Report, ReportEntry, Result, sfnt};
-use std::io::Write;
 #[cfg(feature = "woff")]
 pub mod woff1;
 #[cfg(feature = "woff2")]
@@ -178,26 +177,6 @@ fn table_sum(n: usize, lengths: impl Iterator<Item = usize>, l: &Limits) -> Resu
         "WOFF reconstructed bytes",
     )?;
     Ok(total)
-}
-/// Shared bounded compressed writer, preventing allocation beyond output limit.
-struct Output {
-    bytes: Vec<u8>,
-    limit: usize,
-}
-impl Write for Output {
-    fn write(&mut self, data: &[u8]) -> std::io::Result<usize> {
-        if data.len() > self.limit.saturating_sub(self.bytes.len()) {
-            return Err(std::io::Error::other("WOFF compressed output limit"));
-        }
-        self.bytes
-            .try_reserve(data.len())
-            .map_err(std::io::Error::other)?;
-        self.bytes.extend_from_slice(data);
-        Ok(data.len())
-    }
-    fn flush(&mut self) -> std::io::Result<()> {
-        Ok(())
-    }
 }
 #[cfg(feature = "woff")]
 fn checksum(tag: [u8; 4], data: &[u8]) -> Result<u32> {

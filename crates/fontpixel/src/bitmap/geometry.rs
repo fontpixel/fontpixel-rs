@@ -61,6 +61,11 @@ impl<F: PixelFormat> Bitmap<F> {
     /// Tight nonzero-ink rectangle, in bottom-left coordinates; empty is `(0,0,0,0)`.
     /// Mono scans bytes using leading/trailing zero counts, not individual pixels.
     pub fn bbox(&self) -> Bounds {
+        // A zero-width raster can retain an arbitrarily large logical height.
+        // No stored pixels means no ink, without walking every empty row.
+        if self.data.is_empty() {
+            return Bounds::default();
+        }
         let (mut left, mut right, mut top, mut bottom) = (self.width, 0, self.height, 0);
         for y in 0..self.height {
             for (i, &b) in self.row(y).iter().enumerate() {

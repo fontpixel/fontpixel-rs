@@ -136,11 +136,13 @@ impl<'a> MergePart<'a> {
             license: PartLicense::default(),
         }
     }
-    fn label_text(&self, index: usize) -> String {
-        self.label
-            .clone()
-            .or_else(|| self.font.names.family.clone())
-            .unwrap_or_else(|| format!("part {index}"))
+    fn label_text(&self, index: usize, budget: &mut Budget) -> Result<String> {
+        budget.text(
+            |out| match self.label.as_deref().or(self.font.names.family.as_deref()) {
+                Some(label) => out.write_str(label),
+                None => write!(out, "part {index}"),
+            },
+        )
     }
 }
 /// Explicit merge choices.
@@ -205,6 +207,68 @@ impl Budget {
             });
         }
         Ok(())
+    }
+
+    // Keep the original conservative reservations, and additionally reserve
+    // actual owned notice buffers before allocating them. No storage is credited
+    // back here: sources, previous buffers and allocation overlap stay charged.
+    fn text(
+        &mut self,
+        render: impl Fn(&mut dyn std::fmt::Write) -> std::fmt::Result,
+    ) -> Result<String> {
+        let maximum = self.max;
+        let error = || Error::ResourceLimit {
+            resource: "merge working bytes",
+            limit: maximum,
+        };
+        let mut measured = AuditTextSize { bytes: 0, maximum };
+        render(&mut measured).map_err(|_| error())?;
+        self.charge(measured.bytes)?;
+        let mut text = String::new();
+        text.try_reserve_exact(measured.bytes)
+            .map_err(|_| error())?;
+        self.charge(
+            text.capacity()
+                .checked_sub(measured.bytes)
+                .ok_or_else(error)?,
+        )?;
+        render(&mut AuditText {
+            text: &mut text,
+            maximum: measured.bytes,
+        })
+        .map_err(|_| error())?;
+        Ok(text)
+    }
+
+    fn reserve<T>(&mut self, values: &mut Vec<T>, additional: usize) -> Result<()> {
+        let maximum = self.max;
+        let error = || Error::ResourceLimit {
+            resource: "merge working bytes",
+            limit: maximum,
+        };
+        let target = values.len().checked_add(additional).ok_or_else(error)?;
+        if target <= values.capacity() {
+            return Ok(());
+        }
+        let target = target
+            .max(values.capacity().checked_mul(2).ok_or_else(error)?)
+            .max(4);
+        // Reserve the complete new array while the old allocation remains live.
+        self.charge(
+            target
+                .checked_mul(std::mem::size_of::<T>())
+                .ok_or_else(error)?,
+        )?;
+        values
+            .try_reserve_exact(target - values.len())
+            .map_err(|_| error())?;
+        self.charge(
+            values
+                .capacity()
+                .checked_sub(target)
+                .and_then(|extra| extra.checked_mul(std::mem::size_of::<T>()))
+                .ok_or_else(error)?,
+        )
     }
 }
 fn invalid(message: impl Into<String>) -> Error {
@@ -636,6 +700,25 @@ fn audit_entry(
     code: &str,
     message: std::fmt::Arguments<'_>,
 ) -> Result<()> {
+    budget_entry(
+        report,
+        budget,
+        index,
+        code,
+        Level::Info,
+        Impact::None,
+        message,
+    )
+}
+fn budget_entry(
+    report: &mut Report,
+    budget: &mut Budget,
+    index: usize,
+    code: &str,
+    level: Level,
+    impact: Impact,
+    message: std::fmt::Arguments<'_>,
+) -> Result<()> {
     let maximum = budget.max;
     let error = || Error::ResourceLimit {
         resource: "merge working bytes",
@@ -711,8 +794,8 @@ fn audit_entry(
         budget.charge(extra)?;
     }
     report.push(ReportEntry {
-        level: Level::Info,
-        impact: Impact::None,
+        level,
+        impact,
         code: owned_code,
         location: Location {
             font_index: Some(index),
@@ -800,6 +883,51 @@ fn audit_global_metadata(
         }
     }
     Ok(())
+}
+
+fn retained_result(
+    parts: &[MergePart<'_>],
+    options: &MergeOptions,
+    font: &Font,
+    report: &MergeReport,
+) -> Result<()> {
+    let maximum = options.limits.max_total_bytes;
+    let error = || Error::ResourceLimit {
+        resource: "merge working bytes",
+        limit: maximum,
+    };
+    let mut live = Budget {
+        used: 0,
+        max: maximum,
+    };
+    live.charge(std::mem::size_of_val(parts))?;
+    live.charge(std::mem::size_of::<MergeOptions>())?;
+    live.charge(options.family.capacity())?;
+    for part in parts {
+        live.charge(part.font.retained_usage(maximum)?.bytes)?;
+        live.charge(part.selection.allocation_bytes().ok_or_else(error)?)?;
+        for text in part
+            .label
+            .iter()
+            .chain(part.license.copyright.iter())
+            .chain(part.license.license.iter())
+            .chain(part.license.license_url.iter())
+        {
+            live.charge(text.capacity())?;
+        }
+        live.charge(
+            part.license
+                .reserved_names
+                .capacity()
+                .checked_mul(std::mem::size_of::<String>())
+                .ok_or_else(error)?,
+        )?;
+        for name in &part.license.reserved_names {
+            live.charge(name.capacity())?;
+        }
+    }
+    live.charge(font.retained_usage(maximum)?.bytes)?;
+    live.charge(report.retained_bytes(maximum)?)
 }
 /// Merge selected Unicode mappings without I/O, charset guessing or raster conversion.
 pub fn merge(parts: &[MergePart<'_>], options: &MergeOptions) -> Result<MergeResult> {
@@ -956,7 +1084,7 @@ pub fn merge(parts: &[MergePart<'_>], options: &MergeOptions) -> Result<MergeRes
         let (missing_ranges, missing_blocks, selected_missing) = missing(part, &mut budget)?;
         report.parts.push(PartReport {
             index,
-            label: part.label_text(index),
+            label: part.label_text(index, &mut budget)?,
             selection: part.selection.expression().into(),
             dy: part.dy,
             taken_glyphs: 0,
@@ -1120,7 +1248,7 @@ pub fn merge(parts: &[MergePart<'_>], options: &MergeOptions) -> Result<MergeRes
         cell_height.checked_add(first.metrics.line_gap.unwrap_or(0)),
         "line gap",
     )?);
-    metadata::write_names(&mut font, options, &report.licenses);
+    metadata::write_names(&mut font, options, &report.licenses, &mut budget)?;
     let mut left = 0i64;
     let mut right = 0i64;
     let mut bottom = 0i64;
@@ -1207,7 +1335,10 @@ pub fn merge(parts: &[MergePart<'_>], options: &MergeOptions) -> Result<MergeRes
     }
     audit_global_metadata(parts, &font, &mut report.diagnostics, &mut budget)?;
     font.validate(&options.limits)?;
-    font.retained_usage(options.limits.max_total_bytes)?;
+    // This second, nonallocating check covers the complete simultaneously
+    // retained result and its borrowed caller inputs. It supplements prospective
+    // allocations above; it does not grant credit against their reservations.
+    retained_result(parts, options, &font, &report)?;
     if options.strict && report.diagnostics.has_loss() {
         return Err(Error::StrictLoss(report.diagnostics));
     }
@@ -1218,6 +1349,45 @@ pub fn merge(parts: &[MergePart<'_>], options: &MergeOptions) -> Result<MergeRes
 mod audit_budget_tests {
     use super::*;
     use std::fmt::Write;
+
+    #[test]
+    fn final_aggregate_counts_report_and_caller_spare_capacity() {
+        let source = Font::default();
+        let mut parts = [MergePart::new(&source, Selection::parse("U+0041").unwrap())];
+        let mut options = MergeOptions {
+            family: "New Family".into(),
+            spacing: MergeSpacing::Prop,
+            ..Default::default()
+        };
+        let mut result = merge(&parts, &options).unwrap();
+        let before = result.report.retained_bytes(usize::MAX).unwrap();
+        let old_capacity = result.report.parts[0].label.capacity();
+        result.report.parts[0].label.reserve_exact(128 * 1024);
+        let added = result.report.parts[0].label.capacity() - old_capacity;
+        assert_eq!(
+            result.report.retained_bytes(usize::MAX).unwrap(),
+            before + added
+        );
+        options.limits.max_total_bytes = 64 * 1024;
+        assert!(
+            result
+                .font
+                .retained_usage(options.limits.max_total_bytes)
+                .is_ok()
+        );
+        assert!(matches!(
+            retained_result(&parts, &options, &result.font, &result.report),
+            Err(Error::ResourceLimit { .. })
+        ));
+        options.limits.max_total_bytes = ResourceLimits::default().max_total_bytes;
+        let result = merge(&parts, &options).unwrap();
+        parts[0].label = Some(String::with_capacity(128 * 1024));
+        options.limits.max_total_bytes = 64 * 1024;
+        assert!(matches!(
+            retained_result(&parts, &options, &result.font, &result.report),
+            Err(Error::ResourceLimit { .. })
+        ));
+    }
 
     #[test]
     fn escaped_diagnostic_has_exact_and_one_byte_short_boundaries() {

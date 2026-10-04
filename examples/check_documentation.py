@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit current documentation coverage without compiling or editing inputs."""
+"""Inventory documentation; optionally query CLI help/registry, without font smokes."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -31,10 +31,14 @@ def check():
     spec = importlib.util.spec_from_file_location("tong_batch_example", ROOT / "examples/tong_batch.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    for kwargs, expected in [({},84), ({"only":"otb"},20),
-                              ({"only":"square"},72), ({"only":"dot"},72),
-                              ({"skip_otf":True},76)]:
-        rows = module.tasks(Path("input"), Path("output"), "1.0", ["Large","Small"], **kwargs)
+    for sizes, kwargs, expected in [(["Large", "Small"], {}, 84),
+                                   (["Large", "Small"], {"only": "otb"}, 20),
+                                   (["Large", "Small"], {"only": "square"}, 72),
+                                   (["Large", "Small"], {"only": "dot"}, 72),
+                                   (["Large", "Small"], {"skip_otf": True}, 76),
+                                   (["Large"], {}, 42), (["Small"], {}, 42),
+                                   (["Small"], {"only": "dot", "skip_otf": True}, 34)]:
+        rows = module.tasks(Path("input"), Path("output"), "1.0", sizes, **kwargs)
         assert len(rows) == expected, (kwargs,len(rows))
         assert len({row['id'] for row in rows}) == expected
         assert len({row['output'] for row in rows}) == expected
@@ -42,7 +46,6 @@ def check():
         for row in rows:
             text += "\n[[tasks]]\n" + "".join(f"{key} = {module.value(value)}\n" for key,value in row.items())
         assert tomllib.loads(text)['tasks'] == rows
-    assert len(module.tasks(Path("input"),Path("output"),"1.0",["Large"])) == 42
     manifest = ROOT.parent / "reference/fontpixel/ingest/manifest.toml"
     inventory = json.loads((ROOT / "docs/migration-manifest-inventory.json").read_text())
     migration = (ROOT / "docs/migration-fontpixel.md").read_text()
@@ -78,7 +81,12 @@ def main():
         assert all(row['read'] and row['write'] for row in formats), 'binary must have all-format features'
         for command in sorted(EXPECTED_COMMANDS):
             subprocess.run([str(binary),command,'--help'],check=True,capture_output=True,text=True)
-    print('Documentation audit passed: 99 format documents, 13 command examples, complete manifest keys, Tong task matrix.')
+    print('Documentation source inventory: 99 format documents, 13 command examples, manifest keys, Tong task matrix.')
+    print('Document existence/length and source text are not semantic profile or native font validation.')
+    if args.binary:
+        print('CLI help and registry queries passed; no font conversion smoke was run.')
+    else:
+        print('Native CLI execution: not run.')
 
 
 if __name__ == '__main__':

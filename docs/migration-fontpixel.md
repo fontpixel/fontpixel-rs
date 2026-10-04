@@ -10,8 +10,12 @@ is not accepted.
 ## Open correctness gaps
 
 The latest coordinator finding says the catalogue comparison omitted bitmap
-family, style and copyright. Implicit FontTools defaults and metric differences
-still need an inventory. Therefore the earlier 173-font/8-ZIP result establishes
+family, style and copyright. The subsequent reference-side inventory identified
+FontTools defaults including fsType=4, fsSelection=0 and usBreakChar=32, and the
+explicit metadata/UPM/reference-strike policies. These defaults are not licence
+instructions. Full native comparison of defaults and metric differences remains
+open; see the [current handoff](LOCAL-CODEX-HANDOFF.zh.md#7-收录站与通格对照仍欠哪些证明).
+Therefore the earlier 173-font/8-ZIP result establishes
 only the checks actually performed, not full semantic equivalence. Reconcile all
 name records, missing versus explicit fields, global/strike/glyph metrics, styles,
 copyright/license data, table flags/defaults and packaging against the original

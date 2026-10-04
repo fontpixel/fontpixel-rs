@@ -1,4 +1,4 @@
-//! Reconstructed 23-case W6.5 regression suite. CURRENTLY UNTESTED.
+//! W6.5 merge regression suite. Local repairs require central validation.
 use fontpixel::Error;
 use fontpixel::bitmap::{Bitmap, Bounds, Gray8};
 use fontpixel::charset::merge_categories::*;
@@ -814,5 +814,114 @@ fn mixed_pixel_sizes_keep_first_nominal_grid_and_all_actual_pixels() {
             .entries
             .iter()
             .any(|e| e.code == "merge.metrics.ppem_y" && e.location.font_index == Some(1))
+    );
+}
+
+#[test]
+fn long_part_label_cannot_escape_font_plus_report_budget() {
+    let mut source = font([glyph(65, 3)]);
+    source.names.license_url = Some("https://example.invalid/license".into());
+    let mut component = part(&source, "all");
+    component.label = Some("x".repeat(1024 * 1024));
+    let mut opts = options();
+    opts.limits.max_total_bytes = 13 * 1024 * 1024;
+    // Three notice fields each contain label twice, then names and properties
+    // both retain it: Font >= 12 MiB, report labels >= 2 MiB, plus live sources.
+    assert!(matches!(
+        merge(&[component], &opts),
+        Err(Error::ResourceLimit { .. })
+    ));
+    assert_eq!(
+        source.names.license_url.as_deref(),
+        Some("https://example.invalid/license")
+    );
+}
+
+#[test]
+fn compound_notice_text_is_preserved_in_order_in_strict_merge() {
+    let mut source = font([glyph(65, 3)]);
+    source.properties.push(Property::new(
+        "LICENSE_TEXT",
+        PropertyValue::List(vec![
+            PropertyValue::Text("Additional mandatory notice".into()),
+            PropertyValue::List(vec![PropertyValue::Text(
+                "Second notice\nwith line break é".into(),
+            )]),
+        ]),
+    ));
+    source.properties.push(Property::new(
+        "COPYRIGHT",
+        PropertyValue::List(vec![PropertyValue::Text("Additional copyright".into())]),
+    ));
+    source.properties.push(Property::new(
+        "LICENSE_URL",
+        PropertyValue::List(vec![PropertyValue::Text(
+            "https://example.invalid/license".into(),
+        )]),
+    ));
+    let before = source.clone();
+    let opts = MergeOptions {
+        strict: true,
+        ..options()
+    };
+    let result = merge(&[part(&source, "all")], &opts).unwrap();
+    let expected = "OFL-1.1\nAdditional mandatory notice\nSecond notice\nwith line break é";
+    assert_eq!(result.report.licenses[0].license.as_deref(), Some(expected));
+    assert_eq!(
+        result.report.licenses[0].copyright.as_deref(),
+        Some("Copyright original contributors\nAdditional copyright")
+    );
+    assert_eq!(
+        result.report.licenses[0].license_url.as_deref(),
+        Some("https://example.invalid/license")
+    );
+    assert!(
+        result
+            .font
+            .names
+            .license
+            .as_deref()
+            .unwrap()
+            .ends_with(expected)
+    );
+    assert_eq!(
+        result.font.properties.get("LICENSE"),
+        Some(&PropertyValue::Text(
+            result.font.names.license.clone().unwrap()
+        ))
+    );
+    assert!(!result.report.diagnostics.has_loss());
+    assert_eq!(source, before);
+}
+
+#[test]
+fn opaque_notice_values_are_explicit_loss_without_guessing_text() {
+    let mut source = font([glyph(65, 3)]);
+    source.properties.push(Property::new(
+        "LICENSE_TEXT",
+        PropertyValue::List(vec![
+            PropertyValue::Text("Visible extra notice".into()),
+            PropertyValue::Bytes(vec![0xff, 0x00]),
+            PropertyValue::Integer(42),
+        ]),
+    ));
+    let result = merged(&[part(&source, "all")]);
+    assert_eq!(
+        result.report.licenses[0].license.as_deref(),
+        Some("OFL-1.1\nVisible extra notice")
+    );
+    let losses: Vec<_> = result
+        .report
+        .diagnostics
+        .entries
+        .iter()
+        .filter(|entry| entry.code == "merge.metadata.notice_value_omitted")
+        .collect();
+    assert_eq!(losses.len(), 1);
+    assert_eq!(losses[0].impact, fontpixel::report::Impact::Loss);
+    assert_eq!(losses[0].location.font_index, Some(0));
+    assert!(
+        matches!(merge(&[part(&source, "all")], &MergeOptions { strict: true, ..options() }),
+        Err(Error::StrictLoss(report)) if report.has_loss())
     );
 }

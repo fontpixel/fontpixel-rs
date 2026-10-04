@@ -133,6 +133,13 @@ fn atom(term: &str) -> Result<Vec<CodepointRange>> {
     Ok(ranges)
 }
 impl Selection {
+    pub(super) fn allocation_bytes(&self) -> Option<usize> {
+        self.ranges
+            .capacity()
+            .checked_mul(std::mem::size_of::<CodepointRange>())
+            .and_then(|bytes| bytes.checked_add(self.expression.capacity()))
+    }
+
     /// Parse categories/ranges; 64 KiB and 1,024 terms maximum.
     pub fn parse(expression: &str) -> Result<Self> {
         if expression.len() > 65536 {

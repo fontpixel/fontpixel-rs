@@ -1,5 +1,5 @@
-// Recovery reconstruction of later end-to-end regressions only. Not the full
-// original phase6_cli.rs. Never executed after recovery. Merge with restored tests.
+//! Recovery reconstruction of later end-to-end regressions, plus local phase-6 fixes.
+//! Native acceptance is established only by the coordinator's recorded test runs.
 #![cfg(feature = "bdf")]
 use std::{
     fs,

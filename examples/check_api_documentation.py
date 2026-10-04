@@ -22,6 +22,20 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def source_fragment_present(text: str, fragment: str) -> bool:
+    """Permit formatting whitespace without joining identifiers or string words.
+
+    This remains a lexical source sketch, not a Rust parser. Exact fragments
+    (including diagnostic prose inside a string) retain the original check.
+    """
+    if fragment in text:
+        return True
+    token = r'"(?:\\.|[^"\\])*"|[A-Za-z_][A-Za-z_0-9]*|[0-9]+|[^\s]'
+    needle = "\0" + "\0".join(re.findall(token, fragment)) + "\0"
+    haystack = "\0" + "\0".join(re.findall(token, text)) + "\0"
+    return needle in haystack
+
+
 def local_links(path: Path):
     for target in re.findall(r"\[[^\]]+\]\(([^)]+)\)", path.read_text()):
         if "://" in target or target.startswith("#"):
@@ -42,7 +56,7 @@ def check(require_rustdoc_link: bool):
         path = ROOT / reference["source"]
         text = path.read_text()
         for declaration in reference["declarations"]:
-            if declaration not in text:
+            if not source_fragment_present(text, declaration):
                 raise ValueError(f"missing source reference: {reference['capability']}: {declaration}")
             declarations += 1
         source_hashes[reference["source"]] = digest(path)
@@ -136,6 +150,7 @@ def check(require_rustdoc_link: bool):
             "native_compilation": "not performed", "native_runtime": "not performed",
             "rust_type_checking": "not performed", "rustdoc_link_present": linked,
             "lexical_declarations_checked": declarations, "source_reference_groups": len(contract["references"]),
+            "source_match": "exact text or formatting-insensitive tokens; not Rust parsing/type checking",
             "documented_fragments_checked": documented_fragments,
             "stale_claims_excluded": stale_claims, "toml_examples_parsed": toml_examples,
             "feature_gates": contract["features"], "rustdoc_code_blocks": blocks,

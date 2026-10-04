@@ -31,6 +31,9 @@ def app_names(family, style, kwargs):
 
 
 def setup(reference):
+    protected = Path(__file__).resolve().parents[2] / 'reference'
+    if reference.resolve().is_relative_to(protected.resolve()):
+        raise ValueError('execute reference code only from a writable local-work copy')
     sys.dont_write_bytecode = True
     sys.path.insert(0, str(reference / 'fontpixel/pipeline'))
     from opf import build, downloads, familymeta, licenses, vectorize
@@ -213,7 +216,11 @@ def main():
     p.add_argument('--reference', type=Path, required=True); p.add_argument('--samples', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True); p.add_argument('--binary', type=Path)
     p.add_argument('--rename-binary', type=Path); p.add_argument('--plan', type=Path)
-    a = p.parse_args(); a.output.mkdir(parents=True, exist_ok=True)
+    a = p.parse_args()
+    if a.engine == 'native' and (a.binary is None or a.plan is None):
+        p.error('native requires --binary and --plan')
+    if a.output.exists() and any(a.output.iterdir()):raise ValueError('fresh output directory required')
+    a.output.mkdir(parents=True, exist_ok=True)
     temporary = a.output.resolve() / 'tmp'; temporary.mkdir()
     os.environ['TMPDIR'] = str(temporary); tempfile.tempdir = str(temporary)
     api = setup(a.reference); destination = a.output / 'downloads'; destination.mkdir()

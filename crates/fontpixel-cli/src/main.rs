@@ -16,8 +16,6 @@ mod p2_formats;
 mod p3_formats;
 use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
 use fontpixel::{Error, ReadOptions, ResourceLimits};
-#[cfg(feature = "opentype")]
-use std::{fs::File, io::Read};
 use std::{
     io::{self, Write},
     path::{Path, PathBuf},
@@ -479,19 +477,7 @@ fn emit_json<T: serde::Serialize>(output: &mut dyn Write, value: &T) -> fontpixe
 
 #[cfg(feature = "opentype")]
 fn read_primary(path: &Path, limits: &ResourceLimits) -> fontpixel::Result<Vec<u8>> {
-    let file = File::open(path)?;
-    batch::sources().remember(&file)?;
-    let maximum = limits.max_input_bytes.min(limits.max_total_bytes);
-    let mut bytes = Vec::new();
-    file.take((maximum as u64).saturating_add(1))
-        .read_to_end(&mut bytes)?;
-    if bytes.len() > maximum {
-        return Err(Error::ResourceLimit {
-            resource: "primary input bytes",
-            limit: maximum,
-        });
-    }
-    Ok(bytes)
+    assets::read_primary(path, limits, batch::sources())
 }
 
 fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
@@ -1617,6 +1603,26 @@ fn emit_error(error: &Error, style: ReportStyle, output: &mut dyn Write) -> font
     }
 }
 
+// Obtain the original command total before installing the standalone source scope.
+fn source_identity_total_bytes(command: &Command) -> usize {
+    match command {
+        Command::Merge(args) => args.source_identity_total_bytes(),
+        Command::Diff(args) => args.source_identity_total_bytes(),
+        Command::Validate(args) => args.source_identity_total_bytes(),
+        Command::Charset(args) => args.source_identity_total_bytes(),
+        #[cfg(feature = "opentype")]
+        Command::Variants(args) => args.source_identity_total_bytes(),
+        #[cfg(feature = "opentype")]
+        Command::Subset(_) => ResourceLimits::default().max_total_bytes,
+        Command::Info { raster, .. } => raster.input_limits().max_total_bytes,
+        Command::Convert { raster, .. } => raster.input_limits().max_total_bytes,
+        Command::Preview { layout, .. } | Command::Render { layout, .. } => {
+            layout.raster.input_limits().max_total_bytes
+        }
+        Command::Formats { .. } | Command::Batch(_) => ResourceLimits::default().max_total_bytes,
+    }
+}
+
 fn main() -> ExitCode {
     let cli = Cli::parse();
     let command = match cli.command {
@@ -1624,7 +1630,10 @@ fn main() -> ExitCode {
         command => command,
     };
     let style = report_style(&command);
-    match batch::with_source_scope(|| execute(command, &mut io::stdout().lock())) {
+    let source_total = source_identity_total_bytes(&command);
+    match batch::with_bounded_source_scope(source_total, || {
+        execute(command, &mut io::stdout().lock())
+    }) {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
             let _ = emit_error(&error, style, &mut io::stderr().lock());
@@ -1726,7 +1735,7 @@ impl RasterArguments {
         if let Some(maximum) = self.max_resources {
             limits.max_resources = maximum;
         }
-        limits
+        batch::standalone_working_limits(limits)
     }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         self.extra.apply(registry)?;

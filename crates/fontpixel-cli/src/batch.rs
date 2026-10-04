@@ -384,22 +384,79 @@ struct Capture {
     limit: usize,
     charged: usize,
 }
+struct SourceScope {
+    sources: assets::Sources,
+    identity_reservation: usize,
+}
 thread_local! {
     static CAPTURE:RefCell<Option<Capture>>=const{RefCell::new(None)};
-    static SOURCE_SCOPE:RefCell<Option<assets::Sources>>=const{RefCell::new(None)};
+    static SOURCE_SCOPE:RefCell<Option<SourceScope>>=const{RefCell::new(None)};
 }
-pub(crate) fn with_source_scope<T>(f: impl FnOnce() -> T) -> T {
-    struct Restore(Option<assets::Sources>);
+fn with_scope<T>(scope: SourceScope, f: impl FnOnce() -> T) -> T {
+    struct Restore(Option<SourceScope>);
     impl Drop for Restore {
         fn drop(&mut self) {
             SOURCE_SCOPE.with(|s| *s.borrow_mut() = self.0.take());
         }
     }
-    let restore =
-        Restore(SOURCE_SCOPE.with(|s| s.borrow_mut().replace(assets::Sources::default())));
+    let restore = Restore(SOURCE_SCOPE.with(|s| s.borrow_mut().replace(scope)));
     let result = f();
     drop(restore);
     result
+}
+#[cfg(test)]
+pub(crate) fn with_source_scope<T>(f: impl FnOnce() -> T) -> T {
+    with_scope(
+        SourceScope {
+            sources: assets::Sources::default(),
+            identity_reservation: 0,
+        },
+        f,
+    )
+}
+fn source_identity_reservation(original_total: usize) -> usize {
+    (original_total / 256).min(1024 * 1024)
+}
+/// Reserve standalone source identities from the original command total before
+/// decoding. Retain the complete slice through persistence: dynamic sidecars may
+/// grow the identity table while a codec uses its remaining working allowance.
+/// The default total remains 256 MiB, split into 1 MiB identities and 255 MiB work.
+/// This closes source-table admission, not other codec transients or process RSS.
+pub(crate) fn with_bounded_source_scope<T>(
+    original_total: usize,
+    f: impl FnOnce() -> Result<T>,
+) -> Result<T> {
+    if is_active() {
+        return Err(invalid(
+            "standalone source scope cannot replace batch capture",
+        ));
+    }
+    let identity_reservation = source_identity_reservation(original_total);
+    let sources = assets::Sources::default();
+    sources.set_retained_budget(Arc::new(Mutex::new(0)), identity_reservation)?;
+    with_scope(
+        SourceScope {
+            sources,
+            identity_reservation,
+        },
+        f,
+    )
+}
+/// Apply only when constructing original command limits. Already reduced
+/// InputBudget, writer and codec limits must never pass through this helper.
+pub(crate) fn standalone_working_limits(
+    mut limits: fontpixel::ResourceLimits,
+) -> fontpixel::ResourceLimits {
+    if !is_active() {
+        SOURCE_SCOPE.with(|s| {
+            if let Some(scope) = s.borrow().as_ref() {
+                limits.max_total_bytes = limits
+                    .max_total_bytes
+                    .saturating_sub(scope.identity_reservation);
+            }
+        });
+    }
+    limits
 }
 pub(crate) fn is_active() -> bool {
     CAPTURE.with(|c| c.borrow().is_some())
@@ -409,7 +466,14 @@ pub(crate) fn sources() -> assets::Sources {
         c.borrow()
             .as_ref()
             .map(|c| c.sources.clone())
-            .unwrap_or_else(|| SOURCE_SCOPE.with(|s| s.borrow().clone().unwrap_or_default()))
+            .unwrap_or_else(|| {
+                SOURCE_SCOPE.with(|s| {
+                    s.borrow()
+                        .as_ref()
+                        .map(|scope| scope.sources.clone())
+                        .unwrap_or_default()
+                })
+            })
     })
 }
 pub(crate) fn persist_outputs(
@@ -1184,6 +1248,15 @@ fn prepare(
     reports: &ReportBudget,
     report_limit: usize,
 ) -> Prepared {
+    // Only task identity belongs to the caller. This execution determines all
+    // outcome fields; stale success/commit state must never retain its outputs.
+    report.success = false;
+    report.exit_code = 0;
+    report.committed = false;
+    report.result = None;
+    report.report = None;
+    report.diagnostics_truncated = false;
+    report.error = None;
     CAPTURE.with(|cell| {
         *cell.borrow_mut() = Some(Capture {
             sources,
@@ -1679,6 +1752,197 @@ mod tests {
         }
     }
     #[test]
+    fn standalone_partition_has_bounded_identity_reservation_without_raising_total() {
+        for (total, identity) in [
+            (0, 0),
+            (255, 0),
+            (256, 1),
+            (256 * 1024 * 1024 - 1, 1024 * 1024 - 1),
+            (256 * 1024 * 1024, 1024 * 1024),
+            (512 * 1024 * 1024, 1024 * 1024),
+            (usize::MAX, 1024 * 1024),
+        ] {
+            assert_eq!(super::source_identity_reservation(total), identity);
+            assert_eq!((total - identity).checked_add(identity), Some(total));
+        }
+        let mut ran = false;
+        let result = super::with_bounded_source_scope(255, || {
+            ran = true;
+            Ok(())
+        });
+        assert!(matches!(
+            result,
+            Err(fontpixel::Error::ResourceLimit { .. })
+        ));
+        assert!(!ran);
+        assert!(super::SOURCE_SCOPE.with(|s| s.borrow().is_none()));
+    }
+    #[test]
+    fn standalone_working_limits_reserve_once_and_restore_nested_error_and_panic() {
+        let original = fontpixel::ResourceLimits::default();
+        let mut expected = original.clone();
+        expected.max_total_bytes -= 1024 * 1024;
+        super::with_bounded_source_scope(original.max_total_bytes, || {
+            for _ in 0..3 {
+                assert_eq!(super::standalone_working_limits(original.clone()), expected);
+            }
+            let nested = super::with_bounded_source_scope(1024 * 1024, || {
+                assert_eq!(
+                    super::standalone_working_limits(original.clone()).max_total_bytes,
+                    original.max_total_bytes - 4096,
+                );
+                Err::<(), _>(super::invalid("nested failure"))
+            });
+            assert!(nested.is_err());
+            assert_eq!(super::standalone_working_limits(original.clone()), expected);
+            assert!(
+                std::panic::catch_unwind(|| {
+                    let _ = super::with_bounded_source_scope(
+                        2 * 1024 * 1024,
+                        || -> fontpixel::Result<()> {
+                            panic!("scope restoration probe");
+                        },
+                    );
+                })
+                .is_err()
+            );
+            assert_eq!(super::standalone_working_limits(original.clone()), expected);
+            let child = std::thread::spawn(|| {
+                let limits = fontpixel::ResourceLimits::default();
+                assert_eq!(super::standalone_working_limits(limits.clone()), limits);
+            });
+            child.join().unwrap();
+            Ok(())
+        })
+        .unwrap();
+        assert_eq!(super::standalone_working_limits(original.clone()), original);
+        assert!(super::SOURCE_SCOPE.with(|s| s.borrow().is_none()));
+    }
+    #[test]
+    fn standalone_identity_exhaustion_stays_sticky_after_inputs_are_dropped() {
+        let root = SpoolRoot::new();
+        let destination = root.0.join("output");
+        fs::write(&destination, b"previous output").unwrap();
+        super::with_bounded_source_scope(1024 * 1024, || {
+            let limits = super::standalone_working_limits(fontpixel::ResourceLimits {
+                max_total_bytes: 1024 * 1024,
+                ..Default::default()
+            });
+            let mut denied = false;
+            for index in 0..1024 {
+                let path = root.0.join(format!("source-{index}"));
+                fs::write(&path, b"input").unwrap();
+                match crate::assets::FileInput::open(&path, &limits, super::sources()) {
+                    Ok(file) => drop(file),
+                    Err(fontpixel::Error::ResourceLimit { resource, limit }) => {
+                        assert_eq!(resource, "retained input identity bytes");
+                        assert_eq!(limit, 4096);
+                        denied = true;
+                        break;
+                    }
+                    Err(error) => panic!("unexpected source error: {error}"),
+                }
+            }
+            assert!(denied, "identity table did not enforce its reserved slice");
+            let sources = super::sources();
+            assert!(!sources.is_single_primary());
+            let result = super::persist_outputs(
+                vec![crate::assets::PendingOutput {
+                    destination: destination.clone(),
+                    bundle: fontpixel::OutputBundle::single(
+                        fontpixel::ResourcePath::new("output")?,
+                        b"replacement".to_vec(),
+                    ),
+                }],
+                &sources,
+            );
+            assert!(result.is_err());
+            assert_eq!(fs::read(&destination).unwrap(), b"previous output");
+            assert!(fs::read_dir(&root.0).unwrap().all(|entry| {
+                !entry
+                    .unwrap()
+                    .file_name()
+                    .to_string_lossy()
+                    .starts_with(".fontpixel-")
+            }));
+            Ok(())
+        })
+        .unwrap();
+    }
+    #[test]
+    fn standalone_repeated_reads_share_identity_charge_and_keep_protection() {
+        let root = SpoolRoot::new();
+        let source = root.0.join("source");
+        fs::write(&source, b"original source").unwrap();
+        super::with_bounded_source_scope(1024 * 1024, || {
+            let limits = super::standalone_working_limits(fontpixel::ResourceLimits {
+                max_total_bytes: 1024 * 1024,
+                ..Default::default()
+            });
+            for _ in 0..1024 {
+                drop(crate::assets::FileInput::open(
+                    &source,
+                    &limits,
+                    super::sources(),
+                )?);
+            }
+            let sources = super::sources();
+            assert!(!sources.is_single_primary());
+            let result = super::persist_outputs(
+                vec![crate::assets::PendingOutput {
+                    destination: source.clone(),
+                    bundle: fontpixel::OutputBundle::single(
+                        fontpixel::ResourcePath::new("source")?,
+                        b"replacement".to_vec(),
+                    ),
+                }],
+                &sources,
+            );
+            assert!(result.is_err());
+            assert_eq!(fs::read(&source).unwrap(), b"original source");
+            Ok(())
+        })
+        .unwrap();
+    }
+    #[test]
+    fn batch_capture_keeps_its_pending_ledger_and_full_task_working_allowance() {
+        let limits = fontpixel::ResourceLimits::default();
+        super::with_bounded_source_scope(limits.max_total_bytes, || {
+            let pending = Arc::new(Mutex::new(0));
+            let sources = crate::assets::Sources::default();
+            sources.set_retained_budget(Arc::clone(&pending), 512 * 1024 * 1024)?;
+            super::CAPTURE.with(|cell| {
+                *cell.borrow_mut() = Some(super::Capture {
+                    sources,
+                    outputs: Vec::new(),
+                    pending: Arc::clone(&pending),
+                    limit: 512 * 1024 * 1024,
+                    charged: 0,
+                });
+            });
+            let guard = super::CaptureGuard;
+            assert_eq!(super::standalone_working_limits(limits.clone()), limits);
+            let mut ran = false;
+            assert!(
+                super::with_bounded_source_scope(limits.max_total_bytes, || {
+                    ran = true;
+                    Ok(())
+                })
+                .is_err()
+            );
+            assert!(!ran);
+            assert!(*pending.lock().unwrap() > 0);
+            drop(guard);
+            assert_eq!(*pending.lock().unwrap(), 0);
+            assert_eq!(
+                super::standalone_working_limits(limits.clone()).max_total_bytes,
+                limits.max_total_bytes - 1024 * 1024,
+            );
+            Ok(())
+        })
+        .unwrap();
+    }
+    #[test]
     fn captured_json_preserves_interior_whitespace_and_report_order() {
         let value = r#"{ "report": { "entries": [{"message":"  first\n ","code":"z"}, {"message":"second\t  ","code":"a"}] } }"#;
         let captured = captured_json(format!("{value}\r\n\t ").into_bytes()).unwrap();
@@ -2032,6 +2296,13 @@ mod tests {
     #[test]
     fn successful_execution_without_json_is_not_a_successful_batch_task() {
         use std::sync::atomic::AtomicBool;
+        // Ensure this fixture exercises a successful command with non-JSON
+        // output, rather than an unrelated LimitedOutput overflow.
+        let mut output = Vec::new();
+        crate::execute(crate::Command::Formats { json: false }, &mut output).unwrap();
+        let report_limit = output.len();
+        assert!(report_limit > 0);
+        assert!(captured_json(output).is_none());
         let root = SpoolRoot::new();
         let store = root.store(4096);
         let reports = super::ReportBudget {
@@ -2049,10 +2320,17 @@ mod tests {
             Arc::clone(&pending),
             4096,
             &reports,
-            4096,
+            report_limit,
         );
         assert!(!task.report.success);
         assert_eq!(task.report.exit_code, 1);
+        assert!(!task.report.committed);
+        assert!(task.report.result.is_none());
+        assert!(task.report.report.is_none());
+        assert_eq!(
+            task.report.error.as_deref(),
+            Some("task produced invalid JSON")
+        );
         assert!(task.outputs.is_empty());
         assert_eq!(*pending.lock().unwrap(), 0);
         assert!(!super::is_active());

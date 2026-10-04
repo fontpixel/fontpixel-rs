@@ -132,7 +132,9 @@ the original catalogue's implicit FontTools defaults; that comparison is open.
 - `EmbeddedReferenceStrike::First` is the default; `LargestPpem` chooses the
   greatest effective y-ppem, with the last original input winning ties and the
   same descending priority for missing glyphs. `Index(n)` selects a zero-based
-  source then falls back in original order. Physical strike order is unchanged.
+  source then falls back in original order. Changing this policy leaves the codec's
+  existing physical ordering unchanged: OTB uses source order, while bdat retains
+  its canonical `(ppem_y, ppem_x)` sort.
 - `EmbeddedRounding::NearestTiesAwayFromZero` is the default pixel-to-design rule;
   `NearestTiesEven` uses exact rational arithmetic. This does not change the
   separate OS/2 average-width rounding rule.
@@ -141,8 +143,8 @@ Install these through `Registry::set_embedded_write_options`. The shared CLI
 writer options expose the same controls for `convert` and `merge`:
 `--otb-upm 16..16384`, `--otb-reference first|largest|N` and
 `--otb-rounding half-away|ties-even`. `N` is a zero-based index into the FontSet
-passed to the writer; it chooses metric priority without dropping or reordering
-physical strikes. Batch tasks pass `otb_upm`, `otb_reference` and `otb_rounding`
+passed to the writer; it chooses metric priority without dropping strikes or
+changing the codec's existing physical ordering. Batch tasks pass `otb_upm`, `otb_reference` and `otb_rounding`
 through their scalar `options`. Explicit flags require OTB/bdat output and the
 corresponding enabled feature; color and other outputs reject them, even when
 the requested value matches a default. Vector `--upm` remains a separate control.

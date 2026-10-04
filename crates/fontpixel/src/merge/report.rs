@@ -225,6 +225,69 @@ fn list<T>(out: &mut String, values: &[T], f: impl Fn(&mut String, &T)) {
     out.push(']');
 }
 impl MergeReport {
+    /// Count owned report storage without cloning or serializing it. Inline
+    /// fields are included once in the report/array headers; capacities count
+    /// spare allocation as well as initialized values.
+    pub(super) fn retained_bytes(&self, maximum: usize) -> crate::Result<usize> {
+        fn array<T>(budget: &mut super::Budget, values: &Vec<T>) -> crate::Result<()> {
+            let bytes = values
+                .capacity()
+                .checked_mul(std::mem::size_of::<T>())
+                .ok_or(crate::Error::ResourceLimit {
+                    resource: "merge working bytes",
+                    limit: budget.max,
+                })?;
+            budget.charge(bytes)
+        }
+        let mut budget = super::Budget {
+            used: 0,
+            max: maximum,
+        };
+        budget.charge(std::mem::size_of::<Self>())?;
+        budget.charge(self.unicode_version.capacity())?;
+        budget.charge(self.family.capacity())?;
+        array(&mut budget, &self.parts)?;
+        for part in &self.parts {
+            budget.charge(part.label.capacity())?;
+            budget.charge(part.selection.capacity())?;
+            array(&mut budget, &part.missing_ranges)?;
+            array(&mut budget, &part.missing_blocks)?;
+            for block in &part.missing_blocks {
+                budget.charge(block.block.capacity())?;
+            }
+        }
+        array(&mut budget, &self.adjustments)?;
+        for adjustment in &self.adjustments {
+            array(&mut budget, &adjustment.codepoints)?;
+            budget.charge(adjustment.reason.capacity())?;
+        }
+        array(&mut budget, &self.metrics.parts)?;
+        array(&mut budget, &self.licenses)?;
+        for license in &self.licenses {
+            budget.charge(license.label.capacity())?;
+            budget.charge(license.provenance.capacity())?;
+            for value in [&license.copyright, &license.license, &license.license_url]
+                .into_iter()
+                .flatten()
+            {
+                budget.charge(value.capacity())?;
+            }
+            array(&mut budget, &license.reserved_names)?;
+            for name in &license.reserved_names {
+                budget.charge(name.capacity())?;
+            }
+        }
+        array(&mut budget, &self.diagnostics.entries)?;
+        for entry in &self.diagnostics.entries {
+            budget.charge(entry.code.capacity())?;
+            budget.charge(entry.message.capacity())?;
+            if let Some(asset) = &entry.location.asset {
+                budget.charge(asset.capacity())?;
+            }
+        }
+        Ok(budget.used)
+    }
+
     /// Full deterministic JSON without optional dependencies.
     pub fn to_json(&self) -> String {
         let mut out = String::new();

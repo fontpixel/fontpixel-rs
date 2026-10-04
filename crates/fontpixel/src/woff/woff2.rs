@@ -150,12 +150,14 @@ fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
     // Small streams do not amortize worker creation/dictionary preparation.
     // The size-based choice is deterministic and independent of CPU count.
     if o.compression_threads == 1 || data.len() < 128 * 1024 {
-        let mut out = Output {
-            bytes: Vec::new(),
-            limit: l.sfnt.resources.max_total_bytes,
-        };
+        let budget = sfnt::working::Budget::new(
+            l.sfnt.resources.max_total_bytes,
+            "WOFF2 compressed working bytes",
+        );
+        let mut out = sfnt::working::Buffer::new(&budget)?;
         brotli::BrotliCompress(&mut &data[..], &mut out, &params).map_err(invalid)?;
-        Ok(out.bytes)
+        let (bytes, _lease) = out.into_parts();
+        Ok(bytes)
     } else {
         use brotli::enc::{Owned, SendAlloc, StandardAlloc, backward_references::UnionHasher};
         let size = brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(

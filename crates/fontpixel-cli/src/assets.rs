@@ -295,9 +295,9 @@ impl Sources {
             .lock()
             .is_ok_and(|state| state.reads == 1 && !state.has_directory && !state.incomplete)
     }
-    /// Attach the batch's retained ledger once, before declarations/workers.
-    /// The initial TOML identity is charged here. Standalone scopes deliberately
-    /// have no new implicit cap; callers may attach a command-derived ledger.
+    /// Attach one retained ledger before declarations/workers/command execution.
+    /// Batch shares its pending output budget. Standalone callers reserve a fixed
+    /// identity slice from their original total and use the remainder for work.
     pub(crate) fn set_retained_budget(&self, used: Arc<Mutex<usize>>, limit: usize) -> Result<()> {
         let mut state = self
             .0
@@ -436,6 +436,23 @@ fn read_bounded(mut reader: impl Read, initial: usize, maximum: usize) -> Result
         }
         bytes.extend_from_slice(&chunk[..count]);
     }
+}
+
+#[cfg(feature = "opentype")]
+pub(crate) fn read_primary(
+    path: &Path,
+    limits: &ResourceLimits,
+    sources: Sources,
+) -> Result<Vec<u8>> {
+    let file = File::open(path)?;
+    sources.remember(&file)?;
+    bounded(file, limits.max_input_bytes.min(limits.max_total_bytes)).map_err(|error| match error {
+        Error::ResourceLimit { limit, .. } => Error::ResourceLimit {
+            resource: "primary input bytes",
+            limit,
+        },
+        error => error,
+    })
 }
 
 pub(crate) struct FileInput {
@@ -1155,6 +1172,48 @@ mod tests {
         fn drop(&mut self) {
             let _ = std::fs::remove_dir_all(&self.0);
         }
+    }
+    #[cfg(feature = "opentype")]
+    #[test]
+    fn primary_reader_bounds_capacity_and_remembers_rejected_sources() {
+        let t = Temp::new();
+        let path = t.0.join("source.ttf");
+        std::fs::write(&path, b"1234567").unwrap();
+        for maximum in [7, 8, 13] {
+            let limits = ResourceLimits {
+                max_input_bytes: maximum,
+                max_total_bytes: maximum,
+                ..Default::default()
+            };
+            let sources = Sources::default();
+            let bytes = read_primary(&path, &limits, sources.clone()).unwrap();
+            assert_eq!(bytes, b"1234567");
+            assert!(bytes.capacity() <= maximum);
+            assert!(sources.is_single_primary());
+            assert!(sources.contains(File::open(&path).unwrap()).unwrap());
+        }
+        let sources = Sources::default();
+        let result = read_primary(
+            &path,
+            &ResourceLimits {
+                max_total_bytes: 6,
+                ..Default::default()
+            },
+            sources.clone(),
+        );
+        assert!(matches!(
+            result,
+            Err(Error::ResourceLimit {
+                resource: "primary input bytes",
+                limit: 6,
+            })
+        ));
+        assert!(sources.contains(File::open(&path).unwrap()).unwrap());
+        assert_eq!(std::fs::read(&path).unwrap(), b"1234567");
+        assert!(matches!(
+            read_primary(&t.0, &ResourceLimits::default(), Sources::default()),
+            Err(Error::InvalidInput(_))
+        ));
     }
     fn bundle() -> OutputBundle {
         OutputBundle::new(

@@ -1,4 +1,15 @@
-# 当前停止点：第 6 阶段未验收源码交给本地 Codex
+# 当前进度：第 6 阶段本地接续中，尚未验收
+
+2026-10-04 本地更新：交接包已在新目录独立恢复校验，再通过离线 Git bundle
+快进导入原 `/home/chen/githubprojects/fontpixel/fontpixel-rs`。原工作区已完整备份并
+在空目录恢复验证；原参考/样本不变。用户已澄清采用协调者决定的本地导入方案，
+未配置或声称完成外部备份。详细新证据见 [本地接续记录](reports/phase6-local.md)。
+
+当前普通 Rust 1.99 工具链可用；修复锁文件漏项并格式化后，全 workspace、
+all-targets、all-features `cargo check --locked` 已通过（两条 warning 待修）。
+这次通过仅覆盖该次源码快照；后续预算、许可及对照修正需要重新验证。
+完整 gates、原生对照、性能与最终源码长 ASAN 仍待完成，不进入第 7、8 阶段。
+下方保留的是云端交接时的证据状态，不能覆盖本地新记录。
 
 更新：2026-10-04 UTC。交接文件 `fontpixel-rs-local-codex-handoff-20261004.zip`。
 

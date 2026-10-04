@@ -26,6 +26,9 @@ class WorkloadTests(unittest.TestCase):
             for task in document['tasks']:
                 self.assertNotIn('max_total_bytes', task.get('options', {}))
                 self.assertNotIn('woff2_threads', task.get('options', {}))
+                if task['kind'] == 'variants':
+                    self.assertEqual(sorted(task['languages']), ['ZHT,ZHH', 'ja', 'ko'])
+                    self.assertTrue(task['languages']['ZHT,ZHH'].endswith('-TC.bdf'))
             changed = tomllib.loads(jobs_toml(bdf, root / 'out', reference, 536870912))
             self.assertEqual(sum(t.get('options',{}).get('max_total_bytes')==536870912 for t in changed['tasks']),24)
 

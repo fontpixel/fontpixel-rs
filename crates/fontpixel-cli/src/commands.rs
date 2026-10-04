@@ -143,6 +143,9 @@ pub(crate) struct DiffArgs {
     raster: Box<RasterArguments>,
 }
 impl DiffArgs {
+    pub(crate) fn source_identity_total_bytes(&self) -> usize {
+        self.raster.input_limits().max_total_bytes
+    }
     pub(crate) fn report_style(&self) -> ReportStyle {
         if self.json {
             ReportStyle::Json
@@ -399,6 +402,9 @@ pub(crate) struct ValidateArgs {
     raster: Box<RasterArguments>,
 }
 impl ValidateArgs {
+    pub(crate) fn source_identity_total_bytes(&self) -> usize {
+        self.raster.input_limits().max_total_bytes
+    }
     pub(crate) fn report_style(&self) -> ReportStyle {
         if self.json {
             ReportStyle::Json
@@ -513,6 +519,9 @@ pub(crate) struct CharsetArgs {
     raster: Box<RasterArguments>,
 }
 impl CharsetArgs {
+    pub(crate) fn source_identity_total_bytes(&self) -> usize {
+        self.raster.input_limits().max_total_bytes
+    }
     pub(crate) fn report_style(&self) -> ReportStyle {
         self.report
     }
@@ -780,6 +789,11 @@ mod budget_tests {
 
     fn metadata_heavy_model() -> FontSet {
         let mut font = Font::default();
+        // Supply the normalized SIZE and FONTBOUNDINGBOX data required by a
+        // fresh BDF model so the native writer reaches its resource boundary.
+        font.metrics.point_size = Some(fontpixel::model::Rational::integer(1));
+        font.metrics.resolution = Some(fontpixel::model::Vector::new(75, 75));
+        font.metrics.bounds = Some(fontpixel::bitmap::Bounds::new(1, 1, 0, 0));
         let mut copyright = String::with_capacity(128 * 1024);
         copyright.push_str("Original author notice");
         font.names.copyright = Some(copyright);

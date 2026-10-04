@@ -174,7 +174,8 @@ The library's production dependency tree is empty with `--no-default-features`.
 support crates); neither enables the other codec. Optional `serde`
 enables structured reports. Each format has its own feature; `all-formats`
 selects all 99, while defaults select `bdf,pcf,yaff`. Feature selection does not
-claim an implementation. Heavy `cff`/`fea` slots still add no behavior.
+claim an implementation. `cff` enables the native CFF1 table reader/encoder and
+its `sfnt` dependency; `fea` remains a reserved feature with no implementation.
 `cjk-charsets` includes exact CJK tables and GB18030 ranges without a runtime
 dependency. BDF can preserve CJK source codes without those tables; actual CJK
 conversion returns an explicit feature error when the exact table is disabled.
@@ -392,13 +393,24 @@ and an existing output directory; all outputs share one normal-error rollback
 transaction and duplicate stems fail. `--each --font-index` selects per input.
 `--woff2-threads` controls within-font compression separately from batch jobs.
 
+Standalone commands reserve input identities from the original total byte limit
+`L`: `I = min(1 MiB, floor(L / 256))` for the shared identity table, leaving
+`L - I` for model/codec work. The default total remains 256 MiB, split into
+1 MiB identity storage and 255 MiB working allowance. The full identity slice
+stays reserved through the command, including sidecar discovery and persistence;
+unused table space is not returned to the working allowance. This tightens the
+effective working budget and needs fresh default-workload validation. See the
+[budget contract](docs/w6.1-writer-budget.md) for retained-capacity accounting and
+its limits; it does not cover every codec transient or bound process RSS.
+
 `batch` always emits JSON and does not take `--report`. Relative paths resolve
 from the TOML file. Output parents must exist. Independent tasks may prepare
 successfully after another task fails, but all successful writes enter one
 protected transaction after all input/sidecar identities are known. It has no
 dependency graph. Consult the reconstructed batch contract for worker/report
-spooling details and their limits. `max_pending_bytes` covers prepared outputs
-plus the shared source-identity table; job/path/task caps, working reservations
+spooling details and their limits. Its unchanged 512 MiB default
+`max_pending_bytes` covers prepared outputs plus the shared source-identity table;
+the standalone partition does not reduce batch task allowances. Job/path/task caps, working reservations
 and report quotas are separate, and none is an RSS promise.
 
 `merge` requires a new family, a selection per ordered part and at least one
@@ -427,3 +439,9 @@ budgets, merge, sidecars, embedded metrics, regional names, subsets and WOFF2.
 Its assertions and the [crate-root guide](docs/api-rustdoc.md) are uncompiled and
 unexecuted. [Static documentation checks](examples/check_api_documentation.py)
 inspect files and declarations only; they do not compile Rust or invoke the CLI.
+
+The [documentation smoke runner](examples/README.md#recording-cli-smokes) records
+18 CLI scenarios and 84 tiny Tong tasks against an already built, identified
+all-feature binary. Its new Han/geometric fixture is explicitly synthetic.
+The 99-format/13-command inventory alone does not run those font operations;
+neither inventory nor tiny smoke establishes full-font correctness or performance.

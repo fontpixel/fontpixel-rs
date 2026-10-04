@@ -658,3 +658,61 @@ fn subset_rejects_unpaired_vertical_metric_drops() {
     assert!(f.table(*b"vhea").is_none());
     assert!(f.table(*b"vmtx").is_none());
 }
+
+// A physical glyph may have many aliases. Planning must charge each effective
+// mapping before cloning or accumulating its separate planned glyph record.
+fn alias_face(codepoints: &[u32]) -> Font {
+    let mut font = Font::default();
+    let mut glyph = Glyph::new("#".parse::<Bitmap>().unwrap());
+    glyph.codepoints = codepoints.iter().copied().map(Codepoint::Unicode).collect();
+    font.add_glyph(glyph).unwrap();
+    font
+}
+
+#[test]
+fn variant_alias_budget_stops_before_later_invalid_scalar() {
+    for alternative in [false, true] {
+        let face = alias_face(&[65, 66, 0x110000]);
+        let mut variants = Variants::new(Font::default());
+        if alternative {
+            variants.add_language("ja", face).unwrap();
+        } else {
+            variants.base = face;
+        }
+        let mut limits = LayoutLimits::default();
+        // .notdef plus the first alias fits; the second alias must fail before
+        // traversing the deliberately invalid third alias.
+        limits.sfnt.resources.max_glyphs = 2;
+        assert!(matches!(
+            variants.plan(&limits),
+            Err(fontpixel::Error::ResourceLimit {
+                resource: "sfnt glyphs",
+                limit: 2
+            })
+        ));
+    }
+}
+
+#[test]
+fn variant_mapping_limit_applies_to_base_and_alternative_aliases() {
+    for alternative in [false, true] {
+        let face = alias_face(&[65, 66]);
+        let mut variants = Variants::new(Font::default());
+        if alternative {
+            variants.add_language("ja", face).unwrap();
+        } else {
+            variants.base = face;
+        }
+        let mut limits = LayoutLimits::default();
+        limits.sfnt.max_cmap_mappings = 1;
+        assert!(matches!(
+            variants.plan(&limits),
+            Err(fontpixel::Error::ResourceLimit {
+                resource: "variant Unicode mappings",
+                limit: 1
+            })
+        ));
+        limits.sfnt.max_cmap_mappings = 2;
+        assert_eq!(variants.plan(&limits).unwrap().cmap.len(), 2);
+    }
+}

@@ -21,6 +21,7 @@ pub mod name;
 pub mod os2;
 pub mod post;
 pub mod subset;
+pub(crate) mod working;
 pub use container::{Flavor, Sfnt, SfntBuilder, TableRecord, checksum};
 /// Fontations' typed, borrowed readers, used by this layer and outline clients.
 pub use read_fonts;

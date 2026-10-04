@@ -1,6 +1,7 @@
 //! WOFF 1.0 table-by-table zlib coding.
 use super::*;
 use flate2::{Compression, Decompress, FlushDecompress, Status, write::ZlibEncoder};
+use std::io::Write;
 
 /// Deterministic WOFF1 output options.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -39,15 +40,14 @@ fn decompress(data: &[u8], expected: usize) -> Result<Vec<u8>> {
     Ok(out)
 }
 fn compress(data: &[u8], level: u32, limit: usize) -> Result<Vec<u8>> {
+    let budget = sfnt::working::Budget::new(limit, "WOFF compressed working bytes");
     let mut e = ZlibEncoder::new(
-        Output {
-            bytes: Vec::new(),
-            limit,
-        },
+        sfnt::working::Buffer::new(&budget)?,
         Compression::new(level),
     );
     e.write_all(data).map_err(invalid)?;
-    Ok(e.finish().map_err(invalid)?.bytes)
+    let (bytes, _lease) = e.finish().map_err(invalid)?.into_parts();
+    Ok(bytes)
 }
 // WOFF1 §6 preserves physical table order independently of its tag-sorted
 // directory. SfntBuilder intentionally sorts physical tables, so this wrapper

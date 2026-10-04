@@ -112,6 +112,16 @@ pub fn contours(bitmap: &Bitmap, options: &Options, limits: &Limits) -> Result<V
         limits.max_pixels,
         "outline pixels",
     )?;
+    if bitmap.as_bytes().is_empty() {
+        // Both square tracers reject this origin even for an empty raster.
+        // Preserve that validation before bypassing dimension-only row storage.
+        if options.shape == Shape::Square
+            && (options.origin.0 == i32::MIN || options.origin.1 == i32::MIN)
+        {
+            return Err(invalid("outline coordinate budget exceeded"));
+        }
+        return Ok(Vec::new());
+    }
     if options.shape == Shape::Square {
         let vertices = packed::vertex_count(bitmap.width() as usize, bitmap.height() as usize);
         if vertices.is_some_and(|n| n <= packed::MAX_VERTICES) {
@@ -196,6 +206,9 @@ pub fn pixel_origins(bitmap: &Bitmap, o: &Options, limits: &Limits) -> Result<Ve
         "outline pixels",
     )?;
     let mut result = Vec::new();
+    if bitmap.as_bytes().is_empty() {
+        return Ok(result);
+    }
     for y in 0..bitmap.height() {
         for x in 0..bitmap.width() {
             if bitmap.get_pixel(x, y)? != 0 {

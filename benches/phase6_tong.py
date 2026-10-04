@@ -47,7 +47,10 @@ def jobs_toml(bdf, output, ref, variant_limit=0):
                     lines.extend(['', '[[tasks]]', 'id = ' + json.dumps(stem + '.' + shape + '.' + kind),
                         'kind = "variants"', 'base = ' + json.dumps(paths['SC']), 'family = ' + json.dumps(family),
                         'output = ' + json.dumps(str(output / kind / (stem + '-' + shape + '.' + kind))),
-                        'languages = { ' + ', '.join(json.dumps(k) + ' = ' + json.dumps(v) for k, v in [('zh-Hant,zh-HK', paths['TC']), ('ja', paths['JP']), ('ko', paths['KR'])]) + ' }',
+                        # Batch expands its language map lexically. Use the
+                        # original tags so TC is admitted before JP and KR,
+                        # matching reference/native API alternative deduplication.
+                        'languages = { ' + ', '.join(json.dumps(k) + ' = ' + json.dumps(v) for k, v in [('ZHT,ZHH', paths['TC']), ('ja', paths['JP']), ('ko', paths['KR'])]) + ' }',
                         'scripts = { "latn,grek,cyrl" = ' + json.dumps(paths['Latin']) + ' }',
                         '[tasks.options]', 'shape = ' + json.dumps(shape), 'vendor = "TONG"', 'font_version = "1.0"',
                         'copyright = ' + json.dumps(names['copyright']), 'license = ' + json.dumps(names['licenseDescription']),
