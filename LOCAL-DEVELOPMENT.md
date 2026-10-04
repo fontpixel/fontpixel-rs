@@ -1,18 +1,25 @@
 # 本地恢复与继续开发
 
-2026-10-04 已从 `../fontpixel-rs-local-handoff-2026-10-04/` 完整导入。
-原交接包保持不变；冻结状态说明见 `../CODEX-HANDOFF.md`，最新开发结果见
+2026-10-04 已完成原交接包的完整导入。随后按用户要求，已清理四个并列
+工作区、原交接目录和 `../fontpixel-rs-delivery/` 进度备份目录。
+全部 Git 分支和历史保留在当前仓库，参考资料和样本的已导入副本仍在。
+冻结状态说明见 `../CODEX-HANDOFF.md`，最新开发结果见
 `reports/local-resume-2026-10-04.md` 和各工作项的新验收报告。
 
 ## 目录
 
 - 当前目录：主线 Git 仓库；恢复时 `main = 9e6510d`。
-- `../fontpixel-rs-w3.2/` 至 `../fontpixel-rs-w3.5/`：四个草稿工作树。
+- 当前只保留一个工作区；W3.2 已合入主线，W3.3–W3.5 草稿保留在分支中。
 - `../reference/`、`../samples/`：只读参考和样本，保持与仓库并列。
 - `../validation-inputs/`、`../supplemental-evidence/`：冻结输入和历史补充证据。
 - `../original-task/`、`../audit/`、`../drafts/`：原始任务、恢复审计和草稿快照。
 - `../fontpixel-rs-all-refs.bundle`：原始完整 Git bundle；52 个 refs 均已恢复。
 - `../local-work/`：Python 环境、各工作树独立 Cargo target、原始本地验证日志。
+
+保留的工作项分支为 `w3.2-fnt-fon`、`w3/image-c`、`w3.4-kbitx-pbf`、
+`w3.5-hbf`。后续可以在当前仓库切换分支继续开发，无需重新生成这次清理的
+并列目录。原 W3.2 工作区中新生成的 763 个 fuzz 样本已校验并归档到
+`../local-work/preserved-corpora/w3.2-e80e0f7-2026-10-04.tar.gz`。
 
 主线使用更新后的 `PLAN.md` 和 `docs/plan-addendum-merge.md`，不要用
 `original-task/PLAN.md` 覆盖。按阶段顺序继续；第 3 阶段尚未全部完成。

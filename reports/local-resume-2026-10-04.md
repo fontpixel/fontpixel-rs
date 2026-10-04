@@ -59,3 +59,17 @@ results remain tied to the original restored main, not the later implementation.
 W3.3, W3.4 and W3.5 remain unaccepted drafts. Phase 3 must finish and pass its
 aggregate gate before phase 4. The updated main PLAN and verbatim merge addendum
 remain authoritative. Nothing was published, pushed or deployed.
+
+## Owner-requested directory cleanup
+
+After restoration and W3.2 acceptance, the owner explicitly requested removing
+the four sibling worktrees, the original handoff directory and the generated
+`fontpixel-rs-delivery/` backup directory. All six were removed. The worktrees
+were clean and removed through `git worktree remove`; all 52 Git refs were
+unchanged by the removal, and the main checkout is now the sole worktree.
+
+All 25,882 supporting handoff files were verified against their imported copies
+before deletion. The 763 new W3.2 fuzz corpus files were independently archived
+and hash-verified under `../local-work/preserved-corpora/`. References, samples,
+frozen inputs, draft branches and committed validation evidence remain available.
+The removal audit is `../local-work/results/setup/cleanup-2026-10-04.json`.
