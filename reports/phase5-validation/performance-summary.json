@@ -1,0 +1,96 @@
+{
+  "formal": true,
+  "cases": 185,
+  "engine_records": 301,
+  "repetitions": 5,
+  "engines": {
+    "rust": 197,
+    "python": 94,
+    "java": 6,
+    "native": 4
+  },
+  "verified_raw_stream_files": 2890,
+  "recomputed_all_medians": true,
+  "source_count": 397,
+  "source_drift": [],
+  "competitors_before": [],
+  "competitors_after": [],
+  "environment": {
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+    "cpu": {
+      "vendor_id": "GenuineIntel",
+      "cpu family": "6",
+      "model": "154",
+      "model name": "12th Gen Intel(R) Core(TM) i7-12700H",
+      "stepping": "3",
+      "microcode": "0x43b"
+    },
+    "logical_cpus": 20,
+    "physical_cores": 14,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "memory": {
+      "MemTotal": "65503764 kB",
+      "MemAvailable": "52781236 kB",
+      "SwapTotal": "8388604 kB"
+    },
+    "loadavg": [
+      2.35302734375,
+      2.7197265625,
+      4.322265625
+    ],
+    "rustc": {
+      "command": [
+        "rustc",
+        "-Vv"
+      ],
+      "exit": 0,
+      "output": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0\nLLVM version: 23.1.1"
+    },
+    "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+    "cargo_profile": "release",
+    "rustflags": null,
+    "cargo_encoded_rustflags": null,
+    "timestamp_utc": "2026-10-04T11:43:00.838748+00:00"
+  },
+  "archives": [
+    {
+      "path": "reports/phase5-validation/quiet-final3.json.gz",
+      "sha256": "7ecea2f5863a804a12962a967941d616c47b82eb7505131f65120d8b632e6a50"
+    },
+    {
+      "path": "reports/phase5-validation/prep-v3-final.json.gz",
+      "sha256": "6ab6618f97a50755bf77c78685470898bd74f24b6923172ad27a0b7c39ff2da1"
+    },
+    {
+      "path": "reports/phase5-validation/quiet-final3-raw.tar.gz",
+      "sha256": "08eaeb520b22f86b2f20c2e8efa9368b88d1edcbbe787441538525badf4cd560"
+    }
+  ],
+  "max_rss_kib_by_engine": {
+    "rust": 29240,
+    "python": 112752,
+    "java": 152464,
+    "native": 30532
+  }
+}

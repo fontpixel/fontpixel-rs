@@ -146,6 +146,42 @@
       "rss_mib": 549
     },
     {
+      "target": "c",
+      "label": "phase5-c-fuzz-final2",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "c",
+        "--no-default-features",
+        "--features",
+        "c-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final2.json.gz",
+          "sha256": "76a949af0cdc9943092e60602b6e921760e7fb3a4922a039f393550439644c86"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final2.log.gz",
+          "sha256": "c5b0835db32b32c2a65eefd8442bbf4d858dc432cd96c5b591eb8410c84b1e21"
+        }
+      ],
+      "runs": 896882,
+      "seconds": 611,
+      "coverage": 7404,
+      "features": 28083,
+      "rss_mib": 514
+    },
+    {
       "target": "catalyst",
       "label": "phase5-catalyst-fuzz-final",
       "exit_code": 0,

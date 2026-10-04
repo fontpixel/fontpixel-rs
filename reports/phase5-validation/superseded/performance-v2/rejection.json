@@ -1,0 +1,795 @@
+{
+  "status": "superseded: raw output log collisions discovered during independent archive verification",
+  "cause": "Path.with_suffix replaced filename-extension-bearing case IDs and dropped engine/repetition suffixes",
+  "original_formal_flag": true,
+  "accepted": false,
+  "summary_records_preserved": 301,
+  "mismatching_run_stream_references": 82,
+  "affected_cases": [
+    "e2:pfr-0-0-1.pfr",
+    "e2:pfr-1-0-1.pfr",
+    "e2:pfr-2-0-1.pfr",
+    "e2:pfr-ft-0-0-1.pfr",
+    "e2:pfr-ft-1-0-1.pfr",
+    "e2:pfr-ft-2-0-1.pfr",
+    "e2:pfr-ft-multistrike.pfr",
+    "e2:ssfn-collection.sfn",
+    "e2:ssfn-gray.asc",
+    "e2:ssfn-gray.sfn",
+    "e2:ssfn-gzip.sfn.gz",
+    "e2:ssfn-ligature.asc",
+    "e2:ssfn-original.asc",
+    "e2:ssfn-original.sfn",
+    "e2:ssfn-repeat.sfn"
+  ],
+  "affected_paths": [
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-0-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-1-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-2-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-collection.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gzip.sfn.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-ligature.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+    "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-repeat.stdout"
+  ],
+  "mismatches": [
+    {
+      "case": "e2:ssfn-original.sfn",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "559eb6979247bebba1081c8bdff2f5b07b02e9bd9ae65af8345c972607d68a8d",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.sfn",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "a2133c2718c40a07cf9fbba20f966a669bcc0fe3e52ef954ba712099947e477c",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.sfn",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "d1c527249e19c38f7f3e5b79199fe57cb60eeef4a7e737582c74b4a2cfd4bb09",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.sfn",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "c65c02dd5d3f991c66bc118da2571a9decc0812a1ad868a154429f9eb31a3c79",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.sfn",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "314b0fe2e673ba1cf2bf8e8eee816f7477129395f92053faf6c4136a4003bb35",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.asc",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "c78fd0d12bfaa41cdb0f92d91ace07dbbecbf0aa8c8eaf164e02e187cdb1c233",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.asc",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "ccdea8cd459696600ef915502d031926f49875cd3ea4ffc6e6ddb9745605dc0c",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.asc",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "5fa44a30fa963a9266fef3c740ebef6e9083bd9fc6e95ef65f0faaa5be05e4ff",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-original.asc",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-original.stdout",
+      "recorded_sha256": "d444e2f41372c456afb05c71d20b296df4f115a1a20dd6d33050310ed275005f",
+      "retained_sha256": "e4a322c8ae4f95c1fc68b50533d33c03535a82c599b9606c0779df6a46d51b7a"
+    },
+    {
+      "case": "e2:ssfn-gray.asc",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "5c3ff275244839fdd33f04ace640986c29ed35030a3e4b006e4629cb98283985",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.asc",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "e27385596b79dd23d04042a719874c35189f86a1161a337cfc6bd00ef740e5ed",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.asc",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "0310d073f7d9285af3b74fc037de3e8b6e009ec27681a08f9141aae08396326f",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.asc",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "465a20c813840c82579a15b250b57dbd13936a8084c51fe2fc934f09271b78dd",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.asc",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "342c411a010f6ada8ca8a240611267dfcdb409f3c3034824bab5d4b3e81baeee",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-ligature.asc",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-ligature.stdout",
+      "recorded_sha256": "44658b7ab34e4b5a53bb7e4a39b6ba64b0ef65258063639d6cbf054c50f83ae1",
+      "retained_sha256": "3565ca8e6a4fc3c8f7587acef4cf98cd9b2dc1115832f45f97c0e303bdaf005a"
+    },
+    {
+      "case": "e2:ssfn-ligature.asc",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-ligature.stdout",
+      "recorded_sha256": "8424acf38bca5a0132249f05ae84f4673f8b3268520d5ef9cbff49a8ea843a8a",
+      "retained_sha256": "3565ca8e6a4fc3c8f7587acef4cf98cd9b2dc1115832f45f97c0e303bdaf005a"
+    },
+    {
+      "case": "e2:ssfn-ligature.asc",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-ligature.stdout",
+      "recorded_sha256": "f41891a22a7285d9eeb8a782022b40d9f315896fc1fc9985ee921ece2e19210a",
+      "retained_sha256": "3565ca8e6a4fc3c8f7587acef4cf98cd9b2dc1115832f45f97c0e303bdaf005a"
+    },
+    {
+      "case": "e2:ssfn-ligature.asc",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-ligature.stdout",
+      "recorded_sha256": "98e68951e5298b34eb93fe7d606caaf0c1c394045b6e0a80200e19cdd8c9edcb",
+      "retained_sha256": "3565ca8e6a4fc3c8f7587acef4cf98cd9b2dc1115832f45f97c0e303bdaf005a"
+    },
+    {
+      "case": "e2:ssfn-gray.sfn",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "fa8ab2b067f579ece80a640be0a1b39a8f55faea165aa2e2e5e83dec165187aa",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.sfn",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "783361709ded532ee706b126359b9c35853a8fbff0d3ef89c0cdfe02dc39745f",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.sfn",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "a4d39778e7150bc1b58b7ca9a34039b8a1b7d89ae816f5d8de620d16820d134b",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-gray.sfn",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gray.stdout",
+      "recorded_sha256": "9a8821302a56e41643de86d51359308edbc8bac42702cb139c1e667207ab6db0",
+      "retained_sha256": "a0b6a0611f6d9995e3faa3cdfd106ae7a732ac4cf493a9f2e77a96383b2ff40e"
+    },
+    {
+      "case": "e2:ssfn-repeat.sfn",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-repeat.stdout",
+      "recorded_sha256": "4cec177752ec04c20ba21c1c74d38e9376e7606456082567315b7da0fff19fba",
+      "retained_sha256": "9358ee7c37b972981fb823f02ced03061bcad3d96847a034bc6812fb41598be4"
+    },
+    {
+      "case": "e2:ssfn-repeat.sfn",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-repeat.stdout",
+      "recorded_sha256": "d5b373dd728d57e4433345ced9836bd902709c74b57daa5c254a82b0920cfa64",
+      "retained_sha256": "9358ee7c37b972981fb823f02ced03061bcad3d96847a034bc6812fb41598be4"
+    },
+    {
+      "case": "e2:ssfn-repeat.sfn",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-repeat.stdout",
+      "recorded_sha256": "f04a3d176cc3b47bf794cf89d92488ec007be2118b403ec3b813c1f8879b9480",
+      "retained_sha256": "9358ee7c37b972981fb823f02ced03061bcad3d96847a034bc6812fb41598be4"
+    },
+    {
+      "case": "e2:ssfn-repeat.sfn",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-repeat.stdout",
+      "recorded_sha256": "a76ededc7bb3ac123c571048d36777dcefc775c739ec95d832b1a743abcf49aa",
+      "retained_sha256": "9358ee7c37b972981fb823f02ced03061bcad3d96847a034bc6812fb41598be4"
+    },
+    {
+      "case": "e2:ssfn-collection.sfn",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-collection.stdout",
+      "recorded_sha256": "67b94c8e442c2dc6dc96122354c31f378b2650947ca85e64b9bb1c05ab1a71d6",
+      "retained_sha256": "9acc7d5a9a1f1d74c37f5ddc76074c826ff0e9ebcc671b86c75c6976f7646cf4"
+    },
+    {
+      "case": "e2:ssfn-collection.sfn",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-collection.stdout",
+      "recorded_sha256": "e8b34db8a9a30c27859d1fe33decabc8ef51e7bfd273a1fe6cc87d1571b396b9",
+      "retained_sha256": "9acc7d5a9a1f1d74c37f5ddc76074c826ff0e9ebcc671b86c75c6976f7646cf4"
+    },
+    {
+      "case": "e2:ssfn-collection.sfn",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-collection.stdout",
+      "recorded_sha256": "d1432ab3d295d6f97286d369362ec40d153905af2e2ed88a5c2e66bedfe2b683",
+      "retained_sha256": "9acc7d5a9a1f1d74c37f5ddc76074c826ff0e9ebcc671b86c75c6976f7646cf4"
+    },
+    {
+      "case": "e2:ssfn-collection.sfn",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-collection.stdout",
+      "recorded_sha256": "6129ecb3ff03fca72002428045048edca30e6709620793da4eac0276c19b62a4",
+      "retained_sha256": "9acc7d5a9a1f1d74c37f5ddc76074c826ff0e9ebcc671b86c75c6976f7646cf4"
+    },
+    {
+      "case": "e2:ssfn-gzip.sfn.gz",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gzip.sfn.stdout",
+      "recorded_sha256": "855c2b502717c52cc177c5628525125d43520323c62a07f8d0ed150e3b0a63b7",
+      "retained_sha256": "1fdfc1837c4a52d6e1a1b93c7c3e80d5f906c120c191324d693702a0e8638ff8"
+    },
+    {
+      "case": "e2:ssfn-gzip.sfn.gz",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gzip.sfn.stdout",
+      "recorded_sha256": "692918b3f68e1117d5bc01907b587f7d1c3b38049ee8fccbbad01dd86ca890e2",
+      "retained_sha256": "1fdfc1837c4a52d6e1a1b93c7c3e80d5f906c120c191324d693702a0e8638ff8"
+    },
+    {
+      "case": "e2:ssfn-gzip.sfn.gz",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gzip.sfn.stdout",
+      "recorded_sha256": "37309db7eaaace8d31829f6994c7e28a204c81a78b4ce09fd960dd30521ee65e",
+      "retained_sha256": "1fdfc1837c4a52d6e1a1b93c7c3e80d5f906c120c191324d693702a0e8638ff8"
+    },
+    {
+      "case": "e2:ssfn-gzip.sfn.gz",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-ssfn-gzip.sfn.stdout",
+      "recorded_sha256": "32af9a153a1a65e1e0aa8cb1d58449d4a9a9308e14d80bf8545010d75f4479ba",
+      "retained_sha256": "1fdfc1837c4a52d6e1a1b93c7c3e80d5f906c120c191324d693702a0e8638ff8"
+    },
+    {
+      "case": "e2:pfr-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-0-0-1.stdout",
+      "recorded_sha256": "065cd316e09c29b6ab0d97142b8f9c84a063a46b699acc015953a13ad62bc317",
+      "retained_sha256": "b06527766461d628c35d58319b2f78c632a7d676189a9116d647df5397b528e0"
+    },
+    {
+      "case": "e2:pfr-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-0-0-1.stdout",
+      "recorded_sha256": "acf240ec3a7379cb042517fb5e76dba390322c1a19aadac630aa5be34eae87f9",
+      "retained_sha256": "b06527766461d628c35d58319b2f78c632a7d676189a9116d647df5397b528e0"
+    },
+    {
+      "case": "e2:pfr-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-0-0-1.stdout",
+      "recorded_sha256": "527ab5fcd0a8e93f92ee97547352df9f8abbe42157994e07cd3d75322882ff14",
+      "retained_sha256": "b06527766461d628c35d58319b2f78c632a7d676189a9116d647df5397b528e0"
+    },
+    {
+      "case": "e2:pfr-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-0-0-1.stdout",
+      "recorded_sha256": "e68d822514246152fe5addfd86f65645193bb2723269750ec5ce7ff2482b66c6",
+      "retained_sha256": "b06527766461d628c35d58319b2f78c632a7d676189a9116d647df5397b528e0"
+    },
+    {
+      "case": "e2:pfr-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-1-0-1.stdout",
+      "recorded_sha256": "d6d100107cdd922b331bf01645c9224ff1fc0af891412e4e3a70394d9fc6c37f",
+      "retained_sha256": "7f11506a81ea398797a8ca852290e7f57b637b0c5a92cf82fcc0484fe97e1da0"
+    },
+    {
+      "case": "e2:pfr-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-1-0-1.stdout",
+      "recorded_sha256": "82e4939cd23c07d33461d5ca3c25c96d4de8e289c89e005e496d673440f5569d",
+      "retained_sha256": "7f11506a81ea398797a8ca852290e7f57b637b0c5a92cf82fcc0484fe97e1da0"
+    },
+    {
+      "case": "e2:pfr-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-1-0-1.stdout",
+      "recorded_sha256": "c8ff2aa7f4008d547ea2d317f21a9627030784a4b4da3cf6ff31b0ce28c110ed",
+      "retained_sha256": "7f11506a81ea398797a8ca852290e7f57b637b0c5a92cf82fcc0484fe97e1da0"
+    },
+    {
+      "case": "e2:pfr-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-1-0-1.stdout",
+      "recorded_sha256": "fcd9bbcced04fa5d7a6455c6ef36e7a82a101bb5ba7a0731ae92c6ad69e4171a",
+      "retained_sha256": "7f11506a81ea398797a8ca852290e7f57b637b0c5a92cf82fcc0484fe97e1da0"
+    },
+    {
+      "case": "e2:pfr-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-2-0-1.stdout",
+      "recorded_sha256": "c60ae45908c04593ed974b88f23d4e0fa9c299105cb0e40f282b59e896506685",
+      "retained_sha256": "5d7b093a7dc78fa86639c5dfa5ea464bf6e43658cb9fc707c83856864406a7c5"
+    },
+    {
+      "case": "e2:pfr-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-2-0-1.stdout",
+      "recorded_sha256": "f2b110b2c08511919e439f4b07b1799eeea51eeeda20a4868fc3ad816a32b00a",
+      "retained_sha256": "5d7b093a7dc78fa86639c5dfa5ea464bf6e43658cb9fc707c83856864406a7c5"
+    },
+    {
+      "case": "e2:pfr-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-2-0-1.stdout",
+      "recorded_sha256": "40a5f5138af8eb4131825f706ad67a5608e7f2f49ccaf727464cabee2d9ec2fb",
+      "retained_sha256": "5d7b093a7dc78fa86639c5dfa5ea464bf6e43658cb9fc707c83856864406a7c5"
+    },
+    {
+      "case": "e2:pfr-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-2-0-1.stdout",
+      "recorded_sha256": "cff4d336cd842d8f2dcf09b3095ca54c31ad494dfe9648499d3e06aa5e819ad8",
+      "retained_sha256": "5d7b093a7dc78fa86639c5dfa5ea464bf6e43658cb9fc707c83856864406a7c5"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "b7ab4ff7e6c6f29ef574f5b5bcb9b14fc3fc2b07d48479af1457d4fd29be7c7a",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "8175a097f3f1459be8a7e9b5c23a7b1fb32c029fb01cc63ea8717314b7a409e1",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "2d4017e4103b2caaa69c0c86fc198bb43d2c7fe010dce3b2b44a1c7fe7109bd5",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "14e76202cb2728412aa0328870cf108f6010997bcdc26e90a372ca044de0f112",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "827bcdce37705cae761ef0aea96c5d00979fba77a5dacc8a86c8a3014e1403eb",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "native",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "45703eed7eec2b8b0dc66fd798174cca28e4286d0c45659d2d84ef4d5b305c24",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "native",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "4b21fc786b0346d87545b90a22cb2966353f0072656b7b54d4a707e8b93de918",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "native",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "d00c052c4d6745157e001716a9a567364739a8f4079b12b712a70f0317f46b05",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-0-0-1.pfr",
+      "engine": "native",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-0-0-1.stdout",
+      "recorded_sha256": "e5a05af9ae341250c4c21d732093b6a3c497a53a1afcc0f904d82458bcea21aa",
+      "retained_sha256": "ef7e09cc2d188aec0f22093478efa78b6fa6c8653b4e6828684f94d77d103c19"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "1eff62fd29d585008ab474bcb670df9f0c7ef63ebb968c5e0c1b3281d26bad03",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "700881c0f633372ae5315931e0750369c29dc03461505b3b84ca8e8fa9a45af8",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "a20011e41449a1fd2822d2fe80ee8311fd67f8c18db08f2c9d0e7280e7ad1df1",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "a3a8b9401896d80c77783f0851800ee0f5f2dd0b1782dcd5ea576b20583a7b20",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "14473f1b6ec115fe1777886d974ad72cb5abc956459d11a5f344c07116997cec",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "native",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "f0116eb6d3c46a916c7ca735773a54d609f1f39e2fb7ed27c865309617cd1c5a",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "native",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "6ec83c5d8d133a81fe3a11afdbe42e9bc445a2d7fa341a6b3f7832fac49060fe",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "native",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "bae4fbdfc64e2c9fdc15ad222a5bc679bc21797813eef34f69572512d95d1e36",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-1-0-1.pfr",
+      "engine": "native",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-1-0-1.stdout",
+      "recorded_sha256": "df145c46fdfe7a411391837f6f79e1cb5b9904c57d0f4ed2aeaf84bf53947d64",
+      "retained_sha256": "0240dc7eb9cceb547933b4b5925599049abe4058d3cb4d7949366e2e7f4001f7"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "34355bdee0822507fabaa5dafe557afd0820df1057dc5841e67c2f28157c7813",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "9d0cfb2e6de972ef29314ac3b294cfc1ed69b2a823307cbb81b38693049b8447",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "c09842e1d1660e09671f43ea04bae1e9e8a59fd819e22b9b1905db20e04a5cc3",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "5e233987073d3bfc2d176e5ecaaf13f948a37724291685e68888496860e90a8c",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "3d1fbbe7c99a5292776fe8e6a8ac85c59bfa27f4eec00510116b54d518f08f0b",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "native",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "cbcb37e6487b60cab6e923e15ac50bdf4d49ac31bd340a69985d784df6ba9a62",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "native",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "b635ba49e8f688e365b20212f0a2c2cfc1da29903924bcf0e530bf675af731dd",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "native",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "5473b2071d5e91bab56108050134faca4db9747ee6cec227d5937cc9139926a2",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-2-0-1.pfr",
+      "engine": "native",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-2-0-1.stdout",
+      "recorded_sha256": "f8f1e62d38c8e1c1a6f453d27cff981f9d33bd707552cedc82a7138813dd63e5",
+      "retained_sha256": "8b4921a49eaa6bf01ba4191f64f684f7970f6de8e5935677af93931f848baa18"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "rust",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "d4c4f3dbc78db93d5f6f5d4e39107dfa59bd6af33f5cd1e5d6493002ef07bfe7",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "rust",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "9532b9d2c77bf90e25e280cfed0e3ca7448649be7b6c5231bb3a00bf973ed128",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "rust",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "40d41a4083beea7c2b6d17941e8c22659509b5b87e29afd68989d496813a2078",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "rust",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "8fe93fb85e39eb382905a7b2fd59330160c6965fdc7324c9df529ba0b18d571f",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "rust",
+      "repetition": 5,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "777a8f5194f0f47597f25f2d0e80c383f75ab6c2ad3fb2e2e3f6086cba14172b",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "native",
+      "repetition": 1,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "ee8324e533d0148db2884235003ec2a59bf04c0e6c95d274c84a49a295a7b9b9",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "native",
+      "repetition": 2,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "5d1d7663206b545ff607bc2e255d381c9ce4a473f1abe1f500ed841f6f6ec9b3",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "native",
+      "repetition": 3,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "9cbf405b1d902ccd485d0b01267b9bc7c30d575738e0cd168d1c29b3b36e0f0f",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    },
+    {
+      "case": "e2:pfr-ft-multistrike.pfr",
+      "engine": "native",
+      "repetition": 4,
+      "stream": "stdout",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/quiet-final/e2-pfr-ft-multistrike.stdout",
+      "recorded_sha256": "509f7e13919e18f6bbdd787ac4dec45c714d41fe2a7180cd909d4724a3e31287",
+      "retained_sha256": "6df4a5caf5ef81a4a4d91e751d6435b2810f7a435ebec06910cdc6c2e7715eac"
+    }
+  ],
+  "archives": [
+    {
+      "path": "reports/phase5-validation/superseded/performance-v2/quiet-final.json.gz",
+      "sha256": "36617d57e2bbb67849154b81007439181ae7dce4cdff12b41d64546be4d59aea"
+    },
+    {
+      "path": "reports/phase5-validation/superseded/performance-v2/prep-v2-final.json.gz",
+      "sha256": "c1804f2b745bff6ba25b2b33daa0e770ccafc0a4e5db77be7b2bccb91687b239"
+    },
+    {
+      "path": "reports/phase5-validation/superseded/performance-v2/quiet-final-retained-raw.tar.gz",
+      "sha256": "31a03dcd71ea1bfbabd1afcdbe88b1a232e67aa28c28d8592722ed4a07576694"
+    }
+  ],
+  "repair": "append stdout/stderr suffixes, reject existing files, verify every retained raw hash before successful summary; fresh preparation and full five-repetition measurement"
+}

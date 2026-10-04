@@ -180,3 +180,34 @@ counts, missing operations, E2/transport output shapes, finite values and unique
 case IDs. Existing v1 preparation evidence remains untouched; its exact six-file
 source snapshot is archived under
 `$FONTPIXEL_WORK_ROOT/phase5-performance/prep-v1-source`.
+
+## Raw log integrity (v3)
+
+Each invocation owns two exclusive files. Stream suffixes are **appended** to
+its complete log stem: `e2-ssfn-original.sfn-rust-1.stdout` and `.stderr` retain
+the format extension and repetition number. Existing stdout or stderr causes an
+error before child launch; exclusive creation prevents truncating old evidence.
+
+Preparation verifies every command log before publishing its manifest. Manifest
+verification checks those preparation logs again. Both smoke and formal
+measurement verify every invocation's stdout/stderr SHA256 after all cases and
+before publishing the final result. Duplicate invocation paths, missing files
+and altered bytes are fatal. One process may emit several format records;
+those records intentionally reference the same invocation's verified log pair.
+`raw_log_verification` records the unique command/file counts and verification
+status. A failed verification leaves raw logs/progress without a successful
+summary.
+
+`selfcheck` includes ten real child commands covering `.sfn` and `.asc` across
+five repetitions, refusal to reuse a path, a pre-existing stderr-only conflict,
+modified stdout/stderr rejection, and duplicate invocation detection. These are
+log regressions, not font performance measurements.
+
+The old v2 runner used `Path.with_suffix`, which collapsed dotted case/repetition
+stems and overwrote raw logs. The coordinator's original `quiet-final.json`
+therefore has incomplete raw evidence despite its recorded `formal: true` flag;
+it is superseded and must not be used as accepted formal performance evidence.
+Its files and old reports remain untouched. The exact five-file v2 source
+snapshot is archived at `$FONTPIXEL_WORK_ROOT/phase5-performance/prep-v2-source`.
+V3 uses a fresh preparation and fresh smoke; the coordinator performs the new
+quiet five-repetition campaign in a separate output directory.

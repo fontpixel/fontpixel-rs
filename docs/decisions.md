@@ -1534,3 +1534,21 @@ checked product, output cap and cumulative memory charge before reserving the
 dense table. The allocation is fallible. This keeps two distant source codes
 from requesting gigabytes despite a small output budget; accepted native bytes
 remain unchanged. See `reports/w5.gpi-budget.json` and its two boundary cases.
+
+
+## 2026-10-04 — Preserve each benchmark invocation and hand off at phase 5
+
+The coordinator rejected the first phase-5 quiet run after archive verification
+found that replacing suffixes collapsed dotted case IDs and overwrote raw logs.
+The recorder now appends stream suffixes, refuses existing files, and checks
+unique paths and all stream hashes before publishing. Real subprocess regressions
+cover the collision and tampering; a fresh full preparation and five-run campaign
+replace the rejected evidence without editing it. Native codec/timing workloads
+are unchanged.
+
+The user requested stopping local development after phase 5 and transferring
+phase 6 to online dot with six Astra/xhigh/fast workers. The handoff preserves all
+Git refs, original inputs and complete Tong baseline, while excluding toolchain
+installs/build caches and duplicate historical generated outputs. The new worker
+prompt limits the next task to W6.1–W6.6 and requires truthful reporting when fast
+mode is unavailable or cannot be verified.

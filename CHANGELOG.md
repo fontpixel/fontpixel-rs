@@ -47,4 +47,5 @@
   families, color output, BMFont JSON and raw packing profiles. Native directory
   inputs/outputs, cumulative CLI budgets, bounded gzip envelopes and structural
   cross-format detection are covered by independent tools and regression tests.
-  Phase acceptance remains pending in `reports/phase-5.md`.
+  Phase acceptance, source/long-fuzz boundaries and corrected five-run native
+  measurements are recorded in `reports/phase-5.md`.

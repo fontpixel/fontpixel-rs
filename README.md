@@ -4,14 +4,15 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The requirements and surveyed 99-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phases 0–4 accepted; phase 5 validation
+## Current status: phases 0–5 accepted; local development stopped
 
-Phase 4 is integrated and accepted; see [its validation report](reports/phase-4.md)
-for independent comparisons, fuzz, performance, CLI size and remaining scope.
 Phase 5 implements the remaining formats and the additions from its wider survey.
-All 99 IDs have connected native readers and writers; final validation is still
-in progress. See [the phase 5 report](reports/phase-5.md). CLI completion and
-merging, Python/WASM bindings and the offline merge page remain later stages.
+All 99 IDs have native readers and writers for the documented variants. Aggregate
+gates, long fuzz campaigns and five-run native performance are recorded in the
+[phase 5 acceptance report](reports/phase-5.md). See [TODO.md](TODO.md) for the
+current stop point and [the online handoff](docs/ONLINE-DOT-HANDOFF.md) for phase 6.
+CLI completion and merging, Python/WASM bindings and the offline merge page
+remain later stages; the online task is authorized for phase 6 only.
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -54,7 +55,7 @@ See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
 and [W1.3 validation](reports/w1.3.md).
 The optional `compat-bdfparser` facade and `fontpixel-parity` executable pass the
 full default differential suite; see [W1.5 validation](reports/w1.5.md).
-The merged implementation passed the final aggregate gate; see the
+The merged phase-1 implementation passed its final aggregate gate; see the
 [phase 1 acceptance report](reports/phase-1.md) for evidence and remaining scope.
 
 ```sh
@@ -70,7 +71,7 @@ cargo run -p fontpixel-cli --bin fontpixel -- convert font.bdf -o swapped.pcf --
 Console examples (HEX/PSF cannot retain source names and all BDF metadata):
 
 ```sh
-fontpixel convert source.hex -o console.psf.gz
+fontpixel convert source.hex -o console.psf.gz --to psf
 fontpixel convert source.hex -o console.psf --to psf --psf-version 1 --psf1-count 512
 fontpixel info eight-row.hex --hex-height 8 --json
 fontpixel convert source.bdf -o unifont.hex --hex-height 16 --hex-descent 2
@@ -88,8 +89,9 @@ fontpixel info legacy.fon --fnt-read-code-page cp437 --json
 
 Image atlases preserve exact glyph metadata in a JSON or TOML sidecar. Keep both
 files together; either the image or mapping can be the input entry point. PNG,
-BMP, GIF, TGA, PBM and PGM output are supported. External images need an explicit
-character map. C headers support font8x8, t-mat, explicitly described byte arrays
+BMP, GIF, TGA, PBM and PGM output are supported. External atlas images need an
+explicit character map. Imageset directories use explicitly selected numeric
+filename interpretation. C headers support font8x8, t-mat, explicitly described byte arrays
 and Adafruit GFX; generic and GFX output report metadata and mapping losses.
 
 ```sh

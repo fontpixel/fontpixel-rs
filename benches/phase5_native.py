@@ -6,7 +6,7 @@ owns orchestration and an independent in-memory monobit adapter, not codecs.
 """
 from __future__ import annotations
 import argparse, datetime, hashlib, importlib.util, io, json, os, pathlib, platform
-import math, statistics, subprocess, sys, time, shutil
+import math, statistics, subprocess, sys, time, shutil, tempfile
 sys.dont_write_bytecode = True
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WORK = pathlib.Path(os.environ.get('FONTPIXEL_WORK_ROOT', ROOT.parent / 'local-work'))
@@ -115,16 +115,39 @@ def catalog():
  add('transport','raw-gzip','raw','original.raw',parser='transport_total',mode='transport',write=False,notes='Original 256-glyph 8x16 in-memory raw/gzip pipeline; glyph formula is regenerated inside the probe before timing and the same original bytes are archived by the runner. Gzip default write includes the second same-profile budget audit. Native-only, no external ratio.')
  return rows
 
+def log_paths(log):
+ """Append stream suffixes: case IDs can already contain .sfn/.asc/.pfr."""
+ log=pathlib.Path(log)
+ return pathlib.Path(str(log)+'.stdout'),pathlib.Path(str(log)+'.stderr')
+
+def verify_command_logs(records):
+ """One invocation owns two immutable logs; verify bytes before publication."""
+ seen=set()
+ for record in records:
+  for stream in ['stdout','stderr']:
+   path=pathlib.Path(record[stream]);key=str(path.resolve())
+   if key in seen:raise ValueError('reused raw log path across invocations: '+str(path))
+   seen.add(key)
+   try:actual=sha(path)
+   except OSError as error:raise ValueError('unreadable raw '+stream+' log: '+str(path)) from error
+   if actual!=record[stream+'_sha256']:raise ValueError('raw '+stream+' log hash changed: '+str(path))
+ return dict(commands=len(records),files=len(seen),all_sha256_match=True)
+
 def command(cmd,log,cwd=ROOT,env=None):
  log=pathlib.Path(log);log.parent.mkdir(parents=True,exist_ok=True)
- with log.with_suffix('.stdout').open('wb') as out,log.with_suffix('.stderr').open('wb') as err:
+ stdout,stderr=log_paths(log)
+ # Preflight both names before creating either; exclusive opens also reject
+ # races and dangling symlinks without truncating any existing evidence.
+ for path in [stdout,stderr]:
+  if os.path.lexists(path):raise FileExistsError('Refusing to overwrite raw log: '+str(path))
+ with stdout.open('xb') as out,stderr.open('xb') as err:
   start=time.monotonic()
   proc=subprocess.Popen(list(map(str,cmd)),cwd=cwd,env=env,stdout=out,stderr=err)
   _,status,usage=os.wait4(proc.pid,0);proc.returncode=os.waitstatus_to_exitcode(status)
  elapsed=time.monotonic()-start
- record=dict(command=list(map(str,cmd)),exit=proc.returncode,process_wall_seconds=elapsed,peak_rss_kib=usage.ru_maxrss if sys.platform!='darwin' else usage.ru_maxrss/1024,stdout=str(log.with_suffix('.stdout')),stderr=str(log.with_suffix('.stderr')),stdout_sha256=sha(log.with_suffix('.stdout')),stderr_sha256=sha(log.with_suffix('.stderr')))
- if proc.returncode:raise RuntimeError(json.dumps(record)+'\n'+log.with_suffix('.stderr').read_text(errors='replace')[-6000:])
- return record,log.with_suffix('.stdout').read_text()
+ record=dict(command=list(map(str,cmd)),exit=proc.returncode,process_wall_seconds=elapsed,peak_rss_kib=usage.ru_maxrss if sys.platform!='darwin' else usage.ru_maxrss/1024,stdout=str(stdout),stderr=str(stderr),stdout_sha256=sha(stdout),stderr_sha256=sha(stderr))
+ if proc.returncode:raise RuntimeError(json.dumps(record)+'\n'+stderr.read_text(errors='replace')[-6000:])
+ return record,stdout.read_text()
 
 def generated(group,directory,bins,python):
  if group!='x':directory.mkdir(parents=True,exist_ok=True)
@@ -500,6 +523,7 @@ def prepare(args):
  final_sources=identities()
  source_changes={path:{'before':initial_sources.get(path),'after':final_sources.get(path)} for path in initial_sources.keys()|final_sources.keys() if initial_sources.get(path)!=final_sources.get(path)}
  result=dict(oracle=oracle,formal=False,formal_eligible=not args.skip_build and not args.smoke_only and not unfrozen and not source_changes,explicit_smoke_only=args.smoke_only,group_freeze_evidence=freeze_evidence,freeze_proof_failures=freeze_errors,unfrozen_groups=unfrozen,skip_build_smoke_only=args.skip_build,schema=2,purpose='Preparation only; no formal timing',root=str(root),target=str(target),groups=groups,pending=pending,pending_catalog=PENDING,steps=steps,jobs=jobs,assets=assets,source_hashes=final_sources,source_changes_during_preparation=source_changes,environment=environment())
+ result['raw_log_verification']=verify_command_logs(steps)
  dump(args.manifest,result);print(json.dumps({'manifest':str(args.manifest),'jobs':len(jobs),'pending':pending}))
 
 def parse_records(text,parser):
@@ -548,6 +572,7 @@ def parse_records(text,parser):
  return out
 
 def verify_manifest(manifest,strict=True):
+ verify_command_logs(manifest.get('steps',[]))
  changes=[]
  oracle=manifest.get('oracle',{})
  for path,h in oracle.get('sources',{}).items():
@@ -583,7 +608,7 @@ def measure(args,formal):
  competitors=competing_processes()
  if formal and competitors:raise ValueError('Task-owned build/fuzz/oracle activity prevents formal measurement: '+str(competitors))
  before_environment=environment()
- root=args.output.parent/args.output.stem;fresh(root);root.mkdir(parents=True);records=[]
+ root=args.output.parent/args.output.stem;fresh(root);root.mkdir(parents=True);records=[];command_runs=[]
  selected=[j for j in manifest['jobs'] if not args.cases or j['group']+':'+j['id'] in args.cases.split(',')]
  if not selected:raise ValueError('No selected cases')
  if args.cases and set(args.cases.split(','))!={j['group']+':'+j['id'] for j in selected}:raise ValueError('Unknown case in --cases')
@@ -593,7 +618,7 @@ def measure(args,formal):
    for repetition in range(5 if formal else 1):
     cmd=[str(args.iterations) if a=='{iterations}' else a for a in engine['command']]
     record,text=command(cmd,root/f"{job['group']}-{job['id']}-{engine['name']}-{repetition+1}")
-    record.update(repetition=repetition+1,records=parse_records(text,engine['parser']));engine_runs.append(record)
+    record.update(repetition=repetition+1,records=parse_records(text,engine['parser']));engine_runs.append(record);command_runs.append(record)
    for slot in range(len(engine_runs[0]['records'])):
     if any(len(r['records'])!=len(engine_runs[0]['records']) for r in engine_runs):raise ValueError('Adapter changed record count between repetitions')
     samples=[r['records'][slot] for r in engine_runs];metrics={}
@@ -609,7 +634,44 @@ def measure(args,formal):
  if formal and after_competitors:raise ValueError('Task-owned activity detected after measurement; raw records retained but not formal: '+str(after_competitors))
  result=dict(source_changes_during_busy_smoke=changes,competing_processes_before=competitors,competing_processes_after=after_competitors,environment_before=before_environment,schema=1,purpose='quiet five-run release measurements' if formal else 'interface smoke only; not performance evidence',formal=formal,repetitions=5 if formal else 1,environment_note=args.environment_note,environment=environment(),manifest=str(args.manifest),manifest_sha256=sha(args.manifest),source_hashes=manifest['source_hashes'],results=records,pending=manifest['pending'],pending_catalog=manifest.get('pending_catalog',PENDING),missing_baselines={j['group']+':'+j['id']:j['missing_baselines'] for j in selected},ratios=None,ratio_policy='No automatic speedup ratios: adapters may project metadata, native defaults, or writer behavior differently; compare explicitly supported matching operations only')
  result['comparison_columns']={j['group']+':'+j['id']:{engine:([dict(format=r['format'],read_ns=r['metrics']['read_ns'],write_ns=r['metrics']['write_ns'],peak_rss_kib=r['peak_rss_kib'],iterations=r['metadata']['iterations'],read_iterations=r['metadata'].get('read_iterations'),write_iterations=r['metadata'].get('write_iterations')) for r in records if r['case']==j['group']+':'+j['id'] and r['engine']==engine] or None) for engine in ['rust','python','java','native']} for j in selected}
+ result['raw_log_verification']=verify_command_logs(command_runs)
  dump(args.output,result);print(json.dumps({'output':str(args.output),'formal':formal,'records':len(records)}))
+
+def log_selfcheck():
+ """Real child processes reproduce the dotted case / five-repeat collision."""
+ with tempfile.TemporaryDirectory(prefix='phase5-log-regression-') as directory:
+  root=pathlib.Path(directory);records=[]
+  for extension in ['sfn','asc']:
+   for repetition in range(1,6):
+    token=f'{extension}-{repetition}';log=root/f'e2-ssfn-original.{extension}-rust-{repetition}'
+    record,output=command([sys.executable,'-c','import sys; print(sys.argv[1]); print(sys.argv[1],file=sys.stderr)',token],log)
+    assert output==token+'\n'
+    assert pathlib.Path(record['stdout']).name==log.name+'.stdout'
+    assert pathlib.Path(record['stderr']).read_text()==token+'\n'
+    records.append(record)
+  assert verify_command_logs(records)==dict(commands=10,files=20,all_sha256_match=True)
+  marker=root/'must-not-launch';first=root/'e2-ssfn-original.sfn-rust-1'
+  before={str(p):p.read_bytes() for p in log_paths(first)}
+  try:command([sys.executable,'-c','import pathlib,sys; pathlib.Path(sys.argv[1]).touch()',marker],first)
+  except FileExistsError:pass
+  else:raise AssertionError('existing logs overwritten')
+  assert not marker.exists() and all(pathlib.Path(p).read_bytes()==value for p,value in before.items())
+  stderr_only=root/'stderr-only.sfn';out,err=log_paths(stderr_only);err.write_bytes(b'preserve')
+  try:command([sys.executable,'-c','raise AssertionError("must not launch")'],stderr_only)
+  except FileExistsError:pass
+  else:raise AssertionError('existing stderr overwritten')
+  assert err.read_bytes()==b'preserve' and not out.exists()
+  for stream in ['stdout','stderr']:
+   path=pathlib.Path(records[0][stream]);original=path.read_bytes();path.write_bytes(original+b'tampered')
+   try:verify_command_logs(records)
+   except ValueError as error:assert 'raw '+stream+' log hash changed' in str(error)
+   else:raise AssertionError('tampered raw log accepted')
+   path.write_bytes(original)
+  try:verify_command_logs([records[0],records[0]])
+  except ValueError as error:assert 'reused raw log path' in str(error)
+  else:raise AssertionError('duplicate invocation log accepted')
+  assert verify_command_logs(records)['all_sha256_match']
+ return dict(checks=6,child_processes=10,scenarios=['distinct .sfn/.asc stems across five repetitions','same-path refusal before child launch','stderr-only conflict preserves both paths','modified stdout rejected','modified stderr rejected','duplicate invocation paths rejected'])
 
 def selfcheck():
  """Unit contracts matter: each frozen adapter reports a different scale."""
@@ -640,7 +702,8 @@ def selfcheck():
   try:parse_records(text,parser)
   except ValueError:pass
   else:raise AssertionError('invalid measurement accepted')
- print(json.dumps(dict(status='pass',checks=16,cases=len(cases),purpose='unit normalization, distinct operation counts, missing-operation and unique inventory checks; no performance measurements')))
+ log_checks=log_selfcheck()
+ print(json.dumps(dict(status='pass',checks=16+log_checks['checks'],unit_checks=16,raw_log_regressions=log_checks,cases=len(cases),purpose='unit normalization and real raw-log integrity regressions; no font performance measurements')))
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='action',required=True)

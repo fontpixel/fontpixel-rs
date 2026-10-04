@@ -5,23 +5,65 @@
     {
       "label": "phase5-check-candidate-final1",
       "exit_code": 0,
-      "matching_source_count": 718,
-      "differences": [],
-      "not_recorded": []
+      "matching_source_count": 717,
+      "differences": [
+        {
+          "path": "benches/phase5_native.py",
+          "checked_sha256": "ad7fc462494e7167cdcb6b11a17b3903215845ee9de56c754d2c026b03c24adc",
+          "current_sha256": "a84a97b09e7eeb0b8ab4e4e086aa56bb33c827ee0fc380b9c5bc48611e147264"
+        }
+      ],
+      "not_recorded": [],
+      "difference_scope": "benchmark orchestration only, separately regression-checked in final3"
     },
     {
       "label": "phase5-extra-gates-final1",
       "exit_code": 0,
-      "matching_source_count": 718,
-      "differences": [],
-      "not_recorded": []
+      "matching_source_count": 717,
+      "differences": [
+        {
+          "path": "benches/phase5_native.py",
+          "checked_sha256": "ad7fc462494e7167cdcb6b11a17b3903215845ee9de56c754d2c026b03c24adc",
+          "current_sha256": "a84a97b09e7eeb0b8ab4e4e086aa56bb33c827ee0fc380b9c5bc48611e147264"
+        }
+      ],
+      "not_recorded": [],
+      "difference_scope": "benchmark orchestration only, separately regression-checked in final3"
     },
     {
       "label": "phase5-cli-release-confirmed",
       "exit_code": 0,
-      "matching_source_count": 718,
-      "differences": [],
-      "not_recorded": []
+      "matching_source_count": 717,
+      "differences": [
+        {
+          "path": "benches/phase5_native.py",
+          "checked_sha256": "ad7fc462494e7167cdcb6b11a17b3903215845ee9de56c754d2c026b03c24adc",
+          "current_sha256": "a84a97b09e7eeb0b8ab4e4e086aa56bb33c827ee0fc380b9c5bc48611e147264"
+        }
+      ],
+      "not_recorded": [],
+      "difference_scope": "benchmark orchestration only, separately regression-checked in final3"
+    },
+    {
+      "label": "phase5-check-main-final1",
+      "exit_code": 0,
+      "matching_source_count": 717,
+      "differences": [
+        {
+          "path": "benches/phase5_native.py",
+          "checked_sha256": "ad7fc462494e7167cdcb6b11a17b3903215845ee9de56c754d2c026b03c24adc",
+          "current_sha256": "a84a97b09e7eeb0b8ab4e4e086aa56bb33c827ee0fc380b9c5bc48611e147264"
+        }
+      ],
+      "not_recorded": [],
+      "difference_scope": "benchmark orchestration only, separately regression-checked in final3"
     }
-  ]
+  ],
+  "integrated_commit": "f64b729",
+  "benchmark_runner_followup": {
+    "path": "benches/phase5_native.py",
+    "current_sha256": "a84a97b09e7eeb0b8ab4e4e086aa56bb33c827ee0fc380b9c5bc48611e147264",
+    "reason": "raw-log path collision repair after successful Rust source gates; no production/adapter/seed changes",
+    "evidence": "phase5-benchmark-integrity-final3.json.gz"
+  }
 }

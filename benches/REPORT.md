@@ -1,7 +1,9 @@
 # W1.1 core benchmark report
 
 Later-stage complete-family measurements are in [PHASE2-REPORT.md](PHASE2-REPORT.md).
-The historical W1.1 measurements below retain their original scope.
+Phase 5 native-profile measurements are in [PHASE5-REPORT.md](PHASE5-REPORT.md).
+The historical W1.1 measurements below retain their original scope; complete
+phase 6 Tong/catalogue/merge targets remain pending.
 
 Measured 2026-10-02 in the assigned shared Linux cloud workspace. These are core
 raster/index operations, not font decoding, a layout engine or language bindings.
