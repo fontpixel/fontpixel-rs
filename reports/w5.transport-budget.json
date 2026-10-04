@@ -1,0 +1,245 @@
+{
+  "schema": 1,
+  "scope": "W5 shared gzip writer budget repair",
+  "date": "2026-10-04",
+  "environment": {
+    "setup": "source scripts/local-env.sh",
+    "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-transport",
+    "CARGO_BUILD_JOBS": 2,
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "workspace_edition": "2024"
+  },
+  "production_status": "complete; shared files returned to root after handoff",
+  "files": {
+    "crates/fontpixel/src/resources.rs": "a4c67e887b881ad6ea97b1747ebc4f9be09df17f6608886f90bd1cf8e8400647",
+    "crates/fontpixel/src/formats/mod.rs": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+    "crates/fontpixel/src/formats/registry_codecs.rs": "fa77323a9f30d53cbb6d9a83f64c8d62c965858a5b2305395e7625415e467820",
+    "crates/fontpixel/src/formats/transport.rs": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+    "crates/fontpixel/tests/transport_limits.rs": "3e4e3627410e419f4f20641ef378df41882704bc08be81c84635e47698a27575",
+    "crates/fontpixel/examples/transport_timing.rs": "c2e70f528af405dcebe40909c82841e2f270ab87826fb85f55555190750eb16d"
+  },
+  "api": {
+    "transport_limits": "resources::TransportLimits; formats reexport",
+    "fields": [
+      "resources: ResourceLimits",
+      "max_output_bytes: usize"
+    ],
+    "common_option": "WriteOptions.transport_limits: Option<TransportLimits>",
+    "semantics": "None uses typed writer; Some intersects; cannot expand"
+  },
+  "checks": [
+    {
+      "id": "all_feature_tests",
+      "command": "cargo test --locked -p fontpixel --all-features --test transport_limits",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-tests2.log",
+      "log_sha256": "ecffb8363f9278a47a6dfe0a53ded45be2267942340e037783d48d8182d2655b",
+      "passed": 13,
+      "revision": "final1"
+    },
+    {
+      "id": "regressions",
+      "command": "cargo test --locked -p fontpixel --no-default-features --features raw,gzip,bdf,pcf,yaff,hex,psf,bbc,svg --test transport_limits --test bdf --test pcf --test yaff --test hex_psf --test contracts",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-regressions.log",
+      "log_sha256": "763ed045f05dd57083e6871cb3be04b1151b759abbf1fc867081312187df451a",
+      "passed": 96,
+      "revision": "final1"
+    },
+    {
+      "id": "featureless_contracts",
+      "command": "cargo test --locked -p fontpixel --no-default-features --test contracts",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-disabled.log",
+      "log_sha256": "3c7923594eea1a37a1c00efa2cd9528a2aaa9b936ae06a213e416efe49b1887e",
+      "passed": 22,
+      "revision": "final1"
+    },
+    {
+      "id": "clippy",
+      "command": "cargo clippy --locked -p fontpixel --all-features --lib --test transport_limits --example transport_timing -- -D warnings",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-clippy2.log",
+      "log_sha256": "4e45aaa6bc5bca3e58383d340b66661b50566992f7160f6310924eb12cf10d34",
+      "revision": "final1"
+    },
+    {
+      "id": "featureless_check",
+      "command": "cargo check --locked -p fontpixel --no-default-features",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-no-features.log",
+      "log_sha256": "7debe1cdcd148741f719e39c80307bdc50a77d04c632d94856278280b9110a3d",
+      "revision": "final1"
+    },
+    {
+      "id": "rustdoc",
+      "command": "RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --all-features --no-deps",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-doc.log",
+      "log_sha256": "222cc4d7b42d8bb1b27a13aec1cef6e280a3e0a24683b17b8e5fdeb961b0a4c8",
+      "revision": "final1"
+    },
+    {
+      "id": "release_probe_build",
+      "command": "cargo build --locked -p fontpixel --release --no-default-features --features raw,gzip --example transport_timing",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-timing-build.log",
+      "log_sha256": "b01d2de426077452f0eea5bc00dae8ffac88cd340cadbd9af35a4e1db547ae93",
+      "revision": "final1"
+    },
+    {
+      "id": "release_probe_smoke",
+      "command": "$CARGO_TARGET_DIR/release/examples/transport_timing 2 256",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-timing-smoke.json",
+      "log_sha256": "159a67b1c0546bbc81d7cfbdfd76f73407a43fddd20e57ffa67ece04b50311f6",
+      "revision": "final1"
+    },
+    {
+      "id": "format_edition2021_superseded",
+      "command": "rustfmt --edition 2021 --check --config skip_children=true crates/fontpixel/src/resources.rs crates/fontpixel/src/formats/mod.rs crates/fontpixel/src/formats/registry_codecs.rs crates/fontpixel/src/formats/transport.rs crates/fontpixel/tests/transport_limits.rs crates/fontpixel/examples/transport_timing.rs",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final-rustfmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "revision": "final1",
+      "status": "superseded; does not satisfy workspace Rust 2024 formatting"
+    },
+    {
+      "id": "prior_c_drcs_freeze",
+      "command": "sha256sum -c reports/w5.5-sha256.txt",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-w55-frozen.log",
+      "log_sha256": "01735ab4e002c1cbbb82aaa00d4fa38bea52133099483cd2a3f1b4ece87355a3",
+      "passed": 25,
+      "revision": "final1"
+    },
+    {
+      "id": "prior_a2_freeze",
+      "command": "sha256sum -c reports/w5.a2-sha256.txt",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-a2-frozen.log",
+      "log_sha256": "332d1deb8d5dd8931b88ec4ab81636374fa9bed76327817e295722b0df12fe85",
+      "passed": 44,
+      "revision": "final1"
+    },
+    {
+      "id": "format_edition2024",
+      "revision": "final2",
+      "command": "rustfmt --edition 2024 --check --config skip_children=true crates/fontpixel/src/formats/transport.rs crates/fontpixel/tests/transport_limits.rs crates/fontpixel/examples/transport_timing.rs",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-final2-rustfmt2024.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "probe": {
+    "formal": false,
+    "reason": "shared busy work window; smoke only",
+    "result": {
+      "schema": 1,
+      "release": true,
+      "glyphs": 256,
+      "iterations": 2,
+      "raw_bytes": 4096,
+      "gzip_bytes": 3930,
+      "raw_read_ns": 124218,
+      "gzip_read_ns": 175048,
+      "raw_write_ns": 184980,
+      "gzip_write_ns": 665520,
+      "gzip_native_validations": 2,
+      "correctness": "full-model-and-raw-bytes",
+      "baseline": null
+    },
+    "source_sha256": "c2e70f528af405dcebe40909c82841e2f270ab87826fb85f55555190750eb16d",
+    "binary_sha256": "7ca621ff2caffbb3270b507474fc1689405f7f51a1947523752145687786832e",
+    "runner_owner": "/root/w52_han_iigs",
+    "smoke_source_sha256": "791849ad49029da68378d5d75e3989aab67dfed673ac3d3b1d77b7e11aae6d71",
+    "binary_and_smoke_revision": "final1; no rebuild or timing in final2",
+    "formal_prepare_requires_rebuild": true
+  },
+  "prior_development_failures": [
+    {
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-all-check.log",
+      "reason": "new BDF helper referenced crate::ReadContext instead of crate::resources::ReadContext; fixed"
+    },
+    {
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-tests-initial.log",
+      "reason": "new integration test imported nonexistent root ReadContext reexport; fixed"
+    },
+    {
+      "log": "/home/chen/githubprojects/fontpixel/local-work/transport-clippy.log",
+      "reason": "test registry tuple complexity; replaced nested type with Validation alias; fixed"
+    }
+  ],
+  "limits_and_handoff": [
+    "gzip native writer validation runs a second time after plaintext release; cost included in probe",
+    "native non-gzip writer does not serialize twice",
+    "BDF older API uses default resources plus actual output cap and matching BDF reader validation",
+    "custom writers should implement budget/profile validation hooks",
+    "no new external dependency or copied reference source",
+    "long transport fuzz and aggregate gate are root/W54 responsibility",
+    "performance runner ownership remains W52; formal measurement waits for root quiet window"
+  ],
+  "revision": "final3",
+  "revision_change": {
+    "classification": "format-only; no semantic or API changes",
+    "changed_files": [
+      "crates/fontpixel/src/formats/transport.rs",
+      "crates/fontpixel/tests/transport_limits.rs",
+      "crates/fontpixel/examples/transport_timing.rs"
+    ],
+    "unchanged_shared_files": {
+      "crates/fontpixel/src/resources.rs": "a4c67e887b881ad6ea97b1747ebc4f9be09df17f6608886f90bd1cf8e8400647",
+      "crates/fontpixel/src/formats/mod.rs": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+      "crates/fontpixel/src/formats/registry_codecs.rs": "fa77323a9f30d53cbb6d9a83f64c8d62c965858a5b2305395e7625415e467820"
+    },
+    "format_command": "rustfmt --edition 2024 --config skip_children=true crates/fontpixel/src/formats/transport.rs crates/fontpixel/tests/transport_limits.rs crates/fontpixel/examples/transport_timing.rs",
+    "format_exit_code": 0,
+    "diff": "/home/chen/githubprojects/fontpixel/local-work/transport-final2-format-only.diff",
+    "diff_sha256": "50452f798ca318f5d0ab794b0de6fc7c08fc246979ac39cb2c4806adaf348d2a",
+    "test_policy": "Do not repeat 96 tests for format-only changes; root owns aggregate gate",
+    "supersedes": {
+      "revision": "final1",
+      "manifest_sha256": "a298327ecbf964a8297d0f85214c24c6936363f85b350da75550230c3546ca66",
+      "reason": "wrong rustfmt edition (2021 instead of workspace 2024)",
+      "archive": {
+        "reports/w5.transport-budget/superseded/final1/w5.transport-budget-sha256.txt": "a298327ecbf964a8297d0f85214c24c6936363f85b350da75550230c3546ca66",
+        "reports/w5.transport-budget/superseded/final1/w5.transport-budget.json": "3f59795e5295371dfb7cf382f122efa7e47c0d215c2d27dec6a6051210000d1c",
+        "reports/w5.transport-budget/superseded/final1/w5.transport-budget.md": "c3144c90480ccce5f51ef3f1c6d9a66b34573c4d584ab8a42f0f004f801cf166"
+      }
+    }
+  },
+  "input_capacity_revision": {
+    "changes": [
+      "Capped geometric gzip decompression allocation",
+      "Decoded Vec capacity retained in context budget",
+      "Resolved sidecar Vec capacity budgeted"
+    ],
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-p",
+      "fontpixel",
+      "--all-features",
+      "--test",
+      "transport_limits",
+      "--test",
+      "contracts"
+    ],
+    "exit_code": 0,
+    "tests": {
+      "contracts": 24,
+      "transport_limits": 14
+    },
+    "evidence": [
+      {
+        "path": "reports/w5.transport-budget/phase5-input-capacity-test.json",
+        "sha256": "5a8a89d7d124ad72b8dcf91c44ad45a6fb4768e5b4c8cc843073851a23d072f2"
+      },
+      {
+        "path": "reports/w5.transport-budget/phase5-input-capacity-test.log",
+        "sha256": "691e9060abc224ab0fde6d003e0bc4f42429fc2c5c75ddc221d2ddbe9ad3eca9"
+      }
+    ]
+  }
+}

@@ -1,0 +1,490 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bbc",
+      "--test",
+      "bbc"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/bbc-test.log",
+    "log_sha256": "0edc0c5c0eaae89b9877ae23be700721f877181b32a5df43d41ed103e3bed985"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bbc",
+      "--lib",
+      "--test",
+      "bbc",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/bbc-clippy.log",
+    "log_sha256": "0150e7fcbe0cc5379e3c3f37cf1f6180f248ff29ce684ae0fa658758c2a70a8c"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bbc",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/bbc-doc.log",
+    "log_sha256": "218eb161b5b1e3c976349f5a9d5f0e2144e29b3af031568f2dd80904bd465789"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wyse",
+      "--test",
+      "wyse"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/wyse-test.log",
+    "log_sha256": "90daf7eeff6a36fdd268268750d9cbe7af7302a062fd2d8fe7f317e22ea46a2c"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wyse",
+      "--lib",
+      "--test",
+      "wyse",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/wyse-clippy.log",
+    "log_sha256": "82bf3bf0222daa1597628b8cb0d516d471abf09c7ff94b7a7b31ee834cb30fd4"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wyse",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/wyse-doc.log",
+    "log_sha256": "bfee5655f2b34ffa7b172448843b59f4a82e08a6ab68eac8a6a618ad53ee06c6"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "grasp",
+      "--test",
+      "grasp"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/grasp-test.log",
+    "log_sha256": "b6551cd395ba41ff72675e88001838e94121e355c6cfa946412d031f743c4e0b"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "grasp",
+      "--lib",
+      "--test",
+      "grasp",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/grasp-clippy.log",
+    "log_sha256": "fd578cb1fc76c041800330e074da775159b4a74199f3687fb2f60a2418e3e5a9"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "grasp",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/grasp-doc.log",
+    "log_sha256": "c14bb8600afcfbeb35f683ff2211e625cc4a7c21ef4f6e633e9ce66c04629cc2"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hrcg",
+      "--test",
+      "hrcg"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/hrcg-test.log",
+    "log_sha256": "de01a8d290dfd951b4b47566b49561d87b5d3512c0b2decbec1fbcd9d12b838a"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hrcg",
+      "--lib",
+      "--test",
+      "hrcg",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/hrcg-clippy.log",
+    "log_sha256": "339b76007e10f03249be5f026c510a227e8b490ac819f163aad7db20a6fdfe32"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hrcg",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/hrcg-doc.log",
+    "log_sha256": "218eb161b5b1e3c976349f5a9d5f0e2144e29b3af031568f2dd80904bd465789"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xbin",
+      "--test",
+      "xbin"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/xbin-test.log",
+    "log_sha256": "d5298d1bb1692f667b66f8105fc644f8e395d2f540212bda969d8218677cfb65"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xbin",
+      "--lib",
+      "--test",
+      "xbin",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/xbin-clippy.log",
+    "log_sha256": "5b72ca20dbe2c9f8c80cd16d84ec6e16fd67924e6936f3429d544a118c699d4e"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xbin",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/xbin-doc.log",
+    "log_sha256": "eb15ec58fe363dd6442e42d9f39bb5d66a3d772dac96b9ed02aa79a41c10a387"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "consoleet",
+      "--test",
+      "consoleet"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/consoleet-test.log",
+    "log_sha256": "ee7f4081761b4ce0f38143887b243e587b316eae4c4d64f45c6add37f5b066e0"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "consoleet",
+      "--lib",
+      "--test",
+      "consoleet",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/consoleet-clippy.log",
+    "log_sha256": "339b76007e10f03249be5f026c510a227e8b490ac819f163aad7db20a6fdfe32"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "consoleet",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/consoleet-doc.log",
+    "log_sha256": "bfee5655f2b34ffa7b172448843b59f4a82e08a6ab68eac8a6a618ad53ee06c6"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "zapfont",
+      "--test",
+      "zapfont"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/zapfont-test.log",
+    "log_sha256": "1cdf3432fa7c580e170a1093c3654266352f13f1f077abbfed6bd8ce6a7d2b6b"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "zapfont",
+      "--lib",
+      "--test",
+      "zapfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/zapfont-clippy.log",
+    "log_sha256": "4e9175eedbb19819d28559d36ac29171904810fcd3918ef6e0df7d90d4358b46"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "zapfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/zapfont-doc.log",
+    "log_sha256": "eb15ec58fe363dd6442e42d9f39bb5d66a3d772dac96b9ed02aa79a41c10a387"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "comfont",
+      "--test",
+      "comfont"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/comfont-test.log",
+    "log_sha256": "8421ed851487481048219c42f4c87a40c9d794091eec6459856ecc30d0940bbe"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "comfont",
+      "--lib",
+      "--test",
+      "comfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/comfont-clippy.log",
+    "log_sha256": "51cdf2b458761e2a8a8efd98e9aaf757c948127c9a4fe1f7fac3bcfdc0925bdb"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "comfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/comfont-doc.log",
+    "log_sha256": "8adcef9669cd2c463b0dd04b2a96820d21c9599ac3c58fd4d2a7b4255de123cb"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bbc,wyse,grasp,hrcg,xbin,consoleet,zapfont,comfont",
+      "--lib",
+      "--tests",
+      "--example",
+      "w5a2_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/combined-clippy.log",
+    "log_sha256": "f4b32e5e6f2365021793ddd4b1d5399913af5ba0f463c4cd85cae9effe297e84"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "fuzz/Cargo.toml",
+      "--no-default-features",
+      "--features",
+      "fontpixel/bbc,fontpixel/wyse,fontpixel/grasp,fontpixel/hrcg,fontpixel/xbin,fontpixel/consoleet,fontpixel/zapfont,fontpixel/comfont",
+      "--bin",
+      "bbc",
+      "--bin",
+      "wyse",
+      "--bin",
+      "grasp",
+      "--bin",
+      "hrcg",
+      "--bin",
+      "xbin",
+      "--bin",
+      "consoleet",
+      "--bin",
+      "zapfont",
+      "--bin",
+      "comfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/fuzz-clippy.log",
+    "log_sha256": "bfa93f0ddbf6ead0cf156a23577a671576880de1ad4fbfcd845122ad5ca13300"
+  },
+  {
+    "command": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--release",
+      "--no-default-features",
+      "--features",
+      "bbc,wyse,grasp,hrcg,xbin,consoleet,zapfont,comfont",
+      "--example",
+      "w5a2_timing"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5a2/release-bridge-build.log",
+    "log_sha256": "0c0718c6eade1dd29d32c7f5379ba19fe81f86a3aaacbd1b55d529a4a159930d"
+  },
+  {
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/bin/python",
+      "tests/crosscheck/w5a2.py"
+    ],
+    "exit": 0,
+    "cases": 33,
+    "report": "reports/w5.a2-crosscheck.json"
+  }
+]

@@ -3,6 +3,25 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::bitmap::{BitOrder, RowOrder};
 use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, ResourceLimits, Result};
+mod packed;
+/// Alignment of raw bitmap rows and glyph boundaries.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum RawPacking {
+    /// Each row in a horizontal strike starts on a byte boundary.
+    #[default]
+    ByteAlignedRows,
+    /// Pixels continue across rows and glyphs, with only final-byte padding.
+    BitAligned,
+}
+/// Byte ordering inside a horizontal strike.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum RawByteOrder {
+    /// Store complete rows consecutively.
+    #[default]
+    RowMajor,
+    /// Store each byte column through all rows before the next column.
+    ColumnMajor,
+}
 /// Binary cell layout; no field is inferred from arbitrary input bytes.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RawLayout {
@@ -20,6 +39,12 @@ pub struct RawLayout {
     pub row_order: RowOrder,
     /// Extra bytes after every row.
     pub row_padding: usize,
+    /// Row/glyph alignment; defaults to the original byte-aligned rows.
+    pub packing: RawPacking,
+    /// Ordering of byte columns and rows within a strike.
+    pub byte_order: RawByteOrder,
+    /// Glyph cells side by side in each horizontal strike; must be positive.
+    pub strike_count: usize,
     /// Prefix bytes before the first glyph.
     pub offset: usize,
     /// Default little-endian PRG load address when no matching `raw.prefix` exists.
@@ -39,6 +64,9 @@ impl RawLayout {
             bit_order: BitOrder::MsbFirst,
             row_order: RowOrder::TopDown,
             row_padding: 0,
+            packing: RawPacking::ByteAlignedRows,
+            byte_order: RawByteOrder::RowMajor,
+            strike_count: 1,
             offset: 0,
             default_load_address: None,
             charset: None,
@@ -64,6 +92,12 @@ pub enum RawPreset {
     Ch8,
     /// MSX 8 by 8, 256 positions.
     Msx,
+    /// monobit README Harlekin III: 512 cells in one 4096×8 strike.
+    HarlekinIII,
+    /// Atari Harlekin description: 256 cells in one 2048×8 strike.
+    Harlekin8,
+    /// Atari Harlekin description: 256 cells in one 2048×16 strike.
+    Harlekin16,
 }
 /// Explicit raw import configuration.
 #[derive(Debug, Clone, Default)]
@@ -107,12 +141,12 @@ impl FormatDetector for RawCodec {
     }
 }
 impl FormatReader<FontSet> for RawCodec {
-    fn read(&self, c: &mut ReadContext<'_>, o: &ReadOptions) -> Result<(FontSet, Report)> {
+    fn read(&self, c: &mut ReadContext<'_>, _: &ReadOptions) -> Result<(FontSet, Report)> {
         {
             let (set, mut report) = parse(
                 c.bytes(),
                 &self.read_options,
-                &o.limits,
+                c.limits(),
                 c.retained_input_bytes(),
                 c.name().map_or(0, str::len),
             )?;
@@ -126,6 +160,9 @@ impl FormatReader<FontSet> for RawCodec {
 impl FormatWriter<FontSet> for RawCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
         let (bytes, report) = write(s, &self.write_options)?;
+        if o.strict && report.has_loss() {
+            return Err(crate::Error::StrictLoss(report));
+        }
         Ok(Written {
             output: crate::resources::OutputBundle::single(o.primary_name.clone(), bytes),
             report,
@@ -148,7 +185,7 @@ impl RawPreset {
             8,
             match self {
                 Self::Vga14 => 14,
-                Self::Vga16 => 16,
+                Self::Vga16 | Self::Harlekin16 => 16,
                 _ => 8,
             },
         );
@@ -170,6 +207,10 @@ impl RawPreset {
             }
             Self::Ch8 => l.count = None,
             Self::Msx => {}
+            Self::HarlekinIII | Self::Harlekin8 | Self::Harlekin16 => {
+                l.strike_count = if self == Self::HarlekinIII { 512 } else { 256 };
+                l.count = Some(l.strike_count);
+            }
         }
         l
     }
@@ -186,25 +227,12 @@ impl std::str::FromStr for RawPreset {
             "spectrum" | "zx-spectrum" => Ok(Self::Spectrum),
             "ch8" => Ok(Self::Ch8),
             "msx" => Ok(Self::Msx),
+            "harlekin" | "harlekin-iii" | "harlekin512" => Ok(Self::HarlekinIII),
+            "harlekin8" => Ok(Self::Harlekin8),
+            "harlekin16" => Ok(Self::Harlekin16),
             _ => Err(invalid("unknown raw preset")),
         }
     }
-}
-fn size(layout: &RawLayout, l: &ResourceLimits) -> Result<(usize, usize)> {
-    if layout.default_load_address.is_some() && layout.offset != 2 {
-        return Err(invalid("raw PRG load address requires a two-byte offset"));
-    }
-    cell_size(layout.width, layout.height, l)?;
-    let row = (layout.width as usize)
-        .div_ceil(8)
-        .checked_add(layout.row_padding)
-        .ok_or_else(|| invalid("raw row size overflow"))?;
-    let cell = row
-        .checked_mul(layout.height as usize)
-        .ok_or_else(|| invalid("raw cell size overflow"))?;
-    check(cell, l.max_table_bytes, "raw cell bytes")?;
-    check(layout.offset, l.max_table_bytes, "raw prefix bytes")?;
-    Ok((row, cell))
 }
 /// Read a configured raw font. Partial cells and trailing bytes are errors.
 pub fn read(b: &[u8], o: &RawReadOptions, l: &ResourceLimits) -> Result<(FontSet, Report)> {
@@ -222,25 +250,13 @@ fn parse(
         .layout
         .as_ref()
         .ok_or_else(|| invalid("raw input requires an explicit layout or named preset"))?;
-    let (row, cell) = size(layout, l)?;
     let data = b
         .get(layout.offset..)
         .ok_or_else(|| invalid("raw prefix exceeds input"))?;
-    if data.len() % cell != 0 {
-        return Err(invalid("raw input ends in a partial cell"));
-    }
-    let count = layout.count.unwrap_or(data.len() / cell);
-    if count == 0 || count != data.len() / cell {
-        return Err(invalid("raw count must consume the payload exactly"));
-    }
-    check(count, l.max_glyphs, "raw glyph count")?;
-    check(data.len(), l.max_table_bytes, "raw bitmap table")?;
-    let last = count
-        .checked_sub(1)
-        .and_then(|n| u32::try_from(n).ok())
-        .and_then(|n| layout.first_codepoint.checked_add(n))
-        .ok_or_else(|| invalid("raw positional code overflows u32"))?;
-    let _ = last;
+    let geometry = packed::Geometry::read(layout, data.len(), l)?;
+    let count = geometry.count;
+    let row = geometry.row;
+    let cell = geometry.group;
     let packed = (layout.width as usize).div_ceil(8);
     let n = packed * layout.height as usize;
     let mut budget = Budget::new(retained, l)?;
@@ -275,28 +291,35 @@ fn parse(
         ));
     }
     let mut report = Report::default();
-    for (index, raw) in data.chunks_exact(cell).enumerate() {
-        let mut bytes = vec![0; n];
-        let mut padding = false;
-        for (y, source) in raw.chunks_exact(row).enumerate() {
-            let dy = if layout.row_order == RowOrder::TopDown {
-                y
-            } else {
-                layout.height as usize - 1 - y
-            };
-            for (x, &value) in source[..packed].iter().enumerate() {
-                bytes[dy * packed + x] = if layout.bit_order == BitOrder::MsbFirst {
-                    value
+    let mut bytes = vec![0; n];
+    for index in 0..count {
+        let padding = if packed::Geometry::legacy(layout) {
+            let raw = &data[index * cell..(index + 1) * cell];
+            let mut padding = false;
+            for (y, source) in raw.chunks_exact(row).enumerate() {
+                let dy = if layout.row_order == RowOrder::TopDown {
+                    y
                 } else {
-                    value.reverse_bits()
+                    layout.height as usize - 1 - y
                 };
+                for (x, &value) in source[..packed].iter().enumerate() {
+                    bytes[dy * packed + x] = if layout.bit_order == BitOrder::MsbFirst {
+                        value
+                    } else {
+                        value.reverse_bits()
+                    };
+                }
+                padding |= source[packed..].iter().any(|&x| x != 0);
+                if layout.width % 8 != 0 {
+                    padding |= bytes[dy * packed + packed - 1]
+                        & ((1u8 << (8 - layout.width % 8)) - 1)
+                        != 0;
+                }
             }
-            padding |= source[packed..].iter().any(|&x| x != 0);
-            if layout.width % 8 != 0 {
-                padding |=
-                    bytes[dy * packed + packed - 1] & ((1u8 << (8 - layout.width % 8)) - 1) != 0;
-            }
-        }
+            padding
+        } else {
+            geometry.decode(layout, data, index, &mut bytes)
+        };
         let mut g = Glyph::new(Bitmap::<crate::bitmap::Mono>::from_raw(
             layout.width,
             layout.height,
@@ -317,7 +340,7 @@ fn parse(
                 Some(index),
                 None,
                 Impact::Repair,
-                "Unused raw row padding normalized",
+                "Unused raw row, strike or final-byte padding normalized",
             );
         }
     }
@@ -354,16 +377,17 @@ pub fn write(s: &FontSet, o: &RawWriteOptions) -> Result<(Vec<u8>, Report)> {
             };
             &inferred
         };
-        let (row, cell) = size(layout, &o.limits)?;
+        let geometry = packed::Geometry::for_count(layout, font.len(), &o.limits)?;
+        let row = geometry.row;
+        let cell = geometry.group;
         if layout.count.is_some_and(|n| n != font.len()) {
             return Err(invalid(
                 "raw configured count differs from font glyph count",
             ));
         }
-        let n = font
-            .len()
-            .checked_mul(cell)
-            .and_then(|n| n.checked_add(layout.offset))
+        let n = geometry
+            .payload
+            .checked_add(layout.offset)
             .ok_or_else(|| invalid("raw output size overflow"))?;
         check(
             n,
@@ -372,6 +396,12 @@ pub fn write(s: &FontSet, o: &RawWriteOptions) -> Result<(Vec<u8>, Report)> {
                 .min(o.limits.max_total_bytes),
             "raw output bytes",
         )?;
+        // Bit-packed storage may be up to eight times smaller than the
+        // canonical byte-aligned rows held by raster scratch and decoded glyphs.
+        let canonical_cell = cell_size(layout.width, layout.height, &o.limits)?;
+        let canonical_table = canonical_cell
+            .checked_mul(font.len())
+            .ok_or_else(|| invalid("raw canonical bitmap table overflow"))?;
         let source_bitmap = font
             .glyphs()
             .map(|(_, g)| g.bitmap.as_bytes().len())
@@ -380,7 +410,7 @@ pub fn write(s: &FontSet, o: &RawWriteOptions) -> Result<(Vec<u8>, Report)> {
         report.reserve(
             n.saturating_mul(2)
                 .saturating_add(layout.offset)
-                .saturating_add(cell.saturating_mul(3))
+                .saturating_add(cell.max(canonical_cell).saturating_mul(3))
                 .saturating_add(source_bitmap.saturating_mul(2))
                 .saturating_add(1024),
         )?;
@@ -395,31 +425,52 @@ pub fn write(s: &FontSet, o: &RawWriteOptions) -> Result<(Vec<u8>, Report)> {
         } else {
             out.add(&vec![0; layout.offset])?;
         }
-        let packed = (layout.width as usize).div_ceil(8);
-        let mut wire = vec![0; cell];
-        for (_, g) in font.glyphs() {
-            let bm = raster(
-                g,
-                Bounds::new(layout.width, layout.height, 0, 0),
-                o.gray_threshold,
-                &o.limits,
-            )?;
-            wire.fill(0);
-            for (y, source) in bm.as_bytes().chunks_exact(packed).enumerate() {
-                let dy = if layout.row_order == RowOrder::TopDown {
-                    y
-                } else {
-                    layout.height as usize - 1 - y
-                };
-                for (x, &b) in source.iter().enumerate() {
-                    wire[dy * row + x] = if layout.bit_order == BitOrder::MsbFirst {
-                        b
+        if packed::Geometry::legacy(layout) {
+            let packed = (layout.width as usize).div_ceil(8);
+            let mut wire = vec![0; cell];
+            for (_, g) in font.glyphs() {
+                let bm = raster(
+                    g,
+                    Bounds::new(layout.width, layout.height, 0, 0),
+                    o.gray_threshold,
+                    &o.limits,
+                )?;
+                wire.fill(0);
+                for (y, source) in bm.as_bytes().chunks_exact(packed).enumerate() {
+                    let dy = if layout.row_order == RowOrder::TopDown {
+                        y
                     } else {
-                        b.reverse_bits()
+                        layout.height as usize - 1 - y
                     };
+                    for (x, &b) in source.iter().enumerate() {
+                        wire[dy * row + x] = if layout.bit_order == BitOrder::MsbFirst {
+                            b
+                        } else {
+                            b.reverse_bits()
+                        };
+                    }
                 }
+                out.add(&wire)?;
             }
-            out.add(&wire)?;
+        } else {
+            out.bytes
+                .try_reserve_exact(n - out.bytes.len())
+                .map_err(|_| invalid("raw output allocation failed"))?;
+            out.bytes.resize(n, 0);
+            for (index, (_, glyph)) in font.glyphs().enumerate() {
+                let bitmap = raster(
+                    glyph,
+                    Bounds::new(layout.width, layout.height, 0, 0),
+                    o.gray_threshold,
+                    &o.limits,
+                )?;
+                geometry.encode(
+                    layout,
+                    &mut out.bytes[layout.offset..],
+                    index,
+                    bitmap.as_bytes(),
+                );
+            }
         }
         report.reserve(layout.charset.as_ref().map_or(0, String::len))?;
         let read_options = RawReadOptions {
@@ -429,7 +480,7 @@ pub fn write(s: &FontSet, o: &RawWriteOptions) -> Result<(Vec<u8>, Report)> {
         report.reserve(
             font.len()
                 .saturating_mul(2048)
-                .saturating_add(n.saturating_mul(2))
+                .saturating_add(n.max(canonical_table).saturating_mul(2))
                 .saturating_add(layout.charset.as_ref().map_or(0, String::len))
                 .saturating_add(
                     std::mem::size_of::<Font>()

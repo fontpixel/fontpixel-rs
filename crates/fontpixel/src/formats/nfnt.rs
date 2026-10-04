@@ -2,6 +2,9 @@
 use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
 use crate::resources::{ReadContext, ResourcePath, Written};
 use crate::{FontSet, Report, ResourceLimits, Result};
+mod binhex;
+#[cfg(any(feature = "fbit", feature = "lisa"))]
+pub(crate) mod bridge;
 mod container;
 mod palette;
 mod probe;
@@ -28,6 +31,8 @@ pub enum Container {
     AppleSingle,
     /// AppleDouble version 2 and a separate data asset.
     AppleDouble,
+    /// BinHex 4.0 HQX/RLE transport with checked header and fork CRCs.
+    BinHex,
 }
 /// Bitmap resource type.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]

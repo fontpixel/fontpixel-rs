@@ -1,0 +1,192 @@
+{
+  "status": "worker implementation complete; phase acceptance pending coordinator gates",
+  "formats": [
+    "dosstart",
+    "edwin",
+    "mkwinfont",
+    "psf2txt",
+    "pcr",
+    "plus3dos",
+    "drhalo",
+    "writeon"
+  ],
+  "model": "requested gpt-6-astra / xhigh; actual fast mode cannot be independently verified",
+  "source_sha256": {
+    "crates/fontpixel/src/formats/dosstart.rs": "7e86c0eb598dfd6d65361c5da05fd5ee0799f33bfa69dee192cd0eaebb166025",
+    "crates/fontpixel/tests/dosstart.rs": "9488def806e2b10c2ecb6bbad7b26e5c615ef6764ee27180ace7b3c906458067",
+    "docs/formats/dosstart.md": "4bb799301be7adaa3735180c26175ce097ffe334656a2e20dfee06708916b187",
+    "fuzz/fuzz_targets/dosstart.rs": "bc0671be7a0951b52d0a9370060fd84a23eac03fe20a8cf19d2ba81483f470dd",
+    "crates/fontpixel/src/formats/edwin.rs": "10cde71daa37b1827d2ebea27e51c1650e498594022e9d92c6522c0523ba1525",
+    "crates/fontpixel/tests/edwin.rs": "542544696156ba774c29d927f0e33465462aa944775e8ae6b959efe0595f737f",
+    "docs/formats/edwin.md": "a41116c74af33cf0722811150d0d97e1b6a4ce5795da972104b45f00a7713851",
+    "fuzz/fuzz_targets/edwin.rs": "76843f33a8bab5856122b8007e4ef01c3f9ed2c0d4f25e7d2db4ecda0857df9f",
+    "crates/fontpixel/src/formats/mkwinfont.rs": "b92b630125eb30f3c2f11a51846d4e4c137b439618a102e7132e40ddd485a77b",
+    "crates/fontpixel/tests/mkwinfont.rs": "6c64658e3ea8d4b1f9ab68d73d2d5f2f775342b19bfdee93de96465b8133556b",
+    "docs/formats/mkwinfont.md": "41c3248db19312fa66eeab6517f33eaed9848158d9319ebc66a18f52e30538a8",
+    "fuzz/fuzz_targets/mkwinfont.rs": "2aef5fce9f3d1cb67ddd38f4ae4c9e72cb0cc806e77d65b9c09a88b95d2f6de2",
+    "crates/fontpixel/src/formats/psf2txt.rs": "632d198a9f2bf681f03e73cc0c8d077b1b8a0bdac9fe447bab86d4a8f1312c8e",
+    "crates/fontpixel/tests/psf2txt.rs": "3761d8031bace77bee2a250670b0a8bd719ac8043c65c299995706ff8130de67",
+    "docs/formats/psf2txt.md": "a44dab04d94877dc14c0ab85834573ed828ef14779ceed9d73f434b758a039a0",
+    "fuzz/fuzz_targets/psf2txt.rs": "fcd78fb14ad1a9fb055d836bf0f64b56448ccd7c5b22a31bbcb7bf1d4f4b191d",
+    "crates/fontpixel/src/formats/pcr.rs": "f6d756c7fbe2d4491ed0556025d84cc25d2c291c21f55dbed6cf15518a4519af",
+    "crates/fontpixel/tests/pcr.rs": "9e70719bb1240303070a01688c8f3fad7686655cd1b66ca79d53ecf00f9329eb",
+    "docs/formats/pcr.md": "69d8d3c4151e3c6fd164aa0d1132715dc77e3079f372143f078d0ae240811520",
+    "fuzz/fuzz_targets/pcr.rs": "7c88968e962ff55f89eedb07eac4edac799896861efdc993c414fc435bb7fe5b",
+    "crates/fontpixel/src/formats/plus3dos.rs": "5f0629a6f4ceb39aed97d3c93bd33d07bf97b3665b07509917e0dfc43153014d",
+    "crates/fontpixel/tests/plus3dos.rs": "5e6397881cc50da1ea39659f90dd8154725d9ae8a8a21f6f1cf270a4f4a3af61",
+    "docs/formats/plus3dos.md": "52bc4399d9a646f8e2efb65b5f26b6d92ab477016bfe2fc5ddfacdbf785457c6",
+    "fuzz/fuzz_targets/plus3dos.rs": "8c293935ed08d33fc8119279077c113171221041d527f3c6d8b00bd0b1c2eed4",
+    "crates/fontpixel/src/formats/drhalo.rs": "f724ece7236382dc7bb33de71777aa57cf0f45021a2a1fa401fcd406535eafb1",
+    "crates/fontpixel/tests/drhalo.rs": "c57317c7f3f9d97cb01996c23c3d570db939934702796ebd687f1de8500bcd5c",
+    "docs/formats/drhalo.md": "7be2dd07008dcfbdf9dffaa0eab9b4874892820ebd88360a8a05218005455236",
+    "fuzz/fuzz_targets/drhalo.rs": "c42df70663833534686943a9571c512f81a031ac42357dfd99802387d7afcdbb",
+    "crates/fontpixel/src/formats/writeon.rs": "2c49c30335f020703cc9d4f5150213f4070c53af460063280a4f802184ba2999",
+    "crates/fontpixel/tests/writeon.rs": "00243d586f7b3ff571b19b8b9f44791accab3f9ada19a51045fe1a4fb77cf642",
+    "docs/formats/writeon.md": "43f0ec5f5e8ad2b7e59715e67e4c16703609571186c1721d740de222780dbd73",
+    "fuzz/fuzz_targets/writeon.rs": "0bf80e66d3529509c7284b1804c4ea9f62cc46fed9d97b9d9fab38d89a5770b4",
+    "crates/fontpixel/src/formats/dosstart/common.rs": "095931c943377d5e168b180649c885db0bf2f7f2f4b9bea8e994a3494ba485f4",
+    "crates/fontpixel/tests/dosstart/fixtures.rs": "85c19880b3ab3a2f1e5e06d91959857a13693e83230316fe18fd8e5b64d6625f",
+    "crates/fontpixel/examples/w5a1_timing.rs": "ec8c77f2d4e70c8ca93fabd302e4aa959712a817198e39a9efd0d209fa38b1ae",
+    "fuzz/seed_w5a1.py": "1af401d49cded5d91d6ef895bd0747cd58ecf5a2b2dac4c0cb802fe56d62b6d3",
+    "tests/crosscheck/w5a1.py": "0578273497ced0796df89be8b6656e9f37302c78c1cd6d73d75bf7feec490e09"
+  },
+  "shared_dependency_sha256": {
+    "crates/fontpixel/src/formats/gem/common.rs": "39f514dacc7f713ff7da474b6356a7ab2fb44cd64730cd5bf53ef87d3c57cfce"
+  },
+  "tests": {
+    "dedicated_tests": 44,
+    "single_feature_commands": 24,
+    "all_exit_zero": true
+  },
+  "crosscheck": {
+    "cases": 15,
+    "formats": 8,
+    "report": "reports/w5.a1-crosscheck.json"
+  },
+  "final_asan_smoke": [
+    {
+      "format": "dosstart",
+      "exit": 0,
+      "runs": 194458,
+      "reported_seconds": 11,
+      "max_rss_mb": 448,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-dosstart-final-smoke.log"
+    },
+    {
+      "format": "edwin",
+      "exit": 0,
+      "runs": 849955,
+      "reported_seconds": 11,
+      "max_rss_mb": 517,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-edwin-final-smoke.log"
+    },
+    {
+      "format": "mkwinfont",
+      "exit": 0,
+      "runs": 536068,
+      "reported_seconds": 11,
+      "max_rss_mb": 527,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-mkwinfont-final-smoke.log"
+    },
+    {
+      "format": "psf2txt",
+      "exit": 0,
+      "runs": 712549,
+      "reported_seconds": 11,
+      "max_rss_mb": 522,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-psf2txt-final-smoke.log"
+    },
+    {
+      "format": "pcr",
+      "exit": 0,
+      "runs": 85976,
+      "reported_seconds": 11,
+      "max_rss_mb": 380,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-pcr-final-smoke.log"
+    },
+    {
+      "format": "plus3dos",
+      "exit": 0,
+      "runs": 188850,
+      "reported_seconds": 11,
+      "max_rss_mb": 366,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-plus3dos-final-smoke.log"
+    },
+    {
+      "format": "drhalo",
+      "exit": 0,
+      "runs": 68688,
+      "reported_seconds": 11,
+      "max_rss_mb": 546,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-drhalo-final-smoke.log"
+    },
+    {
+      "format": "writeon",
+      "exit": 0,
+      "runs": 292566,
+      "reported_seconds": 11,
+      "max_rss_mb": 478,
+      "source_unchanged": true,
+      "log": "reports/w5.a1-writeon-final-smoke.log"
+    }
+  ],
+  "deferred_to_coordinator": [
+    "610-second ASAN for every target on unified final source",
+    "five quiet formal release performance repetitions",
+    "whole-repository stage gates and final review"
+  ],
+  "toolchain": {
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "nightly": "rustc 1.99.0-nightly (1a833e165 2026-07-29)"
+  },
+  "adapter_checks": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "dosstart,edwin,mkwinfont,psf2txt,pcr,plus3dos,drhalo,writeon",
+        "--example",
+        "w5a1_timing"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py"
+      ],
+      "exit": 0,
+      "cases": 15
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "dosstart,edwin,mkwinfont,psf2txt,pcr,plus3dos,drhalo,writeon",
+        "--example",
+        "w5a1_timing",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0
+    }
+  ],
+  "timing_interface_check": "reports/w5.a1-timing-interface-check.json"
+}

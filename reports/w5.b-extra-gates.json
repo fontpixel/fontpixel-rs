@@ -1,0 +1,120 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "gpi",
+      "--lib",
+      "all_native_exepack_tokens_and_overlap"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.09491658210754395,
+    "stdout": "\nrunning 1 test\ntest formats::gpi::container::tests::all_native_exepack_tokens_and_overlap ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s\n\n",
+    "stderr": "    Finished `test` profile [unoptimized] target(s) in 0.06s\n     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/fontpixel-5cc8f12ba903795c)\n",
+    "stdout_sha256": "73d6e9523635988e127c419776f23e3c954ae78717dd96dfb5c8ee6623ae0291",
+    "stderr_sha256": "dd9a582a19bce80acfcf7cc4aa4e5f818e7db6b9c36269141cc724d928d58259"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos,geos,gpi,oberon,pcgeos,symbos,vtfont,wsfont",
+      "--example",
+      "w5b_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.9624247550964355,
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.92s\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7ff6bad7e0476eac143406e17a75a314abd80679f9cab6b28acab917a9f994cf"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/examples/w5b_timing",
+      "rewrite",
+      "vtfont-rebuild",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-fallback.bin",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-fallback-rebuilt.bin"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.0016036033630371094,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/examples/w5b_timing",
+      "dump",
+      "vtfont-rebuild",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-fallback-rebuilt.bin"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.001271963119506836,
+    "stdout": "[{\"ascent\":null,\"descent\":null,\"family\":null,\"glyphs\":[{\"advance\":5,\"bytes\":[128,64],\"codes\":[],\"gray\":false,\"height\":2,\"width\":5,\"x\":0,\"y\":0},{\"advance\":10,\"bytes\":[250,0,143,0],\"codes\":[65],\"gray\":false,\"height\":2,\"width\":10,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[64,224],\"codes\":[66],\"gray\":false,\"height\":2,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[24,192],\"codes\":[],\"gray\":false,\"height\":2,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[128,64],\"codes\":[],\"gray\":false,\"height\":2,\"width\":5,\"x\":0,\"y\":0}],\"line_height\":null,\"point\":null,\"size\":2,\"style\":\"Regular\"},{\"ascent\":null,\"descent\":null,\"family\":null,\"glyphs\":[{\"advance\":5,\"bytes\":[128,64],\"codes\":[],\"gray\":false,\"height\":2,\"width\":5,\"x\":0,\"y\":0},{\"advance\":10,\"bytes\":[67,128,228,192],\"codes\":[66],\"gray\":false,\"height\":2,\"width\":10,\"x\":0,\"y\":0},{\"advance\":10,\"bytes\":[170,0,223,0],\"codes\":[65],\"gray\":false,\"height\":2,\"width\":10,\"x\":0,\"y\":0}],\"line_height\":null,\"point\":null,\"size\":2,\"style\":\"Bold\"}]\n",
+    "stderr": "",
+    "stdout_sha256": "938ad4922adce8c647cf82a338819a9074b6e57091a540bee0948391dcd968fe",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "rustfmt",
+      "--check",
+      "--edition",
+      "2024",
+      "crates/fontpixel/examples/w5b_timing.rs",
+      "crates/fontpixel/src/formats/beos.rs",
+      "crates/fontpixel/src/formats/geos/reader.rs",
+      "crates/fontpixel/src/formats/geos/writer.rs",
+      "crates/fontpixel/src/formats/geos.rs",
+      "crates/fontpixel/src/formats/gpi/container.rs",
+      "crates/fontpixel/src/formats/gpi/reader.rs",
+      "crates/fontpixel/src/formats/gpi/writer.rs",
+      "crates/fontpixel/src/formats/gpi.rs",
+      "crates/fontpixel/src/formats/oberon.rs",
+      "crates/fontpixel/src/formats/pcgeos/reader.rs",
+      "crates/fontpixel/src/formats/pcgeos/writer.rs",
+      "crates/fontpixel/src/formats/pcgeos.rs",
+      "crates/fontpixel/src/formats/symbos.rs",
+      "crates/fontpixel/src/formats/vtfont/reader.rs",
+      "crates/fontpixel/src/formats/vtfont/writer.rs",
+      "crates/fontpixel/src/formats/vtfont.rs",
+      "crates/fontpixel/src/formats/wsfont.rs",
+      "crates/fontpixel/tests/beos.rs",
+      "crates/fontpixel/tests/geos.rs",
+      "crates/fontpixel/tests/gpi.rs",
+      "crates/fontpixel/tests/oberon.rs",
+      "crates/fontpixel/tests/pcgeos.rs",
+      "crates/fontpixel/tests/symbos.rs",
+      "crates/fontpixel/tests/vtfont.rs",
+      "crates/fontpixel/tests/wsfont.rs",
+      "fuzz/fuzz_targets/beos.rs",
+      "fuzz/fuzz_targets/geos.rs",
+      "fuzz/fuzz_targets/gpi.rs",
+      "fuzz/fuzz_targets/oberon.rs",
+      "fuzz/fuzz_targets/pcgeos.rs",
+      "fuzz/fuzz_targets/symbos.rs",
+      "fuzz/fuzz_targets/vtfont.rs",
+      "fuzz/fuzz_targets/wsfont.rs"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.13898706436157227,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

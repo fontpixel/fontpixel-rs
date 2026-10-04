@@ -214,6 +214,7 @@ fn losses_are_explicit_and_strict_registry_rejects() {
     let registry = fontpixel::registry();
     let options = formats::WriteOptions {
         strict: true,
+        transport_limits: None,
         primary_name: fontpixel::resources::ResourcePath::new("font.kbitx").unwrap(),
     };
     assert!(matches!(

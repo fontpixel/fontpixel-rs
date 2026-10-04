@@ -1,0 +1,3 @@
+WARNING:root:Could not load resource 'F.F': Buffer size too small (0 instead of at least 2 bytes)
+WARNING:root:Could not load resource 'F.F': Buffer size too small (0 instead of at least 2 bytes)
+{"checks": 73, "by_oracle": {"Lisa-document-original-f.c": 5, "Qt-4.8.7-original-font-engine": 12, "a2d-original-dump_font.pl": 9, "a2d-original-make_font.pl": 3, "monobit-0.54.0-unmodified": 42, "monobit-BinHex-both-forks": 2}}

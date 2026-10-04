@@ -1,0 +1,14 @@
+
+running 6 tests
+test native_four_bit_low_nibble_first ... ok
+test offsetless_native_cells_are_word_aligned ... ok
+test malformed_and_same_limits ... ok
+test rb11_rb12_width9_two_vertical_bands ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+test large_offsets_cross_actual_rockbox_threshold ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.46s
+     Running tests/rockbox.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/rockbox-d24f9af04b2b496a)

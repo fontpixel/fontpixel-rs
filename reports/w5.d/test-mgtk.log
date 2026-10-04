@@ -1,0 +1,25 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.89s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-ea27d9430971ce25)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/mgtk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/mgtk-ddbf73e8beb953ca)
+
+running 7 tests
+test all_truncations_invalid_dimensions_and_strip_options ... ok
+test ignored_high_bits_and_trailing_bytes_are_preserved ... ok
+test seven_bit_reversal_and_separate_strips_are_native ... ok
+test geometry_normalization_and_metadata_losses_are_explicit ... ok
+test trailing_removed_glyph_slot_is_a_model_loss ... ok
+test explicit_gray_threshold_charset_and_limits ... ok
+test zero_width_glyph_has_native_height_and_bounded_empty_raster ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

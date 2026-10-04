@@ -1,0 +1,13 @@
+{
+  "command": [
+    "cargo",
+    "+nightly",
+    "fuzz",
+    "build",
+    "gpi",
+    "--no-default-features",
+    "--features",
+    "gpi-only"
+  ],
+  "exit": 0
+}

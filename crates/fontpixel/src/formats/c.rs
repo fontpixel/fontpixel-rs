@@ -1,5 +1,11 @@
 //! Bounded literal C arrays: generic cells, font8x8, t-mat and Adafruit GFX.
+mod embedded;
+mod legacy_embedded;
 mod lexer;
+mod lvgl;
+mod lvgl_binary;
+mod preprocess;
+mod u8g2;
 mod writer;
 use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
 use crate::bitmap::{Bitmap, BitmapLimits, Bounds};
@@ -25,6 +31,60 @@ pub enum Family {
     Generic,
     /// Adafruit GFXfont, GFXglyph and bitmap arrays.
     Gfx,
+    /// U8g2 compressed bitmap font arrays.
+    U8g2,
+    /// LVGL native fmt_txt font structures.
+    Lvgl,
+    /// NetBSD wsdisplay_font structures.
+    Netbsd,
+    /// Legacy U8glib fonts with 17-byte headers.
+    U8glib,
+    /// U8x8 fixed tile font arrays.
+    U8x8,
+}
+/// Wire container for an embedded C font family.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum CContainer {
+    /// Literal C source declarations.
+    #[default]
+    Source,
+    /// Native LVGL binary head/cmap/loca/glyf tables.
+    LvglBinary,
+}
+/// Native legacy U8glib record representation.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum U8glibFormat {
+    /// Six-byte metrics and monochrome rows (format zero).
+    #[default]
+    Full,
+    /// Three-byte compact metrics and monochrome rows (format one).
+    Compact,
+    /// Six-byte metrics and two-bit antialiased rows (format two).
+    Gray2,
+}
+/// Native LVGL output coverage depth.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum LvglBpp {
+    /// Monochrome coverage.
+    #[default]
+    One,
+    /// Four coverage levels.
+    Two,
+    /// Sixteen coverage levels.
+    Four,
+    /// Full byte coverage.
+    Eight,
+}
+/// Native LVGL bitmap storage.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum LvglCompression {
+    /// Tightly packed uncompressed pixels.
+    #[default]
+    Plain,
+    /// Native run-length encoding without row filtering.
+    Rle,
+    /// Native run-length encoding after preceding-row XOR.
+    RleXor,
 }
 /// Geometry for arrays that have no intrinsic metrics or character mapping.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -46,6 +106,10 @@ pub struct ArrayOptions {
 /// Reader selection. Geometry never comes from an unrelated array.
 #[derive(Debug, Clone, Default)]
 pub struct CReadOptions {
+    /// Explicit wire container, or structural automatic detection.
+    pub container: Option<CContainer>,
+    /// Interpret pre-2019 U8x8 two-byte headers and 8x8 cells.
+    pub u8x8_legacy: bool,
     /// Explicit dialect, or conservative structural detection.
     pub family: Family,
     /// Select a particular byte array or GFXfont declaration.
@@ -56,6 +120,12 @@ pub struct CReadOptions {
 /// Portable C writer choices.
 #[derive(Debug, Clone)]
 pub struct CWriteOptions {
+    /// Native container; binary is valid only for the LVGL family.
+    pub container: CContainer,
+    /// Emit pre-2019 two-byte U8x8 8x8 headers.
+    pub u8x8_legacy: bool,
+    /// Record format for legacy U8glib output.
+    pub u8glib_format: U8glibFormat,
     /// Generic or GFX; specialized upstream header families are read-only.
     pub family: Family,
     /// C identifier used as the output symbol stem.
@@ -66,17 +136,26 @@ pub struct CWriteOptions {
     pub range: Option<(u32, u32)>,
     /// Required for Gray8 reduction to one bit per pixel.
     pub gray_threshold: Option<u8>,
+    /// Coverage depth for LVGL output.
+    pub lvgl_bpp: LvglBpp,
+    /// Compression for LVGL output.
+    pub lvgl_compression: LvglCompression,
     /// Limits for source traversal, scratch, model and output bytes.
     pub limits: ResourceLimits,
 }
 impl Default for CWriteOptions {
     fn default() -> Self {
         Self {
+            container: CContainer::Source,
+            u8x8_legacy: false,
+            u8glib_format: U8glibFormat::Full,
             family: Family::Generic,
             array_name: "font".into(),
             generic: None,
             range: None,
             gray_threshold: None,
+            lvgl_bpp: LvglBpp::One,
+            lvgl_compression: LvglCompression::Plain,
             limits: ResourceLimits::default(),
         }
     }
@@ -218,23 +297,115 @@ fn embedded_options(s: &str, l: &ResourceLimits) -> Result<Option<ArrayOptions>>
 }
 impl FormatDetector for CCodec {
     fn detect(&self, c: &mut ReadContext<'_>) -> Result<Confidence> {
+        if lvgl_binary::detect(c.bytes()) {
+            return Ok(Confidence::Certain);
+        }
         let Ok(s) = std::str::from_utf8(c.bytes()) else {
             return Ok(Confidence::NoMatch);
         };
-        Ok(
-            if s.contains("/* fontpixel-c: ") || (s.contains("GFXfont") && s.contains("GFXglyph")) {
-                Confidence::Certain
-            } else if s.contains("font8x8_") || (s.contains("unsigned char") && s.contains("0b")) {
+        // The registry visits C for every format. Avoid token allocation for
+        // unrelated large inputs; marker strings alone are not evidence.
+        let include_candidate = s.contains("font8x8_") && s.contains('#');
+        if (!s.contains('=') || (!s.contains('{') && !s.contains('"'))) && !include_candidate {
+            return Ok(Confidence::NoMatch);
+        }
+        if ![
+            "fontpixel-c:",
+            "fontpixel-u8x8",
+            "GFXfont",
+            "GFXglyph",
+            "U8G2_FONT_SECTION",
+            "lv_font_fmt_txt_dsc_t",
+            "wsdisplay_font",
+            "U8G_FONT_SECTION",
+            "u8x8_font_",
+            "u8g2_font_",
+            "u8g_fntpgm_uint8_t",
+            "lv_font_t",
+            "font8x8_",
+            "unsigned char",
+        ]
+        .iter()
+        .any(|marker| s.contains(marker))
+        {
+            return Ok(Confidence::NoMatch);
+        }
+        let probe = || -> Result<Confidence> {
+            check(s.len(), c.limits().max_table_bytes, "C detection bytes")?;
+            let mut budget = Budget::new(c.retained_input_bytes(), c.limits())?;
+            let tokens = lexer::lex(s, &mut budget)?;
+            let declarations = lexer::declarations(&tokens, &mut budget)?;
+            let mut possible = false;
+            let metadata = lexer::comments(s).any(|comment| {
+                comment.trim().starts_with("fontpixel-c: ") || comment.trim() == "fontpixel-u8x8"
+            });
+            let gfx_glyphs = declarations.iter().any(|d| d.ty == "GFXglyph");
+            for d in &declarations {
+                if matches!(
+                    d.ty,
+                    "lv_font_t" | "lv_font_fmt_txt_dsc_t" | "wsdisplay_font"
+                ) || (d.ty == "GFXfont" && gfx_glyphs)
+                {
+                    return Ok(Confidence::Certain);
+                }
+                if d.dimensions.is_empty()
+                    || !matches!(d.ty, "char" | "u_char" | "uint8_t" | "u8g_fntpgm_uint8_t")
+                {
+                    continue;
+                }
+                let prefix_end = d.start - 1;
+                let prefix_start = tokens[..prefix_end]
+                    .iter()
+                    .rposition(|t| matches!(t.kind, Kind::Punct(b';' | b'}') | Kind::Directive(_)))
+                    .map_or(0, |at| at + 1);
+                let native_section = tokens[prefix_start..prefix_end].iter().any(|t| {
+                    matches!(
+                        t.kind,
+                        Kind::Ident("U8G_FONT_SECTION" | "U8G2_FONT_SECTION")
+                    )
+                });
+                if metadata
+                    || native_section
+                    || d.ty == "u8g_fntpgm_uint8_t"
+                    || d.name.starts_with("u8g2_font_")
+                    || d.name.starts_with("u8x8_font_")
+                {
+                    return Ok(Confidence::Certain);
+                }
+                possible |= d.name.starts_with("font8x8_")
+                    || tokens[d.start..=d.end].iter()
+                        .any(|t| matches!(t.kind, Kind::Number(n) if n.starts_with("0b") || n.starts_with("0B")));
+            }
+            possible |= tokens.iter().any(|token| {
+                let Kind::Directive(directive) = token.kind else {
+                    return false;
+                };
+                include(directive).ok().flatten().is_some_and(|name| {
+                    name.rsplit('/')
+                        .next()
+                        .is_some_and(|name| name.starts_with("font8x8_"))
+                })
+            });
+            Ok(if possible {
                 Confidence::Possible
             } else {
                 Confidence::NoMatch
-            },
-        )
+            })
+        };
+        Ok(probe().unwrap_or(Confidence::NoMatch))
     }
 }
 impl FormatReader<FontSet> for CCodec {
     fn read(&self, c: &mut ReadContext<'_>, o: &ReadOptions) -> Result<(FontSet, Report)> {
         let l = &o.limits;
+        if self.read_options.container == Some(CContainer::LvglBinary)
+            || (self.read_options.container.is_none() && lvgl_binary::detect(c.bytes()))
+        {
+            if !matches!(self.read_options.family, Family::Auto | Family::Lvgl) {
+                return Err(invalid("LVGL binary container requires LVGL family"));
+            }
+            return lvgl_binary::read(c.bytes(), l, c.retained_input_bytes());
+        }
         let mut b = Budget::new(c.retained_input_bytes(), l)?;
         b.add(c.bytes().len())?;
         if let Some(g) = &self.read_options.generic {
@@ -260,6 +431,13 @@ impl FormatReader<FontSet> for CCodec {
         while let Some((name, text)) = pending.pop() {
             check(text.len(), l.max_table_bytes, "C header bytes")?;
             let t = lexer::lex(&text, &mut b)?;
+            let t = if family == Family::Lvgl
+                || (family == Family::Auto && t.iter().any(|v| v.kind == Kind::Ident("lv_font_t")))
+            {
+                preprocess::lvgl(t, &mut b)?
+            } else {
+                t
+            };
             let ds = lexer::declarations(&t, &mut b)?;
             let generic = match &self.read_options.generic {
                 Some(options) => Some(options.clone()),
@@ -268,6 +446,22 @@ impl FormatReader<FontSet> for CCodec {
             if family == Family::Auto {
                 family = if generic.is_some() {
                     Family::Generic
+                } else if ds.iter().any(|d| d.ty == "wsdisplay_font") {
+                    Family::Netbsd
+                } else if ds.iter().any(|d| d.ty == "u8g_fntpgm_uint8_t")
+                    || t.iter().any(|v| v.kind == Kind::Ident("U8G_FONT_SECTION"))
+                {
+                    Family::U8glib
+                } else if ds.iter().any(|d| d.name.starts_with("u8x8_font_"))
+                    || lexer::comments(&text).any(|v| v.trim() == "fontpixel-u8x8")
+                {
+                    Family::U8x8
+                } else if ds.iter().any(|d| d.ty == "lv_font_t") {
+                    Family::Lvgl
+                } else if ds.iter().any(|d| d.name.starts_with("u8g2_font_"))
+                    || t.iter().any(|v| v.kind == Kind::Ident("U8G2_FONT_SECTION"))
+                {
+                    Family::U8g2
                 } else if ds.iter().any(|d| d.ty == "GFXfont") {
                     Family::Gfx
                 } else if ds.iter().any(|d| d.name.starts_with("font8x8_"))
@@ -319,7 +513,13 @@ impl FormatReader<FontSet> for CCodec {
                 } else {
                     family
                 };
-                if kind == Family::Gfx {
+                if matches!(kind, Family::Netbsd | Family::U8glib | Family::U8x8) {
+                    f = legacy_embedded::read(&t, &ds, kind, &self.read_options, l, &mut b)?;
+                } else if kind == Family::U8g2 {
+                    f = u8g2::read(&t, &ds, &self.read_options, l, &mut b)?;
+                } else if kind == Family::Lvgl {
+                    f = lvgl::read(&t, &ds, &self.read_options, l, &mut b, &mut report)?;
+                } else if kind == Family::Gfx {
                     f = gfx(&t, &ds, &self.read_options, l, &mut b)?;
                 } else {
                     let choices: Vec<_> = ds

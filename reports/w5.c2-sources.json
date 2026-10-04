@@ -1,0 +1,702 @@
+{
+  "primary_sources": [
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/chiwriter-v3.html",
+      "url": "http://jphdupre.chez-alice.fr/chiwriter/technic3/gcw3v01.html",
+      "sha256": "136122ed8fde49013e3d94fdd677706ff3004e64c654c265d92ca302a5357cb1",
+      "bytes": 5878,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/chiwriter-v4.html",
+      "url": "http://jphdupre.chez-alice.fr/chiwriter/manuel4/mcw4-155.html",
+      "sha256": "ca98cc355e19242dc2ba65daab0d3a3d4cb266d9636e722d962513eb49b23d37",
+      "bytes": 2258,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/prebuiltformat.h",
+      "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/prebuiltformat.h",
+      "sha256": "eabbf52858f451a46c3f957ff2b959e019c3ab20b24c2c2160fe857693e66c48",
+      "bytes": 4186,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/alto-formats.pdf",
+      "url": "https://bitsavers.org/pdf/xerox/alto/printing/AltoFontFormats_Oct1980.pdf",
+      "sha256": "419f0f11cb6fb432235653c1a578b7e07103ce8373934a1fd8139720b6400d81",
+      "bytes": 1659999,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/riscos-prm.html",
+      "url": "https://www.riscos.com/support/developers/prm/fileformats.html",
+      "sha256": "6b1e82039e9240ab866af3c99fae39e0dc6d7a406a1c8a94dad1b278550e6928",
+      "bytes": 108884,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/acorn-font-v8.txt",
+      "url": "https://www.chiark.greenend.org.uk/~theom/riscos/docs/ultimate/a252font.txt",
+      "sha256": "76bed632bedce99212849cbaa052e67cd75f2a8d9e7f8a03872b3ff071e29363",
+      "bytes": 24547,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5c2-sources/pcl-reference.pdf",
+      "url": "https://www.hp.com/ctg/Manual/bpl13210.pdf",
+      "sha256": "6659cef6096a91b97ad16c82393b7ae6044d4b4771e8e4cdea841ed1d05bed44",
+      "bytes": 3113217,
+      "usage": "Public field facts; no implementation copied",
+      "license": "Documentation source retained outside repository; not redistributed"
+    }
+  ],
+  "primary_observations": [
+    "Alto PDF is scanned; pages5,6,9,13-17 rendered and inspected, pdftotext is empty",
+    "RISC OS 12-bit original BSD TTF2f x0y0/path packing confirms continuous LE pairs; old xsys width/height typo excluded",
+    "Adobe prebuiltformat.h restrictive declarations used for public layout facts only; original producer requested as separate executable oracle, no code port"
+  ],
+  "oracle": {
+    "name": "monobit",
+    "version": "0.54",
+    "license": "MIT",
+    "reference_commit": "040b1738085ce7967478499eef2835d2cffc95fd",
+    "modules": [
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/catalyst.py",
+        "sha256": "4b0c26e4f59096cdd5cbc9d7b0bb0687f4a227f9e7310f36b9c16f4c8cb0d8f5"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/chiwriter.py",
+        "sha256": "803b6f6e69dc08747d86a1621c2ebf9efd591d3bb8676b91106197412ece2fd7"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/dashen.py",
+        "sha256": "268de3cf57a87160c31e90df17d7dc10ad52815715d60f0fe2c31dbaf84b04f3"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/prebuilt.py",
+        "sha256": "5d0356a0d78605fbff21bd9f41c7b4b42038a4539e692439533986de920276e4"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/riscos.py",
+        "sha256": "3065901fc438f9a73ac81d0660a4c4398c800b1cea59112d89fdde7eea56bdbb"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/xerox.py",
+        "sha256": "0f213f9b0c8a859cf57be471a9f934ba51e4f38f115cf7c16c57820e7b7548f5"
+      },
+      {
+        "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/softfont/pcl.py",
+        "sha256": "52753e828aa35de2e226de454902e747b1a49f38b8271b8c69b07ebcb71c2d31"
+      }
+    ]
+  },
+  "fixture_license": "Original project MIT scripts and Rust tests",
+  "commands": {
+    "crosscheck": "../local-work/oracles/bin/python tests/crosscheck/w5c2.py --adapter ../local-work/target-w5c2/debug/examples/w5c2_timing --artifacts ../local-work/w5c2-oracle-artifacts --output reports/w5.c2-oracles.json",
+    "crosscheck_exit": 0,
+    "seeds": "python3 fuzz/seed_w5c2.py ../local-work/w5c2-seeds"
+  },
+  "original_producer": {
+    "name": "NeXT prebuild",
+    "source_url": "https://github.com/johnsonjh/NeXTDPS/tree/master/fonts-21/bin",
+    "usage": "External executable only; no implementation ported. One external dict.c forward-declaration linkage adjustment; glyph packing code unmodified. Original BDF inputs are MIT test data.",
+    "build_provenance": {
+      "commands": [
+        {
+          "id": "check32-build",
+          "command": [
+            "gcc",
+            "-m32",
+            "-static",
+            "-no-pie",
+            "-std=gnu89",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib32/",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib/gcc/x86_64-linux-gnu/13/32/",
+            "-I",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/include/x86_64-linux-gnu",
+            "-I",
+            "/usr/include/x86_64-linux-gnu",
+            "check32.c",
+            "-o",
+            "check32"
+          ],
+          "exit": 0,
+          "log": "check32-build.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "id": "check32-run",
+          "command": [
+            "./check32"
+          ],
+          "exit": 0,
+          "log": "check32-run.log",
+          "log_sha256": "addf749e2f79521e5ab8be7b796984ea4eb8edf2db2f972d7d494f7c6e7544a2"
+        },
+        {
+          "id": "unmodified-build",
+          "command": [
+            "gcc",
+            "-m32",
+            "-static",
+            "-no-pie",
+            "-std=gnu89",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib32/",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib/gcc/x86_64-linux-gnu/13/32/",
+            "-I",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/include/x86_64-linux-gnu",
+            "-I",
+            "/usr/include/x86_64-linux-gnu",
+            "prebuild.c",
+            "dict.c",
+            "-o",
+            "prebuild-original"
+          ],
+          "exit": 1,
+          "log": "unmodified-build.log",
+          "log_sha256": "1f622794df260eb27d2efe4644393502f248d492ef94106ece2e23368f118b4a"
+        },
+        {
+          "id": "compatibility-build",
+          "command": [
+            "gcc",
+            "-m32",
+            "-static",
+            "-no-pie",
+            "-std=gnu89",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib32/",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib/gcc/x86_64-linux-gnu/13/32/",
+            "-I",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/include/x86_64-linux-gnu",
+            "-I",
+            "/usr/include/x86_64-linux-gnu",
+            "-I",
+            ".",
+            "prebuild.c",
+            "compat/dict.c",
+            "-o",
+            "prebuild"
+          ],
+          "exit": 0,
+          "log": "compatibility-build.log",
+          "log_sha256": "2fc64f7f64caa439231fb2d4ef9cad1a84c1738c68f2660776be4f429a08e364"
+        },
+        {
+          "id": "abi-build",
+          "command": [
+            "gcc",
+            "-m32",
+            "-static",
+            "-no-pie",
+            "-std=gnu89",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib32/",
+            "-B",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/lib/gcc/x86_64-linux-gnu/13/32/",
+            "-I",
+            "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/sysroot/usr/include/x86_64-linux-gnu",
+            "-I",
+            "/usr/include/x86_64-linux-gnu",
+            "abi.c",
+            "-o",
+            "abi"
+          ],
+          "exit": 0,
+          "log": "abi-build.log",
+          "log_sha256": "9bf6f662aca3aaf0717314911928713e8ab9881effefc4f6fcd742eb2c91cfdb"
+        },
+        {
+          "id": "abi-run",
+          "command": [
+            "./abi"
+          ],
+          "exit": 0,
+          "log": "abi-run.log",
+          "log_sha256": "ab1d244e92fa2e68a0aad88e8c7be5f7b17ea7abb242e53fc587f28b8c02133e"
+        }
+      ],
+      "sources": [
+        {
+          "path": "prebuild.c",
+          "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/prebuild.c",
+          "sha256": "9eba5c0c8df95d6cc2a3758834198644e3bb971605de58eda21ad8a511d70935",
+          "bytes": 14861,
+          "unmodified_remote_match": true
+        },
+        {
+          "path": "prebuiltformat.h",
+          "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/prebuiltformat.h",
+          "sha256": "eabbf52858f451a46c3f957ff2b959e019c3ab20b24c2c2160fe857693e66c48",
+          "bytes": 4186,
+          "unmodified_remote_match": true
+        },
+        {
+          "path": "dict.c",
+          "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/dict.c",
+          "sha256": "52036d00f85046fe4577917e5e1013f54778e606d3ec7999996dc68b45b89ebd",
+          "bytes": 1996,
+          "unmodified_remote_match": true
+        },
+        {
+          "path": "dict.h",
+          "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/dict.h",
+          "sha256": "3676a41a66e07bd868d06d1a6b422b47bbe1829adbdc4898295f8b3ccb9c9b7c",
+          "bytes": 452,
+          "unmodified_remote_match": true
+        },
+        {
+          "path": "prebuild.1",
+          "url": "https://raw.githubusercontent.com/johnsonjh/NeXTDPS/master/fonts-21/bin/prebuild.1",
+          "sha256": "665fb23d0133c25b6c4ed6f7f02b47fc1bbac2cdf5c2d8f4b78ba77be2912ef0",
+          "bytes": 2692,
+          "unmodified_remote_match": true
+        }
+      ],
+      "artifacts": {
+        "prebuild": "b64560faf0be1d2c16b9db74cb2f65eed90116afecf64c0a2ac3c1cfa2044256",
+        "compat/dict.c": "f680f9e19377f397eda6263d37294d9a7a81d7e475a81ee988bc895754ea5f5f",
+        "compat/compatibility.diff": "61dc029467f6b47ff08097a3975f296c41e4a1306ca1689fdd1f09977b2908a5",
+        "abi.c": "83b76323279cefcd9d94f6e9dddd753211177ad61636621169872593920499a8",
+        "abi": "b761aba1aef0d32cd5ec6c57ec1a08a65030c67014d98fa860af1be393a1e5bc",
+        "run_evidence.py": "a042db7c517a78dacfbbe72523c932ebdc9f67805021fa4569754a1993a687b7",
+        "pixel-evidence.json": "025c89e729b9359d0a72e7a9821123d6c0d062a89a1466fa2eb144e5a9b673b0"
+      },
+      "sysroot": [
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6-dev-i386_2.39-0ubuntu8.9_amd64.deb",
+          "sha256": "44b85dd652192b23c6979b3f8c240b33105520fdba64024cbba0d818af33258b",
+          "bytes": 1446874
+        },
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6-i386_2.39-0ubuntu8.9_amd64.deb",
+          "sha256": "a7120e4653c257e87385d0be55afcaca6d28e27ff4879afe576ccf3832ef80e4",
+          "bytes": 2786562
+        },
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-13/lib32gcc-13-dev_13.3.0-6ubuntu2~24.04.1_amd64.deb",
+          "sha256": "0850e0555c86f2ce7a954158eb47df42d7645bfa4f12f29ea2df76459c930ac0",
+          "bytes": 2380426
+        }
+      ],
+      "compiler": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "host_kernel": "Linux 7.0.0-30-generic x86_64 GNU/Linux",
+      "compatibility_change": "Only dict.c forward declaration gains static to agree with its existing static definition. prebuild.c and prebuiltformat.h are byte-identical to fetched originals. No bitmap/input/output path changed."
+    },
+    "handoff_manifest_sha256": "ce240b5238ff725d6056d654cda9cbcd4a3492db4937765e2aadd363b8029e0f",
+    "pixel_evidence": [
+      {
+        "name": "mono13",
+        "command": [
+          "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/prebuild",
+          "mono13",
+          "1",
+          "4242",
+          "ISOLatin1CharacterSet",
+          "mono13.bdf"
+        ],
+        "exit": 0,
+        "input_depth": 1,
+        "input_rows": [
+          "9688",
+          "6120"
+        ],
+        "input_sha256": "1cdde0228545a93b67d931908bd4d99c0042dabf1ccbcb57f2fb108946280df5",
+        "output_sha256": "06e212024e92d6a3c3978e81d526a213fac6a5e7c0a7781eed43c6693ca8cb37",
+        "output_bytes": 141,
+        "observed": {
+          "byte_order": 0,
+          "version": 3,
+          "characters": 1,
+          "matrices": 1,
+          "matrix_offset": 92,
+          "masks_offset": 120,
+          "width": 13,
+          "height": 2,
+          "stored_depth": 1,
+          "bitmap_offset": 132,
+          "bitmap_hex": "96886120",
+          "msb_pixels_or_gray": [
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          "mask_fields": [
+            13,
+            2,
+            2,
+            1,
+            14,
+            0,
+            2064,
+            132
+          ]
+        },
+        "expected_pixels": [
+          [
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "name": "mono9",
+        "command": [
+          "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/prebuild",
+          "mono9",
+          "1",
+          "4242",
+          "ISOLatin1CharacterSet",
+          "mono9.bdf"
+        ],
+        "exit": 0,
+        "input_depth": 1,
+        "input_rows": [
+          "9180",
+          "4500"
+        ],
+        "input_sha256": "9ed9fd0124111995dca449d1842e10725bd2fc3085c6967ebbd49d116e0bab9a",
+        "output_sha256": "fa43ad2ea3a776734d058b82456f33b9fd0851627e7f18aa040721fd8a37c55f",
+        "output_bytes": 141,
+        "observed": {
+          "byte_order": 0,
+          "version": 3,
+          "characters": 1,
+          "matrices": 1,
+          "matrix_offset": 92,
+          "masks_offset": 120,
+          "width": 9,
+          "height": 2,
+          "stored_depth": 1,
+          "bitmap_offset": 132,
+          "bitmap_hex": "91804500",
+          "msb_pixels_or_gray": [
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          "mask_fields": [
+            9,
+            2,
+            2,
+            1,
+            14,
+            0,
+            2064,
+            132
+          ]
+        },
+        "expected_pixels": [
+          [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "name": "gray2",
+        "command": [
+          "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/prebuild",
+          "gray2",
+          "1",
+          "4242",
+          "ISOLatin1CharacterSet",
+          "gray2.bdf"
+        ],
+        "exit": 0,
+        "input_depth": 2,
+        "input_rows": [
+          "012",
+          "78F"
+        ],
+        "input_sha256": "3fa65a59cbedc95b2cd36ca936b480f0da49b599327350a8b8b083d1b9b65266",
+        "output_sha256": "ac95d9b8a689188e961fffd2e72e23057c0287e3906a0d518322b30fd8abae77",
+        "output_bytes": 145,
+        "observed": {
+          "byte_order": 0,
+          "version": 3,
+          "characters": 1,
+          "matrices": 1,
+          "matrix_offset": 92,
+          "masks_offset": 120,
+          "width": 3,
+          "height": 2,
+          "stored_depth": 8,
+          "bitmap_offset": 132,
+          "bitmap_hex": "0011227788ff",
+          "msb_pixels_or_gray": [
+            [
+              0,
+              17,
+              34
+            ],
+            [
+              119,
+              136,
+              255
+            ]
+          ],
+          "mask_fields": [
+            3,
+            2,
+            2,
+            1,
+            14,
+            0,
+            2064,
+            132
+          ]
+        },
+        "expected_pixels": [
+          [
+            0,
+            17,
+            34
+          ],
+          [
+            119,
+            136,
+            255
+          ]
+        ]
+      },
+      {
+        "name": "gray4",
+        "command": [
+          "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/prebuild",
+          "gray4",
+          "1",
+          "4242",
+          "ISOLatin1CharacterSet",
+          "gray4.bdf"
+        ],
+        "exit": 0,
+        "input_depth": 4,
+        "input_rows": [
+          "012",
+          "78F"
+        ],
+        "input_sha256": "ff249d3429c42c02fa0d68ee6817ce00b5e038476db470583e5bf4b10d0c5bfc",
+        "output_sha256": "9898006c2142acc4fe10ac63ae29c41f97f588a37e4f117770cba9c131bcf459",
+        "output_bytes": 145,
+        "observed": {
+          "byte_order": 0,
+          "version": 3,
+          "characters": 1,
+          "matrices": 1,
+          "matrix_offset": 92,
+          "masks_offset": 120,
+          "width": 3,
+          "height": 2,
+          "stored_depth": 8,
+          "bitmap_offset": 132,
+          "bitmap_hex": "0011227788ff",
+          "msb_pixels_or_gray": [
+            [
+              0,
+              17,
+              34
+            ],
+            [
+              119,
+              136,
+              255
+            ]
+          ],
+          "mask_fields": [
+            3,
+            2,
+            2,
+            1,
+            14,
+            0,
+            2064,
+            132
+          ]
+        },
+        "expected_pixels": [
+          [
+            0,
+            17,
+            34
+          ],
+          [
+            119,
+            136,
+            255
+          ]
+        ]
+      },
+      {
+        "name": "gray8",
+        "command": [
+          "/home/chen/githubprojects/fontpixel/local-work/prebuilt-research/prebuild",
+          "gray8",
+          "1",
+          "4242",
+          "ISOLatin1CharacterSet",
+          "gray8.bdf"
+        ],
+        "exit": 0,
+        "input_depth": 8,
+        "input_rows": [
+          "012",
+          "78F"
+        ],
+        "input_sha256": "0e4038aaba63e28e5ec9f595945b3e25441c675b519d65d0624d8f5c63b65e68",
+        "output_sha256": "888f0c174da8ccc71f16cfcccdce3f3182c39f6826a0ebaac25e9be3b8a26c29",
+        "output_bytes": 145,
+        "observed": {
+          "byte_order": 0,
+          "version": 3,
+          "characters": 1,
+          "matrices": 1,
+          "matrix_offset": 92,
+          "masks_offset": 120,
+          "width": 3,
+          "height": 2,
+          "stored_depth": 8,
+          "bitmap_offset": 132,
+          "bitmap_hex": "0011227788ff",
+          "msb_pixels_or_gray": [
+            [
+              0,
+              17,
+              34
+            ],
+            [
+              119,
+              136,
+              255
+            ]
+          ],
+          "mask_fields": [
+            3,
+            2,
+            2,
+            1,
+            14,
+            0,
+            2064,
+            132
+          ]
+        },
+        "expected_pixels": [
+          [
+            0,
+            17,
+            34
+          ],
+          [
+            119,
+            136,
+            255
+          ]
+        ]
+      }
+    ]
+  }
+}

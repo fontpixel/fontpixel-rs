@@ -1,0 +1,17 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.46s
+     Running tests/riscos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/riscos-ea6bbe83515dd1c4)
+
+running 9 tests
+test metrics_scale_horizontal_and_vertical_sizes_independently ... ok
+test every_truncation_offsets_and_undefined_outline ... ok
+test budgets_same_limit_output_and_strict_metadata ... ok
+test old_xy_gray_bottom_up_nibbles_and_multistrike ... ok
+test packed_repeat_count_adds_rows ... ok
+test metrics_v0_v2_and_scoped_master_resources ... ok
+test signed_twelve_bit_coordinates_and_v8_extended_code ... ok
+test every_font_generation_raw_and_packed_roundtrips ... ok
+test subpixel_grid_retains_all_sixteen_phases ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

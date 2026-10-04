@@ -1,0 +1,36 @@
+[
+  {
+    "command": [
+      "../local-work/target-w5e2-outline/debug/examples/w5e2_outline_timing",
+      "bench",
+      "pfr",
+      "../local-work/w5e2-outline/crosscheck-final/seeds/pfr-ft-0-0-1.pfr",
+      "2"
+    ],
+    "exit": 0,
+    "result": {
+      "count": 2,
+      "input_bytes": 170,
+      "read_ns": 59294,
+      "write_ns": 168051
+    },
+    "purpose": "adapter functionality only, not formal performance measurement"
+  },
+  {
+    "command": [
+      "../local-work/target-w5e2-outline/debug/examples/w5e2_outline_timing",
+      "bench",
+      "ssfn",
+      "../local-work/w5e2-outline/crosscheck-final/seeds/ssfn-original.sfn",
+      "2"
+    ],
+    "exit": 0,
+    "result": {
+      "count": 2,
+      "input_bytes": 132,
+      "read_ns": 50181,
+      "write_ns": 132808
+    },
+    "purpose": "adapter functionality only, not formal performance measurement"
+  }
+]

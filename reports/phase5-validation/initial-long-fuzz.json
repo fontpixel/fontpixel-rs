@@ -1,0 +1,175 @@
+{
+  "status": "Phase 5 in progress; module campaigns are complete, aggregate acceptance is not. Shared API/cfg integration continues; these records authenticate the source snapshots at each run, not an untested later tree.",
+  "campaigns": [
+    {
+      "target": "vfont",
+      "runs": 1477611,
+      "coverage": 1281,
+      "features": 4612,
+      "rss_mib": 469,
+      "fuzz_seconds": 611,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "vfont",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-vfont-fuzz-final.json.gz",
+          "sha256": "f121d138da3a05cf8642a05f02886a8f53d062b9b2df9688b198e866c8b48ac4"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-vfont-fuzz-final.log.gz",
+          "sha256": "e8db20b3eb8ad007207fff03fcaaebff4c6d731239f62b4d6e1a832cd427b8bb"
+        }
+      ]
+    },
+    {
+      "target": "fzx",
+      "runs": 1853831,
+      "coverage": 1204,
+      "features": 2131,
+      "rss_mib": 381,
+      "fuzz_seconds": 611,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "fzx",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-fzx-fuzz-final.json.gz",
+          "sha256": "5f243f0bbb967ee1b77a4acd3926530a34901e62b8f4df3ac53622a2c41ad4c2"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-fzx-fuzz-final.log.gz",
+          "sha256": "0d02eea34c31e8df8c0f2b29e3acbc31133e76567c76bce4140f63a37e685886"
+        }
+      ]
+    },
+    {
+      "target": "figlet",
+      "runs": 572703,
+      "coverage": 1685,
+      "features": 6028,
+      "rss_mib": 429,
+      "fuzz_seconds": 611,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "figlet",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-figlet-fuzz-final.json.gz",
+          "sha256": "28ab1b37f22e053f40f45a401478d4c14ba4c74ef703969a5a7874d19b5063d0"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-figlet-fuzz-final.log.gz",
+          "sha256": "362d42f5844e8aa5217fae8fea49253356a0aa2be893bbb9916246ba751d4943"
+        }
+      ]
+    },
+    {
+      "target": "color_bitmap",
+      "runs": 334887,
+      "coverage": 5888,
+      "features": 21852,
+      "rss_mib": 497,
+      "fuzz_seconds": 611,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "color_bitmap",
+        "--no-default-features",
+        "--features",
+        "color-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-color_bitmap-fuzz-final.json.gz",
+          "sha256": "e344ef3a9997860f6ee8b6e0f9a751bc518261e9184e9eb2a12d2440f0e2a650"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-color_bitmap-fuzz-final.log.gz",
+          "sha256": "16515d2b4be03d5dbcc76840b7a65e45f0822f4d1ac9dee2f1a495e4f8a51f0c"
+        }
+      ]
+    },
+    {
+      "target": "embedded_bitmap",
+      "runs": 6910245,
+      "coverage": 4676,
+      "features": 11514,
+      "rss_mib": 509,
+      "fuzz_seconds": 611,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "embedded_bitmap",
+        "--no-default-features",
+        "--features",
+        "embedded-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-embedded_bitmap-fuzz-final.json.gz",
+          "sha256": "cdcd261e714ba90fbab44201f184ba7f36f7b976ec8f47f294de1a7189511cc1"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-embedded_bitmap-fuzz-final.log.gz",
+          "sha256": "8fb9c4eebb89fcd80541f5e6c78c3a3f9f5b6854f202f068aff6053324f2e7dc"
+        }
+      ]
+    }
+  ]
+}

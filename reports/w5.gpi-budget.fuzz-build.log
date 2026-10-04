@@ -1,0 +1,14 @@
+   Compiling libc v0.2.189
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.14
+   Compiling alloc-no-stdlib v3.0.0
+   Compiling alloc-stdlib v0.3.0
+   Compiling brotli-decompressor v6.0.1
+   Compiling jobserver v0.1.35
+   Compiling cc v1.5.1
+   Compiling libfuzzer-sys v0.4.13
+   Compiling arbitrary v1.4.2
+   Compiling brotli v9.0.0
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 56.24s

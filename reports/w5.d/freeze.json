@@ -1,0 +1,639 @@
+{
+  "revision": "final1",
+  "frozen_at": "2026-10-04T09:46:45.267751+00:00",
+  "git_head": "8165df70efecbe22825a2a4857e73b91cedf1e59",
+  "owned_manifest_sha256": "f01793f7f06590d4e7ca633fbb72291d211f17ad68bb23f28dd7bd8aab09f0a1",
+  "manifest_algorithm": "SHA256 compact JSON(files, sort_keys=True, separators=(comma,colon))",
+  "files": [
+    {
+      "path": "crates/fontpixel/examples/w5d_timing.rs",
+      "bytes": 6776,
+      "sha256": "a528151a64bfe4b85c1e0aace82c30f31ac5b7f099e042eb7e516e22d473e070"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/fbit/common.rs",
+      "bytes": 11084,
+      "sha256": "3f117fd0e9f3e7a92b0a2646fd8e659bf561597fda2cad0ce31984af2c134d01"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/fbit.rs",
+      "bytes": 30187,
+      "sha256": "fa24e39c30f3e29278c31c86a222952e96b05f14cfc69646f8cfa61b38910c23"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/lisa.rs",
+      "bytes": 21647,
+      "sha256": "26e6d0cf3b19ce852d7a41e57b90ba0ccde38c5f409f1ee4092f788c5bf96dcc"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/mgtk.rs",
+      "bytes": 11821,
+      "sha256": "8eda6045e1095e36283e29da8740239c57012568cc2b112cd9a6ccbcf651553b"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/binhex.rs",
+      "bytes": 11441,
+      "sha256": "247a3b24baaa3956c4f6a9bdd82ffc78882f81371465e114e14da0582a036ad0"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/bridge.rs",
+      "bytes": 2262,
+      "sha256": "a96d8543e40d5ab674c44baeecf36e1b367c1d334c00075325cd39d94b328440"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/container.rs",
+      "bytes": 22089,
+      "sha256": "8191ca89452cf01abceb57e857df714c8516f0b86a59d3ad8fdd54399b3bcf90"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/palette.rs",
+      "bytes": 2431,
+      "sha256": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/probe.rs",
+      "bytes": 4534,
+      "sha256": "28b8b36ee497297828de0269af5999226c9366a56b8da5a460bfdd1b449b8670"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/raster.rs",
+      "bytes": 9197,
+      "sha256": "1ae009912997e63c88f1a640e88675dedad4ee9773eb5472125a9ecab4c25098"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/support.rs",
+      "bytes": 7750,
+      "sha256": "ea1a64444b25cddee4c49c2d35fe58ee2cf2b16c1397d181a7663e102ad37738"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt/writer.rs",
+      "bytes": 44898,
+      "sha256": "a08a7a2d89010cfdc32d9e54aa66e4f90155c70f5d905582d57d03e74e8c9584"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/nfnt.rs",
+      "bytes": 3875,
+      "sha256": "48dbd9324744e58d5c8786585a8526c49104779b23a9ecd5a758462d5d9c7941"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/qpf.rs",
+      "bytes": 18083,
+      "sha256": "70e11b2fd7879f549fca865a27d4b9e5e8049b5143f292761ccbda951ea7fa9e"
+    },
+    {
+      "path": "crates/fontpixel/src/formats/qpf2.rs",
+      "bytes": 20312,
+      "sha256": "6a024eac4069d0d3ad8ee3e06945c1637a8530aad4d6ea28e9c7095be30c2ad4"
+    },
+    {
+      "path": "crates/fontpixel/tests/fbit.rs",
+      "bytes": 9709,
+      "sha256": "7880a7debe43753754856a5f0187e86e58c11af325f732fa56cc11893063ee68"
+    },
+    {
+      "path": "crates/fontpixel/tests/lisa.rs",
+      "bytes": 9120,
+      "sha256": "a8231ca5357718debc0f934c28c4ced96ff3c8e42fce1af276e64510098fdd70"
+    },
+    {
+      "path": "crates/fontpixel/tests/mgtk.rs",
+      "bytes": 6790,
+      "sha256": "ce5f66dd1ffbe4f22c4558a334404494730c265a6fc987b546df9249209f3d3f"
+    },
+    {
+      "path": "crates/fontpixel/tests/nfnt.rs",
+      "bytes": 38538,
+      "sha256": "ee2a2748a9eb15940d1df52969aff25278397bc7d7e5ab2fdd30155700939ac9"
+    },
+    {
+      "path": "crates/fontpixel/tests/qpf.rs",
+      "bytes": 4859,
+      "sha256": "81394e81b40f3f32a6e81ad90f89f2f976455017bf6fafee63654fea4a491520"
+    },
+    {
+      "path": "crates/fontpixel/tests/qpf2.rs",
+      "bytes": 7250,
+      "sha256": "10ceb7e222bebe79b1d009a05e5a78316e797606782f7f19474088cb00b0c595"
+    },
+    {
+      "path": "docs/formats/fbit.md",
+      "bytes": 3122,
+      "sha256": "23188b33f6d607be0752caa6a2fa4e293257d12158cfd3dd3c8024091d4fc644"
+    },
+    {
+      "path": "docs/formats/lisa.md",
+      "bytes": 2994,
+      "sha256": "2e4b8c29b2a1bca589af1e899dc3752ae6bce1a52b0d0db294806b170356ef2d"
+    },
+    {
+      "path": "docs/formats/mgtk.md",
+      "bytes": 1619,
+      "sha256": "834c6bea504fe6d2caa1fe2efe8e1312bda861aad178dae8b2432e91a0837f6b"
+    },
+    {
+      "path": "docs/formats/nfnt.md",
+      "bytes": 10776,
+      "sha256": "81e1a6746d6faa63c7b4c36ced538bb5738b9906938b4101fb6734b733340d72"
+    },
+    {
+      "path": "docs/formats/qpf.md",
+      "bytes": 2117,
+      "sha256": "15e9687d52e1f60699eb2d7b671446f773f823dd033b4de75c842841d70188aa"
+    },
+    {
+      "path": "docs/formats/qpf2.md",
+      "bytes": 3015,
+      "sha256": "a5d7c1cf252a0fa061fb3ea07410247040afbaf222a77e1def08494b928d5f5f"
+    },
+    {
+      "path": "fuzz/fuzz_targets/fbit.rs",
+      "bytes": 2275,
+      "sha256": "eba9e6e80f0b113d7a81ea9166d546199a6ded91334470bb323a9d5fed096b5e"
+    },
+    {
+      "path": "fuzz/fuzz_targets/lisa.rs",
+      "bytes": 1775,
+      "sha256": "0bddfcbbf0c0e13c157a606a98ecdc17597f2912b6b29be395548ec0a3fefac7"
+    },
+    {
+      "path": "fuzz/fuzz_targets/mgtk.rs",
+      "bytes": 1775,
+      "sha256": "a1a3c90d41afa340ab9e58de6e3556c00bb013767818988f18f232359966a482"
+    },
+    {
+      "path": "fuzz/fuzz_targets/nfnt.rs",
+      "bytes": 3457,
+      "sha256": "2559f31d439917ec55f699302c8ebebfb6b4d14e7f50a116fbea6f50e8218721"
+    },
+    {
+      "path": "fuzz/fuzz_targets/qpf.rs",
+      "bytes": 1762,
+      "sha256": "1e7ee374b9f1224279641c767772cbc2133aac8213d0c213ebe970e6d3324f25"
+    },
+    {
+      "path": "fuzz/fuzz_targets/qpf2.rs",
+      "bytes": 1775,
+      "sha256": "8dd7f39b88ac5c0f63b7fafd0cc719eac76220f67469cf6fb8ba8f8159015b2d"
+    },
+    {
+      "path": "fuzz/seed_w5d.py",
+      "bytes": 7074,
+      "sha256": "780155399e608487fdd379b2ddb9b123b029c92d8500eb81abb90cc136433c14"
+    },
+    {
+      "path": "reports/w5.d/build-oracles.sh",
+      "bytes": 1116,
+      "sha256": "79bc37ca52394282ef53f25050e014c6717a4fdffdd9e425c3f0342861f02282"
+    },
+    {
+      "path": "reports/w5.d/check-benchmarks.py",
+      "bytes": 1358,
+      "sha256": "26180647bcc16587bb4ea392d636cb3435b51cd785865bcc4b9fc826f4f3afc6"
+    },
+    {
+      "path": "reports/w5.d/qt-driver.cpp",
+      "bytes": 2135,
+      "sha256": "e32626629307e27289389bc190a6c2f68f12c5f467756996d49aaaece6c2bc22"
+    },
+    {
+      "path": "reports/w5.d/run-gates.py",
+      "bytes": 1784,
+      "sha256": "d2a2ab7d1546c67adc0516aa1158f318a5e64422bb9d300d7b2748821c8899c7"
+    },
+    {
+      "path": "tests/crosscheck/w5d.py",
+      "bytes": 10847,
+      "sha256": "4d734a22b084e0a53c0489b31e12c994d473a2e40bd0c4d100dbe727fcf7bf4f"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/w5.d/REPORT.md",
+      "bytes": 11088,
+      "sha256": "7ee1c4c3c962720061d22e2d7e04419c29478ba3ee34349439355da3bf58cd82"
+    },
+    {
+      "path": "reports/w5.d/alltargets-gates.json",
+      "bytes": 1638,
+      "sha256": "42e56f56836063ee7d6f7f260a92ff28db0754b5a4fb5fe5e9fc09d3baf210f3"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-fbit.log",
+      "bytes": 33569,
+      "sha256": "6638d437855387f8cdf15e990ff08b2c24839191171e068d81906038316ebe52"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-lisa-final.log",
+      "bytes": 34336,
+      "sha256": "1e952d7e5cf6e7bc49345d701947f2a4d37bacc63457d1f174829d6a87cb6d4d"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-lisa.log",
+      "bytes": 33541,
+      "sha256": "0e80db1478df9910c745f7aa1c567940862a4a34f437b19b0c5066bac8a4ee13"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-mgtk.log",
+      "bytes": 31131,
+      "sha256": "50adca0202b799be8a3fc64e232fcf1ddeda67c237bc3ac368fbc1c68083b93d"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-nfnt.log",
+      "bytes": 33513,
+      "sha256": "63e877f5c6ed33b6278857ca1e1782515a0458713cdb077fbc236e21eb239a63"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-qpf.log",
+      "bytes": 31297,
+      "sha256": "965e558a1722e5f519fb7ba287301cf0de1e4bd4d833467a4b89bcd33beb5304"
+    },
+    {
+      "path": "reports/w5.d/alltargets-test-qpf2.log",
+      "bytes": 35910,
+      "sha256": "c1bc1a09efe0d960f0ab43b7c4e651632a7ec22ebfd7bbb318181207d22e651c"
+    },
+    {
+      "path": "reports/w5.d/benchmark-fixtures.json",
+      "bytes": 3717,
+      "sha256": "3c630930c199a02f4698fa1ab3d32b7d38e8c4fd8e9d17eeca62665d5e94104a"
+    },
+    {
+      "path": "reports/w5.d/benchmark-fixtures.log",
+      "bytes": 43,
+      "sha256": "4c3e861a0fe625e621e8491dbe81a0f6fdf227d7a4fcb7dbcb2b73bbc2dcd973"
+    },
+    {
+      "path": "reports/w5.d/build-oracles.log",
+      "bytes": 359,
+      "sha256": "40b1a4151e02a3094c83e84e34c0166bd4993de5ccb4f7c50e370c3c700df344"
+    },
+    {
+      "path": "reports/w5.d/build-oracles.sh",
+      "bytes": 1116,
+      "sha256": "79bc37ca52394282ef53f25050e014c6717a4fdffdd9e425c3f0342861f02282"
+    },
+    {
+      "path": "reports/w5.d/check-benchmarks.py",
+      "bytes": 1358,
+      "sha256": "26180647bcc16587bb4ea392d636cb3435b51cd785865bcc4b9fc826f4f3afc6"
+    },
+    {
+      "path": "reports/w5.d/clippy-combined-final.log",
+      "bytes": 158,
+      "sha256": "2b0f7c2a5f25f0c1d746d43e63d5c0c799393a5610bd14b82fbcdac2bdaac2a8"
+    },
+    {
+      "path": "reports/w5.d/clippy-combined.log",
+      "bytes": 1402,
+      "sha256": "3372b935e74bd238b4f7fc29717f8e01e9993a96bf344654e398fdcbc6296382"
+    },
+    {
+      "path": "reports/w5.d/clippy-fbit.log",
+      "bytes": 278,
+      "sha256": "76a6a6c6f4cc3e2c91530641a3b237b2c501f46f5a6b18de2441d821e64bd855"
+    },
+    {
+      "path": "reports/w5.d/clippy-lisa-final.log",
+      "bytes": 158,
+      "sha256": "96146cd27959cce9fa198d23ab9248629966c3ffa6736931eb6fecd0287b408b"
+    },
+    {
+      "path": "reports/w5.d/clippy-lisa.log",
+      "bytes": 158,
+      "sha256": "4696d5773252833708919660d2fd27a79783b09df4eded9e0ce4f3f856bb5ed6"
+    },
+    {
+      "path": "reports/w5.d/clippy-mgtk.log",
+      "bytes": 158,
+      "sha256": "3545a2432d22b16bcd08a732be985760e90c93732c6f33b225f5e026c8ce0871"
+    },
+    {
+      "path": "reports/w5.d/clippy-nfnt.log",
+      "bytes": 158,
+      "sha256": "f5cb60bf468425bb26cfced10d32a3451fc8e56b24f56d64a2497b18a7951dd7"
+    },
+    {
+      "path": "reports/w5.d/clippy-qpf.log",
+      "bytes": 158,
+      "sha256": "df53406745d117c30f68790602087664c107e0b5b0b28a7904a13b37a53256a5"
+    },
+    {
+      "path": "reports/w5.d/clippy-qpf2.log",
+      "bytes": 158,
+      "sha256": "e09693ba5fdcde22d39f081a00477f345988f95209a7d3ec9eb9dbe714fd3f1b"
+    },
+    {
+      "path": "reports/w5.d/commands.json",
+      "bytes": 18495,
+      "sha256": "77299f75854748efa9f539e5f2d007bdea747f673bef7c70d7a6ce904ce89b04"
+    },
+    {
+      "path": "reports/w5.d/crosscheck-macbinary-autodetect-initial.log",
+      "bytes": 1354,
+      "sha256": "9efd6299ebc0ccf91fc0e70b6d39b0c9757ed5224c3d58c9620eeb6746ef3efe"
+    },
+    {
+      "path": "reports/w5.d/crosscheck-run.log",
+      "bytes": 425,
+      "sha256": "377948416940ad365d7f08944aec4e61ac27f168bb219a4db5b393c4f9d7d1db"
+    },
+    {
+      "path": "reports/w5.d/crosscheck.json",
+      "bytes": 889063,
+      "sha256": "cb379e7776fd9a0510a5c434439f900b67bb10bfbfe00fb95cf43db9cf861408"
+    },
+    {
+      "path": "reports/w5.d/example-build.log",
+      "bytes": 158,
+      "sha256": "0bd44b1ec278e7e08bf06e7ab3dc11408928b83fdcffb6f51602578dca101115"
+    },
+    {
+      "path": "reports/w5.d/external-logs/lisa-consumer-build.log.gz",
+      "bytes": 230,
+      "sha256": "4fa2d2c939b6c9396e2180f2532213b7442594ee31ca100fe0f3a91a5c3f7e8e"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt-consumer-build-final.log.gz",
+      "bytes": 20,
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt-consumer-build.log.gz",
+      "bytes": 284,
+      "sha256": "292d7bae5d11979684191c1efecf4ee7cb8defce458ba0b316830cb4151ba24b"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-bootstrap-compat.log.gz",
+      "bytes": 3638,
+      "sha256": "44f3b8e536f5c3bbb3fdb76ba8ef024955468a95290dd59a26d5352d8f324be1"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-build-64.log.gz",
+      "bytes": 541292,
+      "sha256": "1361ad99c35600e35b871fb1c9d416111eb836e4282787d5c022d9b740bfe8a2"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-build-compat.log.gz",
+      "bytes": 47780,
+      "sha256": "1e3093522f708de2dffc4cf6fe473a4599f8bd0c30d7c07cdfd6152ee2f1d843"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-build-dialogless.log.gz",
+      "bytes": 821529,
+      "sha256": "3f10d8e895ad57159f9d3bf0c39bb265798d5e8fc7b513361add1defcb9ef59d"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-build.log.gz",
+      "bytes": 22701,
+      "sha256": "27d77fc23d564da5f926ab384911655b45a8d1da3f2e4990f661ee2a70e3794c"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-configure-64.log.gz",
+      "bytes": 3720,
+      "sha256": "4549c4f7ea47d35de26ed65bb819949d5fcf3e3ca15cfbc0582c70b4c72f4112"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-configure-dialogless.log.gz",
+      "bytes": 3720,
+      "sha256": "4549c4f7ea47d35de26ed65bb819949d5fcf3e3ca15cfbc0582c70b4c72f4112"
+    },
+    {
+      "path": "reports/w5.d/external-logs/qt4-configure.log.gz",
+      "bytes": 6697,
+      "sha256": "f77e0ff8ab52b89fc075b18e5c9b9ad3770b2436d307ddb15535239342870c91"
+    },
+    {
+      "path": "reports/w5.d/external-logs.json",
+      "bytes": 4308,
+      "sha256": "fe03ba558c85802d73c5448cc2591e982b1bf98c5c5b1a0f8f7c3fdb8cf5b6e6"
+    },
+    {
+      "path": "reports/w5.d/fbit-collision-test.log",
+      "bytes": 761,
+      "sha256": "c2e2fb3241c14b0a8829984e241d131c6ff1f11ad624b129360e73510e0b0d9d"
+    },
+    {
+      "path": "reports/w5.d/fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/w5.d/fuzz-fbit-before-collision-fix.log",
+      "bytes": 50980,
+      "sha256": "2855845ba9923d25779af6136d1de8e4313f18dc59175e61634993755598825d"
+    },
+    {
+      "path": "reports/w5.d/fuzz-fbit-before-collision-seed.log",
+      "bytes": 32273,
+      "sha256": "e69540c17cb4c799bd2686636a316600b425335e9b4f7a3871364bb97bfbb435"
+    },
+    {
+      "path": "reports/w5.d/fuzz-fbit.log",
+      "bytes": 66628,
+      "sha256": "f017c84250b2f69c383240c585eca688e30fdfbd98129f1e607e55cc650d8a21"
+    },
+    {
+      "path": "reports/w5.d/fuzz-lisa.log",
+      "bytes": 74137,
+      "sha256": "b2724538009c8858eda66d98429af682a16795055cf9803406685a16162540de"
+    },
+    {
+      "path": "reports/w5.d/fuzz-mgtk.log",
+      "bytes": 19547,
+      "sha256": "53f25c5484203b569ebd48be1309ef89828f617daee8d5ea9b556be54fa03107"
+    },
+    {
+      "path": "reports/w5.d/fuzz-nfnt.log",
+      "bytes": 335861,
+      "sha256": "34fb646c42f554fdf7025159187e046c8fbb6b92f900ce95f3f95df371406f50"
+    },
+    {
+      "path": "reports/w5.d/fuzz-qpf.log",
+      "bytes": 90765,
+      "sha256": "01804c3a59425a4fbb464353c382923289a1afdb121bc2fb1d67c18733725dd2"
+    },
+    {
+      "path": "reports/w5.d/fuzz-qpf2.log",
+      "bytes": 73457,
+      "sha256": "9572c8df7c080209e62743b8b13ef919c5515eab7e79e6ad26fdbc87caf2e451"
+    },
+    {
+      "path": "reports/w5.d/gates.json",
+      "bytes": 5787,
+      "sha256": "5935056d4902e6a858278e1e32ec321e9f9df204360be04f0c88651708103688"
+    },
+    {
+      "path": "reports/w5.d/initial-alltargets-gates.json",
+      "bytes": 267,
+      "sha256": "ebbefa60e2b2bbe4d12bd2b732316008242e763cb4ff2da372aef697d8b93240"
+    },
+    {
+      "path": "reports/w5.d/initial-alltargets-test-fbit.log",
+      "bytes": 8494,
+      "sha256": "c17072a4e236ff02427664520880f3afa6ded84a45e68b8b674a173bb895809b"
+    },
+    {
+      "path": "reports/w5.d/initial-alltargets-test-lisa-final.log",
+      "bytes": 16523,
+      "sha256": "7e5896e01b4091aaf70b55f6fe3fe1e21888cd292d619aa086793e44667362d0"
+    },
+    {
+      "path": "reports/w5.d/initial-clippy-lisa-final.log",
+      "bytes": 762,
+      "sha256": "852541b3a801b80f5872414231fc65ee1d39bcbc0bc9a9ae7e168896c826e5a3"
+    },
+    {
+      "path": "reports/w5.d/lisa-final-gates.json",
+      "bytes": 510,
+      "sha256": "77c066f4f9f81ae445d45bc51381526f061d288ce2abc9ae95fbf2157be89853"
+    },
+    {
+      "path": "reports/w5.d/lisa-native-consumer-initial.log",
+      "bytes": 1407,
+      "sha256": "2c077bd6907a37efd3ab71a7ea5fcf31b40a2d8cd2bd4d1357bf45c323b22bd9"
+    },
+    {
+      "path": "reports/w5.d/lisa-unsafe-compression.bin",
+      "bytes": 64,
+      "sha256": "9c7de956287a5fdb8788e5f4f32d2f72c0182ead8fe512401e55b838fdab5ec5"
+    },
+    {
+      "path": "reports/w5.d/qt-driver.cpp",
+      "bytes": 2135,
+      "sha256": "e32626629307e27289389bc190a6c2f68f12c5f467756996d49aaaece6c2bc22"
+    },
+    {
+      "path": "reports/w5.d/run-gates.py",
+      "bytes": 1784,
+      "sha256": "d2a2ab7d1546c67adc0516aa1158f318a5e64422bb9d300d7b2748821c8899c7"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-fbit.log",
+      "bytes": 254,
+      "sha256": "8cae7a6a0b9b1a1805e2efd997a179e0297da030dc1ed9fcf8ab8fdda1ffe740"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-lisa.log",
+      "bytes": 254,
+      "sha256": "42d5b7786feadd079979e765e6629581ec916bb4488c9917db95b064be52ad6a"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-mgtk.log",
+      "bytes": 254,
+      "sha256": "321fcb75551ed9244b48c86653dad7175f43a16c5ab39a35b3f49a252ca2daa1"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-nfnt.log",
+      "bytes": 254,
+      "sha256": "81ac95a9f4366955529885f3b18a2adbe3d3c7a43b23815b88a1aae08beae976"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-qpf.log",
+      "bytes": 254,
+      "sha256": "ec9d392b826e261d78e2b17b7bba004e11335c617aa2bdf35b586ab7da64d89c"
+    },
+    {
+      "path": "reports/w5.d/rustdoc-qpf2.log",
+      "bytes": 254,
+      "sha256": "f6a93e07461587eb64c40e8ddb16be9944a9662d8a3024ea1f7a1e7411e065e9"
+    },
+    {
+      "path": "reports/w5.d/seeds.json",
+      "bytes": 4095,
+      "sha256": "4e04cf20fec83869c2b4b8cc31a0b07a5c88004e7e35e0fd1e3d3b3793c51d5a"
+    },
+    {
+      "path": "reports/w5.d/sources.json",
+      "bytes": 9289,
+      "sha256": "847f25f0e3a811ecf293b910786854dc6fcd6e40b16ecd30edeb376f2797c7ee"
+    },
+    {
+      "path": "reports/w5.d/test-combined-initial.log",
+      "bytes": 1145,
+      "sha256": "9457e8ea435c281bb3a866279c990ac6675872dacf2d1c04dead5db575444810"
+    },
+    {
+      "path": "reports/w5.d/test-combined.log",
+      "bytes": 5996,
+      "sha256": "8b3d45e1b14860ae51ec708cd6def54129caf46a481b284f6539e07e1f690c42"
+    },
+    {
+      "path": "reports/w5.d/test-fbit.log",
+      "bytes": 1403,
+      "sha256": "0b9e0f00dd6c328a9a1995db6a289b4d5b155bba6537eafaca0d2981d5051147"
+    },
+    {
+      "path": "reports/w5.d/test-lisa.log",
+      "bytes": 1474,
+      "sha256": "01fd3b17cbd19f805c4697a01da5f3bdf08c128420d52c8d901cd1ff16a58176"
+    },
+    {
+      "path": "reports/w5.d/test-mgtk.log",
+      "bytes": 1416,
+      "sha256": "4ff5caf2a3566a564bbe79a73cd169fcae447e51707e6696136eda8e8e8e04d2"
+    },
+    {
+      "path": "reports/w5.d/test-nfnt.log",
+      "bytes": 3062,
+      "sha256": "7d3aebd4eb522f47b6c9df37397f6189eb52461d9229cbcaf4992e5ba6480755"
+    },
+    {
+      "path": "reports/w5.d/test-qpf.log",
+      "bytes": 1341,
+      "sha256": "9aad44edfd108d4e0b0062c8e81a588caa86004504bd41c1584825d96111d48c"
+    },
+    {
+      "path": "reports/w5.d/test-qpf2.log",
+      "bytes": 1877,
+      "sha256": "67b221f905b759ff4cd237a8bcd389f708e3d22e5b30aa07736e197a7ae4678d"
+    },
+    {
+      "path": "reports/w5.d/versions.json",
+      "bytes": 2081,
+      "sha256": "1b9f502a7b01f725a982419bfee69a8607b447d4af37c3166c6dff4f7081f165"
+    }
+  ],
+  "tests": {
+    "fbit": 8,
+    "lisa": 8,
+    "mgtk": 7,
+    "qpf": 6,
+    "qpf2": 8,
+    "nfnt": 34
+  },
+  "native_crosschecks": 73,
+  "short_asan": {
+    "fbit": {
+      "runs": 38052,
+      "seconds": 21,
+      "exit": 0
+    },
+    "lisa": {
+      "runs": 784580,
+      "seconds": 21,
+      "exit": 0
+    },
+    "mgtk": {
+      "runs": 7351,
+      "seconds": 21,
+      "exit": 0
+    },
+    "qpf": {
+      "runs": 285630,
+      "seconds": 21,
+      "exit": 0
+    },
+    "qpf2": {
+      "runs": 462683,
+      "seconds": 21,
+      "exit": 0
+    },
+    "nfnt": {
+      "runs": 204762,
+      "seconds": 21,
+      "exit": 0
+    }
+  },
+  "shared_integration": "coordinator-owned Cargo/features/registry/CLI/NOTICE/decisions",
+  "remaining_acceptance": "coordinator >=610s ASAN campaigns, five quiet release performance rounds, repository-wide gate"
+}

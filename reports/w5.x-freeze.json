@@ -1,0 +1,217 @@
+{
+  "status": "worker implementation frozen; coordinator final ASAN/performance/integration pending",
+  "utc": "2026-10-04T09:29:47.955511+00:00",
+  "owned": {
+    "crates/fontpixel/src/formats/raw.rs": {
+      "bytes": 18605,
+      "sha256": "06c9220fda4eb10288f2b14116a476d48aba576bc03465f3babb794390fd65ca"
+    },
+    "crates/fontpixel/src/formats/raw/packed.rs": {
+      "bytes": 8816,
+      "sha256": "2eb4b0fb67a7d7ae8a7ee547e4c85d48e20b54d10fe989e887b724f60c5cdf00"
+    },
+    "crates/fontpixel/src/formats/bmfont.rs": {
+      "bytes": 9661,
+      "sha256": "d99279bec8549860e83084079a166917df371f68f0f110328f5e20ae0f7c0366"
+    },
+    "crates/fontpixel/src/formats/bmfont/json.rs": {
+      "bytes": 22246,
+      "sha256": "dcb187526ce346e08615efd1f2243c718c88aaa33e1fe8a7c80669438354b711"
+    },
+    "crates/fontpixel/src/formats/bmfont/wire.rs": {
+      "bytes": 22891,
+      "sha256": "45e7272cd4a66979c01a00073131d39fa23b668087d31c8734f74e5255b84b15"
+    },
+    "crates/fontpixel/src/formats/bmfont/reader.rs": {
+      "bytes": 12908,
+      "sha256": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7"
+    },
+    "crates/fontpixel/src/formats/bmfont/writer.rs": {
+      "bytes": 10952,
+      "sha256": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219"
+    },
+    "docs/formats/raw.md": {
+      "bytes": 8298,
+      "sha256": "c27ccde176ee4de49612fa4a45b9e02751fc11570af5021afc9dfbc05068a33a"
+    },
+    "docs/formats/bmfont.md": {
+      "bytes": 5912,
+      "sha256": "f2da3f7d400187c61caef71a47b5f829834c09dcf63c4450b8283a78e24ce1e5"
+    },
+    "crates/fontpixel/tests/raw.rs": {
+      "bytes": 19237,
+      "sha256": "ee497bb2ff84ee34dec4381c51b466d63fb2e9b06f5d73bab83e31c506cfe8b6"
+    },
+    "crates/fontpixel/tests/bmfont.rs": {
+      "bytes": 20503,
+      "sha256": "c737541e760986ad06ca91e302d9b9a8c5470dc221af9cb99827cca9c9039222"
+    },
+    "fuzz/fuzz_targets/raw.rs": {
+      "bytes": 1944,
+      "sha256": "5fb9ebb2833561125bdf9cd2f5492f45f9f0ff9ecc00a750a4780da2bbb3ddfc"
+    },
+    "fuzz/fuzz_targets/bmfont.rs": {
+      "bytes": 3468,
+      "sha256": "0b5f7430af34d8882eaf07fe2666f4ee2736dc9c2f65c1333bec5fb1030e84ba"
+    },
+    "fuzz/seed_w5x.py": {
+      "bytes": 3405,
+      "sha256": "b202ecd84ae2a89fe17ecc983f1b988335aa1b2b3c5f388ed73c3d93c847b05b"
+    },
+    "tests/crosscheck/w5x.py": {
+      "bytes": 13910,
+      "sha256": "79997d1413e8a8d40f1fa1b03d52c80ed87bf7db9147747daeec1355f8a3f09b"
+    },
+    "crates/fontpixel/examples/w5x_timing.rs": {
+      "bytes": 7922,
+      "sha256": "314a37dee7fbb91509f61f4d5f382a98cdee8fe1fe366be27a547d8fdaf4df0a"
+    }
+  },
+  "shared_dependencies": {
+    "crates/fontpixel/src/formats/raw/support.rs": {
+      "bytes": 18574,
+      "sha256": "d8a9a352bd1822e88c94bbe944cb51c7b80ff82fe821d0bd1d5349ebf49df94f"
+    },
+    "crates/fontpixel/src/formats/bmfont/fidelity.rs": {
+      "bytes": 10070,
+      "sha256": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142"
+    },
+    "crates/fontpixel/src/formats/console.rs": {
+      "bytes": 9609,
+      "sha256": "4ae099193f3c90af9d4154de1629d248dc63aaa0d15a557e632941fc562c376d"
+    }
+  },
+  "evidence": {
+    "reports/w5.x-raw-clippy.log": {
+      "bytes": 158,
+      "sha256": "1a2d94aa8b61a39038dcb171c7ae0c776a2c5f1304b84edc525160f01b1c1f3a"
+    },
+    "reports/w5.x-bmfont-test.log": {
+      "bytes": 1301,
+      "sha256": "d9f354851a09467f53fc88d4e398bf1ac6b258885a0d30644dc3c8979bfc11ec"
+    },
+    "reports/w5.x-native-adapter-2.log": {
+      "bytes": 148,
+      "sha256": "028f2c147e7929e75dbbb2b8a7973b13f0d133be7779cabfdd476a4ec0cf9ae9"
+    },
+    "reports/w5.x-smoke.json": {
+      "bytes": 2768,
+      "sha256": "2282ee3fe0f75f052d370503704e428ce7cb4bcc004aebc9650431fdef18c545"
+    },
+    "reports/w5.x-seeds.json": {
+      "bytes": 3845,
+      "sha256": "95e5d7b2fac1a72298eff84f7eb54757475cb574ae7c6d95b16b78e33111bfc6"
+    },
+    "reports/w5.x-bmfont-clippy.log": {
+      "bytes": 158,
+      "sha256": "a83562760259dad5f398959af84db414301988713323f0db2a31e0dcc0063076"
+    },
+    "reports/w5.x-raw-smoke.log": {
+      "bytes": 9829,
+      "sha256": "e37ec6fe721bdbce40de8cb49dfa33234228bd5092fe692ae0206311466ff10a"
+    },
+    "reports/w5.x-adapter-build.log": {
+      "bytes": 158,
+      "sha256": "34a28f2a73d48015cdab7555c7281302a02205cf20b22423cd9464496e9de424"
+    },
+    "reports/w5.x-native-adapter-0.log": {
+      "bytes": 130,
+      "sha256": "c92da2190c39952017175bf03eb870c630357ddce1cf4d49bf9e25e19093054b"
+    },
+    "reports/w5.x-oracle-provenance.json": {
+      "bytes": 697,
+      "sha256": "b3e544dedc494780a99f034114d5d2688cc0f30ba40985463779526401a256cb"
+    },
+    "reports/w5.x-crosscheck.log": {
+      "bytes": 6094,
+      "sha256": "ccaabb2f13b4edb1760ba1d8e498e74f408b066c03f04896653c36a84df9bbd8"
+    },
+    "reports/w5.x-native-adapter-4.log": {
+      "bytes": 155,
+      "sha256": "883668a6777bc544dacd9b11713a12f620af7cc20aeef49094aced8f0d2d5269"
+    },
+    "reports/w5.x-raw-doc.log": {
+      "bytes": 254,
+      "sha256": "4f051aa18ea2f9be83b2ac3eb9545a9c699974ed7240a13636228430f6e184d0"
+    },
+    "reports/w5.x-adapters.json": {
+      "bytes": 5994,
+      "sha256": "24bbe021c882eefd5ec84d8fef9440c59313ecb7080d8c716a261a1a58afb1da"
+    },
+    "reports/w5.x-combined-tests.log": {
+      "bytes": 2181,
+      "sha256": "2d1fb4e123ab4ed751bfb6802868a0b10ac14a5c4fbda7035a2a074c08201c8e"
+    },
+    "reports/w5.x-oracle-adapter-4.log": {
+      "bytes": 162,
+      "sha256": "c6fb50c1d3ce10dec8adbcddeee2e1f8ffd548e6553fbc18dea34dce69ee1739"
+    },
+    "reports/w5.x-oracle-adapter-3.log": {
+      "bytes": 165,
+      "sha256": "8c06d3b9ee85a6dc0bd9c9442fb29687479e081903eaa968ca5ba0625ff6fc98"
+    },
+    "reports/w5.x-native-adapter-1.log": {
+      "bytes": 146,
+      "sha256": "23d4a68abc3b92cbf7a05d461bab707e6fb630b3139aa3db7d7d31a6163f0f97"
+    },
+    "reports/w5.x-oracle-adapter-1.log": {
+      "bytes": 158,
+      "sha256": "b1cfe805f57aa136bebcead11753ef5df2afe851840f0bb7b1463648ec3df61f"
+    },
+    "reports/w5.x-crosscheck.json": {
+      "bytes": 27694,
+      "sha256": "c9e041ae71027feddd952ed3b91f611096d113f4b098e1eee8ff67dfabfa606e"
+    },
+    "reports/w5.x-raw-test.log": {
+      "bytes": 1039,
+      "sha256": "7cd4f241edf3a5b68aa324018332993ddb6e757a6e917ef17bb514a423813050"
+    },
+    "reports/w5.x-bmfont-doc.log": {
+      "bytes": 254,
+      "sha256": "7f9f10c459f11b82a6d044b25100e3b4e49cb01ee109d30659bdb1f21d0f3cf7"
+    },
+    "reports/w5.x-oracle-adapter-2.log": {
+      "bytes": 159,
+      "sha256": "1c50a6858b4bf50d7d5761390352061a6b0639c8f65a25d9517c98454c36fb23"
+    },
+    "reports/w5.x-bmfont-smoke.log": {
+      "bytes": 185229,
+      "sha256": "c1b6b21a9dec20ed71c6a1bc0aaf436331c2dcbbfe6092460174239570b0bce2"
+    },
+    "reports/w5.x-gates.json": {
+      "bytes": 2514,
+      "sha256": "32a47afc345dddb4711546ea4d5a622c7079e4b3dda310439110813db7848f69"
+    },
+    "reports/w5.x-oracle-adapter-0.log": {
+      "bytes": 141,
+      "sha256": "268a3f4479a35b4aca01b808ef4d528d257089ed3dc52d3088fd04c8872cf431"
+    },
+    "reports/w5.x.md": {
+      "bytes": 7464,
+      "sha256": "6d0f84c192e6012684df301eddcaa178bf26c2e24a069d41634306665e50e3a6"
+    },
+    "reports/w5.x-native-adapter-3.log": {
+      "bytes": 159,
+      "sha256": "91ee953001d6b3f3cb219df72ad94471d96a6aae7dbecde1d8e4b4318a6a64c8"
+    }
+  },
+  "tests": 28,
+  "feature_gates": 6,
+  "crosschecks": 13,
+  "seeds": 26,
+  "short_asan": [
+    {
+      "feature": "bmfont",
+      "exit": 0,
+      "runs": 273334,
+      "seconds": 11
+    },
+    {
+      "feature": "raw",
+      "exit": 0,
+      "runs": 11087,
+      "seconds": 11
+    }
+  ],
+  "fixtures": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2"
+}

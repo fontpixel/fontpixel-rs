@@ -1,0 +1,239 @@
+{
+  "official_tex": {
+    "version": "TFtoPL 3.3 (TeX Live 2023/Debian)",
+    "tftopl_exit": 0,
+    "pltotf_exit": 0,
+    "native_reader_official_tfm": true,
+    "native_tfm_design_width_exact": true,
+    "executable_sha256": "d12cadb76789d36af23ba4c143a65e718a3620d35f5bf791fbc14953f562fbca",
+    "pl_sha256": "8f70201f5206c31a5d7d5d3b692e047dfe6dce291727c088dd093c023f149bad",
+    "regenerated_tfm_sha256": "1a9ee03b7fc80bb56a81ae69f3cb5d6a0ed48f505c95910e86c3989726a76c05",
+    "stderr_note": "Local extracted TeX Live warns that texmf.cnf is absent; tools return0 and report no format corrections"
+  },
+  "real_polyprint": {
+    "url": "https://www.seasip.info/Unix/PSF/Amstrad/PolyPrint/002.fnt",
+    "sha256": "ce88e9e350bf10bd2f85323dc88987affbe856c160557b3a835122d4122110e7",
+    "glyphs": 144,
+    "read_write_pixels_metrics_exact": true,
+    "license": "Not established; external read-only oracle asset, not redistributed"
+  },
+  "tfm": {
+    "fonttools": "4.66.1",
+    "fonttools_design_width_exact": true,
+    "monobit_applies_native_tfm": true,
+    "source_tfm_sha256": "8b7d7dd7ff02f3c8232d6ecf989af51bd142b9bb3e3b3ff3d1e52c6adb04a7de",
+    "native_tfm_sha256": "8b7d7dd7ff02f3c8232d6ecf989af51bd142b9bb3e3b3ff3d1e52c6adb04a7de"
+  },
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "monobit": "0.54",
+  "fixture_license": "Original project MIT byte assemblers in fuzz/seed_w5c1.py",
+  "cases": [
+    {
+      "format": "daisy",
+      "fixture": "v2",
+      "glyphs": 91,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "77575b44c982ec9fc3368d582a1b0f3bc59ce63750bf73c871aab74c6bb3e1ea",
+      "native_sha256": "77575b44c982ec9fc3368d582a1b0f3bc59ce63750bf73c871aab74c6bb3e1ea"
+    },
+    {
+      "format": "daisy",
+      "fixture": "v3",
+      "glyphs": 91,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "5903ed9a9a42361ca922e1cf26c100e34c553155dfeab043ecd3363d186de318",
+      "native_sha256": "5903ed9a9a42361ca922e1cf26c100e34c553155dfeab043ecd3363d186de318"
+    },
+    {
+      "format": "daisy",
+      "fixture": "mag",
+      "glyphs": 91,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "f07f1dcde5258f65cad607f3bcd870cdde13efbc5ef75f50279d63b48848a875",
+      "native_sha256": "f07f1dcde5258f65cad607f3bcd870cdde13efbc5ef75f50279d63b48848a875"
+    },
+    {
+      "format": "polyprint",
+      "fixture": "small",
+      "glyphs": 144,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "a2d987312d223fc007b4483a1416d3c93a8508add620bf9f2079d2a288c09a8c",
+      "native_sha256": "a2d987312d223fc007b4483a1416d3c93a8508add620bf9f2079d2a288c09a8c"
+    },
+    {
+      "format": "polyprint",
+      "fixture": "dense",
+      "glyphs": 144,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "120c36c7dc935e8bd0550ee26629dfae00355f6cf5dc43279aabad958e1bb27e",
+      "native_sha256": "120c36c7dc935e8bd0550ee26629dfae00355f6cf5dc43279aabad958e1bb27e"
+    },
+    {
+      "format": "printshop",
+      "fixture": "small",
+      "glyphs": 95,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "8f86ba5074934807cbd6cd44f2cf5b97704a1be55080325c78872985e12d6d6a",
+      "native_sha256": "84828c579e2bf4417e268d268f8aa04a359890620f311d4a7d06c8bca46701d1"
+    },
+    {
+      "format": "printshop",
+      "fixture": "dense",
+      "glyphs": 95,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "3ef1c5856dea7ef2d5d56d41ef16ca624be182eaf72bd3bd8834b2d0ff6ec109",
+      "native_sha256": "b4d277de37d0c09740835c0582c7a8067405ad90dfd4489b29a61c0c78953a06"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "48k",
+      "glyphs": 96,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "6aadd4299554d4880cf75d124576fa241d3fda587aac064d59df7d7afdb5019a",
+      "native_sha256": "6aadd4299554d4880cf75d124576fa241d3fda587aac064d59df7d7afdb5019a",
+      "external_writer_native_reader": true,
+      "monobit_sha256": "6aadd4299554d4880cf75d124576fa241d3fda587aac064d59df7d7afdb5019a"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "+3",
+      "glyphs": 96,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "a75ca66293c89d2b7accd893332f06c292465adacd60926d739167cd622c79ed",
+      "native_sha256": "a75ca66293c89d2b7accd893332f06c292465adacd60926d739167cd622c79ed",
+      "external_writer_native_reader": true,
+      "monobit_sha256": "a75ca66293c89d2b7accd893332f06c292465adacd60926d739167cd622c79ed"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "cpc",
+      "glyphs": 256,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "cf1f81ad13b80dc2214f73559b2054115c7a4017c74d3fc2833d7def296e166d",
+      "native_sha256": "cf1f81ad13b80dc2214f73559b2054115c7a4017c74d3fc2833d7def296e166d",
+      "external_writer_native_reader": true,
+      "monobit_sha256": "eace99f17d9e6daa6e084cbb1c27d61dbd60d5eae8c144dc03ded38c46dd4a50"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "pcw",
+      "glyphs": 128,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "57db46ac4a2d7edd5103b33f32fcea9f94074e974af7527f25d8bc2afcb468cb",
+      "native_sha256": "57db46ac4a2d7edd5103b33f32fcea9f94074e974af7527f25d8bc2afcb468cb",
+      "external_writer_native_reader": true,
+      "monobit_sha256": "57db46ac4a2d7edd5103b33f32fcea9f94074e974af7527f25d8bc2afcb468cb"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "pcw127",
+      "glyphs": 127,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "f154c3d55b6d37847ad98b1daacce3a6a63ab5ca5a831953da0852672d747b29",
+      "native_sha256": "f154c3d55b6d37847ad98b1daacce3a6a63ab5ca5a831953da0852672d747b29"
+    },
+    {
+      "format": "pxl",
+      "fixture": "1001",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "e73faaca7f26baa4c55fbd4041a16c8aadf3513d6014eaa051545bff5c39f138",
+      "native_sha256": "e73faaca7f26baa4c55fbd4041a16c8aadf3513d6014eaa051545bff5c39f138"
+    },
+    {
+      "format": "pxl",
+      "fixture": "1001-dense",
+      "glyphs": 128,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "abcde01c6dd299a2dbf842fa1ddaee093362e2daecb594624737c59d4979039a",
+      "native_sha256": "abcde01c6dd299a2dbf842fa1ddaee093362e2daecb594624737c59d4979039a"
+    },
+    {
+      "format": "pxl",
+      "fixture": "1002",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "ec7be9bc9b5d41c5e8bc3feec29971662acd552e4772959b05bcc0969b699bd2",
+      "native_sha256": "ec7be9bc9b5d41c5e8bc3feec29971662acd552e4772959b05bcc0969b699bd2"
+    },
+    {
+      "format": "pxl",
+      "fixture": "1002-dense",
+      "glyphs": 128,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "0fd3669d99659251dd3287d32b790223927c0905d2224aa0e7259755ba08112f",
+      "native_sha256": "0fd3669d99659251dd3287d32b790223927c0905d2224aa0e7259755ba08112f"
+    },
+    {
+      "format": "signum",
+      "fixture": "e24",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "da5683d75b99558eaa3896b0e069175a96f901b56e9de6091e62d3066c73b8a7",
+      "native_sha256": "da5683d75b99558eaa3896b0e069175a96f901b56e9de6091e62d3066c73b8a7"
+    },
+    {
+      "format": "signum",
+      "fixture": "p9",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "58e1a8e4c972ac300371045a1ddfbf3d8d50a64575a9bbf5e1599d3ab3edf208",
+      "native_sha256": "58e1a8e4c972ac300371045a1ddfbf3d8d50a64575a9bbf5e1599d3ab3edf208"
+    },
+    {
+      "format": "signum",
+      "fixture": "p24",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "b1cce53c10e3d1792cb6e9dbe84f92bdf830b7ed8e4cfbb6c6a890dac56b77d9",
+      "native_sha256": "b1cce53c10e3d1792cb6e9dbe84f92bdf830b7ed8e4cfbb6c6a890dac56b77d9"
+    },
+    {
+      "format": "signum",
+      "fixture": "l30",
+      "glyphs": 1,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "16a32a59149c8f01b66c65b9981747815426085ac810fc0668fe565e72bb3baa",
+      "native_sha256": "16a32a59149c8f01b66c65b9981747815426085ac810fc0668fe565e72bb3baa"
+    },
+    {
+      "format": "daisy",
+      "fixture": "v3-dense",
+      "glyphs": 91,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "fc2e46059c7c432ee8338202c2c95980d18bdf615027737ca8362179a8b9adf2",
+      "native_sha256": "fc2e46059c7c432ee8338202c2c95980d18bdf615027737ca8362179a8b9adf2"
+    },
+    {
+      "format": "tasprint",
+      "fixture": "48k-dense",
+      "glyphs": 96,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "bc9847dc0ff28bb2eb4e064de2241e8be78fad49f91b7aee5957fcae7ec9e0ff",
+      "native_sha256": "bc9847dc0ff28bb2eb4e064de2241e8be78fad49f91b7aee5957fcae7ec9e0ff",
+      "external_writer_native_reader": true,
+      "monobit_sha256": "bc9847dc0ff28bb2eb4e064de2241e8be78fad49f91b7aee5957fcae7ec9e0ff"
+    },
+    {
+      "format": "signum",
+      "fixture": "e24-dense",
+      "glyphs": 127,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "4bcaca1ab76d6877cd9eaf59933288c89c66e6fd9f51aac4f2349e6a9a70e8d7",
+      "native_sha256": "4bcaca1ab76d6877cd9eaf59933288c89c66e6fd9f51aac4f2349e6a9a70e8d7"
+    },
+    {
+      "format": "signum",
+      "fixture": "p24-dense",
+      "glyphs": 127,
+      "native_read_and_write_external_reader": true,
+      "source_sha256": "1d9a832b284e6962d18e53026f567eee209c64d4a9186de55eda478bf09c022b",
+      "native_sha256": "1d9a832b284e6962d18e53026f567eee209c64d4a9186de55eda478bf09c022b"
+    }
+  ],
+  "limits": [
+    "PXL oracle advance_width defaults to bitmap width; native device advance is independently checked against rounded oracle scalable_width, per-1000 scalable advance against exact fixture fixed point",
+    "monobit PCW reader hardcodes128 slots; documented127-slot fixture compared against its128-slot padded result minus code128",
+    "Printshop proprietary offset/kerning semantics remain unknown; only independently observed contiguous-raster profile is asserted"
+  ]
+}

@@ -1,0 +1,2705 @@
+{
+  "status": "Per-module source snapshots; shared integration continues and final phase acceptance is pending. Superseded campaigns remain auditable.",
+  "campaigns": [
+    {
+      "target": "bbc",
+      "label": "phase5-bbc-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "bbc",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-bbc-fuzz-final.json.gz",
+          "sha256": "5238cbcffbade558d8ae45db5b32926ba5146f4066c7be870b1e3780808c4a7c"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-bbc-fuzz-final.log.gz",
+          "sha256": "2e9394f5bea3794c647ef139c83a49ac480057073301498b8b37033ca77b48ce"
+        }
+      ],
+      "runs": 14820218,
+      "seconds": 611,
+      "coverage": 953,
+      "features": 2734,
+      "rss_mib": 502
+    },
+    {
+      "target": "beos",
+      "label": "phase5-beos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "beos",
+        "--no-default-features",
+        "--features",
+        "beos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-beos-fuzz-final.json.gz",
+          "sha256": "8c1915b4438026040b842801498fcc1ae8f30635681630bc7291e0d7dd51d039"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-beos-fuzz-final.log.gz",
+          "sha256": "6575c78f04034deb7d0154760a83b04fac4465926dd9b858232452ba22e836b3"
+        }
+      ],
+      "runs": 4900888,
+      "seconds": 611,
+      "coverage": 1496,
+      "features": 5263,
+      "rss_mib": 488
+    },
+    {
+      "target": "bmfont",
+      "label": "phase5-bmfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "bmfont",
+        "--no-default-features",
+        "--features",
+        "raw-only,bmfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-bmfont-fuzz-final.json.gz",
+          "sha256": "999986a0c40c1839b69a4a4ec78261bcb9ed0cb65bf3851b2df9af0f654238a1"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-bmfont-fuzz-final.log.gz",
+          "sha256": "c9430a6b303e0d9311d0f6ca6283f9f3c0391baaa8a65ca0c96ddb971affb286"
+        }
+      ],
+      "runs": 4786513,
+      "seconds": 611,
+      "coverage": 7976,
+      "features": 26201,
+      "rss_mib": 448
+    },
+    {
+      "target": "c",
+      "label": "phase5-c-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "c",
+        "--no-default-features",
+        "--features",
+        "c-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "superseded by native declaration detector repair and coverage",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final.json.gz",
+          "sha256": "f72a6ed6d09f832ad51a28be17268fc5638f32d38057071c2e45882b02321609"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final.log.gz",
+          "sha256": "6739c9b05b3e8b5a91856bacbe457d37400251f0bfaa4637e5af8dbe18969d9e"
+        }
+      ],
+      "runs": 652747,
+      "seconds": 611,
+      "coverage": 7108,
+      "features": 26378,
+      "rss_mib": 549
+    },
+    {
+      "target": "catalyst",
+      "label": "phase5-catalyst-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "catalyst",
+        "--no-default-features",
+        "--features",
+        "catalyst-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-catalyst-fuzz-final.json.gz",
+          "sha256": "0edd8af79fbb29902abd29a78df0790a866c909606e64687b7494d432bce7f40"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-catalyst-fuzz-final.log.gz",
+          "sha256": "32c644e41f89cc83389503ba3c91e8accbe2d6b1cf9d613a566855ea7af97ee4"
+        }
+      ],
+      "runs": 290604,
+      "seconds": 611,
+      "coverage": 1365,
+      "features": 4484,
+      "rss_mib": 439
+    },
+    {
+      "target": "chiwriter",
+      "label": "phase5-chiwriter-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "chiwriter",
+        "--no-default-features",
+        "--features",
+        "chiwriter-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-chiwriter-fuzz-final.json.gz",
+          "sha256": "b777fbac5b148b28a885bb25e761a6255099fc22de23431c918deaf42730e53d"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-chiwriter-fuzz-final.log.gz",
+          "sha256": "c28cc56c0343518cb428bd39073cc5105291716fbc75fc40a5ada33bb0c957b1"
+        }
+      ],
+      "runs": 291943,
+      "seconds": 611,
+      "coverage": 1602,
+      "features": 8470,
+      "rss_mib": 465
+    },
+    {
+      "target": "color_bitmap",
+      "label": "phase5-color_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "color_bitmap",
+        "--no-default-features",
+        "--features",
+        "color-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-color_bitmap-fuzz-final.json.gz",
+          "sha256": "e344ef3a9997860f6ee8b6e0f9a751bc518261e9184e9eb2a12d2440f0e2a650"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-color_bitmap-fuzz-final.log.gz",
+          "sha256": "16515d2b4be03d5dbcc76840b7a65e45f0822f4d1ac9dee2f1a495e4f8a51f0c"
+        }
+      ],
+      "runs": 334887,
+      "seconds": 611,
+      "coverage": 5888,
+      "features": 21852,
+      "rss_mib": 497
+    },
+    {
+      "target": "comfont",
+      "label": "phase5-comfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "comfont",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-comfont-fuzz-final.json.gz",
+          "sha256": "6ee32ae79d4eba22b03858ce0e22950e1bc57d3f4bb024109455e99ab4614fea"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-comfont-fuzz-final.log.gz",
+          "sha256": "4d70312a6580f17f426a34da498e8b872a0156d48089c0f7d0b7125058b44f08"
+        }
+      ],
+      "runs": 399855,
+      "seconds": 611,
+      "coverage": 1351,
+      "features": 1995,
+      "rss_mib": 446
+    },
+    {
+      "target": "consoleet",
+      "label": "phase5-consoleet-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "consoleet",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-consoleet-fuzz-final.json.gz",
+          "sha256": "f20755f5c5cd46363e2721180ff558361dfdac39118a15076fb8ba36d64e07fe"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-consoleet-fuzz-final.log.gz",
+          "sha256": "ee21cf66295c93305b626da93e7bbabf4adc934e621fbab80bf0707566cfb074"
+        }
+      ],
+      "runs": 19228915,
+      "seconds": 611,
+      "coverage": 1222,
+      "features": 1885,
+      "rss_mib": 530
+    },
+    {
+      "target": "cybiko_bitmap",
+      "label": "phase5-cybiko_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "cybiko_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-cybiko_bitmap-fuzz-final.json.gz",
+          "sha256": "849f2bc58049342e634ab262cbbf093a5131b87e224039d78ad26a2c6758186a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-cybiko_bitmap-fuzz-final.log.gz",
+          "sha256": "833a46bc3cc0ac78434c025f2cfeb5118012a6d39fcb53d0346ccb3dd76921b0"
+        }
+      ],
+      "runs": 4829203,
+      "seconds": 611,
+      "coverage": 1087,
+      "features": 3690,
+      "rss_mib": 444
+    },
+    {
+      "target": "daisy",
+      "label": "phase5-daisy-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "daisy",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-daisy-fuzz-final.json.gz",
+          "sha256": "424096f037a6ee34eeea85c421078465c2517be53eafbf65c8aa599cbec8fd28"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-daisy-fuzz-final.log.gz",
+          "sha256": "b03f7b207b0bd9027112e6347dbc96453d8ab366ab5ffb11fb259f50ad1d422e"
+        }
+      ],
+      "runs": 928638,
+      "seconds": 611,
+      "coverage": 1515,
+      "features": 2324,
+      "rss_mib": 431
+    },
+    {
+      "target": "dashen",
+      "label": "phase5-dashen-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "dashen",
+        "--no-default-features",
+        "--features",
+        "dashen-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-dashen-fuzz-final.json.gz",
+          "sha256": "d589b0893227be4f67fc202dd8f765a695822046b652f80e6f66f8689ac16668"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-dashen-fuzz-final.log.gz",
+          "sha256": "74868144c4b9fa1cff50d8fc82ee833aa675e542a34355402f0f7177ee34dfab"
+        }
+      ],
+      "runs": 2225952,
+      "seconds": 611,
+      "coverage": 2169,
+      "features": 10616,
+      "rss_mib": 517
+    },
+    {
+      "target": "dosstart",
+      "label": "phase5-dosstart-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "dosstart",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-dosstart-fuzz-final.json.gz",
+          "sha256": "ca2faa24a3c2734b6ed44b4b4890187484317aff7cd4b78559ae35d6159b8a5a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-dosstart-fuzz-final.log.gz",
+          "sha256": "fab68e38169f06252086fc80bd277990361d0627adb86009fb6e46fa92ca2524"
+        }
+      ],
+      "runs": 2709741,
+      "seconds": 611,
+      "coverage": 1558,
+      "features": 5654,
+      "rss_mib": 473
+    },
+    {
+      "target": "drcs",
+      "label": "phase5-drcs-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "drcs",
+        "--no-default-features",
+        "--features",
+        "drcs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-drcs-fuzz-final.json.gz",
+          "sha256": "9c015bb85ab33cde2679f9dafa72b42ab0897593f4b37ab193904abd68785782"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-drcs-fuzz-final.log.gz",
+          "sha256": "a548787217e19e95d3d5a107e5f3fca981bcddc749015a96036640bff9dc1ff8"
+        }
+      ],
+      "runs": 3785744,
+      "seconds": 611,
+      "coverage": 1374,
+      "features": 5753,
+      "rss_mib": 457
+    },
+    {
+      "target": "drhalo",
+      "label": "phase5-drhalo-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "drhalo",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-drhalo-fuzz-final.json.gz",
+          "sha256": "9fdb64f17c20938cdea0bc2bce355ffa56dca990c29163cbc7b7bacb77865b0d"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-drhalo-fuzz-final.log.gz",
+          "sha256": "46aa8cdd2b796eb18ffd2003c7061b11fc15064c73b46007f93e13ddf641f3ae"
+        }
+      ],
+      "runs": 314888,
+      "seconds": 611,
+      "coverage": 1244,
+      "features": 4653,
+      "rss_mib": 482
+    },
+    {
+      "target": "edwin",
+      "label": "phase5-edwin-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "edwin",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-edwin-fuzz-final.json.gz",
+          "sha256": "eb6e782acff77e729188d4ef97d9ab41d2fa942c5c4a9a5459425fc31bd351e5"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-edwin-fuzz-final.log.gz",
+          "sha256": "bea69178bc08647c08f8206f681db18da4d96ac71d95ae124cd5782dc772b8fd"
+        }
+      ],
+      "runs": 7455612,
+      "seconds": 611,
+      "coverage": 1515,
+      "features": 5848,
+      "rss_mib": 521
+    },
+    {
+      "target": "embedded_bitmap",
+      "label": "phase5-embedded_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "embedded_bitmap",
+        "--no-default-features",
+        "--features",
+        "embedded-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-embedded_bitmap-fuzz-final.json.gz",
+          "sha256": "cdcd261e714ba90fbab44201f184ba7f36f7b976ec8f47f294de1a7189511cc1"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-embedded_bitmap-fuzz-final.log.gz",
+          "sha256": "8fb9c4eebb89fcd80541f5e6c78c3a3f9f5b6854f202f068aff6053324f2e7dc"
+        }
+      ],
+      "runs": 6910245,
+      "seconds": 611,
+      "coverage": 4676,
+      "features": 11514,
+      "rss_mib": 509
+    },
+    {
+      "target": "fbit",
+      "label": "phase5-fbit-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "fbit",
+        "--no-default-features",
+        "--features",
+        "fbit-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-fbit-fuzz-final.json.gz",
+          "sha256": "9f093d030593ca8b31b14ae3b0b29aa079d724315af0526e5a2adc53ab9c51b4"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-fbit-fuzz-final.log.gz",
+          "sha256": "99d4fb86a17b30d52d0742c04c77315940960d753ad8d2f2cc7d8057c0634563"
+        }
+      ],
+      "runs": 385608,
+      "seconds": 611,
+      "coverage": 2273,
+      "features": 7439,
+      "rss_mib": 509
+    },
+    {
+      "target": "figlet",
+      "label": "phase5-figlet-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "figlet",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-figlet-fuzz-final.json.gz",
+          "sha256": "28ab1b37f22e053f40f45a401478d4c14ba4c74ef703969a5a7874d19b5063d0"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-figlet-fuzz-final.log.gz",
+          "sha256": "362d42f5844e8aa5217fae8fea49253356a0aa2be893bbb9916246ba751d4943"
+        }
+      ],
+      "runs": 572703,
+      "seconds": 611,
+      "coverage": 1685,
+      "features": 6028,
+      "rss_mib": 429
+    },
+    {
+      "target": "fon",
+      "label": "phase5-fon-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "fon",
+        "--no-default-features",
+        "--features",
+        "fon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-fon-fuzz-final.json.gz",
+          "sha256": "c5af23b23138065378d95276e2ec30a4dae27d8e84832572b1546b382b1a8043"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-fon-fuzz-final.log.gz",
+          "sha256": "df90a4400f261f5da78733307dc8e8addd0169486ff3b14efc8fb504c4e93013"
+        }
+      ],
+      "runs": 26566505,
+      "seconds": 611,
+      "coverage": 381,
+      "features": 685,
+      "rss_mib": 534
+    },
+    {
+      "target": "fzx",
+      "label": "phase5-fzx-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "fzx",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-fzx-fuzz-final.json.gz",
+          "sha256": "5f243f0bbb967ee1b77a4acd3926530a34901e62b8f4df3ac53622a2c41ad4c2"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-fzx-fuzz-final.log.gz",
+          "sha256": "0d02eea34c31e8df8c0f2b29e3acbc31133e76567c76bce4140f63a37e685886"
+        }
+      ],
+      "runs": 1853831,
+      "seconds": 611,
+      "coverage": 1204,
+      "features": 2131,
+      "rss_mib": 381
+    },
+    {
+      "target": "gdr",
+      "label": "phase5-gdr-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "gdr",
+        "--no-default-features",
+        "--features",
+        "gdr-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-gdr-fuzz-final.json.gz",
+          "sha256": "4fd25413c460a3e54fcd87576f4a56abc15f07da04eb043401da84ff165e015a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-gdr-fuzz-final.log.gz",
+          "sha256": "81e09a2d1b5b543b626ba152a248b659294d4a3b003cb89369efad5d51e4d12d"
+        }
+      ],
+      "runs": 818137,
+      "seconds": 611,
+      "coverage": 2396,
+      "features": 7087,
+      "rss_mib": 391
+    },
+    {
+      "target": "geos",
+      "label": "phase5-geos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "geos",
+        "--no-default-features",
+        "--features",
+        "geos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-geos-fuzz-final.json.gz",
+          "sha256": "291e822b70580eaf7b6adfcdae24e6c4fe89e873b05ff5974283b3dff12279e9"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-geos-fuzz-final.log.gz",
+          "sha256": "4e5ae3058b99ca93d72cb08a96b7be9d9f6c124b21d12c10e4d05c70910dbb71"
+        }
+      ],
+      "runs": 836582,
+      "seconds": 611,
+      "coverage": 2350,
+      "features": 7338,
+      "rss_mib": 423
+    },
+    {
+      "target": "gpi",
+      "label": "phase5-gpi-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "gpi",
+        "--no-default-features",
+        "--features",
+        "gpi-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "superseded by descriptor allocation budget repair",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-gpi-fuzz-final.json.gz",
+          "sha256": "96330bef7a013b3e29040605c2e3d1431a22c98691337dcaa76b51b0404e5fe9"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-gpi-fuzz-final.log.gz",
+          "sha256": "69506c45b47e23c5d74f0aac0fe8009cca65494464bc72480dc4ef45fd975a5a"
+        }
+      ],
+      "runs": 7607134,
+      "seconds": 611,
+      "coverage": 2095,
+      "features": 5308,
+      "rss_mib": 519
+    },
+    {
+      "target": "gpi",
+      "label": "phase5-gpi-fuzz-final2",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "gpi",
+        "--no-default-features",
+        "--features",
+        "gpi-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-gpi-fuzz-final2.json.gz",
+          "sha256": "fc9c2b87d4d8eae607dfaed82548faaf6769c2373c906c903bedfe96e5e8d90a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-gpi-fuzz-final2.log.gz",
+          "sha256": "55a9e1761a82765bf28287a1b4b94e2ed1155d2e0d6c4b5a46caa5a712e83282"
+        }
+      ],
+      "runs": 13818798,
+      "seconds": 611,
+      "coverage": 2114,
+      "features": 5402,
+      "rss_mib": 503
+    },
+    {
+      "target": "grasp",
+      "label": "phase5-grasp-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "grasp",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-grasp-fuzz-final.json.gz",
+          "sha256": "b9962e2685a8ac028c4ddf54ca3f81d229bd5c3c748d5655b706be5ddd38d93f"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-grasp-fuzz-final.log.gz",
+          "sha256": "92c99fc7ad494f04b71eaa4d71986d9e7763be63170a35ff0457ccc5703cdd25"
+        }
+      ],
+      "runs": 19252990,
+      "seconds": 611,
+      "coverage": 875,
+      "features": 1486,
+      "rss_mib": 549
+    },
+    {
+      "target": "hanfont",
+      "label": "phase5-hanfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hanfont",
+        "--no-default-features",
+        "--features",
+        "hanfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=11520"
+      ],
+      "status": "superseded by final3 slot-count repair",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final.json.gz",
+          "sha256": "638b819fb08e442b24b266f79afaef0013704f14595bc887f3ccf33f8106fd0f"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final.log.gz",
+          "sha256": "3f5cad1fe76640377089f73210d2fbcfa1ce97b3e539396e9fedb2b6d741ff8d"
+        }
+      ],
+      "runs": 4859,
+      "seconds": 611,
+      "coverage": 826,
+      "features": 834,
+      "rss_mib": 325
+    },
+    {
+      "target": "hanfont",
+      "label": "phase5-hanfont-fuzz-final3",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hanfont",
+        "--no-default-features",
+        "--features",
+        "hanfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=11520"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final3.json.gz",
+          "sha256": "cde17d36a3d8f66be1e6d0284b02f7024b95155db787e8a1509b7548814e613d"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final3.log.gz",
+          "sha256": "0edd68cfc07d9ec2be425b29930a4533aa9fde312cc5628bdc3d7e4bbc5d7a39"
+        }
+      ],
+      "runs": 5078,
+      "seconds": 612,
+      "coverage": 826,
+      "features": 834,
+      "rss_mib": 324
+    },
+    {
+      "target": "hmzk_bitmap",
+      "label": "phase5-hmzk_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hmzk_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hmzk_bitmap-fuzz-final.json.gz",
+          "sha256": "ba0bc1f4fda613f822ef905839d23df4839ea1f0d624fad8827eaad8bed020f0"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hmzk_bitmap-fuzz-final.log.gz",
+          "sha256": "794d70606367f908aa514d808f95dd4595638da3341e492d2d1d33582d4bc807"
+        }
+      ],
+      "runs": 19502326,
+      "seconds": 611,
+      "coverage": 873,
+      "features": 2111,
+      "rss_mib": 475
+    },
+    {
+      "target": "hppcl",
+      "label": "phase5-hppcl-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hppcl",
+        "--no-default-features",
+        "--features",
+        "hppcl-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hppcl-fuzz-final.json.gz",
+          "sha256": "a27078699364182bb61340d118ab01b62474ee34cb3417126d28c4638c858716"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hppcl-fuzz-final.log.gz",
+          "sha256": "a73568889dee1b1e60be1ded854507c7a4a4b27739c9254e686e62b630c266d8"
+        }
+      ],
+      "runs": 1792184,
+      "seconds": 611,
+      "coverage": 1988,
+      "features": 10553,
+      "rss_mib": 496
+    },
+    {
+      "target": "hrcg",
+      "label": "phase5-hrcg-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hrcg",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hrcg-fuzz-final.json.gz",
+          "sha256": "623b8b921188acbb8cdf2654996fe8af2005fb638203c8a3a144f93080976b85"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hrcg-fuzz-final.log.gz",
+          "sha256": "8d5744bb86b4316a288dc352ca4ec9d8113d4f7bd19b036b56dd59d25d41cb98"
+        }
+      ],
+      "runs": 558136,
+      "seconds": 611,
+      "coverage": 1042,
+      "features": 1180,
+      "rss_mib": 379
+    },
+    {
+      "target": "iigs",
+      "label": "phase5-iigs-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "iigs",
+        "--no-default-features",
+        "--features",
+        "iigs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=262144"
+      ],
+      "status": "superseded by final3 slot-count repair",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final.json.gz",
+          "sha256": "bdd26eb302ca21adcad0d78592a194ebe3096fe7b841331cb13083a91a0b5c23"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final.log.gz",
+          "sha256": "9b7a23a21b2c62ca310d453580ecbd46b2801fa8a14916824715650f83f95c67"
+        }
+      ],
+      "runs": 1095142,
+      "seconds": 611,
+      "coverage": 1799,
+      "features": 3988,
+      "rss_mib": 525
+    },
+    {
+      "target": "iigs",
+      "label": "phase5-iigs-fuzz-final3",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "iigs",
+        "--no-default-features",
+        "--features",
+        "iigs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=262144"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final3.json.gz",
+          "sha256": "98370f79cab2b0a16886d40ce2bb6ce5293c536845e1d07605af0ae29ae8d7b0"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final3.log.gz",
+          "sha256": "45858cb1ea3c1da8ee545c323716145059b9633e9626ab5245b59ea23fe1c078"
+        }
+      ],
+      "runs": 1023204,
+      "seconds": 611,
+      "coverage": 1820,
+      "features": 4236,
+      "rss_mib": 552
+    },
+    {
+      "target": "image",
+      "label": "phase5-image-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "image",
+        "--no-default-features",
+        "--features",
+        "imageset-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-image-fuzz-final.json.gz",
+          "sha256": "fe3fd7889532b469e1930dc4212909caf3223104cf01102a1a19feb54ccc079a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-image-fuzz-final.log.gz",
+          "sha256": "d2566355579cab010d4a33bb97da740436b13ccfa0cacf469b7598e7697af42e"
+        }
+      ],
+      "runs": 1179103,
+      "seconds": 611,
+      "coverage": 11947,
+      "features": 38017,
+      "rss_mib": 611
+    },
+    {
+      "target": "imageset_bitmap",
+      "label": "phase5-imageset_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "imageset_bitmap",
+        "--no-default-features",
+        "--features",
+        "imageset-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-imageset_bitmap-fuzz-final.json.gz",
+          "sha256": "de23fd60e04ea57423717f552d491d081d8bb9f546de6f4103d5a0cf1b9b48e3"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-imageset_bitmap-fuzz-final.log.gz",
+          "sha256": "6b3c3bd3893bc188f4ea8c99b331d945fab3a9e3a45b8437188eb6637c0890f4"
+        }
+      ],
+      "runs": 5957251,
+      "seconds": 611,
+      "coverage": 4380,
+      "features": 12386,
+      "rss_mib": 446
+    },
+    {
+      "target": "lisa",
+      "label": "phase5-lisa-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "lisa",
+        "--no-default-features",
+        "--features",
+        "lisa-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-lisa-fuzz-final.json.gz",
+          "sha256": "52285f81ccebc85f0edaf07c332a6f91b356d3e4476e8b388904d003df044426"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-lisa-fuzz-final.log.gz",
+          "sha256": "126745eb4c78b00387950a0e331de4164c55c88389a2718e62c080beb5ef4028"
+        }
+      ],
+      "runs": 8812650,
+      "seconds": 611,
+      "coverage": 1847,
+      "features": 7096,
+      "rss_mib": 522
+    },
+    {
+      "target": "mgtk",
+      "label": "phase5-mgtk-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "mgtk",
+        "--no-default-features",
+        "--features",
+        "mgtk-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-mgtk-fuzz-final.json.gz",
+          "sha256": "c27f6c3db6bbb34ae5a2a99937f62777deb838298261ed434ccf4e80eb577d7a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-mgtk-fuzz-final.log.gz",
+          "sha256": "da14fecf02649a5d8fd8677e45e07bf5371fcba085f051cec06cff333d1cfbcb"
+        }
+      ],
+      "runs": 699514,
+      "seconds": 611,
+      "coverage": 1010,
+      "features": 2650,
+      "rss_mib": 483
+    },
+    {
+      "target": "mkwinfont",
+      "label": "phase5-mkwinfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "mkwinfont",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-mkwinfont-fuzz-final.json.gz",
+          "sha256": "a646537f1e7da97103a71a23ff79848aabf3e1f448242fd2d3cdc612696435bb"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-mkwinfont-fuzz-final.log.gz",
+          "sha256": "b0513bea39e2bcb1af755603dfdc2e2dada736244cd2ce05400e0a86d2773aee"
+        }
+      ],
+      "runs": 3581645,
+      "seconds": 611,
+      "coverage": 1581,
+      "features": 6277,
+      "rss_mib": 532
+    },
+    {
+      "target": "nfnt",
+      "label": "phase5-nfnt-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "nfnt",
+        "--no-default-features",
+        "--features",
+        "nfnt-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-nfnt-fuzz-final.json.gz",
+          "sha256": "d57867ea2632182989f4a3c82c8e2bb49e702334f53b40a2efd91f5f24757724"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-nfnt-fuzz-final.log.gz",
+          "sha256": "bb598cf337e9b419e5b202bd06510788c0424a046c485e87ab67f3b6e24f708b"
+        }
+      ],
+      "runs": 1699305,
+      "seconds": 611,
+      "coverage": 3604,
+      "features": 11616,
+      "rss_mib": 518
+    },
+    {
+      "target": "oberon",
+      "label": "phase5-oberon-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "oberon",
+        "--no-default-features",
+        "--features",
+        "oberon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-oberon-fuzz-final.json.gz",
+          "sha256": "09a59100b7cc7e457c70385693eff00548b5dcd7cd43367aa5a854736bf96c59"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-oberon-fuzz-final.log.gz",
+          "sha256": "a0776039c85e0f03437ae250f9dd446fee410a60a211b5f8e99a287b4fd42724"
+        }
+      ],
+      "runs": 4155905,
+      "seconds": 611,
+      "coverage": 1213,
+      "features": 3796,
+      "rss_mib": 523
+    },
+    {
+      "target": "palm",
+      "label": "phase5-palm-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "palm",
+        "--no-default-features",
+        "--features",
+        "palm-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-palm-fuzz-final.json.gz",
+          "sha256": "6bf85b61567af94d34505bcc15b0d1b4951041d2a2e03d7855c469cba8282955"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-palm-fuzz-final.log.gz",
+          "sha256": "b4ea5b7f35e0df83d41f0e4e5bf238dcffec7e92756f27e4ce57fed3014ecb6e"
+        }
+      ],
+      "runs": 485758,
+      "seconds": 611,
+      "coverage": 3069,
+      "features": 12410,
+      "rss_mib": 520
+    },
+    {
+      "target": "pcgeos",
+      "label": "phase5-pcgeos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pcgeos",
+        "--no-default-features",
+        "--features",
+        "pcgeos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pcgeos-fuzz-final.json.gz",
+          "sha256": "9d3d5dc9e94aee33a11c9ea03a2cca91c48f21fb115fc5ae97feb39c11e8b35c"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pcgeos-fuzz-final.log.gz",
+          "sha256": "3989c105c456adcb02e22a3a1a919da741c1e32ff6790600f7e7004fbdbd2fc6"
+        }
+      ],
+      "runs": 3127471,
+      "seconds": 611,
+      "coverage": 1672,
+      "features": 4878,
+      "rss_mib": 479
+    },
+    {
+      "target": "pcr",
+      "label": "phase5-pcr-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pcr",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pcr-fuzz-final.json.gz",
+          "sha256": "7a2dc0ca0decd28f4f0a211582e8c3f64d7863386305e8454b4ecd9e63f3c9a3"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pcr-fuzz-final.log.gz",
+          "sha256": "cbe1bc77a0fad03235aa78dced77dd2f7c67b6143e783be51370d95d1d870b67"
+        }
+      ],
+      "runs": 1515877,
+      "seconds": 611,
+      "coverage": 894,
+      "features": 927,
+      "rss_mib": 381
+    },
+    {
+      "target": "pfr",
+      "label": "phase5-pfr-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pfr",
+        "--no-default-features",
+        "--features",
+        "pfr-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pfr-fuzz-final.json.gz",
+          "sha256": "fb4e3ea3e24986b338d0fc7e96567ad09fe1ec2afec7df0924ed705c0d718725"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pfr-fuzz-final.log.gz",
+          "sha256": "65d1ba66cd29f5f87fed6690fa63eef68c4fbdb9d3f7090049bafd956db55881"
+        }
+      ],
+      "runs": 13499341,
+      "seconds": 611,
+      "coverage": 1771,
+      "features": 3977,
+      "rss_mib": 483
+    },
+    {
+      "target": "pilfont_bitmap",
+      "label": "phase5-pilfont_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pilfont_bitmap",
+        "--no-default-features",
+        "--features",
+        "pilfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pilfont_bitmap-fuzz-final.json.gz",
+          "sha256": "d9a0cc8f81c937e40c351e8db8af28a0ef4142e102fd0d48c561b68fcdc39fc3"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pilfont_bitmap-fuzz-final.log.gz",
+          "sha256": "3d4f670cdca010f577834e2194239415cc9d500a1d5441133edbfca8f62acc29"
+        }
+      ],
+      "runs": 5232825,
+      "seconds": 611,
+      "coverage": 3359,
+      "features": 8239,
+      "rss_mib": 469
+    },
+    {
+      "target": "playdate_bitmap",
+      "label": "phase5-playdate_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "playdate_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-playdate_bitmap-fuzz-final.json.gz",
+          "sha256": "399444d4a84aed93b10233896f95cec89f8d595f07d0c5e6c0f5f31586e0ec00"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-playdate_bitmap-fuzz-final.log.gz",
+          "sha256": "edb43eed78331daa67fbca83ced21904214c7bc00b294aaaa6f734b871852a41"
+        }
+      ],
+      "runs": 9121135,
+      "seconds": 611,
+      "coverage": 5767,
+      "features": 19570,
+      "rss_mib": 493
+    },
+    {
+      "target": "plus3dos",
+      "label": "phase5-plus3dos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "plus3dos",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-plus3dos-fuzz-final.json.gz",
+          "sha256": "30c30e6065775349846eecd98ea06bcc80fb127f3927fe38ac624782859763ad"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-plus3dos-fuzz-final.log.gz",
+          "sha256": "dddde4d0fec7ea8a9a93871b4e40add54bde71b71c169f38d48209dfb8f95c13"
+        }
+      ],
+      "runs": 2466014,
+      "seconds": 611,
+      "coverage": 1172,
+      "features": 1236,
+      "rss_mib": 363
+    },
+    {
+      "target": "polyprint",
+      "label": "phase5-polyprint-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "polyprint",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-polyprint-fuzz-final.json.gz",
+          "sha256": "6509ac6f239b0dc3e22f59bd6b87bfc4a71fa962efdff522d452992900718506"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-polyprint-fuzz-final.log.gz",
+          "sha256": "ec2846f031d109eb841301fda306fd47fbe8f26a1e2a5d3926d1a0524d4dc0aa"
+        }
+      ],
+      "runs": 131589,
+      "seconds": 611,
+      "coverage": 1318,
+      "features": 1418,
+      "rss_mib": 367
+    },
+    {
+      "target": "prebuilt",
+      "label": "phase5-prebuilt-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "prebuilt",
+        "--no-default-features",
+        "--features",
+        "prebuilt-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-prebuilt-fuzz-final.json.gz",
+          "sha256": "4456d8dc31c92aecc81a2a3b28bb2b6ca79ca95fd3c39ca092fac242f0d67326"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-prebuilt-fuzz-final.log.gz",
+          "sha256": "0786a372e0eea3e1448e83aa22a0bf8fba1e21fedaa913f5a167f6238012ad7f"
+        }
+      ],
+      "runs": 1048261,
+      "seconds": 611,
+      "coverage": 1579,
+      "features": 3566,
+      "rss_mib": 430
+    },
+    {
+      "target": "printshop",
+      "label": "phase5-printshop-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "printshop",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-printshop-fuzz-final.json.gz",
+          "sha256": "4ea81deed34475c6120bd578d78d80602d8267836f5dc7eb100ee568701df7e2"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-printshop-fuzz-final.log.gz",
+          "sha256": "dc604edd6f92e34fdd32edd06a575337f7d10db6bee7bf83842fe7b7e258eafa"
+        }
+      ],
+      "runs": 1378423,
+      "seconds": 611,
+      "coverage": 1193,
+      "features": 1438,
+      "rss_mib": 360
+    },
+    {
+      "target": "psf2txt",
+      "label": "phase5-psf2txt-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "psf2txt",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-psf2txt-fuzz-final.json.gz",
+          "sha256": "ef2f10cd9f5ae85d9c2e05b79118764848d313910298ddfbf6ea3a86de1171be"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-psf2txt-fuzz-final.log.gz",
+          "sha256": "cdb6e04ff7e9cac4792498ab33e6ff202c31f8ec90de3aca6bfe72f37c952cfe"
+        }
+      ],
+      "runs": 7395712,
+      "seconds": 611,
+      "coverage": 1883,
+      "features": 7292,
+      "rss_mib": 522
+    },
+    {
+      "target": "pxl",
+      "label": "phase5-pxl-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pxl",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pxl-fuzz-final.json.gz",
+          "sha256": "0f3134aa532b6a6ed13227d016b511658052e16ed78e6c6cc37dc1f7aa1c02ce"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pxl-fuzz-final.log.gz",
+          "sha256": "e7c9fc1e944a859cb705f882c7acc4653eda7c5927d5bb8ab3e5597caa10c046"
+        }
+      ],
+      "runs": 1686481,
+      "seconds": 611,
+      "coverage": 1820,
+      "features": 7000,
+      "rss_mib": 475
+    },
+    {
+      "target": "qpf",
+      "label": "phase5-qpf-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "qpf",
+        "--no-default-features",
+        "--features",
+        "qpf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-qpf-fuzz-final.json.gz",
+          "sha256": "f4e09cdced465940a474950fdbccb111d30e82e61969325b9de700f1c0083a5e"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-qpf-fuzz-final.log.gz",
+          "sha256": "0b42c9eb6ac87710a6113453ae73736c4091f06d8420eccafc6668ee7a0ba7b5"
+        }
+      ],
+      "runs": 2890424,
+      "seconds": 611,
+      "coverage": 1332,
+      "features": 4466,
+      "rss_mib": 516
+    },
+    {
+      "target": "qpf2",
+      "label": "phase5-qpf2-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "qpf2",
+        "--no-default-features",
+        "--features",
+        "qpf2-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-qpf2-fuzz-final.json.gz",
+          "sha256": "9f2e7eb17feb2cddceb9478ac1802c3b2194b9e277c874c450b3e7ae4d34862a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-qpf2-fuzz-final.log.gz",
+          "sha256": "909937fcc04cbff6ce42fa54cc175be4a209bbbdd5569e1066997caea985dd23"
+        }
+      ],
+      "runs": 1305739,
+      "seconds": 611,
+      "coverage": 2414,
+      "features": 8483,
+      "rss_mib": 528
+    },
+    {
+      "target": "raw",
+      "label": "phase5-raw-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "raw",
+        "--no-default-features",
+        "--features",
+        "raw-only,bmfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-raw-fuzz-final.json.gz",
+          "sha256": "cc5644fd6535cbe240ce7428e1dc281aa6401fa7d216d4c5bc2b1bb2f4630fb9"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-raw-fuzz-final.log.gz",
+          "sha256": "06106d1701fb9c567e6752d0f8ef7c3c913596d267beae138023cd16c293c9c6"
+        }
+      ],
+      "runs": 572190,
+      "seconds": 611,
+      "coverage": 1141,
+      "features": 4380,
+      "rss_mib": 421
+    },
+    {
+      "target": "riscos",
+      "label": "phase5-riscos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "riscos",
+        "--no-default-features",
+        "--features",
+        "riscos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-riscos-fuzz-final.json.gz",
+          "sha256": "fa875ffbc4e0305e2d4fdb24188f06f87fa5b74d9f8e8d2838d768da1ed786b3"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-riscos-fuzz-final.log.gz",
+          "sha256": "77fe6480800c8e86bf6157716b62b81700b64d24da29b3164d89bd807272f9f6"
+        }
+      ],
+      "runs": 8791818,
+      "seconds": 611,
+      "coverage": 2933,
+      "features": 10879,
+      "rss_mib": 527
+    },
+    {
+      "target": "rockbox_bitmap",
+      "label": "phase5-rockbox_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "rockbox_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-rockbox_bitmap-fuzz-final.json.gz",
+          "sha256": "f320930e268a56c04eea0c488622e0e898a73e1efc0575708921b61f2f84f829"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-rockbox_bitmap-fuzz-final.log.gz",
+          "sha256": "c37b4bc1e10c6c46d6ae55c605412028f2336303d4084156d88b3742c7b82b41"
+        }
+      ],
+      "runs": 2010801,
+      "seconds": 611,
+      "coverage": 1904,
+      "features": 7634,
+      "rss_mib": 512
+    },
+    {
+      "target": "sbf_bitmap",
+      "label": "phase5-sbf_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "sbf_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-sbf_bitmap-fuzz-final.json.gz",
+          "sha256": "05e2b5cba6cd963a95a35c88c32d957fce970b9b1d4ff3acf5dfb61b3c5d8a1a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-sbf_bitmap-fuzz-final.log.gz",
+          "sha256": "1075b20d75e4dd5fbdf04139b6ea3ef88a58ed34c566fa90aa83448073007b2a"
+        }
+      ],
+      "runs": 2405560,
+      "seconds": 611,
+      "coverage": 1020,
+      "features": 3840,
+      "rss_mib": 486
+    },
+    {
+      "target": "sfont_bitmap",
+      "label": "phase5-sfont_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "sfont_bitmap",
+        "--no-default-features",
+        "--features",
+        "sfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-sfont_bitmap-fuzz-final.json.gz",
+          "sha256": "ada6897b642e14c4acd89f7a30f7bf51b48609cb43e7d1e5166676096004be0f"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-sfont_bitmap-fuzz-final.log.gz",
+          "sha256": "ef7df3a9e46b28ce9c44945f30d509b8a61ab8cb5336c86f74e05369ff6039f3"
+        }
+      ],
+      "runs": 4972035,
+      "seconds": 611,
+      "coverage": 6064,
+      "features": 14540,
+      "rss_mib": 457
+    },
+    {
+      "target": "signum",
+      "label": "phase5-signum-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "signum",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-signum-fuzz-final.json.gz",
+          "sha256": "bd17a5cabc1040f3437b4b95403a7098956a562c8219f7b5f7077ad5aa242569"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-signum-fuzz-final.log.gz",
+          "sha256": "093056b274fcd2ac0ab3b72da844d0aeae421fb4afae36d12631767b0f576d92"
+        }
+      ],
+      "runs": 1471226,
+      "seconds": 611,
+      "coverage": 1526,
+      "features": 6326,
+      "rss_mib": 486
+    },
+    {
+      "target": "ssfn",
+      "label": "phase5-ssfn-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "ssfn",
+        "--no-default-features",
+        "--features",
+        "ssfn-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-ssfn-fuzz-final.json.gz",
+          "sha256": "f895d2648c64d4f83472aad2c1590b44655199a1c17a94e4fc3452e8e11e805f"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-ssfn-fuzz-final.log.gz",
+          "sha256": "01758a3dc3958ddf098f771bcb3f37237eca640af5c2e003dbcfab0929f20507"
+        }
+      ],
+      "runs": 3235356,
+      "seconds": 611,
+      "coverage": 3475,
+      "features": 12461,
+      "rss_mib": 429
+    },
+    {
+      "target": "symbos",
+      "label": "phase5-symbos-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "symbos",
+        "--no-default-features",
+        "--features",
+        "symbos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "superseded by final3 structural detector and fuzz coverage",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-symbos-fuzz-final.json.gz",
+          "sha256": "9db959718307e80c801b8e1d457fae7ad83766e0f2c47e285a627600256e0c74"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-symbos-fuzz-final.log.gz",
+          "sha256": "0019cae630439def8a001f73ea269b3e592da7738094ea13bcf325d0bac7fcab"
+        }
+      ],
+      "runs": 776586,
+      "seconds": 611,
+      "coverage": 1257,
+      "features": 4576,
+      "rss_mib": 450
+    },
+    {
+      "target": "symbos",
+      "label": "phase5-symbos-fuzz-final3",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "symbos",
+        "--no-default-features",
+        "--features",
+        "symbos-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-symbos-fuzz-final3.json.gz",
+          "sha256": "df19ffd306f4465ae661de2686bb7c1653fae6d1886d4145a3e5784024ee2a4a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-symbos-fuzz-final3.log.gz",
+          "sha256": "eba5f6903195fa12a04329e1c60c5f872bb210beb4c1f715c2de057bc60459ec"
+        }
+      ],
+      "runs": 1242952,
+      "seconds": 611,
+      "coverage": 1312,
+      "features": 4768,
+      "rss_mib": 473
+    },
+    {
+      "target": "tasprint",
+      "label": "phase5-tasprint-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "tasprint",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-tasprint-fuzz-final.json.gz",
+          "sha256": "f2a35f838d75911d876b83155d30c32ff294dd04b8b4091f6cd1ece01cc5c321"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-tasprint-fuzz-final.log.gz",
+          "sha256": "46c36775fe18b00d0710461e3acc4bdfdbcced89e20e63c1b4f648f1d15f2cd5"
+        }
+      ],
+      "runs": 443401,
+      "seconds": 611,
+      "coverage": 1424,
+      "features": 3795,
+      "rss_mib": 429
+    },
+    {
+      "target": "transport",
+      "label": "phase5-transport-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "transport",
+        "--no-default-features",
+        "--features",
+        "transport-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-transport-fuzz-final.json.gz",
+          "sha256": "4510be81a51ee8ea5658b0dd27c49bfb5b0b3edda5ebe6268d6259559460db5b"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-transport-fuzz-final.log.gz",
+          "sha256": "fd4218a307d81fad0e3fe7bdffaa6f5053eb6eb3902761bc0a51aa98bd3be862"
+        }
+      ],
+      "runs": 920637,
+      "seconds": 611,
+      "coverage": 7059,
+      "features": 31186,
+      "rss_mib": 474
+    },
+    {
+      "target": "u8m_bitmap",
+      "label": "phase5-u8m_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "u8m_bitmap",
+        "--no-default-features",
+        "--features",
+        "rockbox-only,u8m-only,cybiko-only,playdate-only,hmzk-only,sbf-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-u8m_bitmap-fuzz-final.json.gz",
+          "sha256": "8a0f4411063999ac1bcfecefe38ad938e3e2facc7cbaa3c0815cf853546c4f2e"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-u8m_bitmap-fuzz-final.log.gz",
+          "sha256": "32166d4ecfa83e1556868bc2dd4b8f24d047c83912abed66b83a86504697e0e7"
+        }
+      ],
+      "runs": 2285087,
+      "seconds": 611,
+      "coverage": 1556,
+      "features": 6440,
+      "rss_mib": 509
+    },
+    {
+      "target": "vfont",
+      "label": "phase5-vfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "vfont",
+        "--no-default-features",
+        "--features",
+        "vfont-only,fzx-only,figlet-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-vfont-fuzz-final.json.gz",
+          "sha256": "f121d138da3a05cf8642a05f02886a8f53d062b9b2df9688b198e866c8b48ac4"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-vfont-fuzz-final.log.gz",
+          "sha256": "e8db20b3eb8ad007207fff03fcaaebff4c6d731239f62b4d6e1a832cd427b8bb"
+        }
+      ],
+      "runs": 1477611,
+      "seconds": 611,
+      "coverage": 1281,
+      "features": 4612,
+      "rss_mib": 469
+    },
+    {
+      "target": "vlw_bitmap",
+      "label": "phase5-vlw_bitmap-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "vlw_bitmap",
+        "--no-default-features",
+        "--features",
+        "vlw-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-vlw_bitmap-fuzz-final.json.gz",
+          "sha256": "e46735ab6e97ef40651fc71d6e5ab6171b76ceb302d669f49d0faaa4a87444cc"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-vlw_bitmap-fuzz-final.log.gz",
+          "sha256": "4e8f799dce2518779ac11f637df4c823817cfd49555635819c063404bafc73e9"
+        }
+      ],
+      "runs": 7320445,
+      "seconds": 611,
+      "coverage": 1271,
+      "features": 2993,
+      "rss_mib": 451
+    },
+    {
+      "target": "vtfont",
+      "label": "phase5-vtfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "vtfont",
+        "--no-default-features",
+        "--features",
+        "vtfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-vtfont-fuzz-final.json.gz",
+          "sha256": "4ffab40d86e8b8038d455add7f5787bf12bf114a188e8ce811784133d8a608c5"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-vtfont-fuzz-final.log.gz",
+          "sha256": "e6b1018e2841cb4f69fc3a50659607d24ea05b03f6e5a32586655073d6c40595"
+        }
+      ],
+      "runs": 2475967,
+      "seconds": 611,
+      "coverage": 2046,
+      "features": 8754,
+      "rss_mib": 550
+    },
+    {
+      "target": "writeon",
+      "label": "phase5-writeon-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "writeon",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-writeon-fuzz-final.json.gz",
+          "sha256": "a32f60da9811ec900e7abf4d7ec4d065d924882bd15d9389d569f2a1e26f5484"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-writeon-fuzz-final.log.gz",
+          "sha256": "ea54c321e25e9d06fef8dc0580c2211de842a248df0b47c4bd9f784db47b525b"
+        }
+      ],
+      "runs": 9643036,
+      "seconds": 611,
+      "coverage": 1109,
+      "features": 3400,
+      "rss_mib": 505
+    },
+    {
+      "target": "wsfont",
+      "label": "phase5-wsfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "wsfont",
+        "--no-default-features",
+        "--features",
+        "wsfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-wsfont-fuzz-final.json.gz",
+          "sha256": "34196f699d54da5a6fef59bc58ab3b713fac466b4e0a0a35603a04d232d41052"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-wsfont-fuzz-final.log.gz",
+          "sha256": "262bf0f74077b49c6723109a854b0f72b1335efe8b6435c89557cc2a0375317d"
+        }
+      ],
+      "runs": 7272881,
+      "seconds": 611,
+      "coverage": 1226,
+      "features": 2791,
+      "rss_mib": 509
+    },
+    {
+      "target": "wyse",
+      "label": "phase5-wyse-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "wyse",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-wyse-fuzz-final.json.gz",
+          "sha256": "5bf52295d41df90e0ba3f68b38fa191095456b264ab3c57ffc52715b3284742c"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-wyse-fuzz-final.log.gz",
+          "sha256": "b18fcca359f9a6f8d153329e9423734bdad9406e190d61d3c79c5b775a2da600"
+        }
+      ],
+      "runs": 19106436,
+      "seconds": 611,
+      "coverage": 1121,
+      "features": 3397,
+      "rss_mib": 521
+    },
+    {
+      "target": "xbin",
+      "label": "phase5-xbin-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "xbin",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-xbin-fuzz-final.json.gz",
+          "sha256": "9c166dfe0c685e187a8dc71a4c93c9e9f5563ffd1ac3650e1580b97f0ef11855"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-xbin-fuzz-final.log.gz",
+          "sha256": "862550eb465c4ae64d3d3efa858a1ad5f87d89b26408358de6656fe9324bac35"
+        }
+      ],
+      "runs": 438583,
+      "seconds": 611,
+      "coverage": 881,
+      "features": 1137,
+      "rss_mib": 452
+    },
+    {
+      "target": "xerox",
+      "label": "phase5-xerox-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "xerox",
+        "--no-default-features",
+        "--features",
+        "xerox-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-xerox-fuzz-final.json.gz",
+          "sha256": "519f151115f1535f5159452ee68b8217e140f3aa8b97b6a7c96ead663718f28c"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-xerox-fuzz-final.log.gz",
+          "sha256": "ad9b8b32c1701d3b3a70c8aadfdb5efc30def3842d001b31912b479c43d00e2f"
+        }
+      ],
+      "runs": 3329254,
+      "seconds": 611,
+      "coverage": 2453,
+      "features": 7210,
+      "rss_mib": 467
+    },
+    {
+      "target": "zapfont",
+      "label": "phase5-zapfont-fuzz-final",
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "zapfont",
+        "--no-default-features",
+        "--features",
+        "bbc-only,wyse-only,grasp-only,hrcg-only,xbin-only,consoleet-only,zapfont-only,comfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "status": "passed",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-zapfont-fuzz-final.json.gz",
+          "sha256": "25d214754b68d0701bc9dd2d943795379e91e353f42281f1be383798e1ae38c1"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-zapfont-fuzz-final.log.gz",
+          "sha256": "81cf11637487e76f522ade14dc6f0291de5d86a1ca3dfc001da27e7aa8426cda"
+        }
+      ],
+      "runs": 261760,
+      "seconds": 611,
+      "coverage": 1822,
+      "features": 5477,
+      "rss_mib": 398
+    }
+  ]
+}

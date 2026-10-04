@@ -1,0 +1,17 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.81s
+     Running tests/hanfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w52/debug/deps/hanfont-934269b871fc8b4b)
+
+running 9 tests
+test incomplete_or_duplicate_components_are_rejected ... ok
+test budgets_cover_full_expansion_and_default_readback ... ok
+test independently_worked_component_examples_cover_all_shapes ... ok
+test gray_components_need_explicit_threshold ... ok
+test loss_covers_metrics_names_and_properties ... ok
+test registry_strict_mode_rejects_complete_model_loss ... ok
+test edited_syllables_do_not_silently_replay_components ... ok
+test components_are_all_360_ordered_slots_and_roundtrip_exact ... ok
+test full_syllable_roundtrip_preserves_unused_nonblank_fillers ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+

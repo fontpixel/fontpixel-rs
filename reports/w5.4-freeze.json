@@ -1,0 +1,207 @@
+{
+  "source_aggregate_sha256": "9a575697ab655c0eb09e450c93a2128e025a6d9ef5bc435bb23c940e50c0d9bd",
+  "source_aggregate_encoding": "UTF-8, sorted path, each line SHA256 + two spaces + relative path + LF",
+  "sources": [
+    {
+      "path": "crates/fontpixel/examples/w54_timing.rs",
+      "sha256": "843276bb37b40bab98fa97d34deca0c731f9c32c6875547534792ae9158ee6f3",
+      "bytes": 8370
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gdr/reader.rs",
+      "sha256": "44ae2d735034808bdfcc92931b8f6816a93c7601959f95a208906f2f6c7da935",
+      "bytes": 14008
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gdr/wire.rs",
+      "sha256": "5199de14f1c399229447d9167eaa1fb14a7fb02c984147853c5c3bbda1b18b4f",
+      "bytes": 7797
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gdr/writer.rs",
+      "sha256": "c37508a4b0e2b87a72f79904c59c353da1e501e17b06473801048d094265b1d8",
+      "bytes": 15487
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gdr.rs",
+      "sha256": "72f2060e911725474989523aab00d8abe17d4ee326c24b499fa50bfc330f7a0f",
+      "bytes": 2791
+    },
+    {
+      "path": "crates/fontpixel/src/formats/palm/gray.rs",
+      "sha256": "ab6d378974e0a68c855adb14d637911640cf4487ae21c61bff9b30ff802bea17",
+      "bytes": 19943
+    },
+    {
+      "path": "crates/fontpixel/src/formats/palm/reader.rs",
+      "sha256": "e93b7feb62bd2a3b4977685253523b2b7f5f042d54239d330a8811f434527a96",
+      "bytes": 16783
+    },
+    {
+      "path": "crates/fontpixel/src/formats/palm/writer.rs",
+      "sha256": "d7e49b0f544f3d98bdd2a16041249ecb744fc46b9b24a8c7ecfa2a5752b11416",
+      "bytes": 20792
+    },
+    {
+      "path": "crates/fontpixel/src/formats/palm.rs",
+      "sha256": "3e2c738b1cd07a1671ef0d255b93be17f9b71617801f972a1ea3f4b295739e7a",
+      "bytes": 3564
+    },
+    {
+      "path": "crates/fontpixel/tests/gdr.rs",
+      "sha256": "01cb3b85a22a46b423d2e49373813590a9096a250692699fc28d019a80002deb",
+      "bytes": 5945
+    },
+    {
+      "path": "crates/fontpixel/tests/palm.rs",
+      "sha256": "05f3483f46d06a4e780a9b26f1a9f7f2f2f8a12704ca25ed14b5588b02510b86",
+      "bytes": 8960
+    },
+    {
+      "path": "docs/formats/gdr.md",
+      "sha256": "64f66f589f1c97e396138067fc6db3602d763f6ad112dace38f3e14f8262c081",
+      "bytes": 5772
+    },
+    {
+      "path": "docs/formats/palm.md",
+      "sha256": "bd7c33a6c02f834fb3afad207b3f45a4f9f36234dafc4a9d654303ca760f703b",
+      "bytes": 7123
+    },
+    {
+      "path": "fuzz/fuzz_targets/gdr.rs",
+      "sha256": "2c3761bfb6a0eb73ccde1a1c3fde32677a3514d945430abc9a14813b7c62fe0d",
+      "bytes": 1774
+    },
+    {
+      "path": "fuzz/fuzz_targets/palm.rs",
+      "sha256": "db0b639932d815574e4c56c3d42c7e7eac89d314574a181ad01451e3159aa864",
+      "bytes": 1855
+    },
+    {
+      "path": "fuzz/seed_w54.py",
+      "sha256": "afb00441701614c2b5371e2ceb9bef4baec33fadef73d8ebd03d2ef0d31835f0",
+      "bytes": 48715
+    },
+    {
+      "path": "tests/crosscheck/w54.py",
+      "sha256": "5ee6a1c2de1f0b4d0439a38c11e818cd2ac5fbe20718f1f9e50def3495c7a7b0",
+      "bytes": 21448
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/w5.4-adapter-build.log",
+      "sha256": "bf8fe463c3d3110bec03119e4cd9c801659199fa5f3b0c136a90652a74d32f73",
+      "bytes": 158
+    },
+    {
+      "path": "reports/w5.4-crosscheck.json",
+      "sha256": "a8cb4fcce99d5b1f9a40f3d5daafb6f69b9a0c33d728e426a9f39a9f7fdecc3c",
+      "bytes": 92458
+    },
+    {
+      "path": "reports/w5.4-final-runs.json",
+      "sha256": "356df4ccc8cf2d572c8bb33c15baaaaa669017453d68155c24b685a40adebad4",
+      "bytes": 1746
+    },
+    {
+      "path": "reports/w5.4-gate-0.log",
+      "sha256": "ec616001fcc75b63e8e8a3c4ac5bad2bc065baaf88c51a12cc253bd8959209f9",
+      "bytes": 716
+    },
+    {
+      "path": "reports/w5.4-gate-1.log",
+      "sha256": "36ce5a4210cedf6d01808d20d0bf51b59f057d84b55fc7dbc09f5f68fdbaad27",
+      "bytes": 720
+    },
+    {
+      "path": "reports/w5.4-gate-2.log",
+      "sha256": "e6ff6d2f76268978af06cdf2093422908f8ffc120d2b9605ca2f411c88005d03",
+      "bytes": 158
+    },
+    {
+      "path": "reports/w5.4-gate-3.log",
+      "sha256": "68d32c7d391a2f076a7adc7f61238c34e0831841fa275852c7f58f98e87f5cf3",
+      "bytes": 158
+    },
+    {
+      "path": "reports/w5.4-gate-4.log",
+      "sha256": "82bf3bf0222daa1597628b8cb0d516d471abf09c7ff94b7a7b31ee834cb30fd4",
+      "bytes": 158
+    },
+    {
+      "path": "reports/w5.4-gate-5.log",
+      "sha256": "ebb6a27bc36ad67b7feaf7cfb504c5ab5d32dc4ace6baa1aca42a9c99cb63481",
+      "bytes": 254
+    },
+    {
+      "path": "reports/w5.4-gate-6.log",
+      "sha256": "0827c57456c75f8180322b9f23569d632e88f58e21c97d4ba202e09602611f21",
+      "bytes": 254
+    },
+    {
+      "path": "reports/w5.4-gates.json",
+      "sha256": "4b857927cde4972d044828045701d26bd3808e38a8e39fa9699d2380d7f6d338",
+      "bytes": 2631
+    },
+    {
+      "path": "reports/w5.4-gdr-smoke.log",
+      "sha256": "d488bfc019e306a2b02209d39fc20a2f6506203919c47152bc910a7848e25101",
+      "bytes": 28029
+    },
+    {
+      "path": "reports/w5.4-oracle-run.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reports/w5.4-oracles.json",
+      "sha256": "49e9e1871278b52583911c52b1e6ba81c476ed87bd4dc29f52abed22b9327666",
+      "bytes": 26766
+    },
+    {
+      "path": "reports/w5.4-palm-smoke.log",
+      "sha256": "f35bf21a40ba777d603fed3028913740ea0b05fb8f6c0c64a62891dc9c302e06",
+      "bytes": 24090
+    },
+    {
+      "path": "reports/w5.4.md",
+      "sha256": "44ce30f1861b4271d762f02ceb392d6764d0dcbc3469c2ff19e2f45fddf67e86",
+      "bytes": 9690
+    }
+  ],
+  "shared_snapshot_not_owned": [
+    {
+      "path": "crates/fontpixel/src/formats/gem/common.rs",
+      "sha256": "bfb276c9b844d629bc8ddcceb46815083538ede8098890b58c94b2e7bd89bf20"
+    },
+    {
+      "path": "crates/fontpixel/src/resources.rs",
+      "sha256": "427178004c52c6b9d85ba0b3d2513c29f75dcf621c1d84fd00b50844d04032e8"
+    },
+    {
+      "path": "crates/fontpixel/src/model/mod.rs",
+      "sha256": "25f501e50263d01c2dcbf2d052c8cee9f43e87aead521274625f0dceeb711165"
+    }
+  ],
+  "short_asan_smoke": {
+    "palm": {
+      "runs": 35753,
+      "seconds": 16,
+      "summary": "#35753\tDONE   cov: 2988 ft: 10418 corp: 340/166Kb lim: 9249 exec/s: 2234 rss: 513Mb",
+      "exit": 0
+    },
+    "gdr": {
+      "runs": 25936,
+      "seconds": 16,
+      "summary": "#25936\tDONE   cov: 2173 ft: 5304 corp: 296/899Kb lim: 11655 exec/s: 1621 rss: 387Mb",
+      "exit": 0
+    }
+  },
+  "crosscheck_status": "pass",
+  "remaining_coordinator_gates": [
+    ">=610-second ASAN per native fuzz target",
+    "five quiet release performance repetitions",
+    "full repository acceptance"
+  ]
+}

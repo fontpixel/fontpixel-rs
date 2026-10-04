@@ -1,0 +1,142 @@
+{
+  "owned_source_manifest_sha256": "df99be942e5d4dbda33cfc60b215a8a380cb79b5e32a5e80d307a131cb00b8c8",
+  "owned_sources": {
+    "crates/fontpixel/examples/w53_timing.rs": "416516ee4623abcd1f707cafe83614461a676bee4b238d20afa9179eae4167b4",
+    "crates/fontpixel/src/formats/figlet.rs": "a739799881da90063fc267986edc392607c0f2ff75a48c22400468e1453cd478",
+    "crates/fontpixel/src/formats/fzx.rs": "743b0f1fc44d0c9706d522883c6273ea5767bd12e534c26f8f5be7f8cf1fa7ba",
+    "crates/fontpixel/src/formats/vfont.rs": "2f3660e08b463a237bc08fbd949ac6523d7279bb196abfa584780e039bc0c5eb",
+    "crates/fontpixel/tests/figlet.rs": "ffe525718a2b6754a9b432d642fd52b8d36a6f193eb56a7c870c25c487189aeb",
+    "crates/fontpixel/tests/fzx.rs": "0772cd14f6b64fec56f8b66137fff13af6d3c7c643d88ea6441495d1cf958571",
+    "crates/fontpixel/tests/vfont.rs": "cdb7e990efdff825af6b70b8c423e094ca0a36bd4eb1cceacc5ef644762724db",
+    "docs/formats/figlet.md": "b9edd1edb414c338098125d83dfafe3019283bbd0d42f51f9b53a20d8602a53a",
+    "docs/formats/fzx.md": "e7fbe694b2eb5ac4ccff9e69afb922c0d2760e37f863db3adb597537fc7ca748",
+    "docs/formats/vfont.md": "4bfa01d0d1f0153b54a011da88ce8145b83cada32346cc9853bd746c7799df03",
+    "fuzz/fuzz_targets/figlet.rs": "f1d81f33ed7532f226940090b6afb20feb1213a366aa84bf823d988c0c7d5dc8",
+    "fuzz/fuzz_targets/fzx.rs": "347989a9dc7dcddae9b29b89b8cfed03084b621f8f36479fd342038183b028d0",
+    "fuzz/fuzz_targets/vfont.rs": "34e0f3bc484d997c46b64c06714619fde9aad1cc54d42a36e37547b0fe9525f3",
+    "fuzz/seed_w53.py": "c6c441f6d1a87316eb3b7079f48092928697a0ebecb30c1d4645e7bf01b1ff2d",
+    "tests/crosscheck/w53.py": "5df4722b9c49a13979f3d0a3d40bc9d6ece39b2de3cb4c6e4445c7c177396475"
+  },
+  "smoke": {
+    "vfont": {
+      "runs": 381560,
+      "cov": 1216,
+      "ft": 3907,
+      "seconds": 21,
+      "exit": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/w53-vfont-fuzz.log",
+      "sha256": "6dac1526864ae26e851344e61452fa0e726ee4fb64197ee909d48255cb4e1042"
+    },
+    "fzx": {
+      "runs": 2573672,
+      "cov": 1036,
+      "ft": 1459,
+      "seconds": 21,
+      "exit": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/w53-fzx-fuzz.log",
+      "sha256": "f91acc1c31cfe4d158c29e11d92b5a3a61f59ce233dc806d4fc50af6a5284ae1"
+    },
+    "figlet": {
+      "runs": 259693,
+      "cov": 1508,
+      "ft": 4046,
+      "seconds": 21,
+      "exit": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/w53-figlet-fuzz.log",
+      "sha256": "d698b31c800957143c744de2325c531b130cc37ba8b822b6e1ebd562ce0977a9"
+    }
+  },
+  "validation": {
+    "vfont": {
+      "test": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-vfont-test.log",
+        "sha256": "7f342e62ea397d889303ad5c10f13e3d581ad20026c9d1e2d9022ee3ee6cdc7b"
+      },
+      "clippy": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-vfont-clippy.log",
+        "sha256": "b9a160da4bd99a8ac44d5a698c3867a91490072e4a4e7ad00e7f832cbd9d1eac"
+      },
+      "rustdoc": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-vfont-rustdoc.log",
+        "sha256": "1ebf63ab9f9746bc04855d66a455c7c7b22e6a6d79d3cc6d876252938786e300"
+      }
+    },
+    "fzx": {
+      "test": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-fzx-test.log",
+        "sha256": "fe67f85358d646e6f41c3d8e8da1307b05ae222d7227365c7077a48744421597"
+      },
+      "clippy": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-fzx-clippy.log",
+        "sha256": "d13439a8cdcbef00dba9115877763bd65982cfae375e8efaf7de347a0e3816ec"
+      },
+      "rustdoc": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-fzx-rustdoc.log",
+        "sha256": "cbf55a0daf371192978b5202d134a4fe4ea2784ee752b62d12e73382d0ac1369"
+      }
+    },
+    "figlet": {
+      "test": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-figlet-test.log",
+        "sha256": "1f75fb4d0f98226d8fddcb822f978b57098f12d1c5f1779b20d2b19746ea7f71"
+      },
+      "clippy": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-figlet-clippy.log",
+        "sha256": "e30af11b81fad6e94ae015a20bf04efc4a9dda989019a011eb69d03bbc8c6259"
+      },
+      "rustdoc": {
+        "exit": 0,
+        "log": "/home/chen/githubprojects/fontpixel/local-work/w53-figlet-rustdoc.log",
+        "sha256": "cbf55a0daf371192978b5202d134a4fe4ea2784ee752b62d12e73382d0ac1369"
+      }
+    }
+  },
+  "raw_oracle_artifacts": {
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/chkfont.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/chkfont.stdout": "c615723aa0ea2b892849650b26b7498a45c9181ba3b9aa917a96f1566d3c29e2",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-canonical.monobit": "7a17137181af6628283df57c431d7aa176af56ab7a79b28396b0c7cc93bb03e1",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-canonical.rust": "82b814122aabd3428f26d9a38cb9fd5d6bad2b1c175a3ee4942707e4bffa2651",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-canonical.source": "52b45ff53007c36aee96f403956f389881ebbe4ac36da5d921d7051604df89ea",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-full358.monobit": "7d6de3a498e292c8938ee92d908e9c8c17bbe392d8798ff46894a1635adbefeb",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-full358.rust": "c9c92922bdbceba0fb61394989ac55cbd0554f0ac3e9030aa4707560c661e360",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-full358.source": "c9c92922bdbceba0fb61394989ac55cbd0554f0ac3e9030aa4707560c661e360",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-negative-rust.stdout": "7f2b187404c5260f61c9ad1c47a2a09fd0df2dfb32ae56f9a4f0ab341cc41733",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-negative-source.stdout": "7f2b187404c5260f61c9ad1c47a2a09fd0df2dfb32ae56f9a4f0ab341cc41733",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/figlet-official-A.stdout": "172b27b3fd85603ef7871983d97223c5da977820670efa06a792ffe94049a0d7",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-full224.monobit": "1d55290c042451ac2a571d1946fefecc7a85eceed7562024d3c9c0b49d5b3093",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-full224.rust": "d949a6cf0e8b0adbcdaa6f3ecf4456b5c9d824645ea79370dec259f4b5853b1d",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-full224.source": "d949a6cf0e8b0adbcdaa6f3ecf4456b5c9d824645ea79370dec259f4b5853b1d",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-proportional.monobit": "2e7cf4723227eb3c64b2495f66963257f23e79cbcdddab49995063f7f83a3b11",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-proportional.rust": "2e7cf4723227eb3c64b2495f66963257f23e79cbcdddab49995063f7f83a3b11",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/fzx-proportional.source": "2e7cf4723227eb3c64b2495f66963257f23e79cbcdddab49995063f7f83a3b11",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/monobit-hardblank-space.raw.flf": "009fe7bb53b41f5b38aed3fea2c4b8f5a40aecb00b8a823a45127712251103cb",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/official.flf": "82b814122aabd3428f26d9a38cb9fd5d6bad2b1c175a3ee4942707e4bffa2651",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/signed-rust.flf": "e2d8e07584ef8aa49629cb225f93737946b2909e30d6f5ca6bdb30a9571d4d42",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/signed.flc": "b3c5e60e350ee365f8d1d6f752f7e918e7d4d2112ed71ba3ae0618ead8202918",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/signed.flf": "a02faeb5c4e8e9bbefdd05312162594fdc18d6eeeaf74bf11b27628c8f5c0932",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/standard.dump.json": "0ba3803699373af2c66074d69954ed9c0766379eafbdd908e8043fafb56d3bef",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-big.monobit": "d82bbdccd567c266650b1440619c47b2cf1dbb3a46a5035260e1577abd7c9ca2",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-big.rust": "e48e1c45a7b32d99e58f1bd66ea3daad2acab772d012a02bc3df031f446442a4",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-big.source": "ca125f712a5fe7bdd60cc1915a8c6cad0151ae3aed01b656b4dbbcfb9a153ac5",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-full256.monobit": "fb05bd1ca63511ba1d7a5e55a5dd71daca09dd012fce65b5bcdad2f9b3498905",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-full256.rust": "fb05bd1ca63511ba1d7a5e55a5dd71daca09dd012fce65b5bcdad2f9b3498905",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-full256.source": "fb05bd1ca63511ba1d7a5e55a5dd71daca09dd012fce65b5bcdad2f9b3498905",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-little.monobit": "2c5a0f3b02267b687576330ede415d757c6fc97c54e49cbc2083610c75fa3a50",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-little.rust": "e48e1c45a7b32d99e58f1bd66ea3daad2acab772d012a02bc3df031f446442a4",
+    "/home/chen/githubprojects/fontpixel/local-work/w53-oracle-artifacts/vfont-little.source": "e48e1c45a7b32d99e58f1bd66ea3daad2acab772d012a02bc3df031f446442a4"
+  },
+  "official_figlet_distribution": {
+    "url": "https://codeload.github.com/cmatsuoka/figlet/tar.gz/refs/tags/2.2.5",
+    "sha256": "4d366c4a618ecdd6fdb81cde90edc54dbff9764efb635b3be47a929473f13930",
+    "license": "BSD-3-Clause",
+    "use": "external oracle only"
+  }
+}

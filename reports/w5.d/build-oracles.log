@@ -1,0 +1,4 @@
+/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f.c: In function ‘main’:
+/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f.c:11:8: warning: ignoring return value of ‘fread’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   11 |        fread(stuff, 1, s, fp);
+      |        ^~~~~~~~~~~~~~~~~~~~~~

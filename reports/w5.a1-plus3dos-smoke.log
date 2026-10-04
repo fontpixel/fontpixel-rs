@@ -1,0 +1,31 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 14.31s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.04s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5a1/x86_64-unknown-linux-gnu/release/plus3dos -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/plus3dos/ -max_total_time=10 -timeout=2 -rss_limit_mb=1024 -max_len=262144 -seed=51001 /home/chen/githubprojects/fontpixel/local-work/w5a1-smoke-corpus/plus3dos`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 51001
+INFO: Loaded 1 modules   (19256 inline 8-bit counters): 19256 [0x62e51187cc40, 0x62e511881778), 
+INFO: Loaded 1 PC tables (19256 PCs): 19256 [0x62e511881778,0x62e5118ccaf8), 
+INFO:        7 files found in /home/chen/githubprojects/fontpixel/local-work/w5a1-smoke-corpus/plus3dos
+INFO: seed corpus: files: 7 min: 1b max: 896b total: 3158b rss: 33Mb
+#8	INITED cov: 1159 ft: 1179 corp: 3/904b exec/s: 0 rss: 38Mb
+#14	NEW    cov: 1160 ft: 1223 corp: 4/1800b lim: 896 exec/s: 0 rss: 39Mb L: 896/896 MS: 1 ChangeBit-
+#26	NEW    cov: 1161 ft: 1224 corp: 5/2696b lim: 896 exec/s: 0 rss: 43Mb L: 896/896 MS: 2 ChangeBit-CopyPart-
+#117	REDUCE cov: 1161 ft: 1224 corp: 5/2694b lim: 896 exec/s: 0 rss: 47Mb L: 5/896 MS: 1 EraseBytes-
+#144	NEW    cov: 1162 ft: 1225 corp: 6/3590b lim: 896 exec/s: 0 rss: 48Mb L: 896/896 MS: 2 CopyPart-CopyPart-
+#170	REDUCE cov: 1162 ft: 1225 corp: 6/3588b lim: 896 exec/s: 0 rss: 49Mb L: 3/896 MS: 1 EraseBytes-
+#757	REDUCE cov: 1169 ft: 1233 corp: 7/3593b lim: 896 exec/s: 0 rss: 62Mb L: 5/896 MS: 2 ChangeBit-CMP- DE: "\037\213"-
+#778	REDUCE cov: 1169 ft: 1233 corp: 7/3592b lim: 896 exec/s: 0 rss: 63Mb L: 2/896 MS: 1 EraseBytes-
+#1162	REDUCE cov: 1169 ft: 1233 corp: 7/3591b lim: 896 exec/s: 0 rss: 72Mb L: 4/896 MS: 4 ChangeBinInt-ShuffleBytes-CopyPart-EraseBytes-
+#1348	NEW    cov: 1170 ft: 1234 corp: 8/4487b lim: 896 exec/s: 0 rss: 76Mb L: 896/896 MS: 1 CrossOver-
+#1639	REDUCE cov: 1170 ft: 1234 corp: 8/4486b lim: 896 exec/s: 0 rss: 86Mb L: 3/896 MS: 1 EraseBytes-
+#2435	REDUCE cov: 1170 ft: 1234 corp: 8/4485b lim: 896 exec/s: 0 rss: 104Mb L: 2/896 MS: 1 EraseBytes-
+#4801	NEW    cov: 1171 ft: 1235 corp: 9/5381b lim: 914 exec/s: 0 rss: 146Mb L: 896/896 MS: 1 PersAutoDict- DE: "\037\213"-
+#32768	pulse  cov: 1171 ft: 1235 corp: 9/5381b lim: 1191 exec/s: 16384 rss: 365Mb
+#65536	pulse  cov: 1171 ft: 1235 corp: 9/5381b lim: 1511 exec/s: 13107 rss: 367Mb
+#116122	DONE   cov: 1171 ft: 1235 corp: 9/5381b lim: 2021 exec/s: 10556 rss: 367Mb
+###### Recommended dictionary. ######
+"\037\213" # Uses: 10581
+###### End of recommended dictionary. ######
+Done 116122 runs in 11 second(s)

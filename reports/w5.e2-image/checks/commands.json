@@ -1,0 +1,318 @@
+[
+  {
+    "format": "pilfont",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.33570194244384766,
+    "log": "reports/w5.e2-image/checks/pilfont-doc.log"
+  },
+  {
+    "format": "vlw",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "vlw",
+      "--test",
+      "vlw"
+    ],
+    "exit": 0,
+    "seconds": 0.9448280334472656,
+    "log": "reports/w5.e2-image/checks/vlw-test.log"
+  },
+  {
+    "format": "vlw",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "vlw",
+      "--lib",
+      "--test",
+      "vlw",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.5896735191345215,
+    "log": "reports/w5.e2-image/checks/vlw-clippy.log"
+  },
+  {
+    "format": "vlw",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "vlw",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.3236265182495117,
+    "log": "reports/w5.e2-image/checks/vlw-doc.log"
+  },
+  {
+    "format": "sfont",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sfont",
+      "--test",
+      "sfont"
+    ],
+    "exit": 0,
+    "seconds": 1.348421335220337,
+    "log": "reports/w5.e2-image/checks/sfont-test.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "sfont",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sfont",
+      "--lib",
+      "--test",
+      "sfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.7488157749176025,
+    "log": "reports/w5.e2-image/checks/sfont-clippy.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "sfont",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.4087831974029541,
+    "log": "reports/w5.e2-image/checks/sfont-doc.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "image",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "image",
+      "--test",
+      "image",
+      "--test",
+      "imageset"
+    ],
+    "exit": 0,
+    "seconds": 2.753140687942505,
+    "log": "reports/w5.e2-image/checks/image-test.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "image",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "image",
+      "--lib",
+      "--test",
+      "image",
+      "--test",
+      "imageset",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.0236146450042725,
+    "log": "reports/w5.e2-image/checks/image-clippy.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "image",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "image",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.48514699935913086,
+    "log": "reports/w5.e2-image/checks/image-doc.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "E2",
+    "kind": "combined-test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont,sfont,vlw,image",
+      "--test",
+      "pilfont",
+      "--test",
+      "sfont",
+      "--test",
+      "vlw",
+      "--test",
+      "image",
+      "--test",
+      "imageset"
+    ],
+    "exit": 0,
+    "seconds": 3.480504274368286,
+    "log": "reports/w5.e2-image/checks/combined-test.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "E2",
+    "kind": "combined-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont,sfont,vlw,image",
+      "--lib",
+      "--test",
+      "sfont",
+      "--test",
+      "imageset",
+      "--example",
+      "w5e2_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.287398338317871,
+    "log": "reports/w5.e2-image/checks/combined-clippy.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "pilfont",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont",
+      "--test",
+      "pilfont"
+    ],
+    "exit": 0,
+    "seconds": 1.1743831634521484,
+    "log": "reports/w5.e2-image/checks/pilfont-test.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "pilfont",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont",
+      "--lib",
+      "--test",
+      "pilfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.6229243278503418,
+    "log": "reports/w5.e2-image/checks/pilfont-clippy.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  },
+  {
+    "format": "E2",
+    "kind": "example-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pilfont,sfont,vlw,image",
+      "--example",
+      "w5e2_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.0572996139526367,
+    "log": "reports/w5.e2-image/checks/pilfont-example-clippy.log",
+    "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2"
+  }
+]

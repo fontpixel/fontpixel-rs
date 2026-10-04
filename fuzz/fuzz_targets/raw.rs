@@ -2,7 +2,7 @@
 use fontpixel::bitmap::{BitOrder, RowOrder};
 use fontpixel::{
     ResourceLimits,
-    formats::raw::{self, RawLayout, RawReadOptions, RawWriteOptions},
+    formats::raw::{self, RawByteOrder, RawLayout, RawPacking, RawReadOptions, RawWriteOptions},
 };
 use libfuzzer_sys::fuzz_target;
 fuzz_target!(|bytes: &[u8]| {
@@ -22,6 +22,17 @@ fuzz_target!(|bytes: &[u8]| {
         RowOrder::BottomUp
     };
     layout.offset = usize::from(bytes[3]);
+    if bytes[2] & 32 != 0 {
+        layout.packing = RawPacking::BitAligned;
+        layout.row_padding = 0;
+    } else {
+        if bytes[2] & 64 != 0 {
+            layout.byte_order = RawByteOrder::ColumnMajor;
+        }
+        if bytes[2] & 128 != 0 {
+            layout.strike_count = [2, 3, 8, 256, 512][usize::from(bytes[3] % 5)];
+        }
+    }
     let o = RawReadOptions {
         layout: Some(layout.clone()),
     };

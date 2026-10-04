@@ -1,0 +1,118 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--test",
+      "symbos"
+    ],
+    "environment_overrides": {},
+    "exit": 0,
+    "elapsed_seconds": 0.19607877731323242,
+    "stdout": "\nrunning 5 tests\ntest strict_and_explicit_gray ... ok\ntest original_pebble_versions_do_not_match_symbos ... ok\ntest detection_requires_complete_bounded_native_records ... ok\ntest limits_and_malformed_native_data ... ok\ntest all_native_layouts ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n",
+    "stderr": "    Finished `test` profile [unoptimized] target(s) in 0.07s\n     Running tests/symbos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/symbos-53fd36ff7ae527a1)\n",
+    "stdout_sha256": "6814d4607f1c56077dbbb2851d405a3c95574bdfa11afe100dc8dcb154d77a26",
+    "stderr_sha256": "add6da971254de24e4ceee0c48f541f90a17ae2556f64fdd96eab9b45de584d5"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "environment_overrides": {},
+    "exit": 0,
+    "elapsed_seconds": 6.336435556411743,
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 6.15s\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7294c6cdc651be09271f37b93c86374d175886881b77f840d901025115b46761"
+  },
+  {
+    "argv": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--no-deps"
+    ],
+    "environment_overrides": {
+      "RUSTDOCFLAGS": "-D warnings"
+    },
+    "exit": 0,
+    "elapsed_seconds": 1.3817763328552246,
+    "stdout": "",
+    "stderr": " Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 1.28s\n   Generated /home/chen/githubprojects/fontpixel/local-work/target-w5b/doc/fontpixel/index.html\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "42e278bda248d52b2c3251889c562502bbbea8def4e8201ede47ce3c31d2c039"
+  },
+  {
+    "argv": [
+      "cargo",
+      "+nightly",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--test",
+      "symbos",
+      "--target",
+      "x86_64-unknown-linux-gnu"
+    ],
+    "environment_overrides": {
+      "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-detector-asan",
+      "RUSTFLAGS": "-Zsanitizer=address"
+    },
+    "exit": 0,
+    "elapsed_seconds": 20.754090070724487,
+    "stdout": "\nrunning 5 tests\ntest original_pebble_versions_do_not_match_symbos ... ok\ntest strict_and_explicit_gray ... ok\ntest detection_requires_complete_bounded_native_records ... ok\ntest all_native_layouts ... ok\ntest limits_and_malformed_native_data ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s\n\n",
+    "stderr": "   Compiling proc-macro2 v1.0.107\n   Compiling unicode-ident v1.0.26\n   Compiling quote v1.0.47\n   Compiling libc v0.2.189\n   Compiling cfg-if v1.0.5\n   Compiling zerocopy v0.8.59\n   Compiling syn v2.0.119\n   Compiling getrandom v0.3.4\n   Compiling serde_core v1.0.229\n   Compiling syn v3.0.6\n   Compiling zerocopy-derive v0.8.59\n   Compiling shlex v2.0.1\n   Compiling find-msvc-tools v0.1.14\n   Compiling serde v1.0.229\n   Compiling autocfg v1.5.1\n   Compiling zmij v1.0.23\n   Compiling num-traits v0.2.19\n   Compiling cc v1.5.1\n   Compiling serde_derive v1.0.229\n   Compiling rand_core v0.9.5\n   Compiling serde_json v1.0.151\n   Compiling regex-syntax v0.8.11\n   Compiling half v2.7.1\n   Compiling alloca v0.4.0\n   Compiling memchr v2.8.3\n   Compiling ciborium-io v0.2.2\n   Compiling clap_lex v1.1.1\n   Compiling either v1.18.0\n   Compiling anstyle v1.0.14\n   Compiling itoa v1.0.18\n   Compiling clap_builder v4.6.7\n   Compiling itertools v0.13.0\n   Compiling ciborium-ll v0.2.2\n   Compiling regex-automata v0.4.18\n   Compiling ppv-lite86 v0.2.21\n   Compiling cast v0.3.0\n   Compiling same-file v1.0.6\n   Compiling walkdir v2.5.0\n   Compiling criterion-plot v0.8.2\n   Compiling regex v1.13.1\n   Compiling rand_chacha v0.9.0\n   Compiling ciborium v0.2.2\n   Compiling clap v4.6.7\n   Compiling tinytemplate v1.2.1\n   Compiling rand v0.9.5\n   Compiling rand_xorshift v0.4.0\n   Compiling page_size v0.6.0\n   Compiling bitflags v2.13.2\n   Compiling oorandom v11.1.5\n   Compiling anes v0.1.6\n   Compiling unarray v0.1.4\n   Compiling proptest v1.11.0\n   Compiling criterion v0.8.2\n   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `test` profile [unoptimized] target(s) in 20.61s\n     Running tests/symbos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b-detector-asan/x86_64-unknown-linux-gnu/debug/deps/symbos-d5114a15cf1e7f5e)\n",
+    "stdout_sha256": "719046f433e38fa21de3e72e53eca086e7ba2dfb42af6d40d877ce4440e814d6",
+    "stderr_sha256": "e734182325b763867c749d268a21ab6c21c780e2fccf2d5bd29e7598c3844785"
+  },
+  {
+    "argv": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "symbos",
+      "--no-default-features",
+      "--features",
+      "symbos-only",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-corpus/symbos",
+      "--",
+      "-max_total_time=12",
+      "-timeout=2",
+      "-max_len=262144",
+      "-rss_limit_mb=1024"
+    ],
+    "environment_overrides": {
+      "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz"
+    },
+    "exit": 0,
+    "elapsed_seconds": 26.849504232406616,
+    "stdout": "",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)\n    Finished `release` profile [optimized + debuginfo] target(s) in 13.60s\n    Finished `release` profile [optimized + debuginfo] target(s) in 0.02s\n     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/symbos -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/symbos/ -max_total_time=12 -timeout=2 -max_len=262144 -rss_limit_mb=1024 /home/chen/githubprojects/fontpixel/local-work/w5b-corpus/symbos`\nINFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 2296979859\nINFO: Loaded 1 modules   (14720 inline 8-bit counters): 14720 [0x605c198348a0, 0x605c19838220), \nINFO: Loaded 1 PC tables (14720 PCs): 14720 [0x605c19838220,0x605c19871a20), \nINFO:      158 files found in /home/chen/githubprojects/fontpixel/local-work/w5b-corpus/symbos\nINFO: seed corpus: files: 158 min: 1b max: 4592b total: 149596b rss: 33Mb\n#159\tINITED cov: 1246 ft: 3405 corp: 89/103Kb exec/s: 0 rss: 68Mb\n#182\tREDUCE cov: 1246 ft: 3405 corp: 89/103Kb lim: 4592 exec/s: 0 rss: 68Mb L: 224/4592 MS: 3 InsertByte-CMP-EraseBytes- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#449\tREDUCE cov: 1246 ft: 3405 corp: 89/103Kb lim: 4592 exec/s: 0 rss: 76Mb L: 1787/4592 MS: 2 ChangeBit-EraseBytes-\n#1050\tNEW    cov: 1246 ft: 3406 corp: 90/103Kb lim: 4592 exec/s: 0 rss: 107Mb L: 213/4592 MS: 1 EraseBytes-\n#3098\tNEW    cov: 1247 ft: 3410 corp: 91/104Kb lim: 4604 exec/s: 0 rss: 212Mb L: 850/4592 MS: 3 ChangeBit-ChangeASCIIInt-PersAutoDict- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#6203\tREDUCE cov: 1247 ft: 3410 corp: 91/104Kb lim: 4628 exec/s: 6203 rss: 375Mb L: 238/4592 MS: 3 InsertByte-ShuffleBytes-EraseBytes-\n#10334\tREDUCE cov: 1247 ft: 3410 corp: 91/104Kb lim: 4664 exec/s: 5167 rss: 387Mb L: 852/4592 MS: 1 EraseBytes-\n#10425\tREDUCE cov: 1247 ft: 3410 corp: 91/103Kb lim: 4664 exec/s: 5212 rss: 387Mb L: 3145/4592 MS: 1 EraseBytes-\n#11160\tREDUCE cov: 1247 ft: 3410 corp: 91/103Kb lim: 4664 exec/s: 5580 rss: 390Mb L: 258/4592 MS: 5 ChangeBit-InsertByte-ChangeBinInt-ChangeByte-EraseBytes-\n#12206\tNEW    cov: 1247 ft: 3411 corp: 92/104Kb lim: 4664 exec/s: 6103 rss: 392Mb L: 1538/4592 MS: 1 ChangeBinInt-\n#12369\tREDUCE cov: 1247 ft: 3411 corp: 92/104Kb lim: 4664 exec/s: 6184 rss: 393Mb L: 220/4592 MS: 3 EraseBytes-ChangeASCIIInt-InsertRepeatedBytes-\n#12981\tREDUCE cov: 1247 ft: 3411 corp: 92/104Kb lim: 4664 exec/s: 6490 rss: 395Mb L: 1686/4592 MS: 2 ShuffleBytes-EraseBytes-\n#14462\tREDUCE cov: 1247 ft: 3411 corp: 92/104Kb lim: 4676 exec/s: 7231 rss: 396Mb L: 580/4592 MS: 1 EraseBytes-\n#15062\tREDUCE cov: 1247 ft: 3411 corp: 92/104Kb lim: 4676 exec/s: 7531 rss: 396Mb L: 216/4592 MS: 5 ChangeASCIIInt-ChangeByte-InsertByte-ShuffleBytes-EraseBytes-\n#16384\tpulse  cov: 1247 ft: 3411 corp: 92/104Kb lim: 4688 exec/s: 8192 rss: 397Mb\n#17754\tREDUCE cov: 1247 ft: 3411 corp: 92/103Kb lim: 4700 exec/s: 8877 rss: 400Mb L: 2139/4592 MS: 2 EraseBytes-CrossOver-\n#18072\tREDUCE cov: 1247 ft: 3411 corp: 92/102Kb lim: 4700 exec/s: 9036 rss: 400Mb L: 1109/4592 MS: 3 PersAutoDict-ChangeBit-EraseBytes- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#19174\tNEW    cov: 1247 ft: 3412 corp: 93/106Kb lim: 4700 exec/s: 6391 rss: 401Mb L: 4592/4592 MS: 2 ChangeASCIIInt-PersAutoDict- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#22053\tREDUCE cov: 1247 ft: 3412 corp: 93/106Kb lim: 4724 exec/s: 7351 rss: 402Mb L: 320/4592 MS: 1 CrossOver-\n#22566\tNEW    cov: 1247 ft: 3413 corp: 94/108Kb lim: 4724 exec/s: 7522 rss: 403Mb L: 1730/4592 MS: 3 ShuffleBytes-ShuffleBytes-CMP- DE: \"\\001\\000\\000\\000\\000\\000\\000\\000\"-\n#22971\tREDUCE cov: 1247 ft: 3413 corp: 94/108Kb lim: 4724 exec/s: 7657 rss: 403Mb L: 1473/4592 MS: 5 ChangeASCIIInt-CMP-ChangeByte-ChangeBinInt-EraseBytes- DE: \"\\037\\213\"-\n#22988\tNEW    cov: 1247 ft: 3415 corp: 95/109Kb lim: 4724 exec/s: 7662 rss: 403Mb L: 1538/4592 MS: 2 ChangeBit-CopyPart-\n#24204\tREDUCE cov: 1247 ft: 3415 corp: 95/109Kb lim: 4736 exec/s: 8068 rss: 404Mb L: 320/4592 MS: 1 EraseBytes-\n#25780\tREDUCE cov: 1247 ft: 3415 corp: 95/109Kb lim: 4748 exec/s: 6445 rss: 406Mb L: 3009/4592 MS: 1 EraseBytes-\n#25907\tREDUCE cov: 1247 ft: 3415 corp: 95/109Kb lim: 4748 exec/s: 6476 rss: 406Mb L: 1644/4592 MS: 2 ChangeBit-EraseBytes-\n#28121\tREDUCE cov: 1247 ft: 3415 corp: 95/109Kb lim: 4760 exec/s: 7030 rss: 409Mb L: 319/4592 MS: 2 ChangeBinInt-EraseBytes-\n#31973\tREDUCE cov: 1247 ft: 3415 corp: 95/109Kb lim: 4796 exec/s: 7993 rss: 412Mb L: 4325/4592 MS: 2 InsertByte-EraseBytes-\n#32768\tpulse  cov: 1247 ft: 3415 corp: 95/109Kb lim: 4796 exec/s: 8192 rss: 413Mb\n#33754\tNEW    cov: 1247 ft: 3416 corp: 96/109Kb lim: 4808 exec/s: 6750 rss: 413Mb L: 282/4592 MS: 1 ChangeBinInt-\n#33840\tREDUCE cov: 1247 ft: 3416 corp: 96/109Kb lim: 4808 exec/s: 6768 rss: 413Mb L: 274/4592 MS: 1 EraseBytes-\n#36982\tREDUCE cov: 1247 ft: 3416 corp: 96/109Kb lim: 4832 exec/s: 7396 rss: 413Mb L: 298/4592 MS: 1 EraseBytes-\n#37042\tREDUCE cov: 1247 ft: 3416 corp: 96/109Kb lim: 4832 exec/s: 7408 rss: 413Mb L: 1157/4592 MS: 5 CopyPart-ChangeBinInt-PersAutoDict-InsertByte-EraseBytes- DE: \"\\001\\000\\000\\000\\000\\000\\000\\000\"-\n#37376\tREDUCE cov: 1247 ft: 3416 corp: 96/109Kb lim: 4832 exec/s: 7475 rss: 413Mb L: 1142/4592 MS: 4 ChangeBit-ChangeBinInt-PersAutoDict-EraseBytes- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#39439\tREDUCE cov: 1247 ft: 3416 corp: 96/109Kb lim: 4844 exec/s: 7887 rss: 413Mb L: 318/4592 MS: 3 ChangeBit-ChangeASCIIInt-EraseBytes-\n#40400\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4844 exec/s: 6733 rss: 413Mb L: 816/4592 MS: 1 EraseBytes-\n#41795\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4856 exec/s: 6965 rss: 413Mb L: 1922/4592 MS: 2 ChangeByte-CrossOver-\n#42977\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4856 exec/s: 7162 rss: 413Mb L: 797/4592 MS: 2 ChangeByte-EraseBytes-\n#44154\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4856 exec/s: 7359 rss: 413Mb L: 637/4592 MS: 2 ChangeASCIIInt-EraseBytes-\n#44865\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4856 exec/s: 7477 rss: 413Mb L: 319/4592 MS: 1 EraseBytes-\n#47740\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4880 exec/s: 6820 rss: 413Mb L: 258/4592 MS: 2 ChangeByte-EraseBytes-\n#49706\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4892 exec/s: 7100 rss: 413Mb L: 666/4592 MS: 1 EraseBytes-\n#49779\tREDUCE cov: 1247 ft: 3416 corp: 96/108Kb lim: 4892 exec/s: 7111 rss: 413Mb L: 313/4592 MS: 3 PersAutoDict-EraseBytes-InsertRepeatedBytes- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#49905\tNEW    cov: 1247 ft: 3419 corp: 97/112Kb lim: 4892 exec/s: 7129 rss: 413Mb L: 4592/4592 MS: 1 PersAutoDict- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#52401\tREDUCE cov: 1247 ft: 3419 corp: 97/112Kb lim: 4916 exec/s: 7485 rss: 414Mb L: 246/4592 MS: 1 EraseBytes-\n#53762\tREDUCE cov: 1247 ft: 3419 corp: 97/112Kb lim: 4928 exec/s: 7680 rss: 414Mb L: 1095/4592 MS: 1 EraseBytes-\n#58583\tNEW    cov: 1247 ft: 3422 corp: 98/113Kb lim: 4976 exec/s: 7322 rss: 417Mb L: 978/4592 MS: 1 InsertRepeatedBytes-\n#61450\tNEW    cov: 1247 ft: 3424 corp: 99/114Kb lim: 5000 exec/s: 6827 rss: 419Mb L: 978/4592 MS: 2 CrossOver-PersAutoDict- DE: \"\\004\\000\\000\\000\\000\\000\\000\\000\"-\n#62756\tREDUCE cov: 1247 ft: 3424 corp: 99/114Kb lim: 5012 exec/s: 6972 rss: 419Mb L: 2621/4592 MS: 1 EraseBytes-\n#64194\tREDUCE cov: 1247 ft: 3424 corp: 99/114Kb lim: 5024 exec/s: 7132 rss: 420Mb L: 874/4592 MS: 3 EraseBytes-InsertByte-CrossOver-\n#64911\tREDUCE cov: 1247 ft: 3424 corp: 99/114Kb lim: 5024 exec/s: 7212 rss: 421Mb L: 832/4592 MS: 2 ShuffleBytes-EraseBytes-\n#65536\tpulse  cov: 1247 ft: 3424 corp: 99/114Kb lim: 5024 exec/s: 7281 rss: 421Mb\n#66079\tREDUCE cov: 1247 ft: 3424 corp: 99/113Kb lim: 5024 exec/s: 7342 rss: 421Mb L: 804/4592 MS: 3 ShuffleBytes-ChangeByte-EraseBytes-\n#66985\tNEW    cov: 1247 ft: 3425 corp: 100/118Kb lim: 5024 exec/s: 7442 rss: 424Mb L: 4592/4592 MS: 1 PersAutoDict- DE: \"\\001\\000\\000\\000\\000\\000\\000\\000\"-\n#67308\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5024 exec/s: 7478 rss: 424Mb L: 800/4592 MS: 3 ChangeByte-CopyPart-EraseBytes-\n#67819\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5024 exec/s: 7535 rss: 424Mb L: 818/4592 MS: 1 EraseBytes-\n#69710\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5036 exec/s: 6971 rss: 424Mb L: 215/4592 MS: 1 EraseBytes-\n#72985\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5060 exec/s: 7298 rss: 424Mb L: 862/4592 MS: 4 InsertByte-ShuffleBytes-ChangeByte-EraseBytes-\n#74311\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5072 exec/s: 7431 rss: 424Mb L: 985/4592 MS: 1 EraseBytes-\n#82134\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5144 exec/s: 6844 rss: 424Mb L: 591/4592 MS: 1 EraseBytes-\n#82641\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5144 exec/s: 6886 rss: 424Mb L: 845/4592 MS: 2 ChangeByte-EraseBytes-\n#84063\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5156 exec/s: 7005 rss: 424Mb L: 782/4592 MS: 1 EraseBytes-\n#85134\tREDUCE cov: 1247 ft: 3425 corp: 100/118Kb lim: 5156 exec/s: 7094 rss: 424Mb L: 785/4592 MS: 1 EraseBytes-\n#85919\tNEW    cov: 1247 ft: 3426 corp: 101/122Kb lim: 5156 exec/s: 7159 rss: 424Mb L: 4592/4592 MS: 5 ChangeBinInt-ChangeBinInt-ChangeBit-ChangeBinInt-CMP- DE: \"\\001\\000\\000\\000\\000\\000\\000\\013\"-\n#88269\tDONE   cov: 1247 ft: 3426 corp: 101/122Kb lim: 5168 exec/s: 6789 rss: 424Mb\n###### Recommended dictionary. ######\n\"\\004\\000\\000\\000\\000\\000\\000\\000\" # Uses: 3680\n\"\\001\\000\\000\\000\\000\\000\\000\\000\" # Uses: 1888\n\"\\037\\213\" # Uses: 1801\n\"\\001\\000\\000\\000\\000\\000\\000\\013\" # Uses: 45\n###### End of recommended dictionary. ######\nDone 88269 runs in 13 second(s)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "8d6e2c67e38ed7c30f8d0f88a721db100a6989506e908f6cb6468ecec0fa62d1"
+  }
+]

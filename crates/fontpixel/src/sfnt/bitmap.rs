@@ -45,7 +45,7 @@ pub enum Kind {
     OpenType,
     /// bdat/bloc version 2.
     Apple,
-    /// CBDT/CBLC version 3 (read only).
+    /// CBDT/CBLC version 3 (PNG writing requires `color`).
     Color,
 }
 impl Kind {
@@ -115,7 +115,7 @@ pub struct Strike {
     pub ppem_x: u8,
     /// Vertical ppem, nonzero.
     pub ppem_y: u8,
-    /// Source depth; write supports 1, 2, 4 or 8.
+    /// Source depth; write supports 1, 2, 4, 8, or 32 for CBDT.
     pub bit_depth: u8,
     /// Small-metric direction: 1 horizontal, 2 vertical; 3 only for big metrics.
     pub flags: u8,
@@ -266,6 +266,8 @@ struct Budget<'a> {
     pixels: usize,
     visits: usize,
     glyphs: usize,
+    #[cfg(feature = "color")]
+    decompressed: usize,
 }
 impl<'a> Budget<'a> {
     fn new(limits: &'a Limits) -> Self {
@@ -275,6 +277,8 @@ impl<'a> Budget<'a> {
             pixels: 0,
             visits: 0,
             glyphs: 0,
+            #[cfg(feature = "color")]
+            decompressed: 0,
         }
     }
     fn add(value: &mut usize, amount: usize, max: usize, name: &'static str) -> Result<()> {
@@ -289,6 +293,15 @@ impl<'a> Budget<'a> {
             n,
             self.limits.sfnt.resources.max_total_bytes,
             "embedded bitmap model bytes",
+        )
+    }
+    #[cfg(feature = "color")]
+    fn decompress(&mut self, n: usize) -> Result<()> {
+        Self::add(
+            &mut self.decompressed,
+            n,
+            self.limits.sfnt.resources.max_decompressed_bytes,
+            "embedded PNG cumulative decompression bytes",
         )
     }
     fn work(&mut self, n: usize) -> Result<()> {
@@ -739,17 +752,26 @@ fn sample(bitmap: &GlyphBitmap, x: u32, y: u32) -> Result<u8> {
 /// Encode canonical variable-size indexes and byte-aligned images. Metrics and
 /// exact gray values must fit; there is no implicit threshold or quantization.
 pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) -> Result<Tables> {
-    if kind == Kind::Color {
-        return Err(invalid("color bitmap writing is not implemented"));
+    if kind == Kind::Color && !cfg!(feature = "color") {
+        return Err(invalid("color bitmap writing requires the color feature"));
     }
     limits.sfnt.glyphs(num_glyphs as usize)?;
     bounded(strikes.len(), limits.max_strikes, "embedded bitmap strikes")?;
     let mut budget = Budget::new(limits);
-    let mut data = vec![0, 2, 0, 0];
-    let mut location = buffer(8 + strikes.len() * 48)?;
-    p32(&mut location, 0x20000);
+    let header_size = strikes
+        .len()
+        .checked_mul(48)
+        .and_then(|n| n.checked_add(8))
+        .ok_or_else(|| invalid("bitmap location header overflow"))?;
+    limits.sfnt.table(header_size)?;
+    if kind == Kind::Color {
+        budget.memory(header_size.saturating_add(4))?;
+    }
+    let mut data = kind.version().to_be_bytes().to_vec();
+    let mut location = buffer(header_size)?;
+    p32(&mut location, kind.version());
     p32(&mut location, to32(strikes.len())?);
-    location.resize(8 + strikes.len() * 48, 0);
+    location.resize(header_size, 0);
     let mut ordered: Vec<_> = strikes.iter().collect();
     if kind == Kind::Apple {
         ordered.sort_by_key(|s| (s.ppem_y, s.ppem_x));
@@ -758,7 +780,11 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
         if s.ppem_x == 0
             || s.ppem_y == 0
             || !(1..=3).contains(&s.flags)
-            || ![1, 2, 4, 8].contains(&s.bit_depth)
+            || !(if kind == Kind::Color {
+                s.bit_depth == 32
+            } else {
+                [1, 2, 4, 8].contains(&s.bit_depth)
+            })
             || s.glyphs.is_empty()
         {
             return Err(invalid("invalid or empty bitmap strike"));
@@ -775,24 +801,43 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
             budget.raster(g.bitmap.width(), g.bitmap.height())?;
             let mut encoded = Vec::new();
             let format = put_metrics(&mut encoded, g.metrics, s.flags)?;
-            let depth = s.bit_depth as usize;
-            let stride = (g.bitmap.width() as usize * depth).div_ceil(8);
-            let header = encoded.len();
-            encoded.resize(header + stride * g.bitmap.height() as usize, 0);
-            let step = 255 / ((1u16 << depth) - 1) as u8;
-            for y in 0..g.bitmap.height() {
-                for x in 0..g.bitmap.width() {
-                    let v = sample(&g.bitmap, x, y)?;
-                    if !v.is_multiple_of(step) {
-                        return Err(invalid(
-                            "bitmap gray value cannot be represented at requested depth",
-                        ));
+            let format = if kind == Kind::Color {
+                #[cfg(feature = "color")]
+                {
+                    if g.bitmap.width() == 0 || g.bitmap.height() == 0 {
+                        // PNG cannot represent zero-area glyphs. CBDT permits
+                        // the ordinary EBDT forms, including empty raw images.
+                        format
+                    } else {
+                        let png = color::encode_png(&g.bitmap, &mut budget)?;
+                        p32(&mut encoded, to32(png.len())?);
+                        encoded.extend(png);
+                        if format == 1 { 17 } else { 18 }
                     }
-                    let bit = x as usize * depth;
-                    encoded[header + y as usize * stride + bit / 8] |=
-                        (v / step) << (8 - depth - bit % 8);
                 }
-            }
+                #[cfg(not(feature = "color"))]
+                unreachable!()
+            } else {
+                let depth = s.bit_depth as usize;
+                let stride = (g.bitmap.width() as usize * depth).div_ceil(8);
+                let header = encoded.len();
+                encoded.resize(header + stride * g.bitmap.height() as usize, 0);
+                let step = 255 / ((1u16 << depth) - 1) as u8;
+                for y in 0..g.bitmap.height() {
+                    for x in 0..g.bitmap.width() {
+                        let v = sample(&g.bitmap, x, y)?;
+                        if !v.is_multiple_of(step) {
+                            return Err(invalid(
+                                "bitmap gray value cannot be represented at requested depth",
+                            ));
+                        }
+                        let bit = x as usize * depth;
+                        encoded[header + y as usize * stride + bit / 8] |=
+                            (v / step) << (8 - depth - bit % 8);
+                    }
+                }
+                format
+            };
             limits.sfnt.table(
                 data.len()
                     .checked_add(encoded.len())
@@ -854,5 +899,10 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
         limits.sfnt.resources.max_total_bytes,
         "bitmap output bytes",
     )?;
+    if kind == Kind::Color {
+        budget.memory(data.len() + location.len())?;
+        // This also applies the reader's PNG chunk/visit/decompression limits.
+        decode(&location, &data, kind, num_glyphs, limits)?;
+    }
     Ok(Tables { data, location })
 }

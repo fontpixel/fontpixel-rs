@@ -1,7 +1,95 @@
 //! Private bounded wire and diagnostic helpers shared by legacy binary codecs.
+use crate::bitmap::BitmapLimits;
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "vtfont",
+    feature = "wsfont"
+))]
 pub use crate::bitmap::ByteOrder;
-use crate::bitmap::{Bitmap, BitmapLimits, Mono};
-use crate::model::{Codepoint, Font, FontSet, Glyph, Properties, PropertyValue};
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "figlet",
+    feature = "palm",
+    feature = "gdr",
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont",
+    feature = "bbc",
+    feature = "comfont",
+    feature = "consoleet",
+    feature = "grasp",
+    feature = "hrcg",
+    feature = "wyse",
+    feature = "xbin",
+    feature = "zapfont",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "xerox",
+    feature = "beos",
+))]
+use crate::bitmap::{Bitmap, Mono};
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "riscos",
+    feature = "xerox"
+))]
+use crate::model::Codepoint;
+use crate::model::{Font, FontSet, Glyph, Properties, PropertyValue};
 use crate::report::{Impact, Level, Location, ReportEntry};
 use crate::{Error, Report, ResourceLimits, Result};
 
@@ -15,6 +103,23 @@ pub fn check(n: usize, limit: usize, resource: &'static str) -> Result<()> {
         Ok(())
     }
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont"
+))]
 pub fn slice(b: &[u8], at: usize, n: usize) -> Result<&[u8]> {
     b.get(
         at..at
@@ -23,6 +128,21 @@ pub fn slice(b: &[u8], at: usize, n: usize) -> Result<&[u8]> {
     )
     .ok_or_else(|| invalid("truncated font data"))
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "oberon",
+    feature = "geos",
+    feature = "gpi",
+    feature = "pcgeos",
+    feature = "vtfont"
+))]
 pub fn u16_at(b: &[u8], at: usize, e: ByteOrder) -> Result<u16> {
     let b = slice(b, at, 2)?;
     Ok(match e {
@@ -30,6 +150,18 @@ pub fn u16_at(b: &[u8], at: usize, e: ByteOrder) -> Result<u16> {
         ByteOrder::Little => u16::from_le_bytes([b[0], b[1]]),
     })
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "wsfont",
+    feature = "gpi",
+    feature = "pcgeos",
+    feature = "vtfont"
+))]
 pub fn u32_at(b: &[u8], at: usize, e: ByteOrder) -> Result<u32> {
     let b = slice(b, at, 4)?;
     Ok(match e {
@@ -37,22 +169,70 @@ pub fn u32_at(b: &[u8], at: usize, e: ByteOrder) -> Result<u32> {
         ByteOrder::Little => u32::from_le_bytes([b[0], b[1], b[2], b[3]]),
     })
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "oberon",
+    feature = "geos",
+    feature = "gpi",
+    feature = "pcgeos",
+    feature = "vtfont"
+))]
 pub fn put16(b: &mut [u8], at: usize, v: u16, e: ByteOrder) {
     b[at..at + 2].copy_from_slice(&match e {
         ByteOrder::Big => v.to_be_bytes(),
         ByteOrder::Little => v.to_le_bytes(),
     });
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "palm",
+    feature = "gdr",
+    feature = "beos",
+    feature = "wsfont",
+    feature = "gpi",
+    feature = "pcgeos",
+    feature = "vtfont"
+))]
 pub fn put32(b: &mut [u8], at: usize, v: u32, e: ByteOrder) {
     b[at..at + 4].copy_from_slice(&match e {
         ByteOrder::Big => v.to_be_bytes(),
         ByteOrder::Little => v.to_le_bytes(),
     });
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "palm",
+    feature = "gdr",
+    feature = "figlet",
+    feature = "beos",
+    feature = "wsfont",
+    feature = "geos",
+    feature = "gpi",
+    feature = "pcgeos"
+))]
 pub fn latin(b: &[u8]) -> String {
     b.iter().map(|&x| char::from(x)).collect()
 }
-#[cfg(any(feature = "amiga", feature = "snf"))]
+#[cfg(any(
+    feature = "amiga",
+    feature = "snf",
+    feature = "beos",
+    feature = "wsfont",
+    feature = "geos",
+    feature = "gpi",
+    feature = "pcgeos"
+))]
 pub fn latin_bytes(s: &str) -> Result<Vec<u8>> {
     s.chars()
         .map(|c| {
@@ -60,6 +240,44 @@ pub fn latin_bytes(s: &str) -> Result<Vec<u8>> {
         })
         .collect()
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "figlet",
+    feature = "palm",
+    feature = "gdr",
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon",
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "sbf",
+    feature = "playdate",
+    feature = "beos",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont",
+    feature = "catalyst",
+    feature = "dashen",
+    feature = "prebuilt",
+    feature = "riscos",
+    feature = "xerox",
+    feature = "sfont",
+    feature = "vlw"
+))]
 pub fn int(p: &Properties, k: &str, default: i64) -> Result<i64> {
     match p.get(k) {
         None => Ok(default),
@@ -149,6 +367,57 @@ pub fn bitmap_limits(l: &ResourceLimits) -> BitmapLimits {
         ..Default::default()
     }
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "figlet",
+    feature = "palm",
+    feature = "gdr",
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont",
+    feature = "bbc",
+    feature = "comfont",
+    feature = "consoleet",
+    feature = "grasp",
+    feature = "hrcg",
+    feature = "wyse",
+    feature = "xbin",
+    feature = "zapfont",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "xerox",
+    feature = "beos",
+))]
 pub fn mono(g: &Glyph) -> Result<&Bitmap<Mono>> {
     match &g.bitmap {
         crate::model::GlyphBitmap::Mono(b) => Ok(b),
@@ -158,7 +427,13 @@ pub fn mono(g: &Glyph) -> Result<&Bitmap<Mono>> {
     }
 }
 /// Extract a non-byte-aligned range without expanding a strip into pixels.
-#[cfg(any(feature = "gem", feature = "amiga"))]
+#[cfg(any(
+    feature = "gem",
+    feature = "amiga",
+    feature = "palm",
+    feature = "geos",
+    feature = "vtfont"
+))]
 pub fn extract(
     strip: &[u8],
     stride: usize,
@@ -202,7 +477,15 @@ pub fn extract(
     Bitmap::from_raw(w, h, &out, bitmap_limits(l))
 }
 /// Paste a packed glyph into a strip; source bounds and total allocation are checked by caller.
-#[cfg(any(feature = "gem", feature = "amiga"))]
+#[cfg(any(
+    feature = "gem",
+    feature = "amiga",
+    feature = "palm",
+    feature = "geos",
+    feature = "vtfont",
+    feature = "symbos",
+    feature = "wsfont"
+))]
 pub fn insert(strip: &mut [u8], stride: usize, x: usize, top: usize, b: &Bitmap<Mono>) {
     let shift = x % 8;
     for y in 0..b.height() as usize {
@@ -489,8 +772,22 @@ pub fn audit(
                     "Glyph moves to another slot",
                 )?;
             }
+            // Large alias lists must not turn a successful write into an O(n²)
+            // audit. Keep tiny lists allocation-free and account for the index
+            // before allocating it. A sorted vector also handles duplicate codes.
+            let mut indexed_codes = Vec::new();
+            if h.codepoints.len() > 16 {
+                budget.items::<crate::model::Codepoint>(h.codepoints.len())?;
+                indexed_codes.extend_from_slice(&h.codepoints);
+                indexed_codes.sort_unstable();
+            }
             for cp in &g.codepoints {
-                if !h.codepoints.contains(cp) {
+                let present = if indexed_codes.is_empty() {
+                    h.codepoints.contains(cp)
+                } else {
+                    indexed_codes.binary_search(cp).is_ok()
+                };
+                if !present {
                     budget.loss(
                         r,
                         format,
@@ -578,6 +875,25 @@ pub fn audit(
     }
     Ok(())
 }
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "riscos",
+    feature = "xerox"
+))]
 pub fn select<'a>(
     f: &'a Font,
     max: u32,
@@ -647,6 +963,58 @@ pub fn select<'a>(
 }
 
 /// Clone only when the caller has explicitly requested thresholding gray input.
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "figlet",
+    feature = "palm",
+    feature = "gdr",
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont",
+    feature = "bbc",
+    feature = "comfont",
+    feature = "consoleet",
+    feature = "grasp",
+    feature = "hrcg",
+    feature = "wyse",
+    feature = "xbin",
+    feature = "zapfont",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "xerox",
+    feature = "ssfn",
+    feature = "pfr"
+))]
 pub fn convert_gray<'a>(
     s: &'a FontSet,
     threshold: Option<u8>,
@@ -714,5 +1082,64 @@ pub fn finish(
             });
             Err(Error::ReportedErrors(report))
         }
+    }
+}
+
+#[cfg(test)]
+mod audit_tests {
+    use super::*;
+    use crate::bitmap::{Bitmap, Mono};
+    use crate::model::Codepoint;
+
+    #[test]
+    fn large_unsorted_alias_lists_preserve_mapping_diagnostics_and_budget() {
+        let mut glyph = Glyph::new(Bitmap::<Mono>::new(1, 1).unwrap());
+        glyph.codepoints = (32..4128).rev().map(Codepoint::Legacy).collect();
+        let mut font = Font::default();
+        font.add_glyph(glyph.clone()).unwrap();
+        let source = FontSet {
+            fonts: vec![font],
+            ..Default::default()
+        };
+        let limits = ResourceLimits::default();
+        let mut report = Report::default();
+        let mut budget = Budget::new(0, &limits).unwrap();
+        audit(&source, &source, "test", &mut report, &mut budget).unwrap();
+        assert!(report.entries.is_empty());
+        assert!(budget.used >= glyph.codepoints.len() * std::mem::size_of::<Codepoint>());
+
+        glyph.codepoints.retain(|cp| *cp != Codepoint::Legacy(2048));
+        let mut target_font = Font::default();
+        target_font.add_glyph(glyph).unwrap();
+        let target = FontSet {
+            fonts: vec![target_font],
+            ..Default::default()
+        };
+        let mut report = Report::default();
+        audit(
+            &source,
+            &target,
+            "test",
+            &mut report,
+            &mut Budget::new(0, &limits).unwrap(),
+        )
+        .unwrap();
+        let omitted: Vec<_> = report
+            .entries
+            .iter()
+            .filter(|e| e.code == "test.write.mapping")
+            .collect();
+        assert_eq!(omitted.len(), 1);
+        assert!(omitted[0].message.contains("2048"));
+        assert!(matches!(
+            audit(
+                &source,
+                &source,
+                "test",
+                &mut Report::default(),
+                &mut Budget { used: 0, max: 100 }
+            ),
+            Err(Error::ResourceLimit { .. })
+        ));
     }
 }

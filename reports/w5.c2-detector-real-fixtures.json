@@ -1,0 +1,54 @@
+[
+  {
+    "format": "riscos",
+    "source": "../local-work/w5-detector-review/fontx2-original.fnt",
+    "sha256": "cd1e8893be48db9c2626db731bb82172dbbe8fe4184f9a790c613ac919869ea6",
+    "command": [
+      "../local-work/w5c2-detector-probe",
+      "riscos",
+      "../local-work/w5-detector-review/fontx2-original.fnt"
+    ],
+    "exit": 0,
+    "stdout": "../local-work/w5-detector-review/fontx2-original.fnt: NoMatch\n",
+    "stderr": ""
+  },
+  {
+    "format": "chiwriter",
+    "source": "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-256",
+    "sha256": "f23e254de4f335cde98e2f8951a59acff95e86139eaf24e1a9893962f2350ae7",
+    "command": [
+      "../local-work/w5c2-detector-probe",
+      "chiwriter",
+      "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-256"
+    ],
+    "exit": 0,
+    "stdout": "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-256: NoMatch\n",
+    "stderr": ""
+  },
+  {
+    "format": "chiwriter",
+    "source": "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-2048",
+    "sha256": "06649c2224e4458fb0badee8e1068c25459b70f50912540b357736002cf84f4b",
+    "command": [
+      "../local-work/w5c2-detector-probe",
+      "chiwriter",
+      "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-2048"
+    ],
+    "exit": 0,
+    "stdout": "../local-work/phase5-performance/prep-final/fixtures/d/benchmark/qpf-2048: NoMatch\n",
+    "stderr": ""
+  },
+  {
+    "format": "xerox",
+    "source": "../local-work/phase5-performance/prep-final/fixtures/p3_54/large-palm.bin",
+    "sha256": "e2824b5d1da9eafca5d60f385ab51db013be7dd8e7d4b0890b5c969bbf528471",
+    "command": [
+      "../local-work/w5c2-detector-probe",
+      "xerox",
+      "../local-work/phase5-performance/prep-final/fixtures/p3_54/large-palm.bin"
+    ],
+    "exit": 0,
+    "stdout": "../local-work/phase5-performance/prep-final/fixtures/p3_54/large-palm.bin: NoMatch\n",
+    "stderr": ""
+  }
+]

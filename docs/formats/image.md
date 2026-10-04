@@ -79,3 +79,55 @@ raw bitmap properties. Output sinks cap vector growth before allocating.
 All nested native metadata objects reject unknown fields, including shared metrics,
 name, charset and property structures. Unknown future fields cannot disappear in a
 strict conversion. The same model schema is used by YAFF's native metadata extension.
+
+## Native imageset directory (W5.E2, recorded before implementation)
+
+The existing atlas API remains the default. A separate imageset layout follows
+monobit's [native directory format](https://github.com/robhagemans/monobit/blob/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/image/image.py):
+one glyph image per file, with the filename stem containing its numeric code.
+Prefix, radix, Unicode/Legacy domain and background interpretation are explicit
+options. Native writing uses deterministic hexadecimal filenames and the chosen
+real image container. It returns OutputBundle::directory without a synthetic
+header, manifest or atlas mapping file. Directory reads require explicit format
+selection and bounded nonrecursive resource listing.
+
+Imageset has no native metric/name metadata. Glyph dimensions remain exact;
+default x/y are zero, advance is image width, and a supplied baseline can define
+vertical placement. Empty dimensions cannot be stored by ordinary PNG/BMP and
+require a diagnosed transparent-cell projection or a clear error. Aliases become
+separate files with separate native glyph associations; unsupported mappings,
+sequences, names, absent metrics and other changes produce Loss. Strict writes
+reject these changes. Coverage remains Mono/Gray8; color/background conversion
+is documented and diagnosed rather than fabricated as RGB model data.
+
+Listing metadata, filenames, retained resource bytes, each decoder/encoder's
+scratch, decoded glyphs, diagnostics, output files and same-limits readback are
+cumulatively bounded. Sorting and keyed membership avoid quadratic behavior for
+large directories. Individual files never obtain filesystem authority; only the
+provided resolver handles enumeration and access. Monobit's actual imageset
+container API supplies the independent full-pixel/mapping oracle.
+
+The typed `ImageSetOptions` defaults are prefix empty, radix 16, Legacy labels,
+Black background, and no supplied baseline. Radix 2..36 is supported; numeric
+filenames must be unique after parsing. Black uses grayscale intensity; White
+inverts it; Alpha uses the alpha sample. Colored opaque pixels use integer
+299/587/114 luminance and generate Loss; greater-than-eight-bit source samples
+also generate Loss. Transparent pixels contribute zero under either grayscale
+profile. Binary coverage becomes Mono; intermediate samples become Gray8.
+A Gray8 source containing only binary samples therefore has an explicit depth
+change if the native reader reconstructs Mono.
+
+PNG is the default directory output. PNG/BMP/GIF/TGA/PBM/PGM remain available;
+Gray8 GIF/PBM needs the existing explicit threshold. Alpha output is limited to
+PNG and uncompressed RGBA TGA. Zero-sized glyph images fail clearly. Directory
+listing is one resource operation and each image read is another; a successful
+writer requires at least glyph-file-count plus one operations. Files are named
+without unnecessary zero padding, in deterministic numeric order. No file is
+created at the directory primary path itself. Listing is sorted and indexed,
+and decoding/encoding work scales with total image pixels and resource bytes.
+
+Generic PNG/BMP/GIF/PNM signatures provide only Possible detection evidence:
+they can be an SFont/RFont as well as an atlas image. An explicit format/profile
+resolves that ambiguity. RFont's structurally valid native rfVM chunk provides
+Certain evidence in its own codec, taking precedence over generic image magic.
+Filename extensions never override contradictory content evidence.

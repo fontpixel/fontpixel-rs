@@ -1,0 +1,124 @@
+[
+  {
+    "format": "ssfn",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "ssfn",
+      "--test",
+      "ssfn"
+    ],
+    "exit": 0,
+    "seconds": 1.1924051070818678,
+    "log": "reports/w5.e2-outline-ssfn-test.log",
+    "sha256": "5b02b8a8563f9e35a44d81ba62a37fc867a30ef4d132a1332d900f5a15648316"
+  },
+  {
+    "format": "ssfn",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "ssfn",
+      "--lib",
+      "--test",
+      "ssfn",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 4.910238284035586,
+    "log": "reports/w5.e2-outline-ssfn-clippy.log",
+    "sha256": "09d105871723cef173de8ed957738267544d2ee1347578b05b73cfa2ac2880eb"
+  },
+  {
+    "format": "ssfn",
+    "kind": "rustdoc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "ssfn",
+      "--lib",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.29710005107335746,
+    "log": "reports/w5.e2-outline-ssfn-rustdoc.log",
+    "sha256": "a479e9f6fd8713c708bf435c0e3d6e00e40c1b24e5f916e44c8aa97896b8949f"
+  },
+  {
+    "format": "pfr",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pfr",
+      "--test",
+      "pfr"
+    ],
+    "exit": 0,
+    "seconds": 1.1874570690561086,
+    "log": "reports/w5.e2-outline-pfr-test.log",
+    "sha256": "3b4981cbd5dec3132a568b6cd70ed54f5aa4810330975100d66dc8ec0dbdae8b"
+  },
+  {
+    "format": "pfr",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pfr",
+      "--lib",
+      "--test",
+      "pfr",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 0.14096510596573353,
+    "log": "reports/w5.e2-outline-pfr-clippy.log",
+    "sha256": "84cad7828bbdc4e1770db47fad8c62323d03bb0a8d19037af4cc608009627e8a"
+  },
+  {
+    "format": "pfr",
+    "kind": "rustdoc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pfr",
+      "--lib",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.29925505304709077,
+    "log": "reports/w5.e2-outline-pfr-rustdoc.log",
+    "sha256": "a479e9f6fd8713c708bf435c0e3d6e00e40c1b24e5f916e44c8aa97896b8949f"
+  }
+]

@@ -1,0 +1,49 @@
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+error[E0432]: unresolved imports `fontpixel::formats::palm`, `fontpixel::formats::gdr`
+   --> crates/fontpixel/examples/w54_timing.rs:2:26
+    |
+  2 | use fontpixel::formats::{palm,gdr};
+    |                          ^^^^ ^^^ no `gdr` in `formats`
+    |                          |
+    |                          no `palm` in `formats`
+    |
+note: found an item that was configured out
+   --> crates/fontpixel/src/formats/mod.rs:80:9
+    |
+ 79 | #[cfg(feature = "palm")]
+    |       ---------------- the item is gated behind the `palm` feature
+ 80 | pub mod palm;
+    |         ^^^^
+note: found an item that was configured out
+   --> crates/fontpixel/src/formats/mod.rs:125:9
+    |
+124 | #[cfg(feature = "gdr")]
+    |       --------------- the item is gated behind the `gdr` feature
+125 | pub mod gdr;
+    |         ^^^
+
+error: this looks like you are trying to use `.. -= ..`, but you really are doing `.. = (- ..)`
+ --> crates/fontpixel/examples/w54_timing.rs:9:641
+  |
+9 | ...int::Unicode(cp)}else{Codepoint::Legacy(cp)});g.metrics.bounds.y=-i64::from(2*scale);g.metrics.advance=Some(Vector::new(i64::from(...
+  |                                                                    ^^
+  |
+  = note: to remove this lint, use either `-=` or `= -`
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#suspicious_assignment_formatting
+  = note: `-D clippy::suspicious-assignment-formatting` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(clippy::suspicious_assignment_formatting)]`
+
+error: this looks like an `else if` but the `else` is missing
+  --> crates/fontpixel/examples/w54_timing.rs:12:261
+   |
+12 | ...)?;if profile=="double"{s.fonts.extend(sample(false,2)?.fonts);}if profile.starts_with("gray"){for id in s.fonts[0].glyphs().map(...
+   |                                                                    ^
+   |
+   = note: to remove this lint, add the missing `else` or add a new line before the second `if`
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#possible_missing_else
+   = note: `-D clippy::possible-missing-else` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::possible_missing_else)]`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `fontpixel` (example "w54_timing") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...

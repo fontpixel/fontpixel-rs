@@ -1,0 +1,170 @@
+[
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/lisa.pdf",
+    "url": "https://www.kreativekorp.com/swdownload/lisa/AppleLisaFontFormat.pdf?download=1",
+    "bytes": 581333,
+    "sha256": "b4a6cc296c85db4f32d29aebc385abde307a9d818b6d31f83f7e0542feaa23eb",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/binhex.txt",
+    "url": "https://files.stairways.com/other/binhex-40-specs-info.txt",
+    "bytes": 9220,
+    "sha256": "b82270223c7432303e8c42fb744cebc9a2e235e82471a449379db60c383eacbf",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/mgtk.md",
+    "url": "https://raw.githubusercontent.com/a2stuff/a2d/0fd807038f5d73593c67f1ec4b3484f7117b4115/src/mgtk/MGTK.md",
+    "bytes": 37471,
+    "sha256": "1a389dc0fb9f53c8d249de3bc92fa7fbdf560c97cd8bf2a0c9318fc08acd59b6",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/qfontengine_qpf_p.h",
+    "url": "https://raw.githubusercontent.com/qt/qt/0a2f2382541424726168804be2c90b91381608c6/src/gui/text/qfontengine_qpf_p.h",
+    "bytes": 9329,
+    "sha256": "e29839d7aed38c6f69e83f62729834090db07f83ebf95cf56f769acc964a25f3",
+    "license": "Qt LGPL-2.1/LGPL-3.0/commercial alternatives; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/qfontengine_qpf.cpp",
+    "url": "https://raw.githubusercontent.com/qt/qt/0a2f2382541424726168804be2c90b91381608c6/src/gui/text/qfontengine_qpf.cpp",
+    "bytes": 38946,
+    "sha256": "d410f3ebd16fe21b969e9143df59f113d70802bedabac05a68e50750ec75edd4",
+    "license": "Qt LGPL-2.1/LGPL-3.0/commercial alternatives; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/qfontengine_qws.cpp",
+    "url": "https://raw.githubusercontent.com/qt/qt/0a2f2382541424726168804be2c90b91381608c6/src/gui/text/qfontengine_qws.cpp",
+    "bytes": 15054,
+    "sha256": "4a3ae2f8d1676d6b23de150c859062e8c9713789a75e705a32c7bbb5595faae1",
+    "license": "Qt LGPL-2.1/LGPL-3.0/commercial alternatives; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/qpf2.cpp",
+    "url": "https://raw.githubusercontent.com/qt/qt/0a2f2382541424726168804be2c90b91381608c6/tools/makeqpf/qpf2.cpp",
+    "bytes": 26110,
+    "sha256": "1302b67c16721f7814549155c82aa5f3ca4940fc001916fe0f9d18c87f85e4ae",
+    "license": "Qt LGPL-2.1/LGPL-3.0/commercial alternatives; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/qpf-doc.html",
+    "url": "https://doc.qt.io/Archives/qt-4.7/qt-embedded-fonts.html",
+    "bytes": 16599,
+    "sha256": "48f6a8b695338c11b4891051eb25c378d64fc712861611eaa61260efee8828fa",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/bin-dump_font.pl",
+    "url": "https://raw.githubusercontent.com/a2stuff/a2d/0fd807038f5d73593c67f1ec4b3484f7117b4115/bin/dump_font.pl",
+    "bytes": 1582,
+    "sha256": "2cd27b4e418617fbc98564ec0acdde2b9d92f5f099cf2ebdc0273a2f3c3177f0",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/bin-make_font.pl",
+    "url": "https://raw.githubusercontent.com/a2stuff/a2d/0fd807038f5d73593c67f1ec4b3484f7117b4115/bin/make_font.pl",
+    "bytes": 1571,
+    "sha256": "c914a8961de19ca23002b658010709735f4bd64bfeed68d9d0bb4e89987aa572",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/sources/bin-convert_font.pl",
+    "url": "https://raw.githubusercontent.com/a2stuff/a2d/0fd807038f5d73593c67f1ec4b3484f7117b4115/bin/convert_font.pl",
+    "bytes": 1820,
+    "sha256": "dfcfae772ca079ad8a7a5978c12b59f66e0963e3285a95778e996fac37256505",
+    "license": "No explicit license established for this document/tool; consulted or executed externally, not redistributed"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt-everywhere-opensource-src-4.8.7.tar.gz",
+    "bytes": 241075567,
+    "sha256": "e2882295097e47fe089f8ac741a95fef47e0a73a3f3cdf21b56990638f626ea0",
+    "scope": "External original native consumer/build artifact",
+    "url": "https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f.c",
+    "bytes": 1646,
+    "sha256": "a355d1fb512bd17f6eaa0fac83eda4c382dc0e415bf1848df0d09991c2f9c535",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f",
+    "bytes": 16272,
+    "sha256": "7a6cce32d29582f187b3382c4eada5e7b093b95bfa751405254e70859adf3e23",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt-consumer",
+    "bytes": 48520,
+    "sha256": "ab338f867ca3160eb3ff8b6e0a04bdef2b62dcf183c6048d6530789e7f7e2317",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/src/gui/text/qfontengine_qws.cpp",
+    "bytes": 15054,
+    "sha256": "4a3ae2f8d1676d6b23de150c859062e8c9713789a75e705a32c7bbb5595faae1",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/src/gui/text/qfontengine_qpf.cpp",
+    "bytes": 38886,
+    "sha256": "9aca20c28e529c963d4ebf6eb90541405fd2c2bba9d0006df8dfb30d90315aa1",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/src/gui/text/qfontengine_qpf_p.h",
+    "bytes": 9329,
+    "sha256": "e29839d7aed38c6f69e83f62729834090db07f83ebf95cf56f769acc964a25f3",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/LICENSE.LGPLv21",
+    "bytes": 26832,
+    "sha256": "a3db6c7f3027aa27489c25a2fa259185cdee945780c32e01c60cbfabf4743b6c",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/LICENSE.LGPLv3",
+    "bytes": 8049,
+    "sha256": "75d800e60c8d58c2e7f0338e8552ea6123a9ce7e5dd8e1cdf2095e013b737488",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/LGPL_EXCEPTION.txt",
+    "bytes": 1187,
+    "sha256": "41351b1164df4960dff35af9304e4f7e1f6d4d65b24641e4e3c6310ac0fae37e",
+    "scope": "External original native consumer/build artifact"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/fbit.py",
+    "bytes": 6478,
+    "sha256": "18dea844f5b2ebade427469f3d5fae84cb4091a945d173ad5c47f1c11965598a",
+    "license": "MIT, monobit 0.54.0, Rob Hagemans and contributors; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/lisa.py",
+    "bytes": 2371,
+    "sha256": "4a21396d0bf2b772417a543b06c0b42b48c5423a97a7c050aa7ba24bd19fd074",
+    "license": "MIT, monobit 0.54.0, Rob Hagemans and contributors; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/nfnt.py",
+    "bytes": 30269,
+    "sha256": "eeaa7632b70d66377538eeb94a824d2d1c38f4c69748506bf4be14a3d67a07e2",
+    "license": "MIT, monobit 0.54.0, Rob Hagemans and contributors; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/containerformats/binhex.py",
+    "bytes": 8270,
+    "sha256": "28344cea5fcf2099cce8b479dca026659b0306e01fa6410955d1798041efcd8a",
+    "license": "MIT, monobit 0.54.0, Rob Hagemans and contributors; external only"
+  },
+  {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/containerformats/macbinary.py",
+    "bytes": 4989,
+    "sha256": "9ca20812f26ec9eb2f4aa84895582e1c3dbae85a4e10897be7604a85b95bf53b",
+    "license": "MIT, monobit 0.54.0, Rob Hagemans and contributors; external only"
+  }
+]

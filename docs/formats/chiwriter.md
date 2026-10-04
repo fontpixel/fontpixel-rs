@@ -1,0 +1,11 @@
+# ChiWriter and FONTRIX-family bitmap fonts
+
+Primary documents are the scanned [ChiWriter v3 technical manual page V-9](http://jphdupre.chez-alice.fr/chiwriter/technic3/gcw3v01.html#pagev09) and [v4 manual pages158–159](http://jphdupre.chez-alice.fr/chiwriter/manuel4/mcw4-155.html#page158). The MIT monobit reader provides an independent implementation for v3/v4 and the compatible PCPaint/GRASP/FONTRIX layouts.
+
+A344-byte control area contains type0x10/0x11, filename, baseline, glyph count, first code minus32, cell width/height and default advance. V3 widths start at250; V4 widths begin at88 and are indexed by full code position. Raster rows are MSB-first, byte padded, with fixed height and cell width. Compatible PCPaint/GRASP files also expose bitmap-offset and stride fields; those must be validated and retained rather than overwritten by assumptions about unused ChiWriter bytes. Space may be implicit. Advance can crop unused right columns; ink cropped by that interpretation must produce Loss and remain in original source bytes.
+
+Native readers/writers distinguish the versions with typed options, keep codes legacy, preserve original control fields, bound every table and glyph, and audit unsupported metrics and names against a native reread. Filename hints alone are not certain detection. Null-terminated DOS names are valid even though monobit's heuristic may need an explicit filetype override for these fixtures.
+
+Typed versions V3/V4 and layouts Contiguous/AbsoluteOffsets/RelativeOffsets are explicit. Contiguous is default. An optional byte stride controls compatible records. Absolute/relative tables start at61; V4 combinations overlapping its width table fail instead of overwriting it. Writers preserve hidden raster ink and padding from a compatible source record, accept an optional at-most13-byte Latin-1 filename, and use a tested13-byte default for new fonts. Visible widths are bounded by cell width and native advances; glyphs with cropped ink emit Loss.
+
+Autodetection performs an allocation-free code-range and raster-extent check. A contiguous or explicitly padded stride must explain the payload; compatible offset records must address the input end. Zero-dimensional nonempty payloads are not detection evidence. This prevents a real QPF header beginning with0x10 from becoming a spurious ChiWriter candidate.

@@ -1,0 +1,150 @@
+{
+  "license": "MIT; original field-based fixtures; no third-party artwork",
+  "seeds": [
+    {
+      "format": "fbit",
+      "name": "inline",
+      "bytes": 48,
+      "sha256": "881cb648db0ddc7ec33b05cfdec661779c586a99682d6061f6f410ad47e8233b"
+    },
+    {
+      "format": "fbit",
+      "name": "hfnt",
+      "bytes": 32,
+      "sha256": "c27973f78c1ff41c86ea93bcd36c571aac882052f2dc78fb7e529c35967e21eb"
+    },
+    {
+      "format": "fbit",
+      "name": "resource-fork",
+      "bytes": 358,
+      "sha256": "ae774e2fffacbe08f11841cd9e1387a22effb5e77f8f34cd74371b09bbc7c33e"
+    },
+    {
+      "format": "fbit",
+      "name": "macbinary-name",
+      "bytes": 512,
+      "sha256": "fcbb6913854c7562a46b96baff5c8e0cc0f75f680b8e3d4539e4f9e703ac17ed"
+    },
+    {
+      "format": "fbit",
+      "name": "large",
+      "bytes": 8236,
+      "sha256": "334a0ce21fe4c03b113eeb569dd0553573092e37c455ddbb68ca4beb3b904159"
+    },
+    {
+      "format": "lisa",
+      "name": "plain",
+      "bytes": 72,
+      "sha256": "65e42e4a8ff23c54540e2facc511aff126a1ef562f8df5d9dddc4c74679c9eed"
+    },
+    {
+      "format": "lisa",
+      "name": "compressed",
+      "bytes": 80,
+      "sha256": "be17f38241416e91cb402a46195d6aeffa2013bff2c7c22e6e7db0ae4a4877c8"
+    },
+    {
+      "format": "mgtk",
+      "name": "single",
+      "bytes": 9,
+      "sha256": "1e457f83a679103660d2146f0f13bdea38972a6bab386a248e905417ba0624e5"
+    },
+    {
+      "format": "mgtk",
+      "name": "double",
+      "bytes": 13,
+      "sha256": "a0a41c42098223062bc7400f638b7afe90c3f0b383b659010caf0ea98aa4810d"
+    },
+    {
+      "format": "mgtk",
+      "name": "zero-width",
+      "bytes": 20,
+      "sha256": "1504467f84be94c5ed5de95914fe1aeae4f825a58846bcbb7f65313f7fdb09cf"
+    },
+    {
+      "format": "mgtk",
+      "name": "large",
+      "bytes": 8451,
+      "sha256": "9bbe0875f5d80c5125aa3420d965f829a669dd593fdb01f1735d57e47952299b"
+    },
+    {
+      "format": "qpf",
+      "name": "mono",
+      "bytes": 57,
+      "sha256": "4948313aff839d3f551382a570a7499a1af635baf5b2ff1135182d523e347bca"
+    },
+    {
+      "format": "qpf",
+      "name": "gray",
+      "bytes": 31,
+      "sha256": "f0d5e4bf3584adcbd82f2784ef1257b278860954ae75d11d97859e638e45bf72"
+    },
+    {
+      "format": "qpf2",
+      "name": "gray",
+      "bytes": 216,
+      "sha256": "91305cc837acf80b9f156e8db0f502716c18bdda5042c07372382ca96741a6b5"
+    },
+    {
+      "format": "qpf2",
+      "name": "supplementary",
+      "bytes": 228,
+      "sha256": "f48787118b7fd3c6807a96a97a474f282d69ffed6d79b888a45e6ef83f001208"
+    },
+    {
+      "format": "nfnt",
+      "name": "binhex",
+      "bytes": 580,
+      "sha256": "e7df40fc565c02fd9cab92a7c15729dd47f3043e56b1c15240c92e718cfc2af8"
+    },
+    {
+      "format": "qpf",
+      "name": "qpf-256",
+      "scope": "benchmark",
+      "bytes": 6159,
+      "sha256": "f23e254de4f335cde98e2f8951a59acff95e86139eaf24e1a9893962f2350ae7"
+    },
+    {
+      "format": "qpf2",
+      "name": "qpf2-256",
+      "scope": "benchmark",
+      "bytes": 35484,
+      "sha256": "19da1d2742854592c8687f2750b654e1f08dbb3176525812ff4b74b6ffa6c8d9"
+    },
+    {
+      "format": "qpf",
+      "name": "qpf-2048",
+      "scope": "benchmark",
+      "bytes": 49167,
+      "sha256": "06649c2224e4458fb0badee8e1068c25459b70f50912540b357736002cf84f4b"
+    },
+    {
+      "format": "qpf2",
+      "name": "qpf2-2048",
+      "scope": "benchmark",
+      "bytes": 282780,
+      "sha256": "28d97a6c722e422e71067eefaab36a1de8da14709513a46741cd86640ef0bf3a"
+    },
+    {
+      "format": "lisa",
+      "name": "lisa-256",
+      "scope": "benchmark",
+      "bytes": 5176,
+      "sha256": "e717591a6460db374bf07876b2550cc7eb6ec06cbada42a5c355abc83ac50ba7"
+    },
+    {
+      "format": "fbit",
+      "name": "fbit-256",
+      "scope": "benchmark",
+      "bytes": 8236,
+      "sha256": "334a0ce21fe4c03b113eeb569dd0553573092e37c455ddbb68ca4beb3b904159"
+    },
+    {
+      "format": "mgtk",
+      "name": "mgtk-256",
+      "scope": "benchmark",
+      "bytes": 8451,
+      "sha256": "9bbe0875f5d80c5125aa3420d965f829a669dd593fdb01f1735d57e47952299b"
+    }
+  ]
+}

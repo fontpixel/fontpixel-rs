@@ -1,0 +1,942 @@
+{
+  "source_aggregate_sha256": "1f81bb6f4ca62a3488f25a93aa80fcd4e2de484308336ce9aee93dfd456f0854",
+  "source_aggregate_encoding": "UTF-8, sorted path, each line SHA256 + two spaces + relative path + LF",
+  "sources": [
+    {
+      "path": "crates/fontpixel/examples/w5b_timing.rs",
+      "sha256": "3c02ad3dd8b942316d915431c861bc6ed3d993fc72a7145996013ae0c19808f5",
+      "bytes": 13486
+    },
+    {
+      "path": "crates/fontpixel/src/formats/beos.rs",
+      "sha256": "f1dff1ac86bdefb171ea1fdcb23d08b76f7c7cf2aaf15a07400f49642815ba2d",
+      "bytes": 22660
+    },
+    {
+      "path": "crates/fontpixel/src/formats/geos/reader.rs",
+      "sha256": "0ec177f51122458db283bb72a206a10c5243842b90f91b6014423745930c6aca",
+      "bytes": 13032
+    },
+    {
+      "path": "crates/fontpixel/src/formats/geos/writer.rs",
+      "sha256": "6f3cba1f99613f0e4ee5e2607a6744b8b493f42a7536d63b9d692b40bfc0a16c",
+      "bytes": 18712
+    },
+    {
+      "path": "crates/fontpixel/src/formats/geos.rs",
+      "sha256": "60158b7c2fb9c5cbe35c0d44106e6bcee64d716bf9169c71f1f8497cb25b293a",
+      "bytes": 4966
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gpi/container.rs",
+      "sha256": "a3f5922b17328012de0af89e4d4691beddf3776557128b5a4c632c5fe73e2e18",
+      "bytes": 16947
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gpi/reader.rs",
+      "sha256": "c7367f08191504b35c9a3bd980ff0b773e2ba9ca7cd613b12875168289eac769",
+      "bytes": 11166
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gpi/writer.rs",
+      "sha256": "06fc8aaa26250ba45114b0f513f7cfec845f741722b28aed69bd6b8d6082f638",
+      "bytes": 14761
+    },
+    {
+      "path": "crates/fontpixel/src/formats/gpi.rs",
+      "sha256": "c9b53d7ed295f8dff38c11292df533e6b01fa0a36b69fb46c65d673a8e22e8e7",
+      "bytes": 5083
+    },
+    {
+      "path": "crates/fontpixel/src/formats/oberon.rs",
+      "sha256": "866053a5d8de698f559af12dd2a5e5c23d9cbdd9a6d136f8752e52af80910a8f",
+      "bytes": 11889
+    },
+    {
+      "path": "crates/fontpixel/src/formats/pcgeos/reader.rs",
+      "sha256": "3fa2485964490c6d8c9dededaa972e25543c278b81e9befbb26b8b9934e4bbd9",
+      "bytes": 10922
+    },
+    {
+      "path": "crates/fontpixel/src/formats/pcgeos/writer.rs",
+      "sha256": "80eb37b4166945a94a1e27dba72e44181e6ee2b26036b6641bd05865b3dd5a68",
+      "bytes": 15205
+    },
+    {
+      "path": "crates/fontpixel/src/formats/pcgeos.rs",
+      "sha256": "ce11b100ce12d40a7fd6418102ca86dad409ac0fc4503781812ba8730440add4",
+      "bytes": 4977
+    },
+    {
+      "path": "crates/fontpixel/src/formats/symbos.rs",
+      "sha256": "36bac2a7a0f8ba03a47871d81ef720bd1a0d4181044ed4305dc9fcbf26163193",
+      "bytes": 20711
+    },
+    {
+      "path": "crates/fontpixel/src/formats/vtfont/reader.rs",
+      "sha256": "4b02aee2ebc52c3457ad7d76361d585c5cc1de56b1884564fcf27435a3c4030b",
+      "bytes": 8663
+    },
+    {
+      "path": "crates/fontpixel/src/formats/vtfont/writer.rs",
+      "sha256": "f30adacb19f619e783889a45334ba2048143a198d5937a1bee42d0b0e2395bec",
+      "bytes": 10366
+    },
+    {
+      "path": "crates/fontpixel/src/formats/vtfont.rs",
+      "sha256": "779952718df77d03448bfd8da11a0d145e14f2e2f4990a80a5cc8eab2b506522",
+      "bytes": 3172
+    },
+    {
+      "path": "crates/fontpixel/src/formats/wsfont.rs",
+      "sha256": "35859f640da800b6505045ede20e17eca42c689a6eaeb8446ed92b2bc34a3a4c",
+      "bytes": 19898
+    },
+    {
+      "path": "crates/fontpixel/tests/beos.rs",
+      "sha256": "69af409a5ebf13993a3cb50c5f90f9eadc8ac49f4e3d82c4b21bf61636aa24e9",
+      "bytes": 6124
+    },
+    {
+      "path": "crates/fontpixel/tests/geos.rs",
+      "sha256": "cc75585d0ef95be7506d8211a3cb9cd0aa7af909dbda5467672c81e84644c5a4",
+      "bytes": 6917
+    },
+    {
+      "path": "crates/fontpixel/tests/gpi.rs",
+      "sha256": "8ac7758993cb4081acc168d1a90fd4cd0c798609d3f2f14eb560a8f10663890c",
+      "bytes": 8396
+    },
+    {
+      "path": "crates/fontpixel/tests/oberon.rs",
+      "sha256": "b25506256e182b84431412b85689ccaefbc5e9a5bb3f76bdbf7fe7bfc5f84aba",
+      "bytes": 2555
+    },
+    {
+      "path": "crates/fontpixel/tests/pcgeos.rs",
+      "sha256": "597dace18ac5390b9a3c743fb72ae6dec084067bcf518c22fcde540e08952e74",
+      "bytes": 6163
+    },
+    {
+      "path": "crates/fontpixel/tests/symbos.rs",
+      "sha256": "7bc8c8244fdd8eae5db5c5f0ddec82387e93ee08868dbc2f1ab7c1ea19a51912",
+      "bytes": 6621
+    },
+    {
+      "path": "crates/fontpixel/tests/vtfont.rs",
+      "sha256": "25e957e0bdf3ca1238c7323927f8911485ee7e767d8c2e5746ce198f1e12f63e",
+      "bytes": 4475
+    },
+    {
+      "path": "crates/fontpixel/tests/wsfont.rs",
+      "sha256": "56945e79f4c348d3aa999d7ea208ec9f276a437dbac543b9f50ff89b0410e7bb",
+      "bytes": 5006
+    },
+    {
+      "path": "docs/formats/beos.md",
+      "sha256": "817123decceee7ddc8fd44cac569d7c58665f714e7c9a5846615e43d80c94049",
+      "bytes": 2437
+    },
+    {
+      "path": "docs/formats/geos.md",
+      "sha256": "00e898ae2f5b65ad6d219a2ab7da9ec291798d7b73bddd5fa1aa82dc4689438f",
+      "bytes": 4305
+    },
+    {
+      "path": "docs/formats/gpi.md",
+      "sha256": "63771421637170d4e5cee2b758a07ab5e046a28178ba803d4fac61efbb33c9fb",
+      "bytes": 3627
+    },
+    {
+      "path": "docs/formats/oberon.md",
+      "sha256": "2d384f97dcdb0868c30842b228fa711915af9c2e253537fef5e63200ce500ec1",
+      "bytes": 1943
+    },
+    {
+      "path": "docs/formats/pcgeos.md",
+      "sha256": "daa2c2846dc66d4f71e27f0d22c0cd20e1da1c287578fdd05b5aef0de2770f26",
+      "bytes": 4188
+    },
+    {
+      "path": "docs/formats/symbos.md",
+      "sha256": "8df175354fbcb7e07789e0f164cebe381f4efda2a57cf1a0c9c007950d17afcd",
+      "bytes": 2756
+    },
+    {
+      "path": "docs/formats/vtfont.md",
+      "sha256": "f29d8540003303eca8c411d1c45ad1dacc65e9e36c532b9c23f1ede38405d4a6",
+      "bytes": 2290
+    },
+    {
+      "path": "docs/formats/wsfont.md",
+      "sha256": "b77f10b60bfce756bc69e90e75322195ef6877bc33459da710453c57d3f83635",
+      "bytes": 2338
+    },
+    {
+      "path": "fuzz/fuzz_targets/beos.rs",
+      "sha256": "91b44671a57ec9142336a8eb59bc81bcf5367a18f7b187514e3425e368752856",
+      "bytes": 1880
+    },
+    {
+      "path": "fuzz/fuzz_targets/geos.rs",
+      "sha256": "421372442034a51678e3ef3a221152dc38797dd168e00138329e774c8e1e2285",
+      "bytes": 1630
+    },
+    {
+      "path": "fuzz/fuzz_targets/gpi.rs",
+      "sha256": "a6d2aa40211e5765c90c45b70ba7d539a8d6e2c24445ff676918806f334260fd",
+      "bytes": 1550
+    },
+    {
+      "path": "fuzz/fuzz_targets/oberon.rs",
+      "sha256": "1a014e85a90b82cb1584428d2121532a780bae1c24ad1ae11fa1b2aa795b32b8",
+      "bytes": 1490
+    },
+    {
+      "path": "fuzz/fuzz_targets/pcgeos.rs",
+      "sha256": "a0729b3fd47e6feece31f24cb32186caa5e6af793ebe63a0922d1bc27ccdee9f",
+      "bytes": 1652
+    },
+    {
+      "path": "fuzz/fuzz_targets/symbos.rs",
+      "sha256": "029626d480bf4c1e911afcc51066592ec6412d812ee9b212f12c35a4064b1bda",
+      "bytes": 1571
+    },
+    {
+      "path": "fuzz/fuzz_targets/vtfont.rs",
+      "sha256": "4fd7bb9e047d53f3dbf50ab22134772b205d23031d58f3a18fec1ad60892a53f",
+      "bytes": 1568
+    },
+    {
+      "path": "fuzz/fuzz_targets/wsfont.rs",
+      "sha256": "d59c3045d5a966b81186b15da32971f7233f5ed18c5d2c2d321015d47910bdd1",
+      "bytes": 1490
+    },
+    {
+      "path": "fuzz/seed_w5b.py",
+      "sha256": "0a5fbc789a9be89e00f463e8a4b37a2a33b24ceef3b7ef6c7c6211a836da4ce9",
+      "bytes": 235528
+    },
+    {
+      "path": "tests/crosscheck/w5b.py",
+      "sha256": "b2da38521104f06ebec2219d5fdc9af309c8e8f9d146b4b22344d6634ea3b3b7",
+      "bytes": 33342
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/w5.b-crosscheck.json",
+      "sha256": "6c9399cf6c69b7f0bd0016744c8e2bd45f5fd5f202995e1d07ca2df61d823899",
+      "bytes": 404728
+    },
+    {
+      "path": "reports/w5.b-extra-gates.json",
+      "sha256": "bba1e3de88eb4895bc20f9b100a3c4f9f9150755b6cbc0d7f3beb7b3012d65fb",
+      "bytes": 5798
+    },
+    {
+      "path": "reports/w5.b-final-runs.json",
+      "sha256": "9cf206797bead08aad8e66e2e3b5450a1d77714d489d495b92b87b17d13f8bea",
+      "bytes": 6450
+    },
+    {
+      "path": "reports/w5.b-first-four-gates.json",
+      "sha256": "b9b7d9c68591f745f9d9ed7c8df289e3975a72b48b0be7cf411d7b6afe31f14c",
+      "bytes": 18603
+    },
+    {
+      "path": "reports/w5.b-first-four-smoke.json",
+      "sha256": "43d3b72e9bd78ad7d6de0bb061c5be92f485f1c1746dce0347dd8dcdcec7ca05",
+      "bytes": 154398
+    },
+    {
+      "path": "reports/w5.b-gates.json",
+      "sha256": "6dd5f53c9c9a3324c5eb814b6b0cb486a3843ca9f7a0743e74d6ee85144fd381",
+      "bytes": 20302
+    },
+    {
+      "path": "reports/w5.b-last-four-smoke.json",
+      "sha256": "6a983a33de70e89ecb305a203cb67ca22d3c5eaa2533ce09113f16b9b4fa1432",
+      "bytes": 406346
+    },
+    {
+      "path": "reports/w5.b-seeds.json",
+      "sha256": "0a624aef69d43ee9582ac73fd77515a26b10c7d7792d39b28756064305921344",
+      "bytes": 7987
+    },
+    {
+      "path": "reports/w5.b.md",
+      "sha256": "b6828130959ced878cee208cfc8f3cddb77ff64ce79a6e3f0ed979827e967974",
+      "bytes": 10305
+    },
+    {
+      "path": "reports/w5.b-symbos-final2-runs.json",
+      "sha256": "44bfbc1cd007f8ea43d473e91d53f7d61cb3ef90a50567c388b52f127faa9744",
+      "bytes": 16231
+    },
+    {
+      "path": "reports/w5.b-symbos-final2.md",
+      "sha256": "1ef6198c1b47a1ac87e002f4958c8167d908c2c19fa16a996b42ae07dec3d50f",
+      "bytes": 1731
+    },
+    {
+      "path": "reports/w5.b-symbos-final3.md",
+      "sha256": "c80324f6211621153a47c26456a6d154d02d156f23c1672cd42fdd7bf6de73ca",
+      "bytes": 1183
+    },
+    {
+      "path": "reports/w5.b-symbos-final3-build.json",
+      "sha256": "1aa744c3cd84b98f7a54845641794b138ffb05ab2f78703aaca989179a0c1fe3",
+      "bytes": 679
+    }
+  ],
+  "shared_snapshot_not_owned": [
+    {
+      "path": "crates/fontpixel/src/formats/gem/common.rs",
+      "sha256": "aabde4dece3ed387585c38f28037ae902131c47b3106833e9e970e81ca557089",
+      "bytes": 32577
+    },
+    {
+      "path": "crates/fontpixel/src/resources.rs",
+      "sha256": "a4c67e887b881ad6ea97b1747ebc4f9be09df17f6608886f90bd1cf8e8400647",
+      "bytes": 25773
+    },
+    {
+      "path": "crates/fontpixel/src/model/mod.rs",
+      "sha256": "3572ae6faf230779f82bbf52e589e8ad210a351fb340cf523e5b66a846d0cb06",
+      "bytes": 38730
+    }
+  ],
+  "short_asan_smoke": [
+    {
+      "format": "beos",
+      "runs": 516637,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-first-four-smoke.json"
+    },
+    {
+      "format": "oberon",
+      "runs": 565456,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-first-four-smoke.json"
+    },
+    {
+      "format": "symbos",
+      "runs": 51023,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-first-four-smoke.json"
+    },
+    {
+      "format": "wsfont",
+      "runs": 406627,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-first-four-smoke.json"
+    },
+    {
+      "format": "vtfont",
+      "runs": 369987,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-last-four-smoke.json"
+    },
+    {
+      "format": "geos",
+      "runs": 97101,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-last-four-smoke.json"
+    },
+    {
+      "format": "gpi",
+      "runs": 668178,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-last-four-smoke.json"
+    },
+    {
+      "format": "pcgeos",
+      "runs": 281582,
+      "seconds": 13,
+      "exit": 0,
+      "report": "reports/w5.b-last-four-smoke.json"
+    }
+  ],
+  "crosscheck_status": "pass",
+  "independent_checks": 46,
+  "integration_tests": 33,
+  "unit_tests": 1,
+  "single_feature_gates": 24,
+  "artifacts": [
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos-16.bin",
+      "sha256": "6a928c403cf1cc9582065546bb0ad622508447e20edf84a79920cb0ab6b21e3b",
+      "bytes": 247
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos-16.monobit.bin",
+      "sha256": "82b6aebea7c2f77ab498319cbe14a89862f20e9738a1465745b08558bad4336d",
+      "bytes": 252
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos-16.source.json",
+      "sha256": "2b397aa1c76dd9a49aef70395eb417676b85f3d369c67b1d778426562ff0b2a9",
+      "bytes": 1017
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos.bin",
+      "sha256": "3186ffaacc94eb24578669eff62191a32723eb59c8397f280fb120636ccf1fef",
+      "bytes": 247
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos.large.bin",
+      "sha256": "1b5ce028c333dce5a8f5751c7cd15f23b3c109a5d50925754fe70c76d8c24a4b",
+      "bytes": 36149
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/beos.source.json",
+      "sha256": "74b1f423a8ae93e53f1f072d061b6651b1613b202a8ec5f8a9e7a5188d4bfebb",
+      "bytes": 1005
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-bare.bin",
+      "sha256": "8d21dd818e7c244579ab05e6746c3278dedfd79a2749f85d4acf7694c23816be",
+      "bytes": 914
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-bare.monobit.bin",
+      "sha256": "d3113755062b77ca1f4250df77f294add15893954e35a7c70c0cbe28733f97e1",
+      "bytes": 916
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-bare.publisher.bin",
+      "sha256": "8d21dd818e7c244579ab05e6746c3278dedfd79a2749f85d4acf7694c23816be",
+      "bytes": 914
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-bare.source.json",
+      "sha256": "ba4d5ec4a18ef111983c69a42d7f3fa6f822c9137a8eec2a480fd124cfd0a5a8",
+      "bytes": 12103
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-extended.bin",
+      "sha256": "53445975dc14ce1dab39c38c34de6b73108a49a20e238368dc9b5ba64d66917c",
+      "bytes": 2032
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-extended.publisher.bin",
+      "sha256": "22ab3eb5a5045054505d413fa3eaea569a8a556b9b317e5850817b098f0756ed",
+      "bytes": 1872
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-extended.source.json",
+      "sha256": "ba4d5ec4a18ef111983c69a42d7f3fa6f822c9137a8eec2a480fd124cfd0a5a8",
+      "bytes": 12103
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega-utf8.bin",
+      "sha256": "2e1e542f37c83e53f6b64abcf0efc57dc61cf51cb85a263a500f9b7e1ae99509",
+      "bytes": 11430
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega-utf8.publisher.bin",
+      "sha256": "0ed1325170214071fb2c3f9570b73faf65b9d323e08b2ee0abcd34c4b5e5ccba",
+      "bytes": 11204
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega-utf8.source.json",
+      "sha256": "6d6864ea44ebe61112f0e3ecedcf68db2912d140dddc72ccb42a02ed99463d34",
+      "bytes": 13015
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega.bin",
+      "sha256": "c9174592ee3ad867b688ed95c5bb27b03796a1667d3fbe2d5d62adfaf66a760f",
+      "bytes": 5842
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega.publisher.bin",
+      "sha256": "9e15d8a26d0f684a7d362a6ec07b868e60ad744a5b2a5c0238c51e5455613fb5",
+      "bytes": 5734
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-mega.source.json",
+      "sha256": "ba4d5ec4a18ef111983c69a42d7f3fa6f822c9137a8eec2a480fd124cfd0a5a8",
+      "bytes": 12103
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-utf8.bin",
+      "sha256": "ea1dbbb79d620f6e8c5136939aea29d954137088359c2a09811dacad29d6f0e8",
+      "bytes": 7620
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-utf8.large.bin",
+      "sha256": "baa7a9a7a9268ce0f0938ee69659394f3d3ae18866f6de07176383d50bf64489",
+      "bytes": 9906
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-utf8.publisher.bin",
+      "sha256": "c4668c3752779445c8d077309124386f2d7d6dc9fb59d6d676b6a3f22f4ed40e",
+      "bytes": 7394
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-utf8.publisher.json",
+      "sha256": "1c606a4303a9215778dba3eccb8e382e3f8c063274c3c5b962cbb16e05435ec7",
+      "bytes": 26952
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos-utf8.source.json",
+      "sha256": "6d6864ea44ebe61112f0e3ecedcf68db2912d140dddc72ccb42a02ed99463d34",
+      "bytes": 13015
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos.bin",
+      "sha256": "7ed7aae6fdcaed4077da45c604b4f35ed71e494617b45bc8fb5a0548a3ac2426",
+      "bytes": 1778
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos.large.bin",
+      "sha256": "2d95380358229e79cbfbbd3c5ce0bf7b0e654d72afdcb2c0631a573225448370",
+      "bytes": 4064
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos.monobit.bin",
+      "sha256": "5b5331d519b4ca5684c05c8d6b4fe6a9f222a7baf619f59ff9c182388082a283",
+      "bytes": 1778
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos.publisher.bin",
+      "sha256": "299e24424b53377f98ef87f71530c6b20b3b2921ba03d97f1077b71022f118db",
+      "bytes": 1676
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/geos.source.json",
+      "sha256": "ba4d5ec4a18ef111983c69a42d7f3fa6f822c9137a8eec2a480fd124cfd0a5a8",
+      "bytes": 12103
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-fixed.bin",
+      "sha256": "f84157487b44cd508032be8da5bb253f11ea46ae660bf2ede91f1069ddf6a395",
+      "bytes": 278
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-fixed.native-writer.bin",
+      "sha256": "7b58afdf6ed4d61445183ef2a4d37c3d6f7d3327dbc76c567a4338772dbc39e2",
+      "bytes": 290
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-fixed.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx-exepack1.bin",
+      "sha256": "5af4235d93bb630d3f3553a0e6cace0b496652d9041ed107e3aba72c0f0216ba",
+      "bytes": 12288
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx-exepack2.bin",
+      "sha256": "50baf730e865cf2f90aba2cc1fe87309620abba01f8c59bde035d5b10c14203a",
+      "bytes": 12288
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx.bin",
+      "sha256": "e3a21bb1ec1be19efcca8a7adb6272de08554329cce32318acb077ac5974c032",
+      "bytes": 12288
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx.large.bin",
+      "sha256": "7360ec26eec5e9cabe1f19d6e1cec304858d2c58b5945c359b78dfa89b0b3c9e",
+      "bytes": 20480
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx.native.json",
+      "sha256": "d5b9ed90b48db309ec7660dfd79ebe969e617c90de087c9ecae801ba6b4dcc31",
+      "bytes": 757
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-lx.source.json",
+      "sha256": "e3998132d0e1bf3afb29a5d98eda4a33017a5fff7df9259e62a01620f5d191ef",
+      "bytes": 490
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-ne.bin",
+      "sha256": "a5d392c33e12e80ee8b61b231679c22cf49a161e089411518433916c112a3797",
+      "bytes": 736
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-ne.face0.bin",
+      "sha256": "1ceb6a1161d35e1d4dbee3233ff7e8c04c934ed6dd89f27a4b0de1f69663cd20",
+      "bytes": 290
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-ne.source.json",
+      "sha256": "e3998132d0e1bf3afb29a5d98eda4a33017a5fff7df9259e62a01620f5d191ef",
+      "bytes": 490
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-prop.bin",
+      "sha256": "9e3ff5f0ac24fc617f5c58ca7d3fbf15baa508beee7569f3e6751a4dbde48e57",
+      "bytes": 278
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-prop.native-writer.bin",
+      "sha256": "928f50cdc7373360c055b5cbdd86890d515a7494376404f6c95277d686382a16",
+      "bytes": 290
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi-prop.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi.bin",
+      "sha256": "1ceb6a1161d35e1d4dbee3233ff7e8c04c934ed6dd89f27a4b0de1f69663cd20",
+      "bytes": 290
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi.large.bin",
+      "sha256": "6a3291428632012b82bc68116f9570f1a6545c133e2c828c8fbee5df33b6e419",
+      "bytes": 9632
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi.native-writer.bin",
+      "sha256": "1d998bcd661ce8a040e39f58abe5da7da9d29961884068e90f1e3b85c5ffeea5",
+      "bytes": 306
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi.native-writer.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/gpi.source.json",
+      "sha256": "e3998132d0e1bf3afb29a5d98eda4a33017a5fff7df9259e62a01620f5d191ef",
+      "bytes": 490
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/oberon.bin",
+      "sha256": "54175213c6658fdc467c823c74f11d874afaf6ddc4c8e4da4a94fdaf4727f193",
+      "bytes": 86
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/oberon.large.bin",
+      "sha256": "fafeda9c4d212878575a3d463791754d75687e0ac8fa98292d3c9c4a52cd16c3",
+      "bytes": 9428
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/oberon.monobit.bin",
+      "sha256": "54175213c6658fdc467c823c74f11d874afaf6ddc4c8e4da4a94fdaf4727f193",
+      "bytes": 86
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/oberon.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-dbcs.bin",
+      "sha256": "161598e8b6e0aeca929804ddf43cbacce7ce1f8de2f894f146899092f82603fc",
+      "bytes": 496
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-dbcs.large.bin",
+      "sha256": "1536311082235f754f4103517dc08c5574cb6b56839cfa0ec228cf3d6dddb578",
+      "bytes": 816
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-dbcs.native.json",
+      "sha256": "54ac0fb3bebbbee4b5ca27795f13e9de54212175947bba23a3ead927f4c4b3fd",
+      "bytes": 4392
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-dbcs.source.json",
+      "sha256": "51c0ed7ba432d23dca33324892b13065a5396c6cbf71feef6bf638c5abad2497",
+      "bytes": 2227
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-styled.bin",
+      "sha256": "1ab214a2dc1f1f594fce8d050b0654f7e24c76e1adf8c48c002b8c4fcef3e1bd",
+      "bytes": 194
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos-styled.source.json",
+      "sha256": "5f030e9e8735e81b68ce65be41e441736d8f799364884eb7e416798d07abfb77",
+      "bytes": 501
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos.bin",
+      "sha256": "dd7fd9fbece9b933976f96abdc8413053f8512c67eb2cf7476d2c147e93ef162",
+      "bytes": 194
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos.large.bin",
+      "sha256": "06347c69a1f28e10733a118fd63900be7c9092aed62823e8e243abc9eedce390",
+      "bytes": 9978
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos.monobit.bin",
+      "sha256": "a662f6b31d4abe087026b868fd47bfdfeb876dd8f67bb00f662246899e7d800f",
+      "bytes": 194
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/pcgeos.source.json",
+      "sha256": "e3998132d0e1bf3afb29a5d98eda4a33017a5fff7df9259e62a01620f5d191ef",
+      "bytes": 490
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-big-extended.bin",
+      "sha256": "9f2d86c47ed0a81c56e89967d13b54c809b25ab800514f604881cb9c95949545",
+      "bytes": 4592
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-big-extended.large.bin",
+      "sha256": "29901be569aad72e4170a8688e779565fadd87110420b1d1fd4e0f8f7b3fc1e6",
+      "bytes": 9692
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-big-extended.source.json",
+      "sha256": "bb8abdaa8cb9184099351c03e973b72155d72281cbcd5b4a15d5ee34615e19e7",
+      "bytes": 32394
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-big.bin",
+      "sha256": "226cdd8ba1f5555767b912c36e92539d7d04a333314ff2478fb0ebbf182f9324",
+      "bytes": 1730
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-big.source.json",
+      "sha256": "8e848cfe0f431e6fe773127952b6483b33fe7b9e462870dff11cbb2db1d1625b",
+      "bytes": 12232
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-small-extended.bin",
+      "sha256": "cd6fc7066d2f0df3982936d936b16aeff98804d05809e2f3e8cbadb42ec23803",
+      "bytes": 2297
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-small-extended.source.json",
+      "sha256": "6f52a8883310d040db0a0cb6838474e770c8e6746cd81777d412b4677e776683",
+      "bytes": 26920
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-small.bin",
+      "sha256": "8c705017a737f078fe39ef203322b761e1d95009eafddc362c4b636065c40030",
+      "bytes": 866
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos-small.source.json",
+      "sha256": "6451b15c6eb30668253af89a29853e0ed29a4cc07b4f078e2d0cf7f53b485953",
+      "bytes": 10176
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos.bin",
+      "sha256": "272e9f2cd7013cc628f135dab265ec0764b62275308b97f2508f7509fb5a5afd",
+      "bytes": 1538
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos.monobit.bin",
+      "sha256": "272e9f2cd7013cc628f135dab265ec0764b62275308b97f2508f7509fb5a5afd",
+      "bytes": 1538
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/symbos.source.json",
+      "sha256": "6451b15c6eb30668253af89a29853e0ed29a4cc07b4f078e2d0cf7f53b485953",
+      "bytes": 10176
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-fallback-rebuilt.bin",
+      "sha256": "170096cf5d578314e9221a232221a953738697efeb7e30eac3a710f0843478ce",
+      "bytes": 94
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-fallback.bin",
+      "sha256": "abac2197119e0ad606649823a570a9e90ffede3ac9b964ed6fe55161adfb8245",
+      "bytes": 92
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-native-bold.hex",
+      "sha256": "8a3b703420cb4b075c55454cfcb0525953c2279998ad127eaa9cf661ad87c642",
+      "bytes": 33
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-native-normal.hex",
+      "sha256": "7dc81c12f7f1a70f9fd2d0093062219738cc87930942175a94808a96ad8a8157",
+      "bytes": 53
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont-native.bin",
+      "sha256": "1327fbf96c70d6a5680c86a1d5a287ffb789d6b97951d7308848ab677712844e",
+      "bytes": 64
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont.bin",
+      "sha256": "0805f8e0df8cc76fd1da344a9dcfea1e34097f5241c5db8f421931c4d5004fb1",
+      "bytes": 92
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont.large.bin",
+      "sha256": "308b2f082840e208d62edb6802fa943fc490ef91e054ec6d5c093caed72819f3",
+      "bytes": 1160
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont.monobit.bin",
+      "sha256": "ce6ec6f7cc8e3bfcc9898a3e6dfb256ada040a9fadb7ca78d44a879ce8673353",
+      "bytes": 76
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont.native.json",
+      "sha256": "057bce26acaa32f79f0d50a847cab9201082a5941356e18cb81fe4fd116d7d92",
+      "bytes": 751
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/vtfont.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-alpha.bin",
+      "sha256": "0543e7ea7ff5bb49ff589b23033283587bf98d7a1b50e9ec059196902fb03b59",
+      "bytes": 280
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-alpha.large.bin",
+      "sha256": "fefaaf9f86e4d7c5666b1cc8d299c06d4edf9c3c60c16d4a4406d210ea7ad3cd",
+      "bytes": 57444
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-alpha.source.json",
+      "sha256": "ede9995920136904b2d8d938a80a23d8ad50a3270da6de772b788cb1e4acedc8",
+      "bytes": 1023
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbit-rbyte.bin",
+      "sha256": "339fb21e325b5f8bf5ffb0fa478426eb87b50200f24a77662eb34b1183ffd2a7",
+      "bytes": 136
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbit-rbyte.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbit.bin",
+      "sha256": "907773d4e47e3c034039ce9b781733a397f2e2c9647958962bad21432c394b22",
+      "bytes": 136
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbit.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbyte.bin",
+      "sha256": "90c2b56d586763e9994f1e7f662da084119d21e65a72e315ebe6f70e9f782422",
+      "bytes": 136
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont-rbyte.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont.bin",
+      "sha256": "03ddf50e713c2ee0f741dc039a9675f5dbf0b72d75dac7a891c7a15944d895dd",
+      "bytes": 136
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont.large.bin",
+      "sha256": "87e0247783ab1f7294f6c991437b51a7a93750f8b2e0b62a81bb0c1edfec5027",
+      "bytes": 7268
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont.monobit.bin",
+      "sha256": "03ddf50e713c2ee0f741dc039a9675f5dbf0b72d75dac7a891c7a15944d895dd",
+      "bytes": 136
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w5b-oracle/fixtures/wsfont.source.json",
+      "sha256": "2c9b925bd41d17f9fbf2ce9d3f6ca141e005f662b4e2c1cf67ee8052519eaa43",
+      "bytes": 484
+    }
+  ],
+  "executables": [
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/examples/w5b_timing",
+      "sha256": "86334005be035d512d2ce8837a3b48f2515ca5fad787c8a7e4ca0966e1e0eb0a",
+      "bytes": 3371280
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/beos",
+      "sha256": "bea42986d0cc811fe9a30411f554161ac788dbdd9780a635f70758a32de8de3c",
+      "bytes": 20839904
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/geos",
+      "sha256": "fbea2c23bfa69f00b88897787f0a51d5bbf6c3c5d0fbb7750123f818b15c5cee",
+      "bytes": 21793416
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/gpi",
+      "sha256": "991186e59eb2dad9ba6f98042764c9c97ee12bed31917385579de477b2ced599",
+      "bytes": 21421504
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/oberon",
+      "sha256": "6c498f236e97d85e319ab98f10225006c62d0383fdff43db7714bb128a36a417",
+      "bytes": 20642424
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/pcgeos",
+      "sha256": "4bb628ac6144fe8d89d6e7cd89c9243fd59e8fa857a710663ac4f4d95668c9d2",
+      "bytes": 21069568
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/symbos",
+      "sha256": "8d2b7475d74bd5740bfce91dd39489e7bcab7ead4860d462487b7078deb99126",
+      "bytes": 20614096
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/vtfont",
+      "sha256": "ba4f3250f399e27f1a202f65acbaa5b6d51c3740863754a356f90c9f5f995873",
+      "bytes": 21435872
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/wsfont",
+      "sha256": "a7179c6c53349ecd72707ff11264fd9a17aa24914344a5616c1e4587761d896c",
+      "bytes": 20745088
+    }
+  ],
+  "remaining_coordinator_gates": [
+    "Run >=610 seconds final3 SymbOS ASAN including detector mutations",
+    "Coordinator whole-repository final gates"
+  ],
+  "supersedes": "reports/w5.b-freeze-final3.json",
+  "changed_owned_paths": [
+    "crates/fontpixel/src/formats/symbos.rs",
+    "crates/fontpixel/tests/symbos.rs",
+    "docs/formats/symbos.md",
+    "fuzz/fuzz_targets/symbos.rs"
+  ],
+  "symbos_final2_asan": {
+    "unit_tests": 5,
+    "fuzz_runs": 88269,
+    "fuzz_seconds": 13,
+    "exit": 0
+  },
+  "changed_owned_paths_since_final2": [
+    "fuzz/fuzz_targets/symbos.rs"
+  ],
+  "revision": "final4",
+  "coordinator_gpi_fix": {
+    "report": "reports/w5.gpi-budget.json",
+    "changed_files": {
+      "crates/fontpixel/src/formats/gpi/writer.rs": "06fc8aaa26250ba45114b0f513f7cfec845f741722b28aed69bd6b8d6082f638",
+      "crates/fontpixel/tests/gpi.rs": "8ac7758993cb4081acc168d1a90fd4cd0c798609d3f2f14eb560a8f10663890c"
+    },
+    "reason": "Validate descriptor table length, output cap and cumulative budget before allocation; use fallible reservation.",
+    "long_fuzz": "pending final2 campaign"
+  }
+}

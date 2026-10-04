@@ -1,0 +1,24 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.37s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-8995f0e11931a1f4)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/qpf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/qpf-4f53561057b18ef3)
+
+running 6 tests
+test all_three_passes_signed_metrics_and_surrogates ... ok
+test canonical_regeneration_and_external_family_loss ... ok
+test gray8_padded_rows_and_explicit_threshold ... ok
+test cumulative_limits_and_default_reader_contract ... ok
+test malformed_tree_ranges_stride_and_all_truncations ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

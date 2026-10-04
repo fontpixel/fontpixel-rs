@@ -21,6 +21,25 @@ not copied wholesale. FNT payload details are in [fnt.md](fnt.md).
 | PE resource Type / Name / Language | checked fixed-depth tree; FONT=8, bounded names and leaves |
 | FONT resource | one FNT strike in resource order |
 
+### W5 cross-container detection correction
+
+The Microsoft NE description identifies the executable target at header offset
+`0x36` (`2` is Windows), while OS/2 NE uses target `1` and a different segment
+resource directory. Microsoft's [resource type list](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
+identifies Windows FONT as type `8` and FONTDIR as type `7`; the OS/2 GPI family
+uses native directory type `6` and font type `7`. An NE/PE signature by itself
+does not establish a Windows font container.
+
+Detection now validates the existing bounded Windows resource-directory layout
+and requires a FONT resource with a recognizable FNT header, without decoding
+glyphs. A normal Windows NE or PE FONT container is Certain. An OS/2-targeted
+NE that nevertheless has valid Windows FONT resources is only Possible, so a
+compatible or contradictory container remains eligible for explicit ambiguity.
+Native OS/2 GPI resources do not match the Windows directory layout. This does
+not change explicit FON reading/writing, execute a container, or consult its
+filename. Directory traversal uses the input context's retained bytes and
+resource/table/aggregate limits; invalid offsets and budgets give NoMatch.
+
 ## Decisions, robustness and losses
 
 Read NE and PE32/PE32+ containers; write deterministic resource-only NE with an

@@ -78,11 +78,84 @@ impl Default for ResourceLimits {
     }
 }
 
+/// Budgets for a registry-applied output envelope such as gzip.
+///
+/// These include the encoded bytes, their uncompressed representation and
+/// retained diagnostics. Built-in writers expose their actual typed limits;
+/// common write options may further restrict, but never enlarge, those limits.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TransportLimits {
+    /// Limits used by the matching reader and native writer validation.
+    pub resources: ResourceLimits,
+    /// Maximum serialized envelope size, including its header and trailer.
+    pub max_output_bytes: usize,
+}
+
+impl Default for TransportLimits {
+    fn default() -> Self {
+        Self {
+            resources: ResourceLimits::default(),
+            max_output_bytes: ResourceLimits::default().max_input_bytes,
+        }
+    }
+}
+
+impl TransportLimits {
+    pub(crate) fn intersect(&self, other: &Self) -> Self {
+        let a = &self.resources;
+        let b = &other.resources;
+        Self {
+            resources: ResourceLimits {
+                max_input_bytes: a.max_input_bytes.min(b.max_input_bytes),
+                max_resource_bytes: a.max_resource_bytes.min(b.max_resource_bytes),
+                max_total_bytes: a.max_total_bytes.min(b.max_total_bytes),
+                max_resources: a.max_resources.min(b.max_resources),
+                max_decompressed_bytes: a.max_decompressed_bytes.min(b.max_decompressed_bytes),
+                max_glyphs: a.max_glyphs.min(b.max_glyphs),
+                max_pixels_per_glyph: a.max_pixels_per_glyph.min(b.max_pixels_per_glyph),
+                max_table_bytes: a.max_table_bytes.min(b.max_table_bytes),
+            },
+            max_output_bytes: self.max_output_bytes.min(other.max_output_bytes),
+        }
+    }
+
+    /// Reserve already retained envelope/report memory for native validation.
+    pub(crate) fn without_retained(&self, retained: usize) -> Result<Self> {
+        let mut limits = self.clone();
+        limits.resources.max_total_bytes = self
+            .resources
+            .max_total_bytes
+            .checked_sub(retained)
+            .ok_or(Error::ResourceLimit {
+                resource: "gzip retained bytes",
+                limit: self.resources.max_total_bytes,
+            })?;
+        Ok(limits)
+    }
+}
+
 /// Resolves only resources explicitly made available by the caller.
-/// Implementations must honor `max_bytes` before allocating an unbounded result.
+/// Implementations must bound the returned vector's allocation capacity by
+/// `max_bytes`, not just its length.
 pub trait ResourceResolver: Send + Sync {
     /// Retrieve one validated relative resource, subject to the byte budget.
     fn resolve(&self, path: &ResourcePath, max_bytes: usize) -> Result<Vec<u8>>;
+
+    /// Enumerate immediate regular-file resources beneath a directory (`None`
+    /// means the resolver root). Paths are relative to the resolver root.
+    /// Bound visited directory entries by `max_entries` and allocation by
+    /// `max_bytes`, charging twice `size_of::<ResourcePath>() + path.len()` for
+    /// each returned path. Do not recurse or follow directory symlinks.
+    fn list(
+        &self,
+        _directory: Option<&ResourcePath>,
+        _max_entries: usize,
+        _max_bytes: usize,
+    ) -> Result<Vec<ResourcePath>> {
+        Err(Error::InvalidInput(
+            "resource enumeration is unavailable".into(),
+        ))
+    }
 }
 
 /// Resolver for standalone files; sidecar requests fail explicitly.
@@ -100,6 +173,7 @@ pub struct Input<'a> {
     bytes: &'a [u8],
     name: Option<&'a str>,
     resolver: &'a dyn ResourceResolver,
+    directory: bool,
 }
 
 impl<'a> Input<'a> {
@@ -109,6 +183,18 @@ impl<'a> Input<'a> {
             bytes,
             name: None,
             resolver: &NO_RESOURCES,
+            directory: false,
+        }
+    }
+
+    /// Directory entry point without a synthetic primary file. The resolver
+    /// root is this directory; callers must select its format explicitly.
+    pub fn directory(name: &'a str, resolver: &'a dyn ResourceResolver) -> Self {
+        Self {
+            bytes: &[],
+            name: Some(name),
+            resolver,
+            directory: true,
         }
     }
 
@@ -153,7 +239,7 @@ impl<'a> ReadContext<'a> {
         let total_bytes = input
             .bytes
             .len()
-            .checked_add(decoded.as_ref().map_or(0, Vec::len))
+            .checked_add(decoded.as_ref().map_or(0, Vec::capacity))
             .ok_or(Error::ResourceLimit {
                 resource: "total input bytes",
                 limit: limits.max_total_bytes,
@@ -178,7 +264,7 @@ impl<'a> ReadContext<'a> {
         self.decoded.as_deref().unwrap_or(self.input.bytes)
     }
 
-    /// Bytes retained by the input context, including both gzip wire and decoded data.
+    /// Bytes retained by the input context, including gzip wire and decoded capacity.
     /// Includes every resolved resource so custom codecs can budget their model
     /// and scratch allocations against the remaining aggregate allowance.
     pub fn retained_input_bytes(&self) -> usize {
@@ -190,12 +276,17 @@ impl<'a> ReadContext<'a> {
         self.input.name
     }
 
+    /// Whether the caller supplied a native directory entry point.
+    pub fn is_directory(&self) -> bool {
+        self.input.directory
+    }
+
     /// Budgets for parsers to check before format-specific allocation.
     pub fn limits(&self) -> &ResourceLimits {
         self.limits
     }
 
-    /// Resolve a sidecar and account for every returned byte, including repeats.
+    /// Resolve a sidecar and account for its allocation capacity, including repeats.
     pub fn resource(&mut self, path: &ResourcePath) -> Result<Vec<u8>> {
         self.resource_limited(path, usize::MAX)
     }
@@ -212,14 +303,74 @@ impl<'a> ReadContext<'a> {
         let remaining = self.limits.max_total_bytes - self.total_bytes;
         let budget = self.limits.max_resource_bytes.min(remaining).min(max_bytes);
         let bytes = self.input.resolver.resolve(path, budget)?;
-        if bytes.len() > budget {
+        if bytes.capacity() > budget {
             return Err(Error::ResourceLimit {
                 resource: "resource bytes",
                 limit: budget,
             });
         }
-        self.total_bytes += bytes.len();
+        self.total_bytes += bytes.capacity();
         Ok(bytes)
+    }
+
+    /// List immediate file resources with deterministic order and shared input
+    /// accounting. `max_bytes` further reserves space for a codec's live model.
+    /// The listing is one resource operation; each later read is another.
+    pub fn list_resources_limited(
+        &mut self,
+        directory: Option<&ResourcePath>,
+        max_entries: usize,
+        max_bytes: usize,
+    ) -> Result<Vec<ResourcePath>> {
+        if self.resource_count >= self.limits.max_resources {
+            return Err(Error::ResourceLimit {
+                resource: "resource count",
+                limit: self.limits.max_resources,
+            });
+        }
+        self.resource_count += 1;
+        let maximum = max_bytes.min(self.limits.max_total_bytes - self.total_bytes);
+        let mut paths = self.input.resolver.list(directory, max_entries, maximum)?;
+        if paths.len() > max_entries {
+            return Err(Error::ResourceLimit {
+                resource: "directory entries",
+                limit: max_entries,
+            });
+        }
+        let mut used = 0usize;
+        for path in &paths {
+            let relative = match directory {
+                Some(parent) => path
+                    .as_str()
+                    .strip_prefix(parent.as_str())
+                    .and_then(|s| s.strip_prefix('/')),
+                None => Some(path.as_str()),
+            };
+            if relative.is_none_or(|s| s.is_empty() || s.contains('/')) {
+                return Err(Error::InvalidInput(
+                    "resource listing escapes its immediate directory".into(),
+                ));
+            }
+            used = used.saturating_add(
+                std::mem::size_of::<ResourcePath>()
+                    .saturating_add(path.as_str().len())
+                    .saturating_mul(2),
+            );
+            if used > maximum {
+                return Err(Error::ResourceLimit {
+                    resource: "directory listing bytes",
+                    limit: maximum,
+                });
+            }
+        }
+        paths.sort_unstable();
+        if paths.windows(2).any(|p| p[0] == p[1]) {
+            return Err(Error::InvalidInput(
+                "duplicate resource in directory listing".into(),
+            ));
+        }
+        self.total_bytes += used;
+        Ok(paths)
     }
 }
 
@@ -237,12 +388,28 @@ pub struct OutputAsset {
 pub struct OutputBundle {
     primary: ResourcePath,
     assets: Vec<OutputAsset>,
+    directory: bool,
 }
 
 impl OutputBundle {
     /// Reject empty bundles, absent entry points, duplicates, and file/directory
     /// collisions before any filesystem writer receives the assets.
-    pub fn new(primary: ResourcePath, mut assets: Vec<OutputAsset>) -> Result<Self> {
+    pub fn new(primary: ResourcePath, assets: Vec<OutputAsset>) -> Result<Self> {
+        Self::validated(primary, assets, false)
+    }
+
+    /// Native directory output. Every asset must be strictly beneath the given
+    /// entry point, and at least one asset must exist. Paths stay relative to the
+    /// entry point's parent, as for a file bundle.
+    pub fn directory(primary: ResourcePath, assets: Vec<OutputAsset>) -> Result<Self> {
+        Self::validated(primary, assets, true)
+    }
+
+    fn validated(
+        primary: ResourcePath,
+        mut assets: Vec<OutputAsset>,
+        directory: bool,
+    ) -> Result<Self> {
         let mut paths = BTreeSet::new();
         for asset in &assets {
             if !paths.insert(asset.path.as_str()) {
@@ -252,7 +419,18 @@ impl OutputBundle {
                 )));
             }
         }
-        if !paths.contains(primary.as_str()) {
+        if directory
+            && (paths.is_empty()
+                || paths.iter().any(|p| {
+                    p.strip_prefix(primary.as_str())
+                        .is_none_or(|tail| !tail.starts_with('/'))
+                }))
+        {
+            return Err(Error::InvalidInput(
+                "directory output requires assets beneath its entry point".into(),
+            ));
+        }
+        if !directory && !paths.contains(primary.as_str()) {
             return Err(Error::InvalidInput(
                 "output bundle is missing its primary asset".into(),
             ));
@@ -267,7 +445,11 @@ impl OutputBundle {
             }
         }
         assets.sort_by(|a, b| a.path.cmp(&b.path));
-        Ok(Self { primary, assets })
+        Ok(Self {
+            primary,
+            assets,
+            directory,
+        })
     }
 
     /// Construct a one-file bundle.
@@ -275,7 +457,13 @@ impl OutputBundle {
         Self {
             primary: path.clone(),
             assets: vec![OutputAsset { path, bytes }],
+            directory: false,
         }
+    }
+
+    /// Whether the entry point is a directory rather than one encoded file.
+    pub fn is_directory(&self) -> bool {
+        self.directory
     }
 
     /// Entry-point path to give the consuming application.
@@ -295,6 +483,11 @@ impl OutputBundle {
 
     /// Single-file convenience API; never silently discard sidecars.
     pub fn into_single(self) -> Result<Vec<u8>> {
+        if self.directory {
+            return Err(Error::InvalidInput(
+                "directory output cannot be flattened into a single file".into(),
+            ));
+        }
         if self.assets.len() != 1 {
             return Err(Error::MultipleAssets {
                 count: self.assets.len(),
@@ -357,12 +550,20 @@ fn decode_transport(bytes: &[u8], limits: &ResourceLimits) -> Result<Option<Vec<
                     limit: maximum,
                 });
             }
-            decoded
-                .try_reserve(count)
-                .map_err(|_| Error::ResourceLimit {
-                    resource: "decompression allocation",
-                    limit: maximum,
-                })?;
+            let required = decoded.len() + count;
+            if required > decoded.capacity() {
+                // Bound geometric growth as well as logical decoded length.
+                // Exact chunk-by-chunk growth would make large inputs quadratic.
+                let capacity = required
+                    .max(decoded.capacity().saturating_mul(2))
+                    .min(maximum);
+                decoded
+                    .try_reserve_exact(capacity - decoded.len())
+                    .map_err(|_| Error::ResourceLimit {
+                        resource: "decompression allocation",
+                        limit: maximum,
+                    })?;
+            }
             decoded.extend_from_slice(&chunk[..count]);
         }
         if decoded.starts_with(&[0x1f, 0x8b]) {
@@ -374,20 +575,61 @@ fn decode_transport(bytes: &[u8], limits: &ResourceLimits) -> Result<Option<Vec<
     }
 }
 
-/// Apply deterministic gzip transport to a single `.gz` output asset. Called
-/// after combined strict validation, never by a font codec itself.
-pub(crate) fn encode_transport(bundle: OutputBundle) -> Result<OutputBundle> {
-    if !bundle
-        .primary()
-        .as_str()
-        .to_ascii_lowercase()
-        .ends_with(".gz")
-    {
+/// Whether a bundle requests the shared single-file gzip envelope.
+pub(crate) fn uses_gzip(bundle: &OutputBundle) -> bool {
+    !bundle.is_directory()
+        && bundle
+            .primary()
+            .as_str()
+            .rsplit_once('.')
+            .is_some_and(|(_, suffix)| suffix.eq_ignore_ascii_case("gz"))
+}
+
+/// Capacity retained by the merged report during compression and native audit.
+pub(crate) fn report_bytes(report: &Report, limit: usize) -> Result<usize> {
+    let mut total = report
+        .entries
+        .capacity()
+        .checked_mul(std::mem::size_of::<crate::report::ReportEntry>())
+        .ok_or(Error::ResourceLimit {
+            resource: "gzip retained diagnostics",
+            limit,
+        })?;
+    for entry in &report.entries {
+        for size in [
+            entry.code.capacity(),
+            entry.message.capacity(),
+            entry.location.asset.as_ref().map_or(0, String::capacity),
+        ] {
+            total = total.checked_add(size).ok_or(Error::ResourceLimit {
+                resource: "gzip retained diagnostics",
+                limit,
+            })?;
+        }
+    }
+    if total > limit {
+        return Err(Error::ResourceLimit {
+            resource: "gzip retained diagnostics",
+            limit,
+        });
+    }
+    Ok(total)
+}
+
+/// Apply deterministic gzip after strict validation. Native source bytes are
+/// released on return; the caller then audits its native profile while retaining
+/// only this compressed result and the already combined diagnostics.
+pub(crate) fn encode_transport(
+    bundle: OutputBundle,
+    limits: &TransportLimits,
+    retained_report: usize,
+) -> Result<OutputBundle> {
+    if !uses_gzip(&bundle) {
         return Ok(bundle);
     }
     #[cfg(not(feature = "gzip"))]
     {
-        let _ = bundle;
+        let _ = (bundle, limits, retained_report);
         Err(Error::FeatureDisabled {
             format: "gzip".into(),
         })
@@ -397,11 +639,107 @@ pub(crate) fn encode_transport(bundle: OutputBundle) -> Result<OutputBundle> {
         use std::io::Write;
         let path = bundle.primary().clone();
         let bytes = bundle.into_single()?;
+        let resources = &limits.resources;
+        if bytes.len() > resources.max_decompressed_bytes {
+            return Err(Error::ResourceLimit {
+                resource: "gzip decompressed bytes",
+                limit: resources.max_decompressed_bytes,
+            });
+        }
+        if bytes.starts_with(&[0x1f, 0x8b]) {
+            return Err(Error::InvalidInput(
+                "nested gzip envelopes are not supported".into(),
+            ));
+        }
+        let available = resources
+            .max_total_bytes
+            .checked_sub(retained_report)
+            .and_then(|n| n.checked_sub(bytes.capacity()))
+            .ok_or(Error::ResourceLimit {
+                resource: "gzip retained bytes",
+                limit: resources.max_total_bytes,
+            })?;
+        let maximum = limits
+            .max_output_bytes
+            .min(resources.max_input_bytes)
+            .min(available);
+        let sink = GzipOutput {
+            bytes: Vec::new(),
+            maximum,
+        };
         let mut encoder = flate2::GzBuilder::new()
             .mtime(0)
             .operating_system(255)
-            .write(Vec::new(), flate2::Compression::default());
-        encoder.write_all(&bytes)?;
-        Ok(OutputBundle::single(path, encoder.finish()?))
+            .write(sink, flate2::Compression::default());
+        encoder.write_all(&bytes).map_err(gzip_error)?;
+        let output = encoder.finish().map_err(gzip_error)?.bytes;
+        // `bytes` drops before the registry runs native validation again.
+        Ok(OutputBundle::single(path, output))
+    }
+}
+
+#[cfg(feature = "gzip")]
+#[derive(Debug)]
+struct GzipBudgetError {
+    resource: &'static str,
+    limit: usize,
+}
+#[cfg(feature = "gzip")]
+impl fmt::Display for GzipBudgetError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} limit {}", self.resource, self.limit)
+    }
+}
+#[cfg(feature = "gzip")]
+impl std::error::Error for GzipBudgetError {}
+#[cfg(feature = "gzip")]
+fn gzip_error(error: std::io::Error) -> Error {
+    if let Some(budget) = error
+        .get_ref()
+        .and_then(|e| e.downcast_ref::<GzipBudgetError>())
+    {
+        Error::ResourceLimit {
+            resource: budget.resource,
+            limit: budget.limit,
+        }
+    } else {
+        Error::Io(error)
+    }
+}
+#[cfg(feature = "gzip")]
+struct GzipOutput {
+    bytes: Vec<u8>,
+    maximum: usize,
+}
+#[cfg(feature = "gzip")]
+impl std::io::Write for GzipOutput {
+    fn write(&mut self, input: &[u8]) -> std::io::Result<usize> {
+        if input.len() > self.maximum.saturating_sub(self.bytes.len()) {
+            return Err(std::io::Error::other(GzipBudgetError {
+                resource: "gzip output bytes",
+                limit: self.maximum,
+            }));
+        }
+        let required = self.bytes.len() + input.len();
+        if required > self.bytes.capacity() {
+            // Geometric growth remains capped by the already reserved byte
+            // budget; exact growth per compressor chunk would be quadratic.
+            let capacity = required
+                .max(self.bytes.capacity().saturating_mul(2))
+                .min(self.maximum);
+            self.bytes
+                .try_reserve_exact(capacity - self.bytes.len())
+                .map_err(|_| {
+                    std::io::Error::other(GzipBudgetError {
+                        resource: "gzip allocation",
+                        limit: self.maximum,
+                    })
+                })?;
+        }
+        self.bytes.extend_from_slice(input);
+        Ok(input.len())
+    }
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
     }
 }

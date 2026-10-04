@@ -1,4 +1,4 @@
-//! AngelCode text/XML/binary v3 descriptors with bounded PNG page bundles.
+//! AngelCode text/XML/binary v3 and Jam3 JSON descriptors with bounded PNG pages.
 use super::editor_fidelity as fidelity;
 use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
 use crate::bitmap::{Bitmap, BitmapLimits, Gray8};
@@ -7,6 +7,7 @@ use crate::resources::{OutputAsset, OutputBundle, ReadContext, ResourcePath, Wri
 use crate::{Error, Report, ResourceLimits, Result};
 use fidelity::{Budget, audit, bound, loss};
 use std::collections::{BTreeMap, BTreeSet};
+mod json;
 mod reader;
 mod wire;
 mod writer;
@@ -20,6 +21,8 @@ pub enum BmfontEncoding {
     Xml,
     /// Version 3 little-endian binary blocks.
     Binary,
+    /// Jam3 JSON descriptor with ordered string pages and glyph arrays.
+    Json,
 }
 /// Explicit coverage conversion on input.
 #[derive(Debug, Clone, Default)]
@@ -113,13 +116,20 @@ impl FormatWriter<FontSet> for BmfontCodec {
                 "Container metadata or source format changed",
             );
         }
+        if o.strict && w.report.has_loss() {
+            return Err(Error::StrictLoss(w.report));
+        }
         Ok(w)
     }
 }
-/// Recognize binary magic or the text/XML root within a bounded prefix.
+/// Recognize binary/text/XML signatures or a structurally complete JSON descriptor.
 pub fn detect(b: &[u8]) -> Confidence {
     if b.starts_with(b"BMF") {
         return Confidence::Certain;
+    }
+    let json_head = b.strip_prefix(b"\xef\xbb\xbf").unwrap_or(b);
+    if json_head.iter().find(|v| !v.is_ascii_whitespace()) == Some(&b'{') {
+        return json::detect(b);
     }
     let s = std::str::from_utf8(&b[..b.len().min(8192)])
         .unwrap_or("")
@@ -155,12 +165,15 @@ fn invalid(m: impl std::fmt::Display) -> Error {
 struct Record {
     tag: String,
     fields: BTreeMap<String, String>,
+    // Only nonstandard scalar types need provenance; standard fields have fixed types.
+    json_types: BTreeMap<String, String>,
 }
 impl Record {
     fn new(tag: &str) -> Self {
         Self {
             tag: tag.into(),
             fields: BTreeMap::new(),
+            json_types: BTreeMap::new(),
         }
     }
     fn set(&mut self, k: &str, v: impl ToString) {
@@ -204,10 +217,14 @@ impl Record {
                 self.fields
                     .iter()
                     .map(|(k, v)| {
-                        PropertyValue::List(vec![
+                        let mut pair = vec![
                             PropertyValue::Text(k.clone()),
                             PropertyValue::Text(v.clone()),
-                        ])
+                        ];
+                        if let Some(kind) = self.json_types.get(k) {
+                            pair.push(PropertyValue::Text(format!("json:{kind}")));
+                        }
+                        PropertyValue::List(pair)
                     })
                     .collect(),
             ),
@@ -222,8 +239,19 @@ impl Record {
         if let PropertyValue::List(items) = &p.value {
             for item in items {
                 if let PropertyValue::List(pair) = item
-                    && let [PropertyValue::Text(k), PropertyValue::Text(v)] = pair.as_slice()
+                    && (pair.len() == 2 || pair.len() == 3)
+                    && let (PropertyValue::Text(k), PropertyValue::Text(v)) = (&pair[0], &pair[1])
                 {
+                    if pair.len() == 3 {
+                        let PropertyValue::Text(marker) = &pair[2] else {
+                            return Err(invalid("native JSON field type"));
+                        };
+                        let kind = marker
+                            .strip_prefix("json:")
+                            .filter(|v| ["number", "bool", "numbers"].contains(v))
+                            .ok_or_else(|| invalid("native JSON field type"))?;
+                        r.json_types.insert(k.clone(), kind.into());
+                    }
                     if r.fields.insert(k.clone(), v.clone()).is_some() {
                         return Err(invalid("duplicate native property field"));
                     }

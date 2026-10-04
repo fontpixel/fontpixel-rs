@@ -1,0 +1,506 @@
+{
+  "cases": [
+    {
+      "id": "pfr-0-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-0-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-1-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-2-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-ft-0-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-0-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-1-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-0-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-0-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-0-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-0-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-1-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-1-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-2-1-1-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": false
+    },
+    {
+      "id": "pfr-ft-multistrike-ftraw.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-ft-multistrike-ftrle4.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "pfr-ft-multistrike-ftrle8.pfr",
+      "consumer": "FreeType",
+      "read_loss": false,
+      "write_loss": true
+    },
+    {
+      "id": "fractional-retained-loss",
+      "consumer": "DAVIC original fields"
+    },
+    {
+      "id": "ssfn-original.sfn-native-binary",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-original.sfn-native-ascii",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-original.asc-native-binary",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-original.asc-native-ascii",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-gray.asc-native-binary",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-gray.asc-native-ascii",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-ligature.asc-native-binary",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    },
+    {
+      "id": "ssfn-ligature.asc-native-ascii",
+      "consumer": "sfnconv ASCII exporter",
+      "extra_nbsp_asserted": true
+    }
+  ],
+  "case_count": 84,
+  "freetype_version": [
+    2,
+    13,
+    2
+  ],
+  "sfnconv_sha256": "55d252a25bc09f42f0a2eb46e5d7f50ed80ebf71386a370f1a5b3688a4a5e2aa",
+  "adapter_sha256": "c86183b0d86234a9bf2c370c016e29e3317c8048038ff6296603ed16b7643193"
+}

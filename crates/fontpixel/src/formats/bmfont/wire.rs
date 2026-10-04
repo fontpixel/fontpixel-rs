@@ -8,7 +8,9 @@ pub(super) fn parse(b: &[u8], l: &ResourceLimits, budget: &mut Budget) -> Result
         let s = std::str::from_utf8(b)
             .map_err(invalid)?
             .trim_start_matches('\u{feff}');
-        if s.trim_start().starts_with('<') {
+        if s.trim_start().starts_with('{') {
+            super::json::parse(s, l, budget)?
+        } else if s.trim_start().starts_with('<') {
             xml(s, l, budget)?
         } else {
             text(s, l, budget)?
@@ -373,6 +375,9 @@ pub(super) fn encode(
 ) -> Result<Vec<u8>> {
     if encoding == BmfontEncoding::Binary {
         return encode_binary(records, l);
+    }
+    if encoding == BmfontEncoding::Json {
+        return super::json::encode(records, l);
     }
     let mut capacity = 64usize;
     let mut largest = 0usize;

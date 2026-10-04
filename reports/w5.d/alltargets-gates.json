@@ -1,0 +1,92 @@
+[
+  {
+    "name": "alltargets-test-fbit",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 31.407002925872803
+  },
+  {
+    "name": "alltargets-test-lisa",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 16.591136932373047
+  },
+  {
+    "name": "alltargets-test-mgtk",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "mgtk",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 11.789688110351562
+  },
+  {
+    "name": "alltargets-test-qpf",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 9.932941436767578
+  },
+  {
+    "name": "alltargets-test-qpf2",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf2",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 14.090684652328491
+  },
+  {
+    "name": "alltargets-test-nfnt",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "nfnt",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 10.020143747329712
+  }
+]

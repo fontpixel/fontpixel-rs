@@ -1,0 +1,339 @@
+[
+  {
+    "name": "test-fbit",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit",
+      "--lib",
+      "--test",
+      "fbit"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.13847136497497559
+  },
+  {
+    "name": "clippy-fbit",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 5.047211170196533
+  },
+  {
+    "name": "rustdoc-fbit",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.6239840984344482
+  },
+  {
+    "name": "test-lisa",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--lib",
+      "--test",
+      "lisa"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.0994043350219727
+  },
+  {
+    "name": "clippy-lisa",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 4.668074607849121
+  },
+  {
+    "name": "rustdoc-lisa",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.2640223503112793
+  },
+  {
+    "name": "test-mgtk",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "mgtk",
+      "--lib",
+      "--test",
+      "mgtk"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.9739704132080078
+  },
+  {
+    "name": "clippy-mgtk",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "mgtk",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.0347402095794678
+  },
+  {
+    "name": "rustdoc-mgtk",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "mgtk",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5513181686401367
+  },
+  {
+    "name": "test-qpf",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf",
+      "--lib",
+      "--test",
+      "qpf"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 2.4387617111206055
+  },
+  {
+    "name": "clippy-qpf",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.009605646133423
+  },
+  {
+    "name": "rustdoc-qpf",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5747456550598145
+  },
+  {
+    "name": "test-qpf2",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf2",
+      "--lib",
+      "--test",
+      "qpf2"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 5.493728160858154
+  },
+  {
+    "name": "clippy-qpf2",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf2",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 4.702305793762207
+  },
+  {
+    "name": "rustdoc-qpf2",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "qpf2",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.1586840152740479
+  },
+  {
+    "name": "test-nfnt",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "nfnt",
+      "--lib",
+      "--test",
+      "nfnt"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 2.901345729827881
+  },
+  {
+    "name": "clippy-nfnt",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "nfnt",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 4.238211393356323
+  },
+  {
+    "name": "rustdoc-nfnt",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "nfnt",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5192844867706299
+  },
+  {
+    "name": "example-build",
+    "command": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit,lisa,mgtk,qpf,qpf2",
+      "--example",
+      "w5d_timing"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 4.889701843261719
+  },
+  {
+    "name": "clippy-combined-final",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "fbit,lisa,mgtk,qpf,qpf2",
+      "--lib",
+      "--tests",
+      "--example",
+      "w5d_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 4.513241767883301
+  }
+]

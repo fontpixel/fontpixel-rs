@@ -10,7 +10,7 @@ authors.workspace = true
 [features]
 default = ["bdf", "pcf", "yaff"]
 compat-bdfparser = ["bdf", "pcf", "sfnt", "dep:serde_json"]
-all-formats = ["bdf", "pcf", "snf", "hex", "draw", "psf", "cpi", "raw", "yaff", "pf2", "fnt", "fon", "fontx2", "hzk", "hbf", "hanfont", "nfnt", "bdat", "iigs", "otb", "ttf", "otf", "woff", "woff2", "ttc", "color", "vector-raster", "svg", "bmfont", "image", "c", "kbitx", "kbits", "pbf", "sfd", "pk", "gf", "plan9", "amiga", "gem", "vfont", "fzx", "figlet", "palm", "gdr", "drcs"]
+all-formats = ["bdf", "pcf", "snf", "hex", "draw", "psf", "cpi", "raw", "yaff", "pf2", "fnt", "fon", "fontx2", "hzk", "hbf", "hanfont", "nfnt", "bdat", "iigs", "otb", "ttf", "otf", "woff", "woff2", "ttc", "color", "vector-raster", "svg", "bmfont", "image", "c", "kbitx", "kbits", "pbf", "sfd", "pk", "gf", "plan9", "amiga", "gem", "vfont", "fzx", "figlet", "palm", "gdr", "drcs", "bbc", "beos", "catalyst", "chiwriter", "comfont", "consoleet", "daisy", "dashen", "dosstart", "drhalo", "edwin", "fbit", "geos", "gpi", "grasp", "hppcl", "hrcg", "lisa", "mgtk", "mkwinfont", "oberon", "pcgeos", "pcr", "pilfont", "plus3dos", "psf2txt", "polyprint", "prebuilt", "printshop", "pxl", "riscos", "sfont", "signum", "symbos", "tasprint", "vtfont", "writeon", "wsfont", "wyse", "xbin", "xerox", "zapfont", "rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf", "qpf", "qpf2", "ssfn", "vlw", "pfr"]
 bdf = ["gzip"]
 pcf = ["gzip"]
 snf = []
@@ -39,7 +39,7 @@ ttc = ["vector-raster"]
 color = ["sfnt", "dep:png"]
 vector-raster = ["cff"]
 svg = ["dep:roxmltree", "dep:svgtypes", "dep:xmlparser"]
-bmfont = ["dep:png", "dep:xmlparser"]
+bmfont = ["dep:png", "dep:xmlparser", "dep:serde_json", "dep:serde"]
 image = ["dep:image-codec", "dep:serde", "dep:serde_json", "dep:toml"]
 png = ["dep:flate2", "dep:crc32fast"]
 c = ["dep:serde", "dep:serde_json"]
@@ -58,6 +58,59 @@ figlet = []
 palm = []
 gdr = []
 drcs = []
+bbc = []
+beos = []
+catalyst = []
+chiwriter = []
+comfont = []
+consoleet = []
+daisy = []
+dashen = ["hppcl"]
+dosstart = []
+drhalo = []
+edwin = []
+fbit = ["nfnt"]
+geos = []
+gpi = []
+grasp = []
+hppcl = []
+hrcg = []
+lisa = ["nfnt"]
+mgtk = []
+mkwinfont = []
+oberon = []
+pcgeos = []
+pcr = []
+pilfont = ["dep:image-codec"]
+plus3dos = []
+psf2txt = []
+polyprint = []
+prebuilt = []
+printshop = []
+pxl = []
+riscos = []
+sfont = ["dep:image-codec"]
+signum = []
+symbos = []
+tasprint = []
+vtfont = []
+writeon = []
+wsfont = ["dep:image-codec"]
+wyse = []
+xbin = []
+xerox = []
+zapfont = []
+rockbox = []
+u8m = []
+cybiko = []
+playdate = ["dep:png", "dep:flate2", "dep:serde_json"]
+hmzk = []
+sbf = []
+qpf = []
+qpf2 = ["sfnt"]
+ssfn = ["gzip"]
+vlw = []
+pfr = []
 cjk-charsets = []
 cff = ["sfnt"]
 fea = []
@@ -183,3 +236,71 @@ required-features = ["draw", "raw", "cpi", "pf2", "fontx2", "hzk", "nfnt", "bmfo
 [[example]]
 name = "w45_timing"
 required-features = ["pk", "gf", "plan9"]
+
+[[example]]
+name = "w56_timing"
+required-features = ["color"]
+
+[[example]]
+name = "w53_timing"
+required-features = ["vfont", "fzx", "figlet"]
+
+[[example]]
+name = "w52_timing"
+required-features = ["hanfont", "iigs"]
+
+[[example]]
+name = "w54_timing"
+required-features = ["palm", "gdr"]
+
+[[example]]
+name = "w55_timing"
+required-features = ["c", "drcs"]
+
+[[example]]
+name = "w5a1_timing"
+required-features = ["dosstart", "edwin", "mkwinfont", "psf2txt", "pcr", "plus3dos", "drhalo", "writeon"]
+
+[[example]]
+name = "w5c1_timing"
+required-features = ["daisy", "polyprint", "printshop", "tasprint", "pxl", "signum"]
+
+[[example]]
+name = "w5e1_timing"
+required-features = ["rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf"]
+
+[[example]]
+name = "w5d_timing"
+required-features = ["fbit", "lisa", "mgtk", "qpf", "qpf2", "nfnt"]
+
+[[example]]
+name = "w5b_timing"
+required-features = ["beos", "geos", "gpi", "oberon", "pcgeos", "symbos", "vtfont", "wsfont"]
+
+[[example]]
+name = "w5a2_timing"
+required-features = ["bbc", "comfont", "consoleet", "grasp", "hrcg", "wyse", "xbin", "zapfont"]
+
+[[example]]
+name = "w5x_timing"
+required-features = ["bmfont", "raw"]
+
+[[example]]
+name = "phase5_device_read_timing"
+required-features = ["rockbox", "u8m", "cybiko", "playdate", "hmzk", "sbf"]
+
+[[example]]
+name = "w5e2_timing"
+required-features = ["pilfont", "sfont", "vlw", "image"]
+
+[[example]]
+name = "w5e2_outline_timing"
+required-features = ["ssfn", "pfr"]
+
+[[example]]
+name = "w5c2_timing"
+required-features = ["catalyst", "chiwriter", "dashen", "hppcl", "prebuilt", "riscos", "xerox"]
+
+[[example]]
+name = "transport_timing"
+required-features = ["raw", "gzip"]

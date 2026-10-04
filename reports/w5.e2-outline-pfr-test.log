@@ -1,0 +1,17 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.06s
+     Running tests/pfr.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2-outline/debug/deps/pfr-a94d81a646a8fe51)
+
+running 9 tests
+test invalid_section_detector_and_zero_progress_run ... ok
+test fractional_metrics_preserved_and_reported ... ok
+test mixed_outline_is_explicit_loss ... ok
+test every_metadata_category_is_audited ... ok
+test multistrike_and_multifont_native ... ok
+test original_native_fields_and_strict ... ok
+test truncations_boundaries_and_limits ... ok
+test all_compressions_polarities_orders_and_dialects ... ok
+test physical_records_larger_than_64k_and_sparse_16bit_codes ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+

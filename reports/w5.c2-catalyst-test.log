@@ -1,0 +1,830 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 4.32s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/fontpixel-3d27647a5b911043)
+
+running 9 tests
+test model::budget::tests::removed_glyphs_and_empty_property_capacity_remain_charged ... ok
+test model::budget::tests::spare_capacity_raw_properties_and_nested_values_are_counted ... ok
+test model::budget::tests::aliases_and_sequences_include_their_index_copies ... ok
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test model::budget::tests::traversal_rejects_excessive_property_nesting_without_deep_recursion ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test formats::legacy_common::audit_tests::large_unsorted_alias_lists_preserve_mapping_diagnostics_and_budget ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/amiga.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/amiga-1ed1a154bad91954)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bbc.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bbc-d1be352a86950c25)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bdf-d2f1518635f8ecc0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_properties.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bdf_properties-a41228ba7edcce8e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bdf_reference.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bdf_reference-6679827a505a1acc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/beos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/beos-f20c1057816d5969)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bitmap.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bitmap-c8aed33e6ba840c4)
+
+running 7 tests
+test canonical_storage_limits_and_invalid_input ... ok
+test checked_geometry_and_label_effects ... ok
+test strings_palettes_hex_and_thresholds ... ok
+test zero_dimensions_are_explicit ... ok
+test all_wire_layouts_and_known_vectors ... ok
+test grayscale_operations_match_scalar_reference ... ok
+test packed_operations_match_scalar_reference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/bitmap_reference.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bitmap_reference-bb82da91474f7386)
+
+running 1 test
+test python_spec_v3_bitmap_corpus ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/bmfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bmfont-0fb55bf4e2b93a41)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/c.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/c-7884ad5e2cea6c9f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/catalyst.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/catalyst-85841eb5e85f2bfc)
+
+running 7 tests
+test every_truncation_and_limits ... ok
+test authoritative_offsets_allow_alias_and_reorder ... ok
+test extreme_line_height_returns_error_and_override_is_authoritative ... ok
+test pixels_offsets_color_and_shift ... ok
+test strict_reports_metadata_and_bad_metrics ... ok
+test explicit_data_relative_offsets ... ok
+test collection_budget_is_aggregate_and_output_readable ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cff.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/cff-5297880174835d6b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/charsets.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/charsets-36935c62aa9cdf6f)
+
+running 9 tests
+test gl_detection_is_order_independent_and_only_applies_to_94_by_94_sets ... ok
+test all_registry_keys_are_present_with_honest_feature_availability ... ok
+test identity_preserves_reference_numeric_surrogates_but_rust_char_rejects_them ... ok
+test single_byte_strictness_and_exact_variants ... ok
+test windows_charset_metadata_does_not_guess_contextual_or_symbol_maps ... ok
+test names_are_not_approximated_or_parsed_with_integer_overflow ... ok
+test hzk_hbf_grid_round_trips_every_cell ... ok
+test canonicalization_matches_reference_fixture ... ok
+test every_compiled_table_matches_python_generated_exhaustive_digests ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.65s
+
+     Running tests/chiwriter.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/chiwriter-3997b4a2a9a0509d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/collection.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/collection-be77eae71d3e0904)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/comfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/comfont-c2a59e762b2a80d7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/compat_bdfparser.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/compat_bdfparser-f0cb5f46f92eee94)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/consoleet.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/consoleet-e7b3af30a511571c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/contracts.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/contracts-8a0e00bc5f378ecd)
+
+running 22 tests
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test directory_bundles_require_real_contained_assets_and_do_not_flatten ... ok
+test directory_listing_is_bounded_scoped_sorted_and_counted ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test feature_state_matches_the_compiled_build ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test read_error_diagnostics_are_never_success ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cpi.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/cpi-3da2aa8c8939a94e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cybiko.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/cybiko-b1226aade8a83936)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/daisy.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/daisy-defead1e62fcba1e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/dashen.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/dashen-be406ffd368a7cab)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/dosstart.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/dosstart-45db5cfd183d5fa1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/draw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/draw-17804e51531d891f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/drcs.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/drcs-d9cd7342bab226e3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/drhalo.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/drhalo-fb361375caae2f69)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/edwin.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/edwin-10658aca58dc40b9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/embedded_bitmap.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/embedded_bitmap-01dcf32bf3edd5e3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fbit.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/fbit-1913f0093abf22fa)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/figlet.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/figlet-71af69167f5decfc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fontx2.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/fontx2-e4de5dc8acf543e1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fzx.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/fzx-2e71093db7da4013)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gdr.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/gdr-ab3ea5bef2d3be0d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gem.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/gem-87dae216be47427d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/geos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/geos-6ed3adad4a3d738f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/gf-fed59902052f1a4f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/glyf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/glyf-a69159a833def3bb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/gpi.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/gpi-417e2c85e60e41e2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/grasp.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/grasp-f041842e7d04a4b9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hanfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hanfont-682f15b1b0fc24ab)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hbf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hbf-79ecdb1ab70dde84)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hex_psf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hex_psf-f78181ec8f376763)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hmzk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hmzk-211ce5cbf1c69836)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hppcl.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hppcl-e06023173f335ae7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hrcg.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hrcg-c7118c254554c321)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hzk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hzk-aaaf8d278742152c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/iigs.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/iigs-be2c30df234d2bf7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/image.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/image-ecde4a2f45e02b64)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/imageset.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/imageset-dc56b0a9a6cc36fd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/kbits.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/kbits-48c21a14a1f846f6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/kbitx.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/kbitx-beb0f5c5b58a088b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/lisa.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/lisa-52cbdd9445f0d5d3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mgtk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/mgtk-8b79582159135581)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mkwinfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/mkwinfont-23079564ec0c61f9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/model.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/model-7a06efc9b53547ee)
+
+running 6 tests
+test property_edits_keep_spelling_and_order_clear_raw ... ok
+test glyph_cells_trimming_bounds_and_budget_errors ... ok
+test original_order_duplicates_sequences_and_transactional_edit ... ok
+test model_preserves_every_source_field ... ok
+test registry_preserves_read_diagnostics_when_a_writer_returns_a_report_error ... ok
+test real_model_registry_preserves_reports_sidecars_and_strictness ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/nfnt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/nfnt-2a1e3197a829a238)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/oberon.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/oberon-5bb6182c47d21ccf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/outlines.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/outlines-66050a9e33927c9a)
+
+running 5 tests
+test implicit_quadratics_and_tangent_edges ... ok
+test limits_and_invalid_geometry ... ok
+test holes_corners_separate_and_dots ... ok
+test exhaustive_three_by_three_geometry ... ok
+test random_square_roundtrip ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/palm.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/palm-cd5f148ab59168de)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pbf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pbf-1fab8495029a18e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pcf-690a8662fd7fb205)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_properties.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pcf_properties-8e0ee4d5efbfa4c1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcf_reference.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pcf_reference-d8844b23f6048c83)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcgeos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pcgeos-d3a368c6bd354f2e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pcr.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pcr-f29dbedd5cbfdbcf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pf2.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pf2-74fb6f3090a24052)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pfr.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pfr-261266aca1947836)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pilfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pilfont-c7de01e11fe4a9e0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pk-ec60e6af31848f7b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/plan9.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/plan9-5532f7a6517d4f29)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/playdate.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/playdate-b4e260a1276fed90)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/plus3dos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/plus3dos-7f44b59b0693f09f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/polyprint.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/polyprint-a862f9b8476b5ac1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/prebuilt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/prebuilt-f6fd8d2123d4d023)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/printshop.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/printshop-88570addcf40a6a7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/psf2txt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/psf2txt-b03e76d6f2a55066)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pxl.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/pxl-33b2934df3bab70f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/qpf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/qpf-491f4bf68ce46afc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/qpf2.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/qpf2-1d5a059eca4d59d8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/raw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/raw-52b15e5f53bcaa1a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/render.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/render-c5ab2984157bba6a)
+
+running 10 tests
+test gray_conversion_is_explicit_and_reported ... ok
+test svg_and_color_validation_are_bounded_and_deterministic ... ok
+test directions_and_missing_are_explicit ... ok
+test clipping_is_real_ink_loss_and_bearings_do_not_overflow ... ok
+test limits_apply_before_rendering_and_empty_layout_is_bounded ... ok
+test unicode_to_legacy_uses_the_existing_exact_tables ... ok
+test file_order_aliases_ranges_and_zero_area_are_explicit ... ok
+test default_advance_cell_ink_and_gaps ... ok
+test borrowed_composite_region_matches_scalar_clipping ... ok
+test diagnostic_deduplication_scales_and_respects_its_own_budget ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/render_reference.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/render_reference-8af55c27efa23e80)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/riscos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/riscos-840eeb0267a00ecc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/rockbox.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/rockbox-6a9d12660f43b75e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sbf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/sbf-cb064bf923f01ebe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfd.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/sfd-bce812e7d34d3478)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfnt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/sfnt-413a8bd735a60bbb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/sfont-085a7f16007f32ca)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/signum.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/signum-417cad1dba5ce7fb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/snf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/snf-0eb49f0d7fc7b579)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/ssfn.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/ssfn-9b4c00b0dc62b155)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/svg.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/svg-71406be72a853b86)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/symbos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/symbos-8ca29ce6a6fd26a5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tasprint.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/tasprint-ee15806b33215fdd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/transport_limits.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/transport_limits-83861dd90b4a2f16)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/u8m.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/u8m-460c2666465988ae)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/variants.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/variants-9b69ba6cd17eba04)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vector_raster.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/vector_raster-8c34eed6c197ffe4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/vfont-8d6dbd1378e72bf6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vlw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/vlw-c4bbd6ed04a6b2f2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vtfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/vtfont-40c81430ea37abe8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/windows.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/windows-3960cdd9b8546220)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/woff.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/woff-6e848ffd275e813e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/writeon.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/writeon-daeb3dfcb2fc94f7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/wsfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/wsfont-575ff3a55b800301)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/wyse.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/wyse-8e60490fc54c8370)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/xbin.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/xbin-01d3896426685824)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/xerox.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/xerox-e7537bee57353e1d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/yaff-06c60efc26a81790)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/yaff_properties.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/yaff_properties-b460c141af3ceb7d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/zapfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/zapfont-d2db76cfc55bc1f0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/bitmap.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/bitmap-1c189792db067337)
+Testing crop_64x64_to_31x31
+Success
+
+Testing concat_two_64x64
+Success
+
+Testing concat_80_glyphs
+Success
+
+Testing paste_screen_80x25
+Success
+
+Testing crop_4096x1024
+Success
+
+Testing overlay_4096x1024_unaligned
+Success
+
+Testing bold_64x64_radius8
+Success
+
+Testing rotate_64x64
+Success
+
+     Running benches/render.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/render-1b3d7eebd33b2685)
+Testing render/screen_80x25
+Success
+
+Testing render/drawall_96
+Success
+
+     Running unittests examples/bdf_timing.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/bdf_timing-2f5d858453a88285)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/bitmap_measure.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/bitmap_measure-32425d3c77e95448)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/charset_probe.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/charset_probe-b4837979b7b94a42)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/pcf_timing.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/pcf_timing-d9b63a7026d618aa)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/render_check.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/render_check-903a9c9c7f38e21f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/render_timing.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/render_timing-be5d67fe5f2d432b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/yaff_timing.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/examples/yaff_timing-2a431822c1a16dbe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

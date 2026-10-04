@@ -1,0 +1,102 @@
+[
+  {
+    "name": "FontFile.py",
+    "url": "https://raw.githubusercontent.com/python-pillow/Pillow/main/src/PIL/FontFile.py",
+    "sha256": "f1ad4c036be09fce0a08765d42e0ccf65c784c1e238f41b5c3f7a85f8f04fe3f",
+    "bytes": 4323
+  },
+  {
+    "name": "Font.c",
+    "url": "https://raw.githubusercontent.com/python-pillow/Pillow/main/src/libImaging/Font.c",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "ImageFont.py",
+    "url": "https://raw.githubusercontent.com/python-pillow/Pillow/main/src/PIL/ImageFont.py",
+    "sha256": "366e44705e94a43338f8ada2556544c7d31993596b17d6fb4baa477e00c03043",
+    "bytes": 63837
+  },
+  {
+    "name": "PFont.java",
+    "url": "https://raw.githubusercontent.com/processing/processing4/main/core/src/processing/core/PFont.java",
+    "sha256": "c153a2933d2068dba4ace1ef0a969a49c4daba5e7e841cdf98080421e4025d1b",
+    "bytes": 34828
+  },
+  {
+    "name": "sfont-README",
+    "url": "https://raw.githubusercontent.com/karlb/sfont/master/README",
+    "sha256": "9e0f6ce52e1081052ed8833c501df30b11451f8707e7eb62312084386e80179a",
+    "bytes": 7612
+  },
+  {
+    "name": "pilfont.py",
+    "url": "https://raw.githubusercontent.com/robhagemans/monobit/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/image/pilfont.py",
+    "sha256": "a49abba9ca23823b092d6b2c28da34a9d8f82346cd15ebdaf5c8e526749500e9",
+    "bytes": 4544
+  },
+  {
+    "name": "sfont.py",
+    "url": "https://raw.githubusercontent.com/robhagemans/monobit/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/image/sfont.py",
+    "sha256": "0af31ac9879300569fb8b9fc6305084a679d625f6f661b03cf7fecad8702cbb3",
+    "bytes": 4673
+  },
+  {
+    "name": "image.py",
+    "url": "https://raw.githubusercontent.com/robhagemans/monobit/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/image/image.py",
+    "sha256": "b166b7dabb83b624785c0b9de319d4ed9413b6f2c7b25df65932d7f1425db897",
+    "bytes": 19382
+  },
+  {
+    "name": "SFontImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/SFontBitmapFontImporter.java",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "SFontExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/SFontBitmapFontExporter.java",
+    "sha256": "42323b8f96edf8f64ce4cf86c11f2a796df1366ec0452d756c2f7e1d09d4b82e",
+    "bytes": 2686
+  },
+  {
+    "name": "SRFontImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/SRFontBitmapFontImporter.java",
+    "sha256": "bcc77a8cd0b62d7e63df2edcab8b1836d5446237b6c66b6123982696e85d6410",
+    "bytes": 11350
+  },
+  {
+    "name": "RFontExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/RFontBitmapFontExporter.java",
+    "sha256": "40a5d677f6f241b201050fc52ab91b68aa57080abe7899b9e24d16482aa64fb1",
+    "bytes": 12105
+  },
+  {
+    "name": "SFont.c",
+    "url": "https://raw.githubusercontent.com/karlb/sfont/master/SFont.c",
+    "sha256": "fac1998e392e73db76b9b549d48ed21a191f484456cbe98f698cebda2da6368c",
+    "bytes": 5135
+  },
+  {
+    "name": "SFont.h",
+    "url": "https://raw.githubusercontent.com/karlb/sfont/master/SFont.h",
+    "sha256": "7e8b928e0dd57a81bf4744f13843e167b5805ed439edc9798e1f14a9f2b9c251",
+    "bytes": 3558
+  },
+  {
+    "name": "processing-core-4.5.2.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/processing/core/4.5.2/core-4.5.2.jar",
+    "sha256": "bab342ad2b80e42b8a728e05a7ec8212bc369513fe8c4ed2381266f1e5e8627d",
+    "bytes": 1037699
+  },
+  {
+    "name": "imageutils.py",
+    "url": "https://raw.githubusercontent.com/robhagemans/monobit/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/utils/perglyph.py",
+    "sha256": "68f3a5c4a086bf12dc46f9fbc78d5c2d8107073833b595b1bd30a1935de79cfa",
+    "bytes": 1130
+  },
+  {
+    "name": "PillowFont.c",
+    "url": "https://raw.githubusercontent.com/python-pillow/Pillow/main/src/_imaging.c",
+    "sha256": "2d1781a4f153f51c9e5f97d76b380222d395d6a6b3de271d2bac25029e34e619",
+    "bytes": 122643
+  }
+]

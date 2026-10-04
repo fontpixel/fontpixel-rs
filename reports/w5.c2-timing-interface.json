@@ -1,0 +1,79 @@
+[
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "catalyst",
+      "../local-work/w5c2-seeds/catalyst/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"catalyst\",\"glyphs\":128,\"input_bytes\":1158,\"iterations\":300,\"output_bytes\":1158,\"read_us\":354.37225333333333,\"write_us\":609.89556}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "chiwriter",
+      "../local-work/w5c2-seeds/chiwriter/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"chiwriter\",\"glyphs\":95,\"input_bytes\":908,\"iterations\":300,\"output_bytes\":908,\"read_us\":261.17449000000005,\"write_us\":442.34997666666663}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "dashen",
+      "../local-work/w5c2-seeds/dashen/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"dashen\",\"glyphs\":95,\"input_bytes\":2210,\"iterations\":300,\"output_bytes\":2210,\"read_us\":275.2693966666667,\"write_us\":430.8226933333333}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "hppcl",
+      "../local-work/w5c2-seeds/hppcl/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"hppcl\",\"glyphs\":95,\"input_bytes\":3327,\"iterations\":300,\"output_bytes\":3327,\"read_us\":239.69032,\"write_us\":431.73554}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "prebuilt",
+      "../local-work/w5c2-seeds/prebuilt/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"prebuilt\",\"glyphs\":96,\"input_bytes\":2680,\"iterations\":300,\"output_bytes\":2680,\"read_us\":143.79371,\"write_us\":380.25269333333335}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "riscos",
+      "../local-work/w5c2-seeds/riscos/dense"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"riscos\",\"glyphs\":95,\"input_bytes\":1588,\"iterations\":300,\"output_bytes\":1588,\"read_us\":171.30120333333335,\"write_us\":419.63397000000003}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "../local-work/target-w5c2/debug/examples/w5c2_timing",
+      "bench",
+      "xerox:bitblt",
+      "../local-work/w5c2-seeds/xerox/bitblt"
+    ],
+    "exit": 0,
+    "stdout": "{\"format\":\"xerox:bitblt\",\"glyphs\":2,\"input_bytes\":30,\"iterations\":300,\"output_bytes\":42,\"read_us\":10.319936666666665,\"write_us\":27.68539666666667}\n",
+    "stderr": ""
+  }
+]

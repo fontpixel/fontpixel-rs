@@ -1,0 +1,42 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.93s
+     Running tests/bmfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/deps/bmfont-a87b3a0996c6dbb8)
+
+running 16 tests
+test failed_write_retains_every_glyph_and_alias_location ... ok
+test gray_png_alpha_alias_and_total_budget ... ok
+test diagnostic_asset_names_share_the_total_budget ... ok
+test rejects_xml_entities_and_mismatched_tree ... ok
+test explicit_threshold_and_glyph_limits ... ok
+test json_order_coordinates_unicode_and_weak_probe ... ok
+test sparse_slots_metrics_and_kerning_are_audited ... ok
+test nested_primary_bundle_is_readable ... ok
+test unsafe_paths_missing_pages_and_bad_rectangles_fail ... ok
+test packed_channels_and_color_losses ... ok
+test json_codec_strict_rejects_glyph_metadata_loss ... ok
+test json_rejects_duplicate_keys_bad_types_and_resource_excess ... ok
+test json_unknown_scalar_types_survive_and_other_metadata_is_audited ... ok
+test kerning_records_survive_every_descriptor_encoding ... ok
+test all_encodings_multipage_semantic_roundtrip ... ok
+test random_gray_atlas_roundtrip ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/raw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/deps/raw-992d7ebcef38381b)
+
+running 12 tests
+test malformed_geometry_and_trailing_bytes ... ok
+test diagnostic_asset_names_are_in_the_read_budget ... ok
+test explicit_configuration_and_named_presets ... ok
+test offset_wire_and_source_are_reserved_before_allocating ... ok
+test new_layout_strict_metadata_and_context_budget ... ok
+test new_layout_padding_counts_and_limits ... ok
+test read_and_write_limits_are_equal ... ok
+test prefix_padding_and_exact_count ... ok
+test c64_prg_default_and_preserved_load_addresses ... ok
+test independently_packed_strikes_bits_and_byte_columns ... ok
+test harlekin_presets_have_distinct_documented_geometries ... ok
+test random_packed_rows_roundtrip ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+

@@ -1,0 +1,22 @@
+[
+  {
+    "target": "c",
+    "command": "cargo +nightly fuzz run c \"$FONTPIXEL_WORK_ROOT/w55/corpus/c\" --no-default-features --features fontpixel/c -- -max_total_time=30 -rss_limit_mb=2048 -max_len=65536",
+    "exit": 0,
+    "executions": 310243,
+    "seconds": 31,
+    "sanitizer": "address",
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/fuzz-c-final-smoke.log",
+    "sha256": "2887b5207e16ba5374355d93ff80a9b428a7de98e022e8439f31a9695f2d74d7"
+  },
+  {
+    "target": "drcs",
+    "command": "cargo +nightly fuzz run drcs \"$FONTPIXEL_WORK_ROOT/w55/corpus/drcs\" --no-default-features --features fontpixel/drcs -- -max_total_time=30 -rss_limit_mb=1024 -max_len=65536",
+    "exit": 0,
+    "executions": 614239,
+    "seconds": 31,
+    "sanitizer": "address",
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/fuzz-drcs-smoke.log",
+    "sha256": "f36c4eb569dd21f0cd20605a2507c13294fbef3963f8c24f5b09758f57b5ed7a"
+  }
+]

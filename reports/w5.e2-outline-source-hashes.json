@@ -1,0 +1,8 @@
+{
+  "crates/fontpixel/src/formats/pfr.rs": "bef1303ca0ea26a5ccf990f5818bdd541ed323914517ea1e82580a04871779f6",
+  "crates/fontpixel/src/formats/ssfn.rs": "49b59715f1203769a71f4707eed32089b4af7d5e604a5655dc9c0ec86fdf0d60",
+  "crates/fontpixel/src/formats/pfr/wire.rs": "249906e117dd06a5a768070280a6be1c624ab4a11ebe2aef59fc348932a97897",
+  "crates/fontpixel/src/formats/ssfn/ascii.rs": "b614037fd980497ab06b273693ef239073ed78433cb6dcd557feebfe079b9791",
+  "crates/fontpixel/src/formats/ssfn/binary.rs": "d4b3fe8c68a7df35ec8812f04950c3c58472aafad6be1b7efa817170fafe0807",
+  "crates/fontpixel/src/formats/ssfn/common.rs": "a24201095ce7af26da8e8ce99131466e6f858240de284ce9c8eb37e1519d37c1"
+}

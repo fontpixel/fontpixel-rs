@@ -1,0 +1,365 @@
+[
+  {
+    "kind": "test",
+    "feature": "daisy",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "daisy",
+      "--test",
+      "daisy"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 5.464272975921631,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-daisy.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "daisy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "daisy",
+      "--lib",
+      "--test",
+      "daisy",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.1573827266693115,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-daisy.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "daisy",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "daisy",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.7274620532989502,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-daisy.log"
+  },
+  {
+    "kind": "test",
+    "feature": "polyprint",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "polyprint",
+      "--test",
+      "polyprint"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 5.3981969356536865,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-polyprint.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "polyprint",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "polyprint",
+      "--lib",
+      "--test",
+      "polyprint",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.043891429901123,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-polyprint.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "polyprint",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "polyprint",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.8549878597259521,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-polyprint.log"
+  },
+  {
+    "kind": "test",
+    "feature": "printshop",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "printshop",
+      "--test",
+      "printshop"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 5.495907783508301,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-printshop.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "printshop",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "printshop",
+      "--lib",
+      "--test",
+      "printshop",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 3.1535356044769287,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-printshop.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "printshop",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "printshop",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5674610137939453,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-printshop.log"
+  },
+  {
+    "kind": "test",
+    "feature": "tasprint",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "tasprint",
+      "--test",
+      "tasprint"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.5808560848236084,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-tasprint.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "tasprint",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "tasprint",
+      "--lib",
+      "--test",
+      "tasprint",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.0054922103881836,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-tasprint.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "tasprint",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "tasprint",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5471286773681641,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-tasprint.log"
+  },
+  {
+    "kind": "test",
+    "feature": "pxl",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pxl",
+      "--test",
+      "pxl"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 2.1291615962982178,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-pxl.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "pxl",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pxl",
+      "--lib",
+      "--test",
+      "pxl",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.9943478107452393,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-pxl.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "pxl",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "pxl",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.6153066158294678,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-pxl.log"
+  },
+  {
+    "kind": "test",
+    "feature": "signum",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "signum",
+      "--test",
+      "signum"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.675281286239624,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-test-signum.log"
+  },
+  {
+    "kind": "clippy",
+    "feature": "signum",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "signum",
+      "--lib",
+      "--test",
+      "signum",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.9385838508605957,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-signum.log"
+  },
+  {
+    "kind": "doc",
+    "feature": "signum",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "signum",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.5105087757110596,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-doc-signum.log"
+  },
+  {
+    "kind": "combined-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "daisy,polyprint,printshop,tasprint,pxl,signum",
+      "--lib",
+      "--tests",
+      "--example",
+      "w5c1_timing",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w5c1-clippy-combined.log"
+  }
+]

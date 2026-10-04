@@ -1,0 +1,2893 @@
+{
+  "status": "pass",
+  "unique_files": 459,
+  "manifests": [
+    {
+      "manifest": "reports/w5.a1-freeze.json",
+      "manifest_sha256": "e8f1af285ce0331f2c2396fb2342c9ea31749be43cddf36b7395b955f65c66a0",
+      "entries": [
+        {
+          "path": "crates/fontpixel/src/formats/dosstart.rs",
+          "expected": "7e86c0eb598dfd6d65361c5da05fd5ee0799f33bfa69dee192cd0eaebb166025",
+          "actual": "7e86c0eb598dfd6d65361c5da05fd5ee0799f33bfa69dee192cd0eaebb166025",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/dosstart.rs",
+          "expected": "9488def806e2b10c2ecb6bbad7b26e5c615ef6764ee27180ace7b3c906458067",
+          "actual": "9488def806e2b10c2ecb6bbad7b26e5c615ef6764ee27180ace7b3c906458067",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/dosstart.md",
+          "expected": "4bb799301be7adaa3735180c26175ce097ffe334656a2e20dfee06708916b187",
+          "actual": "4bb799301be7adaa3735180c26175ce097ffe334656a2e20dfee06708916b187",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/dosstart.rs",
+          "expected": "bc0671be7a0951b52d0a9370060fd84a23eac03fe20a8cf19d2ba81483f470dd",
+          "actual": "bc0671be7a0951b52d0a9370060fd84a23eac03fe20a8cf19d2ba81483f470dd",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/edwin.rs",
+          "expected": "10cde71daa37b1827d2ebea27e51c1650e498594022e9d92c6522c0523ba1525",
+          "actual": "10cde71daa37b1827d2ebea27e51c1650e498594022e9d92c6522c0523ba1525",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/edwin.rs",
+          "expected": "542544696156ba774c29d927f0e33465462aa944775e8ae6b959efe0595f737f",
+          "actual": "542544696156ba774c29d927f0e33465462aa944775e8ae6b959efe0595f737f",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/edwin.md",
+          "expected": "a41116c74af33cf0722811150d0d97e1b6a4ce5795da972104b45f00a7713851",
+          "actual": "a41116c74af33cf0722811150d0d97e1b6a4ce5795da972104b45f00a7713851",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/edwin.rs",
+          "expected": "76843f33a8bab5856122b8007e4ef01c3f9ed2c0d4f25e7d2db4ecda0857df9f",
+          "actual": "76843f33a8bab5856122b8007e4ef01c3f9ed2c0d4f25e7d2db4ecda0857df9f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/mkwinfont.rs",
+          "expected": "b92b630125eb30f3c2f11a51846d4e4c137b439618a102e7132e40ddd485a77b",
+          "actual": "b92b630125eb30f3c2f11a51846d4e4c137b439618a102e7132e40ddd485a77b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/mkwinfont.rs",
+          "expected": "6c64658e3ea8d4b1f9ab68d73d2d5f2f775342b19bfdee93de96465b8133556b",
+          "actual": "6c64658e3ea8d4b1f9ab68d73d2d5f2f775342b19bfdee93de96465b8133556b",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/mkwinfont.md",
+          "expected": "41c3248db19312fa66eeab6517f33eaed9848158d9319ebc66a18f52e30538a8",
+          "actual": "41c3248db19312fa66eeab6517f33eaed9848158d9319ebc66a18f52e30538a8",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/mkwinfont.rs",
+          "expected": "2aef5fce9f3d1cb67ddd38f4ae4c9e72cb0cc806e77d65b9c09a88b95d2f6de2",
+          "actual": "2aef5fce9f3d1cb67ddd38f4ae4c9e72cb0cc806e77d65b9c09a88b95d2f6de2",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/psf2txt.rs",
+          "expected": "632d198a9f2bf681f03e73cc0c8d077b1b8a0bdac9fe447bab86d4a8f1312c8e",
+          "actual": "632d198a9f2bf681f03e73cc0c8d077b1b8a0bdac9fe447bab86d4a8f1312c8e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/psf2txt.rs",
+          "expected": "3761d8031bace77bee2a250670b0a8bd719ac8043c65c299995706ff8130de67",
+          "actual": "3761d8031bace77bee2a250670b0a8bd719ac8043c65c299995706ff8130de67",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/psf2txt.md",
+          "expected": "a44dab04d94877dc14c0ab85834573ed828ef14779ceed9d73f434b758a039a0",
+          "actual": "a44dab04d94877dc14c0ab85834573ed828ef14779ceed9d73f434b758a039a0",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/psf2txt.rs",
+          "expected": "fcd78fb14ad1a9fb055d836bf0f64b56448ccd7c5b22a31bbcb7bf1d4f4b191d",
+          "actual": "fcd78fb14ad1a9fb055d836bf0f64b56448ccd7c5b22a31bbcb7bf1d4f4b191d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pcr.rs",
+          "expected": "f6d756c7fbe2d4491ed0556025d84cc25d2c291c21f55dbed6cf15518a4519af",
+          "actual": "f6d756c7fbe2d4491ed0556025d84cc25d2c291c21f55dbed6cf15518a4519af",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pcr.rs",
+          "expected": "9e70719bb1240303070a01688c8f3fad7686655cd1b66ca79d53ecf00f9329eb",
+          "actual": "9e70719bb1240303070a01688c8f3fad7686655cd1b66ca79d53ecf00f9329eb",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/pcr.md",
+          "expected": "69d8d3c4151e3c6fd164aa0d1132715dc77e3079f372143f078d0ae240811520",
+          "actual": "69d8d3c4151e3c6fd164aa0d1132715dc77e3079f372143f078d0ae240811520",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pcr.rs",
+          "expected": "7c88968e962ff55f89eedb07eac4edac799896861efdc993c414fc435bb7fe5b",
+          "actual": "7c88968e962ff55f89eedb07eac4edac799896861efdc993c414fc435bb7fe5b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/plus3dos.rs",
+          "expected": "5f0629a6f4ceb39aed97d3c93bd33d07bf97b3665b07509917e0dfc43153014d",
+          "actual": "5f0629a6f4ceb39aed97d3c93bd33d07bf97b3665b07509917e0dfc43153014d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/plus3dos.rs",
+          "expected": "5e6397881cc50da1ea39659f90dd8154725d9ae8a8a21f6f1cf270a4f4a3af61",
+          "actual": "5e6397881cc50da1ea39659f90dd8154725d9ae8a8a21f6f1cf270a4f4a3af61",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/plus3dos.md",
+          "expected": "52bc4399d9a646f8e2efb65b5f26b6d92ab477016bfe2fc5ddfacdbf785457c6",
+          "actual": "52bc4399d9a646f8e2efb65b5f26b6d92ab477016bfe2fc5ddfacdbf785457c6",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/plus3dos.rs",
+          "expected": "8c293935ed08d33fc8119279077c113171221041d527f3c6d8b00bd0b1c2eed4",
+          "actual": "8c293935ed08d33fc8119279077c113171221041d527f3c6d8b00bd0b1c2eed4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/drhalo.rs",
+          "expected": "f724ece7236382dc7bb33de71777aa57cf0f45021a2a1fa401fcd406535eafb1",
+          "actual": "f724ece7236382dc7bb33de71777aa57cf0f45021a2a1fa401fcd406535eafb1",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/drhalo.rs",
+          "expected": "c57317c7f3f9d97cb01996c23c3d570db939934702796ebd687f1de8500bcd5c",
+          "actual": "c57317c7f3f9d97cb01996c23c3d570db939934702796ebd687f1de8500bcd5c",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/drhalo.md",
+          "expected": "7be2dd07008dcfbdf9dffaa0eab9b4874892820ebd88360a8a05218005455236",
+          "actual": "7be2dd07008dcfbdf9dffaa0eab9b4874892820ebd88360a8a05218005455236",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/drhalo.rs",
+          "expected": "c42df70663833534686943a9571c512f81a031ac42357dfd99802387d7afcdbb",
+          "actual": "c42df70663833534686943a9571c512f81a031ac42357dfd99802387d7afcdbb",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/writeon.rs",
+          "expected": "2c49c30335f020703cc9d4f5150213f4070c53af460063280a4f802184ba2999",
+          "actual": "2c49c30335f020703cc9d4f5150213f4070c53af460063280a4f802184ba2999",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/writeon.rs",
+          "expected": "00243d586f7b3ff571b19b8b9f44791accab3f9ada19a51045fe1a4fb77cf642",
+          "actual": "00243d586f7b3ff571b19b8b9f44791accab3f9ada19a51045fe1a4fb77cf642",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/writeon.md",
+          "expected": "43f0ec5f5e8ad2b7e59715e67e4c16703609571186c1721d740de222780dbd73",
+          "actual": "43f0ec5f5e8ad2b7e59715e67e4c16703609571186c1721d740de222780dbd73",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/writeon.rs",
+          "expected": "0bf80e66d3529509c7284b1804c4ea9f62cc46fed9d97b9d9fab38d89a5770b4",
+          "actual": "0bf80e66d3529509c7284b1804c4ea9f62cc46fed9d97b9d9fab38d89a5770b4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/dosstart/common.rs",
+          "expected": "095931c943377d5e168b180649c885db0bf2f7f2f4b9bea8e994a3494ba485f4",
+          "actual": "095931c943377d5e168b180649c885db0bf2f7f2f4b9bea8e994a3494ba485f4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/dosstart/fixtures.rs",
+          "expected": "85c19880b3ab3a2f1e5e06d91959857a13693e83230316fe18fd8e5b64d6625f",
+          "actual": "85c19880b3ab3a2f1e5e06d91959857a13693e83230316fe18fd8e5b64d6625f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/examples/w5a1_timing.rs",
+          "expected": "ec8c77f2d4e70c8ca93fabd302e4aa959712a817198e39a9efd0d209fa38b1ae",
+          "actual": "ec8c77f2d4e70c8ca93fabd302e4aa959712a817198e39a9efd0d209fa38b1ae",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5a1.py",
+          "expected": "1af401d49cded5d91d6ef895bd0747cd58ecf5a2b2dac4c0cb802fe56d62b6d3",
+          "actual": "1af401d49cded5d91d6ef895bd0747cd58ecf5a2b2dac4c0cb802fe56d62b6d3",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5a1.py",
+          "expected": "0578273497ced0796df89be8b6656e9f37302c78c1cd6d73d75bf7feec490e09",
+          "actual": "0578273497ced0796df89be8b6656e9f37302c78c1cd6d73d75bf7feec490e09",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.x-freeze.json",
+      "manifest_sha256": "942d36c2c1c92f01c24ca3c8d667481c94dcd71596c8b2d3283122cee346ced6",
+      "entries": [
+        {
+          "path": "crates/fontpixel/src/formats/raw.rs",
+          "expected": "06c9220fda4eb10288f2b14116a476d48aba576bc03465f3babb794390fd65ca",
+          "actual": "06c9220fda4eb10288f2b14116a476d48aba576bc03465f3babb794390fd65ca",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/raw/packed.rs",
+          "expected": "2eb4b0fb67a7d7ae8a7ee547e4c85d48e20b54d10fe989e887b724f60c5cdf00",
+          "actual": "2eb4b0fb67a7d7ae8a7ee547e4c85d48e20b54d10fe989e887b724f60c5cdf00",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bmfont.rs",
+          "expected": "d99279bec8549860e83084079a166917df371f68f0f110328f5e20ae0f7c0366",
+          "actual": "d99279bec8549860e83084079a166917df371f68f0f110328f5e20ae0f7c0366",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bmfont/json.rs",
+          "expected": "dcb187526ce346e08615efd1f2243c718c88aaa33e1fe8a7c80669438354b711",
+          "actual": "dcb187526ce346e08615efd1f2243c718c88aaa33e1fe8a7c80669438354b711",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bmfont/wire.rs",
+          "expected": "45e7272cd4a66979c01a00073131d39fa23b668087d31c8734f74e5255b84b15",
+          "actual": "45e7272cd4a66979c01a00073131d39fa23b668087d31c8734f74e5255b84b15",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bmfont/reader.rs",
+          "expected": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7",
+          "actual": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bmfont/writer.rs",
+          "expected": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219",
+          "actual": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/raw.md",
+          "expected": "c27ccde176ee4de49612fa4a45b9e02751fc11570af5021afc9dfbc05068a33a",
+          "actual": "c27ccde176ee4de49612fa4a45b9e02751fc11570af5021afc9dfbc05068a33a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/bmfont.md",
+          "expected": "f2da3f7d400187c61caef71a47b5f829834c09dcf63c4450b8283a78e24ce1e5",
+          "actual": "f2da3f7d400187c61caef71a47b5f829834c09dcf63c4450b8283a78e24ce1e5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/raw.rs",
+          "expected": "ee497bb2ff84ee34dec4381c51b466d63fb2e9b06f5d73bab83e31c506cfe8b6",
+          "actual": "ee497bb2ff84ee34dec4381c51b466d63fb2e9b06f5d73bab83e31c506cfe8b6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/bmfont.rs",
+          "expected": "c737541e760986ad06ca91e302d9b9a8c5470dc221af9cb99827cca9c9039222",
+          "actual": "c737541e760986ad06ca91e302d9b9a8c5470dc221af9cb99827cca9c9039222",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/raw.rs",
+          "expected": "5fb9ebb2833561125bdf9cd2f5492f45f9f0ff9ecc00a750a4780da2bbb3ddfc",
+          "actual": "5fb9ebb2833561125bdf9cd2f5492f45f9f0ff9ecc00a750a4780da2bbb3ddfc",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/bmfont.rs",
+          "expected": "0b5f7430af34d8882eaf07fe2666f4ee2736dc9c2f65c1333bec5fb1030e84ba",
+          "actual": "0b5f7430af34d8882eaf07fe2666f4ee2736dc9c2f65c1333bec5fb1030e84ba",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5x.py",
+          "expected": "b202ecd84ae2a89fe17ecc983f1b988335aa1b2b3c5f388ed73c3d93c847b05b",
+          "actual": "b202ecd84ae2a89fe17ecc983f1b988335aa1b2b3c5f388ed73c3d93c847b05b",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5x.py",
+          "expected": "79997d1413e8a8d40f1fa1b03d52c80ed87bf7db9147747daeec1355f8a3f09b",
+          "actual": "79997d1413e8a8d40f1fa1b03d52c80ed87bf7db9147747daeec1355f8a3f09b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/examples/w5x_timing.rs",
+          "expected": "314a37dee7fbb91509f61f4d5f382a98cdee8fe1fe366be27a547d8fdaf4df0a",
+          "actual": "314a37dee7fbb91509f61f4d5f382a98cdee8fe1fe366be27a547d8fdaf4df0a",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.2/freeze.json",
+      "manifest_sha256": "83d014929238b1855718f1ebac7f61b6c098139cee7097738b4f4f758cb712eb",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w52_timing.rs",
+          "expected": "c2ce035bed61b1a75ad5a605e8355507d53d9f33e8446c781d3ee08a8a7c8ab0",
+          "actual": "c2ce035bed61b1a75ad5a605e8355507d53d9f33e8446c781d3ee08a8a7c8ab0",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/hanfont.rs",
+          "expected": "50e39a8661648b999d2a70fae8e7c6314b90aca67707d51d69bda79dc2367f94",
+          "actual": "50e39a8661648b999d2a70fae8e7c6314b90aca67707d51d69bda79dc2367f94",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/iigs/binscii.rs",
+          "expected": "5b2d15895af6047554008707e1e0768f9be1449515617d053aa1fd4c2697367b",
+          "actual": "5b2d15895af6047554008707e1e0768f9be1449515617d053aa1fd4c2697367b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/iigs/reader.rs",
+          "expected": "0911438e413ff0ba22c4f5b9c66b697524db670078411602d6ebfaff726c74fd",
+          "actual": "0911438e413ff0ba22c4f5b9c66b697524db670078411602d6ebfaff726c74fd",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/iigs/support.rs",
+          "expected": "5cd2c6ddbc05a7be144f64a411968b868506e65e863026c428f14e8ba4b589d4",
+          "actual": "5cd2c6ddbc05a7be144f64a411968b868506e65e863026c428f14e8ba4b589d4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/iigs/writer.rs",
+          "expected": "728b71a8f91a887e6b78f8955f09cecc3a0de924d53a9bf10ee80e7314fa4f5e",
+          "actual": "728b71a8f91a887e6b78f8955f09cecc3a0de924d53a9bf10ee80e7314fa4f5e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/iigs.rs",
+          "expected": "f1dfa4aa6ffde529e4422a1e886964292eff884ae6af44b03343b59bbacbbf45",
+          "actual": "f1dfa4aa6ffde529e4422a1e886964292eff884ae6af44b03343b59bbacbbf45",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/hanfont.rs",
+          "expected": "a62dbe0bab463b1f605375cfb60656a4a445c1081f561b267c5b8784ea7b1af1",
+          "actual": "a62dbe0bab463b1f605375cfb60656a4a445c1081f561b267c5b8784ea7b1af1",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/iigs.rs",
+          "expected": "6a014005b0265fb47f50d163bbfbe0fce919d530b9238bf88daabd8d30c5b066",
+          "actual": "6a014005b0265fb47f50d163bbfbe0fce919d530b9238bf88daabd8d30c5b066",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/hanfont.md",
+          "expected": "78e0673adc0df3354b1d80addd139f0a3460b1427420eb1e63dbaa2f49a7fab4",
+          "actual": "78e0673adc0df3354b1d80addd139f0a3460b1427420eb1e63dbaa2f49a7fab4",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/iigs.md",
+          "expected": "46b7ffd6f95365c44e821a6e313cc7b2b138cc79ee5a054ab65f965be538afe2",
+          "actual": "46b7ffd6f95365c44e821a6e313cc7b2b138cc79ee5a054ab65f965be538afe2",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/hanfont.rs",
+          "expected": "ed81eafdf66653e21aacb0e9cd4fb7e823a8ce1c42db3b0a325cecafdbcb7d75",
+          "actual": "ed81eafdf66653e21aacb0e9cd4fb7e823a8ce1c42db3b0a325cecafdbcb7d75",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/iigs.rs",
+          "expected": "47bf2856600f70b667a6d74287976ff3f93bfee12bdeb0944a9fb589b664f183",
+          "actual": "47bf2856600f70b667a6d74287976ff3f93bfee12bdeb0944a9fb589b664f183",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w52.py",
+          "expected": "1484b13b12934d7a90d721c6e4a31c55fbddcbecada57152aebe162ef4836738",
+          "actual": "1484b13b12934d7a90d721c6e4a31c55fbddcbecada57152aebe162ef4836738",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w52.py",
+          "expected": "adfd2dc42409743df23c561d40b51d8e129cc5a9ca355b1a9b2a45b550d8e582",
+          "actual": "adfd2dc42409743df23c561d40b51d8e129cc5a9ca355b1a9b2a45b550d8e582",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.d/freeze.json",
+      "manifest_sha256": "f979ab5f6c3efe8cdf0ea498a2a956a79751b97bfbc084b40e9f585c44b6f287",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5d_timing.rs",
+          "expected": "a528151a64bfe4b85c1e0aace82c30f31ac5b7f099e042eb7e516e22d473e070",
+          "actual": "a528151a64bfe4b85c1e0aace82c30f31ac5b7f099e042eb7e516e22d473e070",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/fbit/common.rs",
+          "expected": "3f117fd0e9f3e7a92b0a2646fd8e659bf561597fda2cad0ce31984af2c134d01",
+          "actual": "3f117fd0e9f3e7a92b0a2646fd8e659bf561597fda2cad0ce31984af2c134d01",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/fbit.rs",
+          "expected": "fa24e39c30f3e29278c31c86a222952e96b05f14cfc69646f8cfa61b38910c23",
+          "actual": "fa24e39c30f3e29278c31c86a222952e96b05f14cfc69646f8cfa61b38910c23",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/lisa.rs",
+          "expected": "26e6d0cf3b19ce852d7a41e57b90ba0ccde38c5f409f1ee4092f788c5bf96dcc",
+          "actual": "26e6d0cf3b19ce852d7a41e57b90ba0ccde38c5f409f1ee4092f788c5bf96dcc",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/mgtk.rs",
+          "expected": "8eda6045e1095e36283e29da8740239c57012568cc2b112cd9a6ccbcf651553b",
+          "actual": "8eda6045e1095e36283e29da8740239c57012568cc2b112cd9a6ccbcf651553b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/binhex.rs",
+          "expected": "247a3b24baaa3956c4f6a9bdd82ffc78882f81371465e114e14da0582a036ad0",
+          "actual": "247a3b24baaa3956c4f6a9bdd82ffc78882f81371465e114e14da0582a036ad0",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/bridge.rs",
+          "expected": "a96d8543e40d5ab674c44baeecf36e1b367c1d334c00075325cd39d94b328440",
+          "actual": "a96d8543e40d5ab674c44baeecf36e1b367c1d334c00075325cd39d94b328440",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/container.rs",
+          "expected": "8191ca89452cf01abceb57e857df714c8516f0b86a59d3ad8fdd54399b3bcf90",
+          "actual": "8191ca89452cf01abceb57e857df714c8516f0b86a59d3ad8fdd54399b3bcf90",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/palette.rs",
+          "expected": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53",
+          "actual": "9ff09487869d5a40993b9aa1bb7264d3bb22b5b36c013bd11b420e75ff48fc53",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/probe.rs",
+          "expected": "28b8b36ee497297828de0269af5999226c9366a56b8da5a460bfdd1b449b8670",
+          "actual": "28b8b36ee497297828de0269af5999226c9366a56b8da5a460bfdd1b449b8670",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/raster.rs",
+          "expected": "1ae009912997e63c88f1a640e88675dedad4ee9773eb5472125a9ecab4c25098",
+          "actual": "1ae009912997e63c88f1a640e88675dedad4ee9773eb5472125a9ecab4c25098",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/support.rs",
+          "expected": "ea1a64444b25cddee4c49c2d35fe58ee2cf2b16c1397d181a7663e102ad37738",
+          "actual": "ea1a64444b25cddee4c49c2d35fe58ee2cf2b16c1397d181a7663e102ad37738",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt/writer.rs",
+          "expected": "a08a7a2d89010cfdc32d9e54aa66e4f90155c70f5d905582d57d03e74e8c9584",
+          "actual": "a08a7a2d89010cfdc32d9e54aa66e4f90155c70f5d905582d57d03e74e8c9584",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/nfnt.rs",
+          "expected": "48dbd9324744e58d5c8786585a8526c49104779b23a9ecd5a758462d5d9c7941",
+          "actual": "48dbd9324744e58d5c8786585a8526c49104779b23a9ecd5a758462d5d9c7941",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/qpf.rs",
+          "expected": "70e11b2fd7879f549fca865a27d4b9e5e8049b5143f292761ccbda951ea7fa9e",
+          "actual": "70e11b2fd7879f549fca865a27d4b9e5e8049b5143f292761ccbda951ea7fa9e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/qpf2.rs",
+          "expected": "6a024eac4069d0d3ad8ee3e06945c1637a8530aad4d6ea28e9c7095be30c2ad4",
+          "actual": "6a024eac4069d0d3ad8ee3e06945c1637a8530aad4d6ea28e9c7095be30c2ad4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fbit.rs",
+          "expected": "7880a7debe43753754856a5f0187e86e58c11af325f732fa56cc11893063ee68",
+          "actual": "7880a7debe43753754856a5f0187e86e58c11af325f732fa56cc11893063ee68",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/lisa.rs",
+          "expected": "a8231ca5357718debc0f934c28c4ced96ff3c8e42fce1af276e64510098fdd70",
+          "actual": "a8231ca5357718debc0f934c28c4ced96ff3c8e42fce1af276e64510098fdd70",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/mgtk.rs",
+          "expected": "ce5f66dd1ffbe4f22c4558a334404494730c265a6fc987b546df9249209f3d3f",
+          "actual": "ce5f66dd1ffbe4f22c4558a334404494730c265a6fc987b546df9249209f3d3f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/nfnt.rs",
+          "expected": "ee2a2748a9eb15940d1df52969aff25278397bc7d7e5ab2fdd30155700939ac9",
+          "actual": "ee2a2748a9eb15940d1df52969aff25278397bc7d7e5ab2fdd30155700939ac9",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/qpf.rs",
+          "expected": "81394e81b40f3f32a6e81ad90f89f2f976455017bf6fafee63654fea4a491520",
+          "actual": "81394e81b40f3f32a6e81ad90f89f2f976455017bf6fafee63654fea4a491520",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/qpf2.rs",
+          "expected": "10ceb7e222bebe79b1d009a05e5a78316e797606782f7f19474088cb00b0c595",
+          "actual": "10ceb7e222bebe79b1d009a05e5a78316e797606782f7f19474088cb00b0c595",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/fbit.md",
+          "expected": "23188b33f6d607be0752caa6a2fa4e293257d12158cfd3dd3c8024091d4fc644",
+          "actual": "23188b33f6d607be0752caa6a2fa4e293257d12158cfd3dd3c8024091d4fc644",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/lisa.md",
+          "expected": "2e4b8c29b2a1bca589af1e899dc3752ae6bce1a52b0d0db294806b170356ef2d",
+          "actual": "2e4b8c29b2a1bca589af1e899dc3752ae6bce1a52b0d0db294806b170356ef2d",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/mgtk.md",
+          "expected": "834c6bea504fe6d2caa1fe2efe8e1312bda861aad178dae8b2432e91a0837f6b",
+          "actual": "834c6bea504fe6d2caa1fe2efe8e1312bda861aad178dae8b2432e91a0837f6b",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/nfnt.md",
+          "expected": "81e1a6746d6faa63c7b4c36ced538bb5738b9906938b4101fb6734b733340d72",
+          "actual": "81e1a6746d6faa63c7b4c36ced538bb5738b9906938b4101fb6734b733340d72",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/qpf.md",
+          "expected": "15e9687d52e1f60699eb2d7b671446f773f823dd033b4de75c842841d70188aa",
+          "actual": "15e9687d52e1f60699eb2d7b671446f773f823dd033b4de75c842841d70188aa",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/qpf2.md",
+          "expected": "a5d7c1cf252a0fa061fb3ea07410247040afbaf222a77e1def08494b928d5f5f",
+          "actual": "a5d7c1cf252a0fa061fb3ea07410247040afbaf222a77e1def08494b928d5f5f",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/fbit.rs",
+          "expected": "eba9e6e80f0b113d7a81ea9166d546199a6ded91334470bb323a9d5fed096b5e",
+          "actual": "eba9e6e80f0b113d7a81ea9166d546199a6ded91334470bb323a9d5fed096b5e",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/lisa.rs",
+          "expected": "0bddfcbbf0c0e13c157a606a98ecdc17597f2912b6b29be395548ec0a3fefac7",
+          "actual": "0bddfcbbf0c0e13c157a606a98ecdc17597f2912b6b29be395548ec0a3fefac7",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/mgtk.rs",
+          "expected": "a1a3c90d41afa340ab9e58de6e3556c00bb013767818988f18f232359966a482",
+          "actual": "a1a3c90d41afa340ab9e58de6e3556c00bb013767818988f18f232359966a482",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/nfnt.rs",
+          "expected": "2559f31d439917ec55f699302c8ebebfb6b4d14e7f50a116fbea6f50e8218721",
+          "actual": "2559f31d439917ec55f699302c8ebebfb6b4d14e7f50a116fbea6f50e8218721",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/qpf.rs",
+          "expected": "1e7ee374b9f1224279641c767772cbc2133aac8213d0c213ebe970e6d3324f25",
+          "actual": "1e7ee374b9f1224279641c767772cbc2133aac8213d0c213ebe970e6d3324f25",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/qpf2.rs",
+          "expected": "8dd7f39b88ac5c0f63b7fafd0cc719eac76220f67469cf6fb8ba8f8159015b2d",
+          "actual": "8dd7f39b88ac5c0f63b7fafd0cc719eac76220f67469cf6fb8ba8f8159015b2d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5d.py",
+          "expected": "780155399e608487fdd379b2ddb9b123b029c92d8500eb81abb90cc136433c14",
+          "actual": "780155399e608487fdd379b2ddb9b123b029c92d8500eb81abb90cc136433c14",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.d/build-oracles.sh",
+          "expected": "79bc37ca52394282ef53f25050e014c6717a4fdffdd9e425c3f0342861f02282",
+          "actual": "79bc37ca52394282ef53f25050e014c6717a4fdffdd9e425c3f0342861f02282",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.d/check-benchmarks.py",
+          "expected": "26180647bcc16587bb4ea392d636cb3435b51cd785865bcc4b9fc826f4f3afc6",
+          "actual": "26180647bcc16587bb4ea392d636cb3435b51cd785865bcc4b9fc826f4f3afc6",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.d/qt-driver.cpp",
+          "expected": "e32626629307e27289389bc190a6c2f68f12c5f467756996d49aaaece6c2bc22",
+          "actual": "e32626629307e27289389bc190a6c2f68f12c5f467756996d49aaaece6c2bc22",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.d/run-gates.py",
+          "expected": "d2a2ab7d1546c67adc0516aa1158f318a5e64422bb9d300d7b2748821c8899c7",
+          "actual": "d2a2ab7d1546c67adc0516aa1158f318a5e64422bb9d300d7b2748821c8899c7",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5d.py",
+          "expected": "4d734a22b084e0a53c0489b31e12c994d473a2e40bd0c4d100dbe727fcf7bf4f",
+          "actual": "4d734a22b084e0a53c0489b31e12c994d473a2e40bd0c4d100dbe727fcf7bf4f",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.3-freeze.json",
+      "manifest_sha256": "9706788ff94989f12a9cc666804115eb2919442515eb3b688a3623778f411863",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w53_timing.rs",
+          "expected": "416516ee4623abcd1f707cafe83614461a676bee4b238d20afa9179eae4167b4",
+          "actual": "416516ee4623abcd1f707cafe83614461a676bee4b238d20afa9179eae4167b4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/figlet.rs",
+          "expected": "a739799881da90063fc267986edc392607c0f2ff75a48c22400468e1453cd478",
+          "actual": "a739799881da90063fc267986edc392607c0f2ff75a48c22400468e1453cd478",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/fzx.rs",
+          "expected": "743b0f1fc44d0c9706d522883c6273ea5767bd12e534c26f8f5be7f8cf1fa7ba",
+          "actual": "743b0f1fc44d0c9706d522883c6273ea5767bd12e534c26f8f5be7f8cf1fa7ba",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/vfont.rs",
+          "expected": "2f3660e08b463a237bc08fbd949ac6523d7279bb196abfa584780e039bc0c5eb",
+          "actual": "2f3660e08b463a237bc08fbd949ac6523d7279bb196abfa584780e039bc0c5eb",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/figlet.rs",
+          "expected": "ffe525718a2b6754a9b432d642fd52b8d36a6f193eb56a7c870c25c487189aeb",
+          "actual": "ffe525718a2b6754a9b432d642fd52b8d36a6f193eb56a7c870c25c487189aeb",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fzx.rs",
+          "expected": "0772cd14f6b64fec56f8b66137fff13af6d3c7c643d88ea6441495d1cf958571",
+          "actual": "0772cd14f6b64fec56f8b66137fff13af6d3c7c643d88ea6441495d1cf958571",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/vfont.rs",
+          "expected": "cdb7e990efdff825af6b70b8c423e094ca0a36bd4eb1cceacc5ef644762724db",
+          "actual": "cdb7e990efdff825af6b70b8c423e094ca0a36bd4eb1cceacc5ef644762724db",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/figlet.md",
+          "expected": "b9edd1edb414c338098125d83dfafe3019283bbd0d42f51f9b53a20d8602a53a",
+          "actual": "b9edd1edb414c338098125d83dfafe3019283bbd0d42f51f9b53a20d8602a53a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/fzx.md",
+          "expected": "e7fbe694b2eb5ac4ccff9e69afb922c0d2760e37f863db3adb597537fc7ca748",
+          "actual": "e7fbe694b2eb5ac4ccff9e69afb922c0d2760e37f863db3adb597537fc7ca748",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/vfont.md",
+          "expected": "4bfa01d0d1f0153b54a011da88ce8145b83cada32346cc9853bd746c7799df03",
+          "actual": "4bfa01d0d1f0153b54a011da88ce8145b83cada32346cc9853bd746c7799df03",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/figlet.rs",
+          "expected": "f1d81f33ed7532f226940090b6afb20feb1213a366aa84bf823d988c0c7d5dc8",
+          "actual": "f1d81f33ed7532f226940090b6afb20feb1213a366aa84bf823d988c0c7d5dc8",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/fzx.rs",
+          "expected": "347989a9dc7dcddae9b29b89b8cfed03084b621f8f36479fd342038183b028d0",
+          "actual": "347989a9dc7dcddae9b29b89b8cfed03084b621f8f36479fd342038183b028d0",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/vfont.rs",
+          "expected": "34e0f3bc484d997c46b64c06714619fde9aad1cc54d42a36e37547b0fe9525f3",
+          "actual": "34e0f3bc484d997c46b64c06714619fde9aad1cc54d42a36e37547b0fe9525f3",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w53.py",
+          "expected": "c6c441f6d1a87316eb3b7079f48092928697a0ebecb30c1d4645e7bf01b1ff2d",
+          "actual": "c6c441f6d1a87316eb3b7079f48092928697a0ebecb30c1d4645e7bf01b1ff2d",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w53.py",
+          "expected": "5df4722b9c49a13979f3d0a3d40bc9d6ece39b2de3cb4c6e4445c7c177396475",
+          "actual": "5df4722b9c49a13979f3d0a3d40bc9d6ece39b2de3cb4c6e4445c7c177396475",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.c1-freeze.json",
+      "manifest_sha256": "2eb54217eda0b1abdb1f11f2d5942a6fe303b504cca15a0c779b9f755c0be16e",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5c1_timing.rs",
+          "expected": "6e946dd55ab109b5f4334573f611917b078eefa57f3fedbb69fefd1d4f95394b",
+          "actual": "6e946dd55ab109b5f4334573f611917b078eefa57f3fedbb69fefd1d4f95394b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/daisy.rs",
+          "expected": "140a9c5a5553b353ba5872700e33e4aebc12137ee8e64e2e9faf33357c215364",
+          "actual": "140a9c5a5553b353ba5872700e33e4aebc12137ee8e64e2e9faf33357c215364",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/daisy/common.rs",
+          "expected": "bb08c22c1dba81fe79866cf33a2f36a66643f537a010c48a9a2de7bbdd30a1ea",
+          "actual": "bb08c22c1dba81fe79866cf33a2f36a66643f537a010c48a9a2de7bbdd30a1ea",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/polyprint.rs",
+          "expected": "e8075a46d487091a8f03541f1fc1a9605312727eb0a058dbc9e99b12c7878dfd",
+          "actual": "e8075a46d487091a8f03541f1fc1a9605312727eb0a058dbc9e99b12c7878dfd",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/printshop.rs",
+          "expected": "128f942d33e243ab4ac426aede138b1f4ec43deeeca4314bac3c89105d488ccd",
+          "actual": "128f942d33e243ab4ac426aede138b1f4ec43deeeca4314bac3c89105d488ccd",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pxl.rs",
+          "expected": "7bc2c02dbb0e94ece643acfebc60cdbfdcb36fbc752578dd032954e0fd594c4d",
+          "actual": "7bc2c02dbb0e94ece643acfebc60cdbfdcb36fbc752578dd032954e0fd594c4d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/signum.rs",
+          "expected": "ac4fe20aedb54d08b7349acc4c59babe8e7d832e8829cefcb063a3da8c9e0aff",
+          "actual": "ac4fe20aedb54d08b7349acc4c59babe8e7d832e8829cefcb063a3da8c9e0aff",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/tasprint.rs",
+          "expected": "7ef0ffe2bead7b6bd1b17934eb42ea2a45841b2a4c292ab03118559b83a018ba",
+          "actual": "7ef0ffe2bead7b6bd1b17934eb42ea2a45841b2a4c292ab03118559b83a018ba",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/daisy.rs",
+          "expected": "66fc135538a0fa2a579482cc3c65afcb7ad1e099c8636ee2637f5e23c9dd284f",
+          "actual": "66fc135538a0fa2a579482cc3c65afcb7ad1e099c8636ee2637f5e23c9dd284f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/polyprint.rs",
+          "expected": "94f936d9dca6e412a98578f72852578db933a4cb45e86679754e36c629cedb7e",
+          "actual": "94f936d9dca6e412a98578f72852578db933a4cb45e86679754e36c629cedb7e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/printshop.rs",
+          "expected": "e25462926e8d3ec209e327dce25c66f30d6a2d10c359953f99d2cbf8c9afc5f9",
+          "actual": "e25462926e8d3ec209e327dce25c66f30d6a2d10c359953f99d2cbf8c9afc5f9",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pxl.rs",
+          "expected": "aa720c54876c3ebf8d40e35456a0cf77f99ca144cde9cd93507f3083b93522d2",
+          "actual": "aa720c54876c3ebf8d40e35456a0cf77f99ca144cde9cd93507f3083b93522d2",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/signum.rs",
+          "expected": "f9e1e45f2c1aecbb483eb4365b4cd41035d61b4157273951fbdd165a6e16ca9d",
+          "actual": "f9e1e45f2c1aecbb483eb4365b4cd41035d61b4157273951fbdd165a6e16ca9d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/tasprint.rs",
+          "expected": "3fcb357cdae54f58c8dece24f68c2c88f37c8f336c61473db978e1e84366515a",
+          "actual": "3fcb357cdae54f58c8dece24f68c2c88f37c8f336c61473db978e1e84366515a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/daisy.md",
+          "expected": "6753de5a853acbb75a69acab87b5685957ccd65fa8bac27ed87c9f951efabe2a",
+          "actual": "6753de5a853acbb75a69acab87b5685957ccd65fa8bac27ed87c9f951efabe2a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/polyprint.md",
+          "expected": "8dd2c2f6ccdcaa6291e92f8fcc59971659a7ea2a5d31665b927010dd5cdbfd6f",
+          "actual": "8dd2c2f6ccdcaa6291e92f8fcc59971659a7ea2a5d31665b927010dd5cdbfd6f",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/printshop.md",
+          "expected": "818ea82ae18197c90efe12447c1c091e2b26c0d64e4de5b3436d63e0e6060a30",
+          "actual": "818ea82ae18197c90efe12447c1c091e2b26c0d64e4de5b3436d63e0e6060a30",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/pxl.md",
+          "expected": "f0cb1bda0a538da63a48937146a56cfb5ef0bdd8ffdf2281a7007ffd6c10985a",
+          "actual": "f0cb1bda0a538da63a48937146a56cfb5ef0bdd8ffdf2281a7007ffd6c10985a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/signum.md",
+          "expected": "00bfe911a5f481d97bdfdb7e19f7d58ddad54947fd59c32f4bbd80b000db0020",
+          "actual": "00bfe911a5f481d97bdfdb7e19f7d58ddad54947fd59c32f4bbd80b000db0020",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/tasprint.md",
+          "expected": "cb34483c74599fcf45b9de99dc0f77c0ae947f175d08e28984a2154661e77017",
+          "actual": "cb34483c74599fcf45b9de99dc0f77c0ae947f175d08e28984a2154661e77017",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/daisy.rs",
+          "expected": "e5ae5c829d1eefaeb1ca3bed96d0c985bb2dfb779cbc9c433b4d59dcb2506eac",
+          "actual": "e5ae5c829d1eefaeb1ca3bed96d0c985bb2dfb779cbc9c433b4d59dcb2506eac",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/polyprint.rs",
+          "expected": "8ae9817b6a05c58d9fd156e96cf58b69e3a5910ef94832491beff0dce5558a64",
+          "actual": "8ae9817b6a05c58d9fd156e96cf58b69e3a5910ef94832491beff0dce5558a64",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/printshop.rs",
+          "expected": "6fa026c65a4baaa40b89498c60e12a0d98673602f1c40229c2566db911b935c5",
+          "actual": "6fa026c65a4baaa40b89498c60e12a0d98673602f1c40229c2566db911b935c5",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pxl.rs",
+          "expected": "ed763699d945dc764b280a0cd2337ab79f47cfb82006aca4e367205322400b98",
+          "actual": "ed763699d945dc764b280a0cd2337ab79f47cfb82006aca4e367205322400b98",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/signum.rs",
+          "expected": "8e72725737e84c5a8846ac301685d3cb1560756d85eeffca602cf76967b3fe35",
+          "actual": "8e72725737e84c5a8846ac301685d3cb1560756d85eeffca602cf76967b3fe35",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/tasprint.rs",
+          "expected": "d845c067ac7b3d7ad55e711d8942d4f6c44ba33cd8814a01ea4caa6e63cd2adf",
+          "actual": "d845c067ac7b3d7ad55e711d8942d4f6c44ba33cd8814a01ea4caa6e63cd2adf",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5c1.py",
+          "expected": "bab91f49201e506a0d2e16a2bf44fa39f5ccab34466be05480cc49bb097b39f4",
+          "actual": "bab91f49201e506a0d2e16a2bf44fa39f5ccab34466be05480cc49bb097b39f4",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5c1.py",
+          "expected": "e4b86b1c5d1fb3ea65a122eee63618d07bd1ee9a324eb3bf408784ab82b1a3e6",
+          "actual": "e4b86b1c5d1fb3ea65a122eee63618d07bd1ee9a324eb3bf408784ab82b1a3e6",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.4-freeze.json",
+      "manifest_sha256": "6eff074407a579cf49a0c06e1ed960ed93b9984555231fec27c0c9e4c63e822b",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w54_timing.rs",
+          "expected": "843276bb37b40bab98fa97d34deca0c731f9c32c6875547534792ae9158ee6f3",
+          "actual": "843276bb37b40bab98fa97d34deca0c731f9c32c6875547534792ae9158ee6f3",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gdr/reader.rs",
+          "expected": "44ae2d735034808bdfcc92931b8f6816a93c7601959f95a208906f2f6c7da935",
+          "actual": "44ae2d735034808bdfcc92931b8f6816a93c7601959f95a208906f2f6c7da935",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gdr/wire.rs",
+          "expected": "5199de14f1c399229447d9167eaa1fb14a7fb02c984147853c5c3bbda1b18b4f",
+          "actual": "5199de14f1c399229447d9167eaa1fb14a7fb02c984147853c5c3bbda1b18b4f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gdr/writer.rs",
+          "expected": "c37508a4b0e2b87a72f79904c59c353da1e501e17b06473801048d094265b1d8",
+          "actual": "c37508a4b0e2b87a72f79904c59c353da1e501e17b06473801048d094265b1d8",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gdr.rs",
+          "expected": "72f2060e911725474989523aab00d8abe17d4ee326c24b499fa50bfc330f7a0f",
+          "actual": "72f2060e911725474989523aab00d8abe17d4ee326c24b499fa50bfc330f7a0f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/palm/gray.rs",
+          "expected": "ab6d378974e0a68c855adb14d637911640cf4487ae21c61bff9b30ff802bea17",
+          "actual": "ab6d378974e0a68c855adb14d637911640cf4487ae21c61bff9b30ff802bea17",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/palm/reader.rs",
+          "expected": "e93b7feb62bd2a3b4977685253523b2b7f5f042d54239d330a8811f434527a96",
+          "actual": "e93b7feb62bd2a3b4977685253523b2b7f5f042d54239d330a8811f434527a96",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/palm/writer.rs",
+          "expected": "d7e49b0f544f3d98bdd2a16041249ecb744fc46b9b24a8c7ecfa2a5752b11416",
+          "actual": "d7e49b0f544f3d98bdd2a16041249ecb744fc46b9b24a8c7ecfa2a5752b11416",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/palm.rs",
+          "expected": "3e2c738b1cd07a1671ef0d255b93be17f9b71617801f972a1ea3f4b295739e7a",
+          "actual": "3e2c738b1cd07a1671ef0d255b93be17f9b71617801f972a1ea3f4b295739e7a",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/gdr.rs",
+          "expected": "01cb3b85a22a46b423d2e49373813590a9096a250692699fc28d019a80002deb",
+          "actual": "01cb3b85a22a46b423d2e49373813590a9096a250692699fc28d019a80002deb",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/palm.rs",
+          "expected": "05f3483f46d06a4e780a9b26f1a9f7f2f2f8a12704ca25ed14b5588b02510b86",
+          "actual": "05f3483f46d06a4e780a9b26f1a9f7f2f2f8a12704ca25ed14b5588b02510b86",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/gdr.md",
+          "expected": "64f66f589f1c97e396138067fc6db3602d763f6ad112dace38f3e14f8262c081",
+          "actual": "64f66f589f1c97e396138067fc6db3602d763f6ad112dace38f3e14f8262c081",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/palm.md",
+          "expected": "bd7c33a6c02f834fb3afad207b3f45a4f9f36234dafc4a9d654303ca760f703b",
+          "actual": "bd7c33a6c02f834fb3afad207b3f45a4f9f36234dafc4a9d654303ca760f703b",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/gdr.rs",
+          "expected": "2c3761bfb6a0eb73ccde1a1c3fde32677a3514d945430abc9a14813b7c62fe0d",
+          "actual": "2c3761bfb6a0eb73ccde1a1c3fde32677a3514d945430abc9a14813b7c62fe0d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/palm.rs",
+          "expected": "db0b639932d815574e4c56c3d42c7e7eac89d314574a181ad01451e3159aa864",
+          "actual": "db0b639932d815574e4c56c3d42c7e7eac89d314574a181ad01451e3159aa864",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w54.py",
+          "expected": "afb00441701614c2b5371e2ceb9bef4baec33fadef73d8ebd03d2ef0d31835f0",
+          "actual": "afb00441701614c2b5371e2ceb9bef4baec33fadef73d8ebd03d2ef0d31835f0",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w54.py",
+          "expected": "5ee6a1c2de1f0b4d0439a38c11e818cd2ac5fbe20718f1f9e50def3495c7a7b0",
+          "actual": "5ee6a1c2de1f0b4d0439a38c11e818cd2ac5fbe20718f1f9e50def3495c7a7b0",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.b-freeze-final4.json",
+      "manifest_sha256": "c40f6f6c41ae3ef3d620d6eb4e4dadadb65335e8a9535b7b09a90a26299bea50",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5b_timing.rs",
+          "expected": "3c02ad3dd8b942316d915431c861bc6ed3d993fc72a7145996013ae0c19808f5",
+          "actual": "3c02ad3dd8b942316d915431c861bc6ed3d993fc72a7145996013ae0c19808f5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/beos.rs",
+          "expected": "f1dff1ac86bdefb171ea1fdcb23d08b76f7c7cf2aaf15a07400f49642815ba2d",
+          "actual": "f1dff1ac86bdefb171ea1fdcb23d08b76f7c7cf2aaf15a07400f49642815ba2d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/geos/reader.rs",
+          "expected": "0ec177f51122458db283bb72a206a10c5243842b90f91b6014423745930c6aca",
+          "actual": "0ec177f51122458db283bb72a206a10c5243842b90f91b6014423745930c6aca",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/geos/writer.rs",
+          "expected": "6f3cba1f99613f0e4ee5e2607a6744b8b493f42a7536d63b9d692b40bfc0a16c",
+          "actual": "6f3cba1f99613f0e4ee5e2607a6744b8b493f42a7536d63b9d692b40bfc0a16c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/geos.rs",
+          "expected": "60158b7c2fb9c5cbe35c0d44106e6bcee64d716bf9169c71f1f8497cb25b293a",
+          "actual": "60158b7c2fb9c5cbe35c0d44106e6bcee64d716bf9169c71f1f8497cb25b293a",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gpi/container.rs",
+          "expected": "a3f5922b17328012de0af89e4d4691beddf3776557128b5a4c632c5fe73e2e18",
+          "actual": "a3f5922b17328012de0af89e4d4691beddf3776557128b5a4c632c5fe73e2e18",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gpi/reader.rs",
+          "expected": "c7367f08191504b35c9a3bd980ff0b773e2ba9ca7cd613b12875168289eac769",
+          "actual": "c7367f08191504b35c9a3bd980ff0b773e2ba9ca7cd613b12875168289eac769",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gpi/writer.rs",
+          "expected": "06fc8aaa26250ba45114b0f513f7cfec845f741722b28aed69bd6b8d6082f638",
+          "actual": "06fc8aaa26250ba45114b0f513f7cfec845f741722b28aed69bd6b8d6082f638",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/gpi.rs",
+          "expected": "c9b53d7ed295f8dff38c11292df533e6b01fa0a36b69fb46c65d673a8e22e8e7",
+          "actual": "c9b53d7ed295f8dff38c11292df533e6b01fa0a36b69fb46c65d673a8e22e8e7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/oberon.rs",
+          "expected": "866053a5d8de698f559af12dd2a5e5c23d9cbdd9a6d136f8752e52af80910a8f",
+          "actual": "866053a5d8de698f559af12dd2a5e5c23d9cbdd9a6d136f8752e52af80910a8f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pcgeos/reader.rs",
+          "expected": "3fa2485964490c6d8c9dededaa972e25543c278b81e9befbb26b8b9934e4bbd9",
+          "actual": "3fa2485964490c6d8c9dededaa972e25543c278b81e9befbb26b8b9934e4bbd9",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pcgeos/writer.rs",
+          "expected": "80eb37b4166945a94a1e27dba72e44181e6ee2b26036b6641bd05865b3dd5a68",
+          "actual": "80eb37b4166945a94a1e27dba72e44181e6ee2b26036b6641bd05865b3dd5a68",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pcgeos.rs",
+          "expected": "ce11b100ce12d40a7fd6418102ca86dad409ac0fc4503781812ba8730440add4",
+          "actual": "ce11b100ce12d40a7fd6418102ca86dad409ac0fc4503781812ba8730440add4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/symbos.rs",
+          "expected": "36bac2a7a0f8ba03a47871d81ef720bd1a0d4181044ed4305dc9fcbf26163193",
+          "actual": "36bac2a7a0f8ba03a47871d81ef720bd1a0d4181044ed4305dc9fcbf26163193",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/vtfont/reader.rs",
+          "expected": "4b02aee2ebc52c3457ad7d76361d585c5cc1de56b1884564fcf27435a3c4030b",
+          "actual": "4b02aee2ebc52c3457ad7d76361d585c5cc1de56b1884564fcf27435a3c4030b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/vtfont/writer.rs",
+          "expected": "f30adacb19f619e783889a45334ba2048143a198d5937a1bee42d0b0e2395bec",
+          "actual": "f30adacb19f619e783889a45334ba2048143a198d5937a1bee42d0b0e2395bec",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/vtfont.rs",
+          "expected": "779952718df77d03448bfd8da11a0d145e14f2e2f4990a80a5cc8eab2b506522",
+          "actual": "779952718df77d03448bfd8da11a0d145e14f2e2f4990a80a5cc8eab2b506522",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/wsfont.rs",
+          "expected": "35859f640da800b6505045ede20e17eca42c689a6eaeb8446ed92b2bc34a3a4c",
+          "actual": "35859f640da800b6505045ede20e17eca42c689a6eaeb8446ed92b2bc34a3a4c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/beos.rs",
+          "expected": "69af409a5ebf13993a3cb50c5f90f9eadc8ac49f4e3d82c4b21bf61636aa24e9",
+          "actual": "69af409a5ebf13993a3cb50c5f90f9eadc8ac49f4e3d82c4b21bf61636aa24e9",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/geos.rs",
+          "expected": "cc75585d0ef95be7506d8211a3cb9cd0aa7af909dbda5467672c81e84644c5a4",
+          "actual": "cc75585d0ef95be7506d8211a3cb9cd0aa7af909dbda5467672c81e84644c5a4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/gpi.rs",
+          "expected": "8ac7758993cb4081acc168d1a90fd4cd0c798609d3f2f14eb560a8f10663890c",
+          "actual": "8ac7758993cb4081acc168d1a90fd4cd0c798609d3f2f14eb560a8f10663890c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/oberon.rs",
+          "expected": "b25506256e182b84431412b85689ccaefbc5e9a5bb3f76bdbf7fe7bfc5f84aba",
+          "actual": "b25506256e182b84431412b85689ccaefbc5e9a5bb3f76bdbf7fe7bfc5f84aba",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pcgeos.rs",
+          "expected": "597dace18ac5390b9a3c743fb72ae6dec084067bcf518c22fcde540e08952e74",
+          "actual": "597dace18ac5390b9a3c743fb72ae6dec084067bcf518c22fcde540e08952e74",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/symbos.rs",
+          "expected": "7bc8c8244fdd8eae5db5c5f0ddec82387e93ee08868dbc2f1ab7c1ea19a51912",
+          "actual": "7bc8c8244fdd8eae5db5c5f0ddec82387e93ee08868dbc2f1ab7c1ea19a51912",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/vtfont.rs",
+          "expected": "25e957e0bdf3ca1238c7323927f8911485ee7e767d8c2e5746ce198f1e12f63e",
+          "actual": "25e957e0bdf3ca1238c7323927f8911485ee7e767d8c2e5746ce198f1e12f63e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/wsfont.rs",
+          "expected": "56945e79f4c348d3aa999d7ea208ec9f276a437dbac543b9f50ff89b0410e7bb",
+          "actual": "56945e79f4c348d3aa999d7ea208ec9f276a437dbac543b9f50ff89b0410e7bb",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/beos.md",
+          "expected": "817123decceee7ddc8fd44cac569d7c58665f714e7c9a5846615e43d80c94049",
+          "actual": "817123decceee7ddc8fd44cac569d7c58665f714e7c9a5846615e43d80c94049",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/geos.md",
+          "expected": "00e898ae2f5b65ad6d219a2ab7da9ec291798d7b73bddd5fa1aa82dc4689438f",
+          "actual": "00e898ae2f5b65ad6d219a2ab7da9ec291798d7b73bddd5fa1aa82dc4689438f",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/gpi.md",
+          "expected": "63771421637170d4e5cee2b758a07ab5e046a28178ba803d4fac61efbb33c9fb",
+          "actual": "63771421637170d4e5cee2b758a07ab5e046a28178ba803d4fac61efbb33c9fb",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/oberon.md",
+          "expected": "2d384f97dcdb0868c30842b228fa711915af9c2e253537fef5e63200ce500ec1",
+          "actual": "2d384f97dcdb0868c30842b228fa711915af9c2e253537fef5e63200ce500ec1",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/pcgeos.md",
+          "expected": "daa2c2846dc66d4f71e27f0d22c0cd20e1da1c287578fdd05b5aef0de2770f26",
+          "actual": "daa2c2846dc66d4f71e27f0d22c0cd20e1da1c287578fdd05b5aef0de2770f26",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/symbos.md",
+          "expected": "8df175354fbcb7e07789e0f164cebe381f4efda2a57cf1a0c9c007950d17afcd",
+          "actual": "8df175354fbcb7e07789e0f164cebe381f4efda2a57cf1a0c9c007950d17afcd",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/vtfont.md",
+          "expected": "f29d8540003303eca8c411d1c45ad1dacc65e9e36c532b9c23f1ede38405d4a6",
+          "actual": "f29d8540003303eca8c411d1c45ad1dacc65e9e36c532b9c23f1ede38405d4a6",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/wsfont.md",
+          "expected": "b77f10b60bfce756bc69e90e75322195ef6877bc33459da710453c57d3f83635",
+          "actual": "b77f10b60bfce756bc69e90e75322195ef6877bc33459da710453c57d3f83635",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/beos.rs",
+          "expected": "91b44671a57ec9142336a8eb59bc81bcf5367a18f7b187514e3425e368752856",
+          "actual": "91b44671a57ec9142336a8eb59bc81bcf5367a18f7b187514e3425e368752856",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/geos.rs",
+          "expected": "421372442034a51678e3ef3a221152dc38797dd168e00138329e774c8e1e2285",
+          "actual": "421372442034a51678e3ef3a221152dc38797dd168e00138329e774c8e1e2285",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/gpi.rs",
+          "expected": "a6d2aa40211e5765c90c45b70ba7d539a8d6e2c24445ff676918806f334260fd",
+          "actual": "a6d2aa40211e5765c90c45b70ba7d539a8d6e2c24445ff676918806f334260fd",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/oberon.rs",
+          "expected": "1a014e85a90b82cb1584428d2121532a780bae1c24ad1ae11fa1b2aa795b32b8",
+          "actual": "1a014e85a90b82cb1584428d2121532a780bae1c24ad1ae11fa1b2aa795b32b8",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pcgeos.rs",
+          "expected": "a0729b3fd47e6feece31f24cb32186caa5e6af793ebe63a0922d1bc27ccdee9f",
+          "actual": "a0729b3fd47e6feece31f24cb32186caa5e6af793ebe63a0922d1bc27ccdee9f",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/symbos.rs",
+          "expected": "029626d480bf4c1e911afcc51066592ec6412d812ee9b212f12c35a4064b1bda",
+          "actual": "029626d480bf4c1e911afcc51066592ec6412d812ee9b212f12c35a4064b1bda",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/vtfont.rs",
+          "expected": "4fd7bb9e047d53f3dbf50ab22134772b205d23031d58f3a18fec1ad60892a53f",
+          "actual": "4fd7bb9e047d53f3dbf50ab22134772b205d23031d58f3a18fec1ad60892a53f",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/wsfont.rs",
+          "expected": "d59c3045d5a966b81186b15da32971f7233f5ed18c5d2c2d321015d47910bdd1",
+          "actual": "d59c3045d5a966b81186b15da32971f7233f5ed18c5d2c2d321015d47910bdd1",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5b.py",
+          "expected": "0a5fbc789a9be89e00f463e8a4b37a2a33b24ceef3b7ef6c7c6211a836da4ce9",
+          "actual": "0a5fbc789a9be89e00f463e8a4b37a2a33b24ceef3b7ef6c7c6211a836da4ce9",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5b.py",
+          "expected": "b2da38521104f06ebec2219d5fdc9af309c8e8f9d146b4b22344d6634ea3b3b7",
+          "actual": "b2da38521104f06ebec2219d5fdc9af309c8e8f9d146b4b22344d6634ea3b3b7",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.c2-freeze.json",
+      "manifest_sha256": "e6033f85b8c910bd0485438b957e09067be28f37620893d40e5a975b15b00a70",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5c2_timing.rs",
+          "expected": "dc13d0f0d7f622d827345972b049a53494c301a4370e32cf2fb5b2d2f59278af",
+          "actual": "dc13d0f0d7f622d827345972b049a53494c301a4370e32cf2fb5b2d2f59278af",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/catalyst/common.rs",
+          "expected": "4c5bed8272f95257d190beac34286187caf453401d6323b298910d8618906e76",
+          "actual": "4c5bed8272f95257d190beac34286187caf453401d6323b298910d8618906e76",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/catalyst.rs",
+          "expected": "0c6e36a19c5e21771acd35d963cb2e4d83d5bb809c2cde3f25d27c43643efdce",
+          "actual": "0c6e36a19c5e21771acd35d963cb2e4d83d5bb809c2cde3f25d27c43643efdce",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/chiwriter.rs",
+          "expected": "b3a5fd8b638d4d159dd2c84297dbe4d9adb94dca3e1a9291522b5b20954cde06",
+          "actual": "b3a5fd8b638d4d159dd2c84297dbe4d9adb94dca3e1a9291522b5b20954cde06",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/dashen.rs",
+          "expected": "457b12d2fdaaed1ce598f728fda7027c5a0bc19e62e97b82cb7a8ea94bd98fcc",
+          "actual": "457b12d2fdaaed1ce598f728fda7027c5a0bc19e62e97b82cb7a8ea94bd98fcc",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/hppcl.rs",
+          "expected": "cd4bf81d9b08922b15c683a0e84a488d511291de7b68c048bb8edcaa9fecd431",
+          "actual": "cd4bf81d9b08922b15c683a0e84a488d511291de7b68c048bb8edcaa9fecd431",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/prebuilt.rs",
+          "expected": "598ce843fef5a1e60d87178eb3ea4f1256e77f142ab339111ff627082d87584c",
+          "actual": "598ce843fef5a1e60d87178eb3ea4f1256e77f142ab339111ff627082d87584c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/riscos/bitmap.rs",
+          "expected": "ae8846c58d26791f2a4ab3198a528edae6c9f670f59f559b35c749b9ae9a33f7",
+          "actual": "ae8846c58d26791f2a4ab3198a528edae6c9f670f59f559b35c749b9ae9a33f7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/riscos/metrics.rs",
+          "expected": "6390627a6441e0be5f30fb11b14b11cb2afe51e18d4397cc6fdb3bcaef326919",
+          "actual": "6390627a6441e0be5f30fb11b14b11cb2afe51e18d4397cc6fdb3bcaef326919",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/riscos/writer.rs",
+          "expected": "99b30bf5b5e5df99d5d7e9825e341731a5aab5abc909b85364ba6393dddc98dd",
+          "actual": "99b30bf5b5e5df99d5d7e9825e341731a5aab5abc909b85364ba6393dddc98dd",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/riscos.rs",
+          "expected": "2416e0fc8830df55988df9a346f35d0d4a22d084df9d2e8b410b2b61334bade5",
+          "actual": "2416e0fc8830df55988df9a346f35d0d4a22d084df9d2e8b410b2b61334bade5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xerox/alto.rs",
+          "expected": "da114f12e8d43324c171aac237b804df1b4293c3cb202ab3949748863728607b",
+          "actual": "da114f12e8d43324c171aac237b804df1b4293c3cb202ab3949748863728607b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xerox/bitblt.rs",
+          "expected": "9c2f48752c9dc8e711ab172a1919fd1f80537eef2c08016649ef401c48d025ba",
+          "actual": "9c2f48752c9dc8e711ab172a1919fd1f80537eef2c08016649ef401c48d025ba",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xerox/detection.rs",
+          "expected": "3fa1cd6784132055e5c93cc40d7393c654df951ce1e18697d25c337ce5966599",
+          "actual": "3fa1cd6784132055e5c93cc40d7393c654df951ce1e18697d25c337ce5966599",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xerox/prepress.rs",
+          "expected": "7da542897441f81a5b24eceacc7cac2df6a5eb98b022ee9a78ffa5f32a55509d",
+          "actual": "7da542897441f81a5b24eceacc7cac2df6a5eb98b022ee9a78ffa5f32a55509d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xerox.rs",
+          "expected": "54b9fb3f3fab84b72d38c746ab7e7c276030bc80b927005bcfce27408dd0d37b",
+          "actual": "54b9fb3f3fab84b72d38c746ab7e7c276030bc80b927005bcfce27408dd0d37b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/catalyst.rs",
+          "expected": "f829a7162fba24a4c3a87d47e5e0e37976bc599d6e5b46266e77df37e83809c5",
+          "actual": "f829a7162fba24a4c3a87d47e5e0e37976bc599d6e5b46266e77df37e83809c5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/chiwriter.rs",
+          "expected": "6987e4ae75f40ba02b0a5aa04212b89b8b554514b53477069391102a1be59dac",
+          "actual": "6987e4ae75f40ba02b0a5aa04212b89b8b554514b53477069391102a1be59dac",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/dashen.rs",
+          "expected": "d084aea85e8f831b1ec3732afe67e9fe78939c5d6998a8cc07224229ff30f179",
+          "actual": "d084aea85e8f831b1ec3732afe67e9fe78939c5d6998a8cc07224229ff30f179",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/hppcl.rs",
+          "expected": "61b656b6eac5069f9f4354ad8f39f1ae6acaa3b532e98cf76b6a0a9a6ff7852b",
+          "actual": "61b656b6eac5069f9f4354ad8f39f1ae6acaa3b532e98cf76b6a0a9a6ff7852b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/prebuilt.rs",
+          "expected": "7c7ed8d370c45d4952ad9e3e67e78f1c2b65ee72ea5b5853ca56a0c54ff0f2da",
+          "actual": "7c7ed8d370c45d4952ad9e3e67e78f1c2b65ee72ea5b5853ca56a0c54ff0f2da",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/riscos.rs",
+          "expected": "781c93b6918301662a00d76324f7953074f869237088595c5daceec20c9564c8",
+          "actual": "781c93b6918301662a00d76324f7953074f869237088595c5daceec20c9564c8",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/xerox.rs",
+          "expected": "ddb6a7cb5b20fa27fec3fbb150112e7dda10624c26da7d122aaf18533d6a011a",
+          "actual": "ddb6a7cb5b20fa27fec3fbb150112e7dda10624c26da7d122aaf18533d6a011a",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/catalyst.md",
+          "expected": "1b20e6eeaf308303d2e681cfaef7539a6150fbc9623ec5e5df619ca4e617a05d",
+          "actual": "1b20e6eeaf308303d2e681cfaef7539a6150fbc9623ec5e5df619ca4e617a05d",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/chiwriter.md",
+          "expected": "c271499d7b557489c6ca12e7cf6debaab7d8668f80ea89da04401f5615376f20",
+          "actual": "c271499d7b557489c6ca12e7cf6debaab7d8668f80ea89da04401f5615376f20",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/dashen.md",
+          "expected": "df4f64eb177a38fd8826bfc83a56d4abb03dc9fc895197446dd9ee843acf0c70",
+          "actual": "df4f64eb177a38fd8826bfc83a56d4abb03dc9fc895197446dd9ee843acf0c70",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/hppcl.md",
+          "expected": "4099baf1fe1e56b0ced20efe86cf43ebf709c66e93e561a83196a7baa823467d",
+          "actual": "4099baf1fe1e56b0ced20efe86cf43ebf709c66e93e561a83196a7baa823467d",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/prebuilt.md",
+          "expected": "c316bf85b5dc742087af9e0b64b01b53bdfb29b79e0162df7b29718615269c4e",
+          "actual": "c316bf85b5dc742087af9e0b64b01b53bdfb29b79e0162df7b29718615269c4e",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/riscos.md",
+          "expected": "9103806e3ede1eb753b70a99ced107a4ddaba30b2e3009fe1e5f9fd685e11f5d",
+          "actual": "9103806e3ede1eb753b70a99ced107a4ddaba30b2e3009fe1e5f9fd685e11f5d",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/xerox.md",
+          "expected": "b1935d900e6b96569cb3fe46e3ea9380d260c4495608054ca8326d78aba13436",
+          "actual": "b1935d900e6b96569cb3fe46e3ea9380d260c4495608054ca8326d78aba13436",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/catalyst.rs",
+          "expected": "7e10216b8f1510ada2716f4c013949c79d21aaa1fb3e738cbff43852446bf94d",
+          "actual": "7e10216b8f1510ada2716f4c013949c79d21aaa1fb3e738cbff43852446bf94d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/chiwriter.rs",
+          "expected": "4869c9aa33f74dd28d661214767cb17b211e6fcd8c9020f748b61ed587d69cae",
+          "actual": "4869c9aa33f74dd28d661214767cb17b211e6fcd8c9020f748b61ed587d69cae",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/dashen.rs",
+          "expected": "f012147d7394428032ffb46868b8971fe586d379ce7df013d5837569b0f98032",
+          "actual": "f012147d7394428032ffb46868b8971fe586d379ce7df013d5837569b0f98032",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/hppcl.rs",
+          "expected": "4581f9c887a7717b77ae2690777537dfc730baa61dfb2ab1b55b54e6994dbbb4",
+          "actual": "4581f9c887a7717b77ae2690777537dfc730baa61dfb2ab1b55b54e6994dbbb4",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/prebuilt.rs",
+          "expected": "7704a0dcedb3ac7b0d83c1bb4908feb588df8b0a69c11b7464a4b8264b595355",
+          "actual": "7704a0dcedb3ac7b0d83c1bb4908feb588df8b0a69c11b7464a4b8264b595355",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/riscos.rs",
+          "expected": "b2f4ec57905f626bc9c4a62949bb6d5ef067eee968f7d0eba74a209754dd3b5b",
+          "actual": "b2f4ec57905f626bc9c4a62949bb6d5ef067eee968f7d0eba74a209754dd3b5b",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/xerox.rs",
+          "expected": "610e397c5411ec7fa6fc3038bf1f67b373215dc4fb5cf1b47fe93da0a365ef79",
+          "actual": "610e397c5411ec7fa6fc3038bf1f67b373215dc4fb5cf1b47fe93da0a365ef79",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5c2.py",
+          "expected": "8d892caf1cb33d0df872a1b1c03d970594f860fb70e52d5e5a9fd914b3dd0c5d",
+          "actual": "8d892caf1cb33d0df872a1b1c03d970594f860fb70e52d5e5a9fd914b3dd0c5d",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5c2.py",
+          "expected": "ed397412ba13c3dd58c938cb1e5cfbf5a2c50e03c7bc539623fd119ce863e540",
+          "actual": "ed397412ba13c3dd58c938cb1e5cfbf5a2c50e03c7bc539623fd119ce863e540",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.e2-outline-freeze.json",
+      "manifest_sha256": "91f1fa5467ef09a8dbc31b7109281b78913f77444c645e653456ef8a59a5905f",
+      "entries": [
+        {
+          "path": "crates/fontpixel/src/formats/ssfn.rs",
+          "expected": "49b59715f1203769a71f4707eed32089b4af7d5e604a5655dc9c0ec86fdf0d60",
+          "actual": "49b59715f1203769a71f4707eed32089b4af7d5e604a5655dc9c0ec86fdf0d60",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pfr.rs",
+          "expected": "bef1303ca0ea26a5ccf990f5818bdd541ed323914517ea1e82580a04871779f6",
+          "actual": "bef1303ca0ea26a5ccf990f5818bdd541ed323914517ea1e82580a04871779f6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/ssfn/ascii.rs",
+          "expected": "b614037fd980497ab06b273693ef239073ed78433cb6dcd557feebfe079b9791",
+          "actual": "b614037fd980497ab06b273693ef239073ed78433cb6dcd557feebfe079b9791",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/ssfn/binary.rs",
+          "expected": "d4b3fe8c68a7df35ec8812f04950c3c58472aafad6be1b7efa817170fafe0807",
+          "actual": "d4b3fe8c68a7df35ec8812f04950c3c58472aafad6be1b7efa817170fafe0807",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/ssfn/common.rs",
+          "expected": "a24201095ce7af26da8e8ce99131466e6f858240de284ce9c8eb37e1519d37c1",
+          "actual": "a24201095ce7af26da8e8ce99131466e6f858240de284ce9c8eb37e1519d37c1",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/ssfn.md",
+          "expected": "3a8fdaeb045fd56937c47540e188e8926e5d0c9dfb0ecea87f4b9caee05ffcb4",
+          "actual": "3a8fdaeb045fd56937c47540e188e8926e5d0c9dfb0ecea87f4b9caee05ffcb4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn.rs",
+          "expected": "0a4830e22dacc1bc29ff4f57efb1b08b9b7cef66e2eb1b23bdb27fee5c5c0efb",
+          "actual": "0a4830e22dacc1bc29ff4f57efb1b08b9b7cef66e2eb1b23bdb27fee5c5c0efb",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/ssfn.rs",
+          "expected": "9dd280c82a83a5363211c16de1a0859c0578b058153db401bbdb5365e150ba55",
+          "actual": "9dd280c82a83a5363211c16de1a0859c0578b058153db401bbdb5365e150ba55",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/README.md",
+          "expected": "d55e87ed31026b7c3f9210d1e0bf3e09f66f56e1e41da68d8c3e3e2d134a8d4a",
+          "actual": "d55e87ed31026b7c3f9210d1e0bf3e09f66f56e1e41da68d8c3e3e2d134a8d4a",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/ssfn-collection.sfn",
+          "expected": "92105781323d93624be01717b9c2a15e195e86ff0f3cbcf0eca6d201ba881c2c",
+          "actual": "92105781323d93624be01717b9c2a15e195e86ff0f3cbcf0eca6d201ba881c2c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/ssfn-gray.asc",
+          "expected": "559454ddcb18bbd937afd29cdd96e15d8c772fbed8bce01bf5d0dcb78684c978",
+          "actual": "559454ddcb18bbd937afd29cdd96e15d8c772fbed8bce01bf5d0dcb78684c978",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/ssfn-ligature.asc",
+          "expected": "e8d58634b61843883b90e0db2627df9673708ad62699ae4527c04ca5b4668435",
+          "actual": "e8d58634b61843883b90e0db2627df9673708ad62699ae4527c04ca5b4668435",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/ssfn-original.asc",
+          "expected": "1806f9e47ce8d4250559d78623e6cf7c012875adf4c960cdd36692c33a8064a1",
+          "actual": "1806f9e47ce8d4250559d78623e6cf7c012875adf4c960cdd36692c33a8064a1",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/ssfn/ssfn-original.sfn",
+          "expected": "433420dd13e84d7c78a121b7ff6adec68205958e19a8ff87c7453a8939ea4ac7",
+          "actual": "433420dd13e84d7c78a121b7ff6adec68205958e19a8ff87c7453a8939ea4ac7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pfr/wire.rs",
+          "expected": "249906e117dd06a5a768070280a6be1c624ab4a11ebe2aef59fc348932a97897",
+          "actual": "249906e117dd06a5a768070280a6be1c624ab4a11ebe2aef59fc348932a97897",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/pfr.md",
+          "expected": "73fce3c819ea96acce2a1a2d65babb8e4c10732b141bfb3483adf3df22ad5cff",
+          "actual": "73fce3c819ea96acce2a1a2d65babb8e4c10732b141bfb3483adf3df22ad5cff",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr.rs",
+          "expected": "c9bc4258e2be3b88e58793d0ad8c7bb6904c4a3c124806ddf3cb35c45787b132",
+          "actual": "c9bc4258e2be3b88e58793d0ad8c7bb6904c4a3c124806ddf3cb35c45787b132",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pfr.rs",
+          "expected": "937592de463de1599b0fe0e6b2c0a4eabb0833be8a50e8132939cef00154fa37",
+          "actual": "937592de463de1599b0fe0e6b2c0a4eabb0833be8a50e8132939cef00154fa37",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr/README.md",
+          "expected": "280ea4bc4aeed39c57db4323e5e733a2f7f926fbbb2debde67667d1a2ced50db",
+          "actual": "280ea4bc4aeed39c57db4323e5e733a2f7f926fbbb2debde67667d1a2ced50db",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr/pfr-1-1-0.pfr",
+          "expected": "ba72122805a578216d18056dee680570f09f836f8e05943692236e5176263805",
+          "actual": "ba72122805a578216d18056dee680570f09f836f8e05943692236e5176263805",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr/pfr-fractional.pfr",
+          "expected": "79b298fadf05201bb3770eb0fd44e66f7218da515809064d55e57bb87cc231b7",
+          "actual": "79b298fadf05201bb3770eb0fd44e66f7218da515809064d55e57bb87cc231b7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr/pfr-ft-0-0-1.pfr",
+          "expected": "176601d623f129faebbc70f6596ccca3f8d0e755bcdea66937d3d8d8801bf0f6",
+          "actual": "176601d623f129faebbc70f6596ccca3f8d0e755bcdea66937d3d8d8801bf0f6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pfr/pfr-ft-multistrike.pfr",
+          "expected": "3b06e99d0b4da6705ae08b3512f229bf9b249025f47ba59c75213f6689fe453a",
+          "actual": "3b06e99d0b4da6705ae08b3512f229bf9b249025f47ba59c75213f6689fe453a",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/examples/w5e2_outline_timing.rs",
+          "expected": "002f3b9d6d561995ac020554d71fe10fbc17bf7d82c1ed804c35be9eb4068e66",
+          "actual": "002f3b9d6d561995ac020554d71fe10fbc17bf7d82c1ed804c35be9eb4068e66",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5e2_outline.py",
+          "expected": "aa3616dd44a2af6e66d88bf39d1143197a12aced6e680847b4ed8f7c6e7fd3ff",
+          "actual": "aa3616dd44a2af6e66d88bf39d1143197a12aced6e680847b4ed8f7c6e7fd3ff",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5e2_outline.py",
+          "expected": "f26c7a5cc33a49c40f9fcf38bc33e5e81ad9722fcf37714a2e0a0c89a7c86240",
+          "actual": "f26c7a5cc33a49c40f9fcf38bc33e5e81ad9722fcf37714a2e0a0c89a7c86240",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.e2-image/source-hashes.json",
+      "manifest_sha256": "7dfb929f932eda0605555fc292e56793118403318691626b4f7ff142bb0c14d8",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5e2_timing.rs",
+          "expected": "0d2720f3cd252cb7656b5238dc2ea309aa390583cd37a3adf793e0addc87c0d5",
+          "actual": "0d2720f3cd252cb7656b5238dc2ea309aa390583cd37a3adf793e0addc87c0d5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/image/imageset.rs",
+          "expected": "a65ac6c82911dc5a8fed0e7f70395be5d9539a47d94f62a3e35f70eca7aff918",
+          "actual": "a65ac6c82911dc5a8fed0e7f70395be5d9539a47d94f62a3e35f70eca7aff918",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/image.rs",
+          "expected": "eafc25dd1b009d01a659ce07b968c8e83532a337a53bebe2963ab77eec157dc5",
+          "actual": "eafc25dd1b009d01a659ce07b968c8e83532a337a53bebe2963ab77eec157dc5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pilfont/common.rs",
+          "expected": "55098ec9455aa4836948d1d4382f8a131beb3474fa292f48a7c8388298fcdf1a",
+          "actual": "55098ec9455aa4836948d1d4382f8a131beb3474fa292f48a7c8388298fcdf1a",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/pilfont.rs",
+          "expected": "d8ae4bacd38d7e70416e4424f5b1d8170dbbf842c46df779fae946c102bf4fac",
+          "actual": "d8ae4bacd38d7e70416e4424f5b1d8170dbbf842c46df779fae946c102bf4fac",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/sfont/rfont.rs",
+          "expected": "e3ad312b9de445b76df1f28e95a5125fb437e24d59ec3e085a2e9bb6e713684e",
+          "actual": "e3ad312b9de445b76df1f28e95a5125fb437e24d59ec3e085a2e9bb6e713684e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/sfont.rs",
+          "expected": "51cc00652d61f2a3bb6cadd2eb21c4182cd41275348f85a2a3c1634fd4043883",
+          "actual": "51cc00652d61f2a3bb6cadd2eb21c4182cd41275348f85a2a3c1634fd4043883",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/vlw.rs",
+          "expected": "66a60cd93f9546e70762d1dc42df5e46d46b50a1214d6a34a90d57f8b8a2d102",
+          "actual": "66a60cd93f9546e70762d1dc42df5e46d46b50a1214d6a34a90d57f8b8a2d102",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/README.md",
+          "expected": "2efe2d86fc17191cb4e846371362391f9d7141444b4b1d4a003c64f0494e6a8e",
+          "actual": "2efe2d86fc17191cb4e846371362391f9d7141444b4b1d4a003c64f0494e6a8e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/pillow-original.pbm",
+          "expected": "7d4fbedf2ceeef79f594c2eaa8accec27a64351dc23e751f3f7e8cca07929ac1",
+          "actual": "7d4fbedf2ceeef79f594c2eaa8accec27a64351dc23e751f3f7e8cca07929ac1",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/pillow-original.pil",
+          "expected": "4cfff13702e0c4adb1fc918f11725f2115a966b2990f0352f51256fa41623701",
+          "actual": "4cfff13702e0c4adb1fc918f11725f2115a966b2990f0352f51256fa41623701",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/processing-original.vlw",
+          "expected": "9130aaaae8382831e53c365f10860d370aee6f5ec0b7a7ffba80f9769c7b93de",
+          "actual": "9130aaaae8382831e53c365f10860d370aee6f5ec0b7a7ffba80f9769c7b93de",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/rfont-original.png",
+          "expected": "497a5fec441ceda9c7936fcd786e350bdf6600f14b6e5bbd24942aec2a860e13",
+          "actual": "497a5fec441ceda9c7936fcd786e350bdf6600f14b6e5bbd24942aec2a860e13",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/sfont-original.png",
+          "expected": "930382df102c9f4aac2daf9f46d2f40eccc3945f5866a7fc5226629e20ea8954",
+          "actual": "930382df102c9f4aac2daf9f46d2f40eccc3945f5866a7fc5226629e20ea8954",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/w5e2/sfont-overhang.png",
+          "expected": "da4622e0cadf103aff339b06ada0fc098b8922c624e473ccbc7a5ba62e6a1674",
+          "actual": "da4622e0cadf103aff339b06ada0fc098b8922c624e473ccbc7a5ba62e6a1674",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/image.rs",
+          "expected": "f5a35f8bdba2d174e38f10e0589716ce73cbae1fc3ddd03b2c0bd398e3092b99",
+          "actual": "f5a35f8bdba2d174e38f10e0589716ce73cbae1fc3ddd03b2c0bd398e3092b99",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/imageset.rs",
+          "expected": "64742245bffc14e2e6c11ec6aea158daabb1e1f9d9ccb5b8b6e1135fcc3bc1a2",
+          "actual": "64742245bffc14e2e6c11ec6aea158daabb1e1f9d9ccb5b8b6e1135fcc3bc1a2",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/pilfont.rs",
+          "expected": "f0f6c79fbfe443eb085e3562216844b2fc401d962bad051685dae609730e95f4",
+          "actual": "f0f6c79fbfe443eb085e3562216844b2fc401d962bad051685dae609730e95f4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/sfont.rs",
+          "expected": "f4b5e33fe7d24d375ff6db85633cacfa3618ac5be111497e195c56b032420eca",
+          "actual": "f4b5e33fe7d24d375ff6db85633cacfa3618ac5be111497e195c56b032420eca",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/vlw.rs",
+          "expected": "931c0b3405fa6a4cb677a8e41c417318787bd99acee3a89945afb4afc0d23343",
+          "actual": "931c0b3405fa6a4cb677a8e41c417318787bd99acee3a89945afb4afc0d23343",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/image.md",
+          "expected": "e719423232cf806af71478a7ef2bd204629f6a95d28a8624a087423a57ed41ca",
+          "actual": "e719423232cf806af71478a7ef2bd204629f6a95d28a8624a087423a57ed41ca",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/pilfont.md",
+          "expected": "1327e6235ddb92601df2ce5ff58bb1dc4cb55d1fd663186b4191d80d2acab8d3",
+          "actual": "1327e6235ddb92601df2ce5ff58bb1dc4cb55d1fd663186b4191d80d2acab8d3",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/sfont.md",
+          "expected": "c15abb5a9a21929170950cc9aea7e57942c059433df9d069189ebfdc3f2ccbbc",
+          "actual": "c15abb5a9a21929170950cc9aea7e57942c059433df9d069189ebfdc3f2ccbbc",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/vlw.md",
+          "expected": "b7e260c0f025c2a9d0cce77f2fca8649e8d2e8e8bb1efb15da6d3a05355e9040",
+          "actual": "b7e260c0f025c2a9d0cce77f2fca8649e8d2e8e8bb1efb15da6d3a05355e9040",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/image.rs",
+          "expected": "4945939fbeddf1c698f0018755c1cfdfda4320893c2e3cc0e06fc0b5c910b680",
+          "actual": "4945939fbeddf1c698f0018755c1cfdfda4320893c2e3cc0e06fc0b5c910b680",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/imageset_bitmap.rs",
+          "expected": "3fbfd4a3780732eaa442f6a9f5bb39b2d475241fcd07a56e587b85c20ff8ad76",
+          "actual": "3fbfd4a3780732eaa442f6a9f5bb39b2d475241fcd07a56e587b85c20ff8ad76",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pilfont_bitmap/common.rs",
+          "expected": "61f9d1455cb2f32eb208dbe4506abc9dd3f04d6f4f8c9baff987d147f0f1b78d",
+          "actual": "61f9d1455cb2f32eb208dbe4506abc9dd3f04d6f4f8c9baff987d147f0f1b78d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/pilfont_bitmap.rs",
+          "expected": "0ff6e5bd45262c2aa8ddacc0320db8958f21401bd69246d785e90b50968a3e2c",
+          "actual": "0ff6e5bd45262c2aa8ddacc0320db8958f21401bd69246d785e90b50968a3e2c",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/sfont_bitmap.rs",
+          "expected": "5f71b5e33650be0237971662d5b07dfc85be3d6661b723ec1a30dcf08da229b7",
+          "actual": "5f71b5e33650be0237971662d5b07dfc85be3d6661b723ec1a30dcf08da229b7",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/vlw_bitmap.rs",
+          "expected": "551b8b03ecf3be901f7e39346eb95b2a28ca8116451e73ef7cffb7d5755c42d3",
+          "actual": "551b8b03ecf3be901f7e39346eb95b2a28ca8116451e73ef7cffb7d5755c42d3",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5e2.py",
+          "expected": "13063e8d032fd5569ec801928a0467580c1cc478a41da1ddae255b8d843b4832",
+          "actual": "13063e8d032fd5569ec801928a0467580c1cc478a41da1ddae255b8d843b4832",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/README.md",
+          "expected": "9206d97fd37652a69c58265464cfbc96a3da0bd7d03f1acda3e6cf935e469671",
+          "actual": "9206d97fd37652a69c58265464cfbc96a3da0bd7d03f1acda3e6cf935e469671",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/oracles/SrFontOracle.java",
+          "expected": "f25a5c9510202c5a3540a1b4a16be121b603f4b2cfdd5b6da8ed5f161e6e8b36",
+          "actual": "f25a5c9510202c5a3540a1b4a16be121b603f4b2cfdd5b6da8ed5f161e6e8b36",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/oracles/VlwOracle.java",
+          "expected": "495c00e8e17e50d2244504982ad6657e41e84eda1e0fb8f407fe4a77f642579a",
+          "actual": "495c00e8e17e50d2244504982ad6657e41e84eda1e0fb8f407fe4a77f642579a",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/oracles/build_sfont.py",
+          "expected": "8126a99f5aa6f6f1f169cbef2cc8d0b2ceb4b23a99efadc8527d396b2ec1557f",
+          "actual": "8126a99f5aa6f6f1f169cbef2cc8d0b2ceb4b23a99efadc8527d396b2ec1557f",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/oracles/sfont_adapter.c",
+          "expected": "5c35b122f34d35ac89169491d45c8b674f068503f599cb8254359fe70f3998b1",
+          "actual": "5c35b122f34d35ac89169491d45c8b674f068503f599cb8254359fe70f3998b1",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e2-image/sources.json",
+          "expected": "dad7c260bc85996dc5d0c3ff7e499d05fd7e688d9d57a9616efcc67fce5ff174",
+          "actual": "dad7c260bc85996dc5d0c3ff7e499d05fd7e688d9d57a9616efcc67fce5ff174",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5e2.py",
+          "expected": "a0970502af3839f22ac26d6b1d145fcbd2d1ac6c8695660debec967b6cb51d42",
+          "actual": "a0970502af3839f22ac26d6b1d145fcbd2d1ac6c8695660debec967b6cb51d42",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.e1/source-hashes.json",
+      "manifest_sha256": "950256a61e9045f342f63d94ea7c1a676eb93dc01a98693349ca0bf17a4928dd",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5e1_timing.rs",
+          "expected": "90d83fa7d10f86d31a1e1eed13810422f5e4caf48bee16e2c0e039ffe0e36ee8",
+          "actual": "90d83fa7d10f86d31a1e1eed13810422f5e4caf48bee16e2c0e039ffe0e36ee8",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/cybiko.rs",
+          "expected": "18915f74d4e2ef88a2672e3d257b53ae729c575e7ca39beaae0d022a68e6c9d9",
+          "actual": "18915f74d4e2ef88a2672e3d257b53ae729c575e7ca39beaae0d022a68e6c9d9",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/hmzk.rs",
+          "expected": "63f60c2eef5495871ba561762538545dcd999696c7bc061a87eb913b24152c11",
+          "actual": "63f60c2eef5495871ba561762538545dcd999696c7bc061a87eb913b24152c11",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/playdate/fnt.rs",
+          "expected": "c1dd375cf22a203ee3a3a4e718f971ec3eec482ff9597243a6abdd152034b163",
+          "actual": "c1dd375cf22a203ee3a3a4e718f971ec3eec482ff9597243a6abdd152034b163",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/playdate/pft.rs",
+          "expected": "3c7b686a13ae133403ffb5d0f3fb1e2bd68131369b5f957f5073aa91b2694976",
+          "actual": "3c7b686a13ae133403ffb5d0f3fb1e2bd68131369b5f957f5073aa91b2694976",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/playdate/png.rs",
+          "expected": "eff5521f094540f1a6a522b936f65e1c9a00b7c366d5ab7c04d3737d25e002e5",
+          "actual": "eff5521f094540f1a6a522b936f65e1c9a00b7c366d5ab7c04d3737d25e002e5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/playdate.rs",
+          "expected": "e9a4a2b7082d556f81f47dd761b7b4b763835a9142cd111402af54fda8652aff",
+          "actual": "e9a4a2b7082d556f81f47dd761b7b4b763835a9142cd111402af54fda8652aff",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/rockbox/common.rs",
+          "expected": "dd5abedaf479bda09c7f4aa6ad9d41d287f638bd4875ef36a4c79e576bc72d8c",
+          "actual": "dd5abedaf479bda09c7f4aa6ad9d41d287f638bd4875ef36a4c79e576bc72d8c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/rockbox.rs",
+          "expected": "8533571326d7acddca7721c6fd9ce68ebbaf4a5c3af4ac90937d18708006dbc0",
+          "actual": "8533571326d7acddca7721c6fd9ce68ebbaf4a5c3af4ac90937d18708006dbc0",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/sbf.rs",
+          "expected": "825d1e02646e15602369a5c5da67142193ef1596c49fe6132f9d76df249d6ba7",
+          "actual": "825d1e02646e15602369a5c5da67142193ef1596c49fe6132f9d76df249d6ba7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/u8m.rs",
+          "expected": "178b4135fdd916429019fcaf4aed2295a4d1b62d26c3ac761f3f7a4dd16276cc",
+          "actual": "178b4135fdd916429019fcaf4aed2295a4d1b62d26c3ac761f3f7a4dd16276cc",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/cybiko.rs",
+          "expected": "39590380264239a71137338fb25eb24f67602e416a337542c43ac559dda896ca",
+          "actual": "39590380264239a71137338fb25eb24f67602e416a337542c43ac559dda896ca",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/playdate/original.fnt",
+          "expected": "aba49d2e98528bf5417f90110c93958818c2192aeeb74863706b373905feaabe",
+          "actual": "aba49d2e98528bf5417f90110c93958818c2192aeeb74863706b373905feaabe",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/playdate/sdk-3.1.2-compressed.pft",
+          "expected": "5d1c045c7ef49c2ecf6291d1584dfc04d9631091506d4485d463d5d2e6fc1d85",
+          "actual": "5d1c045c7ef49c2ecf6291d1584dfc04d9631091506d4485d463d5d2e6fc1d85",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fixtures/playdate/sdk-3.1.2-uncompressed.pft",
+          "expected": "6bbbd3210d03092c7dda99a91f69b77ae499ee32a1adcc4627393c2d1d8155f7",
+          "actual": "6bbbd3210d03092c7dda99a91f69b77ae499ee32a1adcc4627393c2d1d8155f7",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/hmzk.rs",
+          "expected": "009cf0f92d23c6ce4488400ce314beecf6d450e4a0404497ef1e142460e0b2c1",
+          "actual": "009cf0f92d23c6ce4488400ce314beecf6d450e4a0404497ef1e142460e0b2c1",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/playdate.rs",
+          "expected": "9b0df6a132bb019573de0c96ca034915d4932fc5f1fe7b7ee4cca83ceb48df4f",
+          "actual": "9b0df6a132bb019573de0c96ca034915d4932fc5f1fe7b7ee4cca83ceb48df4f",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/rockbox.rs",
+          "expected": "f9767cca8171432e29eaab9e21df3ae7e6f92c7fa2ddb4ce134f8a47189d63c2",
+          "actual": "f9767cca8171432e29eaab9e21df3ae7e6f92c7fa2ddb4ce134f8a47189d63c2",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/sbf.rs",
+          "expected": "5501295eba02fd4eef33877bec0d43722ff66929313397f3c6644e5fb44e0957",
+          "actual": "5501295eba02fd4eef33877bec0d43722ff66929313397f3c6644e5fb44e0957",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/u8m.rs",
+          "expected": "a07777e9e20491932ad3faae4f4621dd7e1001267412cba5d6ea5d2d9ae7cc82",
+          "actual": "a07777e9e20491932ad3faae4f4621dd7e1001267412cba5d6ea5d2d9ae7cc82",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/cybiko.md",
+          "expected": "8563996991f72221b831e39fcab60d87c7f14e1b77fd24950c7735792c324ac2",
+          "actual": "8563996991f72221b831e39fcab60d87c7f14e1b77fd24950c7735792c324ac2",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/hmzk.md",
+          "expected": "ae2d75959e4f725c03681c023c1defc84d67bcb6ec6b0b11544da23d00d52777",
+          "actual": "ae2d75959e4f725c03681c023c1defc84d67bcb6ec6b0b11544da23d00d52777",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/playdate.md",
+          "expected": "68c78a87cca5e93c3c7ddbfa8f53ae368db7786b02c65749639684da45165cb8",
+          "actual": "68c78a87cca5e93c3c7ddbfa8f53ae368db7786b02c65749639684da45165cb8",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/rockbox.md",
+          "expected": "1c674e0a7ccd07f2c14bd03b899f364ba7a0ac86f415f656c18ecec489bc6247",
+          "actual": "1c674e0a7ccd07f2c14bd03b899f364ba7a0ac86f415f656c18ecec489bc6247",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/sbf.md",
+          "expected": "63c595409c13551389701419d101fd6ddaaa36d0bfb1d39570fd5f9c2453d445",
+          "actual": "63c595409c13551389701419d101fd6ddaaa36d0bfb1d39570fd5f9c2453d445",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/u8m.md",
+          "expected": "721df32190e7ee7189e7ea6686c4ad766f658008b06f5bc8187599cbb7880f50",
+          "actual": "721df32190e7ee7189e7ea6686c4ad766f658008b06f5bc8187599cbb7880f50",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/cybiko_bitmap.rs",
+          "expected": "918a57412c0a26811dded4e342005e4876eec14e79e2bd0c8808aa7c76186994",
+          "actual": "918a57412c0a26811dded4e342005e4876eec14e79e2bd0c8808aa7c76186994",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/hmzk_bitmap.rs",
+          "expected": "7cd0a5a05d2be1f283121b3cc3ef91a3f805bc5f6751d3e533c0513f37190ea4",
+          "actual": "7cd0a5a05d2be1f283121b3cc3ef91a3f805bc5f6751d3e533c0513f37190ea4",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/playdate_bitmap.rs",
+          "expected": "ce770bcd2efca3833bd2292323aff3965bdd0cf0454ac01adbe352d81282abd6",
+          "actual": "ce770bcd2efca3833bd2292323aff3965bdd0cf0454ac01adbe352d81282abd6",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/rockbox_bitmap/common.rs",
+          "expected": "0446a952c1a6d3e5dc3807f5430a915e930c26bdd325f04eca44f1a923984bbf",
+          "actual": "0446a952c1a6d3e5dc3807f5430a915e930c26bdd325f04eca44f1a923984bbf",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/rockbox_bitmap.rs",
+          "expected": "55430f54a9b5aec79e326af2675971c03d69df66c8f664bd26899b6bda14e74c",
+          "actual": "55430f54a9b5aec79e326af2675971c03d69df66c8f664bd26899b6bda14e74c",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/sbf_bitmap.rs",
+          "expected": "373667ac6a7b27177a329c49f82f13cc7a806455c30c8535a2f205ac19aaf4a6",
+          "actual": "373667ac6a7b27177a329c49f82f13cc7a806455c30c8535a2f205ac19aaf4a6",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/u8m_bitmap.rs",
+          "expected": "1001c7504877245af3dbf8c4ee79a6065137ae326ee1412c0f9d9e5ee21f472b",
+          "actual": "1001c7504877245af3dbf8c4ee79a6065137ae326ee1412c0f9d9e5ee21f472b",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5e1.py",
+          "expected": "69333ce5c5f1ec0b5c88bfe6e726caf16e979f558686429f2fed8e144b99d489",
+          "actual": "69333ce5c5f1ec0b5c88bfe6e726caf16e979f558686429f2fed8e144b99d489",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e1/oracles/U8Oracle.java",
+          "expected": "aff30b3da5a0874a9c459a515d112e4d7dff22a16588c1b6748035a455f90800",
+          "actual": "aff30b3da5a0874a9c459a515d112e4d7dff22a16588c1b6748035a455f90800",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e1/oracles/build_rockbox.py",
+          "expected": "ca5ce21b531124d969ee23f63df0fefba221a8410baee2899369a830a47e229e",
+          "actual": "ca5ce21b531124d969ee23f63df0fefba221a8410baee2899369a830a47e229e",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e1/oracles/build_sdk_fixtures.py",
+          "expected": "dab6399df3f320b21d54bd53de3e50f338c1df1a94b29a276341f51cab0d39ea",
+          "actual": "dab6399df3f320b21d54bd53de3e50f338c1df1a94b29a276341f51cab0d39ea",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e1/oracles/rockbox_adapter.c",
+          "expected": "80032d1e2c9975b4c267dbf4025955d8a3b6e8b93ce565692499b68b2feafeed",
+          "actual": "80032d1e2c9975b4c267dbf4025955d8a3b6e8b93ce565692499b68b2feafeed",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.e1/oracles/rockbox_stubs.h",
+          "expected": "a10d423b04fd2db5e0805b0c53b2346714f0d5ebda923d3fe3f16dba78588c6c",
+          "actual": "a10d423b04fd2db5e0805b0c53b2346714f0d5ebda923d3fe3f16dba78588c6c",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5e1.py",
+          "expected": "f9a83140df70df2121743387c95080840aa206d256b427f2c758f885e924f821",
+          "actual": "f9a83140df70df2121743387c95080840aa206d256b427f2c758f885e924f821",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.6-color/source-hashes.json",
+      "manifest_sha256": "6645474bdd6d2741d51ed47117bb68a15fc744f4af8ffff1c6cb06aea04fd2a4",
+      "entries": [
+        {
+          "path": "crates/fontpixel/src/sfnt/bitmap.rs",
+          "expected": "070a39d2d65c1efacc26eab39d16d3c25b807732cb0436c08fd55c5b9d4791ae",
+          "actual": "070a39d2d65c1efacc26eab39d16d3c25b807732cb0436c08fd55c5b9d4791ae",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/sfnt/bitmap/color.rs",
+          "expected": "6c7feeb9c0d1a236cf5b32224ce6193df457f2f30b688f0e3c0bedfd46560768",
+          "actual": "6c7feeb9c0d1a236cf5b32224ce6193df457f2f30b688f0e3c0bedfd46560768",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/embedded.rs",
+          "expected": "79f5b62cc0f9c95a853b2268de57e55064a3ee5102fa5b8f74cbad02e75ef052",
+          "actual": "79f5b62cc0f9c95a853b2268de57e55064a3ee5102fa5b8f74cbad02e75ef052",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/embedded_bitmap.rs",
+          "expected": "12ee4e4ac6681844868f81157635cd41415c5823397153e398ae010d3561ee4b",
+          "actual": "12ee4e4ac6681844868f81157635cd41415c5823397153e398ae010d3561ee4b",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/color.md",
+          "expected": "046a33537c271ba80718bb7238bdf95217a03eaf8fdd6b925090d6b4d9b21a2b",
+          "actual": "046a33537c271ba80718bb7238bdf95217a03eaf8fdd6b925090d6b4d9b21a2b",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/color_bitmap.rs",
+          "expected": "7c0e4f89acc7a6d4b3234d9e899cd9522093efd83accb11564a1724d04fab110",
+          "actual": "7c0e4f89acc7a6d4b3234d9e899cd9522093efd83accb11564a1724d04fab110",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w56.py",
+          "expected": "18ffd3eecb3f3eccfe90425b4bca732abb08823494204901c692c6c65ee2b0c7",
+          "actual": "18ffd3eecb3f3eccfe90425b4bca732abb08823494204901c692c6c65ee2b0c7",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w56.py",
+          "expected": "06568cc7c8ef10d5ea215be1c900f6afe8188c8396f6cef223e171fcf6495bd2",
+          "actual": "06568cc7c8ef10d5ea215be1c900f6afe8188c8396f6cef223e171fcf6495bd2",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/examples/w56_timing.rs",
+          "expected": "96630bafbbc2b06c097e31a84966a5243b646907b18fbb088020db0e198d7902",
+          "actual": "96630bafbbc2b06c097e31a84966a5243b646907b18fbb088020db0e198d7902",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.transport-harness-freeze.json",
+      "manifest_sha256": "cf57efaac7c2e546af87fa75de77a807e229808195b0b9b5a278a016e9ef27fe",
+      "entries": [
+        {
+          "path": "docs/transport-fuzz.md",
+          "expected": "8e98ec9bb5644ef0e9551420b1bce9ffddc9087338dc9d0c03952f2f2089a3ce",
+          "actual": "8e98ec9bb5644ef0e9551420b1bce9ffddc9087338dc9d0c03952f2f2089a3ce",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/transport.rs",
+          "expected": "e9847911ac50028d477beb55e4f7310c839cfd20f949e2906de52c1bbe27f399",
+          "actual": "e9847911ac50028d477beb55e4f7310c839cfd20f949e2906de52c1bbe27f399",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_transport.py",
+          "expected": "386fdcd5be202b9bc278519dfe4747570d48647d017c3b0ada21b97cebe3187c",
+          "actual": "386fdcd5be202b9bc278519dfe4747570d48647d017c3b0ada21b97cebe3187c",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.5-sha256.txt",
+      "manifest_sha256": "14b0824e7ee474c43b55c41ecae5d09231f270fcd9b6a9c9e8c0ca855486493e",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w55_timing.rs",
+          "expected": "5f4b995b3a9c86b2ba6b1d770699bbbbf076ddc769ab65b84642e0ce8fc8e9a6",
+          "actual": "5f4b995b3a9c86b2ba6b1d770699bbbbf076ddc769ab65b84642e0ce8fc8e9a6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/embedded.rs",
+          "expected": "6914dcd99181252090a8e697a78b341d824ae9653000744ba6f4ac2b5afe5685",
+          "actual": "6914dcd99181252090a8e697a78b341d824ae9653000744ba6f4ac2b5afe5685",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/legacy_embedded.rs",
+          "expected": "dad3b4a71f2778e9c76bd34579856aef4bfa393ce648675a9e7c3dc77793ffe5",
+          "actual": "dad3b4a71f2778e9c76bd34579856aef4bfa393ce648675a9e7c3dc77793ffe5",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/lexer.rs",
+          "expected": "2492c90472a1ba2d84caed364496b981b87700bb07a50eb84b56a60d53417f7c",
+          "actual": "2492c90472a1ba2d84caed364496b981b87700bb07a50eb84b56a60d53417f7c",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/lvgl.rs",
+          "expected": "b19c0b53c4b5b6bb25c7c9dd23748f1dd1842b9223069fbd8d777fe5501d1729",
+          "actual": "b19c0b53c4b5b6bb25c7c9dd23748f1dd1842b9223069fbd8d777fe5501d1729",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/lvgl_binary.rs",
+          "expected": "0217b666519c60c59ac6fcbeb005ed4b91f699bd82212d551505b416a0611917",
+          "actual": "0217b666519c60c59ac6fcbeb005ed4b91f699bd82212d551505b416a0611917",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/preprocess.rs",
+          "expected": "c8e01bf70a6b8a7cf5396cc11a7c1513b89df0c5b82951bf0ff0105ab7d73613",
+          "actual": "c8e01bf70a6b8a7cf5396cc11a7c1513b89df0c5b82951bf0ff0105ab7d73613",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/u8g2.rs",
+          "expected": "0df8078dacd69a269387e4952c921c253cf448caacc4f5fcd70f6521bc0cc1ee",
+          "actual": "0df8078dacd69a269387e4952c921c253cf448caacc4f5fcd70f6521bc0cc1ee",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c/writer.rs",
+          "expected": "759c80a805eec8d506b85e13b53b28da4c2797d2b4fc5c83ba4b6b96438d7c7e",
+          "actual": "759c80a805eec8d506b85e13b53b28da4c2797d2b4fc5c83ba4b6b96438d7c7e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c.rs",
+          "expected": "5f91940b83e70dd4a4af6c906a91e01f3bd6c3826cf72531ba6182854e2ead59",
+          "actual": "32d51dc02866356f4a074bb2a628fc95bbf3c460f2a8591c86eb757fb2a51147",
+          "status": "superseded by reports/w5.fon-detection.sha256"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/drcs.rs",
+          "expected": "f7c631555d5cfd9120e8462076b6539dbe9d625290832dca11e10878e4bca3ba",
+          "actual": "f7c631555d5cfd9120e8462076b6539dbe9d625290832dca11e10878e4bca3ba",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/c.rs",
+          "expected": "6790fc17ae4e6dce2e0ea37ea673a751893878bafda0f3e094f16b3934e783da",
+          "actual": "cd57e093e2fd8fc158e38049b077998f5e15ce9888625397f4874c32d5aa68f8",
+          "status": "superseded by reports/w5.fon-detection.sha256"
+        },
+        {
+          "path": "crates/fontpixel/tests/drcs.rs",
+          "expected": "108e3db63af218ce162adae065671763ab7533af34af393467165b1c1dc7a941",
+          "actual": "108e3db63af218ce162adae065671763ab7533af34af393467165b1c1dc7a941",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/c.md",
+          "expected": "68acc9ee20cd145817542f348b2c7041995155d2bf1fbfdcd82a2dcf30c8be64",
+          "actual": "595756bb99b01b2244c93f5e350534c80cb0cf3f7a97dfe804b69fd80d6fdc3f",
+          "status": "superseded by reports/w5.fon-detection.sha256"
+        },
+        {
+          "path": "docs/formats/drcs.md",
+          "expected": "b6ecc91abe271aa6e01b8fd74c95a3fa4b7aeae2d49384cde0948ff3cd2a624a",
+          "actual": "b6ecc91abe271aa6e01b8fd74c95a3fa4b7aeae2d49384cde0948ff3cd2a624a",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/c.rs",
+          "expected": "469fc1a1e5823b6274c7eeb84a8fb128bb85891c10971caf3baa4ddb614f2f93",
+          "actual": "58cabe3bb722280e5451984197196b34e9a6452e4da22dbe67141e1656f32ade",
+          "status": "superseded by reports/w5.fon-detection.sha256"
+        },
+        {
+          "path": "fuzz/fuzz_targets/drcs.rs",
+          "expected": "ca7127b7320b44c30f9e4310baba36409fb8d195e864b46f0415450b79b855d4",
+          "actual": "ca7127b7320b44c30f9e4310baba36409fb8d195e864b46f0415450b79b855d4",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w55.py",
+          "expected": "d679b0b454fca89f544bffa517abe832fdb732eb420f108cc164973c173a66ec",
+          "actual": "d679b0b454fca89f544bffa517abe832fdb732eb420f108cc164973c173a66ec",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5-crosscheck.json",
+          "expected": "cfadcfe5286b9a4e22385758a8f67c1650e82bcba7dfd07d017ad5d39c80138e",
+          "actual": "cfadcfe5286b9a4e22385758a8f67c1650e82bcba7dfd07d017ad5d39c80138e",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5-decisions.md",
+          "expected": "f21376ddcdc8784097a731a5e5c649884617386eba0208338bfb1a603f389ae9",
+          "actual": "f21376ddcdc8784097a731a5e5c649884617386eba0208338bfb1a603f389ae9",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5-fuzz.json",
+          "expected": "90b94231c274926c4de3d55cf7a1366b0f63fdd6cac7d3cbf092d6de0ce99f1c",
+          "actual": "90b94231c274926c4de3d55cf7a1366b0f63fdd6cac7d3cbf092d6de0ce99f1c",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5-gates.json",
+          "expected": "e43ef82de7361e307523b7fd74a06e8840ebd9bc2c8e1a7d4334a3a9efd93ecc",
+          "actual": "e43ef82de7361e307523b7fd74a06e8840ebd9bc2c8e1a7d4334a3a9efd93ecc",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5-oracle-notes.md",
+          "expected": "433cb09b7db78244f324e8803ada5763d227108143bd89546ce9ce8a36eaa414",
+          "actual": "433cb09b7db78244f324e8803ada5763d227108143bd89546ce9ce8a36eaa414",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.5.md",
+          "expected": "fe7399b51883c20b75a98ec295df4bfa8a7d6be1e744f58ca58124cdcd079374",
+          "actual": "fe7399b51883c20b75a98ec295df4bfa8a7d6be1e744f58ca58124cdcd079374",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w55.py",
+          "expected": "2fd2500935efb3b821062e6f981872acea4890f09c621254d4e56bc27d2f705b",
+          "actual": "2fd2500935efb3b821062e6f981872acea4890f09c621254d4e56bc27d2f705b",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.a2-sha256.txt",
+      "manifest_sha256": "b952fab1dc14349abba923fece3f4ebbca6aad47a4da8eaf36e000468476b602",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/w5a2_timing.rs",
+          "expected": "ffd92cf7f8edfc43260212b2e2b336fea1361fb3b8ac58d647a38032867d6707",
+          "actual": "ffd92cf7f8edfc43260212b2e2b336fea1361fb3b8ac58d647a38032867d6707",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bbc/common.rs",
+          "expected": "7b146119160be237cd68190c345cee31f11aa0a1c576427baa7168029c78d653",
+          "actual": "7b146119160be237cd68190c345cee31f11aa0a1c576427baa7168029c78d653",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/bbc.rs",
+          "expected": "f28cc1e6069efedae22ddc6e1f52cc5dec6794420d4f32e720301b95aacbab5e",
+          "actual": "f28cc1e6069efedae22ddc6e1f52cc5dec6794420d4f32e720301b95aacbab5e",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/comfont/stubs.rs",
+          "expected": "8be1e964ad5516e2e8f3d253630307a9f427b7c649325a2289d4a890786c02a8",
+          "actual": "8be1e964ad5516e2e8f3d253630307a9f427b7c649325a2289d4a890786c02a8",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/comfont.rs",
+          "expected": "2ace8991d2cc69309b8e6a66c443e48b10fe7ad633b33bfdb59c573db55e20cc",
+          "actual": "2ace8991d2cc69309b8e6a66c443e48b10fe7ad633b33bfdb59c573db55e20cc",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/consoleet.rs",
+          "expected": "6676784c7b82129c1ef58e89c4d239f64c6cf91773a849434f83b783ca40b284",
+          "actual": "6676784c7b82129c1ef58e89c4d239f64c6cf91773a849434f83b783ca40b284",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/grasp.rs",
+          "expected": "0028d5db40f6bf63e1b365f631d32ac85cfaae11bbb214ae6f45b56b4c1eba42",
+          "actual": "0028d5db40f6bf63e1b365f631d32ac85cfaae11bbb214ae6f45b56b4c1eba42",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/hrcg.rs",
+          "expected": "6348b32363de445755a52fe7880b90b310d9b121c7bc5a47caffd442287c8926",
+          "actual": "6348b32363de445755a52fe7880b90b310d9b121c7bc5a47caffd442287c8926",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/wyse.rs",
+          "expected": "2360ffcc6b29ef08d91d39dc0a8744b6e8c2e08bbdbf244d02254dc48cbc62e0",
+          "actual": "2360ffcc6b29ef08d91d39dc0a8744b6e8c2e08bbdbf244d02254dc48cbc62e0",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/xbin.rs",
+          "expected": "f925524c09bfbe7e9636e5e99f6118631cd856dfd0721d14ce0316c4162a26ef",
+          "actual": "f925524c09bfbe7e9636e5e99f6118631cd856dfd0721d14ce0316c4162a26ef",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/zapfont.rs",
+          "expected": "bca5817590d26d64ea47c2fe8db15ef4e8eddcf6a4388b04c6965d2df4dec5ec",
+          "actual": "bca5817590d26d64ea47c2fe8db15ef4e8eddcf6a4388b04c6965d2df4dec5ec",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/bbc.rs",
+          "expected": "f53e1252b750020ef5e8386c64f9b8c67009b4c5bea513ef90ab215af19ed205",
+          "actual": "f53e1252b750020ef5e8386c64f9b8c67009b4c5bea513ef90ab215af19ed205",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/comfont.rs",
+          "expected": "ad34f576007114048ad800f797daef58b9a35d08180e336d57038d8a72115d18",
+          "actual": "ad34f576007114048ad800f797daef58b9a35d08180e336d57038d8a72115d18",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/consoleet.rs",
+          "expected": "15b98857d8da85bf890248f521f8ae8521723f52894edabfc5d51351494a9b23",
+          "actual": "15b98857d8da85bf890248f521f8ae8521723f52894edabfc5d51351494a9b23",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/grasp.rs",
+          "expected": "be0d22ad0ee5406da0bfafafa50758bf7b016c2e95056caeb351eb3b3c29ee01",
+          "actual": "be0d22ad0ee5406da0bfafafa50758bf7b016c2e95056caeb351eb3b3c29ee01",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/hrcg.rs",
+          "expected": "3a0426ea7cff8367cc58b106a71817763bc33ab2edb147c26c7916e1002e3645",
+          "actual": "3a0426ea7cff8367cc58b106a71817763bc33ab2edb147c26c7916e1002e3645",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/wyse.rs",
+          "expected": "9889c7b975018020865e940aa40b65da379e92d30793551b1532fde68f4add69",
+          "actual": "9889c7b975018020865e940aa40b65da379e92d30793551b1532fde68f4add69",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/xbin.rs",
+          "expected": "9b4d232dfbc05b096e2b80db08aca1096784eba2aae212c461b915fd1d240269",
+          "actual": "9b4d232dfbc05b096e2b80db08aca1096784eba2aae212c461b915fd1d240269",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/zapfont.rs",
+          "expected": "af3d423a82e54bd831c975a15dd698925cdfeb28c93e579eb4f13e549d72bf47",
+          "actual": "af3d423a82e54bd831c975a15dd698925cdfeb28c93e579eb4f13e549d72bf47",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/bbc.md",
+          "expected": "55b700bdd523d8cc0609d6d51650ae688e687c8013b8cd909d355fb4be69ea12",
+          "actual": "55b700bdd523d8cc0609d6d51650ae688e687c8013b8cd909d355fb4be69ea12",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/comfont.md",
+          "expected": "1d24a4651b965947c93c8b573b8f520f7d45cb214964ede73a1159a43868f82c",
+          "actual": "1d24a4651b965947c93c8b573b8f520f7d45cb214964ede73a1159a43868f82c",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/consoleet.md",
+          "expected": "0569254dd6720f3b99b9b2e91f229eb4d6576901baa2e9c10d418a47dd417675",
+          "actual": "0569254dd6720f3b99b9b2e91f229eb4d6576901baa2e9c10d418a47dd417675",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/grasp.md",
+          "expected": "219010ccb9ac652f827b6b5682a70b4a59b67ac440ee83e2db741d3ce3438e83",
+          "actual": "219010ccb9ac652f827b6b5682a70b4a59b67ac440ee83e2db741d3ce3438e83",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/hrcg.md",
+          "expected": "8b10498a33b53eb1c49ff51b5497cfe8f2c23832db7525f5b432593ec71cfa1b",
+          "actual": "8b10498a33b53eb1c49ff51b5497cfe8f2c23832db7525f5b432593ec71cfa1b",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/wyse.md",
+          "expected": "f9634444dba01fecb018a8a391c3f8d321d368c8bef5dffb6f8f5a9d7ceb4642",
+          "actual": "f9634444dba01fecb018a8a391c3f8d321d368c8bef5dffb6f8f5a9d7ceb4642",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/xbin.md",
+          "expected": "134b1a618166eb0d5262aecb2fa1f194cc1deb2bcb3f9973931faf6a5c2739e0",
+          "actual": "134b1a618166eb0d5262aecb2fa1f194cc1deb2bcb3f9973931faf6a5c2739e0",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/zapfont.md",
+          "expected": "9d50a2b765bee82c57c4e8b4a2029523c0cae98cef3cf1fd1ce77bda3d30f27a",
+          "actual": "9d50a2b765bee82c57c4e8b4a2029523c0cae98cef3cf1fd1ce77bda3d30f27a",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/bbc.rs",
+          "expected": "f81a31fe37daa1066f58c1b5e6b94b3d72c442a765a5862f194ea6cc0c1620ad",
+          "actual": "f81a31fe37daa1066f58c1b5e6b94b3d72c442a765a5862f194ea6cc0c1620ad",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/comfont.rs",
+          "expected": "15d888f80965875ea40b20ad516f204dc424a59756638e2d021432683416c683",
+          "actual": "15d888f80965875ea40b20ad516f204dc424a59756638e2d021432683416c683",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/consoleet.rs",
+          "expected": "06ece05d8e72b4751606fbe8c5b2190bbc1bab987ad618cfeb0f4f570de779e3",
+          "actual": "06ece05d8e72b4751606fbe8c5b2190bbc1bab987ad618cfeb0f4f570de779e3",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/grasp.rs",
+          "expected": "1c9d6389b29aa3e76214256f46c356477ac238dda29b540ac81036d671a7d293",
+          "actual": "1c9d6389b29aa3e76214256f46c356477ac238dda29b540ac81036d671a7d293",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/hrcg.rs",
+          "expected": "bc38f04de1a7a4a4bc4e8ec53e1ff1f81de5fe0693cbedafe0f056b98d5b4a7d",
+          "actual": "bc38f04de1a7a4a4bc4e8ec53e1ff1f81de5fe0693cbedafe0f056b98d5b4a7d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/wyse.rs",
+          "expected": "b18c359013124cbcc987d859b1a8132b60ea1cc8165429edcbd772b3411cd111",
+          "actual": "b18c359013124cbcc987d859b1a8132b60ea1cc8165429edcbd772b3411cd111",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/xbin.rs",
+          "expected": "09e5d81656c81471b357f62a83d8c3e8da312bac38b22a44f08f2201f2337b6d",
+          "actual": "09e5d81656c81471b357f62a83d8c3e8da312bac38b22a44f08f2201f2337b6d",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/zapfont.rs",
+          "expected": "9d0c47278b47f71755c75399b765e70990857d478efdd43f46236370b743bc31",
+          "actual": "9d0c47278b47f71755c75399b765e70990857d478efdd43f46236370b743bc31",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/seed_w5a2.py",
+          "expected": "f3aa9600069c09236ef1dbff3f08df0c6f245528e4e868ad7122c4c15918b7c6",
+          "actual": "f3aa9600069c09236ef1dbff3f08df0c6f245528e4e868ad7122c4c15918b7c6",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-crosscheck.json",
+          "expected": "f85d5494dd7823ec442bcf249c84f9d71df66ed69a6a7ad85ed25f91d9ec25d4",
+          "actual": "f85d5494dd7823ec442bcf249c84f9d71df66ed69a6a7ad85ed25f91d9ec25d4",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-decisions.md",
+          "expected": "7a66990874626a1d0672e79098b0e8799727052014fbc0e56a79a944dd9ef072",
+          "actual": "7a66990874626a1d0672e79098b0e8799727052014fbc0e56a79a944dd9ef072",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-fuzz-final.json",
+          "expected": "c815147a0c35af8c1acc67eb6834e6fddbce9d81cc45ac48ddf8fab0a10d3e5c",
+          "actual": "c815147a0c35af8c1acc67eb6834e6fddbce9d81cc45ac48ddf8fab0a10d3e5c",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-fuzz.json",
+          "expected": "3664723268e7fe6a360d81a9ca6877a63da74a7b6df5de3f1795d7201b2ffad2",
+          "actual": "3664723268e7fe6a360d81a9ca6877a63da74a7b6df5de3f1795d7201b2ffad2",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-gates.json",
+          "expected": "ead9df0036a50189e9a2a7479ca0f7bb2273a758e048f0acc74102f04c225260",
+          "actual": "ead9df0036a50189e9a2a7479ca0f7bb2273a758e048f0acc74102f04c225260",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2-oracles.md",
+          "expected": "6515e38e2c2090a2c50c041c61e0e35ed8607ed7a82e227d8fcfeb6141a95a39",
+          "actual": "6515e38e2c2090a2c50c041c61e0e35ed8607ed7a82e227d8fcfeb6141a95a39",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.a2.md",
+          "expected": "72e376f2535277ee74db57b1be835019f2fded9569e95ec9ccfd3687d4d56009",
+          "actual": "72e376f2535277ee74db57b1be835019f2fded9569e95ec9ccfd3687d4d56009",
+          "status": "verified"
+        },
+        {
+          "path": "tests/crosscheck/w5a2.py",
+          "expected": "08a713506888b09988f7d209b7dbb290894f5ee541d91feb913ad8e2b5b62eb8",
+          "actual": "08a713506888b09988f7d209b7dbb290894f5ee541d91feb913ad8e2b5b62eb8",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.transport-budget-sha256.txt",
+      "manifest_sha256": "6d210c7927917214db5f9b027bf05bc22e0219be809143296de8cafb87bf708a",
+      "entries": [
+        {
+          "path": "crates/fontpixel/examples/transport_timing.rs",
+          "expected": "c2e70f528af405dcebe40909c82841e2f270ab87826fb85f55555190750eb16d",
+          "actual": "c2e70f528af405dcebe40909c82841e2f270ab87826fb85f55555190750eb16d",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/mod.rs",
+          "expected": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+          "actual": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/registry_codecs.rs",
+          "expected": "fa77323a9f30d53cbb6d9a83f64c8d62c965858a5b2305395e7625415e467820",
+          "actual": "fa77323a9f30d53cbb6d9a83f64c8d62c965858a5b2305395e7625415e467820",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/transport.rs",
+          "expected": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+          "actual": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/resources.rs",
+          "expected": "b6babb6c395907d1667643943b876ad94eca11d7b4a29389e28df8bbe407fda6",
+          "actual": "b6babb6c395907d1667643943b876ad94eca11d7b4a29389e28df8bbe407fda6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/contracts.rs",
+          "expected": "baf94eabb1a10b24dacffb23559b0d72a5fa42bf23a174eac0dd98b39bcf90d6",
+          "actual": "baf94eabb1a10b24dacffb23559b0d72a5fa42bf23a174eac0dd98b39bcf90d6",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/transport_limits.rs",
+          "expected": "361d1d75f953f46f54d8f79aaab094029ee738482ba0cb6b9598a5746912c531",
+          "actual": "361d1d75f953f46f54d8f79aaab094029ee738482ba0cb6b9598a5746912c531",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget.json",
+          "expected": "7c111f02a9590916a294306fd34a7fba7a869b14f39d54834a5914d7f0b80356",
+          "actual": "7c111f02a9590916a294306fd34a7fba7a869b14f39d54834a5914d7f0b80356",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget.md",
+          "expected": "b20d2149f98b1dd5c12fdc1109d343a4137d500ae77f0a164df2dc5ba351401d",
+          "actual": "b20d2149f98b1dd5c12fdc1109d343a4137d500ae77f0a164df2dc5ba351401d",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/phase5-input-capacity-test.json",
+          "expected": "5a8a89d7d124ad72b8dcf91c44ad45a6fb4768e5b4c8cc843073851a23d072f2",
+          "actual": "5a8a89d7d124ad72b8dcf91c44ad45a6fb4768e5b4c8cc843073851a23d072f2",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/phase5-input-capacity-test.log",
+          "expected": "691e9060abc224ab0fde6d003e0bc4f42429fc2c5c75ddc221d2ddbe9ad3eca9",
+          "actual": "691e9060abc224ab0fde6d003e0bc4f42429fc2c5c75ddc221d2ddbe9ad3eca9",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final1/w5.transport-budget-sha256.txt",
+          "expected": "a298327ecbf964a8297d0f85214c24c6936363f85b350da75550230c3546ca66",
+          "actual": "a298327ecbf964a8297d0f85214c24c6936363f85b350da75550230c3546ca66",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final1/w5.transport-budget.json",
+          "expected": "3f59795e5295371dfb7cf382f122efa7e47c0d215c2d27dec6a6051210000d1c",
+          "actual": "3f59795e5295371dfb7cf382f122efa7e47c0d215c2d27dec6a6051210000d1c",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final1/w5.transport-budget.md",
+          "expected": "c3144c90480ccce5f51ef3f1c6d9a66b34573c4d584ab8a42f0f004f801cf166",
+          "actual": "c3144c90480ccce5f51ef3f1c6d9a66b34573c4d584ab8a42f0f004f801cf166",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final2/w5.transport-budget-sha256.txt",
+          "expected": "3fd4b82dce8dd3b1a0a2c41f5926fa7574e13558ce0ed1f545721f03544aa6e0",
+          "actual": "3fd4b82dce8dd3b1a0a2c41f5926fa7574e13558ce0ed1f545721f03544aa6e0",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final2/w5.transport-budget.json",
+          "expected": "2234a15eea9aad7d5d87d53a64ea4b751aac87074fa78c165b5d8f02bc93559b",
+          "actual": "2234a15eea9aad7d5d87d53a64ea4b751aac87074fa78c165b5d8f02bc93559b",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.transport-budget/superseded/final2/w5.transport-budget.md",
+          "expected": "08e76b58d4cd9ae139a467212ef695c2fc630c1ad9d5f0e985875c686371b774",
+          "actual": "08e76b58d4cd9ae139a467212ef695c2fc630c1ad9d5f0e985875c686371b774",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "manifest": "reports/w5.fon-detection.sha256",
+      "manifest_sha256": "c48a435bb9627e0c0f8e0b572bfeb0d40dd79e35a7ed5b5e740a4d1e51315889",
+      "entries": [
+        {
+          "path": "crates/fontpixel/src/formats/fon.rs",
+          "expected": "ee5ba8713f2699414849e6f69876416af5fc8c8f42be1a5a3ccc9aa6c50e99d4",
+          "actual": "ee5ba8713f2699414849e6f69876416af5fc8c8f42be1a5a3ccc9aa6c50e99d4",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/src/formats/c.rs",
+          "expected": "32d51dc02866356f4a074bb2a628fc95bbf3c460f2a8591c86eb757fb2a51147",
+          "actual": "32d51dc02866356f4a074bb2a628fc95bbf3c460f2a8591c86eb757fb2a51147",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/fon.rs",
+          "expected": "e169f42b5b8e09bdb7d18793bf28accb54369e19dcee4fc85af2166e8031b606",
+          "actual": "e169f42b5b8e09bdb7d18793bf28accb54369e19dcee4fc85af2166e8031b606",
+          "status": "verified"
+        },
+        {
+          "path": "crates/fontpixel/tests/c.rs",
+          "expected": "cd57e093e2fd8fc158e38049b077998f5e15ce9888625397f4874c32d5aa68f8",
+          "actual": "cd57e093e2fd8fc158e38049b077998f5e15ce9888625397f4874c32d5aa68f8",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/fon.md",
+          "expected": "3ff8f78505f7993f5f22cbfbf4b5753da3ad9cba06fbe010a9b9ad1281f1faa9",
+          "actual": "3ff8f78505f7993f5f22cbfbf4b5753da3ad9cba06fbe010a9b9ad1281f1faa9",
+          "status": "verified"
+        },
+        {
+          "path": "docs/formats/c.md",
+          "expected": "595756bb99b01b2244c93f5e350534c80cb0cf3f7a97dfe804b69fd80d6fdc3f",
+          "actual": "595756bb99b01b2244c93f5e350534c80cb0cf3f7a97dfe804b69fd80d6fdc3f",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/fon.rs",
+          "expected": "121efe2697494d1cacbf67370f40019d0905902fa3946719d36c908308e479b4",
+          "actual": "121efe2697494d1cacbf67370f40019d0905902fa3946719d36c908308e479b4",
+          "status": "verified"
+        },
+        {
+          "path": "fuzz/fuzz_targets/c.rs",
+          "expected": "58cabe3bb722280e5451984197196b34e9a6452e4da22dbe67141e1656f32ade",
+          "actual": "58cabe3bb722280e5451984197196b34e9a6452e4da22dbe67141e1656f32ade",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.fon-detection.md",
+          "expected": "0a971cdbed5144e044c537dbe7921d20d0ef1709136868673b86acc5d1bd6cb2",
+          "actual": "0a971cdbed5144e044c537dbe7921d20d0ef1709136868673b86acc5d1bd6cb2",
+          "status": "verified"
+        },
+        {
+          "path": "reports/w5.fon-detection.json",
+          "expected": "2746311fb6b32639e75af468c1321a59495930b29c285d26ce7af1b434d13844",
+          "actual": "2746311fb6b32639e75af468c1321a59495930b29c285d26ce7af1b434d13844",
+          "status": "verified"
+        }
+      ]
+    }
+  ],
+  "mismatches": []
+}

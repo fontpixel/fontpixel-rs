@@ -1,0 +1,57 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.61s
+     Running tests/image.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/image-2948cac504321902)
+
+running 10 tests
+test external_blank_omission_is_explicit_and_keeps_whitespace ... ok
+test external_grid_preserves_order_pixels_and_baseline ... ok
+test malformed_json_does_not_fall_back_to_toml ... ok
+test budgets_cover_mapping_pixels_slots_and_source_metadata ... ok
+test external_rejects_unmapped_duplicate_overlapping_and_outside_cells ... ok
+test gray_to_mono_requires_threshold_and_reports_loss ... ok
+test native_metadata_rejects_invalid_slot_order_and_zero_denominator ... ok
+test native_nested_metadata_never_discards_unknown_fields ... ok
+test native_roundtrip_all_six_containers_both_mappings_and_entry_points ... ok
+test large_native_atlas_fits_aggregate_budget_and_preserves_raw_properties ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+
+     Running tests/imageset.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/imageset-6923dca575bba60f)
+
+running 3 tests
+test absent_metrics_are_loss_and_directory_mapping_is_rejected ... ok
+test duplicate_labels_bad_names_resources_and_readback_budget ... ok
+test native_directory_all_containers_labels_pixels_and_strict ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/pilfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/pilfont-48a54826f27e0f34)
+
+running 4 tests
+test output_name_does_not_shadow_native_atlas_lookup ... ok
+test signed_metrics_blank_slot_gray_mask_and_strict ... ok
+test registry_loss_and_duplicate_determinism ... ok
+test missing_resources_truncations_rectangles_and_limits ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/sfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/sfont-bd347bcd1c791aa5)
+
+running 5 tests
+test registry_distinguishes_native_rfont_evidence_from_ambiguous_image_magic ... ok
+test native_png_names_and_unknown_text_roundtrip_and_baseline_overflow ... ok
+test malformed_images_codepoints_options_and_budgets ... ok
+test sfont_markers_explicit_order_gray_and_strict ... ok
+test rfont_external_original_pages_redundancy_aux_versions_and_gap_stability ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vlw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/vlw-0cdd58e1210d23ba)
+
+running 3 tests
+test limits_metadata_loss_and_native_registry ... ok
+test original_versions_gray_metrics_and_java_strings ... ok
+test malformed_directories_strings_and_all_truncations ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

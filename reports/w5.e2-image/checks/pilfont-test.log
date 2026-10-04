@@ -1,0 +1,12 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.04s
+     Running tests/pilfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/pilfont-20938ca0183b93c8)
+
+running 4 tests
+test signed_metrics_blank_slot_gray_mask_and_strict ... ok
+test output_name_does_not_shadow_native_atlas_lookup ... ok
+test registry_loss_and_duplicate_determinism ... ok
+test missing_resources_truncations_rectangles_and_limits ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+

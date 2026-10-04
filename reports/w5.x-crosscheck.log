@@ -1,0 +1,199 @@
+[
+  {
+    "format": "raw",
+    "case": "legacy",
+    "config": {
+      "width": 8,
+      "height": 8,
+      "count": 8
+    },
+    "glyphs": 8,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/legacy/source.raw",
+    "sha256": "9e4cdfa269dd998febe71ecd9a5133992d01de0cd8bfb2a69d03a670f5fb6266"
+  },
+  {
+    "format": "raw",
+    "case": "bits9",
+    "config": {
+      "width": 9,
+      "height": 3,
+      "count": 7,
+      "packing": "bit"
+    },
+    "glyphs": 7,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits9/source.raw",
+    "sha256": "15381d9a950dee6d02dd6abcc3172e8f0321e31858da421406c8aa52b4641bc5"
+  },
+  {
+    "format": "raw",
+    "case": "bits3",
+    "config": {
+      "width": 3,
+      "height": 3,
+      "count": 5,
+      "packing": "bit"
+    },
+    "glyphs": 5,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits3/source.raw",
+    "sha256": "f51256310d7fdc4ae5f3227fcb1f4719b93e29873daaac71d40d75f3a4bf7880"
+  },
+  {
+    "format": "raw",
+    "case": "bits_many",
+    "config": {
+      "width": 9,
+      "height": 8,
+      "count": 256,
+      "packing": "bit"
+    },
+    "glyphs": 256,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits_many/source.raw",
+    "sha256": "0aa2c46eff4e2ec1ceed85c34a297b1e03a3c518115a9fdee46b6b7c51239b72"
+  },
+  {
+    "format": "raw",
+    "case": "columns16",
+    "config": {
+      "width": 16,
+      "height": 5,
+      "count": 6,
+      "order": "column"
+    },
+    "glyphs": 6,
+    "directions": 2,
+    "oracle": "monobit writer/reader Raster(order=column-major) + independent byte-column transpose; raw wrapper ignores obsolete byte_order keyword",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/columns16/source.raw",
+    "sha256": "e39c7f541e5694c3454e628b53da54b98559c6ef2e7dd1f26d311003e5da45d3"
+  },
+  {
+    "format": "raw",
+    "case": "columns9_strike",
+    "config": {
+      "width": 9,
+      "height": 3,
+      "count": 6,
+      "order": "column",
+      "strike_count": 3
+    },
+    "glyphs": 6,
+    "directions": 2,
+    "oracle": "monobit writer/reader Raster(order=column-major) + independent byte-column transpose; raw wrapper ignores obsolete byte_order keyword",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/columns9_strike/source.raw",
+    "sha256": "55965baad99621b47c26d0ef5f6b8a5791447a59e7cf3582667b144c4cec09bd"
+  },
+  {
+    "format": "raw",
+    "case": "strike9",
+    "config": {
+      "width": 9,
+      "height": 3,
+      "count": 6,
+      "strike_count": 3
+    },
+    "glyphs": 6,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/strike9/source.raw",
+    "sha256": "16a101d9b45f5264f36b6eaebe95dfef8c1930aea66f791655a96db38ebcdbbb"
+  },
+  {
+    "format": "raw",
+    "case": "harlekin512",
+    "config": {
+      "width": 8,
+      "height": 8,
+      "count": 512,
+      "strike_count": 512
+    },
+    "glyphs": 512,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/harlekin512/source.raw",
+    "sha256": "d3fe456d39bfab043150b782cfef89d86627bd815828c281a524198813e18051"
+  },
+  {
+    "format": "raw",
+    "case": "harlekin8",
+    "config": {
+      "width": 8,
+      "height": 8,
+      "count": 256,
+      "strike_count": 256
+    },
+    "glyphs": 256,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/harlekin8/source.raw",
+    "sha256": "9032db3b358eefdc4dc23a1f24fc9ef21baf1b511bf3065003faf7e91895fa48"
+  },
+  {
+    "format": "raw",
+    "case": "harlekin16",
+    "config": {
+      "width": 8,
+      "height": 16,
+      "count": 256,
+      "strike_count": 256
+    },
+    "glyphs": 256,
+    "directions": 2,
+    "oracle": "monobit writer/reader",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/harlekin16/source.raw",
+    "sha256": "7dbeef572bc9f7f22c3349e58aaff0d41eced62fab4d506355df5acc90487066"
+  },
+  {
+    "format": "raw",
+    "case": "partial_padding_lsb_bottom",
+    "config": {
+      "width": 9,
+      "height": 3,
+      "count": 5,
+      "strike_count": 3,
+      "padding": 2,
+      "offset": 3,
+      "order": "column",
+      "lsb": true,
+      "bottom": true
+    },
+    "glyphs": 5,
+    "directions": 2,
+    "oracle": "independent original row-string assembler + exact wire equality",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/partial_padding_lsb_bottom/source.raw",
+    "sha256": "fe0aaf5fba1b5aa336932984836269b511bc8b527885f6930de50c1cd768a983"
+  },
+  {
+    "format": "raw",
+    "case": "bits_lsb_bottom",
+    "config": {
+      "width": 3,
+      "height": 3,
+      "count": 5,
+      "packing": "bit",
+      "lsb": true,
+      "bottom": true
+    },
+    "glyphs": 5,
+    "directions": 2,
+    "oracle": "independent original row-string assembler + exact wire equality",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits_lsb_bottom/source.raw",
+    "sha256": "aa6afa9a979c0d5a656efa3b2d59b555e3f5c5c8bc1e966deeedbc3acf86731a"
+  },
+  {
+    "format": "bmfont",
+    "encoding": "json",
+    "directions": 2,
+    "glyphs": 3,
+    "pages": 3,
+    "oracle": "monobit 0.54.0 + original schema/PNG assembler",
+    "known_difference": "monobit reader ignores common.base; exact shift max glyph height minus common.base independently asserted",
+    "native_fixture": "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bmfont/source.fnt"
+  }
+]

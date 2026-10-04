@@ -1,0 +1,109 @@
+{
+  "license": "Original project-authored fixtures: MIT",
+  "seeds": {
+    "raw/w5x-bit3": {
+      "bytes": 10,
+      "sha256": "7cda031734d6f34d190665a765958ae9ba81a1ce75b93f5abf474e3723ce7a24"
+    },
+    "raw/w5x-bit9-lsb-bottom": {
+      "bytes": 21,
+      "sha256": "134a4356f2b84eefc57e962a045a5b9436d11ed1af688b6697ba8880607efa93"
+    },
+    "raw/w5x-column16": {
+      "bytes": 54,
+      "sha256": "68b00523bb5f0dff0eaa4215d7d5801d948cef351936512d46fce1e3d05f6752"
+    },
+    "raw/w5x-strike3-padding": {
+      "bytes": 29,
+      "sha256": "97977ad83b53f30d9c7a80a20e2fca52587857d6f312d8db857a9619c523babf"
+    },
+    "raw/w5x-harlekin512": {
+      "bytes": 4104,
+      "sha256": "b2aa06163b19c4213fef6b86466c90fe7683c11d92b00bae47e0e73f29fec70a"
+    },
+    "raw/w5x-harlekin256x16": {
+      "bytes": 4103,
+      "sha256": "25997f742f74c79978ccbb0e93debf6fda5cb4dfe2cafd9bca1d11a1c0a7fbd4"
+    },
+    "raw/w5x-bit3-truncated": {
+      "bytes": 9,
+      "sha256": "8d91f63a853261a1d24860828b07b18ea871ba0e36aa2b4f74536128ec384add"
+    },
+    "raw/w5x-bit9-lsb-bottom-truncated": {
+      "bytes": 20,
+      "sha256": "1d68cab3b3fd6f3fca16e08023b5d97cab7f4ace540bc68964bf95d4490a5029"
+    },
+    "raw/w5x-column16-truncated": {
+      "bytes": 53,
+      "sha256": "34b50c710e35adfabb8f56b78af0637be73e6ac95ca4e5554d936508c822113c"
+    },
+    "raw/w5x-strike3-padding-truncated": {
+      "bytes": 28,
+      "sha256": "bfcc4933a5b6a9174c5822af7ae48db181623360d52ceeca04b9a788053a7bdc"
+    },
+    "raw/w5x-harlekin512-truncated": {
+      "bytes": 4103,
+      "sha256": "3f3756748c7c4767b9fc8e52f9ca34f8f1747cb9aa248c2bd67e5f6ba991e4a1"
+    },
+    "raw/w5x-harlekin256x16-truncated": {
+      "bytes": 4102,
+      "sha256": "e7aa06b71c612224fdedaeeb21989bf7fe1451a5b6d17603580b47e7eadecef9"
+    },
+    "bmfont/w5x-json": {
+      "bytes": 443,
+      "sha256": "3073476212e01597513d9091f14065d3d14be994586964eaf1ea90f87b9da3f9"
+    },
+    "bmfont/w5x-json-bom": {
+      "bytes": 446,
+      "sha256": "28888ba7568832e1378a5767c15271c2fef9c5dd5c55c8dbe01c790de51d0c21"
+    },
+    "bmfont/w5x-json-duplicate": {
+      "bytes": 453,
+      "sha256": "f2cc9275547eb5839a670f078ac13d00e362454b38423f1228c14b9c81153858"
+    },
+    "bmfont/w5x-json-depth": {
+      "bytes": 167,
+      "sha256": "fdc4e1557df810a962b1ae80033d68e2f5b4e235d06baffb6602b06cc17a33fb"
+    },
+    "bmfont/w5x-json-count": {
+      "bytes": 451,
+      "sha256": "93b32d05ca957f74edef464bac151f511861627d3749866e703ef519be973b1e"
+    },
+    "bmfont/w5x-json-traversal": {
+      "bytes": 446,
+      "sha256": "880bc4a18e3f0111199dba4d7b5c8ba5c7d12e9149af3db7cc83582dd56297b1"
+    },
+    "bmfont/w5x-json-float": {
+      "bytes": 445,
+      "sha256": "f6c319405df71e9e13f6322574f6841339eedcdaf0ae507fe9f558dc7582ca8d"
+    },
+    "bmfont/w5x-json-truncated": {
+      "bytes": 442,
+      "sha256": "5865b45f93605376dbb2e32cb192eb402421ee68388b3b749a621d8db1f6bccd"
+    },
+    "bmfont/w5x-json-bom-truncated": {
+      "bytes": 445,
+      "sha256": "1a3e80277fb3b996ead84e808d93f3f2d01a844e6b06999b37bd43920f78e1ea"
+    },
+    "bmfont/w5x-json-duplicate-truncated": {
+      "bytes": 452,
+      "sha256": "35667b228e920e3f10b51e9a89ab6c1697a196f1b4acb9e52be8ab1556d4a7f6"
+    },
+    "bmfont/w5x-json-depth-truncated": {
+      "bytes": 166,
+      "sha256": "9f20f91aac89e61b93e09f846276370995f210b1493b532a3483e6e8a361e543"
+    },
+    "bmfont/w5x-json-count-truncated": {
+      "bytes": 450,
+      "sha256": "89eaef4da22f1710e8ce79c23621adbcfc6eba58f6b20c4fd1a920bfaf1aada6"
+    },
+    "bmfont/w5x-json-traversal-truncated": {
+      "bytes": 445,
+      "sha256": "016be8119d0f4cc8e247c41c22ec93b09410afea756048abc83775760a5e9eab"
+    },
+    "bmfont/w5x-json-float-truncated": {
+      "bytes": 444,
+      "sha256": "8a714d49f854ec647360639381f35df3e5e68f34f5652d1c19e1815171f629f3"
+    }
+  }
+}

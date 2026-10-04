@@ -1,0 +1,184 @@
+{
+  "purpose": "interface functionality only; one iteration is not performance evidence",
+  "runs": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "raw,bmfont",
+        "--example",
+        "w5x_timing"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-adapter-build.log",
+      "sha256": "34a28f2a73d48015cdab7555c7281302a02205cf20b22423cd9464496e9de424"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--binary",
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "--output-dir",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-crosscheck.log",
+      "sha256": "ccaabb2f13b4edb1760ba1d8e498e74f408b066c03f04896653c36a84df9bbd8"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "bench",
+        "raw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/legacy/source.raw",
+        "{\"width\":8,\"height\":8,\"count\":8}",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-native-adapter-0.log",
+      "sha256": "c92da2190c39952017175bf03eb870c630357ddce1cf4d49bf9e25e19093054b"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--bench",
+        "raw",
+        "--file",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/legacy/source.raw",
+        "--config",
+        "{\"width\":8,\"height\":8,\"count\":8}",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-oracle-adapter-0.log",
+      "sha256": "268a3f4479a35b4aca01b808ef4d528d257089ed3dc52d3088fd04c8872cf431"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "bench",
+        "raw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits9/source.raw",
+        "{\"width\":9,\"height\":3,\"count\":7,\"packing\":\"bit\"}",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-native-adapter-1.log",
+      "sha256": "23d4a68abc3b92cbf7a05d461bab707e6fb630b3139aa3db7d7d31a6163f0f97"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--bench",
+        "raw",
+        "--file",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bits9/source.raw",
+        "--config",
+        "{\"width\":9,\"height\":3,\"count\":7,\"packing\":\"bit\"}",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-oracle-adapter-1.log",
+      "sha256": "b1cfe805f57aa136bebcead11753ef5df2afe851840f0bb7b1463648ec3df61f"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "bench",
+        "raw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/columns16/source.raw",
+        "{\"width\":16,\"height\":5,\"count\":6,\"order\":\"column\"}",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-native-adapter-2.log",
+      "sha256": "028f2c147e7929e75dbbb2b8a7973b13f0d133be7779cabfdd476a4ec0cf9ae9"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--bench",
+        "raw",
+        "--file",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/columns16/source.raw",
+        "--config",
+        "{\"width\":16,\"height\":5,\"count\":6,\"order\":\"column\"}",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-oracle-adapter-2.log",
+      "sha256": "1c50a6858b4bf50d7d5761390352061a6b0639c8f65a25d9517c98454c36fb23"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "bench",
+        "raw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/harlekin512/source.raw",
+        "{\"width\":8,\"height\":8,\"count\":512,\"strike_count\":512}",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-native-adapter-3.log",
+      "sha256": "91ee953001d6b3f3cb219df72ad94471d96a6aae7dbecde1d8e4b4318a6a64c8"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--bench",
+        "raw",
+        "--file",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/harlekin512/source.raw",
+        "--config",
+        "{\"width\":8,\"height\":8,\"count\":512,\"strike_count\":512}",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-oracle-adapter-3.log",
+      "sha256": "8c06d3b9ee85a6dc0bd9c9442fb29687479e081903eaa968ca5ba0625ff6fc98"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/examples/w5x_timing",
+        "bench",
+        "bmfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bmfont/source.fnt",
+        "{\"encoding\":\"json\",\"page_width\":4,\"page_height\":4}",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-native-adapter-4.log",
+      "sha256": "883668a6777bc544dacd9b11713a12f620af7cc20aeef49094aced8f0d2d5269"
+    },
+    {
+      "command": [
+        "python",
+        "tests/crosscheck/w5x.py",
+        "--bench",
+        "bmfont",
+        "--file",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-crosscheck-final2/bmfont/source.fnt",
+        "--config",
+        "{\"encoding\":\"json\",\"page_width\":4,\"page_height\":4}",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "log": "reports/w5.x-oracle-adapter-4.log",
+      "sha256": "c6fb50c1d3ce10dec8adbcddeee2e1f8ffd548e6553fbc18dea34dce69ee1739"
+    }
+  ]
+}

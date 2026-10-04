@@ -1,0 +1,28 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.09s
+     Running tests/image.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/image-1662dcb773093854)
+
+running 10 tests
+test external_grid_preserves_order_pixels_and_baseline ... ok
+test external_blank_omission_is_explicit_and_keeps_whitespace ... ok
+test budgets_cover_mapping_pixels_slots_and_source_metadata ... ok
+test malformed_json_does_not_fall_back_to_toml ... ok
+test external_rejects_unmapped_duplicate_overlapping_and_outside_cells ... ok
+test gray_to_mono_requires_threshold_and_reports_loss ... ok
+test native_metadata_rejects_invalid_slot_order_and_zero_denominator ... ok
+test native_nested_metadata_never_discards_unknown_fields ... ok
+test native_roundtrip_all_six_containers_both_mappings_and_entry_points ... ok
+test large_native_atlas_fits_aggregate_budget_and_preserves_raw_properties ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/imageset.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/imageset-cc3da7367736fd76)
+
+running 4 tests
+test explicit_color_and_sample_depth_projections_report_loss ... ok
+test absent_metrics_are_loss_and_directory_mapping_is_rejected ... ok
+test duplicate_labels_bad_names_resources_and_readback_budget ... ok
+test native_directory_all_containers_labels_pixels_and_strict ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

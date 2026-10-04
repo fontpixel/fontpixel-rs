@@ -38,7 +38,7 @@ impl ReadArguments {
 #[group(skip)]
 pub(super) struct WriteArguments {
     /// Macintosh output container (default dfont).
-    #[arg(long, value_parser = ["bare", "resource-fork", "dfont", "suitcase", "macbinary", "apple-single", "apple-double"])]
+    #[arg(long, value_parser = ["bare", "resource-fork", "dfont", "suitcase", "macbinary", "apple-single", "apple-double", "binhex"])]
     nfnt_container: Option<String>,
     /// Resource type used for newly authored Macintosh bitmaps.
     #[arg(long, value_parser = ["nfnt", "font"])]
@@ -66,6 +66,7 @@ impl WriteArguments {
                     Some("macbinary") => Container::MacBinary,
                     Some("apple-single") => Container::AppleSingle,
                     Some("apple-double") => Container::AppleDouble,
+                    Some("binhex") => Container::BinHex,
                     _ => Container::Dfont,
                 },
                 resource_type: if self.nfnt_resource_type.as_deref() == Some("font") {

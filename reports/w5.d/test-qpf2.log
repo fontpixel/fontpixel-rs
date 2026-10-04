@@ -1,0 +1,30 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 5.39s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-834b164c54c83e17)
+
+running 8 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test variants::dot_rows::tests::unrepresentable_helper_translation_uses_direct_circles ... ok
+test variants::dot_rows::tests::patterned_rows_cover_ink_once_and_keep_original_work_limits ... ok
+test variants::dot_rows::tests::nested_rows_keep_glyph_count_and_exact_expanded_contours ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test variants::dot_rows::tests::small_two_dimensional_patterns_preserve_every_3x3_mask ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/qpf2.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/qpf2-203301f17aa1387f)
+
+running 8 tests
+test fractional_metrics_and_linkage_are_explicit_reader_loss ... ok
+test cached_glyph_zero_is_native_unencoded_data_not_a_default_character ... ok
+test canonical_writer_keeps_mapping_and_native_signed_advance ... ok
+test monochrome_requires_explicit_gray_reduction ... ok
+test native_gid_aliases_gray_stride_and_exact_replay ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test unrepresented_model_metadata_is_reported ... ok
+test truncations_out_of_range_offsets_and_budgets ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

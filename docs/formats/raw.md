@@ -30,7 +30,7 @@ same `RawReadOptions` and resource limits. `RawWriteOptions.layout` optionally
 sets output layout; without it, the first source glyph establishes the cell and
 first legacy code. The writer never silently selects a font from a collection.
 
-Glyphs are consecutive, row-major, byte-padded bitmaps. `row_padding` is an
+With the default layout, glyphs are consecutive, row-major, byte-padded bitmaps. `row_padding` is an
 additional byte count, not an alignment exponent. Prefix bytes are retained in
 `raw.prefix` and reused only when their length matches the requested offset;
 otherwise `default_load_address: Option<u16>` supplies a little-endian address
@@ -59,3 +59,69 @@ each stage. Diagnostic vector and string capacities consume the same write
 budget. Oversized escaped property names are checked before formatting. A budget
 failure returns `ResourceLimit` directly instead of allocating a second complete
 failure report; other failures retain bounded per-glyph diagnostics.
+
+## Additional explicit layouts (W5.X)
+
+`RawPacking::ByteAlignedRows` is the unchanged default. `strike_count` is the
+number of glyphs placed side by side in one horizontal strike; glyphs inside a
+strike abut at their actual pixel width, including widths not divisible by eight.
+Each whole strike row is byte-aligned and then has `row_padding` extra bytes.
+Strikes follow one another vertically in file order. An incomplete final strike
+has zero-filled unused cells; an explicit `count` distinguishes these from glyphs.
+Without a count, all complete strike cells are read. Exact final boundaries are
+required; incomplete strikes are not padded silently.
+
+`RawByteOrder::RowMajor` is the unchanged default. `ColumnMajor` transposes the
+byte matrix of each strike, storing all row bytes for the first byte column,
+then the second byte column, and so on. Bits inside each byte still represent
+horizontal pixels. `bit_order` and `row_order` retain their current meanings.
+Padding columns in this transposed matrix remain outside the glyph pixels.
+
+`RawPacking::BitAligned` packs pixels continuously, including across scanline
+and glyph boundaries. It has no per-row or per-glyph byte alignment. Only the
+final storage byte is padded. This mode requires `strike_count == 1`,
+`row_padding == 0`, and `byte_order == RowMajor`, matching monobit's defined
+bit-aligned raw branch. With no explicit count, the maximum number of complete
+glyphs fitting the bit stream is inferred; set `count` when tail zeros could
+otherwise appear to be additional small glyphs. Nonzero unused tail bits produce
+a repair diagnostic. No length-only content detector is added.
+
+These mappings are independently checked against the MIT
+[monobit raw implementation](https://github.com/robhagemans/monobit/blob/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/raw/raw.py).
+There is an explicit Harlekin documentation discrepancy: the pinned monobit
+README describes 512 8×8 glyphs in one 4096×8 strike, whereas its implementation
+comment cites [Atari documentation](https://temlib.org/AtariForumWiki/index.php/Fonts)
+describing 256 glyphs at 8×8 or 8×16.
+The layouts are all representable and are given distinct profiles:
+
+| Preset | Glyph count and cell | Strike geometry | Provenance |
+| --- | --- | --- | --- |
+| `harlekin`, `harlekin-iii`, `harlekin512` | 512 × 8×8 | 4096×8 pixels, 4096 bytes | monobit 0.54.0 README |
+| `harlekin8` | 256 × 8×8 | 2048×8 pixels, 2048 bytes | Atari Harlekin description |
+| `harlekin16` | 256 × 8×16 | 2048×16 pixels, 4096 bytes | Atari Harlekin description |
+
+All have unknown legacy charset and first code zero. Their names do not assert
+that an arbitrary `.fnt` file has one of these layouts. The existing C64, VGA,
+Spectrum, CH8 and MSX definitions and `.64c` address precedence remain unchanged.
+
+The row-major, single-glyph, byte-aligned path keeps its current direct byte loop.
+Additional layouts use checked offset arithmetic and per-glyph or per-strike
+scratch, never repeatedly copying a full growing atlas. Reader and writer budget
+reservations include scratch, output capacity, padding diagnostics and readback.
+
+The independent column-order check uses monobit 0.54.0's public
+`Raster.from_bytes(order="column-major")` reader followed by cell crops.
+Its raw loader passes an obsolete `byte_order` keyword that Raster ignores;
+the unmodified wrapper therefore reads column-order input incorrectly. The
+crosscheck asserts this known discrepancy, then uses the functional public
+Raster API. The independent writer direction transposes monobit's row-order
+output using an original byte-matrix assembler. No oracle files are patched.
+
+The direct `RawCodec` trait reader honors the `ReadContext` resource limits;
+its trait writer honors `WriteOptions.strict`. All new layouts retain the same
+full model loss audit as the original default layout. Original fixture tests
+cover both bit orders, both row orders, incomplete final strikes, zero and
+nonzero padding, checked geometry overflow and equal read/write budgets.
+
+For bit-packed data, write scratch and readback budgets use the expanded
+canonical row storage size, which may be up to eight times the wire size.

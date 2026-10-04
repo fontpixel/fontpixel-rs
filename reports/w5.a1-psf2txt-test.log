@@ -1,0 +1,15 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.55s
+     Running tests/psf2txt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/deps/psf2txt-95a4a6b9f2a4d9f6)
+
+running 7 tests
+test invalid_signature_and_short_inputs_do_not_panic ... ok
+test metadata_loss_is_audited_and_strict_rejects ... ok
+test original_wire_roundtrip_and_strict ... ok
+test utf8_bom_and_native_comments_are_preserved ... ok
+test grayscale_requires_threshold_and_reports_quantization ... ok
+test unicode_alias_sequence_and_positional_slot_survive ... ok
+test cumulative_limits_and_output_reread_contract ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

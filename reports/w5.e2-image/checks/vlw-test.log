@@ -1,0 +1,11 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.91s
+     Running tests/vlw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/vlw-5c98955660c0cf11)
+
+running 3 tests
+test original_versions_gray_metrics_and_java_strings ... ok
+test limits_metadata_loss_and_native_registry ... ok
+test malformed_directories_strings_and_all_truncations ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

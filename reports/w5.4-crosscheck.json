@@ -1,0 +1,1227 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "g++",
+        "-std=c++98",
+        "-fpermissive",
+        "-include",
+        "cstring",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w54-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTTRAN.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTREADR.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTRECRD.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/LEXICAL.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/READER.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/RECORD.CPP",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/STRNG.CPP",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fnttran"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gcc",
+        "-w",
+        "-O2",
+        "-o",
+        "fsconvert",
+        "fsconvert.c"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gcc",
+        "-w",
+        "-O2",
+        "-Dstrnicmp=strncasecmp",
+        "-o",
+        "fontconv",
+        "fontconv.c",
+        "-lm"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gcc",
+        "-w",
+        "-O2",
+        "-Dstrnicmp=strncasecmp",
+        "-DFONTCONV_LIB",
+        "-o",
+        "togray",
+        "togray.c",
+        "fontconv.c",
+        "-lm"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "pkg-config",
+        "--cflags",
+        "--libs",
+        "freetype2"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "b98b38510d81931e6c5bf8d712a042a00b0c0b64cc0ba9e0081f0e3c39491991",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "-I/usr/include/freetype2 -I/usr/include/libpng16 -lfreetype \n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gcc",
+        "-w",
+        "-O2",
+        "-DFT_PARAM_TAG_UNPATENTED_HINTING=0x756e7061",
+        "-Dstrnicmp=strncasecmp",
+        "-DFONTCONV_LIB",
+        "-o",
+        "topalmtext",
+        "topalmtext.c",
+        "fontconv.c",
+        "-I/usr/include/freetype2",
+        "-I/usr/include/libpng16",
+        "-lfreetype",
+        "-lm"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w54-eka/shim",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w54-eka/src/emu/loader/include",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/src/emu/loader/src/gdr.cpp",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/shim/main.cpp",
+        "-licuuc",
+        "-licudata",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w54-eka/shim",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w54-eka/src/emu/loader/include",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr42.cpp",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/shim/main.cpp",
+        "-licuuc",
+        "-licudata",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr42-oracle"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "emit",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fnttran",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/original.bdf",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/original.gd",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external.gdr"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "7abaccd3617b4e07e12ae7c339d918f4b09b2163ab3aa04aa9d6e932cdcccc12",
+      "stderr_sha256": "8da0fd12a86adf6cc3ab46317f7a2f2118c3f59dd34d4c3d9d2ca89b43461026",
+      "stdout": "\nFNTTRAN V41\nCopyright (c) 1998-2005 Symbian Software Ltd.\nAnalysing character metrics...\nDone 0% \nDone 50% \nCodesection 0x41: 0x41 read\nCodesection 0x43: 0x43 read\nFONT read\nTypeface read\nFontstorefile read\n/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external.gdr created\n",
+      "stderr": "Warning: No Maximum Normal Character Width specified in properties\n"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/topalmtext",
+        "-g",
+        "-f-",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/original.ttf",
+        "8",
+        "gray"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c2ae29447ec4e3560cc08a9544698d3faa234b042001c7856b07a28676b79861",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "// Converted by /home/chen/githubprojects/fontpixel/local-work/w54-fontconv/topalmtext from /home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/original.ttf\n\n// Setting encoding to palmLatin\ngrayMap -123456789ABCDE#\nfontVersion 2\nfRectHeight 6\ndescent 0\nascent 6\n\nGLYPH 65\n// left 0, top 0, height 6, xadvance 5, width 5\nleftKerning 0\nadvance     5\n//Processed: xadvance = 5, leftSkip = 0, left = 0, right = 0\n---C2\n--7#4\n-3##7\n-D##9\nA###B\n-----\n\nGLYPH 67\n// left 0, top 0, height 6, xadvance 5, width 5\nleftKerning 0\nadvance     5\n//Processed: xadvance = 5, leftSkip = 0, left = 0, right = 0\n---C2\n--7#4\n-3##7\n-D##9\nA###B\n-----\n\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/togray",
+        "-W/home/chen/githubprojects/fontpixel/local-work/w54-oracle/gray-out",
+        "0080",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gray-original.txt",
+        "GU14",
+        "GU34",
+        "GL14",
+        "GL34",
+        "GR14",
+        "GR34"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v1.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "6ba1100eb8fee579943650fcb4d4e4dda378996f756c679aa8882ec5ba71f185",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v2.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "6ba1100eb8fee579943650fcb4d4e4dda378996f756c679aa8882ec5ba71f185",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/pdb.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "373082a64ab1100ea5b1219a19e57ba8c7a1de6d1683f8326370a062ee78b585",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/prc.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "373082a64ab1100ea5b1219a19e57ba8c7a1de6d1683f8326370a062ee78b585",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv",
+        "-l",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/afnx.bin",
+        "t",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/afnx.txt"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "08911be47cafb553c36550ce7a0b00a99f8f9c7c31180200b39a8be1d9be87b6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "// /home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/afnx.bin: afnx lores FontTypeV2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/afnx.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "6ba1100eb8fee579943650fcb4d4e4dda378996f756c679aa8882ec5ba71f185",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v1.bin",
+        "1a",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external-afnx.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "7e2eb8d61792b18cfbbc60d59f1b0015c345ede81c18cf16e7a6eb5c66a3c680",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "// /home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v1.bin: lores \n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external-afnx.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "7f42bd99a71ec22b4a83ff937ce9e830beb03c941cb7f7cc03511b147dc0792c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":4,\"bytes\":[0,0,0,0,0,0],\"codes\":[],\"gray\":false,\"height\":6,\"width\":4,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v1.bin",
+        "1",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external-nfnt2.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "7e2eb8d61792b18cfbbc60d59f1b0015c345ede81c18cf16e7a6eb5c66a3c680",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "// /home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/v1.bin: lores \n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external-nfnt2.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "7f42bd99a71ec22b4a83ff937ce9e830beb03c941cb7f7cc03511b147dc0792c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":4,\"bytes\":[0,0,0,0,0,0],\"codes\":[],\"gray\":false,\"height\":6,\"width\":4,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fsconvert",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/subst/",
+        "-"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fsconvert",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/subst/",
+        "Original"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/double.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "15ec761546efb5d70934ccf4fb96d6e7dfe4ddbf54b52577783855d92eadb866",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":72,\"family\":null,\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":6,\"width\":0,\"x\":0,\"y\":-2}],\"size\":6},{\"ascent\":8,\"descent\":4,\"dpi\":144,\"family\":null,\"glyphs\":[{\"advance\":4,\"bytes\":[240,240,48,48,240,240,0,0,192,192,0,0],\"codes\":[65],\"gray\":false,\"height\":12,\"width\":4,\"x\":0,\"y\":-4},{\"advance\":4,\"bytes\":[48,48,240,240,192,192,192,192,240,240,0,0],\"codes\":[67],\"gray\":false,\"height\":12,\"width\":4,\"x\":0,\"y\":-4},{\"advance\":0,\"bytes\":[],\"codes\":[],\"gray\":false,\"height\":12,\"width\":0,\"x\":0,\"y\":-4}],\"size\":12}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gray1.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "98fa56bec5546795aeb288af2ca8f5edc4978cf74184d5fb65d510e1fef3e1ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[85,255,0,255,255,255,0,0,255,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[85,255,255,255,255,0,255,0,255,255,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gray2.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "98fa56bec5546795aeb288af2ca8f5edc4978cf74184d5fb65d510e1fef3e1ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[85,255,0,255,255,255,0,0,255,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[85,255,255,255,255,0,255,0,255,255,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "palm",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/gray-out/external-gray.prc"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "eaab35bfafca0dfee589ba85a32dbddb090406d2683a0f0b134703a6acd9557d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6},{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6},{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6},{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6},{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6},{\"ascent\":6,\"descent\":0,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[65],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0},{\"advance\":5,\"bytes\":[0,0,0,204,34,0,0,119,255,68,0,51,255,255,119,0,221,255,255,153,170,255,255,255,187,0,0,0,0,0],\"codes\":[67],\"gray\":true,\"height\":6,\"width\":5,\"x\":0,\"y\":0}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr39.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "1d4e180001cfbcb2d40ffff1cdd66ee46c1ef7ea4c5ca7291d34f7671d6f3188",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[79,114,105,103,105,110,97,108],\"ascent\":4,\"size\":6,\"glyphs\":[{\"code\":65,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[1,1,0,1,1,1,0,0,1,0,0,0]},{\"code\":67,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[0,1,1,1,1,0,1,0,1,1,0,0]}]}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr39.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c819b50807adaba231ada951307df2b17f2e164eb8d327b3df98ccf82ead03e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr40.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "1d4e180001cfbcb2d40ffff1cdd66ee46c1ef7ea4c5ca7291d34f7671d6f3188",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[79,114,105,103,105,110,97,108],\"ascent\":4,\"size\":6,\"glyphs\":[{\"code\":65,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[1,1,0,1,1,1,0,0,1,0,0,0]},{\"code\":67,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[0,1,1,1,1,0,1,0,1,1,0,0]}]}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr40.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c819b50807adaba231ada951307df2b17f2e164eb8d327b3df98ccf82ead03e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr41.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "1d4e180001cfbcb2d40ffff1cdd66ee46c1ef7ea4c5ca7291d34f7671d6f3188",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[79,114,105,103,105,110,97,108],\"ascent\":4,\"size\":6,\"glyphs\":[{\"code\":65,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[1,1,0,1,1,1,0,0,1,0,0,0]},{\"code\":67,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[0,1,1,1,1,0,1,0,1,1,0,0]}]}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr41.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c819b50807adaba231ada951307df2b17f2e164eb8d327b3df98ccf82ead03e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr42-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr42.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "1d4e180001cfbcb2d40ffff1cdd66ee46c1ef7ea4c5ca7291d34f7671d6f3188",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[79,114,105,103,105,110,97,108],\"ascent\":4,\"size\":6,\"glyphs\":[{\"code\":65,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[1,1,0,1,1,1,0,0,1,0,0,0]},{\"code\":67,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[0,1,1,1,1,0,1,0,1,1,0,0]}]}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr42.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c819b50807adaba231ada951307df2b17f2e164eb8d327b3df98ccf82ead03e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr-large.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "087e57367bead8c0902ebebd648393883d698e24f909ad0bb951dac581df3a30",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[102,111,110,116,112,105,120,101,108],\"ascent\":12,\"size\":16,\"glyphs\":[{\"code\":0,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0]},{\"code\":1,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1]},{\"code\":2,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1]},{\"code\":3,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1]},{\"code\":4,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1]},{\"code\":5,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0]},{\"code\":6,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0]},{\"code\":7,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0]},{\"code\":8,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1]},{\"code\":9,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1]},{\"code\":10,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1]},{\"code\":11,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,0,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{\"code\":12,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0]},{\"code\":13,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0]},{\"code\":14,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,1,0,0,1,0,0,0,1,1,0,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,0,1,1,0]},{\"code\":15,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[1,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,1,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1]},{\"code\":16,\"width\":16,\"height\":16,\"x\":0,\"y\":-4,\"advance\":16,\"pixels\":[0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,0,1,1,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,0,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,0,1,0,1,1,1,1,0,0,1,0,1,1,1,1,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr-large.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "56436fd97695655a1c8a0a4d83e92494ba9b25759c872c05a4b8cb6b62ac041d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":12,\"descent\":4,\"dpi\":null,\"family\":\"fontpixel\",\"glyphs\":[{\"advance\":16,\"bytes\":[0,0,224,224,112,112,168,168,56,56,196,196,84,84,140,140,28,28,252,252,98,98,178,178,42,42,218,218,70,70,150,150],\"codes\":[0],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[164,164,52,52,204,204,92,92,130,130,18,18,242,242,106,106,186,186,38,38,214,214,78,78,158,158,1,1,225,225,113,113],\"codes\":[1],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[82,82,138,138,26,26,250,250,102,102,182,182,46,46,222,222,65,65,145,145,9,9,233,233,121,121,165,165,53,53,205,205],\"codes\":[2],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[246,246,110,110,190,190,33,33,209,209,73,73,153,153,5,5,229,229,117,117,173,173,61,61,195,195,83,83,139,139,27,27],\"codes\":[3],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[41,41,217,217,69,69,149,149,13,13,237,237,125,125,163,163,51,51,203,203,91,91,135,135,23,23,247,247,111,111,191,191],\"codes\":[4],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[157,157,3,3,227,227,115,115,171,171,59,59,199,199,87,87,143,143,31,31,255,255,96,96,176,176,40,40,216,216,68,68],\"codes\":[5],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[123,123,167,167,55,55,207,207,95,95,128,128,16,16,240,240,104,104,184,184,36,36,212,212,76,76,156,156,2,2,226,226],\"codes\":[6],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[192,192,80,80,136,136,24,24,248,248,100,100,180,180,44,44,220,220,66,66,146,146,10,10,234,234,122,122,166,166,54,54],\"codes\":[7],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[20,20,244,244,108,108,188,188,34,34,210,210,74,74,154,154,6,6,230,230,118,118,174,174,62,62,193,193,81,81,137,137],\"codes\":[8],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[178,178,42,42,218,218,70,70,150,150,14,14,238,238,126,126,161,161,49,49,201,201,89,89,133,133,21,21,245,245,109,109],\"codes\":[9],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[78,78,158,158,1,1,225,225,113,113,169,169,57,57,197,197,85,85,141,141,29,29,253,253,99,99,179,179,43,43,219,219],\"codes\":[10],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[233,233,121,121,165,165,53,53,205,205,93,93,131,131,19,19,243,243,107,107,187,187,39,39,215,215,79,79,159,159,0,0],\"codes\":[11],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[61,61,195,195,83,83,139,139,27,27,251,251,103,103,183,183,47,47,223,223,64,64,144,144,8,8,232,232,120,120,164,164],\"codes\":[12],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[135,135,23,23,247,247,111,111,191,191,32,32,208,208,72,72,152,152,4,4,228,228,116,116,172,172,60,60,194,194,82,82],\"codes\":[13],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[96,96,176,176,40,40,216,216,68,68,148,148,12,12,236,236,124,124,162,162,50,50,202,202,90,90,134,134,22,22,246,246],\"codes\":[14],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[212,212,76,76,156,156,2,2,226,226,114,114,170,170,58,58,198,198,86,86,142,142,30,30,254,254,97,97,177,177,41,41],\"codes\":[15],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[10,10,234,234,122,122,166,166,54,54,206,206,94,94,129,129,17,17,241,241,105,105,185,185,37,37,213,213,77,77,157,157],\"codes\":[16],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[174,174,62,62,193,193,81,81,137,137,25,25,249,249,101,101,181,181,45,45,221,221,67,67,147,147,11,11,235,235,123,123],\"codes\":[17],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[89,89,133,133,21,21,245,245,109,109,189,189,35,35,211,211,75,75,155,155,7,7,231,231,119,119,175,175,63,63,192,192],\"codes\":[18],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[253,253,99,99,179,179,43,43,219,219,71,71,151,151,15,15,239,239,127,127,160,160,48,48,200,200,88,88,132,132,20,20],\"codes\":[19],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[39,39,215,215,79,79,159,159,0,0,224,224,112,112,168,168,56,56,196,196,84,84,140,140,28,28,252,252,98,98,178,178],\"codes\":[20],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[144,144,8,8,232,232,120,120,164,164,52,52,204,204,92,92,130,130,18,18,242,242,106,106,186,186,38,38,214,214,78,78],\"codes\":[21],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[116,116,172,172,60,60,194,194,82,82,138,138,26,26,250,250,102,102,182,182,46,46,222,222,65,65,145,145,9,9,233,233],\"codes\":[22],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[202,202,90,90,134,134,22,22,246,246,110,110,190,190,33,33,209,209,73,73,153,153,5,5,229,229,117,117,173,173,61,61],\"codes\":[23],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[30,30,254,254,97,97,177,177,41,41,217,217,69,69,149,149,13,13,237,237,125,125,163,163,51,51,203,203,91,91,135,135],\"codes\":[24],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[185,185,37,37,213,213,77,77,157,157,3,3,227,227,115,115,171,171,59,59,199,199,87,87,143,143,31,31,255,255,96,96],\"codes\":[25],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[67,67,147,147,11,11,235,235,123,123,167,167,55,55,207,207,95,95,128,128,16,16,240,240,104,104,184,184,36,36,212,212],\"codes\":[26],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[231,231,119,119,175,175,63,63,192,192,80,80,136,136,24,24,248,248,100,100,180,180,44,44,220,220,66,66,146,146,10,10],\"codes\":[27],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[48,48,200,200,88,88,132,132,20,20,244,244,108,108,188,188,34,34,210,210,74,74,154,154,6,6,230,230,118,118,174,174],\"codes\":[28],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[140,140,28,28,252,252,98,98,178,178,42,42,218,218,70,70,150,150,14,14,238,238,126,126,161,161,49,49,201,201,89,89],\"codes\":[29],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[106,106,186,186,38,38,214,214,78,78,158,158,1,1,225,225,113,113,169,169,57,57,197,197,85,85,141,141,29,29,253,253],\"codes\":[30],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[222,222,65,65,145,145,9,9,233,233,121,121,165,165,53,53,205,205,93,93,131,131,19,19,243,243,107,107,187,187,39,39],\"codes\":[31],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[5,5,229,229,117,117,173,173,61,61,195,195,83,83,139,139,27,27,251,251,103,103,183,183,47,47,223,223,64,64,144,144],\"codes\":[32],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[163,163,51,51,203,203,91,91,135,135,23,23,247,247,111,111,191,191,32,32,208,208,72,72,152,152,4,4,228,228,116,116],\"codes\":[33],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[87,87,143,143,31,31,255,255,96,96,176,176,40,40,216,216,68,68,148,148,12,12,236,236,124,124,162,162,50,50,202,202],\"codes\":[34],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[240,240,104,104,184,184,36,36,212,212,76,76,156,156,2,2,226,226,114,114,170,170,58,58,198,198,86,86,142,142,30,30],\"codes\":[35],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[44,44,220,220,66,66,146,146,10,10,234,234,122,122,166,166,54,54,206,206,94,94,129,129,17,17,241,241,105,105,185,185],\"codes\":[36],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[154,154,6,6,230,230,118,118,174,174,62,62,193,193,81,81,137,137,25,25,249,249,101,101,181,181,45,45,221,221,67,67],\"codes\":[37],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[126,126,161,161,49,49,201,201,89,89,133,133,21,21,245,245,109,109,189,189,35,35,211,211,75,75,155,155,7,7,231,231],\"codes\":[38],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[197,197,85,85,141,141,29,29,253,253,99,99,179,179,43,43,219,219,71,71,151,151,15,15,239,239,127,127,160,160,48,48],\"codes\":[39],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[19,19,243,243,107,107,187,187,39,39,215,215,79,79,159,159,0,0,224,224,112,112,168,168,56,56,196,196,84,84,140,140],\"codes\":[40],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[183,183,47,47,223,223,64,64,144,144,8,8,232,232,120,120,164,164,52,52,204,204,92,92,130,130,18,18,242,242,106,106],\"codes\":[41],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[72,72,152,152,4,4,228,228,116,116,172,172,60,60,194,194,82,82,138,138,26,26,250,250,102,102,182,182,46,46,222,222],\"codes\":[42],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[236,236,124,124,162,162,50,50,202,202,90,90,134,134,22,22,246,246,110,110,190,190,33,33,209,209,73,73,153,153,5,5],\"codes\":[43],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[58,58,198,198,86,86,142,142,30,30,254,254,97,97,177,177,41,41,217,217,69,69,149,149,13,13,237,237,125,125,163,163],\"codes\":[44],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[129,129,17,17,241,241,105,105,185,185,37,37,213,213,77,77,157,157,3,3,227,227,115,115,171,171,59,59,199,199,87,87],\"codes\":[45],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[101,101,181,181,45,45,221,221,67,67,147,147,11,11,235,235,123,123,167,167,55,55,207,207,95,95,128,128,16,16,240,240],\"codes\":[46],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[211,211,75,75,155,155,7,7,231,231,119,119,175,175,63,63,192,192,80,80,136,136,24,24,248,248,100,100,180,180,44,44],\"codes\":[47],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[15,15,239,239,127,127,160,160,48,48,200,200,88,88,132,132,20,20,244,244,108,108,188,188,34,34,210,210,74,74,154,154],\"codes\":[48],\"gray\":false,\"height\":16,\"width\":16,\"x\":0,\"y\":-4},{\"advance\":16,\"bytes\":[168,168,56,56,196,196,84,84,140,140,28,28,252,252,98,98,178,17",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr-unicode.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "349463ef5bef4d5ea307f6f717cd19fa514092c77dd656386a0c3e5e3c6c105c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"family_units\":[197,28450,55357,56832,61441],\"ascent\":4,\"size\":6,\"glyphs\":[{\"code\":65,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[1,1,0,1,1,1,0,0,1,0,0,0]},{\"code\":67,\"width\":2,\"height\":6,\"x\":0,\"y\":-2,\"advance\":2,\"pixels\":[0,1,1,1,1,0,1,0,1,1,0,0]}]}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr-unicode.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "f7c6b4551ca63f1734ba0b2c003b092ffb774caaaa03b7b41db3feec426bccda",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"\u00c5\u6f22\ud83d\ude00\uf001\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/external.gdr"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "8d391374ff0b399ed2df57b20322e31bf9b28cfa60c941161a16fc6da4babf67",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128],\"codes\":[65],\"gray\":false,\"height\":5,\"width\":2,\"x\":0,\"y\":-1},{\"advance\":2,\"bytes\":[64,192,128,128,192],\"codes\":[67],\"gray\":false,\"height\":5,\"width\":2,\"x\":0,\"y\":-1}],\"size\":6}]\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+        "dump",
+        "gdr",
+        "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fixtures/gdr42.bin"
+      ],
+      "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+      "exit": 0,
+      "stdout_sha256": "c819b50807adaba231ada951307df2b17f2e164eb8d327b3df98ccf82ead03e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "[{\"ascent\":4,\"descent\":2,\"dpi\":null,\"family\":\"Original\",\"glyphs\":[{\"advance\":2,\"bytes\":[192,64,192,0,128,0],\"codes\":[65],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2},{\"advance\":2,\"bytes\":[64,192,128,128,192,0],\"codes\":[67],\"gray\":false,\"height\":6,\"width\":2,\"x\":0,\"y\":-2}],\"size\":6}]\n",
+      "stderr": ""
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os2/d1900b19b4525c2b5544aa5f3a9ce53e51a5acc0/sf/os/textandloc/fontservices/fontstore/src/FNTBODY.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTBODY.CPP",
+      "original_sha256": "e5668510bca67e7e4fc6e7a8fa38c64694cc6e372d30c418f8a2d50c9be56883",
+      "compiled_sha256": "e5668510bca67e7e4fc6e7a8fa38c64694cc6e372d30c418f8a2d50c9be56883",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os2/d1900b19b4525c2b5544aa5f3a9ce53e51a5acc0/sf/os/textandloc/fontservices/fontstore/src/FNTBODY.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTBODY.H",
+      "original_sha256": "ad8680187a34a86c3f95b311cde3240a0cfa56934ede93b1cf5232d3cff1a21e",
+      "compiled_sha256": "ad8680187a34a86c3f95b311cde3240a0cfa56934ede93b1cf5232d3cff1a21e",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os2/d1900b19b4525c2b5544aa5f3a9ce53e51a5acc0/sf/os/textandloc/fontservices/fontstore/src/FNTSTD.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTSTD.H",
+      "original_sha256": "a80002d38f1b4a93e0f1950fc8398948abc83ec46697a8bbd9a27a0bd64cb4f6",
+      "compiled_sha256": "a80002d38f1b4a93e0f1950fc8398948abc83ec46697a8bbd9a27a0bd64cb4f6",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/FNTTRAN.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTTRAN.CPP",
+      "original_sha256": "87a5ad4d779909014208824537e40197ede06cfa070491d525d49e5137a58aed",
+      "compiled_sha256": "87a5ad4d779909014208824537e40197ede06cfa070491d525d49e5137a58aed",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/FNTREADR.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTREADR.CPP",
+      "original_sha256": "22cc611a4707841f70d1f62a1de7493d9dcd945109401696f836e1ea78014746",
+      "compiled_sha256": "22cc611a4707841f70d1f62a1de7493d9dcd945109401696f836e1ea78014746",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/FNTREADR.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTREADR.H",
+      "original_sha256": "e91f8546dbdcecdd92bd4dd538bf1d81feac20e9104ca957ea2635a67abd0e5e",
+      "compiled_sha256": "e91f8546dbdcecdd92bd4dd538bf1d81feac20e9104ca957ea2635a67abd0e5e",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/FNTRECRD.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTRECRD.CPP",
+      "original_sha256": "16303e574b47a7403ac3e461a1f5960ca5ba29b6164ac06348ff0f31dabed9c5",
+      "compiled_sha256": "5528a52c5e9bf224ebd2a7a8dfa886561f16a93f80c694b0db101e80e51d50d8",
+      "patch": "--- \n+++ \n@@ -227,7 +227,7 @@\n \n void MetricDistribution::Externalize(ostream& out)\n \t{\n-\tstreamoff idOffset = iStreamId;\n+\tuint32 idOffset = iStreamId;\n \tout.write(reinterpret_cast<char*>(&idOffset), sizeof(idOffset));\n \tint32 numMetrics = iCharacterMetricsList.Size();\n \tout.write(reinterpret_cast<char*>(&numMetrics), sizeof(numMetrics));\n@@ -320,7 +320,7 @@\n \t{\n \tout.write((char*) &iStart, sizeof(iStart));\n \tout.write((char*) &iEnd, sizeof(iEnd));\n-\tstreamoff idOffset = iCharacters.iStreamId;\n+\tuint32 idOffset = iCharacters.iStreamId;\n \tout.write(reinterpret_cast<char*>(&idOffset), sizeof(idOffset));\n \tidOffset = iCharactersBitmap.iStreamId;\n \tout.write(reinterpret_cast<char*>(&idOffset), sizeof(idOffset));\n@@ -446,7 +446,7 @@\n \tout.write((char*) &KFontStoreFileUid, sizeof(KFontStoreFileUid));\n \tout.write((char*) &KNullUid, sizeof(KNullUid));\n \tout.write((char*) &KFontStoreFileChecksum, sizeof(KFontStoreFileChecksum));\n-\tstreamoff idOffset = iStreamId;\n+\tuint32 idOffset = iStreamId;\n \tout.write(reinterpret_cast<char*>(&idOffset), sizeof(idOffset));\n \tiStreamId = out.tellp();\n \tout.write((char*) &KFnttranVersion, sizeof(KFnttranVersion));\n"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/FNTRECRD.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FNTRECRD.H",
+      "original_sha256": "e5c5d1a11b2a0bb074052e609acceafd5d1711da7f04106e239f0716c5415de0",
+      "compiled_sha256": "e5c5d1a11b2a0bb074052e609acceafd5d1711da7f04106e239f0716c5415de0",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/LEXICAL.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/LEXICAL.CPP",
+      "original_sha256": "a6ab0c5821636bb911afab5b56cec8872eea37eadc98bf8652da1a685c20e4aa",
+      "compiled_sha256": "a6ab0c5821636bb911afab5b56cec8872eea37eadc98bf8652da1a685c20e4aa",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/LEXICAL.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/LEXICAL.H",
+      "original_sha256": "d1fc409e910596d4a1c257e5dca552bff6b0d6681b814a291ab6447766c42df4",
+      "compiled_sha256": "d1fc409e910596d4a1c257e5dca552bff6b0d6681b814a291ab6447766c42df4",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/READER.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/READER.CPP",
+      "original_sha256": "2d36086ae54863f98b6a334f1cb2558b88ed5aa646f013e9356cc3bad42d8e36",
+      "compiled_sha256": "2d36086ae54863f98b6a334f1cb2558b88ed5aa646f013e9356cc3bad42d8e36",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/READER.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/READER.H",
+      "original_sha256": "6358eb03d5736470e27d64fbd284ff8d7ac2a429543bbf005d8a2c95b0e9e929",
+      "compiled_sha256": "6358eb03d5736470e27d64fbd284ff8d7ac2a429543bbf005d8a2c95b0e9e929",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/RECORD.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/RECORD.CPP",
+      "original_sha256": "9d1f788b73f9b1f26773df53540a78e740154d9d4f5e084c9b059f0b8d6c5abb",
+      "compiled_sha256": "9d1f788b73f9b1f26773df53540a78e740154d9d4f5e084c9b059f0b8d6c5abb",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/RECORD.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/RECORD.H",
+      "original_sha256": "456eb7d14c8f3a9e420fa019f03011c652b8d324a73eafd5119e5c944375c04e",
+      "compiled_sha256": "456eb7d14c8f3a9e420fa019f03011c652b8d324a73eafd5119e5c944375c04e",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/src/STRNG.CPP",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/STRNG.CPP",
+      "original_sha256": "4c75db5987a07d7895e679f144aacd3ea3aad9816205d6e506ac897b56a23346",
+      "compiled_sha256": "4c75db5987a07d7895e679f144aacd3ea3aad9816205d6e506ac897b56a23346",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/STRNG.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/STRNG.H",
+      "original_sha256": "b4e682184bd8cb64ee0f30781faaaf0d0f0c49456810be0f2b4cf778c381b52a",
+      "compiled_sha256": "b4e682184bd8cb64ee0f30781faaaf0d0f0c49456810be0f2b4cf778c381b52a",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/GDR.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/GDR.H",
+      "original_sha256": "440c38130e0a0afb0894139f38d56a744448a87666ee2a4726321f4f35dedfa7",
+      "compiled_sha256": "a84036ccfa8b4efa1ab6cce61f2f47f94afb0d607222330f7d3ca0eafa024e5a",
+      "patch": "--- \n+++ \n@@ -32,9 +32,9 @@\n /** WARNING: Typedefs for internal use ONLY.  Compatibility is not guaranteed in future releases. */\n typedef unsigned short int uint16;\t// used for values which are written as unsigned short int\n /** WARNING: Typedefs for internal use ONLY.  Compatibility is not guaranteed in future releases. */\n-typedef signed long int32;\t\t\t// used for file signature\n+typedef signed int int32;\t\t\t// used for file signature\n /** WARNING: Typedefs for internal use ONLY.  Compatibility is not guaranteed in future releases. */\n-typedef unsigned long uint32;\n+typedef unsigned int uint32;\n /** WARNING: Typedefs for internal use ONLY.  Compatibility is not guaranteed in future releases. */\n typedef signed int uid;\n /** WARNING: Typedefs for internal use ONLY.  Compatibility is not guaranteed in future releases. */\n"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/UID.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/UID.H",
+      "original_sha256": "ad8c2ffa41407b04c971ae3f0b83980d0d1b669e62edd35fae23b9f3ba3365f1",
+      "compiled_sha256": "ad8c2ffa41407b04c971ae3f0b83980d0d1b669e62edd35fae23b9f3ba3365f1",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/LST.H",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/LST.H",
+      "original_sha256": "7f7fa2f14be5267f097adea1e79900efd14d7b9afe49df2da12930a7662da77b",
+      "compiled_sha256": "7f7fa2f14be5267f097adea1e79900efd14d7b9afe49df2da12930a7662da77b",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/cdaffara/symbiandump-os1/a48c2548bd6f6086dc5dd4a8b19705da2176039c/sf/os/graphics/graphicstools/bitmapfonttools/inc/STRNG.INL",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/STRNG.INL",
+      "original_sha256": "5113656ab0b9df0ee85c384056d4bc7a8a563248b3e63314e017b068508099dd",
+      "compiled_sha256": "5113656ab0b9df0ee85c384056d4bc7a8a563248b3e63314e017b068508099dd",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/FontConv163.zip",
+      "sha256": "066d9c60d9e87354510bf3940ce996104417e81ed9854ce755514e46656e295b",
+      "license": "GPL-2.0-or-later converter; BSD-3-Clause grayfont runtime"
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/fontconv.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv.c",
+      "original_sha256": "1fd202d63209fcc720ef1833c8495a16706520b2ff8c92172df4ee04d21c9178",
+      "compiled_sha256": "1fd202d63209fcc720ef1833c8495a16706520b2ff8c92172df4ee04d21c9178",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/fontconv.h",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv.h",
+      "original_sha256": "7ac5a46bc5b2d7856a3bc49f8ba0d8a7139c95b8187a821ff54e13210a0a5e6c",
+      "compiled_sha256": "7ac5a46bc5b2d7856a3bc49f8ba0d8a7139c95b8187a821ff54e13210a0a5e6c",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/palmtypes.h",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/palmtypes.h",
+      "original_sha256": "5f841daa25bdc9d37b86bdeef771e9ded46a0b529395ccf01019db0554ba00a0",
+      "compiled_sha256": "d1abfd2f84d82941a067487899eb3eb395a3eea2dd446b3d1d8f10032656eff2",
+      "patch": "--- \n+++ \n@@ -30,7 +30,7 @@\n typedef unsigned char Byte;\r\n typedef unsigned short Word;\r\n typedef signed short SWord;\r\n-typedef unsigned long DWord;\r\n+typedef unsigned int DWord;\r\n typedef struct FontTagV2 {\r\n /* 0 */\tWord fontType;\r\n /* 2 */\tWord firstChar;\r\n"
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/togray.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/togray.c",
+      "original_sha256": "63001493119a8d160005449ed45e131b4e60fe96cc841f1bb546161dd21952cb",
+      "compiled_sha256": "63001493119a8d160005449ed45e131b4e60fe96cc841f1bb546161dd21952cb",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/topalmtext.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/topalmtext.c",
+      "original_sha256": "2cd660a57483c6597de08e118456ae64caddd584daf5b033100439c52ba7a21e",
+      "compiled_sha256": "1b26ef52deb7b9174423d11bd666055186c9a5b78af062601a13f2d969bc5312",
+      "patch": "--- \n+++ \n@@ -30,7 +30,7 @@\n #include <stdio.h>\r\n #include <ft2build.h>\r\n #include <freetype/ftglyph.h>\r\n-#include <freetype/ttunpat.h>\r\n+\r\n #include FT_FREETYPE_H\r\n #include \"encodings.c\"\r\n #include \"fontconv.h\"\r\n"
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/encodings.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/encodings.c",
+      "original_sha256": "24980a28485e9a767d262420431189fec8ed73e33e4100f691543257d6e66de5",
+      "compiled_sha256": "24980a28485e9a767d262420431189fec8ed73e33e4100f691543257d6e66de5",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/missingicons.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/missingicons.c",
+      "original_sha256": "07bb8b1043e8e49307727063360c98b2658267e54285c29fdb191d54850a7221",
+      "compiled_sha256": "07bb8b1043e8e49307727063360c98b2658267e54285c29fdb191d54850a7221",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/README.TXT",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/README.TXT",
+      "original_sha256": "2fb02dc9cb36212542760c976ef1ccee8fe5b995efa0c3b2045958f1cca5153d",
+      "compiled_sha256": "2fb02dc9cb36212542760c976ef1ccee8fe5b995efa0c3b2045958f1cca5153d",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/COPYING",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/COPYING",
+      "original_sha256": "61b65d8be67f0acb3a370ce0826c073b7c54a5c08b502ed6f7ffec94a300477f",
+      "compiled_sha256": "61b65d8be67f0acb3a370ce0826c073b7c54a5c08b502ed6f7ffec94a300477f",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/GRANT",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/GRANT",
+      "original_sha256": "1442274a088a2f3257c528914dbcdbabc85d0f878b62b696d23dcfbbbca69fb5",
+      "compiled_sha256": "1442274a088a2f3257c528914dbcdbabc85d0f878b62b696d23dcfbbbca69fb5",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/GrayFormat.txt",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/GrayFormat.txt",
+      "original_sha256": "1d446301e28caf2f49e2915d701f699a1cf0c468aad0febf57715238386c70d1",
+      "compiled_sha256": "1d446301e28caf2f49e2915d701f699a1cf0c468aad0febf57715238386c70d1",
+      "patch": ""
+    },
+    {
+      "url": "https://downloads.sourceforge.net/project/palmfontconv/Font%20Converters%20for%20PalmOS%20Dev/1.63/FontConvForPalmOS163full.zip!/fsconvert.c",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fsconvert.c",
+      "original_sha256": "2dcf1e53cfa297d44754eff97e234cb57336155c4206d13598aeb4b22c0ff637",
+      "compiled_sha256": "2dcf1e53cfa297d44754eff97e234cb57336155c4206d13598aeb4b22c0ff637",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/EKA2L1/EKA2L1/1fcfadbff7f8b81d8c17bc82d04b0c94d16803bf/src/emu/loader/include/loader/gdr.h",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-eka/src/emu/loader/include/loader/gdr.h",
+      "original_sha256": "2979f97c660ba6731d8911854ce6247790cf9d52c78d7730441252db8318bf53",
+      "compiled_sha256": "2979f97c660ba6731d8911854ce6247790cf9d52c78d7730441252db8318bf53",
+      "patch": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/EKA2L1/EKA2L1/1fcfadbff7f8b81d8c17bc82d04b0c94d16803bf/src/emu/loader/src/gdr.cpp",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-eka/src/emu/loader/src/gdr.cpp",
+      "original_sha256": "d1c2b9480d7855553999936a5d79270350d4d21f32f449c2cd1b57193d7e5cfa",
+      "compiled_sha256": "d1c2b9480d7855553999936a5d79270350d4d21f32f449c2cd1b57193d7e5cfa",
+      "patch": ""
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr42.cpp",
+      "original_sha256": "d1c2b9480d7855553999936a5d79270350d4d21f32f449c2cd1b57193d7e5cfa",
+      "compiled_sha256": "df8d4b2d756b2520135f874eaa217981578509985b2bd25f116e2e16682daec4",
+      "patch": "--- \n+++ \n@@ -24,6 +24,7 @@\n namespace eka2l1::loader::gdr {\n     // fnttran 40 (Symbian 7.0) stores each character's metrics inline, next to its bitmap offset.\n     static constexpr std::uint32_t FNTTRAN_VERSION_INLINE_METRICS = 40;\n+    static bool w54_version42 = false;\n \n     static void scan_coverage(const code_section &range, std::uint32_t &coverage_flags, std::uint32_t &coverage_flags_add) {\n         // 0000-024F (including extended), 1E02-1EF3\n@@ -178,6 +179,7 @@\n         read += stream->read(&the_header.font_store_file_checksum_, sizeof(the_header.font_store_file_checksum_));\n         read += stream->read(&the_header.id_offset_, sizeof(the_header.id_offset_));\n         read += stream->read(&the_header.fnt_tran_version_, sizeof(the_header.fnt_tran_version_));\n+        w54_version42 = the_header.fnt_tran_version_ == 42;\n         read += stream->read(&the_header.collection_uid_, sizeof(the_header.collection_uid_));\n         read += stream->read(&the_header.pixel_aspect_ratio_, sizeof(the_header.pixel_aspect_ratio_));\n         read += stream->read(&the_header.id_offset_2_, sizeof(the_header.id_offset_2_));\n@@ -235,6 +237,7 @@\n         read += stream->read(&header.ascent_in_pixels_, sizeof(header.ascent_in_pixels_));\n         read += stream->read(&header.max_char_width_in_pixels_, sizeof(header.max_char_width_in_pixels_));\n         read += stream->read(&header.max_normal_char_width_in_pixels_, sizeof(header.max_normal_char_width_in_pixels_));\n+        if (w54_version42) { char extra[5]; if (stream->read(extra, 5) != 5) return false; }\n         read += stream->read(&header.bitmap_encoding_, sizeof(header.bitmap_encoding_));\n         header.metric_offset_ = 0;\n         header.metric_count_ = 0;\n",
+      "purpose": "External v42 header extension per Nokia runtime; original metric and bitmap decoder unchanged. This is not upstream EKA2L1 v42 support."
+    },
+    {
+      "module": "monobit.storage.fontformats.apple.palm",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/palm.py",
+      "sha256": "6ed75d06f01d9f7cdd05bc36f69d2d440072d7a1fb77b31a608381e058ee7102"
+    },
+    {
+      "module": "monobit.storage.fontformats.apple.nfnt",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/nfnt.py",
+      "sha256": "eeaa7632b70d66377538eeb94a824d2d1c38f4c69748506bf4be14a3d67a07e2"
+    },
+    {
+      "module": "monobit.storage.fontformats.apple.nfnt2",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/nfnt2.py",
+      "sha256": "4a0de8953ef278f174cd4e671c313832effc2ede7e708962e6314a310e780fd3"
+    },
+    {
+      "module": "monobit.storage.fontformats.apple.grayfont",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/apple/grayfont.py",
+      "sha256": "df38ea209b9cd95371ba50fb6cea09b702a5cb993236993e173f9870bff855b6"
+    }
+  ],
+  "checks": [
+    "v1 full pixels/metrics/codes monobit and rust",
+    "v2 full pixels/metrics/codes monobit and rust",
+    "pdb full pixels/metrics/codes monobit and rust",
+    "prc full pixels/metrics/codes monobit and rust",
+    "FontConv afnx/FontSubst reader and native afnx/nfnt2 writer, all mapped glyphs",
+    "FontConv original six GrayFont profiles, rotations, compression and aliased bitmap indexes; Gray1/2 writer independently unpacked by Pillow",
+    "GDR39/40/41 writer all pixels/mappings/metrics checked by unmodified EKA2L1 loader; original Symbian fnttran41 output decoded with equivalent positioned ink and advances",
+    "GDR42 full pixels/metrics/codes checked by external EKA2L1 decoder with documented five-byte header extension; original native bitmap decoder unchanged; this extension is not upstream support"
+  ],
+  "known_oracle_differences": [
+    "monobit 0.54 afnx swaps one-byte offset/advance fields; its advance 0 disagrees with original FontConv advance 2. FontConv validates afnx.",
+    "monobit 0.54 high-density missing ff/ff entry becomes phantom code 66: sentinels are tested after scaling. Compare all real codes and assert this extra explicitly.",
+    "monobit GrayFont module has no registered complete reader and no writer; monobit has no GDR codec. Neither is claimed as oracle support."
+  ],
+  "oracle_versions": {
+    "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+    "monobit": "0.54"
+  },
+  "status": "pass",
+  "executables": [
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/examples/w54_timing",
+      "sha256": "bab3bfed32c5db66d6c118ad5b41f4f1f96fa7d6be601deca71b8e419b6b0343"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-oracle/fnttran",
+      "sha256": "8d7d7b538412a6c784a5187291d9ab84078b5e7123012f4b9131b5fe0695bd5f"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fontconv",
+      "sha256": "a1c52ab9509cfedbb284e503733c9adc8743aaef36860ee05c18450baae250c3"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/fsconvert",
+      "sha256": "21343cc695daebed3e95ff5401b412bf260a3094664e5916e71d27df3ac7d59a"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/togray",
+      "sha256": "0c6dfcc038d211218ee58cbd409117696e846244b6e01d09c3ed4e230ad14458"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-fontconv/topalmtext",
+      "sha256": "e51e0e622b8d22e945090c5825b0433054c85b4077228fc0c1ca820c1615df6f"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr-oracle",
+      "sha256": "d1274953473ca866f470083916c4da49ef45011dc79b2c987304550d09554279"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w54-eka/gdr42-oracle",
+      "sha256": "695a54d73fc77791e414f8020e920b102e56dbe102fe91bea14f86f9e321e13c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "w54-oracle/fixtures/afnx.bin",
+      "sha256": "2f4a576e57e048e34cbe8167735705418008380fafa03c789b469f72bb19dcb2",
+      "bytes": 72
+    },
+    {
+      "path": "w54-oracle/fixtures/afnx.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/afnx.txt",
+      "sha256": "883ba101fa5a664d4564a293d728c133bafe35b515edcd297dd0f50de544c0b0",
+      "bytes": 325
+    },
+    {
+      "path": "w54-oracle/fixtures/double.bin",
+      "sha256": "d8aa0e3955784cb4c10e2a4d09eb429353c7c8c730a731e2c278ca476f381ad1",
+      "bytes": 122
+    },
+    {
+      "path": "w54-oracle/fixtures/double.source.json",
+      "sha256": "e804f7d0b4871d5d2b416462635f4460e8a436ed18af307308dfae9585b02503",
+      "bytes": 612
+    },
+    {
+      "path": "w54-oracle/fixtures/external-afnx.bin",
+      "sha256": "6befa413ace3779edad6b57bec9bddf841c57608e53d649fb27086ed62cdb223",
+      "bytes": 70
+    },
+    {
+      "path": "w54-oracle/fixtures/external-nfnt2.bin",
+      "sha256": "5bbc5c98ac143a4c4cc4456b875cf687ee7c452eee474eb56974fe74d3293e50",
+      "bytes": 66
+    },
+    {
+      "path": "w54-oracle/fixtures/external.gdr",
+      "sha256": "a9fad585853f197393d990aa867b6a608c29d95b4d6bdb6bfdde62e01adb286e",
+      "bytes": 226
+    },
+    {
+      "path": "w54-oracle/fixtures/fontsubst.bin",
+      "sha256": "742b42c8497ed5249d6e2b3233c344b473fe9bca5dd9e16f8b589ee49b410aa2",
+      "bytes": 72
+    },
+    {
+      "path": "w54-oracle/fixtures/fontsubst.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr-large.bin",
+      "sha256": "1e74740f8703636ef5c929ea53397c8c847e485c9fcd9d8c603ae17f5d269c37",
+      "bytes": 11655
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr-large.source.json",
+      "sha256": "d2810901ecaf068638bfb1b4e570cbcfe6e547ecec0f14af4e6fedc842b2cb8f",
+      "bytes": 51739
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr-unicode.bin",
+      "sha256": "f84f92a957a6da9810fc496d5a2daa197d12d1a2a9befcb69db284c7a7e12fea",
+      "bytes": 165
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr-unicode.source.json",
+      "sha256": "8e2043cc9b9f0e1c98e643aa07a383a5287e31246ee534833e196a75d68c4b0d",
+      "bytes": 289
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr39.bin",
+      "sha256": "43d0a8fdc90e4449b2b9e6eae6cb8c323924b56965b3d1fd3ab363346275363b",
+      "bytes": 170
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr39.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr40.bin",
+      "sha256": "c31d908a56354a022015df7a5e7a9cd09c7003fff1453f25f81d69c1c4e7ffbf",
+      "bytes": 163
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr40.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr41.bin",
+      "sha256": "4729d4f087355a5cca98c255db63ede412ef9231cc36c74a8f9abe909e44f9b3",
+      "bytes": 170
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr41.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr42.bin",
+      "sha256": "8620ff8864a07a1e23be1d67cb5fb55f1223715b8e5583f67909e6e85c26dd17",
+      "bytes": 175
+    },
+    {
+      "path": "w54-oracle/fixtures/gdr42.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/gray-input.txt",
+      "sha256": "445808b705e511146a4befe09a7a59e2f754efe7fc226e3fed760a5108e8a702",
+      "bytes": 184
+    },
+    {
+      "path": "w54-oracle/fixtures/gray-original.txt",
+      "sha256": "c2ae29447ec4e3560cc08a9544698d3faa234b042001c7856b07a28676b79861",
+      "bytes": 645
+    },
+    {
+      "path": "w54-oracle/fixtures/gray1.bin",
+      "sha256": "c481143c1900bb8d8410981ada6517812849b008fbb45fd5cc9871e020545b59",
+      "bytes": 256
+    },
+    {
+      "path": "w54-oracle/fixtures/gray1.source.json",
+      "sha256": "7720b6ce0f4bec4d6fad15edb6ec7369adb5fa85f70405ec383ef04392abd8ff",
+      "bytes": 317
+    },
+    {
+      "path": "w54-oracle/fixtures/gray2.bin",
+      "sha256": "b503a1ab099fd23ebc23064789ee55409e3c70c3ed79956d3ed61a741a70e86e",
+      "bytes": 268
+    },
+    {
+      "path": "w54-oracle/fixtures/gray2.source.json",
+      "sha256": "7720b6ce0f4bec4d6fad15edb6ec7369adb5fa85f70405ec383ef04392abd8ff",
+      "bytes": 317
+    },
+    {
+      "path": "w54-oracle/fixtures/large-palm.bin",
+      "sha256": "e2824b5d1da9eafca5d60f385ab51db013be7dd8e7d4b0890b5c969bbf528471",
+      "bytes": 9250
+    },
+    {
+      "path": "w54-oracle/fixtures/large-palm.source.json",
+      "sha256": "d2810901ecaf068638bfb1b4e570cbcfe6e547ecec0f14af4e6fedc842b2cb8f",
+      "bytes": 51739
+    },
+    {
+      "path": "w54-oracle/fixtures/mono-text.txt",
+      "sha256": "883ba101fa5a664d4564a293d728c133bafe35b515edcd297dd0f50de544c0b0",
+      "bytes": 325
+    },
+    {
+      "path": "w54-oracle/fixtures/original.bdf",
+      "sha256": "0f10bbfb8fca68fa1fce489788fa8e5209668e185389491dfbd3703c14af46d1",
+      "bytes": 319
+    },
+    {
+      "path": "w54-oracle/fixtures/original.gd",
+      "sha256": "008865746f789f63b1c229fdabbe29cf2b85b9770991b0d53c93ec58057ab7fb",
+      "bytes": 264
+    },
+    {
+      "path": "w54-oracle/fixtures/original.ttf",
+      "sha256": "791f65c425536539d05a0eae403d214222f9ee3e1c9f8afeccb0cbeeba63a750",
+      "bytes": 764
+    },
+    {
+      "path": "w54-oracle/fixtures/pdb.bin",
+      "sha256": "804993cf5bc4faa80d36cba9810436241556d7b99fe11c0678fc43b760bdc9e1",
+      "bytes": 146
+    },
+    {
+      "path": "w54-oracle/fixtures/pdb.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/prc.bin",
+      "sha256": "97d1748cb2196e877bf21d8c10f261b820752e7ecb509547fd97a4b676c0a424",
+      "bytes": 148
+    },
+    {
+      "path": "w54-oracle/fixtures/prc.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/v1.bin",
+      "sha256": "2996b32fd26e25135c70c10b01d32b6faef80fc30734c55d37b462481728f53e",
+      "bytes": 58
+    },
+    {
+      "path": "w54-oracle/fixtures/v1.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/fixtures/v2.bin",
+      "sha256": "225ba3f7b20665ebdfc10e017ee2317558d31611ed28dbeaa76b4312a9508341",
+      "bytes": 68
+    },
+    {
+      "path": "w54-oracle/fixtures/v2.source.json",
+      "sha256": "d4e0fbaf7a672981ee91370288e9cca69075cd7299322c1d79b6e3fcfa19ead1",
+      "bytes": 285
+    },
+    {
+      "path": "w54-oracle/gray-out/GL140001.bin",
+      "sha256": "088169d3292cb91ac813a88f83b80750523152636c3d6d8a914be9009a29ff5a",
+      "bytes": 39
+    },
+    {
+      "path": "w54-oracle/gray-out/GL340001.bin",
+      "sha256": "8385f8c52ee805a7dbbf983e6d26bcde160c6a678785b8d71e3ea96bbf65d85e",
+      "bytes": 48
+    },
+    {
+      "path": "w54-oracle/gray-out/GR140001.bin",
+      "sha256": "11a7ccdc96ecf5eaaf91817c21f1cd31863ae11339bf548ed82014fbc2edcf9e",
+      "bytes": 39
+    },
+    {
+      "path": "w54-oracle/gray-out/GR340001.bin",
+      "sha256": "793ed9aa6b70f6655b73718f51e7aeeef0435955274ae7925506dc33994df2d1",
+      "bytes": 48
+    },
+    {
+      "path": "w54-oracle/gray-out/GU140001.bin",
+      "sha256": "418b722039e35d1e5e43bf0065467f5566b0e4cc46c5d1a6f9507c676e5c217d",
+      "bytes": 44
+    },
+    {
+      "path": "w54-oracle/gray-out/GU340001.bin",
+      "sha256": "34aa8914520be1b420c218194622c66dc499fc81868b412508328c6400f6b673",
+      "bytes": 52
+    },
+    {
+      "path": "w54-oracle/gray-out/GrFn0000.bin",
+      "sha256": "4659ae2116c89d9f0581576eb4989f5cbab17a4d7fc769ff6c54ea747780c02e",
+      "bytes": 80
+    },
+    {
+      "path": "w54-oracle/gray-out/external-gray.prc",
+      "sha256": "40f884c5600b4db1b408f77da6c2658d4971dd5179029156ab4e3aaa651a8e35",
+      "bytes": 500
+    },
+    {
+      "path": "w54-eka/shim/common/buffer.h",
+      "sha256": "17806a456da8947578a241a4c6dc1cc421229589b3751db9326036fda4fcd403",
+      "bytes": 560
+    },
+    {
+      "path": "w54-eka/shim/main.cpp",
+      "sha256": "56a57e6993d820cdff8576ad260ea9db23a48120dae399c47898afc314901701",
+      "bytes": 1534
+    },
+    {
+      "path": "w54-eka/shim/utils/des.h",
+      "sha256": "575f43f5bebe6b79bc094cf66c44e73347296bd82ef9b89565c2a98b550e949e",
+      "bytes": 937
+    }
+  ]
+}

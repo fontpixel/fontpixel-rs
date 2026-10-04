@@ -1,10 +1,14 @@
 //! Font inspection and conversion through the feature-gated real codec registry.
 #![forbid(unsafe_code)]
 mod assets;
+mod image_formats;
+mod input_budget;
+use image_formats::WriteArguments as ImageArguments;
 mod extra_formats;
 #[cfg(feature = "opentype")]
 mod opentype;
 mod p2_formats;
+mod p3_formats;
 use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
 use fontpixel::{Error, ReadOptions, ResourceLimits};
 #[cfg(feature = "opentype")]
@@ -119,6 +123,8 @@ enum Command {
         extra: extra_formats::WriteArguments,
         #[command(flatten)]
         p2: Box<p2_formats::WriteArguments>,
+        #[command(flatten)]
+        p3: Box<p3_formats::WriteArguments>,
         #[command(flatten)]
         raster: Box<RasterArguments>,
         #[command(flatten)]
@@ -664,6 +670,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             c,
             extra,
             p2,
+            p3,
             raster,
             vector,
         } => {
@@ -702,6 +709,13 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 &mut registry,
             )?;
             // Check the target before doing work, and never create/truncate output.
+            p3.apply(
+                &id,
+                &raster.p3,
+                &raster.input_limits(),
+                vector.gray_threshold,
+                &mut registry,
+            )?;
             registry.ensure_writable(&id)?;
             let options = ReadOptions {
                 format: from,
@@ -709,10 +723,17 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             };
             let mut fonts = fontpixel::FontSet::default();
             let mut report = fontpixel::Report::default();
+            let mut input_budget = input_budget::InputBudget::new(options.limits.clone());
             let sources = assets::Sources::default();
             for input in &inputs {
-                let file = assets::FileInput::open(input, &options.limits, sources.clone())?;
-                let mut loaded = registry.read(&file.input(), &options)?;
+                let per_input = ReadOptions {
+                    format: options.format.clone(),
+                    limits: input_budget.remaining_limits()?,
+                };
+                let file = assets::FileInput::open(input, &per_input.limits, sources.clone())?;
+                let mut loaded = registry.read(&file.input(), &per_input)?;
+                drop(file);
+                input_budget.admit(&loaded)?;
                 for entry in &mut loaded.report.entries {
                     if let Some(index) = &mut entry.location.font_index {
                         *index += fonts.fonts.len();
@@ -735,6 +756,11 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             let mut write_options =
                 fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
             write_options.strict = strict;
+            let output_limits = raster.input_limits();
+            write_options.transport_limits = Some(fontpixel::formats::TransportLimits {
+                max_output_bytes: output_limits.max_total_bytes,
+                resources: output_limits,
+            });
             let written = registry.write_with_report(&fonts, &id, &write_options, report)?;
             let byte_count: usize = written.output.assets().iter().map(|a| a.bytes.len()).sum();
             let output_assets: Vec<_> = written
@@ -747,6 +773,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             // sidecars were read. Hidden aliases and multi-asset replacements fail.
             let protection = if inputs.len() == 1
                 && inputs[0] == destination
+                && !written.output.is_directory()
                 && written.output.assets().len() == 1
                 && sources.is_single_primary()
             {
@@ -1043,10 +1070,18 @@ struct RasterArguments {
     #[command(flatten)]
     p2: Box<p2_formats::ReadArguments>,
     #[command(flatten)]
+    p3: Box<p3_formats::ReadArguments>,
+    #[command(flatten)]
     extra: extra_formats::ReadArguments,
     /// C header dialect (default auto).
-    #[arg(long, value_parser = ["auto", "font8x8", "tmat", "generic", "gfx"])]
+    #[arg(long, value_parser = ["auto", "font8x8", "tmat", "generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8"])]
     c_read_family: Option<String>,
+    /// Explicit C source or LVGL binary input container (default auto).
+    #[arg(long, value_parser = ["source", "lvgl-binary"])]
+    c_read_container: Option<String>,
+    /// Read the pre-2019 two-byte U8x8 header.
+    #[arg(long)]
+    c_read_u8x8_legacy: bool,
     /// C input array or GFXfont symbol to select.
     #[arg(long)]
     c_array: Option<String>,
@@ -1067,9 +1102,8 @@ struct RasterArguments {
     /// Generic C bytes store the leftmost pixel in bit zero.
     #[arg(long, requires = "c_width")]
     c_lsb_first: bool,
-    /// Relative JSON/TOML image mapping, resolved beside the primary input.
-    #[arg(long)]
-    image_mapping: Option<String>,
+    #[command(flatten)]
+    image: image_formats::ReadArguments,
     /// HEX input/output rows (default 16); never inferred from record length.
     #[arg(long, value_parser=clap::value_parser!(u32).range(1..))]
     hex_height: Option<u32>,
@@ -1079,9 +1113,18 @@ struct RasterArguments {
     /// Explicit source FNT/FON legacy code page (does not remap byte positions).
     #[arg(long)]
     fnt_read_code_page: Option<String>,
-    /// Primary input byte budget (default 64 MiB); aggregate 256 MiB cap remains.
+    /// Primary input byte budget (default 64 MiB).
     #[arg(long)]
     max_input_bytes: Option<usize>,
+    /// Individual companion-file byte budget.
+    #[arg(long)]
+    max_resource_bytes: Option<usize>,
+    /// Aggregate resource and codec allocation budget (default 256 MiB).
+    #[arg(long)]
+    max_total_bytes: Option<usize>,
+    /// Maximum companion reads and directory entries.
+    #[arg(long)]
+    max_resources: Option<usize>,
     /// Explicit raster size for reviewed off-grid/curved outlines.
     #[arg(long)]
     ppem: Option<u16>,
@@ -1106,36 +1149,39 @@ impl RasterArguments {
         if let Some(maximum) = self.max_input_bytes {
             limits.max_input_bytes = maximum;
         }
+        if let Some(maximum) = self.max_resource_bytes {
+            limits.max_resource_bytes = maximum;
+        }
+        if let Some(maximum) = self.max_total_bytes {
+            limits.max_total_bytes = maximum;
+        }
+        if let Some(maximum) = self.max_resources {
+            limits.max_resources = maximum;
+        }
         limits
     }
     fn apply(&self, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         self.extra.apply(registry)?;
         self.p2.apply(registry)?;
+        self.p3.apply(registry)?;
         #[cfg(feature = "c")]
         registry.set_c_read_options(fontpixel::formats::c::CReadOptions {
             family: c_family(self.c_read_family.as_deref().unwrap_or("auto")),
             array_name: self.c_array.clone(),
             generic: self.c_geometry()?,
+            container: self.c_read_container.as_deref().map(c_container),
+            u8x8_legacy: self.c_read_u8x8_legacy,
         });
         #[cfg(not(feature = "c"))]
-        if self.c_read_family.is_some() || self.c_array.is_some() || self.c_width.is_some() {
+        if self.c_read_family.is_some()
+            || self.c_array.is_some()
+            || self.c_width.is_some()
+            || self.c_read_container.is_some()
+            || self.c_read_u8x8_legacy
+        {
             return Err(Error::FeatureDisabled { format: "c".into() });
         }
-        #[cfg(feature = "image")]
-        registry.set_image_read_options(fontpixel::formats::image::ImageReadOptions {
-            mapping: None,
-            mapping_path: self
-                .image_mapping
-                .clone()
-                .map(fontpixel::ResourcePath::new)
-                .transpose()?,
-        });
-        #[cfg(not(feature = "image"))]
-        if self.image_mapping.is_some() {
-            return Err(Error::FeatureDisabled {
-                format: "image".into(),
-            });
-        }
+        self.image.apply(registry)?;
         #[cfg(feature = "fnt")]
         registry.set_fnt_read_options(fontpixel::formats::fnt::FntReadOptions {
             code_page: self.fnt_read_code_page.clone(),
@@ -1227,8 +1273,84 @@ impl VectorArguments {
             || self.embed_bitmaps
             || (self.gray_threshold.is_some()
                 && ![
-                    "hex", "psf", "fnt", "fon", "image", "c", "pbf", "hbf", "draw", "raw", "cpi",
-                    "pf2", "fontx2", "hzk", "nfnt", "pk", "gf", "plan9", "amiga", "gem", "snf",
+                    "hex",
+                    "psf",
+                    "fnt",
+                    "fon",
+                    "image",
+                    "c",
+                    "pbf",
+                    "hbf",
+                    "draw",
+                    "raw",
+                    "cpi",
+                    "pf2",
+                    "fontx2",
+                    "hzk",
+                    "nfnt",
+                    "pk",
+                    "gf",
+                    "plan9",
+                    "amiga",
+                    "gem",
+                    "snf",
+                    "hanfont",
+                    "iigs",
+                    "vfont",
+                    "fzx",
+                    "figlet",
+                    "palm",
+                    "gdr",
+                    "drcs",
+                    "dosstart",
+                    "edwin",
+                    "mkwinfont",
+                    "psf2txt",
+                    "pcr",
+                    "plus3dos",
+                    "drhalo",
+                    "writeon",
+                    "daisy",
+                    "polyprint",
+                    "printshop",
+                    "tasprint",
+                    "pxl",
+                    "signum",
+                    "rockbox",
+                    "u8m",
+                    "cybiko",
+                    "playdate",
+                    "hmzk",
+                    "sbf",
+                    "mgtk",
+                    "qpf",
+                    "symbos",
+                    "qpf2",
+                    "oberon",
+                    "fbit",
+                    "lisa",
+                    "wsfont",
+                    "ssfn",
+                    "xerox",
+                    "pcgeos",
+                    "pfr",
+                    "riscos",
+                    "gpi",
+                    "geos",
+                    "prebuilt",
+                    "dashen",
+                    "hppcl",
+                    "vtfont",
+                    "chiwriter",
+                    "catalyst",
+                    "bbc",
+                    "comfont",
+                    "consoleet",
+                    "grasp",
+                    "hrcg",
+                    "wyse",
+                    "xbin",
+                    "zapfont",
                 ]
                 .contains(&id))
             || self.woff2_source.is_some()
@@ -1322,57 +1444,6 @@ fn svg_shape(shape: Option<&str>) -> fontpixel::outline::Shape {
     }
 }
 
-#[derive(Args, Default)]
-struct ImageArguments {
-    /// Atlas columns (default 16).
-    #[arg(long, value_parser = clap::value_parser!(u32).range(1..))]
-    image_columns: Option<u32>,
-    /// Image mapping format (default json).
-    #[arg(long, value_parser = ["json", "toml"])]
-    image_mapping_format: Option<String>,
-}
-impl ImageArguments {
-    fn apply(
-        &self,
-        id: &str,
-        raster: &RasterArguments,
-        threshold: Option<u8>,
-        registry: &mut fontpixel::FontRegistry,
-    ) -> fontpixel::Result<()> {
-        let explicit = self.image_columns.is_some() || self.image_mapping_format.is_some();
-        if id != "image" && explicit {
-            return Err(Error::InvalidInput(
-                "image output options require --to image".into(),
-            ));
-        }
-        #[cfg(feature = "image")]
-        if id == "image" {
-            use fontpixel::formats::image::{ImageWriteOptions, MappingFormat};
-            registry.set_image_write_options(ImageWriteOptions {
-                columns: self.image_columns.unwrap_or(16),
-                mapping_format: if self.image_mapping_format.as_deref() == Some("toml") {
-                    MappingFormat::Toml
-                } else {
-                    MappingFormat::Json
-                },
-                gray_threshold: threshold,
-                limits: raster.input_limits(),
-                ..Default::default()
-            });
-        }
-        #[cfg(not(feature = "image"))]
-        {
-            let _ = (raster, threshold, registry);
-            if id == "image" || explicit {
-                return Err(Error::FeatureDisabled {
-                    format: "image".into(),
-                });
-            }
-        }
-        Ok(())
-    }
-}
-
 #[cfg(feature = "c")]
 fn c_family(s: &str) -> fontpixel::formats::c::Family {
     use fontpixel::formats::c::Family;
@@ -1381,7 +1452,20 @@ fn c_family(s: &str) -> fontpixel::formats::c::Family {
         "tmat" => Family::Tmat,
         "generic" => Family::Generic,
         "gfx" => Family::Gfx,
+        "u8g2" => Family::U8g2,
+        "lvgl" => Family::Lvgl,
+        "netbsd" => Family::Netbsd,
+        "u8glib" => Family::U8glib,
+        "u8x8" => Family::U8x8,
         _ => Family::Auto,
+    }
+}
+#[cfg(feature = "c")]
+fn c_container(value: &str) -> fontpixel::formats::c::CContainer {
+    if value == "lvgl-binary" {
+        fontpixel::formats::c::CContainer::LvglBinary
+    } else {
+        fontpixel::formats::c::CContainer::Source
     }
 }
 #[cfg(feature = "c")]
@@ -1413,14 +1497,29 @@ impl RasterArguments {
 #[derive(Args, Default)]
 struct COutputArguments {
     /// Output C dialect (default generic).
-    #[arg(long, value_parser = ["generic", "gfx"])]
+    #[arg(long, value_parser = ["generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8"])]
     c_family: Option<String>,
+    /// C source (default) or native LVGL binary output.
+    #[arg(long, value_parser = ["source", "lvgl-binary"])]
+    c_container: Option<String>,
+    /// U8glib native font record format (default full).
+    #[arg(long, value_parser = ["full", "compact", "gray2"])]
+    u8glib_format: Option<String>,
+    /// Write the pre-2019 two-byte U8x8 header.
+    #[arg(long)]
+    u8x8_legacy: bool,
     /// Output C symbol (default font).
     #[arg(long)]
     c_name: Option<String>,
     /// Inclusive C output range, e.g. U+0020-U+007E.
     #[arg(long)]
     c_range: Option<String>,
+    /// LVGL coverage bit depth (default 1).
+    #[arg(long, value_parser = ["1", "2", "4", "8"])]
+    lvgl_bpp: Option<String>,
+    /// LVGL bitmap encoding (default plain).
+    #[arg(long, value_parser = ["plain", "rle", "rle-xor"])]
+    lvgl_compression: Option<String>,
 }
 impl COutputArguments {
     fn apply(
@@ -1430,10 +1529,41 @@ impl COutputArguments {
         threshold: Option<u8>,
         registry: &mut fontpixel::FontRegistry,
     ) -> fontpixel::Result<()> {
-        let explicit = self.c_family.is_some() || self.c_name.is_some() || self.c_range.is_some();
+        let explicit = self.c_container.is_some()
+            || self.u8glib_format.is_some()
+            || self.u8x8_legacy
+            || self.c_family.is_some()
+            || self.c_name.is_some()
+            || self.c_range.is_some()
+            || self.lvgl_bpp.is_some()
+            || self.lvgl_compression.is_some();
         if id != "c" && explicit {
             return Err(Error::InvalidInput(
                 "C output options require --to c".into(),
+            ));
+        }
+        if (self.lvgl_bpp.is_some() || self.lvgl_compression.is_some())
+            && self.c_family.as_deref() != Some("lvgl")
+        {
+            return Err(Error::InvalidInput(
+                "LVGL output options require --c-family lvgl".into(),
+            ));
+        }
+        if self.c_container.as_deref() == Some("lvgl-binary")
+            && self.c_family.as_deref() != Some("lvgl")
+        {
+            return Err(Error::InvalidInput(
+                "LVGL binary output requires --c-family lvgl".into(),
+            ));
+        }
+        if self.u8glib_format.is_some() && self.c_family.as_deref() != Some("u8glib") {
+            return Err(Error::InvalidInput(
+                "--u8glib-format requires --c-family u8glib".into(),
+            ));
+        }
+        if self.u8x8_legacy && self.c_family.as_deref() != Some("u8x8") {
+            return Err(Error::InvalidInput(
+                "--u8x8-legacy requires --c-family u8x8".into(),
             ));
         }
         #[cfg(feature = "c")]
@@ -1450,11 +1580,29 @@ impl COutputArguments {
                 .transpose()?;
             registry.set_c_write_options(fontpixel::formats::c::CWriteOptions {
                 family: c_family(self.c_family.as_deref().unwrap_or("generic")),
+                container: c_container(self.c_container.as_deref().unwrap_or("source")),
+                u8x8_legacy: self.u8x8_legacy,
+                u8glib_format: match self.u8glib_format.as_deref() {
+                    Some("compact") => fontpixel::formats::c::U8glibFormat::Compact,
+                    Some("gray2") => fontpixel::formats::c::U8glibFormat::Gray2,
+                    _ => fontpixel::formats::c::U8glibFormat::Full,
+                },
                 array_name: self.c_name.clone().unwrap_or_else(|| "font".into()),
                 generic: raster.c_geometry()?,
                 range,
                 gray_threshold: threshold,
                 limits: raster.input_limits(),
+                lvgl_bpp: match self.lvgl_bpp.as_deref() {
+                    Some("2") => fontpixel::formats::c::LvglBpp::Two,
+                    Some("4") => fontpixel::formats::c::LvglBpp::Four,
+                    Some("8") => fontpixel::formats::c::LvglBpp::Eight,
+                    _ => fontpixel::formats::c::LvglBpp::One,
+                },
+                lvgl_compression: match self.lvgl_compression.as_deref() {
+                    Some("rle") => fontpixel::formats::c::LvglCompression::Rle,
+                    Some("rle-xor") => fontpixel::formats::c::LvglCompression::RleXor,
+                    _ => fontpixel::formats::c::LvglCompression::Plain,
+                },
             });
         }
         #[cfg(not(feature = "c"))]

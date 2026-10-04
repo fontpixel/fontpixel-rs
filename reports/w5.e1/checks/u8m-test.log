@@ -1,0 +1,12 @@
+
+running 4 tests
+test native_unicode_astral_aliases_and_unencoded ... ok
+test prefixed_load_address_uses_font_relative_offsets ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+test malformed_maps_pages_and_same_limits ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.99s
+     Running tests/u8m.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/u8m-a4ec52d682e1c18c)

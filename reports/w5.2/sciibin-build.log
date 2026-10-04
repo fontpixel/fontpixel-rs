@@ -1,0 +1,38 @@
+../local-work/w52/sciibin/sciibin.c: In function ‘main’:
+../local-work/w52/sciibin/sciibin.c:157:23: warning: incompatible implicit declaration of built-in function ‘exit’ [-Wbuiltin-declaration-mismatch]
+  157 |                       exit(0);
+      |                       ^~~~
+../local-work/w52/sciibin/sciibin.c:82:1: note: include ‘<stdlib.h>’ or provide a declaration of ‘exit’
+   81 | #include "filetype.h"
+  +++ |+#include <stdlib.h>
+   82 | 
+../local-work/w52/sciibin/sciibin.c:168:23: warning: incompatible implicit declaration of built-in function ‘strcpy’ [-Wbuiltin-declaration-mismatch]
+  168 |                       strcpy(outfilename, optarg);
+      |                       ^~~~~~
+../local-work/w52/sciibin/sciibin.c:82:1: note: include ‘<string.h>’ or provide a declaration of ‘strcpy’
+   81 | #include "filetype.h"
+  +++ |+#include <string.h>
+   82 | 
+../local-work/w52/sciibin/sciibin.c:202:5: warning: incompatible implicit declaration of built-in function ‘exit’ [-Wbuiltin-declaration-mismatch]
+  202 |     exit(0);
+      |     ^~~~
+../local-work/w52/sciibin/sciibin.c:202:5: note: include ‘<stdlib.h>’ or provide a declaration of ‘exit’
+../local-work/w52/sciibin/sciibin.c: In function ‘sciibin’:
+../local-work/w52/sciibin/sciibin.c:223:43: warning: incompatible implicit declaration of built-in function ‘strlen’ [-Wbuiltin-declaration-mismatch]
+  223 |         if (!strncmp(buf, BINSCII_HEADER, strlen(BINSCII_HEADER))) {
+      |                                           ^~~~~~
+../local-work/w52/sciibin/sciibin.c:223:43: note: include ‘<string.h>’ or provide a declaration of ‘strlen’
+../local-work/w52/sciibin/sciibin.c: In function ‘getheader’:
+../local-work/w52/sciibin/sciibin.c:267:9: warning: incompatible implicit declaration of built-in function ‘strlen’ [-Wbuiltin-declaration-mismatch]
+  267 |     if (strlen(buf) != 65) {
+      |         ^~~~~~
+../local-work/w52/sciibin/sciibin.c:267:9: note: include ‘<string.h>’ or provide a declaration of ‘strlen’
+../local-work/w52/sciibin/sciibin.c:314:9: warning: incompatible implicit declaration of built-in function ‘strncpy’ [-Wbuiltin-declaration-mismatch]
+  314 |         strncpy(outfilename, buf+1, namlen);
+      |         ^~~~~~~
+../local-work/w52/sciibin/sciibin.c:314:9: note: include ‘<string.h>’ or provide a declaration of ‘strncpy’
+../local-work/w52/sciibin/sciibin.c: In function ‘decodestring’:
+../local-work/w52/sciibin/sciibin.c:524:12: warning: incompatible implicit declaration of built-in function ‘strlen’ [-Wbuiltin-declaration-mismatch]
+  524 |     while (strlen(in) > 3) {
+      |            ^~~~~~
+../local-work/w52/sciibin/sciibin.c:524:12: note: include ‘<string.h>’ or provide a declaration of ‘strlen’

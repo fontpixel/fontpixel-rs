@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "revision": "final1",
+  "scope": "FON/C registry detector integration",
+  "workspace_edition": "2024",
+  "environment": {
+    "setup": "source scripts/local-env.sh",
+    "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection",
+    "CARGO_BUILD_JOBS": 2,
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)"
+  },
+  "sources": {
+    "crates/fontpixel/src/formats/fon.rs": "ee5ba8713f2699414849e6f69876416af5fc8c8f42be1a5a3ccc9aa6c50e99d4",
+    "crates/fontpixel/src/formats/c.rs": "32d51dc02866356f4a074bb2a628fc95bbf3c460f2a8591c86eb757fb2a51147",
+    "crates/fontpixel/tests/fon.rs": "e169f42b5b8e09bdb7d18793bf28accb54369e19dcee4fc85af2166e8031b606",
+    "crates/fontpixel/tests/c.rs": "cd57e093e2fd8fc158e38049b077998f5e15ce9888625397f4874c32d5aa68f8",
+    "docs/formats/fon.md": "3ff8f78505f7993f5f22cbfbf4b5753da3ad9cba06fbe010a9b9ad1281f1faa9",
+    "docs/formats/c.md": "595756bb99b01b2244c93f5e350534c80cb0cf3f7a97dfe804b69fd80d6fdc3f",
+    "fuzz/fuzz_targets/fon.rs": "121efe2697494d1cacbf67370f40019d0905902fa3946719d36c908308e479b4",
+    "fuzz/fuzz_targets/c.rs": "58cabe3bb722280e5451984197196b34e9a6452e4da22dbe67141e1656f32ade"
+  },
+  "reader_writer_semantics_changed": false,
+  "shared_registry_or_transport_changed": false,
+  "sources_and_evidence": [
+    "https://github.com/qb40/exe-format",
+    "https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types",
+    "docs/formats/gpi.md"
+  ],
+  "before_evidence": {
+    "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/validation.json": "ac84d0a8e4ca356852124fc59561d4d2326469a26214940067410e0a0f39447d",
+    "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-validation.json": "24885c7e38d6507b75cfd19c8f9de6b378ba354ead1e4f5d7cb1f1bb82a17fec",
+    "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/matrix.json": "365b425dda8f5a4f796c497ba2ed57ee9683150b15925d0239a0ce106554a55d",
+    "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/binary.json": "1a6b6ada862d54234b74b511f161fe3f96b262418b12b9b4c34ab744bab6e038"
+  },
+  "checks": [
+    {
+      "id": "combined_tests",
+      "command": "cargo test --locked -p fontpixel --no-default-features --features fon,c,gpi,hex --test fon --test c --test windows",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-tests2.log",
+      "log_sha256": "39a9ab6001fca3491de53844b20a89f4a7d2c281b08b4a3a99eea39c2d31f5eb",
+      "passed": 56
+    },
+    {
+      "id": "final_fon_tests",
+      "command": "cargo test --locked -p fontpixel --no-default-features --features fon,c,gpi,hex --test fon",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-detection-final-tests.log",
+      "log_sha256": "746178c4f52c53fa7b5c85f4ce97164f1f44649c47bace2b27844014f7300e82",
+      "passed": 4
+    },
+    {
+      "id": "fon_only",
+      "command": "cargo test --locked -p fontpixel --no-default-features --features fon --test fon",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-detection-final-single.log",
+      "log_sha256": "e9004e6a1ae4ad19c931499bf73e644ed8f94fa27e4891fc0568cdbb82c2d2bd",
+      "passed": 3
+    },
+    {
+      "id": "c_only",
+      "command": "cargo test --locked -p fontpixel --no-default-features --features c --test c",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/c-detection-single.log",
+      "log_sha256": "3fa696e7cc091860e9fd05874edeb9357b53886699fba358a03fe7612bc19035",
+      "passed": 28
+    },
+    {
+      "id": "clippy",
+      "command": "cargo clippy --locked -p fontpixel --no-default-features --features fon,c,gpi,hex --lib --test fon --test c --test windows -- -D warnings",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-final-clippy.log",
+      "log_sha256": "2d7e470fd505ecf48c558ab4ee0f6aaeca594143543f49e555e4d2612fee415d"
+    },
+    {
+      "id": "rustdoc",
+      "command": "RUSTDOCFLAGS='-D warnings' cargo doc --locked -p fontpixel --no-default-features --features fon,c,gpi,hex --no-deps",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-doc.log",
+      "log_sha256": "dc9cccf80e721523f7abde31eb12c8f7ce9eb587b4723f39be5e88cd64d4283b"
+    },
+    {
+      "id": "format",
+      "command": "rustfmt --edition 2024 --check --config skip_children=true crates/fontpixel/src/formats/fon.rs crates/fontpixel/src/formats/c.rs crates/fontpixel/tests/fon.rs crates/fontpixel/tests/c.rs fuzz/fuzz_targets/fon.rs fuzz/fuzz_targets/c.rs",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-final-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "cli_build",
+      "command": "cargo build --locked -p fontpixel-cli --no-default-features --features fon,c,gpi,hex --bin fontpixel",
+      "exit_code": 0,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-cli-build.log",
+      "log_sha256": "5096c66cd3074fae68b5e5496440fb42d88fad19f76d59d389b011b475f2f2dd"
+    }
+  ],
+  "cli_after": {
+    "report": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-cli-after.json",
+    "sha256": "d4b4245a1ae08d3b2bee154db78d9d7ea3558447ba0e253806a59f80238ce19a",
+    "binary_sha256": "23845e6ed82551503c5ef0ad10cd9e6e9dcb0bb22b6a479abf5544c31bd57a89",
+    "features": [
+      "fon",
+      "c",
+      "gpi",
+      "hex"
+    ],
+    "records": [
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-v2-new-groups/fixtures/b/gpi-ne.bin"
+        ],
+        "exit_code": 0,
+        "input_sha256": "a5d392c33e12e80ee8b61b231679c22cf49a161e089411518433916c112a3797",
+        "stdout": "{\n  \"format\": \"gpi\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": \"Original\",\n      \"glyph_count\": 3,\n      \"encoded_count\": 3,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 3,\n      \"first_code\": 65,\n      \"last_code\": 67,\n      \"pixel_size\": 6,\n      \"point_size\": {\n        \"numerator\": 60,\n        \"denominator\": 10\n      },\n      \"resolution\": [\n        0,\n        0\n      ],\n      \"ascent\": 5,\n      \"descent\": 1,\n      \"bounds\": null,\n      \"charset\": \"ibmugl\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [],\n      \"properties\": [\n        {\n          \"name\": \"gpi.metrics\",\n          \"value\": {\n            \"bytes\": [\n              1,\n              0,\n              0,\n              0,\n              168,\n              0,\n              0,\n              0,\n              79,\n              114,\n              105,\n              103,\n              105,\n              110,\n              97,\n              108,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              79,\n              114,\n              105,\n              103,\n              105,\n              110,\n              97,\n              108,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              82,\n              3,\n              6,\n              0,\n              0,\n              0,\n              5,\n              0,\n              1,\n              0,\n              5,\n              0,\n              1,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              6,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              65,\n              0,\n              2,\n              0,\n              0,\n              0,\n              0,\n              0,\n              60,\n              0,\n              60,\n              0,\n              60,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.definition\",\n          \"value\": {\n            \"bytes\": [\n              2,\n              0,\n              0,\n              0,\n              94,\n              0,\n              0,\n              0,\n              66,\n              0,\n              184,\n              0,\n              10,\n              0,\n              10,\n              0,\n              6,\n              0,\n              10,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              5,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.kind\",\n          \"value\": 3\n        },\n        {\n          \"name\": \"gpi.codepage\",\n          \"value\": 850\n        },\n        {\n          \"name\": \"gpi.registry_id\",\n          \"value\": 0\n        },\n        {\n          \"name\": \"gpi.tail\",\n          \"value\": {\n            \"bytes\": [\n              255,\n              255,\n              255,\n              255,\n              8,\n              0,\n              0,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.resource_id\",\n          \"value\": 1\n        }\n      ]\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "gpi",
+        "glyphs": [
+          3
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-v2-new-groups/fixtures/b/gpi-ne.bin",
+          "--from",
+          "gpi"
+        ],
+        "exit_code": 0,
+        "input_sha256": "a5d392c33e12e80ee8b61b231679c22cf49a161e089411518433916c112a3797",
+        "stdout": "{\n  \"format\": \"gpi\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": \"Original\",\n      \"glyph_count\": 3,\n      \"encoded_count\": 3,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 3,\n      \"first_code\": 65,\n      \"last_code\": 67,\n      \"pixel_size\": 6,\n      \"point_size\": {\n        \"numerator\": 60,\n        \"denominator\": 10\n      },\n      \"resolution\": [\n        0,\n        0\n      ],\n      \"ascent\": 5,\n      \"descent\": 1,\n      \"bounds\": null,\n      \"charset\": \"ibmugl\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [],\n      \"properties\": [\n        {\n          \"name\": \"gpi.metrics\",\n          \"value\": {\n            \"bytes\": [\n              1,\n              0,\n              0,\n              0,\n              168,\n              0,\n              0,\n              0,\n              79,\n              114,\n              105,\n              103,\n              105,\n              110,\n              97,\n              108,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              79,\n              114,\n              105,\n              103,\n              105,\n              110,\n              97,\n              108,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              82,\n              3,\n              6,\n              0,\n              0,\n              0,\n              5,\n              0,\n              1,\n              0,\n              5,\n              0,\n              1,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              6,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              65,\n              0,\n              2,\n              0,\n              0,\n              0,\n              0,\n              0,\n              60,\n              0,\n              60,\n              0,\n              60,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.definition\",\n          \"value\": {\n            \"bytes\": [\n              2,\n              0,\n              0,\n              0,\n              94,\n              0,\n              0,\n              0,\n              66,\n              0,\n              184,\n              0,\n              10,\n              0,\n              10,\n              0,\n              6,\n              0,\n              10,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              0,\n              5,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.kind\",\n          \"value\": 3\n        },\n        {\n          \"name\": \"gpi.codepage\",\n          \"value\": 850\n        },\n        {\n          \"name\": \"gpi.registry_id\",\n          \"value\": 0\n        },\n        {\n          \"name\": \"gpi.tail\",\n          \"value\": {\n            \"bytes\": [\n              255,\n              255,\n              255,\n              255,\n              8,\n              0,\n              0,\n              0\n            ]\n          }\n        },\n        {\n          \"name\": \"gpi.resource_id\",\n          \"value\": 1\n        }\n      ]\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "gpi",
+        "glyphs": [
+          3
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-U8G2_FONT_SECTION.hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "3e03124c1896d46d8a18de0d6950e5bc79a8e67843c5b5f7296aaa9817df2182",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: U8G2_FONT_SECTION\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-U8G2_FONT_SECTION.hex",
+          "--from",
+          "hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "3e03124c1896d46d8a18de0d6950e5bc79a8e67843c5b5f7296aaa9817df2182",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: U8G2_FONT_SECTION\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-U8G_FONT_SECTION.hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "a3d49db245ddf032228449be59a788d8464770a60085a08dc22a4bffccfd9809",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: U8G_FONT_SECTION\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-U8G_FONT_SECTION.hex",
+          "--from",
+          "hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "a3d49db245ddf032228449be59a788d8464770a60085a08dc22a4bffccfd9809",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: U8G_FONT_SECTION\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-u8x8_font_chroma48medium8_r.hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "1e5e27bc0d2e3b1c564c239b60919af8e7ad43aab1ebe6022ef42b93b2c31703",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: u8x8_font_chroma48medium8_r\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      },
+      {
+        "argv": [
+          "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/comment-u8x8_font_chroma48medium8_r.hex",
+          "--from",
+          "hex"
+        ],
+        "exit_code": 0,
+        "input_sha256": "1e5e27bc0d2e3b1c564c239b60919af8e7ad43aab1ebe6022ef42b93b2c31703",
+        "stdout": "{\n  \"format\": \"hex\",\n  \"font_count\": 1,\n  \"fonts\": [\n    {\n      \"name\": null,\n      \"family\": null,\n      \"glyph_count\": 2,\n      \"encoded_count\": 2,\n      \"unencoded_count\": 0,\n      \"distinct_codes\": 2,\n      \"first_code\": 65,\n      \"last_code\": 66,\n      \"pixel_size\": 16,\n      \"point_size\": {\n        \"numerator\": 16,\n        \"denominator\": 1\n      },\n      \"resolution\": [\n        72,\n        72\n      ],\n      \"ascent\": 16,\n      \"descent\": 0,\n      \"bounds\": [\n        8,\n        16,\n        0,\n        0\n      ],\n      \"charset\": \"unicode\",\n      \"charset_registry\": null,\n      \"charset_encoding\": null,\n      \"gl\": null,\n      \"headers\": [\n        {\n          \"name\": \"hex.comment\",\n          \"value\": \" Source declaration: u8x8_font_chroma48medium8_r\"\n        }\n      ],\n      \"properties\": []\n    }\n  ],\n  \"report\": {\n    \"entries\": []\n  }\n}\n",
+        "stderr": "",
+        "format": "hex",
+        "glyphs": [
+          2
+        ]
+      }
+    ],
+    "passed": 8
+  },
+  "fuzz_smoke": [
+    {
+      "target": "fon",
+      "command": "ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run fon \"$FONTPIXEL_WORK_ROOT/fon-c-detection-corpus/fon\" --no-default-features --features fontpixel/fon -- -max_total_time=10 -rss_limit_mb=1024 -max_len=65536",
+      "target_directory": "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection-fuzz",
+      "exit_code": 0,
+      "runs": 588476,
+      "seconds": 11,
+      "formal_long_campaign": false,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/fon-detection-fuzz.log",
+      "log_sha256": "1d0755f8f7e1ac8123221c87c89fe4e9b5e1512fb8c794e2e160fe1f14b3b0d6"
+    },
+    {
+      "target": "c",
+      "command": "ASAN_OPTIONS=detect_leaks=0 cargo +nightly fuzz run c \"$FONTPIXEL_WORK_ROOT/fon-c-detection-corpus/c\" --no-default-features --features c-only -- -max_total_time=10 -rss_limit_mb=1024 -max_len=65536",
+      "target_directory": "/home/chen/githubprojects/fontpixel/local-work/target-fon-detection-fuzz",
+      "exit_code": 0,
+      "runs": 465734,
+      "seconds": 11,
+      "formal_long_campaign": false,
+      "log": "/home/chen/githubprojects/fontpixel/local-work/c-detection-fuzz.log",
+      "log_sha256": "2a04c25eba498c8d1d98ba1b379a2d5807c402ebdda72eaed1411978e2fd6c9f"
+    }
+  ],
+  "original_initial_seed_bytes": [
+    {
+      "target": "c",
+      "name": "comment-U8G2_FONT_SECTION.hex",
+      "bytes": 117,
+      "sha256": "8d24a60cbd63f7c1f343f0db7f252198579d812e5252a30d5b99c5ba7638abbd",
+      "base64": "ACMgU291cmNlIGRlY2xhcmF0aW9uOiBVOEcyX0ZPTlRfU0VDVElPTgowMDQxOjQxNjY4QkIwRDVGQTFGNDQ2OThFQjNEOEZEMjI0NzZDCjAwNDI6NDI2NzhDQjFENkZCMjA0NTZBOEZCNEQ5RkUyMzQ4NkQK"
+    },
+    {
+      "target": "c",
+      "name": "comment-U8G_FONT_SECTION.hex",
+      "bytes": 116,
+      "sha256": "abc5231ea4a04948f368830e2c7c614647a2d44e0fe5a97b83bd50db0983d891",
+      "base64": "ACMgU291cmNlIGRlY2xhcmF0aW9uOiBVOEdfRk9OVF9TRUNUSU9OCjAwNDE6NDE2NjhCQjBENUZBMUY0NDY5OEVCM0Q4RkQyMjQ3NkMKMDA0Mjo0MjY3OENCMUQ2RkIyMDQ1NkE4RkI0RDlGRTIzNDg2RAo="
+    },
+    {
+      "target": "c",
+      "name": "comment-u8x8_font_chroma48medium8_r.hex",
+      "bytes": 127,
+      "sha256": "592cd658dc1371c39cf3c072e7e99a18ca0f516ba9c63176a635a1b1f035a9c4",
+      "base64": "ACMgU291cmNlIGRlY2xhcmF0aW9uOiB1OHg4X2ZvbnRfY2hyb21hNDhtZWRpdW04X3IKMDA0MTo0MTY2OEJCMEQ1RkExRjQ0Njk4RUIzRDhGRDIyNDc2QwowMDQyOjQyNjc4Q0IxRDZGQjIwNDU2QThGQjREOUZFMjM0ODZECg=="
+    },
+    {
+      "target": "c",
+      "name": "native.h",
+      "bytes": 140,
+      "sha256": "e9e1c6c4c970d6b6b219c918f847d1cc38d40d3a9541f820ac534cab4a7c5a74",
+      "base64": "AC8qIGZvbnRwaXhlbC1jOiB7IndpZHRoIjoxLCJoZWlnaHQiOjEsImZpcnN0X2NvZGUiOjY1LCJjaGFyc2V0IjoidW5pY29kZSIsImJhc2VsaW5lIjoxLCJsc2JfZmlyc3QiOmZhbHNlfSAqLwpjb25zdCB1aW50OF90IHBpeGVsc1tdPXsweDgwfTs="
+    },
+    {
+      "target": "c",
+      "name": "font8x8-include.h",
+      "bytes": 28,
+      "sha256": "37d40ebf30cf1154165cf097c015ffc731089354cafe2481d817094b541d7c54",
+      "base64": "ACNpbmNsdWRlICJmb250OHg4X2Jhc2ljLmgiCg=="
+    },
+    {
+      "target": "fon",
+      "name": "os2-ne",
+      "bytes": 736,
+      "sha256": "a5d392c33e12e80ee8b61b231679c22cf49a161e089411518433916c112a3797",
+      "base64": "TVqAAAEAAAAEAAAA//8AAAABAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAALgBTM0hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABORQUAZAABAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAAAQABQAFgAZABkAAAAAAAAAAQAAgABAAAAAAAAAAAADwC8ADEAvAAbACIBMQAiAQYAAAAHAAEACUZPTlRQSVhFTAAAAAAAAAAAAAAAAAAABgABAKgAAQABAAAAqAAAAE9yaWdpbmFsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT3JpZ2luYWwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFIDBgAAAAUAAQAFAAEAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAABBAAIAAAAAADwAPAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///xQAAABPUy8yIEZPTlQAAAABAAAAqAAAAE9yaWdpbmFsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT3JpZ2luYWwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFIDBgAAAAUAAQAFAAEAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAABBAAIAAAAAADwAPAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAXgAAAEIAuAAKAAoABgAKAAAAAAAAAAUA9gAAAP7/CgACAAIBAAD+/woAAgAOAQAA/v8KAAIAmn/APLtGgIBAgIBAAAAAAAAAAAAAAAAA+QWaf8A8AECAgECA/////wgAAAAAAAAAAAAAAAAAAAAAAA=="
+    },
+    {
+      "target": "fon",
+      "name": "fake-ne",
+      "bytes": 2,
+      "sha256": "d539cd97ca1a108f9f5e3f611d7606d84c0aa35ea1973304e479b99025124e16",
+      "base64": "TkU="
+    },
+    {
+      "target": "fon",
+      "name": "fake-pe",
+      "bytes": 4,
+      "sha256": "6444a337cedce2f444c10b050bd499a75264158b4343638d2d52857918a5b592",
+      "base64": "UEUAAA=="
+    },
+    {
+      "target": "fon",
+      "name": "original-win-ne",
+      "bytes": 294,
+      "sha256": "36bca213d77e710551ba4ff70428174953d97d6c327556d7224f4c05763ad505",
+      "base64": "TVoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAE5FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAWAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAiAAQAAAAAAoACGAAAAAYAAAAAAAAAAAAAAAAAAAAAChgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQBIAEgAAQAAAAAAAAAAkAEACAABAAAIAAgAQUEAAAIAAAAAAAAAAAAAAAAAfgAAAAAIAH4ACAB/AIEAAAAAAAAA"
+    }
+  ],
+  "development_failure": {
+    "log": "/home/chen/githubprojects/fontpixel/local-work/fon-c-detection-tests.log",
+    "description": "Initial positive coverage required preserving actual fontpixel-u8x8 comment plus byte-array declarations with custom symbols; fixed before all passing checks"
+  },
+  "prior_w55_manifest_preserved": {
+    "path": "reports/w5.5-sha256.txt",
+    "sha256": "14b0824e7ee474c43b55c41ecae5d09231f270fcd9b6a9c9e8c0ca855486493e",
+    "semantics": "historical freeze unchanged; only this report manifest supersedes changed C source/test/doc/fuzz entries"
+  },
+  "handoff": [
+    "production source frozen; W56 owns fresh all-feature matrix",
+    "root owns aggregate gate and at least610second detector fuzz campaigns",
+    "W52 rebuilds eligible performance preparation; no formal performance measured here",
+    "GPI source, shared registry/resources, and transport files/reports untouched"
+  ]
+}

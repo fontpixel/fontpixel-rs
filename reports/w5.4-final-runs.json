@@ -1,0 +1,74 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "palm,gdr",
+      "--example",
+      "w54_timing"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.7795546054840088,
+    "log": "reports/w5.4-adapter-build.log",
+    "sha256": "bf8fe463c3d3110bec03119e4cd9c801659199fa5f3b0c136a90652a74d32f73"
+  },
+  {
+    "argv": [
+      "python",
+      "tests/crosscheck/w54.py",
+      "--setup"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 28.842708587646484,
+    "log": "reports/w5.4-oracle-run.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "palm",
+      "--no-default-features",
+      "--features",
+      "palm-only",
+      "/home/chen/githubprojects/fontpixel/local-work/w54-corpus-final/palm",
+      "--",
+      "-max_total_time=15",
+      "-timeout=2",
+      "-max_len=262144",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 50.75057554244995,
+    "log": "reports/w5.4-palm-smoke.log",
+    "sha256": "f35bf21a40ba777d603fed3028913740ea0b05fb8f6c0c64a62891dc9c302e06"
+  },
+  {
+    "argv": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "gdr",
+      "--no-default-features",
+      "--features",
+      "gdr-only",
+      "/home/chen/githubprojects/fontpixel/local-work/w54-corpus-final/gdr",
+      "--",
+      "-max_total_time=15",
+      "-timeout=2",
+      "-max_len=262144",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 31.966363191604614,
+    "log": "reports/w5.4-gdr-smoke.log",
+    "sha256": "d488bfc019e306a2b02209d39fc20a2f6506203919c47152bc910a7848e25101"
+  }
+]

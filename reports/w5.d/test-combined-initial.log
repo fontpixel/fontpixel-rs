@@ -1,0 +1,26 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+error[E0609]: no field `default_glyph` on type `fontpixel::Font`
+   --> crates/fontpixel/tests/qpf2.rs:191:26
+    |
+191 |     assert!(set.fonts[0].default_glyph.is_none());
+    |                          ^^^^^^^^^^^^^ unknown field
+    |
+help: one of the expressions' fields has a field of the same name
+    |
+191 |     assert!(set.fonts[0].metrics.default_glyph.is_none());
+    |                          ++++++++
+
+error[E0609]: no field `default_glyph` on type `fontpixel::Font`
+   --> crates/fontpixel/tests/qpf2.rs:198:29
+    |
+198 |     assert!(parsed.fonts[0].default_glyph.is_none());
+    |                             ^^^^^^^^^^^^^ unknown field
+    |
+help: one of the expressions' fields has a field of the same name
+    |
+198 |     assert!(parsed.fonts[0].metrics.default_glyph.is_none());
+    |                             ++++++++
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `fontpixel` (test "qpf2") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

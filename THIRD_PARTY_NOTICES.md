@@ -432,3 +432,65 @@ machine layouts. Rust implementation and fixtures are original; no Amiga, Atari
 or GPL runtime is embedded. The supplied MIT Tom Thumb sample is read-only
 validation input. Per-format source links and any oracle limitations are in
 `docs/formats/{amiga,gem,snf}.md` and the W4.6 report.
+
+## Phase 5 native format references and external consumers
+
+The pinned monobit 0.54.0 release and surveyed upstream revision are MIT-licensed
+work by Rob Hagemans and contributors. Their published field definitions and
+independent readers/writers were consulted for the Korean, Apple, legacy Unix,
+terminal, printer, text, raw and operating-system bitmap families. In particular,
+the DOSStart, EDWIN, mkwinfont/FD, PSF2TXT, PCR/Optiks, +3DOS, Dr. Halo and
+WriteOn modules supply independently checked format evidence. Checked-in native
+codecs, wire fixtures, raster patterns and test adapters are original project
+code. The shared oracle installation is unchanged; documented compatibility
+adapters run in isolated processes and are distinguished from untouched tools.
+
+Primary Apple/MGTK, Palm, Symbian, DEC, Atari and printer documents establish
+the corresponding wire layouts. Native FIGlet (BSD-3-Clause), MGTK tools,
+published Lisa examples, Palm FontConv/fsconvert, TeX Live, Qt, FreeType and
+fontTools are external verification tools. Their implementation sources and
+historical font artwork are not bundled. Exact source revisions, hashes,
+tool-specific limitations and comparisons appear in the W5 reports and each
+format document.
+
+U8g2/U8glib/U8x8 (BSD), LVGL (MIT) and NetBSD (BSD) runtimes are acknowledged as
+embedded-format references and external consumers. Bits'N'Picas, Rockbox,
+Panic's Playdate SDK/Simulator and Gadgetbridge supply additional format evidence
+or native interoperability checks; no MPL/GPL/vendor runtime implementation is
+included in the Rust library. The checked-in Playdate fixtures are generated
+from original project artwork, with producer versions and reproducibility
+recorded in `reports/w5.e1`. Existing dependency notices also cover serde/JSON
+and the image codecs reused by the new bitmap containers.
+
+NetSurf TTF2f 0.0.6 (J-M Bell, Simplified BSD) provides independent evidence for
+RISC OS paired signed 12-bit coordinate packing. Its published producer source
+is a format reference only; no code is copied into the Rust implementation.
+The checked source archive has SHA-256
+`441afd8003b4a7c4bb9742cb0e260a614cf0af579ba99f0ccc3e4fc082412614`.
+The native PC/GEOS layouts follow the original project's font driver structure
+declarations; documented differences from monobit are tested explicitly.
+
+Pillow's permissively licensed FontFile/ImageFont interfaces provide native
+PILfont producer and rendering checks. Processing's PFont implementation and
+the original SDL SFont implementation are used only as external consumers
+under their respective LGPL/GPL terms; their source is not copied into this
+project and they are not linked or distributed with fontpixel. Versioned source
+URLs, hashes and the exact oracle scope appear in `reports/w5.e2-image`.
+
+The SFN2/SSFN references and author renderer/converter are MIT work by bzt.
+SSFN native-consumer checks use that separate executable. DAVIC 1.4.1 Part 9
+Annex A and FreeType PFR interfaces establish PFR field layouts and document
+consumer differences. The author converter's external potrace dependency is
+not incorporated into this project. Revisions, hashes and exact supported
+comparison scope are in `reports/w5.e2-outline-provenance.json`.
+
+The original NeXT/Adobe `prebuild` producer is a separate historical oracle.
+Its restricted implementation is neither copied into nor distributed with
+fontpixel. Original synthetic BDF input, output bytes and independently parsed
+observations establish little-endian bitmap order; an external ELF32 build
+changes only a conflicting C forward declaration. Build/source/artifact hashes
+and the supported depth boundary are recorded in the Prebuilt format evidence.
+FreeBSD `vtfontcvt`, NetBSD font structures and the original public-domain GPI
+consumer provide further independent system-font checks. SymbOS and PC/GEOS
+published structure declarations are format facts; no GPL driver implementation
+is copied. See `reports/w5.b.md` for the precise oracle and license boundaries.

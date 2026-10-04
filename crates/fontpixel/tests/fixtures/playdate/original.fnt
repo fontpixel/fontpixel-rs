@@ -1,0 +1,14 @@
+--name=Original E1
+--metrics={"baseline":-2}
+datalen=168
+data=iVBORw0KGgoAAAANSUhEUgAAACgAAAAICAYAAACLUr1bAAAAQ0lEQVR4nGNgYGD4z4AJ/iPR/9HEsKlD14MPYFNHyGyaGU4LD5LlQ1p6cFBEIc1Cj15pdECjkFgPDoooJDn0BryYAQBKf1ulZNLyOwAAAABJRU5ErkJggg==
+width=8
+height=8
+tracking=2
+space 4
+A 7
+B 8
+U+0100 6
+U+20000 5
+AB -1
+AU+0100 -2

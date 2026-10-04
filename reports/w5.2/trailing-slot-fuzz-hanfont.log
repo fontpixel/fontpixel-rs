@@ -1,0 +1,27 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 15.45s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w52/x86_64-unknown-linux-gnu/release/hanfont -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/hanfont/ -max_total_time=20 -timeout=3 -rss_limit_mb=1024 -max_len=11520 /home/chen/githubprojects/fontpixel/local-work/w52/smoke-final3/hanfont`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 3051801257
+INFO: Loaded 1 modules   (7299 inline 8-bit counters): 7299 [0x5a56e6a2bca0, 0x5a56e6a2d923), 
+INFO: Loaded 1 PC tables (7299 PCs): 7299 [0x5a56e6a2d928,0x5a56e6a4a158), 
+INFO:        2 files found in /home/chen/githubprojects/fontpixel/local-work/w52/smoke-final3/hanfont
+INFO: seed corpus: files: 2 min: 784b max: 11520b total: 12304b rss: 31Mb
+#3	INITED cov: 826 ft: 834 corp: 2/12304b exec/s: 0 rss: 128Mb
+#8	pulse  cov: 826 ft: 834 corp: 2/12304b lim: 11520 exec/s: 4 rss: 320Mb
+#9	REDUCE cov: 826 ft: 834 corp: 2/12111b lim: 11520 exec/s: 4 rss: 320Mb L: 591/11520 MS: 1 EraseBytes-
+#11	REDUCE cov: 826 ft: 834 corp: 2/11933b lim: 11520 exec/s: 5 rss: 320Mb L: 413/11520 MS: 2 ShuffleBytes-EraseBytes-
+#16	pulse  cov: 826 ft: 834 corp: 2/11933b lim: 11520 exec/s: 8 rss: 320Mb
+#32	pulse  cov: 826 ft: 834 corp: 2/11933b lim: 11520 exec/s: 8 rss: 321Mb
+#39	REDUCE cov: 826 ft: 834 corp: 2/11845b lim: 11520 exec/s: 5 rss: 321Mb L: 325/11520 MS: 1 CrossOver-
+#40	REDUCE cov: 826 ft: 834 corp: 2/11741b lim: 11520 exec/s: 5 rss: 321Mb L: 221/11520 MS: 1 EraseBytes-
+#64	pulse  cov: 826 ft: 834 corp: 2/11741b lim: 11520 exec/s: 8 rss: 322Mb
+#99	REDUCE cov: 826 ft: 834 corp: 2/11725b lim: 11520 exec/s: 9 rss: 322Mb L: 205/11520 MS: 1 EraseBytes-
+#100	REDUCE cov: 826 ft: 834 corp: 2/11640b lim: 11520 exec/s: 9 rss: 322Mb L: 120/11520 MS: 1 EraseBytes-
+#111	REDUCE cov: 826 ft: 834 corp: 2/11585b lim: 11520 exec/s: 10 rss: 322Mb L: 65/11520 MS: 1 EraseBytes-
+#128	pulse  cov: 826 ft: 834 corp: 2/11585b lim: 11520 exec/s: 7 rss: 322Mb
+#148	REDUCE cov: 826 ft: 834 corp: 2/11560b lim: 11520 exec/s: 7 rss: 322Mb L: 40/11520 MS: 3 ChangeBinInt-ChangeBit-EraseBytes-
+#156	DONE   cov: 826 ft: 834 corp: 2/11560b lim: 11520 exec/s: 7 rss: 322Mb
+Done 156 runs in 22 second(s)

@@ -1,0 +1,269 @@
+{
+  "schema": 1,
+  "review_utc": "2026-10-04T11:04:08.466890+00:00",
+  "purpose": "Final independent read-only verification of the five detector fixes; no new search scope",
+  "result": "all five fixes verified; previous successful reads preserved",
+  "unchanged_before_reports": {
+    "reports/w5.detector-review.md": "57d22fc7a46623ca51adecc61f84ee956ab48a54b743aaa5bb4d13086611804f",
+    "reports/w5.detector-review.json": "07846347fe8280d77894f60f4c93de31b3502097ff3fdf744bfaaf3e44c81634",
+    "reports/w5.detector-review.tar.gz": "153ae7cd7d14912cb37674e5c0406a8f62b356680c26544f7c3302d278b98fa9"
+  },
+  "build": {
+    "argv": [
+      "cargo",
+      "build",
+      "--locked",
+      "-p",
+      "fontpixel-cli",
+      "--all-features",
+      "--bin",
+      "fontpixel",
+      "--message-format=json"
+    ],
+    "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+    "exit": 0,
+    "seconds": 34.7346715927124,
+    "environment": {
+      "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs",
+      "CARGO_BUILD_JOBS": "2",
+      "CARGO_INCREMENTAL": "0",
+      "CARGO_PROFILE_DEV_DEBUG": "0"
+    },
+    "probe_command": [
+      "rustc",
+      "--edition=2024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review-final/probe.rs",
+      "-L",
+      "dependency=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps",
+      "--extern",
+      "fontpixel=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libfontpixel-bd84537d0a63e59d.rlib",
+      "--extern",
+      "serde_json=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libserde_json-e06d15a2f7423ec3.rlib",
+      "-o",
+      "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review-final/probe"
+    ],
+    "probe_exit": 0,
+    "probe_stderr": "",
+    "library_features": [
+      "all-formats",
+      "amiga",
+      "bbc",
+      "bdat",
+      "bdf",
+      "beos",
+      "bmfont",
+      "c",
+      "catalyst",
+      "cff",
+      "chiwriter",
+      "cjk-charsets",
+      "color",
+      "comfont",
+      "compat-bdfparser",
+      "consoleet",
+      "cpi",
+      "cybiko",
+      "daisy",
+      "dashen",
+      "default",
+      "dosstart",
+      "draw",
+      "drcs",
+      "drhalo",
+      "edwin",
+      "fbit",
+      "figlet",
+      "fnt",
+      "fon",
+      "fontx2",
+      "fzx",
+      "gdr",
+      "gem",
+      "geos",
+      "gf",
+      "gpi",
+      "grasp",
+      "gzip",
+      "hanfont",
+      "hbf",
+      "hex",
+      "hmzk",
+      "hppcl",
+      "hrcg",
+      "hzk",
+      "iigs",
+      "image",
+      "kbits",
+      "kbitx",
+      "lisa",
+      "mgtk",
+      "mkwinfont",
+      "nfnt",
+      "oberon",
+      "otb",
+      "otf",
+      "palm",
+      "pbf",
+      "pcf",
+      "pcgeos",
+      "pcr",
+      "pf2",
+      "pfr",
+      "pilfont",
+      "pk",
+      "plan9",
+      "playdate",
+      "plus3dos",
+      "png",
+      "polyprint",
+      "prebuilt",
+      "printshop",
+      "psf",
+      "psf2txt",
+      "pxl",
+      "qpf",
+      "qpf2",
+      "raw",
+      "riscos",
+      "rockbox",
+      "sbf",
+      "serde",
+      "sfd",
+      "sfnt",
+      "sfont",
+      "signum",
+      "snf",
+      "ssfn",
+      "svg",
+      "symbos",
+      "tasprint",
+      "ttc",
+      "ttf",
+      "u8m",
+      "vector-raster",
+      "vfont",
+      "vlw",
+      "vtfont",
+      "woff",
+      "woff2",
+      "writeon",
+      "wsfont",
+      "wyse",
+      "xbin",
+      "xerox",
+      "yaff",
+      "zapfont"
+    ],
+    "artifacts": {
+      "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libfontpixel-bd84537d0a63e59d.rlib": {
+        "bytes": 90811376,
+        "sha256": "850bdf2d5bd7fba052cc1f2d448849a461c1467928b0878ef4d5d9d4e84b6729"
+      },
+      "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libserde_json-e06d15a2f7423ec3.rlib": {
+        "bytes": 3013812,
+        "sha256": "0b2fff5b6a22a4a076976ca433a1ba5cfe03f6fe20897ca2a7a25f07e101d143"
+      },
+      "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/fontpixel": {
+        "bytes": 44179000,
+        "sha256": "62eacb9f1545bded563652f355ed197f4993f4d98d9165578f31c94fa775bf77"
+      },
+      "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review-final/fontpixel-fresh": {
+        "bytes": 44179000,
+        "sha256": "62eacb9f1545bded563652f355ed197f4993f4d98d9165578f31c94fa775bf77"
+      }
+    },
+    "source_hashes_sha256": "f6d759b3777bf6df6a73f7ae65478f58071afda4d768399ca5bd13b0c189db40"
+  },
+  "owner_freezes": {
+    "crates/fontpixel/src/formats/c.rs": {
+      "sha256": "32d51dc02866356f4a074bb2a628fc95bbf3c460f2a8591c86eb757fb2a51147",
+      "bytes": 34798
+    },
+    "crates/fontpixel/src/formats/fon.rs": {
+      "sha256": "ee5ba8713f2699414849e6f69876416af5fc8c8f42be1a5a3ccc9aa6c50e99d4",
+      "bytes": 22043
+    },
+    "reports/w5.c2-freeze.json": {
+      "sha256": "e6033f85b8c910bd0485438b957e09067be28f37620893d40e5a975b15b00a70",
+      "bytes": 5399
+    },
+    "reports/w5.c2-detector-real-fixtures.json": {
+      "sha256": "1e191b31f2571a9980fe1e1785117c5ef2ff7b2d65933a473e59bb716f2f3822",
+      "bytes": 1967
+    }
+  },
+  "replay": {
+    "matrix_cases": 189,
+    "canonical_formats": 75,
+    "cli_read_commands": 75,
+    "changed_registry_results": 10,
+    "previous_success_regressions": 0,
+    "checks_passed": true,
+    "cli_sha256": "62eacb9f1545bded563652f355ed197f4993f4d98d9165578f31c94fa775bf77",
+    "probe_sha256": "32b7d298655d1082abb3052d529b8489e31951db9e28c066f78e8266883289b3"
+  },
+  "additional_c_read_commands": 6,
+  "total_cli_read_commands": 81,
+  "successful_output_comparison": {
+    "byte_identical_previous_successes": 41,
+    "changed_previous_successes": 0
+  },
+  "registry": {
+    "formats": 99,
+    "detectors": 89,
+    "readers": 99,
+    "writers": 99
+  },
+  "issues": [
+    {
+      "id": "DR1",
+      "fixed": true,
+      "case": "FONTX2 256 glyphs",
+      "before": "Ambiguous FONTX2/RISC OS Certain",
+      "after": "Unique FONTX2 Certain; automatic read succeeds; invalid RISC OS candidate removed"
+    },
+    {
+      "id": "DR2",
+      "fixed": true,
+      "case": "QPF 256 and 2048 glyphs",
+      "before": "Ambiguous ChiWriter/QPF Possible",
+      "after": "Unique QPF Possible; both automatic reads succeed; invalid ChiWriter candidate removed"
+    },
+    {
+      "id": "DR3",
+      "fixed": true,
+      "case": "OS/2 GPI NE, 3 glyphs",
+      "before": "Wrong unique FON Certain and reader failure",
+      "after": "Unique GPI Possible; automatic read succeeds; generic NE no longer claims Windows FONT evidence"
+    },
+    {
+      "id": "DR4",
+      "fixed": true,
+      "case": "HEX with U8G_FONT_SECTION, u8x8_font_ or U8G2_FONT_SECTION in a legal comment",
+      "before": "Wrong unique C Certain and reader failure",
+      "after": "HEX Possible only; all three automatic reads succeed with 2 glyphs"
+    },
+    {
+      "id": "DR5",
+      "fixed": true,
+      "case": "Palm/NFNT 257 glyphs",
+      "before": "Ambiguous NFNT/Palm/Xerox",
+      "after": "Ambiguous NFNT/Palm retained; both explicit readers succeed; invalid Xerox candidate removed"
+    }
+  ],
+  "unchanged_or_expected_boundaries": [
+    "Generic PNG still has image/SFont Possible ambiguity; valid RFont rfVM evidence remains SFont Certain.",
+    "Palm and NFNT both parse the real original file; their two-way ambiguity is deliberately retained.",
+    "Native magic-only truncations remain detectable and are correctly rejected during reading.",
+    "Pre-2019 U8x8 is correctly detected as C, but requires the documented --c-read-u8x8-legacy interpretation to read its three glyphs. The default-reader rejection is retained in evidence and is not a detector regression.",
+    "DR6 remains the documented/pre-existing explicit-only EDWIN versus broad Plan9 numeric-header boundary; it was not part of the five production fixes."
+  ],
+  "scope_notes": [
+    "The exact original 189 fixture SHA256 values were verified before replay; 75 canonical format IDs.",
+    "The same original 75 CLI reads were replayed, then six supplementary C-family reads clarified newly recognized native declarations.",
+    "All 41 successful reads in the original primary validation set have byte-identical JSON stdout after the fixes.",
+    "Cargo built current source with --locked --all-features; the probe links the exact fontpixel rlib from that build JSON, not a guessed stale artifact. All production Rust source/manifests were hashed before and after build/link and remained unchanged.",
+    "No production code, existing format docs, tests or shared manifests were modified. No long fuzz/performance run."
+  ],
+  "evidence_scratch": "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review-final"
+}

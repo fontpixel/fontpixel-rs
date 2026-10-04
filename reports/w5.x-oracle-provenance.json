@@ -1,0 +1,21 @@
+{
+  "sdist_sha256": "f0f2bb8e20ee758a3febc11bf2aedcb99a548f1540ef93db076c60c5d9865e23",
+  "source": "https://pypi.org/project/monobit/0.54.0/",
+  "files": [
+    {
+      "path": "core/raster.py",
+      "sha256": "ed4318e65d005dfb9bd55d6aab1f7fcffba2fa644db59d088c70d6a08af6c8bb",
+      "matches_official_sdist": true
+    },
+    {
+      "path": "storage/fontformats/raw/raw.py",
+      "sha256": "d2d7721a93ace44fa762e4f17d318f760bb6df750d8fa7ed299247ab98ab3eba",
+      "matches_official_sdist": true
+    },
+    {
+      "path": "storage/fontformats/image/bmfont.py",
+      "sha256": "ba3b612c06e68ba6ec31095853bda3ff0e65bc4c5e4652af578b5b0749e6afa4",
+      "matches_official_sdist": true
+    }
+  ]
+}

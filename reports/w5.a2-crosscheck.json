@@ -1,0 +1,424 @@
+{
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "monobit": "0.54.0",
+  "provenance": {
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/comloaders.py": "5878ec2be8ba99410ca9c6ee0e8d409cf1a485c943925cad8842c8218af94846",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/z80/_z80.cpython-312-x86_64-linux-gnu.so": "e43f050161d89b9cd91ff998ab283abf23d7a1144784c0104f05e127ec164d40",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/softfont/bbc.py": "08a4e932b746e6adfde78d410466bb94e75cfe0be4b84e8b227fc3858f3003da",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/softfont/wyse.py": "30f97c59bf8f6f2cd1ddec06c2e54b90d13f0f259bdbb981f07553909b004e71",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/grasp.py": "4ea7ce4d2ead998ddc403e56a33e048c5453fd3608fccd9b8c5692bea6ab7d20",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/hrcg.py": "fd4d2d343003987cb849e07954ad583b55ceeb5b6b24baed19dad9f86b96f770",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/xbin.py": "a8f94da97f485cc1bb173b5a447b021b0b36117fb96138f604968f2c9ce63ff0",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/text/consoleet.py": "56204eafae6ed0950780ab2be398048f278233dfb7bb059b6e7e26694651ba21",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/zapfont.py": "85d625fa1c976ff30fafcc2aead9ac194c49c9ffe8cdde0f0b7d9babb212c4af",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/zapredraw.py": "4b3fa9d2e53e7813c1e060ee720de81128c6704c74c6df3abda826204a51d6e8",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/fontraption-formats.inc": "2ab791f509fd66d28c55da3d6849fb0d1aa277495bbfc0795b04777ac798eab6",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/wyse.pdf": "b3cab0d06a62123a839e545ccde5557ead85c2f5bed262fcb9c086f6a35d1801",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/zap-formats.txt": "ae959da4c8359d12e11c1ad22bae31de97279ce56537e8476bad8faccf855bc6",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/xbios.html": "0a4c26eaa8dfaff31438105e0579d4ad5d118040a24c716cb211b2d4e7f95349",
+    "/home/chen/githubprojects/fontpixel/local-work/w5a2/xbiosint.html": "a158b8e31eaa6521471f0769119f3de6501bf48f29e95e2f5e4597507eed7cb8"
+  },
+  "results": {
+    "bbc": {
+      "glyphs": 3,
+      "monobit_read": "pass",
+      "sha256": "62eb3ebde93137dccc500cfa06ad1d533dba1363bfe5e7824cbaf3f8533d6d7a",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 3,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "wyse": {
+      "glyphs": 3,
+      "monobit_read": "pass",
+      "sha256": "4e24bc29531e379e88c9917067472fce592b3bc5815e04254c35ab859a563ab1",
+      "oracle_projection": "compare native eight columns; monobit adds two blank display columns",
+      "upstream_write_failure": "Can only expand raster by a positive amount.",
+      "explicit_wire_width_reemit": "pass"
+    },
+    "grasp": {
+      "glyphs": 3,
+      "monobit_read": "pass",
+      "sha256": "a2e6e0d2600d07613c2d2b38d79f136ecd5c3b638694efccfbd611f9e4be92da",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 3,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "hrcg": {
+      "glyphs": 96,
+      "monobit_read": "pass",
+      "sha256": "376915fb4676ac3a24ea7a1b66e8315e1c2e1556fc29b584c7ef5c0b83abfcce",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 96,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "xbin": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "3c6ba9192b0cdd4d1c8f8efec949283aba2f95b622d5e1fd4534c97da9420aeb",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 256,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "xbin-512": {
+      "glyphs": 512,
+      "monobit_read": "pass",
+      "sha256": "645fe4f2b18165299ef9b83c1318d787a7b5f127f19e5f9b0f5aaa0aaa9f4275",
+      "upstream_write_failure": "[PosixPath('/home/chen/githubprojects/fontpixel/local-work/target-w5a2/debug/examples/w5a2_timing'), 'inspect', 'xbin-512', PosixPath('/home/chen/githubprojects/fontpixel/local-work/w5a2/oracle-xbin-512.bin')]: exit 1\n\nError: InvalidInput(\"XBIN screen length mismatch\")\n"
+    },
+    "consoleet": {
+      "glyphs": 3,
+      "monobit_read": "pass",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 3,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "zapfont-old": {
+      "glyphs": 3,
+      "monobit_read": "pass",
+      "sha256": "ac9fdc67a90b591bee25621d4f676f12170507a10e8e43a9613a7b529826e041",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 3,
+      "monobit_write": "pass",
+      "upstream_added_slots": 0
+    },
+    "zapfont-redraw": {
+      "glyphs": 257,
+      "monobit_read": "pass",
+      "sha256": "26780d1f75e6878230f98b8eba992bfd4553eda3805613643d381fbb6710da23",
+      "oracle_output_reader_comparison": "pass",
+      "oracle_output_glyphs": 288,
+      "upstream_write_failure": "('zapfont-redraw', 0, 'upstream source projection')"
+    },
+    "comfont-fontedit": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "743ac2a2e87aad8d36584b41f432d9caaf9a08035b1eb156c2239c9db69798dd",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-fontedit-32": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "a7b41f50b196bc80f2d583da499ef2b7ce8854c0fd2ea423b1f525e9f18588ce",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-frapt": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "35962f631c796d630a5a6f936ea5038ca2dc205bcf9cc8df162a057e1a02b8ac",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-frapt-32": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "f5be87f7f459944bfe60741e2d7bf2149171202aa0cf3bf4290ef55fd44b86af",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-frapt-tsr": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "b83317cc2409535c8c4699d64aee08cba2da9c6b58afdcf8e9dacd8d84f5f358",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 3,
+        "mode_changes": [
+          3,
+          7,
+          19
+        ],
+        "resident_bytes": [
+          2496
+        ]
+      }
+    },
+    "comfont-frapt-tsr-32": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "3d0e1c76a331e4a6b81b9742f00e259d867dadbd23238c38aa008eb7c43e9177",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 3,
+        "mode_changes": [
+          3,
+          7,
+          19
+        ],
+        "resident_bytes": [
+          8640
+        ]
+      }
+    },
+    "comfont-mania": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "1ae64b686364b4b535458e79717eb9d4b2cff06b6043233f4cf89e2af225ce98",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-mania-32": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "84c65fff177d02233ab45ace5d430cc9cd249b77b004bf217f93a4ce04a01300",
+      "execution": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 1,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-letafont-pcw": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "278dad44e1ca5c644861c5668d3c6f087eff11970357dd72749180227c60149d",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "pcw",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-letafont-cpc": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "60c0f0a8b4529695bc57a35b4f3e4ced81341d7982dad4e80d0c835d447d68cb",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "cpc",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-letafont-spectrum": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "f6f52a167cbb69427ecd8866963b4644f1aa531c9e1a4cc0a0b132f360085270",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-udg-pcw": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "832038ba7d381f663cfbf9422a67b2ef21826f8675858e8e9aeb99d28d218fe6",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "pcw",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-udg-cpc": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "75c40b0804fd3cb3321abf37a487d8f1531ede86dd4ba6a727736ee1857e4d82",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "cpc",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-udg-spectrum": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "02c410ab06c36fb91a12adab96c3b1534ce6adcac15add017c4525d829a08ec8",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      }
+    },
+    "comfont-psfcom-pcw": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "ba726ecec176d8666b503c0fbdc9bffd902f39c730b60d1a884027457bf5983c",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "pcw",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-pcw-16": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "954d8ffe9f0fbd4589fbcc527d3f1f37af95c777065d02aeffefecc99d4025c4",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "pcw",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": true
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-cpc": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "b7a30ecaba46758f4773fe9856745fc6b1059b7f74f0b0070e044e0dffe34ed4",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "cpc",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-cpc-16": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "7adecff3182bf628c00f09c67c885c8f29b5bdb1a63cde8f32a077cfe443e266",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "cpc",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": true
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-spectrum": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "00e1fccdc736ff464f1f9217558182cb12126096552f06638b6da9ddcb65994b",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-spectrum-16": {
+      "glyphs": 256,
+      "monobit_read": "pass",
+      "sha256": "04452f9ff796b06dd917863b03f8c7d5600e48c77ccb619c43ac707f16a5546b",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 2048,
+        "bank_switch_calls": 1,
+        "native_16_to_8": true
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-spectrum-512": {
+      "glyphs": 512,
+      "monobit_read": "pass",
+      "sha256": "23f188ae3ecfd196eb4742e1a1453e6cae275ea95b263e72b038cbf259c0b730",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 4096,
+        "bank_switch_calls": 1,
+        "native_16_to_8": false
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "comfont-psfcom-spectrum-512-16": {
+      "glyphs": 512,
+      "monobit_read": "pass",
+      "sha256": "938a177b356846d6ac5538edbaedbc166e28a0e11b7d809352494975d096b8ea",
+      "execution": {
+        "engine": "z80 1.2.0",
+        "target": "spectrum",
+        "installed_bytes": 4096,
+        "bank_switch_calls": 1,
+        "native_16_to_8": true
+      },
+      "dos_unsupported_exit": {
+        "engine": "unicorn 2.1.4",
+        "font_installs": 0,
+        "mode_changes": [],
+        "resident_bytes": []
+      }
+    },
+    "zap-ordinal-alias-primary": {
+      "sha256": "346675946071c01576e545e3a90d5c9eb4deb476eeba57bd73c4540f5fed701a",
+      "primary_table_mapping": "pass",
+      "upstream_read_limitation": "0.54.0 reads sorted nonzero table positions instead of actual one-based ordinals; does not preserve repeated ordinal aliases"
+    },
+    "zap-width9": {
+      "monobit_read": "pass",
+      "glyphs": 2,
+      "sha256": "b3c085a682a6ef7f704dc6e11a3ff81c798737040ac9901bb5df8d50a9408241"
+    }
+  }
+}

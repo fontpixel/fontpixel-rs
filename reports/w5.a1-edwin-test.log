@@ -1,0 +1,17 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.68s
+     Running tests/edwin.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/deps/edwin-7f81a878d7b7e30f)
+
+running 6 tests
+test arbitrary_precision_rows_and_width_validation ... ok
+test metadata_loss_is_audited_and_strict_rejects ... ok
+test invalid_signature_and_short_inputs_do_not_panic ... ok
+test utf8_nondigit_label_survives ... ok
+test original_wire_roundtrip_and_strict ... ok
+test cumulative_limits_and_output_reread_contract ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,705 @@
+{
+  "status": "Module campaigns authenticate their individual source snapshots; phase 5 aggregate acceptance remains pending.",
+  "campaigns": [
+    {
+      "target": "hanfont",
+      "status": "superseded by final3 slot-count repair",
+      "runs": 4859,
+      "fuzz_seconds": 611,
+      "coverage": 826,
+      "features": 834,
+      "rss_mib": 325,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hanfont",
+        "--no-default-features",
+        "--features",
+        "hanfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=11520"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final.json.gz",
+          "sha256": "638b819fb08e442b24b266f79afaef0013704f14595bc887f3ccf33f8106fd0f"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final.log.gz",
+          "sha256": "3f5cad1fe76640377089f73210d2fbcfa1ce97b3e539396e9fedb2b6d741ff8d"
+        }
+      ]
+    },
+    {
+      "target": "iigs",
+      "status": "superseded by final3 slot-count repair",
+      "runs": 1095142,
+      "fuzz_seconds": 611,
+      "coverage": 1799,
+      "features": 3988,
+      "rss_mib": 525,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "iigs",
+        "--no-default-features",
+        "--features",
+        "iigs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=262144"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final.json.gz",
+          "sha256": "bdd26eb302ca21adcad0d78592a194ebe3096fe7b841331cb13083a91a0b5c23"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final.log.gz",
+          "sha256": "9b7a23a21b2c62ca310d453580ecbd46b2801fa8a14916824715650f83f95c67"
+        }
+      ]
+    },
+    {
+      "target": "palm",
+      "status": "module campaign passed",
+      "runs": 485758,
+      "fuzz_seconds": 611,
+      "coverage": 3069,
+      "features": 12410,
+      "rss_mib": 520,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "palm",
+        "--no-default-features",
+        "--features",
+        "palm-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-palm-fuzz-final.json.gz",
+          "sha256": "6bf85b61567af94d34505bcc15b0d1b4951041d2a2e03d7855c469cba8282955"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-palm-fuzz-final.log.gz",
+          "sha256": "b4ea5b7f35e0df83d41f0e4e5bf238dcffec7e92756f27e4ce57fed3014ecb6e"
+        }
+      ]
+    },
+    {
+      "target": "gdr",
+      "status": "module campaign passed",
+      "runs": 818137,
+      "fuzz_seconds": 611,
+      "coverage": 2396,
+      "features": 7087,
+      "rss_mib": 391,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "gdr",
+        "--no-default-features",
+        "--features",
+        "gdr-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-gdr-fuzz-final.json.gz",
+          "sha256": "4fd25413c460a3e54fcd87576f4a56abc15f07da04eb043401da84ff165e015a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-gdr-fuzz-final.log.gz",
+          "sha256": "81e09a2d1b5b543b626ba152a248b659294d4a3b003cb89369efad5d51e4d12d"
+        }
+      ]
+    },
+    {
+      "target": "c",
+      "status": "module campaign passed",
+      "runs": 652747,
+      "fuzz_seconds": 611,
+      "coverage": 7108,
+      "features": 26378,
+      "rss_mib": 549,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "c",
+        "--no-default-features",
+        "--features",
+        "c-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final.json.gz",
+          "sha256": "f72a6ed6d09f832ad51a28be17268fc5638f32d38057071c2e45882b02321609"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-c-fuzz-final.log.gz",
+          "sha256": "6739c9b05b3e8b5a91856bacbe457d37400251f0bfaa4637e5af8dbe18969d9e"
+        }
+      ]
+    },
+    {
+      "target": "drcs",
+      "status": "module campaign passed",
+      "runs": 3785744,
+      "fuzz_seconds": 611,
+      "coverage": 1374,
+      "features": 5753,
+      "rss_mib": 457,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "drcs",
+        "--no-default-features",
+        "--features",
+        "drcs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-drcs-fuzz-final.json.gz",
+          "sha256": "9c015bb85ab33cde2679f9dafa72b42ab0897593f4b37ab193904abd68785782"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-drcs-fuzz-final.log.gz",
+          "sha256": "a548787217e19e95d3d5a107e5f3fca981bcddc749015a96036640bff9dc1ff8"
+        }
+      ]
+    },
+    {
+      "target": "dosstart",
+      "status": "module campaign passed",
+      "runs": 2709741,
+      "fuzz_seconds": 611,
+      "coverage": 1558,
+      "features": 5654,
+      "rss_mib": 473,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "dosstart",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-dosstart-fuzz-final.json.gz",
+          "sha256": "ca2faa24a3c2734b6ed44b4b4890187484317aff7cd4b78559ae35d6159b8a5a"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-dosstart-fuzz-final.log.gz",
+          "sha256": "fab68e38169f06252086fc80bd277990361d0627adb86009fb6e46fa92ca2524"
+        }
+      ]
+    },
+    {
+      "target": "edwin",
+      "status": "module campaign passed",
+      "runs": 7455612,
+      "fuzz_seconds": 611,
+      "coverage": 1515,
+      "features": 5848,
+      "rss_mib": 521,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "edwin",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-edwin-fuzz-final.json.gz",
+          "sha256": "eb6e782acff77e729188d4ef97d9ab41d2fa942c5c4a9a5459425fc31bd351e5"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-edwin-fuzz-final.log.gz",
+          "sha256": "bea69178bc08647c08f8206f681db18da4d96ac71d95ae124cd5782dc772b8fd"
+        }
+      ]
+    },
+    {
+      "target": "mkwinfont",
+      "status": "module campaign passed",
+      "runs": 3581645,
+      "fuzz_seconds": 611,
+      "coverage": 1581,
+      "features": 6277,
+      "rss_mib": 532,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "mkwinfont",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-mkwinfont-fuzz-final.json.gz",
+          "sha256": "a646537f1e7da97103a71a23ff79848aabf3e1f448242fd2d3cdc612696435bb"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-mkwinfont-fuzz-final.log.gz",
+          "sha256": "b0513bea39e2bcb1af755603dfdc2e2dada736244cd2ce05400e0a86d2773aee"
+        }
+      ]
+    },
+    {
+      "target": "psf2txt",
+      "status": "module campaign passed",
+      "runs": 7395712,
+      "fuzz_seconds": 611,
+      "coverage": 1883,
+      "features": 7292,
+      "rss_mib": 522,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "psf2txt",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-psf2txt-fuzz-final.json.gz",
+          "sha256": "ef2f10cd9f5ae85d9c2e05b79118764848d313910298ddfbf6ea3a86de1171be"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-psf2txt-fuzz-final.log.gz",
+          "sha256": "cdb6e04ff7e9cac4792498ab33e6ff202c31f8ec90de3aca6bfe72f37c952cfe"
+        }
+      ]
+    },
+    {
+      "target": "pcr",
+      "status": "module campaign passed",
+      "runs": 1515877,
+      "fuzz_seconds": 611,
+      "coverage": 894,
+      "features": 927,
+      "rss_mib": 381,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pcr",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pcr-fuzz-final.json.gz",
+          "sha256": "7a2dc0ca0decd28f4f0a211582e8c3f64d7863386305e8454b4ecd9e63f3c9a3"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pcr-fuzz-final.log.gz",
+          "sha256": "cbe1bc77a0fad03235aa78dced77dd2f7c67b6143e783be51370d95d1d870b67"
+        }
+      ]
+    },
+    {
+      "target": "plus3dos",
+      "status": "module campaign passed",
+      "runs": 2466014,
+      "fuzz_seconds": 611,
+      "coverage": 1172,
+      "features": 1236,
+      "rss_mib": 363,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "plus3dos",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-plus3dos-fuzz-final.json.gz",
+          "sha256": "30c30e6065775349846eecd98ea06bcc80fb127f3927fe38ac624782859763ad"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-plus3dos-fuzz-final.log.gz",
+          "sha256": "dddde4d0fec7ea8a9a93871b4e40add54bde71b71c169f38d48209dfb8f95c13"
+        }
+      ]
+    },
+    {
+      "target": "drhalo",
+      "status": "module campaign passed",
+      "runs": 314888,
+      "fuzz_seconds": 611,
+      "coverage": 1244,
+      "features": 4653,
+      "rss_mib": 482,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "drhalo",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-drhalo-fuzz-final.json.gz",
+          "sha256": "9fdb64f17c20938cdea0bc2bce355ffa56dca990c29163cbc7b7bacb77865b0d"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-drhalo-fuzz-final.log.gz",
+          "sha256": "46aa8cdd2b796eb18ffd2003c7061b11fc15064c73b46007f93e13ddf641f3ae"
+        }
+      ]
+    },
+    {
+      "target": "writeon",
+      "status": "module campaign passed",
+      "runs": 9643036,
+      "fuzz_seconds": 611,
+      "coverage": 1109,
+      "features": 3400,
+      "rss_mib": 505,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "writeon",
+        "--no-default-features",
+        "--features",
+        "dosstart-only,edwin-only,mkwinfont-only,psf2txt-only,pcr-only,plus3dos-only,drhalo-only,writeon-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-writeon-fuzz-final.json.gz",
+          "sha256": "a32f60da9811ec900e7abf4d7ec4d065d924882bd15d9389d569f2a1e26f5484"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-writeon-fuzz-final.log.gz",
+          "sha256": "ea54c321e25e9d06fef8dc0580c2211de842a248df0b47c4bd9f784db47b525b"
+        }
+      ]
+    },
+    {
+      "target": "daisy",
+      "status": "module campaign passed",
+      "runs": 928638,
+      "fuzz_seconds": 611,
+      "coverage": 1515,
+      "features": 2324,
+      "rss_mib": 431,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "daisy",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-daisy-fuzz-final.json.gz",
+          "sha256": "424096f037a6ee34eeea85c421078465c2517be53eafbf65c8aa599cbec8fd28"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-daisy-fuzz-final.log.gz",
+          "sha256": "b03f7b207b0bd9027112e6347dbc96453d8ab366ab5ffb11fb259f50ad1d422e"
+        }
+      ]
+    },
+    {
+      "target": "polyprint",
+      "status": "module campaign passed",
+      "runs": 131589,
+      "fuzz_seconds": 611,
+      "coverage": 1318,
+      "features": 1418,
+      "rss_mib": 367,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "polyprint",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-polyprint-fuzz-final.json.gz",
+          "sha256": "6509ac6f239b0dc3e22f59bd6b87bfc4a71fa962efdff522d452992900718506"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-polyprint-fuzz-final.log.gz",
+          "sha256": "ec2846f031d109eb841301fda306fd47fbe8f26a1e2a5d3926d1a0524d4dc0aa"
+        }
+      ]
+    },
+    {
+      "target": "printshop",
+      "status": "module campaign passed",
+      "runs": 1378423,
+      "fuzz_seconds": 611,
+      "coverage": 1193,
+      "features": 1438,
+      "rss_mib": 360,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "printshop",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-printshop-fuzz-final.json.gz",
+          "sha256": "4ea81deed34475c6120bd578d78d80602d8267836f5dc7eb100ee568701df7e2"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-printshop-fuzz-final.log.gz",
+          "sha256": "dc604edd6f92e34fdd32edd06a575337f7d10db6bee7bf83842fe7b7e258eafa"
+        }
+      ]
+    },
+    {
+      "target": "tasprint",
+      "status": "module campaign passed",
+      "runs": 443401,
+      "fuzz_seconds": 611,
+      "coverage": 1424,
+      "features": 3795,
+      "rss_mib": 429,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "tasprint",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-tasprint-fuzz-final.json.gz",
+          "sha256": "f2a35f838d75911d876b83155d30c32ff294dd04b8b4091f6cd1ece01cc5c321"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-tasprint-fuzz-final.log.gz",
+          "sha256": "46c36775fe18b00d0710461e3acc4bdfdbcced89e20e63c1b4f648f1d15f2cd5"
+        }
+      ]
+    },
+    {
+      "target": "pxl",
+      "status": "module campaign passed",
+      "runs": 1686481,
+      "fuzz_seconds": 611,
+      "coverage": 1820,
+      "features": 7000,
+      "rss_mib": 475,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pxl",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-pxl-fuzz-final.json.gz",
+          "sha256": "0f3134aa532b6a6ed13227d016b511658052e16ed78e6c6cc37dc1f7aa1c02ce"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-pxl-fuzz-final.log.gz",
+          "sha256": "e7c9fc1e944a859cb705f882c7acc4653eda7c5927d5bb8ab3e5597caa10c046"
+        }
+      ]
+    },
+    {
+      "target": "signum",
+      "status": "module campaign passed",
+      "runs": 1471226,
+      "fuzz_seconds": 611,
+      "coverage": 1526,
+      "features": 6326,
+      "rss_mib": 486,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "signum",
+        "--no-default-features",
+        "--features",
+        "daisy-only,polyprint-only,printshop-only,tasprint-only,pxl-only,signum-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=131072"
+      ],
+      "exit_code": 0,
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-signum-fuzz-final.json.gz",
+          "sha256": "bd17a5cabc1040f3437b4b95403a7098956a562c8219f7b5f7077ad5aa242569"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-signum-fuzz-final.log.gz",
+          "sha256": "093056b274fcd2ac0ab3b72da844d0aeae421fb4afae36d12631767b0f576d92"
+        }
+      ]
+    }
+  ]
+}

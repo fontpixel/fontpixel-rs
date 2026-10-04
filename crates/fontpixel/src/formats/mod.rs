@@ -2,6 +2,7 @@
 //!
 //! The generic registry starts with planned entries. `crate::registry()` installs
 //! actual FontSet codecs under their Cargo features.
+pub use crate::resources::TransportLimits;
 use crate::resources::{Input, ReadContext, ResourceLimits, ResourcePath, Written};
 use crate::{Error, Operation, Report, Result};
 
@@ -46,23 +47,87 @@ pub mod fontx2;
 pub mod gem;
 #[cfg(feature = "gf")]
 pub mod gf;
+#[cfg(feature = "hanfont")]
+pub mod hanfont;
 #[cfg(feature = "hbf")]
 pub mod hbf;
 #[cfg(feature = "hex")]
 pub mod hex;
 #[cfg(feature = "hzk")]
 pub mod hzk;
+#[cfg(feature = "iigs")]
+pub mod iigs;
 #[cfg(feature = "image")]
 pub mod image;
 #[cfg(feature = "kbits")]
 pub mod kbits;
 #[cfg(feature = "kbitx")]
 pub mod kbitx;
-#[cfg(any(feature = "amiga", feature = "gem", feature = "snf"))]
+#[cfg(any(
+    feature = "amiga",
+    feature = "gem",
+    feature = "snf",
+    feature = "vfont",
+    feature = "fzx",
+    feature = "figlet",
+    feature = "palm",
+    feature = "gdr",
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon",
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum",
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf",
+    feature = "beos",
+    feature = "geos",
+    feature = "gpi",
+    feature = "oberon",
+    feature = "pcgeos",
+    feature = "symbos",
+    feature = "vtfont",
+    feature = "wsfont",
+    feature = "bbc",
+    feature = "comfont",
+    feature = "consoleet",
+    feature = "grasp",
+    feature = "hrcg",
+    feature = "wyse",
+    feature = "xbin",
+    feature = "zapfont",
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "prebuilt",
+    feature = "riscos",
+    feature = "xerox",
+    feature = "pilfont",
+    feature = "sfont",
+    feature = "vlw",
+    feature = "image",
+    feature = "ssfn",
+    feature = "pfr"
+))]
 #[path = "gem/common.rs"]
 pub(crate) mod legacy_common;
 #[cfg(feature = "nfnt")]
 pub mod nfnt;
+#[cfg(feature = "palm")]
+pub mod palm;
 #[cfg(feature = "pbf")]
 pub mod pbf;
 #[cfg(feature = "pcf")]
@@ -77,6 +142,7 @@ pub mod plan9;
 pub mod psf;
 #[cfg(feature = "raw")]
 pub mod raw;
+mod registry_codecs;
 #[cfg(feature = "sfd")]
 pub mod sfd;
 #[cfg(feature = "snf")]
@@ -86,6 +152,7 @@ pub mod svg;
 #[cfg(any(feature = "pk", feature = "gf", feature = "plan9"))]
 #[path = "pk/common.rs"]
 pub(crate) mod tex_common;
+mod transport;
 #[cfg(feature = "vector-raster")]
 pub mod vector_raster;
 #[cfg(any(feature = "pf2", feature = "fontx2", feature = "hzk"))]
@@ -96,13 +163,25 @@ pub(crate) mod x11;
 #[cfg(feature = "yaff")]
 pub mod yaff;
 
+#[cfg(feature = "figlet")]
+pub mod figlet;
+#[cfg(feature = "fzx")]
+pub mod fzx;
+#[cfg(feature = "vfont")]
+pub mod vfont;
+
+#[cfg(feature = "drcs")]
+pub mod drcs;
+#[cfg(feature = "gdr")]
+pub mod gdr;
+
 #[cfg(feature = "pf2")]
 impl Registry<crate::FontSet> {
     pub(crate) fn install_pf2(&mut self) {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "pf2") {
             e.detector = Some(Box::new(pf2::Pf2Codec::default()));
             e.reader = Some(Box::new(pf2::Pf2Codec::default()));
-            e.writer = Some(Box::new(pf2::Pf2Codec::default()));
+            e.writer = Some(transport::writer(pf2::Pf2Codec::default()));
         }
     }
     /// Set explicit PF2 read options.
@@ -125,7 +204,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "pf2" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(pf2::Pf2Codec {
+            e.writer = Some(transport::writer(pf2::Pf2Codec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -139,7 +218,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "fontx2") {
             e.detector = Some(Box::new(fontx2::Fontx2Codec::default()));
             e.reader = Some(Box::new(fontx2::Fontx2Codec::default()));
-            e.writer = Some(Box::new(fontx2::Fontx2Codec::default()));
+            e.writer = Some(transport::writer(fontx2::Fontx2Codec::default()));
         }
     }
     /// Set explicit FONTX2 read options.
@@ -162,7 +241,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "fontx2" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(fontx2::Fontx2Codec {
+            e.writer = Some(transport::writer(fontx2::Fontx2Codec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -176,7 +255,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "hzk") {
             // Headerless HZK requires explicit geometry or a preset.
             e.reader = Some(Box::new(hzk::HzkCodec::default()));
-            e.writer = Some(Box::new(hzk::HzkCodec::default()));
+            e.writer = Some(transport::writer(hzk::HzkCodec::default()));
         }
     }
     /// Set explicit HZK read options.
@@ -199,7 +278,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "hzk" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(hzk::HzkCodec {
+            e.writer = Some(transport::writer(hzk::HzkCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -213,7 +292,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "draw") {
             e.detector = Some(Box::new(draw::DrawCodec::default()));
             e.reader = Some(Box::new(draw::DrawCodec::default()));
-            e.writer = Some(Box::new(draw::DrawCodec::default()));
+            e.writer = Some(transport::writer(draw::DrawCodec::default()));
         }
     }
 
@@ -224,7 +303,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "draw" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(draw::DrawCodec {
+            e.writer = Some(transport::writer(draw::DrawCodec {
                 write_options: options,
             }));
         }
@@ -237,7 +316,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "raw") {
             // Headerless raw data requires an explicit layout.
             e.reader = Some(Box::new(raw::RawCodec::default()));
-            e.writer = Some(Box::new(raw::RawCodec::default()));
+            e.writer = Some(transport::writer(raw::RawCodec::default()));
         }
     }
     /// Set explicit RAW read options.
@@ -260,7 +339,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "raw" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(raw::RawCodec {
+            e.writer = Some(transport::writer(raw::RawCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -274,7 +353,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "cpi") {
             e.detector = Some(Box::new(cpi::CpiCodec::default()));
             e.reader = Some(Box::new(cpi::CpiCodec::default()));
-            e.writer = Some(Box::new(cpi::CpiCodec::default()));
+            e.writer = Some(transport::writer(cpi::CpiCodec::default()));
         }
     }
     /// Set explicit CPI read options.
@@ -297,7 +376,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "cpi" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(cpi::CpiCodec {
+            e.writer = Some(transport::writer(cpi::CpiCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -311,7 +390,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "nfnt") {
             e.detector = Some(Box::new(nfnt::NfntCodec::default()));
             e.reader = Some(Box::new(nfnt::NfntCodec::default()));
-            e.writer = Some(Box::new(nfnt::NfntCodec::default()));
+            e.writer = Some(transport::writer(nfnt::NfntCodec::default()));
         }
     }
     /// Set explicit NFNT read options.
@@ -334,7 +413,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "nfnt" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(nfnt::NfntCodec {
+            e.writer = Some(transport::writer(nfnt::NfntCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -348,7 +427,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "bmfont") {
             e.detector = Some(Box::new(bmfont::BmfontCodec::default()));
             e.reader = Some(Box::new(bmfont::BmfontCodec::default()));
-            e.writer = Some(Box::new(bmfont::BmfontCodec::default()));
+            e.writer = Some(transport::writer(bmfont::BmfontCodec::default()));
         }
     }
     /// Set explicit BMFONT read options.
@@ -371,7 +450,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "bmfont" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(bmfont::BmfontCodec {
+            e.writer = Some(transport::writer(bmfont::BmfontCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -385,7 +464,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "sfd") {
             e.detector = Some(Box::new(sfd::SfdCodec::default()));
             e.reader = Some(Box::new(sfd::SfdCodec::default()));
-            e.writer = Some(Box::new(sfd::SfdCodec::default()));
+            e.writer = Some(transport::writer(sfd::SfdCodec::default()));
         }
     }
 
@@ -396,7 +475,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "sfd" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(sfd::SfdCodec {
+            e.writer = Some(transport::writer(sfd::SfdCodec {
                 write_options: options,
             }));
         }
@@ -409,7 +488,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "kbits") {
             e.detector = Some(Box::new(kbits::KbitsCodec::default()));
             e.reader = Some(Box::new(kbits::KbitsCodec::default()));
-            e.writer = Some(Box::new(kbits::KbitsCodec::default()));
+            e.writer = Some(transport::writer(kbits::KbitsCodec::default()));
         }
     }
 
@@ -420,7 +499,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "kbits" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(kbits::KbitsCodec {
+            e.writer = Some(transport::writer(kbits::KbitsCodec {
                 write_options: options,
             }));
         }
@@ -433,7 +512,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "pk") {
             e.detector = Some(Box::new(pk::PkCodec::default()));
             e.reader = Some(Box::new(pk::PkCodec::default()));
-            e.writer = Some(Box::new(pk::PkCodec::default()));
+            e.writer = Some(transport::writer(pk::PkCodec::default()));
         }
     }
 
@@ -444,7 +523,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "pk" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(pk::PkCodec {
+            e.writer = Some(transport::writer(pk::PkCodec {
                 write_options: options,
             }));
         }
@@ -457,7 +536,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "gf") {
             e.detector = Some(Box::new(gf::GfCodec::default()));
             e.reader = Some(Box::new(gf::GfCodec::default()));
-            e.writer = Some(Box::new(gf::GfCodec::default()));
+            e.writer = Some(transport::writer(gf::GfCodec::default()));
         }
     }
 
@@ -468,7 +547,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "gf" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(gf::GfCodec {
+            e.writer = Some(transport::writer(gf::GfCodec {
                 write_options: options,
             }));
         }
@@ -481,7 +560,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "plan9") {
             e.detector = Some(Box::new(plan9::Plan9Codec::default()));
             e.reader = Some(Box::new(plan9::Plan9Codec::default()));
-            e.writer = Some(Box::new(plan9::Plan9Codec::default()));
+            e.writer = Some(transport::writer(plan9::Plan9Codec::default()));
         }
     }
 
@@ -492,7 +571,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "plan9" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(plan9::Plan9Codec {
+            e.writer = Some(transport::writer(plan9::Plan9Codec {
                 write_options: options,
             }));
         }
@@ -505,7 +584,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "amiga") {
             e.detector = Some(Box::new(amiga::AmigaCodec::default()));
             e.reader = Some(Box::new(amiga::AmigaCodec::default()));
-            e.writer = Some(Box::new(amiga::AmigaCodec::default()));
+            e.writer = Some(transport::writer(amiga::AmigaCodec::default()));
         }
     }
     /// Set explicit AMIGA read options.
@@ -528,7 +607,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "amiga" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(amiga::AmigaCodec {
+            e.writer = Some(transport::writer(amiga::AmigaCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -542,7 +621,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "gem") {
             e.detector = Some(Box::new(gem::GemCodec::default()));
             e.reader = Some(Box::new(gem::GemCodec::default()));
-            e.writer = Some(Box::new(gem::GemCodec::default()));
+            e.writer = Some(transport::writer(gem::GemCodec::default()));
         }
     }
     /// Set explicit GEM read options.
@@ -569,7 +648,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "gem" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(gem::GemCodec {
+            e.writer = Some(transport::writer(gem::GemCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -583,7 +662,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "snf") {
             e.detector = Some(Box::new(snf::SnfCodec::default()));
             e.reader = Some(Box::new(snf::SnfCodec::default()));
-            e.writer = Some(Box::new(snf::SnfCodec::default()));
+            e.writer = Some(transport::writer(snf::SnfCodec::default()));
         }
     }
     /// Set explicit SNF read options.
@@ -610,7 +689,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "snf" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(snf::SnfCodec {
+            e.writer = Some(transport::writer(snf::SnfCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -684,6 +763,10 @@ pub struct WriteOptions {
     pub strict: bool,
     /// Primary relative output name; codecs may add sibling/nested sidecars.
     pub primary_name: ResourcePath,
+    /// Additional gzip/envelope budgets. `None` uses the typed writer's limits.
+    /// Present limits are intersected with them, so a common setting cannot
+    /// silently enlarge a codec's budget. Native directory outputs are unchanged.
+    pub transport_limits: Option<TransportLimits>,
 }
 
 impl WriteOptions {
@@ -692,6 +775,7 @@ impl WriteOptions {
         Self {
             strict: false,
             primary_name,
+            transport_limits: None,
         }
     }
 }
@@ -724,6 +808,25 @@ pub trait FormatWriter<M>: Send + Sync {
     /// Encode the model entirely in memory. Never persist output here: strict
     /// rejection happens in the registry after the full report is available.
     fn write(&self, fonts: &M, options: &WriteOptions) -> Result<Written>;
+
+    /// Budgets for registry-applied envelopes. Built-in registrations forward
+    /// their actual typed writer limits. Custom writers may override this hook.
+    fn transport_limits(&self) -> TransportLimits {
+        TransportLimits::default()
+    }
+
+    /// Validate the same native output profile with the memory left after
+    /// retaining the gzip result and diagnostics. Called only for gzip output,
+    /// after its uncompressed source buffer has been released. The default
+    /// leaves native validation to custom writers; envelope budgets still apply.
+    fn validate_transport(
+        &self,
+        _fonts: &M,
+        _options: &WriteOptions,
+        _limits: &TransportLimits,
+    ) -> Result<()> {
+        Ok(())
+    }
 }
 
 /// One catalogue entry with independently installable capabilities.
@@ -880,6 +983,11 @@ impl<M> Registry<M> {
     }
 
     fn detect_context(&self, context: &mut ReadContext<'_>) -> Result<Detected> {
+        if context.is_directory() {
+            return Err(Error::InvalidInput(
+                "directory font input requires an explicit format".into(),
+            ));
+        }
         let mut best = Confidence::NoMatch;
         let mut candidates = Vec::new();
         for entry in &self.entries {
@@ -998,6 +1106,7 @@ impl<M> Registry<M> {
             }
             Err(error) => return Err(error),
         };
+        let writer_report_start = report.entries.len();
         report.extend(written.report);
         if report.has_errors() {
             return Err(Error::ReportedErrors(report));
@@ -1005,10 +1114,44 @@ impl<M> Registry<M> {
         if options.strict && report.has_loss() {
             return Err(Error::StrictLoss(report));
         }
-        Ok(Written {
-            output: crate::resources::encode_transport(written.output)?,
-            report,
-        })
+        let output = if crate::resources::uses_gzip(&written.output) {
+            let mut limits = writer.transport_limits();
+            if let Some(common) = &options.transport_limits {
+                limits = limits.intersect(common);
+            }
+            let retained_report =
+                crate::resources::report_bytes(&report, limits.resources.max_total_bytes)?;
+            let output =
+                crate::resources::encode_transport(written.output, &limits, retained_report)?;
+            let retained = output
+                .assets()
+                .iter()
+                .try_fold(retained_report, |total, asset| {
+                    total
+                        .checked_add(asset.bytes.capacity())
+                        .ok_or(Error::ResourceLimit {
+                            resource: "gzip retained bytes",
+                            limit: limits.resources.max_total_bytes,
+                        })
+                })?;
+            if let Err(error) =
+                writer.validate_transport(fonts, options, &limits.without_retained(retained)?)
+            {
+                return Err(match error {
+                    Error::ReportedErrors(extra) => Error::ReportedErrors(
+                        transport::merge_validation_report(report, extra, writer_report_start),
+                    ),
+                    Error::StrictLoss(extra) => Error::StrictLoss(
+                        transport::merge_validation_report(report, extra, writer_report_start),
+                    ),
+                    other => other,
+                });
+            }
+            output
+        } else {
+            written.output
+        };
+        Ok(Written { output, report })
     }
 }
 
@@ -1018,7 +1161,7 @@ impl Registry<crate::FontSet> {
         if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "bdf") {
             entry.detector = Some(Box::new(bdf::BdfCodec::default()));
             entry.reader = Some(Box::new(bdf::BdfCodec::default()));
-            entry.writer = Some(Box::new(bdf::BdfCodec::default()));
+            entry.writer = Some(transport::writer(bdf::BdfCodec::default()));
         }
     }
 }
@@ -1029,7 +1172,7 @@ impl Registry<crate::FontSet> {
         if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "pcf") {
             entry.detector = Some(Box::new(pcf::PcfCodec::default()));
             entry.reader = Some(Box::new(pcf::PcfCodec::default()));
-            entry.writer = Some(Box::new(pcf::PcfCodec::default()));
+            entry.writer = Some(transport::writer(pcf::PcfCodec::default()));
         }
     }
     /// Configure the built-in PCF writer without altering its detector/reader.
@@ -1042,7 +1185,7 @@ impl Registry<crate::FontSet> {
                 format: "pcf".into(),
                 operation: Operation::Write,
             })?;
-        entry.writer = Some(Box::new(pcf::PcfCodec {
+        entry.writer = Some(transport::writer(pcf::PcfCodec {
             write_options: options,
         }));
         Ok(())
@@ -1055,7 +1198,7 @@ impl Registry<crate::FontSet> {
         if let Some(entry) = self.entries.iter_mut().find(|e| e.format.id == "yaff") {
             entry.detector = Some(Box::new(yaff::YaffCodec::default()));
             entry.reader = Some(Box::new(yaff::YaffCodec::default()));
-            entry.writer = Some(Box::new(yaff::YaffCodec::default()));
+            entry.writer = Some(transport::writer(yaff::YaffCodec::default()));
         }
     }
     /// Configure bounded YAFF writes independently of other codecs.
@@ -1068,7 +1211,7 @@ impl Registry<crate::FontSet> {
                 format: "yaff".into(),
                 operation: Operation::Write,
             })?;
-        entry.writer = Some(Box::new(yaff::YaffCodec {
+        entry.writer = Some(transport::writer(yaff::YaffCodec {
             write_options: options,
         }));
         Ok(())
@@ -1087,7 +1230,7 @@ impl Registry<crate::FontSet> {
             entry.detector = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
             entry.reader = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
             if write {
-                entry.writer = Some(Box::new(embedded::EmbeddedCodec::new(kind)));
+                entry.writer = Some(transport::writer(embedded::EmbeddedCodec::new(kind)));
             }
         }
     }
@@ -1102,7 +1245,7 @@ impl Registry<crate::FontSet> {
                 entry.detector = Some(Box::new(codec.clone()));
             }
             entry.reader = Some(Box::new(codec.clone()));
-            entry.writer = Some(Box::new(codec));
+            entry.writer = Some(transport::writer(codec));
         }
     }
     /// Configure all registered outline/container readers consistently.
@@ -1129,7 +1272,7 @@ impl Registry<crate::FontSet> {
             {
                 let mut codec = vector_raster::Codec::new(entry.format.id);
                 codec.write_options = options.clone();
-                entry.writer = Some(Box::new(codec));
+                entry.writer = Some(transport::writer(codec));
             }
         }
     }
@@ -1141,7 +1284,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "svg") {
             e.detector = Some(Box::new(svg::SvgCodec::default()));
             e.reader = Some(Box::new(svg::SvgCodec::default()));
-            e.writer = Some(Box::new(svg::SvgCodec::default()));
+            e.writer = Some(transport::writer(svg::SvgCodec::default()));
         }
     }
     /// Configure the SVG font reader/detector independently of its writer.
@@ -1168,7 +1311,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "svg" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(svg::SvgCodec {
+            e.writer = Some(transport::writer(svg::SvgCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1182,7 +1325,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "hex") {
             e.detector = Some(Box::new(hex::HexCodec::default()));
             e.reader = Some(Box::new(hex::HexCodec::default()));
-            e.writer = Some(Box::new(hex::HexCodec::default()));
+            e.writer = Some(transport::writer(hex::HexCodec::default()));
         }
     }
     /// Set explicit HEX input geometry without changing output choices.
@@ -1205,7 +1348,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "hex" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(hex::HexCodec {
+            e.writer = Some(transport::writer(hex::HexCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1218,7 +1361,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "psf") {
             e.detector = Some(Box::new(psf::PsfCodec::default()));
             e.reader = Some(Box::new(psf::PsfCodec::default()));
-            e.writer = Some(Box::new(psf::PsfCodec::default()));
+            e.writer = Some(transport::writer(psf::PsfCodec::default()));
         }
     }
     /// Configure bounded PSF1/PSF2 output and Unicode-table policy.
@@ -1228,7 +1371,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "psf" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(psf::PsfCodec {
+            e.writer = Some(transport::writer(psf::PsfCodec {
                 write_options: options,
             }));
         }
@@ -1241,7 +1384,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "image") {
             e.detector = Some(Box::new(image::ImageCodec::default()));
             e.reader = Some(Box::new(image::ImageCodec::default()));
-            e.writer = Some(Box::new(image::ImageCodec::default()));
+            e.writer = Some(transport::writer(image::ImageCodec::default()));
         }
     }
     /// Select an explicit image mapping or caller-scoped mapping asset.
@@ -1264,7 +1407,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "image" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(image::ImageCodec {
+            e.writer = Some(transport::writer(image::ImageCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1278,7 +1421,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "fnt") {
             e.detector = Some(Box::new(fnt::FntCodec::default()));
             e.reader = Some(Box::new(fnt::FntCodec::default()));
-            e.writer = Some(Box::new(fnt::FntCodec::default()));
+            e.writer = Some(transport::writer(fnt::FntCodec::default()));
         }
     }
     /// Set legacy charset interpretation on FNT and enabled FON readers.
@@ -1312,7 +1455,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "fnt" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(fnt::FntCodec {
+            e.writer = Some(transport::writer(fnt::FntCodec {
                 write_options: options.clone(),
                 ..Default::default()
             }));
@@ -1323,7 +1466,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "fon" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(fon::FonCodec {
+            e.writer = Some(transport::writer(fon::FonCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1336,7 +1479,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "fon") {
             e.detector = Some(Box::new(fon::FonCodec::default()));
             e.reader = Some(Box::new(fon::FonCodec::default()));
-            e.writer = Some(Box::new(fon::FonCodec::default()));
+            e.writer = Some(transport::writer(fon::FonCodec::default()));
         }
     }
 }
@@ -1347,7 +1490,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "c") {
             e.detector = Some(Box::new(c::CCodec::default()));
             e.reader = Some(Box::new(c::CCodec::default()));
-            e.writer = Some(Box::new(c::CCodec::default()));
+            e.writer = Some(transport::writer(c::CCodec::default()));
         }
     }
     /// Configure literal C input dialect and explicit geometry.
@@ -1370,7 +1513,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "c" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(c::CCodec {
+            e.writer = Some(transport::writer(c::CCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1384,7 +1527,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "kbitx") {
             e.detector = Some(Box::new(kbitx::KbitxCodec::default()));
             e.reader = Some(Box::new(kbitx::KbitxCodec::default()));
-            e.writer = Some(Box::new(kbitx::KbitxCodec::default()));
+            e.writer = Some(transport::writer(kbitx::KbitxCodec::default()));
         }
     }
     /// Configure Kbitx input interpretation.
@@ -1407,7 +1550,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "kbitx" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(kbitx::KbitxCodec {
+            e.writer = Some(transport::writer(kbitx::KbitxCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1421,7 +1564,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "pbf") {
             e.detector = Some(Box::new(pbf::PbfCodec::default()));
             e.reader = Some(Box::new(pbf::PbfCodec::default()));
-            e.writer = Some(Box::new(pbf::PbfCodec::default()));
+            e.writer = Some(transport::writer(pbf::PbfCodec::default()));
         }
     }
     /// Configure Pbf input interpretation.
@@ -1444,7 +1587,7 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "pbf" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(pbf::PbfCodec {
+            e.writer = Some(transport::writer(pbf::PbfCodec {
                 write_options: options,
                 ..Default::default()
             }));
@@ -1458,7 +1601,7 @@ impl Registry<crate::FontSet> {
         if let Some(e) = self.entries.iter_mut().find(|e| e.format.id == "hbf") {
             e.detector = Some(Box::new(hbf::HbfCodec::default()));
             e.reader = Some(Box::new(hbf::HbfCodec::default()));
-            e.writer = Some(Box::new(hbf::HbfCodec::default()));
+            e.writer = Some(transport::writer(hbf::HbfCodec::default()));
         }
     }
     /// Configure Hbf output and resource limits.
@@ -1468,9 +1611,241 @@ impl Registry<crate::FontSet> {
             .iter_mut()
             .find(|e| e.format.id == "hbf" && e.writer.is_some())
         {
-            e.writer = Some(Box::new(hbf::HbfCodec {
+            e.writer = Some(transport::writer(hbf::HbfCodec {
                 write_options: options,
             }));
         }
     }
 }
+
+#[cfg(feature = "dosstart")]
+pub mod dosstart;
+#[cfg(feature = "drhalo")]
+pub mod drhalo;
+#[cfg(feature = "edwin")]
+pub mod edwin;
+#[cfg(feature = "mkwinfont")]
+pub mod mkwinfont;
+#[cfg(feature = "pcr")]
+pub mod pcr;
+#[cfg(feature = "plus3dos")]
+pub mod plus3dos;
+#[cfg(feature = "psf2txt")]
+pub mod psf2txt;
+#[cfg(any(
+    feature = "dosstart",
+    feature = "edwin",
+    feature = "mkwinfont",
+    feature = "psf2txt",
+    feature = "pcr",
+    feature = "plus3dos",
+    feature = "drhalo",
+    feature = "writeon"
+))]
+#[path = "dosstart/common.rs"]
+pub(crate) mod w5a1_common;
+#[cfg(feature = "writeon")]
+pub mod writeon;
+
+#[cfg(any(
+    feature = "daisy",
+    feature = "polyprint",
+    feature = "printshop",
+    feature = "tasprint",
+    feature = "pxl",
+    feature = "signum"
+))]
+#[path = "daisy/common.rs"]
+pub(crate) mod historical_common;
+
+#[cfg(any(
+    feature = "rockbox",
+    feature = "u8m",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf"
+))]
+#[path = "rockbox/common.rs"]
+pub(crate) mod device_common;
+
+#[cfg(feature = "polyprint")]
+pub mod polyprint;
+
+#[cfg(feature = "printshop")]
+pub mod printshop;
+
+#[cfg(feature = "hmzk")]
+pub mod hmzk;
+
+#[cfg(feature = "sbf")]
+pub mod sbf;
+
+#[cfg(feature = "cybiko")]
+pub mod cybiko;
+
+#[cfg(feature = "signum")]
+pub mod signum;
+
+#[cfg(feature = "daisy")]
+pub mod daisy;
+
+#[cfg(feature = "tasprint")]
+pub mod tasprint;
+
+#[cfg(feature = "rockbox")]
+pub mod rockbox;
+
+#[cfg(feature = "u8m")]
+pub mod u8m;
+
+#[cfg(feature = "pxl")]
+pub mod pxl;
+
+#[cfg(feature = "mgtk")]
+pub mod mgtk;
+
+#[cfg(any(
+    feature = "fbit",
+    feature = "lisa",
+    feature = "mgtk",
+    feature = "qpf",
+    feature = "qpf2"
+))]
+#[path = "fbit/common.rs"]
+pub(crate) mod w5d_common;
+
+#[cfg(feature = "playdate")]
+pub mod playdate;
+
+#[cfg(feature = "qpf")]
+pub mod qpf;
+
+#[cfg(feature = "symbos")]
+pub mod symbos;
+
+#[cfg(feature = "bbc")]
+pub mod bbc;
+
+#[cfg(feature = "wyse")]
+pub mod wyse;
+
+#[cfg(feature = "grasp")]
+pub mod grasp;
+
+#[cfg(feature = "hrcg")]
+pub mod hrcg;
+
+#[cfg(any(
+    feature = "bbc",
+    feature = "comfont",
+    feature = "consoleet",
+    feature = "grasp",
+    feature = "hrcg",
+    feature = "wyse",
+    feature = "xbin",
+    feature = "zapfont"
+))]
+#[path = "bbc/common.rs"]
+pub(crate) mod w5a2_common;
+
+#[cfg(feature = "qpf2")]
+pub mod qpf2;
+
+#[cfg(feature = "xbin")]
+pub mod xbin;
+
+#[cfg(feature = "consoleet")]
+pub mod consoleet;
+
+#[cfg(feature = "oberon")]
+pub mod oberon;
+
+#[cfg(feature = "fbit")]
+pub mod fbit;
+
+#[cfg(feature = "zapfont")]
+pub mod zapfont;
+
+#[cfg(feature = "lisa")]
+pub mod lisa;
+
+#[cfg(feature = "wsfont")]
+pub mod wsfont;
+
+#[cfg(feature = "beos")]
+pub mod beos;
+
+#[cfg(feature = "comfont")]
+pub mod comfont;
+
+#[cfg(feature = "catalyst")]
+pub mod catalyst;
+#[cfg(any(
+    feature = "catalyst",
+    feature = "chiwriter",
+    feature = "dashen",
+    feature = "hppcl",
+    feature = "prebuilt",
+    feature = "riscos",
+    feature = "xerox"
+))]
+#[path = "catalyst/common.rs"]
+pub(crate) mod workstation_common;
+
+#[cfg(feature = "chiwriter")]
+pub mod chiwriter;
+
+#[cfg(feature = "vtfont")]
+pub mod vtfont;
+
+#[cfg(feature = "hppcl")]
+pub mod hppcl;
+
+#[cfg(feature = "dashen")]
+pub mod dashen;
+
+#[cfg(any(
+    feature = "pilfont",
+    feature = "sfont",
+    feature = "vlw",
+    feature = "image"
+))]
+#[path = "pilfont/common.rs"]
+pub(crate) mod image_bundle_common;
+
+#[cfg(feature = "vlw")]
+pub mod vlw;
+
+#[cfg(feature = "pilfont")]
+pub mod pilfont;
+
+#[cfg(feature = "prebuilt")]
+pub mod prebuilt;
+
+#[cfg(feature = "geos")]
+pub mod geos;
+
+#[cfg(feature = "gpi")]
+pub mod gpi;
+
+#[cfg(feature = "riscos")]
+pub mod riscos;
+#[cfg(any(feature = "ssfn", feature = "pfr"))]
+#[path = "ssfn/common.rs"]
+pub(crate) mod w5e2_outline_common;
+
+#[cfg(feature = "sfont")]
+pub mod sfont;
+
+#[cfg(feature = "pfr")]
+pub mod pfr;
+
+#[cfg(feature = "pcgeos")]
+pub mod pcgeos;
+
+#[cfg(feature = "xerox")]
+pub mod xerox;
+
+#[cfg(feature = "ssfn")]
+pub mod ssfn;

@@ -40,6 +40,7 @@ fuzz_target!(|data: &[u8]| {
             Container::Dfont,
             Container::MacBinary,
             Container::AppleSingle,
+            Container::BinHex,
         ] {
             let options = NfntWriteOptions {
                 container,

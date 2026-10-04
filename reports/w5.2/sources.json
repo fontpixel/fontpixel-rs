@@ -1,0 +1,106 @@
+{
+  "sources": [
+    {
+      "name": "Apple IIgs Toolbox Reference II",
+      "url": "https://mirrors.apple2.org.za/ftp.apple.asimov.net/documentation/programming/65816_gs/Apple%20IIGS%20Toolbox%20Reference%20Volume%202.pdf",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/toolbox2.pdf",
+      "bytes": 32732186,
+      "sha256": "92d47ae3fe8c759a7bbaa624b6ee16ffd33c9573429fc7b633a8582c004c2e8b",
+      "license": "Apple copyrighted reference; external only"
+    },
+    {
+      "name": "Apple IIgs Toolbox Reference III beta draft 1989-08-30",
+      "url": "https://mirrors.apple2.org.za/ftp.apple.asimov.net/documentation/programming/65816_gs/Apple%20IIGS%20Toolbox%20Reference%20Volue%203%20part%201.pdf",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/toolbox3part1.pdf",
+      "bytes": 20529846,
+      "sha256": "dcb33b7640de13ee2c55632f1a093cbdc30877dbb9a5abf3650a896f8e129d40",
+      "license": "Apple copyrighted reference; external only; PDF page460 rendered"
+    },
+    {
+      "name": "Unifoundry Hangul generation",
+      "url": "https://www.unifoundry.com/hangul/hangul-generation.html",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/hangul-generation.html",
+      "bytes": 86657,
+      "sha256": "1a3a6749a6095059ac3373f90d2753e40b45c65d1ebd50b3c343d5e4cf5b37ac",
+      "license": "Published factual 844 tables; external only"
+    },
+    {
+      "name": "Neil Parker BinSCII description",
+      "url": "https://mirrors.apple2.org.za/ground.icaen.uiowa.edu/Mirrors/uni-kl/doc/binscii.format",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/binscii.format",
+      "bytes": 4493,
+      "sha256": "b3544e61c0d8a4bfde6de7b0bea243a20013764c9368231122d2514c78459092",
+      "license": "External published description"
+    },
+    {
+      "name": "CiderPress2 BinSCII notes",
+      "url": "https://ciderpress2.com/formatdoc/BinSCII-notes.html",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/binscii-notes.html",
+      "bytes": 9149,
+      "sha256": "ae6610759cc86caf28f8148572731b7c06e71da46efcecde051b5544b16ae4f5",
+      "license": "External reference; no implementation copied"
+    },
+    {
+      "name": "sciibin 3.1",
+      "url": "https://ifarchive.org/if-archive/download-tools/unix/sciibin-3.1.tar.Z",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin.tar.Z",
+      "bytes": 24429,
+      "sha256": "2908c480d4614e10ab4ddc9b9af6ac506f04e1224cecbd377407140dceffac9f",
+      "license": "Copyright 1989/1990 M.J.E. Mol; no explicit distribution license found; external execution only"
+    },
+    {
+      "name": "Original GameMaker 844 renderer hj_init.gml",
+      "url": "https://raw.githubusercontent.com/TandyRum1024/hangul-johab-render-gms/e21dc74c83491f8708a4a3391dc6ea7125470f0e/project/Hangul_boy.gmx/scripts/hj_init.gml",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/hj_init.gml",
+      "bytes": 11923,
+      "sha256": "848805397c39e1601fc70485ea38c0ee4f4eab3d51e81831a38912f65c5cee40",
+      "license": "No explicit license found; external execution through original syntax adapter, no redistributed third-party code"
+    },
+    {
+      "name": "Original GameMaker 844 renderer hj_gen_table.gml",
+      "url": "https://raw.githubusercontent.com/TandyRum1024/hangul-johab-render-gms/e21dc74c83491f8708a4a3391dc6ea7125470f0e/project/Hangul_boy.gmx/scripts/hj_gen_table.gml",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/hj_gen_table.gml",
+      "bytes": 1713,
+      "sha256": "a97ee00786124fdc7d8bbc2ade1abb8c7e569e97cba90818807cb128d849dbda",
+      "license": "No explicit license found; external execution through original syntax adapter, no redistributed third-party code"
+    },
+    {
+      "name": "Original GameMaker 844 renderer hj_draw_raw.gml",
+      "url": "https://raw.githubusercontent.com/TandyRum1024/hangul-johab-render-gms/e21dc74c83491f8708a4a3391dc6ea7125470f0e/project/Hangul_boy.gmx/scripts/hj_draw_raw.gml",
+      "path": "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/hj_draw_raw.gml",
+      "bytes": 5375,
+      "sha256": "00100500377ebfdfff749995c0692ec3edab70cc2d9bcba835c7b9f1e31bbc96",
+      "license": "No explicit license found; external execution through original syntax adapter, no redistributed third-party code"
+    },
+    {
+      "name": "monobit",
+      "version": "0.54.0",
+      "url": "https://github.com/robhagemans/monobit",
+      "license": "MIT",
+      "metadata_sha256": "1cee0fde1e8202d09ab4c631c752d383b3340ca8d98824ec61c6c0d46a78055e"
+    }
+  ],
+  "sciibin_build": {
+    "command": [
+      "gcc",
+      "-std=gnu89",
+      "-include",
+      "stdlib.h",
+      "-include",
+      "string.h",
+      "-include",
+      "unistd.h",
+      "-Wno-implicit-function-declaration",
+      "-Wno-int-conversion",
+      "-o",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin.c"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/sciibin-build2.log"
+  },
+  "python": "3.12.13",
+  "node": "v24.21.0",
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "nightly": "rustc 1.99.0-nightly (1a833e165 2026-07-29)\nbinary: rustc\ncommit-hash: 1a833e16546c2eb012758ddd499964fd8afee29e\ncommit-date: 2026-07-29\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0-nightly\nLLVM version: 22.1.8\n"
+}

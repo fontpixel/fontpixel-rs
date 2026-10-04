@@ -1,0 +1,20 @@
+{
+  "captured_utc": "2026-10-04T08:02:05.261093+00:00",
+  "files": {
+    "crates/fontpixel/src/sfnt/bitmap.rs": "070a39d2d65c1efacc26eab39d16d3c25b807732cb0436c08fd55c5b9d4791ae",
+    "crates/fontpixel/src/sfnt/bitmap/color.rs": "6c7feeb9c0d1a236cf5b32224ce6193df457f2f30b688f0e3c0bedfd46560768",
+    "crates/fontpixel/src/formats/embedded.rs": "79f5b62cc0f9c95a853b2268de57e55064a3ee5102fa5b8f74cbad02e75ef052",
+    "crates/fontpixel/tests/embedded_bitmap.rs": "12ee4e4ac6681844868f81157635cd41415c5823397153e398ae010d3561ee4b",
+    "docs/formats/color.md": "046a33537c271ba80718bb7238bdf95217a03eaf8fdd6b925090d6b4d9b21a2b",
+    "fuzz/fuzz_targets/color_bitmap.rs": "7c0e4f89acc7a6d4b3234d9e899cd9522093efd83accb11564a1724d04fab110",
+    "fuzz/seed_w56.py": "18ffd3eecb3f3eccfe90425b4bca732abb08823494204901c692c6c65ee2b0c7",
+    "tests/crosscheck/w56.py": "06568cc7c8ef10d5ea215be1c900f6afe8188c8396f6cef223e171fcf6495bd2",
+    "crates/fontpixel/examples/w56_timing.rs": "96630bafbbc2b06c097e31a84966a5243b646907b18fbb088020db0e198d7902"
+  },
+  "shared_lock_snapshots": {
+    "Cargo.lock": "42bb9e89840e59113c45b1625ddf35fe6bd929012e67c685ae414a757d0dd76e",
+    "fuzz/Cargo.lock": "a9e01143630ab82f4923fb9b7fb615dff9d708b9e5fe63d9c0f9439c04a4a333"
+  },
+  "snapshot_head": "8165df70efecbe22825a2a4857e73b91cedf1e59",
+  "accepted_base_commit": "5c79f81bb52b44352a885e2dd79cdbe02ae3019c"
+}

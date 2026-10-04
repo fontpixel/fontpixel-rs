@@ -1,0 +1,40 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "dpkg-deb",
+        "-x",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/libsdl2-dev_2.30.0+dfsg-1ubuntu3.1_amd64.deb",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/headers"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "cc",
+        "-O2",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/headers/usr/include/SDL2",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/headers/usr/include/x86_64-linux-gnu",
+        "-I/home/chen/githubprojects/fontpixel/local-work/w5e2-specs",
+        "/home/chen/githubprojects/fontpixel/fontpixel-rs/reports/w5.e2-image/oracles/sfont_adapter.c",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/SFont.c",
+        "/lib/x86_64-linux-gnu/libSDL2-2.0.so.0",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/sfont-reader"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "inputs": {
+    "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/SFont.c": "fac1998e392e73db76b9b549d48ed21a191f484456cbe98f698cebda2da6368c",
+    "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/SFont.h": "7e8b928e0dd57a81bf4744f13843e167b5805ed439edc9798e1f14a9f2b9c251",
+    "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/libsdl2-dev_2.30.0+dfsg-1ubuntu3.1_amd64.deb": "8d78c93699aafdb33205ef7712baeefc8d8aa806862fac4c2554f3f8db234da1",
+    "/lib/x86_64-linux-gnu/libSDL2-2.0.so.0": "2507acbbe40afe7d3e2e775dd8af00a1dba93579b9e837563032f3d751a9a45b",
+    "/home/chen/githubprojects/fontpixel/fontpixel-rs/reports/w5.e2-image/oracles/sfont_adapter.c": "5c35b122f34d35ac89169491d45c8b674f068503f599cb8254359fe70f3998b1"
+  },
+  "output_sha256": "3a18d6cc3069ba9d7d5699d232c1fb9e52b0c4d0cbe8b739c6c0e5b3fcd4b61a"
+}

@@ -288,6 +288,9 @@ impl<F: PixelFormat> Bitmap<F> {
     pub fn as_bytes(&self) -> &[u8] {
         &self.data
     }
+    pub(crate) fn allocation_capacity(&self) -> usize {
+        self.data.capacity()
+    }
     /// Limits that subsequent allocating operations inherit.
     pub const fn limits(&self) -> BitmapLimits {
         self.limits

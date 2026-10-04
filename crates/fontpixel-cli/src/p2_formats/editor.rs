@@ -30,7 +30,7 @@ impl ReadArguments {
 #[group(skip)]
 pub(super) struct WriteArguments {
     /// BMFont descriptor encoding (default text).
-    #[arg(long, value_parser = ["text", "xml", "binary"])]
+    #[arg(long, value_parser = ["text", "xml", "binary", "json"])]
     bmfont_encoding: Option<String>,
     /// BMFont PNG page width in pixels.
     #[arg(long)]
@@ -72,6 +72,7 @@ impl WriteArguments {
                 options.encoding = match v.as_str() {
                     "xml" => BmfontEncoding::Xml,
                     "binary" => BmfontEncoding::Binary,
+                    "json" => BmfontEncoding::Json,
                     _ => BmfontEncoding::Text,
                 };
             }

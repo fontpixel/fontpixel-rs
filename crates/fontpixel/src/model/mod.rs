@@ -24,6 +24,8 @@ use std::collections::BTreeMap;
 
 mod properties;
 pub use properties::{Properties, Property, PropertyValue};
+mod budget;
+pub use budget::ModelUsage;
 
 /// A Unicode number or a code in the owning font's explicitly identified charset.
 /// Unicode-tagged raw source numbers, including surrogates and values above

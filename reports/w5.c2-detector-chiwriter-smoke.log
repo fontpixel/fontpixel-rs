@@ -1,0 +1,60 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 13.51s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.02s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5c2/x86_64-unknown-linux-gnu/release/chiwriter -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/chiwriter/ -max_total_time=5 -timeout=5 -rss_limit_mb=1024 -max_len=262144 /home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/chiwriter`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 3115662890
+INFO: Loaded 1 modules   (15507 inline 8-bit counters): 15507 [0x600c89910870, 0x600c89914503), 
+INFO: Loaded 1 PC tables (15507 PCs): 15507 [0x600c89914508,0x600c89950e38), 
+INFO:      226 files found in /home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/chiwriter
+INFO: seed corpus: files: 226 min: 1b max: 908b total: 131287b rss: 33Mb
+#227	INITED cov: 1448 ft: 7423 corp: 170/92Kb exec/s: 0 rss: 165Mb
+#246	REDUCE cov: 1448 ft: 7423 corp: 170/92Kb lim: 908 exec/s: 0 rss: 167Mb L: 388/908 MS: 4 ShuffleBytes-ChangeBit-ChangeByte-EraseBytes-
+#305	NEW    cov: 1448 ft: 7429 corp: 171/92Kb lim: 908 exec/s: 0 rss: 181Mb L: 349/908 MS: 4 ChangeBit-InsertRepeatedBytes-ChangeByte-EraseBytes-
+#395	REDUCE cov: 1448 ft: 7429 corp: 171/92Kb lim: 908 exec/s: 0 rss: 202Mb L: 386/908 MS: 5 CrossOver-InsertByte-CMP-ChangeByte-EraseBytes- DE: "\377\377\377\377\377\377\377\017"-
+#467	REDUCE cov: 1448 ft: 7429 corp: 171/92Kb lim: 908 exec/s: 0 rss: 208Mb L: 67/908 MS: 2 InsertByte-EraseBytes-
+#644	REDUCE cov: 1448 ft: 7429 corp: 171/92Kb lim: 908 exec/s: 0 rss: 259Mb L: 383/908 MS: 2 CopyPart-CrossOver-
+#711	NEW    cov: 1448 ft: 7431 corp: 172/92Kb lim: 908 exec/s: 711 rss: 298Mb L: 578/908 MS: 2 InsertByte-ChangeBit-
+#736	REDUCE cov: 1448 ft: 7431 corp: 172/92Kb lim: 908 exec/s: 736 rss: 304Mb L: 77/908 MS: 5 InsertRepeatedBytes-CopyPart-ChangeByte-ChangeBit-EraseBytes-
+#746	NEW    cov: 1448 ft: 7432 corp: 173/93Kb lim: 908 exec/s: 746 rss: 304Mb L: 620/908 MS: 5 CopyPart-CMP-ChangeBit-ChangeBit-CopyPart- DE: "E\000"-
+#783	REDUCE cov: 1448 ft: 7432 corp: 173/93Kb lim: 908 exec/s: 783 rss: 316Mb L: 429/908 MS: 2 EraseBytes-InsertRepeatedBytes-
+#878	REDUCE cov: 1448 ft: 7432 corp: 173/93Kb lim: 908 exec/s: 878 rss: 353Mb L: 57/908 MS: 5 CMP-ChangeBit-ChangeByte-InsertByte-EraseBytes- DE: "Y\001\000\000\000\000\000\000"-
+#927	NEW    cov: 1450 ft: 7434 corp: 174/93Kb lim: 908 exec/s: 927 rss: 360Mb L: 796/908 MS: 4 CMP-InsertRepeatedBytes-CMP-CrossOver- DE: "P\000\000\000\000\000\000\000"-"\002\000\000\000\000\000\000\000"-
+#987	REDUCE cov: 1450 ft: 7434 corp: 174/93Kb lim: 908 exec/s: 987 rss: 372Mb L: 355/908 MS: 5 PersAutoDict-CrossOver-CrossOver-CopyPart-EraseBytes- DE: "\002\000\000\000\000\000\000\000"-
+#1092	NEW    cov: 1450 ft: 7440 corp: 175/94Kb lim: 908 exec/s: 1092 rss: 382Mb L: 578/908 MS: 5 CrossOver-ShuffleBytes-CrossOver-ChangeByte-CrossOver-
+#1140	REDUCE cov: 1450 ft: 7440 corp: 175/94Kb lim: 908 exec/s: 1140 rss: 386Mb L: 555/908 MS: 1 EraseBytes-
+#1332	NEW    cov: 1450 ft: 7441 corp: 176/94Kb lim: 908 exec/s: 1332 rss: 393Mb L: 487/908 MS: 2 ChangeBit-PersAutoDict- DE: "\377\377\377\377\377\377\377\017"-
+#1605	NEW    cov: 1450 ft: 7449 corp: 177/95Kb lim: 908 exec/s: 802 rss: 396Mb L: 548/908 MS: 3 InsertRepeatedBytes-CopyPart-CrossOver-
+#1606	NEW    cov: 1450 ft: 7450 corp: 178/95Kb lim: 908 exec/s: 803 rss: 397Mb L: 443/908 MS: 1 CopyPart-
+#1895	REDUCE cov: 1450 ft: 7450 corp: 178/95Kb lim: 908 exec/s: 947 rss: 404Mb L: 32/908 MS: 4 InsertByte-InsertByte-ChangeBit-EraseBytes-
+#1904	REDUCE cov: 1450 ft: 7450 corp: 178/95Kb lim: 908 exec/s: 952 rss: 404Mb L: 363/908 MS: 4 ShuffleBytes-ChangeBit-CMP-CrossOver- DE: "\020ORIGINAL.SET\032\032\032\032\032\001\032\032\000\032\003\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000h"-
+#1930	NEW    cov: 1450 ft: 7451 corp: 179/96Kb lim: 908 exec/s: 965 rss: 406Mb L: 834/908 MS: 1 ChangeBinInt-
+#2048	pulse  cov: 1450 ft: 7451 corp: 179/96Kb lim: 908 exec/s: 1024 rss: 407Mb
+#2079	NEW    cov: 1450 ft: 7453 corp: 180/96Kb lim: 908 exec/s: 1039 rss: 407Mb L: 371/908 MS: 3 InsertRepeatedBytes-ChangeBit-InsertByte-
+#2081	REDUCE cov: 1450 ft: 7453 corp: 180/96Kb lim: 908 exec/s: 1040 rss: 407Mb L: 26/908 MS: 2 ShuffleBytes-EraseBytes-
+#2169	REDUCE cov: 1450 ft: 7453 corp: 180/96Kb lim: 908 exec/s: 1084 rss: 408Mb L: 510/908 MS: 3 ShuffleBytes-ShuffleBytes-EraseBytes-
+#2171	REDUCE cov: 1450 ft: 7453 corp: 180/96Kb lim: 908 exec/s: 1085 rss: 408Mb L: 393/908 MS: 2 CrossOver-EraseBytes-
+#2203	REDUCE cov: 1450 ft: 7453 corp: 180/96Kb lim: 908 exec/s: 1101 rss: 409Mb L: 368/908 MS: 2 CopyPart-EraseBytes-
+#2433	NEW    cov: 1450 ft: 7457 corp: 181/97Kb lim: 908 exec/s: 811 rss: 410Mb L: 674/908 MS: 5 CopyPart-InsertByte-ChangeBit-CopyPart-CopyPart-
+#2560	REDUCE cov: 1450 ft: 7457 corp: 181/97Kb lim: 908 exec/s: 640 rss: 411Mb L: 359/908 MS: 1 EraseBytes-
+#2607	NEW    cov: 1450 ft: 7463 corp: 182/97Kb lim: 908 exec/s: 651 rss: 412Mb L: 445/908 MS: 2 CrossOver-InsertRepeatedBytes-
+#2736	REDUCE cov: 1450 ft: 7463 corp: 182/97Kb lim: 908 exec/s: 684 rss: 413Mb L: 414/908 MS: 4 ChangeBinInt-ChangeByte-InsertByte-EraseBytes-
+#2764	REDUCE cov: 1450 ft: 7463 corp: 182/97Kb lim: 908 exec/s: 691 rss: 413Mb L: 402/908 MS: 3 InsertRepeatedBytes-EraseBytes-EraseBytes-
+#2798	NEW    cov: 1450 ft: 7464 corp: 183/97Kb lim: 908 exec/s: 699 rss: 414Mb L: 404/908 MS: 4 ChangeBit-CMP-PersAutoDict-CMP- DE: "\005\000\000\000\000\000\000\000"-"P\000\000\000\000\000\000\000"-"\001\000\000\001"-
+#2855	NEW    cov: 1450 ft: 7466 corp: 184/98Kb lim: 908 exec/s: 713 rss: 414Mb L: 480/908 MS: 2 CopyPart-PersAutoDict- DE: "\020ORIGINAL.SET\032\032\032\032\032\001\032\032\000\032\003\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000h"-
+#2906	NEW    cov: 1450 ft: 7467 corp: 185/98Kb lim: 908 exec/s: 581 rss: 415Mb L: 483/908 MS: 1 CopyPart-
+#3022	REDUCE cov: 1450 ft: 7467 corp: 185/98Kb lim: 908 exec/s: 604 rss: 415Mb L: 582/908 MS: 1 EraseBytes-
+#3184	NEW    cov: 1450 ft: 7468 corp: 186/99Kb lim: 908 exec/s: 636 rss: 415Mb L: 632/908 MS: 2 InsertRepeatedBytes-InsertRepeatedBytes-
+#3189	DONE   cov: 1450 ft: 7468 corp: 186/99Kb lim: 908 exec/s: 531 rss: 415Mb
+###### Recommended dictionary. ######
+"\377\377\377\377\377\377\377\017" # Uses: 80
+"E\000" # Uses: 42
+"Y\001\000\000\000\000\000\000" # Uses: 49
+"P\000\000\000\000\000\000\000" # Uses: 35
+"\002\000\000\000\000\000\000\000" # Uses: 42
+"\020ORIGINAL.SET\032\032\032\032\032\001\032\032\000\032\003\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000h" # Uses: 13
+"\005\000\000\000\000\000\000\000" # Uses: 2
+"\001\000\000\001" # Uses: 3
+###### End of recommended dictionary. ######
+Done 3189 runs in 6 second(s)

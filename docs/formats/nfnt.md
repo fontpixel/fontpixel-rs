@@ -1,5 +1,34 @@
 # Macintosh bitmap fonts and fork containers
 
+## W5.D BinHex transport specification (recorded before implementation)
+
+BinHex 4.0 adds a single-file ASCII representation of filename, type, creator,
+Finder flags, data fork and resource fork. Basis: [Peter N. Lewis's 1991
+definition](https://files.stairways.com/other/binhex-40-specs-info.txt).
+The transport uses the specified 64-character HQX alphabet, MSB-first six-bit
+groups and 90-byte run escapes: count zero emits a literal 90; a nonzero count
+repeats the prior byte for count-1 further positions. Header and both forks have
+separate CRC-16 checks. All multibyte fields and CRC words are big endian.
+
+`Container::BinHex` preserves complete native fork semantics and original
+header fields, leading text and trailing text. HQX whitespace, line wrapping and
+RLE choices are canonicalized; these transport choices do not change fork data. CRC, alphabet, escapes, name/length bounds,
+truncation, extra payload and expansion budgets are validated before exposing a
+font. Header/fork/RLE/HQX buffers and native readback share one allocation budget.
+Canonical output emits standard 64-character lines and deterministic metadata;
+source names/type/creator/flags/forks and every changed model field are audited.
+No payload, fork or unknown transport field may disappear without loss/error.
+The historical optional final `!` and multipart separators inside the same input
+asset are accepted. Resolving separately stored segments is explicit caller work;
+the codec never searches adjacent files. The cumulative decompression limit
+charges decoded RLE bytes before allocation, including runs and escaped 90 bytes.
+CRC failures in the header, data fork or resource fork are fatal. Original fixtures
+exercise every prefix truncation, all three CRCs, segments and declared-size bombs.
+The unchanged monobit BinHex decoder independently verifies both emitted forks;
+its unsupported BinHex writer is not used as an encoding oracle.
+
+## Existing NFNT and container contract
+
 Implementation basis (consulted 2026-10-04): Apple's [NFNT/FONT resource](https://developer.apple.com/library/archive/documentation/mac/Text/Text-250.html), [font type](https://developer.apple.com/library/archive/documentation/mac/Text/Text-251.html), [extended offsets](https://developer.apple.com/library/archive/documentation/mac/Text/Text-252.html), [FOND](https://developer.apple.com/library/archive/documentation/mac/Text/Text-269.html), [resource fork](https://developer.apple.com/library/archive/documentation/mac/MoreToolbox/MoreToolbox-99.html), Apple's [AppleSingle/AppleDouble developer note](https://nulib.com/library/AppleSingle_AppleDouble.pdf), and the [MacBinary II conference specification](https://files.stairways.com/other/macbinaryii-standard-info.txt).
 
 The independent oracle is monobit 0.54 (MIT, Rob Hagemans; NFNT writer also Kelvin Sherlock). Its structures were consulted; production decoding and encoding are native Rust, with no Python or external process dependency. No GPL implementation is used.

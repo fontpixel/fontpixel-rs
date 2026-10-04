@@ -1,0 +1,380 @@
+[
+  {
+    "format": "catalyst",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "catalyst",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 7.5974440574646,
+    "log": "reports/w5.c2-catalyst-test.log"
+  },
+  {
+    "format": "catalyst",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "catalyst",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.9018516540527344,
+    "log": "reports/w5.c2-catalyst-clippy.log"
+  },
+  {
+    "format": "catalyst",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "catalyst",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.33532071113586426,
+    "log": "reports/w5.c2-catalyst-doc.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 7.443397283554077,
+    "log": "reports/w5.c2-chiwriter-test.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.8717353343963623,
+    "log": "reports/w5.c2-chiwriter-clippy.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.34075236320495605,
+    "log": "reports/w5.c2-chiwriter-doc.log"
+  },
+  {
+    "format": "dashen",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "dashen",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 7.926776647567749,
+    "log": "reports/w5.c2-dashen-test.log"
+  },
+  {
+    "format": "dashen",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "dashen",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.3074772357940674,
+    "log": "reports/w5.c2-dashen-clippy.log"
+  },
+  {
+    "format": "dashen",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "dashen",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.38539671897888184,
+    "log": "reports/w5.c2-dashen-doc.log"
+  },
+  {
+    "format": "hppcl",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hppcl",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 8.197598457336426,
+    "log": "reports/w5.c2-hppcl-test.log"
+  },
+  {
+    "format": "hppcl",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hppcl",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.9289331436157227,
+    "log": "reports/w5.c2-hppcl-clippy.log"
+  },
+  {
+    "format": "hppcl",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hppcl",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.3485534191131592,
+    "log": "reports/w5.c2-hppcl-doc.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 7.984484672546387,
+    "log": "reports/w5.c2-riscos-test.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.0261058807373047,
+    "log": "reports/w5.c2-riscos-clippy.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.3885946273803711,
+    "log": "reports/w5.c2-riscos-doc.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 7.263042211532593,
+    "log": "reports/w5.c2-xerox-test.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.0157713890075684,
+    "log": "reports/w5.c2-xerox-clippy.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.3784301280975342,
+    "log": "reports/w5.c2-xerox-doc.log"
+  },
+  {
+    "format": "prebuilt",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "prebuilt",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 17.49465036392212,
+    "log": "reports/w5.c2-prebuilt-test.log"
+  },
+  {
+    "format": "prebuilt",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "prebuilt",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 9.16783881187439,
+    "log": "reports/w5.c2-prebuilt-clippy.log"
+  },
+  {
+    "format": "prebuilt",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "prebuilt",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 1.9041779041290283,
+    "log": "reports/w5.c2-prebuilt-doc.log"
+  }
+]

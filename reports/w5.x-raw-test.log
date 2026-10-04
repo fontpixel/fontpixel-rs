@@ -1,0 +1,20 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.74s
+     Running tests/raw.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/deps/raw-ca183360a830ce2e)
+
+running 12 tests
+test explicit_configuration_and_named_presets ... ok
+test diagnostic_asset_names_are_in_the_read_budget ... ok
+test malformed_geometry_and_trailing_bytes ... ok
+test offset_wire_and_source_are_reserved_before_allocating ... ok
+test prefix_padding_and_exact_count ... ok
+test new_layout_strict_metadata_and_context_budget ... ok
+test read_and_write_limits_are_equal ... ok
+test c64_prg_default_and_preserved_load_addresses ... ok
+test independently_packed_strikes_bits_and_byte_columns ... ok
+test new_layout_padding_counts_and_limits ... ok
+test harlekin_presets_have_distinct_documented_geometries ... ok
+test random_packed_rows_roundtrip ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.79s
+

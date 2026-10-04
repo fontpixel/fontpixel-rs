@@ -1,0 +1,29 @@
+[
+  {
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2/bin/pdc",
+      "-sdkpath",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2",
+      "-u",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-sdk-fixture-repro/source",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-sdk-fixture-repro/uncompressed.pdx"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "sha256": "6bbbd3210d03092c7dda99a91f69b77ae499ee32a1adcc4627393c2d1d8155f7"
+  },
+  {
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2/bin/pdc",
+      "-sdkpath",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-sdk-fixture-repro/source",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-sdk-fixture-repro/compressed.pdx"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "sha256": "5d1c045c7ef49c2ecf6291d1584dfc04d9631091506d4485d463d5d2e6fc1d85"
+  }
+]

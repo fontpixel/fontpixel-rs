@@ -1,0 +1,302 @@
+[
+  {
+    "format": "beos",
+    "name": "beos",
+    "bytes": 247,
+    "sha256": "3186ffaacc94eb24578669eff62191a32723eb59c8397f280fb120636ccf1fef"
+  },
+  {
+    "format": "beos",
+    "name": "beos-16",
+    "bytes": 247,
+    "sha256": "6a928c403cf1cc9582065546bb0ad622508447e20edf84a79920cb0ab6b21e3b"
+  },
+  {
+    "format": "beos",
+    "name": "beos-16.monobit",
+    "bytes": 252,
+    "sha256": "82b6aebea7c2f77ab498319cbe14a89862f20e9738a1465745b08558bad4336d"
+  },
+  {
+    "format": "geos",
+    "name": "geos",
+    "bytes": 1778,
+    "sha256": "7ed7aae6fdcaed4077da45c604b4f35ed71e494617b45bc8fb5a0548a3ac2426"
+  },
+  {
+    "format": "geos",
+    "name": "geos-bare",
+    "bytes": 914,
+    "sha256": "8d21dd818e7c244579ab05e6746c3278dedfd79a2749f85d4acf7694c23816be"
+  },
+  {
+    "format": "geos",
+    "name": "geos-bare.monobit",
+    "bytes": 916,
+    "sha256": "d3113755062b77ca1f4250df77f294add15893954e35a7c70c0cbe28733f97e1"
+  },
+  {
+    "format": "geos",
+    "name": "geos-bare.publisher",
+    "bytes": 914,
+    "sha256": "8d21dd818e7c244579ab05e6746c3278dedfd79a2749f85d4acf7694c23816be"
+  },
+  {
+    "format": "geos",
+    "name": "geos-extended",
+    "bytes": 2032,
+    "sha256": "53445975dc14ce1dab39c38c34de6b73108a49a20e238368dc9b5ba64d66917c"
+  },
+  {
+    "format": "geos",
+    "name": "geos-extended.publisher",
+    "bytes": 1872,
+    "sha256": "39e5760c21f3a96bd710063ed4b2638fa53ad4d2f2c1f8acf35dd4e40bac0a4d"
+  },
+  {
+    "format": "geos",
+    "name": "geos-mega",
+    "bytes": 5842,
+    "sha256": "c9174592ee3ad867b688ed95c5bb27b03796a1667d3fbe2d5d62adfaf66a760f"
+  },
+  {
+    "format": "geos",
+    "name": "geos-mega-utf8",
+    "bytes": 11430,
+    "sha256": "2e1e542f37c83e53f6b64abcf0efc57dc61cf51cb85a263a500f9b7e1ae99509"
+  },
+  {
+    "format": "geos",
+    "name": "geos-mega-utf8.publisher",
+    "bytes": 11204,
+    "sha256": "972cb1be646c573ee01f77495bfaa811d328ed8f439d7b6d7b6c6a7839b3efba"
+  },
+  {
+    "format": "geos",
+    "name": "geos-mega.publisher",
+    "bytes": 5734,
+    "sha256": "de0d6cd1a80028edb71ed116fc38ff6ed930ee7652b5f18515dc38a451b62eb6"
+  },
+  {
+    "format": "geos",
+    "name": "geos-utf8",
+    "bytes": 7620,
+    "sha256": "ea1dbbb79d620f6e8c5136939aea29d954137088359c2a09811dacad29d6f0e8"
+  },
+  {
+    "format": "geos",
+    "name": "geos-utf8.publisher",
+    "bytes": 7394,
+    "sha256": "35c0fe53a675a180ee1c8f312419be88bdead18eb982571ec14e889f80eb1031"
+  },
+  {
+    "format": "geos",
+    "name": "geos.monobit",
+    "bytes": 1778,
+    "sha256": "5b5331d519b4ca5684c05c8d6b4fe6a9f222a7baf619f59ff9c182388082a283"
+  },
+  {
+    "format": "geos",
+    "name": "geos.publisher",
+    "bytes": 1676,
+    "sha256": "eb62435686e01ab08bd4f92e1a62f127e5f0c0f8a7bc62d53389ae409f77ae12"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi",
+    "bytes": 290,
+    "sha256": "1ceb6a1161d35e1d4dbee3233ff7e8c04c934ed6dd89f27a4b0de1f69663cd20"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-fixed",
+    "bytes": 278,
+    "sha256": "f84157487b44cd508032be8da5bb253f11ea46ae660bf2ede91f1069ddf6a395"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-fixed.native-writer",
+    "bytes": 290,
+    "sha256": "7b58afdf6ed4d61445183ef2a4d37c3d6f7d3327dbc76c567a4338772dbc39e2"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-lx",
+    "bytes": 12288,
+    "sha256": "e3a21bb1ec1be19efcca8a7adb6272de08554329cce32318acb077ac5974c032"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-lx-exepack1",
+    "bytes": 12288,
+    "sha256": "5af4235d93bb630d3f3553a0e6cace0b496652d9041ed107e3aba72c0f0216ba"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-lx-exepack2",
+    "bytes": 12288,
+    "sha256": "50baf730e865cf2f90aba2cc1fe87309620abba01f8c59bde035d5b10c14203a"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-ne",
+    "bytes": 736,
+    "sha256": "a5d392c33e12e80ee8b61b231679c22cf49a161e089411518433916c112a3797"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-ne.face0",
+    "bytes": 290,
+    "sha256": "1ceb6a1161d35e1d4dbee3233ff7e8c04c934ed6dd89f27a4b0de1f69663cd20"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-prop",
+    "bytes": 278,
+    "sha256": "9e3ff5f0ac24fc617f5c58ca7d3fbf15baa508beee7569f3e6751a4dbde48e57"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi-prop.native-writer",
+    "bytes": 290,
+    "sha256": "928f50cdc7373360c055b5cbdd86890d515a7494376404f6c95277d686382a16"
+  },
+  {
+    "format": "gpi",
+    "name": "gpi.native-writer",
+    "bytes": 306,
+    "sha256": "1d998bcd661ce8a040e39f58abe5da7da9d29961884068e90f1e3b85c5ffeea5"
+  },
+  {
+    "format": "oberon",
+    "name": "oberon",
+    "bytes": 86,
+    "sha256": "54175213c6658fdc467c823c74f11d874afaf6ddc4c8e4da4a94fdaf4727f193"
+  },
+  {
+    "format": "oberon",
+    "name": "oberon.monobit",
+    "bytes": 86,
+    "sha256": "54175213c6658fdc467c823c74f11d874afaf6ddc4c8e4da4a94fdaf4727f193"
+  },
+  {
+    "format": "pcgeos",
+    "name": "pcgeos",
+    "bytes": 194,
+    "sha256": "dd7fd9fbece9b933976f96abdc8413053f8512c67eb2cf7476d2c147e93ef162"
+  },
+  {
+    "format": "pcgeos",
+    "name": "pcgeos-dbcs",
+    "bytes": 496,
+    "sha256": "161598e8b6e0aeca929804ddf43cbacce7ce1f8de2f894f146899092f82603fc"
+  },
+  {
+    "format": "pcgeos",
+    "name": "pcgeos-styled",
+    "bytes": 194,
+    "sha256": "1ab214a2dc1f1f594fce8d050b0654f7e24c76e1adf8c48c002b8c4fcef3e1bd"
+  },
+  {
+    "format": "pcgeos",
+    "name": "pcgeos.monobit",
+    "bytes": 194,
+    "sha256": "a662f6b31d4abe087026b868fd47bfdfeb876dd8f67bb00f662246899e7d800f"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos",
+    "bytes": 1538,
+    "sha256": "272e9f2cd7013cc628f135dab265ec0764b62275308b97f2508f7509fb5a5afd"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos-big",
+    "bytes": 1730,
+    "sha256": "226cdd8ba1f5555767b912c36e92539d7d04a333314ff2478fb0ebbf182f9324"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos-big-extended",
+    "bytes": 4592,
+    "sha256": "9f2d86c47ed0a81c56e89967d13b54c809b25ab800514f604881cb9c95949545"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos-small",
+    "bytes": 866,
+    "sha256": "8c705017a737f078fe39ef203322b761e1d95009eafddc362c4b636065c40030"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos-small-extended",
+    "bytes": 2297,
+    "sha256": "cd6fc7066d2f0df3982936d936b16aeff98804d05809e2f3e8cbadb42ec23803"
+  },
+  {
+    "format": "symbos",
+    "name": "symbos.monobit",
+    "bytes": 1538,
+    "sha256": "272e9f2cd7013cc628f135dab265ec0764b62275308b97f2508f7509fb5a5afd"
+  },
+  {
+    "format": "vtfont",
+    "name": "vtfont",
+    "bytes": 92,
+    "sha256": "0805f8e0df8cc76fd1da344a9dcfea1e34097f5241c5db8f421931c4d5004fb1"
+  },
+  {
+    "format": "vtfont",
+    "name": "vtfont-fallback",
+    "bytes": 92,
+    "sha256": "abac2197119e0ad606649823a570a9e90ffede3ac9b964ed6fe55161adfb8245"
+  },
+  {
+    "format": "vtfont",
+    "name": "vtfont-native",
+    "bytes": 64,
+    "sha256": "1327fbf96c70d6a5680c86a1d5a287ffb789d6b97951d7308848ab677712844e"
+  },
+  {
+    "format": "vtfont",
+    "name": "vtfont.monobit",
+    "bytes": 76,
+    "sha256": "ce6ec6f7cc8e3bfcc9898a3e6dfb256ada040a9fadb7ca78d44a879ce8673353"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont",
+    "bytes": 136,
+    "sha256": "03ddf50e713c2ee0f741dc039a9675f5dbf0b72d75dac7a891c7a15944d895dd"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont-alpha",
+    "bytes": 280,
+    "sha256": "0543e7ea7ff5bb49ff589b23033283587bf98d7a1b50e9ec059196902fb03b59"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont-rbit",
+    "bytes": 136,
+    "sha256": "907773d4e47e3c034039ce9b781733a397f2e2c9647958962bad21432c394b22"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont-rbit-rbyte",
+    "bytes": 136,
+    "sha256": "339fb21e325b5f8bf5ffb0fa478426eb87b50200f24a77662eb34b1183ffd2a7"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont-rbyte",
+    "bytes": 136,
+    "sha256": "90c2b56d586763e9994f1e7f662da084119d21e65a72e315ebe6f70e9f782422"
+  },
+  {
+    "format": "wsfont",
+    "name": "wsfont.monobit",
+    "bytes": 136,
+    "sha256": "03ddf50e713c2ee0f741dc039a9675f5dbf0b72d75dac7a891c7a15944d895dd"
+  }
+]

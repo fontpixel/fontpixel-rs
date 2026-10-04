@@ -1,0 +1,69 @@
+{
+  "versions": {
+    "fonttools": "4.66.1",
+    "freetype-py": "2.5.1",
+    "pillow": "12.3.0"
+  },
+  "freetype_library": "libfreetype.so.6",
+  "freetype_version": [
+    2,
+    13,
+    2
+  ],
+  "cases": [
+    {
+      "file": "cbdt-vertical.ttf",
+      "bytes": 5852,
+      "sha256": "3f9cad79faff1f2feb8fe216bbcda5822b7852e9f122b8c11cf0ff11734f4ef4",
+      "fonttools_recompiled_sha256": "18d5219462ff7ad6b9ba770d71a0d18de1f88624195bbfe5c8a7c68bd28a6a35",
+      "strikes": 3,
+      "glyphs": 16,
+      "pixels": 855,
+      "fonttools": true,
+      "freetype": true,
+      "pillow": true,
+      "native_recompiled_read": true
+    },
+    {
+      "file": "cbdt.ttf",
+      "bytes": 5796,
+      "sha256": "067b219d7dd8fc91e85c2f7129e77061023caeeb07c15a5b5efcb38e7d52ab8d",
+      "fonttools_recompiled_sha256": "77661f571157b3811b54bd0cc627607c33e9954fd2e8b610490e390206640ee7",
+      "strikes": 3,
+      "glyphs": 16,
+      "pixels": 855,
+      "fonttools": true,
+      "freetype": true,
+      "pillow": true,
+      "native_recompiled_read": true
+    },
+    {
+      "file": "sbix-wide.ttf",
+      "bytes": 308224,
+      "sha256": "7d51a4ad861a2501d2b4ed98f8d90bc70e1633ce3afbb05b2da3e0e220923641",
+      "fonttools_recompiled_sha256": "d643ce43baaaeeddfa9e479393da4c0b121beaf07d1315c0a84beab51eb165f6",
+      "strikes": 1,
+      "glyphs": 1,
+      "pixels": 76800,
+      "fonttools": true,
+      "freetype": true,
+      "pillow": true,
+      "native_recompiled_read": true
+    },
+    {
+      "file": "sbix.ttf",
+      "bytes": 5432,
+      "sha256": "c0bf10b29c823bd70dcd1c5274fdf8e29fd8e735d3920e3eabef506c333aefac",
+      "fonttools_recompiled_sha256": "e33c4bddcc73fe2493851806a54bdca56308c5f682cb80eb746e0ecb1fd80030",
+      "strikes": 3,
+      "glyphs": 13,
+      "pixels": 855,
+      "fonttools": true,
+      "freetype": true,
+      "pillow": true,
+      "native_recompiled_read": true
+    }
+  ],
+  "glyph_checks": 46,
+  "pixel_checks": 79365
+}
