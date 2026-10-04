@@ -204,14 +204,14 @@ fn cell_metrics(f: &mut Font, o: &ArrayOptions) {
     f.source_format = Some("c".into());
 }
 fn embedded_options(s: &str, l: &ResourceLimits) -> Result<Option<ArrayOptions>> {
-    let Some((_, rest)) = s.split_once("/* fontpixel-c: ") else {
+    let mut comments = lexer::comments(s).filter_map(|c| c.trim().strip_prefix("fontpixel-c: "));
+    let Some(text) = comments.next() else {
         return Ok(None);
     };
-    let text = rest
-        .split_once("*/")
-        .ok_or_else(|| invalid("unterminated fontpixel C options"))?
-        .0
-        .trim();
+    if comments.next().is_some() {
+        return Err(invalid("multiple fontpixel C option comments"));
+    }
+    let text = text.trim();
     check(text.len(), l.max_table_bytes.min(65536), "C option bytes")?;
     let o = serde_json::from_str(text).map_err(|e| invalid(format!("C options: {e}")))?;
     Ok(Some(o))
@@ -243,13 +243,7 @@ impl FormatReader<FontSet> for CCodec {
         }
         let primary =
             String::from_utf8(c.bytes().to_vec()).map_err(|_| invalid("C header is not UTF-8"))?;
-        let family = if self.read_options.family == Family::Auto
-            && (primary.contains("font8x8_") || primary.contains("\"font8x8"))
-        {
-            Family::Font8x8
-        } else {
-            self.read_options.family
-        };
+        let mut family = self.read_options.family;
         let root_name = c
             .name()
             .unwrap_or("font.h")
@@ -267,6 +261,24 @@ impl FormatReader<FontSet> for CCodec {
             check(text.len(), l.max_table_bytes, "C header bytes")?;
             let t = lexer::lex(&text, &mut b)?;
             let ds = lexer::declarations(&t, &mut b)?;
+            let generic = match &self.read_options.generic {
+                Some(options) => Some(options.clone()),
+                None => embedded_options(&text, l)?,
+            };
+            if family == Family::Auto {
+                family = if generic.is_some() {
+                    Family::Generic
+                } else if ds.iter().any(|d| d.ty == "GFXfont") {
+                    Family::Gfx
+                } else if ds.iter().any(|d| d.name.starts_with("font8x8_"))
+                    || t.iter()
+                        .any(|t| matches!(t.kind, Kind::Directive(d) if d.contains("\"font8x8")))
+                {
+                    Family::Font8x8
+                } else {
+                    Family::Auto
+                };
+            }
             if family == Family::Font8x8 {
                 for token in &t {
                     if let Kind::Directive(d) = token.kind
@@ -326,11 +338,6 @@ impl FormatReader<FontSet> for CCodec {
                             "C byte array is missing or ambiguous; select array_name",
                         ));
                     };
-                    let generic = self
-                        .read_options
-                        .generic
-                        .clone()
-                        .or(embedded_options(&text, l)?);
                     if kind == Family::Tmat
                         || (kind == Family::Auto
                             && generic.is_none()
@@ -465,8 +472,14 @@ fn header8(
     if tmat && rows.len() != 96 {
         return Err(invalid("t-mat table needs 96 rows"));
     }
-    let span = s
-        .split_once("unicode points ")
+    let preceding = t[..d.start]
+        .iter()
+        .rev()
+        .find(|token| token.kind == Kind::Punct(b';'))
+        .map_or(0, |token| token.end);
+    let span = lexer::comments(&s[preceding..t[d.start].start])
+        .filter_map(|comment| comment.split_once("unicode points "))
+        .last()
         .map(|(_, v)| {
             let (a, z) = v
                 .split_once('-')

@@ -75,3 +75,7 @@ before encoding. Encoder and reader peak budgets are checked separately. This
 allows the full 38,653-glyph Tong SC font to roundtrip at the default 256 MiB
 aggregate limit. A 4,000-glyph regression also checks a 32 MiB limit with retained
 raw bitmap properties. Output sinks cap vector growth before allocating.
+
+All nested native metadata objects reject unknown fields, including shared metrics,
+name, charset and property structures. Unknown future fields cannot disappear in a
+strict conversion. The same model schema is used by YAFF's native metadata extension.

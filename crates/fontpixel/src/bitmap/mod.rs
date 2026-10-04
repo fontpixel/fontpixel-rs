@@ -115,6 +115,7 @@ pub(crate) fn zeros(len: usize, maximum: usize) -> Result<Vec<u8>> {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Bounds {
     /// Width in pixels.
     pub width: u32,

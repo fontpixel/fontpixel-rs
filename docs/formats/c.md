@@ -45,3 +45,11 @@ before serialization. Unknown C source comments/macros are not font metadata.
 Generic output includes a small JSON option comment so its geometry, mapping origin,
 charset and bit order can be read back without guessing; ordinary C compilers ignore
 it. This is an extension, not a claim arbitrary C arrays carry such metadata.
+
+Automatic family selection inspects declarations and real comments. A native
+`fontpixel-c` option comment selects generic geometry even when the symbol starts
+with `font8x8_`; text inside string literals does not select a format or supply
+options. A font8x8 Unicode range belongs to the declaration following its comment,
+with preceding declarations forming a boundary. Explicit array selection applies
+across includes and must resolve to exactly one declaration. C output reports a
+stable glyph ID reorder even if the total number of slots is unchanged.

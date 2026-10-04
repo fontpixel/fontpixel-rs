@@ -410,3 +410,53 @@ fn large_native_atlas_fits_aggregate_budget_and_preserves_raw_properties() {
     assert!(!report.has_loss());
     assert_eq!(back, set);
 }
+
+#[test]
+fn native_nested_metadata_never_discards_unknown_fields() {
+    let mut source = sample(false);
+    source.fonts[0].metrics.point_size = Some(fontpixel::model::Rational::integer(12));
+    let o = WriteOptions::new(ResourcePath::new("atlas.png").unwrap());
+    let written = ImageCodec::default().write(&source, &o).unwrap();
+    for path in [
+        "/native/metrics",
+        "/native/metrics/bounds",
+        "/native/metrics/point_size",
+        "/native/names",
+        "/native/charset",
+        "/native/properties/0",
+        "/cells/0/native/metrics",
+        "/cells/0/native/metrics/bounds",
+        "/cells/0/native/metrics/advance",
+    ] {
+        for toml in [false, true] {
+            let mut assets = written.output.clone().into_assets();
+            let map = assets
+                .iter_mut()
+                .find(|a| a.path.as_str() == "atlas.json")
+                .unwrap();
+            let mut value: serde_json::Value = serde_json::from_slice(&map.bytes).unwrap();
+            value
+                .pointer_mut(path)
+                .unwrap()
+                .as_object_mut()
+                .unwrap()
+                .insert("futureField".into(), serde_json::json!(999));
+            let json = serde_json::to_string(&value).unwrap();
+            if toml {
+                map.path = ResourcePath::new("atlas.toml").unwrap();
+                map.bytes = format!(
+                    "fontpixel_image = 1\npayload_json = {}\n",
+                    serde_json::to_string(&json).unwrap()
+                )
+                .into_bytes();
+            } else {
+                map.bytes = json.into_bytes();
+            }
+            let assets = Assets(OutputBundle::new(o.primary_name.clone(), assets).unwrap());
+            assert!(
+                read_bundle(&assets, "atlas.png").is_err(),
+                "{path} toml={toml}"
+            );
+        }
+    }
+}

@@ -63,6 +63,7 @@ impl Codepoint {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Vector {
     /// Horizontal component.
     pub x: i64,
@@ -83,6 +84,7 @@ impl Vector {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Rational {
     numerator: i64,
     denominator: u32,
@@ -123,6 +125,7 @@ impl Rational {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct AbcWidths {
     /// Signed left space.
     pub a: i64,
@@ -138,6 +141,7 @@ pub struct AbcWidths {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct GlyphMetrics {
     /// Ink rectangle dimensions must match the bitmap; offsets are relative to origin.
     pub bounds: Bounds,
@@ -436,6 +440,7 @@ impl GlyphId {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontMetrics {
     /// Nominal pixel size.
     #[cfg_attr(
@@ -549,6 +554,7 @@ pub struct FontMetrics {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontNames {
     /// Family name.
     #[cfg_attr(
@@ -623,6 +629,7 @@ pub struct FontNames {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct FontCharset {
     /// Original CHARSET_REGISTRY spelling/value.
     #[cfg_attr(
@@ -709,7 +716,7 @@ impl Font {
         }
         Ok(font)
     }
-    #[cfg(any(feature = "yaff", feature = "image", feature = "c"))]
+    #[cfg(any(feature = "yaff", feature = "image", feature = "c", feature = "kbitx", feature = "pbf"))]
     pub(crate) fn slot_count(&self) -> usize {
         self.glyphs.len()
     }

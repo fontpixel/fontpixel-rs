@@ -46,6 +46,7 @@ impl From<i64> for PropertyValue {
     any(feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
 pub struct Property {
     /// Exact source key spelling.
     pub name: String,

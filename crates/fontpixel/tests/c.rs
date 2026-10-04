@@ -384,3 +384,56 @@ fn font8x8_array_selection_filters_and_requires_one_match() {
     };
     assert!(read(source, options).is_err());
 }
+
+#[test]
+fn native_generic_comment_wins_over_font8x8_symbol_name() {
+    let (source, _) = read(ARRAY, generic()).unwrap();
+    let writer = CCodec {
+        write_options: CWriteOptions {
+            array_name: "font8x8_custom".into(),
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    let output = writer
+        .write(
+            &source,
+            &WriteOptions::new(ResourcePath::new("font.h").unwrap()),
+        )
+        .unwrap();
+    assert!(!output.report.has_loss());
+    let bytes = output.output.into_single().unwrap();
+    assert_eq!(
+        read(
+            std::str::from_utf8(&bytes).unwrap(),
+            CReadOptions::default()
+        )
+        .unwrap()
+        .0,
+        source
+    );
+    let fake =
+        "const char *label = \"/* fontpixel-c: invalid */ font8x8_\"; uint8_t bytes[]={128};";
+    assert!(read(fake, CReadOptions::default()).is_err());
+}
+
+#[test]
+fn font8x8_ranges_belong_to_each_declaration() {
+    let source = "// unicode points U+0041 - U+0041\nchar font8x8_first[1][8]={{1,0,0,0,0,0,0,0}};\n// unicode points U+0042 - U+0042\nchar font8x8_second[1][8]={{2,0,0,0,0,0,0,0}};";
+    let (selected, _) = read(
+        source,
+        CReadOptions {
+            array_name: Some("font8x8_second".into()),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert_eq!(selected.fonts[0].len(), 1);
+    assert!(
+        selected.fonts[0]
+            .glyph_for_codepoint(Codepoint::Unicode(66))
+            .is_some()
+    );
+    let (all, _) = read(source, CReadOptions::default()).unwrap();
+    assert_eq!(all.fonts[0].len(), 2);
+}

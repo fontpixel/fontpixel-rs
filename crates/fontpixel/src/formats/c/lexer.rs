@@ -308,3 +308,54 @@ pub(super) fn rows(t: &[Token<'_>], d: &Declaration<'_>, b: &mut Budget) -> Resu
     }
     Ok(out)
 }
+
+// Enumerate real comments without matching text inside strings or directives.
+// The lexer validates termination before callers use these borrowed slices.
+pub(super) fn comments(s: &str) -> impl Iterator<Item = &str> {
+    let bytes = s.as_bytes();
+    let mut at = 0;
+    std::iter::from_fn(move || {
+        while at < bytes.len() {
+            if bytes[at..].starts_with(b"//") {
+                let start = at + 2;
+                at = start
+                    + bytes[start..]
+                        .iter()
+                        .position(|&b| b == b'\n')
+                        .unwrap_or(bytes.len() - start);
+                return Some(&s[start..at]);
+            }
+            if bytes[at..].starts_with(b"/*") {
+                let start = at + 2;
+                let end = start
+                    + bytes[start..]
+                        .windows(2)
+                        .position(|b| b == b"*/")
+                        .unwrap_or(bytes.len() - start);
+                at = (end + 2).min(bytes.len());
+                return Some(&s[start..end]);
+            }
+            if bytes[at] == b'"' || bytes[at] == b'\'' {
+                let quote = bytes[at];
+                at += 1;
+                while at < bytes.len() {
+                    let c = bytes[at];
+                    at += 1;
+                    if c == b'\\' {
+                        at = (at + 1).min(bytes.len());
+                    } else if c == quote {
+                        break;
+                    }
+                }
+            } else if bytes[at] == b'#' {
+                at += bytes[at..]
+                    .iter()
+                    .position(|&b| b == b'\n')
+                    .unwrap_or(bytes.len() - at);
+            } else {
+                at += 1;
+            }
+        }
+        None
+    })
+}
