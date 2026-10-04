@@ -157,24 +157,48 @@ fn retained_font_arrays_are_charged_even_after_all_fonts_are_removed() {
 fn cli_rejects_cumulative_inputs_before_replacing_an_existing_output() {
     use fontpixel::formats::raw::{RawLayout, RawReadOptions};
     use std::process::Command;
+    // Seventeen real cells provide enough retained model storage for the
+    // standalone identity slice, without making a large bitmap dominate the
+    // decoder's transient budget. The same cap must still complete one CLI write.
+    let input = vec![0x80; 17];
     let (fonts, report) = fontpixel::formats::raw::read(
-        &[0x80],
+        &input,
         &RawReadOptions {
             layout: Some(RawLayout::new(1, 1)),
         },
         &ResourceLimits::default(),
     )
     .unwrap();
+    assert_eq!(fonts.fonts.len(), 1);
+    assert_eq!(fonts.fonts[0].len(), input.len());
+    let loaded = Loaded {
+        fonts,
+        report,
+        format: "raw",
+    };
     let mut probe = InputBudget::new(ResourceLimits::default());
-    probe
-        .admit(&Loaded {
-            fonts,
-            report,
-            format: "raw",
-        })
-        .unwrap();
+    probe.admit(&loaded).unwrap();
     let one = ResourceLimits::default().max_total_bytes
         - probe.remaining_limits().unwrap().max_total_bytes;
+    let working = one.checked_mul(2).unwrap() - 1;
+    // Below the 1 MiB identity ceiling, solve L - floor(L / 256) = working.
+    // This is the smallest such L, including the plateau at multiples of 255.
+    assert!(working < 255 * 1024 * 1024);
+    let total = working.checked_add((working - 1) / 255).unwrap();
+    let identity = (total / 256).min(1024 * 1024);
+    assert_eq!(total - identity, working);
+    let mut cumulative = InputBudget::new(ResourceLimits {
+        max_total_bytes: working,
+        ..Default::default()
+    });
+    cumulative.admit(&loaded).unwrap();
+    assert!(matches!(
+        cumulative.admit(&loaded),
+        Err(fontpixel::Error::ResourceLimit {
+            resource: "retained CLI input bytes",
+            ..
+        })
+    ));
     let directory =
         std::env::temp_dir().join(format!("fontpixel-input-budget-{}", std::process::id()));
     std::fs::create_dir(&directory).unwrap();
@@ -187,7 +211,7 @@ fn cli_rejects_cumulative_inputs_before_replacing_an_existing_output() {
     let _cleanup = Cleanup(directory.clone());
     let source = directory.join("one.raw");
     let target = directory.join("out.yaff");
-    std::fs::write(&source, [0x80]).unwrap();
+    std::fs::write(&source, &input).unwrap();
     let mut command = Command::new(env!("CARGO_BIN_EXE_fontpixel"));
     command
         .args([
@@ -203,7 +227,9 @@ fn cli_rejects_cumulative_inputs_before_replacing_an_existing_output() {
             "-o",
         ])
         .arg(&target)
-        .arg(&source);
+        .arg(&source)
+        .arg("--max-total-bytes")
+        .arg(total.to_string());
     let good = command.output().unwrap();
     assert!(
         good.status.success(),
@@ -211,10 +237,7 @@ fn cli_rejects_cumulative_inputs_before_replacing_an_existing_output() {
         String::from_utf8_lossy(&good.stderr)
     );
     std::fs::write(&target, b"original output").unwrap();
-    command
-        .arg(&source)
-        .arg("--max-total-bytes")
-        .arg((2 * one - 1).to_string());
+    command.arg(&source);
     let failed = command.output().unwrap();
     assert!(!failed.status.success());
     assert!(

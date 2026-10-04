@@ -38,7 +38,7 @@ def bdf_physical(data):
     in_bitmap = False
     declared = None
     for line in text.splitlines():
-        if not line.strip():
+        if not line.strip() and not in_bitmap:
             continue
         key, _, value = line.partition(' ')
         value = value.strip()
@@ -50,7 +50,7 @@ def bdf_physical(data):
             elif in_bitmap:
                 # Hex case and byte padding bits do not change physical ink;
                 # full decoded records below independently compare dimensions.
-                current['rows'].append(value.upper())
+                current['rows'].append(line.strip().upper())
             else:
                 tokens = value.split()
                 if key in ['ENCODING','SWIDTH','DWIDTH','SWIDTH1','DWIDTH1','VVECTOR','BBX']:

@@ -1,6 +1,7 @@
 //! WOFF2 Brotli coding, glyf/loca and hmtx transforms, and bounded parallel jobs.
 use super::*;
 use std::collections::BTreeMap;
+mod brotli_decode;
 #[cfg(feature = "ttc")]
 mod collection;
 mod transform;
@@ -105,38 +106,10 @@ fn ushort255(out: &mut Vec<u8>, n: u16) {
         }
     }
 }
-fn decompress(data: &[u8], expected: usize) -> Result<Vec<u8>> {
-    let mut out = buffer(
-        expected
-            .checked_add(1)
-            .ok_or_else(|| invalid("length overflow"))?,
-    )?;
-    out.resize(expected + 1, 0);
-    let mut state = brotli::BrotliState::new(
-        brotli::HeapAlloc::<u8>::default(),
-        brotli::HeapAlloc::<u32>::default(),
-        brotli::HeapAlloc::<brotli::HuffmanCode>::default(),
-    );
-    let (mut avail_in, mut input_offset, mut avail_out, mut output_offset, mut total_out) =
-        (data.len(), 0, out.len(), 0, 0);
-    let result = brotli::BrotliDecompressStream(
-        &mut avail_in,
-        &mut input_offset,
-        data,
-        &mut avail_out,
-        &mut output_offset,
-        &mut out,
-        &mut total_out,
-        &mut state,
-    );
-    if !matches!(result, brotli::BrotliResult::ResultSuccess)
-        || input_offset != data.len()
-        || output_offset != expected
-    {
-        return Err(invalid("Brotli stream or decoded length mismatch"));
-    }
-    out.truncate(expected);
-    Ok(out)
+fn decompress(data: &[u8], expected: usize, limit: usize) -> Result<Vec<u8>> {
+    let budget = sfnt::working::Budget::new(limit, "WOFF2 decompression working bytes");
+    let (bytes, _lease) = brotli_decode::decompress(data, expected, &budget)?.into_parts();
+    Ok(bytes)
 }
 fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
     use brotli::enc::{BrotliEncoderParams, backward_references::BrotliEncoderMode};
@@ -271,8 +244,14 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         _ => return Err(invalid("missing, misordered or mismatched glyf/loca pair")),
     }
     let compressed = u32_at(data, 20)? as usize;
-    let raw = decompress(cursor.take(compressed)?, size)?;
-    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, decompress)?;
+    let raw = decompress(
+        cursor.take(compressed)?,
+        size,
+        l.sfnt.resources.max_total_bytes,
+    )?;
+    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, |data, expected| {
+        decompress(data, expected, l.sfnt.resources.max_total_bytes)
+    })?;
     let mut tables = BTreeMap::new();
     let mut offset = 0;
     for r in &records {

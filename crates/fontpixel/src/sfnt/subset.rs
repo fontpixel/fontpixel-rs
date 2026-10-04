@@ -3,6 +3,7 @@ use super::{
     glyf::{GlyfTable, Glyph},
     gsub::{Gsub, LayoutLimits},
     metrics::{self, Axis},
+    working::{Budget, Vector as WorkingVector},
     *,
 };
 use crate::{
@@ -60,7 +61,8 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     if o.codepoints.iter().any(|&cp| char::from_u32(cp).is_none()) {
         return Err(invalid("subset requires Unicode scalars"));
     }
-    let f = Sfnt::parse(data, l)?;
+    let working = Budget::new(l.resources.max_total_bytes, "sfnt subset working bytes");
+    let f = Sfnt::parse_with_budget(data, l, &working)?;
     let count = u16_at(get(&f, *b"maxp")?, 4)?;
     l.glyphs(usize::from(count))?;
     if o.drop_tables.contains(b"vhea") != o.drop_tables.contains(b"vmtx") {
@@ -129,8 +131,8 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
             ));
         }
     }
-    let mut cmap = cmap::decode(get(&f, *b"cmap")?, count, l)?;
-    cmap.retain(|cp, _| o.codepoints.contains(cp));
+    let mut cmap =
+        cmap::decode_with_budget(get(&f, *b"cmap")?, count, l, Some(&o.codepoints), &working)?;
     let gsub = if o.drop_tables.contains(b"GSUB") {
         None
     } else {
@@ -177,6 +179,9 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         .map(|(i, &g)| (g, i as u16))
         .collect::<BTreeMap<_, _>>();
     let n = keep.len() as u16;
+    // Leases precede the table owners so errors drop actual table storage first.
+    // Budget-aware encoders transfer their charge through final sfnt assembly.
+    let mut replacement_leases = WorkingVector::new(&working)?;
     let mut replacements = BTreeMap::new();
     let mut head = get(&f, *b"head")?.to_vec();
     bytes(&head, 0, 54)?;
@@ -226,7 +231,10 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     for value in cmap.values_mut() {
         *value = mapping[value];
     }
-    replacements.insert(*b"cmap", cmap::encode(&cmap, n, l)?.data);
+    replacement_leases.reserve(1)?;
+    let (encoded_cmap, cmap_lease) = cmap::encode_with_budget(&cmap, n, l, &working)?.into_parts();
+    replacements.insert(*b"cmap", encoded_cmap.data);
+    replacement_leases.push(cmap_lease)?;
     let mut os = os2::Os2Table::decode(get(&f, *b"OS/2")?, l)?;
     os.set_unicode_coverage(&cmap.keys().copied().collect())?;
     replacements.insert(*b"OS/2", os.encode(l)?);
@@ -304,8 +312,9 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
             b.insert(t, v)?;
         }
     }
+    let (bytes, _output_lease) = b.build_with_budget(l, &working)?.into_parts();
     Ok(Subset {
-        bytes: b.build(l)?,
+        bytes,
         glyph_mapping: mapping,
         report,
     })

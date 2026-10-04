@@ -462,10 +462,12 @@ name = "fontpixel"
 version = "0.1.0"
 dependencies = [
  "brotli",
+ "brotli-decompressor",
  "crc32fast",
  "criterion",
  "flate2",
  "image",
+ "miniz_oxide 0.9.1",
  "png",
  "proptest",
  "read-fonts",

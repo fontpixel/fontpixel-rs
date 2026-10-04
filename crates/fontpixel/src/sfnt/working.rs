@@ -63,6 +63,28 @@ impl Budget {
                 .ok_or_else(|| self.error())?,
         )
     }
+
+    /// Conservative standard-library tree storage, without relying on a
+    /// toolchain-specific minimum node occupancy. Nested key/value allocations
+    /// are separate. Include an additional root while insertions are in flight.
+    pub(crate) fn tree_bytes<K, V>(&self, entries: usize) -> Result<usize> {
+        let slot = size_of::<K>()
+            .checked_add(size_of::<V>())
+            .and_then(|n| n.checked_add(size_of::<usize>()))
+            .ok_or_else(|| self.error())?;
+        let node = slot
+            .checked_mul(16)
+            .and_then(|n| n.checked_add(128))
+            .ok_or_else(|| self.error())?;
+        entries
+            .checked_add(1)
+            .and_then(|n| n.checked_mul(node))
+            .ok_or_else(|| self.error())
+    }
+
+    pub(crate) fn reserve_tree<K, V>(&self, entries: usize) -> Result<Lease> {
+        self.reserve(self.tree_bytes::<K, V>(entries)?)
+    }
 }
 
 /// Keep this lease alive until its corresponding storage has actually dropped.
@@ -358,5 +380,18 @@ mod tests {
         let owned = Owned::from_parts(ObserveDrop(budget.clone()), lease);
         drop(owned);
         assert_eq!(budget.remaining(), 1);
+    }
+
+    #[test]
+    fn tree_estimate_preserves_the_root_and_checks_count_overflow() {
+        let node = 16 * (size_of::<u32>() + size_of::<u16>() + size_of::<usize>()) + 128;
+        let budget = Budget::new(2 * node, "test working bytes");
+        assert_eq!(budget.tree_bytes::<u32, u16>(0).unwrap(), node);
+        let lease = budget.reserve_tree::<u32, u16>(1).unwrap();
+        assert_eq!(lease.bytes(), 2 * node);
+        assert_eq!(budget.remaining(), 0);
+        assert!(budget.tree_bytes::<u32, u16>(usize::MAX).is_err());
+        drop(lease);
+        assert_eq!(budget.remaining(), 2 * node);
     }
 }

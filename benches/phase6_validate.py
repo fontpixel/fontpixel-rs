@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import traceback
 from phase6_reference import family_plan, load_tong, parse_bdf, single_plan
 from phase6_support import digest, inventory, invoke
 from phase6_tong import expected_fonts
@@ -185,6 +186,30 @@ def bitmap_pair(source,native,reference,kind):
             'glyphs_checked':len(expected),'format_unrepresentable_supplementary':len(records)-len(expected)}
 
 
+def bitmap_pair_proof(source,native,reference,kind,reference_root,details):
+    from phase6_tong_metadata import bitmap_metadata
+    proof={'source':str(source),'native':str(native),'reference':str(reference),'kind':kind,'failures':[]}
+    paths={'source':source,'native':native,'reference':reference}
+    before={name:digest(path) for name,path in paths.items()}
+    # Each independent gate runs even when the other finds an error, so names
+    # cannot mask a pixel failure and pixel failures cannot mask missing notices.
+    for label,operation in [('metadata',lambda:bitmap_metadata(source,native,reference,kind,reference_root)),
+                            ('pixels',lambda:bitmap_pair(source,native,reference,kind))]:
+        try:proof[label]=operation()
+        except Exception as exc:
+            proof['failures'].append({'gate':label,'error':str(exc),'traceback':traceback.format_exc()})
+    after={name:digest(path) for name,path in paths.items()}
+    if before!=after:proof['failures'].append({'gate':'input_identity','before':before,'after':after})
+    unresolved=proof.get('metadata',{}).get('unresolved_differences',{})
+    proof.update(input_identities=before,status='fail' if proof['failures'] or unresolved else 'pass')
+    destination=details/(native.name+'.json')
+    with destination.open('x') as stream:json.dump(proof,stream,indent=2);stream.write('\n')
+    return {'file':native.name,'kind':kind,'status':proof['status'],'input_identities':before,
+            'detail_file':str(destination),'detail_sha256':digest(destination),
+            'failed_gates':[failure['gate'] for failure in proof['failures']],
+            'unresolved_metadata_fields':sorted(unresolved),'strict_complete_bitmap_metadata':True}
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='mode',required=True)
     q=sub.add_parser('tong')
@@ -204,13 +229,15 @@ def main():
     if a.mode in ['tong','vector','web']:optimize_woff_reader()
     if a.mode=='tong':
         ref=load_tong(a.reference_root)
+        details=Path(str(a.output)+'.bitmap-details');details.mkdir()
         for directory in [a.native,a.reference]:
             files={str(p.relative_to(directory)) for kind in ['bdf','pcf','otb','ttf','otf','woff2'] for p in (directory/kind).glob('*') if p.is_file()}
             assert files==expected_fonts(),(directory,'complete84')
         for source in sorted(a.bdf.glob('*.bdf')):
             assert source.read_bytes()==(a.native/'bdf'/source.name).read_bytes()==(a.reference/'bdf'/source.name).read_bytes()
             for kind in ['pcf','otb']:
-                name=source.stem+'.'+kind;result['results'].append(bitmap_pair(source,a.native/kind/name,a.reference/kind/name,kind));save()
+                name=source.stem+'.'+kind
+                result['results'].append(bitmap_pair_proof(source,a.native/kind/name,a.reference/kind/name,kind,a.reference_root,details));save();gc.collect()
         for size in ['Large','Small']:
             for spacing in ['prop','mono']:
                 plan=family_plan(ref,a.bdf,size,spacing)
@@ -265,6 +292,9 @@ def main():
             for cp in sorted(cps):assert glyph_raster(source_face,source_face.get_char_index(cp))==glyph_raster(face,face.get_char_index(cp)),(kind,cp,'source glyph pixels/advance')
             result['results'].append({'file':str(target),'sha256':digest(target),'glyphs':len(cps),'independent_freetype':True})
         result['results'].append({'file':'converted.yaff','sha256':digest(a.native/'converted.yaff'),'independent_monobit_glyphs':38653})
-    result.update(partial=False,status='pass');save();print(json.dumps({'status':'pass','checks':len(result['results'])}))
+    failures=[check for check in result['results'] if check.get('status')=='fail']
+    result.update(partial=bool(failures),status='fail' if failures else 'pass');save()
+    print(json.dumps({'status':result['status'],'checks':len(result['results']),'failed_checks':len(failures)}))
+    if failures:raise SystemExit(1)
 
 if __name__=='__main__':main()

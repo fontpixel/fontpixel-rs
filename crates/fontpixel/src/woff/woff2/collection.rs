@@ -143,8 +143,14 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         }
         faces.push((f, indices));
     }
-    let raw = decompress(cursor.take(u32_at(data, 20)? as usize)?, size)?;
-    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, decompress)?;
+    let raw = decompress(
+        cursor.take(u32_at(data, 20)? as usize)?,
+        size,
+        l.sfnt.resources.max_total_bytes,
+    )?;
+    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, |data, expected| {
+        decompress(data, expected, l.sfnt.resources.max_total_bytes)
+    })?;
     let mut offsets = Vec::with_capacity(n);
     let mut offset = 0;
     for r in &records {

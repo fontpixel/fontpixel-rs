@@ -1,7 +1,5 @@
 //! WOFF 1.0 table-by-table zlib coding.
 use super::*;
-use flate2::{Compression, Decompress, FlushDecompress, Status, write::ZlibEncoder};
-use std::io::Write;
 
 /// Deterministic WOFF1 output options.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -19,34 +17,14 @@ impl Default for Options {
         }
     }
 }
-fn decompress(data: &[u8], expected: usize) -> Result<Vec<u8>> {
-    let mut out = buffer(
-        expected
-            .checked_add(1)
-            .ok_or_else(|| invalid("length overflow"))?,
-    )?;
-    out.resize(expected + 1, 0);
-    let mut d = Decompress::new(true);
-    let status = d
-        .decompress(data, &mut out, FlushDecompress::Finish)
-        .map_err(invalid)?;
-    if status != Status::StreamEnd
-        || d.total_in() != data.len() as u64
-        || d.total_out() != expected as u64
-    {
-        return Err(invalid("zlib stream or decoded length mismatch"));
-    }
-    out.truncate(expected);
-    Ok(out)
+fn decompress(data: &[u8], expected: usize, limit: usize) -> Result<Vec<u8>> {
+    let budget = sfnt::working::Budget::new(limit, "WOFF1 decompression working bytes");
+    let (bytes, _lease) = super::zlib::decompress(data, expected, &budget)?.into_parts();
+    Ok(bytes)
 }
 fn compress(data: &[u8], level: u32, limit: usize) -> Result<Vec<u8>> {
-    let budget = sfnt::working::Budget::new(limit, "WOFF compressed working bytes");
-    let mut e = ZlibEncoder::new(
-        sfnt::working::Buffer::new(&budget)?,
-        Compression::new(level),
-    );
-    e.write_all(data).map_err(invalid)?;
-    let (bytes, _lease) = e.finish().map_err(invalid)?.into_parts();
+    let budget = sfnt::working::Budget::new(limit, "WOFF1 compression working bytes");
+    let (bytes, _lease) = super::zlib::compress(data, level, &budget)?.into_parts();
     Ok(bytes)
 }
 // WOFF1 §6 preserves physical table order independently of its tag-sorted
@@ -175,14 +153,16 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
     if slice(data, end, padded_end - end)?.iter().any(|b| *b != 0) {
         return Err(invalid("nonzero final table padding"));
     }
-    let (auxiliary, mut report) = read_aux(data, 20, padded_end, l, decompress)?;
+    let (auxiliary, mut report) = read_aux(data, 20, padded_end, l, |data, expected| {
+        decompress(data, expected, l.sfnt.resources.max_total_bytes)
+    })?;
     let mut tables = Vec::with_capacity(n);
     for (tag, offset, compressed, original, sum) in records {
         let raw = slice(data, offset, compressed)?;
         let table = if compressed == original {
             raw.to_vec()
         } else {
-            decompress(raw, original)?
+            decompress(raw, original, l.sfnt.resources.max_total_bytes)?
         };
         if checksum(tag, &table)? != sum {
             return Err(invalid("WOFF1 table checksum mismatch"));

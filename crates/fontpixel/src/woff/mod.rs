@@ -8,6 +8,8 @@ use crate::{Error, Report, ReportEntry, Result, sfnt};
 pub mod woff1;
 #[cfg(feature = "woff2")]
 pub mod woff2;
+#[cfg(feature = "woff")]
+mod zlib;
 
 /// Byte and transform budgets; auxiliary blocks share the output budget.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -239,6 +241,7 @@ fn read_aux(
         }
         match decompress(slice(data, mo, ml)?, original) {
             Ok(meta) => a.metadata = Some(meta),
+            Err(error @ Error::ResourceLimit { .. }) => return Err(error),
             Err(e) => loss(
                 &mut report,
                 "woff.invalid_metadata",
@@ -314,4 +317,43 @@ fn write_aux(
     bounded(size, l.sfnt.resources.max_total_bytes, "WOFF output bytes")?;
     set32(out, 8, size)?;
     Ok(())
+}
+
+#[cfg(test)]
+mod auxiliary_budget_tests {
+    use super::*;
+
+    fn metadata_envelope() -> Vec<u8> {
+        let mut data = vec![0; 25];
+        data[4..8].copy_from_slice(&24u32.to_be_bytes());
+        data[8..12].copy_from_slice(&1u32.to_be_bytes());
+        data[12..16].copy_from_slice(&1u32.to_be_bytes());
+        data
+    }
+
+    #[test]
+    fn metadata_resource_failure_is_terminal_but_invalid_stream_is_reported() {
+        let data = metadata_envelope();
+        let limit = Limits::default();
+        let error = read_aux(&data, 0, 24, &limit, |_, _| {
+            Err(Error::ResourceLimit {
+                resource: "metadata decoder working bytes",
+                limit: 7,
+            })
+        })
+        .unwrap_err();
+        assert!(matches!(
+            error,
+            Error::ResourceLimit {
+                resource: "metadata decoder working bytes",
+                limit: 7
+            }
+        ));
+        let (auxiliary, report) =
+            read_aux(&data, 0, 24, &limit, |_, _| Err(invalid("bad test stream"))).unwrap();
+        assert!(auxiliary.metadata.is_none());
+        assert_eq!(report.entries.len(), 1);
+        assert_eq!(report.entries[0].code, "woff.invalid_metadata");
+        assert!(report.has_loss());
+    }
 }

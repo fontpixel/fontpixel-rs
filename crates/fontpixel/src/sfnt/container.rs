@@ -1,4 +1,5 @@
-use super::{Limits, bounded, buffer, bytes, invalid, p16, p32, to16, to32, u16_at, u32_at};
+use super::working::{Budget, Buffer, Owned, Vector};
+use super::{Limits, bounded, bytes, invalid, to16, to32, u16_at, u32_at};
 use crate::Result;
 use read_fonts::FontRef;
 use std::collections::BTreeMap;
@@ -89,6 +90,17 @@ impl<'a> Sfnt<'a> {
     /// Read the complete directory before exposing any table. Checksums are an
     /// explicit second operation so stale-checksum source fonts remain readable.
     pub fn parse(data: &'a [u8], limits: &Limits) -> Result<Self> {
+        let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
+        let (font, _lease) = Self::parse_with_budget(data, limits, &budget)?.into_parts();
+        Ok(font)
+    }
+    /// Parse using a caller's remaining allocation allowance. Input bytes are
+    /// borrowed; only the owned directory and temporary validation storage count.
+    pub(crate) fn parse_with_budget(
+        data: &'a [u8],
+        limits: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Self>> {
         bounded(
             data.len(),
             limits.resources.max_input_bytes,
@@ -103,16 +115,16 @@ impl<'a> Sfnt<'a> {
         let directory_end = 12 + count * 16;
         bytes(data, 0, directory_end)?;
         let font = FontRef::new(data).map_err(invalid)?;
-        let mut records = Vec::new();
-        records
-            .try_reserve_exact(count)
-            .map_err(|_| invalid("directory allocation failed"))?;
+        let mut records = Vector::with_capacity(budget, count)?;
+        let mut tags_lease = budget.reserve(0)?;
         let mut tags = std::collections::BTreeSet::new();
         for record in font.table_directory().table_records() {
             let tag = record.tag().to_be_bytes();
-            if !valid_tag(tag) || !tags.insert(tag) {
+            if !valid_tag(tag) || tags.contains(&tag) {
                 return Err(invalid("invalid or duplicate table tag"));
             }
+            tags_lease.grow_to(budget.tree_bytes::<[u8; 4], ()>(tags.len() + 1)?)?;
+            tags.insert(tag);
             let size = record.length() as usize;
             limits.table(size)?;
             let offset = record.offset() as usize;
@@ -125,25 +137,31 @@ impl<'a> Sfnt<'a> {
                 checksum: record.checksum(),
                 offset: record.offset(),
                 data: table,
-            });
+            })?;
         }
-        let mut spans: Vec<_> = records
-            .iter()
-            .filter(|r| !r.data.is_empty())
-            .map(|r| (r.offset as usize, r.data.len()))
-            .collect();
+        let mut spans = Vector::with_capacity(budget, records.len())?;
+        for record in records.iter().filter(|record| !record.data.is_empty()) {
+            spans.push((record.offset as usize, record.data.len()))?;
+        }
         spans.sort_unstable();
         for pair in spans.windows(2) {
             if pair[0].0 + pair[0].1 > pair[1].0 {
                 return Err(invalid("overlapping table data"));
             }
         }
-        Ok(Self {
-            data,
-            flavor,
-            records,
-            font,
-        })
+        drop(spans);
+        drop(tags);
+        drop(tags_lease);
+        let (records, lease) = records.into_parts();
+        Ok(Owned::from_parts(
+            Self {
+                data,
+                flavor,
+                records,
+                font,
+            },
+            lease,
+        ))
     }
     /// Original flavor.
     pub fn flavor(&self) -> Flavor {
@@ -233,6 +251,17 @@ impl SfntBuilder {
     /// Existing head.checkSumAdjustment is always recomputed. Outline-dependent
     /// required tables and their semantic consistency remain the caller's job.
     pub fn build(&self, limits: &Limits) -> Result<Vec<u8>> {
+        let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
+        let (bytes, _lease) = self.build_with_budget(limits, &budget)?.into_parts();
+        Ok(bytes)
+    }
+    /// Assemble with one shared ledger. The caller must keep the builder's table
+    /// leases alive; table bytes are borrowed here and are not charged twice.
+    pub(crate) fn build_with_budget(
+        &self,
+        limits: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Vec<u8>>> {
         bounded(self.tables.len(), limits.max_tables, "sfnt tables")?;
         let (range, selector, shift) = search_fields(self.tables.len())?;
         let head = self
@@ -261,11 +290,11 @@ impl SfntBuilder {
             limits.resources.max_total_bytes,
             "sfnt output bytes",
         )?;
-        let mut out = buffer(length)?;
-        p32(&mut out, self.flavor.version());
-        p16(&mut out, to16(self.tables.len())?);
+        let mut out = Buffer::with_capacity(budget, length)?;
+        out.extend(&self.flavor.version().to_be_bytes())?;
+        out.extend(&to16(self.tables.len())?.to_be_bytes())?;
         for n in [range, selector, shift] {
-            p16(&mut out, n);
+            out.extend(&n.to_be_bytes())?;
         }
         let mut offset = 12 + self.tables.len() * 16;
         let mut head_offset = 0;
@@ -273,19 +302,77 @@ impl SfntBuilder {
             if tag == *b"head" {
                 head_offset = offset;
             }
-            out.extend(tag);
-            p32(&mut out, table_checksum(tag, data)?);
-            p32(&mut out, to32(offset)?);
-            p32(&mut out, to32(data.len())?);
+            out.extend(&tag)?;
+            out.extend(&table_checksum(tag, data)?.to_be_bytes())?;
+            out.extend(&to32(offset)?.to_be_bytes())?;
+            out.extend(&to32(data.len())?.to_be_bytes())?;
             offset += (data.len() + 3) & !3;
         }
         for data in self.tables.values() {
-            out.extend(data);
-            out.resize((out.len() + 3) & !3, 0);
+            out.extend(data)?;
+            out.resize((out.len() + 3) & !3, 0)?;
         }
         out[head_offset + 8..head_offset + 12].fill(0);
         let adjustment = CHECKSUM_MAGIC.wrapping_sub(checksum(&out));
         out[head_offset + 8..head_offset + 12].copy_from_slice(&adjustment.to_be_bytes());
-        Ok(out)
+        Ok(out.into_owned())
+    }
+}
+
+#[cfg(test)]
+mod working_tests {
+    use super::*;
+
+    fn builder() -> SfntBuilder {
+        let mut builder = SfntBuilder::new(Flavor::TrueType);
+        let mut head = vec![0; 54];
+        head[12..16].copy_from_slice(&0x5f0f3cf5u32.to_be_bytes());
+        builder.insert(*b"head", head).unwrap();
+        builder
+    }
+
+    #[test]
+    fn parse_tracks_directory_and_temporary_validation_storage() {
+        let limits = Limits::default();
+        let source = builder().build(&limits).unwrap();
+        let peak = std::mem::size_of::<TableRecord<'_>>()
+            + std::mem::size_of::<(usize, usize)>()
+            + Budget::new(usize::MAX, "test directory bytes")
+                .tree_bytes::<[u8; 4], ()>(1)
+                .unwrap();
+        let budget = Budget::new(peak, "test directory bytes");
+        let font = Sfnt::parse_with_budget(&source, &limits, &budget).unwrap();
+        font.validate_checksums().unwrap();
+        assert_eq!(
+            budget.remaining(),
+            peak - std::mem::size_of::<TableRecord<'_>>()
+        );
+        drop(font);
+        assert_eq!(budget.remaining(), peak);
+        let short = Budget::new(peak - 1, "test directory bytes");
+        assert!(matches!(
+            Sfnt::parse_with_budget(&source, &limits, &short),
+            Err(crate::Error::ResourceLimit { .. })
+        ));
+        assert_eq!(short.remaining(), peak - 1);
+    }
+
+    #[test]
+    fn assembly_shares_the_live_table_allowance() {
+        let builder = builder();
+        let limits = Limits::default();
+        let expected = builder.build(&limits).unwrap();
+        let budget = Budget::new(expected.len(), "test assembly bytes");
+        let bytes = builder.build_with_budget(&limits, &budget).unwrap();
+        assert_eq!(*bytes, expected);
+        assert_eq!(budget.remaining(), 0);
+        drop(bytes);
+        let live_tables = budget.reserve(1).unwrap();
+        assert!(matches!(
+            builder.build_with_budget(&limits, &budget),
+            Err(crate::Error::ResourceLimit { .. })
+        ));
+        drop(live_tables);
+        assert_eq!(budget.remaining(), expected.len());
     }
 }

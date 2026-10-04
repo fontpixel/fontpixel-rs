@@ -1,11 +1,12 @@
 //! Complete Unicode cmap writing and bounded nominal-map reading.
-use super::{Limits, bounded, buffer, invalid, p16, p32, to16, to32};
+use super::working::{Budget, Buffer, Owned, Vector};
+use super::{Limits, bounded, invalid, to16, to32};
 use crate::Result;
 use read_fonts::{
     FontData, FontRead,
     tables::cmap::{Cmap, CmapSubtable, PlatformId},
 };
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// A Unicode scalar to glyph ID mapping, in ascending scalar order.
 pub type Mapping = BTreeMap<u32, u16>;
@@ -35,51 +36,61 @@ fn check(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<()> {
     }
     Ok(())
 }
-fn format4(mapping: &Mapping) -> Result<Option<Vec<u8>>> {
-    // Maximal contiguous runs, delta-coded where possible, otherwise a glyph
-    // array. This avoids one segment per glyph for non-linear dense maps.
-    let mut segments = Vec::<(u16, u16, Vec<u16>)>::new();
+#[derive(Clone, Copy)]
+struct BmpSegment {
+    start: u16,
+    end: u16,
+    delta: u16,
+    linear: bool,
+}
+fn format4(mapping: &Mapping, budget: &Budget) -> Result<Option<Owned<Vec<u8>>>> {
+    let mut count = 1usize; // Mandatory missing-glyph sentinel.
+    let mut previous = None;
+    for (&cp, _) in mapping.range(..0xffff) {
+        if previous.is_none_or(|last| last + 1 != cp) {
+            count += 1;
+        }
+        previous = Some(cp);
+    }
+    let mut segments = Vector::<BmpSegment>::with_capacity(budget, count)?;
     for (&cp, &gid) in mapping.range(..0xffff) {
         if let Some(last) = segments.last_mut()
-            && u32::from(last.1) + 1 == cp
+            && u32::from(last.end) + 1 == cp
         {
-            last.1 = cp as u16;
-            last.2.push(gid);
+            last.end = cp as u16;
+            last.linear &= gid == (cp as u16).wrapping_add(last.delta);
         } else {
-            segments.push((cp as u16, cp as u16, vec![gid]));
+            segments.push(BmpSegment {
+                start: cp as u16,
+                end: cp as u16,
+                delta: gid.wrapping_sub(cp as u16),
+                linear: true,
+            })?;
         }
     }
-    segments.push((0xffff, 0xffff, vec![0]));
-    let count = segments.len();
-    let mut deltas = Vec::new();
-    let mut glyphs = Vec::new();
-    let mut offsets = Vec::new();
-    for (i, (start, _, ids)) in segments.iter().enumerate() {
-        let delta = ids[0].wrapping_sub(*start);
-        if ids
-            .iter()
-            .enumerate()
-            .all(|(j, id)| *id == start.wrapping_add(j as u16).wrapping_add(delta))
-        {
-            deltas.push(delta);
-            offsets.push(0);
-        } else {
-            let off = 2 * (count - i + glyphs.len());
-            if off > 65535 {
+    segments.push(BmpSegment {
+        start: 0xffff,
+        end: 0xffff,
+        delta: 1,
+        linear: true,
+    })?;
+    let mut glyph_count = 0usize;
+    for (index, segment) in segments.iter().enumerate() {
+        if !segment.linear {
+            let offset = 2 * (count - index + glyph_count);
+            if offset > 65535 {
                 return Ok(None);
             }
-            deltas.push(0);
-            offsets.push(off as u16);
-            glyphs.extend(ids);
+            glyph_count += usize::from(segment.end - segment.start) + 1;
         }
     }
-    let length = 16 + 8 * count + 2 * glyphs.len();
+    let length = 16 + 8 * count + 2 * glyph_count;
     if length > 65535 {
         return Ok(None);
     }
     let log = count.ilog2() as u16;
     let search = 2 * (1 << log);
-    let mut out = buffer(length)?;
+    let mut out = Buffer::with_capacity(budget, length)?;
     for n in [
         4,
         to16(length)?,
@@ -89,91 +100,147 @@ fn format4(mapping: &Mapping) -> Result<Option<Vec<u8>>> {
         log,
         to16(2 * count)? - search,
     ] {
-        p16(&mut out, n);
+        out.extend(&n.to_be_bytes())?;
     }
-    for (_, end, _) in &segments {
-        p16(&mut out, *end);
+    for segment in segments.iter() {
+        out.extend(&segment.end.to_be_bytes())?;
     }
-    p16(&mut out, 0);
-    for (start, _, _) in &segments {
-        p16(&mut out, *start);
+    out.extend(&0u16.to_be_bytes())?;
+    for segment in segments.iter() {
+        out.extend(&segment.start.to_be_bytes())?;
     }
-    for n in deltas.into_iter().chain(offsets).chain(glyphs) {
-        p16(&mut out, n);
+    for segment in segments.iter() {
+        let delta = if segment.linear { segment.delta } else { 0 };
+        out.extend(&delta.to_be_bytes())?;
     }
-    Ok(Some(out))
+    let mut glyph_count = 0;
+    for (index, segment) in segments.iter().enumerate() {
+        let offset = if segment.linear {
+            0
+        } else {
+            let offset = to16(2 * (count - index + glyph_count))?;
+            glyph_count += usize::from(segment.end - segment.start) + 1;
+            offset
+        };
+        out.extend(&offset.to_be_bytes())?;
+    }
+    for segment in segments.iter().filter(|segment| !segment.linear) {
+        for (_, &gid) in mapping.range(u32::from(segment.start)..=u32::from(segment.end)) {
+            out.extend(&gid.to_be_bytes())?;
+        }
+    }
+    Ok(Some(out.into_owned()))
 }
 /// Encode all mappings; invalid scalars or glyph IDs fail, never clamp/omit.
 /// Unicode and Windows platform records share the same subtable bytes.
 pub fn encode(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<EncodedCmap> {
+    let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
+    let (encoded, _lease) = encode_with_budget(mapping, num_glyphs, limits, &budget)?.into_parts();
+    Ok(encoded)
+}
+/// Encode into the caller's ledger without charging its borrowed input map.
+pub(crate) fn encode_with_budget(
+    mapping: &Mapping,
+    num_glyphs: u16,
+    limits: &Limits,
+    budget: &Budget,
+) -> Result<Owned<EncodedCmap>> {
     check(mapping, num_glyphs, limits)?;
-    // Budget the maximum possible format-12 work before constructing groups.
-    let max = 16usize
-        .checked_add(
-            mapping
-                .len()
-                .checked_mul(12)
-                .ok_or_else(|| invalid("cmap size overflow"))?,
-        )
+    let max = mapping
+        .len()
+        .checked_mul(12)
+        .and_then(|n| n.checked_add(16))
         .ok_or_else(|| invalid("cmap size overflow"))?;
     limits.table(max)?;
-    let mut groups = Vec::<(u32, u32, u16)>::new();
+    let mut group_count = 0usize;
+    let mut previous: Option<(u32, u16)> = None;
     for (&cp, &gid) in mapping {
-        if let Some((start, end, first)) = groups.last_mut()
+        if previous.is_none_or(|(p, g)| p + 1 != cp || u32::from(g) + 1 != u32::from(gid)) {
+            group_count += 1;
+        }
+        previous = Some((cp, gid));
+    }
+    let bmp = format4(mapping, budget)?;
+    let has_bmp_subtable = bmp.is_some();
+    let count = if has_bmp_subtable { 4 } else { 2 };
+    let header = 4 + 8 * count;
+    let full_offset = header + bmp.as_ref().map_or(0, |bytes| bytes.len());
+    let full_len = 16 + 12 * group_count;
+    let size = full_offset + full_len;
+    limits.table(size)?;
+    let mut out = Buffer::with_capacity(budget, size)?;
+    out.extend(&0u16.to_be_bytes())?;
+    out.extend(&(count as u16).to_be_bytes())?;
+    let records = [
+        (0u16, 3u16, header),
+        (0, 4, full_offset),
+        (3, 1, header),
+        (3, 10, full_offset),
+    ];
+    for (index, &(platform, encoding, offset)) in records.iter().enumerate() {
+        if !has_bmp_subtable && (index == 0 || index == 2) {
+            continue;
+        }
+        out.extend(&platform.to_be_bytes())?;
+        out.extend(&encoding.to_be_bytes())?;
+        out.extend(&to32(offset)?.to_be_bytes())?;
+    }
+    if let Some(bytes) = &bmp {
+        out.extend(bytes)?;
+    }
+    drop(bmp);
+    out.extend(&12u16.to_be_bytes())?;
+    out.extend(&0u16.to_be_bytes())?;
+    out.extend(&to32(full_len)?.to_be_bytes())?;
+    out.extend(&0u32.to_be_bytes())?;
+    out.extend(&to32(group_count)?.to_be_bytes())?;
+    let mut current: Option<(u32, u32, u16)> = None;
+    for (&cp, &gid) in mapping {
+        if let Some((start, end, first)) = &mut current
             && cp == *end + 1
             && u32::from(gid) == u32::from(*first) + (cp - *start)
         {
             *end = cp;
         } else {
-            groups.push((cp, cp, gid));
+            if let Some((start, end, first)) = current {
+                out.extend(&start.to_be_bytes())?;
+                out.extend(&end.to_be_bytes())?;
+                out.extend(&u32::from(first).to_be_bytes())?;
+            }
+            current = Some((cp, cp, gid));
         }
     }
-    let bmp = format4(mapping)?;
-    let count = if bmp.is_some() { 4 } else { 2 };
-    let header = 4 + 8 * count;
-    let full_offset = header + bmp.as_ref().map_or(0, Vec::len);
-    let full_len = 16 + 12 * groups.len();
-    let size = full_offset + full_len;
-    limits.table(size)?;
-    let mut out = buffer(size)?;
-    p16(&mut out, 0);
-    p16(&mut out, count as u16);
-    let records: Vec<(u16, u16, usize)> = if bmp.is_some() {
-        vec![
-            (0, 3, header),
-            (0, 4, full_offset),
-            (3, 1, header),
-            (3, 10, full_offset),
-        ]
-    } else {
-        vec![(0, 4, full_offset), (3, 10, full_offset)]
-    };
-    for (platform, encoding, offset) in records {
-        p16(&mut out, platform);
-        p16(&mut out, encoding);
-        p32(&mut out, to32(offset)?);
+    if let Some((start, end, first)) = current {
+        out.extend(&start.to_be_bytes())?;
+        out.extend(&end.to_be_bytes())?;
+        out.extend(&u32::from(first).to_be_bytes())?;
     }
-    if let Some(b) = &bmp {
-        out.extend(b);
-    }
-    p16(&mut out, 12);
-    p16(&mut out, 0);
-    p32(&mut out, to32(full_len)?);
-    p32(&mut out, 0);
-    p32(&mut out, to32(groups.len())?);
-    for (start, end, gid) in groups {
-        p32(&mut out, start);
-        p32(&mut out, end);
-        p32(&mut out, u32::from(gid));
-    }
-    Ok(EncodedCmap {
-        data: out,
-        has_bmp_subtable: bmp.is_some(),
-    })
+    let (data, lease) = out.into_parts();
+    Ok(Owned::from_parts(
+        EncodedCmap {
+            data,
+            has_bmp_subtable,
+        },
+        lease,
+    ))
 }
 /// Decode the preferred Unicode nominal cmap through Fontations. Does not
 /// silently reinterpret symbol/Macintosh maps or variation sequences as Unicode.
 pub fn decode(data: &[u8], num_glyphs: u16, limits: &Limits) -> Result<Mapping> {
+    let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
+    let (mapping, _lease) =
+        decode_with_budget(data, num_glyphs, limits, None, &budget)?.into_parts();
+    Ok(mapping)
+}
+/// Validate the entire nominal map but allocate entries only for the requested
+/// scalars. Work limits and invalid unselected mappings are still checked.
+pub(crate) fn decode_with_budget(
+    data: &[u8],
+    num_glyphs: u16,
+    limits: &Limits,
+    selection: Option<&BTreeSet<u32>>,
+    budget: &Budget,
+) -> Result<Owned<Mapping>> {
     limits.table(data.len())?;
     limits.glyphs(num_glyphs as usize)?;
     let cmap = Cmap::read(FontData::new(data)).map_err(invalid)?;
@@ -333,23 +400,13 @@ pub fn decode(data: &[u8], num_glyphs: u16, limits: &Limits) -> Result<Mapping> 
         }
         _ => {}
     }
+    let mut lease = budget.reserve(0)?;
     let mut result = Mapping::new();
     let mut previous = None;
     let mut count = 0;
-    // Fontations exposes format 0's bytes but its generic iterator does not
-    // enumerate that variant. Handle the fixed 256-byte array explicitly.
-    let pairs: Box<dyn Iterator<Item = (u32, read_fonts::types::GlyphId)> + '_> = match &table {
-        CmapSubtable::Format0(t) => Box::new(
-            t.glyph_id_array()
-                .iter()
-                .enumerate()
-                .map(|(cp, gid)| (cp as u32, read_fonts::types::GlyphId::from(u32::from(*gid)))),
-        ),
-        _ => Box::new(table.iter()),
-    };
-    for (cp, gid) in pairs {
+    let mut insert = |cp: u32, gid: read_fonts::types::GlyphId| -> Result<()> {
         if gid.to_u32() == 0 {
-            continue;
+            return Ok(());
         }
         count += 1;
         bounded(count, limits.max_cmap_mappings, "sfnt cmap mappings")?;
@@ -360,12 +417,28 @@ pub fn decode(data: &[u8], num_glyphs: u16, limits: &Limits) -> Result<Mapping> 
             return Err(invalid("unordered or overlapping cmap segments"));
         }
         previous = Some(cp);
-        if gid.to_u32() != 0 {
+        if selection.is_none_or(|codes| codes.contains(&cp)) {
+            lease.grow_to(budget.tree_bytes::<u32, u16>(result.len() + 1)?)?;
             result.insert(cp, gid.to_u32() as u16);
         }
+        Ok(())
+    };
+    // Avoid an unaccounted boxed iterator; both paths feed the identical checks.
+    match &table {
+        CmapSubtable::Format0(table) => {
+            for (cp, &gid) in table.glyph_id_array().iter().enumerate() {
+                insert(cp as u32, read_fonts::types::GlyphId::from(u32::from(gid)))?;
+            }
+        }
+        _ => {
+            for (cp, gid) in table.iter() {
+                insert(cp, gid)?;
+            }
+        }
     }
-    Ok(result)
+    Ok(Owned::from_parts(result, lease))
 }
+
 fn validate_groups(
     groups: impl Iterator<Item = (u32, u32, u32)>,
     num_glyphs: u16,
@@ -399,4 +472,119 @@ fn validate_groups(
         bounded(count, limits.max_cmap_mappings, "sfnt cmap mappings")?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod working_tests {
+    use super::*;
+
+    fn small_mapping() -> Mapping {
+        [
+            (65, 3),
+            (66, 7),
+            (67, 8),
+            (69, 10),
+            (0xffff, 9),
+            (0x1f600, 12),
+        ]
+        .into()
+    }
+
+    #[test]
+    fn bmp_runs_keep_the_existing_wire_encoding() {
+        let budget = Budget::new(4096, "test cmap bytes");
+        let bytes = format4(&small_mapping(), &budget).unwrap().unwrap();
+        let words = [
+            4u16, 46, 0, 6, 4, 1, 2, 67, 69, 0xffff, 0, 65, 69, 0xffff, 0, 65477, 1, 6, 0, 0, 3, 7,
+            8,
+        ];
+        let expected: Vec<_> = words.into_iter().flat_map(u16::to_be_bytes).collect();
+        assert_eq!(bytes.as_slice(), expected);
+    }
+
+    #[test]
+    fn encoder_counts_bmp_and_final_output_overlap() {
+        let mapping = small_mapping();
+        let limits = Limits::default();
+        // Three eight-byte segment records + 46-byte BMP is the earlier peak;
+        // the 46-byte BMP and 158-byte complete cmap then coexist.
+        assert_eq!(std::mem::size_of::<BmpSegment>(), 8);
+        let budget = Budget::new(204, "test cmap bytes");
+        let encoded = encode_with_budget(&mapping, 13, &limits, &budget).unwrap();
+        assert_eq!(encoded.data.len(), 158);
+        assert_eq!(budget.remaining(), 46);
+        assert_eq!(decode(&encoded.data, 13, &limits).unwrap(), mapping);
+        drop(encoded);
+        assert_eq!(budget.remaining(), 204);
+        let short = Budget::new(203, "test cmap bytes");
+        assert!(matches!(
+            encode_with_budget(&mapping, 13, &limits, &short),
+            Err(crate::Error::ResourceLimit { .. })
+        ));
+        assert_eq!(short.remaining(), 203);
+    }
+
+    fn format13() -> Vec<u8> {
+        let mut data = Vec::new();
+        for n in [0u16, 1, 3, 10] {
+            data.extend(n.to_be_bytes());
+        }
+        data.extend(12u32.to_be_bytes());
+        data.extend(13u16.to_be_bytes());
+        data.extend(0u16.to_be_bytes());
+        for n in [28u32, 0, 1, 0x20, 0x2000, 1] {
+            data.extend(n.to_be_bytes());
+        }
+        data
+    }
+
+    #[test]
+    fn selection_avoids_full_map_storage_but_keeps_source_work_limit() {
+        let data = format13();
+        let selected = BTreeSet::from([65]);
+        let budget = Budget::new(1024, "test cmap bytes");
+        let mapping =
+            decode_with_budget(&data, 2, &Limits::default(), Some(&selected), &budget).unwrap();
+        assert_eq!(*mapping, BTreeMap::from([(65, 1)]));
+        drop(mapping);
+        let mut limits = Limits::default();
+        limits.max_cmap_mappings = 100;
+        assert!(matches!(
+            decode_with_budget(&data, 2, &limits, Some(&selected), &budget),
+            Err(crate::Error::ResourceLimit {
+                resource: "sfnt cmap mappings",
+                ..
+            })
+        ));
+        let limits = Limits::default();
+        let live = budget.reserve(512).unwrap();
+        assert!(matches!(
+            decode_with_budget(&data, 2, &limits, Some(&selected), &budget),
+            Err(crate::Error::ResourceLimit { .. })
+        ));
+        drop(live);
+        assert_eq!(budget.remaining(), 1024);
+    }
+
+    #[test]
+    fn invalid_unselected_mapping_still_fails() {
+        let mut data = Vec::new();
+        for n in [0u16, 1, 3, 1] {
+            data.extend(n.to_be_bytes());
+        }
+        data.extend(12u32.to_be_bytes());
+        for n in [0u16, 262, 0] {
+            data.extend(n.to_be_bytes());
+        }
+        data.resize(12 + 262, 0);
+        data[18 + 65] = 1;
+        data[18 + 66] = 2;
+        let selected = BTreeSet::from([65]);
+        let budget = Budget::new(1024, "test cmap bytes");
+        assert!(matches!(
+            decode_with_budget(&data, 2, &Limits::default(), Some(&selected), &budget),
+            Err(crate::Error::InvalidInput(_))
+        ));
+        assert_eq!(budget.remaining(), 1024);
+    }
 }

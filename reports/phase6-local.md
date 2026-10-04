@@ -53,7 +53,7 @@ Python 3.12.13、Node v24.21.0。未通过私有 cfg 或 bootstrap 启用优化�
 | 第一批核心 Rust focused tests | passed | gate/013：lib 53、merge 26、zero-area 3、variants 25、WOFF 16，共 123 |
 | 第一批 CLI unit tests | failed | gate/013：91 passed/2 failed；batch 缺失 JSON 结果状态、BDF 预算 fixture 缺必要 header；失败交 owner 修复，后续 integration 因前置失败未运行 |
 | scripts/check.sh、完整 tests、rustdoc、feature/example matrix | not-run | 待逐一执行，不用 focused 结果替代 |
-| native parity、完整 Tong/catalogue/merge 外部对照 | not-run | 不复用旧 pass |
+| native parity、完整 Tong/catalogue/merge 外部对照 | partial | 新的全量运行见下文；没有复用旧 pass |
 | 正式五轮性能与最终源码长 ASAN | not-run | 阈值和输入不变 |
 
 通过的类型检查只对应其日志中源码 hashes，不能证明之后 owner 修改也通过。
@@ -101,3 +101,73 @@ judge 校准，无强同项目完成样本；104 个目标每个至少 600 秒�
 语义对照和预算实现继续。原静态 target 清单保留，但最终 ASAN 仍未完成，因此不能
 验收第 6 阶段。准确事件保存在产物根 `asan-dispatch-rejection.json`。先前时间估计
 未包含此后发生的平台阻塞，不能作为现时交付承诺。
+
+## 本地完整输入与第二批代码检查（22:33 UTC 更新）
+
+以下均为本次新执行。正式测速尚未开始，生成过程的 elapsed 不充当硬目标数据。
+首次 release 二进制冻结在产物根 `frozen-binaries-v1/`，保存每个二进制 SHA、
+完整 `source.json` 和 gate/020 的 build result。该源码是 427ad94 加明确列出的
+工作区修改，随后形成本地提交 `5e65c3a3c812832b077cebcff639c766d7970573`；
+不能把后续工作区改动当成这些二进制已经包含的实现。
+
+| 新执行 | 状态 | 范围与限制 |
+| --- | --- | --- |
+| gate/014 原 export-rs release | passed | 只在 writable reference copy 构建，原 source 逐文件 hash 读回相同 |
+| gate/015 真实 Tong merge reference fixture | passed/external-only | 原 tools/build.py 重建 20 BDF 与基线逐字节相同；这一步未运行 native merge |
+| gate/017 第一批回归 | partial | core lib 55、WOFF 16、CLI unit 93 passed；input_budget 7 passed/1 failed，后续集成未执行；失败是旧 fixture 的 identity allowance 提前耗尽，改为有单输入成功控制的双输入累计预算 fixture 后仍需执行 |
+| gate/018–019 catalogue plan/reference | passed/external-only | 完整 173 fonts + 8 ZIP；生产 opf_vector 不存在，明确使用 supplied FontTools fallback |
+| gate/020 native all-feature release | passed with warnings | 编译期间源码稳定；后续 minimal build 不覆盖已冻结副本 |
+| W6.2 native documentation runner | passed | 18 真实 CLI smokes、84 tiny-Tong tasks、13 help spellings；新 CC0 tiny fixture，不能替代完整字体 |
+| gate/021 原 Tong 完整构建 | passed/external-only | 8 TTF + 8 OTF + 8 WOFF2 + 20 PCF + 20 OTB + 20 BDF |
+| gate/022 catalogue native 完整生成 | passed/generation-only | 173 fonts + 8 ZIP，默认资源额度与完整报告；语义结果由 gate/025 单独判定 |
+| gate/024、028 Tong CLI/API 完整生成 | passed/generation-only | 两条路径各 84 artifacts，默认额度，保存完整报告；paired gate/031–032 仍在运行 |
+| gate/026–027 Unifont + Latin | passed | native merge/BDF 生成及基础字形对照 |
+| gate/030 Unifont 完整来源对照 | passed | 57,106 glyphs，全部 source/index、pixels、metrics、names/notices 与完整报告检查；0 glyph errors、0 report errors |
+| gate/029 真实地区 Tong merge | passed | 4 profiles × 20 cases，另含 strict/mono 拒绝控制；完整 native contract 通过，原构建策略差异逐项保留 |
+| gate/025 catalogue paired | failed | 173 fonts + 8 ZIP 全部执行；8 font pass、164 unresolved、1 fail；.notdef、名字、字体全局与 strike 字段、部分 BDF/PCF XLFD/SWIDTH 尚未通过语义替换 |
+| gate/031–032 Tong CLI/API paired | running, known differences | 初始 PCF 字节/完整物理记录相同；OTB 的 names/global/strike metadata 尚有未决差异 |
+| gate/033–034 新预算 batch | passed with warnings | fmt + locked workspace/all-target/all-feature check；仍有未接入 helper dead_code，无 lint suppression |
+| gate/035 新预算 focused tests | failed | core lib 67 passed/1 failed；Brotli malformed fixture 未得到预期 InvalidInput，正在定位，后续 integration 未执行 |
+| gate/037 Brotli fixture 修正 | passed | 单项回归：低额度截断流 ResourceLimit，足额四类畸形流 InvalidInput，全部 charge 释放；未改生产额度 |
+| gate/038 core/CLI integration | partial | core sfnt/subset/variants/cff/woff、CLI input_budget/merge_phase6 全通过；phase6_cli_recovery 36 passed/3 failed，失败原始输出保留 |
+
+新 oracle 清单显式绑定包内九个固定版本；旧项目 parent 的八项 requirements 保持
+原样，没有拿旧清单冒充完整环境。清点产物在 `owners/w63/checks-03/`。
+
+Catalogue Spleen 64px 的额外 14ppem web 检查遇 FreeType 2.13.2 error 98。
+有限重现已经确认 U+2502 在 native/reference × TTF/WOFF2 四侧同样溢出，64/128ppem
+四侧该字形 raster SHA 相同。这只定位消费者限制；原 gate/025 failure 保留，不能由
+单字形重现替代完整 all-GID、实际字号的 web 检查。
+
+新预算实现覆盖部分 sfnt directory/cmap/subset 输出存储、固定 miniz 0.9.1 流式
+workspace 与 Brotli 6.0.1 decoder 分配。Cargo.lock 只增加已有依赖边，没有更新版本。
+Variants/WOFF 多阶段、subset 内部 GSUB/glyf/CFF 等仍有未接入的存储；Brotli encoder
+尚不具备可传播的动态分配失败路径。局部 admission 成功不是全 codec 或进程总 cap。
+
+`checkpoints/before-codec-budget-batch4` 首次 evidence 打包遇运行中的 OTS 临时目录
+删除，失败包和记录保留。`before-codec-budget-batch4-retry1` 改用同一打开句柄捕获
+文件内容后，3,249 个源码文件、全部 refs 独立恢复通过，4,349 evidence members
+读回通过；四项正在运行的 gate 明示为 partial，未冒充最终完整日志。所有备份仍为
+本机保存，未向外分享文件。
+
+随后 gate/029 完整 80 个 case 全部通过 native contract，原构建策略差异逐项保留，
+未以共同子集替代。`owners/w66/tong-native-01/summary.json` 绑定冻结二进制 SHA，
+汇总 900 artifacts。gate/036 独立诊断确认正常 5-byte Brotli fixture 在 1/4/8 MiB
+均解码成功，而截断输入在 1 MiB 先触发 ResourceLimit；原失败断言及日志保留，
+下一步分开验证低额度拒绝与充分 workspace 时的 InvalidInput，生产 cap 不变。
+
+另一独立子任务“Brotli encoder 可失败分配源码分析及 vendor 草稿”也在任何工具
+动作前被平台以 possible cybersecurity risk 拒绝。已停止，通知其他 owner 不接替
+该被拒补丁；不更换 agent 或执行路径来重试。记录为
+`brotli-encoder-dispatch-rejection.json`。因此 encoder 动态分配闭环仍未实现，
+与 ASAN 一并是最终验收的明确阻塞；已有 decoder 及项目自有代码的普通修复继续。
+
+gate/038 的三项待修正回归是 strict charset 退出码为 2 而预期 3、embedded 控制
+fixture 出现 duplicate physical strike size、validate cmap fixture 的 stderr 未命中
+预期 limit。尚未确定其最终修正，不能删断言或抬生产 cap 来通过。具体测试名及行号
+都在 gate 原始日志；源码检查和测试失败分别记录。
+
+`checkpoints/after-codec-budget-first-integrations` 再次完整保存并独立恢复 3,249 个
+源码文件/全部 refs，4,725 evidence members 全部读回；为降低频繁完整备份的 CPU
+成本，证据改为未压缩 tar，源码仍保留压缩包。只有 gate/031–032 尚未完结并标为
+partial。这次备份也只是本机保存，不能称为异机副本。
