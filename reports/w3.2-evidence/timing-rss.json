@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 31.922535259000142,
+  "max_rss_kib": 10532,
+  "user_seconds": 46.035671,
+  "system_seconds": 0.434367,
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "cpu_count": 9,
+  "cpu_info": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"
+}

@@ -1,0 +1,9 @@
+{"runs":5,"glyphs":256,"cell":[8,16],"iterations":1000,"available_parallelism":9,"formats":[
+{"format":"fnt1","bytes":4256,"read_1000_ms":59.073,"write_1000_ms":142.654}
+,{"format":"fnt2","bytes":5269,"read_1000_ms":57.305,"write_1000_ms":119.577}
+,{"format":"fnt3","bytes":5813,"read_1000_ms":61.765,"write_1000_ms":125.216}
+,{"format":"ne-eight-font","bytes":43632,"read_1000_ms":580.772,"write_1000_ms":1089.581}],"batch_1000_ne_ms":[
+{"workers":1,"median_ms":2347.368}
+,{"workers":2,"median_ms":1047.873}
+,{"workers":4,"median_ms":612.893}
+]}

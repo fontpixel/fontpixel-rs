@@ -9,7 +9,7 @@ cargo-fuzz = true
 [dependencies]
 libfuzzer-sys = "0.4"
 brotli = { version = "9.0.0", default-features = false, features = ["std"] }
-fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff", "sfnt", "cff", "compat-bdfparser", "otb", "bdat", "color", "woff", "woff2", "ttc", "ttf", "otf", "vector-raster", "svg", "hex", "psf"] }
+fontpixel = { version = "0.1.0", path = "../crates/fontpixel", default-features = false, features = ["bdf", "pcf", "yaff", "sfnt", "cff", "compat-bdfparser", "otb", "bdat", "color", "woff", "woff2", "ttc", "ttf", "otf", "vector-raster", "svg", "hex", "psf", "fnt", "fon"] }
 [workspace]
 members = ["."]
 [[bin]]
@@ -132,6 +132,20 @@ bench = false
 [[bin]]
 name = "psf"
 path = "fuzz_targets/psf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fnt"
+path = "fuzz_targets/fnt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fon"
+path = "fuzz_targets/fon.rs"
 test = false
 doc = false
 bench = false

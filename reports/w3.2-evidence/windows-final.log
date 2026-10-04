@@ -1,0 +1,24 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.2/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.48s
+     Running tests/windows.rs (/workspace/scratch/ef9059dd510b/target-w3.2/debug/deps/windows-eaa7797060e5d7db)
+
+running 16 tests
+test budgets_precede_allocations ... ok
+test containers::independently_built_pe32_and_pe64_resources ... ok
+test containers::cumulative_limits_and_shift_overflow ... ok
+test cjk_legacy_bytes_roundtrip_without_conversion_tables ... ok
+test cp1252_maps_euro_and_reports_nonrepresentable_aliases ... ok
+test containers::ne_multifont_and_fontdir_structure ... ok
+test edits_and_aliases_have_honest_reports ... ok
+test foreign_metadata_gray_and_strict_loss ... ok
+test source_metadata_and_output_work_are_bounded ... ok
+test unknown_charset_is_legacy_and_never_unicode_guessed ... ok
+test zero_advance_mapping_is_reported_without_blocking_other_glyphs ... ok
+test unsupported_layouts_offsets_and_truncations_fail ... ok
+test independent_versions_and_lossless_native_roundtrips ... ok
+test write_versions_mapping_and_geometry ... ok
+test generated_byte_cells_roundtrip ... ok
+test large_unicode_sources_report_omissions_with_default_budget ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+

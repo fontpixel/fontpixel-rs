@@ -1,0 +1,41 @@
+{
+  "result": "pass",
+  "monobit_version": "0.54.0",
+  "checks": [
+    {
+      "case": "FNT v1",
+      "result": "original wire + bidirectional monobit + catalogue BDF pixels/metrics pass"
+    },
+    {
+      "case": "FNT v2",
+      "result": "original wire + bidirectional monobit + catalogue BDF pixels/metrics pass"
+    },
+    {
+      "case": "FNT v3",
+      "result": "original wire + bidirectional monobit + catalogue BDF pixels/metrics pass"
+    },
+    {
+      "case": "multi-font NE",
+      "result": "bidirectional monobit fonts/pixels/metrics pass"
+    },
+    {
+      "case": "PE32",
+      "result": "independent tree/section fixture to NE pass"
+    },
+    {
+      "case": "PE64",
+      "result": "independent tree/section fixture to NE pass"
+    },
+    {
+      "case": "FreeType",
+      "result": "FNT2/FNT3 and NE glyph pixels/advances pass"
+    },
+    {
+      "case": "catalogue mini.bdf to FNT1/2/3 and back",
+      "result": "actual importer pixels/normalized metrics; CJK and unencoded omission reported"
+    }
+  ],
+  "catalogue_direct_importer": "absent; actual supplied BDF parser exercised",
+  "scope": "PE fixtures independent; no claim of Windows OS installation test",
+  "catalogue_limitation": "Supplied Python parser rejects MICROSOFT/CP1252 BDF charset spelling; raw legacy-code mode is used explicitly at the BDF boundary. Unicode mapping is independently checked by Rust and monobit."
+}
