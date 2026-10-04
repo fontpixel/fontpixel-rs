@@ -1,0 +1,12 @@
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+  "logical_cpus": 9,
+  "memory_kib": "10206504",
+  "binary_sha256": {
+    "../fontpixel-rs-w3.1/target/release/fontpixel": "e4d577564d22da808631f7d736901e54ca1661a65dc182644de56ca8ee820e64",
+    "../fontpixel-rs-w3.1/target/release/examples/console_timing": "2ee56742c1adcbe3bcb5d2e3e11dbcf8ba8070d84fcbe84819edd2f8c67c8bde",
+    "../fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/hex": "1577d0d5a577dd388a5b1dec549a6dbef7c304a831500dfaa53ed151d5fd9605",
+    "../fontpixel-rs-w3.1/fuzz/target/x86_64-unknown-linux-gnu/release/psf": "0e49bc090df319c212619047915b49e9b668f41f61cb0caaab4a122230bd17ec"
+  }
+}

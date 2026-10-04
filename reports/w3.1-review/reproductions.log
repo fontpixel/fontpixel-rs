@@ -1,0 +1,31 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.50s
+     Running tests/hex_psf.rs (../fontpixel-rs-w3.1/target/debug/deps/hex_psf-715777bfde76b59f)
+
+running 2 tests
+test review_hex_comment_records_obey_writer_table_limit ... FAILED
+test review_gzip_model_budget_includes_retained_compressed_input ... FAILED
+
+failures:
+
+---- review_hex_comment_records_obey_writer_table_limit stdout ----
+
+thread 'review_hex_comment_records_obey_writer_table_limit' (44) panicked at crates/fontpixel/tests/hex_psf.rs:760:5:
+assertion failed: matches!(hex::write(&font, &options),
+    Err(fontpixel::Error::ResourceLimit { .. }))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- review_gzip_model_budget_includes_retained_compressed_input stdout ----
+
+thread 'review_gzip_model_budget_includes_retained_compressed_input' (43) panicked at crates/fontpixel/tests/hex_psf.rs:778:5:
+assertion failed: matches!(fontpixel::read(&compressed, &options),
+    Err(fontpixel::Error::ResourceLimit { .. }))
+
+
+failures:
+    review_gzip_model_budget_includes_retained_compressed_input
+    review_hex_comment_records_obey_writer_table_limit
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p fontpixel --test hex_psf`

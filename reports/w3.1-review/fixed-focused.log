@@ -1,0 +1,29 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1-review/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.06s
+     Running tests/hex_psf.rs (../fontpixel-rs-w3.1/target/debug/deps/hex_psf-715777bfde76b59f)
+
+running 21 tests
+test cell_alignment_keeps_negative_bearings_and_descent_pixels ... ok
+test embedded_carriage_return_in_hex_comment_is_lossless ... ok
+test hex_height_is_explicit_not_guessed ... ok
+test hex_all_widths_crlf_comments_duplicates_and_scalars ... ok
+test hex_rejects_bad_records_and_invalid_geometry ... ok
+test output_totals_alias_expansion_and_edited_comment_loss ... ok
+test psf2_all_aliases_multiple_sequences_sequence_only_and_noncharacters ... ok
+test psf2_arbitrary_width_padding_and_extended_header ... ok
+test gzip_wire_and_decompressed_limits_are_independent ... ok
+test metadata_mapping_gray_and_psf1_losses_are_explicit ... ok
+test psf_without_table_never_invents_unicode_and_unencoded_auto_has_table ... ok
+test psf_rejects_bad_headers_utf8_sequences_and_trailing_bytes ... ok
+test read_resource_budgets_cover_wire_model_tables_pixels_and_mappings ... ok
+test review_hex_comment_records_obey_writer_table_limit ... ok
+test writer_limits_empty_psf_multiple_fonts_and_unrepresentable_geometry ... ok
+test review_gzip_model_budget_includes_retained_compressed_input ... ok
+test registry_detection_gzip_strict_and_repeatable_output ... ok
+test psf1_modes_counts_and_true_little_endian_sequence_markers ... ok
+test hex_native_roundtrip ... ok
+test psf2_native_roundtrip ... ok
+test psf_rejects_all_truncations_except_complete_headerless_tables ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

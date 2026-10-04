@@ -1,0 +1,133 @@
+{
+  "monobit_version": "0.54.0",
+  "checks": [
+    {
+      "case": "HEX standard 8/16 widths plus supplementary Unicode",
+      "result": "bidirectional pixels/metrics/labels pass"
+    },
+    {
+      "case": "HEX 8/16/24/32 extensions",
+      "result": "exact canonical bytes pass"
+    },
+    {
+      "case": "PSF1 8x4 256 positions",
+      "result": "bidirectional wire/pixels/metrics/labels pass"
+    },
+    {
+      "case": "PSF1 8x4 512 positions",
+      "result": "bidirectional wire/pixels/metrics/labels pass"
+    },
+    {
+      "case": "PSF2 9x4 7 positions",
+      "result": "bidirectional wire/pixels/metrics/labels pass"
+    },
+    {
+      "case": "PSF2 24x4 4 positions",
+      "result": "bidirectional wire/pixels/metrics/labels pass"
+    },
+    {
+      "case": "PSF1/PSF2 aliases, sequence-only, multiple sequences and empty entries",
+      "result": "independent grammar and exact mapping roundtrip pass"
+    },
+    {
+      "case": "catalogue test_bdf mini.bdf via hex",
+      "result": "actual importer, codepoints, full-cell rows and normalized metrics pass"
+    },
+    {
+      "case": "catalogue test_bdf mini.bdf via psf",
+      "result": "actual importer, codepoints, full-cell rows and normalized metrics pass"
+    }
+  ],
+  "oracle_limitations": [
+    {
+      "oracle": "monobit",
+      "case": "24/32-wide HEX",
+      "observed_dimensions": [
+        [
+          8,
+          16
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          16,
+          24
+        ],
+        [
+          16,
+          32
+        ]
+      ],
+      "expected": [
+        [
+          8,
+          16
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          24,
+          16
+        ],
+        [
+          32,
+          16
+        ]
+      ],
+      "coverage": "independent byte equality and Rust tests"
+    },
+    {
+      "oracle": "monobit",
+      "case": "PSF2 sequence input",
+      "error": "'utf-8' codec can't decode byte 0xfe in position 3: invalid start byte",
+      "coverage": "independent kbd grammar roundtrip"
+    },
+    {
+      "oracle": "monobit",
+      "case": "PSF2 sequence output",
+      "expected_mappings": [
+        [
+          [],
+          [
+            [
+              65,
+              778
+            ]
+          ]
+        ]
+      ],
+      "rewritten_mappings": [
+        [
+          [
+            65
+          ],
+          [
+            [
+              778
+            ]
+          ]
+        ]
+      ],
+      "coverage": "independent kbd grammar roundtrip"
+    },
+    {
+      "oracle": "monobit",
+      "case": "PSF1 LE FFFE marker",
+      "observed_labels": [
+        "Å",
+        "Å",
+        "￾",
+        "A",
+        "̊"
+      ],
+      "expected_sequence": "Å",
+      "coverage": "independent wire grammar"
+    }
+  ],
+  "catalogue_direct_importers": "absent in supplied reference; explicit unsupported manifest entries verified",
+  "result": "pass"
+}

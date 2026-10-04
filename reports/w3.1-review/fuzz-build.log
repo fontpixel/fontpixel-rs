@@ -1,0 +1,5 @@
+   Compiling fontpixel v0.1.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1-review/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1-review/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2m 11s
+   Compiling fontpixel-fuzz v0.0.0 (/workspace/scratch/ef9059dd510b/fontpixel-rs-package/extracted/fontpixel-rs-w3.1-review/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 1.22s

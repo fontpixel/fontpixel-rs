@@ -1,0 +1,6 @@
+{"glyphs":38653,"cell":[16,16],"runs":5,"available_parallelism":9,"hex_bytes":2705710,"psf_bytes":1389364,"median_ms":{"hex_read":22.554,"hex_write":15.609,"psf_read":12.994,"psf_write":4.164},"eight_font_batch_ms":[
+{"workers":1,"hex":288.356,"psf":148.625}
+,{"workers":2,"hex":159.123,"psf":89.922}
+,{"workers":4,"hex":142.880,"psf":69.161}
+,{"workers":8,"hex":74.808,"psf":39.523}
+]}

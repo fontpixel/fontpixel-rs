@@ -1,0 +1,108 @@
+{
+  "result": "pass",
+  "checks": [
+    {
+      "case": "all-1112064-scalars.psf",
+      "bytes": 4382626,
+      "sha256": "1c03f9a48fec4c47f22eb9cd9509cf08bf78795d18206b4ecd3f4aa33d4d397e",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-all-1112064-scalars.psf",
+        "format": "psf",
+        "bytes": 4382626,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "all-63486-psf1-scalars.psf",
+      "bytes": 127744,
+      "sha256": "0636d8e9a2fc62e16f47dd986d72a4072ba1e7dff245a82b032aa125ec26211d",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-all-63486-psf1-scalars.psf",
+        "format": "psf",
+        "bytes": 127744,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "unicode-sequence-edges.psf",
+      "bytes": 81,
+      "sha256": "7ef4420ec4babba7b42302942386391cbaab335f3407eeba9ee25602d2fa49c9",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-unicode-sequence-edges.psf",
+        "format": "psf",
+        "bytes": 81,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "width-8.hex",
+      "bytes": 459,
+      "sha256": "9e32d672f1cdd76111c3a8aad55b14fb52eeeafb33eca2713519fd35ce40470e",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-width-8.hex",
+        "format": "hex",
+        "bytes": 459,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "width-16.hex",
+      "bytes": 843,
+      "sha256": "b29d5e69d1d3eecfba1eab80b36a89b7c5da53b7de3432157a1885007d85c9bb",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-width-16.hex",
+        "format": "hex",
+        "bytes": 843,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "width-24.hex",
+      "bytes": 1227,
+      "sha256": "f8e4d0d1ea623b096a4813ad61802fccc64ae0b31841841edd7d05621336ba33",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-width-24.hex",
+        "format": "hex",
+        "bytes": 1227,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "width-32.hex",
+      "bytes": 1611,
+      "sha256": "b94de7eeabc123e8feb147c870ca49277e31a9500587d6f7a7f3a5123b34e5d5",
+      "result": "strict exact byte roundtrip",
+      "report": {
+        "output": "/tmp/console-independent-review-924hbid_/out-width-32.hex",
+        "format": "hex",
+        "bytes": 1611,
+        "report": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "case": "malformed UTF-8, empty sequence, trailing entry",
+      "count": 10,
+      "result": "all rejected, existing destination preserved"
+    }
+  ]
+}
