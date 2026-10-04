@@ -1,0 +1,159 @@
+[
+  {
+    "format": "pilfont",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "pilfont_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/pilfont_bitmap",
+      "--no-default-features",
+      "--features",
+      "pilfont-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 84.33984756469727,
+    "log": "reports/w5.e2-image/fuzz/pilfont-initial.log"
+  },
+  {
+    "format": "sfont",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "sfont_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/sfont_bitmap",
+      "--no-default-features",
+      "--features",
+      "sfont-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 29.35905933380127,
+    "log": "reports/w5.e2-image/fuzz/sfont-initial.log"
+  },
+  {
+    "format": "vlw",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "vlw_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/vlw_bitmap",
+      "--no-default-features",
+      "--features",
+      "vlw-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 1,
+    "seconds": 0.5206921100616455,
+    "log": "reports/w5.e2-image/fuzz/vlw-shared-transport-wip.log",
+    "note": "Shared mod transport was declared before its file landed; no target execution occurred."
+  },
+  {
+    "format": "vlw",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "vlw_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/vlw_bitmap",
+      "--no-default-features",
+      "--features",
+      "vlw-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 23.01246953010559,
+    "log": "reports/w5.e2-image/fuzz/vlw.log"
+  },
+  {
+    "format": "imageset",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "imageset_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/imageset_bitmap",
+      "--no-default-features",
+      "--features",
+      "imageset-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 78.52637195587158,
+    "log": "reports/w5.e2-image/fuzz/imageset.log"
+  },
+  {
+    "format": "pilfont",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "pilfont_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/pilfont_bitmap",
+      "--no-default-features",
+      "--features",
+      "pilfont-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 25.6780788898468,
+    "log": "reports/w5.e2-image/fuzz/pilfont.log",
+    "note": "Final source after filename/detection refinements."
+  },
+  {
+    "format": "sfont",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "sfont_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-corpus/sfont_bitmap",
+      "--no-default-features",
+      "--features",
+      "sfont-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-artifact_prefix=/home/chen/githubprojects/fontpixel/local-work/w5e2-fuzz-artifacts/"
+    ],
+    "exit": 0,
+    "seconds": 29.877755641937256,
+    "log": "reports/w5.e2-image/fuzz/sfont.log",
+    "note": "Final source after filename/detection refinements."
+  }
+]

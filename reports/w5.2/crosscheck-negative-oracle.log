@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 87, in <module>
+    compare(shifted)
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 52, in compare
+    expected = oracle(path, fmt)
+               ^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 43, in oracle
+    f = monobit.load(path, format=fmt)[0]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/plumbing/scripting.py", line 104, in _converted_func
+    result = func(*args, **conv_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/plumbing/scripting.py", line 61, in _scriptable_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontfiles.py", line 64, in load
+    return _load_stream(
+           ^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontfiles.py", line 93, in _load_stream
+    raise FileFormatError(message)
+monobit.base.basetypes.FileFormatError: Unable to read fonts from 'local-work/w52/crosscheck/above-baseline.fon': tried formats: iigs

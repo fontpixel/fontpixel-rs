@@ -1,7 +1,7 @@
 //! Planned format metadata. Catalogue membership never implies support.
 use super::FormatInfo;
 
-/// The 46 initial format IDs from the task specification, in specification order.
+/// Original format IDs followed by the documented general-format survey additions.
 pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "bdf",
@@ -36,7 +36,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "psf",
         name: "Linux PSF1 / PSF2",
-        extensions: &["psf", "psfu", "psf.gz"],
+        extensions: &["psf", "psfu", "psf.gz", "psfu.gz"],
         feature_enabled: cfg!(feature = "psf"),
     },
     FormatInfo {
@@ -48,7 +48,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "raw",
         name: "Raw fixed-cell bitmap",
-        extensions: &["f08", "f14", "f16", "ch8", "64c", "rom", "bin"],
+        extensions: &["f08", "f14", "f16", "ch8", "64c", "rom", "bin", "fnt"],
         feature_enabled: cfg!(feature = "raw"),
     },
     FormatInfo {
@@ -72,13 +72,13 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "fon",
         name: "Windows FON resources",
-        extensions: &["fon"],
+        extensions: &["fon", "exe", "dll"],
         feature_enabled: cfg!(feature = "fon"),
     },
     FormatInfo {
         id: "fontx2",
         name: "DOS/V FONTX2",
-        extensions: &["fnt", "f16", "fx2"],
+        extensions: &["fnt", "f16", "fx2", "ftx"],
         feature_enabled: cfg!(feature = "fontx2"),
     },
     FormatInfo {
@@ -102,7 +102,9 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "nfnt",
         name: "Mac NFNT / FONT / FOND containers",
-        extensions: &["dfont", "bin"],
+        extensions: &[
+            "dfont", "bin", "f", "nfnt", "suit", "as", "adf", "rsrc", "hqx",
+        ],
         feature_enabled: cfg!(feature = "nfnt"),
     },
     FormatInfo {
@@ -114,13 +116,13 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "iigs",
         name: "Apple IIgs QuickDraw II",
-        extensions: &[],
+        extensions: &["fon", "bsc", "bsq"],
         feature_enabled: cfg!(feature = "iigs"),
     },
     FormatInfo {
         id: "otb",
         name: "Bitmap-only OpenType",
-        extensions: &["otb"],
+        extensions: &["otb", "ttf", "otf"],
         feature_enabled: cfg!(feature = "otb"),
     },
     FormatInfo {
@@ -174,7 +176,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "bmfont",
         name: "AngelCode BMFont",
-        extensions: &["fnt"],
+        extensions: &["fnt", "xml", "json"],
         feature_enabled: cfg!(feature = "bmfont"),
     },
     FormatInfo {
@@ -188,7 +190,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "c",
         name: "C / C++ bitmap arrays",
-        extensions: &["h", "c"],
+        extensions: &["h", "c", "cpp", "cc"],
         feature_enabled: cfg!(feature = "c"),
     },
     FormatInfo {
@@ -242,7 +244,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "gem",
         name: "Atari GEM / GDOS",
-        extensions: &["fnt", "gem"],
+        extensions: &["fnt", "gem", "gft", "vga"],
         feature_enabled: cfg!(feature = "gem"),
     },
     FormatInfo {
@@ -266,7 +268,7 @@ pub const CATALOGUE: &[FormatInfo] = &[
     FormatInfo {
         id: "palm",
         name: "Palm OS font resources",
-        extensions: &["pdb"],
+        extensions: &["pdb", "prc", "afnx"],
         feature_enabled: cfg!(feature = "palm"),
     },
     FormatInfo {
@@ -280,5 +282,323 @@ pub const CATALOGUE: &[FormatInfo] = &[
         name: "DEC DRCS soft fonts",
         extensions: &[],
         feature_enabled: cfg!(feature = "drcs"),
+    },
+    FormatInfo {
+        id: "bbc",
+        name: "BBC Micro VDU 23 character definitions, code byte and eight bitmap rows",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "bbc"),
+    },
+    FormatInfo {
+        id: "beos",
+        name: "BeOS |Be; bitmap fonts",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "beos"),
+    },
+    FormatInfo {
+        id: "catalyst",
+        name: "Quark Catalyst SYSTEM.FONTS collection",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "catalyst"),
+    },
+    FormatInfo {
+        id: "chiwriter",
+        name: "ChiWriter v3/v4 and compatible FONTRIX/PCPaint/GRASP new-format headers, width/offset tables and fixed-height rasters.",
+        extensions: &["set", "sft", "pft", "eft", "cft", "xft"],
+        feature_enabled: cfg!(feature = "chiwriter"),
+    },
+    FormatInfo {
+        id: "comfont",
+        name: "DOS FONTEDIT, Fontraption normal/TSR, Font Mania and CP/M PSFCOM, LETAFONT, UDG binary loader envelopes",
+        extensions: &["com"],
+        feature_enabled: cfg!(feature = "comfont"),
+    },
+    FormatInfo {
+        id: "consoleet",
+        name: "Consoleet/vfontas per-glyph text files in a directory, hexadecimal filenames and raster text.",
+        extensions: &["txt"],
+        feature_enabled: cfg!(feature = "consoleet"),
+    },
+    FormatInfo {
+        id: "daisy",
+        name: "Daisy-Dot I/II/III and magnified multi-file variants NLQ/NL2/NL3/NL4, variable widths and vertical bitmap streams.",
+        extensions: &["nlq", "nl2", "nl3", "nl4"],
+        feature_enabled: cfg!(feature = "daisy"),
+    },
+    FormatInfo {
+        id: "dashen",
+        name: "Dashen PFT screen font directory and packed glyphs, optionally followed by an HP PCL printer strike.",
+        extensions: &["pft"],
+        feature_enabled: cfg!(feature = "dashen"),
+    },
+    FormatInfo {
+        id: "dosstart",
+        name: "DOSStart DSF bitmap branch, encoded glyph rows, height and advance information.",
+        extensions: &["dsf"],
+        feature_enabled: cfg!(feature = "dosstart"),
+    },
+    FormatInfo {
+        id: "drhalo",
+        name: "Dr. Halo/Dr. Genius fixed-cell FON header and bitmap payload.",
+        extensions: &["fon"],
+        feature_enabled: cfg!(feature = "drhalo"),
+    },
+    FormatInfo {
+        id: "edwin",
+        name: "EDWIN text bitmap definitions, code, dimensions, metrics and raster rows.",
+        extensions: &["fnt"],
+        feature_enabled: cfg!(feature = "edwin"),
+    },
+    FormatInfo {
+        id: "fbit",
+        name: "Apple Japanese fbit and HFNT resources, resolution/encoding tables and optional data-fork bitmap payloads.",
+        extensions: &["dfont", "suit", "bin", "as", "adf", "rsrc", "hqx"],
+        feature_enabled: cfg!(feature = "fbit"),
+    },
+    FormatInfo {
+        id: "geos",
+        name: "Commodore GEOS CVT font collections and bare VLIR strike records, including MEGA extensions documented by Bits'N'Picas.",
+        extensions: &["cvt"],
+        feature_enabled: cfg!(feature = "geos"),
+    },
+    FormatInfo {
+        id: "gpi",
+        name: "OS/2 GPI bitmap fonts / NE / LX containers",
+        extensions: &["fnt", "fon", "exe", "dll"],
+        feature_enabled: cfg!(feature = "gpi"),
+    },
+    FormatInfo {
+        id: "grasp",
+        name: "PCPaint/GRASP old raster format with fixed-cell header and raw rows.",
+        extensions: &["set", "fnt"],
+        feature_enabled: cfg!(feature = "grasp"),
+    },
+    FormatInfo {
+        id: "hppcl",
+        name: "HP PCL bitmap soft fonts",
+        extensions: &["sft", "sfp", "sfl"],
+        feature_enabled: cfg!(feature = "hppcl"),
+    },
+    FormatInfo {
+        id: "hrcg",
+        name: "AppleSoft Toolkit Hi-Res Character Generator SET bitmaps including high-bit half-dot shifts.",
+        extensions: &["set"],
+        feature_enabled: cfg!(feature = "hrcg"),
+    },
+    FormatInfo {
+        id: "lisa",
+        name: "Apple Lisa font libraries with resource directory and Lisa NFNT-like bitmaps, including compressed strike semantics.",
+        extensions: &["bin"],
+        feature_enabled: cfg!(feature = "lisa"),
+    },
+    FormatInfo {
+        id: "mgtk",
+        name: "Apple II MouseGraphics Toolkit / MousePaint fonts, one/two 7-bit-wide strips and widths.",
+        extensions: &["fnt", "mgf", "mpf"],
+        feature_enabled: cfg!(feature = "mgtk"),
+    },
+    FormatInfo {
+        id: "mkwinfont",
+        name: "Simon Tatham mkwinfont FD text, header properties and per-character ASCII rasters.",
+        extensions: &["fd"],
+        feature_enabled: cfg!(feature = "mkwinfont"),
+    },
+    FormatInfo {
+        id: "oberon",
+        name: "Project Oberon bitmap FNT screen/printer files, character runs, glyph boxes and little-endian raster words.",
+        extensions: &["fnt", "scn.fnt"],
+        feature_enabled: cfg!(feature = "oberon"),
+    },
+    FormatInfo {
+        id: "pcgeos",
+        name: "PC/GEOS 2+ BSWF font files, font metadata, point-size strikes, metrics, bitmaps and kerning.",
+        extensions: &["fnt"],
+        feature_enabled: cfg!(feature = "pcgeos"),
+    },
+    FormatInfo {
+        id: "pcr",
+        name: "Optiks PCR fixed-width 8-pixel font header and per-glyph rows.",
+        extensions: &["pcr"],
+        feature_enabled: cfg!(feature = "pcr"),
+    },
+    FormatInfo {
+        id: "pilfont",
+        name: "Pillow PILfont .pil metrics plus PBM/PNG glyph atlas.",
+        extensions: &["pil"],
+        feature_enabled: cfg!(feature = "pilfont"),
+    },
+    FormatInfo {
+        id: "plus3dos",
+        name: "ZX Spectrum +3DOS font file header, length/type/load metadata, checksum and 8x8 glyph payload.",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "plus3dos"),
+    },
+    FormatInfo {
+        id: "psf2txt",
+        name: "psftools textual PSF representation with glyph index, dimensions, Unicode aliases/sequences and bitmap rows.",
+        extensions: &["txt"],
+        feature_enabled: cfg!(feature = "psf2txt"),
+    },
+    FormatInfo {
+        id: "polyprint",
+        name: "PolyPrint printer bitmap fonts and proportional glyph packing as documented by its utility maintainer.",
+        extensions: &["fnt"],
+        feature_enabled: cfg!(feature = "polyprint"),
+    },
+    FormatInfo {
+        id: "prebuilt",
+        name: "Adobe prebuilt BEPF/LEPF files",
+        extensions: &["bepf", "lepf"],
+        feature_enabled: cfg!(feature = "prebuilt"),
+    },
+    FormatInfo {
+        id: "printshop",
+        name: "The Print Shop PNF printer fonts, native raster/width arrangement.",
+        extensions: &["pnf", "psf"],
+        feature_enabled: cfg!(feature = "printshop"),
+    },
+    FormatInfo {
+        id: "pxl",
+        name: "TeX PXL 1001/1002 font bitmaps, 128-entry directory, TFM widths, design size and dpi",
+        extensions: &["pxl"],
+        feature_enabled: cfg!(feature = "pxl"),
+    },
+    FormatInfo {
+        id: "riscos",
+        name: "RISC OS older x90y45 and newer Font bitmap files, strike indexes, metrics and grayscale packing.",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "riscos"),
+    },
+    FormatInfo {
+        id: "sfont",
+        name: "SDL SFont marker-row PNG atlas and Kreative RFont extension, explicit code sequence and proportional spacing.",
+        extensions: &["png"],
+        feature_enabled: cfg!(feature = "sfont"),
+    },
+    FormatInfo {
+        id: "signum",
+        name: "Signum! editor E24 and printer P9/P24/L30 raster character sets.",
+        extensions: &["e24", "p9", "p24", "l30"],
+        feature_enabled: cfg!(feature = "signum"),
+    },
+    FormatInfo {
+        id: "symbos",
+        name: "SymbOS small / medium / big bitmap fonts",
+        extensions: &["fnt"],
+        feature_enabled: cfg!(feature = "symbos"),
+    },
+    FormatInfo {
+        id: "tasprint",
+        name: "TasPrint screen/printer character sets, widths up to 16, 16-row glyphs and multi-font sequences",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "tasprint"),
+    },
+    FormatInfo {
+        id: "vtfont",
+        name: "FreeBSD VFNT0002 console fonts",
+        extensions: &["fnt"],
+        feature_enabled: cfg!(feature = "vtfont"),
+    },
+    FormatInfo {
+        id: "writeon",
+        name: "Hercules Write On WOF bitmaps and native header, cells in 8x14 multiples.",
+        extensions: &["wof"],
+        feature_enabled: cfg!(feature = "writeon"),
+    },
+    FormatInfo {
+        id: "wsfont",
+        name: "NetBSD WSF binary fonts with geometry, stride, encoding, byte/bit order",
+        extensions: &["wsf"],
+        feature_enabled: cfg!(feature = "wsfont"),
+    },
+    FormatInfo {
+        id: "wyse",
+        name: "Wyse-60 downloadable soft-font escape sequences, 8x16 glyph rows and encoded character selectors.",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "wyse"),
+    },
+    FormatInfo {
+        id: "xbin",
+        name: "XBIN font section with XBIN header, 256/512 glyph flags and optional palette/screen data.",
+        extensions: &["xb"],
+        feature_enabled: cfg!(feature = "xbin"),
+    },
+    FormatInfo {
+        id: "xerox",
+        name: "Xerox Alto CONVERT .al, BITBLT .strike/.ks and PrePress .ac variants, each with native directory/metrics/raster packing.",
+        extensions: &["al", "strike", "ks", "ac"],
+        feature_enabled: cfg!(feature = "xerox"),
+    },
+    FormatInfo {
+        id: "zapfont",
+        name: "RISC OS ZapFont old fixed-cell form and ZapRedraw UCS chunk/range form.",
+        extensions: &[],
+        feature_enabled: cfg!(feature = "zapfont"),
+    },
+    FormatInfo {
+        id: "rockbox",
+        name: "Rockbox RB11/RB12 binary bitmap fonts, glyph/offset/width tables and native row packing.",
+        extensions: &["fnt", "rbf", "rb11", "rb12"],
+        feature_enabled: cfg!(feature = "rockbox"),
+    },
+    FormatInfo {
+        id: "u8m",
+        name: "Kreative U8/M UTF-8 font format",
+        extensions: &["u8m"],
+        feature_enabled: cfg!(feature = "u8m"),
+    },
+    FormatInfo {
+        id: "cybiko",
+        name: "Cybiko device font files including native bitmap and compression variants identified by the original SDK documentation.",
+        extensions: &["cyf", "fnt", "fntz", "fnty"],
+        feature_enabled: cfg!(feature = "cybiko"),
+    },
+    FormatInfo {
+        id: "playdate",
+        name: "Playdate FNT source / PFT compiled bitmap fonts",
+        extensions: &["fnt", "pft"],
+        feature_enabled: cfg!(feature = "playdate"),
+    },
+    FormatInfo {
+        id: "hmzk",
+        name: "Mi Band 2 HMZK device bitmap font header, code directory and glyph data.",
+        extensions: &["bin", "hmzk"],
+        feature_enabled: cfg!(feature = "hmzk"),
+    },
+    FormatInfo {
+        id: "sbf",
+        name: "Sabriel Bitmap Font binary headers, glyph maps, bitmap data and metrics.",
+        extensions: &["sbf"],
+        feature_enabled: cfg!(feature = "sbf"),
+    },
+    FormatInfo {
+        id: "qpf",
+        name: "Qt/Embedded 2/3 legacy QPF prerendered bitmap fonts",
+        extensions: &["qpf"],
+        feature_enabled: cfg!(feature = "qpf"),
+    },
+    FormatInfo {
+        id: "qpf2",
+        name: "Qt for Embedded Linux QPF2 prerendered fonts",
+        extensions: &["qpf2"],
+        feature_enabled: cfg!(feature = "qpf2"),
+    },
+    FormatInfo {
+        id: "ssfn",
+        name: "Scalable Screen Font 2 binary SFN bitmap/pixmap fragments, glyph references and mappings, plus ASCII source form.",
+        extensions: &["sfn", "asc", "sfn.gz"],
+        feature_enabled: cfg!(feature = "ssfn"),
+    },
+    FormatInfo {
+        id: "vlw",
+        name: "Processing PFont VLW versions with per-glyph metrics, Gray8 bitmaps and Java data-stream strings.",
+        extensions: &["vlw"],
+        feature_enabled: cfg!(feature = "vlw"),
+    },
+    FormatInfo {
+        id: "pfr",
+        name: "Portable Font Resource bitmap strikes, character maps and packed bitmap data in bitmap-bearing PFR files.",
+        extensions: &["pfr"],
+        feature_enabled: cfg!(feature = "pfr"),
     },
 ];

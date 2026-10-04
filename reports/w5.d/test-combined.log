@@ -1,0 +1,108 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 16.46s
+     Running tests/fbit.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fbit-7223085192811fa0)
+
+running 8 tests
+test continuous_cell_bits_and_shiftjis_discontinuity ... ok
+test all_truncations_runs_unknown_code_and_aggregate_limits ... ok
+test appledouble_pair_resolves_explicitly_and_preserves_external_rasters ... ok
+test both_native_external_fdefs_bundle_and_inline_conversion ... ok
+test hfnt_native_codes_and_explicit_width ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test envelope_type_precedes_filename_tag_and_explicit_bare_kind ... ok
+test all_native_envelopes_keep_resource_fields ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/lisa.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/lisa-efe318f57af9c4c8)
+
+running 7 tests
+test malformed_directory_compression_and_expansion_limits ... ok
+test native_directory_without_mac_terminator_and_exact_replay ... ok
+test reverse_mixed_controls_and_xor_are_independently_authored ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test writer_success_is_readable_under_same_cumulative_budget ... ok
+test writer_both_native_compression_modes_and_metrics_records ... ok
+test native_in_place_overlap_is_rejected_and_default_writer_can_use_plain ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mgtk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/mgtk-d521ee8308ba30b6)
+
+running 7 tests
+test seven_bit_reversal_and_separate_strips_are_native ... ok
+test ignored_high_bits_and_trailing_bytes_are_preserved ... ok
+test trailing_removed_glyph_slot_is_a_model_loss ... ok
+test explicit_gray_threshold_charset_and_limits ... ok
+test all_truncations_invalid_dimensions_and_strip_options ... ok
+test geometry_normalization_and_metadata_losses_are_explicit ... ok
+test zero_width_glyph_has_native_height_and_bounded_empty_raster ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/nfnt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/nfnt-f6dd0ef9a03787e9)
+
+running 34 tests
+test all_unrepresentable_keeps_omissions ... ok
+test apple_data_fork_resource_variant ... ok
+test appledouble_write_preflights_companion_resolution_limits ... ok
+test appledouble_uses_scoped_companion_and_bundle ... ok
+test authored_gray8_preserves_all_samples_and_threshold_is_explicit ... ok
+test appledouble_empty_primary_is_present_in_readback_model ... ok
+test authored_font_generates_valid_classic_ids_and_name_record ... ok
+test binhex_optional_exclamation_and_same_asset_segment_boundaries ... ok
+test binhex_declared_expansion_and_same_limit_output_contract ... ok
+test complete_metadata_and_unicode_loss_is_reported ... ok
+test classic_font_name_resource_and_encoded_point_size ... ok
+test derived_properties_and_trailing_glyph_slots_are_reported ... ok
+test cumulative_envelope_and_resource_count ... ok
+test detector_requires_resource_and_raster_structure ... ok
+test extreme_origin_differences_never_panic ... ok
+test hand_authored_raster_and_exact_bare_roundtrip ... ok
+test edited_palette_font_writes_model_samples_not_stale_indices ... ok
+test minimum_aggregate_budget_is_inclusive ... ok
+test font_resources_and_multi_strike ... ok
+test binhex_original_literal_wire_preserves_both_forks_and_finder_fields ... ok
+test partial_palette_uses_ordered_port_ramp_and_device_indices ... ok
+test grayscale_depths_decode_and_exact_source_writes ... ok
+test malformed_ranges_truncations_crc_and_overlap ... ok
+test resource_limits_cover_all_strikes_and_unknown_records ... ok
+test resource_opaque_and_fond_optional_tables_survive ... ok
+test indexed_fctb_projects_rgb_and_preserves_original_resources ... ok
+test malformed_palettes_fail_explicitly ... ok
+test writer_same_limits_readable_and_inclusive_budget ... ok
+test optional_tables_and_unknown_flag_preserved ... ok
+test every_single_asset_container_roundtrips ... ok
+test generated_models_preserve_legacy_geometry_after_normalization ... ok
+test mutations_remain_bounded_and_readable ... ok
+test binhex_three_crcs_alphabet_truncation_and_rle_errors ... ok
+test detector_keeps_all_font_containers_and_extended_tables ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/qpf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/qpf-628ac8ccab21f053)
+
+running 6 tests
+test all_three_passes_signed_metrics_and_surrogates ... ok
+test canonical_regeneration_and_external_family_loss ... ok
+test cumulative_limits_and_default_reader_contract ... ok
+test gray8_padded_rows_and_explicit_threshold ... ok
+test malformed_tree_ranges_stride_and_all_truncations ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/qpf2.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/qpf2-39202624bcdeb8ce)
+
+running 8 tests
+test fractional_metrics_and_linkage_are_explicit_reader_loss ... ok
+test cached_glyph_zero_is_native_unencoded_data_not_a_default_character ... ok
+test canonical_writer_keeps_mapping_and_native_signed_advance ... ok
+test native_gid_aliases_gray_stride_and_exact_replay ... ok
+test monochrome_requires_explicit_gray_reduction ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test unrepresented_model_metadata_is_reported ... ok
+test truncations_out_of_range_offsets_and_budgets ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

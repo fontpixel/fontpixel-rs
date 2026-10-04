@@ -159,6 +159,7 @@ fn external(
         read_options: ImageReadOptions {
             mapping: Some(map),
             mapping_path: None,
+            ..Default::default()
         },
         ..Default::default()
     };

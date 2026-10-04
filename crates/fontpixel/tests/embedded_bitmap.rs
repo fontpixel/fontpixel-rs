@@ -505,7 +505,11 @@ fn native_capability_flags_remain_honest() {
             ),
             "color" => assert_eq!(
                 (s.detect, s.read, s.write),
-                (cfg!(feature = "color"), cfg!(feature = "color"), false)
+                (
+                    cfg!(feature = "color"),
+                    cfg!(feature = "color"),
+                    cfg!(feature = "color")
+                )
             ),
             "ttf" | "otf" | "ttc" | "woff" | "woff2" | "vector-raster" => {
                 let enabled = s.format.feature_enabled;
@@ -673,4 +677,325 @@ fn diagnostics_are_bounded_before_returning_assets() {
             ..
         })
     ));
+}
+
+#[cfg(feature = "color")]
+fn color_model() -> fontpixel::FontSet {
+    use fontpixel::{
+        Font, Glyph,
+        bitmap::{BitmapLimits, Gray8},
+        model::{Codepoint, Vector},
+    };
+    let mut f = Font::default();
+    f.metrics.pixel_size = Some(12);
+    f.metrics.ascent = Some(9);
+    f.metrics.descent = Some(3);
+    let mut g = Glyph::new(
+        Bitmap::<Gray8>::from_raw(3, 2, &[0, 1, 64, 128, 254, 255], BitmapLimits::default())
+            .unwrap(),
+    );
+    g.codepoints = vec![Codepoint::Unicode(65), Codepoint::Unicode(0x10000)];
+    g.name = Some("A".into());
+    g.metrics.bounds.x = -1;
+    g.metrics.bounds.y = -1;
+    g.metrics.advance = Some(Vector::new(4, 0));
+    f.add_glyph(g).unwrap();
+    f.into()
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn native_color_writers_are_deterministic_exact_gray_and_registered() {
+    use fontpixel::{
+        formats::embedded::{self, ColorFlavor, ColorWriteOptions},
+        model::Codepoint,
+    };
+    for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+        let options = ColorWriteOptions {
+            flavor,
+            ..Default::default()
+        };
+        let set = color_model();
+        let (bytes, _) = embedded::write_color(&set, &options).unwrap();
+        assert_eq!(bytes, embedded::write_color(&set, &options).unwrap().0);
+        for darkness in [false, true] {
+            let (loaded, _) = embedded::read(
+                &bytes,
+                Kind::Color,
+                &embedded::EmbeddedReadOptions {
+                    color_darkness: darkness,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let expected = set.fonts[0]
+                .glyph_for_codepoint(Codepoint::Unicode(65))
+                .unwrap();
+            let actual = loaded.fonts[0]
+                .glyph_for_codepoint(Codepoint::Unicode(65))
+                .unwrap();
+            assert_eq!(actual.bitmap, expected.bitmap);
+            assert_eq!(actual.metrics, expected.metrics);
+            assert_eq!(actual.codepoints, expected.codepoints);
+        }
+        let mut registry = fontpixel::registry();
+        registry.set_color_write_options(options);
+        let output = registry
+            .write(
+                &set,
+                "color",
+                &fontpixel::WriteOptions::new(fontpixel::ResourcePath::new("out.ttf").unwrap()),
+            )
+            .unwrap();
+        assert_eq!(output.output.into_single().unwrap(), bytes);
+    }
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn color_writer_reports_projection_empty_and_shared_advance_losses() {
+    use fontpixel::{
+        Glyph,
+        formats::embedded::{self, ColorFlavor, ColorWriteOptions},
+        model::{Codepoint, Vector},
+    };
+    let mut set = color_model();
+    let mut empty = Glyph::new(Bitmap::<fontpixel::bitmap::Mono>::default());
+    empty.codepoints.push(Codepoint::Unicode(32));
+    empty.metrics.advance = Some(Vector::new(4, 0));
+    set.fonts[0].add_glyph(empty).unwrap();
+    let mut second = set.fonts[0].clone();
+    second.metrics.pixel_size = Some(24);
+    set.fonts.push(second);
+    for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+        let options = ColorWriteOptions {
+            flavor,
+            ..Default::default()
+        };
+        let (bytes, report) = embedded::write_color(&set, &options).unwrap();
+        let (loaded, _) = embedded::read(&bytes, Kind::Color, &Default::default()).unwrap();
+        let second = loaded
+            .fonts
+            .iter()
+            .find(|f| f.metrics.pixel_size == Some(24))
+            .unwrap();
+        let g = second.glyph_for_codepoint(Codepoint::Unicode(65)).unwrap();
+        if flavor == ColorFlavor::Cbdt {
+            assert_eq!(g.metrics.advance, Some(Vector::new(4, 0)));
+            assert!(second.glyph_for_codepoint(Codepoint::Unicode(32)).is_some());
+        } else {
+            assert_eq!(g.metrics.advance, Some(Vector::new(8, 0)));
+            assert!(second.glyph_for_codepoint(Codepoint::Unicode(32)).is_none());
+            assert!(
+                report
+                    .entries
+                    .iter()
+                    .any(|e| e.code == "embedded.sbix_advance")
+            );
+            assert!(
+                report
+                    .entries
+                    .iter()
+                    .any(|e| e.code == "embedded.sbix_empty")
+            );
+        }
+        let mut registry = fontpixel::registry();
+        registry.set_color_write_options(options);
+        let mut write =
+            fontpixel::WriteOptions::new(fontpixel::ResourcePath::new("out.ttf").unwrap());
+        write.strict = true;
+        assert!(matches!(
+            registry.write(&set, "color", &write),
+            Err(fontpixel::Error::StrictLoss(_))
+        ));
+    }
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn sbix_large_dimensions_and_multiblock_png_are_exact() {
+    use fontpixel::{
+        Font, Glyph,
+        bitmap::{BitmapLimits, Gray8},
+        formats::embedded::{self, ColorFlavor, ColorWriteOptions},
+        model::{Codepoint, Vector},
+    };
+    let pixels: Vec<_> = (0..300 * 100).map(|i| (i % 256) as u8).collect();
+    let mut g =
+        Glyph::new(Bitmap::<Gray8>::from_raw(300, 100, &pixels, BitmapLimits::default()).unwrap());
+    g.metrics.bounds.x = -150;
+    g.metrics.bounds.y = -40;
+    g.metrics.advance = Some(Vector::new(320, 0));
+    g.codepoints.push(Codepoint::Unicode(65));
+    let mut f = Font::default();
+    f.metrics.pixel_size = Some(512);
+    f.metrics.ascent = Some(100);
+    f.metrics.descent = Some(50);
+    f.add_glyph(g.clone()).unwrap();
+    let options = ColorWriteOptions {
+        flavor: ColorFlavor::Sbix,
+        ..Default::default()
+    };
+    let (bytes, _) = embedded::write_color(&f.into(), &options).unwrap();
+    let (set, _) = embedded::read(&bytes, Kind::Color, &Default::default()).unwrap();
+    let actual = set.fonts[0]
+        .glyph_for_codepoint(Codepoint::Unicode(65))
+        .unwrap();
+    assert_eq!(actual.bitmap, g.bitmap);
+    assert_eq!(actual.metrics, g.metrics);
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn color_writer_limits_cover_png_output_readback_and_work() {
+    use fontpixel::formats::embedded::{self, ColorFlavor, ColorWriteOptions};
+    for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+        for field in 0..7 {
+            let mut options = ColorWriteOptions {
+                flavor,
+                ..Default::default()
+            };
+            match field {
+                0 => options.limits.sfnt.resources.max_total_bytes = 1024,
+                1 => options.limits.sfnt.resources.max_input_bytes = 32,
+                2 => options.limits.sfnt.resources.max_table_bytes = 16,
+                3 => options.limits.sfnt.resources.max_decompressed_bytes = 16,
+                4 => options.limits.max_pixel_work = 1,
+                5 => options.limits.max_visits = 1,
+                _ => options.limits.sfnt.resources.max_pixels_per_glyph = 1,
+            }
+            assert!(
+                embedded::write_color(&color_model(), &options).is_err(),
+                "{flavor:?} field {field}"
+            );
+        }
+        for limit in [4096, 16384, 32768, 65536] {
+            let mut options = ColorWriteOptions {
+                flavor,
+                ..Default::default()
+            };
+            options.limits.sfnt.resources.max_total_bytes = limit;
+            if let Ok((bytes, _)) = embedded::write_color(&color_model(), &options) {
+                embedded::read(
+                    &bytes,
+                    Kind::Color,
+                    &embedded::EmbeddedReadOptions {
+                        limits: options.limits,
+                        ..Default::default()
+                    },
+                )
+                .unwrap();
+            }
+        }
+    }
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn color_table_writers_cover_big_metrics_sparse_ids_and_duplicate_strikes() {
+    use fontpixel::sfnt::bitmap::color::{self, Sbix, SbixGlyph, SbixStrike};
+    let mut s = strike();
+    s.bit_depth = 32;
+    s.glyphs.insert(1, glyph());
+    let tables = sbit::encode(&[s.clone()], Kind::Color, 3, &Limits::default()).unwrap();
+    let decoded = sbit::decode(
+        &tables.location,
+        &tables.data,
+        Kind::Color,
+        3,
+        &Limits::default(),
+    )
+    .unwrap();
+    assert_eq!(decoded[0].glyphs[&1].metrics, s.glyphs[&1].metrics);
+    let strike = SbixStrike {
+        ppem: 12,
+        ppi: 72,
+        glyphs: BTreeMap::from([(
+            2,
+            SbixGlyph {
+                origin: [-1, 0],
+                bitmap: glyph().bitmap,
+            },
+        )]),
+    };
+    let mut sbix = Sbix {
+        draw_outlines: false,
+        strikes: vec![strike.clone(), strike],
+    };
+    assert!(color::encode_sbix(&sbix, 3, &Limits::default()).is_err());
+    sbix.strikes[1].ppi = 144;
+    let encoded = color::encode_sbix(&sbix, 3, &Limits::default()).unwrap();
+    assert_eq!(
+        color::decode_sbix(&encoded, 3, &Limits::default(), false)
+            .unwrap()
+            .strikes
+            .len(),
+        2
+    );
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn color_writer_cumulative_decompression_and_extreme_metrics_are_bounded() {
+    use fontpixel::{
+        formats::embedded::{self, ColorFlavor, ColorWriteOptions},
+        model::{Codepoint, Vector},
+    };
+    for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+        let mut options = ColorWriteOptions {
+            flavor,
+            ..Default::default()
+        };
+        options.limits.sfnt.resources.max_decompressed_bytes = 40;
+        let mut set = color_model();
+        assert!(embedded::write_color(&set, &options).is_ok());
+        let mut g = set.fonts[0]
+            .glyph_for_codepoint(Codepoint::Unicode(65))
+            .unwrap()
+            .clone();
+        g.codepoints = vec![Codepoint::Unicode(66)];
+        g.name = Some("B".into());
+        set.fonts[0].add_glyph(g).unwrap();
+        assert!(embedded::write_color(&set, &options).is_err());
+        options.limits = Limits::default();
+        for extreme in [i64::MIN, i64::MAX] {
+            let mut set = color_model();
+            let id = set.fonts[0].glyphs().next().unwrap().0;
+            set.fonts[0]
+                .edit_glyph(id, |g| {
+                    g.metrics.advance = Some(Vector::new(extreme, 0));
+                    Ok(())
+                })
+                .unwrap();
+            assert!(embedded::write_color(&set, &options).is_err());
+            set.fonts[0].metrics.descent = Some(extreme);
+            assert!(embedded::write_color(&set, &options).is_err());
+        }
+    }
+}
+
+#[cfg(feature = "color")]
+#[test]
+fn color_strict_gray_and_shared_underline_policy() {
+    use fontpixel::formats::embedded::{ColorFlavor, ColorWriteOptions};
+    for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+        let mut registry = fontpixel::registry();
+        registry.set_color_write_options(ColorWriteOptions {
+            flavor,
+            ..Default::default()
+        });
+        let mut write =
+            fontpixel::WriteOptions::new(fontpixel::ResourcePath::new("out.ttf").unwrap());
+        write.strict = true;
+        let mut set = color_model();
+        registry.write(&set, "color", &write).unwrap();
+        let mut second = set.fonts[0].clone();
+        second.metrics.pixel_size = Some(24);
+        second.metrics.underline_position = Some(-7);
+        set.fonts.push(second);
+        assert!(matches!(
+            registry.write(&set, "color", &write),
+            Err(fontpixel::Error::StrictLoss(_))
+        ));
+    }
 }

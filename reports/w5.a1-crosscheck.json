@@ -1,0 +1,870 @@
+{
+  "status": "pass",
+  "monobit_version": "0.54.0",
+  "oracle_sources": {
+    "dosstart": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/text/dosstart.py",
+      "sha256": "7ff57b8860349b355fec335466a241b711d927448a0c9fc900f6775bdf0b85f4"
+    },
+    "edwin": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/text/edwin.py",
+      "sha256": "260bf196552fb2814ddbf28a40f17b1c2e54546955723340b248bcbac7044af7"
+    },
+    "mkwinfont": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/text/fd.py",
+      "sha256": "33cc0441541705338066fe262f38d34697ee229a20591d3f3ec52b2dbed9daeb"
+    },
+    "psf2txt": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/text/psf2txt.py",
+      "sha256": "f4e88b7a57041ec0ae88774caa6b5613df9e8c228137a902910a93a8b0361a36"
+    },
+    "pcr": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/optiks.py",
+      "sha256": "386bcecb6334c32fa24ee4416993326ca8b4b0cf2a12bebd999f0427c8b9a065"
+    },
+    "plus3dos": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/plus3dos.py",
+      "sha256": "6c8a19507de4f9e2abcfb3504676c75a1f6d585a22965b437b0634132b19ca7e"
+    },
+    "drhalo": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/drhalo.py",
+      "sha256": "9a1c398b5975d0d39b10cf61e9796f95e27f980b89738b46ececa0f6c8a24a38"
+    },
+    "writeon": {
+      "file": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontformats/raw/writeon.py",
+      "sha256": "d07da4b45b63737e8343f200ab4293c9ad2c092bf333695fc2b6fdbc637ce671"
+    }
+  },
+  "adapter_sha256": "e947c381f99400c2b0ac8bb0a5040a4559a95b3d27e61d0edef8b4b486abb3d1",
+  "samples_license": "Original generated raster patterns and independently authored wire fixtures: project MIT; monobit tool MIT",
+  "psf_position_convention": "Unlabeled PSF glyph slots acquire their implicit legacy index in native model; oracle comparison explicitly derives that wire index.",
+  "cases": [
+    {
+      "format": "dosstart",
+      "case": "dosstart.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 96,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "73b05a6e2732e6da94af1dc0bd64862b67ea85a2d263722bd595c57be999bc83",
+      "native_sha256": "01d8011c3595531f26d0952f2ef3cccc0354e61d0e08334f048c4ab0359d44b1",
+      "status": "pass"
+    },
+    {
+      "format": "edwin",
+      "case": "edwin.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "a79a4c53e4a286f21917068c8291ef9ff5b0c4de41e5da6f4b844840fb9f6928",
+      "native_sha256": "a79a4c53e4a286f21917068c8291ef9ff5b0c4de41e5da6f4b844840fb9f6928",
+      "status": "pass"
+    },
+    {
+      "format": "mkwinfont",
+      "case": "mkwinfont.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "7293ebadd9efa559e7be7672742755b94887771e8244eee7f96068ea89db92cd",
+      "native_sha256": "d45f05052b3d9001b3e11811e579c38042d4fc1c5254bf5a070990104400b5c0",
+      "status": "pass"
+    },
+    {
+      "format": "psf2txt",
+      "case": "psf2txt.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "0cf386b7bbd77cfcec124e959d21a6e78f51efa22317e35e62c4a2f538458d4e",
+      "native_sha256": "852f96df8a5ea54010212267417f940ae134d98379e09cb366c4270ae9756d2f",
+      "status": "pass"
+    },
+    {
+      "format": "pcr",
+      "case": "pcr.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 256,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "51a835700c64458189700469388dd06fb133656be465efe2a44d0d2d31350d45",
+      "native_sha256": "51a835700c64458189700469388dd06fb133656be465efe2a44d0d2d31350d45",
+      "status": "pass"
+    },
+    {
+      "format": "plus3dos",
+      "case": "plus3dos.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 96,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "d73d153fed450d14b507f638a61da4bbe6a017d4f2f2ee7f88daea647dc13884",
+      "native_sha256": "d73d153fed450d14b507f638a61da4bbe6a017d4f2f2ee7f88daea647dc13884",
+      "status": "pass"
+    },
+    {
+      "format": "drhalo",
+      "case": "drhalo.oracle",
+      "provenance": "spec-authored",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "3a8bee4c2101949fad954489eb5a54b78c65470995f559863158115f436af0c4",
+      "native_sha256": "3a8bee4c2101949fad954489eb5a54b78c65470995f559863158115f436af0c4",
+      "status": "pass"
+    },
+    {
+      "format": "writeon",
+      "case": "writeon.oracle",
+      "provenance": "independent-writer",
+      "glyphs": 96,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "90a27ba6fbfc6c7c5203e5c0f6c29c07c5adc757c128ff6ac4ed365507fff2f7",
+      "native_sha256": "90a27ba6fbfc6c7c5203e5c0f6c29c07c5adc757c128ff6ac4ed365507fff2f7",
+      "status": "pass"
+    },
+    {
+      "format": "drhalo",
+      "case": "drhalo-first0.oracle",
+      "provenance": "spec-authored first0",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "a050b6528b64afe41e18efceb066171aa58e7690dc8336049486c82aee165524",
+      "native_sha256": "a050b6528b64afe41e18efceb066171aa58e7690dc8336049486c82aee165524",
+      "status": "pass"
+    },
+    {
+      "format": "pcr",
+      "case": "pcr-v1.oracle",
+      "provenance": "independent-writer with version1",
+      "glyphs": 256,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "71276738e175e8f60b22fe70129f55e29157ea1036a4af6598402105b511b545",
+      "native_sha256": "71276738e175e8f60b22fe70129f55e29157ea1036a4af6598402105b511b545",
+      "status": "pass"
+    },
+    {
+      "format": "edwin",
+      "case": "edwin-wide.oracle",
+      "provenance": "independent-writer width129",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "fc0b9b9e6b6f5da84233df8cf5468c98ae392f06bbc0449fc6c55da50858d38c",
+      "native_sha256": "fc0b9b9e6b6f5da84233df8cf5468c98ae392f06bbc0449fc6c55da50858d38c",
+      "status": "pass"
+    },
+    {
+      "format": "psf2txt",
+      "case": "psf2txt-alias-sequence.oracle",
+      "provenance": "spec-authored aliases, sequence, unlabeled slot",
+      "glyphs": 2,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "dbaa38cde29da89b95f8a3d29d31dc53386f972528d7ce0c9148310493f40c25",
+      "native_sha256": "c10083242cc7a0e415a4b3e8904bbff0bbfae8cafd5aab743455fedb2ce8771e",
+      "status": "pass"
+    },
+    {
+      "format": "mkwinfont",
+      "case": "mkwinfont-utf8.oracle",
+      "provenance": "independent-writer UTF-8 family name",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "3ba60846efb596a722f8c98c6fe08902101b2e3f4c288d9b1acf38a38ff34788",
+      "native_sha256": "b666a0fee8c30aac526e903376ba8af5d412eed3b53e370697fb435b221b8278",
+      "status": "pass"
+    },
+    {
+      "format": "mkwinfont",
+      "case": "mkwinfont-pointsize.oracle",
+      "provenance": "independent-writer explicit point size",
+      "glyphs": 4,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "f7e91882b74652c42017a3fa6925af018b6653e5a0025bbcbf9114fa34544dc0",
+      "native_sha256": "c84f58641de51673f627dd0741b5d62b8e009752075a2c45a069ba59d052afb5",
+      "status": "pass"
+    },
+    {
+      "format": "edwin",
+      "case": "edwin-label-baseline.oracle",
+      "provenance": "spec-authored UTF-8 labels and variable-height baseline",
+      "glyphs": 2,
+      "fields": [
+        "legacy positions",
+        "Unicode aliases",
+        "Unicode sequences",
+        "width",
+        "height",
+        "left bearing",
+        "baseline",
+        "advance",
+        "all packed pixels",
+        "font ascent/descent",
+        "native family name",
+        "native glyph label",
+        "explicit point size"
+      ],
+      "source_sha256": "2ad828c2fd344c7efd2e410f6539272209fb1665a68bf40728557b031566d617",
+      "native_sha256": "2ad828c2fd344c7efd2e410f6539272209fb1665a68bf40728557b031566d617",
+      "status": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "dosstart",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/dosstart.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.006429928005672991
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "dosstart",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/dosstart.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/dosstart.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005737464991398156
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "dosstart",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/dosstart.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.006971211056225002
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0028286779997870326
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0028722260612994432
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0025694400537759066
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.003046797006390989
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0021275730105116963
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0032474560430273414
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0031905159121379256
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0033881509443745017
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0037921039620414376
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.02056518802419305
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.010123052052222192
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.023178203962743282
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "plus3dos",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/plus3dos.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0073693819576874375
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "plus3dos",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/plus3dos.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/plus3dos.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.006678807898424566
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "plus3dos",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/plus3dos.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.010902756010182202
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004393797949887812
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0041527809808030725
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.00458361697383225
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "writeon",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/writeon.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.012777565978467464
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "writeon",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/writeon.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/writeon.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.00749323598574847
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "writeon",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/writeon.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.00940614496357739
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo-first0.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005095971981063485
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo-first0.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo-first0.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005083131021820009
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "drhalo",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/drhalo-first0.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005624257959425449
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr-v1.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.030088033992797136
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr-v1.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr-v1.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.01383469405118376
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "pcr",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/pcr-v1.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.02711587294470519
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-wide.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0064251379808411
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-wide.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-wide.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.006870733108371496
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-wide.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.007005124934948981
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt-alias-sequence.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005759704974479973
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt-alias-sequence.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt-alias-sequence.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004773739958181977
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "psf2txt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/psf2txt-alias-sequence.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004918596940115094
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-utf8.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004621669068001211
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-utf8.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-utf8.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0052722610998898745
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-utf8.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.00510316202417016
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-pointsize.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005211864016018808
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-pointsize.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-pointsize.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005239428952336311
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "mkwinfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/mkwinfont-pointsize.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004875048063695431
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-label-baseline.oracle"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.004597278079017997
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "rewrite",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-label-baseline.oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-label-baseline.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005220028106123209
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/examples/w5a1_timing",
+        "dump",
+        "edwin",
+        "/home/chen/githubprojects/fontpixel/local-work/w5a1-crosscheck/edwin-label-baseline.native"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.005505215958692133
+    }
+  ]
+}

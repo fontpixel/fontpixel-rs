@@ -1,0 +1,6 @@
+    Checking serde v1.0.229
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Checking ciborium v0.2.2
+    Checking tinytemplate v1.2.1
+    Checking criterion v0.8.2
+    Finished `dev` profile [unoptimized] target(s) in 4.95s

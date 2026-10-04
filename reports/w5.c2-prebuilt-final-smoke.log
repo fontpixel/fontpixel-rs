@@ -1,0 +1,45 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 1m 02s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.05s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5c2/x86_64-unknown-linux-gnu/release/prebuilt -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/prebuilt/ -max_total_time=12 -timeout=5 -rss_limit_mb=1024 -max_len=262144 ../local-work/w5c2-seeds/prebuilt`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1209200619
+INFO: Loaded 1 modules   (14562 inline 8-bit counters): 14562 [0x5c4f4bdcd5f0, 0x5c4f4bdd0ed2), 
+INFO: Loaded 1 PC tables (14562 PCs): 14562 [0x5c4f4bdd0ed8,0x5c4f4be09cf8), 
+INFO:      304 files found in ../local-work/w5c2-seeds/prebuilt
+INFO: seed corpus: files: 304 min: 1b max: 2712b total: 400337b rss: 34Mb
+#305	INITED cov: 1560 ft: 3506 corp: 167/184Kb exec/s: 0 rss: 103Mb
+#2061	REDUCE cov: 1560 ft: 3506 corp: 167/184Kb lim: 2692 exec/s: 2061 rss: 166Mb L: 2494/2681 MS: 1 CrossOver-
+#5329	NEW    cov: 1560 ft: 3507 corp: 168/186Kb lim: 2714 exec/s: 5329 rss: 260Mb L: 2529/2681 MS: 3 ShuffleBytes-ChangeASCIIInt-CopyPart-
+#8192	pulse  cov: 1560 ft: 3507 corp: 168/186Kb lim: 2736 exec/s: 4096 rss: 344Mb
+#8877	REDUCE cov: 1560 ft: 3507 corp: 168/186Kb lim: 2747 exec/s: 4438 rss: 366Mb L: 129/2681 MS: 3 ChangeBit-ChangeBinInt-EraseBytes-
+#9063	NEW    cov: 1560 ft: 3509 corp: 169/189Kb lim: 2747 exec/s: 4531 rss: 372Mb L: 2680/2681 MS: 1 ChangeBit-
+#13714	REDUCE cov: 1560 ft: 3510 corp: 170/189Kb lim: 2791 exec/s: 4571 rss: 398Mb L: 129/2681 MS: 1 ChangeBit-
+#14593	REDUCE cov: 1560 ft: 3510 corp: 170/189Kb lim: 2791 exec/s: 4864 rss: 399Mb L: 1308/2681 MS: 4 ChangeBinInt-InsertRepeatedBytes-CMP-EraseBytes- DE: "\000\000\000\000\000\000\000\000"-
+#15909	REDUCE cov: 1560 ft: 3510 corp: 170/189Kb lim: 2802 exec/s: 3977 rss: 400Mb L: 53/2681 MS: 1 EraseBytes-
+#16384	pulse  cov: 1560 ft: 3510 corp: 170/189Kb lim: 2802 exec/s: 4096 rss: 401Mb
+#16623	REDUCE cov: 1560 ft: 3510 corp: 170/189Kb lim: 2802 exec/s: 4155 rss: 401Mb L: 127/2681 MS: 4 InsertRepeatedBytes-CMP-CopyPart-EraseBytes- DE: "R\000\000\000"-
+#19912	REDUCE cov: 1560 ft: 3510 corp: 170/189Kb lim: 2824 exec/s: 4978 rss: 406Mb L: 91/2681 MS: 4 PersAutoDict-InsertByte-CopyPart-EraseBytes- DE: "R\000\000\000"-
+#20453	NEW    cov: 1561 ft: 3521 corp: 171/189Kb lim: 2824 exec/s: 4090 rss: 408Mb L: 112/2681 MS: 1 ChangeBinInt-
+#20454	NEW    cov: 1561 ft: 3522 corp: 172/192Kb lim: 2824 exec/s: 4090 rss: 408Mb L: 2680/2681 MS: 1 ChangeBit-
+#20610	REDUCE cov: 1561 ft: 3522 corp: 172/191Kb lim: 2824 exec/s: 4122 rss: 408Mb L: 2548/2681 MS: 1 EraseBytes-
+#21726	REDUCE cov: 1561 ft: 3522 corp: 172/191Kb lim: 2835 exec/s: 4345 rss: 408Mb L: 2518/2681 MS: 1 EraseBytes-
+#23646	REDUCE cov: 1561 ft: 3522 corp: 172/191Kb lim: 2846 exec/s: 4729 rss: 408Mb L: 2578/2681 MS: 5 ChangeBit-ShuffleBytes-CopyPart-CrossOver-EraseBytes-
+#31903	REDUCE cov: 1561 ft: 3522 corp: 172/191Kb lim: 2923 exec/s: 4557 rss: 411Mb L: 52/2681 MS: 2 ShuffleBytes-EraseBytes-
+#32768	pulse  cov: 1561 ft: 3522 corp: 172/191Kb lim: 2923 exec/s: 4096 rss: 411Mb
+#35894	REDUCE cov: 1561 ft: 3522 corp: 172/191Kb lim: 2956 exec/s: 4486 rss: 411Mb L: 110/2681 MS: 1 EraseBytes-
+#36595	NEW    cov: 1561 ft: 3526 corp: 173/194Kb lim: 2956 exec/s: 4574 rss: 411Mb L: 2680/2681 MS: 1 ChangeBinInt-
+#37621	REDUCE cov: 1561 ft: 3526 corp: 173/194Kb lim: 2956 exec/s: 4702 rss: 411Mb L: 1314/2681 MS: 1 EraseBytes-
+#38799	NEW    cov: 1561 ft: 3527 corp: 174/197Kb lim: 2967 exec/s: 4311 rss: 411Mb L: 2642/2681 MS: 3 ChangeByte-ChangeBinInt-CrossOver-
+#39090	REDUCE cov: 1561 ft: 3527 corp: 174/197Kb lim: 2967 exec/s: 4343 rss: 411Mb L: 116/2681 MS: 1 EraseBytes-
+#41159	REDUCE cov: 1561 ft: 3527 corp: 174/196Kb lim: 2978 exec/s: 4573 rss: 411Mb L: 2569/2681 MS: 4 ShuffleBytes-ShuffleBytes-ChangeByte-EraseBytes-
+#47896	NEW    cov: 1561 ft: 3528 corp: 175/199Kb lim: 3044 exec/s: 4354 rss: 411Mb L: 2680/2681 MS: 2 ChangeBinInt-ShuffleBytes-
+#54112	NEW    cov: 1561 ft: 3529 corp: 176/202Kb lim: 3099 exec/s: 4509 rss: 411Mb L: 2549/2681 MS: 1 CopyPart-
+#57254	NEW    cov: 1562 ft: 3531 corp: 177/204Kb lim: 3121 exec/s: 4771 rss: 411Mb L: 2680/2681 MS: 2 ChangeByte-ShuffleBytes-
+#58279	DONE   cov: 1562 ft: 3531 corp: 177/204Kb lim: 3121 exec/s: 4483 rss: 411Mb
+###### Recommended dictionary. ######
+"\000\000\000\000\000\000\000\000" # Uses: 1988
+"R\000\000\000" # Uses: 1821
+###### End of recommended dictionary. ######
+Done 58279 runs in 13 second(s)

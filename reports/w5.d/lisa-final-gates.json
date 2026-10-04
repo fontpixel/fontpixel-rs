@@ -1,0 +1,33 @@
+[
+  {
+    "name": "alltargets-test-lisa-final",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--all-targets"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "clippy-lisa-final",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "lisa",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0
+  }
+]

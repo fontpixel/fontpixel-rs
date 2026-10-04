@@ -1,0 +1,48 @@
+[
+  {
+    "format": "riscos",
+    "exit": 0,
+    "runs": 679231,
+    "fuzz_seconds": 13,
+    "log": "reports/w5.c2-riscos-final-smoke.log",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "riscos-only",
+      "riscos",
+      "../local-work/w5c2-seeds/riscos",
+      "--",
+      "-max_total_time=12",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ]
+  },
+  {
+    "format": "prebuilt",
+    "exit": 0,
+    "runs": 58279,
+    "fuzz_seconds": 13,
+    "log": "reports/w5.c2-prebuilt-final-smoke.log",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "prebuilt-only",
+      "prebuilt",
+      "../local-work/w5c2-seeds/prebuilt",
+      "--",
+      "-max_total_time=12",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ]
+  }
+]

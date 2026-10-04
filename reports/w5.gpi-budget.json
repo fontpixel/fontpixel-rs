@@ -1,0 +1,99 @@
+{
+  "work_item": "W5 scaling review / GPI descriptor preallocation correction",
+  "state": "two owned files ready for root GPI superseding freeze; formal ASAN and performance pending",
+  "scope": [
+    "crates/fontpixel/src/formats/gpi/writer.rs",
+    "crates/fontpixel/tests/gpi.rs"
+  ],
+  "before_B_final3": {
+    "crates/fontpixel/src/formats/gpi/writer.rs": "433f6850f81e8f0e81459d1cb78a1b13690879640beaad2a708669793f8ef031",
+    "crates/fontpixel/tests/gpi.rs": "f28229ea7a622653399e31077a30b41cf3e5baae5e4a55fe3e06295f741fc455"
+  },
+  "after": {
+    "crates/fontpixel/src/formats/gpi/writer.rs": "06fc8aaa26250ba45114b0f513f7cfec845f741722b28aed69bd6b8d6082f638",
+    "crates/fontpixel/tests/gpi.rs": "8ac7758993cb4081acc168d1a90fd4cd0c798609d3f2f14eb560a8f10663890c"
+  },
+  "source_aggregate_sha256": "cd65df7bd53990091793ab2b731a58428f486e37d2cc1c2d26f78b3eff8f4775",
+  "source_aggregate_encoding": "UTF-8 sorted path lines: SHA256 + two spaces + relative path + LF",
+  "environment": {
+    "CARGO_TARGET_DIR": "$FONTPIXEL_WORK_ROOT/target-w5gpi-budget",
+    "CARGO_BUILD_JOBS": "2",
+    "setup": "source scripts/local-env.sh"
+  },
+  "gates": [
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "crates/fontpixel/src/formats/gpi/writer.rs",
+        "crates/fontpixel/tests/gpi.rs"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "gpi",
+        "--test",
+        "gpi"
+      ],
+      "exit": 0,
+      "passed": 7,
+      "failed": 0,
+      "evidence": "exec transcript: session 51651 final output, result 4c20fe"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "gpi",
+        "--lib",
+        "--test",
+        "gpi",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "reports/w5.gpi-budget.clippy.log",
+      "log_sha256": "1748c6a3eb50ecf19e68bbe3af9c2ba15640a91251aa8699e1f3c5e220c86244"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "build",
+        "gpi",
+        "--no-default-features",
+        "--features",
+        "gpi-only"
+      ],
+      "exit": 0,
+      "log": "reports/w5.gpi-budget.fuzz-build.log",
+      "log_sha256": "b0d2b722644a73e8ab522528d54cd6eb723d5a1f8c2cd1b17297eff876f0fa05"
+    }
+  ],
+  "review_report": "reports/w5.scaling-review.md",
+  "review_report_sha256": "cd3bb687707364489bdaebdb1bf1db0618635660b5aad73effb723282271f19f",
+  "pfr_observation": {
+    "production_changed": false,
+    "witness": "../local-work/w5-scaling-review/pfr_shared_witness.py",
+    "witness_sha256": "a6f620afe67a45b3ad389f252fb08d02c01e0cb242baaf722fdfc039d87e44fd",
+    "result": "../local-work/w5-scaling-review/pfr-shared-result.json",
+    "result_sha256": "6c01b5d465478a2b7fddaac2d7253025dce30de055cdad7d0fc54fe3d50370cd",
+    "decision": "Root deferred shared-physical cache changes pending formal performance evidence"
+  },
+  "long_fuzz_performed": false,
+  "timing_performed": false
+}

@@ -1,0 +1,18 @@
+    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+error: missing documentation for the crate
+  --> crates/fontpixel/tests/gdr.rs:1:1
+   |
+ 1 | / #![cfg(feature="gdr")]
+ 2 | | use fontpixel::formats::gdr::*;
+ 3 | | use fontpixel::model::{Codepoint,Glyph,Vector,Property};
+ 4 | | use fontpixel::resources::{Input,ReadContext,ResourcePath};
+...  |
+11 | | #[test]fn losses_are_not_silent(){let mut s=source();let mut g=Glyph::new(Bitmap::new(0,0).unwrap());g.codepoints.push(Codepoint::Unicode(0x10000));g.name=Some("extra".into());s.fonts[0].add_glyph(g).unwrap();let w=WriteOptions::new(ResourcePath::new("x").unwrap());let result=fontpixel::formats::gdr::write(&s,&w,&Default::default()).unwrap();assert!(result.report.entries.iter().any(|e|e.code=="gdr.write.mapping"));let mut w=w;w.strict=true;assert!(fontpixel::formats::gdr::write(&s,&w,&Default::default()).is_err());}
+12 | | #[test]fn dense_wide_metric_indices(){let mut f=Font::default();for cp in 0..140{let mut g=Glyph::new("#".parse::<Bitmap>().unwrap());g.codepoints.push(Codepoint::Unicode(cp));g.metrics.bounds.x=i64::from(cp%127)-63;g.metrics.bounds.y=i64::from(cp/127);g.metrics.advance=Some(Vector::new(4,0));f.add_glyph(g).unwrap();}let s=FontSet::from(f);let b=write(&s,GdrVersion::V41);let got=read(&b,&Default::default()).unwrap();for cp in 0..140{assert_eq!(s.fonts[0].glyph_for_codepoint(Codepoint::Unicode(cp)),got.fonts[0].glyph_for_codepoint(Codepoint::Unicode(cp)));}}
+   | |___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________^
+   |
+   = note: `-D missing-docs` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(missing_docs)]`
+
+error: could not compile `fontpixel` (test "gdr") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

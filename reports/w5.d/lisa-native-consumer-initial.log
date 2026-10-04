@@ -1,0 +1,13 @@
+WARNING:root:Could not load resource 'F.F': Buffer size too small (0 instead of at least 2 bytes)
+WARNING:root:Could not load resource 'F.F': Buffer size too small (0 instead of at least 2 bytes)
+Traceback (most recent call last):
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w5d.py", line 102, in <module>
+    if fmt=='lisa':lisa_c_check(output)
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w5d.py", line 79, in lisa_c_check
+    inp=args.work/(path.name+'.resource');out=args.work/(path.name+'.expanded');inp.write_bytes(resource);run([args.lisa_consumer,inp,out]);output=out.read_bytes()
+                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w5d.py", line 20, in run
+    if result.returncode:raise RuntimeError(commands[-1])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: {'command': ['/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f', '/home/chen/githubprojects/fontpixel/local-work/w5d/crosscheck/lisa-compressed.resource', '/home/chen/githubprojects/fontpixel/local-work/w5d/crosscheck/lisa-compressed.expanded'], 'exit': -6, 'stdout': '', 'stderr': '*** buffer overflow detected ***: terminated\n'}

@@ -62,6 +62,7 @@ fn every_single_asset_container_roundtrips() {
         Container::Suitcase,
         Container::MacBinary,
         Container::AppleSingle,
+        Container::BinHex,
     ] {
         let source = read(&wire());
         let (out, _) = nfnt::write(&source, &options(c)).unwrap();
@@ -845,6 +846,7 @@ fn detector_keeps_all_font_containers_and_extended_tables() {
         Container::Suitcase,
         Container::MacBinary,
         Container::AppleSingle,
+        Container::BinHex,
         Container::AppleDouble,
     ] {
         let written =
@@ -955,6 +957,160 @@ fn detector_rejects_generated_plain_and_embedded_opentype() {
                     "{id} embedded={embedded} width={width}"
                 );
             }
+        }
+    }
+}
+
+// Independent literal-only HQX authoring; CRC follows the definition's bit-in
+// register followed by sixteen zero bits, unlike production's byte-XOR loop.
+fn binhex_crc(bytes: &[u8]) -> u16 {
+    let mut register = 0u16;
+    for byte in bytes.iter().copied().chain([0, 0]) {
+        for bit in (0..8).rev() {
+            let carry = register & 0x8000 != 0;
+            register = (register << 1) | u16::from((byte >> bit) & 1);
+            if carry {
+                register ^= 0x1021;
+            }
+        }
+    }
+    register
+}
+fn hqx_rle(bytes: &[u8]) -> Vec<u8> {
+    let alphabet = b"!\"#$%&'()*+,-012345689@ABCDEFGHIJKLMNPQRSTUVXYZ[`abcdefhijklmpqr";
+    let mut out =
+        b"Description survives.\n(This file must be converted with BinHex 4.0)\r\n:".to_vec();
+    for bit in (0..bytes.len() * 8).step_by(6) {
+        let mut value = 0usize;
+        for n in bit..bit + 6 {
+            value = (value << 1)
+                | if n < bytes.len() * 8 {
+                    usize::from((bytes[n / 8] >> (7 - n % 8)) & 1)
+                } else {
+                    0
+                };
+        }
+        out.push(alphabet[value]);
+    }
+    out.extend_from_slice(b":\nTransport footer\n");
+    out
+}
+fn hqx_plain(bytes: &[u8]) -> Vec<u8> {
+    let escaped: Vec<_> = bytes
+        .iter()
+        .flat_map(|&v| if v == 0x90 { vec![v, 0] } else { vec![v] })
+        .collect();
+    hqx_rle(&escaped)
+}
+fn binhex_wire() -> (Vec<u8>, Vec<u8>) {
+    let (fork, _) = nfnt::write(&read(&wire()), &options(Container::ResourceFork)).unwrap();
+    let data = [0x90, 0x90, 0x90, 0, 0xff];
+    let mut decoded = b"\x04Test\0FFILABCD\xa5\x5a".to_vec();
+    decoded.extend_from_slice(&(data.len() as u32).to_be_bytes());
+    decoded.extend_from_slice(&(fork.len() as u32).to_be_bytes());
+    decoded.extend_from_slice(&binhex_crc(&decoded).to_be_bytes());
+    decoded.extend_from_slice(&data);
+    decoded.extend_from_slice(&binhex_crc(&data).to_be_bytes());
+    decoded.extend_from_slice(&fork);
+    decoded.extend_from_slice(&binhex_crc(&fork).to_be_bytes());
+    (hqx_plain(&decoded), decoded)
+}
+#[test]
+fn binhex_original_literal_wire_preserves_both_forks_and_finder_fields() {
+    let (input, _) = binhex_wire();
+    let s = read(&input);
+    assert_eq!(
+        s.properties.get("nfnt.binhex-header"),
+        Some(&PropertyValue::Bytes(
+            b"\x04Test\0FFILABCD\xa5\x5a".to_vec()
+        ))
+    );
+    assert_eq!(
+        s.properties.get("nfnt.data-fork"),
+        Some(&PropertyValue::Bytes(vec![0x90, 0x90, 0x90, 0, 0xff]))
+    );
+    let (out, r) = nfnt::write(&s, &options(Container::BinHex)).unwrap();
+    assert!(!r.has_loss(), "{r}");
+    assert_eq!(read(&out), s);
+    assert_eq!(nfnt::detect(&out), fontpixel::formats::Confidence::Certain);
+}
+#[test]
+fn binhex_three_crcs_alphabet_truncation_and_rle_errors() {
+    let (input, decoded) = binhex_wire();
+    for at in [24, 31, decoded.len() - 1] {
+        let mut bad = decoded.clone();
+        bad[at] ^= 1;
+        assert!(
+            nfnt::read(&hqx_plain(&bad), &Default::default(), &Default::default()).is_err(),
+            "CRC {at}"
+        );
+    }
+    for malformed in [vec![0x90], vec![0x90, 4], vec![0, 0x90, 0]] {
+        assert!(
+            nfnt::read(
+                &hqx_rle(&malformed),
+                &Default::default(),
+                &Default::default()
+            )
+            .is_err()
+        );
+    }
+    let start = input.iter().position(|v| *v == b':').unwrap();
+    let end = input.iter().rposition(|v| *v == b':').unwrap();
+    for n in start + 1..=end {
+        assert!(nfnt::read(&input[..n], &Default::default(), &Default::default()).is_err());
+    }
+    let mut bad = input;
+    bad[start + 5] = b'~';
+    assert!(nfnt::read(&bad, &Default::default(), &Default::default()).is_err());
+}
+#[test]
+fn binhex_optional_exclamation_and_same_asset_segment_boundaries() {
+    let (input, _) = binhex_wire();
+    let end = input.iter().rposition(|v| *v == b':').unwrap();
+    let mut old = input.clone();
+    old.insert(end, b'!');
+    assert_eq!(read(&old), read(&input));
+    let start = input.iter().position(|v| *v == b':').unwrap();
+    let mut segmented = input;
+    segmented.splice(
+        start + 41..start + 41,
+        b"\n--- end of part 01 ---\nmail text ignored\n---\n"
+            .iter()
+            .copied(),
+    );
+    assert_eq!(read(&segmented).fonts, read(&old).fonts);
+}
+#[test]
+fn binhex_declared_expansion_and_same_limit_output_contract() {
+    let (_, mut decoded) = binhex_wire();
+    decoded[16..20].copy_from_slice(&u32::MAX.to_be_bytes());
+    let crc = binhex_crc(&decoded[..24]);
+    decoded[24..26].copy_from_slice(&crc.to_be_bytes());
+    assert!(
+        nfnt::read(
+            &hqx_plain(&decoded),
+            &Default::default(),
+            &ResourceLimits {
+                max_total_bytes: 4096,
+                ..Default::default()
+            }
+        )
+        .is_err()
+    );
+    let (input, _) = binhex_wire();
+    let s = read(&input);
+    for max in [0, 1000, 4096, 10000, 100000] {
+        let o = NfntWriteOptions {
+            container: Container::BinHex,
+            limits: ResourceLimits {
+                max_total_bytes: max,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        if let Ok((out, _)) = nfnt::write(&s, &o) {
+            assert!(nfnt::read(&out, &Default::default(), &o.limits).is_ok());
         }
     }
 }

@@ -1,0 +1,24 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.20s
+     Running tests/iigs.rs (/home/chen/githubprojects/fontpixel/local-work/target-w52/debug/deps/iigs-099fed993566695f)
+
+running 16 tests
+test apple_wire_has_unsigned_width_offset_and_unswapped_bitmap ... ok
+test edited_native_extent_cannot_undersize_text_buffer ... ok
+test binscii_custom_dictionary_and_cr_line_ends ... ok
+test malformed_tables_and_every_truncation_fail ... ok
+test grayscale_requires_explicit_conversion_and_reports_loss ... ok
+test location_table_follows_offset_pointer_across_padding ... ok
+test canonical_versions_reopen_and_preserve_pixels ... ok
+test native_unknown_header_extension_and_trailing_bytes_roundtrip ... ok
+test native_edits_are_not_hidden_and_all_metadata_is_audited ... ok
+test reader_charset_is_explicit_and_not_serialized_silently ... ok
+test tight_limits_enforce_source_output_and_readback_budget ... ok
+test unmapped_unicode_and_unrepresentable_bearings_are_explicit ... ok
+test registry_strict_mode_rejects_complete_model_loss ... ok
+test successful_writer_rereads_at_its_exact_cumulative_budget ... ok
+test extended_32_bit_width_offset_and_explicit_legacy_version_failure ... ok
+test binscii_segments_reorder_roundtrip_crc_and_completeness ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

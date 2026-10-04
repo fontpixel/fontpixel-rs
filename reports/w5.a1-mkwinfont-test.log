@@ -1,0 +1,14 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.57s
+     Running tests/mkwinfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5a1/debug/deps/mkwinfont-5cb31aace8445bd3)
+
+running 6 tests
+test dimensions_and_extreme_metrics_are_bounded ... ok
+test invalid_signature_and_short_inputs_do_not_panic ... ok
+test metadata_loss_is_audited_and_strict_rejects ... ok
+test utf8_family_and_comments_survive ... ok
+test original_wire_roundtrip_and_strict ... ok
+test cumulative_limits_and_output_reread_contract ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

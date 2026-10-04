@@ -1,0 +1,97 @@
+{
+  "test-color": [
+    "cargo",
+    "test",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "color"
+  ],
+  "test-otb": [
+    "cargo",
+    "test",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "otb"
+  ],
+  "test-bdat": [
+    "cargo",
+    "test",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "bdat"
+  ],
+  "clippy-color": [
+    "cargo",
+    "clippy",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "color",
+    "--lib",
+    "--test",
+    "embedded_bitmap",
+    "--example",
+    "w56_timing",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "clippy-otb-bdat": [
+    "cargo",
+    "clippy",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "otb,bdat",
+    "--lib",
+    "--test",
+    "embedded_bitmap",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "doc-color": [
+    "cargo",
+    "doc",
+    "-p",
+    "fontpixel",
+    "--no-default-features",
+    "--features",
+    "color",
+    "--no-deps"
+  ],
+  "build-oracle": [
+    "cargo",
+    "build",
+    "-p",
+    "fontpixel",
+    "--release",
+    "--no-default-features",
+    "--features",
+    "color",
+    "--example",
+    "w56_timing"
+  ],
+  "crosscheck": [
+    "python",
+    "tests/crosscheck/w56.py",
+    "--binary",
+    "/home/chen/githubprojects/fontpixel/local-work/target-w56/release/examples/w56_timing",
+    "--output",
+    "reports/w5.6-color"
+  ],
+  "seeds": [
+    "python",
+    "fuzz/seed_w56.py",
+    "--binary",
+    "/home/chen/githubprojects/fontpixel/local-work/target-w56/release/examples/w56_timing"
+  ]
+}

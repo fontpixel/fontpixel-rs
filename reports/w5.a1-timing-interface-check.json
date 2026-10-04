@@ -1,0 +1,125 @@
+{
+  "purpose": "Interface smoke only; not performance measurements or acceptance",
+  "checks": [
+    {
+      "format": "dosstart",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "dosstart",
+        "--file",
+        "../local-work/w5a1-crosscheck/dosstart.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "edwin",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "edwin",
+        "--file",
+        "../local-work/w5a1-crosscheck/edwin.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "mkwinfont",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "mkwinfont",
+        "--file",
+        "../local-work/w5a1-crosscheck/mkwinfont.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "psf2txt",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "psf2txt",
+        "--file",
+        "../local-work/w5a1-crosscheck/psf2txt.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "pcr",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "pcr",
+        "--file",
+        "../local-work/w5a1-crosscheck/pcr.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "plus3dos",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "plus3dos",
+        "--file",
+        "../local-work/w5a1-crosscheck/plus3dos.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "drhalo",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "drhalo",
+        "--file",
+        "../local-work/w5a1-crosscheck/drhalo.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "format": "writeon",
+      "command": [
+        "python",
+        "tests/crosscheck/w5a1.py",
+        "--bench",
+        "writeon",
+        "--file",
+        "../local-work/w5a1-crosscheck/writeon.oracle",
+        "--count",
+        "1"
+      ],
+      "exit": 0,
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Dashen PFT
+
+The primary empirical source is the [MIT monobit Dashen reader](https://github.com/robhagemans/monobit/blob/040b1738085ce7967478499eef2835d2cffc95fd/monobit/storage/fontformats/dashen.py). Header meanings are partly inferred; the format documentation must not claim unknown fields as established metrics.
+
+A14-byte little-endian header precedes256 signed32-bit glyph offsets and32 opaque bytes. Offset -1 means absent; other offsets are relative to byte1070. The documented screen profile has width, vertical shift and height bytes, followed by vertically packed eight-row strips with one byte per column. Pixel y is header.top minus glyph height minus shift plus1. Optional256-byte code mapping follows the addressed glyph region; an HP PCL printer font may follow that map. The native parser follows validated absolute spans and preserves the source map and unknown data.
+
+The public feature includes native `hppcl` for attached printer strikes. Writers produce one screen strike and, when present, an attached native PCL strike. Screen/printer mappings remain explicit legacy codes. Unknown versions, truncated maps and unsupported embedded scalable data fail clearly; no decoder invokes external programs. All nested allocations use the same cumulative resource budget, and losses are audited for both strikes.
+
+The supported generations are V3 (one screen strike) and V4 (screen plus one or more PCL printer strikes). Unverified V1 is rejected explicitly. Mapping collisions among present glyphs fail; offset aliases are valid. `DashenReadOptions` and `DashenWriteOptions` include nested PCL options; grayscale threshold, Unicode-as-legacy conversion, top and mapping output are explicit. Embedded printer glyphs consume the same aggregate glyph and allocation budgets as the screen strike.

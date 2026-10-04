@@ -38,3 +38,13 @@
   staged multi-file CLI output preserve inputs and strict-loss destinations.
   Independent catalogue/tool comparisons, final-source fuzz and five-run release
   timings are recorded in `reports/phase-3.md`.
+
+- Phase 4: sixteen native console, editor, Macintosh, TeX and legacy system
+  families, including CPI/CP/CPX loaders and multi-asset outputs; accepted
+  validation and performance are in `reports/phase-4.md`.
+- Phase 5 implementation: survey expands the catalogue to 99 native read/write
+  IDs; adds Korean/Apple, terminal, printer, embedded, system and image font
+  families, color output, BMFont JSON and raw packing profiles. Native directory
+  inputs/outputs, cumulative CLI budgets, bounded gzip envelopes and structural
+  cross-format detection are covered by independent tools and regression tests.
+  Phase acceptance remains pending in `reports/phase-5.md`.

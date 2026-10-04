@@ -165,6 +165,62 @@ doc = false
 bench = false
 
 [features]
+fon-only = ["fontpixel/fon"]
+transport-only = ["fontpixel/gzip", "fontpixel/raw", "fontpixel/bdf", "fontpixel/ssfn"]
+xerox-only = ["fontpixel/xerox"]
+riscos-only = ["fontpixel/riscos"]
+prebuilt-only = ["fontpixel/prebuilt"]
+hppcl-only = ["fontpixel/hppcl"]
+dashen-only = ["fontpixel/dashen"]
+chiwriter-only = ["fontpixel/chiwriter"]
+catalyst-only = ["fontpixel/catalyst"]
+vtfont-only = ["fontpixel/vtfont"]
+geos-only = ["fontpixel/geos"]
+gpi-only = ["fontpixel/gpi"]
+pcgeos-only = ["fontpixel/pcgeos"]
+pilfont-only = ["fontpixel/pilfont"]
+sfont-only = ["fontpixel/sfont"]
+vlw-only = ["fontpixel/vlw"]
+imageset-only = ["fontpixel/image"]
+ssfn-only = ["fontpixel/ssfn"]
+pfr-only = ["fontpixel/pfr"]
+bbc-only = ["fontpixel/bbc"]
+wyse-only = ["fontpixel/wyse"]
+grasp-only = ["fontpixel/grasp"]
+hrcg-only = ["fontpixel/hrcg"]
+xbin-only = ["fontpixel/xbin"]
+consoleet-only = ["fontpixel/consoleet"]
+zapfont-only = ["fontpixel/zapfont"]
+comfont-only = ["fontpixel/comfont"]
+beos-only = ["fontpixel/beos"]
+oberon-only = ["fontpixel/oberon"]
+symbos-only = ["fontpixel/symbos"]
+wsfont-only = ["fontpixel/wsfont"]
+fbit-only = ["fontpixel/fbit"]
+lisa-only = ["fontpixel/lisa"]
+mgtk-only = ["fontpixel/mgtk"]
+qpf-only = ["fontpixel/qpf"]
+qpf2-only = ["fontpixel/qpf2"]
+sbf-only = ["fontpixel/sbf"]
+hmzk-only = ["fontpixel/hmzk"]
+playdate-only = ["fontpixel/playdate"]
+cybiko-only = ["fontpixel/cybiko"]
+u8m-only = ["fontpixel/u8m"]
+rockbox-only = ["fontpixel/rockbox"]
+signum-only = ["fontpixel/signum"]
+pxl-only = ["fontpixel/pxl"]
+tasprint-only = ["fontpixel/tasprint"]
+printshop-only = ["fontpixel/printshop"]
+polyprint-only = ["fontpixel/polyprint"]
+daisy-only = ["fontpixel/daisy"]
+writeon-only = ["fontpixel/writeon"]
+drhalo-only = ["fontpixel/drhalo"]
+plus3dos-only = ["fontpixel/plus3dos"]
+pcr-only = ["fontpixel/pcr"]
+psf2txt-only = ["fontpixel/psf2txt"]
+mkwinfont-only = ["fontpixel/mkwinfont"]
+edwin-only = ["fontpixel/edwin"]
+dosstart-only = ["fontpixel/dosstart"]
 draw-only = ["fontpixel/draw"]
 raw-only = ["fontpixel/raw"]
 cpi-only = ["fontpixel/cpi"]
@@ -184,7 +240,19 @@ snf-only = ["fontpixel/snf"]
 kbitx-only = ["fontpixel/kbitx"]
 pbf-only = ["fontpixel/pbf"]
 hbf-only = ["fontpixel/hbf"]
-default = ["baseline", "phase4"]
+default = ["baseline", "phase4", "phase5"]
+phase5 = ["fontpixel/hanfont", "fontpixel/iigs", "fontpixel/vfont", "fontpixel/fzx", "fontpixel/figlet", "fontpixel/palm", "fontpixel/gdr", "fontpixel/drcs", "fontpixel/color"]
+hanfont-only = ["fontpixel/hanfont"]
+iigs-only = ["fontpixel/iigs"]
+vfont-only = ["fontpixel/vfont"]
+fzx-only = ["fontpixel/fzx"]
+figlet-only = ["fontpixel/figlet"]
+palm-only = ["fontpixel/palm"]
+gdr-only = ["fontpixel/gdr"]
+drcs-only = ["fontpixel/drcs"]
+color-only = ["fontpixel/color"]
+embedded-only = ["fontpixel/otb", "fontpixel/bdat"]
+c-only = ["fontpixel/c"]
 baseline = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/sfnt", "fontpixel/cff", "fontpixel/compat-bdfparser", "fontpixel/otb", "fontpixel/bdat", "fontpixel/color", "fontpixel/woff", "fontpixel/woff2", "fontpixel/ttc", "fontpixel/ttf", "fontpixel/otf", "fontpixel/vector-raster", "fontpixel/svg", "fontpixel/hex", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/image", "fontpixel/c", "fontpixel/kbitx", "fontpixel/pbf", "fontpixel/hbf"]
 image-c = ["fontpixel/image", "fontpixel/c"]
 phase4 = ["fontpixel/draw", "fontpixel/raw", "fontpixel/cpi", "fontpixel/pf2", "fontpixel/fontx2", "fontpixel/hzk", "fontpixel/nfnt", "fontpixel/bmfont", "fontpixel/sfd", "fontpixel/kbits", "fontpixel/pk", "fontpixel/gf", "fontpixel/plan9", "fontpixel/amiga", "fontpixel/gem", "fontpixel/snf"]
@@ -318,6 +386,447 @@ bench = false
 [[bin]]
 name = "snf"
 path = "fuzz_targets/snf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "vfont"
+path = "fuzz_targets/vfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fzx"
+path = "fuzz_targets/fzx.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "figlet"
+path = "fuzz_targets/figlet.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hanfont"
+path = "fuzz_targets/hanfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "iigs"
+path = "fuzz_targets/iigs.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "drcs"
+path = "fuzz_targets/drcs.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "palm"
+path = "fuzz_targets/palm.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gdr"
+path = "fuzz_targets/gdr.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dosstart"
+path = "fuzz_targets/dosstart.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "edwin"
+path = "fuzz_targets/edwin.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "mkwinfont"
+path = "fuzz_targets/mkwinfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "psf2txt"
+path = "fuzz_targets/psf2txt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pcr"
+path = "fuzz_targets/pcr.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "plus3dos"
+path = "fuzz_targets/plus3dos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "drhalo"
+path = "fuzz_targets/drhalo.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "writeon"
+path = "fuzz_targets/writeon.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "daisy"
+path = "fuzz_targets/daisy.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "polyprint"
+path = "fuzz_targets/polyprint.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "printshop"
+path = "fuzz_targets/printshop.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "tasprint"
+path = "fuzz_targets/tasprint.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pxl"
+path = "fuzz_targets/pxl.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "signum"
+path = "fuzz_targets/signum.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "rockbox_bitmap"
+path = "fuzz_targets/rockbox_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "u8m_bitmap"
+path = "fuzz_targets/u8m_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cybiko_bitmap"
+path = "fuzz_targets/cybiko_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "playdate_bitmap"
+path = "fuzz_targets/playdate_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hmzk_bitmap"
+path = "fuzz_targets/hmzk_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sbf_bitmap"
+path = "fuzz_targets/sbf_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fbit"
+path = "fuzz_targets/fbit.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "lisa"
+path = "fuzz_targets/lisa.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "mgtk"
+path = "fuzz_targets/mgtk.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "qpf"
+path = "fuzz_targets/qpf.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "qpf2"
+path = "fuzz_targets/qpf2.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "beos"
+path = "fuzz_targets/beos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "oberon"
+path = "fuzz_targets/oberon.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "symbos"
+path = "fuzz_targets/symbos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "wsfont"
+path = "fuzz_targets/wsfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "bbc"
+path = "fuzz_targets/bbc.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "wyse"
+path = "fuzz_targets/wyse.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "grasp"
+path = "fuzz_targets/grasp.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hrcg"
+path = "fuzz_targets/hrcg.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "xbin"
+path = "fuzz_targets/xbin.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "consoleet"
+path = "fuzz_targets/consoleet.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "zapfont"
+path = "fuzz_targets/zapfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "comfont"
+path = "fuzz_targets/comfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "vtfont"
+path = "fuzz_targets/vtfont.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "geos"
+path = "fuzz_targets/geos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gpi"
+path = "fuzz_targets/gpi.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pcgeos"
+path = "fuzz_targets/pcgeos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pilfont_bitmap"
+path = "fuzz_targets/pilfont_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sfont_bitmap"
+path = "fuzz_targets/sfont_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "vlw_bitmap"
+path = "fuzz_targets/vlw_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "imageset_bitmap"
+path = "fuzz_targets/imageset_bitmap.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ssfn"
+path = "fuzz_targets/ssfn.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pfr"
+path = "fuzz_targets/pfr.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "catalyst"
+path = "fuzz_targets/catalyst.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "chiwriter"
+path = "fuzz_targets/chiwriter.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dashen"
+path = "fuzz_targets/dashen.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "hppcl"
+path = "fuzz_targets/hppcl.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "prebuilt"
+path = "fuzz_targets/prebuilt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "riscos"
+path = "fuzz_targets/riscos.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "xerox"
+path = "fuzz_targets/xerox.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "transport"
+path = "fuzz_targets/transport.rs"
 test = false
 doc = false
 bench = false

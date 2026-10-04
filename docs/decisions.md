@@ -1402,3 +1402,135 @@ feature. BDF-based P2 integration tests require it explicitly, while the raw to
 NFNT container test also runs without a BDF reader. Clap parameter groups are
 disabled for the flattened P2 argument structs so equal Rust type names cannot
 create duplicate command-line groups.
+
+## 2026-10-04 — Keep the phase 5 survey as concrete required scope
+
+**Question:** The original 46 IDs do not cover all general bitmap formats in the
+versioned independent tool catalogues.
+**Choice:** Add 53 canonical wire families from the reproducible W5.1 survey,
+for 99 planned IDs. Group aliases and related native variants under one ID,
+while recording existing-family extensions separately. Register unimplemented
+entries honestly as planned; do not advertise codecs merely because their
+feature or catalogue slot exists. Format-specific native readers and writers,
+loss reports, independent validation, fuzz and performance remain required.
+**Reason:** The original task explicitly requires this survey and its resulting
+implementations. Missing upstream writers or freely redistributable historical
+artwork are not reasons to omit an otherwise documented general format.
+
+The boundary is the pinned monobit release/master, Bits’N’Picas catalogue and
+the listed original developer sources, not every unknown or future format.
+Generic compression/transport utilities and pure-outline formats are classified
+separately from bitmap wire families; game-specific private formats remain
+excluded by PLAN §1.3. See `reports/w5.1-survey.md` and its coverage check.
+
+### 2026-10-04: Native directory font inputs and outputs
+
+**Issue:** The survey includes image sets and console fonts whose native entry
+point is a directory. Inventing a header file would not implement that format.
+**Decision:** Extend the caller-controlled resource API with explicit directory
+inputs and bounded, nonrecursive listing. Existing resolvers remain compatible
+through a default unsupported listing method. Contexts budget listing calls,
+entry metadata and subsequently resolved bytes; the CLI uses the same scoped
+directory capability for enumeration and reads. Directory detection requires an
+explicit format until a detector can inspect resources without guessing from
+an empty byte buffer. Writers may return a directory OutputBundle with validated
+assets strictly beneath its entry point, persisted through the existing staged
+transaction. Single-file convenience and gzip transport do not flatten a
+directory. No synthetic primary asset is added to native directory formats.
+**Reason:** This preserves real wire layouts, deterministic traversal and the
+library's filesystem-independent authority boundary for future Python/WASM use.
+
+The CLI also indexes source/output file identities in hash sets, preserving a
+separate resolution count for the existing single-file in-place exception. On
+Unix it records device/inode metadata instead of retaining a descriptor per
+glyph; inode reuse can only cause a conservative refusal to overwrite, and
+cannot bypass the identity check. Staged files share one scoped directory handle
+per parent. This avoids quadratic alias checks and descriptor exhaustion for
+large image sets. Directory writes never use the single-file in-place exception.
+
+Existing output font directories are checked against the complete new asset
+tree before staging. Extra existing files or subdirectories cause a refusal,
+leaving all existing contents intact. Matching assets can still be replaced
+through the rollback-capable transaction. This prevents a smaller replacement
+font from silently retaining old glyph files and avoids deleting unrelated user
+files as an implicit side effect of conversion.
+
+## 2026-10-04 — Apple and Qt native compatibility boundaries
+
+Lisa compression must satisfy the original consumer's in-place expansion cursor
+constraint. An explicitly compressed write fails if no safe stream is generated;
+Preserve can choose the uncompressed native representation with diagnostics.
+QPF2 defaults to Gray8, which the original Qt 4.8.7 renderer actually consumes;
+packed Mono remains an explicit wire option because that renderer ignores its
+format tag. NFNT BinHex validates all three CRCs and retains fork/header semantics
+while canonicalizing whitespace and compression. Native Mac envelope structure
+takes priority over coincidental bare-resource magic in a filename.
+
+## 2026-10-04 — Native RISC OS coordinate evidence
+
+The public PRM does not fully disambiguate paired 12-bit coordinate byte order.
+NetSurf's BSD-licensed TTF2f producer establishes a continuous little-endian
+24-bit pair, with independent signed 12-bit x/y values. The implementation uses
+that layout and original signed-coordinate fixtures. An unrelated width/height
+nibble mask error in the old producer is recorded and is not copied. The source
+archive and its exact hashes remain in external verification evidence, outside
+the production library.
+
+## 2026-10-04 — Cumulative CLI input and gzip envelope budgets
+
+Previously, individually bounded decodes could accumulate unbounded retained
+models across many CLI inputs. The CLI now reserves existing models, diagnostics
+and vector merge capacity before opening the next input. Model accounting walks
+only the newly admitted model, counts allocation capacity and duplicate mapping
+indexes, and includes deleted glyph slots. Admission is atomic and happens
+before moving the new font into the aggregate. Conservative B-tree accounting
+bounds owned storage; it is not a process-RSS estimate.
+
+A one-byte raw font also demonstrated that a bounded native write could acquire
+a larger gzip envelope that its identically configured reader would reject.
+Built-in registry writers now expose their typed budgets through a private
+adapter. Common transport limits can reduce those budgets but cannot enlarge
+them. A bounded gzip sink checks encoded, decoded and simultaneously retained
+bytes; native profile validation runs again with compressed bytes and retained
+diagnostics reserved. The replay uses the same configured writer, preserving
+headerless/raw and other native profiles. Ordinary uncompressed output does not
+repeat serialization. The dedicated performance adapter records this gzip cost
+separately. Strict-loss checking precedes compression and output persistence.
+
+## 2026-10-04 — Prebuilt raster order is independent of numeric endianness
+
+An external ELF32 build of NeXT's original producer emitted little-endian
+Prebuilt headers with unchanged MSB-first mono rows, including 9- and 13-pixel
+rows crossing byte boundaries. Gray output preserved each sample's value and
+position. Default native decoding/encoding therefore uses MSB-first pixel
+groups for both integer byte orders. LSB-first remains an explicit compatibility
+option with separate CLI read/write switches; it is not inferred from the header.
+The old producer promotes requested depths above one to eight and accepts only
+16 gray input levels, so these runs do not claim native producer coverage of
+packed depth-2/depth-4 output. The `SWAPBITS` suffix macro is not bitmap evidence.
+
+## 2026-10-04 — Cross-format detection requires native evidence
+
+Adding new codecs exposed false matches against existing valid fonts. Detection
+now checks SymbOS record extents, ChiWriter layout extents, and RISC OS header
+version/structure instead of short ambiguous prefixes. Xerox probes validate
+complete native tables before adding a Possible candidate. Windows FON examines
+FONT resources rather than treating every NE/PE executable as a Windows font;
+this lets actual OS/2 GPI resources select their native reader. C checks bounded
+actual declarations, so a native-family name in a HEX comment cannot override
+that font's content. Cheap preliminary C checks avoid tokenizing unrelated large
+inputs. Detector entry points are also exercised by the affected fuzz targets.
+
+Actual dual interpretations remain ambiguous: a valid Palm/NFNT resource, or a
+generic PNG that could be an atlas or SFont, requires an explicit input format.
+Filename extensions remain hints and never break a content-evidence tie. Before
+and after review evidence is kept separately in `reports/w5.detector-review*`.
+
+## 2026-10-04 — Bound sparse GPI descriptor tables before allocation
+
+The GPI descriptor count follows the inclusive 16-bit code span, while each
+record can carry preserved native extension bytes. Compute and validate their
+checked product, output cap and cumulative memory charge before reserving the
+dense table. The allocation is fallible. This keeps two distant source codes
+from requesting gigabytes despite a small output budget; accepted native bytes
+remain unchanged. See `reports/w5.gpi-budget.json` and its two boundary cases.

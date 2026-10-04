@@ -1,0 +1,75 @@
+{
+  "status": "Final3 module source snapshots passed; aggregate phase 5 gate pending.",
+  "campaigns": [
+    {
+      "target": "hanfont",
+      "runs": 5078,
+      "seconds": 612,
+      "coverage": 826,
+      "features": 834,
+      "rss_mib": 324,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "hanfont",
+        "--no-default-features",
+        "--features",
+        "hanfont-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=11520"
+      ],
+      "exit_code": 0,
+      "owned_manifest_sha256": "e01fc604b9696c537ef44611ad8d615690a525ac01f328e37ea3029d9b03dc69",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final3.json.gz",
+          "sha256": "cde17d36a3d8f66be1e6d0284b02f7024b95155db787e8a1509b7548814e613d"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-hanfont-fuzz-final3.log.gz",
+          "sha256": "0edd68cfc07d9ec2be425b29930a4533aa9fde312cc5628bdc3d7e4bbc5d7a39"
+        }
+      ]
+    },
+    {
+      "target": "iigs",
+      "runs": 1023204,
+      "seconds": 611,
+      "coverage": 1820,
+      "features": 4236,
+      "rss_mib": 552,
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "iigs",
+        "--no-default-features",
+        "--features",
+        "iigs-only",
+        "--",
+        "-max_total_time=610",
+        "-timeout=10",
+        "-rss_limit_mb=1024",
+        "-max_len=262144"
+      ],
+      "exit_code": 0,
+      "owned_manifest_sha256": "e01fc604b9696c537ef44611ad8d615690a525ac01f328e37ea3029d9b03dc69",
+      "evidence": [
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final3.json.gz",
+          "sha256": "98370f79cab2b0a16886d40ce2bb6ce5293c536845e1d07605af0ae29ae8d7b0"
+        },
+        {
+          "path": "reports/phase5-validation/phase5-iigs-fuzz-final3.log.gz",
+          "sha256": "45858cb1ea3c1da8ee545c323716145059b9633e9626ab5245b59ea23fe1c078"
+        }
+      ]
+    }
+  ]
+}

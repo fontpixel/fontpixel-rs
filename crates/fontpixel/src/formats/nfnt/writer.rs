@@ -110,7 +110,7 @@ fn same_raster(f: &Font, g: &Font) -> bool {
         && f.metrics.spacing == g.metrics.spacing
         && f.metrics.default_glyph == g.metrics.default_glyph
 }
-fn encode_font(
+pub(super) fn encode_font(
     f: &Font,
     o: &NfntWriteOptions,
     budget: &mut Budget,
@@ -457,7 +457,7 @@ fn point(f: &Font) -> Result<u16> {
     }
     word(i64::from(f.metrics.pixel_size.unwrap_or(12)))
 }
-fn encode_fork(
+pub(super) fn encode_fork(
     set: &FontSet,
     o: &NfntWriteOptions,
     budget: &mut Budget,
@@ -470,7 +470,9 @@ fn encode_fork(
             return Err(invalid("nfnt.resource must be bytes"));
         };
         let resource = container::unpack_record(raw)?;
-        if resource.kind == *b"NFNT" || (resource.kind == *b"FONT" && resource.id & 127 != 0) {
+        if !set.fonts.is_empty()
+            && (resource.kind == *b"NFNT" || (resource.kind == *b"FONT" && resource.id & 127 != 0))
+        {
             return Err(invalid("opaque bitmap duplicates modeled resource"));
         }
         if !ids.insert((resource.kind, resource.id)) {
@@ -789,7 +791,7 @@ fn encode_fork(
     }
     Ok(out)
 }
-fn wrap(
+pub(super) fn wrap(
     fork: Vec<u8>,
     set: &FontSet,
     o: &NfntWriteOptions,
@@ -807,6 +809,10 @@ fn wrap(
         Container::ResourceFork | Container::Dfont | Container::Suitcase => {
             Ok(OutputBundle::single(path.clone(), fork))
         }
+        Container::BinHex => Ok(OutputBundle::single(
+            path.clone(),
+            super::binhex::encode(&fork, set, o.max_output_bytes, &o.limits, budget)?,
+        )),
         Container::MacBinary => {
             let data_font = number(&set.properties, "nfnt.macbinary-font-fork") == Some(1);
             let (data, fork) = if data_font {

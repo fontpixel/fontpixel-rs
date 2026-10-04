@@ -302,6 +302,7 @@ fn mac_containers_and_appledouble_companion() {
         "macbinary",
         "apple-single",
         "apple-double",
+        "binhex",
     ] {
         let target = d.0.join(format!("{container}.nfnt"));
         convert(
@@ -351,7 +352,7 @@ fn mac_containers_and_appledouble_companion() {
 fn editor_encodings_page_assets_and_strict_protection() {
     let d = Dir::new();
     let source = d.source();
-    for encoding in ["text", "xml", "binary"] {
+    for encoding in ["text", "xml", "binary", "json"] {
         let target = d.0.join(format!("{encoding}.fnt"));
         convert(
             &source,

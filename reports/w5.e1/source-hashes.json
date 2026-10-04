@@ -1,0 +1,162 @@
+{
+  "crates/fontpixel/examples/w5e1_timing.rs": {
+    "bytes": 10904,
+    "sha256": "90d83fa7d10f86d31a1e1eed13810422f5e4caf48bee16e2c0e039ffe0e36ee8"
+  },
+  "crates/fontpixel/src/formats/cybiko.rs": {
+    "bytes": 8266,
+    "sha256": "18915f74d4e2ef88a2672e3d257b53ae729c575e7ca39beaae0d022a68e6c9d9"
+  },
+  "crates/fontpixel/src/formats/hmzk.rs": {
+    "bytes": 4763,
+    "sha256": "63f60c2eef5495871ba561762538545dcd999696c7bc061a87eb913b24152c11"
+  },
+  "crates/fontpixel/src/formats/playdate/fnt.rs": {
+    "bytes": 21194,
+    "sha256": "c1dd375cf22a203ee3a3a4e718f971ec3eec482ff9597243a6abdd152034b163"
+  },
+  "crates/fontpixel/src/formats/playdate/pft.rs": {
+    "bytes": 12770,
+    "sha256": "3c7b686a13ae133403ffb5d0f3fb1e2bd68131369b5f957f5073aa91b2694976"
+  },
+  "crates/fontpixel/src/formats/playdate/png.rs": {
+    "bytes": 5878,
+    "sha256": "eff5521f094540f1a6a522b936f65e1c9a00b7c366d5ab7c04d3737d25e002e5"
+  },
+  "crates/fontpixel/src/formats/playdate.rs": {
+    "bytes": 9376,
+    "sha256": "e9a4a2b7082d556f81f47dd761b7b4b763835a9142cd111402af54fda8652aff"
+  },
+  "crates/fontpixel/src/formats/rockbox/common.rs": {
+    "bytes": 7616,
+    "sha256": "dd5abedaf479bda09c7f4aa6ad9d41d287f638bd4875ef36a4c79e576bc72d8c"
+  },
+  "crates/fontpixel/src/formats/rockbox.rs": {
+    "bytes": 18545,
+    "sha256": "8533571326d7acddca7721c6fd9ce68ebbaf4a5c3af4ac90937d18708006dbc0"
+  },
+  "crates/fontpixel/src/formats/sbf.rs": {
+    "bytes": 7346,
+    "sha256": "825d1e02646e15602369a5c5da67142193ef1596c49fe6132f9d76df249d6ba7"
+  },
+  "crates/fontpixel/src/formats/u8m.rs": {
+    "bytes": 16602,
+    "sha256": "178b4135fdd916429019fcaf4aed2295a4d1b62d26c3ac761f3f7a4dd16276cc"
+  },
+  "crates/fontpixel/tests/cybiko.rs": {
+    "bytes": 3315,
+    "sha256": "39590380264239a71137338fb25eb24f67602e416a337542c43ac559dda896ca"
+  },
+  "crates/fontpixel/tests/fixtures/playdate/original.fnt": {
+    "bytes": 311,
+    "sha256": "aba49d2e98528bf5417f90110c93958818c2192aeeb74863706b373905feaabe"
+  },
+  "crates/fontpixel/tests/fixtures/playdate/sdk-3.1.2-compressed.pft": {
+    "bytes": 140,
+    "sha256": "5d1c045c7ef49c2ecf6291d1584dfc04d9631091506d4485d463d5d2e6fc1d85"
+  },
+  "crates/fontpixel/tests/fixtures/playdate/sdk-3.1.2-uncompressed.pft": {
+    "bytes": 492,
+    "sha256": "6bbbd3210d03092c7dda99a91f69b77ae499ee32a1adcc4627393c2d1d8155f7"
+  },
+  "crates/fontpixel/tests/hmzk.rs": {
+    "bytes": 3671,
+    "sha256": "009cf0f92d23c6ce4488400ce314beecf6d450e4a0404497ef1e142460e0b2c1"
+  },
+  "crates/fontpixel/tests/playdate.rs": {
+    "bytes": 9939,
+    "sha256": "9b0df6a132bb019573de0c96ca034915d4932fc5f1fe7b7ee4cca83ceb48df4f"
+  },
+  "crates/fontpixel/tests/rockbox.rs": {
+    "bytes": 7643,
+    "sha256": "f9767cca8171432e29eaab9e21df3ae7e6f92c7fa2ddb4ce134f8a47189d63c2"
+  },
+  "crates/fontpixel/tests/sbf.rs": {
+    "bytes": 4966,
+    "sha256": "5501295eba02fd4eef33877bec0d43722ff66929313397f3c6644e5fb44e0957"
+  },
+  "crates/fontpixel/tests/u8m.rs": {
+    "bytes": 4766,
+    "sha256": "a07777e9e20491932ad3faae4f4621dd7e1001267412cba5d6ea5d2d9ae7cc82"
+  },
+  "docs/formats/cybiko.md": {
+    "bytes": 2554,
+    "sha256": "8563996991f72221b831e39fcab60d87c7f14e1b77fd24950c7735792c324ac2"
+  },
+  "docs/formats/hmzk.md": {
+    "bytes": 2461,
+    "sha256": "ae2d75959e4f725c03681c023c1defc84d67bcb6ec6b0b11544da23d00d52777"
+  },
+  "docs/formats/playdate.md": {
+    "bytes": 3823,
+    "sha256": "68c78a87cca5e93c3c7ddbfa8f53ae368db7786b02c65749639684da45165cb8"
+  },
+  "docs/formats/rockbox.md": {
+    "bytes": 3290,
+    "sha256": "1c674e0a7ccd07f2c14bd03b899f364ba7a0ac86f415f656c18ecec489bc6247"
+  },
+  "docs/formats/sbf.md": {
+    "bytes": 2642,
+    "sha256": "63c595409c13551389701419d101fd6ddaaa36d0bfb1d39570fd5f9c2453d445"
+  },
+  "docs/formats/u8m.md": {
+    "bytes": 2748,
+    "sha256": "721df32190e7ee7189e7ea6686c4ad766f658008b06f5bc8187599cbb7880f50"
+  },
+  "fuzz/fuzz_targets/cybiko_bitmap.rs": {
+    "bytes": 493,
+    "sha256": "918a57412c0a26811dded4e342005e4876eec14e79e2bd0c8808aa7c76186994"
+  },
+  "fuzz/fuzz_targets/hmzk_bitmap.rs": {
+    "bytes": 489,
+    "sha256": "7cd0a5a05d2be1f283121b3cc3ef91a3f805bc5f6751d3e533c0513f37190ea4"
+  },
+  "fuzz/fuzz_targets/playdate_bitmap.rs": {
+    "bytes": 716,
+    "sha256": "ce770bcd2efca3833bd2292323aff3965bdd0cf0454ac01adbe352d81282abd6"
+  },
+  "fuzz/fuzz_targets/rockbox_bitmap/common.rs": {
+    "bytes": 2509,
+    "sha256": "0446a952c1a6d3e5dc3807f5430a915e930c26bdd325f04eca44f1a923984bbf"
+  },
+  "fuzz/fuzz_targets/rockbox_bitmap.rs": {
+    "bytes": 839,
+    "sha256": "55430f54a9b5aec79e326af2675971c03d69df66c8f664bd26899b6bda14e74c"
+  },
+  "fuzz/fuzz_targets/sbf_bitmap.rs": {
+    "bytes": 487,
+    "sha256": "373667ac6a7b27177a329c49f82f13cc7a806455c30c8535a2f205ac19aaf4a6"
+  },
+  "fuzz/fuzz_targets/u8m_bitmap.rs": {
+    "bytes": 487,
+    "sha256": "1001c7504877245af3dbf8c4ee79a6065137ae326ee1412c0f9d9e5ee21f472b"
+  },
+  "fuzz/seed_w5e1.py": {
+    "bytes": 3500,
+    "sha256": "69333ce5c5f1ec0b5c88bfe6e726caf16e979f558686429f2fed8e144b99d489"
+  },
+  "reports/w5.e1/oracles/U8Oracle.java": {
+    "bytes": 1226,
+    "sha256": "aff30b3da5a0874a9c459a515d112e4d7dff22a16588c1b6748035a455f90800"
+  },
+  "reports/w5.e1/oracles/build_rockbox.py": {
+    "bytes": 1837,
+    "sha256": "ca5ce21b531124d969ee23f63df0fefba221a8410baee2899369a830a47e229e"
+  },
+  "reports/w5.e1/oracles/build_sdk_fixtures.py": {
+    "bytes": 1607,
+    "sha256": "dab6399df3f320b21d54bd53de3e50f338c1df1a94b29a276341f51cab0d39ea"
+  },
+  "reports/w5.e1/oracles/rockbox_adapter.c": {
+    "bytes": 1723,
+    "sha256": "80032d1e2c9975b4c267dbf4025955d8a3b6e8b93ce565692499b68b2feafeed"
+  },
+  "reports/w5.e1/oracles/rockbox_stubs.h": {
+    "bytes": 2164,
+    "sha256": "a10d423b04fd2db5e0805b0c53b2346714f0d5ebda923d3fe3f16dba78588c6c"
+  },
+  "tests/crosscheck/w5e1.py": {
+    "bytes": 12668,
+    "sha256": "f9a83140df70df2121743387c95080840aa206d256b427f2c758f885e924f821"
+  }
+}

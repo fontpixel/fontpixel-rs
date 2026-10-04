@@ -1,0 +1,724 @@
+{
+  "environment": {
+    "source": "scripts/local-env.sh",
+    "CARGO_TARGET_DIR": "/home/chen/githubprojects/fontpixel/local-work/target-w5d",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "commands": [
+    {
+      "name": "test-fbit",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit",
+        "--lib",
+        "--test",
+        "fbit"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.13847136497497559,
+      "log": "reports/w5.d/test-fbit.log",
+      "log_sha256": "0b9e0f00dd6c328a9a1995db6a289b4d5b155bba6537eafaca0d2981d5051147"
+    },
+    {
+      "name": "clippy-fbit",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 5.047211170196533,
+      "log": "reports/w5.d/clippy-fbit.log",
+      "log_sha256": "76a6a6c6f4cc3e2c91530641a3b237b2c501f46f5a6b18de2441d821e64bd855"
+    },
+    {
+      "name": "rustdoc-fbit",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.6239840984344482,
+      "log": "reports/w5.d/rustdoc-fbit.log",
+      "log_sha256": "8cae7a6a0b9b1a1805e2efd997a179e0297da030dc1ed9fcf8ab8fdda1ffe740",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "test-lisa",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--lib",
+        "--test",
+        "lisa"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 3.0994043350219727,
+      "log": "reports/w5.d/test-lisa.log",
+      "log_sha256": "01fd3b17cbd19f805c4697a01da5f3bdf08c128420d52c8d901cd1ff16a58176"
+    },
+    {
+      "name": "clippy-lisa",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.668074607849121,
+      "log": "reports/w5.d/clippy-lisa.log",
+      "log_sha256": "4696d5773252833708919660d2fd27a79783b09df4eded9e0ce4f3f856bb5ed6"
+    },
+    {
+      "name": "rustdoc-lisa",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.2640223503112793,
+      "log": "reports/w5.d/rustdoc-lisa.log",
+      "log_sha256": "42d5b7786feadd079979e765e6629581ec916bb4488c9917db95b064be52ad6a",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "test-mgtk",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "mgtk",
+        "--lib",
+        "--test",
+        "mgtk"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.9739704132080078,
+      "log": "reports/w5.d/test-mgtk.log",
+      "log_sha256": "4ff5caf2a3566a564bbe79a73cd169fcae447e51707e6696136eda8e8e8e04d2"
+    },
+    {
+      "name": "clippy-mgtk",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "mgtk",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 3.0347402095794678,
+      "log": "reports/w5.d/clippy-mgtk.log",
+      "log_sha256": "3545a2432d22b16bcd08a732be985760e90c93732c6f33b225f5e026c8ce0871"
+    },
+    {
+      "name": "rustdoc-mgtk",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "mgtk",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.5513181686401367,
+      "log": "reports/w5.d/rustdoc-mgtk.log",
+      "log_sha256": "321fcb75551ed9244b48c86653dad7175f43a16c5ab39a35b3f49a252ca2daa1",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "test-qpf",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf",
+        "--lib",
+        "--test",
+        "qpf"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 2.4387617111206055,
+      "log": "reports/w5.d/test-qpf.log",
+      "log_sha256": "9aad44edfd108d4e0b0062c8e81a588caa86004504bd41c1584825d96111d48c"
+    },
+    {
+      "name": "clippy-qpf",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 3.009605646133423,
+      "log": "reports/w5.d/clippy-qpf.log",
+      "log_sha256": "df53406745d117c30f68790602087664c107e0b5b0b28a7904a13b37a53256a5"
+    },
+    {
+      "name": "rustdoc-qpf",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.5747456550598145,
+      "log": "reports/w5.d/rustdoc-qpf.log",
+      "log_sha256": "ec9d392b826e261d78e2b17b7bba004e11335c617aa2bdf35b586ab7da64d89c",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "test-qpf2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf2",
+        "--lib",
+        "--test",
+        "qpf2"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 5.493728160858154,
+      "log": "reports/w5.d/test-qpf2.log",
+      "log_sha256": "67b221f905b759ff4cd237a8bcd389f708e3d22e5b30aa07736e197a7ae4678d"
+    },
+    {
+      "name": "clippy-qpf2",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf2",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.702305793762207,
+      "log": "reports/w5.d/clippy-qpf2.log",
+      "log_sha256": "e09693ba5fdcde22d39f081a00477f345988f95209a7d3ec9eb9dbe714fd3f1b"
+    },
+    {
+      "name": "rustdoc-qpf2",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf2",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.1586840152740479,
+      "log": "reports/w5.d/rustdoc-qpf2.log",
+      "log_sha256": "f6a93e07461587eb64c40e8ddb16be9944a9662d8a3024ea1f7a1e7411e065e9",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "test-nfnt",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "nfnt",
+        "--lib",
+        "--test",
+        "nfnt"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 2.901345729827881,
+      "log": "reports/w5.d/test-nfnt.log",
+      "log_sha256": "7d3aebd4eb522f47b6c9df37397f6189eb52461d9229cbcaf4992e5ba6480755"
+    },
+    {
+      "name": "clippy-nfnt",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "nfnt",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.238211393356323,
+      "log": "reports/w5.d/clippy-nfnt.log",
+      "log_sha256": "f5cb60bf468425bb26cfced10d32a3451fc8e56b24f56d64a2497b18a7951dd7"
+    },
+    {
+      "name": "rustdoc-nfnt",
+      "command": [
+        "cargo",
+        "doc",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "nfnt",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.5192844867706299,
+      "log": "reports/w5.d/rustdoc-nfnt.log",
+      "log_sha256": "81ac95a9f4366955529885f3b18a2adbe3d3c7a43b23815b88a1aae08beae976",
+      "environment": {
+        "RUSTDOCFLAGS": "-D warnings"
+      }
+    },
+    {
+      "name": "example-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit,lisa,mgtk,qpf,qpf2",
+        "--example",
+        "w5d_timing"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.889701843261719,
+      "log": "reports/w5.d/example-build.log",
+      "log_sha256": "0bd44b1ec278e7e08bf06e7ab3dc11408928b83fdcffb6f51602578dca101115"
+    },
+    {
+      "name": "clippy-combined-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit,lisa,mgtk,qpf,qpf2",
+        "--lib",
+        "--tests",
+        "--example",
+        "w5d_timing",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.513241767883301,
+      "log": "reports/w5.d/clippy-combined-final.log",
+      "log_sha256": "2b0f7c2a5f25f0c1d746d43e63d5c0c799393a5610bd14b82fbcdac2bdaac2a8"
+    },
+    {
+      "name": "alltargets-test-fbit",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "fbit",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 31.407002925872803,
+      "log": "reports/w5.d/alltargets-test-fbit.log",
+      "log_sha256": "6638d437855387f8cdf15e990ff08b2c24839191171e068d81906038316ebe52"
+    },
+    {
+      "name": "alltargets-test-lisa",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 16.591136932373047,
+      "log": "reports/w5.d/alltargets-test-lisa.log",
+      "log_sha256": "0e80db1478df9910c745f7aa1c567940862a4a34f437b19b0c5066bac8a4ee13"
+    },
+    {
+      "name": "alltargets-test-mgtk",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "mgtk",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 11.789688110351562,
+      "log": "reports/w5.d/alltargets-test-mgtk.log",
+      "log_sha256": "50adca0202b799be8a3fc64e232fcf1ddeda67c237bc3ac368fbc1c68083b93d"
+    },
+    {
+      "name": "alltargets-test-qpf",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 9.932941436767578,
+      "log": "reports/w5.d/alltargets-test-qpf.log",
+      "log_sha256": "965e558a1722e5f519fb7ba287301cf0de1e4bd4d833467a4b89bcd33beb5304"
+    },
+    {
+      "name": "alltargets-test-qpf2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "qpf2",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 14.090684652328491,
+      "log": "reports/w5.d/alltargets-test-qpf2.log",
+      "log_sha256": "c1bc1a09efe0d960f0ab43b7c4e651632a7ec22ebfd7bbb318181207d22e651c"
+    },
+    {
+      "name": "alltargets-test-nfnt",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "nfnt",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 10.020143747329712,
+      "log": "reports/w5.d/alltargets-test-nfnt.log",
+      "log_sha256": "63e877f5c6ed33b6278857ca1e1782515a0458713cdb077fbc236e21eb239a63"
+    },
+    {
+      "name": "alltargets-test-lisa-final",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--all-targets"
+      ],
+      "exit": 0,
+      "log": "reports/w5.d/alltargets-test-lisa-final.log",
+      "log_sha256": "1e952d7e5cf6e7bc49345d701947f2a4d37bacc63457d1f174829d6a87cb6d4d"
+    },
+    {
+      "name": "clippy-lisa-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "fontpixel",
+        "--no-default-features",
+        "--features",
+        "lisa",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "log": "reports/w5.d/clippy-lisa-final.log",
+      "log_sha256": "96146cd27959cce9fa198d23ab9248629966c3ffa6736931eb6fecd0287b408b"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "fbit",
+        "--no-default-features",
+        "--features",
+        "fbit-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/fbit",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 38052,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-fbit.log",
+      "log_sha256": "f017c84250b2f69c383240c585eca688e30fdfbd98129f1e607e55cc650d8a21"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "lisa",
+        "--no-default-features",
+        "--features",
+        "lisa-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/lisa",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 784580,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-lisa.log",
+      "log_sha256": "b2724538009c8858eda66d98429af682a16795055cf9803406685a16162540de"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "mgtk",
+        "--no-default-features",
+        "--features",
+        "mgtk-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/mgtk",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 7351,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-mgtk.log",
+      "log_sha256": "53f25c5484203b569ebd48be1309ef89828f617daee8d5ea9b556be54fa03107"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "qpf",
+        "--no-default-features",
+        "--features",
+        "qpf-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/qpf",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 285630,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-qpf.log",
+      "log_sha256": "01804c3a59425a4fbb464353c382923289a1afdb121bc2fb1d67c18733725dd2"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "qpf2",
+        "--no-default-features",
+        "--features",
+        "qpf2-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/qpf2",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 462683,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-qpf2.log",
+      "log_sha256": "9572c8df7c080209e62743b8b13ef919c5515eab7e79e6ad26fdbc87caf2e451"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "nfnt",
+        "--no-default-features",
+        "--features",
+        "nfnt-only",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/smoke/nfnt",
+        "--",
+        "-max_total_time=20",
+        "-timeout=3",
+        "-rss_limit_mb=1024",
+        "-max_len=65536"
+      ],
+      "exit": 0,
+      "runs": 204762,
+      "seconds": 21,
+      "log": "reports/w5.d/fuzz-nfnt.log",
+      "log_sha256": "34fb646c42f554fdf7025159187e046c8fbb6b92f900ce95f3f95df371406f50"
+    },
+    {
+      "command": [
+        "bash",
+        "reports/w5.d/build-oracles.sh",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d"
+      ],
+      "exit": 0,
+      "log": "reports/w5.d/build-oracles.log",
+      "log_sha256": "40b1a4151e02a3094c83e84e34c0166bd4993de5ccb4f7c50e370c3c700df344"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/crosscheck/w5d.py",
+        "--driver",
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+        "--work",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/crosscheck",
+        "--qt-consumer",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/qt-consumer",
+        "--qt-lib",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build/qt-everywhere-opensource-src-4.8.7/lib",
+        "--lisa-consumer",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-official-f",
+        "--mgtk-tools",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/sources",
+        "--report",
+        "reports/w5.d/crosscheck.json"
+      ],
+      "exit": 0,
+      "log": "reports/w5.d/crosscheck-run.log",
+      "log_sha256": "377948416940ad365d7f08944aec4e61ac27f168bb219a4db5b393c4f9d7d1db"
+    },
+    {
+      "command": [
+        "python3",
+        "reports/w5.d/check-benchmarks.py",
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+        "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark",
+        "reports/w5.d/benchmark-fixtures.json"
+      ],
+      "exit": 0,
+      "log": "reports/w5.d/benchmark-fixtures.log",
+      "log_sha256": "4c3e861a0fe625e621e8491dbe81a0f6fdf227d7a4fcb7dbcb2b73bbc2dcd973"
+    }
+  ]
+}

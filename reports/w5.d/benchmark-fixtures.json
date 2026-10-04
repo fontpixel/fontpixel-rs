@@ -1,0 +1,116 @@
+[
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/fbit-256",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "fbit",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/fbit-256",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/fbit-256.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 256,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/lisa-256",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "lisa",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/lisa-256",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/lisa-256.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 256,
+    "report": {
+      "loss": true,
+      "reports": [
+        "lisa.properties"
+      ]
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/mgtk-256",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "mgtk",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/mgtk-256",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/mgtk-256.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 256,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-2048",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "qpf",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-2048",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-2048.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 2048,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-256",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "qpf",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-256",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf-256.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 256,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-2048",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "qpf2",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-2048",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-2048.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 2048,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  },
+  {
+    "file": "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-256",
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/examples/w5d_timing",
+      "canonical",
+      "qpf2",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-256",
+      "/home/chen/githubprojects/fontpixel/local-work/w5d/seeds/benchmark/qpf2-256.canonical"
+    ],
+    "exit": 0,
+    "glyphs": 256,
+    "report": {
+      "loss": false,
+      "reports": []
+    }
+  }
+]

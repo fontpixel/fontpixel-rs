@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "/home/chen/githubprojects/fontpixel/local-work/target-transport-fuzz/x86_64-unknown-linux-gnu/release/transport",
+    "-runs=0",
+    "-timeout=2",
+    "-rss_limit_mb=1024",
+    "/home/chen/githubprojects/fontpixel/local-work/transport-corpus"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 1.6409902572631836,
+  "stdout": "",
+  "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 2220116616\nINFO: Loaded 1 modules   (42851 inline 8-bit counters): 42851 [0x5ce245495b50, 0x5ce2454a02b3), \nINFO: Loaded 1 PC tables (42851 PCs): 42851 [0x5ce2454a02b8,0x5ce2455478e8), \nINFO:      302 files found in /home/chen/githubprojects/fontpixel/local-work/transport-corpus\nINFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes\nINFO: seed corpus: files: 302 min: 16b max: 305b total: 13219b rss: 35Mb\n#303\tINITED cov: 5168 ft: 13082 corp: 78/5707b exec/s: 303 rss: 203Mb\n#303\tDONE   cov: 5168 ft: 13082 corp: 78/5707b lim: 305 exec/s: 303 rss: 203Mb\nDone 303 runs in 1 second(s)\n",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "5a36f2a6ce601b79b8ff041f627005ebbd65b60e793716d7df8f0044719a0759"
+}

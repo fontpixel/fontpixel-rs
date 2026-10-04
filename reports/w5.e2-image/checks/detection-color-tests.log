@@ -1,0 +1,23 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.82s
+     Running tests/imageset.rs (/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/imageset-c85e293d48e599b4)
+
+running 4 tests
+test explicit_color_and_sample_depth_projections_report_loss ... ok
+test duplicate_labels_bad_names_resources_and_readback_budget ... ok
+test absent_metrics_are_loss_and_directory_mapping_is_rejected ... ok
+test native_directory_all_containers_labels_pixels_and_strict ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/sfont-526fe3a07a72eefe)
+
+running 5 tests
+test registry_distinguishes_native_rfont_evidence_from_ambiguous_image_magic ... ok
+test native_png_names_and_unknown_text_roundtrip_and_baseline_overflow ... ok
+test sfont_markers_explicit_order_gray_and_strict ... ok
+test malformed_images_codepoints_options_and_budgets ... ok
+test rfont_external_original_pages_redundancy_aux_versions_and_gap_stability ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 101, in compare_signed
+    compare(path)
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 56, in compare
+    expected = oracle(path, fmt)
+               ^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 47, in oracle
+    f = monobit.load(path, format=fmt)[0]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/plumbing/scripting.py", line 104, in _converted_func
+    result = func(*args, **conv_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/plumbing/scripting.py", line 61, in _scriptable_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontfiles.py", line 64, in load
+    return _load_stream(
+           ^^^^^^^^^^^^^
+  File "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/monobit/storage/fontfiles.py", line 93, in _load_stream
+    raise FileFormatError(message)
+monobit.base.basetypes.FileFormatError: Unable to read fonts from 'local-work/w52/crosscheck/above-baseline.fon': tried formats: iigs
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 117, in <module>
+    compare_signed(shifted)
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 107, in compare_signed
+    compare(path)
+  File "/home/chen/githubprojects/fontpixel/fontpixel-rs/tests/crosscheck/w52.py", line 58, in compare
+    assert actual[key] == expected[key], (path, key, actual[key], expected[key])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/above-baseline.fon'), 'descent', -5, 65531)

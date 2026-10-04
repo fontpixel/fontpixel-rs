@@ -1,4 +1,4 @@
-//! Native FontSet projection for bitmap-only sfnt, Apple sbits, and color reads.
+//! Native FontSet projection for bitmap-only sfnt, Apple sbits, and color bitmaps.
 //!
 //! These hooks extract physical strikes. They do not claim general vector font
 //! rasterization or resource-fork support. Low-level editable tables live in
@@ -35,7 +35,26 @@ pub struct EmbeddedWriteOptions {
     /// Explicit EBSC instructions; an empty list uses retained source EBSC, if any.
     pub scaling: Vec<sbit::Scale>,
 }
-/// Feature-selected registry hooks; color exposes only read/detect.
+/// Native color bitmap container, with black RGB and exact coverage alpha.
+#[cfg(feature = "color")]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ColorFlavor {
+    /// CBDT/CBLC version 3, with exact per-strike pixel metrics.
+    #[default]
+    Cbdt,
+    /// sbix version 1, with shared design-space horizontal advances.
+    Sbix,
+}
+/// Options for native color bitmap output.
+#[cfg(feature = "color")]
+#[derive(Clone, Debug, Default)]
+pub struct ColorWriteOptions {
+    /// Table, PNG, model, output and native readback budgets.
+    pub limits: sbit::Limits,
+    /// Output table family. The default is CBDT/CBLC.
+    pub flavor: ColorFlavor,
+}
+/// Feature-selected registry hooks for all three embedded families.
 #[derive(Clone, Debug)]
 pub struct EmbeddedCodec {
     /// The intended bitmap table family.
@@ -44,6 +63,9 @@ pub struct EmbeddedCodec {
     pub read_options: EmbeddedReadOptions,
     /// Detailed OTB/bdat output choices.
     pub write_options: EmbeddedWriteOptions,
+    /// Color container choice and budgets.
+    #[cfg(feature = "color")]
+    pub color_write_options: ColorWriteOptions,
 }
 impl EmbeddedCodec {
     /// Construct one family with default budgets and exact gray preservation.
@@ -52,6 +74,8 @@ impl EmbeddedCodec {
             kind,
             read_options: EmbeddedReadOptions::default(),
             write_options: EmbeddedWriteOptions::default(),
+            #[cfg(feature = "color")]
+            color_write_options: ColorWriteOptions::default(),
         }
     }
 }
@@ -96,6 +120,14 @@ impl FormatReader<FontSet> for EmbeddedCodec {
 }
 impl FormatWriter<FontSet> for EmbeddedCodec {
     fn write(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+        #[cfg(feature = "color")]
+        if self.kind == sbit::Kind::Color {
+            let (bytes, report) = write_color(fonts, &self.color_write_options)?;
+            return Ok(Written {
+                output: OutputBundle::single(options.primary_name.clone(), bytes),
+                report,
+            });
+        }
         let (bytes, report) = write(fonts, self.kind, &self.write_options)?;
         Ok(Written {
             output: OutputBundle::single(options.primary_name.clone(), bytes),
@@ -949,7 +981,7 @@ fn line_record(f: &Font, strike: &sbit::Strike, vertical: bool) -> Result<sbit::
     }
     Ok(sbit::LineMetrics(line))
 }
-fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics) {
+fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
     for (source, props) in [("header", &f.headers), ("property", &f.properties)] {
         for p in props.iter() {
             if !p.name.starts_with("sfnt.sbit_") {
@@ -966,7 +998,7 @@ fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics) {
     let m = &f.metrics;
     for (name, present) in [
         ("point_size", m.point_size.is_some()),
-        ("resolution", m.resolution.is_some()),
+        ("resolution", m.resolution.is_some() && !sbix),
         ("bounds", m.bounds.is_some()),
         ("line_height", m.line_height.is_some()),
         ("default_character", m.default_character.is_some()),
@@ -1079,11 +1111,57 @@ pub fn write(
     kind: sbit::Kind,
     options: &EmbeddedWriteOptions,
 ) -> Result<(Vec<u8>, Report)> {
+    let result = write_impl(fonts, kind, options, false)?;
+    #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
-        return Err(invalid("color writing is not implemented"));
+        color_readback(&result.0, &options.limits)?;
+    }
+    Ok(result)
+}
+
+/// Write coverage as black PNG alpha, preserving aliases and physical strikes.
+/// The returned loss report includes representation and shared-metric changes.
+#[cfg(feature = "color")]
+pub fn write_color(fonts: &FontSet, options: &ColorWriteOptions) -> Result<(Vec<u8>, Report)> {
+    let result = write_impl(
+        fonts,
+        sbit::Kind::Color,
+        &EmbeddedWriteOptions {
+            limits: options.limits.clone(),
+            scaling: Vec::new(),
+        },
+        options.flavor == ColorFlavor::Sbix,
+    )?;
+    color_readback(&result.0, &options.limits)?;
+    Ok(result)
+}
+#[cfg(feature = "color")]
+fn color_readback(bytes: &[u8], limits: &sbit::Limits) -> Result<()> {
+    read(
+        bytes,
+        sbit::Kind::Color,
+        &EmbeddedReadOptions {
+            limits: limits.clone(),
+            ..Default::default()
+        },
+    )?;
+    Ok(())
+}
+fn write_impl(
+    fonts: &FontSet,
+    kind: sbit::Kind,
+    options: &EmbeddedWriteOptions,
+    sbix: bool,
+) -> Result<(Vec<u8>, Report)> {
+    if kind == sbit::Kind::Color && !cfg!(feature = "color") {
+        return Err(invalid("color writing requires the color feature"));
     }
     let limits = &options.limits;
     write_preflight(fonts, &limits.sfnt)?;
+    #[cfg(feature = "color")]
+    if kind == sbit::Kind::Color {
+        color_memory_preflight(fonts, limits)?;
+    }
     let first = fonts
         .fonts
         .first()
@@ -1099,7 +1177,11 @@ pub fn write(
     let mut total = 0usize;
     for (fi, f) in fonts.fonts.iter().enumerate() {
         f.validate(&limits.sfnt.resources)?;
-        ignored_fields(f, fi, &mut report);
+        ignored_fields(f, fi, &mut report, sbix);
+        #[cfg(feature = "color")]
+        if kind == sbit::Kind::Color {
+            color_global_losses(first, f, fi, &mut report)?;
+        }
         if fi > 0 && f.names != first.names {
             loss(
                 &mut report,
@@ -1125,6 +1207,17 @@ pub fn write(
                 return Err(invalid("ambiguous duplicate glyph labels within strike"));
             }
             let gid = if let Some(gid) = ids.get(&key) {
+                if kind == sbit::Kind::Color
+                    && g.name.as_ref().is_some_and(|n| n != &names[*gid as usize])
+                {
+                    loss(
+                        &mut report,
+                        "strike_glyph_name",
+                        Some(fi),
+                        Some(id.index()),
+                        "Shared post name comes from the first strike containing this glyph",
+                    );
+                }
                 *gid
             } else {
                 let gid = u16::try_from(ids.len()).map_err(|_| invalid("too many sfnt glyphs"))?;
@@ -1168,6 +1261,12 @@ pub fn write(
         return Err(invalid("cmap mapping budget exceeded"));
     }
     let count = u16::try_from(ids.len()).map_err(|_| invalid("too many sfnt glyphs"))?;
+    if sbix {
+        #[cfg(feature = "color")]
+        return write_native_sbix(fonts, &assigned, count, &mapping, names, limits, report);
+        #[cfg(not(feature = "color"))]
+        return Err(invalid("sbix requires the color feature"));
+    }
     let mut strikes = Vec::new();
     for (fi, (f, selected)) in fonts.fonts.iter().zip(&assigned).enumerate() {
         let ppem = f
@@ -1177,7 +1276,9 @@ pub fn write(
             .ok_or_else(|| invalid("missing pixel size"))?;
         let x = byte(f.metrics.ppem_x.unwrap_or(ppem) as i64, "ppem x")?;
         let y = byte(f.metrics.ppem_y.unwrap_or(ppem) as i64, "ppem y")?;
-        let depth = if selected
+        let depth = if kind == sbit::Kind::Color {
+            32
+        } else if selected
             .iter()
             .any(|(_, g)| matches!(g.bitmap, GlyphBitmap::Gray8(_)))
         {
@@ -1192,13 +1293,13 @@ pub fn write(
             let metrics = sbit_metrics(g, f)?;
             horiz |= metrics.horizontal.is_some();
             vert |= metrics.vertical.is_some();
-            if depth == 8 && matches!(g.bitmap, GlyphBitmap::Mono(_)) {
+            if [8, 32].contains(&depth) && matches!(g.bitmap, GlyphBitmap::Mono(_)) {
                 loss(
                     &mut report,
                     "depth_normalized",
                     Some(fi),
                     Some(gid as usize),
-                    "Mono represented at shared 8-bit strike depth without changing coverage",
+                    "Mono represented as Gray8 coverage without changing samples",
                 );
             }
             glyphs.insert(
@@ -1308,6 +1409,324 @@ pub fn write(
     let report = report.finish()?;
     Ok((builder.build(&limits.sfnt)?, report))
 }
+#[cfg(feature = "color")]
+fn color_global_losses(first: &Font, f: &Font, fi: usize, report: &mut Diagnostics) -> Result<()> {
+    let ppem = |f: &Font| {
+        f.metrics
+            .ppem_y
+            .or(f.metrics.pixel_size)
+            .filter(|p| *p != 0)
+            .ok_or_else(|| invalid("missing or zero ppem"))
+    };
+    let reference = i128::from(ppem(first)?);
+    let current = i128::from(ppem(f)?);
+    let scale = if reference <= 163 {
+        100
+    } else if reference <= 255 {
+        64
+    } else {
+        (16384 / reference).max(1)
+    };
+    let upem = (reference * scale).min(16384);
+    let round = |n: i128, d: i128| (n + if n >= 0 { d / 2 } else { -(d / 2) }) / d;
+    for (field, base, actual) in [
+        ("line gap", first.metrics.line_gap, f.metrics.line_gap),
+        (
+            "underline position",
+            first.metrics.underline_position,
+            f.metrics.underline_position,
+        ),
+        (
+            "underline thickness",
+            first.metrics.underline_thickness,
+            f.metrics.underline_thickness,
+        ),
+    ] {
+        if let Some(actual) = actual {
+            let encoded = round(i128::from(base.unwrap_or(0)) * upem, reference);
+            let decoded = round(encoded * current, upem);
+            if decoded != i128::from(actual) {
+                loss(
+                    report,
+                    "shared_line_metric",
+                    Some(fi),
+                    None,
+                    format!("Per-strike {field} changed to the rounded shared sfnt metric"),
+                );
+            }
+        }
+    }
+    Ok(())
+}
+#[cfg(feature = "color")]
+fn color_memory_preflight(fonts: &FontSet, limits: &sbit::Limits) -> Result<()> {
+    // Conservative cumulative envelope, including source/assigned rasters,
+    // stored PNG scratch and payloads, table assembly copies, native readback,
+    // decoder row/inflate buffers, per-glyph indexes and bounded diagnostics.
+    // Every multiplication is saturating so impossible sizes fail closed.
+    // Reserve the complete diagnostic allowance alongside the allocation envelope.
+    let mut total = 32768 + (limits.sfnt.resources.max_total_bytes / 4).min(64 * 1024 * 1024);
+    let mut pixels = 0usize;
+    for f in &fonts.fonts {
+        charge(
+            &mut total,
+            8192 + name_bytes(&f.names).saturating_mul(8),
+            &limits.sfnt,
+        )?;
+        for (_, g) in f.glyphs() {
+            let area = (g.bitmap.width() as usize).saturating_mul(g.bitmap.height() as usize);
+            pixels = pixels.saturating_add(area.saturating_mul(3));
+            charge(
+                &mut total,
+                4096usize
+                    .saturating_add(area.saturating_mul(48))
+                    .saturating_add(g.bitmap.height() as usize * 8)
+                    .saturating_add(g.codepoints.len().saturating_mul(256))
+                    .saturating_add(g.name.as_ref().map_or(0, String::len).saturating_mul(8)),
+                &limits.sfnt,
+            )?;
+        }
+    }
+    crate::sfnt::bounded(
+        pixels,
+        limits.max_pixel_work,
+        "color write/readback pixel work",
+    )?;
+    Ok(())
+}
+#[cfg(feature = "color")]
+#[allow(clippy::too_many_arguments)]
+fn write_native_sbix(
+    fonts: &FontSet,
+    assigned: &[Vec<(u16, &Glyph)>],
+    count: u16,
+    mapping: &cmap::Mapping,
+    names: Vec<String>,
+    limits: &sbit::Limits,
+    mut report: Diagnostics,
+) -> Result<(Vec<u8>, Report)> {
+    use sbit::color::{Sbix, SbixGlyph, SbixStrike};
+    let mut strikes = Vec::new();
+    let mut design = Vec::new();
+    for (fi, (f, selected)) in fonts.fonts.iter().zip(assigned).enumerate() {
+        let ppem = f
+            .metrics
+            .ppem_y
+            .or(f.metrics.pixel_size)
+            .ok_or_else(|| invalid("missing sbix ppem"))?;
+        let ppem = u16::try_from(ppem)
+            .ok()
+            .filter(|p| *p != 0)
+            .ok_or_else(|| invalid("sbix ppem must fit nonzero uint16"))?;
+        if f.metrics.ppem_x.is_some_and(|x| x != u32::from(ppem)) {
+            loss(
+                &mut report,
+                "sbix_ppem",
+                Some(fi),
+                None,
+                "sbix uses the vertical ppem for both axes",
+            );
+        }
+        let ppi = match f.metrics.resolution {
+            Some(v) if v.x == v.y && v.x > 0 => {
+                u16::try_from(v.x).map_err(|_| invalid("sbix PPI does not fit uint16"))?
+            }
+            Some(_) => {
+                loss(
+                    &mut report,
+                    "sbix_ppi",
+                    Some(fi),
+                    None,
+                    "Non-square or non-positive resolution replaced by 72 PPI",
+                );
+                72
+            }
+            None => 72,
+        };
+        let mut glyphs = BTreeMap::new();
+        let mut design_glyphs = Vec::new();
+        for &(gid, g) in selected {
+            let b = g.metrics.bounds;
+            let advance = g
+                .metrics
+                .advance
+                .or(f.metrics.glyph_defaults.advance)
+                .ok_or_else(|| invalid("sbix requires a horizontal advance"))?;
+            if advance.y != 0 || advance.x < 0 {
+                return Err(invalid("sbix requires a nonnegative horizontal advance"));
+            }
+            // Even at maximum ppem and minimum legal upem, a uint16 hmtx
+            // advance cannot exceed int32 pixels. Bound before design scaling.
+            i32::try_from(advance.x).map_err(|_| invalid("sbix advance overflow"))?;
+            let origin = [int16(b.x, "sbix origin x")?, int16(b.y, "sbix origin y")?];
+            let top =
+                b.y.checked_add(i64::from(b.height))
+                    .ok_or_else(|| invalid("sbix top overflow"))?;
+            design_glyphs.push(DesignGlyph {
+                id: gid,
+                width: b.width,
+                height: b.height,
+                horizontal: Some([b.x, top, advance.x]),
+                vertical: None,
+            });
+            if g.metrics
+                .vertical_advance
+                .or(f.metrics.glyph_defaults.vertical_advance)
+                .is_some()
+                || g.metrics
+                    .vertical_origin
+                    .or(f.metrics.glyph_defaults.vertical_origin)
+                    .is_some()
+            {
+                loss(
+                    &mut report,
+                    "sbix_vertical",
+                    Some(fi),
+                    Some(gid as usize),
+                    "Native sbix projection does not retain vertical glyph metrics",
+                );
+            }
+            if b.width == 0 || b.height == 0 {
+                loss(
+                    &mut report,
+                    "sbix_empty",
+                    Some(fi),
+                    Some(gid as usize),
+                    "Zero-area sbix glyph has an absent image; its explicit rectangle and strike membership are not retained",
+                );
+                continue;
+            }
+            if matches!(g.bitmap, GlyphBitmap::Mono(_)) {
+                loss(
+                    &mut report,
+                    "depth_normalized",
+                    Some(fi),
+                    Some(gid as usize),
+                    "Mono represented as Gray8 coverage without changing samples",
+                );
+            }
+            glyphs.insert(
+                gid,
+                SbixGlyph {
+                    origin,
+                    bitmap: g.bitmap.clone(),
+                },
+            );
+        }
+        let ascent = f.metrics.ascent.unwrap_or_else(|| {
+            design_glyphs
+                .iter()
+                .filter_map(|g| g.horizontal.map(|h| h[1]))
+                .max()
+                .unwrap_or(0)
+        });
+        let descent = f.metrics.descent.unwrap_or_else(|| {
+            design_glyphs
+                .iter()
+                .filter_map(|g| g.horizontal.map(|h| i64::from(g.height) - h[1]))
+                .max()
+                .unwrap_or(0)
+        });
+        design.push(DesignStrike {
+            ppem: [u32::from(ppem); 2],
+            ascent,
+            descent,
+            glyphs: design_glyphs,
+        });
+        strikes.push(SbixStrike { ppem, ppi, glyphs });
+    }
+    for p in fonts.properties.iter() {
+        loss(
+            &mut report,
+            "container_property",
+            None,
+            None,
+            format!(
+                "Container property {:?} is not copied into regenerated sbix tables",
+                p.name
+            ),
+        );
+    }
+    let sbix = Sbix {
+        draw_outlines: false,
+        strikes,
+    };
+    let mut builder = SfntBuilder::new(Flavor::TrueType);
+    builder.insert(*b"sbix", sbit::color::encode_sbix(&sbix, count, limits)?)?;
+    common_design_tables(
+        &mut builder,
+        &fonts.fonts[0],
+        &design,
+        count,
+        mapping,
+        names,
+        &limits.sfnt,
+        &mut report,
+    )?;
+    let bytes = builder.build(&limits.sfnt)?;
+    let font = Sfnt::parse(&bytes, &limits.sfnt)?;
+    let upem = i64::from(u16at(required(&font, *b"head")?, 18)?);
+    let (header, metrics) = metrics::decode(
+        metrics::Axis::Horizontal,
+        required(&font, *b"hhea")?,
+        required(&font, *b"hmtx")?,
+        count,
+        &limits.sfnt,
+    )?;
+    for (fi, s) in design.iter().enumerate() {
+        let scale = |n: i64| {
+            let value = n * i64::from(s.ppem[1]);
+            (value + if value >= 0 { upem / 2 } else { -(upem / 2) }) / upem
+        };
+        for g in &s.glyphs {
+            if let Some(h) = g.horizontal
+                && h[2] != scale(i64::from(metrics[g.id as usize].advance))
+            {
+                loss(
+                    &mut report,
+                    "sbix_advance",
+                    Some(fi),
+                    Some(g.id as usize),
+                    "Per-strike advance changed to the rounded shared hmtx advance",
+                );
+            }
+        }
+        let f = &fonts.fonts[fi];
+        for (field, expected, actual) in [
+            ("ascent", s.ascent, scale(i64::from(header.ascender))),
+            ("descent", s.descent, -scale(i64::from(header.descender))),
+            (
+                "line_gap",
+                f.metrics.line_gap.unwrap_or(0),
+                scale(i64::from(header.line_gap)),
+            ),
+        ] {
+            if expected != actual {
+                loss(
+                    &mut report,
+                    "sbix_line_metric",
+                    Some(fi),
+                    None,
+                    format!("Per-strike {field} changed to the rounded shared design metric"),
+                );
+            }
+        }
+    }
+    Ok((bytes, report.finish()?))
+}
+struct DesignGlyph {
+    id: u16,
+    width: u32,
+    height: u32,
+    horizontal: Option<[i64; 3]>,
+    vertical: Option<[i64; 3]>,
+}
+struct DesignStrike {
+    ppem: [u32; 2],
+    ascent: i64,
+    descent: i64,
+    glyphs: Vec<DesignGlyph>,
+}
 #[allow(clippy::too_many_arguments)]
 fn common_tables(
     builder: &mut SfntBuilder,
@@ -1319,41 +1738,107 @@ fn common_tables(
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
 ) -> Result<()> {
+    let design: Vec<_> = strikes
+        .iter()
+        .map(|s| DesignStrike {
+            ppem: [u32::from(s.ppem_x), u32::from(s.ppem_y)],
+            ascent: i64::from(s.horizontal.ascender()),
+            descent: -i64::from(s.horizontal.descender()),
+            glyphs: s
+                .glyphs
+                .iter()
+                .map(|(&id, g)| {
+                    let bearing =
+                        |b: sbit::Bearing| [i64::from(b.x), i64::from(b.y), i64::from(b.advance)];
+                    DesignGlyph {
+                        id,
+                        width: u32::from(g.metrics.width),
+                        height: u32::from(g.metrics.height),
+                        horizontal: g.metrics.horizontal.map(bearing),
+                        vertical: g.metrics.vertical.map(bearing),
+                    }
+                })
+                .collect(),
+        })
+        .collect();
+    common_design_tables(
+        builder,
+        f,
+        &design,
+        count,
+        mapping,
+        glyph_names,
+        limits,
+        report,
+    )
+}
+#[allow(clippy::too_many_arguments)]
+fn common_design_tables(
+    builder: &mut SfntBuilder,
+    f: &Font,
+    strikes: &[DesignStrike],
+    count: u16,
+    mapping: &cmap::Mapping,
+    glyph_names: Vec<String>,
+    limits: &sfnt::Limits,
+    report: &mut Diagnostics,
+) -> Result<()> {
     let strike = &strikes[0];
-    let scale = if strike.ppem_y <= 163 { 100i64 } else { 64 };
-    let upem = strike.ppem_y as u16 * scale as u16;
+    let ppem = i64::from(strike.ppem[1]);
+    let scale = if ppem <= 163 {
+        100
+    } else if ppem <= 255 {
+        64
+    } else {
+        (16384 / ppem).max(1)
+    };
+    let upem = (ppem * scale).min(16384) as u16;
+    let global = |n: i64| -> Result<i16> {
+        let value = i128::from(n) * i128::from(upem);
+        i16::try_from(
+            (value
+                + if value >= 0 {
+                    i128::from(ppem / 2)
+                } else {
+                    -i128::from(ppem / 2)
+                })
+                / i128::from(ppem),
+        )
+        .map_err(|_| invalid("design metric does not fit int16"))
+    };
     let mut horizontal = vec![metrics::LongMetric::default(); count as usize];
     let mut ink = vec![None; count as usize];
     let mut seen = BTreeSet::new();
     let (mut left, mut bottom, mut right, mut top) = (0i64, 0i64, 0i64, 0i64);
     for source in strikes {
-        for (&gid, g) in &source.glyphs {
+        for g in &source.glyphs {
+            let gid = g.id;
             if !seen.insert(gid) {
                 continue;
             }
             let sx = |n: i64| {
                 (n * upem as i64
                     + if n >= 0 {
-                        source.ppem_x as i64 / 2
+                        source.ppem[0] as i64 / 2
                     } else {
-                        -(source.ppem_x as i64 / 2)
+                        -(source.ppem[0] as i64 / 2)
                     })
-                    / source.ppem_x as i64
+                    / source.ppem[0] as i64
             };
             let sy = |n: i64| {
                 (n * upem as i64
                     + if n >= 0 {
-                        source.ppem_y as i64 / 2
+                        source.ppem[1] as i64 / 2
                     } else {
-                        -(source.ppem_y as i64 / 2)
+                        -(source.ppem[1] as i64 / 2)
                     })
-                    / source.ppem_y as i64
+                    / source.ppem[1] as i64
             };
-            let m = g.metrics;
+            let m = g;
             if let Some(h) = m.horizontal {
-                if [h.advance as i64, h.x as i64, m.width as i64]
+                if [h[2], h[0], m.width as i64]
                     .iter()
-                    .any(|n| n * upem as i64 % source.ppem_x as i64 != 0)
+                    .any(|n| n * upem as i64 % source.ppem[0] as i64 != 0)
                 {
                     loss(
                         report,
@@ -1364,16 +1849,16 @@ fn common_tables(
                     );
                 }
                 horizontal[gid as usize] = metrics::LongMetric {
-                    advance: u16::try_from(sx(h.advance as i64))
+                    advance: u16::try_from(sx(h[2]))
                         .map_err(|_| invalid("design advance overflow"))?,
-                    bearing: int16(sx(h.x as i64), "design bearing")?,
+                    bearing: int16(sx(h[0]), "design bearing")?,
                 };
             }
             if let Some(h) = m.horizontal.or(m.vertical) {
-                left = left.min(sx(h.x as i64));
-                right = right.max(sx(h.x as i64 + m.width as i64));
-                bottom = bottom.min(sy(h.y as i64 - m.height as i64));
-                top = top.max(sy(h.y as i64));
+                left = left.min(sx(h[0]));
+                right = right.max(sx(h[0] + m.width as i64));
+                bottom = bottom.min(sy(h[1] - m.height as i64));
+                top = top.max(sy(h[1]));
             }
             if m.width > 0 && m.height > 0 {
                 ink[gid as usize] = Some(
@@ -1384,19 +1869,14 @@ fn common_tables(
         }
     }
     let mut header = metrics::Header::new(metrics::Axis::Horizontal);
-    header.ascender = int16(strike.horizontal.ascender() as i64 * scale, "design ascent")?;
-    header.descender = int16(
-        strike.horizontal.descender() as i64 * scale,
-        "design descent",
+    header.ascender = global(strike.ascent)?;
+    header.descender = global(
+        strike
+            .descent
+            .checked_neg()
+            .ok_or_else(|| invalid("descent overflow"))?,
     )?;
-    header.line_gap = int16(
-        f.metrics
-            .line_gap
-            .unwrap_or(0)
-            .checked_mul(scale)
-            .ok_or_else(|| invalid("line gap overflow"))?,
-        "line gap",
-    )?;
+    header.line_gap = global(f.metrics.line_gap.unwrap_or(0))?;
     header.recompute(&horizontal, &ink)?;
     let hm = metrics::encode(
         metrics::Axis::Horizontal,
@@ -1462,26 +1942,12 @@ fn common_tables(
         f.metrics.spacing,
         Some(Spacing::Monospaced | Spacing::CharacterCell)
     ));
-    post.header.underline_position = int16(
-        f.metrics
-            .underline_position
-            .unwrap_or(0)
-            .checked_mul(scale)
-            .ok_or_else(|| invalid("underline overflow"))?,
-        "underline position",
-    )?;
-    post.header.underline_thickness = int16(
-        f.metrics
-            .underline_thickness
-            .unwrap_or(0)
-            .checked_mul(scale)
-            .ok_or_else(|| invalid("underline overflow"))?,
-        "underline thickness",
-    )?;
+    post.header.underline_position = global(f.metrics.underline_position.unwrap_or(0))?;
+    post.header.underline_thickness = global(f.metrics.underline_thickness.unwrap_or(0))?;
     builder.insert(*b"post", post.encode(count, limits)?)?;
     if strikes
         .iter()
-        .any(|s| s.glyphs.values().any(|g| g.metrics.vertical.is_some()))
+        .any(|s| s.glyphs.iter().any(|g| g.vertical.is_some()))
     {
         loss(
             report,

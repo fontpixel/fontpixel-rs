@@ -1,0 +1,165 @@
+{
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "monobit": "0.54.0",
+  "monobit_dec_sha256": "691f84b4b3ca624361be9c791723afb83b3c80d89b34b347e845b4d0f7110f23",
+  "runtime_provenance": {
+    "u8x8-legacy-runtime/u8x8_8x8.c": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/b2d84613a8ea258049c8aa7be816acd4139bfcc7/csrc/u8x8_8x8.c",
+      "sha256": "fe885f590784b34ced1cfec7f5b12e1a3427f12b37579167e2c43ec0f83b42e4"
+    },
+    "u8x8-legacy-runtime/u8x8.h": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/b2d84613a8ea258049c8aa7be816acd4139bfcc7/csrc/u8x8.h",
+      "sha256": "ae618fc17c72a6c42416119523a70ae50ad954aa5d9f3ef5dc9cece0c4c6337f"
+    },
+    "u8g2_font.c": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/d6c8499c5f2707cac8eccd09fd8f677d12b17977/csrc/u8g2_font.c",
+      "sha256": "3d205ff43e0da767aaf87787777ef38ae930a876702c560e7d0e60183ad9730a"
+    },
+    "u8g2.h": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/d6c8499c5f2707cac8eccd09fd8f677d12b17977/csrc/u8g2.h",
+      "sha256": "c85d1926d21514bbe1503b29b6c6a46b264c78259ddbd82c82177467d901f971"
+    },
+    "u8x8.h": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/d6c8499c5f2707cac8eccd09fd8f677d12b17977/csrc/u8x8.h",
+      "sha256": "d8fba514283df6974861ac8b5551b36eb3f2e72488b6a4c0e0c83bd2d032c796"
+    },
+    "u8x8_8x8.c": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/d6c8499c5f2707cac8eccd09fd8f677d12b17977/csrc/u8x8_8x8.c",
+      "sha256": "da32dff05050e4b18ea9007fdefc49ef31bf24b85ba2200fa791755aa81b2884"
+    },
+    "u8g_font.c": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8glib/c5aac51b301ff82b5bfd06c35edf7cb819e00177/csrc/u8g_font.c",
+      "sha256": "436e251dc0f45ef771d0dea543da5091e896c680abdb06c2056f48074e2837a1"
+    },
+    "u8g.h": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8glib/c5aac51b301ff82b5bfd06c35edf7cb819e00177/csrc/u8g.h",
+      "sha256": "7a4a7fb1b302c20c30a1855de0f31262eb2662f0720ca45eed89e72f78bbce1b"
+    },
+    "u8g2_example.c": {
+      "url": "https://raw.githubusercontent.com/olikraus/u8g2/d6c8499c5f2707cac8eccd09fd8f677d12b17977/tools/font/build/single_font_files/u8g2_font_5x7_tf.c",
+      "sha256": "48f17be689f0ce9dec06075e5830a6de2c470e3761d2226ae7fa80c1959d2bf6"
+    },
+    "spleen5x8.h": {
+      "url": "https://raw.githubusercontent.com/NetBSD/src/trunk/sys/dev/wsfont/spleen5x8.h",
+      "sha256": "8ac9133b8ba0e83a524651b38eac8a94d51a623673f3b55199e947d9ba69ebd5"
+    },
+    "lvgl-v8.3.11.tar.gz": {
+      "url": "https://codeload.github.com/lvgl/lvgl/tar.gz/refs/tags/v8.3.11",
+      "sha256": "83b7325a4b78cbb19a39f3ac75346c8086926d7faeab5ff2d825c20da0bbdb46"
+    }
+  },
+  "results": {
+    "u8g2": {
+      "glyphs": 4,
+      "bytes": 765,
+      "sha256": "4a96362c40f272575fe6097da022170ec51192018cf05218e32871aff86479ae",
+      "native_consumer": "pass"
+    },
+    "u8glib": {
+      "glyphs": 3,
+      "bytes": 381,
+      "sha256": "cf13b41545c9589f18691396f20cf88325e3b6f589e31b9fb52e2322b0840be9",
+      "native_consumer": "pass"
+    },
+    "u8glib-compact": {
+      "glyphs": 3,
+      "bytes": 336,
+      "sha256": "161cfe70c7ff40dc0c23e8f83da2cd222b3a7f0fffdae8501961780decd28701",
+      "native_consumer": "pass"
+    },
+    "u8glib-gray": {
+      "glyphs": 3,
+      "bytes": 502,
+      "sha256": "2cfbb805401af7d9ebf1a70fc420b1c7968fe15f014dc7827f444c4e2fb47e7f",
+      "native_consumer": "pass"
+    },
+    "u8x8": {
+      "glyphs": 3,
+      "bytes": 236,
+      "sha256": "648aa605dfc3280f674964f843c213e01c094f001efb1545592f9844984a1eee",
+      "native_consumer": "pass"
+    },
+    "u8x8-legacy": {
+      "glyphs": 3,
+      "bytes": 226,
+      "sha256": "a79d948ff109a00e7a5cb2d1ce8bf5a885a7b2236e0256e19b6f3efa4cdfd531",
+      "native_consumer": "pass (2018 two-byte header runtime)"
+    },
+    "netbsd": {
+      "glyphs": 3,
+      "bytes": 398,
+      "sha256": "9872a5203c16d543e0d3e13da88f2edbfa35c23868b3df5bae0738c1d4a67b3c",
+      "monobit_bidirectional": "pass"
+    },
+    "drcs": {
+      "glyphs": 3,
+      "bytes": 77,
+      "sha256": "c68aff2316639639631c8b8564870e0747d4b912d1f5dba6dc99e02588814861",
+      "upstream_metadata_reemit_failure": "not enough values to unpack (expected 3, got 2)",
+      "monobit_bidirectional": "pass"
+    },
+    "lvgl": {
+      "glyphs": 3,
+      "bytes": 1233,
+      "sha256": "9b773c4134a61af848d99620bcec2addd362176b887f7438eab15968538d60f4",
+      "native_consumer": "pass"
+    },
+    "lvgl-rle": {
+      "glyphs": 3,
+      "bytes": 1280,
+      "sha256": "cfe434d0b54e26f176594db520fa9096ebea7ae05fd1ae16e5da14bbdd45bf1b",
+      "native_consumer": "pass"
+    },
+    "lvgl-xor": {
+      "glyphs": 3,
+      "bytes": 1280,
+      "sha256": "e6e906a3b6b1bd60d98964d309abff02bccfe186b2e25af292fa22ff0a4c7bbd",
+      "native_consumer": "pass"
+    },
+    "lvgl2-rle": {
+      "glyphs": 3,
+      "bytes": 1355,
+      "sha256": "4d387755c9763e742400485b7ad8a9cc23a583f15733b26dfb7f0c86aa98d4d5",
+      "native_consumer": "pass"
+    },
+    "lvgl4-xor": {
+      "glyphs": 3,
+      "bytes": 1638,
+      "sha256": "2d3579862677430832b8f3475d9a94c28566aa7a4015610d166ac7d0950ea5a8",
+      "native_consumer": "pass"
+    },
+    "lvgl8": {
+      "glyphs": 3,
+      "bytes": 2082,
+      "sha256": "ead87fa6eee1937ab7a7e42e9bd7206ac005b74b5fec4adbd6778393feb83bd4",
+      "native_consumer": "pass"
+    },
+    "lvgl4-binary-xor": {
+      "glyphs": 3,
+      "bytes": 248,
+      "sha256": "77426f11657ff9e522086400d317326b021232f87c1ff1fb727fdbf274c081e5",
+      "native_consumer": "pass"
+    },
+    "u8g2-upstream-font": {
+      "glyphs_read": 191,
+      "glyphs_compared": 3,
+      "sha256": "48f17be689f0ce9dec06075e5830a6de2c470e3761d2226ae7fa80c1959d2bf6",
+      "independent_consumer": "native",
+      "result": "pass"
+    },
+    "lvgl-upstream-font": {
+      "glyphs_read": 157,
+      "glyphs_compared": 3,
+      "sha256": "cb0e6923dd76cceecdb655135f0d2f85e5a978571226149640bf30135bce8d28",
+      "independent_consumer": "native",
+      "result": "pass"
+    },
+    "netbsd-upstream-font": {
+      "glyphs_read": 96,
+      "glyphs_compared": 3,
+      "sha256": "8ac9133b8ba0e83a524651b38eac8a94d51a623673f3b55199e947d9ba69ebd5",
+      "independent_consumer": "monobit",
+      "result": "pass"
+    }
+  }
+}

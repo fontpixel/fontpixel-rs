@@ -1,0 +1,50 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 12.38s
+     Running tests/chiwriter.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/chiwriter-73b1d25b491b7953)
+
+running 8 tests
+test budgets_and_same_limit_write ... ok
+test clipped_ink_is_diagnosed_and_retained ... ok
+test detection_requires_usable_records_and_does_not_claim_qpf_header ... ok
+test every_truncation_and_bad_directory ... ok
+test explicit_offsets_stride_aliasing_and_reorder ... ok
+test new_font_default_filename_is_bounded_in_both_versions ... ok
+test strict_and_invalid_compatibility ... ok
+test generations_pixels_and_native_writes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/riscos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/riscos-9de3afd337272558)
+
+running 10 tests
+test detection_distinguishes_fontx2_and_requires_native_header ... ok
+test budgets_same_limit_output_and_strict_metadata ... ok
+test every_truncation_offsets_and_undefined_outline ... ok
+test packed_repeat_count_adds_rows ... ok
+test metrics_scale_horizontal_and_vertical_sizes_independently ... ok
+test metrics_v0_v2_and_scoped_master_resources ... ok
+test every_font_generation_raw_and_packed_roundtrips ... ok
+test signed_twelve_bit_coordinates_and_v8_extended_code ... ok
+test old_xy_gray_bottom_up_nibbles_and_multistrike ... ok
+test subpixel_grid_retains_all_sixteen_phases ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/xerox.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/xerox-b8582f0901107b55)
+
+running 9 tests
+test ac_rotation_and_fractional_metrics_report_loss ... ok
+test ac_signed_vectors_true_height_and_multiple_segments ... ok
+test all_four_bitblt_layouts_and_dummy ... ok
+test detector_validates_declared_strike_end_and_native_index_tables ... ok
+test alto_primary_baseline_formula_and_extensions ... ok
+test unsigned_kerned_spacing_and_negative_font_offset ... ok
+test index_bad_body_reference_and_exact_plain_strict ... ok
+test truncation_limits_and_output_readability ... ok
+test indexed_strikes_cross_body_boundary ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+

@@ -1,0 +1,252 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont",
+      "--test",
+      "hanfont"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/test-hanfont.log",
+    "log_sha256": "0b0a7512c375f8662a03cb44c6a9e5692d8f0b781ca9b5e373c3acce9b6f1f58"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/clippy-hanfont.log",
+    "log_sha256": "5c99649f8abadfab44b102d614831f139378d32cfa8a8147eb7327fc36289cc6"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/doc-hanfont.log",
+    "log_sha256": "b76c3bef85b4e3b72a2c662ea61e1ca20aae85312c774c8b1c4f82d8a9d6d5da"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "iigs",
+      "--test",
+      "iigs"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/test-iigs.log",
+    "log_sha256": "6a183dd75ac388f8a687f99cf979f2e8073ea2a735748a1da43b3186d3281ce2"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "iigs",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/clippy-iigs.log",
+    "log_sha256": "64cb9455b1ce6d9e35bedd0a7d2457d348b56fb239f86754d0f6ef2c6bf2c7be"
+  },
+  {
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "iigs",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/doc-iigs.log",
+    "log_sha256": "56efb7953711dc4ba66e953c13c38a0b2f775a80d6a9375e7dbc3f73925aeefd"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont,iigs",
+      "--example",
+      "w52_timing",
+      "--test",
+      "hanfont",
+      "--test",
+      "iigs",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/clippy-combined.log",
+    "log_sha256": "d2536df3e96bdafad591c14e90f1d1701962c37d99584ab7cb615ad9e0705f31"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont,iigs",
+      "--test",
+      "hanfont",
+      "--test",
+      "iigs"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/test-combined.log",
+    "log_sha256": "015396ab027857dca10329aa65b731479563e0653c54def1cadaab0ac7f6a1d0"
+  },
+  {
+    "command": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hanfont,iigs",
+      "--example",
+      "w52_timing"
+    ],
+    "exit": 0,
+    "log": "reports/w5.2/build-example.log",
+    "log_sha256": "55bef8219775097dc522fe83f9fe03d165592187476e6970b8d6e4af4540ba73"
+  },
+  {
+    "command": [
+      "python",
+      "tests/crosscheck/w52.py",
+      "--driver",
+      "/home/chen/githubprojects/fontpixel/local-work/target-w52/debug/examples/w52_timing",
+      "--work",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck",
+      "--sciibin",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin"
+    ],
+    "exit": 0,
+    "stdout": "reports/w5.2/crosscheck.json",
+    "stderr": "reports/w5.2/crosscheck.log",
+    "stdout_sha256": "99b6f572b72f2bddf66caec454e6be50979d359e0ca773b3a6303a36745c5dcf",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "python",
+      "fuzz/seed_w52.py",
+      "--directory",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/final-seeds"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "hanfont",
+      "--no-default-features",
+      "--features",
+      "hanfont-only",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/seeds/hanfont",
+      "--",
+      "-max_total_time=20",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-max_len=11520"
+    ],
+    "env": {
+      "ASAN_OPTIONS": "detect_leaks=0"
+    },
+    "exit": 0,
+    "log": "reports/w5.2/fuzz-hanfont.log",
+    "log_sha256": "5497b1246d449eed1d412a1bbcc4da1ce3638deaaaede91cbdddc87a8e784195"
+  },
+  {
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "iigs",
+      "--no-default-features",
+      "--features",
+      "iigs-only",
+      "/home/chen/githubprojects/fontpixel/local-work/w52/smoke-final2/iigs",
+      "--",
+      "-max_total_time=20",
+      "-timeout=3",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "env": {
+      "ASAN_OPTIONS": "detect_leaks=0"
+    },
+    "exit": 0,
+    "log": "reports/w5.2/fuzz-iigs.log",
+    "log_sha256": "8d38c87a388906ccf12de84ff198205895a5e7c52a14efcc110017e80292a616"
+  },
+  {
+    "command": "rustfmt --edition 2024 --check [all owned Rust source/test/example/fuzz files]",
+    "exit": 0,
+    "log": "reports/w5.2/rustfmt.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": "initial IIgs smoke with overstrong provenance equality assertion",
+    "exit": 1,
+    "fuzzer_exit": 77,
+    "log": "reports/w5.2/fuzz-iigs-initial-harness.log",
+    "resolution": "harness-only assertion corrected; final smoke above passes",
+    "log_sha256": "c2750ff362bc85c6cdcc434c67773fe032c05462ceee225c3618da6ade31b08b"
+  },
+  {
+    "command": "intermediate IIgs harness build",
+    "exit": 1,
+    "log": "reports/w5.2/fuzz-iigs-harness-build-fix.log",
+    "resolution": "Properties::remove returns count, assertion corrected",
+    "log_sha256": "6a34b17490e24ad5d600cfcc27c5a81becd014b59463f1dcfb025bbfa058c3b8"
+  }
+]

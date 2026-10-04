@@ -1,0 +1,52 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.77s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-288f49f0c34d29b3)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/nfnt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/nfnt-a1c24a1f09b82a48)
+
+running 34 tests
+test all_unrepresentable_keeps_omissions ... ok
+test appledouble_write_preflights_companion_resolution_limits ... ok
+test apple_data_fork_resource_variant ... ok
+test authored_gray8_preserves_all_samples_and_threshold_is_explicit ... ok
+test appledouble_empty_primary_is_present_in_readback_model ... ok
+test appledouble_uses_scoped_companion_and_bundle ... ok
+test derived_properties_and_trailing_glyph_slots_are_reported ... ok
+test authored_font_generates_valid_classic_ids_and_name_record ... ok
+test cumulative_envelope_and_resource_count ... ok
+test edited_palette_font_writes_model_samples_not_stale_indices ... ok
+test binhex_declared_expansion_and_same_limit_output_contract ... ok
+test detector_requires_resource_and_raster_structure ... ok
+test hand_authored_raster_and_exact_bare_roundtrip ... ok
+test classic_font_name_resource_and_encoded_point_size ... ok
+test complete_metadata_and_unicode_loss_is_reported ... ok
+test extreme_origin_differences_never_panic ... ok
+test font_resources_and_multi_strike ... ok
+test minimum_aggregate_budget_is_inclusive ... ok
+test binhex_optional_exclamation_and_same_asset_segment_boundaries ... ok
+test binhex_original_literal_wire_preserves_both_forks_and_finder_fields ... ok
+test every_single_asset_container_roundtrips ... ok
+test optional_tables_and_unknown_flag_preserved ... ok
+test malformed_palettes_fail_explicitly ... ok
+test grayscale_depths_decode_and_exact_source_writes ... ok
+test partial_palette_uses_ordered_port_ramp_and_device_indices ... ok
+test malformed_ranges_truncations_crc_and_overlap ... ok
+test resource_limits_cover_all_strikes_and_unknown_records ... ok
+test indexed_fctb_projects_rgb_and_preserves_original_resources ... ok
+test resource_opaque_and_fond_optional_tables_survive ... ok
+test writer_same_limits_readable_and_inclusive_budget ... ok
+test mutations_remain_bounded_and_readable ... ok
+test generated_models_preserve_legacy_geometry_after_normalization ... ok
+test binhex_three_crcs_alphabet_truncation_and_rle_errors ... ok
+test detector_keeps_all_font_containers_and_extended_tables ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

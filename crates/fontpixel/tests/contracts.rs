@@ -150,12 +150,12 @@ fn catalogue_exactly_matches_specification_ids_including_pk_and_gf() {
             }
         }
     }
-    assert_eq!(expected.len(), 46);
+    assert_eq!(expected.len(), 99);
     let registry = Registry::<()>::new();
     let actual: Vec<_> = registry.formats().map(|entry| entry.format.id).collect();
     assert_eq!(actual, expected);
     let unique: std::collections::BTreeSet<_> = actual.iter().collect();
-    assert_eq!(unique.len(), 46);
+    assert_eq!(unique.len(), expected.len());
     assert!(
         registry
             .formats()
@@ -221,7 +221,25 @@ fn filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed() {
     let fnt = registry.extension_candidates("foo.fnt");
     assert_eq!(
         fnt.iter().map(|format| format.id).collect::<Vec<_>>(),
-        ["fnt", "fontx2", "bmfont", "gem"]
+        [
+            "raw",
+            "fnt",
+            "fontx2",
+            "bmfont",
+            "gem",
+            "edwin",
+            "gpi",
+            "grasp",
+            "mgtk",
+            "oberon",
+            "pcgeos",
+            "polyprint",
+            "symbos",
+            "vtfont",
+            "rockbox",
+            "cybiko",
+            "playdate",
+        ]
     );
     assert!(matches!(
         registry.format_from_name("foo.fnt"),
@@ -396,6 +414,95 @@ fn output_bundle_validates_collisions_entry_point_and_order() {
 }
 
 #[test]
+fn directory_bundles_require_real_contained_assets_and_do_not_flatten() {
+    let asset = |name| OutputAsset {
+        path: path(name),
+        bytes: vec![1],
+    };
+    for assets in [
+        vec![],
+        vec![asset("x")],
+        vec![asset("xy/a")],
+        vec![asset("other/a")],
+        vec![asset("x/a"), asset("x/a/b")],
+    ] {
+        assert!(OutputBundle::directory(path("x"), assets).is_err());
+    }
+    let bundle = OutputBundle::directory(path("x"), vec![asset("x/a.png")]).unwrap();
+    assert!(bundle.is_directory());
+    assert_eq!(bundle.primary(), &path("x"));
+    assert!(bundle.into_single().is_err());
+}
+
+#[test]
+fn directory_listing_is_bounded_scoped_sorted_and_counted() {
+    struct Listing(Vec<ResourcePath>);
+    impl ResourceResolver for Listing {
+        fn resolve(&self, _: &ResourcePath, maximum: usize) -> fontpixel::Result<Vec<u8>> {
+            if maximum < 1 {
+                return Err(Error::ResourceLimit {
+                    resource: "fixture",
+                    limit: maximum,
+                });
+            }
+            Ok(vec![42])
+        }
+        fn list(
+            &self,
+            _: Option<&ResourcePath>,
+            _: usize,
+            _: usize,
+        ) -> fontpixel::Result<Vec<ResourcePath>> {
+            Ok(self.0.clone())
+        }
+    }
+    let listing = Listing(vec![path("b"), path("a")]);
+    let cost = 4 * (std::mem::size_of::<ResourcePath>() + 1);
+    let limits = ResourceLimits {
+        max_total_bytes: cost + 1,
+        max_resources: 2,
+        ..Default::default()
+    };
+    let input = Input::directory("font", &listing);
+    let mut context = ReadContext::new(&input, &limits).unwrap();
+    assert!(context.is_directory());
+    assert!(context.bytes().is_empty());
+    assert_eq!(
+        context.list_resources_limited(None, 2, cost).unwrap(),
+        [path("a"), path("b")]
+    );
+    assert_eq!(context.retained_input_bytes(), cost);
+    assert_eq!(context.resource(&path("a")).unwrap(), [42]);
+    assert!(context.list_resources_limited(None, 2, cost).is_err());
+    assert!(
+        fontpixel::registry()
+            .read(&input, &ReadOptions::default())
+            .is_err()
+    );
+
+    for (names, directory, max_entries, max_bytes) in [
+        (vec!["a", "a"], None, 2, 1000),
+        (vec!["a", "b"], None, 1, 1000),
+        (vec!["a"], None, 1, 0),
+        (vec!["sub/a"], None, 2, 1000),
+        (vec!["outside/a"], Some("sub"), 2, 1000),
+        (vec!["sub/deep/a"], Some("sub"), 2, 1000),
+    ] {
+        let bad = Listing(names.into_iter().map(path).collect());
+        let input = Input::directory("font", &bad);
+        let limits = ResourceLimits::default();
+        let mut context = ReadContext::new(&input, &limits).unwrap();
+        assert!(
+            context
+                .list_resources_limited(directory.map(path).as_ref(), max_entries, max_bytes)
+                .is_err()
+        );
+    }
+    let legacy = MapResolver(BTreeMap::new());
+    assert!(legacy.list(None, 10, 1000).is_err());
+}
+
+#[test]
 fn primary_and_aggregate_input_limits_are_enforced() {
     let limits = ResourceLimits {
         max_input_bytes: 1,
@@ -459,6 +566,39 @@ fn resolver_results_and_call_count_are_checked() {
     ));
 }
 
+#[test]
+fn sidecar_spare_capacity_is_charged_and_cannot_bypass_limits() {
+    struct Spare;
+    impl ResourceResolver for Spare {
+        fn resolve(&self, _: &ResourcePath, _: usize) -> fontpixel::Result<Vec<u8>> {
+            let mut bytes = Vec::with_capacity(32);
+            bytes.push(1);
+            Ok(bytes)
+        }
+    }
+    let input = Input::new(b"x").with_resources(&Spare);
+    let limits = ResourceLimits {
+        max_total_bytes: 33,
+        ..Default::default()
+    };
+    let mut context = ReadContext::new(&input, &limits).unwrap();
+    assert_eq!(context.resource(&path("one")).unwrap(), [1]);
+    assert_eq!(context.retained_input_bytes(), 33);
+    assert!(matches!(
+        context.resource(&path("two")),
+        Err(Error::ResourceLimit { .. })
+    ));
+    let limits = ResourceLimits {
+        max_total_bytes: 32,
+        ..limits
+    };
+    let mut context = ReadContext::new(&input, &limits).unwrap();
+    assert!(matches!(
+        context.resource(&path("one")),
+        Err(Error::ResourceLimit { .. })
+    ));
+}
+
 struct DiagnosticWriter {
     report: Report,
     calls: Arc<AtomicUsize>,
@@ -494,6 +634,7 @@ fn strict_rejects_write_loss_at_any_severity_without_returning_assets() {
     let (registry, calls) = diagnostic_registry(loss());
     let options = WriteOptions {
         strict: true,
+        transport_limits: None,
         primary_name: path("output"),
     };
     let error = registry.write(&(), FIXTURE.id, &options).unwrap_err();
@@ -508,6 +649,7 @@ fn strict_preexisting_read_loss_rejects_before_invoking_writer() {
     let (registry, calls) = diagnostic_registry(Report::default());
     let options = WriteOptions {
         strict: true,
+        transport_limits: None,
         primary_name: path("output"),
     };
     assert!(matches!(
@@ -545,6 +687,7 @@ fn strict_allows_nonlossy_warnings_and_rejects_error_diagnostics() {
     let (registry, _) = diagnostic_registry(report.clone());
     let options = WriteOptions {
         strict: true,
+        transport_limits: None,
         primary_name: path("output"),
     };
     assert!(registry.write(&(), FIXTURE.id, &options).is_ok());

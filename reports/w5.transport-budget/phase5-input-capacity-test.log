@@ -1,0 +1,52 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 59.78s
+     Running tests/contracts.rs (/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/contracts-2d65534ffca5fe4a)
+
+running 24 tests
+test asset_paths_block_absolute_parent_windows_and_noncanonical_paths ... ok
+test directory_bundles_require_real_contained_assets_and_do_not_flatten ... ok
+test catalogue_exactly_matches_specification_ids_including_pk_and_gf ... ok
+test content_evidence_precedes_wrong_extensions ... ok
+test explicit_read_bypasses_detection_and_sidecar_request_is_real ... ok
+test directory_listing_is_bounded_scoped_sorted_and_counted ... ok
+test feature_state_matches_the_compiled_build ... ok
+test filename_is_only_a_hint_and_ambiguous_extensions_are_not_guessed ... ok
+test multi_asset_write_and_resource_backed_read_roundtrip_synthetic_model ... ok
+test no_evidence_errors_and_detector_cannot_mislabel_filename_evidence ... ok
+test nonstrict_retains_loss_and_merges_reports_in_encounter_order ... ok
+test primary_and_aggregate_input_limits_are_enforced ... ok
+test read_error_diagnostics_are_never_success ... ok
+test output_bundle_validates_collisions_entry_point_and_order ... ok
+test registration_rejects_duplicates_disabled_features_and_changed_catalogue ... ok
+test resolver_results_and_call_count_are_checked ... ok
+test report_json_is_structured_and_roundtrips ... ok
+test reports_preserve_location_and_have_deterministic_text ... ok
+test strict_preexisting_read_loss_rejects_before_invoking_writer ... ok
+test strict_allows_nonlossy_warnings_and_rejects_error_diagnostics ... ok
+test strict_rejects_write_loss_at_any_severity_without_returning_assets ... ok
+test stronger_content_wins_and_equal_strength_remains_ambiguous ... ok
+test unimplemented_is_not_a_successful_empty_font ... ok
+test sidecar_spare_capacity_is_charged_and_cannot_bypass_limits ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/transport_limits.rs (/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/transport_limits-11aee789ff4012d0)
+
+running 14 tests
+test common_limits_can_only_restrict_typed_limits ... ok
+test decoded_growth_is_capped_and_its_spare_capacity_is_reserved ... ok
+test caps_include_header_trailer_and_decompressed_body ... ok
+test retained_diagnostics_are_charged_once_before_native_validation ... ok
+test strict_loss_precedes_compression_and_does_not_duplicate_reports ... ok
+test native::older_nested_limits_reach_the_transport_layer ... ok
+test envelope_growth_and_plaintext_are_one_budget ... ok
+test failed_native_validation_keeps_read_report_and_deduplicates_replayed_prefix ... ok
+test directories_multiple_assets_and_nongzip_names_keep_their_contracts ... ok
+test native::macro_registered_writer_preserves_its_typed_input_cap ... ok
+test native::exact_public_raw_regression_and_writer_only_layout ... ok
+test native::independent_typed_output_and_total_native_audit_caps ... ok
+test native::smallest_successful_native_aggregate_budget_reopens ... ok
+test incompressible_input_hits_bounded_sink_and_large_success_reopens ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+

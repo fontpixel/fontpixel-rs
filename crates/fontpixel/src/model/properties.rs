@@ -78,6 +78,9 @@ impl Property {
 )]
 pub struct Properties(Vec<Property>);
 impl Properties {
+    pub(crate) fn allocation_capacity(&self) -> usize {
+        self.0.capacity()
+    }
     /// Number of records, including repeated names.
     pub fn len(&self) -> usize {
         self.0.len()

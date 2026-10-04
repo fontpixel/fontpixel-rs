@@ -16,7 +16,7 @@ impl Write for Output {
         Ok(())
     }
 }
-fn symbol(s: &str) -> bool {
+pub(super) fn symbol(s: &str) -> bool {
     let mut bytes = s.bytes();
     bytes
         .next()
@@ -70,7 +70,12 @@ fn symbol(s: &str) -> bool {
         ]
         .contains(&s)
 }
-fn pixels(g: &Glyph, cell: Bounds, threshold: Option<u8>, l: &ResourceLimits) -> Result<Bitmap> {
+pub(super) fn pixels(
+    g: &Glyph,
+    cell: Bounds,
+    threshold: Option<u8>,
+    l: &ResourceLimits,
+) -> Result<Bitmap> {
     if u64::from(cell.width) * u64::from(cell.height) > l.max_pixels_per_glyph as u64 {
         return Err(Error::ResourceLimit {
             resource: "C raster pixels",
@@ -133,6 +138,15 @@ fn pixels(g: &Glyph, cell: Bounds, threshold: Option<u8>, l: &ResourceLimits) ->
     Bitmap::from_raw(cell.width, cell.height, &bytes, bitmap_limits(l))
 }
 pub(super) fn write(set: &FontSet, o: &CWriteOptions) -> Result<(Vec<u8>, Report)> {
+    if o.container == CContainer::LvglBinary && o.family != Family::Lvgl {
+        return Err(invalid("LVGL binary container requires LVGL family"));
+    }
+    if matches!(
+        o.family,
+        Family::U8g2 | Family::Lvgl | Family::Netbsd | Family::U8glib | Family::U8x8
+    ) {
+        return super::embedded::write(set, o);
+    }
     let l = &o.limits;
     set.validate(l)?;
     let f = set.single()?;
@@ -435,6 +449,7 @@ pub(super) fn write(set: &FontSet, o: &CWriteOptions) -> Result<(Vec<u8>, Report
             family: o.family,
             array_name: Some(o.array_name.clone()),
             generic: None,
+            ..Default::default()
         },
         ..Default::default()
     };
@@ -466,7 +481,7 @@ fn union(a: Bounds, b: Bounds) -> Result<Bounds> {
         .ok_or_else(|| invalid("C cell height overflow"))?;
     Ok(Bounds::new(w, h, x, y))
 }
-fn compare(
+pub(super) fn compare(
     source: &Font,
     target: &Font,
     selected: &BTreeMap<u32, (usize, &Glyph)>,

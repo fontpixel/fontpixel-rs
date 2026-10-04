@@ -1,0 +1,24 @@
+{
+  "source_sha256": "2908c480d4614e10ab4ddc9b9af6ac506f04e1224cecbd377407140dceffac9f",
+  "source": "https://ifarchive.org/if-archive/download-tools/unix/sciibin-3.1.tar.Z",
+  "checks": [
+    {
+      "file": "native-0.bsc",
+      "exit": 0,
+      "bytes": 65,
+      "sha256": "656e5e8420b5f0b1177f705a929444c932d330dc27a6fbfb39cb345ac09ad9f6"
+    },
+    {
+      "file": "native-12288.bsc",
+      "exit": 0,
+      "bytes": 12353,
+      "sha256": "330cac752edd8e17c7d2a3e76e08115bc08a1fd898b7619e53f64ac61233a856"
+    },
+    {
+      "file": "native-30000.bsc",
+      "exit": 0,
+      "bytes": 30065,
+      "sha256": "312104e5cb5ab2d043c9c625c9a7fb33885b6b4f1bb1ea0c8c61cdf9ec8fde5d"
+    }
+  ]
+}

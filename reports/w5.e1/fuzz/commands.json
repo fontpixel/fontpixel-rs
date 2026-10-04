@@ -1,0 +1,128 @@
+[
+  {
+    "format": "rockbox",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "rockbox_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap",
+      "--no-default-features",
+      "--features",
+      "rockbox-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 24.08399987220764,
+    "log": "reports/w5.e1/fuzz/rockbox.log"
+  },
+  {
+    "format": "u8m",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "u8m_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/u8m_bitmap",
+      "--no-default-features",
+      "--features",
+      "u8m-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 24.69349503517151,
+    "log": "reports/w5.e1/fuzz/u8m.log"
+  },
+  {
+    "format": "cybiko",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "cybiko_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/cybiko_bitmap",
+      "--no-default-features",
+      "--features",
+      "cybiko-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 24.65710687637329,
+    "log": "reports/w5.e1/fuzz/cybiko.log"
+  },
+  {
+    "format": "hmzk",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "hmzk_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap",
+      "--no-default-features",
+      "--features",
+      "hmzk-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 36.41604924201965,
+    "log": "reports/w5.e1/fuzz/hmzk.log"
+  },
+  {
+    "format": "sbf",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "sbf_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/sbf_bitmap",
+      "--no-default-features",
+      "--features",
+      "sbf-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 25.687557458877563,
+    "log": "reports/w5.e1/fuzz/sbf.log"
+  },
+  {
+    "format": "playdate",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "playdate_bitmap",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap",
+      "--no-default-features",
+      "--features",
+      "playdate-only",
+      "--",
+      "-max_total_time=12",
+      "-timeout=3",
+      "-rss_limit_mb=1024"
+    ],
+    "exit": 0,
+    "seconds": 31.505815982818604,
+    "log": "reports/w5.e1/fuzz/playdate.log"
+  }
+]

@@ -1,0 +1,43 @@
+   Compiling libc v0.2.189
+   Compiling find-msvc-tools v0.1.14
+   Compiling shlex v2.0.1
+   Compiling alloc-no-stdlib v3.0.0
+   Compiling alloc-stdlib v0.3.0
+   Compiling brotli-decompressor v6.0.1
+   Compiling jobserver v0.1.35
+   Compiling cc v1.5.1
+   Compiling libfuzzer-sys v0.4.13
+   Compiling arbitrary v1.4.2
+   Compiling brotli v9.0.0
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 21.48s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.01s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w52/x86_64-unknown-linux-gnu/release/hanfont -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/hanfont/ -max_total_time=20 -timeout=3 -rss_limit_mb=1024 -max_len=11520 /home/chen/githubprojects/fontpixel/local-work/w52/seeds/hanfont`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 949722891
+INFO: Loaded 1 modules   (7298 inline 8-bit counters): 7298 [0x58cda4ca5c80, 0x58cda4ca7902), 
+INFO: Loaded 1 PC tables (7298 PCs): 7298 [0x58cda4ca7908,0x58cda4cc4128), 
+INFO:        1 files found in /home/chen/githubprojects/fontpixel/local-work/w52/seeds/hanfont
+INFO: seed corpus: files: 1 min: 11520b max: 11520b total: 11520b rss: 31Mb
+#2	INITED cov: 815 ft: 816 corp: 1/11520b exec/s: 0 rss: 127Mb
+	NEW_FUNC[1/1]: 0x58cda4ba8720 in core::ptr::drop_glue::<fontpixel::error::Error> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/core/src/ptr/mod.rs:828
+#8	NEW    cov: 826 ft: 834 corp: 2/20Kb lim: 11520 exec/s: 4 rss: 319Mb L: 9958/11520 MS: 1 EraseBytes-
+#16	pulse  cov: 826 ft: 834 corp: 2/20Kb lim: 11520 exec/s: 8 rss: 321Mb
+#24	REDUCE cov: 826 ft: 834 corp: 2/17Kb lim: 11520 exec/s: 8 rss: 321Mb L: 6269/11520 MS: 1 CrossOver-
+#26	REDUCE cov: 826 ft: 834 corp: 2/16Kb lim: 11520 exec/s: 8 rss: 321Mb L: 5068/11520 MS: 2 ShuffleBytes-EraseBytes-
+#32	pulse  cov: 826 ft: 834 corp: 2/16Kb lim: 11520 exec/s: 10 rss: 322Mb
+#43	REDUCE cov: 826 ft: 834 corp: 2/14280b lim: 11520 exec/s: 14 rss: 322Mb L: 2760/11520 MS: 2 CrossOver-EraseBytes-
+#64	pulse  cov: 826 ft: 834 corp: 2/14280b lim: 11520 exec/s: 9 rss: 323Mb
+#103	REDUCE cov: 826 ft: 834 corp: 2/14216b lim: 11520 exec/s: 11 rss: 323Mb L: 2696/11520 MS: 5 ChangeBinInt-CMP-InsertRepeatedBytes-CopyPart-EraseBytes- DE: "\000\000\000\000\000\000\000\000"-
+#127	REDUCE cov: 826 ft: 834 corp: 2/13741b lim: 11520 exec/s: 11 rss: 323Mb L: 2221/11520 MS: 4 InsertByte-CopyPart-InsertByte-EraseBytes-
+#128	pulse  cov: 826 ft: 834 corp: 2/13741b lim: 11520 exec/s: 10 rss: 323Mb
+#139	REDUCE cov: 826 ft: 834 corp: 2/13208b lim: 11520 exec/s: 9 rss: 324Mb L: 1688/11520 MS: 2 ChangeBit-EraseBytes-
+#167	REDUCE cov: 826 ft: 834 corp: 2/13172b lim: 11520 exec/s: 10 rss: 324Mb L: 1652/11520 MS: 3 ChangeByte-InsertRepeatedBytes-EraseBytes-
+#178	REDUCE cov: 826 ft: 834 corp: 2/12693b lim: 11520 exec/s: 10 rss: 324Mb L: 1173/11520 MS: 1 EraseBytes-
+#230	REDUCE cov: 826 ft: 834 corp: 2/12304b lim: 11520 exec/s: 11 rss: 324Mb L: 784/11520 MS: 2 InsertRepeatedBytes-EraseBytes-
+#235	DONE   cov: 826 ft: 834 corp: 2/12304b lim: 11520 exec/s: 11 rss: 324Mb
+###### Recommended dictionary. ######
+"\000\000\000\000\000\000\000\000" # Uses: 9
+###### End of recommended dictionary. ######
+Done 235 runs in 21 second(s)

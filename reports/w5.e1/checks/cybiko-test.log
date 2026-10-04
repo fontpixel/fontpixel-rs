@@ -1,0 +1,11 @@
+
+running 3 tests
+test sparse_slots_space_baseline_width9 ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+test malformed_counts_padding_and_limits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 3.37s
+     Running tests/cybiko.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/cybiko-1a7f57c4deac74b7)

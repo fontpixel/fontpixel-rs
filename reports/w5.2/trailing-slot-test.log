@@ -1,0 +1,42 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 7.50s
+     Running tests/hanfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w52/debug/deps/hanfont-36072bdb085042f8)
+
+running 10 tests
+test incomplete_or_duplicate_components_are_rejected ... ok
+test budgets_cover_full_expansion_and_default_readback ... ok
+test removed_trailing_slot_is_reported_even_when_live_ids_are_unchanged ... ok
+test gray_components_need_explicit_threshold ... ok
+test independently_worked_component_examples_cover_all_shapes ... ok
+test loss_covers_metrics_names_and_properties ... ok
+test edited_syllables_do_not_silently_replay_components ... ok
+test components_are_all_360_ordered_slots_and_roundtrip_exact ... ok
+test registry_strict_mode_rejects_complete_model_loss ... ok
+test full_syllable_roundtrip_preserves_unused_nonblank_fillers ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/iigs.rs (/home/chen/githubprojects/fontpixel/local-work/target-w52/debug/deps/iigs-d600db04b4f9babc)
+
+running 18 tests
+test apple_wire_has_unsigned_width_offset_and_unswapped_bitmap ... ok
+test edited_native_extent_cannot_undersize_text_buffer ... ok
+test binscii_custom_dictionary_and_cr_line_ends ... ok
+test canonical_versions_reopen_and_preserve_pixels ... ok
+test location_table_follows_offset_pointer_across_padding ... ok
+test malformed_tables_and_every_truncation_fail ... ok
+test native_edits_are_not_hidden_and_all_metadata_is_audited ... ok
+test grayscale_requires_explicit_conversion_and_reports_loss ... ok
+test native_unknown_header_extension_and_trailing_bytes_roundtrip ... ok
+test reader_charset_is_explicit_and_not_serialized_silently ... ok
+test registry_strict_mode_rejects_complete_model_loss ... ok
+test removed_trailing_slot_is_reported_even_when_live_ids_are_unchanged ... ok
+test tight_limits_enforce_source_output_and_readback_budget ... ok
+test unmapped_unicode_and_unrepresentable_bearings_are_explicit ... ok
+test signed_vertical_metrics_allow_rectangles_outside_baseline ... ok
+test successful_writer_rereads_at_its_exact_cumulative_budget ... ok
+test extended_32_bit_width_offset_and_explicit_legacy_version_failure ... ok
+test binscii_segments_reorder_roundtrip_crc_and_completeness ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+

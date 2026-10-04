@@ -1,0 +1,172 @@
+[
+  {
+    "path": "fuzz/corpus/pfr/pfr-2-0-1.pfr",
+    "bytes": 186,
+    "sha256": "caa03bd0b0e708038754dff7db2ca682f8363b9375f53b46a6e775d1c86482d3"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-1-1-0.pfr",
+    "bytes": 176,
+    "sha256": "ade9a9e2f7aeba71a21ccfc83a0211f62a14866cde38a5fe2c281772fa540ea1"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-original.sfn",
+    "bytes": 132,
+    "sha256": "433420dd13e84d7c78a121b7ff6adec68205958e19a8ff87c7453a8939ea4ac7"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-gray.asc",
+    "bytes": 652,
+    "sha256": "559454ddcb18bbd937afd29cdd96e15d8c772fbed8bce01bf5d0dcb78684c978"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-1-0-1.pfr",
+    "bytes": 175,
+    "sha256": "6f5483c926e5206f5869966aee11bfc338ae83e983f762fa989860e1bdaebb5e"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-0-1-1.pfr",
+    "bytes": 170,
+    "sha256": "499ea04751ea5bae54aac4952161a6eb611d5b3c7867a7489a67857c407db1a3"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-0-1-0.pfr",
+    "bytes": 170,
+    "sha256": "e95ba89fcdd7aef614a7e8e9b0b9d584984c164041817d1f1dd9361f062ac0f1"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-1-1-0.pfr",
+    "bytes": 176,
+    "sha256": "ba72122805a578216d18056dee680570f09f836f8e05943692236e5176263805"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-0-0-0.pfr",
+    "bytes": 170,
+    "sha256": "16d06afd7aae9a3190655c8e03bc199e9d506fa3f4f0187453b30ec7e98965c2"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-0-1-0.pfr",
+    "bytes": 170,
+    "sha256": "6f3881c6474ed191b60e7ffe2c9241a63a0fd25e2e3a16a32841a4b8cf5af115"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-0-0-1.pfr",
+    "bytes": 170,
+    "sha256": "140117832b069b63aaa19547b176b1bf8bc5542c54dcd3b3083ec793f5fa180f"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-2-1-0.pfr",
+    "bytes": 188,
+    "sha256": "df2fccc4cf1ef691859ecb21dbdf61967b6f91723f99e39f20b8147c228fe255"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-1-0-0.pfr",
+    "bytes": 175,
+    "sha256": "d42d28685d80a69db3cbf12e4bfb63092e35652361205fff9f87c6519b197e88"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-2-1-1.pfr",
+    "bytes": 188,
+    "sha256": "06d607caf8908360bd1c9ec052c5eff1ba2c3b242bb590c71435a4784dae57fa"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-2-0-0.pfr",
+    "bytes": 186,
+    "sha256": "35efbf13d73cf3b42293f9b1ce26dd70e59a0099d379e50b988a37e59978fc99"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-original.asc",
+    "bytes": 297,
+    "sha256": "1806f9e47ce8d4250559d78623e6cf7c012875adf4c960cdd36692c33a8064a1"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-ligature.asc",
+    "bytes": 298,
+    "sha256": "e8d58634b61843883b90e0db2627df9673708ad62699ae4527c04ca5b4668435"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-2-1-0.pfr",
+    "bytes": 188,
+    "sha256": "960ca5a07df59721209d3a11851377a5fbc15b704228534e50e820de4abf2b1f"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-1-0-1.pfr",
+    "bytes": 175,
+    "sha256": "4309c93b75bb7774bf4eb0e9ef1966ee00184fe58339ca88e8b7c2e70fbf9562"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-2-0-0.pfr",
+    "bytes": 186,
+    "sha256": "c2953698314413ebec2ff70c32fd07e86af42739ffaa983e68920b1e12328e4b"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-fractional.pfr",
+    "bytes": 173,
+    "sha256": "79b298fadf05201bb3770eb0fd44e66f7218da515809064d55e57bb87cc231b7"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-collection.sfn",
+    "bytes": 272,
+    "sha256": "92105781323d93624be01717b9c2a15e195e86ff0f3cbcf0eca6d201ba881c2c"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-0-0-1.pfr",
+    "bytes": 170,
+    "sha256": "176601d623f129faebbc70f6596ccca3f8d0e755bcdea66937d3d8d8801bf0f6"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-2-0-1.pfr",
+    "bytes": 186,
+    "sha256": "47fbfb051b12005cc672ffd30395e4ab14fb8242354f4ec0f62b73a10aa296f9"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-1-1-1.pfr",
+    "bytes": 176,
+    "sha256": "2dfcc12c0891b69038249c6ed4846d79075d0aff28af071368debef015580b64"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-0-1-1.pfr",
+    "bytes": 170,
+    "sha256": "c1f2eed866825cf83eaafbf2c8a112f2669e39659ecb1c8b3f1a20c39d3ce29b"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-1-1-1.pfr",
+    "bytes": 176,
+    "sha256": "26a76471418617335b723049c7b95e1ca23a95c4f7453ba093645b8e01877dc4"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-1-0-0.pfr",
+    "bytes": 175,
+    "sha256": "76a40db306681785c922943a78fcc0f9c3a633a9a5e9b2a9eb857192147f2231"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-2-1-1.pfr",
+    "bytes": 188,
+    "sha256": "3f52bcbd662434e10dec06052a3a6472ad2dfc149e6fafa28bf6b30d91c8ac63"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-gray.sfn",
+    "bytes": 1186,
+    "sha256": "c0b51b467b7372a06a76770ec418f8e6a1214f66a4055ef848003ca08f618e51"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-multistrike.pfr",
+    "bytes": 182,
+    "sha256": "3b06e99d0b4da6705ae08b3512f229bf9b249025f47ba59c75213f6689fe453a"
+  },
+  {
+    "path": "fuzz/corpus/pfr/pfr-ft-0-0-0.pfr",
+    "bytes": 170,
+    "sha256": "23cf136cd0583522d0252c326575c938b87c44e22a6d7dba70504b3cfd7000c6"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-repeat.sfn",
+    "bytes": 1186,
+    "sha256": "77e514ba69f544aa311610d10237039025447f05dc3d59d05ca6ec8fcda4183b"
+  },
+  {
+    "path": "fuzz/corpus/ssfn/ssfn-gzip.sfn.gz",
+    "bytes": 113,
+    "sha256": "cdb9fd134039ef88915883d20819993a6dbacccbe807675f761a36e003ca722c"
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "sources": [
+    {
+      "file": "sfn_format.md",
+      "url": "https://gitlab.com/bztsrc/scalable-font2/-/raw/master/docs/sfn_format.md",
+      "bytes": 20571,
+      "sha256": "5991af899e101f73c0e01e03414efc7dddf3e47ea15a28de32ca1c968ea44431"
+    },
+    {
+      "file": "asc_format.md",
+      "url": "https://gitlab.com/bztsrc/scalable-font2/-/raw/master/docs/asc_format.md",
+      "bytes": 9610,
+      "sha256": "5cd4b2d29b81a44628c0f7621aea9600b47b5b1aef82ea99e616a9ed7dda991a"
+    },
+    {
+      "file": "sfnconv.md",
+      "url": "https://gitlab.com/bztsrc/scalable-font2/-/raw/master/docs/sfnconv.md",
+      "bytes": 18536,
+      "sha256": "1a4f5c5b56e0884f027c6767046f448bf29e4c51072c69090417bf0edd221161"
+    },
+    {
+      "file": "ssfn.h",
+      "url": "https://gitlab.com/bztsrc/scalable-font2/-/raw/master/ssfn.h",
+      "bytes": 65536,
+      "sha256": "074a647f163b18a9746dde271ae330e833c7848cd04e1ffe1be79d6551f5143e"
+    },
+    {
+      "file": "davic-part9.pdf",
+      "url": "https://docbox.etsi.org/reference/davic/davic%201.4.1%20specification%20part%209.pdf",
+      "bytes": 1532379,
+      "sha256": "0ecc9eac424aed2789f0f72707db25ae5c6396095b769f0ab2d70144f3cc88d5"
+    },
+    {
+      "file": "scalable-font2-master.tar.gz",
+      "url": "https://gitlab.com/bztsrc/scalable-font2/-/archive/master/scalable-font2-master.tar.gz",
+      "bytes": 15186980,
+      "sha256": "babe14c86a08833a6eda03428f11d34ac7bf12f6b49a88d35b4580c324379b75"
+    },
+    {
+      "file": "pfrload.c",
+      "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-13-2/src/pfr/pfrload.c",
+      "bytes": 28988,
+      "sha256": "93c48584a1c94689432e24deae4cc9475d51bb27f343a5254ab5bcb98d5da468"
+    },
+    {
+      "file": "pfrsbit.c",
+      "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-13-2/src/pfr/pfrsbit.c",
+      "bytes": 21398,
+      "sha256": "063159b3d16f6e1dc9e67df205dd8f6d7c4e22812bd332a86cd5eb275725c343"
+    }
+  ],
+  "freetype_version": [
+    2,
+    13,
+    2
+  ],
+  "python_freetype": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/freetype/__init__.py",
+  "freetype_library": "/home/chen/githubprojects/fontpixel/local-work/oracles/lib/python3.12/site-packages/freetype/libfreetype.so",
+  "freetype_library_sha256": "33f7bb37f65553ecc4d273d51a79fb152d4f0cd1cdd13b8477c76a90fce09b7d",
+  "sfnconv": {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/w5e2-outline/scalable-font2-master/sfnconv/sfnconv",
+    "sha256": "55d252a25bc09f42f0a2eb46e5d7f50ed80ebf71386a370f1a5b3688a4a5e2aa",
+    "build_command": [
+      "make",
+      "-C",
+      "../local-work/w5e2-outline/scalable-font2-master/sfnconv",
+      "USE_DYNDEPS=1",
+      "-j2"
+    ],
+    "build_exit": 0,
+    "build_log_sha256": "99629ec458478be25b47248f3cdc667d122cc59b22d6b867e0209814d6ccefee",
+    "notice": "Author MIT renderer/converter; bundled GPL potrace used solely in external oracle build, never incorporated into production sources."
+  }
+}

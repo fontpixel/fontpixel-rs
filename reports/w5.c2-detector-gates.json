@@ -1,0 +1,325 @@
+[
+  {
+    "format": "chiwriter",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 25.450820922851562,
+    "log": "reports/w5.c2-detector-chiwriter-test.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.8377323150634766,
+    "log": "reports/w5.c2-detector-chiwriter-clippy.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "chiwriter",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.5383429527282715,
+    "log": "reports/w5.c2-detector-chiwriter-doc.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 10.601272583007812,
+    "log": "reports/w5.c2-detector-riscos-test.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.4760541915893555,
+    "log": "reports/w5.c2-detector-riscos-clippy.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "riscos",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.49362635612487793,
+    "log": "reports/w5.c2-detector-riscos-doc.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--all-targets"
+    ],
+    "exit": 0,
+    "seconds": 9.969178915023804,
+    "log": "reports/w5.c2-detector-xerox-test.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 2.657907485961914,
+    "log": "reports/w5.c2-detector-xerox-clippy.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "xerox",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.5335028171539307,
+    "log": "reports/w5.c2-detector-xerox-doc.log"
+  },
+  {
+    "format": "catalyst",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "catalyst-only",
+      "catalyst",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/catalyst",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 19.359415531158447,
+    "log": "reports/w5.c2-detector-catalyst-smoke.log"
+  },
+  {
+    "format": "chiwriter",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "chiwriter-only",
+      "chiwriter",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/chiwriter",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 19.87491488456726,
+    "log": "reports/w5.c2-detector-chiwriter-smoke.log"
+  },
+  {
+    "format": "dashen",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "dashen-only",
+      "dashen",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/dashen",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 39.68377423286438,
+    "log": "reports/w5.c2-detector-dashen-smoke.log"
+  },
+  {
+    "format": "hppcl",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "hppcl-only",
+      "hppcl",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/hppcl",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 20.317100524902344,
+    "log": "reports/w5.c2-detector-hppcl-smoke.log"
+  },
+  {
+    "format": "prebuilt",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "prebuilt-only",
+      "prebuilt",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/prebuilt",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 18.39245629310608,
+    "log": "reports/w5.c2-detector-prebuilt-smoke.log"
+  },
+  {
+    "format": "riscos",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "riscos-only",
+      "riscos",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/riscos",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 21.024465560913086,
+    "log": "reports/w5.c2-detector-riscos-smoke.log"
+  },
+  {
+    "format": "xerox",
+    "kind": "asan_smoke",
+    "command": [
+      "cargo",
+      "+nightly",
+      "fuzz",
+      "run",
+      "--no-default-features",
+      "--features",
+      "xerox-only",
+      "xerox",
+      "/home/chen/githubprojects/fontpixel/local-work/w5c2-seeds/xerox",
+      "--",
+      "-max_total_time=5",
+      "-timeout=5",
+      "-rss_limit_mb=1024",
+      "-max_len=262144"
+    ],
+    "exit": 0,
+    "seconds": 21.037106037139893,
+    "log": "reports/w5.c2-detector-xerox-smoke.log"
+  }
+]

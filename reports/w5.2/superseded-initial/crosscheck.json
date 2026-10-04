@@ -1,0 +1,405 @@
+{
+  "monobit": "0.54",
+  "checks": 68,
+  "cases": [
+    {
+      "file": "original-0.fon",
+      "sha256": "656e5e8420b5f0b1177f705a929444c932d330dc27a6fbfb39cb345ac09ad9f6",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-0-101.fon",
+      "sha256": "b54ae8361bac6128b689e89025e99a4208d5e857fecec2bd75a3ef6efd843d75",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-0-101.fon",
+      "sha256": "156a48377f9eb08f6184810fe2f77029544a873283f9afce2323305ad0a1162e",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-0-105.fon",
+      "sha256": "c9673b6b015f384ebbf33d0c62d3be1d534f90397826e340905f811fc11db4d2",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-0-105.fon",
+      "sha256": "9ff5435f38620fab6adc5a71241705e3de0cfa32db629001e255362069858570",
+      "glyphs": 3
+    },
+    {
+      "file": "original-1.fon",
+      "sha256": "63b8e7b7adb71de6511615358dc799b02b833f77bf05be4ff7e7a2397498992a",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-1-101.fon",
+      "sha256": "b54ae8361bac6128b689e89025e99a4208d5e857fecec2bd75a3ef6efd843d75",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-1-101.fon",
+      "sha256": "156a48377f9eb08f6184810fe2f77029544a873283f9afce2323305ad0a1162e",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-1-105.fon",
+      "sha256": "c9673b6b015f384ebbf33d0c62d3be1d534f90397826e340905f811fc11db4d2",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-1-105.fon",
+      "sha256": "9ff5435f38620fab6adc5a71241705e3de0cfa32db629001e255362069858570",
+      "glyphs": 3
+    },
+    {
+      "file": "original-2.fon",
+      "sha256": "f1e0dc6170070b742ae1a1cb6249503699ec78718d1d9943ebdd64ebcf207dec",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-2-101.fon",
+      "sha256": "b677a98e473d721002e5e6564bc58a0c6f900f29da1218dabed8805ef1bef8cc",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-2-101.fon",
+      "sha256": "9bf0176e2a94fa1fdb46401261791a36f69edecdedea9624db25f6661235e272",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-2-105.fon",
+      "sha256": "1f8fb997c3780c07c259a097fb045eba40e39335d963262f4d758e8aa5c633b4",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-2-105.fon",
+      "sha256": "7f56edda197164b664ab9beb7db45fa6f5fbf039f6b1a7e2613e461b15e90540",
+      "glyphs": 3
+    },
+    {
+      "file": "original-3.fon",
+      "sha256": "c2067e8c4bf6b788081e51a773427693aeea36940755c278058ea1749bee6133",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-3-101.fon",
+      "sha256": "f5e80ea98f1e67eaae2ab9a40e207992c9068841454dfda62eec63a84a0bc7fa",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-3-101.fon",
+      "sha256": "b429cca3971b2cb6f1540bd9f9b0ee5070a4bbc26dd650425d9d60de1fef51fc",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-3-105.fon",
+      "sha256": "fa13904e0d044172c0c734c5da4278b726d6b9f3045ea6432e7941ba5a5550f6",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-3-105.fon",
+      "sha256": "daa83de2e9e61008e0204fd9507d5bc1a5834917fa9bc32fe8babf42e81d01df",
+      "glyphs": 3
+    },
+    {
+      "file": "original-4.fon",
+      "sha256": "2ccd6b9d22b220bdd97cd587d1402cb5c6f126246379b8627b3ab129034b37c5",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-4-101.fon",
+      "sha256": "61e16d35b2d6d31734a630ab8e9b77b4517af3889246e52606335790d1bc8bfd",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-4-101.fon",
+      "sha256": "51d7a8a3df985e6394bd313ba1cd4863a8356ca3860cddc2e679b9c361418ea0",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-4-105.fon",
+      "sha256": "212376f4e6573548725e58a612120fd324a4a4bad01c5b5e8087ba2b07156d60",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-4-105.fon",
+      "sha256": "4f87aa5f3d21c284ca4df2da5f44ab8389fad9d2f7957f316cee14ceaf9448c9",
+      "glyphs": 3
+    },
+    {
+      "file": "original-5.fon",
+      "sha256": "e82ddc646b27ae509968738647d2d5eda9b6163e9712fb8460643245651a0b4c",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-5-101.fon",
+      "sha256": "b4809279593dfa7abacbb0805199318c372bb7f253be4ad7f558d19950091e7d",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-5-101.fon",
+      "sha256": "ee3f61ec3450fb88e145243c06ca28ae9b6accd66be3950daa25c638abbd1389",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-5-105.fon",
+      "sha256": "c3e1ddab7a185dbed45d216cf59e656e48064f405e4d96a3e4e693869f18ff1d",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-5-105.fon",
+      "sha256": "9b5cad1b06875bfb673f08031363ff1e0d79c7800895e0702b98b80517ce3aff",
+      "glyphs": 3
+    },
+    {
+      "file": "original-6.fon",
+      "sha256": "39231aa25ede530e31bccaf182598bafd0234e5cbdfca9dabcebed0936df2bcb",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-6-101.fon",
+      "sha256": "de6cf6919dc2e553c6d66971e6198bc8f2d973d88604a10ffe14b1513aa87088",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-6-101.fon",
+      "sha256": "041e5834943fc45346dd64a824000faa7d1b0f666797fddcbf41c726038eedad",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-6-105.fon",
+      "sha256": "a6c23eef9b111f2d91e6b4369900aa2b6fc0327944680689d4cb7f25a7c17c56",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-6-105.fon",
+      "sha256": "ca4152ccc2f2fe80b57060b0f19fa2d87ba5fc9e411aa7f406659b6f9261fceb",
+      "glyphs": 3
+    },
+    {
+      "file": "original-7.fon",
+      "sha256": "fcf4947d334fb45ae9378b36622e423852b16fd4ddb20a91d2886f8dcef86da6",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-7-101.fon",
+      "sha256": "23f2674afbedcb18959956f9e01b38ce8fe9dec416a207049d6fc633dd1c6c35",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-7-101.fon",
+      "sha256": "4b9e904eede14096d96466c40ac71cdc46c7b82de46a1c2e26e9dd9562c5c944",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-7-105.fon",
+      "sha256": "55bde03fb9ad7e925970d32b5412d94288b29fac1546c6cc2046c518e9f61439",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-7-105.fon",
+      "sha256": "fdda100fdebce2161ae501f6c8cbf6965da3c47f2b10a5a4755265b5663be06d",
+      "glyphs": 3
+    },
+    {
+      "file": "original-8.fon",
+      "sha256": "2f9da2d862b8e8f44286044f3d52f7704de415eb5f99415167f47813463607d6",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-8-101.fon",
+      "sha256": "1688871642ab09e6bc6b7eb24a3bdd7b2aa200b9d7dd2a1c0fc3d99c1ea71bd6",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-8-101.fon",
+      "sha256": "ac44a9e67fdf3de4766a33125fb95acc680cc5028e2278066fe23d749a0f9d1d",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-8-105.fon",
+      "sha256": "453f57fa802c32047d0380abc8151376e5f901fd53902bda6045bee54e90cc2a",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-8-105.fon",
+      "sha256": "b14832ed03bf1977b9e90563354b5322a34f7b0d41a860765e8da56c939b9508",
+      "glyphs": 3
+    },
+    {
+      "file": "original-9.fon",
+      "sha256": "ad50b0689c85e4dd6d463d4aa5f11b3cf30e4bc5efd1bb5e060e3522f959c854",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-9-101.fon",
+      "sha256": "1688871642ab09e6bc6b7eb24a3bdd7b2aa200b9d7dd2a1c0fc3d99c1ea71bd6",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-9-101.fon",
+      "sha256": "ac44a9e67fdf3de4766a33125fb95acc680cc5028e2278066fe23d749a0f9d1d",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-9-105.fon",
+      "sha256": "453f57fa802c32047d0380abc8151376e5f901fd53902bda6045bee54e90cc2a",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-9-105.fon",
+      "sha256": "b14832ed03bf1977b9e90563354b5322a34f7b0d41a860765e8da56c939b9508",
+      "glyphs": 3
+    },
+    {
+      "file": "original-10.fon",
+      "sha256": "c09285e0b244186af4cb5a1fd8dd2d43d323b2a9a0bc7ddab72c6bb99dcedb56",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-10-101.fon",
+      "sha256": "00bd381d95c40ccce42af11f48035f4f9313616c5a90a32d829dfc8989de0c02",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-10-101.fon",
+      "sha256": "99dda4b67c6ce5ae1128650edda1a10b2be7e41757ee02b6f602671bd62ff886",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-10-105.fon",
+      "sha256": "83820ac1db8ab45edede4ee7e0cfcc3b2e59056fab0d74c75ac3121119495751",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-10-105.fon",
+      "sha256": "c03ec4f77b123bc453b57e59bade1f4895307df015b6df1a19497146e5ce2f54",
+      "glyphs": 3
+    },
+    {
+      "file": "original-11.fon",
+      "sha256": "b0311f89dc6a16dae0d5b32c7890f54739bc7e802512f9080bfcef2863b008e1",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-11-101.fon",
+      "sha256": "0cc9d9542f1b03632e22cef0de682eff9fe8bed8d0a9d66592c1dc5fc4cb14d8",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-11-101.fon",
+      "sha256": "b76c66473922647ab20fb9ae4f14ab5c8d46731ada44cb3d6f94930ec77824c4",
+      "glyphs": 3
+    },
+    {
+      "file": "monobit-11-105.fon",
+      "sha256": "1c4008d4d2c3c9bbe2cd47c2bd87ab7dc136a4147e19f2b64e6a8ec20bdf08bd",
+      "glyphs": 3
+    },
+    {
+      "file": "rust-11-105.fon",
+      "sha256": "0a12eb1057a1a6741d8f4d50353ce3f568339ad2d1728707ef0f5f9eae690058",
+      "glyphs": 3
+    },
+    {
+      "file": "extended-offset105.fon",
+      "sha256": "a5c0be98df48e5cbde6d2c6b87a0282712e749ed9a00868bc5cc07af0b21eb73",
+      "glyphs": 2
+    },
+    {
+      "file": "rust-extended-offset105.fon",
+      "sha256": "a5c0be98df48e5cbde6d2c6b87a0282712e749ed9a00868bc5cc07af0b21eb73",
+      "glyphs": 2
+    },
+    {
+      "file": "native-0.bsc",
+      "sha256": "b80951a6eed6ff26feb0e1e9420f4135ebd0e652c1778ce04420022e8dff842f",
+      "glyphs": 3
+    },
+    {
+      "file": "native-12288.bsc",
+      "sha256": "c0ed7d367bc3effd3e8168563d8f8f5ca64918f339c96c43c2ec496ddff77caf",
+      "glyphs": 3
+    },
+    {
+      "file": "native-30000.bsc",
+      "sha256": "c39fb2ffd6cf4d814cf9fe566a3b2447198b2b91df641d29615d75bbf7b61df3",
+      "glyphs": 3
+    },
+    {
+      "file": "python-0.bsc",
+      "sha256": "b80951a6eed6ff26feb0e1e9420f4135ebd0e652c1778ce04420022e8dff842f",
+      "glyphs": 3
+    },
+    {
+      "file": "python-30000.bsc",
+      "sha256": "c39fb2ffd6cf4d814cf9fe566a3b2447198b2b91df641d29615d75bbf7b61df3",
+      "glyphs": 3
+    },
+    {
+      "file": "original.han",
+      "sha256": "7ef0dd0632b9d4057145e437f41653f2fd9f713352bcb28d9ecc133d9618bd87",
+      "glyphs": 360,
+      "oracle": "monobit raw geometry; composition checked separately"
+    }
+  ],
+  "sciibin": [
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin",
+        "-o/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/sciibin-0.fon",
+        "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/native-0.bsc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "bytes": 65,
+      "sha256": "656e5e8420b5f0b1177f705a929444c932d330dc27a6fbfb39cb345ac09ad9f6"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin",
+        "-o/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/sciibin-12288.fon",
+        "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/native-12288.bsc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "bytes": 12353,
+      "sha256": "330cac752edd8e17c7d2a3e76e08115bc08a1fd898b7619e53f64ac61233a856"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/w52/sciibin/sciibin",
+        "-o/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/sciibin-30000.fon",
+        "/home/chen/githubprojects/fontpixel/local-work/w52/crosscheck/native-30000.bsc"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "bytes": 30065,
+      "sha256": "312104e5cb5ab2d043c9c625c9a7fb33885b6b4f1bb1ea0c8c61cdf9ec8fde5d"
+    }
+  ],
+  "oracle_limitations": [
+    {
+      "file": "table-gap.fon",
+      "sha256": "b2f382548e44408556e48a73536481f344586622d7e8213085c26389d6ee3832",
+      "error": "Can only crop raster by a positive amount.",
+      "cause": "monobit 0.54 assumes raster-adjacent locTable; Apple pointer-relative native test passes"
+    }
+  ],
+  "composition": {
+    "syllables": 11172,
+    "source_commit": "e21dc74c83491f8708a4a3391dc6ea7125470f0e",
+    "files": {
+      "hj_init.gml": "848805397c39e1601fc70485ea38c0ee4f4eab3d51e81831a38912f65c5cee40",
+      "hj_gen_table.gml": "a97ee00786124fdc7d8bbc2ade1abb8c7e569e97cba90818807cb128d849dbda",
+      "hj_draw_raw.gml": "00100500377ebfdfff749995c0692ec3edab70cc2d9bcba835c7b9f1e31bbc96"
+    },
+    "adapter_sha256": "15fc4a10b756f90a52752521747260d659ff507c4c0cfa34b9711f546b2b283a",
+    "scope": "GML lookup generator and drawing branch under JS syntax adaptation; not GameMaker runtime",
+    "limitation": "absent-final filler is ignored; no third-party artwork; 28-column sprite rows remapped to compact wire slots"
+  }
+}

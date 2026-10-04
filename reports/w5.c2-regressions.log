@@ -1,0 +1,54 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 0.25s
+     Running tests/catalyst.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/catalyst-5e957c9103bc8383)
+
+running 7 tests
+test every_truncation_and_limits ... ok
+test authoritative_offsets_allow_alias_and_reorder ... ok
+test extreme_line_height_returns_error_and_override_is_authoritative ... ok
+test pixels_offsets_color_and_shift ... ok
+test strict_reports_metadata_and_bad_metrics ... ok
+test explicit_data_relative_offsets ... ok
+test collection_budget_is_aggregate_and_output_readable ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/dashen.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/dashen-7ee9ec47fbd07470)
+
+running 6 tests
+test offsets_are_authoritative_with_aliases ... ok
+test codepoint_map_survives_native_write ... ok
+test vertical_strips_and_native_roundtrip ... ok
+test limits_writer_same_limits_and_strict_loss ... ok
+test malformed_offsets_truncations_and_undefined_generation ... ok
+test v4_embedded_printer_has_shared_glyph_budget ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hppcl.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/hppcl-be814e29c05772c3)
+
+running 8 tests
+test extreme_font_metrics_return_error ... ok
+test malformed_descriptor_and_legacy_compatibility ... ok
+test official_descriptor_pixels_baseline_and_advance ... ok
+test multiple_fonts_aggregate_budget_and_same_limit_writer ... ok
+test unknown_commands_and_fractional_advance_are_explicit ... ok
+test rle_repeat_counts_long_runs_and_zero_run ... ok
+test truncated_records_bad_rle_and_resource_limits ... ok
+test four_orientations_two_encodings_and_continuations ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/prebuilt.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5c2/debug/deps/prebuilt-31587909b50a3e32)
+
+running 7 tests
+test extreme_vertical_origin_returns_error ... ok
+test every_truncation_bad_offsets_and_version ... ok
+test budgets_output_readability_and_requested_order ... ok
+test gray_quantization_requires_explicit_option ... ok
+test multiple_matrices_and_aggregate_limits ... ok
+test vertical_vectors_preserved_and_diagnosed ... ok
+test both_orders_and_all_native_depths ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

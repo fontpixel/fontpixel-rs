@@ -1,0 +1,47 @@
+[
+  {
+    "name": "cbdt-vertical",
+    "bytes": 5852,
+    "sha256": "3f9cad79faff1f2feb8fe216bbcda5822b7852e9f122b8c11cf0ff11734f4ef4"
+  },
+  {
+    "name": "cbdt-vertical-tables",
+    "bytes": 5019,
+    "sha256": "67b1a94a61565b83bad2e19f111072b3b889efa98ed55542de65a50abbd4c5a3"
+  },
+  {
+    "name": "cbdt",
+    "bytes": 5796,
+    "sha256": "067b219d7dd8fc91e85c2f7129e77061023caeeb07c15a5b5efcb38e7d52ab8d"
+  },
+  {
+    "name": "cbdt-tables",
+    "bytes": 4962,
+    "sha256": "d90abd187e3fd13024c574baee277a11d196259ecbd05c9369849e21279b7a01"
+  },
+  {
+    "name": "sbix",
+    "bytes": 5432,
+    "sha256": "c0bf10b29c823bd70dcd1c5274fdf8e29fd8e735d3920e3eabef506c333aefac"
+  },
+  {
+    "name": "sbix-table",
+    "bytes": 4615,
+    "sha256": "aa24949e72c695b93aaa5013b8859bc63022d63c8ea47089adf1b0d199557560"
+  },
+  {
+    "name": "generated-gray",
+    "bytes": 11,
+    "sha256": "1af51a2f6f9e07e1a3e407d66653849476d5e9ab12f1e4618a10f8629050d31c"
+  },
+  {
+    "name": "generated-zero-area",
+    "bytes": 5,
+    "sha256": "dc15acedec5f8ad9a0da4de42b5d798529722331a635f2e12ab1147f2970908c"
+  },
+  {
+    "name": "generated-max-metrics",
+    "bytes": 20,
+    "sha256": "ab3e1f10cf536c8a903e5d6168686f144339d6c3e792f859f31d42275a8a4a0e"
+  }
+]

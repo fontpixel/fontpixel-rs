@@ -1,0 +1,151 @@
+[
+  {
+    "name": "RockboxImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/RockboxBitmapFontImporter.java",
+    "sha256": "510dd425bf64301cd9a9fe4e337be370e065a66ac584156c5a08cd265848763f",
+    "bytes": 6345
+  },
+  {
+    "name": "RockboxExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/RockboxBitmapFontExporter.java",
+    "sha256": "ae09df09bc6d407a6bb3613821341ec3e77aef6cf45e56a05ad31209cacbaa8e",
+    "bytes": 7000
+  },
+  {
+    "name": "U8MImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/U8MBitmapFontImporter.java",
+    "sha256": "9b46eea243a66e596613de932744565f7c8305e00ded71c8e35c62a6bd51bc3e",
+    "bytes": 3119
+  },
+  {
+    "name": "U8MExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/U8MBitmapFontExporter.java",
+    "sha256": "7edd3c2412f500d4b26463694a51cb418bf038fc98f8338b5c0e8bd09eb19f94",
+    "bytes": 3328
+  },
+  {
+    "name": "CybikoImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/CybikoBitmapFontImporter.java",
+    "sha256": "e933b130246f34800619d8f5bd524ba9b0b24149020143da34bf54fe5ea28c7a",
+    "bytes": 5126
+  },
+  {
+    "name": "CybikoExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/CybikoBitmapFontExporter.java",
+    "sha256": "59154b5cc6b00992936a1047870e693dd5b0b518539db6819e6a03c48cb11240",
+    "bytes": 5009
+  },
+  {
+    "name": "PlaydateImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/PlaydateBitmapFontImporter.java",
+    "sha256": "321078e818304caf65868c0a77bfad10c7c343401dbb9e3c7cc64e2e0df791ad",
+    "bytes": 9460
+  },
+  {
+    "name": "PlaydateExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/PlaydateBitmapFontExporter.java",
+    "sha256": "cca8106fe0fc4947df461bb5c6b310c54b161f48f75e5262fc7c8cb6f6d8bb78",
+    "bytes": 7676
+  },
+  {
+    "name": "HMZKImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/HMZKBitmapFontImporter.java",
+    "sha256": "c1d6102b70e93e15aba7b5f8529fffffc3ffa62c3453cb511142d714edc5f867",
+    "bytes": 2332
+  },
+  {
+    "name": "HMZKExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/HMZKBitmapFontExporter.java",
+    "sha256": "9a9d6b190dba6053d6c4e816a2bb272575de7ce1670e5b9c744f958d7a83092e",
+    "bytes": 3194
+  },
+  {
+    "name": "SBFImporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/importer/SBFBitmapFontImporter.java",
+    "sha256": "b7d3c9c7eb51969f7b376bd7c053fc188a46f0e68e81969923b37dc72645eb9c",
+    "bytes": 4295
+  },
+  {
+    "name": "SBFExporter.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/exporter/SBFBitmapFontExporter.java",
+    "sha256": "5fee70f3559ece13a6ec447d67b84424cb63b9c97146823219ec6894adc84bb1",
+    "bytes": 4229
+  },
+  {
+    "name": "U8MFontFormat.pdf",
+    "url": "https://raw.githubusercontent.com/kreativekorp/u8m/master/U8MFontFormat.pdf",
+    "sha256": "12d35bacfc48ef0d5f17b61087169b2d5abb15e4dc65577cae822d33cc7ed346",
+    "bytes": 52027
+  },
+  {
+    "name": "U8MFile.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/u8m/U8MFile.java",
+    "sha256": "d52b0f9504139fd1907a2218e64d5e24d928c76ba16c7b51f461bb9a9a2ec1cf",
+    "bytes": 8033
+  },
+  {
+    "name": "U8MMap.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/u8m/U8MMap.java",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "U8MGlyph.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/u8m/U8MGlyph.java",
+    "sha256": "90be9b6763b9949aa4af4194e45668a2cb77468ef1b1fae4af834aa5c310a9dc",
+    "bytes": 2988
+  },
+  {
+    "name": "playdate-pft.md",
+    "url": "https://raw.githubusercontent.com/cranksters/playdate-reverse-engineering/main/formats/pft.md",
+    "sha256": "8c69c3df59591b24a5a16fcd2b45d6f0518500fccad25945732a5cca7e3ab560",
+    "bytes": 3638
+  },
+  {
+    "name": "playdate-pdi.md",
+    "url": "https://raw.githubusercontent.com/cranksters/playdate-reverse-engineering/main/formats/pdi.md",
+    "sha256": "93c91d3aee4d4d2064e098d7303a6eb8db7fedba21f8a35dbe012096e5859ffd",
+    "bytes": 2899
+  },
+  {
+    "name": "rockbox-font.h",
+    "url": "https://raw.githubusercontent.com/Rockbox/rockbox/master/firmware/export/font.h",
+    "sha256": "7fee3ef7921b68f77b14df4d657afb94f619378e4a18e62f8f9cc58d7614ea1e",
+    "bytes": 6146
+  },
+  {
+    "name": "rockbox-font.c",
+    "url": "https://raw.githubusercontent.com/Rockbox/rockbox/master/firmware/font.c",
+    "sha256": "56c0591ac7646be826ea5e178e830a6319b4adc5aa8a68fa3a2f5a5009727097",
+    "bytes": 33719
+  },
+  {
+    "name": "rockbox-convbdf.c",
+    "url": "https://raw.githubusercontent.com/Rockbox/rockbox/master/tools/convbdf.c",
+    "sha256": "ebab9281dad8110d6afcce92fed43ae531c2460ed2cad7cf6f6a6a49b0966ac6",
+    "bytes": 49497
+  },
+  {
+    "name": "U8MMapData.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/u8m/U8MMapData.java",
+    "sha256": "d3e1ae8d26563463bfbcb1ce6c8de75c96e8241c97d3f4a9ec033393e6cee08c",
+    "bytes": 2091
+  },
+  {
+    "name": "U8MMapEntry.java",
+    "url": "https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/u8m/U8MMapEntry.java",
+    "sha256": "63445b76d38b9806566eb91873ec62e3e4e56b1ee97670a019b5b6072f66069c",
+    "bytes": 1605
+  },
+  {
+    "name": "PlaydateSDK-latest.tar.gz",
+    "url": "https://download.panic.com/playdate_sdk/Linux/PlaydateSDK-latest.tar.gz",
+    "sha256": "7e3d912611e82f79007afd2a3a9e68a19c8bfc7025b5f761805f21368470d793",
+    "bytes": 33810967
+  },
+  {
+    "name": "rockbox-convttf.c",
+    "url": "https://raw.githubusercontent.com/Rockbox/rockbox/master/tools/convttf.c",
+    "sha256": "6a3d3b5fd0778ffae5f23d0247ca728b999058d36df75b51179694f8a83c715b",
+    "bytes": 40105
+  }
+]

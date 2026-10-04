@@ -1,0 +1,257 @@
+{
+  "adapter_source": "use fontpixel::{Input, ReadOptions, ResourceLimits, ResourcePath, WriteOptions};\nuse fontpixel::formats::{raw,ssfn};\nuse fontpixel::resources::TransportLimits;\nfn main()->Result<(),Box<dyn std::error::Error>>{\n let a:Vec<_>=std::env::args().collect();let data=std::fs::read(&a[1])?;let id=[\"raw\",\"bdf\",\"ssfn\"][(data[0]%3) as usize];\n let limits=ResourceLimits{max_input_bytes:262144,max_total_bytes:2097152,max_decompressed_bytes:262144,max_glyphs:256,max_pixels_per_glyph:4096,max_table_bytes:262144,max_resources:8,..Default::default()};\n let mut layout=raw::RawLayout::new(1,1);layout.first_codepoint=32;layout.count=Some(1);\n let mut reader=fontpixel::registry();reader.set_raw_read_options(raw::RawReadOptions{layout:Some(layout.clone())});let ro=ReadOptions{format:Some(id.into()),limits:limits.clone()};let source=reader.read(&Input::new(&data[16..]),&ro)?;\n assert_eq!(source.fonts.fonts.len(),1);assert_eq!(source.fonts.fonts[0].len(),1);let glyph=source.fonts.fonts[0].glyphs().next().unwrap().1;\n assert_eq!(glyph.bitmap.as_bytes(),if id==\"raw\" { &[128][..] } else { &[128,64][..] });assert_eq!((glyph.bitmap.width(),glyph.bitmap.height()),if id==\"raw\" {(1,1)} else {(2,2)});assert_eq!(glyph.codepoints[0].value(),if id==\"raw\" {32}else{65});\n let mut writer=fontpixel::registry();writer.set_raw_write_options(raw::RawWriteOptions{layout:Some(layout),limits:limits.clone(),max_output_bytes:262144,..Default::default()});writer.set_ssfn_write_options(ssfn::SsfnWriteOptions{encoding:if data[2]&128==0 {ssfn::SsfnEncoding::Binary}else{ssfn::SsfnEncoding::Ascii},limits:limits.clone(),max_output_bytes:262144,..Default::default()});\n let mut po=WriteOptions::new(ResourcePath::new(\"native\")?);po.transport_limits=Some(TransportLimits{resources:limits,max_output_bytes:262144});let plain=writer.write(&source.fonts,id,&po)?.output.into_single()?;po.primary_name=ResourcePath::new(\"native.gz\")?;let gzip=writer.write(&source.fonts,id,&po)?.output.into_single()?;\n assert_eq!(reader.read(&Input::new(&plain),&ro)?.fonts,reader.read(&Input::new(&gzip),&ro)?.fonts);std::fs::write(format!(\"{}.plain\",a[2]),plain)?;std::fs::write(format!(\"{}.gz\",a[2]),gzip)?;println!(\"{id}: original pixels/code + complete plain/gzip model passed\");Ok(())\n}\n",
+  "adapter_manifest": "[package]\nname=\"transport-native-check\"\nversion=\"0.0.0\"\nedition=\"2024\"\n[dependencies]\nfontpixel={path=\"../../fontpixel-rs/crates/fontpixel\",default-features=false,features=[\"gzip\",\"raw\",\"bdf\",\"ssfn\"]}\n[workspace]\n",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--offline",
+        "--manifest-path",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/Cargo.toml"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 2.5481834411621094,
+      "stdout": "",
+      "stderr": "     Locking 7 packages to highest Rust 1.99.0 compatible versions\n   Compiling crc32fast v1.5.2\n   Compiling adler2 v2.0.1\n   Compiling simd-adler32 v0.3.10\n   Compiling cfg-if v1.0.5\n   Compiling miniz_oxide v0.9.1\n   Compiling flate2 v1.1.10\n   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n   Compiling transport-native-check v0.0.0 (/home/chen/githubprojects/fontpixel/local-work/transport-native-check)\n    Finished `dev` profile [unoptimized] target(s) in 2.51s\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "45b0ee79fafa9556b40f722a04de74a37b02fb5d5e82c93080975efa2a771735"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/raw-wire-plain",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/raw-wire-plain"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0024542808532714844,
+      "stdout": "raw: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "5ee8888ad7b63f82e77becf91cba0e0bae38f1e8e4184dab3f4ee1d3b38c7675",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/raw-wire-gzip",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/raw-wire-gzip"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0022554397583007812,
+      "stdout": "raw: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "5ee8888ad7b63f82e77becf91cba0e0bae38f1e8e4184dab3f4ee1d3b38c7675",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/raw-wire-members",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/raw-wire-members"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0024306774139404297,
+      "stdout": "raw: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "5ee8888ad7b63f82e77becf91cba0e0bae38f1e8e4184dab3f4ee1d3b38c7675",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/bdf-wire-plain",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/bdf-wire-plain"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0033617019653320312,
+      "stdout": "bdf: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "ac38a42e23ad0582f0023e68e4d5907a65f88d5f724e5b5166f1bcd1c01bda47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/bdf-wire-gzip",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/bdf-wire-gzip"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.003389596939086914,
+      "stdout": "bdf: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "ac38a42e23ad0582f0023e68e4d5907a65f88d5f724e5b5166f1bcd1c01bda47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/bdf-wire-members",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/bdf-wire-members"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.00360107421875,
+      "stdout": "bdf: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "ac38a42e23ad0582f0023e68e4d5907a65f88d5f724e5b5166f1bcd1c01bda47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-ascii-wire-plain",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-ascii-wire-plain"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0028743743896484375,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-ascii-wire-gzip",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-ascii-wire-gzip"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0029659271240234375,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-ascii-wire-members",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-ascii-wire-members"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0027265548706054688,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-binary-wire-plain",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-binary-wire-plain"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0026397705078125,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-binary-wire-gzip",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-binary-wire-gzip"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.002622842788696289,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-probe/debug/transport-native-check",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus/ssfn-binary-wire-members",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-native-check/outputs/ssfn-binary-wire-members"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.0023326873779296875,
+      "stdout": "ssfn: original pixels/code + complete plain/gzip model passed\n",
+      "stderr": "",
+      "stdout_sha256": "421346f26aebb3a07ef7ff1f8bd2e6d0c242f48232bd8048ede149bea7a885f9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "checks": [
+    {
+      "fixture": "raw-wire-plain",
+      "native_plain_sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "native_gzip_sha256": "52b94f6321f536f248d890305858e00d5f3f3fafc6e830084712f27b92677706",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "raw-wire-gzip",
+      "native_plain_sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "native_gzip_sha256": "52b94f6321f536f248d890305858e00d5f3f3fafc6e830084712f27b92677706",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "raw-wire-members",
+      "native_plain_sha256": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+      "native_gzip_sha256": "52b94f6321f536f248d890305858e00d5f3f3fafc6e830084712f27b92677706",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "bdf-wire-plain",
+      "native_plain_sha256": "ae9400a32f1caf1a6408f2fd52aa1c348aa7f3cf17c7cb90371625054f7af6cc",
+      "native_gzip_sha256": "5ffe9ff0f69a47d1fc051979ee5e930e53f7102b66aca94cb3bbe79a9e9ce5dc",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "bdf-wire-gzip",
+      "native_plain_sha256": "ae9400a32f1caf1a6408f2fd52aa1c348aa7f3cf17c7cb90371625054f7af6cc",
+      "native_gzip_sha256": "5ffe9ff0f69a47d1fc051979ee5e930e53f7102b66aca94cb3bbe79a9e9ce5dc",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "bdf-wire-members",
+      "native_plain_sha256": "ae9400a32f1caf1a6408f2fd52aa1c348aa7f3cf17c7cb90371625054f7af6cc",
+      "native_gzip_sha256": "5ffe9ff0f69a47d1fc051979ee5e930e53f7102b66aca94cb3bbe79a9e9ce5dc",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-ascii-wire-plain",
+      "native_plain_sha256": "8087c1e8a8a97225a41c78893be405518f7802df368d79b2718de9fb3da14c69",
+      "native_gzip_sha256": "16f9baa84081d094a97a9f0373f09af5ca6fa502f125f5d40a256b431c95c3d7",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-ascii-wire-gzip",
+      "native_plain_sha256": "8087c1e8a8a97225a41c78893be405518f7802df368d79b2718de9fb3da14c69",
+      "native_gzip_sha256": "16f9baa84081d094a97a9f0373f09af5ca6fa502f125f5d40a256b431c95c3d7",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-ascii-wire-members",
+      "native_plain_sha256": "8087c1e8a8a97225a41c78893be405518f7802df368d79b2718de9fb3da14c69",
+      "native_gzip_sha256": "16f9baa84081d094a97a9f0373f09af5ca6fa502f125f5d40a256b431c95c3d7",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-binary-wire-plain",
+      "native_plain_sha256": "50803cec5f09e6a9fdeccacc5544fa6e765f56d0e77c1d06889ee1f0102eb558",
+      "native_gzip_sha256": "b5fc1d36571a836c4c55e18e89ec4d3d874b021c4b9bd567949755a8583bbafd",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-binary-wire-gzip",
+      "native_plain_sha256": "50803cec5f09e6a9fdeccacc5544fa6e765f56d0e77c1d06889ee1f0102eb558",
+      "native_gzip_sha256": "b5fc1d36571a836c4c55e18e89ec4d3d874b021c4b9bd567949755a8583bbafd",
+      "python_gzip_matches_plain": true
+    },
+    {
+      "fixture": "ssfn-binary-wire-members",
+      "native_plain_sha256": "50803cec5f09e6a9fdeccacc5544fa6e765f56d0e77c1d06889ee1f0102eb558",
+      "native_gzip_sha256": "b5fc1d36571a836c4c55e18e89ec4d3d874b021c4b9bd567949755a8583bbafd",
+      "python_gzip_matches_plain": true
+    }
+  ],
+  "status": "pass",
+  "versions": {
+    "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+    "gzip_module": "/home/chen/.pyenv/versions/3.12.13/lib/python3.12/gzip.py"
+  },
+  "gzip_module_sha256": "ea6e194b9df26398bf0d5215e63320c7b9d801b2d8b723fb9c80619df48076e9"
+}

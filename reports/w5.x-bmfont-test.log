@@ -1,0 +1,24 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 6.07s
+     Running tests/bmfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5x/debug/deps/bmfont-85da82ce17671c37)
+
+running 16 tests
+test failed_write_retains_every_glyph_and_alias_location ... ok
+test diagnostic_asset_names_share_the_total_budget ... ok
+test gray_png_alpha_alias_and_total_budget ... ok
+test explicit_threshold_and_glyph_limits ... ok
+test rejects_xml_entities_and_mismatched_tree ... ok
+test nested_primary_bundle_is_readable ... ok
+test unsafe_paths_missing_pages_and_bad_rectangles_fail ... ok
+test sparse_slots_metrics_and_kerning_are_audited ... ok
+test json_order_coordinates_unicode_and_weak_probe ... ok
+test json_codec_strict_rejects_glyph_metadata_loss ... ok
+test packed_channels_and_color_losses ... ok
+test json_rejects_duplicate_keys_bad_types_and_resource_excess ... ok
+test kerning_records_survive_every_descriptor_encoding ... ok
+test json_unknown_scalar_types_survive_and_other_metadata_is_audited ... ok
+test all_encodings_multipage_semantic_roundtrip ... ok
+test random_gray_atlas_roundtrip ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+

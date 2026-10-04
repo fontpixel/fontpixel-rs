@@ -1,0 +1,22 @@
+[
+  {
+    "command": "cargo test -p fontpixel --no-default-features --features c --test c",
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/final-gate-0.log"
+  },
+  {
+    "command": "cargo test -p fontpixel --no-default-features --features drcs --test drcs",
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/final-gate-1.log"
+  },
+  {
+    "command": "cargo clippy -p fontpixel --no-default-features --features c,drcs --lib --test c --test drcs --example w55_timing -- -D warnings",
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/final-gate-2.log"
+  },
+  {
+    "command": "cargo doc -p fontpixel --no-default-features --features c,drcs --no-deps",
+    "exit": 0,
+    "log": "/home/chen/githubprojects/fontpixel/local-work/w55/final-gate-3.log"
+  }
+]

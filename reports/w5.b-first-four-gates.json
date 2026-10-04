@@ -1,0 +1,322 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos",
+      "--test",
+      "beos"
+    ],
+    "exit": 0,
+    "stdout_sha256": "cd1beff7841e2d622d09befcf8cfdcd777a76e594979496b1837a069b072c186",
+    "stderr_sha256": "897bb98da8b466d10b0d354eb201d34428b679c0de84e3f522380dfaed53b39d",
+    "stdout": "\nrunning 4 tests\ntest fractional_projection_explicit_and_exact_preservation ... ok\ntest malformed_size_hash_pointer_float_and_limits ... ok\ntest native_palette_unicode_aliases_unencoded_and_empty ... ok\ntest quantization_and_sixteen_level_compatibility ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `test` profile [unoptimized] target(s) in 6.90s\n     Running tests/beos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/beos-bfe851a0c41788cf)\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 101,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "a232c360eb58c230307a89bbdd380b65210812c65bc9c393d932629fcd32bc66",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\nerror: manual implementation of `.is_multiple_of()`\n   --> crates/fontpixel/src/formats/beos.rs:543:12\n    |\n543 |         if width % 2 != 0\n    |            ^^^^^^^^^^^^^^ help: replace with: `!width.is_multiple_of(2)`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_is_multiple_of\n    = note: `-D clippy::manual-is-multiple-of` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::manual_is_multiple_of)]`\n\nerror: using `chunks_exact` with a constant chunk size\n   --> crates/fontpixel/src/formats/beos.rs:569:27\n    |\n569 |             for pair in v.chunks_exact(4) {\n    |                           ^^^^^^^^^^^^^^^ help: consider using `as_chunks` instead: `as_chunks::<4>().0`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#chunks_exact_to_as_chunks\n    = note: `-D clippy::chunks-exact-to-as-chunks` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::chunks_exact_to_as_chunks)]`\n\nerror: could not compile `fontpixel` (lib) due to 2 previous errors\nwarning: build failed, waiting for other jobs to finish...\nerror: could not compile `fontpixel` (lib test) due to 2 previous errors\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b93ef2477664ccb782a1b19076178f19ff0f0422ed2d44269584122c49985991",
+    "stdout": "",
+    "stderr": " Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.76s\n   Generated /home/chen/githubprojects/fontpixel/local-work/target-w5b/doc/fontpixel/index.html\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "oberon",
+      "--test",
+      "oberon"
+    ],
+    "exit": 0,
+    "stdout_sha256": "f05590fb5ffb4aaf0f2774dcbc5f34a4428fbbd5f8398a10d72559b031aee8bc",
+    "stderr_sha256": "8ffb434fe38838356409415a2475e2f42d4e42ff99b107f25809f146541a8e01",
+    "stdout": "\nrunning 2 tests\ntest all_words_runs_and_pixels ... ok\ntest hostile_tables_and_limits ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `test` profile [unoptimized] target(s) in 2.12s\n     Running tests/oberon.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/oberon-b69577c4c4c95a52)\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "oberon",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 101,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "48217104aa69a5ef2ada634f8cb68d2884a268ac8032ff2971c940154caf7fb3",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\nerror[E0432]: unresolved imports `fontpixel::formats::beos`, `fontpixel::formats::symbos`, `fontpixel::formats::wsfont`\n    --> crates/fontpixel/examples/w5b_timing.rs:3:26\n     |\n   3 | use fontpixel::formats::{beos, oberon, symbos, wsfont};\n     |                          ^^^^          ^^^^^^  ^^^^^^ no `wsfont` in `formats`\n     |                          |             |\n     |                          |             no `symbos` in `formats`\n     |                          no `beos` in `formats`\n     |\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1703:9\n     |\n1702 | #[cfg(feature = \"beos\")]\n     |       ---------------- the item is gated behind the `beos` feature\n1703 | pub mod beos;\n     |         ^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1651:9\n     |\n1650 | #[cfg(feature = \"symbos\")]\n     |       ------------------ the item is gated behind the `symbos` feature\n1651 | pub mod symbos;\n     |         ^^^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1700:9\n     |\n1699 | #[cfg(feature = \"wsfont\")]\n     |       ------------------ the item is gated behind the `wsfont` feature\n1700 | pub mod wsfont;\n     |         ^^^^^^\n\nFor more information about this error, try `rustc --explain E0432`.\nerror: could not compile `fontpixel` (example \"w5b_timing\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "oberon",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b10ffa93564384e0193603ba1d513bdc9d3e94d222e97cb1e4004716d7838f50",
+    "stdout": "",
+    "stderr": " Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.55s\n   Generated /home/chen/githubprojects/fontpixel/local-work/target-w5b/doc/fontpixel/index.html\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--test",
+      "symbos"
+    ],
+    "exit": 0,
+    "stdout_sha256": "57cff766bf347249843f78e10dd0555eaa7d7f13266462f8bd93544f5de401db",
+    "stderr_sha256": "2b6a35c2f7f2e2974e35e20bf93e0e2b0ba46d23faf641e23ae0f9eb7c7db5ca",
+    "stdout": "\nrunning 3 tests\ntest strict_and_explicit_gray ... ok\ntest limits_and_malformed_native_data ... ok\ntest all_native_layouts ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `test` profile [unoptimized] target(s) in 1.66s\n     Running tests/symbos.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/symbos-53fd36ff7ae527a1)\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 101,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "564e6c719e0ed93a36770b4f75d994b80965932f54f9c3e47f8b00029fa60200",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\nerror[E0432]: unresolved imports `fontpixel::formats::beos`, `fontpixel::formats::oberon`, `fontpixel::formats::wsfont`\n    --> crates/fontpixel/examples/w5b_timing.rs:3:26\n     |\n   3 | use fontpixel::formats::{beos, oberon, symbos, wsfont};\n     |                          ^^^^  ^^^^^^          ^^^^^^ no `wsfont` in `formats`\n     |                          |     |\n     |                          |     no `oberon` in `formats`\n     |                          no `beos` in `formats`\n     |\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1703:9\n     |\n1702 | #[cfg(feature = \"beos\")]\n     |       ---------------- the item is gated behind the `beos` feature\n1703 | pub mod beos;\n     |         ^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1688:9\n     |\n1687 | #[cfg(feature = \"oberon\")]\n     |       ------------------ the item is gated behind the `oberon` feature\n1688 | pub mod oberon;\n     |         ^^^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1700:9\n     |\n1699 | #[cfg(feature = \"wsfont\")]\n     |       ------------------ the item is gated behind the `wsfont` feature\n1700 | pub mod wsfont;\n     |         ^^^^^^\n\nFor more information about this error, try `rustc --explain E0432`.\nerror: could not compile `fontpixel` (example \"w5b_timing\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b2e9683bab2c6be10332df2378ed24125d3ee6967a469502b287266d05be555c",
+    "stdout": "",
+    "stderr": " Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.54s\n   Generated /home/chen/githubprojects/fontpixel/local-work/target-w5b/doc/fontpixel/index.html\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wsfont",
+      "--test",
+      "wsfont"
+    ],
+    "exit": 0,
+    "stdout_sha256": "029651edec314e0bd5a5615fbac203a58799d2c6039214b5c234506e0b4cbaba",
+    "stderr_sha256": "24471734fb6cf02165a7494ec0d3ff9a70145148224e20ec3421027574ae2dae",
+    "stdout": "\nrunning 3 tests\ntest malformed_limits_and_gray_permission ... ok\ntest preserve_nonzero_unused_bits_bytes_and_name_tail ... ok\ntest native_depths_all_orders_and_padding ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `test` profile [unoptimized] target(s) in 1.66s\n     Running tests/wsfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5b/debug/deps/wsfont-e230e41e0c68aa1d)\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wsfont",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 101,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "c5ebcd73fbe45afea7222ed31741bd341a9993a75a4c05b16147808a38f50246",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\nerror[E0432]: unresolved imports `fontpixel::formats::beos`, `fontpixel::formats::oberon`, `fontpixel::formats::symbos`\n    --> crates/fontpixel/examples/w5b_timing.rs:3:26\n     |\n   3 | use fontpixel::formats::{beos, oberon, symbos, wsfont};\n     |                          ^^^^  ^^^^^^  ^^^^^^ no `symbos` in `formats`\n     |                          |     |\n     |                          |     no `oberon` in `formats`\n     |                          no `beos` in `formats`\n     |\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1703:9\n     |\n1702 | #[cfg(feature = \"beos\")]\n     |       ---------------- the item is gated behind the `beos` feature\n1703 | pub mod beos;\n     |         ^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1688:9\n     |\n1687 | #[cfg(feature = \"oberon\")]\n     |       ------------------ the item is gated behind the `oberon` feature\n1688 | pub mod oberon;\n     |         ^^^^^^\nnote: found an item that was configured out\n    --> crates/fontpixel/src/formats/mod.rs:1651:9\n     |\n1650 | #[cfg(feature = \"symbos\")]\n     |       ------------------ the item is gated behind the `symbos` feature\n1651 | pub mod symbos;\n     |         ^^^^^^\n\nFor more information about this error, try `rustc --explain E0432`.\nerror: could not compile `fontpixel` (example \"w5b_timing\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wsfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "296f3c75429c6c8de869db523d9119c773a626c793d3d47eba5812da1771ac7f",
+    "stdout": "",
+    "stderr": " Documenting fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.53s\n   Generated /home/chen/githubprojects/fontpixel/local-work/target-w5b/doc/fontpixel/index.html\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 101,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "607d166e135749db6d80626e9e4c04befa41482881b9f6f17010afabf970e2c3",
+    "stdout": "",
+    "stderr": "    Blocking waiting for file lock on build directory\n    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\nerror: enclosing `Ok` and `?` operator are unneeded\n  --> crates/fontpixel/tests/beos.rs:37:5\n   |\n37 | /     Ok(\n38 | |         fontpixel::formats::beos::write(s, &WriteOptions::new(ResourcePath::new(\"f\").unwrap()), o)?\n39 | |             .output\n40 | |             .into_single()?,\n41 | |     )\n   | |_____^\n   |\n   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_question_mark\n   = note: `-D clippy::needless-question-mark` implied by `-D warnings`\n   = help: to override `-D warnings` add `#[allow(clippy::needless_question_mark)]`\nhelp: remove the enclosing `Ok` and `?` operator\n   |\n37 ~     fontpixel::formats::beos::write(s, &WriteOptions::new(ResourcePath::new(\"f\").unwrap()), o)?\n38 |             .output\n39 ~             .into_single()\n   |\n\nerror: could not compile `fontpixel` (test \"beos\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "oberon",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "dd5fa0f0fa34e4fca64650bbdbf1732651fc3e549573152c26d0deace053a3c7",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 1.78s\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "symbos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "23d6cc7af962b10496bfdd41924f81e8ac5071d049e95cddf73ce15180e4ba83",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 1.91s\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "wsfont",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b4e00050d44e239e61f4f03b16c202127806e24a2f984e8fba5c86ad70bdd785",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 2.03s\n"
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7723c83d832613637d70699a69a3f66360f635b5acc6823474d24b00b89741b0",
+    "stdout": "",
+    "stderr": "    Checking fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 0.98s\n"
+  }
+]

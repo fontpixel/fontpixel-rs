@@ -1,0 +1,757 @@
+{
+  "binary_sha256": "92320e61e39f3914bc8e1206831ef2d061e4d66650df15efbd49da19cc4e3137",
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "pillow": "12.3.0",
+  "monobit": "0.54",
+  "jar_sha256": "22685a52bc1a7f26680f80197548e74dc61a9f58eb083d6f700220a48a1165a6",
+  "processing_sha256": "bab342ad2b80e42b8a728e05a7ec8212bc369513fe8c4ed2381266f1e5e8627d",
+  "sdl_reader_sha256": "3a18d6cc3069ba9d7d5699d232c1fb9e52b0c4d0cbe8b739c6c0e5b3fcd4b61a",
+  "commands": [
+    {
+      "argv": [
+        "javac",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "-d",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "/home/chen/githubprojects/fontpixel/fontpixel-rs/reports/w5.e2-image/oracles/SrFontOracle.java"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "javac",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar",
+        "-d",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "/home/chen/githubprojects/fontpixel/fontpixel-rs/reports/w5.e2-image/oracles/VlwOracle.java"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "vlw8",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw8.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "54061e532f2c310933ab4ca5bfb33277e789cecec85df29cd9f1176fe767d9e9",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw8.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "a039720733e717100db1f8f0e8c97ab8becd1eace46bb56e9bbca9e422fd9dcc",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "vlw9",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw9.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "54061e532f2c310933ab4ca5bfb33277e789cecec85df29cd9f1176fe767d9e9",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw9.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "a039720733e717100db1f8f0e8c97ab8becd1eace46bb56e9bbca9e422fd9dcc",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "vlw10",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw10.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "28d0f816e73d363a34be4936faed8960df187d532c1154eb1ea61af65dbeb7ca",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw10.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "680cb18270170da41db0320d20bd558c49d1b2575cf2e1aa16dd5b03ac66ad05",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "vlw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "28d0f816e73d363a34be4936faed8960df187d532c1154eb1ea61af65dbeb7ca",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/vlw.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "722e710320c1f1bd0718bc7e3f72e1a70ed457270fb5a8368eed6d60c1d435aa",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "emit",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/processing-original.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "vlw",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/processing-original.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "75d7047e7fd53dd0ee689b871a694fe54780a01d0eb15d324c0207b979315b1c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/processing-core-4.5.2.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "VlwOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/processing-original.vlw"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f1097a60ef9ba0cf90939b7adb0bc3c1b26bfc78b0cc2448b0a65058caa77a8b",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "pilfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-original.pil"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ed83667a12e962dda3879e86619876a831ad047cf168534f55ab7b706c4d45f2",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "pilfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/pillow-original.pil"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b7014842017b71bd67e7afb4b136569597974c0849baeb2f40573c2eaf8aa753",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "pilfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/pillow-original.pil"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b7014842017b71bd67e7afb4b136569597974c0849baeb2f40573c2eaf8aa753",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "pilfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/monobit-original.pil"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b7014842017b71bd67e7afb4b136569597974c0849baeb2f40573c2eaf8aa753",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "rfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f4421caa18d63bb08968fc2988857a08daa4da0bc25e24a784820e3ecdc90ac3",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "5d8420b037912e4c10518490ee896a8def0defa881fd1949ed63edf3020b8204",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "emit",
+        "rfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "rfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "df03597184e04f5da1c6436b5c7cac567333a419ac237cb3de1dc0cad0d11c4c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "62619e71bf2fda58b4401dd4ca41921d23cfc04838750a65dd2007027c866b43",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "rewrite",
+        "rfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-rfont.png",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "df03597184e04f5da1c6436b5c7cac567333a419ac237cb3de1dc0cad0d11c4c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "rfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "df03597184e04f5da1c6436b5c7cac567333a419ac237cb3de1dc0cad0d11c4c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-rfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "62619e71bf2fda58b4401dd4ca41921d23cfc04838750a65dd2007027c866b43",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "c03f58062b253bff0aadfdc864818a4cf3fe6f94a2085f5d9f1f6c162e7c6320",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e53ee5e38997b67d60035a6b0518b16e19404fcead2176729520914a4748dde7",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/sfont-reader",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/sfont.rgba"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f1d212e9e6b72ebd1065651faf227f7e645faef8bdf802d37e20098cf35d1fea",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "emit",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fc47de3306b1991cc943cfa9e5c3376b83784149d61debfbad378a51ab359bfb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "c30034734a8eb3d711431786d5b48fd2ce65b35743f1eb6cb1554cf06e228027",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "rewrite",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont.png",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f3ceb10e4cff80491043b7e210469734f1c9a97e47438f488b7e5dce590d9f6e",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f3ceb10e4cff80491043b7e210469734f1c9a97e47438f488b7e5dce590d9f6e",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rewritten-sfont.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "c30034734a8eb3d711431786d5b48fd2ce65b35743f1eb6cb1554cf06e228027",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "emit",
+        "sfont-overhang",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont-overhang.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar:/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck",
+        "SrFontOracle",
+        "inspect",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont-overhang.png"
+      ],
+      "exit": 1,
+      "expected_failure": "BitsNPicas rejects its own SFont first-glyph overhang in vertical detection column",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "Exception in thread \"main\" java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0\n\tat SrFontOracle.main(SrFontOracle.java:25)\n"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "sfont",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/java-sfont-overhang.png"
+      ],
+      "exit": 0,
+      "stdout_sha256": "5cca6aeca6ebf9838eb9648e102b578a251ec66a1fdb74e21097968d5bfa682e",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-specs/sfont-reader",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/sfont-overhang.rgba"
+      ],
+      "exit": 0,
+      "stdout_sha256": "0dfb6083391741a37d0acefb35e180726f80251ae442a30b1c706b4b250be326",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "emit",
+        "imageset",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/rust-imageset"
+      ],
+      "exit": 0,
+      "stdout_sha256": "9be1297ce32c45aee1917689682a34b5f1559c4b558c40a7aad7b408925b8a8b",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+        "inspect",
+        "imageset",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-crosscheck/monobit-imageset"
+      ],
+      "exit": 0,
+      "stdout_sha256": "98c7b2e01b14e920963c58ca2eeddd5ae6d00d8a1459749f90ec7b33dfc0cc9a",
+      "stderr": ""
+    }
+  ],
+  "checks": [
+    {
+      "name": "Rust→Processing vlw8",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→Processing vlw9",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→Processing vlw10",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→Processing vlw",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Processing→Rust VLW11",
+      "glyphs": 3,
+      "samples": 12,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→Pillow PILfont native metrics and decoded mask",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Pillow ImageFont.load actual glyph rendering",
+      "glyphs": 5,
+      "samples": 60
+    },
+    {
+      "name": "Pillow FontFile producer→Rust",
+      "glyphs": 2,
+      "samples": 24,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Pillow↔monobit↔Rust PILfont",
+      "glyphs": 2,
+      "samples": 24,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "monobit PILfont producer→Rust",
+      "glyphs": 2,
+      "samples": 24,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→BitsNPicas RFont",
+      "glyphs": 3,
+      "samples": 187,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "BitsNPicas producer→Rust rfont",
+      "glyphs": 3,
+      "samples": 187,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust native rewrite→BitsNPicas rfont",
+      "glyphs": 3,
+      "samples": 187,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→BitsNPicas SFont (runtime space excluded)",
+      "glyphs": 94,
+      "samples": 3020,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust→unmodified SDL SFont_InitFont/SFont_Write",
+      "glyphs": 94,
+      "samples": 3020,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "BitsNPicas producer→Rust sfont",
+      "glyphs": 94,
+      "samples": 3311,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust native rewrite→BitsNPicas sfont",
+      "glyphs": 94,
+      "samples": 3322,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Java SFont first-glyph overhang→Rust and unmodified SDL",
+      "glyphs": 94,
+      "samples": 3311,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "Rust imageset→monobit native directory",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    },
+    {
+      "name": "monobit imageset producer→Rust",
+      "glyphs": 5,
+      "samples": 60,
+      "comparison": "all nonzero samples in baseline coordinates and exact advances; transparent native cell padding retained separately"
+    }
+  ],
+  "files": {
+    "SrFontOracle.class": {
+      "bytes": 4233,
+      "sha256": "53b0996331f4f3ad477f409012b434e2874053658754b9dfd6bc264fe8375d0d"
+    },
+    "VlwOracle.class": {
+      "bytes": 4408,
+      "sha256": "430ea9cd16308d6e53f58b33260d7f34da9c8ee703e60292f44b3894b60557c3"
+    },
+    "java-rfont.png": {
+      "bytes": 525,
+      "sha256": "497a5fec441ceda9c7936fcd786e350bdf6600f14b6e5bbd24942aec2a860e13"
+    },
+    "java-sfont-overhang.png": {
+      "bytes": 339,
+      "sha256": "da4622e0cadf103aff339b06ada0fc098b8922c624e473ccbc7a5ba62e6a1674"
+    },
+    "java-sfont.png": {
+      "bytes": 340,
+      "sha256": "930382df102c9f4aac2daf9f46d2f40eccc3945f5866a7fc5226629e20ea8954"
+    },
+    "monobit-imageset/21.png": {
+      "bytes": 76,
+      "sha256": "04ce712cfc6afc1eb8486bb683db9031a7b946066de12c43144aecd57e5bd235"
+    },
+    "monobit-imageset/22.png": {
+      "bytes": 81,
+      "sha256": "cc7f0e7e752c0aa27f1d639a3e893d25b3e02bcf74ce7e055edbe84ec870e12d"
+    },
+    "monobit-imageset/23.png": {
+      "bytes": 81,
+      "sha256": "bc2472611948701f3ab0ca880711658123e8745e359b1583bd364deab56cf62c"
+    },
+    "monobit-imageset/24.png": {
+      "bytes": 81,
+      "sha256": "aafcf0fb2624e2e303d65807abe35881d67733794aed31cd7a0c4442cacf8501"
+    },
+    "monobit-imageset/25.png": {
+      "bytes": 81,
+      "sha256": "aa4632a0d2c79ef445d5e23fc122915bf4b19b12791d0521d44a319a2dda40ea"
+    },
+    "monobit-original.pbm": {
+      "bytes": 73,
+      "sha256": "7d4fbedf2ceeef79f594c2eaa8accec27a64351dc23e751f3f7e8cca07929ac1"
+    },
+    "monobit-original.pil": {
+      "bytes": 5142,
+      "sha256": "4cfff13702e0c4adb1fc918f11725f2115a966b2990f0352f51256fa41623701"
+    },
+    "pillow-original.pbm": {
+      "bytes": 73,
+      "sha256": "7d4fbedf2ceeef79f594c2eaa8accec27a64351dc23e751f3f7e8cca07929ac1"
+    },
+    "pillow-original.pil": {
+      "bytes": 5142,
+      "sha256": "4cfff13702e0c4adb1fc918f11725f2115a966b2990f0352f51256fa41623701"
+    },
+    "processing-original.vlw": {
+      "bytes": 151,
+      "sha256": "9130aaaae8382831e53c365f10860d370aee6f5ec0b7a7ffba80f9769c7b93de"
+    },
+    "rewritten-rfont.png": {
+      "bytes": 669,
+      "sha256": "4b626bd7848a0a6dbc83523237f1589f99119fc498e5be3699dbd8706042b375"
+    },
+    "rewritten-sfont.png": {
+      "bytes": 721,
+      "sha256": "7f4ae8447940061ba77ee76242e80ecaafc1e9d8d5ede32cf27aca57da43a221"
+    },
+    "rust-imageset/21.png": {
+      "bytes": 84,
+      "sha256": "7db77e9d7a00844ca34199eda73f1e33c2b434ce7d653673519185f68f4ec85a"
+    },
+    "rust-imageset/22.png": {
+      "bytes": 84,
+      "sha256": "758880490eda45e88abfe1230c0597027e5cd5e20e57fdb473a33647abff1efe"
+    },
+    "rust-imageset/23.png": {
+      "bytes": 84,
+      "sha256": "c3e37d68669f6c63de47426328dbc453538261a6385650a4cb90ce3eed9f187b"
+    },
+    "rust-imageset/24.png": {
+      "bytes": 84,
+      "sha256": "2e1311b0d53e53bc545d488f0f97960ff7d5c2d8ac3f85305f21f122e66f56f7"
+    },
+    "rust-imageset/25.png": {
+      "bytes": 84,
+      "sha256": "0e805612827a41105e4522ce03a2070a1a285b1ca68665830a145bc36fef8372"
+    },
+    "rust-original.pbm": {
+      "bytes": 132,
+      "sha256": "3ea6e5009986d2d81358940e2978096fe0ff27bf0e25a9a687d44f9cb4231893"
+    },
+    "rust-original.pil": {
+      "bytes": 5143,
+      "sha256": "0eff140e64aa8cf2300dbb738b3d62750c3613fdc42d2614f3f8fc7af845126a"
+    },
+    "rust-rfont.png": {
+      "bytes": 610,
+      "sha256": "eedb0df26305a823b766e4c07920fe5649a2a5a81a776dd3dc66f6abc99990bf"
+    },
+    "rust-sfont.png": {
+      "bytes": 773,
+      "sha256": "e1d647dae970bae4cca45441c9a77f9e8d4914a5683497c8a120b3fcd28a7f1c"
+    },
+    "sfont-overhang.rgba": {
+      "bytes": 14504,
+      "sha256": "133d18d7dbafb7d09d233c278d5ecd524e0f91d93509c989729165a4f653e3e1"
+    },
+    "sfont.rgba": {
+      "bytes": 13384,
+      "sha256": "e5632b55535cb89255acb6e7a2f33cc94dafa621640cc80907121e227d3d968b"
+    },
+    "vlw.vlw": {
+      "bytes": 255,
+      "sha256": "952dffc3045788b03cd62a174f05f0d015bb7b3332ef448c383cb2549f6eb9de"
+    },
+    "vlw10.vlw": {
+      "bytes": 254,
+      "sha256": "5488084e240463d54a3fa6f70cd820c5c8bea88b8f91937dad369560d1dbb620"
+    },
+    "vlw8.vlw": {
+      "bytes": 224,
+      "sha256": "6890be64f1f643f168d5b677fa52aad8cf7b8d702d289d46053b4d784bbf2231"
+    },
+    "vlw9.vlw": {
+      "bytes": 224,
+      "sha256": "da023dfcbfcd5f6c05c99a5fd434340902af8f3779e0c49659f14314d077654c"
+    }
+  },
+  "failure": null
+}

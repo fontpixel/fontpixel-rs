@@ -1,0 +1,12 @@
+
+running 4 tests
+test malformed_lengths_mappings_and_pixel_limit ... ok
+test native_directory_all_pixels_header_and_strict ... ok
+test full_metadata_loss_and_same_limits ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.78s
+     Running tests/hmzk.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/hmzk-f1bb4487cbc6a7fc)

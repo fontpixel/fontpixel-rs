@@ -1,0 +1,135 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "fuzz/fuzz_targets/transport.rs"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.03836202621459961,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "fuzz/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "transport-only",
+        "--bin",
+        "transport",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.06511640548706055,
+      "stdout": "",
+      "stderr": "    Finished `dev` profile [unoptimized] target(s) in 0.01s\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d406543f224718b237022a6f718b7b5c4163f285ff7b447252247fd16fb99e75"
+    },
+    {
+      "argv": [
+        "python3",
+        "fuzz/seed_transport.py",
+        "--root",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus",
+        "--check"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.040700674057006836,
+      "stdout": "{\"seeds\": 302, \"bytes\": 13219, \"check\": true}\n",
+      "stderr": "",
+      "stdout_sha256": "b90393af5afed8825ba1cd914b69f9eee0e0068232bdb30a610495215a1ff6cd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "build",
+        "transport",
+        "--no-default-features",
+        "--features",
+        "transport-only"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 0.11375188827514648,
+      "stdout": "",
+      "stderr": "    Finished `release` profile [optimized + debuginfo] target(s) in 0.07s\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6903e81247cf2cc3de52bceda85055cad8d1597a1255e8549dda2ba095aedf18"
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-transport-fuzz/x86_64-unknown-linux-gnu/release/transport",
+        "-runs=0",
+        "-timeout=2",
+        "-max_len=262144",
+        "-rss_limit_mb=1024",
+        "/home/chen/githubprojects/fontpixel/local-work/transport-corpus"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 1.129019021987915,
+      "stdout": "",
+      "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 3519064594\nINFO: Loaded 1 modules   (42851 inline 8-bit counters): 42851 [0x58c6731ffb50, 0x58c67320a2b3), \nINFO: Loaded 1 PC tables (42851 PCs): 42851 [0x58c67320a2b8,0x58c6732b18e8), \nINFO:     1383 files found in /home/chen/githubprojects/fontpixel/local-work/transport-corpus\nINFO: seed corpus: files: 1383 min: 4b max: 305b total: 162801b rss: 36Mb\n#1384\tINITED cov: 6214 ft: 24374 corp: 891/109Kb exec/s: 1384 rss: 424Mb\n#1384\tDONE   cov: 6214 ft: 24374 corp: 891/109Kb lim: 305 exec/s: 1384 rss: 424Mb\nDone 1384 runs in 1 second(s)\n",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "3b024ca30cfa95d33d7fe08915f08ed8d29be582262ce1b07054762163f18708"
+    }
+  ],
+  "production_before": [
+    {
+      "path": "crates/fontpixel/src/resources.rs",
+      "sha256": "b6babb6c395907d1667643943b876ad94eca11d7b4a29389e28df8bbe407fda6",
+      "bytes": 26280
+    },
+    {
+      "path": "crates/fontpixel/src/formats/mod.rs",
+      "sha256": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+      "bytes": 59950
+    },
+    {
+      "path": "crates/fontpixel/src/formats/transport.rs",
+      "sha256": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+      "bytes": 14677
+    },
+    {
+      "path": "crates/fontpixel/tests/transport_limits.rs",
+      "sha256": "361d1d75f953f46f54d8f79aaab094029ee738482ba0cb6b9598a5746912c531",
+      "bytes": 22218
+    }
+  ],
+  "production_after": [
+    {
+      "path": "crates/fontpixel/src/resources.rs",
+      "sha256": "b6babb6c395907d1667643943b876ad94eca11d7b4a29389e28df8bbe407fda6",
+      "bytes": 26280
+    },
+    {
+      "path": "crates/fontpixel/src/formats/mod.rs",
+      "sha256": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+      "bytes": 59950
+    },
+    {
+      "path": "crates/fontpixel/src/formats/transport.rs",
+      "sha256": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+      "bytes": 14677
+    },
+    {
+      "path": "crates/fontpixel/tests/transport_limits.rs",
+      "sha256": "361d1d75f953f46f54d8f79aaab094029ee738482ba0cb6b9598a5746912c531",
+      "bytes": 22218
+    }
+  ],
+  "status": "pass"
+}

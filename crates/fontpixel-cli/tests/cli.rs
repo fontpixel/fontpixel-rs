@@ -32,13 +32,16 @@ impl Drop for TempDir {
 }
 
 #[test]
-fn formats_lists_all_46_and_marks_actual_codecs() {
+fn formats_lists_catalogue_and_marks_actual_codecs() {
     let output = run(&["formats"]);
     assert!(output.status.success());
     assert!(output.stderr.is_empty());
     let text = String::from_utf8(output.stdout).unwrap();
     let lines: Vec<_> = text.lines().collect();
-    assert_eq!(lines.len(), 47);
+    assert_eq!(
+        lines.len(),
+        fontpixel::formats::catalogue::CATALOGUE.len() + 1
+    );
     assert!(lines[0].starts_with("ID\tREAD\tWRITE"));
     assert!(
         lines[1..]
@@ -82,7 +85,68 @@ fn formats_lists_all_46_and_marks_actual_codecs() {
                     "plan9",
                     "amiga",
                     "gem",
-                    "snf"
+                    "snf",
+                    "hanfont",
+                    "iigs",
+                    "vfont",
+                    "fzx",
+                    "figlet",
+                    "palm",
+                    "gdr",
+                    "drcs",
+                    "dosstart",
+                    "edwin",
+                    "mkwinfont",
+                    "psf2txt",
+                    "pcr",
+                    "plus3dos",
+                    "drhalo",
+                    "writeon",
+                    "daisy",
+                    "polyprint",
+                    "printshop",
+                    "tasprint",
+                    "pxl",
+                    "signum",
+                    "rockbox",
+                    "u8m",
+                    "cybiko",
+                    "playdate",
+                    "hmzk",
+                    "sbf",
+                    "mgtk",
+                    "qpf",
+                    "symbos",
+                    "qpf2",
+                    "oberon",
+                    "fbit",
+                    "lisa",
+                    "wsfont",
+                    "ssfn",
+                    "xerox",
+                    "pcgeos",
+                    "pfr",
+                    "sfont",
+                    "riscos",
+                    "gpi",
+                    "geos",
+                    "prebuilt",
+                    "pilfont",
+                    "vlw",
+                    "dashen",
+                    "hppcl",
+                    "vtfont",
+                    "chiwriter",
+                    "catalyst",
+                    "bbc",
+                    "comfont",
+                    "consoleet",
+                    "grasp",
+                    "hrcg",
+                    "wyse",
+                    "xbin",
+                    "zapfont",
+                    "beos",
                 ]
                 .iter()
                 .any(|id| line.starts_with(&format!("{id}\t"))))
@@ -103,7 +167,10 @@ fn formats_json_is_parseable_and_honest() {
     assert!(output.status.success());
     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     let formats = json["formats"].as_array().unwrap();
-    assert_eq!(formats.len(), 46);
+    assert_eq!(
+        formats.len(),
+        fontpixel::formats::catalogue::CATALOGUE.len()
+    );
     assert!(
         formats
             .iter()
@@ -145,7 +212,68 @@ fn formats_json_is_parseable_and_honest() {
                     "plan9",
                     "amiga",
                     "gem",
-                    "snf"
+                    "snf",
+                    "hanfont",
+                    "iigs",
+                    "vfont",
+                    "fzx",
+                    "figlet",
+                    "palm",
+                    "gdr",
+                    "drcs",
+                    "dosstart",
+                    "edwin",
+                    "mkwinfont",
+                    "psf2txt",
+                    "pcr",
+                    "plus3dos",
+                    "drhalo",
+                    "writeon",
+                    "daisy",
+                    "polyprint",
+                    "printshop",
+                    "tasprint",
+                    "pxl",
+                    "signum",
+                    "rockbox",
+                    "u8m",
+                    "cybiko",
+                    "playdate",
+                    "hmzk",
+                    "sbf",
+                    "mgtk",
+                    "qpf",
+                    "symbos",
+                    "qpf2",
+                    "oberon",
+                    "fbit",
+                    "lisa",
+                    "wsfont",
+                    "ssfn",
+                    "xerox",
+                    "pcgeos",
+                    "pfr",
+                    "sfont",
+                    "riscos",
+                    "gpi",
+                    "geos",
+                    "prebuilt",
+                    "pilfont",
+                    "vlw",
+                    "dashen",
+                    "hppcl",
+                    "vtfont",
+                    "chiwriter",
+                    "catalyst",
+                    "bbc",
+                    "comfont",
+                    "consoleet",
+                    "grasp",
+                    "hrcg",
+                    "wyse",
+                    "xbin",
+                    "zapfont",
+                    "beos",
                 ]
                 .iter()
                 .any(|id| entry["format"]["id"] == *id))
@@ -177,6 +305,67 @@ fn formats_json_is_parseable_and_honest() {
         "amiga",
         "gem",
         "snf",
+        "hanfont",
+        "iigs",
+        "vfont",
+        "fzx",
+        "figlet",
+        "palm",
+        "gdr",
+        "drcs",
+        "dosstart",
+        "edwin",
+        "mkwinfont",
+        "psf2txt",
+        "pcr",
+        "plus3dos",
+        "drhalo",
+        "writeon",
+        "daisy",
+        "polyprint",
+        "printshop",
+        "tasprint",
+        "pxl",
+        "signum",
+        "rockbox",
+        "u8m",
+        "cybiko",
+        "playdate",
+        "hmzk",
+        "sbf",
+        "mgtk",
+        "qpf",
+        "symbos",
+        "qpf2",
+        "oberon",
+        "fbit",
+        "lisa",
+        "wsfont",
+        "ssfn",
+        "xerox",
+        "pcgeos",
+        "pfr",
+        "sfont",
+        "riscos",
+        "gpi",
+        "geos",
+        "prebuilt",
+        "pilfont",
+        "vlw",
+        "dashen",
+        "hppcl",
+        "vtfont",
+        "chiwriter",
+        "catalyst",
+        "bbc",
+        "comfont",
+        "consoleet",
+        "grasp",
+        "hrcg",
+        "wyse",
+        "xbin",
+        "zapfont",
+        "beos",
     ] {
         let entry = formats
             .iter()
@@ -187,7 +376,20 @@ fn formats_json_is_parseable_and_honest() {
         assert_eq!(entry["write"], enabled);
         assert_eq!(
             entry["detect"],
-            enabled && !["vector-raster", "raw", "hzk"].contains(&id)
+            enabled
+                && ![
+                    "vector-raster",
+                    "raw",
+                    "hzk",
+                    "hanfont",
+                    "edwin",
+                    "mkwinfont",
+                    "polyprint",
+                    "catalyst",
+                    "consoleet",
+                    "hrcg",
+                ]
+                .contains(&id)
         );
     }
     for id in ["otb", "bdat", "color"] {
@@ -198,7 +400,7 @@ fn formats_json_is_parseable_and_honest() {
         let enabled = entry["format"]["feature_enabled"].as_bool().unwrap();
         assert_eq!(entry["read"], enabled);
         assert_eq!(entry["detect"], enabled);
-        assert_eq!(entry["write"], enabled && id != "color");
+        assert_eq!(entry["write"], enabled);
     }
 }
 
@@ -254,10 +456,12 @@ fn info_reports_missing_inputs_and_ambiguous_extensions() {
     assert_eq!(output.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&output.stderr).contains("ambiguous format"));
     let explicit = run(&["info", input.to_str().unwrap(), "--from", "drcs"]);
-    assert!(
-        String::from_utf8_lossy(&explicit.stderr)
-            .contains("read for format 'drcs' is not implemented")
-    );
+    assert_eq!(explicit.status.code(), Some(1));
+    let error = String::from_utf8_lossy(&explicit.stderr);
+    assert!(!error.contains("ambiguous format"));
+    if cfg!(feature = "drcs") {
+        assert!(!error.contains("not implemented"));
+    }
 }
 
 #[test]
@@ -298,24 +502,49 @@ fn failed_conversion_never_creates_or_overwrites_output() {
 #[test]
 fn convert_dispatch_accepts_multiple_inputs_and_explicit_target() {
     let dir = TempDir::new();
+    let first = dir.0.join("first.bdf");
+    let second = dir.0.join("second.bdf");
     let target = dir.0.join("output.unusual");
+    fs::write(&first, BDF).unwrap();
+    fs::write(&second, BDF.replace("ENCODING 65", "ENCODING 66")).unwrap();
     let output = run(&[
         "convert",
-        "first.bdf",
-        "second.bdf",
+        first.to_str().unwrap(),
+        second.to_str().unwrap(),
         "-o",
         target.to_str().unwrap(),
         "--from",
         "bdf",
         "--to",
-        "drcs",
+        "yaff",
     ]);
-    assert_eq!(output.status.code(), Some(1));
+    let registry = fontpixel::registry();
+    if !registry.status("bdf").unwrap().read || !registry.status("yaff").unwrap().write {
+        assert_eq!(output.status.code(), Some(1));
+        assert!(!target.exists());
+        return;
+    }
     assert!(
+        output.status.success(),
+        "{}",
         String::from_utf8_lossy(&output.stderr)
-            .contains("write for format 'drcs' is not implemented")
     );
-    assert!(!target.exists());
+    let loaded = registry
+        .read(
+            &fontpixel::Input::new(&fs::read(&target).unwrap()),
+            &fontpixel::ReadOptions {
+                format: Some("yaff".into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+    assert_eq!(loaded.fonts.fonts.len(), 2);
+    for (font, cp) in loaded.fonts.fonts.iter().zip([65, 66]) {
+        let glyph = font
+            .glyph_for_codepoint(fontpixel::model::Codepoint::Unicode(cp))
+            .unwrap();
+        assert_eq!(glyph.bitmap.as_bytes(), &[0x80]);
+    }
 }
 
 #[test]
@@ -1119,6 +1348,8 @@ fn hex_psf_cli_variants_and_strict_atomic_failure() {
         source.to_str().unwrap(),
         "-o",
         sentinel.to_str().unwrap(),
+        "--to",
+        "psf",
         "--hex-height",
         "8",
         "--psf-version",
@@ -1132,6 +1363,8 @@ fn hex_psf_cli_variants_and_strict_atomic_failure() {
         source.to_str().unwrap(),
         "-o",
         sentinel.to_str().unwrap(),
+        "--to",
+        "psf",
         "--hex-height",
         "8",
         "--psf-version",
@@ -1154,6 +1387,8 @@ fn hex_psf_cli_variants_and_strict_atomic_failure() {
             source.to_str().unwrap(),
             "-o",
             sentinel.to_str().unwrap(),
+            "--to",
+            "psf",
             "--hex-height",
             "8",
         ];
@@ -1324,7 +1559,13 @@ fn image_bundle_cli_roundtrip_sidecar_info_and_failure_protection() {
     assert_eq!(report["assets"].as_array().unwrap().len(), 2);
     assert!(mapping.is_file());
     for source in [&image, &mapping] {
-        let info = run(&["info", source.to_str().unwrap(), "--json"]);
+        let info = run(&[
+            "info",
+            source.to_str().unwrap(),
+            "--from",
+            "image",
+            "--json",
+        ]);
         assert!(
             info.status.success(),
             "{}",
@@ -1333,6 +1574,8 @@ fn image_bundle_cli_roundtrip_sidecar_info_and_failure_protection() {
         let result = run(&[
             "convert",
             source.to_str().unwrap(),
+            "--from",
+            "image",
             "-o",
             back.to_str().unwrap(),
             "--strict",

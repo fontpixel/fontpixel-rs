@@ -1,0 +1,1974 @@
+{
+  "original_prebuild": [
+    {
+      "name": "mono13",
+      "original_producer_exit": 0,
+      "native_pixels_advance_exact": true,
+      "source_sha256": "06e212024e92d6a3c3978e81d526a213fac6a5e7c0a7781eed43c6693ca8cb37",
+      "native_sha256": "fa899b96c87ef6c447808fbd01919af25226bdc1b6a3fc53d1d081e9008724a4"
+    },
+    {
+      "name": "mono9",
+      "original_producer_exit": 0,
+      "native_pixels_advance_exact": true,
+      "source_sha256": "fa43ad2ea3a776734d058b82456f33b9fd0851627e7f18aa040721fd8a37c55f",
+      "native_sha256": "aea38e1bdd580fb18c8397bb90ac4dc94bdb941461ce5cdc4e541b4c1134ebeb"
+    },
+    {
+      "name": "gray2",
+      "original_producer_exit": 0,
+      "native_pixels_advance_exact": true,
+      "source_sha256": "ac95d9b8a689188e961fffd2e72e23057c0287e3906a0d518322b30fd8abae77",
+      "native_sha256": "1e0ff90dd3490a4abdc52db9f07c914c047c20c88d0de2bc9a2f38ce71799e2d"
+    },
+    {
+      "name": "gray4",
+      "original_producer_exit": 0,
+      "native_pixels_advance_exact": true,
+      "source_sha256": "9898006c2142acc4fe10ac63ae29c41f97f588a37e4f117770cba9c131bcf459",
+      "native_sha256": "e24dccdffd75b1614bba924e0b4301e31253e08609e12c335deb55434ee3c8ff"
+    },
+    {
+      "name": "gray8",
+      "original_producer_exit": 0,
+      "native_pixels_advance_exact": true,
+      "source_sha256": "888f0c174da8ccc71f16cfcccdce3f3182c39f6826a0ebaac25e9be3b8a26c29",
+      "native_sha256": "112db65e38c730534ab841d16e6b9b7fc3ccb68b0d53af30b0170709024d0c30"
+    }
+  ],
+  "original_prebuild_manifest_sha256": "ce240b5238ff725d6056d654cda9cbcd4a3492db4937765e2aadd363b8029e0f",
+  "original_prebuild_executable_sha256": "b64560faf0be1d2c16b9db74cb2f65eed90116afecf64c0a2ac3c1cfa2044256",
+  "bitblt_independent": [
+    {
+      "layout": "plain",
+      "independent_primary_decoder": true,
+      "sha256": "838231b2e1c0c19cbd1b59b5d40c51bbc0251b2caffd1cde470d36adcc30f3f1"
+    },
+    {
+      "layout": "kerned",
+      "independent_primary_decoder": true,
+      "sha256": "ca9ce02283ae760f665234c809e09abd61a55ed47936cfe4ea95fc9cf4ca9498"
+    },
+    {
+      "layout": "plain-index",
+      "independent_primary_decoder": true,
+      "sha256": "f590359792a9cb38cf80bde097c04931e011877fa8f738715f11f575bfc87aec"
+    },
+    {
+      "layout": "kerned-index",
+      "independent_primary_decoder": true,
+      "sha256": "a15d4e9c52c05f9dc63bf84084a73ccb43f2d947af74aca868aa4441a921ce36"
+    }
+  ],
+  "pcl_independent": [
+    {
+      "profile": "hppcl:o0:raw:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "c50f4066d2d8b3122fb428c2493533312782795b536c74f2c71a11f667409075"
+    },
+    {
+      "profile": "hppcl:o0:rle:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "937b0d63f9641fffe47188eab470b171ebb600c5f97f35bebe750c73f003de3a"
+    },
+    {
+      "profile": "hppcl:o1:raw:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "413255dbddb362fd9453ceee8a3862a1a6710d9ffa655ba52f2dab45c5795400"
+    },
+    {
+      "profile": "hppcl:o1:rle:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "c4aae10bdb07ea5ff2652a4b570d0ecef31e960c1455e23ac64781d739541249"
+    },
+    {
+      "profile": "hppcl:o2:raw:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "41b637aa60067e19e93993509065372b89550a997ff57518bcdf7928ab539d60"
+    },
+    {
+      "profile": "hppcl:o2:rle:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "ee9b09e7cf9eb6392f2a996f2da524120264bf9ef956bb52b4ed304416dc7c38"
+    },
+    {
+      "profile": "hppcl:o3:raw:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "484754b0cf71e66125763f18816ad80a1b1eb59bd78fb6c77036e8f460e6c676"
+    },
+    {
+      "profile": "hppcl:o3:rle:chunks",
+      "independent_hp_spec_decoder": true,
+      "sha256": "afca25fce8224ef9ac830a633f12a98502af78d35cde81024057429ee6b9a4d2"
+    },
+    {
+      "profile": "portrait",
+      "external_writer_native_reader": true,
+      "sha256": "243dc84faa2a6a9fb667fb1e8eb22c0d8f6c355bbdc963ef2530d17eefbef148"
+    },
+    {
+      "profile": "landscape",
+      "external_writer_native_reader": true,
+      "sha256": "83c078c50ecb08cbdc2d560193c711bfbb06143195fadcad7189c9fd2178d4e5"
+    }
+  ],
+  "python": "3.12.13 (main, Mar  8 2026, 21:27:28) [GCC 13.3.0]",
+  "monobit": "0.54",
+  "fixture_license": "Original project MIT byte assemblers in fuzz/seed_w5c2.py",
+  "cases": [
+    {
+      "format": "catalyst",
+      "fixture": "small",
+      "glyphs": 128,
+      "native_read_write": true,
+      "source_sha256": "ab98de7f3b04742d4720828f5794279103209c5dd912b5f9bf88daf364256dfa",
+      "native_sha256": "ab98de7f3b04742d4720828f5794279103209c5dd912b5f9bf88daf364256dfa",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "dashen",
+      "fixture": "v3",
+      "glyphs": 2,
+      "native_read_write": true,
+      "source_sha256": "e94c828276a1cd45335a708e8c52a6386fa390cafe543d859898de2b41eb0fcd",
+      "native_sha256": "e94c828276a1cd45335a708e8c52a6386fa390cafe543d859898de2b41eb0fcd",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "hppcl",
+      "fixture": "raw",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "3494db3e48dc225ccfb6cf55a6167d3fb5a8ccff3d1715b644de17406e299c53",
+      "native_sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "catalyst",
+      "fixture": "dense",
+      "glyphs": 128,
+      "native_read_write": true,
+      "source_sha256": "d1cf3f19729ba3f3392b0c04b72a042e340efabd414cffdb6d21effe537a2134",
+      "native_sha256": "d1cf3f19729ba3f3392b0c04b72a042e340efabd414cffdb6d21effe537a2134",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "dashen",
+      "fixture": "dense",
+      "glyphs": 95,
+      "native_read_write": true,
+      "source_sha256": "c698358d6cd2bd69a71f0b1012bb5e260eabf24c2bed076af332af71c1be354f",
+      "native_sha256": "c698358d6cd2bd69a71f0b1012bb5e260eabf24c2bed076af332af71c1be354f",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "hppcl",
+      "fixture": "dense",
+      "glyphs": 95,
+      "native_read_write": true,
+      "source_sha256": "d611a0bbd3872efc9d3c18b6c4baeae168d9e42b6d24e1434ac9eb0ab26af2d9",
+      "native_sha256": "b04e169c3f96c4b68cdf47ece191438fee76ed4f4785634c4c3628f4d5790fc3",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "dense",
+      "glyphs": 96,
+      "native_read_write": true,
+      "source_sha256": "8bdf0695ee55da24cc9df33e9ee84fbad9df349e0d2e86872af46799ba727391",
+      "native_sha256": "8bdf0695ee55da24cc9df33e9ee84fbad9df349e0d2e86872af46799ba727391",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "catalyst",
+      "fixture": "data",
+      "glyphs": 128,
+      "native_read_write": true,
+      "source_sha256": "2ce8088ee63c5f836cb173d6f09f32d298e31639cc850cd1a90ce2306ccd31ef",
+      "native_sha256": "2ce8088ee63c5f836cb173d6f09f32d298e31639cc850cd1a90ce2306ccd31ef",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "chiwriter",
+      "fixture": "v3",
+      "glyphs": 3,
+      "native_read_write": true,
+      "source_sha256": "ffd4a3cddf5fec7c981dab49c4b0f502225d46c48be6b885f5b9eb4acaf40386",
+      "native_sha256": "490904441e8ec8f2d932288b12044ec79b54a4b7134c6f5195322bb1e8e48747",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "chiwriter",
+      "fixture": "v4",
+      "glyphs": 3,
+      "native_read_write": true,
+      "source_sha256": "7c24e3a22960a03aaed6b0dce1c1a11d02666d297bed8fa9f93dcb56f114eb0d",
+      "native_sha256": "75e4a1939695789d479bf2d6ad1b97d769ea88d4fdd6ffd186fba876b65b351b",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "chiwriter",
+      "fixture": "dense",
+      "glyphs": 95,
+      "native_read_write": true,
+      "source_sha256": "fec66c9d75df0ab62edeca6e3cf6af1d2c00eef4e64cb418451d14e100880838",
+      "native_sha256": "87e97e15ec24136f9b3713baacd806e53d4462cda4750797a38f9a3896ed4844",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "chiwriter",
+      "fixture": "absolute-stride3",
+      "glyphs": 3,
+      "native_read_write": true,
+      "source_sha256": "585aa95eaf81f7c438c475d323f4acb468a2c1083b8f5277e113e704510dbf54",
+      "native_sha256": "b510dff59684d43331ff3e59a8c04cc44a808a435e44ff67a4509572d73da3c3",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "chiwriter",
+      "fixture": "relative-stride3",
+      "glyphs": 3,
+      "native_read_write": true,
+      "source_sha256": "e044e355c6d04ab41631651106528adad20c815d3592f7c015242fd3ce651a2f",
+      "native_sha256": "f912df7704a330c9775a02c3e9e3127b99c2d6f28c9446266e4e5cd37539d3ae",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "dashen",
+      "fixture": "v4",
+      "glyphs": 3,
+      "native_read_write": true,
+      "source_sha256": "8acafe4c69830376cf756809617cc37cc8f285a7cdf03e559e1909e356bb2f5c",
+      "native_sha256": "fe07de1b0911ebd92e05e2131f1f2d08557dfbf2bfaa5b200ab0eacc3bbe83c2",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "hppcl",
+      "fixture": "rle",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "d8e8f5ae16ebfcfc58fe13ddbec46d375b442318220553ffb3e5052952c33d93",
+      "native_sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "hppcl",
+      "fixture": "legacy",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "928d31875f7f6487c405bdf2173b0a69c168d1bedd46883a0f0817a00ce7cde0",
+      "native_sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "be-1",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "b5b6bd24d64c4dfb625d1f51a72fb75bb4b461b4bde73bc64940fe9c80e4b19c",
+      "native_sha256": "c805a843cb57242e3bcd2036babcf21083b912b8acac346592675f2d4551f687",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "be-2",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "6d9c9a9df5df46903b0b2d6b55e0580e227170245ce113ef94f28ce8ecddd9e0",
+      "native_sha256": "362bbb525869049d853b67538b3601fe3ce891a36a0fa7fef71232731a3ae80e",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "be-4",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "020a0b14abc5bdd610957566a01798575db40313bd5f31c6e275da7e40f0187b",
+      "native_sha256": "9854cda14cff0a163898fba3dfe4f348e14f7f457c7816245cd0e21e16ef5a00",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "be-8",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "bd00dfcc591cf269728de37bc8e63373c61b7f6e95e01f545ec90dc4b21e7480",
+      "native_sha256": "edc428d81e125fe247fb742350f6b27cbb98dcdd7144c4bc51165c40ace9210e",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "le-1",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "832e4eef585a92b57b022689b8172374b667aead3982fe862a06c041e5f1fcc8",
+      "native_sha256": "669ee89c6246bac693317b9a500e8429465e69932dca3b583408e041424da283",
+      "independent_reader_source_and_native_output": true,
+      "oracle_numeric_endian_normalization": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "le-2",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "50bdb8caf68952bbe897610d875589dd46195ee8c74d6d6bdc44801c18e48aac",
+      "native_sha256": "7e9f3be75b7287a35d4e6e56c175ebf77718446e366bd293825c626e92f065a8",
+      "independent_reader_source_and_native_output": true,
+      "oracle_numeric_endian_normalization": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "le-4",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "ae94c5fff2621f9b53728fe3f934f6b7a496a4ac6e370a8b5331d989e821ec86",
+      "native_sha256": "535859ce5fbb25b72dd5cac56630838316a90f263789f7829df956b3e01ae823",
+      "independent_reader_source_and_native_output": true,
+      "oracle_numeric_endian_normalization": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "le-8",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "01c384244e5c340ccaca35a02198a61609bd8a97c0c80f0c68142bc143413fce",
+      "native_sha256": "b46f2882fc11bad54da84b8ffbba3cf7935a955c071b583ce0693e364b2480cd",
+      "independent_reader_source_and_native_output": true,
+      "oracle_numeric_endian_normalization": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "vertical",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "724fd2110df9e8d3d8bb11c76f819b90d926a75b70f525155fdac798c96c0db3",
+      "native_sha256": "2129655607e825afd543bd3eb1263bc4de927d9ce0c3e2ff8792e3b6a66caff5",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "prebuilt",
+      "fixture": "be-8-gray",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "c0f20aa84b76f42094383918cb05d2deb3f981399bd36cf0f691a0728047158a",
+      "native_sha256": "7d9a88acdfec0bf288d2307388e3cfb6d57228c539c59572d12809a91d0f99e5",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "v4",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "9ed91be6839c0128a60f1a2113bfd3d82bea684c6ac510713260a8c95b35030d",
+      "native_sha256": "9ed91be6839c0128a60f1a2113bfd3d82bea684c6ac510713260a8c95b35030d",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "v5",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "a81ba2510eacbd461f40021f1e730d17a79af46e09b040dafcead8251d284c67",
+      "native_sha256": "a81ba2510eacbd461f40021f1e730d17a79af46e09b040dafcead8251d284c67",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "v6",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46",
+      "native_sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "v7",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "3c9a7e49cc2cf3499f219b168fe1428383ce3cd60aa3a540c27f5304e0267720",
+      "native_sha256": "3c9a7e49cc2cf3499f219b168fe1428383ce3cd60aa3a540c27f5304e0267720",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "v8",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "455249835ff84bcde0910b981280af75d3a0b0f4d10c8965bd70f6e3e4c0937e",
+      "native_sha256": "9b7460a85dcb26d981e1c1c3624c8aae945c6a6949ea82c4350518861c6ac490",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "dense",
+      "glyphs": 95,
+      "native_read_write": true,
+      "source_sha256": "f6a8556dc3dce2f9df98481fc3fa5f6023768b98d98464f0cf09f2cd79a00a98",
+      "native_sha256": "f6a8556dc3dce2f9df98481fc3fa5f6023768b98d98464f0cf09f2cd79a00a98",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "packed",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "7640c80cc17178c3817c0f557f3c64e5e3dd7a129520f39c7566ee39cfefeaa1",
+      "native_sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "phases",
+      "glyphs": 16,
+      "native_read_write": true,
+      "source_sha256": "cf26461fce72068d8d9e286907f9c144cae6fe05146a3fc461d849530563f51f",
+      "native_sha256": "cf26461fce72068d8d9e286907f9c144cae6fe05146a3fc461d849530563f51f",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "wide",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "8f3bea8b653c8d0c68b8250de3ba89be095fa37c39ff13853bcdc5bacb4dd49c",
+      "native_sha256": "bda019b40727cc6af676940ca041e28794bd9fe044ae1542b075458fbb9e8f82",
+      "native_variant_fixture_without_external_reader": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "xy",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "317af3d7428a68aa7ef29a05450a31b37a4f70059374f390ca7de1598503fd0d",
+      "native_sha256": "317af3d7428a68aa7ef29a05450a31b37a4f70059374f390ca7de1598503fd0d",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "riscos",
+      "fixture": "xy-gray",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "b0cd906a78de6d53b4c9f4a16446af9af3f1ecbc497d9075cef63375ff1e6a6b",
+      "native_sha256": "b0cd906a78de6d53b4c9f4a16446af9af3f1ecbc497d9075cef63375ff1e6a6b",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "xerox",
+      "fixture": "alto",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "45b08f5b27a1f5b1fa3460f4f875d0126089c9657ef70d803bd85b71bb073902",
+      "native_sha256": "eb0ff0b0528948ac1208aafd5f7bda8e229daf3b8008c6df29994ca68ab90865",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "xerox",
+      "fixture": "bitblt",
+      "glyphs": 2,
+      "native_read_write": true,
+      "source_sha256": "cb50e09a708d7717b46b0edc8157d28d7f27b46f1db46203f16abebacab2a60d",
+      "native_sha256": "83e7e3c3cf50d5412d17647fa0efc0fae208c13df766b7a2714a415fa8cb4e02",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "xerox",
+      "fixture": "bitblt-dense",
+      "glyphs": 96,
+      "native_read_write": true,
+      "source_sha256": "838231b2e1c0c19cbd1b59b5d40c51bbc0251b2caffd1cde470d36adcc30f3f1",
+      "native_sha256": "ca9ce02283ae760f665234c809e09abd61a55ed47936cfe4ea95fc9cf4ca9498",
+      "independent_reader_source_and_native_output": true
+    },
+    {
+      "format": "xerox",
+      "fixture": "prepress",
+      "glyphs": 1,
+      "native_read_write": true,
+      "source_sha256": "fa879667082bd57b159d587ceb291ee7b31ca60bfd8d46b61cfbaf44c0743146",
+      "native_sha256": "52d4ea3e97894c74c52fc0551384e90fd78cd4ca200de4902c559e1726cfe5b6",
+      "independent_reader_source_and_native_output": true
+    }
+  ],
+  "normalizations": [
+    "Alto: subtract monobit extra +1 from y, primary AltoFontFormats p5 defines baseline-HD-XH",
+    "Prebuilt/Prepress: compare advance x; independent monobit drops y advance, native tests verify both axes",
+    "Prepress: compare physical pixels; oracle retains storage height ceil16 rather than logical BBdy",
+    "Original explicit relative offsets and new RISC OS v7/v8/phases/12bit require primary spec fixtures because monobit lacks these profiles",
+    "PCL RLE and all four orientations have a separate independent Python decoder derived from HP tables",
+    "Catalyst sparse reader fails zero-width modulo in monobit; independent validation uses dense128-slot fixture",
+    "Prebuilt LE: original NeXT producer confirms MSB-first rasters; monobit incorrectly mirrors them. Numeric fields alone are converted to BE for its independent pixel/name/metric comparison; raster bytes are untouched."
+  ],
+  "artifacts": [
+    {
+      "path": "catalyst-data/native.bin",
+      "bytes": 402,
+      "sha256": "2ce8088ee63c5f836cb173d6f09f32d298e31639cc850cd1a90ce2306ccd31ef"
+    },
+    {
+      "path": "catalyst-data/native.bin.fontpixel.json",
+      "bytes": 13452,
+      "sha256": "00955cbb4a57dce5b14e222faa36e34a3b696e98ec02272de348f714c03946eb"
+    },
+    {
+      "path": "catalyst-data/source.bin",
+      "bytes": 402,
+      "sha256": "2ce8088ee63c5f836cb173d6f09f32d298e31639cc850cd1a90ce2306ccd31ef"
+    },
+    {
+      "path": "catalyst-data/source.bin.fontpixel.json",
+      "bytes": 13452,
+      "sha256": "00955cbb4a57dce5b14e222faa36e34a3b696e98ec02272de348f714c03946eb"
+    },
+    {
+      "path": "catalyst-dense/native.bin",
+      "bytes": 1158,
+      "sha256": "d1cf3f19729ba3f3392b0c04b72a042e340efabd414cffdb6d21effe537a2134"
+    },
+    {
+      "path": "catalyst-dense/native.bin.fontpixel.json",
+      "bytes": 14712,
+      "sha256": "4589eeeda775ced2c00458ba8fa2dec7ee3b56f604a1e31d5f0dcac771f6f85e"
+    },
+    {
+      "path": "catalyst-dense/native.bin.monobit.json",
+      "bytes": 124311,
+      "sha256": "a8f0717e1185bd211f2ba08a5d466f984a2c840b73973875fdd3cd8f9d46d39f"
+    },
+    {
+      "path": "catalyst-dense/source.bin",
+      "bytes": 1158,
+      "sha256": "d1cf3f19729ba3f3392b0c04b72a042e340efabd414cffdb6d21effe537a2134"
+    },
+    {
+      "path": "catalyst-dense/source.bin.fontpixel.json",
+      "bytes": 14712,
+      "sha256": "4589eeeda775ced2c00458ba8fa2dec7ee3b56f604a1e31d5f0dcac771f6f85e"
+    },
+    {
+      "path": "catalyst-dense/source.bin.monobit.json",
+      "bytes": 124311,
+      "sha256": "a8f0717e1185bd211f2ba08a5d466f984a2c840b73973875fdd3cd8f9d46d39f"
+    },
+    {
+      "path": "catalyst-small/native.bin",
+      "bytes": 402,
+      "sha256": "ab98de7f3b04742d4720828f5794279103209c5dd912b5f9bf88daf364256dfa"
+    },
+    {
+      "path": "catalyst-small/native.bin.fontpixel.json",
+      "bytes": 13452,
+      "sha256": "00955cbb4a57dce5b14e222faa36e34a3b696e98ec02272de348f714c03946eb"
+    },
+    {
+      "path": "catalyst-small/source.bin",
+      "bytes": 402,
+      "sha256": "ab98de7f3b04742d4720828f5794279103209c5dd912b5f9bf88daf364256dfa"
+    },
+    {
+      "path": "catalyst-small/source.bin.fontpixel.json",
+      "bytes": 13452,
+      "sha256": "00955cbb4a57dce5b14e222faa36e34a3b696e98ec02272de348f714c03946eb"
+    },
+    {
+      "path": "chiwriter-absolute-stride3/native.bin",
+      "bytes": 362,
+      "sha256": "b510dff59684d43331ff3e59a8c04cc44a808a435e44ff67a4509572d73da3c3"
+    },
+    {
+      "path": "chiwriter-absolute-stride3/native.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-absolute-stride3/source.bin",
+      "bytes": 362,
+      "sha256": "585aa95eaf81f7c438c475d323f4acb468a2c1083b8f5277e113e704510dbf54"
+    },
+    {
+      "path": "chiwriter-absolute-stride3/source.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-dense/native.bin",
+      "bytes": 908,
+      "sha256": "87e97e15ec24136f9b3713baacd806e53d4462cda4750797a38f9a3896ed4844"
+    },
+    {
+      "path": "chiwriter-dense/native.bin.fontpixel.json",
+      "bytes": 11989,
+      "sha256": "99ce29bf32680763f2ecfbec7253fbe09cad24a966c2f52e1552394a0af23f5e"
+    },
+    {
+      "path": "chiwriter-dense/native.bin.monobit.json",
+      "bytes": 99136,
+      "sha256": "4b23f5588ad7981d3ec05acb187620ffb090845d9539b18ff98b8f73b01a643f"
+    },
+    {
+      "path": "chiwriter-dense/source.bin",
+      "bytes": 908,
+      "sha256": "fec66c9d75df0ab62edeca6e3cf6af1d2c00eef4e64cb418451d14e100880838"
+    },
+    {
+      "path": "chiwriter-dense/source.bin.fontpixel.json",
+      "bytes": 11989,
+      "sha256": "99ce29bf32680763f2ecfbec7253fbe09cad24a966c2f52e1552394a0af23f5e"
+    },
+    {
+      "path": "chiwriter-dense/source.bin.monobit.json",
+      "bytes": 99136,
+      "sha256": "4b23f5588ad7981d3ec05acb187620ffb090845d9539b18ff98b8f73b01a643f"
+    },
+    {
+      "path": "chiwriter-relative-stride3/native.bin",
+      "bytes": 362,
+      "sha256": "f912df7704a330c9775a02c3e9e3127b99c2d6f28c9446266e4e5cd37539d3ae"
+    },
+    {
+      "path": "chiwriter-relative-stride3/native.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-relative-stride3/source.bin",
+      "bytes": 362,
+      "sha256": "e044e355c6d04ab41631651106528adad20c815d3592f7c015242fd3ce651a2f"
+    },
+    {
+      "path": "chiwriter-relative-stride3/source.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-v3/native.bin",
+      "bytes": 356,
+      "sha256": "490904441e8ec8f2d932288b12044ec79b54a4b7134c6f5195322bb1e8e48747"
+    },
+    {
+      "path": "chiwriter-v3/native.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-v3/native.bin.monobit.json",
+      "bytes": 2417,
+      "sha256": "ca1cf973410bf00abf4d786c594b533446827f4bd035aa3cb843a8b59d116d5a"
+    },
+    {
+      "path": "chiwriter-v3/source.bin",
+      "bytes": 356,
+      "sha256": "ffd4a3cddf5fec7c981dab49c4b0f502225d46c48be6b885f5b9eb4acaf40386"
+    },
+    {
+      "path": "chiwriter-v3/source.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "90d261b6a6d5a60ea8c3cce6a7ce41198f2ad0f341a2b0a512e41161464809a5"
+    },
+    {
+      "path": "chiwriter-v3/source.bin.monobit.json",
+      "bytes": 2417,
+      "sha256": "ca1cf973410bf00abf4d786c594b533446827f4bd035aa3cb843a8b59d116d5a"
+    },
+    {
+      "path": "chiwriter-v4/native.bin",
+      "bytes": 356,
+      "sha256": "75e4a1939695789d479bf2d6ad1b97d769ea88d4fdd6ffd186fba876b65b351b"
+    },
+    {
+      "path": "chiwriter-v4/native.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "30f266126f5a3f4a7127073afd864b792fa96d5f10bed50feba0a8e21cc0db10"
+    },
+    {
+      "path": "chiwriter-v4/native.bin.monobit.json",
+      "bytes": 2417,
+      "sha256": "d555ad90ff89fdb5ddb47a5bb11abef11555874e253680db79bc582bde5dfa82"
+    },
+    {
+      "path": "chiwriter-v4/source.bin",
+      "bytes": 356,
+      "sha256": "7c24e3a22960a03aaed6b0dce1c1a11d02666d297bed8fa9f93dcb56f114eb0d"
+    },
+    {
+      "path": "chiwriter-v4/source.bin.fontpixel.json",
+      "bytes": 462,
+      "sha256": "30f266126f5a3f4a7127073afd864b792fa96d5f10bed50feba0a8e21cc0db10"
+    },
+    {
+      "path": "chiwriter-v4/source.bin.monobit.json",
+      "bytes": 2417,
+      "sha256": "d555ad90ff89fdb5ddb47a5bb11abef11555874e253680db79bc582bde5dfa82"
+    },
+    {
+      "path": "dashen-dense/native.bin",
+      "bytes": 2210,
+      "sha256": "c698358d6cd2bd69a71f0b1012bb5e260eabf24c2bed076af332af71c1be354f"
+    },
+    {
+      "path": "dashen-dense/native.bin.fontpixel.json",
+      "bytes": 11625,
+      "sha256": "1cb1a23f110eacb0189bf40300fc934f7d984b457023c103d7d247133a4b196c"
+    },
+    {
+      "path": "dashen-dense/native.bin.monobit.json",
+      "bytes": 45096,
+      "sha256": "b0e9a815c23f91c7dad2ad57a4fea3930eeefa44555d4164294cd25f46392eb4"
+    },
+    {
+      "path": "dashen-dense/source.bin",
+      "bytes": 2210,
+      "sha256": "c698358d6cd2bd69a71f0b1012bb5e260eabf24c2bed076af332af71c1be354f"
+    },
+    {
+      "path": "dashen-dense/source.bin.fontpixel.json",
+      "bytes": 11625,
+      "sha256": "1cb1a23f110eacb0189bf40300fc934f7d984b457023c103d7d247133a4b196c"
+    },
+    {
+      "path": "dashen-dense/source.bin.monobit.json",
+      "bytes": 45096,
+      "sha256": "b0e9a815c23f91c7dad2ad57a4fea3930eeefa44555d4164294cd25f46392eb4"
+    },
+    {
+      "path": "dashen-v3/native.bin",
+      "bytes": 1094,
+      "sha256": "e94c828276a1cd45335a708e8c52a6386fa390cafe543d859898de2b41eb0fcd"
+    },
+    {
+      "path": "dashen-v3/native.bin.fontpixel.json",
+      "bytes": 345,
+      "sha256": "6bf4a0af5066ca1b0f73133991b59e8418a9523cc40f8969e5d1c7d723003c02"
+    },
+    {
+      "path": "dashen-v3/native.bin.monobit.json",
+      "bytes": 1080,
+      "sha256": "e93fd5be77a6202d91ede7a0816678c55eccf50f1dd1c5369070e2063f23c6f2"
+    },
+    {
+      "path": "dashen-v3/source.bin",
+      "bytes": 1094,
+      "sha256": "e94c828276a1cd45335a708e8c52a6386fa390cafe543d859898de2b41eb0fcd"
+    },
+    {
+      "path": "dashen-v3/source.bin.fontpixel.json",
+      "bytes": 345,
+      "sha256": "6bf4a0af5066ca1b0f73133991b59e8418a9523cc40f8969e5d1c7d723003c02"
+    },
+    {
+      "path": "dashen-v3/source.bin.monobit.json",
+      "bytes": 1080,
+      "sha256": "e93fd5be77a6202d91ede7a0816678c55eccf50f1dd1c5369070e2063f23c6f2"
+    },
+    {
+      "path": "dashen-v4/native.bin",
+      "bytes": 1454,
+      "sha256": "fe07de1b0911ebd92e05e2131f1f2d08557dfbf2bfaa5b200ab0eacc3bbe83c2"
+    },
+    {
+      "path": "dashen-v4/native.bin.fontpixel.json",
+      "bytes": 574,
+      "sha256": "7f00a2272484e5c3ebccef81696f9aeb68409bdabfb210110acd746c31be2c29"
+    },
+    {
+      "path": "dashen-v4/source.bin",
+      "bytes": 1454,
+      "sha256": "8acafe4c69830376cf756809617cc37cc8f285a7cdf03e559e1909e356bb2f5c"
+    },
+    {
+      "path": "dashen-v4/source.bin.fontpixel.json",
+      "bytes": 574,
+      "sha256": "7f00a2272484e5c3ebccef81696f9aeb68409bdabfb210110acd746c31be2c29"
+    },
+    {
+      "path": "hppcl-dense/native.bin",
+      "bytes": 3327,
+      "sha256": "b04e169c3f96c4b68cdf47ece191438fee76ed4f4785634c4c3628f4d5790fc3"
+    },
+    {
+      "path": "hppcl-dense/native.bin.fontpixel.json",
+      "bytes": 12206,
+      "sha256": "437e7cf2d952a8634780ff41e7bffcc57032d90eede42689ee99c54f51c27725"
+    },
+    {
+      "path": "hppcl-dense/native.bin.monobit.json",
+      "bytes": 100385,
+      "sha256": "3aaf284764a5837489e5f6a900b94e79b482a5bcbc74fbe6c4c2e295297654a2"
+    },
+    {
+      "path": "hppcl-dense/source.bin",
+      "bytes": 3327,
+      "sha256": "d611a0bbd3872efc9d3c18b6c4baeae168d9e42b6d24e1434ac9eb0ab26af2d9"
+    },
+    {
+      "path": "hppcl-dense/source.bin.fontpixel.json",
+      "bytes": 12206,
+      "sha256": "437e7cf2d952a8634780ff41e7bffcc57032d90eede42689ee99c54f51c27725"
+    },
+    {
+      "path": "hppcl-dense/source.bin.monobit.json",
+      "bytes": 100385,
+      "sha256": "3aaf284764a5837489e5f6a900b94e79b482a5bcbc74fbe6c4c2e295297654a2"
+    },
+    {
+      "path": "hppcl-independent/monobit-landscape.bin",
+      "bytes": 108,
+      "sha256": "83c078c50ecb08cbdc2d560193c711bfbb06143195fadcad7189c9fd2178d4e5"
+    },
+    {
+      "path": "hppcl-independent/monobit-landscape.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "29bb567e1f8c2fcf19933c7ee3e5da41ace724a70087c0938e9079da4c1c744f"
+    },
+    {
+      "path": "hppcl-independent/monobit-landscape.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-independent/monobit-portrait.bin",
+      "bytes": 105,
+      "sha256": "243dc84faa2a6a9fb667fb1e8eb22c0d8f6c355bbdc963ef2530d17eefbef148"
+    },
+    {
+      "path": "hppcl-independent/monobit-portrait.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "29bb567e1f8c2fcf19933c7ee3e5da41ace724a70087c0938e9079da4c1c744f"
+    },
+    {
+      "path": "hppcl-independent/monobit-portrait.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-independent/native-0-raw.bin",
+      "bytes": 111,
+      "sha256": "c50f4066d2d8b3122fb428c2493533312782795b536c74f2c71a11f667409075"
+    },
+    {
+      "path": "hppcl-independent/native-0-rle.bin",
+      "bytes": 118,
+      "sha256": "937b0d63f9641fffe47188eab470b171ebb600c5f97f35bebe750c73f003de3a"
+    },
+    {
+      "path": "hppcl-independent/native-1-raw.bin",
+      "bytes": 115,
+      "sha256": "413255dbddb362fd9453ceee8a3862a1a6710d9ffa655ba52f2dab45c5795400"
+    },
+    {
+      "path": "hppcl-independent/native-1-rle.bin",
+      "bytes": 122,
+      "sha256": "c4aae10bdb07ea5ff2652a4b570d0ecef31e960c1455e23ac64781d739541249"
+    },
+    {
+      "path": "hppcl-independent/native-2-raw.bin",
+      "bytes": 111,
+      "sha256": "41b637aa60067e19e93993509065372b89550a997ff57518bcdf7928ab539d60"
+    },
+    {
+      "path": "hppcl-independent/native-2-rle.bin",
+      "bytes": 118,
+      "sha256": "ee9b09e7cf9eb6392f2a996f2da524120264bf9ef956bb52b4ed304416dc7c38"
+    },
+    {
+      "path": "hppcl-independent/native-3-raw.bin",
+      "bytes": 115,
+      "sha256": "484754b0cf71e66125763f18816ad80a1b1eb59bd78fb6c77036e8f460e6c676"
+    },
+    {
+      "path": "hppcl-independent/native-3-rle.bin",
+      "bytes": 131,
+      "sha256": "afca25fce8224ef9ac830a633f12a98502af78d35cde81024057429ee6b9a4d2"
+    },
+    {
+      "path": "hppcl-independent/source.bin",
+      "bytes": 104,
+      "sha256": "3494db3e48dc225ccfb6cf55a6167d3fb5a8ccff3d1715b644de17406e299c53"
+    },
+    {
+      "path": "hppcl-independent/source.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-legacy/native.bin",
+      "bytes": 104,
+      "sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864"
+    },
+    {
+      "path": "hppcl-legacy/native.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-legacy/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-legacy/source.bin",
+      "bytes": 104,
+      "sha256": "928d31875f7f6487c405bdf2173b0a69c168d1bedd46883a0f0817a00ce7cde0"
+    },
+    {
+      "path": "hppcl-legacy/source.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-legacy/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-raw/native.bin",
+      "bytes": 104,
+      "sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864"
+    },
+    {
+      "path": "hppcl-raw/native.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-raw/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-raw/source.bin",
+      "bytes": 104,
+      "sha256": "3494db3e48dc225ccfb6cf55a6167d3fb5a8ccff3d1715b644de17406e299c53"
+    },
+    {
+      "path": "hppcl-raw/source.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-raw/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "95525c9cc5834459d276415a0f6053138730cf653e8957ab09d73366e34c5d3c"
+    },
+    {
+      "path": "hppcl-rle/native.bin",
+      "bytes": 104,
+      "sha256": "658790a3ae3b67a9990721d19579e00aa83f7ddd0103f4954bf5e416c39de864"
+    },
+    {
+      "path": "hppcl-rle/native.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "hppcl-rle/source.bin",
+      "bytes": 110,
+      "sha256": "d8e8f5ae16ebfcfc58fe13ddbec46d375b442318220553ffb3e5052952c33d93"
+    },
+    {
+      "path": "hppcl-rle/source.bin.fontpixel.json",
+      "bytes": 241,
+      "sha256": "14d0a4ae103b39a6a9e786b0c936e9c720128afeb8444ce24a43deb506794353"
+    },
+    {
+      "path": "original-prebuild-gray2/native.lepf",
+      "bytes": 142,
+      "sha256": "1e0ff90dd3490a4abdc52db9f07c914c047c20c88d0de2bc9a2f38ce71799e2d"
+    },
+    {
+      "path": "original-prebuild-gray2/native.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "9b50bc1a79eb4c4f51231012c63cdb6104e91dd55624770ec6106a9dff7a2cb3"
+    },
+    {
+      "path": "original-prebuild-gray2/native.lepf.monobit.json",
+      "bytes": 686,
+      "sha256": "1843065a3a64cf90793f9572621e7f1b4e34aeb8688254e4bc0a029b6d2ead14"
+    },
+    {
+      "path": "original-prebuild-gray2/native.lepf.oracle-be.bepf",
+      "bytes": 142,
+      "sha256": "cd823e49cc9dd061459218dffc8e63347f1189980412774e472ad2450c929eb3"
+    },
+    {
+      "path": "original-prebuild-gray2/source.bdf",
+      "bytes": 238,
+      "sha256": "3fa65a59cbedc95b2cd36ca936b480f0da49b599327350a8b8b083d1b9b65266"
+    },
+    {
+      "path": "original-prebuild-gray2/source.lepf",
+      "bytes": 145,
+      "sha256": "ac95d9b8a689188e961fffd2e72e23057c0287e3906a0d518322b30fd8abae77"
+    },
+    {
+      "path": "original-prebuild-gray2/source.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "9b50bc1a79eb4c4f51231012c63cdb6104e91dd55624770ec6106a9dff7a2cb3"
+    },
+    {
+      "path": "original-prebuild-gray4/native.lepf",
+      "bytes": 142,
+      "sha256": "e24dccdffd75b1614bba924e0b4301e31253e08609e12c335deb55434ee3c8ff"
+    },
+    {
+      "path": "original-prebuild-gray4/native.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "bc4a3c901de8adadfafb7803fac1a09fb04d74c108e4c644060d75aeab66c4b3"
+    },
+    {
+      "path": "original-prebuild-gray4/native.lepf.monobit.json",
+      "bytes": 686,
+      "sha256": "1843065a3a64cf90793f9572621e7f1b4e34aeb8688254e4bc0a029b6d2ead14"
+    },
+    {
+      "path": "original-prebuild-gray4/native.lepf.oracle-be.bepf",
+      "bytes": 142,
+      "sha256": "8d1a11b1771cde558b494b566c89e7a9caf5493fd86ba3cb1556f40336606748"
+    },
+    {
+      "path": "original-prebuild-gray4/source.bdf",
+      "bytes": 238,
+      "sha256": "ff249d3429c42c02fa0d68ee6817ce00b5e038476db470583e5bf4b10d0c5bfc"
+    },
+    {
+      "path": "original-prebuild-gray4/source.lepf",
+      "bytes": 145,
+      "sha256": "9898006c2142acc4fe10ac63ae29c41f97f588a37e4f117770cba9c131bcf459"
+    },
+    {
+      "path": "original-prebuild-gray4/source.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "bc4a3c901de8adadfafb7803fac1a09fb04d74c108e4c644060d75aeab66c4b3"
+    },
+    {
+      "path": "original-prebuild-gray8/native.lepf",
+      "bytes": 142,
+      "sha256": "112db65e38c730534ab841d16e6b9b7fc3ccb68b0d53af30b0170709024d0c30"
+    },
+    {
+      "path": "original-prebuild-gray8/native.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "4826825328c2da33bcc20180e1f17956f8775f58235b0e1422cb111de4afaec2"
+    },
+    {
+      "path": "original-prebuild-gray8/native.lepf.monobit.json",
+      "bytes": 686,
+      "sha256": "1843065a3a64cf90793f9572621e7f1b4e34aeb8688254e4bc0a029b6d2ead14"
+    },
+    {
+      "path": "original-prebuild-gray8/native.lepf.oracle-be.bepf",
+      "bytes": 142,
+      "sha256": "416aa8de7df2dfd84a0178b1c58b7bfcbb6b121d2d64d23ebc6fb648f8da2e2e"
+    },
+    {
+      "path": "original-prebuild-gray8/source.bdf",
+      "bytes": 238,
+      "sha256": "0e4038aaba63e28e5ec9f595945b3e25441c675b519d65d0624d8f5c63b65e68"
+    },
+    {
+      "path": "original-prebuild-gray8/source.lepf",
+      "bytes": 145,
+      "sha256": "888f0c174da8ccc71f16cfcccdce3f3182c39f6826a0ebaac25e9be3b8a26c29"
+    },
+    {
+      "path": "original-prebuild-gray8/source.lepf.fontpixel.json",
+      "bytes": 247,
+      "sha256": "4826825328c2da33bcc20180e1f17956f8775f58235b0e1422cb111de4afaec2"
+    },
+    {
+      "path": "original-prebuild-mono13/native.lepf",
+      "bytes": 140,
+      "sha256": "fa899b96c87ef6c447808fbd01919af25226bdc1b6a3fc53d1d081e9008724a4"
+    },
+    {
+      "path": "original-prebuild-mono13/native.lepf.fontpixel.json",
+      "bytes": 243,
+      "sha256": "be08c071de99f98caff51564bace7e34eef1c1d63fe82e6a5059db65e120c3b2"
+    },
+    {
+      "path": "original-prebuild-mono13/native.lepf.monobit.json",
+      "bytes": 1045,
+      "sha256": "f7908ef3bc2dc7040286e55aad3693173a2b772302d2ae7ccd078f3ee40005e0"
+    },
+    {
+      "path": "original-prebuild-mono13/native.lepf.oracle-be.bepf",
+      "bytes": 140,
+      "sha256": "7534c0aeb51b42bc8314ddedb5dbc51803d738de556b551d11631d88dc1fdc3e"
+    },
+    {
+      "path": "original-prebuild-mono13/source.bdf",
+      "bytes": 243,
+      "sha256": "1cdde0228545a93b67d931908bd4d99c0042dabf1ccbcb57f2fb108946280df5"
+    },
+    {
+      "path": "original-prebuild-mono13/source.lepf",
+      "bytes": 141,
+      "sha256": "06e212024e92d6a3c3978e81d526a213fac6a5e7c0a7781eed43c6693ca8cb37"
+    },
+    {
+      "path": "original-prebuild-mono13/source.lepf.fontpixel.json",
+      "bytes": 243,
+      "sha256": "be08c071de99f98caff51564bace7e34eef1c1d63fe82e6a5059db65e120c3b2"
+    },
+    {
+      "path": "original-prebuild-mono9/native.lepf",
+      "bytes": 140,
+      "sha256": "aea38e1bdd580fb18c8397bb90ac4dc94bdb941461ce5cdc4e541b4c1134ebeb"
+    },
+    {
+      "path": "original-prebuild-mono9/native.lepf.fontpixel.json",
+      "bytes": 240,
+      "sha256": "4c4db4a4355b5940b17300f8e62a03de5da63365c730b4b8b5a48e0c29c78379"
+    },
+    {
+      "path": "original-prebuild-mono9/native.lepf.monobit.json",
+      "bytes": 829,
+      "sha256": "d64e5ccdb8365d6ba750c94df71b715b205bb55bf4d98e4d73434da63f96d958"
+    },
+    {
+      "path": "original-prebuild-mono9/native.lepf.oracle-be.bepf",
+      "bytes": 140,
+      "sha256": "895a7b21ae0d11ab1d00d09ee9e48d8632a982a186249307fc0654bbd3371b80"
+    },
+    {
+      "path": "original-prebuild-mono9/source.bdf",
+      "bytes": 240,
+      "sha256": "9ed9fd0124111995dca449d1842e10725bd2fc3085c6967ebbd49d116e0bab9a"
+    },
+    {
+      "path": "original-prebuild-mono9/source.lepf",
+      "bytes": 141,
+      "sha256": "fa43ad2ea3a776734d058b82456f33b9fd0851627e7f18aa040721fd8a37c55f"
+    },
+    {
+      "path": "original-prebuild-mono9/source.lepf.fontpixel.json",
+      "bytes": 240,
+      "sha256": "4c4db4a4355b5940b17300f8e62a03de5da63365c730b4b8b5a48e0c29c78379"
+    },
+    {
+      "path": "prebuilt-be-1/native.bin",
+      "bytes": 114,
+      "sha256": "c805a843cb57242e3bcd2036babcf21083b912b8acac346592675f2d4551f687"
+    },
+    {
+      "path": "prebuilt-be-1/native.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-be-1/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-1/source.bin",
+      "bytes": 112,
+      "sha256": "b5b6bd24d64c4dfb625d1f51a72fb75bb4b461b4bde73bc64940fe9c80e4b19c"
+    },
+    {
+      "path": "prebuilt-be-1/source.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-be-1/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-2/native.bin",
+      "bytes": 114,
+      "sha256": "362bbb525869049d853b67538b3601fe3ce891a36a0fa7fef71232731a3ae80e"
+    },
+    {
+      "path": "prebuilt-be-2/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-2/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-2/source.bin",
+      "bytes": 112,
+      "sha256": "6d9c9a9df5df46903b0b2d6b55e0580e227170245ce113ef94f28ce8ecddd9e0"
+    },
+    {
+      "path": "prebuilt-be-2/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-2/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-4/native.bin",
+      "bytes": 116,
+      "sha256": "9854cda14cff0a163898fba3dfe4f348e14f7f457c7816245cd0e21e16ef5a00"
+    },
+    {
+      "path": "prebuilt-be-4/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-4/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-4/source.bin",
+      "bytes": 114,
+      "sha256": "020a0b14abc5bdd610957566a01798575db40313bd5f31c6e275da7e40f0187b"
+    },
+    {
+      "path": "prebuilt-be-4/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-4/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-8/native.bin",
+      "bytes": 118,
+      "sha256": "edc428d81e125fe247fb742350f6b27cbb98dcdd7144c4bc51165c40ace9210e"
+    },
+    {
+      "path": "prebuilt-be-8/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-8/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-8/source.bin",
+      "bytes": 116,
+      "sha256": "bd00dfcc591cf269728de37bc8e63373c61b7f6e95e01f545ec90dc4b21e7480"
+    },
+    {
+      "path": "prebuilt-be-8/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-be-8/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-be-8-gray/native.bin",
+      "bytes": 118,
+      "sha256": "7d9a88acdfec0bf288d2307388e3cfb6d57228c539c59572d12809a91d0f99e5"
+    },
+    {
+      "path": "prebuilt-be-8-gray/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "baecd5117a350f205e84bf087197fcb4f2a7424717ec767a69d857dfb0044ec1"
+    },
+    {
+      "path": "prebuilt-be-8-gray/native.bin.monobit.json",
+      "bytes": 679,
+      "sha256": "dd50c01edc11d3598f0e5e086aa66bb556a49693cc7f98cffe394a1bf6bec081"
+    },
+    {
+      "path": "prebuilt-be-8-gray/source.bin",
+      "bytes": 116,
+      "sha256": "c0f20aa84b76f42094383918cb05d2deb3f981399bd36cf0f691a0728047158a"
+    },
+    {
+      "path": "prebuilt-be-8-gray/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "baecd5117a350f205e84bf087197fcb4f2a7424717ec767a69d857dfb0044ec1"
+    },
+    {
+      "path": "prebuilt-be-8-gray/source.bin.monobit.json",
+      "bytes": 679,
+      "sha256": "dd50c01edc11d3598f0e5e086aa66bb556a49693cc7f98cffe394a1bf6bec081"
+    },
+    {
+      "path": "prebuilt-dense/native.bin",
+      "bytes": 2680,
+      "sha256": "8bdf0695ee55da24cc9df33e9ee84fbad9df349e0d2e86872af46799ba727391"
+    },
+    {
+      "path": "prebuilt-dense/native.bin.fontpixel.json",
+      "bytes": 11157,
+      "sha256": "d35268430cd9b2db62ed87f31cfd1b364560662c3b1f3fefb07b11c160da61c9"
+    },
+    {
+      "path": "prebuilt-dense/native.bin.monobit.json",
+      "bytes": 39302,
+      "sha256": "7b048476343e479bb88734863f3a9a9ac154fe735aee9dd0c8e1154b05fb2cdb"
+    },
+    {
+      "path": "prebuilt-dense/source.bin",
+      "bytes": 2680,
+      "sha256": "8bdf0695ee55da24cc9df33e9ee84fbad9df349e0d2e86872af46799ba727391"
+    },
+    {
+      "path": "prebuilt-dense/source.bin.fontpixel.json",
+      "bytes": 11157,
+      "sha256": "d35268430cd9b2db62ed87f31cfd1b364560662c3b1f3fefb07b11c160da61c9"
+    },
+    {
+      "path": "prebuilt-dense/source.bin.monobit.json",
+      "bytes": 39302,
+      "sha256": "7b048476343e479bb88734863f3a9a9ac154fe735aee9dd0c8e1154b05fb2cdb"
+    },
+    {
+      "path": "prebuilt-le-1/native.bin",
+      "bytes": 114,
+      "sha256": "669ee89c6246bac693317b9a500e8429465e69932dca3b583408e041424da283"
+    },
+    {
+      "path": "prebuilt-le-1/native.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-le-1/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-1/native.bin.oracle-be.bepf",
+      "bytes": 114,
+      "sha256": "c805a843cb57242e3bcd2036babcf21083b912b8acac346592675f2d4551f687"
+    },
+    {
+      "path": "prebuilt-le-1/source.bin",
+      "bytes": 112,
+      "sha256": "832e4eef585a92b57b022689b8172374b667aead3982fe862a06c041e5f1fcc8"
+    },
+    {
+      "path": "prebuilt-le-1/source.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-le-1/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-1/source.bin.oracle-be.bepf",
+      "bytes": 112,
+      "sha256": "b5b6bd24d64c4dfb625d1f51a72fb75bb4b461b4bde73bc64940fe9c80e4b19c"
+    },
+    {
+      "path": "prebuilt-le-2/native.bin",
+      "bytes": 114,
+      "sha256": "7e9f3be75b7287a35d4e6e56c175ebf77718446e366bd293825c626e92f065a8"
+    },
+    {
+      "path": "prebuilt-le-2/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-2/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-2/native.bin.oracle-be.bepf",
+      "bytes": 114,
+      "sha256": "362bbb525869049d853b67538b3601fe3ce891a36a0fa7fef71232731a3ae80e"
+    },
+    {
+      "path": "prebuilt-le-2/source.bin",
+      "bytes": 112,
+      "sha256": "50bdb8caf68952bbe897610d875589dd46195ee8c74d6d6bdc44801c18e48aac"
+    },
+    {
+      "path": "prebuilt-le-2/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-2/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-2/source.bin.oracle-be.bepf",
+      "bytes": 112,
+      "sha256": "6d9c9a9df5df46903b0b2d6b55e0580e227170245ce113ef94f28ce8ecddd9e0"
+    },
+    {
+      "path": "prebuilt-le-4/native.bin",
+      "bytes": 116,
+      "sha256": "535859ce5fbb25b72dd5cac56630838316a90f263789f7829df956b3e01ae823"
+    },
+    {
+      "path": "prebuilt-le-4/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-4/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-4/native.bin.oracle-be.bepf",
+      "bytes": 116,
+      "sha256": "9854cda14cff0a163898fba3dfe4f348e14f7f457c7816245cd0e21e16ef5a00"
+    },
+    {
+      "path": "prebuilt-le-4/source.bin",
+      "bytes": 114,
+      "sha256": "ae94c5fff2621f9b53728fe3f934f6b7a496a4ac6e370a8b5331d989e821ec86"
+    },
+    {
+      "path": "prebuilt-le-4/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-4/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-4/source.bin.oracle-be.bepf",
+      "bytes": 114,
+      "sha256": "020a0b14abc5bdd610957566a01798575db40313bd5f31c6e275da7e40f0187b"
+    },
+    {
+      "path": "prebuilt-le-8/native.bin",
+      "bytes": 118,
+      "sha256": "b46f2882fc11bad54da84b8ffbba3cf7935a955c071b583ce0693e364b2480cd"
+    },
+    {
+      "path": "prebuilt-le-8/native.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-8/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-8/native.bin.oracle-be.bepf",
+      "bytes": 118,
+      "sha256": "edc428d81e125fe247fb742350f6b27cbb98dcdd7144c4bc51165c40ace9210e"
+    },
+    {
+      "path": "prebuilt-le-8/source.bin",
+      "bytes": 116,
+      "sha256": "01c384244e5c340ccaca35a02198a61609bd8a97c0c80f0c68142bc143413fce"
+    },
+    {
+      "path": "prebuilt-le-8/source.bin.fontpixel.json",
+      "bytes": 240,
+      "sha256": "3217e680c57ed44d897d31b1ca6a46aed6fd8c0bbec92b30c3a2229aad75f8e7"
+    },
+    {
+      "path": "prebuilt-le-8/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-le-8/source.bin.oracle-be.bepf",
+      "bytes": 116,
+      "sha256": "bd00dfcc591cf269728de37bc8e63373c61b7f6e95e01f545ec90dc4b21e7480"
+    },
+    {
+      "path": "prebuilt-vertical/native.bin",
+      "bytes": 126,
+      "sha256": "2129655607e825afd543bd3eb1263bc4de927d9ce0c3e2ff8792e3b6a66caff5"
+    },
+    {
+      "path": "prebuilt-vertical/native.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-vertical/native.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "prebuilt-vertical/source.bin",
+      "bytes": 124,
+      "sha256": "724fd2110df9e8d3d8bb11c76f819b90d926a75b70f525155fdac798c96c0db3"
+    },
+    {
+      "path": "prebuilt-vertical/source.bin.fontpixel.json",
+      "bytes": 229,
+      "sha256": "f4d6e2f71c424578f9aa3e129547d8e1a5da4a6be88cf163661d0b63a0452912"
+    },
+    {
+      "path": "prebuilt-vertical/source.bin.monobit.json",
+      "bytes": 539,
+      "sha256": "af94038ea8a943ee2fc1b523ebfdcad852729d6058e4ac77040cef72607b5a0a"
+    },
+    {
+      "path": "riscos-dense/native.bin",
+      "bytes": 1588,
+      "sha256": "f6a8556dc3dce2f9df98481fc3fa5f6023768b98d98464f0cf09f2cd79a00a98"
+    },
+    {
+      "path": "riscos-dense/native.bin.fontpixel.json",
+      "bytes": 12106,
+      "sha256": "0b9cad50b263ad557f04e9b25d51562eeab43416f6caafcc11a508b945ef4e52"
+    },
+    {
+      "path": "riscos-dense/native.bin.monobit.json",
+      "bytes": 100291,
+      "sha256": "225f3cb18251674a434e00709b9a9bfb66a0ae002cce52e26ad8db5fd61413c2"
+    },
+    {
+      "path": "riscos-dense/source.bin",
+      "bytes": 1588,
+      "sha256": "f6a8556dc3dce2f9df98481fc3fa5f6023768b98d98464f0cf09f2cd79a00a98"
+    },
+    {
+      "path": "riscos-dense/source.bin.fontpixel.json",
+      "bytes": 12106,
+      "sha256": "0b9cad50b263ad557f04e9b25d51562eeab43416f6caafcc11a508b945ef4e52"
+    },
+    {
+      "path": "riscos-dense/source.bin.monobit.json",
+      "bytes": 100291,
+      "sha256": "225f3cb18251674a434e00709b9a9bfb66a0ae002cce52e26ad8db5fd61413c2"
+    },
+    {
+      "path": "riscos-packed/native.bin",
+      "bytes": 204,
+      "sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46"
+    },
+    {
+      "path": "riscos-packed/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-packed/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-packed/source.bin",
+      "bytes": 204,
+      "sha256": "7640c80cc17178c3817c0f557f3c64e5e3dd7a129520f39c7566ee39cfefeaa1"
+    },
+    {
+      "path": "riscos-packed/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-packed/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-phases/native.bin",
+      "bytes": 2308,
+      "sha256": "cf26461fce72068d8d9e286907f9c144cae6fe05146a3fc461d849530563f51f"
+    },
+    {
+      "path": "riscos-phases/native.bin.fontpixel.json",
+      "bytes": 3580,
+      "sha256": "255a91780e2587f209c73814b43aed580de98e7d7bf2f9c8b347ae020e83141b"
+    },
+    {
+      "path": "riscos-phases/source.bin",
+      "bytes": 2308,
+      "sha256": "cf26461fce72068d8d9e286907f9c144cae6fe05146a3fc461d849530563f51f"
+    },
+    {
+      "path": "riscos-phases/source.bin.fontpixel.json",
+      "bytes": 3580,
+      "sha256": "255a91780e2587f209c73814b43aed580de98e7d7bf2f9c8b347ae020e83141b"
+    },
+    {
+      "path": "riscos-v4/native.bin",
+      "bytes": 204,
+      "sha256": "9ed91be6839c0128a60f1a2113bfd3d82bea684c6ac510713260a8c95b35030d"
+    },
+    {
+      "path": "riscos-v4/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v4/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v4/source.bin",
+      "bytes": 204,
+      "sha256": "9ed91be6839c0128a60f1a2113bfd3d82bea684c6ac510713260a8c95b35030d"
+    },
+    {
+      "path": "riscos-v4/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v4/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v5/native.bin",
+      "bytes": 204,
+      "sha256": "a81ba2510eacbd461f40021f1e730d17a79af46e09b040dafcead8251d284c67"
+    },
+    {
+      "path": "riscos-v5/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v5/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v5/source.bin",
+      "bytes": 204,
+      "sha256": "a81ba2510eacbd461f40021f1e730d17a79af46e09b040dafcead8251d284c67"
+    },
+    {
+      "path": "riscos-v5/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v5/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v6/native.bin",
+      "bytes": 204,
+      "sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46"
+    },
+    {
+      "path": "riscos-v6/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v6/native.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v6/source.bin",
+      "bytes": 204,
+      "sha256": "5f1ea68399d3e7f3e91f9e7e24e4050dac061ddbbfc5f122c0b905c9afdcaf46"
+    },
+    {
+      "path": "riscos-v6/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v6/source.bin.monobit.json",
+      "bytes": 1188,
+      "sha256": "7503b6a71522a6914381467708f0ccb29de9368ce48e0d5f9337c717445efcf6"
+    },
+    {
+      "path": "riscos-v7/native.bin",
+      "bytes": 208,
+      "sha256": "3c9a7e49cc2cf3499f219b168fe1428383ce3cd60aa3a540c27f5304e0267720"
+    },
+    {
+      "path": "riscos-v7/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v7/source.bin",
+      "bytes": 208,
+      "sha256": "3c9a7e49cc2cf3499f219b168fe1428383ce3cd60aa3a540c27f5304e0267720"
+    },
+    {
+      "path": "riscos-v7/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v8/native.bin",
+      "bytes": 224,
+      "sha256": "9b7460a85dcb26d981e1c1c3624c8aae945c6a6949ea82c4350518861c6ac490"
+    },
+    {
+      "path": "riscos-v8/native.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-v8/source.bin",
+      "bytes": 244,
+      "sha256": "455249835ff84bcde0910b981280af75d3a0b0f4d10c8965bd70f6e3e4c0937e"
+    },
+    {
+      "path": "riscos-v8/source.bin.fontpixel.json",
+      "bytes": 235,
+      "sha256": "481fad6dfc43e809052fb4b47f83554d72072949715ca0d76142cf5d2ebf0e83"
+    },
+    {
+      "path": "riscos-wide/native.bin",
+      "bytes": 268,
+      "sha256": "bda019b40727cc6af676940ca041e28794bd9fe044ae1542b075458fbb9e8f82"
+    },
+    {
+      "path": "riscos-wide/native.bin.fontpixel.json",
+      "bytes": 328,
+      "sha256": "1a0ff3c75824b37a6aa43f9c4feac382c7f5b4e0da93e51db6157a2bc94d4d4d"
+    },
+    {
+      "path": "riscos-wide/source.bin",
+      "bytes": 288,
+      "sha256": "8f3bea8b653c8d0c68b8250de3ba89be095fa37c39ff13853bcdc5bacb4dd49c"
+    },
+    {
+      "path": "riscos-wide/source.bin.fontpixel.json",
+      "bytes": 326,
+      "sha256": "9acd9c217d44e4850ed62d398c23ef2cc7616059ebcb72a666128639985c07cb"
+    },
+    {
+      "path": "riscos-xy/native.bin",
+      "bytes": 560,
+      "sha256": "317af3d7428a68aa7ef29a05450a31b37a4f70059374f390ca7de1598503fd0d"
+    },
+    {
+      "path": "riscos-xy/native.bin.fontpixel.json",
+      "bytes": 230,
+      "sha256": "37cb132702ea75a54b19027246010360f60185addf606de9069fd7c558ed5d4f"
+    },
+    {
+      "path": "riscos-xy/native.bin.monobit.json",
+      "bytes": 540,
+      "sha256": "92e2e07e52d68a6afd5f3ae748be7e2b9268f4681f256349036d211cba084d97"
+    },
+    {
+      "path": "riscos-xy/source.bin",
+      "bytes": 560,
+      "sha256": "317af3d7428a68aa7ef29a05450a31b37a4f70059374f390ca7de1598503fd0d"
+    },
+    {
+      "path": "riscos-xy/source.bin.fontpixel.json",
+      "bytes": 230,
+      "sha256": "37cb132702ea75a54b19027246010360f60185addf606de9069fd7c558ed5d4f"
+    },
+    {
+      "path": "riscos-xy/source.bin.monobit.json",
+      "bytes": 540,
+      "sha256": "92e2e07e52d68a6afd5f3ae748be7e2b9268f4681f256349036d211cba084d97"
+    },
+    {
+      "path": "riscos-xy-gray/native.bin",
+      "bytes": 560,
+      "sha256": "b0cd906a78de6d53b4c9f4a16446af9af3f1ecbc497d9075cef63375ff1e6a6b"
+    },
+    {
+      "path": "riscos-xy-gray/native.bin.fontpixel.json",
+      "bytes": 233,
+      "sha256": "76592bf9c6bf5b6a1cc4d528444e7b943de5365b49e0bc31a910ebd02f8d4d89"
+    },
+    {
+      "path": "riscos-xy-gray/native.bin.monobit.json",
+      "bytes": 753,
+      "sha256": "7067014ec5931cbaab1d0fde6baf04dbb78aff34793c20f7e786329199b70b52"
+    },
+    {
+      "path": "riscos-xy-gray/source.bin",
+      "bytes": 560,
+      "sha256": "b0cd906a78de6d53b4c9f4a16446af9af3f1ecbc497d9075cef63375ff1e6a6b"
+    },
+    {
+      "path": "riscos-xy-gray/source.bin.fontpixel.json",
+      "bytes": 233,
+      "sha256": "76592bf9c6bf5b6a1cc4d528444e7b943de5365b49e0bc31a910ebd02f8d4d89"
+    },
+    {
+      "path": "riscos-xy-gray/source.bin.monobit.json",
+      "bytes": 753,
+      "sha256": "7067014ec5931cbaab1d0fde6baf04dbb78aff34793c20f7e786329199b70b52"
+    },
+    {
+      "path": "xerox-alto/native.bin",
+      "bytes": 532,
+      "sha256": "eb0ff0b0528948ac1208aafd5f7bda8e229daf3b8008c6df29994ca68ab90865"
+    },
+    {
+      "path": "xerox-alto/native.bin.fontpixel.json",
+      "bytes": 228,
+      "sha256": "48787e047298ec25c76bd242161c35e4b065134fe73491b6d171d219c8650a3e"
+    },
+    {
+      "path": "xerox-alto/native.bin.monobit.json",
+      "bytes": 1176,
+      "sha256": "0bb8e045ecdb45998c16d726ea768dc018a3ed7c284fdd6a1609aedc01266de9"
+    },
+    {
+      "path": "xerox-alto/source.bin",
+      "bytes": 152,
+      "sha256": "45b08f5b27a1f5b1fa3460f4f875d0126089c9657ef70d803bd85b71bb073902"
+    },
+    {
+      "path": "xerox-alto/source.bin.fontpixel.json",
+      "bytes": 228,
+      "sha256": "48787e047298ec25c76bd242161c35e4b065134fe73491b6d171d219c8650a3e"
+    },
+    {
+      "path": "xerox-alto/source.bin.monobit.json",
+      "bytes": 1176,
+      "sha256": "0bb8e045ecdb45998c16d726ea768dc018a3ed7c284fdd6a1609aedc01266de9"
+    },
+    {
+      "path": "xerox-bitblt/native.bin",
+      "bytes": 42,
+      "sha256": "83e7e3c3cf50d5412d17647fa0efc0fae208c13df766b7a2714a415fa8cb4e02"
+    },
+    {
+      "path": "xerox-bitblt/native.bin.fontpixel.json",
+      "bytes": 344,
+      "sha256": "cfb6a43bfde8483c41212b26a47f6805a569fc910ca06117c7da6e6741a4c078"
+    },
+    {
+      "path": "xerox-bitblt/native.bin.monobit.json",
+      "bytes": 1591,
+      "sha256": "7e5425e58385c04448b83346186edabdcbc4e96a61130333741913f2cbebb9cf"
+    },
+    {
+      "path": "xerox-bitblt/source.bin",
+      "bytes": 30,
+      "sha256": "cb50e09a708d7717b46b0edc8157d28d7f27b46f1db46203f16abebacab2a60d"
+    },
+    {
+      "path": "xerox-bitblt/source.bin.fontpixel.json",
+      "bytes": 344,
+      "sha256": "cfb6a43bfde8483c41212b26a47f6805a569fc910ca06117c7da6e6741a4c078"
+    },
+    {
+      "path": "xerox-bitblt/source.bin.monobit.json",
+      "bytes": 1591,
+      "sha256": "7e5425e58385c04448b83346186edabdcbc4e96a61130333741913f2cbebb9cf"
+    },
+    {
+      "path": "xerox-bitblt-dense/native.bin",
+      "bytes": 736,
+      "sha256": "ca9ce02283ae760f665234c809e09abd61a55ed47936cfe4ea95fc9cf4ca9498"
+    },
+    {
+      "path": "xerox-bitblt-dense/native.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-bitblt-dense/native.bin.monobit.json",
+      "bytes": 100190,
+      "sha256": "9f0ed2434bdde58affa06799407eb89f6f8780438390ac7795f541d3f5d0ec33"
+    },
+    {
+      "path": "xerox-bitblt-dense/source.bin",
+      "bytes": 536,
+      "sha256": "838231b2e1c0c19cbd1b59b5d40c51bbc0251b2caffd1cde470d36adcc30f3f1"
+    },
+    {
+      "path": "xerox-bitblt-dense/source.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-bitblt-dense/source.bin.monobit.json",
+      "bytes": 100190,
+      "sha256": "9f0ed2434bdde58affa06799407eb89f6f8780438390ac7795f541d3f5d0ec33"
+    },
+    {
+      "path": "xerox-independent/kerned-index.bin",
+      "bytes": 934,
+      "sha256": "a15d4e9c52c05f9dc63bf84084a73ccb43f2d947af74aca868aa4441a921ce36"
+    },
+    {
+      "path": "xerox-independent/kerned-index.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-independent/kerned.bin",
+      "bytes": 736,
+      "sha256": "ca9ce02283ae760f665234c809e09abd61a55ed47936cfe4ea95fc9cf4ca9498"
+    },
+    {
+      "path": "xerox-independent/kerned.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-independent/plain-index.bin",
+      "bytes": 734,
+      "sha256": "f590359792a9cb38cf80bde097c04931e011877fa8f738715f11f575bfc87aec"
+    },
+    {
+      "path": "xerox-independent/plain-index.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-independent/plain.bin",
+      "bytes": 536,
+      "sha256": "838231b2e1c0c19cbd1b59b5d40c51bbc0251b2caffd1cde470d36adcc30f3f1"
+    },
+    {
+      "path": "xerox-independent/plain.bin.fontpixel.json",
+      "bytes": 12115,
+      "sha256": "6715728ec09b95b8a1b55f074ba9984d44c869183413a2a5043eda3983a68b0e"
+    },
+    {
+      "path": "xerox-independent/source.bin",
+      "bytes": 536,
+      "sha256": "838231b2e1c0c19cbd1b59b5d40c51bbc0251b2caffd1cde470d36adcc30f3f1"
+    },
+    {
+      "path": "xerox-prepress/native.bin",
+      "bytes": 76,
+      "sha256": "52d4ea3e97894c74c52fc0551384e90fd78cd4ca200de4902c559e1726cfe5b6"
+    },
+    {
+      "path": "xerox-prepress/native.bin.fontpixel.json",
+      "bytes": 232,
+      "sha256": "c0d566a2651fd3e3b52060f071a5e2d67155cadc310f78c7e6b2bdd65ad6292e"
+    },
+    {
+      "path": "xerox-prepress/native.bin.monobit.json",
+      "bytes": 686,
+      "sha256": "788940c98e4281ad4148ca90e88d12cc9c7a1826e8ace9ee8b5618a8ed767429"
+    },
+    {
+      "path": "xerox-prepress/source.bin",
+      "bytes": 76,
+      "sha256": "fa879667082bd57b159d587ceb291ee7b31ca60bfd8d46b61cfbaf44c0743146"
+    },
+    {
+      "path": "xerox-prepress/source.bin.fontpixel.json",
+      "bytes": 232,
+      "sha256": "c0d566a2651fd3e3b52060f071a5e2d67155cadc310f78c7e6b2bdd65ad6292e"
+    },
+    {
+      "path": "xerox-prepress/source.bin.monobit.json",
+      "bytes": 686,
+      "sha256": "788940c98e4281ad4148ca90e88d12cc9c7a1826e8ace9ee8b5618a8ed767429"
+    }
+  ]
+}

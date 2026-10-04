@@ -47,6 +47,7 @@ fuzz_target!(|data: &[u8]| {
     let Some(description) = data.get(4..end) else {
         return;
     };
+    let _ = bmfont::detect(description);
     let page = Page(&data[end..]);
     let limits = ResourceLimits {
         max_input_bytes: 65536,
@@ -67,6 +68,7 @@ fuzz_target!(|data: &[u8]| {
             BmfontEncoding::Text,
             BmfontEncoding::Xml,
             BmfontEncoding::Binary,
+            BmfontEncoding::Json,
         ] {
             let options = BmfontWriteOptions {
                 encoding,

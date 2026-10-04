@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+    "bench",
+    "8",
+    "1"
+  ],
+  "exit": 0,
+  "stdout": "rb12\t8\t1\t241064\t124\nu8m\t8\t1\t179518\t644\nhmzk\t8\t1\t107697\t288\ncybiko\t8\t1\t131094\t313\nsbf\t8\t1\t122648\t2160\nplaydate\t8\t1\t506386\t1623\npft\t8\t1\t169299\t780\n",
+  "stderr": ""
+}

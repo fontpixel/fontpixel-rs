@@ -182,3 +182,30 @@ cargo +nightly fuzz run hbf --no-default-features --features hbf-only -- \
 The final local campaigns need no LeakSanitizer override; their exact commands,
 source identities, successful DONE records and counts are in phase 3 evidence.
 Earlier interrupted campaigns and build failures are not acceptance evidence.
+
+## Phase 5 and public transport
+
+Phase 5 format campaigns use independent feature profiles so all their parser
+paths are instrumented without linking unrelated codecs. For a normal target
+`ID`, use `--no-default-features --features ID-only`; image font targets are
+`pilfont_bitmap`, `sfont_bitmap`, `vlw_bitmap` and `imageset_bitmap`, with features
+`pilfont-only`, `sfont-only`, `vlw-only` and `imageset-only`, respectively. Updated
+C, FON, SymbOS and workstation targets also exercise their detector entry points.
+
+```sh
+python3 fuzz/seed_w5b.py --root fuzz/corpus
+python3 fuzz/seed_w5c2.py fuzz/corpus
+python3 fuzz/seed_w5e2.py --output-dir fuzz/corpus
+python3 fuzz/seed_transport.py --root fuzz/corpus/transport
+cargo +nightly fuzz run transport --no-default-features --features transport-only -- \
+  -max_total_time=610 -timeout=10 -rss_limit_mb=1024 -max_len=131072
+```
+
+The transport target covers public registry read/write, typed budget
+intersections, strict diagnostics, native writer-only profiles, bounded gzip and
+complete native/transport model comparison. See [its contract](../docs/transport-fuzz.md).
+Original seed scripts and their ownership manifests identify the exact native
+profiles and resource framing. [The phase 5 index](../reports/phase5-validation/long-fuzz-index.json)
+records commands, execution counts, coverage, elapsed fuzz seconds and sanitizer
+RSS. Superseded campaigns stay in the index and never count as current acceptance.
+The sanitizer figures include instrumentation overhead and are not release RSS.

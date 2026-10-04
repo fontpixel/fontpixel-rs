@@ -1,0 +1,98 @@
+{
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/rb11": {
+    "sha256": "1cee1673b4fa289d99da6bf25fc39719c908727b6f82669a3f8a9d4f27df849d",
+    "bytes": 428
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/rb12": {
+    "sha256": "ef67e6be0ff0594776f158eba19fe51ef93c4e1ced81c52ac862ee2299ccf43f",
+    "bytes": 96
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/gray4": {
+    "sha256": "02a2388245420b6745e3b420d7e3c0269528c59859199a703d6a921b1e646691",
+    "bytes": 178
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/fixed": {
+    "sha256": "a588082318abe9c60af5b292ea9f1213b22e19e8c6498df4763088e89db6402f",
+    "bytes": 90
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/truncated": {
+    "sha256": "16fadbca55b2aa9863b9026a3632729b9b589b1440dbf4e61749df1767b414b7",
+    "bytes": 214
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/rockbox_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap/two-cells": {
+    "sha256": "7e0dd5ac56021e6d752a5ede78cf5d33cf0a23a62a122a4b75789838a74dadea",
+    "bytes": 84
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap/truncated": {
+    "sha256": "ed8ed6cfb80bd5a014b0a85a7fef2ee3d143599ed3c647b757f961e89c0a3663",
+    "bytes": 42
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/sbf_bitmap/sparse-signed-blank": {
+    "sha256": "2eb5ac5371508ba50af449393e9cd34d3a79f61b27b90937111e8be8063f9570",
+    "bytes": 2052
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/sbf_bitmap/truncated": {
+    "sha256": "f3e424022f3511f3c5ec2a9181576bd4f5ff0e639b9c9cc4c593baa575ad3ece",
+    "bytes": 1026
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/sbf_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/cybiko_bitmap/space-and-sparse": {
+    "sha256": "5c3d03aaf34ac411e0920deb9e25db091ad1d45fee2bf65a89898db98cb6485e",
+    "bytes": 182
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/cybiko_bitmap/truncated": {
+    "sha256": "7515f9a131f642daa727061f70fb82d96e984bde8f672b6409a9c193e2f39358",
+    "bytes": 91
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/cybiko_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/u8m_bitmap/aliases-radix-pages": {
+    "sha256": "284b4350c76a0a8065b5bf47d22ae43ef33ae8b6310387847f932ce06e78029e",
+    "bytes": 780
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/u8m_bitmap/load-address": {
+    "sha256": "274e1cf581bd35c8052856c0f938f9ad1000d7848689015f07d4a99057ac6eb8",
+    "bytes": 782
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/u8m_bitmap/truncated": {
+    "sha256": "4f96a4916a0d22db6ed6208fd39b2da9c4eee94506642597f5c3ab541ea5390c",
+    "bytes": 390
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/u8m_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap/sdk-3.1.2-uncompressed.pft": {
+    "sha256": "6bbbd3210d03092c7dda99a91f69b77ae499ee32a1adcc4627393c2d1d8155f7",
+    "bytes": 492
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap/sdk-3.1.2-compressed.pft": {
+    "sha256": "5d1c045c7ef49c2ecf6291d1584dfc04d9631091506d4485d463d5d2e6fc1d85",
+    "bytes": 140
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap/original.fnt": {
+    "sha256": "aba49d2e98528bf5417f90110c93958818c2192aeeb74863706b373905feaabe",
+    "bytes": 311
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap/truncated": {
+    "sha256": "a952fe9933b44d40031130da8c5871a158edadb12004346028ffd41e267b0b2e",
+    "bytes": 246
+  },
+  "/home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/playdate_bitmap/empty": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+}

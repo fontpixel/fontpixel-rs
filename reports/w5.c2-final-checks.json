@@ -1,0 +1,48 @@
+[
+  {
+    "kind": "tests",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "catalyst,chiwriter,dashen,hppcl,prebuilt,riscos,xerox",
+      "--test",
+      "catalyst",
+      "--test",
+      "chiwriter",
+      "--test",
+      "dashen",
+      "--test",
+      "hppcl",
+      "--test",
+      "prebuilt",
+      "--test",
+      "riscos",
+      "--test",
+      "xerox"
+    ],
+    "exit": 0,
+    "log": "reports/w5.c2-combined-tests.log"
+  },
+  {
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "catalyst,chiwriter,dashen,hppcl,prebuilt,riscos,xerox",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "log": "reports/w5.c2-combined-clippy.log"
+  }
+]

@@ -70,6 +70,7 @@ pub(super) fn bitmap_limits(l: &ResourceLimits) -> BitmapLimits {
 }
 pub(super) struct Budget {
     pub used: usize,
+    pub expanded: usize,
     pub glyphs: usize,
     pub resources: usize,
     max: usize,
@@ -79,6 +80,7 @@ impl Budget {
         check(n, l.max_total_bytes, "NFNT aggregate bytes")?;
         Ok(Self {
             used: n,
+            expanded: 0,
             glyphs: 0,
             resources: 0,
             max: l.max_total_bytes,

@@ -1,0 +1,15 @@
+    Blocking waiting for file lock on package cache
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.44s
+     Running tests/gdr.rs (/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/deps/gdr-12d48c01e1a7183b)
+
+running 6 tests
+test inline_native_empty_bitmap_stream ... ok
+test extreme_cell_metrics_and_zero_size_inline ... ok
+test losses_are_not_silent ... ok
+test native_multistrike_metrics_pixels_and_names ... ok
+test dense_wide_metric_indices ... ok
+test truncation_counts_and_compressed_runs ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

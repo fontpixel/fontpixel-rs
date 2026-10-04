@@ -1,0 +1,26 @@
+{
+  "rockbox": {
+    "runs": 361523,
+    "seconds": 13
+  },
+  "u8m": {
+    "runs": 370619,
+    "seconds": 13
+  },
+  "cybiko": {
+    "runs": 245199,
+    "seconds": 13
+  },
+  "playdate": {
+    "runs": 414615,
+    "seconds": 13
+  },
+  "hmzk": {
+    "runs": 854998,
+    "seconds": 13
+  },
+  "sbf": {
+    "runs": 266787,
+    "seconds": 13
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "+nightly",
+    "fuzz",
+    "build",
+    "symbos",
+    "--no-default-features",
+    "--features",
+    "symbos-only"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 68.08706665039062,
+  "stdout": "",
+  "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)\n    Finished `release` profile [optimized + debuginfo] target(s) in 1m 07s\n",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "f52d0eb0669572816394750d1bf6b9a8b38517ff1206fa8d04cd2f6ddc946f41"
+}

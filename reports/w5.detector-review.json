@@ -1,0 +1,379 @@
+{
+  "schema": 1,
+  "review_utc": "2026-10-04T10:49:19.748607+00:00",
+  "scope": "Independent read-only W5 all-registry detector integration review; no production/doc/test/shared manifest mutations",
+  "baseline_binary": {
+    "path": "/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/fontpixel",
+    "sha256": "f24f9aff2844aca5e8b63c5b283e1438621c05db7fb3e298f3b34e9be6beb392",
+    "bytes": 44129720
+  },
+  "library_probe": {
+    "argv": [
+      "rustc",
+      "--edition=2024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/probe.rs",
+      "-L",
+      "dependency=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps",
+      "--extern",
+      "fontpixel=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libfontpixel-bd84537d0a63e59d.rlib",
+      "--extern",
+      "serde_json=/home/chen/githubprojects/fontpixel/local-work/target-fontpixel-rs/debug/deps/libserde_json-d00bbe0c4808b96f.rlib",
+      "-o",
+      "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review/probe"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "rlib_sha256": "e56f80ea6a3cc1d4051c55eb2c801d7a85b39e3228a93213ade2c94687e07663"
+  },
+  "registry": {
+    "formats": 99,
+    "registered_detectors": 89,
+    "readers": 99,
+    "writers": 99
+  },
+  "coverage": {
+    "deduplicated_native_fixture_cases": 189,
+    "canonical_format_ids": [
+      "bbc",
+      "bdf",
+      "beos",
+      "bmfont",
+      "c",
+      "catalyst",
+      "chiwriter",
+      "comfont",
+      "cybiko",
+      "daisy",
+      "dashen",
+      "dosstart",
+      "draw",
+      "drcs",
+      "drhalo",
+      "edwin",
+      "fbit",
+      "figlet",
+      "fontx2",
+      "fzx",
+      "gdr",
+      "geos",
+      "gpi",
+      "grasp",
+      "hanfont",
+      "hex",
+      "hmzk",
+      "hppcl",
+      "hrcg",
+      "iigs",
+      "kbits",
+      "lisa",
+      "mgtk",
+      "mkwinfont",
+      "nfnt",
+      "oberon",
+      "otb",
+      "palm",
+      "pbf",
+      "pcf",
+      "pcgeos",
+      "pcr",
+      "pfr",
+      "pilfont",
+      "playdate",
+      "plus3dos",
+      "polyprint",
+      "prebuilt",
+      "printshop",
+      "psf",
+      "psf2txt",
+      "pxl",
+      "qpf",
+      "qpf2",
+      "raw",
+      "riscos",
+      "rockbox",
+      "sbf",
+      "sfd",
+      "sfont",
+      "signum",
+      "ssfn",
+      "symbos",
+      "tasprint",
+      "u8m",
+      "vfont",
+      "vlw",
+      "vtfont",
+      "writeon",
+      "wsfont",
+      "wyse",
+      "xbin",
+      "xerox",
+      "yaff",
+      "zapfont"
+    ],
+    "canonical_format_count": 75,
+    "legal_hex_comment_probes": 3,
+    "explicit_and_automatic_cli_validations": 75,
+    "text_magic_auto_reads": [
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-final/fixtures/a1/dosstart.oracle"
+        ],
+        "expected": "dosstart",
+        "exit": 0,
+        "stdout_sha256": "d40e6f1dc49cef4453ad5613985fa05034dba92672683b22b1bef14f695df539",
+        "stderr": "",
+        "format": "dosstart",
+        "font_count": 1,
+        "glyph_counts": [
+          96
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-final/fixtures/a1/psf2txt.oracle"
+        ],
+        "expected": "psf2txt",
+        "exit": 0,
+        "stdout_sha256": "98cac96c6d7027ea866065d32c528b7df688574dcf370c234180d24c575f1518",
+        "stderr": "",
+        "format": "psf2txt",
+        "font_count": 1,
+        "glyph_counts": [
+          4
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-final/fixtures/e1/original-playdate.fnt"
+        ],
+        "expected": "playdate",
+        "exit": 0,
+        "stdout_sha256": "6306a5cf55ab217121b01942bdc28cd9d298c4bcba819413e108427017856a6d",
+        "stderr": "",
+        "format": "playdate",
+        "font_count": 1,
+        "glyph_counts": [
+          5
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-final/fixtures/p3_53/figlet-full358.source"
+        ],
+        "expected": "figlet",
+        "exit": 0,
+        "stdout_sha256": "22680c2cd42db8be44538abe89eeb8f30f722f38542be15325ad3a0df23ff487",
+        "stderr": "",
+        "format": "figlet",
+        "font_count": 1,
+        "glyph_counts": [
+          358
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-final/fixtures/c/fixture-drcs.h"
+        ],
+        "expected": "drcs",
+        "exit": 0,
+        "stdout_sha256": "a9f06469e6d5baa262df7dceaff22ef7cc0b8fb8c797e1e248387c6e38420676",
+        "stderr": "",
+        "format": "drcs",
+        "font_count": 1,
+        "glyph_counts": [
+          3
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-v2-new-groups/fixtures/c2/hppcl/raw"
+        ],
+        "expected": "hppcl",
+        "exit": 0,
+        "stdout_sha256": "e94e873be90fd5c0c6dc3a4f6602fc6c078b6eb50533a0053e4285119546e37c",
+        "stderr": "",
+        "format": "hppcl",
+        "font_count": 1,
+        "glyph_counts": [
+          1
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-v2-new-groups/fixtures/e2/pilfont/font.pil"
+        ],
+        "expected": "pilfont",
+        "exit": 0,
+        "stdout_sha256": "fe4661ccd6aab9f678b22f2db68eec66db81e39cf4d5acf574434ecf1ebc344c",
+        "stderr": "",
+        "format": "pilfont",
+        "font_count": 1,
+        "glyph_counts": [
+          100
+        ]
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "/home/chen/githubprojects/fontpixel/local-work/phase5-performance/prep-v2-new-groups/fixtures/e2/outline/ssfn-original.sfn"
+        ],
+        "expected": "ssfn",
+        "exit": 0,
+        "stdout_sha256": "5c89e56e520a7dfa949cc8d190f4d66816d5f30af62f16142c7476ae21cd6590",
+        "stderr": "",
+        "format": "ssfn",
+        "font_count": 1,
+        "glyph_counts": [
+          1
+        ]
+      }
+    ],
+    "truncation_controls": [
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "../local-work/w5-detector-review/truncated.dosstart"
+        ],
+        "exit": 1,
+        "stderr": "{\n  \"error\": {\n    \"message\": \"missing DosStart name\",\n    \"exit_code\": 1\n  },\n  \"report\": null\n}\n",
+        "probe": {
+          "path": "../local-work/w5-detector-review/truncated.dosstart",
+          "bytes": 13,
+          "detection": "Ok(Detected { format: FormatInfo { id: \"dosstart\", name: \"DOSStart DSF bitmap branch, encoded glyph rows, height and advance information.\", extensions: [\"dsf\"], feature_enabled: true }, confidence: Certain })",
+          "matches": [
+            {
+              "id": "dosstart",
+              "confidence": "Ok(Certain)"
+            }
+          ]
+        },
+        "classification": "expected invalid native truncation, not a detector regression"
+      },
+      {
+        "argv": [
+          "../local-work/target-fontpixel-rs/debug/fontpixel",
+          "info",
+          "--json",
+          "../local-work/w5-detector-review/truncated.rockbox"
+        ],
+        "exit": 1,
+        "stderr": "{\n  \"error\": {\n    \"message\": \"truncated device font\",\n    \"exit_code\": 1\n  },\n  \"report\": null\n}\n",
+        "probe": {
+          "path": "../local-work/w5-detector-review/truncated.rockbox",
+          "bytes": 4,
+          "detection": "Ok(Detected { format: FormatInfo { id: \"rockbox\", name: \"Rockbox RB11/RB12 binary bitmap fonts, glyph/offset/width tables and native row packing.\", extensions: [\"fnt\", \"rbf\", \"rb11\", \"rb12\"], feature_enabled: true }, confidence: Certain })",
+          "matches": [
+            {
+              "id": "rockbox",
+              "confidence": "Ok(Certain)"
+            }
+          ]
+        },
+        "classification": "expected invalid native truncation, not a detector regression"
+      }
+    ]
+  },
+  "issues": [
+    {
+      "id": "DR1",
+      "status": "confirmed; owner notified",
+      "kind": "invalid Certain ambiguity",
+      "format": "riscos",
+      "victim": "fontx2",
+      "cause": "FONT prefix matches FONTX2; no native version check",
+      "evidence": "fontx2-riscos.json",
+      "native_result": "FONTX2 256 glyphs succeeds; RISC OS rejects version; automatic ambiguous"
+    },
+    {
+      "id": "DR2",
+      "status": "confirmed; owner notified",
+      "kind": "invalid Possible ambiguity",
+      "format": "chiwriter",
+      "victim": "qpf",
+      "cause": "type byte and nonzero count without validating body spans",
+      "evidence": "validation.json; qpf-256 and qpf-2048",
+      "native_result": "QPF succeeds at 256 and 2048 glyphs; ChiWriter rejects bytes outside records"
+    },
+    {
+      "id": "DR3",
+      "status": "confirmed; owner notified",
+      "kind": "wrong unique Certain selection",
+      "format": "fon",
+      "victim": "gpi NE",
+      "cause": "shared NE container signature claimed as Windows FON without identifying FONT resources",
+      "evidence": "validation.json; gpi-ne.bin",
+      "native_result": "GPI succeeds with 3 glyphs; FON and automatic reject no FONT resources"
+    },
+    {
+      "id": "DR4",
+      "status": "confirmed; owner notified",
+      "kind": "wrong unique Certain selection",
+      "format": "c",
+      "victim": "hex with legal comment",
+      "cause": "whole-text contains of U8G_FONT_SECTION/u8x8_font_ treats comments as C declaration evidence; old U8G2 check also affected",
+      "evidence": "comment-validation.json",
+      "native_result": "HEX succeeds with 2 glyphs; C and automatic fail no byte array"
+    },
+    {
+      "id": "DR5",
+      "status": "confirmed lower-priority extra candidate; owner notified",
+      "kind": "invalid additional Possible candidate",
+      "format": "xerox",
+      "victim": "palm/nfnt",
+      "cause": "BITBLT type word without checking full body spans",
+      "evidence": "validation.json; large-palm.bin",
+      "native_result": "Palm and NFNT both succeed with 257 glyphs; Xerox rejects trailing declared-body bytes; legitimate Palm/NFNT ambiguity remains"
+    },
+    {
+      "id": "DR6",
+      "status": "pre-existing detector boundary; parent notified, no W5 regression claim",
+      "kind": "wrong Possible selection for explicit-only text format",
+      "format": "plan9",
+      "victim": "edwin",
+      "cause": "first two integers accepted without same-line metric/range validation",
+      "evidence": "validation.json; edwin.oracle",
+      "native_result": "Edwin explicit succeeds with 4 glyphs; Plan9 and automatic reject ascent > height; EDWIN docs already require explicit selection"
+    }
+  ],
+  "limits": [
+    "This is a bounded integration review, not exhaustive fuzzing or a claim that every format pair is disjoint.",
+    "Matrix inputs use filename-free registry detection. Unrecognized explicit-only or headerless inputs are not failures. Individual hook matches also include public hooks not installed in the registry; registry.detection is authoritative.",
+    "Variant labels are normalized in matrix.canonical; special read options are not inferred from alias names.",
+    "The all-format CLI and rlib were captured before owner fixes. Follow-up fix verification belongs to owner/root gates.",
+    "Generic PNG/image and SFont Possible ambiguity is accepted. RFont rfVM evidence chooses SFont Certain.",
+    "Palm and NFNT both valid is a legitimate native ambiguity. Removing Xerox alone must not choose a filename-based winner.",
+    "A truncated file retaining a strong native magic may legitimately detect Certain and fail parsing."
+  ],
+  "evidence": {
+    "scratch": "/home/chen/githubprojects/fontpixel/local-work/w5-detector-review",
+    "matrix": "matrix.json",
+    "validation": "validation.json",
+    "comment_validation": "comment-validation.json",
+    "source_excerpts": "detector-source.json"
+  }
+}

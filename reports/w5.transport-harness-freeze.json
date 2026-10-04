@@ -1,0 +1,127 @@
+{
+  "source_aggregate_sha256": "1f10014b718dfe9fed772630811ed0653cbca74ae5f8aeed81debee825d7d027",
+  "source_aggregate_encoding": "UTF-8, sorted path, each line SHA256 + two spaces + relative path + LF",
+  "sources": [
+    {
+      "path": "docs/transport-fuzz.md",
+      "bytes": 4438,
+      "sha256": "8e98ec9bb5644ef0e9551420b1bce9ffddc9087338dc9d0c03952f2f2089a3ce"
+    },
+    {
+      "path": "fuzz/fuzz_targets/transport.rs",
+      "bytes": 11749,
+      "sha256": "e9847911ac50028d477beb55e4f7310c839cfd20f949e2906de52c1bbe27f399"
+    },
+    {
+      "path": "fuzz/seed_transport.py",
+      "bytes": 5536,
+      "sha256": "386fdcd5be202b9bc278519dfe4747570d48647d017c3b0ada21b97cebe3187c"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/w5.transport-harness.md",
+      "bytes": 3900,
+      "sha256": "e81f82759a450f3577c51d59530442618f130902a7fbbaa301169efd54c79e31"
+    },
+    {
+      "path": "reports/w5.transport-harness-final-runs.json",
+      "bytes": 4907,
+      "sha256": "c5e49425a63be3eeeb1833912acfb3ab4656eea922ed2ceb2a4f20f1ea53f613"
+    },
+    {
+      "path": "reports/w5.transport-seeds.json",
+      "bytes": 45366,
+      "sha256": "e2cb661b294f3efa4a523298b9051a237aedb49dd7c9d9317ed4ce845506b001"
+    },
+    {
+      "path": "reports/w5.transport-smoke.json",
+      "bytes": 200575,
+      "sha256": "6f74d999d4a34df39d31a9da68a49738648e700af1203b386f11ac308f5a6239"
+    },
+    {
+      "path": "reports/w5.transport-initial-replay.json",
+      "bytes": 1229,
+      "sha256": "19806172a5ea1a89b4b840e988e4560cad833608f03c9e5e926c8752c7c9d0d9"
+    },
+    {
+      "path": "reports/w5.transport-external-check.json",
+      "bytes": 15691,
+      "sha256": "d915e336831fbf20a1d921cef7e2715806cb26c139a186fd62d4126d714b2d27"
+    }
+  ],
+  "shared_snapshot_not_owned": [
+    {
+      "path": "crates/fontpixel/src/resources.rs",
+      "sha256": "b6babb6c395907d1667643943b876ad94eca11d7b4a29389e28df8bbe407fda6",
+      "bytes": 26280
+    },
+    {
+      "path": "crates/fontpixel/src/formats/mod.rs",
+      "sha256": "c1bc315b1a7653c505a4c429a98a9224d49265d862102551dd7e7a70f721eb1b",
+      "bytes": 59950
+    },
+    {
+      "path": "crates/fontpixel/src/formats/transport.rs",
+      "sha256": "ee7064d2714517496173fbd9089d7c4a093f959b3b49d355643ce3d2674c78b8",
+      "bytes": 14677
+    },
+    {
+      "path": "crates/fontpixel/tests/transport_limits.rs",
+      "sha256": "361d1d75f953f46f54d8f79aaab094029ee738482ba0cb6b9598a5746912c531",
+      "bytes": 22218
+    },
+    {
+      "path": "fuzz/Cargo.toml",
+      "bytes": 14250,
+      "sha256": "e271b15c695d84cbed88cd675ec646142846ceeec93a07fa190ad5f4a5f5bd7d"
+    }
+  ],
+  "short_asan": {
+    "mutation_runs": 22756,
+    "seconds": 13,
+    "exit": 0,
+    "initial_seed_replay_runs": 303,
+    "final_seed_and_mutation_replay_runs": 1384
+  },
+  "original_seeds": 302,
+  "external_crosschecks": 12,
+  "remaining_coordinator_gates": [
+    "Rebuild current production and run >=610 seconds transport ASAN",
+    "Whole-repository final acceptance gates"
+  ],
+  "executables": [
+    {
+      "path": "../local-work/target-transport-fuzz/x86_64-unknown-linux-gnu/release/transport",
+      "bytes": 26232320,
+      "sha256": "b82d4bec4e36a61ec5fdf59a008b084c108c8fdbdff050efd0979c2a2507c234"
+    },
+    {
+      "path": "../local-work/target-transport-probe/debug/transport-native-check",
+      "bytes": 3465568,
+      "sha256": "7875c77dc083282f68b6d7ba39ec388da641ccb368d23dd962a077a44dd47df2"
+    }
+  ],
+  "external_original_adapter": [
+    {
+      "path": "../local-work/transport-native-check/src/main.rs",
+      "bytes": 2243,
+      "sha256": "5fe7d073373099262ab30ffe25ae7fc0adfb8656de0311c045c17c06353aa2da"
+    },
+    {
+      "path": "../local-work/transport-native-check/Cargo.toml",
+      "bytes": 213,
+      "sha256": "ff8ec769bc12261eeba7922efc7bdb4e77e9371715da9389416fbaade7c9a350"
+    },
+    {
+      "path": "../local-work/transport-native-check/Cargo.lock",
+      "bytes": 1561,
+      "sha256": "83e50cec2e641ff9076231f64deacc9d9591d068286b4b5e6baff7ef56de7f8e"
+    },
+    {
+      "path": "../local-work/transport-native-check/check.py",
+      "bytes": 1814,
+      "sha256": "32431c96458c53208b33e96bdaafd586409bc3ce823452eb7612395d6b044560"
+    }
+  ]
+}

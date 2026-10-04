@@ -1,0 +1,77 @@
+{
+  "commands": [
+    {
+      "command": [
+        "rustc",
+        "--version"
+      ],
+      "exit": 0,
+      "output": "rustc 1.99.0 (b940084d7 2026-09-28)\n"
+    },
+    {
+      "command": [
+        "rustc",
+        "+nightly",
+        "--version"
+      ],
+      "exit": 0,
+      "output": "rustc 1.99.0-nightly (1a833e165 2026-07-29)\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "--version"
+      ],
+      "exit": 0,
+      "output": "cargo 1.99.0 (5f94df478 2026-08-27)\n"
+    },
+    {
+      "command": [
+        "java",
+        "-version"
+      ],
+      "exit": 0,
+      "output": "openjdk version \"21.0.12\" 2026-07-21\nOpenJDK Runtime Environment (build 21.0.12+8-1-24.04-Ubuntu)\nOpenJDK 64-Bit Server VM (build 21.0.12+8-1-24.04-Ubuntu, mixed mode, sharing)\n"
+    },
+    {
+      "command": [
+        "/home/chen/githubprojects/fontpixel/local-work/oracles/bin/python",
+        "--version"
+      ],
+      "exit": 0,
+      "output": "Python 3.12.13\n"
+    },
+    {
+      "command": [
+        "cc",
+        "--version"
+      ],
+      "exit": 0,
+      "output": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    }
+  ],
+  "lock_sha256": {
+    "Cargo.lock": "42bb9e89840e59113c45b1625ddf35fe6bd929012e67c685ae414a757d0dd76e",
+    "fuzz/Cargo.lock": "a9e01143630ab82f4923fb9b7fb615dff9d708b9e5fe63d9c0f9439c04a4a333"
+  },
+  "target_dir": "/home/chen/githubprojects/fontpixel/local-work/target-w5e2",
+  "build_jobs": 2,
+  "fuzz_binaries": {
+    "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/fuzz/x86_64-unknown-linux-gnu/release/pilfont_bitmap": {
+      "bytes": 36866640,
+      "sha256": "ac3e2259c455c73a64f46634b15a4cdd8210c4e0196b87cf2d05d213a996fd4e"
+    },
+    "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/fuzz/x86_64-unknown-linux-gnu/release/sfont_bitmap": {
+      "bytes": 37583384,
+      "sha256": "930ca7c9e008f66fc3664c4dcb17c7bbec284adfc5b42cb4d4bb1362f26ab21c"
+    },
+    "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/fuzz/x86_64-unknown-linux-gnu/release/vlw_bitmap": {
+      "bytes": 20519608,
+      "sha256": "ac5b4f595869ff9c879ab98a6f3118b954e3073ea93180ff4f5d55165932407f"
+    },
+    "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/fuzz/x86_64-unknown-linux-gnu/release/imageset_bitmap": {
+      "bytes": 47770808,
+      "sha256": "c94147e26c4ef828ac2ab4d0bcf0d14bbc2aaec8eee8d430aaf4d5dabb96e823"
+    }
+  }
+}

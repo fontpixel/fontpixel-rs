@@ -1,0 +1,25 @@
+    Finished `test` profile [unoptimized] target(s) in 0.06s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-a06d723a21ac4967)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/fbit.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fbit-85917e7e91357014)
+
+running 8 tests
+test continuous_cell_bits_and_shiftjis_discontinuity ... ok
+test all_truncations_runs_unknown_code_and_aggregate_limits ... ok
+test hfnt_native_codes_and_explicit_width ... ok
+test appledouble_pair_resolves_explicitly_and_preserves_external_rasters ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test both_native_external_fdefs_bundle_and_inline_conversion ... ok
+test envelope_type_precedes_filename_tag_and_explicit_bare_kind ... ok
+test all_native_envelopes_keep_resource_fields ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

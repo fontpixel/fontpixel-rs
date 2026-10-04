@@ -1,0 +1,15 @@
+
+running 7 tests
+test native_split_atlas_explicit_and_listed ... ok
+test source_caps_baseline_embedded_strict ... ok
+test sixteen_bit_png_reports_precision_loss_and_extreme_metrics_fail ... ok
+test official_sdk_pages_unicode_kerning_all_pixels ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+test full_page_256_glyph_count_wrap ... ok
+test malformed_pft_and_aggregate_limits ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.81s
+     Running tests/playdate.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/playdate-06cc0824aa126a87)

@@ -1,0 +1,132 @@
+[
+  {
+    "format": "pilfont",
+    "source_glyphs": 100,
+    "native_glyphs": 100,
+    "read": {
+      "format": "pilfont",
+      "mode": "memory_read",
+      "total_ns": 1530282,
+      "actual_iterations": 3,
+      "warmup_iterations": 5,
+      "glyphs": 100,
+      "primary_bytes": 5143,
+      "resource_bytes": 1272,
+      "resource_files": 1,
+      "read_report_entries": 0,
+      "full_model_and_report_verified": true
+    },
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+      "bench-read",
+      "pilfont",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-timing-smoke/font.pil",
+      "3"
+    ],
+    "exit": 0
+  },
+  {
+    "format": "vlw",
+    "source_glyphs": 100,
+    "native_glyphs": 100,
+    "read": {
+      "format": "vlw",
+      "mode": "memory_read",
+      "total_ns": 1373517,
+      "actual_iterations": 3,
+      "warmup_iterations": 5,
+      "glyphs": 100,
+      "primary_bytes": 4055,
+      "resource_bytes": 0,
+      "resource_files": 0,
+      "read_report_entries": 0,
+      "full_model_and_report_verified": true
+    },
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+      "bench-read",
+      "vlw",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-timing-smoke/font.vlw",
+      "3"
+    ],
+    "exit": 0
+  },
+  {
+    "format": "sfont",
+    "source_glyphs": 94,
+    "native_glyphs": 94,
+    "read": {
+      "format": "sfont",
+      "mode": "memory_read",
+      "total_ns": 2675079,
+      "actual_iterations": 3,
+      "warmup_iterations": 5,
+      "glyphs": 94,
+      "primary_bytes": 3736,
+      "resource_bytes": 0,
+      "resource_files": 0,
+      "read_report_entries": 0,
+      "full_model_and_report_verified": true
+    },
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+      "bench-read",
+      "sfont",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-timing-smoke/sfont.png",
+      "3"
+    ],
+    "exit": 0
+  },
+  {
+    "format": "rfont",
+    "source_glyphs": 100,
+    "native_glyphs": 100,
+    "read": {
+      "format": "rfont",
+      "mode": "memory_read",
+      "total_ns": 9082804,
+      "actual_iterations": 3,
+      "warmup_iterations": 5,
+      "glyphs": 100,
+      "primary_bytes": 10827,
+      "resource_bytes": 0,
+      "resource_files": 0,
+      "read_report_entries": 0,
+      "full_model_and_report_verified": true
+    },
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+      "bench-read",
+      "rfont",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-timing-smoke/rfont.png",
+      "3"
+    ],
+    "exit": 0
+  },
+  {
+    "format": "imageset",
+    "source_glyphs": 100,
+    "native_glyphs": 100,
+    "read": {
+      "format": "imageset",
+      "mode": "memory_read",
+      "total_ns": 6912147,
+      "actual_iterations": 3,
+      "warmup_iterations": 5,
+      "glyphs": 100,
+      "primary_bytes": 0,
+      "resource_bytes": 8400,
+      "resource_files": 100,
+      "read_report_entries": 0,
+      "full_model_and_report_verified": true
+    },
+    "command": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/examples/w5e2_timing",
+      "bench-read",
+      "imageset",
+      "/home/chen/githubprojects/fontpixel/local-work/w5e2-timing-smoke/glyphs",
+      "3"
+    ],
+    "exit": 0
+  }
+]

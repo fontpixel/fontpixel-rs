@@ -1,0 +1,57 @@
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.64s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5a1/x86_64-unknown-linux-gnu/release/writeon -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/writeon/ -max_total_time=10 -timeout=2 -rss_limit_mb=1024 -max_len=262144 -seed=51001 /home/chen/githubprojects/fontpixel/local-work/w5a1-final-smoke-corpus/writeon`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 51001
+INFO: Loaded 1 modules   (19257 inline 8-bit counters): 19257 [0x5edb70794d80, 0x5edb707998b9), 
+INFO: Loaded 1 PC tables (19257 PCs): 19257 [0x5edb707998c0,0x5edb707e4c50), 
+INFO:        7 files found in /home/chen/githubprojects/fontpixel/local-work/w5a1-final-smoke-corpus/writeon
+INFO: seed corpus: files: 7 min: 1b max: 50b total: 197b rss: 33Mb
+#8	INITED cov: 962 ft: 993 corp: 4/83b exec/s: 0 rss: 35Mb
+#9	NEW    cov: 963 ft: 994 corp: 5/109b lim: 50 exec/s: 0 rss: 35Mb L: 26/50 MS: 1 InsertByte-
+#28	NEW    cov: 964 ft: 995 corp: 6/157b lim: 50 exec/s: 0 rss: 35Mb L: 48/50 MS: 4 ShuffleBytes-CrossOver-CrossOver-InsertRepeatedBytes-
+#39	REDUCE cov: 964 ft: 995 corp: 6/156b lim: 50 exec/s: 0 rss: 36Mb L: 6/50 MS: 1 EraseBytes-
+#51	NEW    cov: 966 ft: 997 corp: 7/181b lim: 50 exec/s: 0 rss: 36Mb L: 25/50 MS: 2 ChangeBit-CrossOver-
+#52	REDUCE cov: 966 ft: 997 corp: 7/164b lim: 50 exec/s: 0 rss: 36Mb L: 31/50 MS: 1 EraseBytes-
+#81	REDUCE cov: 966 ft: 997 corp: 7/163b lim: 50 exec/s: 0 rss: 37Mb L: 5/50 MS: 4 CopyPart-CrossOver-CopyPart-EraseBytes-
+#86	REDUCE cov: 966 ft: 997 corp: 7/154b lim: 50 exec/s: 0 rss: 37Mb L: 22/50 MS: 5 ChangeBinInt-CopyPart-EraseBytes-CMP-EraseBytes- DE: "E\001"-
+#118	NEW    cov: 967 ft: 1003 corp: 8/179b lim: 50 exec/s: 0 rss: 37Mb L: 25/50 MS: 2 ChangeBit-CopyPart-
+#179	REDUCE cov: 967 ft: 1003 corp: 8/177b lim: 50 exec/s: 0 rss: 38Mb L: 3/50 MS: 1 EraseBytes-
+#198	REDUCE cov: 967 ft: 1003 corp: 8/176b lim: 50 exec/s: 0 rss: 38Mb L: 25/50 MS: 4 InsertRepeatedBytes-ShuffleBytes-ChangeBinInt-EraseBytes-
+#224	REDUCE cov: 967 ft: 1003 corp: 8/173b lim: 50 exec/s: 0 rss: 38Mb L: 22/50 MS: 1 EraseBytes-
+#281	REDUCE cov: 967 ft: 1003 corp: 8/172b lim: 50 exec/s: 0 rss: 39Mb L: 2/50 MS: 2 ChangeBinInt-EraseBytes-
+#628	NEW    cov: 968 ft: 1004 corp: 9/199b lim: 50 exec/s: 0 rss: 40Mb L: 27/50 MS: 2 PersAutoDict-PersAutoDict- DE: "E\001"-"E\001"-
+#789	REDUCE cov: 968 ft: 1004 corp: 9/196b lim: 50 exec/s: 0 rss: 41Mb L: 24/50 MS: 1 CrossOver-
+#791	NEW    cov: 975 ft: 1012 corp: 10/199b lim: 50 exec/s: 0 rss: 41Mb L: 3/50 MS: 2 ChangeBit-CMP- DE: "\037\213"-
+#1028	REDUCE cov: 975 ft: 1012 corp: 10/196b lim: 50 exec/s: 0 rss: 41Mb L: 22/50 MS: 2 ShuffleBytes-EraseBytes-
+#1084	REDUCE cov: 975 ft: 1012 corp: 10/194b lim: 50 exec/s: 0 rss: 41Mb L: 22/50 MS: 1 EraseBytes-
+#1129	REDUCE cov: 976 ft: 1013 corp: 11/222b lim: 50 exec/s: 0 rss: 41Mb L: 28/50 MS: 5 InsertRepeatedBytes-PersAutoDict-ShuffleBytes-ChangeBit-CMP- DE: "E\001"-"\000\000"-
+#1181	REDUCE cov: 976 ft: 1013 corp: 11/219b lim: 50 exec/s: 0 rss: 41Mb L: 22/50 MS: 2 ChangeByte-CrossOver-
+#1279	REDUCE cov: 977 ft: 1014 corp: 12/241b lim: 50 exec/s: 0 rss: 41Mb L: 22/50 MS: 3 ShuffleBytes-ShuffleBytes-ChangeByte-
+#1350	REDUCE cov: 977 ft: 1014 corp: 12/239b lim: 50 exec/s: 0 rss: 41Mb L: 23/50 MS: 1 EraseBytes-
+#1531	REDUCE cov: 977 ft: 1014 corp: 12/235b lim: 50 exec/s: 0 rss: 42Mb L: 24/50 MS: 1 EraseBytes-
+#1782	REDUCE cov: 977 ft: 1014 corp: 12/234b lim: 50 exec/s: 0 rss: 42Mb L: 2/50 MS: 1 EraseBytes-
+#1979	REDUCE cov: 977 ft: 1014 corp: 12/233b lim: 50 exec/s: 0 rss: 42Mb L: 23/50 MS: 2 ChangeBit-EraseBytes-
+#2823	REDUCE cov: 978 ft: 1015 corp: 13/257b lim: 55 exec/s: 0 rss: 43Mb L: 24/50 MS: 4 ChangeByte-ShuffleBytes-InsertByte-ShuffleBytes-
+#3459	REDUCE cov: 978 ft: 1015 corp: 13/256b lim: 60 exec/s: 0 rss: 43Mb L: 23/50 MS: 1 EraseBytes-
+#3771	REDUCE cov: 978 ft: 1015 corp: 13/255b lim: 60 exec/s: 0 rss: 43Mb L: 22/50 MS: 2 CrossOver-EraseBytes-
+#7133	REDUCE cov: 978 ft: 1015 corp: 13/254b lim: 89 exec/s: 0 rss: 44Mb L: 22/50 MS: 2 ChangeBinInt-EraseBytes-
+#7265	REDUCE cov: 978 ft: 1015 corp: 13/253b lim: 89 exec/s: 0 rss: 44Mb L: 22/50 MS: 2 ChangeBit-EraseBytes-
+	NEW_FUNC[1/2]: 0x5edb70603830 in core::ptr::drop_glue::<core::result::Result<fontpixel::resources::Written, fontpixel::error::Error>> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/core/src/ptr/mod.rs:828
+	NEW_FUNC[2/2]: 0x5edb7069bf40 in core::ptr::drop_glue::<fontpixel::report::Report> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/core/src/ptr/mod.rs:828
+#31084	NEW    cov: 1002 ft: 1303 corp: 14/289b lim: 321 exec/s: 31084 rss: 54Mb L: 36/50 MS: 4 ChangeByte-EraseBytes-CrossOver-InsertByte-
+#60272	NEW    cov: 1002 ft: 1550 corp: 15/325b lim: 603 exec/s: 60272 rss: 72Mb L: 36/50 MS: 1 ChangeBinInt-
+#131072	pulse  cov: 1002 ft: 1550 corp: 15/325b lim: 1306 exec/s: 43690 rss: 163Mb
+	NEW_FUNC[1/2]: 0x5edb706897f0 in <alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Owned, fontpixel::model::Codepoint, alloc::vec::Vec<fontpixel::model::GlyphId>, alloc::collections::btree::node::marker::Internal>>::from_new_internal::<alloc::alloc::Global> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/alloc/src/collections/btree/node.rs:244
+	NEW_FUNC[2/2]: 0x5edb706c0ce0 in <alloc::raw_vec::RawVecInner<_>>::reserve::do_reserve_and_handle::<alloc::alloc::Global> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/alloc/src/raw_vec/mod.rs:658
+#171512	NEW    cov: 1090 ft: 1975 corp: 16/585b lim: 1706 exec/s: 42878 rss: 215Mb L: 260/260 MS: 5 ChangeBinInt-InsertRepeatedBytes-CrossOver-CopyPart-CopyPart-
+#252046	NEW    cov: 1091 ft: 2045 corp: 17/635b lim: 2507 exec/s: 28005 rss: 478Mb L: 50/260 MS: 4 ChangeBit-PersAutoDict-ChangeByte-ChangeBit- DE: "E\001"-
+#262144	pulse  cov: 1091 ft: 2045 corp: 17/635b lim: 2606 exec/s: 29127 rss: 478Mb
+#292566	DONE   cov: 1091 ft: 2045 corp: 17/635b lim: 2903 exec/s: 26596 rss: 478Mb
+###### Recommended dictionary. ######
+"E\001" # Uses: 9188
+"\037\213" # Uses: 9029
+"\000\000" # Uses: 8797
+###### End of recommended dictionary. ######
+Done 292566 runs in 11 second(s)

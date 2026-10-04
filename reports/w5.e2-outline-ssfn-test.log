@@ -1,0 +1,18 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.16s
+     Running tests/ssfn.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2-outline/debug/deps/ssfn-361eb3823592c943)
+
+running 10 tests
+test author_terminal_skip_overshoot_is_a_bounded_repair ... ok
+test ascii_byte_padded_rows_and_invalid_padding ... ok
+test ascii_unknown_property_and_font_budget ... ok
+test every_binary_truncation_and_resource_limit ... ok
+test negative_canvas_top_rejected_and_detector ... ok
+test metadata_alias_loss_and_strict ... ok
+test original_binary_ascii_identical_metrics_pixels ... ok
+test mixed_vector_and_color_are_explicit_loss ... ok
+test ligature_binary_ascii_and_collection ... ok
+test both_encodings_strict_and_gray_coverage ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

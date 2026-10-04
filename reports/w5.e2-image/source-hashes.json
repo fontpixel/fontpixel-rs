@@ -1,0 +1,154 @@
+{
+  "crates/fontpixel/examples/w5e2_timing.rs": {
+    "bytes": 15181,
+    "sha256": "0d2720f3cd252cb7656b5238dc2ea309aa390583cd37a3adf793e0addc87c0d5"
+  },
+  "crates/fontpixel/src/formats/image/imageset.rs": {
+    "bytes": 13972,
+    "sha256": "a65ac6c82911dc5a8fed0e7f70395be5d9539a47d94f62a3e35f70eca7aff918"
+  },
+  "crates/fontpixel/src/formats/image.rs": {
+    "bytes": 44093,
+    "sha256": "eafc25dd1b009d01a659ce07b968c8e83532a337a53bebe2963ab77eec157dc5"
+  },
+  "crates/fontpixel/src/formats/pilfont/common.rs": {
+    "bytes": 14353,
+    "sha256": "55098ec9455aa4836948d1d4382f8a131beb3474fa292f48a7c8388298fcdf1a"
+  },
+  "crates/fontpixel/src/formats/pilfont.rs": {
+    "bytes": 14819,
+    "sha256": "d8ae4bacd38d7e70416e4424f5b1d8170dbbf842c46df779fae946c102bf4fac"
+  },
+  "crates/fontpixel/src/formats/sfont/rfont.rs": {
+    "bytes": 30401,
+    "sha256": "e3ad312b9de445b76df1f28e95a5125fb437e24d59ec3e085a2e9bb6e713684e"
+  },
+  "crates/fontpixel/src/formats/sfont.rs": {
+    "bytes": 15020,
+    "sha256": "51cc00652d61f2a3bb6cadd2eb21c4182cd41275348f85a2a3c1634fd4043883"
+  },
+  "crates/fontpixel/src/formats/vlw.rs": {
+    "bytes": 12310,
+    "sha256": "66a60cd93f9546e70762d1dc42df5e46d46b50a1214d6a34a90d57f8b8a2d102"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/README.md": {
+    "bytes": 1958,
+    "sha256": "2efe2d86fc17191cb4e846371362391f9d7141444b4b1d4a003c64f0494e6a8e"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/pillow-original.pbm": {
+    "bytes": 73,
+    "sha256": "7d4fbedf2ceeef79f594c2eaa8accec27a64351dc23e751f3f7e8cca07929ac1"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/pillow-original.pil": {
+    "bytes": 5142,
+    "sha256": "4cfff13702e0c4adb1fc918f11725f2115a966b2990f0352f51256fa41623701"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/processing-original.vlw": {
+    "bytes": 151,
+    "sha256": "9130aaaae8382831e53c365f10860d370aee6f5ec0b7a7ffba80f9769c7b93de"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/rfont-original.png": {
+    "bytes": 525,
+    "sha256": "497a5fec441ceda9c7936fcd786e350bdf6600f14b6e5bbd24942aec2a860e13"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/sfont-original.png": {
+    "bytes": 340,
+    "sha256": "930382df102c9f4aac2daf9f46d2f40eccc3945f5866a7fc5226629e20ea8954"
+  },
+  "crates/fontpixel/tests/fixtures/w5e2/sfont-overhang.png": {
+    "bytes": 339,
+    "sha256": "da4622e0cadf103aff339b06ada0fc098b8922c624e473ccbc7a5ba62e6a1674"
+  },
+  "crates/fontpixel/tests/image.rs": {
+    "bytes": 15505,
+    "sha256": "f5a35f8bdba2d174e38f10e0589716ce73cbae1fc3ddd03b2c0bd398e3092b99"
+  },
+  "crates/fontpixel/tests/imageset.rs": {
+    "bytes": 9593,
+    "sha256": "64742245bffc14e2e6c11ec6aea158daabb1e1f9d9ccb5b8b6e1135fcc3bc1a2"
+  },
+  "crates/fontpixel/tests/pilfont.rs": {
+    "bytes": 6352,
+    "sha256": "f0f6c79fbfe443eb085e3562216844b2fc401d962bad051685dae609730e95f4"
+  },
+  "crates/fontpixel/tests/sfont.rs": {
+    "bytes": 8093,
+    "sha256": "f4b5e33fe7d24d375ff6db85633cacfa3618ac5be111497e195c56b032420eca"
+  },
+  "crates/fontpixel/tests/vlw.rs": {
+    "bytes": 4093,
+    "sha256": "931c0b3405fa6a4cb677a8e41c417318787bd99acee3a89945afb4afc0d23343"
+  },
+  "docs/formats/image.md": {
+    "bytes": 8593,
+    "sha256": "e719423232cf806af71478a7ef2bd204629f6a95d28a8624a087423a57ed41ca"
+  },
+  "docs/formats/pilfont.md": {
+    "bytes": 2927,
+    "sha256": "1327e6235ddb92601df2ce5ff58bb1dc4cb55d1fd663186b4191d80d2acab8d3"
+  },
+  "docs/formats/sfont.md": {
+    "bytes": 5407,
+    "sha256": "c15abb5a9a21929170950cc9aea7e57942c059433df9d069189ebfdc3f2ccbbc"
+  },
+  "docs/formats/vlw.md": {
+    "bytes": 2625,
+    "sha256": "b7e260c0f025c2a9d0cce77f2fca8649e8d2e8e8bb1efb15da6d3a05355e9040"
+  },
+  "fuzz/fuzz_targets/image.rs": {
+    "bytes": 3596,
+    "sha256": "4945939fbeddf1c698f0018755c1cfdfda4320893c2e3cc0e06fc0b5c910b680"
+  },
+  "fuzz/fuzz_targets/imageset_bitmap.rs": {
+    "bytes": 635,
+    "sha256": "3fbfd4a3780732eaa442f6a9f5bb39b2d475241fcd07a56e587b85c20ff8ad76"
+  },
+  "fuzz/fuzz_targets/pilfont_bitmap/common.rs": {
+    "bytes": 4700,
+    "sha256": "61f9d1455cb2f32eb208dbe4506abc9dd3f04d6f4f8c9baff987d147f0f1b78d"
+  },
+  "fuzz/fuzz_targets/pilfont_bitmap.rs": {
+    "bytes": 483,
+    "sha256": "0ff6e5bd45262c2aa8ddacc0320db8958f21401bd69246d785e90b50968a3e2c"
+  },
+  "fuzz/fuzz_targets/sfont_bitmap.rs": {
+    "bytes": 731,
+    "sha256": "5f71b5e33650be0237971662d5b07dfc85be3d6661b723ec1a30dcf08da229b7"
+  },
+  "fuzz/fuzz_targets/vlw_bitmap.rs": {
+    "bytes": 711,
+    "sha256": "551b8b03ecf3be901f7e39346eb95b2a28ca8116451e73ef7cffb7d5755c42d3"
+  },
+  "fuzz/seed_w5e2.py": {
+    "bytes": 3702,
+    "sha256": "13063e8d032fd5569ec801928a0467580c1cc478a41da1ddae255b8d843b4832"
+  },
+  "reports/w5.e2-image/README.md": {
+    "bytes": 7564,
+    "sha256": "9206d97fd37652a69c58265464cfbc96a3da0bd7d03f1acda3e6cf935e469671"
+  },
+  "reports/w5.e2-image/oracles/SrFontOracle.java": {
+    "bytes": 2270,
+    "sha256": "f25a5c9510202c5a3540a1b4a16be121b603f4b2cfdd5b6da8ed5f161e6e8b36"
+  },
+  "reports/w5.e2-image/oracles/VlwOracle.java": {
+    "bytes": 2405,
+    "sha256": "495c00e8e17e50d2244504982ad6657e41e84eda1e0fb8f407fe4a77f642579a"
+  },
+  "reports/w5.e2-image/oracles/build_sfont.py": {
+    "bytes": 2207,
+    "sha256": "8126a99f5aa6f6f1f169cbef2cc8d0b2ceb4b23a99efadc8527d396b2ec1557f"
+  },
+  "reports/w5.e2-image/oracles/sfont_adapter.c": {
+    "bytes": 1354,
+    "sha256": "5c35b122f34d35ac89169491d45c8b674f068503f599cb8254359fe70f3998b1"
+  },
+  "reports/w5.e2-image/sources.json": {
+    "bytes": 4437,
+    "sha256": "dad7c260bc85996dc5d0c3ff7e499d05fd7e688d9d57a9616efcc67fce5ff174"
+  },
+  "tests/crosscheck/w5e2.py": {
+    "bytes": 11757,
+    "sha256": "a0970502af3839f22ac26d6b1d145fcbd2d1ac6c8695660debec967b6cb51d42"
+  }
+}

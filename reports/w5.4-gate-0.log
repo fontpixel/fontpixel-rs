@@ -1,0 +1,15 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 6.08s
+     Running tests/palm.rs (/home/chen/githubprojects/fontpixel/local-work/target-w54/debug/deps/palm-ef47d581ae9c8d53)
+
+running 7 tests
+test explicit_domain_and_output_limit ... ok
+test corrupt_tables_and_chained_directory ... ok
+test grayfont_preserves_pixels ... ok
+test preserves_native_density_resource_group_on_rewrite ... ok
+test every_native_density_and_extreme_metrics ... ok
+test all_native_layouts ... ok
+test truncations_and_aggregate_limits ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

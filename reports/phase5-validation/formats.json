@@ -1,0 +1,1370 @@
+{
+  "formats": [
+    {
+      "format": {
+        "id": "bdf",
+        "name": "Glyph Bitmap Distribution Format",
+        "extensions": [
+          "bdf",
+          "bdf.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pcf",
+        "name": "X11 Portable Compiled Format",
+        "extensions": [
+          "pcf",
+          "pcf.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "snf",
+        "name": "X11 Server Natural Format",
+        "extensions": [
+          "snf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hex",
+        "name": "GNU Unifont hex",
+        "extensions": [
+          "hex"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "draw",
+        "name": "Unifont hexdraw",
+        "extensions": [
+          "txt",
+          "draw"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "psf",
+        "name": "Linux PSF1 / PSF2",
+        "extensions": [
+          "psf",
+          "psfu",
+          "psf.gz",
+          "psfu.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "cpi",
+        "name": "DOS / FreeDOS CPI, CP, CPX",
+        "extensions": [
+          "cpi",
+          "cp",
+          "cpx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "raw",
+        "name": "Raw fixed-cell bitmap",
+        "extensions": [
+          "f08",
+          "f14",
+          "f16",
+          "ch8",
+          "64c",
+          "rom",
+          "bin",
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "yaff",
+        "name": "monobit YAFF",
+        "extensions": [
+          "yaff",
+          "yaffs",
+          "yaff.gz",
+          "yaffs.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pf2",
+        "name": "GRUB PF2",
+        "extensions": [
+          "pf2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fnt",
+        "name": "Windows bitmap FNT",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fon",
+        "name": "Windows FON resources",
+        "extensions": [
+          "fon",
+          "exe",
+          "dll"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fontx2",
+        "name": "DOS/V FONTX2",
+        "extensions": [
+          "fnt",
+          "f16",
+          "fx2",
+          "ftx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hzk",
+        "name": "UCDOS HZK / ASC",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hbf",
+        "name": "Hanzi Bitmap Font",
+        "extensions": [
+          "hbf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hanfont",
+        "name": "Korean DOS component fonts",
+        "extensions": [
+          "han"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "nfnt",
+        "name": "Mac NFNT / FONT / FOND containers",
+        "extensions": [
+          "dfont",
+          "bin",
+          "f",
+          "nfnt",
+          "suit",
+          "as",
+          "adf",
+          "rsrc",
+          "hqx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "bdat",
+        "name": "Apple embedded bdat / bloc",
+        "extensions": [
+          "ttf",
+          "dfont"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "iigs",
+        "name": "Apple IIgs QuickDraw II",
+        "extensions": [
+          "fon",
+          "bsc",
+          "bsq"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "otb",
+        "name": "Bitmap-only OpenType",
+        "extensions": [
+          "otb",
+          "ttf",
+          "otf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "ttf",
+        "name": "TrueType outlines",
+        "extensions": [
+          "ttf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "otf",
+        "name": "OpenType CFF",
+        "extensions": [
+          "otf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "woff",
+        "name": "WOFF 1.0",
+        "extensions": [
+          "woff"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "woff2",
+        "name": "WOFF 2.0",
+        "extensions": [
+          "woff2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "ttc",
+        "name": "TrueType / OpenType collection",
+        "extensions": [
+          "ttc",
+          "otc"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "color",
+        "name": "Color bitmap CBDT / sbix",
+        "extensions": [
+          "ttf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "vector-raster",
+        "name": "Pixel-vector import strategy",
+        "extensions": [
+          "ttf",
+          "otf",
+          "woff",
+          "woff2",
+          "ttc",
+          "otc"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "svg",
+        "name": "SVG images / glyphs / fonts",
+        "extensions": [
+          "svg"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "bmfont",
+        "name": "AngelCode BMFont",
+        "extensions": [
+          "fnt",
+          "xml",
+          "json"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "image",
+        "name": "Image atlas and mapping",
+        "extensions": [
+          "png",
+          "bmp",
+          "gif",
+          "tga",
+          "pbm",
+          "pgm",
+          "pnm",
+          "json",
+          "toml"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "c",
+        "name": "C / C++ bitmap arrays",
+        "extensions": [
+          "h",
+          "c",
+          "cpp",
+          "cc"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "kbitx",
+        "name": "Bits'n'Picas kbitx",
+        "extensions": [
+          "kbitx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "kbits",
+        "name": "Bits'n'Picas kbits",
+        "extensions": [
+          "kbits"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pbf",
+        "name": "PebbleOS PBF",
+        "extensions": [
+          "pbf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "sfd",
+        "name": "FontForge SFD bitmap strikes",
+        "extensions": [
+          "sfd"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pk",
+        "name": "TeX packed font",
+        "extensions": [
+          "pk"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gf",
+        "name": "TeX generic font",
+        "extensions": [
+          "gf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "plan9",
+        "name": "Plan 9 font / subfont",
+        "extensions": [
+          "font"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "amiga",
+        "name": "Amiga diskfont",
+        "extensions": [
+          "font"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gem",
+        "name": "Atari GEM / GDOS",
+        "extensions": [
+          "fnt",
+          "gem",
+          "gft",
+          "vga"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "vfont",
+        "name": "Berkeley vfont",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fzx",
+        "name": "ZX Spectrum FZX",
+        "extensions": [
+          "fzx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "figlet",
+        "name": "FIGlet",
+        "extensions": [
+          "flf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "palm",
+        "name": "Palm OS font resources",
+        "extensions": [
+          "pdb",
+          "prc",
+          "afnx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gdr",
+        "name": "Psion / EPOC GDR",
+        "extensions": [
+          "gdr"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "drcs",
+        "name": "DEC DRCS soft fonts",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "bbc",
+        "name": "BBC Micro VDU 23 character definitions, code byte and eight bitmap rows",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "beos",
+        "name": "BeOS |Be; bitmap fonts",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "catalyst",
+        "name": "Quark Catalyst SYSTEM.FONTS collection",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "chiwriter",
+        "name": "ChiWriter v3/v4 and compatible FONTRIX/PCPaint/GRASP new-format headers, width/offset tables and fixed-height rasters.",
+        "extensions": [
+          "set",
+          "sft",
+          "pft",
+          "eft",
+          "cft",
+          "xft"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "comfont",
+        "name": "DOS FONTEDIT, Fontraption normal/TSR, Font Mania and CP/M PSFCOM, LETAFONT, UDG binary loader envelopes",
+        "extensions": [
+          "com"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "consoleet",
+        "name": "Consoleet/vfontas per-glyph text files in a directory, hexadecimal filenames and raster text.",
+        "extensions": [
+          "txt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "daisy",
+        "name": "Daisy-Dot I/II/III and magnified multi-file variants NLQ/NL2/NL3/NL4, variable widths and vertical bitmap streams.",
+        "extensions": [
+          "nlq",
+          "nl2",
+          "nl3",
+          "nl4"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "dashen",
+        "name": "Dashen PFT screen font directory and packed glyphs, optionally followed by an HP PCL printer strike.",
+        "extensions": [
+          "pft"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "dosstart",
+        "name": "DOSStart DSF bitmap branch, encoded glyph rows, height and advance information.",
+        "extensions": [
+          "dsf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "drhalo",
+        "name": "Dr. Halo/Dr. Genius fixed-cell FON header and bitmap payload.",
+        "extensions": [
+          "fon"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "edwin",
+        "name": "EDWIN text bitmap definitions, code, dimensions, metrics and raster rows.",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "fbit",
+        "name": "Apple Japanese fbit and HFNT resources, resolution/encoding tables and optional data-fork bitmap payloads.",
+        "extensions": [
+          "dfont",
+          "suit",
+          "bin",
+          "as",
+          "adf",
+          "rsrc",
+          "hqx"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "geos",
+        "name": "Commodore GEOS CVT font collections and bare VLIR strike records, including MEGA extensions documented by Bits'N'Picas.",
+        "extensions": [
+          "cvt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "gpi",
+        "name": "OS/2 GPI bitmap fonts / NE / LX containers",
+        "extensions": [
+          "fnt",
+          "fon",
+          "exe",
+          "dll"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "grasp",
+        "name": "PCPaint/GRASP old raster format with fixed-cell header and raw rows.",
+        "extensions": [
+          "set",
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hppcl",
+        "name": "HP PCL bitmap soft fonts",
+        "extensions": [
+          "sft",
+          "sfp",
+          "sfl"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hrcg",
+        "name": "AppleSoft Toolkit Hi-Res Character Generator SET bitmaps including high-bit half-dot shifts.",
+        "extensions": [
+          "set"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "lisa",
+        "name": "Apple Lisa font libraries with resource directory and Lisa NFNT-like bitmaps, including compressed strike semantics.",
+        "extensions": [
+          "bin"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "mgtk",
+        "name": "Apple II MouseGraphics Toolkit / MousePaint fonts, one/two 7-bit-wide strips and widths.",
+        "extensions": [
+          "fnt",
+          "mgf",
+          "mpf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "mkwinfont",
+        "name": "Simon Tatham mkwinfont FD text, header properties and per-character ASCII rasters.",
+        "extensions": [
+          "fd"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "oberon",
+        "name": "Project Oberon bitmap FNT screen/printer files, character runs, glyph boxes and little-endian raster words.",
+        "extensions": [
+          "fnt",
+          "scn.fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pcgeos",
+        "name": "PC/GEOS 2+ BSWF font files, font metadata, point-size strikes, metrics, bitmaps and kerning.",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pcr",
+        "name": "Optiks PCR fixed-width 8-pixel font header and per-glyph rows.",
+        "extensions": [
+          "pcr"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pilfont",
+        "name": "Pillow PILfont .pil metrics plus PBM/PNG glyph atlas.",
+        "extensions": [
+          "pil"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "plus3dos",
+        "name": "ZX Spectrum +3DOS font file header, length/type/load metadata, checksum and 8x8 glyph payload.",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "psf2txt",
+        "name": "psftools textual PSF representation with glyph index, dimensions, Unicode aliases/sequences and bitmap rows.",
+        "extensions": [
+          "txt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "polyprint",
+        "name": "PolyPrint printer bitmap fonts and proportional glyph packing as documented by its utility maintainer.",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": false,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "prebuilt",
+        "name": "Adobe prebuilt BEPF/LEPF files",
+        "extensions": [
+          "bepf",
+          "lepf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "printshop",
+        "name": "The Print Shop PNF printer fonts, native raster/width arrangement.",
+        "extensions": [
+          "pnf",
+          "psf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pxl",
+        "name": "TeX PXL 1001/1002 font bitmaps, 128-entry directory, TFM widths, design size and dpi",
+        "extensions": [
+          "pxl"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "riscos",
+        "name": "RISC OS older x90y45 and newer Font bitmap files, strike indexes, metrics and grayscale packing.",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "sfont",
+        "name": "SDL SFont marker-row PNG atlas and Kreative RFont extension, explicit code sequence and proportional spacing.",
+        "extensions": [
+          "png"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "signum",
+        "name": "Signum! editor E24 and printer P9/P24/L30 raster character sets.",
+        "extensions": [
+          "e24",
+          "p9",
+          "p24",
+          "l30"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "symbos",
+        "name": "SymbOS small / medium / big bitmap fonts",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "tasprint",
+        "name": "TasPrint screen/printer character sets, widths up to 16, 16-row glyphs and multi-font sequences",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "vtfont",
+        "name": "FreeBSD VFNT0002 console fonts",
+        "extensions": [
+          "fnt"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "writeon",
+        "name": "Hercules Write On WOF bitmaps and native header, cells in 8x14 multiples.",
+        "extensions": [
+          "wof"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "wsfont",
+        "name": "NetBSD WSF binary fonts with geometry, stride, encoding, byte/bit order",
+        "extensions": [
+          "wsf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "wyse",
+        "name": "Wyse-60 downloadable soft-font escape sequences, 8x16 glyph rows and encoded character selectors.",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "xbin",
+        "name": "XBIN font section with XBIN header, 256/512 glyph flags and optional palette/screen data.",
+        "extensions": [
+          "xb"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "xerox",
+        "name": "Xerox Alto CONVERT .al, BITBLT .strike/.ks and PrePress .ac variants, each with native directory/metrics/raster packing.",
+        "extensions": [
+          "al",
+          "strike",
+          "ks",
+          "ac"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "zapfont",
+        "name": "RISC OS ZapFont old fixed-cell form and ZapRedraw UCS chunk/range form.",
+        "extensions": [],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "rockbox",
+        "name": "Rockbox RB11/RB12 binary bitmap fonts, glyph/offset/width tables and native row packing.",
+        "extensions": [
+          "fnt",
+          "rbf",
+          "rb11",
+          "rb12"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "u8m",
+        "name": "Kreative U8/M UTF-8 font format",
+        "extensions": [
+          "u8m"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "cybiko",
+        "name": "Cybiko device font files including native bitmap and compression variants identified by the original SDK documentation.",
+        "extensions": [
+          "cyf",
+          "fnt",
+          "fntz",
+          "fnty"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "playdate",
+        "name": "Playdate FNT source / PFT compiled bitmap fonts",
+        "extensions": [
+          "fnt",
+          "pft"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "hmzk",
+        "name": "Mi Band 2 HMZK device bitmap font header, code directory and glyph data.",
+        "extensions": [
+          "bin",
+          "hmzk"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "sbf",
+        "name": "Sabriel Bitmap Font binary headers, glyph maps, bitmap data and metrics.",
+        "extensions": [
+          "sbf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "qpf",
+        "name": "Qt/Embedded 2/3 legacy QPF prerendered bitmap fonts",
+        "extensions": [
+          "qpf"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "qpf2",
+        "name": "Qt for Embedded Linux QPF2 prerendered fonts",
+        "extensions": [
+          "qpf2"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "ssfn",
+        "name": "Scalable Screen Font 2 binary SFN bitmap/pixmap fragments, glyph references and mappings, plus ASCII source form.",
+        "extensions": [
+          "sfn",
+          "asc",
+          "sfn.gz"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "vlw",
+        "name": "Processing PFont VLW versions with per-glyph metrics, Gray8 bitmaps and Java data-stream strings.",
+        "extensions": [
+          "vlw"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    },
+    {
+      "format": {
+        "id": "pfr",
+        "name": "Portable Font Resource bitmap strikes, character maps and packed bitmap data in bitmap-bearing PFR files.",
+        "extensions": [
+          "pfr"
+        ],
+        "feature_enabled": true
+      },
+      "detect": true,
+      "read": true,
+      "write": true
+    }
+  ]
+}

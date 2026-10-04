@@ -1,0 +1,1017 @@
+{
+  "checks": [
+    {
+      "format": "rb11",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 3,
+      "pixels": 189,
+      "sha256": "ffa695e96fb82f14e6bdd8021efe7ec981928d857de9329cfa6e193c8bbbc90e"
+    },
+    {
+      "format": "rb11",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e"
+    },
+    {
+      "format": "rb12",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 3,
+      "pixels": 189,
+      "sha256": "81db9682be8fa9db05a1d8d4b93887cdb8c04c666bf8d944dcd6e7d6337e7f9b"
+    },
+    {
+      "format": "rb12",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1"
+    },
+    {
+      "format": "u8m",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 4,
+      "pixels": 315,
+      "sha256": "96e268e5f24602c22c9dfe81560e6c83d5509b6c9ee714a35e223f28eb4089f3"
+    },
+    {
+      "format": "u8m",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 4,
+      "sha256": "4c64ddd32a83ac83e53e26d139187b9eb402cd62ca867867b6c01d889f6db80b"
+    },
+    {
+      "format": "cybiko",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 3,
+      "pixels": 189,
+      "sha256": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d"
+    },
+    {
+      "format": "cybiko",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d"
+    },
+    {
+      "format": "sbf",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 3,
+      "pixels": 189,
+      "sha256": "7d55906f72cbd70de258fec8155150f4cbc4eb3c19b40e6baf9861650557c282"
+    },
+    {
+      "format": "sbf",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "ee65ef8dadbdd1f7eecf33f23421a0751f9d2df9ec6e7767017ff39c430de4d8"
+    },
+    {
+      "format": "hmzk",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 3,
+      "pixels": 768,
+      "sha256": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff"
+    },
+    {
+      "format": "hmzk",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff"
+    },
+    {
+      "format": "playdate",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 5,
+      "pixels": 315,
+      "sha256": "c308859bd4da928c9460101dd656a9f906c1b01f32e946726221c33caf6cb210"
+    },
+    {
+      "format": "playdate",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "7e7913c95e9fa1b278b3008615932053d56f96896cd287c94a06829cab7fe099"
+    },
+    {
+      "format": "split",
+      "direction": "Rust writer -> BitsNPicas native reader",
+      "glyphs": 5,
+      "pixels": 315,
+      "sha256": "f1545a68d18d44624b4b3814ec332bc5ee427ecdb3d9b487ebcf7b6da69ca885"
+    },
+    {
+      "format": "split",
+      "direction": "BitsNPicas native writer -> Rust reader",
+      "glyphs": 3,
+      "sha256": "8542acd79206c196d15b320f68d64e7b731a8ac1c10ca83c18e4b93b64c306d5"
+    },
+    {
+      "format": "u8m",
+      "direction": "author native U8MFile API validates all glyphs and mapping domains",
+      "fixture": "original.u8m",
+      "glyphs": 4,
+      "mappings": 5
+    },
+    {
+      "format": "u8m",
+      "direction": "author native U8MFile API validates all glyphs and mapping domains",
+      "fixture": "java-original.u8m",
+      "glyphs": 4,
+      "mappings": 3
+    },
+    {
+      "format": "rockbox",
+      "direction": "Rust writer -> official unmodified Rockbox runtime loader",
+      "fixture": "original.rb12",
+      "glyphs": 3,
+      "pixels": 189
+    },
+    {
+      "format": "rockbox",
+      "direction": "Rust writer -> official unmodified Rockbox runtime loader",
+      "fixture": "original-gray.rb12",
+      "glyphs": 3,
+      "pixels": 189
+    },
+    {
+      "format": "rockbox",
+      "direction": "Rust writer -> official unmodified Rockbox runtime loader",
+      "fixture": "original-large.rb12",
+      "glyphs": 33,
+      "pixels": 538560
+    },
+    {
+      "format": "playdate",
+      "direction": "Rust FNT embedded/split/PFT -> Panic SDK 3.1.2 compiler + Simulator runtime",
+      "glyphs": 15,
+      "pixels": 945,
+      "kerning_pairs": 9
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "emit",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb11.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb11"
+      ],
+      "exit": 0,
+      "stdout_sha256": "9c15a3599e695761254b0b00aa7a907f26201a60150fb811edeb1602c126e964",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "rb11",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb11"
+      ],
+      "exit": 0,
+      "stdout_sha256": "2b3e028af237af0b0bf11c19d84d6cd1a2e1bd6d5d61aca7f3c79c6a91b76f01",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "rb11",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb11",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/rb11.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "47e7aa96852b9089d32a1d31c155b9c4b6fe8605c161fc9c6ab9c94d8a07a700",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb11.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb11"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f65a6010177ac8d7e6b77500ba6ee4163a6e7301086460f3e3078f3cb525653d",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "rb11",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb11"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b3dc7008d975622e7eb92525c41cbf3256050adcd0f5054e1ee632de8233e225",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb12.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "0ea4af429c9fbe9464247a96ae3a6e5501aa8d977e80f8577ee1a3a240882a84",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "rb12",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fc94c0c7094784c352aa900dadbf1ad6cc354e063539021ad9523a9c34ad939c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "rb12",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb12",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/rb12.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "99e9a0fe98c9bc741ede0df9940eb3191f96915bce1f99dd6366691e107ef3fa",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb12.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "594fda57c173d61f3c7894de5667a3cee91b904ea42a4d20311300b0fb99a695",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "rb12",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fc94c0c7094784c352aa900dadbf1ad6cc354e063539021ad9523a9c34ad939c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.u8m.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f648a1ff602a2050e5619bda592cae24973dc4696d01a97e664d81d37d2ef74f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "u8m",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ebf19622d6d1b4c0452e04e62c0c9a7c8be8d808c20f1aa9b0495d286580ae4c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "u8m",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/u8m.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "89002bab2fdee0435533deff2af237591f5bf19dd5590f95f70deef48c196892",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "66ca420bc889235d17cbf38063adf88f9fb919efb172ac917f994a39e9fc09eb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "u8m",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "927b484ef2db132d05d7bf3619a8a996831451ee652660fa1f249a6ed789bdfb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.cyf.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.cyf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8a3af75e6a7a8f557f19fe38b128d482273a2141acead138cbbcbbcde02cfb94",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "cybiko",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.cyf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "24d5a4465fe37216dd4d3eb6c3f2de522e22da1aa3cfec410f19a07e1fb71beb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "cybiko",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.cyf",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/cybiko.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "120a2f68c6ff2d4adb555d1310098d4fcea0586795bd7b94eb9fe37f9ff29239",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.cyf.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.cyf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8097632446828f7d6a03194e0f980ce1e2ab7f39bd3e716aa5f7d5a1e99752e8",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "cybiko",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.cyf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "24d5a4465fe37216dd4d3eb6c3f2de522e22da1aa3cfec410f19a07e1fb71beb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.sbf.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.sbf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "a8276c322c38350c4323ee7899208e44f884d3f72f40ec899c6466f522d51a29",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "sbf",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.sbf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "24d5a4465fe37216dd4d3eb6c3f2de522e22da1aa3cfec410f19a07e1fb71beb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "sbf",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.sbf",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/sbf.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "39de5654ed9ae9ba6eccbb783fe3d7fccc0a3bf0d04dd7bf9ef39a4b3bd75261",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.sbf.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.sbf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "0467581e5844d88c954c8d712c795f823446308f64ee5724551b3ff8a3bcf295",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "sbf",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.sbf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "24d5a4465fe37216dd4d3eb6c3f2de522e22da1aa3cfec410f19a07e1fb71beb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.hmzk.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.hmzk"
+      ],
+      "exit": 0,
+      "stdout_sha256": "d4092ec18ddc8b2e8373741341f4e6fbc87692cc9ec25feaa3ce3136116afe07",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "hmzk",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.hmzk"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f7b80b0fd3ef04ae84b6cbd0bc39d9ece58518a972cafefd36ff11ed2b889064",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "hmzk",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.hmzk",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/hmzk.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f4f5421b706873e40462f66f826394d5b7fae36d820e295cc8e138a4ad1a06d7",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.hmzk.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.hmzk"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b93804e8ae5ced94381a0982788f5d02251af6de48d95136361b7c25b08d0482",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "hmzk",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.hmzk"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f7b80b0fd3ef04ae84b6cbd0bc39d9ece58518a972cafefd36ff11ed2b889064",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-playdate.fnt.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-playdate.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "5db850e3616f6eaa9602413c2ca467d92bc147752775b035b14b6324cbda397c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "playdate",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-playdate.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "28482872f78b039ff1a78c5e45ab8201c821046f90a183503a38f3c26581ace8",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "playdate",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-playdate.fnt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/playdate.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "7fee5ec262cf8308ccce346cfaa509bc009cee526db48f6e17169e36d78f6200",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-playdate.fnt.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-playdate.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "72d72d4b3d2a593dce64af378689df542df7403d55d55dda8280e5591c61f5dd",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "playdate",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-playdate.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f04cf224dc69f7a8dcdacf201cc9977f784c5c9b9a865565466ec34fb97ec53f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-split.fnt.java.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-split.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "d8a028a4bdd0ddd410ec7a600a98f9c51e8226bea7f2a410e0a6c0a98a760902",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "split",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-split.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "28482872f78b039ff1a78c5e45ab8201c821046f90a183503a38f3c26581ace8",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "playdate-separate",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-split.fnt",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/split.bdf"
+      ],
+      "exit": 0,
+      "stdout_sha256": "9194c41ee24c4f6e90a0fbc5cc081ea5f42edf02404b402060c101257049f642",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-Djava.awt.headless=true",
+        "-jar",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "convertbitmap",
+        "-f",
+        "kbits",
+        "-o",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-split.fnt.kbits",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-split.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "3216976f178601926def654b5346057db6cd290f8f294c903e9d226e281e9995",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "split",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original-split.fnt"
+      ],
+      "exit": 0,
+      "stdout_sha256": "f04cf224dc69f7a8dcdacf201cc9977f784c5c9b9a865565466ec34fb97ec53f",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "javac",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "-d",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck",
+        "/home/chen/githubprojects/fontpixel/fontpixel-rs/reports/w5.e1/oracles/U8Oracle.java"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck:/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "U8Oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "eaa414c98fe15b5118cc6bc6bdf628b204aeac12fccde9fd00125597fb14e3fd",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "u8m",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ebf19622d6d1b4c0452e04e62c0c9a7c8be8d808c20f1aa9b0495d286580ae4c",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-cp",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck:/home/chen/githubprojects/fontpixel/local-work/w44-oracles/BitsNPicas.jar",
+        "U8Oracle",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "7487bab7303612884340e03c8e719048b64928a49ab234fae450b4f8e4b88a37",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/examples/w5e1_timing",
+        "inspect",
+        "u8m",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/java-original.u8m"
+      ],
+      "exit": 0,
+      "stdout_sha256": "927b484ef2db132d05d7bf3619a8a996831451ee652660fa1f249a6ed789bdfb",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/rockbox-oracle/rockbox-read",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "1dd1a2b99745a194b1aff4401437d11cfcf2a7a645937820f6e10a1db16d6184",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/rockbox-oracle/rockbox-read",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-gray.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "adadb587ecfe24cd3c58a919cad596b1ee3eeaf13883b55b42b6175d5f0e458e",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/rockbox-oracle/rockbox-read",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/original-large.rb12"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ffcd2e7feeb54d502822a8c900c03f8a77dfdc8fc57c6a69b74e042a362c6cb9",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2/bin/pdc",
+        "-sdkpath",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2",
+        "-u",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/runtime-source",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/runtime.pdx"
+      ],
+      "exit": 0,
+      "stdout_sha256": "15e59e0eca600153a628986f22ee5587f80a1751664c106f64a8629b408ed115",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-specs/PlaydateSDK-3.1.2/bin/PlaydateSimulator",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e1-crosscheck/runtime.pdx"
+      ],
+      "exit": -9,
+      "controlled_stop": true,
+      "result_observed": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "tools": {
+    "helper_sha256": "8b99cb16d095f54c1a94340619deb19f6243fa29f5c3c44c4b052cbecd49ae8b",
+    "jar_sha256": "22685a52bc1a7f26680f80197548e74dc61a9f58eb083d6f700220a48a1165a6",
+    "rockbox_reader_sha256": "13f4f3ec2f3bc2f103503d750740d96031cfebe86155b4e52adf6a6c62b8209f",
+    "pdc_sha256": "527c60abc8a005b9ee72d797a551b8c336138636259b365c2a0c273b29db64c2",
+    "simulator_sha256": "71b7d4299ccbb73cbaed5279f06e476fd1340b5ffc5a8e7a9e85b09ac8879094"
+  },
+  "fixtures": {
+    "original.rb11.java-3.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "manual-simulator.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "java-original-playdate-3.fnt": "7e7913c95e9fa1b278b3008615932053d56f96896cd287c94a06829cab7fe099",
+    "java-original.u8m.api.tsv": "7487bab7303612884340e03c8e719048b64928a49ab234fae450b4f8e4b88a37",
+    "original.rb12.java-3.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "original.rb12.java.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.sbf": "ee65ef8dadbdd1f7eecf33f23421a0751f9d2df9ec6e7767017ff39c430de4d8",
+    "java-original.rb12-6.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "split.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "original.cyf.java-3.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original-4.sbf": "ee65ef8dadbdd1f7eecf33f23421a0751f9d2df9ec6e7767017ff39c430de4d8",
+    "java-original-2.sbf": "ee65ef8dadbdd1f7eecf33f23421a0751f9d2df9ec6e7767017ff39c430de4d8",
+    "java-original-2.cyf": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d",
+    "original-split.fnt.java.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "java-original-6.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "original.rb11.java.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "original.hmzk.java-2.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "rb12.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "java-original-split.fnt.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "original-split.fnt": "f1545a68d18d44624b4b3814ec332bc5ee427ecdb3d9b487ebcf7b6da69ca885",
+    "java-original-3.u8m": "4c64ddd32a83ac83e53e26d139187b9eb402cd62ca867867b6c01d889f6db80b",
+    "original-gray.rb12.expected.json": "648936bfb40c5a3ee9afd5b7e1aa2492cfda9d873cb7cf880617013ac96214a2",
+    "java-original-6.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "java-original-playdate.fnt-2.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "simulator.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "java-original.sbf.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "java-original.rb12-2.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original.rb12.java-6.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original-3.sbf": "ee65ef8dadbdd1f7eecf33f23421a0751f9d2df9ec6e7767017ff39c430de4d8",
+    "original.hmzk": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff",
+    "original.sbf.java-4.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.cyf-4.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "java-original.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "java-original-5.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "java-original.rb11-2.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "original.cyf.expected.json": "daad4a587ef42b9e0fa9179483ad8af7787951bb95b4becfb4df01e033ff56a6",
+    "original.rb11": "ffa695e96fb82f14e6bdd8021efe7ec981928d857de9329cfa6e193c8bbbc90e",
+    "original.sbf.java-3.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "original.rb12.java-2.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.u8m-3.kbits": "22bc3c020421a80ca7619ad31aadffd102f9145912e13d13405ffb9bb4293fcc",
+    "original.cyf.java-4.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.hmzk-4.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "java-original.rb12-5.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "hmzk.bdf": "b0de93653193a33f581e72b0426413cda05b16f4710b77114dc66397ec14a445",
+    "runtime-result.tsv": "5ffe0f3c74edc06db8bafa9f5f191f79c4d60ec9837a93708cc3938d8981895d",
+    "java-original.rb11-4.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "original-large.rb12.expected.json": "2c1b42ca4605052133e6934d6b5d1362637ef541cd67f99ae78c8437d4197e2c",
+    "original.u8m.expected.json": "df22be5de31908c5c887396427bd7f7b4230a25f7a6152d1dbcf2420b1d9201b",
+    "java-original.sbf-4.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "java-original.cyf": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d",
+    "original.sbf.java.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "playdate.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "java-original.u8m-2.kbits": "22bc3c020421a80ca7619ad31aadffd102f9145912e13d13405ffb9bb4293fcc",
+    "original.hmzk.java-4.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "java-original.cyf.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "sdk-only-simulator.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "U8Oracle.class": "046d2eda525892cab7215251cc61c8e8b66ee089d421c665f62951434a8c355b",
+    "original-playdate.fnt.java-2.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "original.u8m.java-3.kbits": "ae04cb4706d99b4a8685701aff66f9698b15a7faa611f6fb47b2cf102a956f54",
+    "java-original-split.fnt": "8542acd79206c196d15b320f68d64e7b731a8ac1c10ca83c18e4b93b64c306d5",
+    "java-original.rb11-6.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "java-original.hmzk-3.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "original.rb12.java-4.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "debug-simulator.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "java-original.cyf-2.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original.hmzk.java.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "java-original.u8m-4.kbits": "22bc3c020421a80ca7619ad31aadffd102f9145912e13d13405ffb9bb4293fcc",
+    "java-original-split.fnt-3.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "java-original.u8m": "4c64ddd32a83ac83e53e26d139187b9eb402cd62ca867867b6c01d889f6db80b",
+    "original-playdate.fnt.java.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "original.hmzk.expected.json": "f9d207b81d48705831e2532d9f4f38db5335a9e082df2fb7d2e7c3ee9b2b33d8",
+    "java-original-3.cyf": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d",
+    "java-original-3.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "original.sbf.java-2.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.rb12-4.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original.rb11.java-5.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "original.u8m.api.tsv": "eaa414c98fe15b5118cc6bc6bdf628b204aeac12fccde9fd00125597fb14e3fd",
+    "crosscheck.json": "8dee39ff43785dc7ef80f97bb2a3336803c290ef9a20742d35b0e01c5c2debc9",
+    "java-original.rb12.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original-split.fnt.java-3.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "java-original.hmzk": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff",
+    "original.u8m": "96e268e5f24602c22c9dfe81560e6c83d5509b6c9ee714a35e223f28eb4089f3",
+    "java-original-4.hmzk": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff",
+    "sbf.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "original.hmzk.java-3.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "original-split.fnt.expected.json": "c4bf89b026ed638d7671132623dc98764e13f3970d98a37c410ce1086370e682",
+    "original.rb12.java-5.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "original.cyf": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d",
+    "original.rb11.expected.json": "8c4f27d1e4e096f2ff439c4989f49a56a54c67b120fb3805f1ae155c3055c91b",
+    "java-original-playdate-2.fnt": "7e7913c95e9fa1b278b3008615932053d56f96896cd287c94a06829cab7fe099",
+    "java-original-3.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "u8m.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "java-original-4.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "java-original-split-2.fnt": "8542acd79206c196d15b320f68d64e7b731a8ac1c10ca83c18e4b93b64c306d5",
+    "java-original-playdate.fnt-4.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "java-original.sbf-2.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "java-original.rb11-3.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "java-original-2.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "java-original-split-table-10-7.png": "21f6d882a2123172b38191bb564840baa175501981ccc223e362f24071f02678",
+    "java-original-4.u8m": "4c64ddd32a83ac83e53e26d139187b9eb402cd62ca867867b6c01d889f6db80b",
+    "original-playdate.fnt.expected.json": "c4bf89b026ed638d7671132623dc98764e13f3970d98a37c410ce1086370e682",
+    "original.sbf.expected.json": "daad4a587ef42b9e0fa9179483ad8af7787951bb95b4becfb4df01e033ff56a6",
+    "java-original.hmzk-2.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "original.pft": "7c4acc458bde9bc90d47d534a7c1934791d15b27ef36f2e4583dc3f78a6c28e8",
+    "java-original-playdate.fnt": "7e7913c95e9fa1b278b3008615932053d56f96896cd287c94a06829cab7fe099",
+    "java-original-split-4.fnt": "8542acd79206c196d15b320f68d64e7b731a8ac1c10ca83c18e4b93b64c306d5",
+    "original.rb12": "81db9682be8fa9db05a1d8d4b93887cdb8c04c666bf8d944dcd6e7d6337e7f9b",
+    "original-split-table-9-7.png": "5686c8abe09ba0fdfea86a0b5caa5e165e828e9d541ee4026a757bcbb25801e6",
+    "java-original-split-3-table-10-7.png": "21f6d882a2123172b38191bb564840baa175501981ccc223e362f24071f02678",
+    "original.pft.expected.json": "c4bf89b026ed638d7671132623dc98764e13f3970d98a37c410ce1086370e682",
+    "java-original-4.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "java-original.sbf-3.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "java-original.u8m.kbits": "22bc3c020421a80ca7619ad31aadffd102f9145912e13d13405ffb9bb4293fcc",
+    "original.u8m.java-4.kbits": "ae04cb4706d99b4a8685701aff66f9698b15a7faa611f6fb47b2cf102a956f54",
+    "cybiko.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "java-original-2.hmzk": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff",
+    "rb11.bdf": "75ab33fb1a05bcf1370ca4f1766f27f6492a5b30dd52ebdae047e5242c24574e",
+    "java-original-split.fnt-2.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "original.rb12.expected.json": "8c4f27d1e4e096f2ff439c4989f49a56a54c67b120fb3805f1ae155c3055c91b",
+    "java-original-playdate.fnt-3.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "original.rb11.java-4.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "original.cyf.java-2.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.rb12-3.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original-playdate.fnt.java-3.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "java-original-split-4-table-10-7.png": "21f6d882a2123172b38191bb564840baa175501981ccc223e362f24071f02678",
+    "original.u8m.java.kbits": "ae04cb4706d99b4a8685701aff66f9698b15a7faa611f6fb47b2cf102a956f54",
+    "java-original-5.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "original.u8m.java-2.kbits": "ae04cb4706d99b4a8685701aff66f9698b15a7faa611f6fb47b2cf102a956f54",
+    "original.rb11.java-6.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "java-original.rb11.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "java-original-4.cyf": "978f929e748c803e685534c2630f54fc7d1ab0b99b6ee010767a00888cd93c7d",
+    "java-original.rb11-5.kbits": "256057117c6add7f0ed12906058a2271af1378dd011a9b424e50c609eac2397f",
+    "java-original.cyf-3.kbits": "a6ed7e2227b2c525fc8601ea183295eb80147d55cb55732706876943388fd955",
+    "original-playdate.fnt.java-4.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "original-gray.rb12": "4618079191d9d96f75d33e83587be68b3747462c8b2754672cbff0b043d3e4e9",
+    "original-split.fnt.java-4.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd",
+    "java-original-2.rb11": "4ac7769dc092e3d48c12b6e4464f59ee73dd7e47d79b3371b1c5a2ee7fd5db3e",
+    "original-large.rb12": "a3dc8023f9c1c56587b39f8484c85ce0a1dbb54ba2ad698839e2cf6b3317008d",
+    "java-original.rb12": "d94e137e05cae55999c3905fff06ff831a3bbde051ba875d14d649ef531a28e1",
+    "original-playdate.fnt": "c308859bd4da928c9460101dd656a9f906c1b01f32e946726221c33caf6cb210",
+    "java-original-playdate-4.fnt": "7e7913c95e9fa1b278b3008615932053d56f96896cd287c94a06829cab7fe099",
+    "java-original-2.u8m": "4c64ddd32a83ac83e53e26d139187b9eb402cd62ca867867b6c01d889f6db80b",
+    "original.rb11.java-2.kbits": "6f2721af0fae1aab75bb6208e2319b5076ad80535b9990ce48ff385ade53fc2a",
+    "java-original-split-2-table-10-7.png": "21f6d882a2123172b38191bb564840baa175501981ccc223e362f24071f02678",
+    "java-original-split-3.fnt": "8542acd79206c196d15b320f68d64e7b731a8ac1c10ca83c18e4b93b64c306d5",
+    "original.u8m.java-5.kbits": "ae04cb4706d99b4a8685701aff66f9698b15a7faa611f6fb47b2cf102a956f54",
+    "java-original-playdate.fnt.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "java-original-split.fnt-4.kbits": "bacb9c9292a5aa7edc3361b4a3e8cbd5f4da9b88ed4a0abe9c24277f3dfa69e1",
+    "original.sbf": "7d55906f72cbd70de258fec8155150f4cbc4eb3c19b40e6baf9861650557c282",
+    "java-original-3.hmzk": "ade9a09d7d5d0606014a8d308a0bd736380574fb8efc96b7f1e137d3401662ff",
+    "original.cyf.java.kbits": "993baf1e7b614c5719271e882e2eddfb255fed1e20a3d848f78a790a517557ae",
+    "java-original.hmzk.kbits": "0b4d96e43c2f0087581eefc4de4155148c150cf98d3d603c75f4ef8307e131a9",
+    "original-split.fnt.java-2.kbits": "693b21bc251e6174260b14ede747db2b336b0a2ac0396ac5fbd21c974dc36bfd"
+  }
+}

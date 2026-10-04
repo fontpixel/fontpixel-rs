@@ -50,7 +50,7 @@ pub fn registry() -> FontRegistry {
     #[cfg(feature = "bdat")]
     registry.install_embedded("bdat", sfnt::bitmap::Kind::Apple, true);
     #[cfg(feature = "color")]
-    registry.install_embedded("color", sfnt::bitmap::Kind::Color, false);
+    registry.install_embedded("color", sfnt::bitmap::Kind::Color, true);
     #[cfg(feature = "ttf")]
     registry.install_vector("ttf");
     #[cfg(feature = "otf")]
@@ -116,6 +116,128 @@ pub fn registry() -> FontRegistry {
     registry.install_gem();
     #[cfg(feature = "snf")]
     registry.install_snf();
+    #[cfg(feature = "hanfont")]
+    registry.install_hanfont();
+    #[cfg(feature = "iigs")]
+    registry.install_iigs();
+    #[cfg(feature = "vfont")]
+    registry.install_vfont();
+    #[cfg(feature = "fzx")]
+    registry.install_fzx();
+    #[cfg(feature = "figlet")]
+    registry.install_figlet();
+    #[cfg(feature = "palm")]
+    registry.install_palm();
+    #[cfg(feature = "gdr")]
+    registry.install_gdr();
+    #[cfg(feature = "drcs")]
+    registry.install_drcs();
+    #[cfg(feature = "dosstart")]
+    registry.install_dosstart();
+    #[cfg(feature = "edwin")]
+    registry.install_edwin();
+    #[cfg(feature = "mkwinfont")]
+    registry.install_mkwinfont();
+    #[cfg(feature = "psf2txt")]
+    registry.install_psf2txt();
+    #[cfg(feature = "pcr")]
+    registry.install_pcr();
+    #[cfg(feature = "plus3dos")]
+    registry.install_plus3dos();
+    #[cfg(feature = "drhalo")]
+    registry.install_drhalo();
+    #[cfg(feature = "writeon")]
+    registry.install_writeon();
+    #[cfg(feature = "daisy")]
+    registry.install_daisy();
+    #[cfg(feature = "polyprint")]
+    registry.install_polyprint();
+    #[cfg(feature = "printshop")]
+    registry.install_printshop();
+    #[cfg(feature = "tasprint")]
+    registry.install_tasprint();
+    #[cfg(feature = "pxl")]
+    registry.install_pxl();
+    #[cfg(feature = "signum")]
+    registry.install_signum();
+    #[cfg(feature = "rockbox")]
+    registry.install_rockbox();
+    #[cfg(feature = "u8m")]
+    registry.install_u8m();
+    #[cfg(feature = "cybiko")]
+    registry.install_cybiko();
+    #[cfg(feature = "playdate")]
+    registry.install_playdate();
+    #[cfg(feature = "hmzk")]
+    registry.install_hmzk();
+    #[cfg(feature = "sbf")]
+    registry.install_sbf();
+    #[cfg(feature = "mgtk")]
+    registry.install_mgtk();
+    #[cfg(feature = "qpf")]
+    registry.install_qpf();
+    #[cfg(feature = "symbos")]
+    registry.install_symbos();
+    #[cfg(feature = "qpf2")]
+    registry.install_qpf2();
+    #[cfg(feature = "oberon")]
+    registry.install_oberon();
+    #[cfg(feature = "fbit")]
+    registry.install_fbit();
+    #[cfg(feature = "lisa")]
+    registry.install_lisa();
+    #[cfg(feature = "wsfont")]
+    registry.install_wsfont();
+    #[cfg(feature = "beos")]
+    registry.install_beos();
+    #[cfg(feature = "bbc")]
+    registry.install_bbc();
+    #[cfg(feature = "comfont")]
+    registry.install_comfont();
+    #[cfg(feature = "consoleet")]
+    registry.install_consoleet();
+    #[cfg(feature = "grasp")]
+    registry.install_grasp();
+    #[cfg(feature = "hrcg")]
+    registry.install_hrcg();
+    #[cfg(feature = "wyse")]
+    registry.install_wyse();
+    #[cfg(feature = "xbin")]
+    registry.install_xbin();
+    #[cfg(feature = "zapfont")]
+    registry.install_zapfont();
+    #[cfg(feature = "catalyst")]
+    registry.install_catalyst();
+    #[cfg(feature = "chiwriter")]
+    registry.install_chiwriter();
+    #[cfg(feature = "vtfont")]
+    registry.install_vtfont();
+    #[cfg(feature = "hppcl")]
+    registry.install_hppcl();
+    #[cfg(feature = "dashen")]
+    registry.install_dashen();
+    #[cfg(feature = "vlw")]
+    registry.install_vlw();
+    #[cfg(feature = "pilfont")]
+    registry.install_pilfont();
+    #[cfg(feature = "prebuilt")]
+    registry.install_prebuilt();
+    #[cfg(feature = "geos")]
+    registry.install_geos();
+    #[cfg(feature = "gpi")]
+    registry.install_gpi();
+    #[cfg(feature = "riscos")]
+    registry.install_riscos();
+    #[cfg(feature = "sfont")]
+    registry.install_sfont();
+    #[cfg(feature = "pfr")]
+    registry.install_pfr();
+    #[cfg(feature = "pcgeos")]
+    registry.install_pcgeos();
+    #[cfg(feature = "xerox")]
+    registry.install_xerox();
+    #[cfg(feature = "ssfn")]
+    registry.install_ssfn();
     registry
 }
 

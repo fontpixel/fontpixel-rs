@@ -1,8 +1,9 @@
-//! Explicitly mapped image atlases with reversible JSON/TOML metadata.
+//! Explicitly mapped image atlases and native glyph-image directories.
 //!
 //! [`Mapping`] accepts the catalogue's grid/cell schema. Native writes additionally
 //! retain exact font and glyph metadata; all resource access stays caller-scoped.
 mod budget;
+mod imageset;
 use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
 use crate::bitmap::{Bitmap, BitmapLimits, Bounds, Gray8};
 use crate::model::{
@@ -14,6 +15,7 @@ use crate::resources::{OutputAsset, OutputBundle, ReadContext, Written};
 use crate::{Error, Report, ResourceLimits, ResourcePath, Result};
 use budget::Budget;
 use image_codec::{DynamicImage, ImageDecoder, ImageFormat, ImageReader};
+pub use imageset::{ImageLayout, ImageSetBackground, ImageSetDomain, ImageSetOptions};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
 use std::io::{Cursor, Write};
@@ -181,9 +183,11 @@ pub struct NativeGlyph {
     /// Ordered per-glyph properties.
     pub properties: Properties,
 }
-/// Atlas reader choices. A supplied map avoids a sidecar lookup.
+/// Atlas mapping or native directory interpretation.
 #[derive(Debug, Clone, Default)]
 pub struct ImageReadOptions {
+    /// Filename labels and coverage for a native directory input.
+    pub imageset: ImageSetOptions,
     /// Explicit mapping; mutually exclusive with mapping_path.
     pub mapping: Option<Mapping>,
     /// Caller-authorized relative JSON/TOML mapping asset.
@@ -244,9 +248,13 @@ impl Encoding {
         }
     }
 }
-/// Bounded deterministic atlas output.
+/// Bounded deterministic atlas or native directory output.
 #[derive(Debug, Clone)]
 pub struct ImageWriteOptions {
+    /// Atlas with mapping, or native separately labelled glyph images.
+    pub layout: ImageLayout,
+    /// Native directory labels, coverage and optional external baseline.
+    pub imageset: ImageSetOptions,
     /// Container override; otherwise use output extension.
     pub encoding: Option<Encoding>,
     /// JSON by default.
@@ -261,6 +269,8 @@ pub struct ImageWriteOptions {
 impl Default for ImageWriteOptions {
     fn default() -> Self {
         Self {
+            layout: ImageLayout::Atlas,
+            imageset: ImageSetOptions::default(),
             encoding: None,
             mapping_format: MappingFormat::Json,
             columns: 16,
@@ -272,7 +282,7 @@ impl Default for ImageWriteOptions {
 /// Image codec installed by the `image` feature.
 #[derive(Debug, Clone, Default)]
 pub struct ImageCodec {
-    /// Input mapping selection.
+    /// Input mapping and native directory profile.
     pub read_options: ImageReadOptions,
     /// Output packing and limits.
     pub write_options: ImageWriteOptions,
@@ -345,7 +355,7 @@ impl FormatDetector for ImageCodec {
                 ImageFormat::Png | ImageFormat::Bmp | ImageFormat::Gif | ImageFormat::Pnm
             )
         }) {
-            return Ok(Confidence::Certain);
+            return Ok(Confidence::Possible);
         }
         if b.windows(15).any(|v| v == b"fontpixel_image") {
             return Ok(Confidence::Possible);
@@ -355,6 +365,12 @@ impl FormatDetector for ImageCodec {
 }
 impl FormatReader<FontSet> for ImageCodec {
     fn read(&self, c: &mut ReadContext<'_>, o: &ReadOptions) -> Result<(FontSet, Report)> {
+        if c.is_directory() {
+            if self.read_options.mapping.is_some() || self.read_options.mapping_path.is_some() {
+                return Err(invalid("imageset input cannot use an atlas mapping"));
+            }
+            return imageset::read(c, &self.read_options.imageset);
+        }
         if self.read_options.mapping.is_some() && self.read_options.mapping_path.is_some() {
             return Err(invalid("choose mapping or mapping_path, not both"));
         }
@@ -880,6 +896,9 @@ impl std::io::Seek for Sink {
 }
 impl FormatWriter<FontSet> for ImageCodec {
     fn write(&self, set: &FontSet, o: &WriteOptions) -> Result<Written> {
+        if self.write_options.layout == ImageLayout::Imageset {
+            return imageset::write(set, o, &self.write_options);
+        }
         let l = &self.write_options.limits;
         set.validate(l)?;
         let [font] = set.fonts.as_slice() else {

@@ -1,0 +1,12 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 1.31s
+     Running tests/sfont.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e2/debug/deps/sfont-5396d38e2d8b4aaf)
+
+running 4 tests
+test native_png_names_and_unknown_text_roundtrip_and_baseline_overflow ... ok
+test malformed_images_codepoints_options_and_budgets ... ok
+test sfont_markers_explicit_order_gray_and_strict ... ok
+test rfont_external_original_pages_redundancy_aux_versions_and_gap_stability ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

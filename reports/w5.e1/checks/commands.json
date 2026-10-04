@@ -1,0 +1,344 @@
+[
+  {
+    "format": "rockbox",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "rockbox",
+      "--test",
+      "rockbox"
+    ],
+    "exit": 0,
+    "seconds": 1.527442455291748,
+    "log": "reports/w5.e1/checks/rockbox-test.log"
+  },
+  {
+    "format": "rockbox",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "rockbox",
+      "--lib",
+      "--test",
+      "rockbox",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.8125433921813965,
+    "log": "reports/w5.e1/checks/rockbox-clippy.log"
+  },
+  {
+    "format": "rockbox",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "rockbox",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 1.0413110256195068,
+    "log": "reports/w5.e1/checks/rockbox-doc.log"
+  },
+  {
+    "format": "u8m",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "u8m",
+      "--test",
+      "u8m"
+    ],
+    "exit": 0,
+    "seconds": 3.094029426574707,
+    "log": "reports/w5.e1/checks/u8m-test.log"
+  },
+  {
+    "format": "u8m",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "u8m",
+      "--lib",
+      "--test",
+      "u8m",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.8705897331237793,
+    "log": "reports/w5.e1/checks/u8m-clippy.log"
+  },
+  {
+    "format": "u8m",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "u8m",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.9218201637268066,
+    "log": "reports/w5.e1/checks/u8m-doc.log"
+  },
+  {
+    "format": "cybiko",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "cybiko",
+      "--test",
+      "cybiko"
+    ],
+    "exit": 0,
+    "seconds": 3.456510543823242,
+    "log": "reports/w5.e1/checks/cybiko-test.log"
+  },
+  {
+    "format": "cybiko",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "cybiko",
+      "--lib",
+      "--test",
+      "cybiko",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.6574201583862305,
+    "log": "reports/w5.e1/checks/cybiko-clippy.log"
+  },
+  {
+    "format": "cybiko",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "cybiko",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.8061985969543457,
+    "log": "reports/w5.e1/checks/cybiko-doc.log"
+  },
+  {
+    "format": "playdate",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "playdate",
+      "--test",
+      "playdate"
+    ],
+    "exit": 0,
+    "seconds": 2.900606870651245,
+    "log": "reports/w5.e1/checks/playdate-test.log"
+  },
+  {
+    "format": "playdate",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "playdate",
+      "--lib",
+      "--test",
+      "playdate",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.6955008506774902,
+    "log": "reports/w5.e1/checks/playdate-clippy.log"
+  },
+  {
+    "format": "playdate",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "playdate",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 1.050912857055664,
+    "log": "reports/w5.e1/checks/playdate-doc.log"
+  },
+  {
+    "format": "hmzk",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hmzk",
+      "--test",
+      "hmzk"
+    ],
+    "exit": 0,
+    "seconds": 2.8769350051879883,
+    "log": "reports/w5.e1/checks/hmzk-test.log"
+  },
+  {
+    "format": "hmzk",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hmzk",
+      "--lib",
+      "--test",
+      "hmzk",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.5078096389770508,
+    "log": "reports/w5.e1/checks/hmzk-clippy.log"
+  },
+  {
+    "format": "hmzk",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "hmzk",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.8428761959075928,
+    "log": "reports/w5.e1/checks/hmzk-doc.log"
+  },
+  {
+    "format": "sbf",
+    "kind": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sbf",
+      "--test",
+      "sbf"
+    ],
+    "exit": 0,
+    "seconds": 2.2585535049438477,
+    "log": "reports/w5.e1/checks/sbf-test.log"
+  },
+  {
+    "format": "sbf",
+    "kind": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sbf",
+      "--lib",
+      "--test",
+      "sbf",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.139958143234253,
+    "log": "reports/w5.e1/checks/sbf-clippy.log"
+  },
+  {
+    "format": "sbf",
+    "kind": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "sbf",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.38088440895080566,
+    "log": "reports/w5.e1/checks/sbf-doc.log"
+  }
+]

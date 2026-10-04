@@ -1,0 +1,21 @@
+# Commodore GEOS CVT/VLIR and MEGA fonts
+
+W5.B research recorded before implementation, 2026-10-04.
+
+Primary source: [Commodore GEOS CVT/VLIR and MEGA fonts authority](https://www.lyonlabs.org/commodore/onrequest/geos/geos-fonts.html). Supplementary executable format evidence is MIT monobit 0.54, module `geos`; the installed release fingerprints and exact external-oracle scope are recorded in `reports/w5.b-crosscheck.json`.
+
+Bare VLIR strike: byte baseline, LE stride word, byte height, index-table offset, bitstream offset. The original table has 96 word locations for codes 32..126, with an optional later DEL entry; glyphs are slices of one row-major strip. CVT contains 254-byte signature/directory, info and record blocks, followed by padded VLIR records. MEGA partitions the base characters into six subsets plus an index-only record; the separate publisher Unicode extension expands character coverage.
+
+Collections retain record IDs, sizes, source directory metadata and every strike. DEL ambiguity is exposed explicitly. Writer choices distinguish Bare/CVT/MEGA, preserve legacy mappings, and report common-cell padding, bearings, names, default glyphs and unavailable metadata.
+
+All reads budget retained input, cumulative fonts/glyphs, table allocations, decompressed pixels and diagnostics before allocation. Every successful write is reopened under identical limits and compared field by field. Source resources and external fonts are never fetched implicitly. Synthetic fixtures are original MIT artwork; third-party tools remain outside the repository.
+
+Additional publisher evidence: [Bits'N'Picas GEOSFontStrike](https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/geos/GEOSFontStrike.java), [GEOSFontFile](https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/geos/GEOSFontFile.java), and [UTF8StrikeMap](https://raw.githubusercontent.com/kreativekorp/bitsnpicas/43b11dca0809a3342b8281b570897e8654ffe705/main/java/BitsNPicas/src/com/kreative/bitsnpicas/geos/UTF8StrikeMap.java). The original GEOS font table has 95 printable characters (32..126) and 96 boundary words; DEL is a later optional 96th glyph, and real files sometimes contain an invalid extra boundary. Its handling is an explicit read/write option.
+
+Extended records have 14-byte headers. Flags at byte 8 use 0x8000 for extension, 0x4000 for short character tables, 0x2000 for per-glyph signed offset/unsigned advance pairs, and 0x1000 for a UTF-8 map. Word offsets at bytes 10/12 locate the offset-width table and Unicode map. These offset-width pairs describe glyph metrics, not pair kerning. Unicode maps select 64-character sub-strikes by block: 32 four-byte low entries, 16 word pointers to 64-entry BMP tables, and six word pointers to astral tables of 64 further word pointers. Each leaf stores record index, 254-byte sector index and word byte length. Offsets within the maps are relative to the containing strike. Record 126 lists the auxiliary blocks globally. This publisher extension remains part of the `geos` canonical format.
+
+MEGA uses records 48..53 for six successive sixteen-character subsets and record 54 for an index-only strike. It may coexist with ordinary sizes and Unicode extension blocks. Detection uses record 54's empty bitmap extent, allowing a Unicode map at the same offset, rather than assuming every collection of seven matching heights is MEGA. Native CVT record entries provide the actual record sizes and ordering; the info block's fifteen size entries are metadata, not a replacement for the record directory.
+
+CVT signature recognition accepts both versioned and versionless PRG/SEQ format comments, as emitted by native publisher tools. The primary publisher wire classes independently read and rebuild all six fixture profiles. MEGA+UTF8 requires a documented collection-selection workaround in the external harness because the publisher’s `isMega()` test counts its Unicode metadata as bitmap data; bitmap and map routines remain unchanged.
+
+New CVT output uses the deterministic valid native date 1900-01-01 00:00. Unmodified native resources preserve their original directory bytes.

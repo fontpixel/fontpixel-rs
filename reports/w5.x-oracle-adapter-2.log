@@ -1,0 +1,1 @@
+{"format": "raw", "loops": 1, "read_ns": 331865, "write_ns": 606401, "monobit": "0.54.0", "config": {"width": 16, "height": 5, "count": 6, "order": "column"}}

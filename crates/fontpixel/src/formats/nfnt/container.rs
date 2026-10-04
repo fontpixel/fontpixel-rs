@@ -71,7 +71,35 @@ fn mac_signature(b: &[u8]) -> bool {
         && b[82] == 0
         && (u32be(b, 87).is_ok_and(|n| n >= 30) || u32be(b, 83).is_ok_and(|n| n >= 30))
 }
+#[cfg(feature = "fbit")]
+pub(super) fn envelope_signature(b: &[u8]) -> bool {
+    super::binhex::signature(b)
+        || b.starts_with(&[0, 5, 0x16, 0])
+        || b.starts_with(&[0, 5, 0x16, 7])
+        || mac_signature(b)
+        || fork_signature(b)
+}
 pub(super) fn detect(b: &[u8]) -> Confidence {
+    if super::binhex::signature(b) {
+        let limits = ResourceLimits {
+            max_input_bytes: 1 << 20,
+            max_total_bytes: 8 << 20,
+            max_table_bytes: 2 << 20,
+            max_resource_bytes: 2 << 20,
+            ..Default::default()
+        };
+        if b.len() <= limits.max_input_bytes
+            && let Ok(mut budget) = Budget::new(b.len(), &limits)
+        {
+            let mut set = FontSet::default();
+            if let Ok(fork) = super::binhex::decode(b, &mut set, &mut budget, &limits)
+                && super::probe::fork(&fork).unwrap_or(false)
+            {
+                return Confidence::Certain;
+            }
+        }
+        return Confidence::NoMatch;
+    }
     if b.starts_with(&[0, 5, 0x16, 0]) || b.starts_with(&[0, 5, 0x16, 7]) {
         return if super::probe::apple(b).unwrap_or(false) {
             Confidence::Certain
@@ -136,12 +164,33 @@ pub(super) fn parse(
     l: &ResourceLimits,
     budget: &mut Budget,
 ) -> Result<(FontSet, Report)> {
+    parse_mode(b, o, l, budget, false)
+}
+#[cfg(feature = "fbit")]
+pub(super) fn parse_resources(
+    b: &[u8],
+    l: &ResourceLimits,
+    budget: &mut Budget,
+) -> Result<(FontSet, Report)> {
+    parse_mode(b, &NfntReadOptions::default(), l, budget, true)
+}
+fn parse_mode(
+    b: &[u8],
+    o: &NfntReadOptions,
+    l: &ResourceLimits,
+    budget: &mut Budget,
+    resources_only: bool,
+) -> Result<(FontSet, Report)> {
     let mut set = FontSet {
         source_format: Some("nfnt".into()),
         ..FontSet::default()
     };
     let mut report = Report::default();
-    let fork = if b.starts_with(&[0, 5, 0x16, 0]) || b.starts_with(&[0, 5, 0x16, 7]) {
+    let binhex_fork;
+    let fork = if super::binhex::signature(b) {
+        binhex_fork = super::binhex::decode(b, &mut set, budget, l)?;
+        &binhex_fork[..]
+    } else if b.starts_with(&[0, 5, 0x16, 0]) || b.starts_with(&[0, 5, 0x16, 7]) {
         let version = u32be(b, 4)?;
         if ![0x10000, 0x20000].contains(&version) {
             return Err(invalid("unsupported AppleSingle/Double version"));
@@ -280,10 +329,13 @@ pub(super) fn parse(
     } else if fork_signature(b) {
         b
     } else {
+        if resources_only {
+            return Err(invalid("expected native resource-fork envelope"));
+        }
         set.fonts.push(raster::parse(b, o, l, budget)?);
         return Ok((set, report));
     };
-    parse_fork(fork, o, l, budget, &mut set, &mut report)?;
+    parse_fork(fork, o, l, budget, &mut set, &mut report, resources_only)?;
     Ok((set, report))
 }
 fn nonzero_gaps(
@@ -381,6 +433,7 @@ fn parse_fork(
     budget: &mut Budget,
     set: &mut FontSet,
     report: &mut Report,
+    resources_only: bool,
 ) -> Result<()> {
     let da = u32be(b, 0)? as usize;
     let ma = u32be(b, 4)? as usize;
@@ -473,6 +526,18 @@ fn parse_fork(
     ranges(&mut data_ranges)?;
     nonzero_gaps(map, &refs, budget, report, "map_padding")?;
     nonzero_gaps(data, &data_ranges, budget, report, "resource_padding")?;
+    if resources_only {
+        for resource in &res {
+            let len = 13 + resource.name.map_or(0, <[u8]>::len) + resource.data.len();
+            check(len, l.max_table_bytes, "native retained resource")?;
+            budget.add(len + 256)?;
+            let mut raw = resource.metadata();
+            raw.extend_from_slice(resource.data);
+            set.properties
+                .push(Property::new("nfnt.resource", PropertyValue::Bytes(raw)));
+        }
+        return Ok(());
+    }
     let mut associations = BTreeMap::new();
     for (idx, r) in res.iter().enumerate().filter(|(_, r)| r.kind == *b"FOND") {
         slice(r.data, 0, 54)?;

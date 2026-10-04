@@ -1,0 +1,107 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "build",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "beos,geos,gpi,oberon,pcgeos,symbos,vtfont,wsfont",
+      "--example",
+      "w5b_timing"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 1.6616923809051514,
+    "stdout": "",
+    "stderr": "   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)\n    Finished `dev` profile [unoptimized] target(s) in 1.63s\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "9ed2b3c1d4a399339ae9b7f3964a826f64128498d7f8d9766a5f50d1fae61174"
+  },
+  {
+    "argv": [
+      "python3",
+      "tests/crosscheck/w5b.py"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 16.426647424697876,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "python3",
+      "fuzz/seed_w5b.py",
+      "--root",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.03330564498901367,
+    "stdout": "",
+    "stderr": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/vtfont",
+      "-runs=0",
+      "-timeout=2",
+      "-rss_limit_mb=1024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/vtfont"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.03309965133666992,
+    "stdout": "",
+    "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 3553664175\nINFO: Loaded 1 modules   (18819 inline 8-bit counters): 18819 [0x62c4b5c45df0, 0x62c4b5c4a773), \nINFO: Loaded 1 PC tables (18819 PCs): 18819 [0x62c4b5c4a778,0x62c4b5c93fa8), \nINFO:       28 files found in /home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/vtfont\nINFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes\nINFO: seed corpus: files: 28 min: 1b max: 92b total: 1022b rss: 33Mb\n#29\tINITED cov: 1476 ft: 2548 corp: 8/410b exec/s: 0 rss: 37Mb\n#29\tDONE   cov: 1476 ft: 2548 corp: 8/410b lim: 92 exec/s: 0 rss: 37Mb\nDone 29 runs in 0 second(s)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "161c6c60364eec5534482245dd68d21a3aebe71ef3bf6cb46d88f6542635a342"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/geos",
+      "-runs=0",
+      "-timeout=2",
+      "-rss_limit_mb=1024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/geos"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.043218135833740234,
+    "stdout": "",
+    "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 3587376637\nINFO: Loaded 1 modules   (20315 inline 8-bit counters): 20315 [0x557bb6f0fd50, 0x557bb6f14cab), \nINFO: Loaded 1 PC tables (20315 PCs): 20315 [0x557bb6f14cb0,0x557bb6f64260), \nINFO:       98 files found in /home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/geos\nINFO: -max_len is not provided; libFuzzer will not generate inputs larger than 11430 bytes\nINFO: seed corpus: files: 98 min: 1b max: 11430b total: 153502b rss: 34Mb\n#99\tINITED cov: 2017 ft: 2544 corp: 23/83Kb exec/s: 0 rss: 48Mb\n#99\tDONE   cov: 2017 ft: 2544 corp: 23/83Kb lim: 11429 exec/s: 0 rss: 48Mb\nDone 99 runs in 0 second(s)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "51a7deff0ebd0809de41c3c91f5617695bc26929f85ca52adb34109987c5069b"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/gpi",
+      "-runs=0",
+      "-timeout=2",
+      "-rss_limit_mb=1024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/gpi"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.03519463539123535,
+    "stdout": "",
+    "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 3630795902\nINFO: Loaded 1 modules   (18601 inline 8-bit counters): 18601 [0x5a009e02db30, 0x5a009e0323d9), \nINFO: Loaded 1 PC tables (18601 PCs): 18601 [0x5a009e0323e0,0x5a009e07ae70), \nINFO:       77 files found in /home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/gpi\nINFO: -max_len is not provided; libFuzzer will not generate inputs larger than 12288 bytes\nINFO: seed corpus: files: 77 min: 1b max: 12288b total: 99638b rss: 34Mb\n#78\tINITED cov: 1607 ft: 2125 corp: 24/57Kb exec/s: 0 rss: 42Mb\n#78\tDONE   cov: 1607 ft: 2125 corp: 24/57Kb lim: 12287 exec/s: 0 rss: 42Mb\nDone 78 runs in 0 second(s)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "21788c231c84a912274712c9fbf9e66cb7a5af2b7d9f5991b6ef17630fd97c50"
+  },
+  {
+    "argv": [
+      "/home/chen/githubprojects/fontpixel/local-work/target-w5b-fuzz/x86_64-unknown-linux-gnu/release/pcgeos",
+      "-runs=0",
+      "-timeout=2",
+      "-rss_limit_mb=1024",
+      "/home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/pcgeos"
+    ],
+    "exit": 0,
+    "elapsed_seconds": 0.02992701530456543,
+    "stdout": "",
+    "stderr": "INFO: Running with entropic power schedule (0xFF, 100).\nINFO: Seed: 3666301429\nINFO: Loaded 1 modules   (17154 inline 8-bit counters): 17154 [0x5d0ec693bf80, 0x5d0ec6940282), \nINFO: Loaded 1 PC tables (17154 PCs): 17154 [0x5d0ec6940288,0x5d0ec69832a8), \nINFO:       28 files found in /home/chen/githubprojects/fontpixel/local-work/w5b-final-corpus/pcgeos\nINFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes\nINFO: seed corpus: files: 28 min: 1b max: 496b total: 2907b rss: 33Mb\n#29\tINITED cov: 1417 ft: 2007 corp: 9/1446b exec/s: 0 rss: 37Mb\n#29\tDONE   cov: 1417 ft: 2007 corp: 9/1446b lim: 496 exec/s: 0 rss: 37Mb\nDone 29 runs in 0 second(s)\n",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "af67e871a3e3ae479980ba6c61e9b5ce543d694ec51b39e41f572d9692c932a8"
+  }
+]

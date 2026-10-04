@@ -102,6 +102,7 @@ fn all_encodings_multipage_semantic_roundtrip() {
         BmfontEncoding::Text,
         BmfontEncoding::Xml,
         BmfontEncoding::Binary,
+        BmfontEncoding::Json,
     ] {
         let o = BmfontWriteOptions {
             encoding,
@@ -324,6 +325,7 @@ fn kerning_records_survive_every_descriptor_encoding() {
         BmfontEncoding::Text,
         BmfontEncoding::Xml,
         BmfontEncoding::Binary,
+        BmfontEncoding::Json,
     ] {
         let out = bmfont::write(
             &f,
@@ -368,4 +370,231 @@ fn diagnostic_asset_names_share_the_total_budget() {
         codec.read(&mut context, &ReadOptions::default()),
         Err(fontpixel::Error::ResourceLimit { .. })
     ));
+}
+
+fn json_fixture() -> serde_json::Value {
+    serde_json::json!({"info":{"face":"Original \"JSON\" 字", "size":8,"unicode":true,"padding":[0,0,0,0],"spacing":[0,0]},"common":{"lineHeight":9,"base":7,"scaleW":1,"scaleH":1,"pages":1},"pages":["page.png"],"chars":[{"id":90,"x":0,"y":0,"width":1,"height":1,"xoffset":-2,"yoffset":8,"xadvance":4,"page":0,"chnl":15},{"id":65,"x":0,"y":0,"width":1,"height":1,"xoffset":3,"yoffset":2,"xadvance":5,"page":0,"chnl":15}],"kernings":[{"first":90,"second":65,"amount":-1}]})
+}
+fn read_json(bytes: &[u8], limits: &ResourceLimits) -> Result<Font> {
+    let pages = Pages([("page.png".into(), png(png::ColorType::Grayscale, &[173]))].into());
+    let input = Input::new(bytes).with_resources(&pages);
+    bmfont::read(&mut ReadContext::new(&input, limits)?, &Default::default()).map(|v| v.0)
+}
+#[test]
+fn json_order_coordinates_unicode_and_weak_probe() {
+    use fontpixel::formats::Confidence;
+    let bytes = serde_json::to_vec(&json_fixture()).unwrap();
+    assert_eq!(bmfont::detect(&bytes), Confidence::Possible);
+    let mut long = json_fixture();
+    long["info"]["face"] = serde_json::json!("X");
+    let short = serde_json::to_vec(&long).unwrap();
+    let start = short.windows(3).position(|v| v == b"\"X\"").unwrap() + 1;
+    long["info"]["face"] = serde_json::json!(format!("{}字", "x".repeat(8191 - start)));
+    let long = serde_json::to_vec(&long).unwrap();
+    assert_eq!(&long[8191..8194], "字".as_bytes());
+    assert_eq!(bmfont::detect(&long), Confidence::Possible);
+    assert!(read_json(&long, &Default::default()).is_ok());
+    let f = read_json(&bytes, &Default::default()).unwrap();
+    assert_eq!(f.names.family.as_deref(), Some("Original \"JSON\" 字"));
+    let glyphs: Vec<_> = f
+        .glyphs()
+        .map(|(_, g)| {
+            (
+                g.codepoints.clone(),
+                g.metrics.bounds.x,
+                g.metrics.bounds.y,
+                g.metrics.advance.unwrap().x,
+                g.bitmap.as_bytes().to_vec(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        glyphs,
+        vec![
+            (vec![Codepoint::Unicode(90)], -2, -2, 4, vec![173]),
+            (vec![Codepoint::Unicode(65)], 3, 4, 5, vec![173])
+        ]
+    );
+    let mut bom = b"\xef\xbb\xbf  \n".to_vec();
+    bom.extend(&bytes);
+    assert_eq!(read_json(&bom, &Default::default()).unwrap(), f);
+    for bytes in [
+        b"{}".as_slice(),
+        b"{\"info\":{},\"common\":{},\"pages\":[],\"chars\":[",
+        b"{\"info\":{},\"common\":{},\"pages\":{},\"chars\":[]}",
+        b"{\"info\":{},\"common\":{},\"pages\":[],\"chars\":[]} junk",
+    ] {
+        assert_eq!(bmfont::detect(bytes), Confidence::NoMatch);
+    }
+}
+#[test]
+fn json_rejects_duplicate_keys_bad_types_and_resource_excess() {
+    let good = serde_json::to_string(&json_fixture()).unwrap();
+    assert!(
+        read_json(
+            good.replacen("{", "{\"info\":{},", 1).as_bytes(),
+            &Default::default()
+        )
+        .is_err()
+    );
+    for (field, value) in [
+        ("padding", serde_json::json!([1, 2, 3])),
+        ("spacing", serde_json::json!([1, 2, 3])),
+        ("face", serde_json::json!({"nested":1})),
+        ("size", serde_json::json!(1.5)),
+    ] {
+        let mut j = json_fixture();
+        j["info"][field] = value;
+        assert!(read_json(&serde_json::to_vec(&j).unwrap(), &Default::default()).is_err());
+    }
+    for limits in [
+        ResourceLimits {
+            max_glyphs: 1,
+            ..Default::default()
+        },
+        ResourceLimits {
+            max_resources: 0,
+            ..Default::default()
+        },
+        ResourceLimits {
+            max_table_bytes: 10,
+            ..Default::default()
+        },
+        ResourceLimits {
+            max_total_bytes: 5000,
+            ..Default::default()
+        },
+    ] {
+        assert!(matches!(
+            read_json(good.as_bytes(), &limits),
+            Err(fontpixel::Error::ResourceLimit { .. })
+        ));
+    }
+    let bad = good.replace("\"chars\":[", "\"chars\":[null,");
+    assert!(read_json(bad.as_bytes(), &Default::default()).is_err());
+    let mut j = json_fixture();
+    j["pages"][0] = serde_json::json!("../page.png");
+    assert!(read_json(&serde_json::to_vec(&j).unwrap(), &Default::default()).is_err());
+    let nested = format!("{{\"info\":{}1{}}}", "[".repeat(30), "]".repeat(30));
+    assert!(matches!(
+        read_json(nested.as_bytes(), &Default::default()),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+#[test]
+fn json_unknown_scalar_types_survive_and_other_metadata_is_audited() {
+    let mut j = json_fixture();
+    j["info"]["vendorText"] = serde_json::json!("17");
+    j["info"]["vendorNumber"] = serde_json::json!(17);
+    j["info"]["vendorBool"] = serde_json::json!(true);
+    j["info"]["vendorArray"] = serde_json::json!([17, -2]);
+    j["info"]["vendorEmpty"] = serde_json::json!([]);
+    j["common"]["vendorCommon"] = serde_json::json!("retained until repacking");
+    let f = read_json(&serde_json::to_vec(&j).unwrap(), &Default::default()).unwrap();
+    let o = BmfontWriteOptions {
+        encoding: BmfontEncoding::Json,
+        page_width: 4,
+        page_height: 4,
+        ..Default::default()
+    };
+    let first = bmfont::write(&f, &ResourcePath::new("types.fnt").unwrap(), &o).unwrap();
+    assert!(
+        first
+            .report
+            .entries
+            .iter()
+            .any(|e| e.code == "bmfont.properties")
+    );
+    let bytes = &first
+        .output
+        .assets()
+        .iter()
+        .find(|a| &a.path == first.output.primary())
+        .unwrap()
+        .bytes;
+    let parsed: serde_json::Value = serde_json::from_slice(bytes).unwrap();
+    for key in [
+        "vendorText",
+        "vendorNumber",
+        "vendorBool",
+        "vendorArray",
+        "vendorEmpty",
+    ] {
+        assert_eq!(parsed["info"][key], j["info"][key]);
+    }
+    let native = load(&first.output);
+    let second = bmfont::write(&native, &ResourcePath::new("types.fnt").unwrap(), &o).unwrap();
+    assert!(!second.report.has_loss(), "{}", second.report);
+    assert_eq!(first.output, second.output);
+    let limits = ResourceLimits {
+        max_input_bytes: 64,
+        ..Default::default()
+    };
+    assert!(matches!(
+        bmfont::write(
+            &native,
+            &ResourcePath::new("types.fnt").unwrap(),
+            &BmfontWriteOptions { limits, ..o }
+        ),
+        Err(fontpixel::Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
+fn json_codec_strict_rejects_glyph_metadata_loss() {
+    use fontpixel::formats::{FormatReader, FormatWriter, ReadOptions, WriteOptions};
+    let options = BmfontWriteOptions {
+        encoding: BmfontEncoding::Json,
+        page_width: 8,
+        page_height: 8,
+        ..Default::default()
+    };
+    let w = bmfont::write(&font(), &ResourcePath::new("font.fnt").unwrap(), &options).unwrap();
+    let primary = &w
+        .output
+        .assets()
+        .iter()
+        .find(|a| &a.path == w.output.primary())
+        .unwrap()
+        .bytes;
+    let pages = Pages(
+        w.output
+            .assets()
+            .iter()
+            .map(|a| (a.path.as_str().into(), a.bytes.clone()))
+            .collect(),
+    );
+    let input = Input::new(primary).with_resources(&pages);
+    let limits = ResourceLimits::default();
+    let codec = bmfont::BmfontCodec {
+        write_options: options,
+        ..Default::default()
+    };
+    let (mut s, _) = codec
+        .read(
+            &mut ReadContext::new(&input, &limits).unwrap(),
+            &ReadOptions::default(),
+        )
+        .unwrap();
+    let mut o = WriteOptions::new(ResourcePath::new("font.fnt").unwrap());
+    o.strict = true;
+    assert!(codec.write(&s, &o).is_ok());
+    let id = s.fonts[0].glyphs().next().unwrap().0;
+    s.fonts[0]
+        .edit_glyph(id, |g| {
+            g.name = Some("unrepresented".into());
+            g.unicode_sequences.push(vec![65, 0x301]);
+            Ok(())
+        })
+        .unwrap();
+    let e = codec.write(&s, &o).unwrap_err();
+    assert!(matches!(e, fontpixel::Error::StrictLoss(_)));
+    let report = e.report().unwrap();
+    assert!(report.entries.iter().any(|e| e.code == "bmfont.glyph_name"));
+    assert!(
+        report
+            .entries
+            .iter()
+            .any(|e| e.code == "bmfont.unicode_sequences")
+    );
 }

@@ -1,0 +1,40 @@
+{
+  "artifacts": [
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-artifacts/fontpixel",
+      "bytes": 13103232,
+      "sha256": "ffe0d07c51dad7d8cd645e95267d2ac002e31735f29c0973944ef810f5ff1778"
+    },
+    {
+      "path": "/home/chen/githubprojects/fontpixel/local-work/phase5-artifacts/fontpixel.gz",
+      "bytes": 5634032,
+      "sha256": "88c7f33812156010b814dc82cf2591ccf0c56d16fcdc305aadd7bc6633e1a8ad"
+    }
+  ],
+  "checks": {
+    "version": {
+      "exit_code": 0,
+      "sha256": "3048f2c7325f430c40bacc53787aa45067c24db0133389ae0c881ec9f2eab8dc"
+    },
+    "formats": {
+      "exit_code": 0,
+      "sha256": "783ffa56d6c58196af206007a1d04c6be4ebdd481b3abcf3b4412d1244035b18"
+    },
+    "help": {
+      "exit_code": 0,
+      "sha256": "9a4d7ffec93bc3c514a4938ac6b4f2bc4cb5f54dc038d23aa719fad503b7454c"
+    }
+  },
+  "unstripped": {
+    "bytes": 14548640,
+    "sha256": "e043aa4ca7ae69571b1065474f1b0a3e7cc409b47a5489be137d72c287995b43"
+  },
+  "build_evidence": "phase5-cli-release-confirmed.json.gz",
+  "platform": "Linux x86-64",
+  "dynamic_libraries": "\tlinux-vdso.so.1 (0x0000704d0dba8000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000704d0db55000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000704d0cd17000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000704d0ca00000)\n\t/lib64/ld-linux-x86-64.so.2 (0x0000704d0dbaa000)\n",
+  "strip_command": [
+    "strip",
+    "fontpixel"
+  ],
+  "gzip_mtime": 0
+}

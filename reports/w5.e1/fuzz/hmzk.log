@@ -1,0 +1,61 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 11.79s
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 11.41s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5e1/x86_64-unknown-linux-gnu/release/hmzk_bitmap -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/hmzk_bitmap/ -max_total_time=12 -timeout=3 -rss_limit_mb=1024 /home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 716735355
+INFO: Loaded 1 modules   (12860 inline 8-bit counters): 12860 [0x55fede9763f0, 0x55fede97962c), 
+INFO: Loaded 1 PC tables (12860 PCs): 12860 [0x55fede979630,0x55fede9ab9f0), 
+INFO:        2 files found in /home/chen/githubprojects/fontpixel/local-work/w5e1-corpus/hmzk_bitmap
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes
+INFO: seed corpus: files: 2 min: 42b max: 84b total: 126b rss: 33Mb
+#3	INITED cov: 725 ft: 745 corp: 2/126b exec/s: 0 rss: 35Mb
+#6	REDUCE cov: 725 ft: 745 corp: 2/110b lim: 84 exec/s: 0 rss: 35Mb L: 26/84 MS: 3 ChangeBinInt-ShuffleBytes-EraseBytes-
+#11	REDUCE cov: 727 ft: 747 corp: 3/170b lim: 84 exec/s: 0 rss: 35Mb L: 60/84 MS: 5 ChangeByte-CrossOver-ChangeBit-CopyPart-CrossOver-
+#18	NEW    cov: 730 ft: 750 corp: 4/245b lim: 84 exec/s: 0 rss: 36Mb L: 75/84 MS: 2 CrossOver-ChangeByte-
+#43	REDUCE cov: 730 ft: 750 corp: 4/223b lim: 84 exec/s: 0 rss: 36Mb L: 53/84 MS: 5 ShuffleBytes-ChangeByte-InsertRepeatedBytes-ShuffleBytes-EraseBytes-
+#56	REDUCE cov: 730 ft: 750 corp: 4/219b lim: 84 exec/s: 0 rss: 37Mb L: 49/84 MS: 3 CopyPart-ShuffleBytes-CrossOver-
+#61	REDUCE cov: 730 ft: 750 corp: 4/208b lim: 84 exec/s: 0 rss: 37Mb L: 38/84 MS: 5 ShuffleBytes-ChangeBit-InsertRepeatedBytes-CMP-EraseBytes- DE: "\377\377\377\377\377\377\377;"-
+#83	REDUCE cov: 730 ft: 750 corp: 4/200b lim: 84 exec/s: 0 rss: 38Mb L: 18/84 MS: 2 EraseBytes-InsertByte-
+#84	REDUCE cov: 730 ft: 750 corp: 4/177b lim: 84 exec/s: 0 rss: 38Mb L: 37/84 MS: 1 EraseBytes-
+#88	REDUCE cov: 730 ft: 750 corp: 4/163b lim: 84 exec/s: 0 rss: 38Mb L: 23/84 MS: 4 CopyPart-InsertByte-PersAutoDict-CrossOver- DE: "\377\377\377\377\377\377\377;"-
+#89	REDUCE cov: 730 ft: 750 corp: 4/161b lim: 84 exec/s: 0 rss: 38Mb L: 16/84 MS: 1 EraseBytes-
+#148	NEW    cov: 732 ft: 752 corp: 5/173b lim: 84 exec/s: 0 rss: 39Mb L: 12/84 MS: 4 ChangeASCIIInt-EraseBytes-CopyPart-CrossOver-
+#229	REDUCE cov: 732 ft: 752 corp: 5/167b lim: 84 exec/s: 0 rss: 40Mb L: 32/84 MS: 1 EraseBytes-
+#251	REDUCE cov: 732 ft: 752 corp: 5/166b lim: 84 exec/s: 0 rss: 40Mb L: 31/84 MS: 2 InsertByte-EraseBytes-
+#283	REDUCE cov: 732 ft: 752 corp: 5/162b lim: 84 exec/s: 0 rss: 41Mb L: 19/84 MS: 2 InsertRepeatedBytes-EraseBytes-
+#297	REDUCE cov: 732 ft: 752 corp: 5/149b lim: 84 exec/s: 0 rss: 41Mb L: 18/84 MS: 4 ChangeBit-ChangeByte-ChangeBinInt-EraseBytes-
+#333	REDUCE cov: 732 ft: 752 corp: 5/143b lim: 84 exec/s: 0 rss: 42Mb L: 12/84 MS: 1 CrossOver-
+#349	REDUCE cov: 732 ft: 752 corp: 5/137b lim: 84 exec/s: 0 rss: 42Mb L: 6/84 MS: 1 EraseBytes-
+#412	REDUCE cov: 732 ft: 752 corp: 5/134b lim: 84 exec/s: 0 rss: 42Mb L: 9/84 MS: 3 CMP-ShuffleBytes-EraseBytes- DE: "\000\000\000\374"-
+#480	REDUCE cov: 732 ft: 752 corp: 5/132b lim: 84 exec/s: 0 rss: 43Mb L: 4/84 MS: 3 ChangeBit-CopyPart-EraseBytes-
+#511	REDUCE cov: 733 ft: 753 corp: 6/134b lim: 84 exec/s: 0 rss: 43Mb L: 2/84 MS: 1 EraseBytes-
+#562	NEW    cov: 740 ft: 761 corp: 7/136b lim: 84 exec/s: 0 rss: 43Mb L: 2/84 MS: 1 CMP- DE: "\037\213"-
+#684	REDUCE cov: 740 ft: 761 corp: 7/134b lim: 84 exec/s: 0 rss: 44Mb L: 17/84 MS: 2 PersAutoDict-EraseBytes- DE: "\037\213"-
+#686	NEW    cov: 741 ft: 762 corp: 8/135b lim: 84 exec/s: 0 rss: 44Mb L: 1/84 MS: 2 ShuffleBytes-EraseBytes-
+#917	REDUCE cov: 741 ft: 762 corp: 8/134b lim: 84 exec/s: 0 rss: 44Mb L: 16/84 MS: 1 EraseBytes-
+	NEW_FUNC[1/4]: 0x55fede8abf40 in <fontpixel::formats::legacy_common::Budget>::loss::<&str> /home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel/src/formats/gem/common.rs:293
+	NEW_FUNC[2/4]: 0x55fede8b7510 in core::ptr::drop_glue::<alloc::vec::Vec<fontpixel::resources::OutputAsset>> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/core/src/ptr/mod.rs:828
+#1051	NEW    cov: 802 ft: 849 corp: 9/218b lim: 84 exec/s: 0 rss: 45Mb L: 84/84 MS: 4 ShuffleBytes-ChangeBit-ChangeByte-CopyPart-
+#1207	REDUCE cov: 802 ft: 849 corp: 9/217b lim: 84 exec/s: 0 rss: 46Mb L: 1/84 MS: 1 EraseBytes-
+#1453	REDUCE cov: 802 ft: 849 corp: 9/213b lim: 84 exec/s: 0 rss: 47Mb L: 5/84 MS: 1 EraseBytes-
+#2816	REDUCE cov: 802 ft: 849 corp: 9/212b lim: 96 exec/s: 0 rss: 51Mb L: 4/84 MS: 3 EraseBytes-CopyPart-CMP- DE: "HMZK"-
+#3378	NEW    cov: 807 ft: 1046 corp: 10/296b lim: 96 exec/s: 0 rss: 52Mb L: 84/84 MS: 2 ChangeByte-CrossOver-
+	NEW_FUNC[1/1]: 0x55fede8bf2f0 in core::ptr::drop_glue::<fontpixel::report::Report> /rustc/1a833e16546c2eb012758ddd499964fd8afee29e/library/core/src/ptr/mod.rs:828
+#7734	REDUCE cov: 830 ft: 1231 corp: 11/312b lim: 139 exec/s: 0 rss: 59Mb L: 16/84 MS: 1 ChangeBinInt-
+#16665	NEW    cov: 831 ft: 1234 corp: 12/396b lim: 223 exec/s: 16665 rss: 71Mb L: 84/84 MS: 3 ShuffleBytes-ChangeByte-ShuffleBytes-
+#41593	NEW    cov: 837 ft: 1253 corp: 13/480b lim: 466 exec/s: 41593 rss: 100Mb L: 84/84 MS: 3 ChangeASCIIInt-ChangeBinInt-ShuffleBytes-
+#131072	pulse  cov: 837 ft: 1253 corp: 13/480b lim: 1347 exec/s: 65536 rss: 385Mb
+#262144	pulse  cov: 837 ft: 1253 corp: 13/480b lim: 2651 exec/s: 65536 rss: 413Mb
+#524288	pulse  cov: 837 ft: 1253 corp: 13/480b lim: 4096 exec/s: 65536 rss: 413Mb
+#854998	DONE   cov: 837 ft: 1253 corp: 13/480b lim: 4096 exec/s: 65769 rss: 413Mb
+###### Recommended dictionary. ######
+"\377\377\377\377\377\377\377;" # Uses: 18792
+"\000\000\000\374" # Uses: 18932
+"\037\213" # Uses: 19270
+"HMZK" # Uses: 19118
+###### End of recommended dictionary. ######
+Done 854998 runs in 13 second(s)

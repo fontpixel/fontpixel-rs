@@ -1,0 +1,7 @@
+# Daisy-Dot I/II, III and magnified fonts
+
+Primary source: [Daisy-Dot III manual, Part IV §§2–4](https://archive.org/stream/daisydotiiii/Daisy%20Dot%20III_djvu.txt). The MIT monobit Daisy reader is the independent oracle and an attributed interoperability reference.
+
+I/II starts `DAISY-DOT NLQ FONT` followed by byte 155; 91 slots cover codes 32–124 excluding 96/123. Each record has width 1–19, two vertical eight-pin passes (interleaved into 16 rows), and byte 155. III starts `3,155`, omits the space raster, and uses width 1–32 with bit 6 selecting four passes/32 rows. Its final three bytes are height-minus-one, underline row and space width. `B,155` magnified files hold successive 32-row slices, up to four files; the primary `.nlq` determines total height, and `.nl2`–`.nl4` continue the same width table. Sidecars are resolved only through ReadContext and written through OutputBundle.
+
+Codes remain legacy. Advance is raster width plus one. The III baseline is inferred from underline-minus-one, matching the documented underline placement; I/II uses bottom-aligned 16-row cells and line height 20. Original bytes and parameters are retained. The manual forbids graphics bytes 13 and 155: reads retain these with diagnostics, and new writes require explicit permission to emit them. Unsupported metrics, names, codes, range padding, normalized cells, aliases and original-property changes are audited as Loss. The native reader/writer support every variant; output must reread under identical aggregate limits.

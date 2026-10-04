@@ -8,7 +8,7 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 #[derive(Args, Default)]
 #[group(skip)]
 pub(super) struct ReadArguments {
-    /// Explicit raw layout preset (VGA, C64, Spectrum, CH8 or MSX).
+    /// Explicit raw layout preset (VGA, C64, Spectrum, CH8, MSX or Harlekin).
     #[arg(long)]
     raw_preset: Option<String>,
     /// Raw glyph width; overrides a selected preset.
@@ -29,6 +29,15 @@ pub(super) struct ReadArguments {
     /// Raw row order (default top-down).
     #[arg(long, value_parser = ["top-down", "bottom-up"])]
     raw_row_order: Option<String>,
+    /// Raw alignment: byte-aligned rows or continuous packed bits.
+    #[arg(long, value_parser = ["byte-rows", "bit-aligned"])]
+    raw_packing: Option<String>,
+    /// Row-major or byte-column-major storage within each horizontal strip.
+    #[arg(long, value_parser = ["row-major", "column-major"])]
+    raw_byte_order: Option<String>,
+    /// Glyph cells placed side by side in each raw horizontal strip (default 1).
+    #[arg(long)]
+    raw_strike_count: Option<usize>,
     /// Extra padding bytes after every raw row.
     #[arg(long)]
     raw_row_padding: Option<usize>,
@@ -54,6 +63,9 @@ impl ReadArguments {
             || self.raw_first.is_some()
             || self.raw_bit_order.is_some()
             || self.raw_row_order.is_some()
+            || self.raw_packing.is_some()
+            || self.raw_byte_order.is_some()
+            || self.raw_strike_count.is_some()
             || self.raw_row_padding.is_some()
             || self.raw_offset.is_some()
             || self.raw_default_load_address.is_some()
@@ -62,7 +74,7 @@ impl ReadArguments {
     #[cfg(feature = "raw")]
     fn layout(&self) -> Result<Option<fontpixel::formats::raw::RawLayout>> {
         use fontpixel::bitmap::{BitOrder, RowOrder};
-        use fontpixel::formats::raw::{RawLayout, RawPreset};
+        use fontpixel::formats::raw::{RawByteOrder, RawLayout, RawPacking, RawPreset};
         if !self.raw_requested() {
             return Ok(None);
         }
@@ -110,6 +122,28 @@ impl ReadArguments {
         }
         if let Some(padding) = self.raw_row_padding {
             layout.row_padding = padding;
+        }
+        if let Some(packing) = &self.raw_packing {
+            layout.packing = if packing == "bit-aligned" {
+                RawPacking::BitAligned
+            } else {
+                RawPacking::ByteAlignedRows
+            };
+        }
+        if let Some(order) = &self.raw_byte_order {
+            layout.byte_order = if order == "column-major" {
+                RawByteOrder::ColumnMajor
+            } else {
+                RawByteOrder::RowMajor
+            };
+        }
+        if let Some(count) = self.raw_strike_count {
+            if count == 0 {
+                return Err(Error::InvalidInput(
+                    "raw strip glyph count must be positive".into(),
+                ));
+            }
+            layout.strike_count = count;
         }
         if let Some(offset) = self.raw_offset {
             layout.offset = offset;

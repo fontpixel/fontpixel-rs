@@ -1,0 +1,78 @@
+{
+  "fuzz/corpus/pilfont_bitmap/gray-and-blank": {
+    "bytes": 5268,
+    "sha256": "1bf8303a4a055cfa34a0225728f81dd8e30b5c4b2e4b8e58a77ffac1f9a6ec72"
+  },
+  "fuzz/corpus/pilfont_bitmap/bare-metrics": {
+    "bytes": 5160,
+    "sha256": "212ad81d2114e0b5291ff363d38d9514006d6d0630287afaae4cf23844e2144e"
+  },
+  "fuzz/corpus/pilfont_bitmap/truncated": {
+    "bytes": 2634,
+    "sha256": "74638320f92d1cea226aee24c2aeb1014b6f34a85622d2fba86f02966c68ea30"
+  },
+  "fuzz/corpus/pilfont_bitmap/empty": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "fuzz/corpus/imageset_bitmap/two-labels": {
+    "bytes": 179,
+    "sha256": "d08725b4bcde758f4831e53e02305ee1b3a024c433eec7cc9df5748a2e38a5a6"
+  },
+  "fuzz/corpus/imageset_bitmap/duplicate": {
+    "bytes": 179,
+    "sha256": "fd79bebc41c485b7cf19673ac4b31fa00be15a020833a8611d6fd7110451b2c2"
+  },
+  "fuzz/corpus/imageset_bitmap/truncated": {
+    "bytes": 89,
+    "sha256": "04e26a14e0812cf69bd1a7b3f45eed4629bd8e36cc9b04d5cf6a03ea39837e46"
+  },
+  "fuzz/corpus/imageset_bitmap/empty": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "fuzz/corpus/vlw_bitmap/version8": {
+    "bytes": 120,
+    "sha256": "701695ff56077a57bbfa2a26fc40b2a9cc1a885565bd74a2f35a7866bd0edb3c"
+  },
+  "fuzz/corpus/vlw_bitmap/version9": {
+    "bytes": 120,
+    "sha256": "cbe0df2206f44a8d9da326e4e7ff0e695f9ece7d29c5314c2bad63329d8939a4"
+  },
+  "fuzz/corpus/vlw_bitmap/version10": {
+    "bytes": 150,
+    "sha256": "09555e6a60aa51e1f4350395cfb3a93680284e5e5b7413783a06bce0ce92bb4c"
+  },
+  "fuzz/corpus/vlw_bitmap/version11": {
+    "bytes": 151,
+    "sha256": "d807d0b86608a416cec8996e29f0b2a24d27297fdc745c428dd4dfeb30215f86"
+  },
+  "fuzz/corpus/vlw_bitmap/truncated": {
+    "bytes": 60,
+    "sha256": "c6bc43c189abef082c2fa097d09bde4f3f27d8480b4b5804399a70b8a96bdc3f"
+  },
+  "fuzz/corpus/vlw_bitmap/empty": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "fuzz/corpus/sfont_bitmap/sfont-two": {
+    "bytes": 94,
+    "sha256": "127c68a4ac4433dc4c6ba9444c0543c759c3fa3c815479cfec9d8448f1242be8"
+  },
+  "fuzz/corpus/sfont_bitmap/rfont-v1": {
+    "bytes": 525,
+    "sha256": "497a5fec441ceda9c7936fcd786e350bdf6600f14b6e5bbd24942aec2a860e13"
+  },
+  "fuzz/corpus/sfont_bitmap/rfont-v2": {
+    "bytes": 559,
+    "sha256": "ecef3378fb2c18cc83eb1bc609ee64190ae7805fb55769e9e4465d2d1a11fa3e"
+  },
+  "fuzz/corpus/sfont_bitmap/truncated": {
+    "bytes": 47,
+    "sha256": "af3671971a35aa733886ce848b4b4284e7f2e6f2de673848f95a36d2443f1f04"
+  },
+  "fuzz/corpus/sfont_bitmap/empty": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

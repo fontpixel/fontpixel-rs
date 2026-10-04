@@ -1,0 +1,79 @@
+[
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/lisa-consumer-build.log",
+    "original_bytes": 359,
+    "original_sha256": "40b1a4151e02a3094c83e84e34c0166bd4993de5ccb4f7c50e370c3c700df344",
+    "archived_path": "reports/w5.d/external-logs/lisa-consumer-build.log.gz",
+    "archive_sha256": "4fa2d2c939b6c9396e2180f2532213b7442594ee31ca100fe0f3a91a5c3f7e8e"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt-consumer-build-final.log",
+    "original_bytes": 0,
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archived_path": "reports/w5.d/external-logs/qt-consumer-build-final.log.gz",
+    "archive_sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt-consumer-build.log",
+    "original_bytes": 742,
+    "original_sha256": "9e69669f08543bd65372e83eba3a90f5a96261d27242010886aacd668207f9ab",
+    "archived_path": "reports/w5.d/external-logs/qt-consumer-build.log.gz",
+    "archive_sha256": "292d7bae5d11979684191c1efecf4ee7cb8defce458ba0b316830cb4151ba24b"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-bootstrap-compat.log",
+    "original_bytes": 63018,
+    "original_sha256": "ec1aa983ccda2bc499db49c2404673021b1e81c436ca282f442c1862b7803c0a",
+    "archived_path": "reports/w5.d/external-logs/qt4-bootstrap-compat.log.gz",
+    "archive_sha256": "44f3b8e536f5c3bbb3fdb76ba8ef024955468a95290dd59a26d5352d8f324be1"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build-64.log",
+    "original_bytes": 9514622,
+    "original_sha256": "a59c744d17814e1e0f30ae97b2bbeec6ee8e4a76d635d519aee67a94eacc0a08",
+    "archived_path": "reports/w5.d/external-logs/qt4-build-64.log.gz",
+    "archive_sha256": "1361ad99c35600e35b871fb1c9d416111eb836e4282787d5c022d9b740bfe8a2"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build-compat.log",
+    "original_bytes": 730107,
+    "original_sha256": "5b35c6d2d61f5ab63840bc8ca8bfb7cba293543995f85c1948f1d36903c197b7",
+    "archived_path": "reports/w5.d/external-logs/qt4-build-compat.log.gz",
+    "archive_sha256": "1e3093522f708de2dffc4cf6fe473a4599f8bd0c30d7c07cdfd6152ee2f1d843"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build-dialogless.log",
+    "original_bytes": 14080054,
+    "original_sha256": "b0c803a7afbef29b38f5e8f0f8cb7b3cb2ced6ea356a44f7e1a2745805158ba4",
+    "archived_path": "reports/w5.d/external-logs/qt4-build-dialogless.log.gz",
+    "archive_sha256": "3f10d8e895ad57159f9d3bf0c39bb265798d5e8fc7b513361add1defcb9ef59d"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-build.log",
+    "original_bytes": 549590,
+    "original_sha256": "af3206a1a608c2ee420a52c8e7548e29372a7501b707f8ad374e40cd63252bd1",
+    "archived_path": "reports/w5.d/external-logs/qt4-build.log.gz",
+    "archive_sha256": "27d77fc23d564da5f926ab384911655b45a8d1da3f2e4990f661ee2a70e3794c"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-configure-64.log",
+    "original_bytes": 38590,
+    "original_sha256": "9026b6fe6b8848dac28683d2ed94f3832b48a88bfe543efc27db6d89f85b5e3a",
+    "archived_path": "reports/w5.d/external-logs/qt4-configure-64.log.gz",
+    "archive_sha256": "4549c4f7ea47d35de26ed65bb819949d5fcf3e3ca15cfbc0582c70b4c72f4112"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-configure-dialogless.log",
+    "original_bytes": 38590,
+    "original_sha256": "9026b6fe6b8848dac28683d2ed94f3832b48a88bfe543efc27db6d89f85b5e3a",
+    "archived_path": "reports/w5.d/external-logs/qt4-configure-dialogless.log.gz",
+    "archive_sha256": "4549c4f7ea47d35de26ed65bb819949d5fcf3e3ca15cfbc0582c70b4c72f4112"
+  },
+  {
+    "original_path": "/home/chen/githubprojects/fontpixel/local-work/w5d/qt4-configure.log",
+    "original_bytes": 140686,
+    "original_sha256": "83de73200f2fba66e8fef5f62da99b538968ee4153197595211b563320a6377b",
+    "archived_path": "reports/w5.d/external-logs/qt4-configure.log.gz",
+    "archive_sha256": "f77e0ff8ab52b89fc075b18e5c9b9ad3770b2436d307ddb15535239342870c91"
+  }
+]

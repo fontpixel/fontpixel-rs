@@ -1,0 +1,13 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+error[E0583]: file not found for module `transport`
+   --> /home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel/src/formats/mod.rs:146:1
+    |
+146 | mod transport;
+    | ^^^^^^^^^^^^^^
+    |
+    = help: to create the module `transport`, create file "/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel/src/formats/transport.rs" or "/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel/src/formats/transport/mod.rs"
+    = note: if there is a `mod transport` elsewhere in the crate already, import it with `use crate::...` instead
+
+For more information about this error, try `rustc --explain E0583`.
+error: could not compile `fontpixel` (lib) due to 1 previous error
+Error: failed to build fuzz script: ASAN_OPTIONS="detect_odr_violation=0" RUSTFLAGS=" -Cpasses=sancov-module -Cllvm-args=-sanitizer-coverage-level=4 -Cllvm-args=-sanitizer-coverage-inline-8bit-counters -Cllvm-args=-sanitizer-coverage-pc-table -Cllvm-args=-sanitizer-coverage-trace-compares --cfg fuzzing -Cllvm-args=-simplifycfg-branch-fold-threshold=0 -Zsanitizer=address -Cllvm-args=-sanitizer-coverage-stack-depth -Cdebug-assertions -Ccodegen-units=1" "cargo" "build" "--manifest-path" "/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/Cargo.toml" "--target" "x86_64-unknown-linux-gnu" "--release" "--config" "profile.release.debug=\"line-tables-only\"" "--no-default-features" "--features" "vlw-only" "--bin" "vlw_bitmap"

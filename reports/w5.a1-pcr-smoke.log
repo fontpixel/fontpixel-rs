@@ -1,0 +1,66 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+   Compiling fontpixel-fuzz v0.0.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 14.65s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.02s
+     Running `/home/chen/githubprojects/fontpixel/local-work/target-w5a1/x86_64-unknown-linux-gnu/release/pcr -artifact_prefix=/home/chen/githubprojects/fontpixel/fontpixel-rs/fuzz/artifacts/pcr/ -max_total_time=10 -timeout=2 -rss_limit_mb=1024 -max_len=262144 -seed=51001 /home/chen/githubprojects/fontpixel/local-work/w5a1-smoke-corpus/pcr`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 51001
+INFO: Loaded 1 modules   (19262 inline 8-bit counters): 19262 [0x5e863f2d9dc0, 0x5e863f2de8fe), 
+INFO: Loaded 1 PC tables (19262 PCs): 19262 [0x5e863f2de900,0x5e863f329ce0), 
+INFO:        8 files found in /home/chen/githubprojects/fontpixel/local-work/w5a1-smoke-corpus/pcr
+INFO: seed corpus: files: 8 min: 1b max: 523b total: 2375b rss: 33Mb
+#9	INITED cov: 881 ft: 913 corp: 5/807b exec/s: 0 rss: 42Mb
+#21	REDUCE cov: 881 ft: 913 corp: 5/687b lim: 523 exec/s: 0 rss: 42Mb L: 141/523 MS: 2 ChangeBit-EraseBytes-
+#27	NEW    cov: 882 ft: 914 corp: 6/704b lim: 523 exec/s: 0 rss: 42Mb L: 17/523 MS: 1 CMP- DE: "\001\344"-
+#30	NEW    cov: 883 ft: 915 corp: 7/778b lim: 523 exec/s: 0 rss: 43Mb L: 74/523 MS: 3 PersAutoDict-InsertByte-InsertRepeatedBytes- DE: "\001\344"-
+#31	NEW    cov: 884 ft: 916 corp: 8/796b lim: 523 exec/s: 0 rss: 43Mb L: 18/523 MS: 1 InsertByte-
+#47	REDUCE cov: 884 ft: 916 corp: 8/776b lim: 523 exec/s: 0 rss: 47Mb L: 121/523 MS: 1 EraseBytes-
+#67	REDUCE cov: 884 ft: 916 corp: 8/761b lim: 523 exec/s: 0 rss: 47Mb L: 106/523 MS: 5 CopyPart-EraseBytes-ChangeByte-InsertByte-EraseBytes-
+#73	REDUCE cov: 885 ft: 917 corp: 9/869b lim: 523 exec/s: 0 rss: 51Mb L: 108/523 MS: 1 PersAutoDict- DE: "\001\344"-
+#80	REDUCE cov: 885 ft: 917 corp: 9/862b lim: 523 exec/s: 0 rss: 51Mb L: 11/523 MS: 2 ChangeBinInt-EraseBytes-
+#133	REDUCE cov: 885 ft: 917 corp: 9/826b lim: 523 exec/s: 0 rss: 52Mb L: 38/523 MS: 3 CMP-CMP-EraseBytes- DE: "\001\000\000\000\000\000\000\000"-"\000\000\000\371"-
+#145	REDUCE cov: 885 ft: 917 corp: 9/801b lim: 523 exec/s: 0 rss: 52Mb L: 81/523 MS: 2 ShuffleBytes-EraseBytes-
+#163	REDUCE cov: 885 ft: 917 corp: 9/779b lim: 523 exec/s: 0 rss: 58Mb L: 59/523 MS: 3 InsertRepeatedBytes-ChangeBinInt-EraseBytes-
+#184	REDUCE cov: 885 ft: 917 corp: 9/776b lim: 523 exec/s: 0 rss: 58Mb L: 4/523 MS: 1 EraseBytes-
+#285	REDUCE cov: 885 ft: 917 corp: 9/774b lim: 523 exec/s: 0 rss: 69Mb L: 2/523 MS: 1 EraseBytes-
+#286	REDUCE cov: 885 ft: 917 corp: 9/760b lim: 523 exec/s: 0 rss: 69Mb L: 94/523 MS: 1 EraseBytes-
+#287	REDUCE cov: 885 ft: 917 corp: 9/755b lim: 523 exec/s: 0 rss: 69Mb L: 33/523 MS: 1 EraseBytes-
+#320	REDUCE cov: 885 ft: 917 corp: 9/748b lim: 523 exec/s: 0 rss: 70Mb L: 26/523 MS: 3 InsertByte-ShuffleBytes-EraseBytes-
+#356	REDUCE cov: 885 ft: 917 corp: 9/741b lim: 523 exec/s: 0 rss: 76Mb L: 87/523 MS: 1 EraseBytes-
+#467	REDUCE cov: 885 ft: 917 corp: 9/728b lim: 523 exec/s: 0 rss: 85Mb L: 74/523 MS: 1 EraseBytes-
+#552	REDUCE cov: 885 ft: 917 corp: 9/727b lim: 523 exec/s: 0 rss: 100Mb L: 25/523 MS: 5 ChangeBinInt-CrossOver-ChangeByte-ShuffleBytes-EraseBytes-
+#613	REDUCE cov: 885 ft: 917 corp: 9/716b lim: 523 exec/s: 0 rss: 105Mb L: 48/523 MS: 1 EraseBytes-
+#699	REDUCE cov: 885 ft: 917 corp: 9/711b lim: 523 exec/s: 0 rss: 111Mb L: 20/523 MS: 1 EraseBytes-
+#714	NEW    cov: 892 ft: 925 corp: 10/713b lim: 523 exec/s: 0 rss: 112Mb L: 2/523 MS: 5 InsertByte-ChangeBit-CrossOver-CopyPart-CMP- DE: "\037\213"-
+#725	REDUCE cov: 892 ft: 925 corp: 10/700b lim: 523 exec/s: 0 rss: 112Mb L: 61/523 MS: 1 EraseBytes-
+#734	REDUCE cov: 892 ft: 925 corp: 10/697b lim: 523 exec/s: 0 rss: 112Mb L: 17/523 MS: 4 ChangeByte-CrossOver-EraseBytes-EraseBytes-
+#825	REDUCE cov: 892 ft: 925 corp: 10/692b lim: 523 exec/s: 0 rss: 117Mb L: 12/523 MS: 1 EraseBytes-
+#842	REDUCE cov: 892 ft: 925 corp: 10/686b lim: 523 exec/s: 0 rss: 122Mb L: 42/523 MS: 2 PersAutoDict-EraseBytes- DE: "\037\213"-
+#863	REDUCE cov: 892 ft: 925 corp: 10/680b lim: 523 exec/s: 0 rss: 122Mb L: 11/523 MS: 1 EraseBytes-
+#1009	REDUCE cov: 892 ft: 925 corp: 10/668b lim: 523 exec/s: 0 rss: 122Mb L: 30/523 MS: 1 EraseBytes-
+#1086	REDUCE cov: 892 ft: 925 corp: 10/660b lim: 523 exec/s: 0 rss: 132Mb L: 22/523 MS: 2 ShuffleBytes-EraseBytes-
+#1177	NEW    cov: 893 ft: 926 corp: 11/675b lim: 523 exec/s: 0 rss: 136Mb L: 15/523 MS: 1 ShuffleBytes-
+#1590	REDUCE cov: 893 ft: 926 corp: 11/669b lim: 523 exec/s: 0 rss: 161Mb L: 16/523 MS: 3 ChangeBinInt-PersAutoDict-EraseBytes- DE: "\037\213"-
+#1617	REDUCE cov: 893 ft: 926 corp: 11/667b lim: 523 exec/s: 0 rss: 161Mb L: 13/523 MS: 2 CrossOver-EraseBytes-
+#2142	REDUCE cov: 893 ft: 926 corp: 11/642b lim: 523 exec/s: 0 rss: 186Mb L: 36/523 MS: 5 PersAutoDict-CopyPart-EraseBytes-CMP-EraseBytes- DE: "\001\000\000\000\000\000\000\000"-"\377\377\377\377"-
+#2193	REDUCE cov: 893 ft: 926 corp: 11/626b lim: 523 exec/s: 0 rss: 190Mb L: 20/523 MS: 1 EraseBytes-
+#3374	REDUCE cov: 893 ft: 926 corp: 11/624b lim: 532 exec/s: 0 rss: 222Mb L: 13/523 MS: 1 EraseBytes-
+#3585	REDUCE cov: 893 ft: 926 corp: 11/617b lim: 532 exec/s: 0 rss: 225Mb L: 13/523 MS: 1 EraseBytes-
+#3832	REDUCE cov: 893 ft: 926 corp: 11/616b lim: 532 exec/s: 0 rss: 231Mb L: 12/523 MS: 2 CopyPart-EraseBytes-
+#3898	REDUCE cov: 893 ft: 926 corp: 11/615b lim: 532 exec/s: 0 rss: 231Mb L: 11/523 MS: 1 EraseBytes-
+#6614	REDUCE cov: 893 ft: 926 corp: 11/614b lim: 559 exec/s: 0 rss: 281Mb L: 12/523 MS: 1 EraseBytes-
+#7225	REDUCE cov: 893 ft: 926 corp: 11/613b lim: 559 exec/s: 0 rss: 288Mb L: 11/523 MS: 1 EraseBytes-
+#9632	REDUCE cov: 893 ft: 926 corp: 11/612b lim: 577 exec/s: 9632 rss: 332Mb L: 11/523 MS: 2 ChangeBinInt-EraseBytes-
+#11453	REDUCE cov: 893 ft: 926 corp: 11/611b lim: 595 exec/s: 11453 rss: 377Mb L: 12/523 MS: 1 EraseBytes-
+#32768	pulse  cov: 893 ft: 926 corp: 11/611b lim: 802 exec/s: 10922 rss: 380Mb
+#65536	pulse  cov: 893 ft: 926 corp: 11/611b lim: 1127 exec/s: 9362 rss: 380Mb
+#66674	REDUCE cov: 893 ft: 926 corp: 11/610b lim: 1137 exec/s: 8334 rss: 380Mb L: 11/523 MS: 1 EraseBytes-
+#86285	DONE   cov: 893 ft: 926 corp: 11/610b lim: 1327 exec/s: 7844 rss: 380Mb
+###### Recommended dictionary. ######
+"\001\344" # Uses: 1544
+"\001\000\000\000\000\000\000\000" # Uses: 1436
+"\000\000\000\371" # Uses: 1514
+"\037\213" # Uses: 1669
+"\377\377\377\377" # Uses: 1465
+###### End of recommended dictionary. ######
+Done 86285 runs in 11 second(s)

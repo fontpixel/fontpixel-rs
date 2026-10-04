@@ -56,6 +56,7 @@ fuzz_target!(|data: &[u8]| {
                 ..Default::default()
             }),
             mapping_path: None,
+            ..Default::default()
         };
     }
     let name = match mode {

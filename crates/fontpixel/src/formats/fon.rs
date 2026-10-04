@@ -16,7 +16,11 @@ pub struct FonCodec {
 }
 impl FormatDetector for FonCodec {
     fn detect(&self, c: &mut ReadContext<'_>) -> Result<Confidence> {
-        Ok(detect(c.bytes()))
+        Ok(detect_limited(
+            c.bytes(),
+            c.limits(),
+            c.retained_input_bytes(),
+        ))
     }
 }
 impl FormatReader<FontSet> for FonCodec {
@@ -52,12 +56,40 @@ fn header_offset(b: &[u8]) -> Result<usize> {
         Err(invalid("missing FON executable signature"))
     }
 }
-/// Recognize NE/PE signatures at a checked executable-header offset.
+/// Recognize bounded Windows FONT directories and FNT headers in NE/PE files.
 pub fn detect(b: &[u8]) -> Confidence {
-    match header_offset(b).ok().and_then(|at| b.get(at..)) {
-        Some(t) if t.starts_with(b"NE") || t.starts_with(b"PE\0\0") => Confidence::Certain,
-        _ => Confidence::NoMatch,
-    }
+    detect_limited(b, &ResourceLimits::default(), b.len())
+}
+fn detect_limited(b: &[u8], l: &ResourceLimits, retained: usize) -> Confidence {
+    let probe = || -> Result<Confidence> {
+        let at = header_offset(b)?;
+        let mut budget = Budget::new(retained, l)?;
+        let mut report = Report::default();
+        let ne = slice(b, at, 2)? == b"NE";
+        let resources = if ne {
+            ne_resources(b, at, l, &mut report, &mut budget)?
+        } else if slice(b, at, 4)? == b"PE\0\0" {
+            pe_resources(b, at, l, &mut report, &mut budget)?
+        } else {
+            return Ok(Confidence::NoMatch);
+        };
+        if resources.is_empty()
+            || resources
+                .iter()
+                .any(|r| fnt::detect(&b[r.offset..r.offset + r.size]) != Confidence::Certain)
+        {
+            return Ok(Confidence::NoMatch);
+        }
+        // OS/2 has a different resource directory. A Windows FONT directory
+        // with that target byte is compatible/contradictory evidence, not a
+        // reason to override the independent GPI detector's Possible match.
+        Ok(if ne && b[at + 54] == 1 {
+            Confidence::Possible
+        } else {
+            Confidence::Certain
+        })
+    };
+    probe().unwrap_or(Confidence::NoMatch)
 }
 fn fon_loss(r: &mut Report, code: &str, message: impl Into<String>) {
     loss(r, code, None, None, message);

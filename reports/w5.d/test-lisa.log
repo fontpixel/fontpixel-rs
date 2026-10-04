@@ -1,0 +1,25 @@
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 3.03s
+     Running unittests src/lib.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/fontpixel-4c944f7233419b61)
+
+running 4 tests
+test outline::packed::tests::dense_grid_dimensions_are_checked_before_arithmetic ... ok
+test outline::packed::tests::maximum_width_empty_bitmap_has_no_outline ... ok
+test outline::packed::tests::every_three_by_three_bitmap_has_exact_spec_order ... ok
+test outline::packed::tests::conservative_edge_and_point_limits_match_reference ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/lisa.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5d/debug/deps/lisa-29917d0a698dc283)
+
+running 7 tests
+test malformed_directory_compression_and_expansion_limits ... ok
+test native_directory_without_mac_terminator_and_exact_replay ... ok
+test reverse_mixed_controls_and_xor_are_independently_authored ... ok
+test strict_registry_rejects_unrepresented_metadata_and_removed_slots ... ok
+test writer_success_is_readable_under_same_cumulative_budget ... ok
+test writer_both_native_compression_modes_and_metrics_records ... ok
+test native_in_place_overlap_is_rejected_and_default_writer_can_use_plain ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

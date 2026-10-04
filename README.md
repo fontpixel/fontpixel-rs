@@ -1,15 +1,17 @@
 # fontpixel
 
 A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
-The full requirements and intended 46-format scope are in [PLAN.md](PLAN.md) and
+The requirements and surveyed 99-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phases 0–4 complete
+## Current status: phases 0–4 accepted; phase 5 validation
 
 Phase 4 is integrated and accepted; see [its validation report](reports/phase-4.md)
 for independent comparisons, fuzz, performance, CLI size and remaining scope.
-Phase 5 covers the remaining formats and a wider format survey. The complete
-project remains under development.
+Phase 5 implements the remaining formats and the additions from its wider survey.
+All 99 IDs have connected native readers and writers; final validation is still
+in progress. See [the phase 5 report](reports/phase-5.md). CLI completion and
+merging, Python/WASM bindings and the offline merge page remain later stages.
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -42,9 +44,10 @@ library users enable `fnt` or `fon` (which also enables `fnt`).
 See [FNT](docs/formats/fnt.md), [FON](docs/formats/fon.md) and
 [W3.2 independent validation](reports/w3.2-review.md).
 
-Thirty-eight format IDs now have native readers, thirty-seven have writers (color writing
-is deferred); the remaining eight IDs and Python/WASM bindings remain unimplemented
-and are reported honestly by `formats`. Packed Mono/Gray8 operations, loss-preserving
+The all-feature build exposes 99 native readers and writers, including CBDT/SBIX
+color output. Each format document states its native variants, metadata and loss
+boundaries; this does not imply all encodings of every historical container are
+supported. Packed Mono/Gray8 operations, loss-preserving
 Glyph/Font/FontSet models and exact per-glyph charsets are implemented.
 See [BDF contracts](docs/formats/bdf.md), [core API](docs/bitmap-model.md),
 [charset support](docs/charsets.md), and [W1.2 validation](reports/w1.2.md), [PCF contracts](docs/formats/pcf.md),
@@ -68,10 +71,10 @@ Console examples (HEX/PSF cannot retain source names and all BDF metadata):
 
 ```sh
 fontpixel convert source.hex -o console.psf.gz
-fontpixel convert source.hex -o console.psf --psf-version 1 --psf1-count 512
+fontpixel convert source.hex -o console.psf --to psf --psf-version 1 --psf1-count 512
 fontpixel info eight-row.hex --hex-height 8 --json
 fontpixel convert source.bdf -o unifont.hex --hex-height 16 --hex-descent 2
-fontpixel convert source.psf -o restored.psf --strict
+fontpixel convert source.psf -o restored.psf --to psf --strict
 ```
 
 Windows examples (FNT cannot retain every BDF field or characters beyond the
@@ -79,7 +82,7 @@ selected code page's single-byte range):
 
 ```sh
 fontpixel convert source.bdf -o latin.fnt --to fnt --fnt-version 3 --fnt-charset 0
-fontpixel convert small.fnt large.fnt -o family.fon --strict
+fontpixel convert small.fnt large.fnt -o family.fon --to fon --strict
 fontpixel info legacy.fon --fnt-read-code-page cp437 --json
 ```
 
@@ -92,8 +95,8 @@ and Adafruit GFX; generic and GFX output report metadata and mapping losses.
 ```sh
 fontpixel convert source.bdf -o atlas.png --to image --strict
 fontpixel convert source.bdf -o atlas.pgm --to image --image-mapping-format toml --strict
-fontpixel convert atlas.json -o restored.bdf --strict
-fontpixel info external.png --image-mapping external.json --json
+fontpixel convert atlas.json --from image -o restored.bdf --strict
+fontpixel info external.png --from image --image-mapping external.json --json
 fontpixel convert font8x8.h -o imported.bdf
 fontpixel convert source.bdf -o font.h --to c --c-family gfx --c-range U+0020-U+007F
 fontpixel info cells.h --c-width 8 --c-height 16 --c-first U+0020 --c-charset unicode --json
@@ -156,7 +159,7 @@ The library's production dependency tree is empty with `--no-default-features`.
 `bdf` and `pcf` independently enable shared `gzip` transport using flate2's pure-Rust backend (flate2 plus five small
 support crates); neither enables the other codec. Optional `serde`
 enables structured reports. Each format has its own feature; `all-formats`
-selects all 46, while defaults select `bdf,pcf,yaff`. Feature selection does not
+selects all 99, while defaults select `bdf,pcf,yaff`. Feature selection does not
 claim an implementation. Heavy `cff`/`fea` slots still add no behavior.
 `cjk-charsets` includes exact CJK tables and GB18030 ranges without a runtime
 dependency. BDF can preserve CJK source codes without those tables; actual CJK
@@ -184,7 +187,7 @@ Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-b
 
 The synthetic codec used in `crates/fontpixel/tests/contracts.rs` tests these
 contracts with an invented byte protocol. It is not registered in production and
-is not evidence for any of the 46 font formats.
+is not evidence for any of the 99 font formats.
 
 ## Next integration points
 
@@ -222,7 +225,8 @@ fn main() -> fontpixel::Result<()> {
 
 Optional `otb` and `bdat` features enable native multi-strike bitmap sfnt reading
 and writing. `color` enables CBDT/CBLC and PNG/dupe sbix reading, with reported
-alpha-to-Gray8 projection; no color writer is advertised. Use
+alpha-to-Gray8 projection, and CBDT/sbix writing of Mono/Gray8 coverage as black
+PNG pixels with alpha. The native model does not preserve RGBA artwork. Use
 `formats::embedded::{read, write, EmbeddedReadOptions, EmbeddedWriteOptions}` for
 typed bounds, color darkness/threshold choices and EBSC instructions.
 `sfnt::bitmap` exposes editable glyph-ID strikes and table pairs for embedding in

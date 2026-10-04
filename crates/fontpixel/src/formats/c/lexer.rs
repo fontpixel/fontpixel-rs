@@ -105,7 +105,8 @@ pub(super) fn declarations<'a>(t: &[Token<'a>], b: &mut Budget) -> Result<Vec<De
     let mut i = 0;
     while i < t.len() {
         if t[i].kind != Kind::Punct(b'=')
-            || t.get(i + 1).is_none_or(|v| v.kind != Kind::Punct(b'{'))
+            || t.get(i + 1)
+                .is_none_or(|v| !matches!(v.kind, Kind::Punct(b'{') | Kind::String(_)))
         {
             i += 1;
             continue;
@@ -116,29 +117,55 @@ pub(super) fn declarations<'a>(t: &[Token<'a>], b: &mut Budget) -> Result<Vec<De
             .map_or(0, |p| p + 1);
         let prefix = &t[begin..i];
         let ty = prefix.iter().find_map(|v| match v.kind {
-            Kind::Ident(s @ ("char" | "uint8_t" | "GFXglyph" | "GFXfont")) => Some(s),
+            Kind::Ident(
+                s @ ("char"
+                | "u_char"
+                | "u8g_fntpgm_uint8_t"
+                | "wsdisplay_font"
+                | "uint8_t"
+                | "uint16_t"
+                | "int8_t"
+                | "uint32_t"
+                | "GFXglyph"
+                | "GFXfont"
+                | "lv_font_t"
+                | "lv_font_fmt_txt_glyph_dsc_t"
+                | "lv_font_fmt_txt_cmap_t"
+                | "lv_font_fmt_txt_dsc_t"
+                | "lv_font_fmt_txt_kern_pair_t"
+                | "lv_font_fmt_txt_kern_classes_t"),
+            ) => Some(s),
             _ => None,
         });
         let mut depth = 0usize;
         let mut end = i + 1;
-        loop {
-            match t.get(end).map(|v| v.kind) {
-                Some(Kind::Punct(b'{')) => {
-                    depth += 1;
-                    if depth > 8 {
-                        return Err(invalid("C initializer nesting exceeds 8"));
-                    }
-                }
-                Some(Kind::Punct(b'}')) => {
-                    depth -= 1;
-                    if depth == 0 {
-                        break;
-                    }
-                }
-                None => return Err(invalid("unterminated C initializer")),
-                _ => {}
+        if matches!(t[end].kind, Kind::String(_)) {
+            while t
+                .get(end + 1)
+                .is_some_and(|v| matches!(v.kind, Kind::String(_)))
+            {
+                end += 1;
             }
-            end += 1;
+        } else {
+            loop {
+                match t.get(end).map(|v| v.kind) {
+                    Some(Kind::Punct(b'{')) => {
+                        depth += 1;
+                        if depth > 8 {
+                            return Err(invalid("C initializer nesting exceeds 8"));
+                        }
+                    }
+                    Some(Kind::Punct(b'}')) => {
+                        depth -= 1;
+                        if depth == 0 {
+                            break;
+                        }
+                    }
+                    None => return Err(invalid("unterminated C initializer")),
+                    _ => {}
+                }
+                end += 1;
+            }
         }
         if t.get(end + 1).is_none_or(|v| v.kind != Kind::Punct(b';')) {
             return Err(invalid("C initializer needs a semicolon"));
@@ -160,6 +187,25 @@ pub(super) fn declarations<'a>(t: &[Token<'a>], b: &mut Budget) -> Result<Vec<De
             let mut dimensions = Vec::new();
             let mut j = name_pos + 1;
             while j < prefix.len() {
+                if matches!(
+                    prefix[j].kind,
+                    Kind::Ident("U8G2_FONT_SECTION" | "U8G_FONT_SECTION")
+                ) {
+                    if prefix
+                        .get(j + 1)
+                        .is_none_or(|v| v.kind != Kind::Punct(b'('))
+                        || prefix
+                            .get(j + 2)
+                            .is_none_or(|v| !matches!(v.kind, Kind::String(_)))
+                        || prefix
+                            .get(j + 3)
+                            .is_none_or(|v| v.kind != Kind::Punct(b')'))
+                    {
+                        return Err(invalid("invalid U8g2 storage annotation"));
+                    }
+                    j += 4;
+                    continue;
+                }
                 if prefix[j].kind == Kind::Ident("PROGMEM") {
                     j += 1;
                     continue;

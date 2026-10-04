@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "bmfont",
+    "gate": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bmfont",
+      "--test",
+      "bmfont"
+    ],
+    "exit": 0,
+    "seconds": 6.935694694519043,
+    "log": "reports/w5.x-bmfont-test.log",
+    "reason": "complete JSON probe handles a UTF-8 scalar crossing byte8192"
+  },
+  {
+    "feature": "bmfont",
+    "gate": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bmfont",
+      "--lib",
+      "--test",
+      "bmfont",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 3.2396957874298096,
+    "log": "reports/w5.x-bmfont-clippy.log",
+    "reason": "complete JSON probe handles a UTF-8 scalar crossing byte8192"
+  },
+  {
+    "feature": "bmfont",
+    "gate": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "bmfont",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 1.352102279663086,
+    "log": "reports/w5.x-bmfont-doc.log",
+    "reason": "complete JSON probe handles a UTF-8 scalar crossing byte8192"
+  },
+  {
+    "feature": "raw",
+    "gate": "test",
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "raw",
+      "--test",
+      "raw"
+    ],
+    "exit": 0,
+    "seconds": 2.57792329788208,
+    "log": "reports/w5.x-raw-test.log",
+    "reason": "bit-aligned wire versus expanded canonical scratch/readback budget"
+  },
+  {
+    "feature": "raw",
+    "gate": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "raw",
+      "--lib",
+      "--test",
+      "raw",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 1.6911077499389648,
+    "log": "reports/w5.x-raw-clippy.log",
+    "reason": "bit-aligned wire versus expanded canonical scratch/readback budget"
+  },
+  {
+    "feature": "raw",
+    "gate": "doc",
+    "command": [
+      "cargo",
+      "doc",
+      "-p",
+      "fontpixel",
+      "--no-default-features",
+      "--features",
+      "raw",
+      "--no-deps"
+    ],
+    "exit": 0,
+    "seconds": 0.7020981311798096,
+    "log": "reports/w5.x-raw-doc.log",
+    "reason": "bit-aligned wire versus expanded canonical scratch/readback budget"
+  }
+]

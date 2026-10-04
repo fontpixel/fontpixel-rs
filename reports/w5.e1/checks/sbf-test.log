@@ -1,0 +1,13 @@
+
+running 5 tests
+test fixed_advance_retains_record_field ... ok
+test signed_bearings_sparse_directory_and_blank ... ok
+test registry_dispatch_and_strict_metadata_loss ... ok
+test malformed_and_limits ... ok
+test final_bitmap_may_extend_past_u16_address_space ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling fontpixel v0.1.0 (/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel)
+    Finished `test` profile [unoptimized] target(s) in 2.18s
+     Running tests/sbf.rs (/home/chen/githubprojects/fontpixel/local-work/target-w5e1/debug/deps/sbf-6fd437fcbb8b59eb)

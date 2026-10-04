@@ -1,0 +1,75 @@
+{
+  "source_sha256": {
+    "crates/fontpixel/src/formats/raw.rs": "06c9220fda4eb10288f2b14116a476d48aba576bc03465f3babb794390fd65ca",
+    "crates/fontpixel/src/formats/raw/packed.rs": "2eb4b0fb67a7d7ae8a7ee547e4c85d48e20b54d10fe989e887b724f60c5cdf00",
+    "crates/fontpixel/src/formats/raw/support.rs": "d8a9a352bd1822e88c94bbe944cb51c7b80ff82fe821d0bd1d5349ebf49df94f",
+    "crates/fontpixel/src/formats/bmfont.rs": "d99279bec8549860e83084079a166917df371f68f0f110328f5e20ae0f7c0366",
+    "crates/fontpixel/src/formats/bmfont/fidelity.rs": "280a71e625018ace0ddcc5e5e78b882194f08b729b7437b162f08471c4957142",
+    "crates/fontpixel/src/formats/bmfont/reader.rs": "f6e87f16aa92dad9ff10ab26d7f914ca625387a11eaeaaf904f10ad8fe9114b7",
+    "crates/fontpixel/src/formats/bmfont/wire.rs": "45e7272cd4a66979c01a00073131d39fa23b668087d31c8734f74e5255b84b15",
+    "crates/fontpixel/src/formats/bmfont/json.rs": "dcb187526ce346e08615efd1f2243c718c88aaa33e1fe8a7c80669438354b711",
+    "crates/fontpixel/src/formats/bmfont/writer.rs": "366ed5fb4f7da6d7b24da8a225a43c98a464ab5b8c7cfa37f05343108c52a219"
+  },
+  "runs": [
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "bmfont",
+        "--no-default-features",
+        "--features",
+        "bmfont-only",
+        "--sanitizer",
+        "address",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-smoke-corpus/bmfont",
+        "--",
+        "-max_total_time=10",
+        "-timeout=2",
+        "-rss_limit_mb=1024",
+        "-max_len=65536",
+        "-seed=51003"
+      ],
+      "exit": 0,
+      "seconds": 36.43754506111145,
+      "log": "reports/w5.x-bmfont-smoke.log",
+      "log_sha256": "c1b6b21a9dec20ed71c6a1bc0aaf436331c2dcbbfe6092460174239570b0bce2",
+      "source_unchanged": true,
+      "reason": "final JSON probe UTF-8 boundary correction",
+      "executions": 273334,
+      "fuzzer_seconds": 11,
+      "feature": "bmfont"
+    },
+    {
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "raw",
+        "--no-default-features",
+        "--features",
+        "raw-only",
+        "--sanitizer",
+        "address",
+        "/home/chen/githubprojects/fontpixel/local-work/w5x-smoke-corpus/raw",
+        "--",
+        "-max_total_time=10",
+        "-timeout=2",
+        "-rss_limit_mb=1024",
+        "-max_len=65536",
+        "-seed=51003"
+      ],
+      "exit": 0,
+      "seconds": 68.40463733673096,
+      "log": "reports/w5.x-raw-smoke.log",
+      "log_sha256": "e37ec6fe721bdbce40de8cb49dfa33234228bd5092fe692ae0206311466ff10a",
+      "source_unchanged": true,
+      "reason": "final bit-aligned canonical memory accounting",
+      "executions": 11087,
+      "fuzzer_seconds": 11,
+      "feature": "raw"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "source_sha256": {
+    "crates/fontpixel/src/formats/pfr.rs": "bef1303ca0ea26a5ccf990f5818bdd541ed323914517ea1e82580a04871779f6",
+    "crates/fontpixel/src/formats/ssfn.rs": "49b59715f1203769a71f4707eed32089b4af7d5e604a5655dc9c0ec86fdf0d60",
+    "crates/fontpixel/src/formats/pfr/wire.rs": "249906e117dd06a5a768070280a6be1c624ab4a11ebe2aef59fc348932a97897",
+    "crates/fontpixel/src/formats/ssfn/ascii.rs": "b614037fd980497ab06b273693ef239073ed78433cb6dcd557feebfe079b9791",
+    "crates/fontpixel/src/formats/ssfn/binary.rs": "d4b3fe8c68a7df35ec8812f04950c3c58472aafad6be1b7efa817170fafe0807",
+    "crates/fontpixel/src/formats/ssfn/common.rs": "a24201095ce7af26da8e8ce99131466e6f858240de284ce9c8eb37e1519d37c1"
+  },
+  "runs": [
+    {
+      "format": "pfr",
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "pfr",
+        "--no-default-features",
+        "--features",
+        "pfr-only",
+        "--sanitizer",
+        "address",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-outline/smoke-corpus/pfr",
+        "--",
+        "-max_total_time=10",
+        "-timeout=2",
+        "-rss_limit_mb=1024",
+        "-max_len=65536",
+        "-seed=52001"
+      ],
+      "exit": 0,
+      "executions": 1071929,
+      "fuzzer_seconds": 11,
+      "log": "reports/w5.e2-outline-pfr-smoke.log",
+      "log_sha256": "7e5e8fb62f5a54c7196c3803e2184adcef518ac5ae8a6228160edaba654c900b",
+      "owned_source_unchanged": true
+    },
+    {
+      "format": "ssfn",
+      "command": [
+        "cargo",
+        "+nightly",
+        "fuzz",
+        "run",
+        "ssfn",
+        "--no-default-features",
+        "--features",
+        "ssfn-only",
+        "--sanitizer",
+        "address",
+        "/home/chen/githubprojects/fontpixel/local-work/w5e2-outline/smoke-corpus/ssfn",
+        "--",
+        "-max_total_time=10",
+        "-timeout=2",
+        "-rss_limit_mb=1024",
+        "-max_len=65536",
+        "-seed=52002"
+      ],
+      "exit": 0,
+      "executions": 393855,
+      "fuzzer_seconds": 11,
+      "log": "reports/w5.e2-outline-ssfn-smoke.log",
+      "log_sha256": "d250ea91b8ec8d4bf9a44c0a92922629e64a41c38662777a35835ebb6722e2cd",
+      "owned_source_unchanged": true
+    }
+  ]
+}
