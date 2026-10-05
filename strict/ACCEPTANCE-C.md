@@ -114,7 +114,9 @@ Status key: [x] done, [~] done with a stated limit, [ ] not done.
   pass, as do CLI `cli` and `phase6_cli_recovery`. All CLI sentinels are
   byte-identical to 6297998 at the default limits: square-separate TTF/OTF, dot
   literal/rows/0.8, embedded TTF/OTF, Small regional+embedded, and convert
-  TTF/OTF/dot. Full Tong Large regional square/dot TTF/OTF is byte-identical at
+  TTF/OTF/dot. A same-label suffix case (Small zh-Hant=TC, zh-HK=KR, plus a
+  second script face, square TTF and dot OTF at 2 GiB) also matches.
+  Full Tong Large regional square/dot TTF/OTF is byte-identical at
   its minimal `--max-total-bytes`, but **no longer fits the CLI default of
   256 MiB** (G1).
 - [x] F6. `cargo clippy --locked -p fontpixel --all-targets --all-features -- -D warnings`
@@ -153,4 +155,8 @@ Status key: [x] done, [~] done with a stated limit, [ ] not done.
   `NameTable::encode`, `GaspTable::encode`, `Statistics::unhinted_maxp` and
   `bitmap::encode`. `Gsub::subset_with_budget`, `cmap::encode_with_budget` and
   the GSUB decode check still use the unverified `Budget::reserve_tree`
-  formula.
+  formula. `tables::code_pages` uses one fixed 4096-byte scratch bound for
+  the charset-codec key strings, not a source-derived size. Merge hotspot:
+  `Budget::reserve` now records the test-only peak. `ledger::tree_nodes`
+  copies `model::budget::tree_node_bound`, which could be made `pub(crate)`
+  and shared.
