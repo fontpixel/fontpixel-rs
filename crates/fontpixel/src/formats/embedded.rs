@@ -1374,7 +1374,7 @@ fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
                     "source_property",
                     Some(fi),
                     None,
-                    format!("Source {source} {:?} is not represented", p.name),
+                    format_args!("Source {source} {:?} is not represented", p.name),
                 );
             }
         }
@@ -1396,7 +1396,7 @@ fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
                 "font_metric",
                 Some(fi),
                 None,
-                format!("Independent {name} is not preserved"),
+                format_args!("Independent {name} is not preserved"),
             );
         }
     }
@@ -1451,7 +1451,7 @@ fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
                     "glyph_property",
                     Some(fi),
                     Some(id.index()),
-                    format!("Glyph property {:?} is not represented", p.name),
+                    format_args!("Glyph property {:?} is not represented", p.name),
                 );
             }
         }
@@ -1482,7 +1482,7 @@ fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
                     "glyph_metric",
                     Some(fi),
                     Some(id.index()),
-                    format!("Independent {name} is not preserved"),
+                    format_args!("Independent {name} is not preserved"),
                 );
             }
         }
@@ -2044,7 +2044,7 @@ fn color_global_losses(first: &Font, f: &Font, fi: usize, report: &mut Diagnosti
                     "shared_line_metric",
                     Some(fi),
                     None,
-                    format!("Per-strike {field} changed to the rounded shared sfnt metric"),
+                    format_args!("Per-strike {field} changed to the rounded shared sfnt metric"),
                 );
             }
         }
