@@ -1,10 +1,13 @@
-//! Source-derived upper bound of the locked `brotli 9.0.0` encoder heap.
+//! Heap admission for the locked `brotli 9.0.0` encoder: a source-derived
+//! (proven) bound for quality 0-9 and an **empirical, not proven** envelope
+//! for quality 10-11.
 //!
 //! The encoder allocates through `alloc_no_stdlib::Allocator`, whose
 //! `alloc_cell` cannot fail, and indexes new cells immediately, so its storage
-//! cannot be admitted cell by cell. fontpixel therefore reserves this bound in
-//! the operation's working ledger before calling the encoder and keeps it until
-//! every worker has been joined. The dependency is not patched or vendored.
+//! cannot be admitted cell by cell. fontpixel therefore reserves the admitted
+//! amount in the operation's working ledger before calling the encoder and
+//! keeps it until every worker has been joined. The dependency is not patched
+//! or vendored.
 //!
 //! # Call shape covered
 //!
@@ -63,13 +66,43 @@
 //! term by term. It is a documented allowance, validated by the counting
 //! allocator in `crates/fontpixel-heap-check`, not a derived quantity.
 //!
-//! # Consequence
+//! # Quality 10-11: empirical admission
 //!
-//! At quality >= 10 the block-split clustering terms are linear in the
-//! metablock's symbol count with kilobyte constants, and the quality-11 match
-//! array alone approaches 400 MiB for a 256 KiB block. A sound bound therefore
-//! exceeds the 256 MiB default working ledger for nearly every real font at
-//! the default quality 11. See `strict/ACCEPTANCE-A.md`.
+//! The proven bound above is exact about which sites allocate, but at quality
+//! 10 and above its block-split clustering terms are linear in the metablock's symbol
+//! count with kilobyte constants (`ClusterBlocks` holds histograms and pair
+//! queues per block, and `FindBlocks` bounds the block count only by the
+//! symbol count). A tighter proof was attempted: the block-switch cost
+//! argument (`block_splitter.rs:225-330`, `update_cost_and_signal`) only shows
+//! that consecutive switches are at least `ceil(S / D)` symbols apart, where
+//! the switch cost `S` is 28.1/13.5/14.6 bits and the per-symbol cost spread
+//! `D` is up to `log2(total) + 2` bits, i.e. one or two symbols; that still
+//! leaves gigabytes for a full font. [`brotli_encoder_proven_heap_bound`] keeps
+//! that sound value for analysis (about 13.5 GB for a full Tong stream).
+//!
+//! Admission at quality 10-11 therefore uses, per encoder instance, the exact
+//! persistent tables (H10 hasher `2^17 + 2 * 2^lgwin` u32, ring buffer and its
+//! first cell, Huffman trees, [`BOOKKEEPING`]) plus
+//!
+//! `envelope = 1.5 * (1 MiB + 80 * min(n, 2^lgblock) + 7 * min(n, max_length))`
+//!
+//! for every data-dependent term (commands, output storage, Zopfli/HQ scratch,
+//! block splitting, clustering), plus each parallel worker's output cell. The
+//! constants were fitted on the counting-allocator matrix
+//! (`crates/fontpixel-heap-check/tests/encoder_bound.rs`): the data-dependent
+//! heap per instance was at most about 75 bytes per byte of the first 256 KiB
+//! block (Zopfli nodes, cost model and the initial `4b` HQ match array) and at
+//! most 6.7 bytes per further metablock byte (worst case: the full Tong square
+//! OTF at q10 with two workers), with no growth beyond the initial match
+//! array observed even for adversarial repeat structures (recombined
+//! vocabularies, chunk-mutation chains, Fibonacci words). The fit was rounded
+//! up and multiplied by 1.5. Across the final 816-case matrix (31 inputs, 16
+//! of them full Tong TTF/OTF exports) the observed data-dependent heap is at
+//! most 0.65 of the envelope, and total observed/admitted at most 0.90 at
+//! `lgwin = 22` (0.97 at `lgwin = 24`, where the exact tables dominate). Nothing here proves that other inputs cannot exceed the envelope;
+//! an input whose clustering produces far more blocks than any measured one
+//! could. This is recorded as an accepted limitation in
+//! `docs/w6.1-writer-budget.md` and `strict/ACCEPTANCE-A.md`.
 use brotli::enc::{
     Mem256f, ZopfliNode,
     cluster::HistogramPair,
@@ -348,28 +381,53 @@ fn instance(
     sum.0
 }
 
-/// Conservative upper bound, in bytes, of all heap the locked `brotli 9.0.0`
-/// encoder can allocate while fontpixel compresses `input_len` bytes at
-/// `quality` (0..=11) and window `lgwin` (clamped to 10..=24 as the encoder
-/// does) with `threads` workers (1..=16). WOFF2 always uses `lgwin = 22`.
-///
-/// This covers the dependency's internal storage only. fontpixel's own
-/// input copy, output buffer and allocator descriptors are admitted
-/// separately. Returns `None` on arithmetic overflow. The per-site derivation
-/// (with locked-source line numbers) is the module documentation of
-/// `src/woff/woff2/brotli_encode.rs`. At quality >= 10 the bound exceeds the
-/// default 256 MiB working limit for inputs above a few tens of KiB.
-pub fn brotli_encoder_heap_bound(
-    quality: u32,
-    lgwin: u32,
+/// Empirical envelope constants for quality 10-11 (see the module docs,
+/// "Quality 10-11: empirical admission"). Fitted to the counting-allocator
+/// matrix in `crates/fontpixel-heap-check`, then rounded up and scaled.
+const HQ_BASE: usize = 1 << 20;
+/// Bytes per input byte of the first backward-reference block.
+const HQ_PER_BLOCK_BYTE: usize = 80;
+/// Bytes per input byte of the metablock span.
+const HQ_PER_METABLOCK_BYTE: usize = 7;
+/// Safety factor applied to the fitted data-dependent envelope, in halves.
+const HQ_SAFETY_HALVES: usize = 3;
+
+/// Quality 10-11 admission for one encoder instance: the exact persistent
+/// tables (H10 hasher, ring buffer, Huffman trees, bookkeeping) plus an
+/// **empirical, not proven** envelope for everything that depends on the data
+/// (commands, output storage, Zopfli/HQ scratch, block splitting, clustering).
+fn empirical_hq_instance(quality: usize, lgwin: u32, n: usize, catable: bool) -> Option<usize> {
+    debug_assert!(quality >= 10);
+    let lgblock = if lgwin > 16 { lgwin.min(18) } else { 16 };
+    let block = 1usize << lgblock;
+    let rb_bits = 1 + lgwin.max(lgblock);
+    let max_length = 1usize << rb_bits.min(24);
+    let ring = (1usize << rb_bits).checked_add(block)?.checked_add(9)?;
+    let first = if catable { block } else { n.min(block) };
+    let envelope = HQ_PER_BLOCK_BYTE
+        .checked_mul(block.min(n))?
+        .checked_add(HQ_PER_METABLOCK_BYTE.checked_mul(max_length.min(n))?)?
+        .checked_add(HQ_BASE)?
+        .checked_mul(HQ_SAFETY_HALVES)?
+        / 2;
+    Sum(Some(BOOKKEEPING))
+        .add(hasher(quality, lgwin, n))
+        .add(array::<HuffmanTree>(3 * (2 * 704 + 1)))
+        .add(Some(ring))
+        .add(first.checked_add(9))
+        .add(Some(envelope))
+        .0
+}
+
+/// Sum per-instance bounds over fontpixel's single-stream or parallel call.
+fn call_bound(
     input_len: usize,
     threads: usize,
+    instance: impl Fn(usize, bool) -> Option<usize>,
 ) -> Option<usize> {
-    let quality = quality.min(11) as usize;
-    let lgwin = lgwin.clamp(10, 24);
     let threads = threads.max(1);
     if threads == 1 || input_len < PARALLEL_MIN_BYTES {
-        return instance(quality, lgwin, input_len, input_len, false);
+        return instance(input_len, false);
     }
     let mut sum = Sum(Some(0));
     for i in 0..threads {
@@ -378,10 +436,61 @@ pub fn brotli_encoder_heap_bound(
         let end = (i + 1).checked_mul(input_len)? / threads;
         let n = end - start;
         sum = sum
-            .add(instance(quality, lgwin, n, input_len, i != 0))
+            .add(instance(n, i != 0))
             .add(Some(brotli::enc::encode::BrotliEncoderMaxCompressedSize(n)));
     }
     sum.0
+}
+
+/// Bytes fontpixel admits for the locked `brotli 9.0.0` encoder's own heap
+/// while compressing `input_len` bytes at `quality` (0..=11), window `lgwin`
+/// (clamped to 10..=24 as the encoder does) and `threads` workers (1..=16).
+/// WOFF2 always uses `lgwin = 22`.
+///
+/// For quality 0-9 this is [`brotli_encoder_proven_heap_bound`]. For quality
+/// 10-11 it is an **empirical, not proven** envelope: exact persistent tables
+/// plus 1.5 x a fitted linear model of the data-dependent heap, enforced by the
+/// counting-allocator matrix in `crates/fontpixel-heap-check`. The proven
+/// bound for those qualities exceeds the 256 MiB default working limit for
+/// inputs above a few tens of KiB. fontpixel's own input copy, output buffer
+/// and allocator descriptors are admitted separately. Returns `None` on
+/// arithmetic overflow.
+pub fn brotli_encoder_heap_bound(
+    quality: u32,
+    lgwin: u32,
+    input_len: usize,
+    threads: usize,
+) -> Option<usize> {
+    let quality = quality.min(11) as usize;
+    let lgwin = lgwin.clamp(10, 24);
+    if quality >= 10 {
+        return call_bound(input_len, threads, |n, catable| {
+            empirical_hq_instance(quality, lgwin, n, catable)
+        });
+    }
+    call_bound(input_len, threads, |n, catable| {
+        instance(quality, lgwin, n, input_len, catable)
+    })
+}
+
+/// Source-derived (proven) upper bound of all heap the locked `brotli 9.0.0`
+/// encoder can allocate for the same call shape as
+/// [`brotli_encoder_heap_bound`]. The per-site derivation, with locked-source
+/// line numbers, is the module documentation of
+/// `src/woff/woff2/brotli_encode.rs`. At quality >= 10 its block-split
+/// clustering terms grow with the symbol count at kilobytes per symbol, so it
+/// is reported for analysis but not used for admission at those qualities.
+pub fn brotli_encoder_proven_heap_bound(
+    quality: u32,
+    lgwin: u32,
+    input_len: usize,
+    threads: usize,
+) -> Option<usize> {
+    let quality = quality.min(11) as usize;
+    let lgwin = lgwin.clamp(10, 24);
+    call_bound(input_len, threads, |n, catable| {
+        instance(quality, lgwin, n, input_len, catable)
+    })
 }
 
 #[cfg(test)]
@@ -400,15 +509,26 @@ mod tests {
         }
         // A full 256 KiB HQ block's match arrays alone exceed 300 MiB, so q11
         // can never be below that; the metablock phase is larger still.
-        let q10 = brotli_encoder_heap_bound(10, 22, 1 << 18, 1).unwrap();
-        let q11 = brotli_encoder_heap_bound(11, 22, 1 << 18, 1).unwrap();
+        let q10 = brotli_encoder_proven_heap_bound(10, 22, 1 << 18, 1).unwrap();
+        let q11 = brotli_encoder_proven_heap_bound(11, 22, 1 << 18, 1).unwrap();
         assert!(q11 >= q10 && q11 > 300 * 1024 * 1024);
         // Documented consequence: small inputs fit the 256 MiB default at
         // every quality, while q >= 10 exceeds it from a few tens of KiB.
         for quality in 0..=11 {
-            assert!(brotli_encoder_heap_bound(quality, 22, 1024, 2).unwrap() < 256 << 20);
+            assert!(brotli_encoder_proven_heap_bound(quality, 22, 1024, 2).unwrap() < 256 << 20);
         }
-        assert!(brotli_encoder_heap_bound(10, 22, 64 << 10, 1).unwrap() > 256 << 20);
+        assert!(brotli_encoder_proven_heap_bound(10, 22, 64 << 10, 1).unwrap() > 256 << 20);
+        // The admitted q10-11 envelope keeps a 7 MiB two-worker stream (a full
+        // Tong raw stream is 6.0-6.9 MB) inside the default.
+        assert!(brotli_encoder_heap_bound(11, 22, 7 << 20, 2).unwrap() < 240 << 20);
+        for quality in 0..=9 {
+            for len in [0, 1 << 16, 1 << 20, 8 << 20] {
+                assert_eq!(
+                    brotli_encoder_heap_bound(quality, 22, len, 2),
+                    brotli_encoder_proven_heap_bound(quality, 22, len, 2)
+                );
+            }
+        }
         assert!(brotli_encoder_heap_bound(9, 22, 8 << 20, 2).unwrap() < 256 << 20);
         assert!(brotli_encoder_heap_bound(11, 22, usize::MAX, 2).is_none());
     }

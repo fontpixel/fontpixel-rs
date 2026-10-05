@@ -193,7 +193,7 @@ threads 1/2, transform combinations and auxiliary blocks produced identical dige
 and identical error lines to `6297998` (9512 lines). The full Tong sfnt at q5/q11,
 threads 1/2 is identical with a 64 GiB ledger; at the 256 MiB default q11 now fails.
 
-### Bound versus default (decision for the coordinator)
+### Bound versus default (superseded by the resumed decision below)
 
 `brotli_encoder_heap_bound(q, 22, n, threads)`, MiB:
 
@@ -232,3 +232,62 @@ q >= 10 from the strict claim and document it; tighten the q >= 10 terms with a
 further proof (the dominant terms are `ClusterBlocks` histogram arrays and pair
 queues sized by block count, bounded today only by symbol count); or reopen the
 fallible-allocator route that the design sources rule out for this phase.
+
+## Resumed after the coordinator decision (2026-10-05)
+
+The ledger commits (`bc024c8`, `5146bde`) were merged into main (`417bee2`);
+the first bound commits (`73eb8bc`, `1facfb7`) were not, because they made
+default q11 WOFF2 fail. Main was merged back into this branch without
+conflicts (`working.rs` keeps one `Budget::peak`; B's `vec_into`/`split` are
+untouched; `sfnt/collection.rs` is unchanged, so the TTC reservations still
+match it).
+
+**Route: empirical for quality 10-11; proven for quality 0-9.**
+
+- Tighter proof attempt (timeboxed): the dominant q >= 10 terms are
+  `ClusterBlocks` histogram arrays and pair queues sized by the block count.
+  The block-switch cost argument in `FindBlocks`/`update_cost_and_signal`
+  only proves consecutive switches are `ceil(S / D)` symbols apart, with switch
+  cost `S` = 28.1/13.5/14.6 bits and per-symbol cost spread `D` up to
+  `log2(total) + 2` bits, i.e. one or two symbols. Nothing in
+  `block_splitter.rs`/`cluster.rs`/`metablock.rs` (max 256 block types, batch
+  size 64, 100/50 split histograms) caps the block count of a metablock below
+  that, so a proven bound stays near 14 GB for a full Tong stream. Not
+  provable within the timebox.
+- Admission now: `brotli_encoder_heap_bound` = proven bound for q0-9
+  (unchanged, `brotli_encoder_proven_heap_bound`), and for q10-11 the exact
+  persistent tables (H10 hasher, ring buffer + first cell, Huffman trees,
+  bookkeeping) plus
+  `1.5 * (1 MiB + 80 * min(n, 2^lgblock) + 7 * min(n, max_length))` per
+  encoder instance, plus each parallel worker's output cell. Documented as
+  **empirical, not proven** in the `brotli_encode.rs` module docs, here, and in
+  `docs/w6.1-writer-budget.md`.
+- Evidence: `fontpixel-heap-check/tests/encoder_bound.rs`, 816 cases over 31
+  inputs (synthetic, adversarial repeat structures: recombined vocabularies,
+  chunk-mutation chains, Fibonacci words; all 16 full Tong TTF/OTF exports;
+  the Tong sfnt), q0-11, lgwin 10/16/22/24, 1 and 2 threads. Observed peak <=
+  admitted in every case. q0-9: max 0.929. q10-11: the data-dependent heap is
+  at most 0.65 of the envelope; total observed/admitted at most 0.90 at
+  lgwin 22.
+- Full Tong q11 / 2 threads (admitted vs observed encoder heap): square TTF
+  9.06 MB sfnt 256.8 vs 168.9 MB; dot TTF 6.47 MB 227.0 vs 154.8 MB; the
+  `vector-native` sfnt 239.5 vs 162.1 MB.
+- Default CLI path: the WOFF2 ledger of each default Tong task has 254.8-256.1
+  MB remaining at the encoder gate for raw Brotli streams of 6.05-6.83 MB; the
+  largest stream needs about 231 MB of encoder admission plus 13.7 MB of
+  fontpixel buffers, leaving about 10 MB. Estimated limit: raw streams up to
+  about 7.5 MB at q11/2 threads fit the 255 MiB CLI working allowance; larger
+  ones return `ResourceLimit` (q <= 9 or a larger limit then applies).
+- Default Tong batch (`benches/phase6_tong.py batch`, release build of this
+  branch): exit 0, 64/64 tasks, 84 artifacts. All 84 hashes equal both main
+  `417bee2` and `6297998` run the same way. Against
+  `WORK/gates/100-v2-tong-default-cli/stdout.log` (frozen-binaries-v2), 60
+  BDF/PCF/OTB artifacts match and 24 TTF/OTF/WOFF2 differ for main and
+  `6297998` alike: the sfnt `OS/2.ulCodePageRange1` byte at offset 79 and the
+  derived `head.checkSumAdjustment` differ. That source change predates this
+  unit; WOFF2 bytes are unchanged by it.
+- Existing tests: `tests/woff.rs` (including
+  `large_parallel_streams_are_deterministic_and_preserve_all_tables` with its
+  original budget), `woff_budget`, the lib unit tests, `vector_raster`,
+  `contracts`, `embedded_bitmap`, `model`, `bdf`, and the CLI `cli`,
+  `merge_phase6`, `phase6_cli_recovery` tests pass.

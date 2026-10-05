@@ -7,7 +7,7 @@ use super::*;
 use crate::working::Vector;
 mod brotli_decode;
 mod brotli_encode;
-pub use brotli_encode::brotli_encoder_heap_bound;
+pub use brotli_encode::{brotli_encoder_heap_bound, brotli_encoder_proven_heap_bound};
 #[cfg(feature = "ttc")]
 pub(in crate::woff) mod collection;
 mod transform;
@@ -127,8 +127,9 @@ fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Own
         size_hint: data.len(),
         ..Default::default()
     };
-    // The encoder's own heap cannot be refused cell by cell; admit its
-    // source-derived bound first and hold it until every worker has joined.
+    // The encoder's own heap cannot be refused cell by cell; reserve its
+    // admitted bound (proven for q0-9, empirical for q10-11) first and hold it
+    // until every worker has joined.
     let encoder = budget.reserve(
         brotli_encoder_heap_bound(o.quality, LGWIN, data.len(), o.compression_threads)
             .ok_or_else(|| budget.error())?,
