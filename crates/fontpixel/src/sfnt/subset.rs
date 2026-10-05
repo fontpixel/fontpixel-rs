@@ -1,9 +1,17 @@
 //! Compact Unicode subsets with GSUB/composite closure and explicit table safety.
+//!
+//! All storage newly owned by a subset operation is admitted to one working
+//! ledger before it is allocated and stays charged until it drops: directory,
+//! selected cmap, GSUB model/closure/remap, glyf validation temporaries and
+//! composite dependencies, keep/mapping trees, CFF model and output, metrics,
+//! OS/2, post, embedded strikes, auxiliary tables, copied global tables,
+//! builder nodes, the final sfnt and the report. Borrowed input bytes and the
+//! caller's selection options are the caller's to account for.
 use super::{
-    glyf::{GlyfTable, Glyph},
+    glyf::Dependencies,
     gsub::{Gsub, LayoutLimits},
     metrics::{self, Axis},
-    working::{Budget, Vector as WorkingVector},
+    working::{Budget, Buffer, Lease, Owned, Vector as WorkingVector},
     *,
 };
 use crate::{
@@ -44,25 +52,140 @@ fn get<'a>(f: &Sfnt<'a>, t: [u8; 4]) -> Result<&'a [u8]> {
     f.table(t)
         .ok_or_else(|| invalid(format!("subset missing {}", String::from_utf8_lossy(&t))))
 }
-fn loss(r: &mut Report, code: &str, msg: String) {
-    r.push(ReportEntry {
-        level: Level::Warning,
-        impact: Impact::Loss,
-        code: code.into(),
-        location: Default::default(),
-        message: msg,
-    });
+/// Report entries and their owned strings, each admitted before allocation.
+/// Field order drops the entries before their charges.
+struct Notes {
+    entries: WorkingVector<ReportEntry>,
+    text: Lease,
+}
+impl Notes {
+    fn new(budget: &Budget) -> Result<Self> {
+        Ok(Self {
+            entries: WorkingVector::new(budget)?,
+            text: budget.reserve(0)?,
+        })
+    }
+    fn push(
+        &mut self,
+        budget: &Budget,
+        (level, impact): (Level, Impact),
+        code: &str,
+        message: &[&str],
+    ) -> Result<()> {
+        let length = message
+            .iter()
+            .try_fold(0usize, |n, part| n.checked_add(part.len()))
+            .ok_or_else(|| budget.error())?;
+        let mut charge = budget.reserve(
+            code.len()
+                .checked_add(length)
+                .ok_or_else(|| budget.error())?,
+        )?;
+        self.entries.reserve_exact(1)?;
+        self.text.merge(&mut charge)?;
+        let mut text = String::with_capacity(length);
+        for part in message {
+            text.push_str(part);
+        }
+        self.entries.push(ReportEntry {
+            level,
+            impact,
+            code: code.into(),
+            location: Default::default(),
+            message: text,
+        })
+    }
+    fn loss(&mut self, budget: &Budget, code: &str, message: &[&str]) -> Result<()> {
+        self.push(budget, (Level::Warning, Impact::Loss), code, message)
+    }
+    fn into_parts(self) -> Result<(Report, Lease)> {
+        let (entries, mut lease) = self.entries.into_parts();
+        let mut text = self.text;
+        let report = Report { entries };
+        if let Err(error) = lease.merge(&mut text) {
+            drop(report);
+            return Err(error);
+        }
+        Ok((report, lease))
+    }
+}
+/// Output tables in the final builder. The builder (and every table it owns)
+/// drops before the lease that admitted its nodes and table bytes.
+struct Tables<'a> {
+    builder: SfntBuilder,
+    lease: Lease,
+    dropped: &'a BTreeSet<[u8; 4]>,
+}
+impl<'a> Tables<'a> {
+    fn new(
+        flavor: Flavor,
+        count: usize,
+        dropped: &'a BTreeSet<[u8; 4]>,
+        budget: &Budget,
+    ) -> Result<Self> {
+        // Output tags are a subset of the source directory's tags.
+        Ok(Self {
+            lease: budget.reserve_tree::<[u8; 4], Vec<u8>>(count)?,
+            builder: SfntBuilder::new(flavor),
+            dropped,
+        })
+    }
+    fn put(&mut self, tag: [u8; 4], table: Owned<Vec<u8>>) -> Result<()> {
+        let (data, lease) = table.into_parts();
+        self.put_parts([(tag, data)], lease)
+    }
+    /// Insert tables sharing one charge; explicitly dropped tags are discarded
+    /// (their storage drops before the charge does).
+    fn put_parts<const N: usize>(
+        &mut self,
+        parts: [([u8; 4], Vec<u8>); N],
+        mut lease: Lease,
+    ) -> Result<()> {
+        if let Err(error) = self.lease.merge(&mut lease) {
+            drop(parts);
+            return Err(error);
+        }
+        for (tag, data) in parts {
+            if !self.dropped.contains(&tag) {
+                self.builder.insert(tag, data)?;
+            }
+        }
+        Ok(())
+    }
+}
+/// Copy borrowed table bytes into an exact ledger buffer.
+fn copy(budget: &Budget, data: &[u8]) -> Result<Owned<Vec<u8>>> {
+    let mut out = Buffer::with_capacity(budget, data.len())?;
+    out.extend(data)?;
+    Ok(out.into_owned())
 }
 /// Subset TTF, CFF1 OTF, bitmap-only sfnt and matching embedded bitmap strikes.
 /// Unknown table semantics are rejected unless the exact tag is in `drop_tables`.
+///
+/// `limits.sfnt.resources.max_total_bytes` is the caller's remaining working
+/// allowance: every allocation the subset makes is charged to one ledger with
+/// that capacity, and failure is `Error::ResourceLimit`.
 pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
+    let working = Budget::new(
+        o.limits.sfnt.resources.max_total_bytes,
+        "sfnt subset working bytes",
+    );
+    let (result, _lease) = subset_with_budget(data, o, &working)?.into_parts();
+    Ok(result)
+}
+/// Subset on a caller's shared ledger. The returned output bytes, glyph
+/// mapping and report keep their charge in the returned lease.
+pub(crate) fn subset_with_budget(
+    data: &[u8],
+    o: &Options,
+    working: &Budget,
+) -> Result<Owned<Subset>> {
     let l = &o.limits.sfnt;
     bounded(o.codepoints.len(), l.max_cmap_mappings, "subset codepoints")?;
     if o.codepoints.iter().any(|&cp| char::from_u32(cp).is_none()) {
         return Err(invalid("subset requires Unicode scalars"));
     }
-    let working = Budget::new(l.resources.max_total_bytes, "sfnt subset working bytes");
-    let f = Sfnt::parse_with_budget(data, l, &working)?;
+    let f = Sfnt::parse_with_budget(data, l, working)?;
     let count = u16_at(get(&f, *b"maxp")?, 4)?;
     l.glyphs(usize::from(count))?;
     if o.drop_tables.contains(b"vhea") != o.drop_tables.contains(b"vmtx") {
@@ -82,7 +205,7 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
             "cannot explicitly drop a required or paired glyph table",
         ));
     }
-    let mut report = Report::default();
+    let mut report = Notes::new(working)?;
     let rewritten = [
         *b"head", *b"maxp", *b"cmap", *b"hhea", *b"hmtx", *b"vhea", *b"vmtx", *b"glyf", *b"loca",
         *b"CFF ", *b"GSUB", *b"post", *b"OS/2", *b"EBDT", *b"EBLC", *b"bdat", *b"bloc", *b"VORG",
@@ -94,20 +217,20 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     ];
     for t in f.tables() {
         if t.tag == *b"DSIG" {
-            loss(
-                &mut report,
+            report.loss(
+                working,
                 "subset.signature_removed",
-                "Subsetting invalidates the source digital signature".into(),
-            );
+                &["Subsetting invalidates the source digital signature"],
+            )?;
         } else if o.drop_tables.contains(&t.tag) {
-            loss(
-                &mut report,
+            report.loss(
+                working,
                 "subset.table_dropped",
-                format!(
-                    "Explicitly discarded table {}",
-                    String::from_utf8_lossy(&t.tag)
-                ),
-            );
+                &[
+                    "Explicitly discarded table ",
+                    &String::from_utf8_lossy(&t.tag),
+                ],
+            )?;
         } else if !rewritten.contains(&t.tag) && !globals.contains(&t.tag) {
             return Err(invalid(format!(
                 "cannot safely remap table {}; explicitly drop that tag to acknowledge loss",
@@ -132,12 +255,12 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         }
     }
     let mut cmap =
-        cmap::decode_with_budget(get(&f, *b"cmap")?, count, l, Some(&o.codepoints), &working)?;
+        cmap::decode_with_budget(get(&f, *b"cmap")?, count, l, Some(&o.codepoints), working)?;
     let gsub = if o.drop_tables.contains(b"GSUB") {
         None
     } else {
         f.table(*b"GSUB")
-            .map(|b| Gsub::decode_with_budget(b, count, &o.limits, &working))
+            .map(|b| Gsub::decode_with_budget(b, count, &o.limits, working))
             .transpose()?
     };
     if gsub
@@ -145,7 +268,14 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         .and_then(|g| g.scripts.get(b"DFLT"))
         .is_some_and(|s| s.default.is_none())
     {
-        report.push(ReportEntry{level:Level::Warning,impact:Impact::Repair,code:"subset.dflt_langsys_repaired".into(),location:Default::default(),message:"Added the required empty DFLT default language system; explicit language routing is unchanged".into()});
+        report.push(
+            working,
+            (Level::Warning, Impact::Repair),
+            "subset.dflt_langsys_repaired",
+            &[
+                "Added the required empty DFLT default language system; explicit language routing is unchanged",
+            ],
+        )?;
     }
     let mut keep_lease = working.reserve(0)?;
     let mut keep = BTreeSet::new();
@@ -156,19 +286,20 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         }
     }
     if let Some(g) = &gsub {
-        g.closure_with_budget(&mut keep, &mut keep_lease, &working)?;
+        g.closure_with_budget(&mut keep, &mut keep_lease, working)?;
     }
     let gl = glyf::Limits {
         sfnt: l.clone(),
         ..Default::default()
     };
-    let glyf = if f.table(*b"glyf").is_some() {
-        Some(GlyfTable::from_sfnt(&f, &gl)?)
+    // Every glyph is fully validated; only composite child IDs are retained.
+    let dependencies = if f.table(*b"glyf").is_some() {
+        Some(Dependencies::from_sfnt_with_budget(&f, &gl, working)?)
     } else {
         None
     };
-    if let Some(table) = &glyf {
-        let mut queue = WorkingVector::with_capacity(&working, keep.len())?;
+    if let Some(table) = &dependencies {
+        let mut queue = WorkingVector::with_capacity(working, keep.len())?;
         for &glyph in &keep {
             queue.push(glyph)?;
         }
@@ -176,39 +307,36 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         while next < queue.len() {
             let gid = queue[next];
             next += 1;
-            if let Glyph::Composite(g) = &table.glyphs[usize::from(gid)] {
-                for c in &g.components {
-                    if !keep.contains(&c.glyph_id) {
-                        keep_lease.grow_to(working.tree_bytes::<u16, ()>(keep.len() + 1)?)?;
-                        queue.reserve(1)?;
-                        keep.insert(c.glyph_id);
-                        queue.push(c.glyph_id)?;
-                    }
+            for &child in table.children(usize::from(gid)) {
+                if !keep.contains(&child) {
+                    keep_lease.grow_to(working.tree_bytes::<u16, ()>(keep.len() + 1)?)?;
+                    queue.reserve(1)?;
+                    keep.insert(child);
+                    queue.push(child)?;
                 }
             }
         }
     }
-    let _mapping_lease = working.reserve_tree::<u16, u16>(keep.len())?;
+    // The mapping is returned; its charge moves into the returned lease.
+    let mut mapping_lease = working.reserve_tree::<u16, u16>(keep.len())?;
     let mut mapping = BTreeMap::new();
     for (index, &glyph) in keep.iter().enumerate() {
         mapping.insert(glyph, index as u16);
     }
     let n = keep.len() as u16;
-    // Leases precede the table owners so errors drop actual table storage first.
-    // Budget-aware encoders transfer their charge through final sfnt assembly.
-    let mut replacement_leases = WorkingVector::new(&working)?;
-    let mut replacements = BTreeMap::new();
-    let mut head = get(&f, *b"head")?.to_vec();
+    let mut tables = Tables::new(f.flavor(), f.tables().len(), &o.drop_tables, working)?;
+    let mut head = copy(working, get(&f, *b"head")?)?;
     bytes(&head, 0, 54)?;
-    let mut maxp = get(&f, *b"maxp")?.to_vec();
+    let mut maxp = copy(working, get(&f, *b"maxp")?)?;
     maxp[4..6].copy_from_slice(&n.to_be_bytes());
-    if let Some(table) = &glyf {
-        let (data, locations, format) = subset_glyf(&f, table, &keep, &mapping, l)?;
-        head[50..52].copy_from_slice(&format.to_be_bytes());
+    if let Some(table) = dependencies {
+        let raw = subset_glyf(&f, &table, &keep, &mapping, l, working)?;
+        drop(table);
+        head[50..52].copy_from_slice(&raw.index_to_loc_format.to_be_bytes());
         // Keep conservative original maxp maxima and the original global bbox.
         // Hint programs may use stored glyph bboxes through phantom points.
-        replacements.insert(*b"glyf", data);
-        replacements.insert(*b"loca", locations);
+        tables.put(*b"glyf", raw.glyf)?;
+        tables.put(*b"loca", raw.loca)?;
     } else if f.table(*b"CFF ").is_some() {
         #[cfg(feature = "cff")]
         {
@@ -216,11 +344,15 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
                 sfnt: l.clone(),
                 ..Default::default()
             };
-            let c = cff::Cff::from_sfnt(&f, &cl)?;
-            replacements.insert(
-                *b"CFF ",
-                c.subset(&keep.iter().copied().collect::<Vec<_>>(), &cl)?,
-            );
+            let c = cff::Cff::from_sfnt_with_budget(&f, &cl, working)?;
+            let mut order_lease = working.reserve(0)?;
+            let mut order = working.vec_into::<u16>(keep.len(), &mut order_lease)?;
+            order.extend(keep.iter().copied());
+            let table = c.subset_with_budget(&order, &cl, working)?;
+            drop(order);
+            drop(order_lease);
+            drop(c);
+            tables.put(*b"CFF ", table)?;
         }
         #[cfg(not(feature = "cff"))]
         return Err(crate::Error::FeatureDisabled {
@@ -229,142 +361,182 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     } else if f.table(*b"EBDT").is_none() && f.table(*b"bdat").is_none() {
         return Err(invalid("subset has no supported glyph data"));
     }
-    replacements.insert(*b"head", head);
-    replacements.insert(*b"maxp", maxp);
+    tables.put(*b"head", head)?;
+    tables.put(*b"maxp", maxp)?;
     for (axis, ht, mt) in [
         (Axis::Horizontal, *b"hhea", *b"hmtx"),
         (Axis::Vertical, *b"vhea", *b"vmtx"),
     ] {
         if axis == Axis::Horizontal || f.table(ht).is_some() || f.table(mt).is_some() {
-            let (h, m) = metrics::decode(axis, get(&f, ht)?, get(&f, mt)?, count, l)?;
-            let m = keep.iter().map(|&i| m[usize::from(i)]).collect::<Vec<_>>();
-            let e = metrics::encode(axis, &h, &m, true, l)?;
-            replacements.insert(ht, e.header);
-            replacements.insert(mt, e.metrics);
+            let (h, m) = metrics::decode_selected_with_budget(
+                axis,
+                get(&f, ht)?,
+                get(&f, mt)?,
+                count,
+                &keep,
+                l,
+                working,
+            )?;
+            let encoded = metrics::encode_with_budget(axis, &h, &m, true, l, working)?;
+            drop(m);
+            let (encoded, lease) = encoded.into_parts();
+            tables.put_parts([(ht, encoded.header), (mt, encoded.metrics)], lease)?;
         }
     }
     for value in cmap.values_mut() {
         *value = mapping[value];
     }
-    replacement_leases.reserve(1)?;
-    let (encoded_cmap, cmap_lease) = cmap::encode_with_budget(&cmap, n, l, &working)?.into_parts();
-    replacements.insert(*b"cmap", encoded_cmap.data);
-    replacement_leases.push(cmap_lease)?;
+    let (encoded_cmap, cmap_lease) = cmap::encode_with_budget(&cmap, n, l, working)?.into_parts();
+    tables.put_parts([(*b"cmap", encoded_cmap.data)], cmap_lease)?;
     let mut os = os2::Os2Table::decode(get(&f, *b"OS/2")?, l)?;
-    os.set_unicode_coverage(&cmap.keys().copied().collect())?;
-    replacements.insert(*b"OS/2", os.encode(l)?);
-    let mut post = post::PostTable::decode(get(&f, *b"post")?, count, l)?;
-    if let Some(names) = &mut post.names {
-        *names = keep
-            .iter()
-            .map(|&i| names[usize::from(i)].clone())
-            .collect();
-    }
-    replacements.insert(*b"post", post.encode(n, l)?);
+    os.set_unicode_coverage_map(&cmap)?;
+    drop(cmap);
+    tables.put(*b"OS/2", os.encode_with_budget(l, working)?)?;
+    let post =
+        post::PostTable::decode_selected_with_budget(get(&f, *b"post")?, count, &keep, l, working)?;
+    tables.put(*b"post", post.encode_with_budget(n, l, working)?)?;
+    drop(post);
     if let Some(source) = gsub {
-        let g = source.subset_with_budget(&mapping, &working)?;
+        let g = source.subset_with_budget(&mapping, working)?;
         drop(source);
         if !g.features.is_empty() {
-            replacement_leases.reserve(1)?;
-            let (data, lease) = g.encode_with_budget(n, &o.limits, &working)?.into_parts();
-            replacements.insert(*b"GSUB", data);
-            replacement_leases.push(lease)?;
+            tables.put(*b"GSUB", g.encode_with_budget(n, &o.limits, working)?)?;
         }
     }
     let bl = bitmap::Limits {
         sfnt: l.clone(),
         ..Default::default()
     };
+    let mut ppems_lease = working.reserve(0)?;
     let mut retained_ppems = BTreeSet::new();
     for kind in [bitmap::Kind::OpenType, bitmap::Kind::Apple] {
         let (dt, lt) = kind.tags();
         if f.table(dt).is_some() || f.table(lt).is_some() {
-            let mut strikes = bitmap::decode(get(&f, lt)?, get(&f, dt)?, kind, count, &bl)?;
-            for s in &mut strikes {
-                s.glyphs = std::mem::take(&mut s.glyphs)
-                    .into_iter()
-                    .filter_map(|(g, b)| mapping.get(&g).map(|&n| (n, b)))
-                    .collect();
-            }
+            let mut strikes = bitmap::decode_selected_with_budget(
+                get(&f, lt)?,
+                get(&f, dt)?,
+                kind,
+                count,
+                &bl,
+                &mapping,
+                working,
+            )?;
             strikes.retain(|s| !s.glyphs.is_empty());
-            retained_ppems.extend(strikes.iter().map(|s| [s.ppem_x, s.ppem_y]));
+            for s in strikes.iter() {
+                let ppem = [s.ppem_x, s.ppem_y];
+                if !retained_ppems.contains(&ppem) {
+                    ppems_lease
+                        .grow_to(working.tree_bytes::<[u8; 2], ()>(retained_ppems.len() + 1)?)?;
+                    retained_ppems.insert(ppem);
+                }
+            }
             if !strikes.is_empty() {
-                let e = bitmap::encode(&strikes, kind, n, &bl)?;
-                replacements.insert(dt, e.data);
-                replacements.insert(lt, e.location);
+                let (e, lease) =
+                    bitmap::encode_with_budget(&strikes, kind, n, &bl, working)?.into_parts();
+                drop(strikes);
+                tables.put_parts([(dt, e.data), (lt, e.location)], lease)?;
             }
         }
     }
     if let Some(data) = f.table(*b"EBSC") {
-        let scales = bitmap::decode_scaling(data, &bl)?
-            .into_iter()
-            .filter(|s| retained_ppems.contains(&s.source))
-            .collect::<Vec<_>>();
+        let mut scales = bitmap::decode_scaling_with_budget(data, &bl, working)?;
+        scales.retain(|s| retained_ppems.contains(&s.source));
         if !scales.is_empty() {
-            replacements.insert(*b"EBSC", bitmap::encode_scaling(&scales, &bl)?);
+            let encoded = bitmap::encode_scaling_with_budget(&scales, &bl, working)?;
+            drop(scales);
+            tables.put(*b"EBSC", encoded)?;
         }
     }
+    drop(retained_ppems);
+    drop(ppems_lease);
     if let Some(v) = f.table(*b"VORG") {
-        replacements.insert(*b"VORG", vorg(v, count, &mapping)?);
+        tables.put(*b"VORG", vorg(v, count, &mapping, working)?)?;
     }
     if let Some(v) = f.table(*b"LTSH") {
         if u16_at(v, 0)? != 0 || u16_at(v, 2)? != count {
             return Err(invalid("invalid LTSH"));
         }
         bytes(v, 4, usize::from(count))?;
-        let mut out = vec![0, 0];
-        p16(&mut out, n);
-        out.extend(keep.iter().map(|&g| v[4 + usize::from(g)]));
-        replacements.insert(*b"LTSH", out);
+        let mut out = Buffer::with_capacity(working, 4 + keep.len())?;
+        out.extend(&[0, 0])?;
+        out.extend(&n.to_be_bytes())?;
+        for &g in &keep {
+            out.push(v[4 + usize::from(g)])?;
+        }
+        tables.put(*b"LTSH", out.into_owned())?;
     }
     if let Some(v) = f.table(*b"hdmx") {
-        replacements.insert(*b"hdmx", hdmx(v, count, &keep, l)?);
+        tables.put(*b"hdmx", hdmx(v, count, &keep, l, working)?)?;
     }
-    let mut b = SfntBuilder::new(f.flavor());
+    drop(keep);
+    drop(keep_lease);
+    // Unchanged global tables are copied last, while every replacement is
+    // still live, and all of them coexist with the final output buffer.
     for t in f.tables() {
         if globals.contains(&t.tag) && !o.drop_tables.contains(&t.tag) {
-            b.insert(t.tag, t.data.to_vec())?;
+            tables.put(t.tag, copy(working, t.data)?)?;
         }
     }
-    for (t, v) in replacements {
-        if !o.drop_tables.contains(&t) {
-            b.insert(t, v)?;
-        }
-    }
-    let (bytes, _output_lease) = b.build_with_budget(l, &working)?.into_parts();
-    Ok(Subset {
+    let output = tables.builder.build_with_budget(l, working)?;
+    drop(tables);
+    drop(f);
+    let (bytes, mut lease) = output.into_parts();
+    let (report, mut report_lease) = report.into_parts()?;
+    let result = Subset {
         bytes,
         glyph_mapping: mapping,
         report,
-    })
+    };
+    if let Err(error) = lease
+        .merge(&mut mapping_lease)
+        .and_then(|()| lease.merge(&mut report_lease))
+    {
+        drop(result);
+        return Err(error);
+    }
+    Ok(Owned::from_parts(result, lease))
 }
-fn vorg(data: &[u8], count: u16, map: &BTreeMap<u16, u16>) -> Result<Vec<u8>> {
+fn vorg(
+    data: &[u8],
+    count: u16,
+    map: &BTreeMap<u16, u16>,
+    budget: &Budget,
+) -> Result<Owned<Vec<u8>>> {
     if u32_at(data, 0)? != 0x10000 {
         return Err(invalid("unsupported VORG version"));
     }
     let n = usize::from(u16_at(data, 6)?);
     bytes(data, 8, 4 * n)?;
-    let mut pairs = Vec::new();
     let mut prev = None;
+    let mut kept = 0usize;
     for i in 0..n {
         let id = u16_at(data, 8 + 4 * i)?;
         if id >= count || prev.is_some_and(|p| p >= id) {
             return Err(invalid("invalid VORG record"));
         }
         prev = Some(id);
-        if let Some(&new) = map.get(&id) {
-            pairs.push((new, u16_at(data, 10 + 4 * i)?));
+        if map.contains_key(&id) {
+            kept += 1;
         }
     }
-    let mut out = data[..6].to_vec();
-    p16(&mut out, to16(pairs.len())?);
-    for (a, b) in pairs {
-        p16(&mut out, a);
-        p16(&mut out, b);
+    let mut out = Buffer::with_capacity(budget, 8 + 4 * kept)?;
+    out.extend(&data[..6])?;
+    out.extend(&to16(kept)?.to_be_bytes())?;
+    for i in 0..n {
+        if let Some(&new) = map.get(&u16_at(data, 8 + 4 * i)?) {
+            out.extend(&new.to_be_bytes())?;
+            out.extend(&data[10 + 4 * i..12 + 4 * i])?;
+        }
     }
-    Ok(out)
+    Ok(out.into_owned())
 }
-fn hdmx(data: &[u8], count: u16, keep: &BTreeSet<u16>, l: &Limits) -> Result<Vec<u8>> {
+fn hdmx(
+    data: &[u8],
+    count: u16,
+    keep: &BTreeSet<u16>,
+    l: &Limits,
+    budget: &Budget,
+) -> Result<Owned<Vec<u8>>> {
     if u16_at(data, 0)? != 0 {
         return Err(invalid("unsupported hdmx version"));
     }
@@ -381,7 +553,8 @@ fn hdmx(data: &[u8], count: u16, keep: &BTreeSet<u16>, l: &Limits) -> Result<Vec
     )?;
     let size = (keep.len() + 5) & !3;
     l.table(8 + n * size)?;
-    let mut out = vec![0; 8 + n * size];
+    let mut out = Buffer::with_capacity(budget, 8 + n * size)?;
+    out.resize(8 + n * size, 0)?;
     out[2..4].copy_from_slice(&(n as u16).to_be_bytes());
     out[4..8].copy_from_slice(&to32(size)?.to_be_bytes());
     for i in 0..n {
@@ -393,16 +566,26 @@ fn hdmx(data: &[u8], count: u16, keep: &BTreeSet<u16>, l: &Limits) -> Result<Vec
         }
         dst[1] = *dst[2..2 + keep.len()].iter().max().unwrap_or(&0);
     }
-    Ok(out)
+    Ok(out.into_owned())
 }
 
+/// Raw glyf/loca replacement tables and the matching head.indexToLocFormat.
+struct GlyfSubset {
+    glyf: Owned<Vec<u8>>,
+    loca: Owned<Vec<u8>>,
+    index_to_loc_format: i16,
+}
+/// Copy selected raw glyph records into exact pre-sized glyf/loca buffers,
+/// renumbering composite children in place. Instructions, bounding boxes and
+/// all other record bytes are preserved exactly.
 fn subset_glyf(
     f: &Sfnt<'_>,
-    parsed: &GlyfTable,
+    dependencies: &Dependencies,
     keep: &BTreeSet<u16>,
     mapping: &BTreeMap<u16, u16>,
     l: &Limits,
-) -> Result<(Vec<u8>, Vec<u8>, i16)> {
+    budget: &Budget,
+) -> Result<GlyfSubset> {
     let loca = get(f, *b"loca")?;
     let glyf = get(f, *b"glyf")?;
     let original_format = u16_at(get(f, *b"head")?, 50)?;
@@ -413,29 +596,42 @@ fn subset_glyf(
             _ => Err(invalid("invalid loca format")),
         }
     };
-    let mut out = Vec::new();
-    let mut offsets = Vec::with_capacity(keep.len() + 1);
-    for &gid in keep {
-        offsets.push(out.len());
+    let span = |gid: u16| -> Result<(usize, usize)> {
         let start = offset(usize::from(gid))?;
         let end = offset(usize::from(gid) + 1)?;
         let size = end
             .checked_sub(start)
             .ok_or_else(|| invalid("decreasing loca"))?;
-        l.table(out.len().saturating_add(size).saturating_add(1))?;
-        let mut record = bytes(glyf, start, size)?.to_vec();
-        if let Glyph::Composite(g) = &parsed.glyphs[usize::from(gid)] {
-            let mut at = 10;
-            // The existing bounded glyf reader already validated all flags,
-            // arguments, programs, graph edges and compound expansion budgets.
-            for component in &g.components {
-                let flags = u16_at(&record, at)?;
-                if u16_at(&record, at + 2)? != component.glyph_id {
+        Ok((start, size))
+    };
+    // Size the output with the same per-record checks, in the same order, as
+    // incremental writing would apply; every record is two-byte aligned.
+    let mut total = 0usize;
+    for &gid in keep {
+        let (start, size) = span(gid)?;
+        l.table(total.saturating_add(size).saturating_add(1))?;
+        bytes(glyf, start, size)?;
+        total += size + size % 2;
+    }
+    let mut out = Buffer::with_capacity(budget, total)?;
+    for &gid in keep {
+        let (start, size) = span(gid)?;
+        let at = out.len();
+        out.extend(&glyf[start..start + size])?;
+        let children = dependencies.children(usize::from(gid));
+        if !children.is_empty() {
+            let record = &mut out[at..];
+            let mut cursor = 10;
+            // The shared glyf validator already checked all flags, arguments,
+            // programs, graph edges and compound expansion budgets.
+            for &child in children {
+                let flags = u16_at(record, cursor)?;
+                if u16_at(record, cursor + 2)? != child {
                     return Err(invalid("composite preflight mismatch"));
                 }
-                record[at + 2..at + 4].copy_from_slice(&mapping[&component.glyph_id].to_be_bytes());
-                at += 4 + if flags & 1 != 0 { 4 } else { 2 };
-                at += if flags & 8 != 0 {
+                record[cursor + 2..cursor + 4].copy_from_slice(&mapping[&child].to_be_bytes());
+                cursor += 4 + if flags & 1 != 0 { 4 } else { 2 };
+                cursor += if flags & 8 != 0 {
                     2
                 } else if flags & 64 != 0 {
                     4
@@ -446,21 +642,37 @@ fn subset_glyf(
                 };
             }
         }
-        out.extend(record);
         if !out.len().is_multiple_of(2) {
-            out.push(0);
+            out.push(0)?;
         }
     }
-    offsets.push(out.len());
-    let short = out.len() / 2 <= usize::from(u16::MAX);
-    let mut locations = Vec::new();
-    for offset in offsets {
+    let short = total / 2 <= usize::from(u16::MAX);
+    let entry = if short { 2 } else { 4 };
+    let size = (keep.len() + 1)
+        .checked_mul(entry)
+        .ok_or_else(|| invalid("loca size overflow"))?;
+    if !short {
+        to32(total)?;
+    }
+    l.table(size)?;
+    let mut locations = Buffer::with_capacity(budget, size)?;
+    let mut write = |position: usize| -> Result<()> {
         if short {
-            p16(&mut locations, to16(offset / 2)?);
+            locations.extend(&to16(position / 2)?.to_be_bytes())
         } else {
-            p32(&mut locations, to32(offset)?);
+            locations.extend(&to32(position)?.to_be_bytes())
         }
+    };
+    let mut position = 0usize;
+    for &gid in keep {
+        write(position)?;
+        let (_, size) = span(gid)?;
+        position += size + size % 2;
     }
-    l.table(locations.len())?;
-    Ok((out, locations, i16::from(!short)))
+    write(position)?;
+    Ok(GlyfSubset {
+        glyf: out.into_owned(),
+        loca: locations.into_owned(),
+        index_to_loc_format: i16::from(!short),
+    })
 }

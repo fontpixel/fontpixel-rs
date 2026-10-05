@@ -2,9 +2,8 @@
 //!
 //! IDs are the enclosing sfnt's IDs, not Unicode values. Missing images remain
 //! absent; EBSC records describe scaling without manufacturing new strikes.
-use super::{
-    Limits as SfntLimits, bounded, buffer, bytes, invalid, p16, p32, to32, u16_at, u32_at,
-};
+use super::working::{Budget as Ledger, Buffer, Lease, Owned, Vector};
+use super::{Limits as SfntLimits, bounded, bytes, invalid, p32, to32, u16_at, u32_at};
 use crate::Result;
 use crate::bitmap::{Bitmap, BitmapLimits, Gray8};
 use crate::model::GlyphBitmap;
@@ -148,6 +147,23 @@ pub struct Scale {
 }
 /// Read version-2 EBSC records without silently scaling glyph pixels.
 pub fn decode_scaling(data: &[u8], limits: &Limits) -> Result<Vec<Scale>> {
+    let budget = root(limits);
+    let (scales, _lease) = decode_scaling_with_budget(data, limits, &budget)?.into_parts();
+    Ok(scales)
+}
+/// Standalone embedded-bitmap codec ledger, for callers without a shared one.
+fn root(limits: &Limits) -> Ledger {
+    Ledger::new(
+        limits.sfnt.resources.max_total_bytes,
+        "embedded bitmap working bytes",
+    )
+}
+/// EBSC decode with the record array and duplicate-target tree on a ledger.
+pub(crate) fn decode_scaling_with_budget(
+    data: &[u8],
+    limits: &Limits,
+    budget: &Ledger,
+) -> Result<Owned<Vec<Scale>>> {
     limits.sfnt.table(data.len())?;
     if u32_at(data, 0)? != 0x20000 {
         return Err(invalid("unsupported EBSC version"));
@@ -157,7 +173,8 @@ pub fn decode_scaling(data: &[u8], limits: &Limits) -> Result<Vec<Scale>> {
     if data.len() != 8 + n * 28 {
         return Err(invalid("invalid EBSC length"));
     }
-    let mut out = Vec::new();
+    let mut out = Vector::with_capacity(budget, n)?;
+    let _targets_lease = budget.reserve_tree::<[u8; 2], ()>(n)?;
     let mut targets = std::collections::BTreeSet::new();
     for b in data[8..].as_chunks::<28>().0 {
         let target = [b[24], b[25]];
@@ -170,15 +187,28 @@ pub fn decode_scaling(data: &[u8], limits: &Limits) -> Result<Vec<Scale>> {
             vertical: line(b, 12)?,
             target,
             source,
-        });
+        })?;
     }
-    Ok(out)
+    drop(targets);
+    Ok(out.into_owned())
 }
 /// Encode complete, editable EBSC records with deterministic ordering.
 pub fn encode_scaling(scales: &[Scale], limits: &Limits) -> Result<Vec<u8>> {
+    let budget = root(limits);
+    let (out, _lease) = encode_scaling_with_budget(scales, limits, &budget)?.into_parts();
+    Ok(out)
+}
+/// EBSC encode into an exact ledger buffer; the validating re-read of the
+/// output is charged alongside it.
+pub(crate) fn encode_scaling_with_budget(
+    scales: &[Scale],
+    limits: &Limits,
+    budget: &Ledger,
+) -> Result<Owned<Vec<u8>>> {
     bounded(scales.len(), limits.max_strikes, "bitmap scaling records")?;
     limits.sfnt.table(8 + scales.len() * 28)?;
-    let mut out = buffer(8 + scales.len() * 28)?;
+    let mut lease = budget.reserve(0)?;
+    let mut out = budget.vec_into(8 + scales.len() * 28, &mut lease)?;
     p32(&mut out, 0x20000);
     p32(&mut out, to32(scales.len())?);
     for s in scales {
@@ -187,8 +217,8 @@ pub fn encode_scaling(scales: &[Scale], limits: &Limits) -> Result<Vec<u8>> {
         out.extend(s.target);
         out.extend(s.source);
     }
-    decode_scaling(&out, limits)?;
-    Ok(out)
+    decode_scaling_with_budget(&out, limits, budget)?;
+    Ok(Owned::from_parts(out, lease))
 }
 fn line(data: &[u8], at: usize) -> Result<LineMetrics> {
     let mut raw = [0; 12];
@@ -356,7 +386,52 @@ pub fn decode(
     num_glyphs: u16,
     limits: &Limits,
 ) -> Result<Vec<Strike>> {
-    decode_impl(location, data, kind, num_glyphs, limits, false)
+    decode_impl(location, data, kind, num_glyphs, limits, false, None)
+}
+/// Subset decoding on a caller's shared ledger. Every strike and every image
+/// is fully validated and decoded (including unselected composite parts);
+/// only glyphs in `mapping` are retained, renumbered to their new IDs. The
+/// existing local model/pixel/visit limits apply unchanged in addition.
+pub(crate) fn decode_selected_with_budget(
+    location: &[u8],
+    data: &[u8],
+    kind: Kind,
+    num_glyphs: u16,
+    limits: &Limits,
+    mapping: &BTreeMap<u16, u16>,
+    budget: &Ledger,
+) -> Result<Owned<Vec<Strike>>> {
+    let mut lease = budget.reserve(0)?;
+    let strikes = decode_impl(
+        location,
+        data,
+        kind,
+        num_glyphs,
+        limits,
+        false,
+        Some(Select {
+            budget,
+            mapping,
+            lease: &mut lease,
+        }),
+    )?;
+    Ok(Owned::from_parts(strikes, lease))
+}
+/// Shared-ledger selection; retained storage is merged into `lease`.
+struct Select<'a> {
+    budget: &'a Ledger,
+    mapping: &'a BTreeMap<u16, u16>,
+    lease: &'a mut Lease,
+}
+fn charge<T>(budget: Option<&Ledger>, count: usize) -> Result<Option<Lease>> {
+    budget.map(|b| b.reserve_array::<T>(count)).transpose()
+}
+/// Owned pixel storage of a decoded glyph (both formats allocate exactly).
+fn pixel_bytes(bitmap: &GlyphBitmap) -> usize {
+    match bitmap {
+        GlyphBitmap::Mono(b) => b.as_bytes().len(),
+        GlyphBitmap::Gray8(b) => b.as_bytes().len(),
+    }
 }
 /// Decode using alpha-weighted darkness rather than alpha for color images.
 /// Color projection is intrinsically lossy; native codec reports that loss.
@@ -369,7 +444,7 @@ pub fn decode_with_color(
     limits: &Limits,
     darkness: bool,
 ) -> Result<Vec<Strike>> {
-    decode_impl(location, data, kind, num_glyphs, limits, darkness)
+    decode_impl(location, data, kind, num_glyphs, limits, darkness, None)
 }
 fn decode_impl(
     location: &[u8],
@@ -378,7 +453,9 @@ fn decode_impl(
     num_glyphs: u16,
     limits: &Limits,
     darkness: bool,
+    mut select: Option<Select<'_>>,
 ) -> Result<Vec<Strike>> {
+    let ledger = select.as_ref().map(|s| s.budget);
     limits.sfnt.glyphs(num_glyphs as usize)?;
     limits.sfnt.table(location.len())?;
     limits.sfnt.table(data.len())?;
@@ -391,7 +468,10 @@ fn decode_impl(
     bytes(location, 0, head_end)?;
     let mut budget = Budget::new(limits);
     budget.memory(count * std::mem::size_of::<Strike>())?;
-    let mut result = Vec::new();
+    let mut result = match &mut select {
+        Some(s) => s.budget.vec_into(count, s.lease)?,
+        None => Vec::new(),
+    };
     for s in 0..count {
         let size = bytes(location, 8 + s * 48, 48)?;
         let offset = u32_at(size, 0)? as usize;
@@ -425,6 +505,11 @@ fn decode_impl(
                     + std::mem::size_of::<Option<BitmapGlyph>>()
                     + 1),
         )?;
+        // Per-strike ledger charges outlive the arrays and images they cover.
+        let _records_lease = charge::<Option<Record<'_>>>(ledger, num_glyphs as usize)?;
+        let _decoded_lease = charge::<Option<BitmapGlyph>>(ledger, num_glyphs as usize)?;
+        let _active_lease = charge::<bool>(ledger, num_glyphs as usize)?;
+        let mut pixels_lease = charge::<u8>(ledger, 0)?;
         let mut records = vec![None; num_glyphs as usize];
         let mut previous = None;
         for i in 0..n {
@@ -578,15 +663,39 @@ fn decode_impl(
             flags: size[47],
             darkness,
             budget: &mut budget,
+            ledger: ledger.zip(pixels_lease.as_mut()),
         };
         for gid in 0..num_glyphs {
             if records[gid as usize].is_some() {
                 resolver.resolve(gid, 0)?;
             }
         }
-        for (gid, glyph) in decoded.into_iter().enumerate() {
-            if let Some(glyph) = glyph {
-                glyphs.insert(gid as u16, glyph);
+        if let (Some(select), Some(pixels)) = (&mut select, &mut pixels_lease) {
+            // Retain only selected images; unselected ones (validated above)
+            // drop with `decoded` before their share of `pixels` is released.
+            let retained = decoded
+                .iter()
+                .enumerate()
+                .filter(|(gid, g)| g.is_some() && select.mapping.contains_key(&(*gid as u16)))
+                .count();
+            let mut tree = select.budget.reserve_tree::<u16, BitmapGlyph>(retained)?;
+            let mut moved = 0usize;
+            for (gid, slot) in decoded.iter_mut().enumerate() {
+                if let Some(&new) = select.mapping.get(&(gid as u16))
+                    && let Some(glyph) = slot.take()
+                {
+                    moved += pixel_bytes(&glyph.bitmap);
+                    glyphs.insert(new, glyph);
+                }
+            }
+            let mut moved = pixels.split(moved)?;
+            select.lease.merge(&mut tree)?;
+            select.lease.merge(&mut moved)?;
+        } else {
+            for (gid, glyph) in decoded.into_iter().enumerate() {
+                if let Some(glyph) = glyph {
+                    glyphs.insert(gid as u16, glyph);
+                }
             }
         }
         result.push(Strike {
@@ -609,8 +718,16 @@ struct Resolver<'a, 'b, 'c> {
     flags: u8,
     darkness: bool,
     budget: &'b mut Budget<'c>,
+    /// Shared ledger and the strike's decoded-pixel lease, when subsetting.
+    ledger: Option<(&'b Ledger, &'b mut Lease)>,
 }
 impl Resolver<'_, '_, '_> {
+    fn charge(&self, bytes: usize) -> Result<Option<Lease>> {
+        self.ledger
+            .as_ref()
+            .map(|(l, _)| l.reserve(bytes))
+            .transpose()
+    }
     fn resolve(&mut self, gid: u16, nesting: usize) -> Result<()> {
         self.budget.visit()?;
         bounded(
@@ -649,6 +766,11 @@ impl Resolver<'_, '_, '_> {
         let w = u32::from(m.width);
         let h = u32::from(m.height);
         let limits = self.budget.raster(w, h)?;
+        // Ledger charges precede the Gray8 canvas and, for one-bit strikes,
+        // the packed copy that coexists with it during conversion.
+        let canvas_lease = self.charge(w as usize * h as usize)?;
+        let mono_bytes = (w as usize).div_ceil(8) * h as usize;
+        let mut mono_lease = None;
         let bitmap = if matches!(record.format, 8 | 9) {
             if self.depth == 32 && self.darkness {
                 return Err(invalid(
@@ -686,6 +808,7 @@ impl Resolver<'_, '_, '_> {
                 }
             }
             if self.depth == 1 {
+                mono_lease = self.charge(mono_bytes)?;
                 GlyphBitmap::Mono(canvas.to_mono(128)?)
             } else {
                 GlyphBitmap::Gray8(canvas)
@@ -733,11 +856,22 @@ impl Resolver<'_, '_, '_> {
                 }
             }
             if self.depth == 1 {
+                mono_lease = self.charge(mono_bytes)?;
                 GlyphBitmap::Mono(canvas.to_mono(128)?)
             } else {
                 GlyphBitmap::Gray8(canvas)
             }
         };
+        // A converted canvas has already dropped; keep only the retained charge.
+        let retained = if mono_lease.is_some() {
+            drop(canvas_lease);
+            mono_lease
+        } else {
+            canvas_lease
+        };
+        if let (Some((_, pixels)), Some(mut retained)) = (&mut self.ledger, retained) {
+            pixels.merge(&mut retained)?;
+        }
         self.decoded[at] = Some(BitmapGlyph { metrics: m, bitmap });
         self.active[at] = false;
         Ok(())
@@ -752,6 +886,40 @@ fn sample(bitmap: &GlyphBitmap, x: u32, y: u32) -> Result<u8> {
 /// Encode canonical variable-size indexes and byte-aligned images. Metrics and
 /// exact gray values must fit; there is no implicit threshold or quantization.
 pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) -> Result<Tables> {
+    let budget = root(limits);
+    let (tables, _lease) =
+        encode_with_budget(strikes, kind, num_glyphs, limits, &budget)?.into_parts();
+    Ok(tables)
+}
+/// Upper bound of EBDT/bdat image bytes for already-validated model rasters;
+/// capped by the table limit the encoder enforces anyway.
+fn data_capacity(strikes: &[Strike], kind: Kind, limits: &Limits) -> usize {
+    if kind == Kind::Color {
+        return 4;
+    }
+    let mut total = 4usize;
+    for s in strikes {
+        for g in s.glyphs.values() {
+            let stride = (g.bitmap.width() as usize).saturating_mul(usize::from(s.bit_depth));
+            total = total.saturating_add(8).saturating_add(
+                stride
+                    .div_ceil(8)
+                    .saturating_mul(g.bitmap.height() as usize),
+            );
+        }
+    }
+    total.min(limits.sfnt.resources.max_table_bytes.saturating_add(4))
+}
+/// Encode with every output, index and per-glyph buffer on a shared ledger.
+/// Existing local model/pixel limits still apply. CBDT PNG compression
+/// buffers are produced inside `color` and are charged once they exist.
+pub(crate) fn encode_with_budget(
+    strikes: &[Strike],
+    kind: Kind,
+    num_glyphs: u16,
+    limits: &Limits,
+    ledger: &Ledger,
+) -> Result<Owned<Tables>> {
     if kind == Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color bitmap writing requires the color feature"));
     }
@@ -767,16 +935,20 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
     if kind == Kind::Color {
         budget.memory(header_size.saturating_add(4))?;
     }
-    let mut data = kind.version().to_be_bytes().to_vec();
-    let mut location = buffer(header_size)?;
-    p32(&mut location, kind.version());
-    p32(&mut location, to32(strikes.len())?);
-    location.resize(header_size, 0);
-    let mut ordered: Vec<_> = strikes.iter().collect();
+    let mut data = Buffer::with_capacity(ledger, data_capacity(strikes, kind, limits))?;
+    data.extend(&kind.version().to_be_bytes())?;
+    let mut location = Buffer::with_capacity(ledger, header_size)?;
+    location.extend(&kind.version().to_be_bytes())?;
+    location.extend(&to32(strikes.len())?.to_be_bytes())?;
+    location.resize(header_size, 0)?;
+    let mut ordered = Vector::with_capacity(ledger, strikes.len())?;
+    for s in strikes {
+        ordered.push(s)?;
+    }
     if kind == Kind::Apple {
         ordered.sort_by_key(|s| (s.ppem_y, s.ppem_x));
     }
-    for (i, s) in ordered.into_iter().enumerate() {
+    for (i, s) in ordered.iter().copied().enumerate() {
         if s.ppem_x == 0
             || s.ppem_y == 0
             || !(1..=3).contains(&s.flags)
@@ -789,7 +961,9 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
         {
             return Err(invalid("invalid or empty bitmap strike"));
         }
-        let mut groups: Vec<(u16, u16, u16, usize, Vec<u32>)> = Vec::new();
+        // Groups are (first, last, format, data base, start in `offsets`).
+        let mut groups = Vector::<(u16, u16, u16, usize, usize)>::new(ledger)?;
+        let mut offsets = Vector::<u32>::new(ledger)?;
         for (&gid, g) in &s.glyphs {
             if gid >= num_glyphs
                 || u32::from(g.metrics.width) != g.bitmap.width()
@@ -799,7 +973,16 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
             }
             budget.glyph()?;
             budget.raster(g.bitmap.width(), g.bitmap.height())?;
-            let mut encoded = Vec::new();
+            // Big metrics plus the exact raw image rows; PNG bytes are added
+            // below only after their own charge.
+            let raw = if kind == Kind::Color {
+                0
+            } else {
+                (g.bitmap.width() as usize * usize::from(s.bit_depth)).div_ceil(8)
+                    * g.bitmap.height() as usize
+            };
+            let mut glyph_lease = ledger.reserve(0)?;
+            let mut encoded = ledger.vec_into::<u8>(8 + raw, &mut glyph_lease)?;
             let format = put_metrics(&mut encoded, g.metrics, s.flags)?;
             let format = if kind == Kind::Color {
                 #[cfg(feature = "color")]
@@ -810,6 +993,12 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
                         format
                     } else {
                         let png = color::encode_png(&g.bitmap, &mut budget)?;
+                        let mut png_lease = ledger.reserve(png.capacity())?;
+                        glyph_lease.merge(&mut png_lease)?;
+                        // Old and grown record coexist during reallocation.
+                        let grown = encoded.len() + 4 + png.len();
+                        glyph_lease.grow_to(glyph_lease.bytes() + grown)?;
+                        encoded.reserve_exact(4 + png.len());
                         p32(&mut encoded, to32(png.len())?);
                         encoded.extend(png);
                         if format == 1 { 17 } else { 18 }
@@ -861,30 +1050,33 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
                 .last()
                 .is_some_and(|g| g.1.checked_add(1) == Some(gid) && g.2 == format);
             if !extend {
-                groups.push((gid, gid, format, data.len(), vec![0]));
+                groups.push((gid, gid, format, data.len(), offsets.len()))?;
+                offsets.push(0)?;
             }
+            data.extend(&encoded)?;
             let group = groups
                 .last_mut()
                 .ok_or_else(|| invalid("missing output group"))?;
-            data.extend(encoded);
             group.1 = gid;
-            group.4.push(to32(data.len() - group.3)?);
+            offsets.push(to32(data.len() - group.3)?)?;
         }
         let start = location.len();
-        let index_size: usize = groups.iter().map(|g| 16 + g.4.len() * 4).sum();
+        let index_size: usize = groups.len() * 16 + offsets.len() * 4;
         limits.sfnt.table(start + index_size)?;
-        location.resize(start + groups.len() * 8, 0);
-        for (j, (lo, hi, format, base, offsets)) in groups.iter().enumerate() {
+        location.reserve_exact(index_size)?;
+        location.resize(start + groups.len() * 8, 0)?;
+        for (j, &(lo, hi, format, base, first)) in groups.iter().enumerate() {
             let pos = start + j * 8;
             location[pos..pos + 2].copy_from_slice(&lo.to_be_bytes());
             location[pos + 2..pos + 4].copy_from_slice(&hi.to_be_bytes());
             let off = to32(location.len() - start)?;
             location[pos + 4..pos + 8].copy_from_slice(&off.to_be_bytes());
-            p16(&mut location, 1);
-            p16(&mut location, *format);
-            p32(&mut location, to32(*base)?);
-            for v in offsets {
-                p32(&mut location, *v);
+            location.extend(&1u16.to_be_bytes())?;
+            location.extend(&format.to_be_bytes())?;
+            location.extend(&to32(base)?.to_be_bytes())?;
+            let end = groups.get(j + 1).map_or(offsets.len(), |next| next.4);
+            for v in &offsets[first..end] {
+                location.extend(&v.to_be_bytes())?;
             }
         }
         let size = location.len() - start;
@@ -918,5 +1110,13 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
         // This also applies the reader's PNG chunk/visit/decompression limits.
         decode(&location, &data, kind, num_glyphs, limits)?;
     }
-    Ok(Tables { data, location })
+    drop(ordered);
+    let (data, mut lease) = data.into_parts();
+    let (location, mut location_lease) = location.into_parts();
+    let tables = Tables { data, location };
+    if let Err(error) = lease.merge(&mut location_lease) {
+        drop(tables);
+        return Err(error);
+    }
+    Ok(Owned::from_parts(tables, lease))
 }

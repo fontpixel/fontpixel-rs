@@ -87,6 +87,20 @@ impl Budget {
     pub(crate) fn reserve_tree<K, V>(&self, entries: usize) -> Result<Lease> {
         self.reserve(self.tree_bytes::<K, V>(entries)?)
     }
+
+    /// Allocate exactly `capacity` elements after admitting them, and move the
+    /// charge (for the actual capacity) into `lease`. The caller must keep
+    /// `lease` alive until the returned vector has dropped, and must not grow
+    /// the vector beyond this capacity.
+    #[cfg(any(feature = "sfnt", test))]
+    pub(crate) fn vec_into<T>(&self, capacity: usize, lease: &mut Lease) -> Result<Vec<T>> {
+        let (values, mut charge) = Vector::with_capacity(self, capacity)?.into_parts();
+        if let Err(error) = lease.merge(&mut charge) {
+            drop(values);
+            return Err(error);
+        }
+        Ok(values)
+    }
 }
 
 /// Keep this lease alive until its corresponding storage has actually dropped.
@@ -126,6 +140,23 @@ impl Lease {
             .ok_or_else(|| self.budget.error())?;
         other.bytes = 0;
         Ok(())
+    }
+
+    /// Move `bytes` of this live charge into a new lease on the same ledger,
+    /// without releasing anything. Use it when part of the covered storage
+    /// moves to an owner with a different lifetime.
+    #[cfg(any(feature = "sfnt", test))]
+    pub(crate) fn split(&mut self, bytes: usize) -> Result<Self> {
+        if bytes > self.bytes {
+            return Err(Error::InvalidInput(
+                "working lease split exceeds its charge".into(),
+            ));
+        }
+        self.bytes -= bytes;
+        Ok(Self {
+            budget: self.budget.clone(),
+            bytes,
+        })
     }
 }
 
