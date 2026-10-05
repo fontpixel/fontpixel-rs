@@ -82,6 +82,7 @@ fn observed(data: &[u8], quality: u32, lgwin: u32, threads: usize) -> (usize, us
 }
 
 #[test]
+#[ignore = "heavy; run: cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture"]
 fn encoder_heap_never_exceeds_the_admitted_bound() {
     let quick = std::env::var_os("FONTPIXEL_HEAP_CHECK_QUICK").is_some();
     let qualities: Vec<u32> = if quick {

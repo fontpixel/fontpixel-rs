@@ -47,6 +47,7 @@ fn check<T>(name: &str, run: impl Fn(&Limits) -> fontpixel::Result<T>) {
 }
 
 #[test]
+#[ignore = "heavy; run: cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture"]
 fn codec_heap_stays_inside_the_working_ledger() {
     let aux = Auxiliary {
         major_version: 1,

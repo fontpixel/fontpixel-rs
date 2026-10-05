@@ -10,7 +10,9 @@
 //!
 //! `BROTLI_MODE_FONT`, `size_hint = input_len`, every other
 //! `BrotliEncoderParams` field at its default (`log_meta_block = false`,
-//! `favor_cpu_efficiency = false`, no custom dictionary, no large window).
+//! `favor_cpu_efficiency = false`, hasher block/bucket bits 8/15, no custom
+//! dictionary, no large window): `Default` is `BrotliEncoderInitParams()`
+//! (`backward_references/mod.rs:127-129`, `encode.rs:318-358`).
 //! A single `BrotliCompress` stream when `threads == 1` or
 //! `input_len < 128 KiB`; otherwise `compress_multi` with `threads`
 //! `StandardAlloc` workers, worker `i` encoding `get_range(i)` with the preceding
@@ -353,8 +355,10 @@ fn instance(
 ///
 /// This covers the dependency's internal storage only. fontpixel's own
 /// input copy, output buffer and allocator descriptors are admitted
-/// separately. Returns `None` on arithmetic overflow. See the module
-/// documentation for the per-site derivation.
+/// separately. Returns `None` on arithmetic overflow. The per-site derivation
+/// (with locked-source line numbers) is the module documentation of
+/// `src/woff/woff2/brotli_encode.rs`. At quality >= 10 the bound exceeds the
+/// default 256 MiB working limit for inputs above a few tens of KiB.
 pub fn brotli_encoder_heap_bound(
     quality: u32,
     lgwin: u32,

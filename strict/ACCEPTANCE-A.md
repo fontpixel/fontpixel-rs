@@ -147,7 +147,11 @@ without `#[allow]`; a `GlobalAlloc` implementation requires `unsafe impl`. The
 package keeps its own lint table (missing_docs, clippy::all) and contains only
 the counting allocator and its tests. Run it by name:
 `cargo test --locked --release -p fontpixel-heap-check`. Cargo.lock gains one
-path-package entry and no registry packages (same `brotli`/`miniz_oxide` pins).
+path-package entry and no registry packages (same `brotli` pin). Its two
+measurement tests are `#[ignore]`d so the debug `cargo test --workspace` gate
+stays fast; run them with
+`cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture`
+(optionally `FONTPIXEL_HEAP_CHECK_FONT=<large sfnt>`).
 
 ## A7. Default workload report (goal 5)
 
@@ -160,7 +164,7 @@ tests/call sites that now fail.
 
 - `cargo test --locked -p fontpixel --features woff,woff2,ttc --lib woff`
 - `cargo test --locked -p fontpixel --features woff,woff2,ttc --test woff --test woff_budget`
-- `cargo test --locked --release -p fontpixel-heap-check`
+- `cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture`
 - `cargo clippy --locked -p fontpixel --all-targets --all-features -- -D warnings`
 - `cargo clippy --locked -p fontpixel-heap-check --all-targets -- -D warnings`
 - `cargo fmt --all --check`
@@ -171,7 +175,7 @@ tests/call sites that now fail.
 |---|---|---|
 | A1 ledger lifecycle | done | `woff/{mod,woff1,woff2}.rs`, `woff2/{transform,collection}.rs`; `woff::ledger_tests` |
 | A1 shared tables once | done | `ledger_tests::shared_collection_tables_are_charged_once` (4 identical faces with a 64 KiB table add < 32 KiB of peak) |
-| A1 sfnt::collection boundary | done as reservation | `collection::{parse_bound, assemble_bound}` reserve a source-derived bound around `Collection::parse` / `sfnt::collection::encode` (that file is outside this unit and keeps its own ledgers) |
+| A1 sfnt::collection boundary | done as reservation | `collection::{parse_bound, assemble_bound}` reserve a source-derived bound around `Collection::parse` / `sfnt::collection::encode` (that file is outside this unit and keeps its own ledgers). Both bounds were derived from `sfnt/collection.rs` at `6297998`; any later change to that file's allocations must re-check them |
 | A2 io::Error unwrapping | done | `woff::io_error`; `woff2::tests::encoder_bound_is_admitted_and_writer_failures_stay_resource_limits`; `tests/woff_budget.rs` sweeps every `max_total_bytes` below each boundary (512-value window + geometric sample) and sees only `ResourceLimit` |
 | A3 encoder bound function | done | `woff::woff2::brotli_encoder_heap_bound`, derivation in `woff2/brotli_encode.rs` module docs |
 | A3 admission before encoding | done | `woff2::compress` reserves the bound for the whole call (all workers joined) |

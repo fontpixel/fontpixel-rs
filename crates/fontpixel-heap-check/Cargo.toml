@@ -8,8 +8,10 @@ license.workspace = true
 authors.workspace = true
 publish = false
 
-# Not in workspace default-members; run explicitly:
-#   cargo test --locked --release -p fontpixel-heap-check -- --nocapture
+# Not in workspace default-members. The measurement tests are #[ignore]d so the
+# debug-profile `cargo test --workspace` gate stays fast; run them explicitly:
+#   cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture
+# Optional: FONTPIXEL_HEAP_CHECK_FONT=<large sfnt>, FONTPIXEL_HEAP_CHECK_QUICK=1.
 # A process-wide `#[global_allocator]` needs `unsafe impl GlobalAlloc`, which
 # the workspace lint table forbids. This package therefore keeps its own lint
 # table and contains nothing but the counting allocator and its measurements.
