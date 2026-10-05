@@ -17,6 +17,14 @@ from phase6_reference import family_plan, load_module, load_tong
 from phase6_support import batch_header, inventory, invoke
 
 KINDS = ['bdf', 'pcf', 'otb', 'ttf', 'otf', 'woff2']
+# Explicit per-call WOFF2 working budget for native profiles with more than one
+# intra-font Brotli worker. Several concurrent quality-11 workers in one call
+# genuinely need more than the library's 256 MiB per-call default, which is not
+# raised. Measured minimum for jobs 2, threads 4, quality 11 (the perf profile
+# "intra4"): 404488192 bytes = 385.75 MiB at 256 KiB resolution (404226048
+# fails; unit G, 2026-10-05). This is that minimum rounded up to 400 MiB.
+# Single-thread profiles pass no budget and keep their invocation.
+INTRA_WOFF2_MAX_TOTAL_BYTES = 400 * 1024 * 1024
 
 
 def expected_fonts():
@@ -123,6 +131,9 @@ def main():
     p.add_argument('--jobs', type=int); p.add_argument('--quality', type=int, default=11)
     p.add_argument('--threads', type=int, default=1); p.add_argument('--dot-reuse', choices=['literal', 'rows', 'patterns'], default='patterns')
     p.add_argument('--variant-max-total-bytes', type=int, default=0)
+    p.add_argument('--max-total-bytes', type=int,
+                   help='native only: explicit per-call WOFF2 max_total_bytes passed to the API driver; '
+                        f'default {INTRA_WOFF2_MAX_TOTAL_BYTES} when --threads > 1, otherwise none (library default)')
     p.add_argument('--profile', choices=['default', 'parity'], default='default',
                    help='batch only: parity adds explicit export-rs OTB metadata options; default is unchanged')
     p.add_argument('--parity-timestamps', type=Path,
@@ -138,17 +149,24 @@ def main():
     if {p.name for p in sources} != expected_sources: raise ValueError('unexpected Tong BDF matrix')
     ref = load_tong(a.reference_root) if a.engine != 'native' else None
     metrics = {}; calls = []; start = time.perf_counter_ns()
+    if a.max_total_bytes is not None and a.engine != 'native':
+        raise ValueError('--max-total-bytes is a native API driver option')
     if a.engine == 'native':
-        default = a.jobs is None and a.quality == 11 and a.threads == 1 and a.dot_reuse == 'patterns'
+        budget = a.max_total_bytes
+        if budget is None and a.threads > 1: budget = INTRA_WOFF2_MAX_TOTAL_BYTES
+        default = (a.jobs is None and a.quality == 11 and a.threads == 1 and a.dot_reuse == 'patterns'
+                   and budget is None)
         command = [a.binary, a.bdf.resolve(), out]
         if not default:
             command += [str(a.jobs or min(os.cpu_count() or 1, 8)), str(a.quality), str(a.threads), '1.0', a.dot_reuse]
+        if budget is not None: command.append(str(budget))
         calls.append(invoke(command, a.output / 'native'))
         metrics['pipeline_wall'] = time.perf_counter_ns() - start
         driver = json.loads((a.output / 'native.stdout').read_text())
         for key in ['read_seconds', 'bitmap_seconds', 'plan_seconds', 'vector_seconds', 'wall_seconds']:
             metrics['api_' + key.removesuffix('_seconds')] = round(driver[key] * 1e9)
-        profile = {'kind': 'native-api-full-reports-v2', 'driver': driver, 'default_options': default}
+        profile = {'kind': 'native-api-full-reports-v2', 'driver': driver, 'default_options': default,
+                   'woff2_max_total_bytes_override': budget}
     elif a.engine == 'batch':
         if a.quality != 11 or a.threads != 1 or a.dot_reuse != 'patterns':
             raise ValueError('batch default profile does not accept API-only tuning arguments')

@@ -3,6 +3,13 @@
 //! This new profile requires fresh validation and five observations.
 //! Usage: phase6_tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS=8] [QUALITY=11]
 //!                   [COMPRESSION_THREADS=1] [VERSION=1.0] [DOT_REUSE=patterns]
+//!                   [WOFF2_MAX_TOTAL_BYTES]
+//!
+//! WOFF2_MAX_TOTAL_BYTES is an explicit per-call working budget for each WOFF2
+//! encode (`woff::Limits::sfnt.resources.max_total_bytes`); without it every
+//! call keeps the library default (256 MiB). Several concurrent quality-11
+//! Brotli workers in one call genuinely need more than that default, so
+//! profiles with COMPRESSION_THREADS > 1 must pass a larger budget explicitly.
 use fontpixel::{
     FontSet, Input, ResourcePath, Variants,
     outline::Shape,
@@ -171,7 +178,7 @@ fn write_bitmap(face: &InputFace, out: &Path) -> AnyResult<serde_json::Value> {
 fn main() -> AnyResult<()> {
     let args = std::env::args().collect::<Vec<_>>();
     if args.len() < 3 {
-        return Err("phase6_tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS] [QUALITY] [COMPRESSION_THREADS] [VERSION] [DOT_REUSE]".into());
+        return Err("phase6_tong_export BDF_DIRECTORY OUTPUT_DIRECTORY [JOBS] [QUALITY] [COMPRESSION_THREADS] [VERSION] [DOT_REUSE] [WOFF2_MAX_TOTAL_BYTES]".into());
     }
     let input = Path::new(&args[1]);
     let out = Path::new(&args[2]);
@@ -189,6 +196,13 @@ fn main() -> AnyResult<()> {
         "rows" => DotReuse::Rows,
         "patterns" => DotReuse::Patterns,
         _ => return Err("dot reuse must be literal, rows or patterns".into()),
+    };
+    let woff2_limits = {
+        let mut limits = fontpixel::woff::Limits::default();
+        if let Some(bytes) = args.get(8).map(|s| s.parse::<usize>()).transpose()? {
+            limits.sfnt.resources.max_total_bytes = bytes;
+        }
+        limits
     };
     if !(1..=8).contains(&jobs)
         || !(1..=8).contains(&threads)
@@ -326,7 +340,7 @@ fn main() -> AnyResult<()> {
                 compression_threads: threads,
                 ..Default::default()
             },
-            &Default::default(),
+            &woff2_limits,
         )?;
         save_report(out, &format!("{stem}.woff2"), &web.report)?;
         fs::write(out.join("woff2").join(format!("{stem}.woff2")), &web.bytes)?;
@@ -339,6 +353,7 @@ fn main() -> AnyResult<()> {
     let result = serde_json::json!({"profile":"reconstructed-full-reports-v2","complete_report_files":84,"wall_seconds":start.elapsed().as_secs_f64(),"read_seconds":read_seconds,
         "bitmap_seconds":bitmap_seconds,"plan_seconds":plan_seconds,"vector_seconds":vector_start.elapsed().as_secs_f64(),
         "jobs":jobs,"quality":quality,"compression_threads":threads,"available_cpus":cpus,
+        "woff2_max_total_bytes":woff2_limits.sfnt.resources.max_total_bytes,
         "bitmaps":bitmap_reports,"vectors":vector_reports});
     println!("{}", serde_json::to_string_pretty(&result)?);
     Ok(())
