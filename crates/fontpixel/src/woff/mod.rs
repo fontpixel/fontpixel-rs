@@ -3,6 +3,7 @@
 //! These codecs preserve sfnt tables and auxiliary data. They do not rasterize
 //! outlines or imply that a FontSet projection is available for every sfnt.
 use crate::report::{Impact, Level};
+use crate::working::{Budget, Buffer, Owned};
 use crate::{Error, Report, ReportEntry, Result, sfnt};
 #[cfg(feature = "woff")]
 pub mod woff1;
@@ -102,11 +103,14 @@ fn u32_at(data: &[u8], offset: usize) -> Result<u32> {
         slice(data, offset, 4)?.try_into().map_err(invalid)?,
     ))
 }
-fn p16(v: &mut Vec<u8>, n: u16) {
-    v.extend(n.to_be_bytes());
+fn put(out: &mut Buffer, bytes: &[u8]) -> Result<()> {
+    out.extend(bytes)
 }
-fn p32(v: &mut Vec<u8>, n: u32) {
-    v.extend(n.to_be_bytes());
+fn p16(out: &mut Buffer, n: u16) -> Result<()> {
+    out.extend(&n.to_be_bytes())
+}
+fn p32(out: &mut Buffer, n: u32) -> Result<()> {
+    out.extend(&n.to_be_bytes())
 }
 fn as32(n: usize) -> Result<u32> {
     u32::try_from(n).map_err(|_| invalid("32-bit length overflow"))
@@ -114,11 +118,87 @@ fn as32(n: usize) -> Result<u32> {
 fn align(n: usize) -> Result<usize> {
     Ok(n.checked_add(3).ok_or_else(|| invalid("length overflow"))? & !3)
 }
-fn buffer(n: usize) -> Result<Vec<u8>> {
-    let mut v = Vec::new();
-    v.try_reserve_exact(n)
-        .map_err(|_| invalid("allocation failed"))?;
-    Ok(v)
+/// One shared working ledger for a complete public WOFF operation. Caller
+/// input bytes are borrowed and stay outside it; every owned stage is admitted.
+fn ledger(l: &Limits) -> Budget {
+    Budget::new(l.sfnt.resources.max_total_bytes, "WOFF working bytes")
+}
+/// Admitted copy of borrowed bytes.
+fn copy(budget: &Budget, bytes: &[u8]) -> Result<Owned<Vec<u8>>> {
+    Ok(Buffer::from_slice(budget, bytes)?.into_owned())
+}
+/// Release ledger charges at the public boundary: the returned storage then
+/// belongs to the caller, as with every other codec's returned bytes.
+fn release(value: Owned<Vec<u8>>) -> Vec<u8> {
+    value.into_parts().0
+}
+/// Codec errors written through `std::io` keep their original class, so a
+/// working-ledger failure inside a dependency writer remains `ResourceLimit`.
+#[cfg(feature = "woff2")]
+fn io_error(error: std::io::Error) -> Error {
+    match error.downcast::<Error>() {
+        Ok(error) => error,
+        Err(error) => invalid(error),
+    }
+}
+/// Tag-keyed table map whose tree nodes and table bytes are all admitted.
+/// Table values carry their own leases; replacing a value admits the new bytes
+/// while the old ones are still live and releases them only after they drop.
+#[cfg(feature = "woff2")]
+struct Tables {
+    map: std::collections::BTreeMap<[u8; 4], Owned<Vec<u8>>>,
+    nodes: crate::working::Lease,
+}
+#[cfg(feature = "woff2")]
+impl Tables {
+    fn new(budget: &Budget) -> Result<Self> {
+        Ok(Self {
+            map: std::collections::BTreeMap::new(),
+            nodes: budget.reserve_tree::<[u8; 4], Owned<Vec<u8>>>(0)?,
+        })
+    }
+    fn insert(&mut self, budget: &Budget, tag: [u8; 4], value: Owned<Vec<u8>>) -> Result<()> {
+        if !self.map.contains_key(&tag) {
+            self.nodes
+                .grow_to(budget.tree_bytes::<[u8; 4], Owned<Vec<u8>>>(self.map.len() + 1)?)?;
+        }
+        self.map.insert(tag, value);
+        Ok(())
+    }
+    fn get(&self, tag: &[u8; 4]) -> Option<&[u8]> {
+        self.map.get(tag).map(|t| t.as_slice())
+    }
+    fn get_mut(&mut self, tag: &[u8; 4]) -> Option<&mut [u8]> {
+        self.map.get_mut(tag).map(|t| t.as_mut_slice())
+    }
+    fn contains_key(&self, tag: &[u8; 4]) -> bool {
+        self.map.contains_key(tag)
+    }
+    fn remove(&mut self, tag: &[u8; 4]) -> Option<Owned<Vec<u8>>> {
+        self.map.remove(tag)
+    }
+    fn len(&self) -> usize {
+        self.map.len()
+    }
+    /// Move every table into an sfnt builder. The builder's own tree nodes are
+    /// admitted first; table leases are merged into the returned lease, which
+    /// must outlive the builder.
+    fn into_builder(
+        self,
+        budget: &Budget,
+        flavor: sfnt::Flavor,
+    ) -> Result<(sfnt::SfntBuilder, crate::working::Lease)> {
+        let mut lease = budget.reserve_tree::<[u8; 4], Vec<u8>>(self.map.len())?;
+        let mut builder = sfnt::SfntBuilder::new(flavor);
+        let Self { map, nodes } = self;
+        for (tag, table) in map {
+            let (bytes, mut table_lease) = table.into_parts();
+            lease.merge(&mut table_lease)?;
+            builder.insert(tag, bytes)?;
+        }
+        drop(nodes);
+        Ok((builder, lease))
+    }
 }
 fn loss(r: &mut Report, code: &str, message: impl Into<String>) {
     r.push(ReportEntry {
@@ -184,10 +264,8 @@ fn table_sum(n: usize, lengths: impl Iterator<Item = usize>, l: &Limits) -> Resu
 fn checksum(tag: [u8; 4], data: &[u8]) -> Result<u32> {
     Ok(sfnt::checksum(data).wrapping_sub(if tag == *b"head" { u32_at(data, 8)? } else { 0 }))
 }
-fn pad(out: &mut Vec<u8>) {
-    while !out.len().is_multiple_of(4) {
-        out.push(0);
-    }
+fn pad(out: &mut Buffer) -> Result<()> {
+    out.resize(align(out.len())?, 0)
 }
 fn set32(out: &mut [u8], pos: usize, value: usize) -> Result<()> {
     out[pos..pos + 4].copy_from_slice(&as32(value)?.to_be_bytes());
@@ -202,6 +280,27 @@ fn checked_aux(a: &Auxiliary, l: &Limits) -> Result<()> {
     }
     Ok(())
 }
+/// Decoded optional blocks whose storage is still charged to the operation.
+struct OwnedAuxiliary {
+    major_version: u16,
+    minor_version: u16,
+    metadata: Option<Owned<Vec<u8>>>,
+    private_data: Option<Owned<Vec<u8>>>,
+}
+impl OwnedAuxiliary {
+    fn bytes(&self) -> usize {
+        self.metadata.as_ref().map_or(0, |m| m.len())
+            + self.private_data.as_ref().map_or(0, |p| p.len())
+    }
+    fn release(self) -> Auxiliary {
+        Auxiliary {
+            major_version: self.major_version,
+            minor_version: self.minor_version,
+            metadata: self.metadata.map(release),
+            private_data: self.private_data.map(release),
+        }
+    }
+}
 // Optional block offsets/layout are structural, while invalid metadata compression
 // only drops metadata. Resource-limit errors still stop before decompression.
 fn read_aux(
@@ -209,13 +308,15 @@ fn read_aux(
     header_offset: usize,
     mut end: usize,
     l: &Limits,
-    decompress: impl Fn(&[u8], usize) -> Result<Vec<u8>>,
-) -> Result<(Auxiliary, Report)> {
+    budget: &Budget,
+    decompress: impl Fn(&[u8], usize) -> Result<Owned<Vec<u8>>>,
+) -> Result<(OwnedAuxiliary, Report)> {
     let o = header_offset;
-    let mut a = Auxiliary {
+    let mut a = OwnedAuxiliary {
         major_version: u16_at(data, o)?,
         minor_version: u16_at(data, o + 2)?,
-        ..Default::default()
+        metadata: None,
+        private_data: None,
     };
     let (mo, ml, original) = (
         u32_at(data, o + 4)? as usize,
@@ -262,7 +363,7 @@ fn read_aux(
         if slice(data, end, po - end)?.iter().any(|b| *b != 0) {
             return Err(invalid("nonzero block padding"));
         }
-        a.private_data = Some(slice(data, po, pl)?.to_vec());
+        a.private_data = Some(copy(budget, slice(data, po, pl)?)?);
         end = po + pl;
     }
     // WOFF1 table padding or a final optional block may have up to 3 zero bytes.
@@ -277,19 +378,21 @@ fn read_aux(
     }
     Ok((a, report))
 }
+/// Append optional blocks to the growable, admitted output. Header fields are
+/// edited through the buffer's mutable slice, so no write bypasses admission.
 fn write_aux(
-    out: &mut Vec<u8>,
+    out: &mut Buffer,
     offset: usize,
     a: &Auxiliary,
     l: &Limits,
-    compress: impl Fn(&[u8]) -> Result<Vec<u8>>,
+    compress: impl Fn(&[u8]) -> Result<Owned<Vec<u8>>>,
 ) -> Result<()> {
     checked_aux(a, l)?;
     out[offset..offset + 2].copy_from_slice(&a.major_version.to_be_bytes());
     out[offset + 2..offset + 4].copy_from_slice(&a.minor_version.to_be_bytes());
     if let Some(meta) = &a.metadata {
         let encoded = compress(meta)?;
-        pad(out);
+        pad(out)?;
         let pos = out.len();
         set32(out, offset + 4, pos)?;
         set32(out, offset + 8, encoded.len())?;
@@ -299,10 +402,12 @@ fn write_aux(
             l.sfnt.resources.max_total_bytes,
             "WOFF output bytes",
         )?;
-        out.extend(encoded);
+        put(out, &encoded)?;
+        // The compressed block and its charge drop only after the copy.
+        drop(encoded);
     }
     if let Some(private) = &a.private_data {
-        pad(out);
+        pad(out)?;
         let pos = out.len();
         set32(out, offset + 16, pos)?;
         set32(out, offset + 20, private.len())?;
@@ -311,13 +416,16 @@ fn write_aux(
             l.sfnt.resources.max_total_bytes,
             "WOFF output bytes",
         )?;
-        out.extend(private);
+        put(out, private)?;
     }
     let size = out.len();
     bounded(size, l.sfnt.resources.max_total_bytes, "WOFF output bytes")?;
     set32(out, 8, size)?;
     Ok(())
 }
+
+#[cfg(all(test, feature = "woff", feature = "woff2"))]
+mod ledger_tests;
 
 #[cfg(test)]
 mod auxiliary_budget_tests {
@@ -335,13 +443,14 @@ mod auxiliary_budget_tests {
     fn metadata_resource_failure_is_terminal_but_invalid_stream_is_reported() {
         let data = metadata_envelope();
         let limit = Limits::default();
-        let error = read_aux(&data, 0, 24, &limit, |_, _| {
+        let error = read_aux(&data, 0, 24, &limit, &ledger(&limit), |_, _| {
             Err(Error::ResourceLimit {
                 resource: "metadata decoder working bytes",
                 limit: 7,
             })
         })
-        .unwrap_err();
+        .err()
+        .expect("resource failures are terminal");
         assert!(matches!(
             error,
             Error::ResourceLimit {
@@ -349,8 +458,10 @@ mod auxiliary_budget_tests {
                 limit: 7
             }
         ));
-        let (auxiliary, report) =
-            read_aux(&data, 0, 24, &limit, |_, _| Err(invalid("bad test stream"))).unwrap();
+        let (auxiliary, report) = read_aux(&data, 0, 24, &limit, &ledger(&limit), |_, _| {
+            Err(invalid("bad test stream"))
+        })
+        .unwrap();
         assert!(auxiliary.metadata.is_none());
         assert_eq!(report.entries.len(), 1);
         assert_eq!(report.entries[0].code, "woff.invalid_metadata");

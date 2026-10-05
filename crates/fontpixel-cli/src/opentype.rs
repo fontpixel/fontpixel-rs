@@ -80,6 +80,16 @@ pub(super) struct VariantsArgs {
     /// Outline source for WOFF/WOFF2; auto uses CFF square and TrueType dots.
     #[arg(long,default_value="auto",value_parser=["auto","cff","ttf"])]
     woff2_source: String,
+    /// Glyph 0: keep the generated box (preserve) or write an empty outline
+    /// with exact design-unit metrics (empty; requires --notdef-advance).
+    #[arg(long, default_value = "preserve", value_parser = ["preserve", "empty"])]
+    notdef: String,
+    /// Empty .notdef advance width in design units.
+    #[arg(long)]
+    notdef_advance: Option<u16>,
+    /// Empty .notdef left side bearing in design units (default 0).
+    #[arg(long, allow_hyphen_values = true)]
+    notdef_lsb: Option<i16>,
     #[command(flatten)]
     resources: ResourceArguments,
     #[command(flatten)]
@@ -583,6 +593,23 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
     if !a.vendor.bytes().all(|v| (32..=126).contains(&v)) {
         return Err(Error::InvalidInput("vendor must be printable ASCII".into()));
     }
+    let notdef = match (a.notdef.as_str(), a.notdef_advance, a.notdef_lsb) {
+        ("empty", Some(advance_width), lsb) => variants::NotdefPolicy::Empty {
+            advance_width,
+            left_side_bearing: lsb.unwrap_or(0),
+        },
+        ("empty", None, _) => {
+            return Err(Error::InvalidInput(
+                "--notdef empty requires --notdef-advance".into(),
+            ));
+        }
+        (_, None, None) => variants::NotdefPolicy::Preserve,
+        _ => {
+            return Err(Error::InvalidInput(
+                "--notdef-advance/--notdef-lsb require --notdef empty".into(),
+            ));
+        }
+    };
     let encode_limits = variants_limits(&v, &report, &limits)?;
     let o = Options {
         shape,
@@ -605,6 +632,7 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
         copyright: a.copyright,
         license: a.license,
         license_url: a.license_url,
+        notdef,
         limits: sfnt::gsub::LayoutLimits {
             sfnt: sfnt_limits(&encode_limits),
             ..Default::default()

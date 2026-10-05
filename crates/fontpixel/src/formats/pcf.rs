@@ -67,6 +67,22 @@ impl ScanUnit {
         }
     }
 }
+/// Which value wins when a normalized size/resolution edit (for example an
+/// explicit [`crate::projection`]) disagrees with an existing PCF property.
+///
+/// PCF has no `SIZE` header: point size and resolution live only in the
+/// `POINT_SIZE`, `RESOLUTION_X`, `RESOLUTION_Y` and `RESOLUTION` properties.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MetadataPrecedence {
+    /// Normalized edits rewrite those existing properties (the default).
+    #[default]
+    NormalizedEdits,
+    /// Existing properties are kept unchanged; absent ones are still generated
+    /// from the edited model. Every kept property that disagrees with the
+    /// edited model is reported as loss. An edited font name still replaces
+    /// the `FONT` property, which is the name itself.
+    ExplicitProperties,
+}
 /// PCF-specific deterministic output choices.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PcfWriteOptions {
@@ -84,6 +100,8 @@ pub struct PcfWriteOptions {
     pub max_output_bytes: usize,
     /// Budgets for glyphs, intermediate tables, pixels and model data.
     pub limits: ResourceLimits,
+    /// Size/resolution property precedence after normalized edits.
+    pub metadata_precedence: MetadataPrecedence,
 }
 impl Default for PcfWriteOptions {
     fn default() -> Self {
@@ -95,6 +113,7 @@ impl Default for PcfWriteOptions {
             gray_threshold: None,
             max_output_bytes: 256 * 1024 * 1024,
             limits: ResourceLimits::default(),
+            metadata_precedence: MetadataPrecedence::default(),
         }
     }
 }

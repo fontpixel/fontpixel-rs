@@ -1,14 +1,22 @@
-# 当前进度：第 6 阶段已完成（2026-10-05）
+# 当前进度：第 6 阶段严格标准补完进行中，已按用户指示暂停（2026-10-05 下午）
 
-用户 2026-10-05 恢复并指定只做第 6 阶段，按 PLAN.md 原文验收。交付报告见
-**[reports/phase-6.md](reports/phase-6.md)**，测速见 [benches/REPORT.md](benches/REPORT.md)，
-逐 gate 记录见 [reports/phase6-local.md](reports/phase6-local.md)。
+**恢复入口：[docs/LOCAL-PAUSE-20261005-STRICT.zh.md](docs/LOCAL-PAUSE-20261005-STRICT.zh.md)**
 
-- [x] 第 6 阶段 W6.1–W6.6：check.sh、rustdoc、真实字体对照、104 目标 ASAN、PLAN §10 正式测速全部通过。
-- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API），等待用户指示后开始。
-- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API），在第 7 阶段之后。
-- [ ] 第 9 阶段：拼合网页，未授权。
-- 不 push、不 publish、不 deploy。
+第 6 阶段已按 PLAN 原文交付，见 [reports/phase-6.md](reports/phase-6.md)。之后用户要求按更严标准补完，
+并一路做到第 9 阶段；本地提交可以，不 push、不发布、不部署。
+
+- [x] 第 6 阶段按 PLAN 原文交付（`6297998`）。
+- [ ] 第 6 阶段严格标准补完：
+  - [x] 单元 E 收录站投影追平（已合并）
+  - [x] 单元 B subset 账本（已合并）
+  - [x] 单元 D OTB/bdat 元数据（已合并）
+  - [~] 单元 A：WOFF 账本已合并；Brotli 编码器上界待处理，方案已定，见暂停记录第 3 节
+  - [~] 单元 C variants 账本：已完成但未合并，默认通格导出会超预算，方案已定，见暂停记录第 3 节
+  - [ ] 单元 F 矢量字体元数据选项；若干小问题与文档（暂停记录第 4 节）
+  - [ ] 最终冻结 + 对照全量重跑 + ASAN + 空闲时正式测速 + 更新报告
+- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）
+- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）
+- [ ] 第 9 阶段：拼合网页 `web/merge/`
 
 以下本地接续/云端交接文字是历史过程；最终暂停状态以最新记录及 checkpoint 为准。
 

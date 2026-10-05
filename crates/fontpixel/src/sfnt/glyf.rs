@@ -1,6 +1,6 @@
 //! Editable, bounded TrueType simple/composite outlines and short/long loca.
 //! Glyph bytecode is retained, never interpreted. Flattening is unhinted.
-use super::working::{Budget, Owned, Vector};
+use super::working::{Budget, Lease, Owned, Vector};
 use super::{bounded, bytes, invalid, p16, p32, pi16, to16, to32, u16_at, u32_at};
 use crate::{
     Result,
@@ -326,11 +326,231 @@ impl<'a> Cursor<'a> {
     fn signed(&mut self) -> Result<i16> {
         Ok(self.word()? as i16)
     }
-    fn instructions(&mut self, limit: usize) -> Result<Vec<u8>> {
+    /// Borrow a bounded program; only the editable model copies it.
+    fn program(&mut self, limit: usize) -> Result<&'a [u8]> {
         let n = self.word()? as usize;
         bounded(n, limit, "glyf instructions")?;
-        Ok(self.take(n)?.to_vec())
+        self.take(n)
     }
+}
+/// Where one decoded glyph goes. `Model` is the public editable decoder and
+/// owns no ledger. `Dependencies` runs exactly the same structural and typed
+/// validation, charges every temporary to the caller's shared ledger before it
+/// is allocated, and retains only composite child IDs.
+enum Mode<'a> {
+    Model,
+    Dependencies {
+        budget: &'a Budget,
+        children: &'a mut Vector<u16>,
+    },
+}
+impl Mode<'_> {
+    fn model(&self) -> bool {
+        matches!(self, Self::Model)
+    }
+    fn charge<T>(&self, count: usize) -> Result<Option<Lease>> {
+        match self {
+            Self::Model => Ok(None),
+            Self::Dependencies { budget, .. } => budget.reserve_array::<T>(count).map(Some),
+        }
+    }
+}
+/// Work counted against the whole-font point/component/program caps.
+#[derive(Default)]
+struct Summary {
+    points: usize,
+    components: usize,
+    instructions: usize,
+}
+/// Composite dependencies of a fully validated glyf table, for raw subsetting.
+/// Simple outlines and programs are validated and then discarded.
+pub(crate) struct Dependencies {
+    /// `num_glyphs + 1` starts into `children`; a nonempty span is a composite.
+    starts: Vec<u32>,
+    children: Vec<u16>,
+}
+impl Dependencies {
+    /// Validate every glyph of an sfnt's glyf/loca under the shared ledger.
+    pub(crate) fn from_sfnt_with_budget(
+        font: &super::Sfnt<'_>,
+        l: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Self>> {
+        let (glyf, loca, num_glyphs, format) = sfnt_tables(font)?;
+        let mut starts = Vector::with_capacity(budget, usize::from(num_glyphs) + 1)?;
+        let mut children = Vector::new(budget)?;
+        starts.push(0)?;
+        let mut mode = Mode::Dependencies {
+            budget,
+            children: &mut children,
+        };
+        decode_with(glyf, loca, num_glyphs, format, l, &mut mode, |mode, _| {
+            if let Mode::Dependencies { children, .. } = mode {
+                starts.push(to32(children.len())?)?;
+            }
+            Ok(())
+        })?;
+        let (starts, mut lease) = starts.into_parts();
+        let (children, mut nested) = children.into_parts();
+        let result = Self { starts, children };
+        if let Err(error) = lease.merge(&mut nested) {
+            drop(result);
+            return Err(error);
+        }
+        let result = Owned::from_parts(result, lease);
+        let count = result.starts.len() - 1;
+        let _states = budget.reserve_array::<u8>(count)?;
+        let _depths = budget.reserve_array::<usize>(count)?;
+        check_graph(count, l, |gid| {
+            let children = result.children(gid);
+            (!children.is_empty()).then(|| children.iter().copied())
+        })?;
+        Ok(result)
+    }
+    /// Child glyph IDs of a composite in point-numbering order; empty otherwise.
+    pub(crate) fn children(&self, gid: usize) -> &[u16] {
+        match (self.starts.get(gid), self.starts.get(gid + 1)) {
+            (Some(&a), Some(&b)) => &self.children[a as usize..b as usize],
+            _ => &[],
+        }
+    }
+}
+fn sfnt_tables<'a>(font: &super::Sfnt<'a>) -> Result<(&'a [u8], &'a [u8], u16, i16)> {
+    use read_fonts::TableProvider;
+    let h = font.font_ref().head().map_err(invalid)?;
+    let m = font.font_ref().maxp().map_err(invalid)?;
+    Ok((
+        font.table(*b"glyf")
+            .ok_or_else(|| invalid("missing glyf"))?,
+        font.table(*b"loca")
+            .ok_or_else(|| invalid("missing loca"))?,
+        m.num_glyphs(),
+        h.index_to_loc_format(),
+    ))
+}
+/// Shared loca walk and cumulative font-wide caps for both decoder modes.
+fn decode_with(
+    glyf: &[u8],
+    loca: &[u8],
+    num_glyphs: u16,
+    index_to_loc_format: i16,
+    l: &Limits,
+    mode: &mut Mode<'_>,
+    mut sink: impl FnMut(&mut Mode<'_>, Option<Glyph>) -> Result<()>,
+) -> Result<()> {
+    l.sfnt.glyphs(num_glyphs as usize)?;
+    l.sfnt.table(glyf.len())?;
+    l.sfnt.table(loca.len())?;
+    let size = match index_to_loc_format {
+        0 => 2,
+        1 => 4,
+        _ => return Err(invalid("invalid indexToLocFormat")),
+    };
+    bytes(loca, 0, (num_glyphs as usize + 1) * size)?;
+    let _offsets_lease = mode.charge::<usize>(num_glyphs as usize + 1)?;
+    let mut offsets = Vec::with_capacity(num_glyphs as usize + 1);
+    for i in 0..=num_glyphs as usize {
+        let n = if size == 2 {
+            usize::from(u16_at(loca, i * 2)?) * 2
+        } else {
+            u32_at(loca, i * 4)? as usize
+        };
+        if n > glyf.len() || offsets.last().is_some_and(|last| *last > n) {
+            return Err(invalid("invalid or descending loca offset"));
+        }
+        offsets.push(n);
+    }
+    let (mut points, mut components, mut instructions) = (0usize, 0usize, 0usize);
+    for span in offsets.windows(2) {
+        let mut remaining = l.clone();
+        remaining.geometry.max_points = remaining
+            .geometry
+            .max_points
+            .min(l.max_total_points - points);
+        remaining.max_components = remaining
+            .max_components
+            .min(l.max_total_components - components);
+        remaining.max_total_instructions = l.max_total_instructions - instructions;
+        let first_child = match mode {
+            Mode::Model => 0,
+            Mode::Dependencies { children, .. } => children.len(),
+        };
+        let (g, s) = decode_glyph(&glyf[span[0]..span[1]], &remaining, mode)?;
+        let out_of_range = match (&g, &*mode) {
+            (Some(Glyph::Composite(g)), _) => g.components.iter().any(|c| c.glyph_id >= num_glyphs),
+            (_, Mode::Dependencies { children, .. }) => {
+                children[first_child..].iter().any(|&c| c >= num_glyphs)
+            }
+            _ => false,
+        };
+        if out_of_range {
+            return Err(invalid("component glyph ID out of range"));
+        }
+        points = points.saturating_add(s.points);
+        components = components.saturating_add(s.components);
+        instructions = instructions.saturating_add(s.instructions);
+        bounded(points, l.max_total_points, "glyf total points")?;
+        bounded(components, l.max_total_components, "glyf total components")?;
+        bounded(
+            instructions,
+            l.max_total_instructions,
+            "glyf total instructions",
+        )?;
+        sink(mode, g)?;
+    }
+    Ok(())
+}
+/// Cycle, depth and component-count checks over any glyph graph. `children`
+/// returns `None` for a non-composite glyph.
+fn check_graph<I: ExactSizeIterator<Item = u16>>(
+    count: usize,
+    l: &Limits,
+    children: impl Fn(usize) -> Option<I>,
+) -> Result<()> {
+    l.sfnt.glyphs(count)?;
+    let mut states = vec![0u8; count];
+    let mut depths = vec![0usize; count];
+    fn visit<I: ExactSizeIterator<Item = u16>>(
+        children: &impl Fn(usize) -> Option<I>,
+        gid: usize,
+        depth: usize,
+        states: &mut [u8],
+        depths: &mut [usize],
+        l: &Limits,
+    ) -> Result<usize> {
+        bounded(depth, l.max_depth.min(64), "glyf component depth")?;
+        match states.get(gid) {
+            Some(1) => return Err(invalid("cyclic composite glyph")),
+            Some(2) => {
+                bounded(
+                    depth.saturating_add(depths[gid]),
+                    l.max_depth.min(64),
+                    "glyf component depth",
+                )?;
+                return Ok(depths[gid]);
+            }
+            None => return Err(invalid("component glyph ID out of range")),
+            _ => {}
+        }
+        states[gid] = 1;
+        let mut d = 0;
+        if let Some(components) = children(gid) {
+            if components.len() == 0 {
+                return Err(invalid("empty composite glyph"));
+            }
+            bounded(components.len(), l.max_components, "glyf components")?;
+            for c in components {
+                d = d.max(1 + visit(children, c as usize, depth + 1, states, depths, l)?);
+            }
+        }
+        states[gid] = 2;
+        depths[gid] = d;
+        Ok(d)
+    }
+    for gid in 0..count {
+        visit(&children, gid, 0, &mut states, &mut depths, l)?;
+    }
+    Ok(())
 }
 impl GlyfTable {
     /// Decode loca-delimited glyphs. Fontations interprets points after strict
@@ -343,126 +563,33 @@ impl GlyfTable {
         l: &Limits,
     ) -> Result<Self> {
         l.sfnt.glyphs(num_glyphs as usize)?;
-        l.sfnt.table(glyf.len())?;
-        l.sfnt.table(loca.len())?;
-        let size = match index_to_loc_format {
-            0 => 2,
-            1 => 4,
-            _ => return Err(invalid("invalid indexToLocFormat")),
-        };
-        bytes(loca, 0, (num_glyphs as usize + 1) * size)?;
-        let mut offsets = Vec::with_capacity(num_glyphs as usize + 1);
-        for i in 0..=num_glyphs as usize {
-            let n = if size == 2 {
-                usize::from(u16_at(loca, i * 2)?) * 2
-            } else {
-                u32_at(loca, i * 4)? as usize
-            };
-            if n > glyf.len() || offsets.last().is_some_and(|last| *last > n) {
-                return Err(invalid("invalid or descending loca offset"));
-            }
-            offsets.push(n);
-        }
         let mut glyphs = Vec::with_capacity(num_glyphs as usize);
-        let (mut points, mut components, mut instructions) = (0usize, 0usize, 0usize);
-        for span in offsets.windows(2) {
-            let mut remaining = l.clone();
-            remaining.geometry.max_points = remaining
-                .geometry
-                .max_points
-                .min(l.max_total_points - points);
-            remaining.max_components = remaining
-                .max_components
-                .min(l.max_total_components - components);
-            remaining.max_total_instructions = l.max_total_instructions - instructions;
-            let g = decode_glyph(&glyf[span[0]..span[1]], &remaining)?;
-            match &g {
-                Glyph::Empty => {}
-                Glyph::Simple(g) => {
-                    points = points.saturating_add(count(&g.contours)?);
-                    instructions = instructions.saturating_add(g.instructions.len());
-                }
-                Glyph::Composite(g) => {
-                    components = components.saturating_add(g.components.len());
-                    instructions = instructions.saturating_add(g.instructions.len());
-                    if g.components.iter().any(|c| c.glyph_id >= num_glyphs) {
-                        return Err(invalid("component glyph ID out of range"));
-                    }
-                }
-            }
-            bounded(points, l.max_total_points, "glyf total points")?;
-            bounded(components, l.max_total_components, "glyf total components")?;
-            bounded(
-                instructions,
-                l.max_total_instructions,
-                "glyf total instructions",
-            )?;
-            glyphs.push(g);
-        }
+        decode_with(
+            glyf,
+            loca,
+            num_glyphs,
+            index_to_loc_format,
+            l,
+            &mut Mode::Model,
+            |_, g| {
+                glyphs.push(g.ok_or_else(|| invalid("missing decoded glyph"))?);
+                Ok(())
+            },
+        )?;
         let result = Self { glyphs };
         result.validate_graph(l)?;
         Ok(result)
     }
     /// Decode the outlines of a standalone sfnt through its typed head/maxp.
     pub fn from_sfnt(font: &super::Sfnt<'_>, l: &Limits) -> Result<Self> {
-        use read_fonts::TableProvider;
-        let h = font.font_ref().head().map_err(invalid)?;
-        let m = font.font_ref().maxp().map_err(invalid)?;
-        Self::decode(
-            font.table(*b"glyf")
-                .ok_or_else(|| invalid("missing glyf"))?,
-            font.table(*b"loca")
-                .ok_or_else(|| invalid("missing loca"))?,
-            m.num_glyphs(),
-            h.index_to_loc_format(),
-            l,
-        )
+        let (glyf, loca, num_glyphs, format) = sfnt_tables(font)?;
+        Self::decode(glyf, loca, num_glyphs, format, l)
     }
     fn validate_graph(&self, l: &Limits) -> Result<()> {
-        l.sfnt.glyphs(self.glyphs.len())?;
-        let mut states = vec![0u8; self.glyphs.len()];
-        let mut depths = vec![0usize; self.glyphs.len()];
-        fn visit(
-            table: &GlyfTable,
-            gid: usize,
-            depth: usize,
-            states: &mut [u8],
-            depths: &mut [usize],
-            l: &Limits,
-        ) -> Result<usize> {
-            bounded(depth, l.max_depth.min(64), "glyf component depth")?;
-            match states.get(gid) {
-                Some(1) => return Err(invalid("cyclic composite glyph")),
-                Some(2) => {
-                    bounded(
-                        depth.saturating_add(depths[gid]),
-                        l.max_depth.min(64),
-                        "glyf component depth",
-                    )?;
-                    return Ok(depths[gid]);
-                }
-                None => return Err(invalid("component glyph ID out of range")),
-                _ => {}
-            }
-            states[gid] = 1;
-            let mut d = 0;
-            if let Glyph::Composite(g) = &table.glyphs[gid] {
-                if g.components.is_empty() {
-                    return Err(invalid("empty composite glyph"));
-                }
-                bounded(g.components.len(), l.max_components, "glyf components")?;
-                for c in &g.components {
-                    d = d.max(1 + visit(table, c.glyph_id as usize, depth + 1, states, depths, l)?);
-                }
-            }
-            states[gid] = 2;
-            depths[gid] = d;
-            Ok(d)
-        }
-        for gid in 0..self.glyphs.len() {
-            visit(self, gid, 0, &mut states, &mut depths, l)?;
-        }
-        Ok(())
+        check_graph(self.glyphs.len(), l, |gid| match &self.glyphs[gid] {
+            Glyph::Composite(g) => Some(g.components.iter().map(|c| c.glyph_id)),
+            _ => None,
+        })
     }
     /// Resolve unhinted outlines, including scaled offsets and point attachments.
     /// Device grid rounding, bytecode, variations and phantom points are excluded.
@@ -682,18 +809,24 @@ impl GlyfTable {
         })
     }
 }
-fn decode_glyph(data: &[u8], l: &Limits) -> Result<Glyph> {
+/// Validate one glyph record. Only `Mode::Model` returns an owned glyph; in
+/// dependency mode every temporary is charged before allocation and dropped
+/// before return, and composite child IDs are appended to the caller's array.
+fn decode_glyph(data: &[u8], l: &Limits, mode: &mut Mode<'_>) -> Result<(Option<Glyph>, Summary)> {
+    let model = mode.model();
     if data.is_empty() {
-        return Ok(Glyph::Empty);
+        return Ok((model.then_some(Glyph::Empty), Summary::default()));
     }
     let mut r = Cursor { data, pos: 0 };
     let nc = r.signed()?;
     r.take(8)?;
     if nc >= 0 {
         if nc == 0 && data.len() == 10 {
-            return Ok(Glyph::Simple(SimpleGlyph::default()));
+            let glyph = model.then(|| Glyph::Simple(SimpleGlyph::default()));
+            return Ok((glyph, Summary::default()));
         }
         bytes(data, 10, nc as usize * 2)?;
+        let _ends_lease = mode.charge::<usize>(nc as usize)?;
         let mut ends = Vec::with_capacity(nc as usize);
         for _ in 0..nc {
             let e = r.word()? as usize;
@@ -704,7 +837,10 @@ fn decode_glyph(data: &[u8], l: &Limits) -> Result<Glyph> {
         }
         let n = ends.last().map_or(0, |v| v + 1);
         bounded(n, l.geometry.max_points, "glyf points")?;
-        let instructions = r.instructions(l.max_total_instructions)?;
+        let program = r.program(l.max_total_instructions)?;
+        // Dependency mode validates the program bounds without copying it.
+        let instructions = if model { program.to_vec() } else { Vec::new() };
+        let _flags_lease = mode.charge::<u8>(n)?;
         let mut flags = Vec::with_capacity(n);
         while flags.len() < n {
             let f = r.byte()?;
@@ -740,11 +876,21 @@ fn decode_glyph(data: &[u8], l: &Limits) -> Result<Glyph> {
         }
         // Typed point reading occurs only after the independent structural pass.
         let typed = ReadSimple::read(FontData::new(data)).map_err(invalid)?;
+        let _points_lease = mode.charge::<read_fonts::types::Point<i32>>(n)?;
         let mut pts = vec![read_fonts::types::Point::<i32>::default(); n];
+        let _point_flags_lease = mode.charge::<read_fonts::tables::glyf::PointFlags>(n)?;
         let mut point_flags = vec![read_fonts::tables::glyf::PointFlags::default(); n];
         typed
             .read_points_fast(&mut pts, &mut point_flags)
             .map_err(invalid)?;
+        let summary = Summary {
+            points: n,
+            components: 0,
+            instructions: program.len(),
+        };
+        if !model {
+            return Ok((None, summary));
+        }
         let mut contours = Vec::with_capacity(ends.len());
         let mut start = 0;
         for end in ends {
@@ -761,15 +907,17 @@ fn decode_glyph(data: &[u8], l: &Limits) -> Result<Glyph> {
             );
             start = end + 1;
         }
-        Ok(Glyph::Simple(SimpleGlyph {
+        let glyph = Glyph::Simple(SimpleGlyph {
             contours,
             instructions,
             overlap: flags.first().is_some_and(|f| f & 64 != 0),
-        }))
+        });
+        Ok((Some(glyph), summary))
     } else {
         let mut components = Vec::new();
+        let mut count = 0usize;
         let final_flags = loop {
-            bounded(components.len() + 1, l.max_components, "glyf components")?;
+            bounded(count + 1, l.max_components, "glyf components")?;
             let flags = r.word()?;
             let glyph_id = r.word()?;
             if flags & !0x1fff != 0 || (flags & 0x1800) == 0x1800 || (flags & 0xc8).count_ones() > 1
@@ -806,35 +954,47 @@ fn decode_glyph(data: &[u8], l: &Limits) -> Result<Glyph> {
             } else {
                 [16384, 0, 0, 16384]
             };
-            components.push(Component {
-                glyph_id,
-                anchor,
-                transform,
-                offset_mode: if flags & 0x800 != 0 {
-                    OffsetMode::Scaled
-                } else if flags & 0x1000 != 0 {
-                    OffsetMode::Unscaled
-                } else {
-                    OffsetMode::Default
-                },
-                round_to_grid: flags & 4 != 0,
-                use_my_metrics: flags & 0x200 != 0,
-                overlap: flags & 0x400 != 0,
-                non_overlapping: flags & 0x10 != 0,
-            });
+            match mode {
+                Mode::Model => components.push(Component {
+                    glyph_id,
+                    anchor,
+                    transform,
+                    offset_mode: if flags & 0x800 != 0 {
+                        OffsetMode::Scaled
+                    } else if flags & 0x1000 != 0 {
+                        OffsetMode::Unscaled
+                    } else {
+                        OffsetMode::Default
+                    },
+                    round_to_grid: flags & 4 != 0,
+                    use_my_metrics: flags & 0x200 != 0,
+                    overlap: flags & 0x400 != 0,
+                    non_overlapping: flags & 0x10 != 0,
+                }),
+                Mode::Dependencies { children, .. } => children.push(glyph_id)?,
+            }
+            count += 1;
             if flags & 32 == 0 {
                 break flags;
             }
         };
-        let instructions = if final_flags & 0x100 != 0 {
-            r.instructions(l.max_total_instructions)?
+        let program = if final_flags & 0x100 != 0 {
+            r.program(l.max_total_instructions)?
         } else {
-            Vec::new()
+            &[]
         };
-        Ok(Glyph::Composite(CompositeGlyph {
-            components,
-            instructions,
-        }))
+        let summary = Summary {
+            points: 0,
+            components: count,
+            instructions: program.len(),
+        };
+        let glyph = model.then(|| {
+            Glyph::Composite(CompositeGlyph {
+                components,
+                instructions: program.to_vec(),
+            })
+        });
+        Ok((glyph, summary))
     }
 }
 fn encode_glyph(g: &Glyph, b: [i16; 4], l: &Limits) -> Result<Vec<u8>> {

@@ -17,7 +17,7 @@ struct State {
     used: AtomicUsize,
     maximum: usize,
     resource: &'static str,
-    /// High-water mark of admitted bytes, for exact-capacity unit tests.
+    /// High-water mark of admitted bytes, for exact-capacity regressions.
     #[cfg(test)]
     peak: AtomicUsize,
 }
@@ -36,7 +36,7 @@ impl Budget {
         }))
     }
 
-    /// Largest simultaneous admitted total since creation (test builds only).
+    /// Highest simultaneous admitted total observed by this ledger.
     #[cfg(test)]
     pub(crate) fn peak(&self) -> usize {
         self.0.peak.load(Ordering::Relaxed)
@@ -54,17 +54,17 @@ impl Budget {
     }
 
     pub(crate) fn reserve(&self, bytes: usize) -> Result<Lease> {
-        let _previous = self
-            .0
+        self.0
             .used
             .try_update(Ordering::Relaxed, Ordering::Relaxed, |used| {
                 used.checked_add(bytes)
                     .filter(|&next| next <= self.0.maximum)
             })
             .map_err(|_| self.error())?;
-        // The update above proved this sum is representable and admitted.
         #[cfg(test)]
-        self.0.peak.fetch_max(_previous + bytes, Ordering::Relaxed);
+        self.0
+            .peak
+            .fetch_max(self.0.used.load(Ordering::Relaxed), Ordering::Relaxed);
         Ok(Lease {
             budget: self.clone(),
             bytes,
@@ -102,6 +102,20 @@ impl Budget {
     pub(crate) fn reserve_tree<K, V>(&self, entries: usize) -> Result<Lease> {
         self.reserve(self.tree_bytes::<K, V>(entries)?)
     }
+
+    /// Allocate exactly `capacity` elements after admitting them, and move the
+    /// charge (for the actual capacity) into `lease`. The caller must keep
+    /// `lease` alive until the returned vector has dropped, and must not grow
+    /// the vector beyond this capacity.
+    #[cfg(any(feature = "sfnt", test))]
+    pub(crate) fn vec_into<T>(&self, capacity: usize, lease: &mut Lease) -> Result<Vec<T>> {
+        let (values, mut charge) = Vector::with_capacity(self, capacity)?.into_parts();
+        if let Err(error) = lease.merge(&mut charge) {
+            drop(values);
+            return Err(error);
+        }
+        Ok(values)
+    }
 }
 
 /// Keep this lease alive until its corresponding storage has actually dropped.
@@ -126,23 +140,6 @@ impl Lease {
         self.bytes
     }
 
-    #[cfg(any(feature = "sfnt", test))]
-    /// Move `bytes` of this live charge into a separate lease. Nothing is
-    /// admitted or released; the caller may then drop the remainder only once
-    /// the storage it covered has actually dropped.
-    pub(crate) fn split(&mut self, bytes: usize) -> Result<Self> {
-        if bytes > self.bytes {
-            return Err(Error::InvalidInput(
-                "working lease split exceeds its charge".into(),
-            ));
-        }
-        self.bytes -= bytes;
-        Ok(Self {
-            budget: self.budget.clone(),
-            bytes,
-        })
-    }
-
     /// Combine charges after the associated owned values move into one stage.
     /// On failure both leases retain their charges and caller storage remains
     /// admitted. Taking a mutable reference prevents an error from dropping it.
@@ -158,6 +155,23 @@ impl Lease {
             .ok_or_else(|| self.budget.error())?;
         other.bytes = 0;
         Ok(())
+    }
+
+    /// Move `bytes` of this live charge into a new lease on the same ledger,
+    /// without releasing anything. Use it when part of the covered storage
+    /// moves to an owner with a different lifetime.
+    #[cfg(any(feature = "sfnt", test))]
+    pub(crate) fn split(&mut self, bytes: usize) -> Result<Self> {
+        if bytes > self.bytes {
+            return Err(Error::InvalidInput(
+                "working lease split exceeds its charge".into(),
+            ));
+        }
+        self.bytes -= bytes;
+        Ok(Self {
+            budget: self.budget.clone(),
+            bytes,
+        })
     }
 }
 
@@ -262,6 +276,17 @@ impl<T> Vector<T> {
     pub(crate) fn with_capacity(budget: &Budget, capacity: usize) -> Result<Self> {
         let mut result = Self::new(budget)?;
         result.reserve_exact(capacity)?;
+        Ok(result)
+    }
+
+    /// Admit and copy borrowed values into new owned storage.
+    #[cfg(any(feature = "woff", feature = "woff2", test))]
+    pub(crate) fn from_slice(budget: &Budget, values: &[T]) -> Result<Self>
+    where
+        T: Copy,
+    {
+        let mut result = Self::with_capacity(budget, values.len())?;
+        result.extend(values)?;
         Ok(result)
     }
 
@@ -408,6 +433,18 @@ mod tests {
     }
 
     #[test]
+    fn peak_records_the_highest_simultaneous_admission() {
+        let budget = Budget::new(100, "test working bytes");
+        let first = budget.reserve(30).unwrap();
+        let second = budget.reserve(50).unwrap();
+        drop(first);
+        let copied = Vector::from_slice(&budget, b"0123456789").unwrap();
+        assert_eq!(copied.as_slice(), b"0123456789");
+        drop((second, copied));
+        assert_eq!((budget.peak(), budget.remaining()), (80, 100));
+    }
+
+    #[test]
     fn growth_accounts_for_live_old_and_new_storage() {
         let budget = Budget::new(11, "test working bytes");
         let mut buffer = Buffer::new(&budget).unwrap();
@@ -486,6 +523,37 @@ mod tests {
     }
 
     #[test]
+    fn exact_vectors_merge_their_charge_into_a_shared_lease() {
+        let budget = Budget::new(3 * size_of::<u32>() + 2, "exact budget");
+        let mut lease = budget.reserve(0).unwrap();
+        let values = budget.vec_into::<u32>(3, &mut lease).unwrap();
+        assert!(values.capacity() >= 3);
+        assert_eq!(lease.bytes(), values.capacity() * size_of::<u32>());
+        let bytes = budget.vec_into::<u8>(2, &mut lease).unwrap();
+        assert_eq!(budget.remaining(), 0);
+        // A refused allocation leaves the existing charges unchanged.
+        assert!(budget.vec_into::<u8>(1, &mut lease).is_err());
+        assert_eq!(lease.bytes(), 3 * size_of::<u32>() + 2);
+        drop((values, bytes));
+        drop(lease);
+        assert_eq!(budget.remaining(), 3 * size_of::<u32>() + 2);
+    }
+
+    #[test]
+    fn split_moves_part_of_a_live_charge_without_release() {
+        let budget = Budget::new(10, "split budget");
+        let mut lease = budget.reserve(10).unwrap();
+        let part = lease.split(4).unwrap();
+        assert_eq!((lease.bytes(), part.bytes(), budget.remaining()), (6, 4, 0));
+        assert!(matches!(lease.split(7), Err(Error::InvalidInput(_))));
+        assert_eq!((lease.bytes(), budget.remaining()), (6, 0));
+        drop(lease);
+        assert_eq!(budget.remaining(), 6);
+        drop(part);
+        assert_eq!(budget.remaining(), 10);
+    }
+
+    #[test]
     fn nested_storage_retains_its_capacity_until_the_output_drops() {
         let maximum = size_of::<Vec<u8>>() + 5;
         let budget = Budget::new(maximum, "nested budget");
@@ -498,21 +566,5 @@ mod tests {
         assert_eq!(budget.remaining(), 0);
         drop(output);
         assert_eq!(budget.remaining(), maximum);
-    }
-
-    #[test]
-    fn split_partitions_a_live_charge_without_admitting_or_releasing() {
-        let budget = Budget::new(10, "split budget");
-        let mut whole = budget.reserve(8).unwrap();
-        let part = whole.split(3).unwrap();
-        assert_eq!((whole.bytes(), part.bytes()), (5, 3));
-        assert_eq!(budget.remaining(), 2);
-        assert!(matches!(whole.split(6), Err(Error::InvalidInput(_))));
-        assert_eq!(whole.bytes(), 5);
-        drop(whole);
-        assert_eq!(budget.remaining(), 7);
-        drop(part);
-        assert_eq!(budget.remaining(), 10);
-        assert_eq!(budget.peak(), 8);
     }
 }

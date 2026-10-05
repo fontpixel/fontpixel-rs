@@ -1,7 +1,13 @@
 //! Preserve raw Type 2 programs, hints, widths and subroutines during compaction.
+//!
+//! The output is laid out twice by one writer: first into a byte counter (every
+//! rewritten DICT operand uses the fixed five-byte integer form, so lengths do
+//! not depend on offset values), then into one exact, ledger-admitted buffer.
+//! No INDEX item, DICT template or Private block is copied in between.
+use super::read::{IdSet, dictionary, index_at};
 use super::*;
+use crate::working::Buffer;
 use read_fonts::ps::cff::dict::Entry;
-use std::collections::BTreeMap;
 // DICT operators encoded as byte or 0x0c00 | escaped byte.
 const CHARSET: u16 = 15;
 const CHARSTRINGS: u16 = 17;
@@ -9,24 +15,51 @@ const PRIVATE: u16 = 18;
 const SUBRS: u16 = 19;
 const FDARRAY: u16 = 0x0c24;
 const FDSELECT: u16 = 0x0c25;
-fn integer(v: usize) -> Result<Vec<u8>> {
-    let n = i32::try_from(v).map_err(|_| invalid("CFF offset overflow"))?;
-    let mut b = vec![29];
-    b.extend(n.to_be_bytes());
-    Ok(b)
+
+/// Output sink: a layout counter or the final ledger buffer.
+trait Out {
+    fn put(&mut self, bytes: &[u8]) -> Result<()>;
+    fn len(&self) -> usize;
 }
-fn arguments(values: &[usize]) -> Result<Vec<u8>> {
-    let mut b = Vec::new();
-    for &v in values {
-        b.extend(integer(v)?);
+struct Count(usize);
+impl Out for Count {
+    fn put(&mut self, bytes: &[u8]) -> Result<()> {
+        self.0 = self
+            .0
+            .checked_add(bytes.len())
+            .ok_or_else(|| invalid("CFF size overflow"))?;
+        Ok(())
     }
-    Ok(b)
+    fn len(&self) -> usize {
+        self.0
+    }
 }
-/// Split validated DICT entries without changing unknown numeric representations.
-fn parts(data: &[u8]) -> Result<Vec<(u16, &[u8])>> {
+impl Out for Buffer {
+    fn put(&mut self, bytes: &[u8]) -> Result<()> {
+        self.extend(bytes)
+    }
+    fn len(&self) -> usize {
+        self.as_slice().len()
+    }
+}
+fn integer(out: &mut impl Out, v: usize) -> Result<()> {
+    let n = i32::try_from(v).map_err(|_| invalid("CFF offset overflow"))?;
+    out.put(&[29])?;
+    out.put(&n.to_be_bytes())
+}
+fn operator(out: &mut impl Out, op: u16, values: &[usize]) -> Result<()> {
+    for &v in values {
+        integer(out, v)?;
+    }
+    if op > 255 {
+        out.put(&[12])?;
+    }
+    out.put(&[op as u8])
+}
+/// Visit validated DICT entries without changing unknown numeric representations.
+fn for_parts<'a>(data: &'a [u8], mut f: impl FnMut(u16, &'a [u8]) -> Result<()>) -> Result<()> {
     let mut pos = 0;
     let mut start = 0;
-    let mut out = Vec::new();
     while pos < data.len() {
         let b = data[pos];
         pos += 1;
@@ -59,7 +92,7 @@ fn parts(data: &[u8]) -> Result<Vec<(u16, &[u8])>> {
                 } else {
                     u16::from(b)
                 };
-                out.push((op, &data[start..pos]));
+                f(op, &data[start..pos])?;
                 start = pos;
             }
             _ => return Err(invalid("invalid CFF DICT token")),
@@ -68,44 +101,123 @@ fn parts(data: &[u8]) -> Result<Vec<(u16, &[u8])>> {
     if start != data.len() {
         return Err(invalid("unterminated CFF DICT"));
     }
-    Ok(out)
+    Ok(())
 }
-fn rewrite(data: &[u8], replacements: &BTreeMap<u16, Vec<u8>>) -> Result<Vec<u8>> {
-    let mut out = Vec::new();
-    let mut left = replacements.clone();
-    for (op, raw) in parts(data)? {
-        if let Some(value) = left.remove(&op) {
-            out.extend(value);
-            if op > 255 {
-                out.push(12);
+/// Replace operators in place; absent ones are appended in ascending operator
+/// order. `replacements` must be sorted by operator.
+fn rewrite(out: &mut impl Out, data: &[u8], replacements: &[(u16, &[usize])]) -> Result<()> {
+    let mut used = [false; 8];
+    for_parts(data, |op, raw| {
+        match replacements.iter().position(|(o, _)| *o == op) {
+            Some(i) if !used[i] => {
+                used[i] = true;
+                operator(out, op, replacements[i].1)
             }
-            out.push(op as u8);
-        } else {
-            out.extend(raw);
+            _ => out.put(raw),
+        }
+    })?;
+    for (i, (op, values)) in replacements.iter().enumerate() {
+        if !used[i] {
+            operator(out, *op, values)?;
         }
     }
-    for (op, value) in left {
-        out.extend(value);
-        if op > 255 {
-            out.push(12);
-        }
-        out.push(op as u8);
+    Ok(())
+}
+fn rewritten_len(data: &[u8], replacements: &[(u16, &[usize])]) -> Result<usize> {
+    let mut count = Count(0);
+    rewrite(&mut count, data, replacements)?;
+    Ok(count.0)
+}
+/// Canonical CFF1 INDEX with minimal offset size, identical to `write::index`.
+fn index<O: Out>(
+    out: &mut O,
+    count: usize,
+    length: impl Fn(usize) -> Result<usize>,
+    mut item: impl FnMut(&mut O, usize) -> Result<()>,
+    l: &Limits,
+) -> Result<()> {
+    to16(count)?;
+    if count == 0 {
+        return out.put(&[0, 0]);
     }
-    Ok(out)
+    let mut total = 1usize;
+    for i in 0..count {
+        total = total
+            .checked_add(length(i)?)
+            .ok_or_else(|| invalid("CFF INDEX overflow"))?;
+    }
+    let offsize = if total <= 0xff {
+        1
+    } else if total <= 0xffff {
+        2
+    } else if total <= 0xffffff {
+        3
+    } else {
+        4
+    };
+    let len = 3usize
+        .checked_add((count + 1) * offsize)
+        .and_then(|n| n.checked_add(total - 1))
+        .ok_or_else(|| invalid("CFF INDEX size overflow"))?;
+    l.sfnt.table(len)?;
+    out.put(&(count as u16).to_be_bytes())?;
+    out.put(&[offsize as u8])?;
+    let mut pos = 1usize;
+    for i in 0..=count {
+        let p = u32::try_from(pos).map_err(|_| invalid("CFF INDEX offset overflow"))?;
+        out.put(&p.to_be_bytes()[4 - offsize..])?;
+        if i < count {
+            pos += length(i)?;
+        }
+    }
+    for i in 0..count {
+        item(out, i)?;
+    }
+    Ok(())
 }
-fn entries(data: &[u8], l: &Limits, total: &mut usize) -> Result<Vec<Entry>> {
-    super::read::dictionary(data, l, total)
+fn copy_index(out: &mut impl Out, source: &Index<'_>, l: &Limits) -> Result<()> {
+    let get = |i: usize| source.get(i).ok_or_else(|| invalid("invalid CFF INDEX"));
+    index(
+        out,
+        source.count() as usize,
+        |i| get(i).map(<[u8]>::len),
+        |out, i| out.put(get(i)?),
+        l,
+    )
 }
-fn private_blob(
-    data: &[u8],
+/// A Private DICT and its raw local Subrs INDEX, relocated directly after it.
+#[derive(Clone, Copy)]
+struct Private<'a> {
+    dict: &'a [u8],
+    subrs: Option<&'a [u8]>,
+    /// Length of the (possibly rewritten) DICT, excluding Subrs.
+    dict_len: usize,
+}
+impl Private<'_> {
+    fn len(&self) -> usize {
+        self.dict_len + self.subrs.map_or(0, <[u8]>::len)
+    }
+    fn write(&self, out: &mut impl Out) -> Result<()> {
+        match self.subrs {
+            Some(subrs) => {
+                rewrite(out, self.dict, &[(SUBRS, &[self.dict_len])])?;
+                out.put(subrs)
+            }
+            None => out.put(self.dict),
+        }
+    }
+}
+fn private_info<'a>(
+    data: &'a [u8],
     range: std::ops::Range<usize>,
     l: &Limits,
     total: &mut usize,
-) -> Result<(Vec<u8>, usize)> {
+    budget: &Budget,
+) -> Result<Private<'a>> {
     let original = data
         .get(range.clone())
         .ok_or_else(|| invalid("CFF private range outside table"))?;
-    let e = entries(original, l, total)?;
+    let e = dictionary(original, l, total, budget)?;
     let sub = e.iter().find_map(|e| {
         if let Entry::SubrsOffset(n) = e {
             Some(*n)
@@ -113,20 +225,170 @@ fn private_blob(
             None
         }
     });
+    drop(e);
     if let Some(off) = sub {
         let at = range
             .start
             .checked_add(off)
             .ok_or_else(|| invalid("CFF Subrs offset overflow"))?;
-        let (_, end) = super::read::index_at(data, at)?;
-        let mut change = BTreeMap::from([(SUBRS, arguments(&[0])?)]);
-        let len = rewrite(original, &change)?.len();
-        change.insert(SUBRS, arguments(&[len])?);
-        let mut out = rewrite(original, &change)?;
-        out.extend(bytes(data, at, end - at)?);
-        Ok((out, len))
+        let (_, end) = index_at(data, at)?;
+        Ok(Private {
+            dict: original,
+            subrs: Some(bytes(data, at, end - at)?),
+            dict_len: rewritten_len(original, &[(SUBRS, &[0])])?,
+        })
     } else {
-        Ok((original.to_vec(), original.len()))
+        Ok(Private {
+            dict: original,
+            subrs: None,
+            dict_len: original.len(),
+        })
+    }
+}
+/// One retained Font DICT and its relocated Private block.
+#[derive(Clone, Copy)]
+struct Fd<'a> {
+    raw: &'a [u8],
+    /// Rewritten Font DICT length.
+    len: usize,
+    /// Private block position relative to the first Private block.
+    relative: usize,
+    private: Private<'a>,
+}
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+struct Offsets {
+    charset: usize,
+    charstrings: usize,
+    select: usize,
+    array: usize,
+    privates: usize,
+}
+struct Plan<'a, 'c> {
+    cff: &'c Cff<'a>,
+    glyphs: &'c [u16],
+    names: Index<'a>,
+    strings: Index<'a>,
+    global: Index<'a>,
+    charstrings: Index<'a>,
+    top: &'a [u8],
+    top_len: usize,
+    /// CID Font DICTs (all retained, preserving FDSelect identity).
+    fds: Option<&'c [Fd<'a>]>,
+    /// Non-CID Private block.
+    private: Option<Private<'a>>,
+    /// Unused CID Top DICT Private, still relocated so the table stays valid.
+    top_private: Option<Private<'a>>,
+}
+impl Plan<'_, '_> {
+    fn fd_private_total(&self) -> usize {
+        self.fds
+            .and_then(|fds| fds.last())
+            .map_or(0, |fd| fd.relative + fd.private.len())
+    }
+    fn top_dict(&self, out: &mut impl Out, o: &Offsets) -> Result<()> {
+        let charset = [o.charset];
+        let charstrings = [o.charstrings];
+        let array = [o.array];
+        let select = [o.select];
+        let top_private = self
+            .top_private
+            .map(|p| [p.dict_len, o.privates + self.fd_private_total()]);
+        let private = self.private.map(|p| [p.dict_len, o.array]);
+        let mut changes: [(u16, &[usize]); 5] = [(0, &[]); 5];
+        let mut n = 0;
+        let mut add = |op, values| {
+            changes[n] = (op, values);
+            n += 1;
+        };
+        add(CHARSET, &charset[..]);
+        add(CHARSTRINGS, &charstrings[..]);
+        if let Some(values) = &top_private {
+            add(PRIVATE, &values[..]);
+        }
+        if let Some(values) = &private {
+            add(PRIVATE, &values[..]);
+        }
+        if self.fds.is_some() {
+            add(FDARRAY, &array[..]);
+            add(FDSELECT, &select[..]);
+        }
+        rewrite(out, self.top, &changes[..n])
+    }
+    fn charstring(&self, i: usize) -> Result<&[u8]> {
+        self.charstrings
+            .get(usize::from(self.glyphs[i]))
+            .ok_or_else(|| invalid("missing CFF charstring"))
+    }
+    /// Write the complete table, recording where each located section begins.
+    fn write<O: Out>(
+        &self,
+        out: &mut O,
+        o: &Offsets,
+        l: &Limits,
+        sections: &mut Offsets,
+    ) -> Result<()> {
+        out.put(&[1, 0, 4, 4])?;
+        copy_index(out, &self.names, l)?;
+        index(
+            out,
+            1,
+            |_| Ok(self.top_len),
+            |out, _| self.top_dict(out, o),
+            l,
+        )?;
+        copy_index(out, &self.strings, l)?;
+        copy_index(out, &self.global, l)?;
+        sections.charset = out.len();
+        out.put(&[0])?;
+        for &gid in &self.glyphs[1..] {
+            let id = self
+                .cff
+                .identifier(gid)
+                .ok_or_else(|| invalid("missing CFF charset identifier"))?;
+            out.put(&id.to_be_bytes())?;
+        }
+        sections.charstrings = out.len();
+        index(
+            out,
+            self.glyphs.len(),
+            |i| self.charstring(i).map(<[u8]>::len),
+            |out, i| out.put(self.charstring(i)?),
+            l,
+        )?;
+        sections.select = out.len();
+        if self.fds.is_some() {
+            out.put(&[0])?;
+            for &gid in self.glyphs {
+                out.put(&[self.cff.subfont_selector(gid)?])?;
+            }
+        }
+        sections.array = out.len();
+        if let Some(fds) = self.fds {
+            index(
+                out,
+                fds.len(),
+                |i| Ok(fds[i].len),
+                |out, i| {
+                    let fd = &fds[i];
+                    let values = [fd.private.dict_len, o.privates + fd.relative];
+                    rewrite(out, fd.raw, &[(PRIVATE, &values)])
+                },
+                l,
+            )?;
+        }
+        sections.privates = out.len();
+        let blocks = self
+            .fds
+            .into_iter()
+            .flatten()
+            .map(|fd| fd.private)
+            .chain(self.private)
+            .chain(self.top_private);
+        for block in blocks {
+            l.sfnt.table(out.len().saturating_add(block.len()))?;
+            block.write(out)?;
+        }
+        l.sfnt.table(out.len())
     }
 }
 impl Cff<'_> {
@@ -134,29 +396,39 @@ impl Cff<'_> {
     /// `glyphs` is new glyph order and must begin with original glyph zero.
     /// Legacy nondefault CFF encodings are rejected instead of silently changed.
     pub fn subset(&self, glyphs: &[u16], l: &Limits) -> Result<Vec<u8>> {
+        let budget = super::read::root(l);
+        let (out, _lease) = self.subset_with_budget(glyphs, l, &budget)?.into_parts();
+        Ok(out)
+    }
+    /// Subset on a shared ledger. The parsed model is the caller's; DICT and
+    /// Font DICT bookkeeping are charged while live, and the output is admitted
+    /// at its exact final size before it is allocated.
+    pub(crate) fn subset_with_budget(
+        &self,
+        glyphs: &[u16],
+        l: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Vec<u8>>> {
         l.sfnt.glyphs(glyphs.len())?;
+        let mut seen = IdSet::new();
         if glyphs.first() != Some(&0)
             || glyphs.iter().any(|&g| usize::from(g) >= self.len())
-            || glyphs
-                .iter()
-                .collect::<std::collections::BTreeSet<_>>()
-                .len()
-                != glyphs.len()
+            || !glyphs.iter().all(|&g| seen.insert(g))
         {
             return Err(invalid("invalid CFF subset glyph order"));
         }
         let data = self.data();
-        let (names, end) = super::read::index_at(data, usize::from(data[2]))?;
-        let (top, end) = super::read::index_at(data, end)?;
-        let (strings, end) = super::read::index_at(data, end)?;
-        let (global, _) = super::read::index_at(data, end)?;
+        let (names, end) = index_at(data, usize::from(data[2]))?;
+        let (top, end) = index_at(data, end)?;
+        let (strings, end) = index_at(data, end)?;
+        let (global, _) = index_at(data, end)?;
         let original = top.get(0).ok_or_else(|| invalid("missing CFF Top DICT"))?;
         let mut dict_work = 0;
-        let e = entries(original, l, &mut dict_work)?;
+        let e = dictionary(original, l, &mut dict_work, budget)?;
         let mut cs = 0;
         let mut fdarray = None;
         let mut private = None;
-        for item in &e {
+        for item in e.iter() {
             match item {
                 Entry::CharstringsOffset(n) => cs = *n,
                 Entry::FdArrayOffset(n) => fdarray = Some(*n),
@@ -167,167 +439,109 @@ impl Cff<'_> {
                 _ => (),
             }
         }
-        let (charstrings, _) = super::read::index_at(data, cs)?;
+        drop(e);
+        let (charstrings, _) = index_at(data, cs)?;
         // Validate every retained program under aggregate execution limits, before
         // copying raw bytes. Unused local/global programs remain inert and intact.
-        self.validate_selected(glyphs, l)?;
-        let items = glyphs
-            .iter()
-            .map(|&id| {
-                charstrings
-                    .get(usize::from(id))
-                    .map(<[u8]>::to_vec)
-                    .ok_or_else(|| invalid("missing CFF charstring"))
-            })
-            .collect::<Result<Vec<_>>>()?;
-        let cs = super::write::index(&items, l)?;
-        let index_copy = |index: Index<'_>| -> Result<Vec<u8>> {
-            let items = (0..index.count())
-                .map(|i| {
-                    index
-                        .get(i as usize)
-                        .map(<[u8]>::to_vec)
-                        .ok_or_else(|| invalid("invalid CFF INDEX"))
-                })
-                .collect::<Result<Vec<_>>>()?;
-            super::write::index(&items, l)
-        };
-        let names = index_copy(names)?;
-        let strings = index_copy(strings)?;
-        let global = index_copy(global)?;
-        let mut charset = vec![0];
-        for &gid in &glyphs[1..] {
-            p16(
-                &mut charset,
-                self.identifier(gid)
-                    .ok_or_else(|| invalid("missing CFF charset identifier"))?,
-            );
-        }
-        let mut changes =
-            BTreeMap::from([(CHARSET, arguments(&[0])?), (CHARSTRINGS, arguments(&[0])?)]);
+        self.validate_selected(glyphs, l, budget)?;
         // Some valid CID fonts also retain an unused Top DICT Private entry.
         // Its bytes still need relocation: leaving an old offset can invalidate
         // the whole CFF table even though glyph execution uses only FD privates.
         let top_private = if fdarray.is_some() {
             private
                 .clone()
-                .map(|range| private_blob(data, range, l, &mut dict_work))
+                .map(|range| private_info(data, range, l, &mut dict_work, budget))
                 .transpose()?
         } else {
             None
         };
-        if let Some((_, len)) = &top_private {
-            changes.insert(PRIVATE, arguments(&[*len, 0])?);
-        }
-        let mut private_bytes = top_private.as_ref().map_or(0, |(data, _)| data.len());
-        let mut private_blocks = Vec::new();
-        let mut font_dicts = Vec::new();
-        let mut selectors = Vec::new();
-        if let Some(off) = fdarray {
-            let (index, _) = super::read::index_at(data, off)?;
+        let mut private_bytes = top_private.as_ref().map_or(0, Private::len);
+        let mut fd_lease = budget.reserve(0)?;
+        let mut fds = Vec::new();
+        let single = if let Some(off) = fdarray {
+            let (index, _) = index_at(data, off)?;
+            fds = budget.vec_into(index.count() as usize, &mut fd_lease)?;
             // Retaining every FD avoids changing FDSelect identity and preserves
             // per-FD matrices/metadata even when some become unused.
+            let mut relative = 0usize;
             for i in 0..index.count() {
                 let raw = index
                     .get(i as usize)
                     .ok_or_else(|| invalid("missing CFF FD"))?;
-                let e = entries(raw, l, &mut dict_work)?;
+                let e = dictionary(raw, l, &mut dict_work, budget)?;
                 let range = e
-                    .into_iter()
+                    .iter()
                     .find_map(|e| {
                         if let Entry::PrivateDictRange(r) = e {
-                            Some(r)
+                            Some(r.clone())
                         } else {
                             None
                         }
                     })
                     .ok_or_else(|| invalid("missing CFF FD private dict"))?;
-                let blob = private_blob(data, range, l, &mut dict_work)?;
+                drop(e);
+                let p = private_info(data, range, l, &mut dict_work, budget)?;
                 add_budget(
                     &mut private_bytes,
-                    blob.0.len(),
+                    p.len(),
                     l.sfnt.resources.max_table_bytes,
                     "CFF retained private bytes",
                 )?;
-                private_blocks.push(blob);
-                font_dicts.push(raw.to_vec());
+                let len = rewritten_len(raw, &[(PRIVATE, &[p.dict_len, 0])])?;
+                fds.push(Fd {
+                    raw,
+                    len,
+                    relative,
+                    private: p,
+                });
+                relative = relative
+                    .checked_add(p.len())
+                    .ok_or_else(|| invalid("CFF size overflow"))?;
             }
-            selectors.push(0);
             for &gid in glyphs {
-                selectors.push(self.subfont_selector(gid)?);
+                self.subfont_selector(gid)?;
             }
-            changes.insert(FDARRAY, arguments(&[0])?);
-            changes.insert(FDSELECT, arguments(&[0])?);
+            None
         } else {
-            private_blocks.push(private_blob(
+            Some(private_info(
                 data,
                 private.ok_or_else(|| invalid("missing CFF private dict"))?,
                 l,
                 &mut dict_work,
-            )?);
-            changes.insert(PRIVATE, arguments(&[private_blocks[0].1, 0])?);
-        }
-        let template = super::write::index(&[rewrite(original, &changes)?], l)?;
-        let prefix = 4 + names.len() + template.len() + strings.len() + global.len();
-        let charset_at = prefix;
-        let cs_at = charset_at + charset.len();
-        let select_at = cs_at + cs.len();
-        let array_at = select_at + selectors.len();
-        let placeholder_fds = font_dicts
-            .iter()
-            .enumerate()
-            .map(|(i, raw)| {
-                rewrite(
-                    raw,
-                    &BTreeMap::from([(PRIVATE, arguments(&[private_blocks[i].1, 0])?)]),
-                )
-            })
-            .collect::<Result<Vec<_>>>()?;
-        let fd_template = if font_dicts.is_empty() {
-            Vec::new()
-        } else {
-            super::write::index(&placeholder_fds, l)?
+                budget,
+            )?)
         };
-        let mut private_at = array_at + fd_template.len();
-        let mut new_fds = Vec::new();
-        for (i, raw) in font_dicts.iter().enumerate() {
-            new_fds.push(rewrite(
-                raw,
-                &BTreeMap::from([(PRIVATE, arguments(&[private_blocks[i].1, private_at])?)]),
-            )?);
-            private_at += private_blocks[i].0.len();
+        let mut plan = Plan {
+            cff: self,
+            glyphs,
+            names,
+            strings,
+            global,
+            charstrings,
+            top: original,
+            top_len: 0,
+            fds: fdarray.map(|_| fds.as_slice()),
+            private: single,
+            top_private,
+        };
+        plan.top_len = {
+            let mut count = Count(0);
+            plan.top_dict(&mut count, &Offsets::default())?;
+            count.0
+        };
+        // Layout pass: exact size and section positions, with every table
+        // check applied before any output byte is allocated.
+        let mut sections = Offsets::default();
+        let mut count = Count(0);
+        plan.write(&mut count, &Offsets::default(), l, &mut sections)?;
+        let mut out = Buffer::with_capacity(budget, count.0)?;
+        let mut written = Offsets::default();
+        plan.write(&mut out, &sections, l, &mut written)?;
+        if out.len() != count.0 || written != sections {
+            return Err(invalid("CFF subset layout mismatch"));
         }
-        if let Some((_, len)) = &top_private {
-            changes.insert(PRIVATE, arguments(&[*len, private_at])?);
-        }
-        changes.insert(CHARSET, arguments(&[charset_at])?);
-        changes.insert(CHARSTRINGS, arguments(&[cs_at])?);
-        if font_dicts.is_empty() {
-            changes.insert(PRIVATE, arguments(&[private_blocks[0].1, array_at])?);
-        } else {
-            changes.insert(FDARRAY, arguments(&[array_at])?);
-            changes.insert(FDSELECT, arguments(&[select_at])?);
-        }
-        let mut out = vec![1, 0, 4, 4];
-        out.extend(names);
-        out.extend(super::write::index(&[rewrite(original, &changes)?], l)?);
-        out.extend(strings);
-        out.extend(global);
-        out.extend(charset);
-        out.extend(cs);
-        out.extend(selectors);
-        if !new_fds.is_empty() {
-            out.extend(super::write::index(&new_fds, l)?);
-        }
-        for (b, _) in private_blocks {
-            l.sfnt.table(out.len().saturating_add(b.len()))?;
-            out.extend(b);
-        }
-        if let Some((data, _)) = top_private {
-            l.sfnt.table(out.len().saturating_add(data.len()))?;
-            out.extend(data);
-        }
-        l.sfnt.table(out.len())?;
-        Ok(out)
+        drop(fds);
+        drop(fd_lease);
+        Ok(out.into_owned())
     }
 }

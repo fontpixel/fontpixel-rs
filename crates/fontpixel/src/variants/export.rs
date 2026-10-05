@@ -77,6 +77,8 @@ pub struct Options {
     pub license_url: Option<String>,
     /// Replace generated names with an exact caller-supplied name table.
     pub names: Option<NameTable>,
+    /// Glyph 0 policy; the default keeps the source/generated `.notdef`.
+    pub notdef: super::NotdefPolicy,
     /// Layout, source and output limits.
     pub limits: LayoutLimits,
 }
@@ -102,6 +104,7 @@ impl Default for Options {
             license: None,
             license_url: None,
             names: None,
+            notdef: super::NotdefPolicy::Preserve,
             limits: LayoutLimits::default(),
         }
     }
@@ -408,9 +411,18 @@ fn encode_planned(
     };
     let mut notes = Notes::new(budget)?;
     let retain_names = source_notdef.is_some();
-    let notdef = match source_notdef {
-        Some(g) => g,
-        None => notdef(budget)?,
+    let empty_notdef = o.notdef.empty_metrics();
+    let notdef = match (empty_notdef, source_notdef) {
+        (Some((advance, _)), _) => {
+            // The empty glyph's only heap storage is its ".notdef" name.
+            let lease = budget.reserve(".notdef".len())?;
+            Owned::from_parts(
+                super::notdef::empty_glyph(advance, o.units_per_pixel, o.embed_bitmaps)?,
+                lease,
+            )
+        }
+        (None, Some(g)) => g,
+        (None, None) => notdef(budget)?,
     };
     let mut sources = Vector::with_capacity(budget, plan.glyphs.len().saturating_add(1))?;
     sources.push((".notdef", &*notdef))?;
@@ -608,6 +620,10 @@ fn encode_planned(
                 });
             }
         }
+        let (advance, bearing) = match empty_notdef {
+            Some(exact) if i == 0 => exact,
+            _ => (advance, bearing),
+        };
         hm.push(LongMetric { advance, bearing })?;
         extents.push(width)?;
         match o.flavor {
@@ -1094,6 +1110,13 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
         }
     };
     let mut notes = Notes::new(&budget)?;
+    if notdef_id.is_some() && o.notdef.empty_metrics().is_some() {
+        notes.note(
+            &budget,
+            "variants.notdef.replaced",
+            "The source .notdef glyph was replaced by the explicit empty .notdef policy",
+        )?;
+    }
     {
         let mut names_tree = budget.reserve(0)?;
         let mut names_heap = budget.reserve(0)?;

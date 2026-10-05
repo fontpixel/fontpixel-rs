@@ -2,6 +2,7 @@
 //!
 //! This is an outline-table API, not a bitmap FontSet codec. See
 //! `docs/formats/cff.md` for supported programs, numeric bounds and loss policy.
+use super::working::{Budget, Lease, Owned};
 use super::{bounded, bytes, invalid, p16, p32, to16, u16_at};
 use crate::{Bitmap, Result, outline};
 use read_fonts::{
