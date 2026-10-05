@@ -374,9 +374,10 @@ fontTools refer to the oracle copy in `local-work/oracles`.
 Results (2026-10-05, `local-work/strict-f/`): unresolved fonts 132 (unit E) →
 73; all 42 vector TTFs and 17 of 21 bitmap TTFs pass. Every remaining field is
 classified: 28 BDF keep source `COMMENT` lines (original-lossy, as above); 41
-WOFF2 differ only in `head.checkSumAdjustment` (derived: the original's
-WOFF2 encoder rewrites it for its reconstructed table layout, native keeps the
-source TTF's value; both TTFs pass); 4 bitmap TTFs (3x5-block ×2, Capsigrany,
+WOFF2 differ only in `head.checkSumAdjustment` (derived, rule `repr-01`: the
+original's WOFF2 value differs from its own TTF's, for example 2694500144 vs
+2962985748 for `tom-thumb-6px-square`, while native WOFF2 carries its TTF's
+value; both TTFs pass); 4 bitmap TTFs (3x5-block ×2, Capsigrany,
 Tinypixel) keep unencoded source glyphs that `ttfexport.py:65-71` drops
 (original-lossy), and their glyph count, `numberOfHMetrics`,
 `xAvgCharWidth`, unencoded glyph records and EBLC glyph ranges equal the

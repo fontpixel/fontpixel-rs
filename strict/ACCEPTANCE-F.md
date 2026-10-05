@@ -144,6 +144,14 @@ fontTools line numbers to `local-work/oracles/lib/python3.12/site-packages/fontT
 | WOFF2 pass | 0 / 41 | 0 / 41 (checksum only) |
 | BDF/PCF pass | 40 / 68 | 40 / 68 |
 
+Validity: the catalogue validator runs OTS on every vector TTF and WOFF2
+(all native pass) but not on bitmap TTFs; `F/tools/ots_bitmap.py` ran OTS
+on the 21 explicit-profile bitmap TTFs (empty glyf, caret 0/1, mirrored
+vertical records, spanning index): 21/21 native and 21/21 original pass
+(`F/ots-bitmap-ttf.json`). FreeType rasters of every encoded glyph match
+(validator `encoded_raster_metrics`). Workspace tests
+(`cargo test --workspace --all-features`): 1,574 passed, 0 failed.
+
 Field occurrences by rule, E → F: app-01 104 → 0; app-02/app-03/repr-03
 287 → 8; app-04 535 → 3; app-07 312 → 0; repr-02/repr-03 21 → 4; repr-03
 712 → 8; app-06 56 → 56; repr-01 41 → 41.
@@ -155,10 +163,11 @@ Field occurrences by rule, E → F: app-01 104 → 0; app-02/app-03/repr-03
   writes none; native keeps the notices (E's classification; the 3 archives
   inherit it).
 - derived, checksum (41 WOFF2 × `head.checkSumAdjustment`): every other field,
-  outline and raster of these fonts matches and their TTFs pass. The
-  original's WOFF2 head adjustment differs from its own TTF's
-  (`tom-thumb-6px-square`: TTF 2962985748, WOFF2 2694500144), native carries
-  the TTF value; each is a checksum of its own byte layout (repr-01).
+  outline and raster of these fonts matches and their TTFs pass. Observed:
+  the original's WOFF2 head adjustment differs from its own TTF's
+  (`tom-thumb-6px-square`: TTF 2962985748, WOFF2 2694500144), while native
+  WOFF2 carries its TTF's value. Same rule as E (repr-01); the encoder-side
+  mechanism was not traced further.
 - original-lossy, unencoded glyphs (23 = 4 files): `ttfexport.py:65-71` builds
   the glyph order from encoded code points only, dropping `.null`/
   `nonmarkingreturn` (3x5-block ×2), `nonmarkingreturn` (Capsigrany) and two
@@ -180,6 +189,32 @@ dropped source name fields, SWIDTH projection (E).
 
 - Variants renumbering with GSUB alternates is rejected rather than remapping
   GSUB lookups.
+- The exact-name Loss audit (variants) compares Mac 1/0/0 records only for
+  ASCII text; a non-ASCII notice carried solely by a Mac record is reported as
+  Loss (conservative).
+
+### Merge notes (files outside the obvious unit-F surface)
+
+- `crates/fontpixel/src/sfnt/cmap.rs`: `FullRecords`, `encode_with_records`,
+  `encode_records_with_budget` now `pub(crate)` with an enum; format-12 writing
+  split into `format12`. `encode`/`encode_records`/`encode_with_budget` bytes
+  unchanged (subset path untouched).
+- `crates/fontpixel/src/sfnt/os2.rs`: shared `check_*` functions.
+- `crates/fontpixel/src/sfnt/bitmap.rs`: `encode_spanning` and private
+  `encode_layout`; `encode`/`encode_with_budget` unchanged.
+- `crates/fontpixel/src/formats/embedded.rs` (write_impl strike loop,
+  `common_design_tables`, new `reorder_by_codepoint`, `apply_line_metrics`) and
+  `embedded/metadata.rs` (new enums/fields, `working_bytes`, `prepare`,
+  `audit`); `EmbeddedCmapUnicodeFull` became a type alias.
+- `crates/fontpixel/src/variants/export.rs` (`encode_planned`: renumbering,
+  table controls, `audit_metadata`; `Notes::info`), new `variants/metadata.rs`.
+- `crates/fontpixel-cli/src/p3_formats/embedded_metadata.rs` (parser moved to
+  `name_records.rs`, new `--otb-*` flags), `main.rs` (`mod name_records`,
+  `mod outline_metadata`, `VectorArguments` notdef flags), `opentype.rs`
+  (`variants` reserves metadata arguments, passes `names`/`metadata`).
+- Struct literals gained `..Default::default()`:
+  `tests/phase6_embedded_options.rs::tong_like`,
+  `fontpixel-cli/tests/embedded_metadata.rs`.
 - `w6.1-cli.md`/`api.md` were not extended; `--help` documents every flag and
   `docs/migration-fontpixel.md` has the option table.
 - The reduced-profile clippy failure noted in the pause file (`batch.rs`
