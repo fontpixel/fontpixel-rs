@@ -308,6 +308,15 @@ impl Budget {
         })?;
         check(self.used, self.max, "legacy aggregate bytes")
     }
+    /// Return `n` bytes of an earlier charge once that storage has dropped.
+    #[cfg(feature = "zapfont")]
+    pub fn release(&mut self, n: usize) -> Result<()> {
+        self.used = self
+            .used
+            .checked_sub(n)
+            .ok_or_else(|| invalid("legacy ledger release exceeds its charges"))?;
+        Ok(())
+    }
     pub fn items<T>(&mut self, n: usize) -> Result<()> {
         self.add(
             n.checked_mul(std::mem::size_of::<T>())

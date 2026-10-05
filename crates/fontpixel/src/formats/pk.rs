@@ -28,11 +28,22 @@ impl FormatReader<FontSet> for PkCodec {
 }
 impl FormatWriter<FontSet> for PkCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
-        let reserved = super::tex_common::container_allowance(s, &self.write_options.limits)?;
-        let mut options = self.write_options.clone();
-        options.limits.max_total_bytes -= reserved;
-        let (b, mut r) = write(s.single()?, &options)?;
-        super::tex_common::container_losses(s, "pk", &mut r, &self.write_options.limits, b.len())?;
+        self.write_charged(s, o, super::ModelCharge::Estimate)
+    }
+}
+impl PkCodec {
+    /// As [`FormatWriter::write`] when the caller has reserved the model's
+    /// exact retained usage outside this codec's limits.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, super::ModelCharge::Reserved)
+    }
+    fn write_charged(
+        &self,
+        s: &FontSet,
+        o: &WriteOptions,
+        charge: super::ModelCharge,
+    ) -> Result<Written> {
+        let (b, r) = writer::write_set(s, &self.write_options, charge)?;
         Ok(Written {
             output: OutputBundle::single(o.primary_name.clone(), b),
             report: r,

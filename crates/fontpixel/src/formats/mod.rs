@@ -765,7 +765,11 @@ pub struct WriteOptions {
     pub primary_name: ResourcePath,
     /// Additional native-write and gzip/envelope budgets. `None` preserves the
     /// typed writer's limits. Present limits intersect those limits, so a common
-    /// setting cannot silently enlarge a codec budget. Built-in native wrappers
+    /// setting cannot silently enlarge a codec budget, with one exception: the
+    /// built-in outline writers (`ttf`, `otf`, `woff`, `woff2`, `ttc`,
+    /// `vector-raster`) whose own total is still the default 256 MiB take a
+    /// larger common `max_total_bytes` as their total, so an explicit larger
+    /// budget can admit a larger outline or webfont job. Built-in native wrappers
     /// validate the model and restrict their codec before writing; compressed
     /// output also enforces the applicable envelope and replay budgets.
     /// Plain output additionally checks the sum of all returned asset lengths
@@ -821,6 +825,14 @@ pub trait FormatWriter<M>: Send + Sync {
         TransportLimits::default()
     }
 
+    /// The budgets this writer runs under for the caller's common allowance
+    /// `common`. The default intersects [`transport_limits`](Self::transport_limits)
+    /// with it; built-in outline writers may instead take a larger common
+    /// total (see [`WriteOptions::transport_limits`]).
+    fn common_transport_limits(&self, common: &TransportLimits) -> TransportLimits {
+        self.transport_limits().intersect(common)
+    }
+
     /// Validate the same native output profile with the memory left after
     /// retaining the gzip result and diagnostics. Called only for gzip output,
     /// after its uncompressed source buffer has been released. The default
@@ -843,6 +855,26 @@ pub trait FormatWriter<M>: Send + Sync {
     /// then reserves the model and uses the borrowing path.
     fn write_owned(&self, fonts: M, _options: &WriteOptions) -> OwnedWrite<M> {
         OwnedWrite::Declined(fonts)
+    }
+
+    /// As [`write`](Self::write) when the caller keeps the borrowed model's
+    /// exact retained usage reserved outside `options.transport_limits`. A
+    /// writer that would otherwise charge its own estimate of that model may
+    /// skip it; everything it allocates itself is still charged. Output and
+    /// report must equal [`write`](Self::write). The default is `write`.
+    fn write_reserved(&self, fonts: &M, options: &WriteOptions) -> Result<Written> {
+        self.write(fonts, options)
+    }
+
+    /// As [`validate_transport`](Self::validate_transport) for a model the
+    /// caller has reserved, as in [`write_reserved`](Self::write_reserved).
+    fn validate_transport_reserved(
+        &self,
+        fonts: &M,
+        options: &WriteOptions,
+        limits: &TransportLimits,
+    ) -> Result<()> {
+        self.validate_transport(fonts, options, limits)
     }
 }
 
@@ -1132,7 +1164,33 @@ impl<M> Registry<M> {
     ) -> Result<Written> {
         let (writer, report) = self.admit_writer(id, options, report)?;
         let result = writer.write(fonts, options);
-        Self::complete(writer, result, Some(fonts), options, report)
+        Self::complete(writer, result, Some(fonts), options, report, false)
+    }
+
+    /// As [`write_with_report`](Self::write_with_report) when the caller keeps
+    /// the borrowed model's exact retained usage
+    /// ([`FontSet::retained_usage`](crate::FontSet::retained_usage)) reserved
+    /// outside `options.transport_limits` until this returns. Writers that
+    /// would otherwise charge their own estimate of that model (the
+    /// legacy-aggregate and editor families, `pf2`, the TeX writers and the
+    /// embedded bitmap writers) then charge it only through that reservation,
+    /// including in a gzip envelope's native replay. Output and report are
+    /// identical. Without transport limits this is `write_with_report`.
+    pub fn write_reserved_with_report(
+        &self,
+        fonts: &M,
+        id: &str,
+        options: &WriteOptions,
+        report: Report,
+    ) -> Result<Written> {
+        let (writer, report) = self.admit_writer(id, options, report)?;
+        let reserved = options.transport_limits.is_some();
+        let result = if reserved {
+            writer.write_reserved(fonts, options)
+        } else {
+            writer.write(fonts, options)
+        };
+        Self::complete(writer, result, Some(fonts), options, report, reserved)
     }
 
     /// Writer for `id` once incoming reported errors and, in strict mode,
@@ -1170,6 +1228,7 @@ impl<M> Registry<M> {
         fonts: Option<&M>,
         options: &WriteOptions,
         mut report: Report,
+        reserved: bool,
     ) -> Result<Written> {
         let written = match result {
             Ok(written) => written,
@@ -1195,10 +1254,10 @@ impl<M> Registry<M> {
             let fonts = fonts.ok_or_else(|| {
                 Error::InvalidInput("a gzip envelope needs the borrowed model for replay".into())
             })?;
-            let mut limits = writer.transport_limits();
-            if let Some(common) = &options.transport_limits {
-                limits = limits.intersect(common);
-            }
+            let limits = match &options.transport_limits {
+                Some(common) => writer.common_transport_limits(common),
+                None => writer.transport_limits(),
+            };
             let retained_report =
                 crate::resources::report_bytes(&report, limits.resources.max_total_bytes)?;
             let output =
@@ -1214,9 +1273,13 @@ impl<M> Registry<M> {
                             limit: limits.resources.max_total_bytes,
                         })
                 })?;
-            if let Err(error) =
-                writer.validate_transport(fonts, options, &limits.without_retained(retained)?)
-            {
+            let limits = limits.without_retained(retained)?;
+            let validated = if reserved {
+                writer.validate_transport_reserved(fonts, options, &limits)
+            } else {
+                writer.validate_transport(fonts, options, &limits)
+            };
+            if let Err(error) = validated {
                 return Err(match error {
                     Error::ReportedErrors(extra) => Error::ReportedErrors(
                         transport::merge_validation_report(report, extra, writer_report_start),
@@ -1268,10 +1331,11 @@ impl Registry<crate::FontSet> {
     /// writer with the model), has the model's `retained_usage` removed from the
     /// transport allowance and runs the borrowing route; the model drops when it
     /// returns. Native writers that would otherwise charge their own estimate of
-    /// that model (the legacy-aggregate and editor families, `pf2` and the
-    /// embedded bitmap writers) are told it is reserved, so they charge it only
-    /// through this exact reservation. Without transport limits the writer's own budget applies to
-    /// everything except the model, on either route.
+    /// that model are told it is reserved, as in
+    /// [`write_reserved_with_report`](Self::write_reserved_with_report), so they
+    /// charge it only through this exact reservation, also in a gzip envelope's
+    /// native replay. Without transport limits the writer's own budget applies
+    /// to everything except the model, on either route.
     ///
     /// [`FontSet::retained_usage`]: crate::FontSet::retained_usage
     pub fn write_owned(
@@ -1292,20 +1356,23 @@ impl Registry<crate::FontSet> {
         } else {
             match writer.write_owned(fonts, options) {
                 OwnedWrite::Written(result) => {
-                    return Self::complete(writer, result, None, options, report);
+                    return Self::complete(writer, result, None, options, report, false);
                 }
                 OwnedWrite::Declined(fonts) => fonts,
             }
         };
         let mut reserved = options.clone();
-        if let Some(limits) = &mut reserved.transport_limits {
+        let result = if let Some(limits) = &mut reserved.transport_limits {
             let model = fonts
                 .retained_usage(limits.resources.max_total_bytes)?
                 .bytes;
             *limits = limits.without_model(model)?;
-        }
-        let result = writer.write(&fonts, &reserved);
-        let written = Self::complete(writer, result, Some(&fonts), &reserved, report);
+            writer.write_reserved(&fonts, &reserved)
+        } else {
+            writer.write(&fonts, &reserved)
+        };
+        let has_limits = reserved.transport_limits.is_some();
+        let written = Self::complete(writer, result, Some(&fonts), &reserved, report, has_limits);
         drop(fonts);
         written
     }

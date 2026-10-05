@@ -117,20 +117,36 @@ impl<'a> Cursor<'a> {
         Ok(self.take(1)?[0])
     }
 }
+/// Encoded bytes whose growth is admitted on a working ledger before each
+/// reallocation (old and new buffers overlap while the bytes move).
 pub(crate) struct Output {
-    pub b: Vec<u8>,
+    pub b: crate::working::Buffer,
     pub max: usize,
 }
 impl Output {
-    pub fn new(max: usize) -> Self {
-        Self { b: Vec::new(), max }
+    /// A buffer bounded only by `max` (its private ledger is unlimited).
+    pub fn new(max: usize) -> Result<Self> {
+        let budget = crate::working::Budget::new(usize::MAX, "encoded font bytes");
+        Self::charged(max, &budget)
+    }
+    /// A buffer whose capacity is charged on `budget`.
+    pub fn charged(max: usize, budget: &crate::working::Budget) -> Result<Self> {
+        Ok(Self {
+            b: crate::working::Buffer::new(budget)?,
+            max,
+        })
     }
     pub fn put(&mut self, b: &[u8]) -> Result<()> {
         let n = self.b.len().checked_add(b.len()).ok_or_else(limit)?;
         check(n, self.max, "encoded font bytes")?;
-        self.b.try_reserve(b.len()).map_err(|_| limit())?;
-        self.b.extend_from_slice(b);
-        Ok(())
+        self.b.extend(b)
+    }
+    /// Append `n` zero bytes.
+    #[cfg(feature = "pk")]
+    pub fn zeros(&mut self, n: usize) -> Result<()> {
+        let len = self.b.len().checked_add(n).ok_or_else(limit)?;
+        check(len, self.max, "encoded font bytes")?;
+        self.b.resize(len, 0)
     }
     #[cfg(any(feature = "pk", feature = "gf"))]
     pub fn u(&mut self, v: u32, n: usize) -> Result<()> {
@@ -139,6 +155,9 @@ impl Output {
     #[cfg(any(feature = "pk", feature = "gf"))]
     pub fn byte(&mut self, v: u8) -> Result<()> {
         self.put(&[v])
+    }
+    pub fn into_bytes(self) -> Vec<u8> {
+        self.b.into_parts().0
     }
 }
 #[cfg(any(feature = "pk", feature = "gf"))]
@@ -369,18 +388,174 @@ pub(crate) fn loss(
     cp: Option<u32>,
     message: impl Into<String>,
 ) {
-    r.push(ReportEntry {
+    r.push(loss_entry(format!("{id}.{code}"), g, cp, message.into()));
+}
+fn loss_entry(code: String, g: Option<usize>, cp: Option<u32>, message: String) -> ReportEntry {
+    ReportEntry {
         level: Level::Warning,
         impact: Impact::Loss,
-        code: format!("{id}.{code}"),
+        code,
         location: Location {
             font_index: Some(0),
             glyph_index: g,
             codepoint: cp,
             asset: None,
         },
-        message: message.into(),
-    });
+        message,
+    }
+}
+/// Destination of conversion-loss diagnostics.
+pub(crate) trait Losses {
+    fn loss(
+        &mut self,
+        id: &str,
+        code: &str,
+        g: Option<usize>,
+        cp: Option<u32>,
+        message: std::fmt::Arguments<'_>,
+    ) -> Result<()>;
+}
+impl Losses for Report {
+    fn loss(
+        &mut self,
+        id: &str,
+        code: &str,
+        g: Option<usize>,
+        cp: Option<u32>,
+        message: std::fmt::Arguments<'_>,
+    ) -> Result<()> {
+        loss(self, id, code, g, cp, message.to_string());
+        Ok(())
+    }
+}
+/// A report whose entry array and strings are admitted on a working ledger
+/// before they are allocated, and stay charged while this lives.
+#[cfg(any(feature = "pk", feature = "gf"))]
+pub(crate) struct Charged<'a> {
+    pub report: &'a mut Report,
+    budget: crate::working::Budget,
+    entries: crate::working::Lease,
+    strings: crate::working::Lease,
+}
+#[cfg(any(feature = "pk", feature = "gf"))]
+impl<'a> Charged<'a> {
+    /// Charge `report`'s current storage, then admit everything added.
+    pub fn new(budget: &crate::working::Budget, report: &'a mut Report) -> Result<Self> {
+        let entries = budget.reserve_array::<ReportEntry>(report.entries.capacity())?;
+        let mut strings = budget.reserve(0)?;
+        strings.grow_to(string_bytes(report, budget)?)?;
+        Ok(Self {
+            report,
+            budget: budget.clone(),
+            entries,
+            strings,
+        })
+    }
+    /// Room for `additional` more entries. A new array is admitted while the
+    /// old one is still live; growth is geometric unless that would not fit.
+    fn reserve(&mut self, additional: usize) -> Result<()> {
+        let size = std::mem::size_of::<ReportEntry>();
+        let entries = &mut self.report.entries;
+        let required = entries
+            .len()
+            .checked_add(additional)
+            .ok_or_else(|| self.budget.error())?;
+        if required <= entries.capacity() {
+            return Ok(());
+        }
+        let available = self.budget.remaining() / size;
+        let capacity = required
+            .max(entries.capacity().saturating_mul(2))
+            .max(4)
+            .min(available)
+            .max(required);
+        let mut lease = self.budget.reserve_array::<ReportEntry>(capacity)?;
+        let mut next = Vec::new();
+        next.try_reserve_exact(capacity)
+            .map_err(|_| self.budget.error())?;
+        lease.grow_to(
+            next.capacity()
+                .checked_mul(size)
+                .ok_or_else(|| self.budget.error())?,
+        )?;
+        next.append(entries);
+        drop(std::mem::replace(entries, next));
+        // Only after the previous array is gone may its charge go.
+        self.entries = lease;
+        Ok(())
+    }
+    /// Format `parts` into an exactly sized string admitted before allocation.
+    fn string(&mut self, parts: std::fmt::Arguments<'_>) -> Result<String> {
+        struct Count(usize);
+        impl std::fmt::Write for Count {
+            fn write_str(&mut self, s: &str) -> std::fmt::Result {
+                self.0 += s.len();
+                Ok(())
+            }
+        }
+        let mut count = Count(0);
+        std::fmt::Write::write_fmt(&mut count, parts).map_err(|_| invalid("diagnostic text"))?;
+        let before = self.strings.bytes();
+        let charged = before
+            .checked_add(count.0)
+            .ok_or_else(|| self.budget.error())?;
+        self.strings.grow_to(charged)?;
+        let mut text = String::new();
+        text.try_reserve_exact(count.0)
+            .map_err(|_| self.budget.error())?;
+        std::fmt::Write::write_fmt(&mut text, parts).map_err(|_| invalid("diagnostic text"))?;
+        self.strings.grow_to(
+            before
+                .checked_add(text.capacity())
+                .ok_or_else(|| self.budget.error())?,
+        )?;
+        Ok(text)
+    }
+    /// Move another report's entries in. Their strings are already live and
+    /// are charged here from now on; the moved-from array stays charged until
+    /// it has dropped.
+    pub fn absorb(&mut self, other: Report) -> Result<()> {
+        let held = self
+            .budget
+            .reserve_array::<ReportEntry>(other.entries.capacity())?;
+        let bytes = string_bytes(&other, &self.budget)?;
+        let charged = self
+            .strings
+            .bytes()
+            .checked_add(bytes)
+            .ok_or_else(|| self.budget.error())?;
+        self.strings.grow_to(charged)?;
+        self.reserve(other.entries.len())?;
+        self.report.entries.extend(other.entries);
+        drop(held);
+        Ok(())
+    }
+}
+#[cfg(any(feature = "pk", feature = "gf"))]
+fn string_bytes(r: &Report, budget: &crate::working::Budget) -> Result<usize> {
+    r.entries.iter().try_fold(0usize, |n, e| {
+        n.checked_add(e.code.capacity())
+            .and_then(|n| n.checked_add(e.message.capacity()))
+            .and_then(|n| n.checked_add(e.location.asset.as_ref().map_or(0, String::capacity)))
+            .ok_or_else(|| budget.error())
+    })
+}
+#[cfg(any(feature = "pk", feature = "gf"))]
+impl Losses for Charged<'_> {
+    fn loss(
+        &mut self,
+        id: &str,
+        code: &str,
+        g: Option<usize>,
+        cp: Option<u32>,
+        message: std::fmt::Arguments<'_>,
+    ) -> Result<()> {
+        self.reserve(1)?;
+        let code = self.string(format_args!("{id}.{code}"))?;
+        let message = self.string(message)?;
+        self.report.entries.push(loss_entry(code, g, cp, message));
+        Ok(())
+    }
 }
 pub(crate) fn fatal(mut r: Report, id: &str, message: &str) -> Error {
     r.push(ReportEntry {
@@ -395,6 +570,7 @@ pub(crate) fn fatal(mut r: Report, id: &str, message: &str) -> Error {
     });
     Error::ReportedErrors(r)
 }
+#[cfg(feature = "plan9")]
 pub(crate) fn property_cost(p: &Properties, b: &mut Budget) -> Result<()> {
     for p in p.iter() {
         b.add(
@@ -421,6 +597,7 @@ pub(crate) fn property_cost(p: &Properties, b: &mut Budget) -> Result<()> {
     }
     Ok(())
 }
+#[cfg(feature = "plan9")]
 pub(crate) fn model_budget(f: &Font, l: &ResourceLimits) -> Result<Budget> {
     f.validate(l)?;
     let mut b = Budget::new(8192, l)?;
@@ -484,45 +661,43 @@ pub(crate) fn compare_properties(
     id: &str,
     scope: &str,
     g: Option<usize>,
-    r: &mut Report,
-) {
+    r: &mut impl Losses,
+) -> Result<()> {
     let mut target = b.iter();
     for p in a.iter() {
         if target.next() != Some(p) {
-            loss(
-                r,
+            r.loss(
                 id,
                 "property",
                 g,
                 None,
-                format!(
+                format_args!(
                     "{scope} property {:?} or its order/raw record changes",
                     p.name
                 ),
-            );
+            )?;
         }
     }
     if b.len() > a.len() {
-        loss(
-            r,
+        r.loss(
             id,
             "property_projection",
             g,
             None,
-            format!("{scope} gains target-native property projections"),
-        );
+            format_args!("{scope} gains target-native property projections"),
+        )?;
     }
+    Ok(())
 }
-pub(crate) fn compare_font(a: &Font, b: &Font, id: &str, r: &mut Report) {
+pub(crate) fn compare_font(a: &Font, b: &Font, id: &str, r: &mut impl Losses) -> Result<()> {
     if a.names != b.names {
-        loss(
-            r,
+        r.loss(
             id,
             "names",
             None,
             None,
-            "Font name, license or localized name metadata changes",
-        )
+            format_args!("Font name, license or localized name metadata changes"),
+        )?;
     }
     compare_properties(
         &a.names.localized,
@@ -531,20 +706,19 @@ pub(crate) fn compare_font(a: &Font, b: &Font, id: &str, r: &mut Report) {
         "Localized name",
         None,
         r,
-    );
+    )?;
     if a.charset != b.charset {
-        loss(
-            r,
+        r.loss(
             id,
             "charset",
             None,
             None,
-            "Charset metadata or interpretation changes",
-        )
+            format_args!("Charset metadata or interpretation changes"),
+        )?;
     }
-    compare_properties(&a.headers, &b.headers, id, "Header", None, r);
-    compare_properties(&a.properties, &b.properties, id, "Font", None, r);
-    macro_rules! m{($($k:ident),*)=>{$(if a.metrics.$k!=b.metrics.$k{loss(r,id,"font_metric",None,None,concat!("Font metric ",stringify!($k)," changes"));})*};}
+    compare_properties(&a.headers, &b.headers, id, "Header", None, r)?;
+    compare_properties(&a.properties, &b.properties, id, "Font", None, r)?;
+    macro_rules! m{($($k:ident),*)=>{$(if a.metrics.$k!=b.metrics.$k{r.loss(id,"font_metric",None,None,format_args!(concat!("Font metric ",stringify!($k)," changes")))?;})*};}
     m!(
         pixel_size,
         ppem_x,
@@ -566,15 +740,15 @@ pub(crate) fn compare_font(a: &Font, b: &Font, id: &str, r: &mut Report) {
         metrics_set
     );
     if a.slot_count() != b.slot_count() {
-        loss(
-            r,
+        r.loss(
             id,
             "slots",
             None,
             None,
-            "Glyph table slot count or deleted slots change",
-        )
+            format_args!("Glyph table slot count or deleted slots change"),
+        )?;
     }
+    Ok(())
 }
 pub(crate) fn compare_glyph(
     a: &Glyph,
@@ -582,67 +756,68 @@ pub(crate) fn compare_glyph(
     src: usize,
     dst: usize,
     id: &str,
-    r: &mut Report,
-) {
+    r: &mut impl Losses,
+) -> Result<()> {
     if src != dst {
-        loss(
-            r,
+        r.loss(
             id,
             "slot",
             Some(src),
             None,
-            format!("Glyph moves to slot {dst}"),
-        );
+            format_args!("Glyph moves to slot {dst}"),
+        )?;
     }
     if a.codepoints != b.codepoints {
         if a.codepoints.is_empty() {
-            loss(
-                r,
+            r.loss(
                 id,
                 "mapping",
                 Some(src),
                 None,
-                "Unencoded glyph receives a target slot mapping",
-            );
+                format_args!("Unencoded glyph receives a target slot mapping"),
+            )?;
         }
         for cp in &a.codepoints {
-            loss(
-                r,
+            r.loss(
                 id,
                 "mapping",
                 Some(src),
                 Some(cp.value()),
-                "Codepoint domain, alias identity or mapping order changes",
-            );
+                format_args!("Codepoint domain, alias identity or mapping order changes"),
+            )?;
         }
     }
     if a.unicode_sequences != b.unicode_sequences {
         for _ in &a.unicode_sequences {
-            loss(
-                r,
+            r.loss(
                 id,
                 "sequence",
                 Some(src),
                 None,
-                "Unicode sequence is not represented",
-            );
+                format_args!("Unicode sequence is not represented"),
+            )?;
         }
     }
     if a.name != b.name {
-        loss(r, id, "glyph_name", Some(src), None, "Glyph name changes")
+        r.loss(
+            id,
+            "glyph_name",
+            Some(src),
+            None,
+            format_args!("Glyph name changes"),
+        )?;
     }
     if a.bitmap != b.bitmap {
-        loss(
-            r,
+        r.loss(
             id,
             "bitmap",
             Some(src),
             None,
-            "Glyph bitmap rectangle, depth or samples change",
-        )
+            format_args!("Glyph bitmap rectangle, depth or samples change"),
+        )?;
     }
-    compare_properties(&a.properties, &b.properties, id, "Glyph", Some(src), r);
-    macro_rules! m{($($k:ident),*)=>{$(if a.metrics.$k!=b.metrics.$k{loss(r,id,"glyph_metric",Some(src),None,concat!("Glyph metric ",stringify!($k)," changes"));})*};}
+    compare_properties(&a.properties, &b.properties, id, "Glyph", Some(src), r)?;
+    macro_rules! m{($($k:ident),*)=>{$(if a.metrics.$k!=b.metrics.$k{r.loss(id,"glyph_metric",Some(src),None,format_args!(concat!("Glyph metric ",stringify!($k)," changes")))?;})*};}
     m!(
         bounds,
         advance,
@@ -655,30 +830,80 @@ pub(crate) fn compare_glyph(
         right_bearing,
         image_offset
     );
+    Ok(())
 }
+/// One diagnostic per container property, admitted before it is allocated.
 #[cfg(any(feature = "pk", feature = "gf"))]
-pub(crate) fn container_losses(
-    s: &FontSet,
-    id: &str,
-    r: &mut Report,
-    l: &ResourceLimits,
-    n: usize,
-) -> Result<()> {
-    let mut b = model_budget(s.single()?, l)?;
-    b.add(n)?;
-    b.add(container_allowance(s, l)?)?;
+pub(crate) fn container_losses(s: &FontSet, id: &str, r: &mut Charged<'_>) -> Result<()> {
     for p in s.properties.iter() {
-        loss(
-            r,
+        r.loss(
             id,
             "container_property",
             None,
             None,
-            format!("Container property {:?} is not represented", p.name),
-        );
+            format_args!("Container property {:?} is not represented", p.name),
+        )?;
     }
-    report_cost(r, &mut b)
+    Ok(())
 }
+/// Shared TeX writer driver on one exact working ledger built from
+/// `l.max_total_bytes`: the model's exact `retained_usage` unless the caller
+/// has reserved it, then every allocation `encode` makes (admitted before it
+/// is made) and every diagnostic. Container losses follow the font's.
+#[cfg(any(feature = "pk", feature = "gf"))]
+pub(crate) fn write_charged(
+    f: &Font,
+    container: Option<&FontSet>,
+    l: &ResourceLimits,
+    id: &str,
+    charge: super::ModelCharge,
+    encode: impl FnOnce(&crate::working::Budget, &mut Charged<'_>) -> Result<Vec<u8>>,
+) -> Result<(Vec<u8>, Report)> {
+    let budget = crate::working::Budget::new(l.max_total_bytes, "TeX/Plan 9 aggregate bytes");
+    let mut report = Report::default();
+    let result = (|| {
+        f.validate(l)?;
+        let model = match container {
+            Some(set) => set.retained_usage(l.max_total_bytes)?.bytes,
+            None => f.retained_usage(l.max_total_bytes)?.bytes,
+        };
+        let _model = budget.reserve(charge.of(model))?;
+        let mut sink = Charged::new(&budget, &mut report)?;
+        let bytes = encode(&budget, &mut sink)?;
+        if let Some(set) = container {
+            container_losses(set, id, &mut sink)?;
+        }
+        Ok(bytes)
+    })();
+    match result {
+        Ok(bytes) => Ok((bytes, report)),
+        Err(error) => Err(write_error(error, report, id)),
+    }
+}
+/// Admit a decoded readback model that its reader built within the remaining
+/// allowance; it stays charged until the returned lease drops.
+#[cfg(any(feature = "pk", feature = "gf"))]
+pub(crate) fn readback(
+    budget: &crate::working::Budget,
+    target: &Font,
+) -> Result<crate::working::Lease> {
+    budget.reserve(target.retained_usage(budget.remaining())?.bytes)
+}
+/// The per-glyph monochrome copy `mono` makes, admitted before it exists.
+#[cfg(any(feature = "pk", feature = "gf"))]
+pub(crate) fn mono_charged(
+    g: &Glyph,
+    threshold: Option<u8>,
+    l: &ResourceLimits,
+    budget: &crate::working::Budget,
+) -> Result<(Bitmap, crate::working::Lease)> {
+    let size = bitmap_size(g.bitmap.width(), g.bitmap.height(), l)?;
+    let mut lease = budget.reserve(size)?;
+    let bitmap = mono(g, threshold, l)?;
+    lease.grow_to(bitmap.as_bytes().len())?;
+    Ok((bitmap, lease))
+}
+#[cfg(feature = "plan9")]
 pub(crate) fn report_cost(r: &Report, b: &mut Budget) -> Result<()> {
     b.add(
         r.entries
@@ -757,33 +982,42 @@ pub(crate) fn write_specials(
     }
     Ok(())
 }
+/// One output mapping: source slot, code and glyph.
+#[cfg(any(feature = "pk", feature = "gf"))]
+pub(crate) type Mapping<'a> = (usize, u32, &'a Glyph);
+/// Every mapped code in slot order, in an array admitted at its final size.
 #[cfg(any(feature = "pk", feature = "gf"))]
 pub(crate) fn mappings<'a>(
     f: &'a Font,
     id: &str,
-    r: &mut Report,
+    r: &mut Charged<'_>,
     l: &ResourceLimits,
-) -> Result<Vec<(usize, u32, &'a Glyph)>> {
-    let mut v = Vec::new();
+    budget: &crate::working::Budget,
+) -> Result<crate::working::Vector<Mapping<'a>>> {
+    let codes = f
+        .glyphs()
+        .try_fold(0usize, |n, (_, g)| n.checked_add(g.codepoints.len()))
+        .ok_or_else(limit)?;
+    // A count above `max_glyphs` fails at that push below, as before.
+    let mut v = crate::working::Vector::with_capacity(budget, codes.min(l.max_glyphs))?;
     for (gid, g) in f.glyphs() {
         if g.codepoints.is_empty() {
-            loss(
-                r,
+            r.loss(
                 id,
                 "unencoded",
                 Some(gid.index()),
                 None,
-                "Unencoded glyph omitted",
-            );
+                format_args!("Unencoded glyph omitted"),
+            )?;
         }
         for cp in &g.codepoints {
             check(v.len() + 1, l.max_glyphs, "output glyph mappings")?;
-            v.push((gid.index(), cp.value(), g));
+            v.push((gid.index(), cp.value(), g))?;
         }
     }
     if v.is_empty() {
         return Err(fatal(
-            std::mem::take(r),
+            std::mem::take(r.report),
             id,
             "No mapped glyphs can be written",
         ));
@@ -814,6 +1048,7 @@ pub(crate) fn write_error(error: Error, mut report: Report, id: &str) -> Error {
 }
 
 /// Reserve container strings/properties before entering an inner writer.
+#[cfg(feature = "plan9")]
 pub(crate) fn container_allowance(
     set: &crate::model::FontSet,
     limits: &ResourceLimits,
@@ -826,28 +1061,37 @@ pub(crate) fn container_allowance(
     Ok(budget.used)
 }
 /// Emit per-source metadata once, plus one diagnostic for each split alias.
+/// `slots` is the source font's slot count; the seen flags are admitted on
+/// `budget` before they are allocated.
 pub(crate) fn compare_mapped(
     target: &Font,
     maps: &[(usize, u32, &Glyph)],
+    slots: usize,
     id: &str,
-    r: &mut Report,
-) {
-    let mut seen = std::collections::BTreeSet::new();
+    r: &mut impl Losses,
+    budget: &crate::working::Budget,
+) -> Result<()> {
+    let mut seen = crate::working::Vector::with_capacity(budget, slots)?;
+    seen.resize(slots, false)?;
     for ((gid, g), &(source, code, original)) in target.glyphs().zip(maps) {
-        if seen.insert(source) {
-            compare_glyph(original, g, source, gid.index(), id, r);
+        let first = seen
+            .get_mut(source)
+            .map(|seen| !std::mem::replace(seen, true))
+            .ok_or_else(|| invalid("mapping source outside the font"))?;
+        if first {
+            compare_glyph(original, g, source, gid.index(), id, r)?;
         } else {
-            loss(
-                r,
+            r.loss(
                 id,
                 "alias_copy",
                 Some(source),
                 Some(code),
-                format!(
+                format_args!(
                     "Alias is materialized as independent target glyph slot {}",
                     gid.index()
                 ),
-            );
+            )?;
         }
     }
+    Ok(())
 }

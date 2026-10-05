@@ -263,8 +263,10 @@ fn source_provenance_and_escaped_properties_are_preflighted() {
     };
     let common = WriteOptions::new(ResourcePath::new("f.pk").unwrap());
     assert!(codec.write(&set, &common).is_err());
+    // The property itself fits; its Debug-escaped loss message (six bytes
+    // per control character) does not, and is admitted before it is built.
     f.properties
-        .push(Property::new("\x01".repeat(5000), PropertyValue::Flag));
+        .push(Property::new("\x01".repeat(12000), PropertyValue::Flag));
     assert!(pk::write(&f, &options).is_err());
 }
 

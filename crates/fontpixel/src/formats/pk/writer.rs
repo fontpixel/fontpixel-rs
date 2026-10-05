@@ -1,24 +1,37 @@
 use super::{PkWriteOptions, reader};
+use crate::formats::ModelCharge;
 use crate::formats::tex_common::*;
-use crate::model::Font;
+use crate::model::{Font, FontSet};
+use crate::working::Budget;
 use crate::{Report, Result};
 /// Encode deterministic PK packets and report every changed model field.
+///
+/// One working ledger of `o.limits.max_total_bytes` holds the font's exact
+/// retained usage and everything this writer allocates, each admitted first.
 pub fn write(f: &Font, o: &PkWriteOptions) -> Result<(Vec<u8>, Report)> {
-    let mut report = Report::default();
-    match write_inner(f, o, &mut report) {
-        Ok(bytes) => Ok((bytes, report)),
-        Err(error) => Err(write_error(error, report, "pk")),
-    }
+    write_charged(f, None, &o.limits, "pk", ModelCharge::Estimate, |b, r| {
+        write_inner(f, o, b, r)
+    })
 }
-fn write_inner(f: &Font, o: &PkWriteOptions, r: &mut Report) -> Result<Vec<u8>> {
-    let mut budget = model_budget(f, &o.limits)?;
-    let maps = mappings(f, "pk", r, &o.limits)?;
-    budget.add(maps.len().saturating_mul(32))?;
-    let mut out = Output::new(
-        o.max_output_bytes
-            .min(o.limits.max_input_bytes)
-            .min(budget.remaining() / 2),
-    );
+/// As [`write`] for a whole set; its container losses follow the font's.
+pub(crate) fn write_set(
+    s: &FontSet,
+    o: &PkWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    let f = s.single()?;
+    write_charged(f, Some(s), &o.limits, "pk", charge, |b, r| {
+        write_inner(f, o, b, r)
+    })
+}
+fn write_inner(
+    f: &Font,
+    o: &PkWriteOptions,
+    budget: &Budget,
+    r: &mut Charged<'_>,
+) -> Result<Vec<u8>> {
+    let maps = mappings(f, "pk", r, &o.limits, budget)?;
+    let mut out = Output::charged(o.max_output_bytes.min(o.limits.max_input_bytes), budget)?;
     let (ds, cs, hp, vp) = header_values(f, o)?;
     let comment = bytes(&f.headers, "tex.comment").unwrap_or(&[]);
     check(comment.len(), 255, "PK comment bytes")?;
@@ -28,8 +41,8 @@ fn write_inner(f: &Font, o: &PkWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
         out.u(v, 4)?
     }
     write_specials(&f.properties, "pk", 240, &mut out, &o.limits)?;
-    for &(_, cp, g) in &maps {
-        let bitmap = mono(g, o.gray_threshold, &o.limits)?;
+    for &(_, cp, g) in maps.iter() {
+        let (bitmap, _copy) = mono_charged(g, o.gray_threshold, &o.limits, budget)?;
         let (w, h) = (bitmap.width() as usize, bitmap.height() as usize);
         let area = w.checked_mul(h).ok_or_else(limit)?;
         let n = area.div_ceil(8);
@@ -110,7 +123,7 @@ fn write_inner(f: &Font, o: &PkWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
             }
         }
         let start = out.b.len();
-        out.put(&vec![0; n])?;
+        out.zeros(n)?;
         if w > 0 {
             for y in 0..h {
                 copy_bits(
@@ -127,13 +140,12 @@ fn write_inner(f: &Font, o: &PkWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
     while !out.b.len().is_multiple_of(4) {
         out.byte(246)?
     }
-    budget.add(out.b.len())?;
     let mut reread = o.limits.clone();
     reread.max_total_bytes = budget.remaining();
     let (target, rr) = reader::read(&out.b, &reread)?;
-    r.extend(rr);
-    compare_font(f, &target, "pk", r);
-    compare_mapped(&target, &maps, "pk", r);
-    report_cost(r, &mut budget)?;
-    Ok(out.b)
+    let _target = readback(budget, &target)?;
+    r.absorb(rr)?;
+    compare_font(f, &target, "pk", r)?;
+    compare_mapped(&target, &maps, f.slot_count(), "pk", r, budget)?;
+    Ok(out.into_bytes())
 }
