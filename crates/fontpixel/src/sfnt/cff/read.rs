@@ -6,7 +6,11 @@ use read_fonts::ps::{
     },
     string::Sid,
 };
-use std::collections::BTreeSet;
+
+/// Standalone CFF codec ledger, for callers without a shared one.
+pub(super) fn root(l: &Limits) -> Budget {
+    Budget::new(l.sfnt.resources.max_total_bytes, "CFF working bytes")
+}
 
 /// Borrowed, structurally validated single-font CFF1 table.
 /// Glyph programs are checked when decoded; call `read_all` to validate all.
@@ -43,7 +47,15 @@ pub(super) fn index_at<'a>(data: &'a [u8], off: usize) -> Result<(Index<'a>, usi
     let index = Index::new(&data[off..end], false).map_err(ps_error)?;
     Ok((index, end))
 }
-pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<Vec<Entry>> {
+/// Validate a DICT and return its entries. The token pass keeps only the
+/// first operand and a fixed-size set of seen operators (no heap); the entry
+/// array is sized exactly from the operator count and charged to `budget`.
+pub(super) fn dictionary(
+    data: &[u8],
+    l: &Limits,
+    total: &mut usize,
+    budget: &Budget,
+) -> Result<Owned<Vec<Entry>>> {
     bounded(data.len(), l.max_dict_bytes, "CFF DICT bytes")?;
     add_budget(
         total,
@@ -53,12 +65,16 @@ pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<V
     )?;
     let mut n = 0usize;
     let mut operators = 0;
-    let mut operands = Vec::new();
-    let mut seen = BTreeSet::new();
+    let mut first_operand = None;
+    // Duplicate operators are rejected, so at most one slot per variant.
+    let mut seen = [None::<Operator>; 128];
+    let mut seen_count = 0usize;
     for token in dict::tokens(data) {
         match token.map_err(ps_error)? {
             Token::Operand(value, _) => {
-                operands.push(value);
+                if n == 0 {
+                    first_operand = Some(value);
+                }
                 n += 1;
                 bounded(n, 48, "CFF DICT stack")?;
             }
@@ -77,20 +93,24 @@ pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<V
                     | VariationStoreIndex => false,
                     _ => n == 1,
                 };
-                if !valid || !seen.insert(format!("{op:?}")) {
+                let duplicate = valid && seen[..seen_count].contains(&Some(op));
+                if !valid || duplicate || seen_count == seen.len() {
                     return Err(invalid(
                         "invalid, duplicate or unsupported CFF DICT operator",
                     ));
                 }
+                seen[seen_count] = Some(op);
+                seen_count += 1;
                 if matches!(op, DefaultWidthX | NominalWidthX) {
                     use read_fonts::ps::cff::stack::Number;
-                    let value = match operands[0] {
-                        Number::I32(n) => f64::from(n),
-                        Number::Fixed(n) => n.to_f64(),
+                    let value = match first_operand {
+                        Some(Number::I32(n)) => f64::from(n),
+                        Some(Number::Fixed(n)) => n.to_f64(),
+                        None => return Err(invalid("invalid CFF DICT values")),
                     };
                     coordinate(value)?;
                 }
-                operands.clear();
+                first_operand = None;
                 n = 0;
                 operators += 1;
             }
@@ -100,13 +120,22 @@ pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<V
     if n != 0 {
         return Err(invalid("unterminated CFF DICT operands"));
     }
-    let entries = dict::entries(data, None)
-        .map(|e| e.map_err(ps_error))
-        .collect::<Result<Vec<_>>>()?;
-    if entries.len() != operators {
+    let mut lease = budget.reserve(0)?;
+    let mut entries = budget.vec_into::<Entry>(operators, &mut lease)?;
+    let mut extra = 0usize;
+    for e in dict::entries(data, None) {
+        let e = e.map_err(ps_error)?;
+        // Never grow past the admitted capacity; a count mismatch is an error.
+        if entries.len() < operators {
+            entries.push(e);
+        } else {
+            extra += 1;
+        }
+    }
+    if entries.len() + extra != operators {
         return Err(invalid("invalid CFF DICT values"));
     }
-    for e in &entries {
+    for e in entries.iter() {
         match e {
             Entry::CharstringType(n) if *n != 2 => {
                 return Err(invalid("CFF Type 1 charstrings unsupported"));
@@ -115,21 +144,22 @@ pub(super) fn dictionary(data: &[u8], l: &Limits, total: &mut usize) -> Result<V
             _ => {}
         }
     }
-    Ok(entries)
+    Ok(Owned::from_parts(entries, lease))
 }
 fn private<'a>(
     data: &'a [u8],
     range: std::ops::Range<usize>,
     l: &Limits,
     total: &mut usize,
+    budget: &Budget,
 ) -> Result<(Index<'a>, (f64, f64))> {
     let dict = data
         .get(range.clone())
         .ok_or_else(|| invalid("CFF Private DICT outside table"))?;
-    let entries = dictionary(dict, l, total)?;
+    let entries = dictionary(dict, l, total, budget)?;
     let mut local = Index::Empty;
     let mut widths = (0., 0.);
-    for e in entries {
+    for e in entries.iter().cloned() {
         match &e {
             Entry::DefaultWidthX(w) => widths.0 = w.to_f64(),
             Entry::NominalWidthX(w) => widths.1 = w.to_f64(),
@@ -151,25 +181,53 @@ fn private<'a>(
     }
     Ok((local, widths))
 }
-fn charset(data: &[u8], offset: usize, count: usize, is_cid: bool) -> Result<Vec<u16>> {
+/// Set membership for 16-bit identifiers without heap storage.
+pub(super) struct IdSet([u64; 1024]);
+impl IdSet {
+    pub(super) fn new() -> Self {
+        Self([0; 1024])
+    }
+    /// Returns false when the identifier was already present.
+    pub(super) fn insert(&mut self, id: u16) -> bool {
+        let (word, bit) = (usize::from(id) / 64, 1u64 << (id % 64));
+        let fresh = self.0[word] & bit == 0;
+        self.0[word] |= bit;
+        fresh
+    }
+    fn contains(&self, id: u16) -> bool {
+        self.0[usize::from(id) / 64] & (1u64 << (id % 64)) != 0
+    }
+}
+/// Charset identifiers in an exact-capacity array charged to `lease`.
+fn charset(
+    data: &[u8],
+    offset: usize,
+    count: usize,
+    is_cid: bool,
+    budget: &Budget,
+    lease: &mut Lease,
+) -> Result<Vec<u16>> {
     if offset <= 2 {
         if is_cid {
             return Err(invalid("CID CFF requires a custom charset"));
         }
         let charset = Charset::new(FontData::new(data), offset, count as u32)
             .ok_or_else(|| invalid("invalid CFF charset"))?;
-        return (0..count)
-            .map(|i| {
+        let mut ids = budget.vec_into(count, lease)?;
+        for i in 0..count {
+            ids.push(
                 charset
                     .string_id(GlyphId::new(i as u32))
                     .map(|s| s.to_u16())
-                    .ok_or_else(|| invalid("predefined CFF charset too short"))
-            })
-            .collect();
+                    .ok_or_else(|| invalid("predefined CFF charset too short"))?,
+            );
+        }
+        return Ok(ids);
     }
     let format = bytes(data, offset, 1)?[0];
     let mut cursor = offset + 1;
-    let mut ids = vec![0];
+    let mut ids = budget.vec_into(count.max(1), lease)?;
+    ids.push(0);
     match format {
         0 => {
             for _ in 1..count {
@@ -198,7 +256,7 @@ fn charset(data: &[u8], offset: usize, count: usize, is_cid: bool) -> Result<Vec
         }
         _ => return Err(invalid("unsupported CFF charset format")),
     }
-    let mut seen = BTreeSet::new();
+    let mut seen = IdSet::new();
     for &id in &ids {
         if !seen.insert(id) {
             return Err(invalid("duplicate CFF charset identifier"));
@@ -215,11 +273,16 @@ fn encoding(data: &[u8], offset: usize, ids: &[u16]) -> Result<()> {
     let mut cur = offset + 1;
     let count = bytes(data, cur, 1)?[0] as usize;
     cur += 1;
-    let mut codes = BTreeSet::new();
+    let mut codes = IdSet::new();
+    let mut code_count = 0usize;
+    let mut insert = |code: u8| {
+        code_count += 1;
+        codes.insert(u16::from(code))
+    };
     match format {
         0 => {
             for &code in bytes(data, cur, count)? {
-                if !codes.insert(code) {
+                if !insert(code) {
                     return Err(invalid("duplicate CFF encoding code"));
                 }
             }
@@ -234,7 +297,7 @@ fn encoding(data: &[u8], offset: usize, ids: &[u16]) -> Result<()> {
                     return Err(invalid("CFF encoding range overflow"));
                 }
                 for code in u16::from(r[0])..=last {
-                    if !codes.insert(code as u8) {
+                    if !insert(code as u8) {
                         return Err(invalid("duplicate CFF encoding code"));
                     }
                 }
@@ -242,27 +305,38 @@ fn encoding(data: &[u8], offset: usize, ids: &[u16]) -> Result<()> {
         }
         _ => return Err(invalid("invalid CFF encoding format")),
     }
-    if codes.len() >= ids.len() {
+    // Every inserted code was fresh (duplicates returned above).
+    if code_count >= ids.len() {
         return Err(invalid("CFF encoding exceeds glyph count"));
     }
     if flag & 128 != 0 {
         let count = bytes(data, cur, 1)?[0] as usize;
         cur += 1;
-        let valid = ids.iter().copied().collect::<BTreeSet<_>>();
+        let mut valid = IdSet::new();
+        for &id in ids {
+            valid.insert(id);
+        }
         for _ in 0..count {
             let record = bytes(data, cur, 3)?;
             cur += 3;
             let sid = u16::from_be_bytes([record[1], record[2]]);
-            if !valid.contains(&sid) {
+            if !valid.contains(sid) {
                 return Err(invalid("CFF supplement SID missing from charset"));
             }
         }
     }
     Ok(())
 }
-fn selectors(data: &[u8], off: usize, count: usize, fd_count: usize) -> Result<Vec<u16>> {
+fn selectors(
+    data: &[u8],
+    off: usize,
+    count: usize,
+    fd_count: usize,
+    budget: &Budget,
+    lease: &mut Lease,
+) -> Result<Vec<u16>> {
     let format = bytes(data, off, 1)?[0];
-    let mut result = Vec::with_capacity(count);
+    let mut result = budget.vec_into(count, lease)?;
     match format {
         0 => result.extend(bytes(data, off + 1, count)?.iter().map(|n| u16::from(*n))),
         3 => {
@@ -298,6 +372,20 @@ fn selectors(data: &[u8], off: usize, count: usize, fd_count: usize) -> Result<V
 impl<'a> Cff<'a> {
     /// Parse a CFF1 table, with the containing font's units per em.
     pub fn parse(data: &'a [u8], units_per_em: u16, l: &Limits) -> Result<Self> {
+        let budget = root(l);
+        let (cff, _lease) = Self::parse_with_budget(data, units_per_em, l, &budget)?.into_parts();
+        Ok(cff)
+    }
+    /// Parse on a shared ledger. Input bytes are borrowed; the retained
+    /// selector/identifier/subfont arrays stay charged to the returned lease,
+    /// and DICT parsing temporaries are charged while they live.
+    pub(crate) fn parse_with_budget(
+        data: &'a [u8],
+        units_per_em: u16,
+        l: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Self>> {
+        let mut lease = budget.reserve(0)?;
         l.sfnt.table(data.len())?;
         bounded(
             data.len(),
@@ -323,11 +411,12 @@ impl<'a> Cff<'a> {
             top.get(0).ok_or_else(|| invalid("missing CFF Top DICT"))?,
             l,
             &mut dict_bytes,
+            budget,
         )?;
         let (mut cs_off, mut charset_off, mut encoding_off, mut fdarray, mut fdselect, mut is_cid) =
             (None, 0, 0, None, None, false);
         let mut private_range = None;
-        for e in &entries {
+        for e in entries.iter() {
             match e {
                 Entry::CharstringsOffset(n) => cs_off = Some(*n),
                 Entry::Charset(n) => charset_off = *n,
@@ -346,7 +435,7 @@ impl<'a> Cff<'a> {
         .0;
         let count = cs.count() as usize;
         l.sfnt.glyphs(count)?;
-        let identifiers = charset(data, charset_off, count, is_cid)?;
+        let identifiers = charset(data, charset_off, count, is_cid, budget, &mut lease)?;
         if !is_cid {
             for id in &identifiers {
                 if *id > 64999 || (*id >= 391 && u32::from(*id) - 391 >= strings.count()) {
@@ -364,7 +453,7 @@ impl<'a> Cff<'a> {
                 Ok(())
             }
         };
-        for e in &entries {
+        for e in entries.iter() {
             match e {
                 Entry::Version(s)
                 | Entry::Notice(s)
@@ -384,31 +473,40 @@ impl<'a> Cff<'a> {
                 _ => {}
             }
         }
-        let mut locals = Vec::new();
-        let mut widths = Vec::new();
-        let selection = if is_cid {
+        drop(entries);
+        let fds = if is_cid {
             let fds = index_at(data, fdarray.ok_or_else(|| invalid("missing CFF FDArray"))?)?.0;
             if fds.count() == 0 || fds.count() > 256 {
                 return Err(invalid("CFF FDArray count outside 1..=256"));
             }
+            Some(fds)
+        } else {
+            None
+        };
+        let subfont_count = fds.as_ref().map_or(1, |f| f.count() as usize);
+        let mut locals = budget.vec_into(subfont_count, &mut lease)?;
+        let mut widths = budget.vec_into(subfont_count, &mut lease)?;
+        let selection = if let Some(fds) = fds {
             for i in 0..fds.count() {
                 let dict = dictionary(
                     fds.get(i as usize)
                         .ok_or_else(|| invalid("invalid CFF Font DICT"))?,
                     l,
                     &mut dict_bytes,
+                    budget,
                 )?;
                 let range = dict
-                    .into_iter()
+                    .iter()
                     .find_map(|e| {
                         if let Entry::PrivateDictRange(r) = e {
-                            Some(r)
+                            Some(r.clone())
                         } else {
                             None
                         }
                     })
                     .ok_or_else(|| invalid("missing FD Private DICT"))?;
-                let (local, width) = private(data, range, l, &mut dict_bytes)?;
+                drop(dict);
+                let (local, width) = private(data, range, l, &mut dict_bytes, budget)?;
                 locals.push(local);
                 widths.push(width);
             }
@@ -417,6 +515,8 @@ impl<'a> Cff<'a> {
                 fdselect.ok_or_else(|| invalid("missing CFF FDSelect"))?,
                 count,
                 fds.count() as usize,
+                budget,
+                &mut lease,
             )?
         } else {
             if fdarray.is_some() || fdselect.is_some() {
@@ -427,31 +527,47 @@ impl<'a> Cff<'a> {
                 private_range.ok_or_else(|| invalid("missing CFF Private DICT"))?,
                 l,
                 &mut dict_bytes,
+                budget,
             )?;
             locals.push(local);
             widths.push(width);
-            vec![0; count]
+            let mut selection = budget.vec_into(count, &mut lease)?;
+            selection.resize(count, 0);
+            selection
         };
         // Fontations is used only after independent structural preflight.
         let raw = CffFontRef::new_cff(data, 0, Some(i32::from(units_per_em))).map_err(ps_error)?;
         if raw.num_glyphs() != count as u32 || raw.global_subrs().count() != global.count() {
             return Err(invalid("CFF reader count mismatch"));
         }
-        let mut subfonts = Vec::with_capacity(locals.len());
+        let mut subfonts = budget.vec_into(locals.len(), &mut lease)?;
         for i in 0..locals.len() {
             subfonts.push(raw.subfont(i as u16, &[]).map_err(ps_error)?);
         }
-        Ok(Self {
-            raw,
-            subfonts,
-            locals,
-            widths,
-            selectors: selection,
-            identifiers,
-        })
+        Ok(Owned::from_parts(
+            Self {
+                raw,
+                subfonts,
+                locals,
+                widths,
+                selectors: selection,
+                identifiers,
+            },
+            lease,
+        ))
     }
     /// Parse from an sfnt font, checking CFF/maxp count and head units per em.
     pub fn from_sfnt(font: &super::super::Sfnt<'a>, l: &Limits) -> Result<Self> {
+        let budget = root(l);
+        let (cff, _lease) = Self::from_sfnt_with_budget(font, l, &budget)?.into_parts();
+        Ok(cff)
+    }
+    /// `from_sfnt` on a caller's shared ledger.
+    pub(crate) fn from_sfnt_with_budget(
+        font: &super::super::Sfnt<'a>,
+        l: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Self>> {
         if font.flavor() != super::super::Flavor::Cff {
             return Err(invalid("CFF requires OTTO sfnt flavor"));
         }
@@ -464,11 +580,12 @@ impl<'a> Cff<'a> {
         if bytes(maxp, 0, 4)? != [0, 0, 0x50, 0] {
             return Err(invalid("CFF requires maxp 0.5"));
         }
-        let cff = Self::parse(
+        let cff = Self::parse_with_budget(
             font.table(*b"CFF ")
                 .ok_or_else(|| invalid("missing CFF table"))?,
             u16_at(head, 18)?,
             l,
+            budget,
         )?;
         if u32::from(u16_at(maxp, 4)?) != cff.raw.num_glyphs() {
             return Err(invalid("CFF/maxp glyph count mismatch"));
@@ -482,7 +599,14 @@ impl<'a> Cff<'a> {
             .and_then(|v| u8::try_from(v).ok())
             .ok_or_else(|| invalid("CFF FDSelect outside uint8"))
     }
-    pub(super) fn validate_selected(&self, glyphs: &[u16], l: &Limits) -> Result<()> {
+    pub(super) fn validate_selected(
+        &self,
+        glyphs: &[u16],
+        l: &Limits,
+        budget: &Budget,
+    ) -> Result<()> {
+        // Each program's validator owns one 48-operand stack, sequentially.
+        let _stack = budget.reserve_array::<f64>(48)?;
         let (mut programs, mut commands) = (0, 0);
         for &gid in glyphs {
             let fd = usize::from(self.subfont_selector(gid)?);
