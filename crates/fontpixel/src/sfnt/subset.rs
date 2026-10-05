@@ -676,3 +676,93 @@ fn subset_glyf(
         index_to_loc_format: i16::from(!short),
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Error, variants};
+
+    const GOLDEN: &[u8] = include_bytes!("../../../../tests/data/compat/mini-square-1.0-0.ttf");
+    const LEDGER: &str = "test shared subset ledger";
+
+    fn sources() -> Vec<Vec<u8>> {
+        let mut font = crate::Font::default();
+        font.metrics.pixel_size = Some(14);
+        font.metrics.ascent = Some(14);
+        font.metrics.descent = Some(4);
+        for (cp, pattern) in [(65, "#.\n##"), (66, "##\n#.")] {
+            let mut glyph = crate::Glyph::new(pattern.parse::<crate::Bitmap>().unwrap());
+            glyph.codepoints = vec![crate::model::Codepoint::Unicode(cp)];
+            glyph.metrics.advance = Some(crate::model::Vector::new(3, 0));
+            font.add_glyph(glyph).unwrap();
+        }
+        let v = crate::Variants::new(font);
+        let dots = variants::Options {
+            shape: crate::outline::Shape::Dot,
+            dot_size: 0.9,
+            embed_bitmaps: true,
+            ..Default::default()
+        };
+        let mut sources = vec![GOLDEN.to_vec(), variants::encode(&v, &dots).unwrap().bytes];
+        if cfg!(feature = "cff") {
+            let cff = variants::Options {
+                flavor: variants::OutlineFlavor::Cff,
+                embed_bitmaps: false,
+                ..dots
+            };
+            sources.push(variants::encode(&v, &cff).unwrap().bytes);
+        }
+        sources
+    }
+
+    /// Smallest capacity of a fresh shared ledger with which subsetting works.
+    fn peak(source: &[u8], options: &Options) -> usize {
+        let (mut low, mut high) = (0usize, 16 << 20);
+        while low + 1 < high {
+            let middle = low + (high - low) / 2;
+            let budget = Budget::new(middle, LEDGER);
+            match subset_with_budget(source, options, &budget) {
+                Ok(_) => high = middle,
+                Err(Error::ResourceLimit { .. }) => low = middle,
+                Err(other) => panic!("{other:?}"),
+            }
+            assert_eq!(budget.remaining(), middle, "every charge is released");
+        }
+        high
+    }
+
+    #[test]
+    fn a_live_caller_lease_reduces_the_shared_allowance() {
+        const HELD: usize = 4096;
+        let options = Options::text("A");
+        for source in sources() {
+            let peak = peak(&source, &options);
+            // Exactly enough beside a caller's still-live lease on one ledger.
+            let budget = Budget::new(peak + HELD, LEDGER);
+            let held = budget.reserve(HELD).unwrap();
+            let result = subset_with_budget(&source, &options, &budget).unwrap();
+            // Output bytes and the glyph mapping stay charged to the caller
+            // until the returned value drops.
+            let retained = peak - budget.remaining();
+            let mapping = budget
+                .tree_bytes::<u16, u16>(result.glyph_mapping.len())
+                .unwrap();
+            assert!(retained >= result.bytes.len() + mapping, "{retained}");
+            drop(result);
+            assert_eq!(budget.remaining(), peak);
+            drop(held);
+            // One byte less beside the same live lease is this ledger's error,
+            // and a failed subset leaves only the caller's lease charged.
+            let budget = Budget::new(peak + HELD - 1, LEDGER);
+            let _held = budget.reserve(HELD).unwrap();
+            assert!(matches!(
+                subset_with_budget(&source, &options, &budget),
+                Err(Error::ResourceLimit {
+                    resource: LEDGER,
+                    ..
+                })
+            ));
+            assert_eq!(budget.remaining(), peak - 1);
+        }
+    }
+}

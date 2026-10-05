@@ -485,6 +485,37 @@ mod tests {
     }
 
     #[test]
+    fn exact_vectors_merge_their_charge_into_a_shared_lease() {
+        let budget = Budget::new(3 * size_of::<u32>() + 2, "exact budget");
+        let mut lease = budget.reserve(0).unwrap();
+        let values = budget.vec_into::<u32>(3, &mut lease).unwrap();
+        assert!(values.capacity() >= 3);
+        assert_eq!(lease.bytes(), values.capacity() * size_of::<u32>());
+        let bytes = budget.vec_into::<u8>(2, &mut lease).unwrap();
+        assert_eq!(budget.remaining(), 0);
+        // A refused allocation leaves the existing charges unchanged.
+        assert!(budget.vec_into::<u8>(1, &mut lease).is_err());
+        assert_eq!(lease.bytes(), 3 * size_of::<u32>() + 2);
+        drop((values, bytes));
+        drop(lease);
+        assert_eq!(budget.remaining(), 3 * size_of::<u32>() + 2);
+    }
+
+    #[test]
+    fn split_moves_part_of_a_live_charge_without_release() {
+        let budget = Budget::new(10, "split budget");
+        let mut lease = budget.reserve(10).unwrap();
+        let part = lease.split(4).unwrap();
+        assert_eq!((lease.bytes(), part.bytes(), budget.remaining()), (6, 4, 0));
+        assert!(matches!(lease.split(7), Err(Error::InvalidInput(_))));
+        assert_eq!((lease.bytes(), budget.remaining()), (6, 0));
+        drop(lease);
+        assert_eq!(budget.remaining(), 6);
+        drop(part);
+        assert_eq!(budget.remaining(), 10);
+    }
+
+    #[test]
     fn nested_storage_retains_its_capacity_until_the_output_drops() {
         let maximum = size_of::<Vec<u8>>() + 5;
         let budget = Budget::new(maximum, "nested budget");
