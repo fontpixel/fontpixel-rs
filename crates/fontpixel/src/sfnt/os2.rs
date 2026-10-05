@@ -101,6 +101,37 @@ impl Default for Os2Table {
         }
     }
 }
+/// Check a caller-supplied `fsType`: only defined bits (1..=3, 8, 9) and at
+/// most one usage permission among bits 1..=3. Returns the reason on failure;
+/// writers wrap it in their own error context.
+pub fn check_embedding_flags(flags: u16) -> std::result::Result<(), &'static str> {
+    if flags & !0x030e != 0 {
+        return Err("OS/2 fsType sets a reserved bit");
+    }
+    if (flags & 0x000e).count_ones() > 1 {
+        return Err("OS/2 fsType may set at most one usage permission bit");
+    }
+    Ok(())
+}
+/// Check a caller-supplied `fsSelection` for an OS/2 table `version`: bits
+/// 10..=15 are reserved and bits 7..=9 exist only from version 4.
+pub fn check_selection_flags(flags: u16, version: u16) -> std::result::Result<(), &'static str> {
+    if flags & 0xfc00 != 0 {
+        return Err("OS/2 fsSelection bits 10..=15 are reserved");
+    }
+    if flags & 0x0380 != 0 && version < 4 {
+        return Err("OS/2 fsSelection bits 7..=9 require version 4");
+    }
+    Ok(())
+}
+/// Check caller-supplied `ulCodePageRange1..2`: the bits the specification
+/// reserves (9..=15, 22..=28 and 32..=47) must be clear.
+pub fn check_code_page_ranges(ranges: [u32; 2]) -> std::result::Result<(), &'static str> {
+    if ranges[0] & 0x1fc0_fe00 != 0 || ranges[1] & 0x0000_ffff != 0 {
+        return Err("OS/2 code page range sets a reserved bit");
+    }
+    Ok(())
+}
 impl Os2Table {
     /// Set coverage bits and first/last character indexes from actual mappings.
     /// Code-page bits are separate and never guessed from a block intersection.

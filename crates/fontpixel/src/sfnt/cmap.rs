@@ -13,7 +13,8 @@ pub type Mapping = BTreeMap<u32, u16>;
 /// Serialized cmap and a compatibility fact callers can report.
 #[derive(Clone, Debug)]
 pub struct EncodedCmap {
-    /// Complete table bytes, always including full-Unicode format 12.
+    /// Complete table bytes, including full-Unicode format 12 unless
+    /// [`FullRecords::WhenNeeded`] found format 4 sufficient.
     pub data: Vec<u8>,
     /// Whether a complete representable BMP format 4 is included (U+FFFF is only
     /// in format 12). False never means the full-Unicode map was truncated.
@@ -136,6 +137,24 @@ fn format4(mapping: &Mapping, budget: &Budget) -> Result<Option<Owned<Vec<u8>>>>
 pub fn encode(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<EncodedCmap> {
     encode_records(mapping, num_glyphs, limits, true)
 }
+/// Which cmap encoding records list the full-repertoire format-12 subtable.
+///
+/// The format-4 subtable (BMP scalars except U+FFFF) is written under (0, 3)
+/// and (3, 1) whenever it is representable. Every policy decodes to the same
+/// mapping: no scalar is ever dropped.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum FullRecords {
+    /// List format 12 under both (0, 4) and (3, 10) (native default).
+    #[default]
+    Always,
+    /// Omit the redundant (0, 4) record for a BMP-only map; maps with a
+    /// supplementary-plane scalar keep both records.
+    NonBmpOnly,
+    /// Write format 12 only when format 4 cannot hold the whole map (a
+    /// supplementary scalar, U+FFFF, or no representable format 4), and list
+    /// it under (3, 10) only. A map that format 4 covers gets no format 12.
+    WhenNeeded,
+}
 /// [`encode`] with an explicit Unicode-platform record choice for maps without
 /// supplementary-plane scalars. `unicode_full_for_bmp == true` (the [`encode`]
 /// default) lists the format-12 subtable under both (0, 4) and (3, 10);
@@ -148,10 +167,27 @@ pub fn encode_records(
     limits: &Limits,
     unicode_full_for_bmp: bool,
 ) -> Result<EncodedCmap> {
+    encode_with_records(
+        mapping,
+        num_glyphs,
+        limits,
+        if unicode_full_for_bmp {
+            FullRecords::Always
+        } else {
+            FullRecords::NonBmpOnly
+        },
+    )
+}
+/// [`encode`] with an explicit [`FullRecords`] policy.
+pub fn encode_with_records(
+    mapping: &Mapping,
+    num_glyphs: u16,
+    limits: &Limits,
+    records: FullRecords,
+) -> Result<EncodedCmap> {
     let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
     let (encoded, _lease) =
-        encode_records_with_budget(mapping, num_glyphs, limits, &budget, unicode_full_for_bmp)?
-            .into_parts();
+        encode_records_with_budget(mapping, num_glyphs, limits, &budget, records)?.into_parts();
     Ok(encoded)
 }
 /// Encode into the caller's ledger without charging its borrowed input map.
@@ -161,14 +197,15 @@ pub(crate) fn encode_with_budget(
     limits: &Limits,
     budget: &Budget,
 ) -> Result<Owned<EncodedCmap>> {
-    encode_records_with_budget(mapping, num_glyphs, limits, budget, true)
+    encode_records_with_budget(mapping, num_glyphs, limits, budget, FullRecords::Always)
 }
-fn encode_records_with_budget(
+/// [`encode_with_budget`] with an explicit [`FullRecords`] policy.
+pub(crate) fn encode_records_with_budget(
     mapping: &Mapping,
     num_glyphs: u16,
     limits: &Limits,
     budget: &Budget,
-    unicode_full_for_bmp: bool,
+    records: FullRecords,
 ) -> Result<Owned<EncodedCmap>> {
     check(mapping, num_glyphs, limits)?;
     let max = mapping
@@ -187,25 +224,38 @@ fn encode_records_with_budget(
     }
     let bmp = format4(mapping, budget)?;
     let has_bmp_subtable = bmp.is_some();
-    let unicode_full =
-        unicode_full_for_bmp || mapping.last_key_value().is_some_and(|(&cp, _)| cp > 0xffff);
-    let count = if has_bmp_subtable { 3 } else { 1 } + usize::from(unicode_full);
+    let supplementary = mapping.last_key_value().is_some_and(|(&cp, _)| cp > 0xffff);
+    let (unicode_full, windows_full) = match records {
+        FullRecords::Always => (true, true),
+        FullRecords::NonBmpOnly => (supplementary, true),
+        FullRecords::WhenNeeded => (
+            false,
+            !has_bmp_subtable || supplementary || mapping.contains_key(&0xffff),
+        ),
+    };
+    let count = if has_bmp_subtable { 2 } else { 0 }
+        + usize::from(unicode_full)
+        + usize::from(windows_full);
     let header = 4 + 8 * count;
     let full_offset = header + bmp.as_ref().map_or(0, |bytes| bytes.len());
-    let full_len = 16 + 12 * group_count;
+    let full_len = if windows_full {
+        16 + 12 * group_count
+    } else {
+        0
+    };
     let size = full_offset + full_len;
     limits.table(size)?;
     let mut out = Buffer::with_capacity(budget, size)?;
     out.extend(&0u16.to_be_bytes())?;
     out.extend(&(count as u16).to_be_bytes())?;
-    let records = [
-        (0u16, 3u16, header),
-        (0, 4, full_offset),
-        (3, 1, header),
-        (3, 10, full_offset),
+    let entries = [
+        (0u16, 3u16, header, has_bmp_subtable),
+        (0, 4, full_offset, unicode_full),
+        (3, 1, header, has_bmp_subtable),
+        (3, 10, full_offset, windows_full),
     ];
-    for (index, &(platform, encoding, offset)) in records.iter().enumerate() {
-        if (!has_bmp_subtable && (index == 0 || index == 2)) || (!unicode_full && index == 1) {
+    for &(platform, encoding, offset, present) in &entries {
+        if !present {
             continue;
         }
         out.extend(&platform.to_be_bytes())?;
@@ -216,6 +266,25 @@ fn encode_records_with_budget(
         out.extend(bytes)?;
     }
     drop(bmp);
+    if windows_full {
+        format12(&mut out, mapping, full_len, group_count)?;
+    }
+    let (data, lease) = out.into_parts();
+    Ok(Owned::from_parts(
+        EncodedCmap {
+            data,
+            has_bmp_subtable,
+        },
+        lease,
+    ))
+}
+/// Append the format-12 subtable of every mapping.
+fn format12(
+    out: &mut Buffer,
+    mapping: &Mapping,
+    full_len: usize,
+    group_count: usize,
+) -> Result<()> {
     out.extend(&12u16.to_be_bytes())?;
     out.extend(&0u16.to_be_bytes())?;
     out.extend(&to32(full_len)?.to_be_bytes())?;
@@ -242,14 +311,7 @@ fn encode_records_with_budget(
         out.extend(&end.to_be_bytes())?;
         out.extend(&u32::from(first).to_be_bytes())?;
     }
-    let (data, lease) = out.into_parts();
-    Ok(Owned::from_parts(
-        EncodedCmap {
-            data,
-            has_bmp_subtable,
-        },
-        lease,
-    ))
+    Ok(())
 }
 /// Decode the preferred Unicode nominal cmap through Fontations. Does not
 /// silently reinterpret symbol/Macintosh maps or variation sequences as Unicode.
@@ -527,6 +589,75 @@ mod working_tests {
         ];
         let expected: Vec<_> = words.into_iter().flat_map(u16::to_be_bytes).collect();
         assert_eq!(bytes.as_slice(), expected);
+    }
+
+    fn records(data: &[u8]) -> Vec<(u16, u16)> {
+        let count = usize::from(u16::from_be_bytes([data[2], data[3]]));
+        (0..count)
+            .map(|i| {
+                let at = 4 + 8 * i;
+                (
+                    u16::from_be_bytes([data[at], data[at + 1]]),
+                    u16::from_be_bytes([data[at + 2], data[at + 3]]),
+                )
+            })
+            .collect()
+    }
+
+    #[test]
+    fn record_policies_keep_every_mapping_and_the_default_bytes() {
+        let limits = Limits::default();
+        let bmp: Mapping = [(65, 1), (66, 2), (0x4e00, 3)].into();
+        let supplementary: Mapping = [(65, 1), (0x1f600, 2)].into();
+        let ffff: Mapping = [(65, 1), (0xffff, 2)].into();
+        for mapping in [&bmp, &supplementary, &ffff, &small_mapping()] {
+            let n = 13;
+            let native = encode(mapping, n, &limits).unwrap().data;
+            assert_eq!(
+                encode_with_records(mapping, n, &limits, FullRecords::Always)
+                    .unwrap()
+                    .data,
+                native
+            );
+            assert_eq!(
+                encode_with_records(mapping, n, &limits, FullRecords::NonBmpOnly)
+                    .unwrap()
+                    .data,
+                encode_records(mapping, n, &limits, false).unwrap().data
+            );
+            for policy in [
+                FullRecords::Always,
+                FullRecords::NonBmpOnly,
+                FullRecords::WhenNeeded,
+            ] {
+                let data = encode_with_records(mapping, n, &limits, policy)
+                    .unwrap()
+                    .data;
+                assert_eq!(&decode(&data, n, &limits).unwrap(), mapping);
+            }
+        }
+        let when = |m: &Mapping| {
+            records(
+                &encode_with_records(m, 13, &limits, FullRecords::WhenNeeded)
+                    .unwrap()
+                    .data,
+            )
+        };
+        // fontTools' set: format 4 only, plus (3,10) when format 4 is not enough.
+        assert_eq!(when(&bmp), [(0, 3), (3, 1)]);
+        assert_eq!(when(&supplementary), [(0, 3), (3, 1), (3, 10)]);
+        // U+FFFF lives only in format 12, so it is kept rather than dropped.
+        assert_eq!(when(&ffff), [(0, 3), (3, 1), (3, 10)]);
+        let data = encode_with_records(&bmp, 13, &limits, FullRecords::WhenNeeded)
+            .unwrap()
+            .data;
+        let format4 = encode(&bmp, 13, &limits).unwrap().data;
+        assert!(data.len() < format4.len());
+        assert_eq!(
+            records(&format4),
+            [(0, 3), (0, 4), (3, 1), (3, 10)],
+            "native default"
+        );
     }
 
     #[test]

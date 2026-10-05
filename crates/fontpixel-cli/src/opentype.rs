@@ -91,6 +91,8 @@ pub(super) struct VariantsArgs {
     #[arg(long, allow_hyphen_values = true)]
     notdef_lsb: Option<i16>,
     #[command(flatten)]
+    metadata: crate::outline_metadata::OutlineMetadataArguments,
+    #[command(flatten)]
     resources: ResourceArguments,
     #[command(flatten)]
     output: Output,
@@ -489,7 +491,15 @@ fn add_language_routes(
 }
 pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
     let mut report = Report::default();
-    let limits = a.resources.limits();
+    // Explicit metadata arguments and the name table built from them stay
+    // alive for the whole command; everything else runs on what remains.
+    let limits = {
+        let limits = a.resources.limits();
+        let reserved = a.metadata.reserved_bytes(limits.max_total_bytes)?;
+        codec_limits(&limits, reserved)?
+    };
+    let names = a.metadata.names(&limits)?;
+    let metadata = a.metadata.options();
     let mut input_budget = InputBudget::new(limits.clone());
     let mut v = Variants::new(load(a.base, &mut report, &mut input_budget)?);
     for s in &a.languages {
@@ -604,11 +614,12 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
         license: a.license,
         license_url: a.license_url,
         notdef,
+        names,
+        metadata,
         limits: sfnt::gsub::LayoutLimits {
             sfnt: sfnt_limits(&encode_limits),
             ..Default::default()
         },
-        ..Default::default()
     };
     let e = v.encode_owned(&o)?;
     drop(o);

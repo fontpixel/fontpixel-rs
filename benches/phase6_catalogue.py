@@ -170,18 +170,92 @@ def explicit_options(task, parsed):
         else:
             options['pcf_metadata_precedence'] = 'explicit-properties'
         return options
+    if kind == 'ttf':
+        fonts = sorted((parsed[str(Path(p).resolve())] for p in task['inputs']), key=lambda f: f.pixel_size)
+        ref = fonts[-1]; scale = UPEM / max(ref.pixel_size, 1)
+        return {
+            # ttfexport.py:62 sorts the strikes by pixel size (host input order here).
+            'inputs': [str(f.path.resolve()) for f in fonts],
+            # :103 + fontBuilder.py:440-490 setupNameTable.
+            'otb_name_record': fonttools_name_records(task),
+            # fontBuilder.py:145,147-148,154 _headDefaults; ttfexport.py:17-20,180.
+            'otb_head_flags': 3, 'otb_lowest_rec_ppem': 3,
+            'otb_created': FIXED_TIMESTAMP, 'otb_modified': FIXED_TIMESTAMP,
+            # :104-105 setupOS2 with fontBuilder.py:267-308 _getOS2Defaults.
+            'otb_os2_version': '3', 'otb_vendor': '????', 'otb_fs_type': 4, 'otb_fs_selection': 0,
+            'otb_break_char': 32,
+            # :107 setupPost(keepGlyphNames=False, isFixedPitch=0); fontBuilder.py:185-186.
+            'otb_post_names': 'omit', 'otb_fixed_pitch': 'false', 'otb_underline': '0,0',
+            # :75 setupCharacterMap -> fontBuilder.py:399-421 (format 12 only above U+FFFF).
+            'otb_cmap_unicode_full': 'when-needed',
+            # :65-71 glyph order '.notdef' + sorted code points; :84 .notdef advance, no bitmap.
+            'otb_glyph_order': 'codepoint',
+            'otb_notdef': 'empty', 'otb_notdef_advance': int(round(ref.pixel_size * scale / 2)),
+            # :76-80 empty glyf outlines; fontBuilder.py:167 maxZones=2.
+            'otb_outline_tables': 'empty-glyf', 'otb_max_zones': '2',
+            # fontTools _h_m_t_x.py:93-104 trailing equal-advance compaction.
+            'otb_hmtx': 'compact-trailing',
+            # :140-154 line metrics: widthMax = max DWIDTH, caret 0/1, zero extremes,
+            # the same record for hori and vert; :164-169 one index subtable per strike.
+            'otb_width_max': 'advance', 'otb_caret_slope': '0,1', 'otb_line_extremes': 'zero',
+            'otb_vertical_line_metrics': 'mirror-horizontal', 'otb_index_layout': 'spanning',
+        }
     if kind in VECTOR_KINDS:
         px = task['pixel_size']; unit = 1000 // max(px, 1)
         return {'notdef': 'empty', 'notdef_advance': max(unit * px // 2, 1), 'notdef_lsb': 0,
-                'vendor': '????'}
+                'vendor': '????',
+                # vectorize.py:309 setupNameTable(name_records(...)), fontBuilder.py:440-490.
+                'name_record': fonttools_name_records(task),
+                # vectorize.py:310-311 setupOS2 -> fontBuilder.py:267-308 _getOS2Defaults
+                # (fsType 4, fsSelection 0, usBreakChar 32, code pages 0).
+                'fs_type': 4, 'fs_selection': 0, 'break_char': 32, 'code_page_ranges': '0,0',
+                # vectorize.py:312 isFixedPitch=0; :315-317 FIXED_TIMESTAMP.
+                'fixed_pitch': 'false', 'created': FIXED_TIMESTAMP, 'modified': FIXED_TIMESTAMP,
+                # fontBuilder.py:167 maxZones=2; FontBuilder never writes gasp.
+                'max_zones': '2', 'gasp': 'omit',
+                # vectorize.py:286 setupCharacterMap -> fontBuilder.py:399-421.
+                'cmap_unicode_full': 'when-needed',
+                # vectorize.py:290-292 '.notdef', [dot], then sorted code points.
+                'glyph_order': 'codepoint',
+                **({'dot_glyph': 'after-notdef'} if task['shape'] == 'round' else {})}
     return {}
+
+
+UPEM = 1000  # ttfexport.py:16
+FIXED_TIMESTAMP = 3660681600  # ttfexport.py:17-20
+# ttfexport.py:24-41 name_records() keys in name ID order 0..6.
+NAME_KEYS = ('copyright', 'familyName', 'styleName', 'uniqueFontIdentifier', 'fullName', 'version', 'psName')
+
+
+def fonttools_name_records(task):
+    """Exact records of fontBuilder.py:440-490 setupNameTable(name_records(...)).
+
+    addMultilingualName writes a Windows 3/1/0x409 record and, through
+    _n_a_m_e.py:448-483 _makeMacName, a Mac 1/0/0 record when Mac Roman encodes
+    the text. The ltag fallback for other text is not reproduced: it raises.
+    """
+    names = {'copyright': task['copyright'], 'familyName': task['family'], 'styleName': task['style'],
+             'uniqueFontIdentifier': f"{task['family']}-{task['style']}-{task['font_version']}",
+             'fullName': f"{task['family']} {task['style']}",
+             'psName': f"{task['family']}-{task['style']}".replace(' ', ''), 'version': task['font_version']}
+    records = []
+    for name_id, key in enumerate(NAME_KEYS):
+        text = names[key]
+        text.encode('mac_roman')
+        records += [f'3/1/0x409/{name_id}={text}', f'1/0/0/{name_id}={text}']
+    return records
 
 
 def attach_profile(tasks, all_families, profile):
     if profile == 'default':
         return tasks
     parsed = {str(font.path.resolve()): font for family in all_families for font, _ in family['fonts']}
-    return [dict(task, explicit=explicit_options(task, parsed)) for task in tasks]
+    result = []
+    for task in tasks:
+        explicit = explicit_options(task, parsed)
+        # The bitmap TTF strike order is an input order, not a writer option.
+        result.append(dict(task, explicit=explicit, inputs=explicit.pop('inputs', task['inputs'])))
+    return result
 
 
 def jobfile(tasks, target):
@@ -199,6 +273,7 @@ def jobfile(tasks, target):
                 for key in ['style', 'full_name', 'postscript_name', 'font_version', 'copyright']:
                     lines.append(key + ' = ' + json.dumps(task[key]))
                 lines.extend(['otb_upm = 1000', 'otb_reference = "largest"', 'otb_rounding = "ties-even"'])
+                lines.extend(f'{key} = {toml_value(value)}' for key, value in task.get('explicit', {}).items())
             elif task.get('explicit') and not task['explicit'].get('pcf_copy'):
                 lines.append('[tasks.options]')
                 lines.extend(f'{key} = {toml_value(value)}' for key, value in task['explicit'].items())

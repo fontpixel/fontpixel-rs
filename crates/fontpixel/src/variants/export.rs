@@ -79,6 +79,9 @@ pub struct Options {
     pub names: Option<NameTable>,
     /// Glyph 0 policy; the default keeps the source/generated `.notdef`.
     pub notdef: super::NotdefPolicy,
+    /// Explicit head/OS/2/post/maxp/gasp/cmap and glyph-order controls; the
+    /// default reproduces the native tables.
+    pub metadata: super::MetadataOptions,
     /// Layout, source and output limits.
     pub limits: LayoutLimits,
 }
@@ -105,6 +108,7 @@ impl Default for Options {
             license_url: None,
             names: None,
             notdef: super::NotdefPolicy::Preserve,
+            metadata: super::MetadataOptions::default(),
             limits: LayoutLimits::default(),
         }
     }
@@ -118,6 +122,7 @@ pub struct Encoded {
     pub report: Report,
 }
 fn validate_names(o: &Options) -> Result<()> {
+    o.metadata.validate(o.flavor, o.shape)?;
     if o.names.is_some() {
         return Ok(());
     }
@@ -171,13 +176,27 @@ impl Notes {
         self.entries.iter().any(|e| e.code == code)
     }
     fn note(&mut self, budget: &Budget, code: &str, message: &str) -> Result<()> {
+        self.push(budget, Level::Warning, Impact::Loss, code, message)
+    }
+    /// An informational audit entry (no loss).
+    fn info(&mut self, budget: &Budget, code: &str, message: &str) -> Result<()> {
+        self.push(budget, Level::Info, Impact::None, code, message)
+    }
+    fn push(
+        &mut self,
+        budget: &Budget,
+        level: Level,
+        impact: Impact,
+        code: &str,
+        message: &str,
+    ) -> Result<()> {
         let (code, mut lease) = ledger::string(budget, code)?.into_parts();
         let (message, mut message_lease) = ledger::string(budget, message)?.into_parts();
         lease.merge(&mut message_lease)?;
         self.entries.push(Owned::from_parts(
             ReportEntry {
-                level: Level::Warning,
-                impact: Impact::Loss,
+                level,
+                impact,
                 code,
                 location: Default::default(),
                 message,
@@ -305,6 +324,56 @@ fn name_records(
         },
         lease,
     ))
+}
+/// Whether `record` holds exactly `value`, compared without allocating:
+/// UTF-16BE for Unicode and Windows Unicode encodings, ASCII for Mac Roman.
+fn record_holds(record: &NameRecord, value: &str) -> bool {
+    match (record.platform_id, record.encoding_id) {
+        (0, _) | (3, 0 | 1 | 10) => record
+            .value
+            .iter()
+            .copied()
+            .eq(value.encode_utf16().flat_map(u16::to_be_bytes)),
+        (1, 0) => value.is_ascii() && record.value == value.as_bytes(),
+        _ => false,
+    }
+}
+/// Info audit for explicit table controls, and Loss for each source name the
+/// default table would carry (family without `family`, copyright/license/URL
+/// without their overrides) that an exact name table omits or replaces.
+fn audit_metadata(base: &Font, o: &Options, notes: &mut Notes, budget: &Budget) -> Result<()> {
+    if o.metadata.requested() {
+        notes.info(
+            budget,
+            "variants.metadata_configuration",
+            "Explicit outline table controls applied; source model unchanged",
+        )?;
+    }
+    let Some(table) = &o.names else {
+        return Ok(());
+    };
+    for (id, source, overridden) in [
+        (0u16, &base.names.copyright, o.copyright.is_some()),
+        (1, &base.names.family, o.family.is_some()),
+        (13, &base.names.license, o.license.is_some()),
+        (14, &base.names.license_url, o.license_url.is_some()),
+    ] {
+        let Some(value) = source.as_deref().filter(|v| !v.is_empty() && !overridden) else {
+            continue;
+        };
+        if !table
+            .records
+            .iter()
+            .any(|r| r.name_id == id && record_holds(r, value))
+        {
+            notes.note(
+                budget,
+                "variants.metadata_name",
+                "The exact name table omits or replaces a source name field; source model unchanged",
+            )?;
+        }
+    }
+    Ok(())
 }
 /// Admitted deep copy of a caller-supplied name table.
 fn clone_names(budget: &Budget, names: &NameTable) -> Result<Owned<NameTable>> {
@@ -439,11 +508,51 @@ fn encode_planned(
         (None, Some(g)) => g,
         (None, None) => notdef(budget)?,
     };
+    audit_metadata(base, o, &mut notes, budget)?;
     let mut sources = Vector::with_capacity(budget, plan.glyphs.len().saturating_add(1))?;
     sources.push((".notdef", &*notdef))?;
     for (n, g) in &plan.glyphs {
         sources.push((n.as_str(), g))?;
     }
+    let reorder = o.metadata.glyph_order == super::GlyphOrder::Codepoint;
+    let after_notdef = o.metadata.dot_glyph == super::DotGlyph::AfterNotdef;
+    if (reorder || after_notdef) && !plan.gsub.features.is_empty() {
+        return Err(invalid(
+            "glyph order and dot position controls do not support regional alternates",
+        ));
+    }
+    // positions[p]: index in `sources` of planned glyph ID p (only when reordered).
+    let mut positions =
+        Vector::<u16>::with_capacity(budget, if reorder { sources.len() } else { 0 })?;
+    if reorder {
+        let mut keys = Vector::<(u32, u16)>::with_capacity(budget, plan.glyphs.len())?;
+        for id in 1..sources.len() {
+            keys.push((u32::MAX, id as u16))?;
+        }
+        for (&cp, &gid) in &plan.cmap {
+            if let Some(key) = keys.get_mut(usize::from(gid).wrapping_sub(1)) {
+                key.0 = key.0.min(cp);
+            }
+        }
+        keys.sort_unstable();
+        positions.resize(sources.len(), 0)?;
+        let mut ordered = Vector::with_capacity(budget, sources.len())?;
+        ordered.push(sources[0])?;
+        for (rank, &(_, id)) in keys.iter().enumerate() {
+            positions[usize::from(id)] = (rank + 1) as u16;
+            ordered.push(sources[usize::from(id)])?;
+        }
+        drop(keys);
+        sources = ordered;
+    }
+    // Final glyph ID of `sources[i]`: the dot moves to 1 and shifts the rest.
+    let final_id = |i: usize| -> u16 {
+        if after_notdef && i >= 1 {
+            i as u16 + 1
+        } else {
+            i as u16
+        }
+    };
     let shared = o.flavor == OutlineFlavor::TrueType && o.shape == Shape::Dot;
     let count = sources.len() + usize::from(shared);
     l.glyphs(count)?;
@@ -659,11 +768,23 @@ fn encode_planned(
                     )?;
                 }
                 let glyph = if shared && !generated_notdef {
-                    if let Some(rows) = &dot_rows {
+                    let mut glyph = if let Some(rows) = &dot_rows {
                         rows.glyph(i, &bitmap, &opts, dot_id, &gl, budget)?
                     } else {
                         glyf::Glyph::pixels_with_budget(&bitmap, &opts, dot_id, &gl, budget)?
+                    };
+                    if after_notdef && let glyf::Glyph::Composite(c) = &mut *glyph {
+                        // Components name the dot and source indices; move both
+                        // to their final IDs (dot first, the rest up by one).
+                        for k in &mut c.components {
+                            k.glyph_id = if k.glyph_id == dot_id {
+                                1
+                            } else {
+                                final_id(usize::from(k.glyph_id))
+                            };
+                        }
                     }
+                    glyph
                 } else {
                     let (contours, lease) =
                         outline::contours_with_budget(&bitmap, &opts, &gl.geometry, budget)?
@@ -752,7 +873,7 @@ fn encode_planned(
             ledger::tree::<u16, sbit::BitmapGlyph>(&mut bitmaps_tree, budget, bitmaps.len() + 1)?;
             bitmaps_heap.merge(&mut lease)?;
             bitmaps.insert(
-                i as u16,
+                final_id(i),
                 sbit::BitmapGlyph {
                     metrics,
                     bitmap: GlyphBitmap::Mono(rows),
@@ -790,6 +911,16 @@ fn encode_planned(
         })?;
         vertical_extents.push(Some(u16n((o.dot_size * scale as f64).round() as i64)?))?;
     }
+    if after_notdef {
+        // The dot was appended last; move it to glyph 1 in place.
+        tt[1..].rotate_right(1);
+        hm[1..].rotate_right(1);
+        extents[1..].rotate_right(1);
+        if vertical {
+            vm[1..].rotate_right(1);
+            vertical_extents[1..].rotate_right(1);
+        }
+    }
     let mut b = tables::Builder::new(
         if truetype {
             Flavor::TrueType
@@ -811,7 +942,14 @@ fn encode_planned(
             b.insert_charged(*b"loca", e.loca)?;
             b.insert(
                 *b"maxp",
-                tables::small(budget, || e.statistics.unhinted_maxp(count as u16))?,
+                tables::small(budget, || {
+                    let mut maxp = e.statistics.unhinted_maxp(count as u16)?;
+                    if let Some(zones) = o.metadata.max_zones {
+                        // maxZones follows version, numGlyphs and four maxima.
+                        maxp[14..16].copy_from_slice(&zones.to_be_bytes());
+                    }
+                    Ok(maxp)
+                })?,
             )?;
             (e.bounds, e.index_to_loc_format)
         }
@@ -871,6 +1009,10 @@ fn encode_planned(
     head[46..48].copy_from_slice(&3u16.to_be_bytes());
     head[48..50].copy_from_slice(&2i16.to_be_bytes());
     head[50..52].copy_from_slice(&loca_format.to_be_bytes());
+    if let Some([created, modified]) = o.metadata.timestamps {
+        head[20..28].copy_from_slice(&created.to_be_bytes());
+        head[28..36].copy_from_slice(&modified.to_be_bytes());
+    }
     b.insert(*b"head", head.into_owned())?;
     let mut h = Header::new(Axis::Horizontal);
     h.ascender = ascent;
@@ -935,13 +1077,54 @@ fn encode_planned(
         drop(cps);
         drop(cps_lease);
     }
+    let m = &o.metadata;
+    if let Some(ranges) = m.code_page_ranges {
+        os.code_page_ranges = Some(ranges);
+    }
+    if let Some(flags) = m.embedding_flags {
+        os.base.embedding_flags = flags;
+    }
+    if let Some(flags) = m.selection_flags {
+        os.base.selection_flags = flags;
+    }
+    if let (Some(value), Some(extension)) = (m.break_char, os.extension.as_mut()) {
+        extension.break_char = value;
+    }
     b.insert(*b"OS/2", os.encode_with_budget(l, budget)?)?;
     {
-        let (cmap, lease) =
-            sfnt::cmap::encode_with_budget(&plan.cmap, count as u16, l, budget)?.into_parts();
+        // Reordered or shifted glyph IDs: an admitted copy of the mapping.
+        let remapped = if reorder || after_notdef {
+            let lease = ledger::reserve_tree::<u32, u16>(budget, plan.cmap.len())?;
+            let map = plan
+                .cmap
+                .iter()
+                .map(|(&cp, &id)| {
+                    let index = if reorder {
+                        usize::from(positions[usize::from(id)])
+                    } else {
+                        usize::from(id)
+                    };
+                    (cp, final_id(index))
+                })
+                .collect::<BTreeMap<_, _>>();
+            Some(Owned::from_parts(map, lease))
+        } else {
+            None
+        };
+        let mapping = remapped.as_deref().unwrap_or(&plan.cmap);
+        let (cmap, lease) = sfnt::cmap::encode_records_with_budget(
+            mapping,
+            count as u16,
+            l,
+            budget,
+            m.cmap_full_records,
+        )?
+        .into_parts();
+        drop(remapped);
         b.charge(lease)?;
         b.insert_charged(*b"cmap", cmap.data)?;
     }
+    drop(positions);
     {
         let mut post = PostTable::default();
         let mut names_lease = budget.reserve(0)?;
@@ -966,15 +1149,18 @@ fn encode_planned(
             }
             if shared {
                 names.push(ledger::string(budget, "fontpixel.dot")?)?;
+                if after_notdef {
+                    names[1..].rotate_right(1);
+                }
             }
             let (names, mut lease) = names.into_owned()?.into_parts();
             names_lease.merge(&mut lease)?;
             post.names = Some(names);
         }
-        post.header.is_fixed_pitch = u32::from(matches!(
+        post.header.is_fixed_pitch = u32::from(m.fixed_pitch.unwrap_or(matches!(
             base.metrics.spacing,
             Some(crate::model::Spacing::Monospaced | crate::model::Spacing::CharacterCell)
-        ));
+        )));
         b.insert(*b"post", post.encode_with_budget(count as u16, l, budget)?)?;
         drop(post);
         drop(names_lease);
@@ -1030,7 +1216,7 @@ fn encode_planned(
                 .encode_with_budget(count as u16, &o.limits, budget)?,
         )?;
     }
-    {
+    if o.metadata.gasp == super::GaspPolicy::Write {
         let mut ranges = Vector::with_capacity(budget, 1)?;
         ranges.push(sfnt::gasp::Range {
             max_ppem: 65535,
