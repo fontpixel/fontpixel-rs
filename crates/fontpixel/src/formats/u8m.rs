@@ -1,6 +1,6 @@
 //! U8/M page-addressed glyphs and bounded radix-64 mapping trees.
 use super::device_common::*;
-use super::{Confidence, WriteOptions};
+use super::{Confidence, ModelCharge, WriteOptions};
 use crate::model::{Codepoint, Font, FontSet, Glyph, Property, PropertyValue};
 use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
@@ -303,9 +303,23 @@ fn page_record(at: usize, size: usize) -> Result<usize> {
 }
 /// Write native page tables and continuous pixel bits, then audit native readback.
 pub fn write(s: &FontSet, o: &WriteOptions, v: &U8mWriteOptions) -> Result<Written> {
+    write_charged(s, o, v, ModelCharge::Estimate)
+}
+impl U8mCodec {
+    /// [`write`](super::FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        write_charged(s, o, &self.write_options, ModelCharge::Reserved)
+    }
+}
+fn write_charged(
+    s: &FontSet,
+    o: &WriteOptions,
+    v: &U8mWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut report = Report::default();
     let result = (|| {
-        let mut budget = source_budget(s, &v.limits)?;
+        let mut budget = source_budget_for(s, &v.limits, charge)?;
         let converted = convert_gray(s, v.gray_threshold, &v.limits, &mut budget)?;
         let f = converted.single()?;
         let default = f

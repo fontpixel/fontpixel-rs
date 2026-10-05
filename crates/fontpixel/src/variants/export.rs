@@ -593,9 +593,36 @@ fn encode_planned(
     let mut total_commands = 0usize;
     let truetype = o.flavor == OutlineFlavor::TrueType;
     let mut tt = Nested::<glyf::Glyph>::with_capacity(budget, if truetype { count } else { 0 })?;
+    // CFF programs are encoded as each glyph is built, so only their bytes
+    // (not every glyph's path commands) stay live until the table is laid out.
     #[cfg(feature = "cff")]
-    let mut cff_glyphs =
-        Nested::<sfnt::cff::Glyph>::with_capacity(budget, if truetype { 0 } else { count })?;
+    let cff_limits = sfnt::cff::Limits {
+        sfnt: l.clone(),
+        ..Default::default()
+    };
+    #[cfg(feature = "cff")]
+    let cff_full_name: &str = if fullname.is_ascii() || (o.names.is_none() && o.full_name.is_some())
+    {
+        &fullname
+    } else {
+        &psname
+    };
+    #[cfg(feature = "cff")]
+    let mut cff = if truetype {
+        None
+    } else {
+        Some(sfnt::cff::Encoder::new(
+            &psname,
+            cff_full_name,
+            upm,
+            sfnt::cff::DotOptions {
+                cell_size: scale as f64,
+                diameter: o.dot_size * scale as f64,
+            },
+            &cff_limits,
+            budget,
+        )?)
+    };
     let mut bitmaps_tree = budget.reserve(0)?;
     let mut bitmaps_heap = budget.reserve(0)?;
     let mut bitmaps = BTreeMap::new();
@@ -834,7 +861,11 @@ fn encode_planned(
                         cl.max_total_commands,
                         "variant CFF commands",
                     )?;
-                    cff_glyphs.push(glyph)?;
+                    if let Some(cff) = cff.as_mut() {
+                        cff.glyph(&glyph)?;
+                    }
+                    // The path and its charge drop here; only the program stays.
+                    drop(glyph);
                 }
                 #[cfg(not(feature = "cff"))]
                 {
@@ -956,35 +987,9 @@ fn encode_planned(
         OutlineFlavor::Cff => {
             #[cfg(feature = "cff")]
             {
-                let full_name =
-                    if fullname.is_ascii() || (o.names.is_none() && o.full_name.is_some()) {
-                        ledger::string(budget, &*fullname)?
-                    } else {
-                        ledger::string(budget, &*psname)?
-                    };
-                let (full_name, mut lease) = full_name.into_parts();
-                let (postscript_name, mut ps_lease) =
-                    ledger::string(budget, &*psname)?.into_parts();
-                let (glyphs, mut glyphs_lease) = cff_glyphs.into_owned()?.into_parts();
-                lease.merge(&mut ps_lease)?;
-                lease.merge(&mut glyphs_lease)?;
-                let f = sfnt::cff::Font {
-                    postscript_name,
-                    full_name,
-                    units_per_em: upm,
-                    glyphs,
-                    dots: sfnt::cff::DotOptions {
-                        cell_size: scale as f64,
-                        diameter: o.dot_size * scale as f64,
-                    },
-                };
-                let cl = sfnt::cff::Limits {
-                    sfnt: l.clone(),
-                    ..Default::default()
-                };
-                let (e, table_lease) = tables::cff(&f, &cl, budget)?.into_parts();
-                drop(f);
-                drop(lease);
+                let encoder = cff.take().ok_or_else(|| invalid("CFF encoder missing"))?;
+                // Every encoder buffer but the table and maxp has dropped here.
+                let (e, table_lease) = encoder.finish()?.into_parts();
                 b.charge(table_lease)?;
                 b.insert_charged(*b"CFF ", e.data)?;
                 b.insert_charged(*b"maxp", e.maxp)?;

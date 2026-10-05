@@ -1,6 +1,8 @@
 //! RISC OS ZapFont and ZapRedraw UCS native chunks and translation tables.
 use super::w5a2_common::*;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::resources::{OutputBundle, ReadContext, Written};
 use std::collections::{BTreeMap, BTreeSet};
 /// Native container layout.
@@ -67,6 +69,12 @@ impl FormatReader<FontSet> for ZapfontCodec {
 impl FormatWriter<FontSet> for ZapfontCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
         write(s, o, &self.write_options)
+    }
+}
+impl ZapfontCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        write_charged(s, o, &self.write_options, ModelCharge::Reserved)
     }
 }
 /// Detect either exact native magic.
@@ -338,10 +346,18 @@ fn append_glyph(
 }
 /// Emit the native selected variant; chunked output always includes chunk zero.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &ZapfontWriteOptions) -> Result<Written> {
+    write_charged(s, o, p, ModelCharge::Estimate)
+}
+fn write_charged(
+    s: &FontSet,
+    o: &WriteOptions,
+    p: &ZapfontWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut report = Report::default();
     let result = (|| {
         let native = p.native();
-        let mut b = source(s, &native)?;
+        let mut b = source_for(s, &native, charge)?;
         b.add(o.primary_name.as_str().len().saturating_mul(2))?;
         let source = convert_gray(s, native.gray_threshold, &p.limits, &mut b)?;
         let f = source.single()?;

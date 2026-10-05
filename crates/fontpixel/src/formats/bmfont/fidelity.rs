@@ -147,6 +147,17 @@ pub(crate) fn properties_bytes(p: &crate::model::Properties) -> Result<usize> {
             .saturating_add(value(&p.value, 0)?))
     })
 }
+/// Container-level part of a source model estimate: its properties,
+/// `source_format` and font array.
+pub(crate) fn container_bytes(s: &crate::model::FontSet) -> Result<usize> {
+    Ok(properties_bytes(&s.properties)?
+        .saturating_add(s.source_format.as_ref().map_or(0, String::capacity))
+        .saturating_add(
+            s.fonts
+                .capacity()
+                .saturating_mul(std::mem::size_of::<Font>()),
+        ))
+}
 pub(crate) fn model_bytes(f: &Font) -> Result<usize> {
     let mut n = 4096usize
         .saturating_add(f.slot_count().saturating_mul(1024))
@@ -218,18 +229,21 @@ pub(crate) fn attach_asset(
 
 /// Preserve every affected source slot/code when a representability failure
 /// prevents any output. Resource failures retain their original typed category.
+/// `extra_bytes` is charged as given; the fonts' model estimate only when the
+/// writer charges its source (`charge`).
 pub(crate) fn failed_write<'a>(
     error: Error,
     format: &str,
     fonts: impl Iterator<Item = (usize, &'a Font)> + Clone,
-    extra_source_bytes: usize,
+    extra_bytes: usize,
     limits: &ResourceLimits,
+    charge: super::ModelCharge,
 ) -> Error {
     let Error::InvalidInput(message) = error else {
         return error;
     };
     let build = || -> Result<Report> {
-        let mut source = extra_source_bytes;
+        let mut source = 0usize;
         let mut count = 1usize;
         for (_, font) in fonts.clone() {
             source = source.saturating_add(model_bytes(font)?);
@@ -237,6 +251,7 @@ pub(crate) fn failed_write<'a>(
                 count = count.saturating_add(glyph.codepoints.len().max(1));
             }
         }
+        let source = extra_bytes.saturating_add(charge.of(source));
         let mut budget = Budget::new(source, limits)?;
         budget.add(count.saturating_mul(512).saturating_add(message.capacity()))?;
         let mut report = Report::default();

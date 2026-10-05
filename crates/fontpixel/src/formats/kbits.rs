@@ -1,6 +1,8 @@
 //! Native Bits'N'Picas 1.x binary fonts, including modified UTF-8 names.
 use super::editor_fidelity as fidelity;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::bitmap::{Bitmap, BitmapLimits, Gray8};
 use crate::model::{Codepoint, Font, FontSet, Glyph, GlyphBitmap, Property, PropertyValue, Vector};
 use crate::resources::{OutputBundle, ReadContext, Written};
@@ -41,14 +43,18 @@ impl FormatReader<FontSet> for KbitsCodec {
 }
 impl FormatWriter<FontSet> for KbitsCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, ModelCharge::Estimate)
+    }
+}
+impl KbitsCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, ModelCharge::Reserved)
+    }
+    fn write_charged(&self, s: &FontSet, o: &WriteOptions, charge: ModelCharge) -> Result<Written> {
         let changed = !s.properties.is_empty() || s.source_format.as_deref() != Some("kbits");
-        let reserve = fidelity::properties_bytes(&s.properties)?
-            .saturating_add(s.source_format.as_ref().map_or(0, String::capacity))
-            .saturating_add(
-                s.fonts
-                    .capacity()
-                    .saturating_mul(std::mem::size_of::<Font>()),
-            )
+        let reserve = charge
+            .of(fidelity::container_bytes(s)?)
             .saturating_add(if changed { 512 } else { 0 });
         let mut options = self.write_options.clone();
         options.limits.max_total_bytes = Budget::new(reserve, &options.limits)?.remaining();
@@ -59,9 +65,10 @@ impl FormatWriter<FontSet> for KbitsCodec {
                 s.fonts.iter().enumerate(),
                 reserve,
                 &self.write_options.limits,
+                charge,
             )
         })?;
-        let (b, mut r) = write(font, &options)?;
+        let (b, mut r) = write_charged(font, &options, charge)?;
         if changed {
             loss(
                 &mut r,
@@ -239,12 +246,21 @@ fn native(f: &Font, key: &str, default: i64) -> i64 {
 }
 /// Emit standard Kbits, reporting every model difference after bounded reread.
 pub fn write(f: &Font, o: &KbitsWriteOptions) -> Result<(Vec<u8>, Report)> {
-    write_inner(f, o)
-        .map_err(|e| fidelity::failed_write(e, "kbits", std::iter::once((0, f)), 0, &o.limits))
+    write_charged(f, o, ModelCharge::Estimate)
 }
-fn write_inner(f: &Font, o: &KbitsWriteOptions) -> Result<(Vec<u8>, Report)> {
+fn write_charged(
+    f: &Font,
+    o: &KbitsWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    write_inner(f, o, charge).map_err(|e| {
+        fidelity::failed_write(e, "kbits", std::iter::once((0, f)), 0, &o.limits, charge)
+    })
+}
+fn write_inner(f: &Font, o: &KbitsWriteOptions, charge: ModelCharge) -> Result<(Vec<u8>, Report)> {
     f.validate(&o.limits)?;
-    let source_bytes = fidelity::model_bytes(f)?;
+    // Held for the whole write; zero when the caller reserved the model.
+    let source_bytes = charge.of(fidelity::model_bytes(f)?);
     let mut budget = Budget::new(source_bytes, &o.limits)?;
     budget.temporary(4096)?;
     let mut name_limits = o.limits.clone();

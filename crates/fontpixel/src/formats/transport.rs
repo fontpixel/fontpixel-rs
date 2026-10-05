@@ -49,6 +49,19 @@ trait Budget: FormatWriter<FontSet> + Clone {
     fn write_owned_native(&self, fonts: FontSet, options: &WriteOptions) -> Result<Written> {
         self.write(&fonts, options)
     }
+    /// Whether [`write_reserved`](Self::write_reserved) skips this codec's
+    /// own estimate of the borrowed model.
+    fn reserves_model(&self) -> bool {
+        false
+    }
+    /// As [`write`](FormatWriter::write) when the caller has already reserved
+    /// the model's exact `retained_usage` outside this codec's limits: the
+    /// codec does not charge its estimate of that model again
+    /// ([`ModelCharge::Reserved`](super::ModelCharge::Reserved)). Only called
+    /// when [`reserves_model`](Self::reserves_model) is true.
+    fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+        self.write(fonts, options)
+    }
 }
 
 #[allow(dead_code)]
@@ -75,6 +88,28 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
         self.0.validate_native(fonts, options, limits)
     }
     fn write_owned(&self, fonts: FontSet, options: &WriteOptions) -> OwnedWrite<FontSet> {
+        if self.0.reserves_model() {
+            // The registry's borrowing route with the same limits (the
+            // allowance less the model's exact retained usage); the model stays
+            // live until the writer returns. The codec is told the model is
+            // reserved, so it charges no estimate of it on top.
+            let Some(common) = &options.transport_limits else {
+                return OwnedWrite::Declined(fonts);
+            };
+            let result = (|| {
+                let model = fonts
+                    .retained_usage(common.resources.max_total_bytes)?
+                    .bytes;
+                let common = common.without_model(model)?;
+                let limits = self.0.budget().intersect(&common);
+                let mut reserved = options.clone();
+                reserved.transport_limits = Some(common);
+                fonts.validate(&limits.resources)?;
+                self.0.restricted(&limits).write_reserved(&fonts, &reserved)
+            })();
+            drop(fonts);
+            return OwnedWrite::Written(result);
+        }
         if !self.0.owns_model() {
             return OwnedWrite::Declined(fonts);
         }
@@ -129,7 +164,7 @@ pub(super) fn writer<C: Budget + 'static>(codec: C) -> Box<dyn FormatWriter<Font
 
 #[allow(unused_macros)]
 macro_rules! resource_codec {
-    ($module:ident, $codec:ident, $($path:ident).+ $(; $output:ident)?) => {
+    ($module:ident, $codec:ident, $($path:ident).+ $(; $output:ident)? $(=> $reserved:ident)?) => {
         impl Budget for super::$module::$codec {
             fn budget(&self) -> TransportLimits {
                 TransportLimits {
@@ -143,6 +178,14 @@ macro_rules! resource_codec {
                 $(codec.write_options.$output = codec.write_options.$output.min(limits.max_output_bytes);)?
                 codec
             }
+            $(
+                fn reserves_model(&self) -> bool {
+                    true
+                }
+                fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+                    self.$reserved(fonts, options)
+                }
+            )?
         }
     };
     (@output $this:ident, $output:ident) => { $this.write_options.$output };
@@ -156,10 +199,10 @@ resource_codec!(amiga, AmigaCodec, write_options.limits; max_output_bytes);
 resource_codec!(bbc, BbcCodec, write_options.limits);
 
 #[cfg(feature = "beos")]
-resource_codec!(beos, BeosCodec, write_options.limits; max_output_bytes);
+resource_codec!(beos, BeosCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "bmfont")]
-resource_codec!(bmfont, BmfontCodec, write_options.limits);
+resource_codec!(bmfont, BmfontCodec, write_options.limits => write_reserved);
 
 #[cfg(feature = "c")]
 resource_codec!(c, CCodec, write_options.limits);
@@ -222,7 +265,7 @@ resource_codec!(fontx2, Fontx2Codec, write_options.limits; max_output_bytes);
 resource_codec!(fzx, FzxCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "gdr")]
-resource_codec!(gdr, GdrCodec, write_options.limits; max_output_bytes);
+resource_codec!(gdr, GdrCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "gem")]
 resource_codec!(gem, GemCodec, write_options.limits; max_output_bytes);
@@ -267,7 +310,7 @@ resource_codec!(iigs, IigsCodec, write_options.limits; max_output_bytes);
 resource_codec!(image, ImageCodec, write_options.limits);
 
 #[cfg(feature = "kbits")]
-resource_codec!(kbits, KbitsCodec, write_options.limits);
+resource_codec!(kbits, KbitsCodec, write_options.limits => write_reserved);
 
 #[cfg(feature = "kbitx")]
 resource_codec!(kbitx, KbitxCodec, write_options.limits; max_output_bytes);
@@ -303,7 +346,7 @@ resource_codec!(pcgeos, PcgeosCodec, write_options.limits; max_output_bytes);
 resource_codec!(pcr, PcrCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "pf2")]
-resource_codec!(pf2, Pf2Codec, write_options.limits; max_output_bytes);
+resource_codec!(pf2, Pf2Codec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "pfr")]
 resource_codec!(pfr, PfrCodec, write_options.limits; max_output_bytes);
@@ -336,7 +379,7 @@ resource_codec!(printshop, PrintshopCodec, write_options.limits; max_output_byte
 resource_codec!(psf, PsfCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "psf2txt")]
-resource_codec!(psf2txt, Psf2txtCodec, write_options.limits; max_output_bytes);
+resource_codec!(psf2txt, Psf2txtCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "pxl")]
 resource_codec!(pxl, PxlCodec, write_options.limits; max_output_bytes);
@@ -360,7 +403,7 @@ resource_codec!(rockbox, RockboxCodec, write_options.limits; max_output_bytes);
 resource_codec!(sbf, SbfCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "sfd")]
-resource_codec!(sfd, SfdCodec, write_options.limits);
+resource_codec!(sfd, SfdCodec, write_options.limits => write_reserved);
 
 #[cfg(feature = "sfont")]
 resource_codec!(sfont, SfontCodec, write_options.limits; max_output_bytes);
@@ -369,10 +412,10 @@ resource_codec!(sfont, SfontCodec, write_options.limits; max_output_bytes);
 resource_codec!(signum, SignumCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "snf")]
-resource_codec!(snf, SnfCodec, write_options.limits; max_output_bytes);
+resource_codec!(snf, SnfCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "ssfn")]
-resource_codec!(ssfn, SsfnCodec, write_options.limits; max_output_bytes);
+resource_codec!(ssfn, SsfnCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "symbos")]
 resource_codec!(symbos, SymbosCodec, write_options.limits; max_output_bytes);
@@ -381,13 +424,13 @@ resource_codec!(symbos, SymbosCodec, write_options.limits; max_output_bytes);
 resource_codec!(tasprint, TasprintCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "u8m")]
-resource_codec!(u8m, U8mCodec, write_options.limits; max_output_bytes);
+resource_codec!(u8m, U8mCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "vfont")]
 resource_codec!(vfont, VfontCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "vlw")]
-resource_codec!(vlw, VlwCodec, write_options.limits; max_output_bytes);
+resource_codec!(vlw, VlwCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "vtfont")]
 resource_codec!(vtfont, VtfontCodec, write_options.limits; max_output_bytes);
@@ -411,7 +454,7 @@ resource_codec!(xerox, XeroxCodec, write_options.limits; max_output_bytes);
 resource_codec!(yaff, YaffCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "zapfont")]
-resource_codec!(zapfont, ZapfontCodec, write_options.limits);
+resource_codec!(zapfont, ZapfontCodec, write_options.limits => write_reserved);
 
 #[cfg(feature = "svg")]
 resource_codec!(svg, SvgCodec, write_options.limits.resources; max_output_bytes);
@@ -466,6 +509,12 @@ impl Budget for super::embedded::EmbeddedCodec {
         codec.write_options.limits.sfnt.resources = limits.resources.clone();
         codec
     }
+    fn reserves_model(&self) -> bool {
+        true
+    }
+    fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+        super::embedded::EmbeddedCodec::write_reserved(self, fonts, options)
+    }
 }
 
 #[cfg(feature = "bdf")]
@@ -509,5 +558,141 @@ impl Budget for super::bdf::BdfCodec {
             },
         )?);
         Ok(())
+    }
+}
+
+#[cfg(all(
+    test,
+    feature = "snf",
+    feature = "u8m",
+    feature = "kbits",
+    feature = "pf2",
+    feature = "color"
+))]
+mod tests {
+    //! `Registry::write_owned` for codecs that keep the model until they
+    //! return: the model's exact retained usage is reserved once, the codec
+    //! charges no estimate of it, and output and report equal the borrowing
+    //! route.
+    use super::super::{TransportLimits, WriteOptions};
+    use crate::model::{Codepoint, Font, Glyph, Vector};
+    use crate::{Bitmap, Error, FontSet, Report, ResourceLimits, ResourcePath, Result};
+
+    const DEFAULT: usize = 256 * 1024 * 1024;
+
+    /// Smallest accepted total; its output equals the output at `DEFAULT`
+    /// and one byte less is a `ResourceLimit` error.
+    fn minimal<T: PartialEq + std::fmt::Debug>(run: impl Fn(usize) -> Result<T>) -> (usize, T) {
+        let expected = run(DEFAULT).unwrap();
+        let (mut lo, mut hi) = (0usize, DEFAULT);
+        while hi - lo > 1 {
+            let mid = lo + (hi - lo) / 2;
+            if run(mid).is_ok() {
+                hi = mid;
+            } else {
+                lo = mid;
+            }
+        }
+        let at = run(hi).unwrap();
+        assert_eq!(at, expected, "minimal total changed the output");
+        // Legacy writers carry the limit inside their omission report.
+        match run(hi - 1) {
+            Err(Error::ResourceLimit { .. }) => {}
+            Err(Error::ReportedErrors(r))
+                if r.entries
+                    .last()
+                    .is_some_and(|e| e.message.contains("exceeds configured limit")) => {}
+            other => panic!("one byte short must be a resource error: {other:?}"),
+        }
+        (hi, at)
+    }
+
+    fn options(name: &str, total: usize) -> WriteOptions {
+        let mut o = WriteOptions::new(ResourcePath::new(name).unwrap());
+        o.transport_limits = Some(TransportLimits {
+            resources: ResourceLimits {
+                max_total_bytes: total,
+                ..ResourceLimits::default()
+            },
+            max_output_bytes: total,
+        });
+        o
+    }
+
+    /// One strike whose clones retain exactly what it does.
+    fn model() -> FontSet {
+        let mut f = Font::default();
+        f.metrics.pixel_size = Some(8);
+        f.metrics.ascent = Some(7);
+        f.metrics.descent = Some(1);
+        f.names.family = Some("Ledger".into());
+        for (i, pattern) in ["#.\n##", "###\n#.#\n###", "#.#\n.#.\n#.#", "##\n##"]
+            .into_iter()
+            .enumerate()
+        {
+            let mut g = Glyph::new(pattern.parse::<Bitmap>().unwrap());
+            g.codepoints = vec![Codepoint::Unicode(0x41 + i as u32)];
+            g.metrics.advance = Some(Vector::new(4, 0));
+            f.add_glyph(g).unwrap();
+        }
+        FontSet::from(f).clone()
+    }
+
+    #[test]
+    fn reserved_writers_charge_the_model_exactly_once() {
+        let registry = crate::registry();
+        let set = model();
+        let used = set.retained_usage(usize::MAX).unwrap().bytes;
+        let limits = ResourceLimits::default();
+        let font = set.single().unwrap();
+        // What each codec charges for the model on its own ledger when the
+        // caller has not reserved it.
+        let legacy = super::super::legacy_common::source_budget(&set, &limits)
+            .unwrap()
+            .used
+            - 1024;
+        let editor = super::super::editor_fidelity::model_bytes(font).unwrap()
+            + super::super::editor_fidelity::container_bytes(&set).unwrap();
+        let pf2 = super::super::w42_common::source_cost(font, &limits).unwrap();
+        for (id, name, estimate) in [
+            ("snf", "a.snf", legacy),
+            ("u8m", "a.u8m", legacy),
+            ("kbits", "a.kbits", editor),
+            ("pf2", "a.pf2", pf2),
+        ] {
+            let (owned, written) = minimal(|total| {
+                registry.write_owned(set.clone(), id, &options(name, total), Report::default())
+            });
+            let (borrowed, expected) = minimal(|total| {
+                registry.write_with_report(&set, id, &options(name, total), Report::default())
+            });
+            assert_eq!(written, expected, "{id}");
+            // The borrowing route still charges the codec's estimate; the
+            // owned route charges the exact model in its place.
+            assert_eq!(owned, borrowed - estimate + used, "{id}");
+        }
+    }
+
+    #[test]
+    fn reserved_color_skips_only_the_model_admission() {
+        let registry = crate::registry();
+        let set = model();
+        let used = set.retained_usage(usize::MAX).unwrap().bytes;
+        let (owned, written) = minimal(|total| {
+            registry.write_owned(
+                set.clone(),
+                "color",
+                &options("a.ttf", total),
+                Report::default(),
+            )
+        });
+        let (borrowed, expected) = minimal(|total| {
+            registry.write_with_report(&set, "color", &options("a.ttf", total), Report::default())
+        });
+        assert_eq!(written, expected);
+        assert!(
+            owned > used && owned <= borrowed + used,
+            "{owned} {borrowed} {used}"
+        );
     }
 }

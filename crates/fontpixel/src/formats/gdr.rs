@@ -87,3 +87,9 @@ impl FormatWriter<FontSet> for GdrCodec {
         write(s, w, &self.write_options)
     }
 }
+impl GdrCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, w: &WriteOptions) -> Result<Written> {
+        writer::write_charged(s, w, &self.write_options, super::ModelCharge::Reserved)
+    }
+}

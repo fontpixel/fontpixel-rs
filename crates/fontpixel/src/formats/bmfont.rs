@@ -1,6 +1,8 @@
 //! AngelCode text/XML/binary v3 and Jam3 JSON descriptors with bounded PNG pages.
 use super::editor_fidelity as fidelity;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::bitmap::{Bitmap, BitmapLimits, Gray8};
 use crate::model::{Codepoint, Font, FontSet, Glyph, GlyphBitmap, Property, PropertyValue, Vector};
 use crate::resources::{OutputAsset, OutputBundle, ReadContext, ResourcePath, Written};
@@ -85,14 +87,18 @@ impl FormatReader<FontSet> for BmfontCodec {
 }
 impl FormatWriter<FontSet> for BmfontCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, ModelCharge::Estimate)
+    }
+}
+impl BmfontCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, ModelCharge::Reserved)
+    }
+    fn write_charged(&self, s: &FontSet, o: &WriteOptions, charge: ModelCharge) -> Result<Written> {
         let changed = !s.properties.is_empty() || s.source_format.as_deref() != Some("bmfont");
-        let reserve = fidelity::properties_bytes(&s.properties)?
-            .saturating_add(s.source_format.as_ref().map_or(0, String::capacity))
-            .saturating_add(
-                s.fonts
-                    .capacity()
-                    .saturating_mul(std::mem::size_of::<Font>()),
-            )
+        let reserve = charge
+            .of(fidelity::container_bytes(s)?)
             .saturating_add(if changed { 512 } else { 0 });
         let mut options = self.write_options.clone();
         options.limits.max_total_bytes = Budget::new(reserve, &options.limits)?.remaining();
@@ -103,9 +109,10 @@ impl FormatWriter<FontSet> for BmfontCodec {
                 s.fonts.iter().enumerate(),
                 reserve,
                 &self.write_options.limits,
+                charge,
             )
         })?;
-        let mut w = write(font, &o.primary_name, &options)?;
+        let mut w = write_charged(font, &o.primary_name, &options, charge)?;
         if changed {
             loss(
                 &mut w.report,
@@ -155,8 +162,17 @@ pub fn read(c: &mut ReadContext<'_>, o: &BmfontReadOptions) -> Result<(Font, Rep
 }
 /// Encode one strike and PNG pages as an in-memory output bundle.
 pub fn write(f: &Font, primary: &ResourcePath, o: &BmfontWriteOptions) -> Result<Written> {
-    writer::write(f, primary, o)
-        .map_err(|e| fidelity::failed_write(e, "bmfont", std::iter::once((0, f)), 0, &o.limits))
+    write_charged(f, primary, o, ModelCharge::Estimate)
+}
+fn write_charged(
+    f: &Font,
+    primary: &ResourcePath,
+    o: &BmfontWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
+    writer::write(f, primary, o, charge).map_err(|e| {
+        fidelity::failed_write(e, "bmfont", std::iter::once((0, f)), 0, &o.limits, charge)
+    })
 }
 fn invalid(m: impl std::fmt::Display) -> Error {
     Error::InvalidInput(format!("BMFONT: {m}"))

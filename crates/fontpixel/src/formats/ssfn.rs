@@ -1,6 +1,8 @@
 //! Native SFN2/SFNC raster fragments and the author's ASCII source representation.
 use super::w5e2_outline_common as c;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, ResourceLimits, Result};
 mod ascii;
@@ -89,12 +91,27 @@ pub fn read(c: &mut ReadContext<'_>, _: &SsfnReadOptions) -> Result<(FontSet, Re
 }
 /// Encode native fragments and audit every changed model field.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &SsfnWriteOptions) -> Result<Written> {
+    write_charged(s, o, p, ModelCharge::Estimate)
+}
+impl SsfnCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        write_charged(s, o, &self.write_options, ModelCharge::Reserved)
+    }
+}
+fn write_charged(
+    s: &FontSet,
+    o: &WriteOptions,
+    p: &SsfnWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     c::output(
         s,
         o,
         &p.limits,
         p.max_output_bytes,
         "ssfn",
+        charge,
         |b, r| {
             let converted = if p.gray_threshold.is_some() {
                 c::convert_gray(s, p.gray_threshold, &p.limits, b)?

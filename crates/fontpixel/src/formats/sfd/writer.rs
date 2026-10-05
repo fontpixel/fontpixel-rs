@@ -13,18 +13,19 @@ fn slot(g: &Glyph, default: usize) -> Result<i64> {
         _ => i64::try_from(default).map_err(invalid),
     }
 }
-pub(super) fn write(set: &FontSet, o: &SfdWriteOptions) -> Result<(Vec<u8>, Report)> {
+pub(super) fn write(
+    set: &FontSet,
+    o: &SfdWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
     set.validate(&o.limits)?;
-    let source_bytes = set.fonts.iter().try_fold(
-        fidelity::properties_bytes(&set.properties)?
-            .saturating_add(set.source_format.as_ref().map_or(0, String::capacity))
-            .saturating_add(
-                set.fonts
-                    .capacity()
-                    .saturating_mul(std::mem::size_of::<Font>()),
-            ),
-        |n, f| Ok::<_, Error>(n.saturating_add(fidelity::model_bytes(f)?)),
-    )?;
+    // Held for the whole write; zero when the caller reserved the model.
+    let source_bytes = charge.of(set
+        .fonts
+        .iter()
+        .try_fold(fidelity::container_bytes(set)?, |n, f| {
+            Ok::<_, Error>(n.saturating_add(fidelity::model_bytes(f)?))
+        })?);
     let mut budget = Budget::new(source_bytes, &o.limits)?;
     budget.add(
         set.fonts

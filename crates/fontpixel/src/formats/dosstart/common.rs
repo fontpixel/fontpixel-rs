@@ -1,6 +1,6 @@
 //! Bounded implementation support shared by eight small native font formats.
 use super::legacy_common::{
-    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, mono, source_budget,
+    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, mono, source_budget_for,
 };
 use super::{Confidence, WriteOptions};
 use crate::bitmap::{Bitmap, Bounds, Mono};
@@ -476,9 +476,20 @@ pub fn write(
     opt: &NativeWriteOptions,
     id: &str,
 ) -> Result<Written> {
+    write_charged(set, o, opt, id, super::ModelCharge::Estimate)
+}
+/// [`write`] with the source model charged as `charge` says.
+#[allow(dead_code)]
+pub(crate) fn write_charged(
+    set: &FontSet,
+    o: &WriteOptions,
+    opt: &NativeWriteOptions,
+    id: &str,
+    charge: super::ModelCharge,
+) -> Result<Written> {
     let mut report = Report::default();
     let result = (|| {
-        let mut budget = source_budget(set, &opt.limits)?;
+        let mut budget = source_budget_for(set, &opt.limits, charge)?;
         let source = convert_gray(set, opt.gray_threshold, &opt.limits, &mut budget)?;
         let f = source.single()?;
         let mut out = Output::new(opt);

@@ -1,7 +1,7 @@
 //! Checked scalar, allocation and full-model audit support for SSFN/PFR.
 use super::WriteOptions;
 pub use super::legacy_common::{
-    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, source_budget,
+    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, source_budget_for,
 };
 use crate::model::{FontSet, Properties, PropertyValue};
 use crate::resources::{OutputBundle, ReadContext, Written};
@@ -155,11 +155,12 @@ pub fn output(
     l: &ResourceLimits,
     max: usize,
     id: &str,
+    charge: super::ModelCharge,
     encode: impl FnOnce(&mut Budget, &mut Report) -> Result<Vec<u8>>,
     decode: impl FnOnce(&[u8], &ResourceLimits, &mut Budget, &mut Report) -> Result<FontSet>,
 ) -> Result<Written> {
     s.validate(l)?;
-    let mut budget = source_budget(s, l)?;
+    let mut budget = source_budget_for(s, l, charge)?;
     let mut report = Report::default();
     let result = (|| {
         let b = encode(&mut budget, &mut report)?;

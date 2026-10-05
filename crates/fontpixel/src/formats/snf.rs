@@ -1,6 +1,8 @@
 //! X11 SNF v4, including machine bitfields, independent bitmap layout and properties.
 use super::legacy_common::*;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 pub use crate::bitmap::ByteOrder;
 use crate::bitmap::{Bitmap, Bounds, ByteLayout, Mono};
 use crate::model::{Codepoint, Font, FontSet, Glyph, Property, PropertyValue, Vector};
@@ -70,6 +72,12 @@ impl FormatReader<FontSet> for SnfCodec {
 impl FormatWriter<FontSet> for SnfCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
         write(s, o, &self.write_options)
+    }
+}
+impl SnfCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        write_charged(s, o, &self.write_options, ModelCharge::Reserved)
     }
 }
 const LAYOUT: &str = "_FONTPIXEL_SNF_BITMAP_FORMAT";
@@ -524,11 +532,12 @@ fn encode(
     s: &FontSet,
     w: &WriteOptions,
     o: &SnfWriteOptions,
+    charge: ModelCharge,
     report: &mut Report,
 ) -> Result<OutputBundle> {
     let source = s;
     stride(o.bitmap, 0)?;
-    let mut budget = source_budget(s, &o.limits)?;
+    let mut budget = source_budget_for(s, &o.limits, charge)?;
     let converted = convert_gray(s, o.gray_threshold, &o.limits, &mut budget)?;
     let s = converted.as_ref();
     let f = s.single()?;
@@ -813,7 +822,15 @@ fn stride(l: ByteLayout, w: u32) -> Result<usize> {
 
 /// Encode and enforce strict mode before returning any output assets.
 pub fn write(s: &FontSet, w: &WriteOptions, o: &SnfWriteOptions) -> Result<Written> {
+    write_charged(s, w, o, ModelCharge::Estimate)
+}
+fn write_charged(
+    s: &FontSet,
+    w: &WriteOptions,
+    o: &SnfWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut report = Report::default();
-    let result = encode(s, w, o, &mut report);
+    let result = encode(s, w, o, charge, &mut report);
     finish(result, report, "snf", w.strict)
 }

@@ -846,6 +846,31 @@ pub trait FormatWriter<M>: Send + Sync {
     }
 }
 
+/// Who accounts for the borrowed source model of a native writer.
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum ModelCharge {
+    /// The writer charges its own estimate of the model, as every direct call
+    /// and the plain registry route do.
+    Estimate,
+    /// The caller has already reserved the model's exact `retained_usage`
+    /// outside the writer's limits, so the writer must not charge it again.
+    /// It still performs the same validation and charges everything it
+    /// allocates itself (copies, readback models, output, diagnostics).
+    Reserved,
+}
+
+#[allow(dead_code)]
+impl ModelCharge {
+    /// `estimate` when the writer charges the model, otherwise zero.
+    pub(crate) fn of(self, estimate: usize) -> usize {
+        match self {
+            Self::Estimate => estimate,
+            Self::Reserved => 0,
+        }
+    }
+}
+
 /// Outcome of [`FormatWriter::write_owned`].
 #[derive(Debug)]
 pub enum OwnedWrite<M> {
@@ -1242,7 +1267,10 @@ impl Registry<crate::FontSet> {
     /// Every other writer, and any gzip-named output (whose envelope replays the
     /// writer with the model), has the model's `retained_usage` removed from the
     /// transport allowance and runs the borrowing route; the model drops when it
-    /// returns. Without transport limits the writer's own budget applies to
+    /// returns. Native writers that would otherwise charge their own estimate of
+    /// that model (the legacy-aggregate and editor families, `pf2` and the
+    /// embedded bitmap writers) are told it is reserved, so they charge it only
+    /// through this exact reservation. Without transport limits the writer's own budget applies to
     /// everything except the model, on either route.
     ///
     /// [`FontSet::retained_usage`]: crate::FontSet::retained_usage
@@ -1271,25 +1299,10 @@ impl Registry<crate::FontSet> {
         };
         let mut reserved = options.clone();
         if let Some(limits) = &mut reserved.transport_limits {
-            let limit = limits.resources.max_total_bytes;
-            let model = fonts.retained_usage(limit)?.bytes;
-            let error = || Error::ResourceLimit {
-                resource: "writer model bytes",
-                limit,
-            };
-            let resources = &mut limits.resources;
-            resources.max_total_bytes = limit.checked_sub(model).ok_or_else(error)?;
-            resources.max_input_bytes = resources.max_input_bytes.min(resources.max_total_bytes);
-            resources.max_resource_bytes =
-                resources.max_resource_bytes.min(resources.max_total_bytes);
-            resources.max_decompressed_bytes = resources
-                .max_decompressed_bytes
-                .min(resources.max_total_bytes);
-            resources.max_table_bytes = resources.max_table_bytes.min(resources.max_total_bytes);
-            limits.max_output_bytes = limits
-                .max_output_bytes
-                .checked_sub(model)
-                .ok_or_else(error)?;
+            let model = fonts
+                .retained_usage(limits.resources.max_total_bytes)?
+                .bytes;
+            *limits = limits.without_model(model)?;
         }
         let result = writer.write(&fonts, &reserved);
         let written = Self::complete(writer, result, Some(&fonts), &reserved, report);

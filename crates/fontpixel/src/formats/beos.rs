@@ -1,6 +1,8 @@
 //! BeOS bitmap fonts: sparse Unicode hash tables, float metrics and nibble coverage.
 use super::legacy_common::*;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::bitmap::{Bitmap, Gray8};
 use crate::model::{
     Codepoint, Font, FontSet, Glyph, GlyphBitmap, Property, PropertyValue, Rational, Vector,
@@ -84,6 +86,12 @@ impl FormatReader<FontSet> for BeosCodec {
 impl FormatWriter<FontSet> for BeosCodec {
     fn write(&self, s: &FontSet, w: &WriteOptions) -> Result<Written> {
         write(s, w, &self.write_options)
+    }
+}
+impl BeosCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, w: &WriteOptions) -> Result<Written> {
+        write_charged(s, w, &self.write_options, ModelCharge::Reserved)
     }
 }
 fn word(b: &[u8], at: usize) -> Result<u16> {
@@ -332,8 +340,16 @@ fn parse(
 }
 /// Encode all physical glyphs and bounded collision chains, then audit the reread.
 pub fn write(s: &FontSet, w: &WriteOptions, o: &BeosWriteOptions) -> Result<Written> {
+    write_charged(s, w, o, ModelCharge::Estimate)
+}
+fn write_charged(
+    s: &FontSet,
+    w: &WriteOptions,
+    o: &BeosWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut r = Report::default();
-    let result = encode(s, w, o, &mut r);
+    let result = encode(s, w, o, charge, &mut r);
     finish(result, r, "beos", w.strict)
 }
 fn find_free(parent: &mut [usize], mut at: usize) -> usize {
@@ -352,9 +368,10 @@ fn encode(
     s: &FontSet,
     w: &WriteOptions,
     o: &BeosWriteOptions,
+    charge: ModelCharge,
     r: &mut Report,
 ) -> Result<OutputBundle> {
-    let mut budget = source_budget(s, &o.limits)?;
+    let mut budget = source_budget_for(s, &o.limits, charge)?;
     if s.fonts.len() != 1 {
         return Err(invalid("BeOS output requires one selected strike"));
     }

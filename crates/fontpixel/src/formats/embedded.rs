@@ -3,7 +3,9 @@
 //! These hooks extract physical strikes. They do not claim general vector font
 //! rasterization or resource-fork support. Low-level editable tables live in
 //! [`crate::sfnt::bitmap`].
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::bitmap::{Bitmap, Bounds};
 use crate::model::{
     Codepoint, Font, FontNames, FontSet, Glyph, GlyphBitmap, Property, PropertyValue, Spacing,
@@ -240,15 +242,33 @@ impl FormatReader<FontSet> for EmbeddedCodec {
 }
 impl FormatWriter<FontSet> for EmbeddedCodec {
     fn write(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+        self.write_charged(fonts, options, ModelCharge::Estimate)
+    }
+}
+impl EmbeddedCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(
+        &self,
+        fonts: &FontSet,
+        options: &WriteOptions,
+    ) -> Result<Written> {
+        self.write_charged(fonts, options, ModelCharge::Reserved)
+    }
+    fn write_charged(
+        &self,
+        fonts: &FontSet,
+        options: &WriteOptions,
+        charge: ModelCharge,
+    ) -> Result<Written> {
         #[cfg(feature = "color")]
         if self.kind == sbit::Kind::Color {
-            let (bytes, report) = write_color(fonts, &self.color_write_options)?;
+            let (bytes, report) = write_color_charged(fonts, &self.color_write_options, charge)?;
             return Ok(Written {
                 output: OutputBundle::single(options.primary_name.clone(), bytes),
                 report,
             });
         }
-        let (bytes, report) = write(fonts, self.kind, &self.write_options)?;
+        let (bytes, report) = write_charged(fonts, self.kind, &self.write_options, charge)?;
         Ok(Written {
             output: OutputBundle::single(options.primary_name.clone(), bytes),
             report,
@@ -1384,7 +1404,15 @@ pub fn write(
     kind: sbit::Kind,
     options: &EmbeddedWriteOptions,
 ) -> Result<(Vec<u8>, Report)> {
-    let result = write_impl(fonts, kind, options, false)?;
+    write_charged(fonts, kind, options, ModelCharge::Estimate)
+}
+fn write_charged(
+    fonts: &FontSet,
+    kind: sbit::Kind,
+    options: &EmbeddedWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    let result = write_impl(fonts, kind, options, false, charge)?;
     #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
         color_readback(&result.0, &options.limits)?;
@@ -1396,6 +1424,14 @@ pub fn write(
 /// The returned loss report includes representation and shared-metric changes.
 #[cfg(feature = "color")]
 pub fn write_color(fonts: &FontSet, options: &ColorWriteOptions) -> Result<(Vec<u8>, Report)> {
+    write_color_charged(fonts, options, ModelCharge::Estimate)
+}
+#[cfg(feature = "color")]
+fn write_color_charged(
+    fonts: &FontSet,
+    options: &ColorWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
     let result = write_impl(
         fonts,
         sbit::Kind::Color,
@@ -1404,6 +1440,7 @@ pub fn write_color(fonts: &FontSet, options: &ColorWriteOptions) -> Result<(Vec<
             ..Default::default()
         },
         options.flavor == ColorFlavor::Sbix,
+        charge,
     )?;
     color_readback(&result.0, &options.limits)?;
     Ok(result)
@@ -1425,6 +1462,7 @@ fn write_impl(
     kind: sbit::Kind,
     options: &EmbeddedWriteOptions,
     sbix: bool,
+    charge: ModelCharge,
 ) -> Result<(Vec<u8>, Report)> {
     if kind == sbit::Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color writing requires the color feature"));
@@ -1432,9 +1470,13 @@ fn write_impl(
     let design_options = DesignOptions::from(options);
     design_options.validate(fonts.fonts.len(), kind)?;
     options.metadata.validate(kind)?;
-    let prepared = options.metadata.prepare(fonts, &options.limits)?;
+    let prepared = options.metadata.prepare(fonts, &options.limits, charge)?;
     let limits = prepared.limits.as_ref().unwrap_or(&options.limits);
-    write_preflight(fonts, &limits.sfnt)?;
+    // An admission check of the model estimate alone: a model the caller
+    // has reserved exactly is not admitted again.
+    if charge == ModelCharge::Estimate {
+        write_preflight(fonts, &limits.sfnt)?;
+    }
     #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
         color_memory_preflight(fonts, limits)?;

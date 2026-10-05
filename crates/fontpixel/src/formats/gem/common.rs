@@ -529,6 +529,43 @@ fn property_cost(p: &Properties) -> usize {
         },
     )
 }
+/// The writer ledger for `set`, charged with an estimate of `set` itself
+/// unless the caller has reserved it ([`ModelCharge::Reserved`]). Validation is
+/// the same either way, and the final-diagnostic reserve is always charged.
+///
+/// [`ModelCharge::Reserved`]: super::ModelCharge::Reserved
+#[allow(dead_code)]
+pub fn source_budget_for(
+    set: &FontSet,
+    l: &ResourceLimits,
+    charge: super::ModelCharge,
+) -> Result<Budget> {
+    if charge == super::ModelCharge::Estimate {
+        return source_budget(set, l);
+    }
+    set.validate(l)?;
+    for f in &set.fonts {
+        for (_, g) in f.glyphs() {
+            safe_metrics(g)?;
+        }
+    }
+    let mut b = Budget::new(0, l)?;
+    b.add(1024)?;
+    Ok(b)
+}
+fn safe_metrics(g: &Glyph) -> Result<()> {
+    if i32::try_from(g.metrics.bounds.x).is_err()
+        || i32::try_from(g.metrics.bounds.y).is_err()
+        || g.metrics
+            .advance
+            .is_some_and(|v| i32::try_from(v.x).is_err())
+    {
+        return Err(invalid(
+            "legacy font glyph metrics exceed safe 32-bit coordinates",
+        ));
+    }
+    Ok(())
+}
 pub fn source_budget(set: &FontSet, l: &ResourceLimits) -> Result<Budget> {
     set.validate(l)?;
     let mut b = Budget::new(property_cost(&set.properties).saturating_mul(8), l)?;
@@ -568,16 +605,7 @@ pub fn source_budget(set: &FontSet, l: &ResourceLimits) -> Result<Budget> {
         }
         b.add(f.names.xlfd_fields.iter().map(String::len).sum::<usize>())?;
         for (_, g) in f.glyphs() {
-            if i32::try_from(g.metrics.bounds.x).is_err()
-                || i32::try_from(g.metrics.bounds.y).is_err()
-                || g.metrics
-                    .advance
-                    .is_some_and(|v| i32::try_from(v.x).is_err())
-            {
-                return Err(invalid(
-                    "legacy font glyph metrics exceed safe 32-bit coordinates",
-                ));
-            }
+            safe_metrics(g)?;
             b.add(
                 g.bitmap
                     .as_bytes()
