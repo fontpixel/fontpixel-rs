@@ -3,7 +3,8 @@ use super::{Budget, Limits};
 use crate::Result;
 use crate::bitmap::{Bitmap, Gray8};
 use crate::model::GlyphBitmap;
-use crate::sfnt::{bounded, buffer, bytes, invalid, p16, p32, to32, u16_at, u32_at};
+use crate::sfnt::working::{Budget as Ledger, Buffer, Owned, Vector};
+use crate::sfnt::{bounded, buffer, bytes, invalid, p32, to32, u16_at, u32_at};
 use std::collections::BTreeMap;
 use std::io::Cursor;
 
@@ -38,10 +39,27 @@ fn chunk(out: &mut Vec<u8>, tag: &[u8; 4], data: &[u8]) -> Result<()> {
     Ok(())
 }
 
+/// Byte length of the PNG `encode_png` writes for a nonempty `w` x `h`
+/// image (saturating; an impossible size is rejected by `encode_png`).
+pub(super) fn png_len(w: u32, h: u32) -> usize {
+    let raw = (w as usize)
+        .saturating_mul(4)
+        .saturating_add(1)
+        .saturating_mul(h as usize);
+    raw.saturating_add(raw.div_ceil(65535).saturating_mul(5))
+        .saturating_add(6)
+        .saturating_add(57)
+}
+
 /// Predictable-size, black RGBA PNG using filter None and stored DEFLATE.
-/// The caller has charged the raster and this function charges both scratch and
-/// output before allocation. PNG is an interchange projection, not an RGB model.
-pub(super) fn encode_png(bitmap: &GlyphBitmap, budget: &mut Budget<'_>) -> Result<Vec<u8>> {
+/// The filtered scratch rows (released before return) and the exact output
+/// are admitted on `ledger` before allocation; the returned lease charges the
+/// output. PNG is an interchange projection, not an RGB model.
+pub(super) fn encode_png(
+    bitmap: &GlyphBitmap,
+    budget: &mut Budget<'_>,
+    ledger: &Ledger,
+) -> Result<Owned<Vec<u8>>> {
     let (w, h) = (bitmap.width(), bitmap.height());
     if w == 0 || h == 0 {
         return Err(invalid("PNG cannot represent an empty rectangle"));
@@ -67,15 +85,16 @@ pub(super) fn encode_png(bitmap: &GlyphBitmap, budget: &mut Budget<'_>) -> Resul
         .ok_or_else(|| invalid("PNG output overflow"))?;
     to32(png_len)?;
     budget.limits.sfnt.table(png_len)?;
-    budget.memory(raw_len)?;
-    budget.memory(png_len)?;
+    let raw_lease = ledger.reserve(raw_len)?;
     let mut raw = crate::bitmap::zeros(raw_len, budget.limits.sfnt.resources.max_total_bytes)?;
     for y in 0..h {
         for x in 0..w {
             raw[y as usize * stride + x as usize * 4 + 4] = super::sample(bitmap, x, y)?;
         }
     }
+    let mut lease = ledger.reserve(png_len)?;
     let mut out = buffer(png_len)?;
+    lease.grow_to(out.capacity())?;
     out.extend(b"\x89PNG\r\n\x1a\n");
     let mut ihdr = [0; 13];
     ihdr[..4].copy_from_slice(&w.to_be_bytes());
@@ -109,18 +128,41 @@ pub(super) fn encode_png(bitmap: &GlyphBitmap, budget: &mut Budget<'_>) -> Resul
     p32(&mut out, checksum);
     chunk(&mut out, b"IEND", &[])?;
     debug_assert_eq!(out.len(), png_len);
-    Ok(out)
+    drop(raw);
+    drop(raw_lease);
+    Ok(Owned::from_parts(out, lease))
 }
 
 /// Encode sparse PNG-only sbix strikes with canonical ppem/PPI ordering.
 /// Zero-area records must be omitted by the caller, as required by sbix.
 /// Coverage is written as black with alpha; the table's overlay flag is retained.
 pub fn encode_sbix(sbix: &Sbix, num_glyphs: u16, limits: &Limits) -> Result<Vec<u8>> {
+    let ledger = super::root(limits);
+    let (out, _lease) =
+        encode_sbix_with_budget(sbix, num_glyphs, limits, &ledger, true)?.into_parts();
+    Ok(out)
+}
+/// [`encode_sbix`] on a shared ledger: the strike order, the exactly sized
+/// output and every PNG (scratch and bytes) are admitted before allocation,
+/// and the readback (`verify`) runs within the ledger's remaining allowance.
+/// A writer that reads its complete output back with the same limits later
+/// (decoding this table again) passes `verify: false`. The glyph, visit and
+/// pixel limits still apply.
+pub(crate) fn encode_sbix_with_budget(
+    sbix: &Sbix,
+    num_glyphs: u16,
+    limits: &Limits,
+    ledger: &Ledger,
+    verify: bool,
+) -> Result<Owned<Vec<u8>>> {
     limits.sfnt.glyphs(num_glyphs as usize)?;
     bounded(sbix.strikes.len(), limits.max_strikes, "sbix strikes")?;
     let mut budget = Budget::new(limits);
-    budget.memory(sbix.strikes.len().saturating_mul(16))?;
-    let mut ordered: Vec<_> = sbix.strikes.iter().collect();
+    budget.counted = false;
+    let mut ordered = Vector::with_capacity(ledger, sbix.strikes.len())?;
+    for strike in &sbix.strikes {
+        ordered.push(strike)?;
+    }
     ordered.sort_by_key(|s| (s.ppem, s.ppi));
     if ordered
         .windows(2)
@@ -130,24 +172,30 @@ pub fn encode_sbix(sbix: &Sbix, num_glyphs: u16, limits: &Limits) -> Result<Vec<
     }
     let header = 8 + ordered.len() * 4;
     limits.sfnt.table(header)?;
-    budget.memory(header)?;
-    let mut out = buffer(header)?;
-    p16(&mut out, 1);
-    p16(&mut out, 1 | u16::from(sbix.draw_outlines) << 1);
-    p32(&mut out, to32(ordered.len())?);
-    out.resize(header, 0);
+    let index = 4 + (usize::from(num_glyphs) + 1) * 4;
+    // Exact output size: header, each strike's offset array and every
+    // record (origin, tag and stored PNG); capped by the table limit.
+    let size = ordered.iter().fold(header, |n, s| {
+        s.glyphs.values().fold(n.saturating_add(index), |n, g| {
+            n.saturating_add(8)
+                .saturating_add(png_len(g.bitmap.width(), g.bitmap.height()))
+        })
+    });
+    let mut out = Buffer::with_capacity(ledger, size.min(limits.sfnt.resources.max_table_bytes))?;
+    out.extend(&1u16.to_be_bytes())?;
+    out.extend(&(1 | u16::from(sbix.draw_outlines) << 1).to_be_bytes())?;
+    out.extend(&to32(ordered.len())?.to_be_bytes())?;
+    out.resize(header, 0)?;
     for (i, strike) in ordered.iter().enumerate() {
         if strike.ppem == 0 || strike.glyphs.keys().any(|gid| *gid >= num_glyphs) {
             return Err(invalid("invalid sbix ppem or glyph ID"));
         }
         let start = out.len();
         out[8 + i * 4..12 + i * 4].copy_from_slice(&to32(start)?.to_be_bytes());
-        let index = 4 + (usize::from(num_glyphs) + 1) * 4;
         limits.sfnt.table(start.saturating_add(index))?;
-        budget.memory(index + usize::from(num_glyphs) * 128)?;
-        p16(&mut out, strike.ppem);
-        p16(&mut out, strike.ppi);
-        out.resize(start + index, 0);
+        out.extend(&strike.ppem.to_be_bytes())?;
+        out.extend(&strike.ppi.to_be_bytes())?;
+        out.resize(start + index, 0)?;
         for gid in 0..=num_glyphs {
             budget.visit()?;
             let at = start + 4 + usize::from(gid) * 4;
@@ -156,21 +204,25 @@ pub fn encode_sbix(sbix: &Sbix, num_glyphs: u16, limits: &Limits) -> Result<Vec<
             if let Some(g) = strike.glyphs.get(&gid) {
                 budget.glyph()?;
                 budget.raster(g.bitmap.width(), g.bitmap.height())?;
-                let png = encode_png(&g.bitmap, &mut budget)?;
+                let png = encode_png(&g.bitmap, &mut budget, ledger)?;
                 limits
                     .sfnt
                     .table(out.len().saturating_add(8).saturating_add(png.len()))?;
-                budget.memory(8 + png.len())?;
                 for origin in g.origin {
-                    out.extend(origin.to_be_bytes());
+                    out.extend(&origin.to_be_bytes())?;
                 }
-                out.extend(b"png ");
-                out.extend(png);
+                out.extend(b"png ")?;
+                out.extend(&png)?;
             }
         }
     }
-    decode_sbix(&out, num_glyphs, limits, false)?;
-    Ok(out)
+    drop(ordered);
+    if verify {
+        let reread = super::within_remaining(limits, ledger);
+        decode_sbix(&out, num_glyphs, &reread, false)
+            .map_err(|error| super::readback_error(error, &reread, ledger))?;
+    }
+    Ok(out.into_owned())
 }
 
 pub(super) fn bgra_coverage(b: [u8; 4], darkness: bool) -> Result<u8> {
@@ -245,14 +297,17 @@ pub(super) fn decode_png(
     bounded(size, max, "embedded PNG decompression bytes")?;
     budget.decompress(size)?;
     budget.memory(size)?;
-    let decoder_limit = max.min(
-        budget
-            .limits
-            .sfnt
-            .resources
-            .max_total_bytes
-            .saturating_sub(budget.bytes),
-    );
+    let total = budget.limits.sfnt.resources.max_total_bytes;
+    let by_model = total.saturating_sub(budget.bytes);
+    let decoder_limit = max.min(by_model);
+    // A decoder stopped by what the model counter left reports that limit.
+    let failed = |error: png::DecodingError| match error {
+        png::DecodingError::LimitsExceeded if by_model <= max => crate::Error::ResourceLimit {
+            resource: "embedded bitmap model bytes",
+            limit: total,
+        },
+        error => invalid(error),
+    };
     let mut decoder = png::Decoder::new_with_limits(
         Cursor::new(data),
         png::Limits {
@@ -262,14 +317,14 @@ pub(super) fn decode_png(
     decoder.set_ignore_text_chunk(true);
     decoder.set_ignore_iccp_chunk(true);
     decoder.set_transformations(png::Transformations::EXPAND | png::Transformations::STRIP_16);
-    let mut reader = decoder.read_info().map_err(invalid)?;
+    let mut reader = decoder.read_info().map_err(failed)?;
     let output_size = reader
         .output_buffer_size()
         .ok_or_else(|| invalid("PNG output overflow"))?;
     bounded(output_size, size, "embedded PNG output bytes")?;
     let mut out = crate::bitmap::zeros(output_size, max)?;
-    let info = reader.next_frame(&mut out).map_err(invalid)?;
-    reader.finish().map_err(invalid)?;
+    let info = reader.next_frame(&mut out).map_err(failed)?;
+    reader.finish().map_err(failed)?;
     if info.bit_depth != png::BitDepth::Eight || (info.width, info.height) != (w, h) {
         return Err(invalid("unsupported PNG decoded format"));
     }

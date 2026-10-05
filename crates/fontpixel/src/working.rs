@@ -118,6 +118,82 @@ impl Budget {
     }
 }
 
+/// Make room for `additional` more elements in a plain `Vec` whose array
+/// storage `lease` charges. A new array is admitted while the old one is
+/// still live; growth is geometric unless that would not fit. Nested element
+/// allocations need their own leases.
+#[cfg(any(
+    feature = "otb",
+    feature = "bdat",
+    feature = "color",
+    feature = "vector-raster"
+))]
+pub(crate) fn grow_vec<T>(
+    budget: &Budget,
+    values: &mut Vec<T>,
+    lease: &mut Lease,
+    additional: usize,
+) -> Result<()> {
+    let size = size_of::<T>().max(1);
+    let required = values
+        .len()
+        .checked_add(additional)
+        .ok_or_else(|| budget.error())?;
+    if required <= values.capacity() {
+        return Ok(());
+    }
+    let capacity = required
+        .max(values.capacity().saturating_mul(2))
+        .max(4)
+        .min(budget.remaining() / size)
+        .max(required);
+    let mut next_lease = budget.reserve_array::<T>(capacity)?;
+    let mut next = Vec::new();
+    next.try_reserve_exact(capacity)
+        .map_err(|_| budget.error())?;
+    next_lease.grow_to(
+        next.capacity()
+            .checked_mul(size_of::<T>())
+            .ok_or_else(|| budget.error())?,
+    )?;
+    next.append(values);
+    drop(std::mem::replace(values, next));
+    // Only after the previous array is gone may its charge go.
+    *lease = next_lease;
+    Ok(())
+}
+
+/// Format `parts` into an exactly sized string whose bytes are added to
+/// `lease` before the string is allocated.
+#[cfg(any(
+    feature = "otb",
+    feature = "bdat",
+    feature = "color",
+    feature = "vector-raster"
+))]
+pub(crate) fn exact_string(lease: &mut Lease, parts: std::fmt::Arguments<'_>) -> Result<String> {
+    struct Count(usize);
+    impl std::fmt::Write for Count {
+        fn write_str(&mut self, s: &str) -> std::fmt::Result {
+            self.0 += s.len();
+            Ok(())
+        }
+    }
+    let text_error = || Error::InvalidInput("working string formatting failed".into());
+    let mut count = Count(0);
+    std::fmt::Write::write_fmt(&mut count, parts).map_err(|_| text_error())?;
+    let before = lease.bytes();
+    let error = lease.budget.error();
+    lease.grow_to(before.checked_add(count.0).ok_or(error)?)?;
+    let mut text = String::new();
+    text.try_reserve_exact(count.0)
+        .map_err(|_| lease.budget.error())?;
+    std::fmt::Write::write_fmt(&mut text, parts).map_err(|_| text_error())?;
+    let error = lease.budget.error();
+    lease.grow_to(before.checked_add(text.capacity()).ok_or(error)?)?;
+    Ok(text)
+}
+
 /// Keep this lease alive until its corresponding storage has actually dropped.
 pub(crate) struct Lease {
     budget: Budget,

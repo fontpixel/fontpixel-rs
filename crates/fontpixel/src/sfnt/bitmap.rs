@@ -153,6 +153,32 @@ pub fn decode_scaling(data: &[u8], limits: &Limits) -> Result<Vec<Scale>> {
     let (scales, _lease) = decode_scaling_with_budget(data, limits, &budget)?.into_parts();
     Ok(scales)
 }
+/// Limits for a readback inside a writer: the reader's own counters (which
+/// bound what it allocates) get only the allowance the writer's ledger has
+/// left, so everything still live in the writer stays charged alongside it.
+#[cfg(feature = "color")]
+pub(crate) fn within_remaining(limits: &Limits, ledger: &Ledger) -> Limits {
+    let mut reread = limits.clone();
+    reread.sfnt.resources.max_total_bytes = ledger.remaining();
+    reread
+}
+/// A readback that ran out of the remaining allowance reports the writer
+/// ledger's own limit; every other failure is unchanged.
+#[cfg(feature = "color")]
+pub(crate) fn readback_error(
+    error: crate::Error,
+    reread: &Limits,
+    ledger: &Ledger,
+) -> crate::Error {
+    match error {
+        crate::Error::ResourceLimit { limit, .. }
+            if limit == reread.sfnt.resources.max_total_bytes =>
+        {
+            ledger.error()
+        }
+        error => error,
+    }
+}
 /// Standalone embedded-bitmap codec ledger, for callers without a shared one.
 fn root(limits: &Limits) -> Ledger {
     Ledger::new(
@@ -294,6 +320,10 @@ struct Record<'a> {
 }
 struct Budget<'a> {
     limits: &'a Limits,
+    /// Whether `memory` counts model bytes here. A writer whose storage is
+    /// admitted exactly on a working ledger keeps only the work, visit, glyph
+    /// and per-glyph pixel limits on this counter.
+    counted: bool,
     bytes: usize,
     pixels: usize,
     visits: usize,
@@ -305,6 +335,7 @@ impl<'a> Budget<'a> {
     fn new(limits: &'a Limits) -> Self {
         Self {
             limits,
+            counted: true,
             bytes: 0,
             pixels: 0,
             visits: 0,
@@ -320,6 +351,9 @@ impl<'a> Budget<'a> {
         bounded(*value, max, name)
     }
     fn memory(&mut self, n: usize) -> Result<()> {
+        if !self.counted {
+            return Ok(());
+        }
         Self::add(
             &mut self.bytes,
             n,
@@ -904,16 +938,35 @@ pub fn encode_spanning(
 ) -> Result<Tables> {
     let budget = root(limits);
     let (tables, _lease) =
-        encode_layout(strikes, kind, num_glyphs, limits, &budget, true)?.into_parts();
+        encode_layout(strikes, kind, num_glyphs, limits, &budget, true, true)?.into_parts();
     Ok(tables)
 }
 /// Upper bound of EBDT/bdat image bytes for already-validated model rasters;
 /// capped by the table limit the encoder enforces anyway.
 fn data_capacity(strikes: &[Strike], kind: Kind, limits: &Limits) -> usize {
-    if kind == Kind::Color {
-        return 4;
-    }
     let mut total = 4usize;
+    if kind == Kind::Color {
+        // Exact CBDT records: small or big metrics, then the length-prefixed
+        // stored PNG of every nonempty image (formats 17/18).
+        #[cfg(feature = "color")]
+        for s in strikes {
+            for g in s.glyphs.values() {
+                let m = &g.metrics;
+                let metrics = if m.horizontal.is_some() && m.vertical.is_some() {
+                    8
+                } else {
+                    5
+                };
+                let image = if g.bitmap.width() == 0 || g.bitmap.height() == 0 {
+                    0
+                } else {
+                    color::png_len(g.bitmap.width(), g.bitmap.height()).saturating_add(4)
+                };
+                total = total.saturating_add(metrics).saturating_add(image);
+            }
+        }
+        return total.min(limits.sfnt.resources.max_table_bytes.saturating_add(4));
+    }
     for s in strikes {
         for g in s.glyphs.values() {
             let stride = (g.bitmap.width() as usize).saturating_mul(usize::from(s.bit_depth));
@@ -927,8 +980,9 @@ fn data_capacity(strikes: &[Strike], kind: Kind, limits: &Limits) -> usize {
     total.min(limits.sfnt.resources.max_table_bytes.saturating_add(4))
 }
 /// Encode with every output, index and per-glyph buffer on a shared ledger.
-/// Existing local model/pixel limits still apply. CBDT PNG compression
-/// buffers are produced inside `color` and are charged once they exist.
+/// Existing local glyph/pixel limits still apply (and, except for CBDT, the
+/// local model counter). CBDT PNG scratch and output are admitted before they
+/// are allocated; the CBDT readback runs within the ledger's remaining room.
 pub(crate) fn encode_with_budget(
     strikes: &[Strike],
     kind: Kind,
@@ -936,7 +990,20 @@ pub(crate) fn encode_with_budget(
     limits: &Limits,
     ledger: &Ledger,
 ) -> Result<Owned<Tables>> {
-    encode_layout(strikes, kind, num_glyphs, limits, ledger, false)
+    encode_layout(strikes, kind, num_glyphs, limits, ledger, false, true)
+}
+/// [`encode_with_budget`] for a writer that afterwards reads its complete
+/// output back with the same limits, which decodes these tables again; the
+/// tables are not decoded here as well.
+#[cfg(feature = "color")]
+pub(crate) fn encode_read_back_later(
+    strikes: &[Strike],
+    kind: Kind,
+    num_glyphs: u16,
+    limits: &Limits,
+    ledger: &Ledger,
+) -> Result<Owned<Tables>> {
+    encode_layout(strikes, kind, num_glyphs, limits, ledger, false, false)
 }
 fn encode_layout(
     strikes: &[Strike],
@@ -945,6 +1012,7 @@ fn encode_layout(
     limits: &Limits,
     ledger: &Ledger,
     span_gaps: bool,
+    verify: bool,
 ) -> Result<Owned<Tables>> {
     if kind == Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color bitmap writing requires the color feature"));
@@ -952,15 +1020,15 @@ fn encode_layout(
     limits.sfnt.glyphs(num_glyphs as usize)?;
     bounded(strikes.len(), limits.max_strikes, "embedded bitmap strikes")?;
     let mut budget = Budget::new(limits);
+    // Color storage (tables, records, PNG scratch and output) is admitted
+    // exactly on `ledger`; the counter keeps its glyph and pixel limits.
+    budget.counted = kind != Kind::Color;
     let header_size = strikes
         .len()
         .checked_mul(48)
         .and_then(|n| n.checked_add(8))
         .ok_or_else(|| invalid("bitmap location header overflow"))?;
     limits.sfnt.table(header_size)?;
-    if kind == Kind::Color {
-        budget.memory(header_size.saturating_add(4))?;
-    }
     let mut data = Buffer::with_capacity(ledger, data_capacity(strikes, kind, limits))?;
     data.extend(&kind.version().to_be_bytes())?;
     let mut location = Buffer::with_capacity(ledger, header_size)?;
@@ -1018,15 +1086,19 @@ fn encode_layout(
                         // the ordinary EBDT forms, including empty raw images.
                         format
                     } else {
-                        let png = color::encode_png(&g.bitmap, &mut budget)?;
-                        let mut png_lease = ledger.reserve(png.capacity())?;
-                        glyph_lease.merge(&mut png_lease)?;
-                        // Old and grown record coexist during reallocation.
-                        let grown = encoded.len() + 4 + png.len();
-                        glyph_lease.grow_to(glyph_lease.bytes() + grown)?;
-                        encoded.reserve_exact(4 + png.len());
-                        p32(&mut encoded, to32(png.len())?);
-                        encoded.extend(png);
+                        let png = color::encode_png(&g.bitmap, &mut budget, ledger)?;
+                        // The complete record is admitted while the
+                        // metrics-only record and the PNG are still live.
+                        let mut record_lease = ledger.reserve(0)?;
+                        let mut record = ledger
+                            .vec_into::<u8>(encoded.len() + 4 + png.len(), &mut record_lease)?;
+                        record.extend_from_slice(&encoded);
+                        p32(&mut record, to32(png.len())?);
+                        record.extend_from_slice(&png);
+                        drop(png);
+                        encoded = record;
+                        // Only after the previous record is gone may its charge go.
+                        glyph_lease = record_lease;
                         if format == 1 { 17 } else { 18 }
                     }
                 }
@@ -1091,6 +1163,9 @@ fn encode_layout(
                 offsets.push(0)?;
             }
             data.extend(&encoded)?;
+            // The record goes before its charge.
+            drop(encoded);
+            drop(glyph_lease);
             let group = groups
                 .last_mut()
                 .ok_or_else(|| invalid("missing output group"))?;
@@ -1142,11 +1217,16 @@ fn encode_layout(
         limits.sfnt.resources.max_total_bytes,
         "bitmap output bytes",
     )?;
-    if kind == Kind::Color {
-        budget.memory(data.len() + location.len())?;
-        // This also applies the reader's PNG chunk/visit/decompression limits.
-        decode(&location, &data, kind, num_glyphs, limits)?;
+    #[cfg(feature = "color")]
+    if kind == Kind::Color && verify {
+        // This also applies the reader's PNG chunk/visit/decompression limits,
+        // within what the ledger has left beside the live tables.
+        let reread = within_remaining(limits, ledger);
+        decode(&location, &data, kind, num_glyphs, &reread)
+            .map_err(|error| readback_error(error, &reread, ledger))?;
     }
+    #[cfg(not(feature = "color"))]
+    let _ = verify;
     drop(ordered);
     let (data, mut lease) = data.into_parts();
     let (location, mut location_lease) = location.into_parts();
