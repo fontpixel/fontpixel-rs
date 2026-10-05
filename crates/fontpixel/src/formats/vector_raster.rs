@@ -1001,7 +1001,7 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
     }
     finish(encoded, report, id, o, &o.outline.limits.sfnt.resources)
 }
-/// As [`write`], consuming the model to lower peak memory. Output and report
+/// As [`write()`], consuming the model to lower peak memory. Output and report
 /// are identical.
 ///
 /// `o.outline.limits.sfnt.resources.max_total_bytes` is the whole allowance and

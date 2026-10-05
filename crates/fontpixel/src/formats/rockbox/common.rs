@@ -7,7 +7,13 @@
     feature = "playdate"
 ))]
 pub use super::legacy_common::int;
-#[cfg(feature = "rockbox")]
+#[cfg(any(
+    feature = "rockbox",
+    feature = "cybiko",
+    feature = "playdate",
+    feature = "hmzk",
+    feature = "sbf"
+))]
 pub use super::legacy_common::source_budget;
 #[cfg(feature = "u8m")]
 pub use super::legacy_common::source_budget_for;
