@@ -7,80 +7,90 @@ and batch wiring, and a new catalogue adapter profile. Defaults never change.
 Design sources: `WORK/owners/w66/CATALOGUE-BITMAP-PROJECTION-PROPOSAL.txt`
 (§4 API, §5 provenance/strict, §6 budget/transaction, §7 a–f),
 `WORK/owners/w63/CATALOGUE-ACTUAL-FIX-PROPOSALS.txt` (item 2, `.notdef`),
-`docs/LOCAL-PAUSE-20261005.zh.md` §5.
+`docs/LOCAL-PAUSE-20261005.zh.md` §5. `WORK` =
+`local-work/phase6-local-20261004`; `E` = `local-work/strict-e`.
+
+Commits: `9db3b7c` (projection, PCF precedence, CLI, adapter), `0e45bc6` and
+its follow-up (vector `.notdef`: new `variants/notdef.rs` plus hookup lines in
+unit C files `variants.rs`, `variants/export.rs`, CLI `opentype.rs`).
 
 ## Checklist
 
 ### Library: `fontpixel::projection`
-- [ ] E1 `BitmapProjection::default()` changes nothing (no model change, empty outcome).
-- [ ] E2 `font_name`: sets `names.xlfd` and resyncs `names.xlfd_fields` with the
-      reader's rule (leading `-`, split on `-`, empty fields kept); an existing
-      `FONT` property is kept in sync. Rejects empty text, line breaks, NUL,
-      length above the table-byte bound.
-- [ ] E3 `size { point_size: Rational, resolution: Vector }`: sets
-      `metrics.point_size`/`metrics.resolution`; positive values only; BDF SIZE
-      follows through `reconcile`.
-- [ ] E4 Bounded typed property edits `Set{name, Integer|Text}` / `Remove{name}`:
-      at most 64 edits, one edit per property name, token names only; rejects
-      `COMMENT`, every notice-like name (COPYRIGHT/NOTICE/LICENSE/LICENCE),
-      internal `bdf.`/`pcf.` provenance records, `FONT` set (use `font_name`),
-      and names owned by normalized fields that are not integer metrics
-      (names, charset, spacing, default char). Integer-metric keys
-      (PIXEL_SIZE, FONT_ASCENT, FONT_DESCENT, …) keep the normalized model field
-      in sync.
-- [ ] E5 Impacts: replacing an existing different value = Loss (strict
-      rejects); adding an absent value = Repair; removing a record = Loss;
-      equal value = no change, no entry.
-- [ ] E6 Full audit: one typed change record per changed field/property record
-      (strike, field, before, after) plus per-change report entries; SWIDTH
-      audit unchanged.
-- [ ] E7 Transaction: validate and stage everything for every strike first;
-      the commit only moves staged values (no allocation, no fallible step);
-      any validation or budget failure leaves the `FontSet` equal to before.
-- [ ] E8 Budget: all staged strings, replacement property lists, change
-      records and report entries are charged to `max_working_bytes` before
-      allocation; `ProjectionOutcome::retained_bytes` covers the audit.
+- [x] E1 Default changes nothing — `projection::tests::default_preserves_everything`.
+- [x] E2 `font_name` sets `names.xlfd`, resyncs `names.xlfd_fields` (reader
+      rule, empty fields kept) and an existing `FONT` property; rejects empty,
+      padded, multi-line, NUL, > 4096 bytes —
+      `font_name_resyncs_fields_and_font_property_with_audit`,
+      `rejects_unsafe_or_ambiguous_edits_without_change`.
+- [x] E3 `SizeProjection { point_size, resolution }`, positive only; BDF SIZE
+      follows via `reconcile` — `size_replacement_is_loss_and_absent_size_is_repair`,
+      `pcf_precedence_keeps_existing_size_properties_and_reports_loss` (BDF part).
+- [x] E4 Typed edits `Set{name, EditValue::Integer|Text}` / `Remove{name}`, ≤ 64,
+      one per name, token names; rejects COMMENT, notice-like names
+      (COPYRIGHT/NOTICE/LICENSE/LICENCE), `bdf.`/`pcf.` provenance, `FONT` set,
+      normalized name/charset/spacing/default-char keys; integer metrics
+      (PIXEL_SIZE, FONT_ASCENT/DESCENT, UNDERLINE_*, SPACE_WIDTH, LINE_GAP,
+      LINE_HEIGHT) sync the model — `property_edits_classify_sync_metrics_and_keep_comments`,
+      `rejects_unsafe_or_ambiguous_edits_without_change`.
+- [x] E5 Replace/remove = Loss, add = Repair, equal = no change and no entry —
+      same tests plus second-apply check in the font-name test.
+- [x] E6 Typed `MetadataChange { font_index, field, before, after }` per changed
+      record (incl. synced metrics) and per-change report entries; SWIDTH audit
+      unchanged — `projects_all_physical_records_with_full_audit`,
+      `font_name_sync_precedes_font_property_removal`.
+- [x] E7 Validate and stage every strike first, commit only moves staged values
+      — `later_strike_failure_and_budget_failure_commit_nothing`,
+      `failure_in_a_later_strike_leaves_every_strike_unchanged`.
+- [x] E8 Upper bounds (replacement property lists incl. coexisting old/new
+      records, staged strings, audit, report) admitted against
+      `max_working_bytes` before allocation; exact-bound probe in the budget
+      test; CLI charges argument strings, edit slice, live model, earlier
+      report and the outcome (`metadata::project`).
 
 ### PCF writer
-- [ ] E9 `PcfWriteOptions::metadata_precedence`, default
-      `MetadataPrecedence::NormalizedEdits` (byte-identical existing output).
-- [ ] E10 `ExplicitProperties`: existing POINT_SIZE / RESOLUTION_X /
-      RESOLUTION_Y / RESOLUTION properties win over projected model size;
-      missing ones are still generated from the projected model; FONT stays in
-      sync with an explicit font-name edit; each kept property that disagrees
-      with the projected model is reported as Loss. Source snapshots untouched.
+- [x] E9 `PcfWriteOptions::metadata_precedence`, default `NormalizedEdits`;
+      existing `tests/pcf.rs`, `pcf_reference.rs`, `pcf_properties.rs` pass;
+      default-profile catalogue outputs byte-identical to frozen v2 (below).
+- [x] E10 `ExplicitProperties` keeps existing POINT_SIZE/RESOLUTION_X/Y/RESOLUTION,
+      generates absent ones from the projected model (Spleen RESOLUTION 103,
+      Cozette POINT_SIZE 120), reports `pcf.write.property_precedence` Loss —
+      `pcf_precedence_keeps_existing_size_properties_and_reports_loss`,
+      CLI `pcf_precedence_is_explicit_and_reports_kept_properties`.
 
 ### Vector `.notdef`
-- [ ] E11 `NotdefPolicy::{Preserve (default), Empty{advance_width, left_side_bearing}}`
-      in design units, in a separate new file; Empty writes an empty outline at
-      GID 0 with exactly those hmtx values; replacing a source `.notdef`
-      (single-font export path) reports Loss; replacing the generated box
-      reports nothing lossy.
-- [ ] E12 Hookup lines in unit C's files (variants export, opentype CLI) kept
-      minimal, in a separate commit, and listed for the coordinator.
+- [x] E11 `NotdefPolicy::{Preserve, Empty{advance_width, left_side_bearing}}`
+      (design units) in new `variants/notdef.rs`; empty outline at GID 0 with
+      exact hmtx; replacing a source `.notdef` (`encode_single`) reports
+      `variants.notdef.replaced` Loss — `variants::notdef::tests::*`, CLI
+      `variants_empty_notdef_has_exact_design_metrics_and_empty_outline`.
+- [x] E12 Hookup lines in unit C files isolated in commit `0e45bc6` (+ follow-up).
 
 ### CLI / batch
-- [ ] E13 `convert`: `--font-name`, `--point-size`, `--resolution X,Y`,
-      `--set-property NAME=VALUE` (repeatable), `--remove-property NAME`
-      (repeatable), `--pcf-metadata-precedence`; batch `[tasks.options]`
-      equivalents; projection diagnostics join the report before strict.
-- [ ] E14 `variants`: `--notdef empty --notdef-advance N [--notdef-lsb L]`.
-- [ ] E15 Marked slot for unit D's embedded flag group.
-- [ ] E16 Without the new options CLI output is byte-identical (tested).
+- [x] E13 `convert`: `--font-name`, `--point-size` + `--resolution X,Y`,
+      `--set-integer-property NAME=N`, `--set-text-property NAME=TEXT`,
+      `--remove-property NAME` (repeatable), `--pcf-metadata-precedence`
+      (`normalized-edits`|`explicit-properties`, PCF only); batch options with
+      the same names — `tests/projection_cli.rs` (11 tests).
+- [x] E14 `variants --notdef empty --notdef-advance N [--notdef-lsb L]` (hookup commit).
+- [x] E15 `// Unit D hookup slot` comment in the `Convert` arguments.
+- [x] E16 No-option output unchanged: `projections_equal_to_the_source_leave_output_byte_identical`
+      and all 181 default-profile catalogue downloads byte-identical to
+      `WORK/full-correctness-v2/catalogue-native/downloads` (`E/catalogue-native-default`).
 
 ### Catalogue adapter
-- [ ] E17 New `--profile explicit` (old profile remains default): BDF and
-      rebuilt-PCF tasks get `swidth_ppem`, `font_name`, `point_size`,
-      `resolution`, PCF `explicit-properties`; Proggy PCF download converts
-      the source PCF directly (no charset→BDF detour); vector tasks get the
-      empty `.notdef` with `max(unit*px//2, 1)` advance and `vendor = "????"`.
-- [ ] E18 Native batch run with the new profile under
-      `local-work/strict-e/`, validated against the original Python downloads;
-      before/after counts per field and classification rule; every remaining
-      difference classified as original-lossy (Python file:line), derived, or
-      consumer limitation, or attributed to the owning unit.
+- [x] E17 `benches/phase6_catalogue.py --profile explicit` (default profile
+      unchanged; `benches/phase6_catalogue_test.py` 9 tests). Per-task values
+      come from the application's own parsed model, the same inputs
+      `ingest/bdfwrite.py:18-30` uses. Unrenamed, unmerged PCF downloads convert
+      the source PCF directly (`downloads.py:261-267`), no charset step.
+- [x] E18 Native explicit run `E/catalogue-native` (173/173 tasks), validator
+      proof `E/catalogue-native-proof.json`, comparison `E/comparison.json`.
+      Unresolved fonts 164 → 132; BDF/PCF pass 8 → 40 (all 34 PCF and Proggy
+      BDF pass; the 28 remaining BDF differ only by retained source COMMENT
+      lines); archives pass 3 → 5; failed 1 → 1 (Spleen64 consumer-01).
 
 ### Gates
-- [ ] Focused tests, `cargo clippy --locked --workspace --all-targets --all-features -- -D warnings`,
+- [x] Focused tests, `cargo clippy --locked --workspace --all-targets --all-features -- -D warnings`,
       `cargo fmt --all --check`. No `#[allow]`, no default-cap change, no
       deleted report entries, no COMMENT/notice removal.

@@ -73,6 +73,54 @@ mod tests {
         assert_eq!(empty.empty_metrics(), Some((494, 0)));
     }
 
+    fn hmtx0(font: &[u8]) -> (u16, i16) {
+        let sfnt = crate::sfnt::Sfnt::parse(font, &Default::default()).unwrap();
+        let t = sfnt.table(*b"hmtx").unwrap();
+        (
+            u16::from_be_bytes([t[0], t[1]]),
+            i16::from_be_bytes([t[2], t[3]]),
+        )
+    }
+
+    #[test]
+    fn replacing_a_source_notdef_is_loss_and_default_keeps_it() {
+        use crate::model::{Codepoint, Font};
+        use crate::report::Impact;
+        let mut notdef = Glyph::new("##\n##".parse::<Bitmap>().unwrap());
+        notdef.name = Some(".notdef".into());
+        notdef.metrics.advance = Some(Vector::new(3, 0));
+        let mut a = Glyph::new("#".parse::<Bitmap>().unwrap());
+        a.codepoints.push(Codepoint::Unicode(65));
+        a.metrics.advance = Some(Vector::new(2, 0));
+        let mut font = Font::from_glyphs([notdef, a]).unwrap();
+        font.metrics.pixel_size = Some(13);
+        let kept = super::super::encode_single(&font, &Default::default()).unwrap();
+        assert_eq!(hmtx0(&kept.bytes), (300, 0));
+        assert!(
+            !kept
+                .report
+                .entries
+                .iter()
+                .any(|e| e.code == "variants.notdef.replaced")
+        );
+        let options = super::super::Options {
+            notdef: NotdefPolicy::Empty {
+                advance_width: 494,
+                left_side_bearing: 0,
+            },
+            ..Default::default()
+        };
+        let empty = super::super::encode_single(&font, &options).unwrap();
+        assert_eq!(hmtx0(&empty.bytes), (494, 0));
+        assert!(
+            empty
+                .report
+                .entries
+                .iter()
+                .any(|e| e.code == "variants.notdef.replaced" && e.impact == Impact::Loss)
+        );
+    }
+
     #[test]
     fn embedded_strike_requires_whole_pixel_advance() {
         assert!(empty_glyph(494, 76, true).is_err());
