@@ -17,6 +17,9 @@ struct State {
     used: AtomicUsize,
     maximum: usize,
     resource: &'static str,
+    /// High-water mark of admitted bytes, for exact-capacity unit tests.
+    #[cfg(test)]
+    peak: AtomicUsize,
 }
 
 #[derive(Clone)]
@@ -28,7 +31,15 @@ impl Budget {
             used: AtomicUsize::new(0),
             maximum,
             resource,
+            #[cfg(test)]
+            peak: AtomicUsize::new(0),
         }))
+    }
+
+    /// Largest simultaneous admitted total since creation (test builds only).
+    #[cfg(test)]
+    pub(crate) fn peak(&self) -> usize {
+        self.0.peak.load(Ordering::Relaxed)
     }
 
     pub(crate) fn error(&self) -> Error {
@@ -43,13 +54,17 @@ impl Budget {
     }
 
     pub(crate) fn reserve(&self, bytes: usize) -> Result<Lease> {
-        self.0
+        let _previous = self
+            .0
             .used
             .try_update(Ordering::Relaxed, Ordering::Relaxed, |used| {
                 used.checked_add(bytes)
                     .filter(|&next| next <= self.0.maximum)
             })
             .map_err(|_| self.error())?;
+        // The update above proved this sum is representable and admitted.
+        #[cfg(test)]
+        self.0.peak.fetch_max(_previous + bytes, Ordering::Relaxed);
         Ok(Lease {
             budget: self.clone(),
             bytes,
@@ -109,6 +124,23 @@ impl Lease {
 
     pub(crate) fn bytes(&self) -> usize {
         self.bytes
+    }
+
+    #[cfg(any(feature = "sfnt", test))]
+    /// Move `bytes` of this live charge into a separate lease. Nothing is
+    /// admitted or released; the caller may then drop the remainder only once
+    /// the storage it covered has actually dropped.
+    pub(crate) fn split(&mut self, bytes: usize) -> Result<Self> {
+        if bytes > self.bytes {
+            return Err(Error::InvalidInput(
+                "working lease split exceeds its charge".into(),
+            ));
+        }
+        self.bytes -= bytes;
+        Ok(Self {
+            budget: self.budget.clone(),
+            bytes,
+        })
     }
 
     /// Combine charges after the associated owned values move into one stage.
@@ -466,5 +498,21 @@ mod tests {
         assert_eq!(budget.remaining(), 0);
         drop(output);
         assert_eq!(budget.remaining(), maximum);
+    }
+
+    #[test]
+    fn split_partitions_a_live_charge_without_admitting_or_releasing() {
+        let budget = Budget::new(10, "split budget");
+        let mut whole = budget.reserve(8).unwrap();
+        let part = whole.split(3).unwrap();
+        assert_eq!((whole.bytes(), part.bytes()), (5, 3));
+        assert_eq!(budget.remaining(), 2);
+        assert!(matches!(whole.split(6), Err(Error::InvalidInput(_))));
+        assert_eq!(whole.bytes(), 5);
+        drop(whole);
+        assert_eq!(budget.remaining(), 7);
+        drop(part);
+        assert_eq!(budget.remaining(), 10);
+        assert_eq!(budget.peak(), 8);
     }
 }

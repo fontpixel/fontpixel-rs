@@ -4,7 +4,9 @@ use crate::{
     model::GlyphBitmap,
     outline,
     sfnt::{self, glyf},
+    working::{Budget, Nested, Owned, Vector},
 };
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug)]
 struct Row {
@@ -16,14 +18,30 @@ struct Row {
     ink: u32,
 }
 
+/// Most catalogue patterns retained; selection stays deterministic.
+const MAX_PATTERNS: usize = 256;
+/// Largest admitted pattern dimension.
+const MAX_SIDE: u32 = 64;
+
 /// Selected helpers themselves stay direct circle composites, preventing cycles.
+/// Rows and selection flags keep their admitted charges until the catalogue drops.
 pub(super) struct Catalogue {
-    rows: Vec<Row>,
-    selected: Vec<bool>,
+    rows: Owned<Vec<Row>>,
+    selected: Vector<bool>,
 }
 impl Catalogue {
-    pub(super) fn new(sources: &[(&str, &Glyph)], scale: i64, include_2d: bool) -> Self {
-        let mut patterns = std::collections::BTreeMap::new();
+    pub(super) fn new(
+        sources: &[(&str, &Glyph)],
+        scale: i64,
+        include_2d: bool,
+        budget: &Budget,
+    ) -> Result<Self> {
+        // Patterns are keyed by `[width, masks...]`, so lookups borrow one
+        // admitted scratch key instead of cloning masks for every candidate.
+        let mut patterns_lease = budget.reserve(0)?;
+        let mut keys_lease = budget.reserve(0)?;
+        let mut patterns = BTreeMap::<Vec<u64>, Owned<Row>>::new();
+        let mut key = Vector::<u64>::with_capacity(budget, MAX_SIDE as usize + 1)?;
         for (id, (_, glyph)) in sources.iter().enumerate().skip(1) {
             let GlyphBitmap::Mono(bitmap) = &glyph.bitmap else {
                 continue;
@@ -34,13 +52,15 @@ impl Catalogue {
             }
             if ink.width == 0
                 || ink.height == 0
-                || ink.width > 64
-                || ink.height > 64
+                || ink.width > MAX_SIDE
+                || ink.height > MAX_SIDE
                 || (ink.width > 1 && ink.height > 1 && (ink.width > 4 || ink.height > 4))
             {
                 continue;
             }
-            let mut masks = vec![0u64; ink.height as usize];
+            key.truncate(0);
+            key.push(u64::from(ink.width))?;
+            key.resize(1 + ink.height as usize, 0)?;
             for y in 0..ink.height {
                 let row = bitmap.height() - 1 - ink.y as u32 - y;
                 for x in 0..ink.width {
@@ -48,15 +68,13 @@ impl Catalogue {
                         .get_pixel(ink.x as u32 + x, row)
                         .is_ok_and(|p| p != 0)
                     {
-                        masks[y as usize] |= 1u64 << x;
+                        key[1 + y as usize] |= 1u64 << x;
                     }
                 }
             }
+            let masks = &key[1..];
             let pixels = masks.iter().map(|m| m.count_ones()).sum::<u32>();
-            if pixels < 2
-                || patterns.contains_key(&(ink.width, masks.clone()))
-                || patterns.len() >= 256
-            {
+            if pixels < 2 || patterns.contains_key(&key[..]) || patterns.len() >= MAX_PATTERNS {
                 continue;
             }
             let Some(x) = glyph
@@ -81,31 +99,53 @@ impl Catalogue {
             else {
                 continue;
             };
+            let (stored, mut stored_lease) = copy(budget, &key)?.into_parts();
+            keys_lease.merge(&mut stored_lease)?;
+            let (masks, lease) = copy(budget, masks)?.into_parts();
+            crate::variants::ledger::tree::<Vec<u64>, Owned<Row>>(
+                &mut patterns_lease,
+                budget,
+                patterns.len() + 1,
+            )?;
             patterns.insert(
-                (ink.width, masks.clone()),
-                Row {
-                    glyph,
-                    x,
-                    y,
-                    width: ink.width as usize,
-                    masks,
-                    ink: pixels,
-                },
+                stored,
+                Owned::from_parts(
+                    Row {
+                        glyph,
+                        x,
+                        y,
+                        width: ink.width as usize,
+                        masks,
+                        ink: pixels,
+                    },
+                    lease,
+                ),
             );
         }
-        let mut rows = patterns.into_values().collect::<Vec<_>>();
-        rows.sort_by_key(|r| {
+        drop(key);
+        let mut rows = Nested::with_capacity(budget, patterns.len())?;
+        for (_, row) in std::mem::take(&mut patterns) {
+            rows.push(row)?;
+        }
+        drop(keys_lease);
+        drop(patterns_lease);
+        // Glyph IDs are unique, so an in-place unstable sort is fully determined.
+        rows.sort_unstable_by_key(|r| {
             (
                 std::cmp::Reverse(r.ink),
                 std::cmp::Reverse(r.width),
                 r.glyph,
             )
         });
-        let mut selected = vec![false; sources.len()];
-        for row in &rows {
+        let mut selected = Vector::with_capacity(budget, sources.len())?;
+        selected.resize(sources.len(), false)?;
+        for row in rows.iter() {
             selected[usize::from(row.glyph)] = true;
         }
-        Self { rows, selected }
+        Ok(Self {
+            rows: rows.into_owned()?,
+            selected,
+        })
     }
 
     pub(super) fn glyph(
@@ -115,30 +155,35 @@ impl Catalogue {
         options: &outline::Options,
         dot: u16,
         limits: &glyf::Limits,
-    ) -> Result<glyf::Glyph> {
+        budget: &Budget,
+    ) -> Result<Owned<glyf::Glyph>> {
         if self.selected[id] || self.rows.is_empty() {
-            return glyf::Glyph::pixels(bitmap, options, dot, limits);
+            return glyf::Glyph::pixels_with_budget(bitmap, options, dot, limits, budget);
         }
-        let origins = outline::pixel_origins(bitmap, options, &limits.geometry)?;
-        // Retain the direct writer's pre-optimization per-glyph work budget.
-        sfnt::bounded(origins.len(), limits.max_components, "glyf components")?;
-        let coordinate = |v: f64| {
-            if !v.is_finite()
-                || v.fract() != 0.
-                || v < f64::from(i16::MIN)
-                || v > f64::from(i16::MAX)
-            {
-                Err(sfnt::invalid("glyf coordinate is not an integral int16"))
-            } else {
-                Ok(v as i16)
+        let origins = {
+            let origins =
+                outline::pixel_origins_with_budget(bitmap, options, &limits.geometry, budget)?;
+            // Retain the direct writer's pre-optimization per-glyph work budget.
+            sfnt::bounded(origins.len(), limits.max_components, "glyf components")?;
+            let coordinate = |v: f64| {
+                if !v.is_finite()
+                    || v.fract() != 0.
+                    || v < f64::from(i16::MIN)
+                    || v > f64::from(i16::MAX)
+                {
+                    Err(sfnt::invalid("glyf coordinate is not an integral int16"))
+                } else {
+                    Ok(v as i16)
+                }
+            };
+            let mut out = Vector::with_capacity(budget, origins.len())?;
+            for &(x, y) in origins.iter() {
+                out.push((coordinate(x)?, coordinate(y)?))?;
             }
+            out
         };
-        let origins = origins
-            .into_iter()
-            .map(|(x, y)| Ok((coordinate(x)?, coordinate(y)?)))
-            .collect::<Result<Vec<_>>>()?;
         if origins.is_empty() {
-            return Ok(glyf::Glyph::Empty);
+            return Ok(Owned::from_parts(glyf::Glyph::Empty, budget.reserve(0)?));
         }
         let x0 = origins.iter().map(|p| p.0).min().unwrap();
         let y0 = origins.iter().map(|p| p.1).min().unwrap();
@@ -146,21 +191,24 @@ impl Catalogue {
         let y1 = origins.iter().map(|p| p.1).max().unwrap();
         let width = ((i32::from(x1) - i32::from(x0)) / options.units_per_pixel + 1) as usize;
         let height = ((i32::from(y1) - i32::from(y0)) / options.units_per_pixel + 1) as usize;
-        if width > 64 || height > 64 {
-            return glyf::Glyph::pixels(bitmap, options, dot, limits);
+        if width > MAX_SIDE as usize || height > MAX_SIDE as usize {
+            drop(origins);
+            return glyf::Glyph::pixels_with_budget(bitmap, options, dot, limits, budget);
         }
-        let mut remaining = vec![0u64; height];
-        for &(x, y) in &origins {
+        let mut remaining = Vector::with_capacity(budget, height)?;
+        remaining.resize(height, 0u64)?;
+        for &(x, y) in origins.iter() {
             let x = ((i32::from(x) - i32::from(x0)) / options.units_per_pixel) as usize;
             let y = ((i32::from(y) - i32::from(y0)) / options.units_per_pixel) as usize;
             remaining[y] |= 1u64 << x;
         }
-        let mut components = Vec::with_capacity(origins.len());
+        let mut components = Vector::with_capacity(budget, origins.len())?;
+        drop(origins);
         for y in (0..height).rev() {
             while remaining[y] != 0 {
                 let first = remaining[y].trailing_zeros() as usize;
                 let mut chosen = None;
-                for helper in &self.rows {
+                for helper in self.rows.iter() {
                     // Top row always has ink. Its first bit anchors the match;
                     // bounding-box x may lie left of that first top-row pixel.
                     let anchor = helper.masks.last().unwrap().trailing_zeros() as usize;
@@ -196,27 +244,39 @@ impl Catalogue {
                     }
                 }
                 if let Some((helper, x, start_y, dx, dy)) = chosen {
-                    components.push(glyf::Component::translated(helper.glyph, dx, dy));
+                    components.push(glyf::Component::translated(helper.glyph, dx, dy))?;
                     for (j, mask) in helper.masks.iter().enumerate() {
                         remaining[start_y + j] &= !(mask << x);
                     }
                 } else {
                     let px = (i32::from(x0) + first as i32 * options.units_per_pixel) as i16;
                     let py = (i32::from(y0) + y as i32 * options.units_per_pixel) as i16;
-                    components.push(glyf::Component::translated(dot, px, py));
+                    components.push(glyf::Component::translated(dot, px, py))?;
                     remaining[y] &= !(1u64 << first);
                 }
             }
         }
-        Ok(if components.is_empty() {
-            glyf::Glyph::Empty
-        } else {
-            glyf::Glyph::Composite(glyf::CompositeGlyph {
-                components,
-                instructions: Vec::new(),
-            })
-        })
+        drop(remaining);
+        let (components, lease) = components.into_parts();
+        Ok(Owned::from_parts(
+            if components.is_empty() {
+                glyf::Glyph::Empty
+            } else {
+                glyf::Glyph::Composite(glyf::CompositeGlyph {
+                    components,
+                    instructions: Vec::new(),
+                })
+            },
+            lease,
+        ))
     }
+}
+
+/// Exact admitted copy of a mask slice.
+fn copy(budget: &Budget, values: &[u64]) -> Result<Owned<Vec<u64>>> {
+    let mut out = Vector::with_capacity(budget, values.len())?;
+    out.extend(values)?;
+    Ok(out.into_owned())
 }
 
 #[cfg(test)]
@@ -236,11 +296,14 @@ mod tests {
                 .parse::<Bitmap>()
                 .unwrap(),
         ));
+        let budget = Budget::new(usize::MAX, "test working bytes");
         let catalogue = Catalogue::new(
             &sources.iter().map(|g| ("", g)).collect::<Vec<_>>(),
             100,
             true,
-        );
+            &budget,
+        )
+        .unwrap();
         let limits = glyf::Limits::default();
         let options = outline::Options {
             shape: outline::Shape::Dot,
@@ -291,8 +354,10 @@ mod tests {
                 glyphs: glyphs.clone(),
             };
             new.glyphs[target] = catalogue
-                .glyph(target, &bitmap, &options, dot, &limits)
-                .unwrap();
+                .glyph(target, &bitmap, &options, dot, &limits, &budget)
+                .unwrap()
+                .into_parts()
+                .0;
             let canonical = |table: &glyf::GlyfTable| {
                 let mut contours = table
                     .contours(target as u16, &limits)
@@ -322,7 +387,8 @@ mod tests {
         target.metrics.bounds.x = -1;
         target.metrics.bounds.y = -2;
         let sources = [(".notdef", &empty), ("row", &row), ("target", &target)];
-        let catalogue = Catalogue::new(&sources, 100, true);
+        let budget = Budget::new(usize::MAX, "test working bytes");
+        let catalogue = Catalogue::new(&sources, 100, true, &budget).unwrap();
         let limits = glyf::Limits::default();
         let base = outline::Options {
             shape: outline::Shape::Dot,
@@ -340,7 +406,13 @@ mod tests {
                 ..base.clone()
             };
             before.push(glyf::Glyph::pixels(bitmap, &options, 3, &limits).unwrap());
-            after.push(catalogue.glyph(id, bitmap, &options, 3, &limits).unwrap());
+            after.push(
+                catalogue
+                    .glyph(id, bitmap, &options, 3, &limits, &budget)
+                    .unwrap()
+                    .into_parts()
+                    .0,
+            );
         }
         let circle = glyf::Glyph::simple(vec![outline::pixel_contour(&base).unwrap()]);
         before.push(circle.clone());
@@ -369,7 +441,8 @@ mod tests {
         let row = Glyph::new("#.#".parse::<Bitmap>().unwrap());
         let target = Glyph::new("###..#\n.#....".parse::<Bitmap>().unwrap());
         let sources = [(".notdef", &empty), ("row", &row), ("target", &target)];
-        let catalogue = Catalogue::new(&sources, 100, true);
+        let budget = Budget::new(usize::MAX, "test working bytes");
+        let catalogue = Catalogue::new(&sources, 100, true, &budget).unwrap();
         let options = outline::Options {
             shape: outline::Shape::Dot,
             dot_size: 0.9,
@@ -396,7 +469,11 @@ mod tests {
             glyphs: vec![
                 glyf::Glyph::Empty,
                 row_glyph,
-                catalogue.glyph(2, bitmap, &options, 3, &limits).unwrap(),
+                catalogue
+                    .glyph(2, bitmap, &options, 3, &limits, &budget)
+                    .unwrap()
+                    .into_parts()
+                    .0,
                 circle,
             ],
         };
@@ -419,7 +496,11 @@ mod tests {
             max_components: 3,
             ..limits
         };
-        assert!(catalogue.glyph(2, bitmap, &options, 3, &strict).is_err());
+        assert!(
+            catalogue
+                .glyph(2, bitmap, &options, 3, &strict, &budget)
+                .is_err()
+        );
     }
 
     #[test]
@@ -429,11 +510,14 @@ mod tests {
         row.metrics.bounds.x = 325;
         let mut target = Glyph::new("##\n.#".parse::<Bitmap>().unwrap());
         target.metrics.bounds.x = -326;
+        let budget = Budget::new(usize::MAX, "test working bytes");
         let catalogue = Catalogue::new(
             &[(".notdef", &empty), ("row", &row), ("target", &target)],
             100,
             true,
-        );
+            &budget,
+        )
+        .unwrap();
         let options = outline::Options {
             shape: outline::Shape::Dot,
             dot_size: 0.9,
@@ -445,8 +529,10 @@ mod tests {
         };
         assert_eq!(
             catalogue
-                .glyph(2, bitmap, &options, 3, &Default::default())
-                .unwrap(),
+                .glyph(2, bitmap, &options, 3, &Default::default(), &budget)
+                .unwrap()
+                .into_parts()
+                .0,
             glyf::Glyph::pixels(bitmap, &options, 3, &Default::default()).unwrap()
         );
     }

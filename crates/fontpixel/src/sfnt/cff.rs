@@ -94,31 +94,69 @@ impl Glyph {
         options: &outline::Options,
         limits: &Limits,
     ) -> Result<Self> {
+        let budget = super::working::Budget::new(usize::MAX, "outline working bytes");
+        let name = name.into();
+        let lease = budget.reserve(name.capacity())?;
+        let name = super::working::Owned::from_parts(name, lease);
+        Ok(
+            Self::from_bitmap_with_budget(name, advance, bitmap, options, limits, &budget)?
+                .into_parts()
+                .0,
+        )
+    }
+    /// As [`Glyph::from_bitmap`], admitting geometry and path commands on
+    /// `budget` before allocation. `name` carries its own admitted storage.
+    pub(crate) fn from_bitmap_with_budget(
+        name: super::working::Owned<String>,
+        advance: f64,
+        bitmap: &Bitmap,
+        options: &outline::Options,
+        limits: &Limits,
+        budget: &super::working::Budget,
+    ) -> Result<super::working::Owned<Self>> {
+        let (name, mut lease) = name.into_parts();
         let shape = if options.shape == outline::Shape::Dot {
-            Outline::Dots(outline::pixel_origins(bitmap, options, &limits.geometry)?)
+            let (origins, mut origins_lease) =
+                outline::pixel_origins_with_budget(bitmap, options, &limits.geometry, budget)?
+                    .into_parts();
+            lease.merge(&mut origins_lease)?;
+            Outline::Dots(origins)
         } else {
-            let cs = outline::contours(bitmap, options, &limits.geometry)?;
-            let mut path = Vec::new();
-            for c in cs {
+            let cs = outline::contours_with_budget(bitmap, options, &limits.geometry, budget)?;
+            // Preserve the incremental command checks, then admit the exact path.
+            let mut length = 0usize;
+            for c in cs.iter().filter(|c| !c.is_empty()) {
+                bounded(
+                    length.saturating_add(c.len()).saturating_add(1),
+                    limits.max_commands,
+                    "CFF commands",
+                )?;
+                length += c.len() + 1;
+            }
+            bounded(length, limits.max_commands, "CFF commands")?;
+            let mut path = super::working::Vector::with_capacity(budget, length)?;
+            for c in cs.iter() {
                 if let Some(p) = c.first() {
-                    bounded(
-                        path.len().saturating_add(c.len()).saturating_add(1),
-                        limits.max_commands,
-                        "CFF commands",
-                    )?;
-                    path.push(Command::MoveTo((p.0, p.1)));
-                    path.extend(c[1..].iter().map(|p| Command::LineTo((p.0, p.1))));
-                    path.push(Command::Close);
+                    path.push(Command::MoveTo((p.0, p.1)))?;
+                    for p in &c[1..] {
+                        path.push(Command::LineTo((p.0, p.1)))?;
+                    }
+                    path.push(Command::Close)?;
                 }
             }
-            bounded(path.len(), limits.max_commands, "CFF commands")?;
+            drop(cs);
+            let (path, mut path_lease) = path.into_parts();
+            lease.merge(&mut path_lease)?;
             Outline::Path(path)
         };
-        Ok(Self {
-            name: name.into(),
-            advance,
-            outline: shape,
-        })
+        Ok(super::working::Owned::from_parts(
+            Self {
+                name,
+                advance,
+                outline: shape,
+            },
+            lease,
+        ))
     }
 }
 /// Shared circle configuration, in design units.
