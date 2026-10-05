@@ -6,8 +6,10 @@ names, cmap records, every strike/index subtable/GID, raw timestamps) and the
 FreeType pixel/advance gate of phase6_validate. Every remaining difference is
 listed per field and classified only by the rules below; nothing is waived:
 
-- head.checkSumAdjustment is derived: it is accepted only when the two files
-  are byte-identical after zeroing that field in both;
+- head.checkSumAdjustment is derived: it is accepted only when every table's
+  bytes are identical with that field zeroed, the directories differ at most in
+  table data offsets (physical placement order), and each file's value is the
+  correct adjustment for its own bytes;
 - head.created/modified are producer timestamps: equal when copied explicitly,
   otherwise reported as the export-rs wall-clock policy;
 - anything else is an unresolved difference.
@@ -39,6 +41,26 @@ def zero_checksum_adjustment(data):
     return bytes(data)
 
 
+def directory(data):
+    records = {}
+    for i in range(int.from_bytes(data[4:6], 'big')):
+        record = data[12 + 16 * i:28 + 16 * i]
+        offset, length = int.from_bytes(record[8:12], 'big'), int.from_bytes(record[12:16], 'big')
+        table = bytearray(data[offset:offset + length])
+        if record[:4] == b'head': table[8:12] = b'\0\0\0\0'
+        records[bytes(record[:4])] = {'checksum': record[4:8].hex(), 'offset': offset, 'length': length,
+                                      'data': bytes(table)}
+    return data[:12], records
+
+
+def checksum_adjustment_valid(data):
+    head = directory(data)[1][b'head']
+    zeroed = zero_checksum_adjustment(data) + b'\0' * (-len(data) % 4)
+    total = sum(int.from_bytes(zeroed[i:i + 4], 'big') for i in range(0, len(zeroed), 4)) & 0xffffffff
+    stored = int.from_bytes(data[head['offset'] + 8:head['offset'] + 12], 'big')
+    return stored == (0xb1b0afba - total) & 0xffffffff
+
+
 def compare(source, native, reference):
     a, b = sfnt_inventory(native), sfnt_inventory(reference)
     diff = differences(a, b)
@@ -52,10 +74,20 @@ def compare(source, native, reference):
                         'all_physical_glyphs_equal': left['all_physical_glyphs'] == right['all_physical_glyphs']})
     native_bytes, reference_bytes = native.read_bytes(), reference.read_bytes()
     zeroed = zero_checksum_adjustment(native_bytes) == zero_checksum_adjustment(reference_bytes)
+    (header_a, tables_a), (header_b, tables_b) = directory(native_bytes), directory(reference_bytes)
+    placement_only = (header_a == header_b and tables_a.keys() == tables_b.keys() and all(
+        {k: v for k, v in tables_a[tag].items() if k != 'offset'} == {k: v for k, v in tables_b[tag].items() if k != 'offset'}
+        for tag in tables_a))
+    adjustments_valid = checksum_adjustment_valid(native_bytes) and checksum_adjustment_valid(reference_bytes)
+    order = lambda tables: [tag.decode() for tag, _ in sorted(tables.items(), key=lambda item: item[1]['offset'])]
     classified = {}
     for field in global_fields:
         if field == 'head.checkSumAdjustment':
-            classified[field] = 'derived: files identical after zeroing checkSumAdjustment' if zeroed else 'UNRESOLVED: other bytes differ'
+            if zeroed or (placement_only and adjustments_valid):
+                classified[field] = ('derived: every table byte-identical with checkSumAdjustment zeroed, '
+                                     'directory differs only in table data offsets, both adjustments valid')
+            else:
+                classified[field] = 'UNRESOLVED: other bytes differ'
         elif field in ('head.created', 'head.modified'):
             classified[field] = 'producer timestamp (export-rs wall clock); not copied in this run'
         else:
@@ -68,6 +100,9 @@ def compare(source, native, reference):
             'reference_sha256': hashlib.sha256(reference_bytes).hexdigest(),
             'byte_identical': native_bytes == reference_bytes,
             'byte_identical_except_checksum_adjustment': zeroed,
+            'tables_identical_except_placement': placement_only,
+            'checksum_adjustments_valid': adjustments_valid,
+            'table_data_order': {'native': order(tables_a), 'reference': order(tables_b)},
             'differing_inventory_keys': sorted(diff), 'differing_global_fields': global_fields,
             'name_records_equal': a['name_records'] == b['name_records'],
             'cmap_records_equal': a['cmap_records'] == b['cmap_records'],
@@ -93,6 +128,8 @@ def main():
                          for field, rule in r['classification'].items() if rule.startswith('UNRESOLVED')})
     summary = {'files': len(results), 'byte_identical': sum(r['byte_identical'] for r in results.values()),
                'byte_identical_except_checksum_adjustment': sum(r['byte_identical_except_checksum_adjustment'] for r in results.values()),
+               'tables_identical_except_placement': sum(r['tables_identical_except_placement'] for r in results.values()),
+               'checksum_adjustments_valid': sum(r['checksum_adjustments_valid'] for r in results.values()),
                'pixel_glyphs_checked': sum(r['pixels']['glyphs_checked'] for r in results.values()),
                'differing_field_file_counts': counts, 'unresolved': unresolved}
     a.output.write_text(json.dumps({'summary': summary, 'files': results}, indent=1) + '\n')
