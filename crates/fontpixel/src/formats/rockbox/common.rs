@@ -7,10 +7,12 @@
     feature = "playdate"
 ))]
 pub use super::legacy_common::int;
+#[cfg(feature = "rockbox")]
+pub use super::legacy_common::source_budget;
 #[cfg(feature = "u8m")]
 pub use super::legacy_common::source_budget_for;
 pub use super::legacy_common::{
-    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, mono, source_budget,
+    Budget, audit, bitmap_limits, check, convert_gray, finish, invalid, mono,
 };
 use crate::bitmap::{Bitmap, Bounds, Mono};
 #[cfg(any(

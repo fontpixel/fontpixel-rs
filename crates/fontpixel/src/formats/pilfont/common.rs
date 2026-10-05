@@ -1,11 +1,11 @@
 //! Original bounded primitives shared by native image-font families.
 #[cfg(any(feature = "sfont", feature = "vlw"))]
 pub use super::legacy_common::int;
+#[cfg(feature = "pilfont")]
+pub use super::legacy_common::source_budget;
 #[cfg(feature = "vlw")]
 pub use super::legacy_common::source_budget_for;
-pub use super::legacy_common::{
-    Budget, audit, bitmap_limits, check, finish, invalid, source_budget,
-};
+pub use super::legacy_common::{Budget, audit, bitmap_limits, check, finish, invalid};
 use crate::bitmap::{Bitmap, Bounds, Gray8, Mono};
 use crate::model::{Codepoint, Font, FontSet, Glyph, GlyphBitmap, Vector};
 use crate::{ResourceLimits, Result};

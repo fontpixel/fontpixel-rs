@@ -73,6 +73,7 @@ impl Budget {
         })?;
         check(self.used, self.max, "TeX/Plan 9 aggregate bytes")
     }
+    #[cfg(feature = "plan9")]
     pub fn remaining(&self) -> usize {
         self.max - self.used
     }
@@ -125,6 +126,7 @@ pub(crate) struct Output {
 }
 impl Output {
     /// A buffer bounded only by `max` (its private ledger is unlimited).
+    #[cfg(feature = "plan9")]
     pub fn new(max: usize) -> Result<Self> {
         let budget = crate::working::Budget::new(usize::MAX, "encoded font bytes");
         Self::charged(max, &budget)
