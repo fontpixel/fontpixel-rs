@@ -6,6 +6,8 @@
 use super::*;
 use crate::working::Vector;
 mod brotli_decode;
+mod brotli_encode;
+pub use brotli_encode::{brotli_encoder_heap_bound, brotli_encoder_proven_heap_bound};
 #[cfg(feature = "ttc")]
 pub(in crate::woff) mod collection;
 mod transform;
@@ -114,23 +116,41 @@ fn ushort255(out: &mut Buffer, n: u16) -> Result<()> {
 fn decompress(data: &[u8], expected: usize, budget: &Budget) -> Result<Owned<Vec<u8>>> {
     brotli_decode::decompress(data, expected, budget)
 }
-/// Inputs below this size use one Brotli stream even with several workers:
-/// small streams do not amortize worker creation/dictionary preparation. The
-/// size-based choice is deterministic and independent of CPU count.
-const PARALLEL_MIN_BYTES: usize = 128 * 1024;
+/// Brotli window used for every WOFF2 stream.
+const LGWIN: u32 = 22;
 fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Owned<Vec<u8>>> {
     use brotli::enc::{BrotliEncoderParams, backward_references::BrotliEncoderMode};
     let params = BrotliEncoderParams {
         quality: o.quality as i32,
         mode: BrotliEncoderMode::BROTLI_MODE_FONT,
-        lgwin: 22,
+        lgwin: LGWIN as i32,
         size_hint: data.len(),
         ..Default::default()
     };
-    if o.compression_threads == 1 || data.len() < PARALLEL_MIN_BYTES {
+    // The encoder's own heap cannot be refused cell by cell; reserve its
+    // admitted bound (proven for q0-9, empirical for q10-11) first and hold it
+    // until every worker has joined.
+    let encoder = budget.reserve(
+        brotli_encoder_heap_bound(o.quality, LGWIN, data.len(), o.compression_threads)
+            .ok_or_else(|| budget.error())?,
+    )?;
+    let result = compress_admitted(data, o, l, budget, &params);
+    drop(encoder);
+    result
+}
+fn compress_admitted(
+    data: &[u8],
+    o: &Options,
+    l: &Limits,
+    budget: &Budget,
+    params: &brotli::enc::BrotliEncoderParams,
+) -> Result<Owned<Vec<u8>>> {
+    // Small streams do not amortize worker creation/dictionary preparation.
+    // The size-based choice is deterministic and independent of CPU count.
+    if o.compression_threads == 1 || data.len() < brotli_encode::PARALLEL_MIN_BYTES {
         let mut out = Buffer::new(budget)?;
         // A ledger failure inside the writer comes back as the original error.
-        brotli::BrotliCompress(&mut &data[..], &mut out, &params).map_err(io_error)?;
+        brotli::BrotliCompress(&mut &data[..], &mut out, params).map_err(io_error)?;
         Ok(out.into_owned())
     } else {
         use brotli::enc::{SendAlloc, StandardAlloc, backward_references::UnionHasher};
@@ -163,7 +183,7 @@ fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Own
         let (input, input_lease) = Buffer::from_slice(budget, data)?.into_parts();
         let mut owned = brotli::enc::Owned::new(Bytes(input));
         // compress_multi joins every worker before it returns.
-        let size = brotli::enc::compress_multi(&params, &mut owned, &mut out, &mut allocators)
+        let size = brotli::enc::compress_multi(params, &mut owned, &mut out, &mut allocators)
             .map_err(|e| invalid(format!("parallel Brotli: {e:?}")))?;
         drop(owned);
         drop(input_lease);

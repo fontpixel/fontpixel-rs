@@ -147,7 +147,11 @@ without `#[allow]`; a `GlobalAlloc` implementation requires `unsafe impl`. The
 package keeps its own lint table (missing_docs, clippy::all) and contains only
 the counting allocator and its tests. Run it by name:
 `cargo test --locked --release -p fontpixel-heap-check`. Cargo.lock gains one
-path-package entry and no registry packages (same `brotli`/`miniz_oxide` pins).
+path-package entry and no registry packages (same `brotli` pin). Its two
+measurement tests are `#[ignore]`d so the debug `cargo test --workspace` gate
+stays fast; run them with
+`cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture`
+(optionally `FONTPIXEL_HEAP_CHECK_FONT=<large sfnt>`).
 
 ## A7. Default workload report (goal 5)
 
@@ -160,11 +164,137 @@ tests/call sites that now fail.
 
 - `cargo test --locked -p fontpixel --features woff,woff2,ttc --lib woff`
 - `cargo test --locked -p fontpixel --features woff,woff2,ttc --test woff --test woff_budget`
-- `cargo test --locked --release -p fontpixel-heap-check`
+- `cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture`
 - `cargo clippy --locked -p fontpixel --all-targets --all-features -- -D warnings`
 - `cargo clippy --locked -p fontpixel-heap-check --all-targets -- -D warnings`
 - `cargo fmt --all --check`
 
-## Status
+## Status (2026-10-05, branch of the unit-A worktree)
 
-(filled in at the end of the unit)
+| Item | Status | Evidence |
+|---|---|---|
+| A1 ledger lifecycle | done | `woff/{mod,woff1,woff2}.rs`, `woff2/{transform,collection}.rs`; `woff::ledger_tests` |
+| A1 shared tables once | done | `ledger_tests::shared_collection_tables_are_charged_once` (4 identical faces with a 64 KiB table add < 32 KiB of peak) |
+| A1 sfnt::collection boundary | done as reservation | `collection::{parse_bound, assemble_bound}` reserve a source-derived bound around `Collection::parse` / `sfnt::collection::encode` (that file is outside this unit and keeps its own ledgers). Both bounds were derived from `sfnt/collection.rs` at `6297998`; any later change to that file's allocations must re-check them |
+| A2 io::Error unwrapping | done | `woff::io_error`; `woff2::tests::encoder_bound_is_admitted_and_writer_failures_stay_resource_limits`; `tests/woff_budget.rs` sweeps every `max_total_bytes` below each boundary (512-value window + geometric sample) and sees only `ResourceLimit` |
+| A3 encoder bound function | done | `woff::woff2::brotli_encoder_heap_bound`, derivation in `woff2/brotli_encode.rs` module docs |
+| A3 admission before encoding | done | `woff2::compress` reserves the bound for the whole call (all workers joined) |
+| A3 empirical proof | done | `fontpixel-heap-check/tests/encoder_bound.rs`: 264 cases, q0-11 x threads 1/2 x 8 inputs (+lgwin 10/16/24); max observed/bound 0.929; Tong sfnt included via env |
+| A3 defaults unchanged | **conflict, see below** | bytes identical wherever the encode still succeeds; q >= 10 now fails at 256 MiB for Brotli inputs above ~40 KiB |
+| A4 Brotli decoder | done | `fontpixel-heap-check/tests/codecs.rs`: decode heap <= minimal ledger + 48 bytes on all cases |
+| A4 deflate backend | done | WOFF1 calls `miniz_oxide =0.9.1` directly (`woff/zlib.rs`); flate2 is only the zlib test oracle. `cargo tree -e features -i flate2` (workspace default, workspace all-features, fontpixel all-features): only `default`, `rust_backend`, `miniz_oxide`, `any_impl`, `runtime_detection`; no `zlib`/`zlib-rs`/C feature is active. WOFF1 encode/decode heap <= minimal ledger + 48 bytes at levels 0/6/9 incl. Tong |
+| A5 exact capacity | done | `ledger_tests`: WOFF1 encode/decode, WOFF2 encode q2/q5 transforms on/off, WOFF2 decode on/off, WOFF2 collection encode/decode; exact capacity succeeds with identical bytes, one byte short is `ResourceLimit`, all charges released |
+| A6 measurement package | done | `crates/fontpixel-heap-check` (not a default member); Cargo.lock gains only its path entry |
+| A7 default workload report | done | below |
+
+Byte identity: a probe encoding/decoding every `tests/data` ttf/otf (45 files, plus a
+two-face and a shared-face TTC) with WOFF1 levels 0/6/9 and WOFF2 q0/1/2/4/5/9/10/11,
+threads 1/2, transform combinations and auxiliary blocks produced identical digests
+and identical error lines to `6297998` (9512 lines). The full Tong sfnt at q5/q11,
+threads 1/2 is identical with a 64 GiB ledger; at the 256 MiB default q11 now fails.
+
+### Bound versus default (superseded by the resumed decision below)
+
+`brotli_encoder_heap_bound(q, 22, n, threads)`, MiB:
+
+| n | q9 t1/t2 | q10 = q11 t1 | q10 = q11 t2 |
+|---|---|---|---|
+| 1 KiB | 43.4 | 149.5 | 149.5 |
+| 32 KiB | 45.2 | 210.5 | 210.5 |
+| 48 KiB | 46.1 | 294.6 | 294.6 |
+| 64 KiB | 47.1 | 379.3 | 379.3 |
+| 160 KiB | 52.6 / 96.3 | 885.4 | 927.5 |
+| 1 MiB | 83.7 / 134.3 | 5423.5 | 5472.5 |
+| 8 MiB | 97.7 / 187.4 | 6771.0 | 13534.0 |
+
+At q >= 10 the bound passes 256 MiB for Brotli inputs between 32 and 48 KiB, so
+default-quality (11) WOFF2 encoding of essentially every real font now fails with
+`ResourceLimit { resource: "WOFF working bytes", limit: 268435456 }`. Observed
+encoder heap is 1-12% of the q >= 10 bound (it is 50-93% at q <= 9).
+
+Full Tong square TTF (`full-correctness-v2/vector-native/font.ttf`, 7,550,360
+bytes) with default `woff2::Options` (q11, 2 threads), release build:
+smallest succeeding `max_total_bytes` is about 13,544 MiB, i.e. about 13,288 MiB
+(~13 GiB) more than the 256 MiB default. Observed encoder heap for that input is
+about 163 MB (q11, 2 threads). At q9/2 threads it needs 206.4 MB of ledger
+(observed 133 MB) and fits the default.
+
+Default-limit tests in the focused set that now fail:
+`crates/fontpixel/tests/woff.rs::large_parallel_streams_are_deterministic_and_preserve_all_tables`
+(q11 on a 160 KiB table). All other `tests/woff.rs`, `vector_raster`, `contracts`,
+`embedded_bitmap`, `model`, `bdf` and the CLI `cli`/`merge_phase6`/
+`phase6_cli_recovery` tests pass (their WOFF2 inputs are small). Expected to fail
+outside this unit's test set: every default-quality WOFF2 export of a full font
+(Tong examples, full Tong/catalogue CLI conversions to `.woff2`).
+
+Choices open to the coordinator, none taken here: accept the gate as is; exclude
+q >= 10 from the strict claim and document it; tighten the q >= 10 terms with a
+further proof (the dominant terms are `ClusterBlocks` histogram arrays and pair
+queues sized by block count, bounded today only by symbol count); or reopen the
+fallible-allocator route that the design sources rule out for this phase.
+
+## Resumed after the coordinator decision (2026-10-05)
+
+The ledger commits (`bc024c8`, `5146bde`) were merged into main (`417bee2`);
+the first bound commits (`73eb8bc`, `1facfb7`) were not, because they made
+default q11 WOFF2 fail. Main was merged back into this branch without
+conflicts (`working.rs` keeps one `Budget::peak`; B's `vec_into`/`split` are
+untouched; `sfnt/collection.rs` is unchanged, so the TTC reservations still
+match it).
+
+**Route: empirical for quality 10-11; proven for quality 0-9.**
+
+- Tighter proof attempt (timeboxed): the dominant q >= 10 terms are
+  `ClusterBlocks` histogram arrays and pair queues sized by the block count.
+  The block-switch cost argument in `FindBlocks`/`update_cost_and_signal`
+  only proves consecutive switches are `ceil(S / D)` symbols apart, with switch
+  cost `S` = 28.1/13.5/14.6 bits and per-symbol cost spread `D` up to
+  `log2(total) + 2` bits, i.e. one or two symbols. Nothing in
+  `block_splitter.rs`/`cluster.rs`/`metablock.rs` (max 256 block types, batch
+  size 64, 100/50 split histograms) caps the block count of a metablock below
+  that, so a proven bound stays near 14 GB for a full Tong stream. Not
+  provable within the timebox.
+- Admission now: `brotli_encoder_heap_bound` = proven bound for q0-9
+  (unchanged, `brotli_encoder_proven_heap_bound`), and for q10-11 the exact
+  persistent tables (H10 hasher, ring buffer + first cell, Huffman trees,
+  bookkeeping) plus
+  `1.5 * (1 MiB + 80 * min(n, 2^lgblock) + 7 * min(n, max_length))` per
+  encoder instance, plus each parallel worker's output cell. Documented as
+  **empirical, not proven** in the `brotli_encode.rs` module docs, here, and in
+  `docs/w6.1-writer-budget.md`.
+- Evidence: `fontpixel-heap-check/tests/encoder_bound.rs`, 816 cases over 31
+  inputs (synthetic, adversarial repeat structures: recombined vocabularies,
+  chunk-mutation chains, Fibonacci words; all 16 full Tong TTF/OTF exports;
+  the Tong sfnt), q0-11, lgwin 10/16/22/24, 1 and 2 threads. Observed peak <=
+  admitted in every case. q0-9: max 0.929. q10-11: the data-dependent heap is
+  at most 0.65 of the envelope; total observed/admitted at most 0.90 at
+  lgwin 22.
+- Full Tong q11 / 2 threads (admitted vs observed encoder heap): square TTF
+  9.06 MB sfnt 256.8 vs 168.9 MB; dot TTF 6.47 MB 227.0 vs 154.8 MB; the
+  `vector-native` sfnt 239.5 vs 162.1 MB.
+- Default CLI path: the WOFF2 ledger of each default Tong task has 254.8-256.1
+  MB remaining at the encoder gate for raw Brotli streams of 6.05-6.83 MB; the
+  largest stream needs about 231 MB of encoder admission plus 13.7 MB of
+  fontpixel buffers, leaving about 10 MB. Estimated limit: raw streams up to
+  about 7.5 MB at q11/2 threads fit the 255 MiB CLI working allowance; larger
+  ones return `ResourceLimit` (q <= 9 or a larger limit then applies).
+- Default Tong batch (`benches/phase6_tong.py batch`, release build of this
+  branch): exit 0, 64/64 tasks, 84 artifacts. All 84 hashes equal both main
+  `417bee2` and `6297998` run the same way. Against
+  `WORK/gates/100-v2-tong-default-cli/stdout.log` (frozen-binaries-v2), 60
+  BDF/PCF/OTB artifacts match and 24 TTF/OTF/WOFF2 differ for main and
+  `6297998` alike: the sfnt `OS/2.ulCodePageRange1` byte at offset 79 and the
+  derived `head.checkSumAdjustment` differ. That source change predates this
+  unit; WOFF2 bytes are unchanged by it.
+- Existing tests: `tests/woff.rs` (including
+  `large_parallel_streams_are_deterministic_and_preserve_all_tables` with its
+  original budget), `woff_budget`, the lib unit tests, `vector_raster`,
+  `contracts`, `embedded_bitmap`, `model`, `bdf`, and the CLI `cli`,
+  `merge_phase6`, `phase6_cli_recovery` tests pass.
+- Whole-call check (`fontpixel-heap-check/tests/codecs.rs`, release, with the
+  `vector-native` Tong sfnt): every WOFF1/WOFF2/TTC case stays within its
+  smallest succeeding `max_total_bytes` plus report strings. Default WOFF2
+  options (q11, 2 threads, transforms on) need 237.4 MB of `max_total_bytes`
+  (observed whole-call heap 177.3 MB), within the 256 MiB library default.
+  With transforms off (not a default) the same font needs 262.1 MB, just under
+  the library default and above the 255 MiB CLI working allowance.

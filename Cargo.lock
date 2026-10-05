@@ -496,6 +496,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "fontpixel-heap-check"
+version = "0.1.0"
+dependencies = [
+ "brotli",
+ "fontpixel",
+]
+
+[[package]]
 name = "fontpixel-py"
 version = "0.1.0"
 dependencies = [

@@ -1,0 +1,28 @@
+[package]
+name = "fontpixel-heap-check"
+description = "Counting-allocator measurements for fontpixel codec heap bounds (test-only)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish = false
+
+# Not in workspace default-members. The measurement tests are #[ignore]d so the
+# debug-profile `cargo test --workspace` gate stays fast; run them explicitly:
+#   cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture
+# Optional: FONTPIXEL_HEAP_CHECK_FONT=<large sfnt>, FONTPIXEL_HEAP_CHECK_QUICK=1.
+# A process-wide `#[global_allocator]` needs `unsafe impl GlobalAlloc`, which
+# the workspace lint table forbids. This package therefore keeps its own lint
+# table and contains nothing but the counting allocator and its measurements.
+
+[dependencies]
+fontpixel = { workspace = true, features = ["woff", "woff2", "ttc"] }
+brotli = { version = "=9.0.0", default-features = false, features = ["std"] }
+
+[lints.rust]
+missing_docs = "warn"
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = "warn"

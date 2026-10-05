@@ -92,3 +92,40 @@ fn woff1_roundtrip() {
         assert_eq!(d.auxiliary, o.auxiliary);
     }
 }
+#[test]
+fn encoder_bound_is_admitted_and_writer_failures_stay_resource_limits() {
+    let data = vec![7u8; 10_000];
+    let l = Limits::default();
+    let o = Options {
+        quality: 2,
+        compression_threads: 1,
+        ..Default::default()
+    };
+    let bound = brotli_encoder_heap_bound(2, LGWIN, data.len(), 1).unwrap();
+    // The bound itself is refused before the encoder runs.
+    let short = Budget::new(bound - 1, "encoder test bytes");
+    assert!(matches!(
+        compress(&data, &o, &l, &short),
+        Err(Error::ResourceLimit {
+            resource: "encoder test bytes",
+            ..
+        })
+    ));
+    assert_eq!(short.remaining(), bound - 1);
+    // The bound fits but the ledger output buffer inside the Brotli writer does
+    // not: the io::Error carries the original ResourceLimit back out.
+    let writer = Budget::new(bound + 1, "writer test bytes");
+    assert!(matches!(
+        compress(&data, &o, &l, &writer),
+        Err(Error::ResourceLimit {
+            resource: "writer test bytes",
+            ..
+        })
+    ));
+    assert_eq!(writer.remaining(), bound + 1);
+    let enough = Budget::new(bound + 4096, "writer test bytes");
+    let out = compress(&data, &o, &l, &enough).unwrap();
+    assert!(!out.is_empty());
+    drop(out);
+    assert_eq!(enough.remaining(), bound + 4096);
+}
