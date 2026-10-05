@@ -131,6 +131,47 @@ class CataloguePolicyTests(unittest.TestCase):
         self.assertEqual((vector['notdef'], vector['notdef_advance'], vector['notdef_lsb'], vector['vendor']),
                          ('empty', 494, 0, '????'))
 
+    def test_explicit_profile_sets_original_sfnt_table_policy(self):
+        small = SimpleNamespace(path=Path('/input/s.bdf'), pixel_size=8)
+        large = SimpleNamespace(path=Path('/input/l.bdf'), pixel_size=16)
+        families = [dict(fonts=[(large, None), (small, None)])]
+        bitmap = dict(self.names(), kind='ttf', inputs=['/input/l.bdf', '/input/s.bdf'], file='m.ttf')
+        square = dict(self.names(), kind='ttf-square', inputs=['/input/s.bdf'], file='s.ttf',
+                      shape='square', pixel_size=8)
+        tasks = c.attach_profile([bitmap, square], families, 'explicit')
+        # ttfexport.py:62: strikes in pixel-size order.
+        self.assertEqual(tasks[0]['inputs'], ['/input/s.bdf', '/input/l.bdf'])
+        jobs = tomllib.loads(c.jobfile(tasks, Path('/output')))['tasks']
+        self.assertEqual(jobs[0]['inputs'], ['/input/s.bdf', '/input/l.bdf'])
+        o = jobs[0]['options']
+        records = o['otb_name_record']
+        self.assertEqual(len(records), 14)
+        self.assertIn('3/1/0x409/3=FontPixel Sample-Bold u12b-1.000', records)
+        self.assertIn('1/0/0/0=Source — licence (Author)', records)
+        self.assertIn('1/0/0/5=1.000', records)
+        expected = {'otb_head_flags': 3, 'otb_lowest_rec_ppem': 3, 'otb_created': 3660681600,
+                    'otb_modified': 3660681600, 'otb_os2_version': '3', 'otb_vendor': '????',
+                    'otb_fs_type': 4, 'otb_fs_selection': 0, 'otb_break_char': 32, 'otb_post_names': 'omit',
+                    'otb_fixed_pitch': 'false', 'otb_underline': '0,0', 'otb_cmap_unicode_full': 'when-needed',
+                    'otb_glyph_order': 'codepoint', 'otb_notdef': 'empty', 'otb_notdef_advance': 500,
+                    'otb_outline_tables': 'empty-glyf', 'otb_max_zones': '2', 'otb_hmtx': 'compact-trailing',
+                    'otb_width_max': 'advance', 'otb_caret_slope': '0,1', 'otb_line_extremes': 'zero',
+                    'otb_vertical_line_metrics': 'mirror-horizontal', 'otb_index_layout': 'spanning',
+                    'otb_upm': 1000, 'otb_reference': 'largest', 'otb_rounding': 'ties-even'}
+        self.assertEqual({k: o[k] for k in expected}, expected)
+        v = jobs[1]['options']
+        self.assertEqual(v['name_record'], records)
+        self.assertEqual((v['fs_type'], v['fs_selection'], v['break_char'], v['code_page_ranges']),
+                         (4, 0, 32, '0,0'))
+        self.assertEqual((v['created'], v['modified'], v['fixed_pitch'], v['max_zones'], v['gasp']),
+                         (3660681600, 3660681600, 'false', '2', 'omit'))
+        self.assertEqual((v['cmap_unicode_full'], v['glyph_order']), ('when-needed', 'codepoint'))
+        self.assertNotIn('dot_glyph', v)
+        self.assertEqual(self.explicit_tasks()[4]['explicit']['dot_glyph'], 'after-notdef')
+        # Text Mac Roman cannot encode is not silently re-encoded (no ltag fallback).
+        with self.assertRaises(UnicodeEncodeError):
+            c.fonttools_name_records(dict(bitmap, copyright='一'))
+
     def test_explicit_profile_skips_charset_step_only_for_the_copied_pcf(self):
         with tempfile.TemporaryDirectory() as td, \
                 patch.object(c.subprocess, 'run', return_value=SimpleNamespace(returncode=0)) as run:
