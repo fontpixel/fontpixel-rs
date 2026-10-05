@@ -131,8 +131,14 @@ inventory + FreeType pixel gate) over the 20 OTBs (`tong-batch-parity-otb-*`):
   classified derived (placement order of identical tables).
 
 Of the 18 differing global fields plus names/strikes/cmap of the default run,
-all are now equal except the derived checksum. Without `--parity-timestamps`,
-`head.created/modified` differ in 20 files (export-rs wall clock, volatile).
+all are now equal except the derived checksum. Without `--parity-timestamps`
+(`tong-batch-parity-no-timestamps-otb-*`), `head.created/modified` (and the raw
+timestamps) differ in all 20 files: export-rs wall clock, a producer timestamp;
+checkSumAdjustment is then derived from placement plus those timestamps.
+
+The parity binary predates one report-only change made afterwards: the
+`embedded.index_layout` Info note is now emitted only when at least one
+shared-metric run was written (output bytes unaffected; covered by tests).
 
 Original-lossy behaviour reproduced only under explicit options, and reported
 by the native writer as `Loss` (strict would reject): source BDF copyright
@@ -154,6 +160,32 @@ head/hhea extents and bearings, xAvgCharWidth (5, glyph-set driven), cmap
 records (21: fontTools writes format 4 only), post underline (2), mirrored vert
 line metrics and strike order, checkSumAdjustment.
 
+### Files outside the unit-D list (merge notes)
+
+- `crates/fontpixel/src/sfnt/cmap.rs`: new `pub fn encode_records(mapping,
+  num_glyphs, limits, unicode_full_for_bmp)` and private
+  `encode_records_with_budget`; `encode` and `encode_with_budget` (subset path)
+  keep their signatures and bytes. Inside, the record count becomes
+  `if has_bmp_subtable { 3 } else { 1 } + usize::from(unicode_full)` and record
+  index 1 (0, 4) is skipped when `!unicode_full`.
+- `crates/fontpixel/src/sfnt/bitmap.rs`: only `mod runs; pub use runs::...`;
+  the new encoder lives in `sfnt/bitmap/runs.rs`, `encode` is untouched.
+- `crates/fontpixel/src/formats/embedded.rs` (owned) touched in: `loss`
+  (now via `push`, plus `note`), `EmbeddedWriteOptions` (new `metadata` field),
+  `write_impl` (validate/prepare/audit, widthMax, index layout),
+  `write_native_sbix` call site, `common_tables`/`common_design_tables`
+  (`CommonOptions` replaces the `DesignOptions` parameter; head, OS/2, cmap,
+  name, post application). New `formats/embedded/metadata.rs`.
+
+### Budget accounting (deviation from the pure caller-ledger pattern)
+
+The explicit name table is charged on the writer side twice (conservative): the
+CLI subtracts `WriteArguments::reserved_bytes` (argument strings + built table
++ Arc header) from the embedded writer's limit in `p3.apply`, and the library's
+`prepare` charges retained table + encode scratch + output against the writer
+total. The read phase of `convert`/`merge` does not yet reserve these bytes;
+the main.rs hookup below closes that. Scalar options own no allocation.
+
 ### Not closed / notes
 
 - main.rs (unit E) hookup, optional: the CLI already subtracts
@@ -168,3 +200,6 @@ line metrics and strike order, checkSumAdjustment.
   `-p fontpixel-cli --no-default-features --features bdf[,otb|bdat|color]`.
 - Docs `migration-tong.md`/`migration-fontpixel.md` "Option: none" rows for OTB
   metadata are stale; left for the docs owner.
+- `phase6_cli_recovery` (not this unit) creates `.claude/worktrees/local-work/
+  w6.1-tests` when run from a worktree (`../../../local-work` relative path); the
+  new CLI test uses `CARGO_TARGET_TMPDIR` instead.

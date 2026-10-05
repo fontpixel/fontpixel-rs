@@ -295,14 +295,6 @@ impl EmbeddedMetadataOptions {
                 );
             }
         }
-        if self.index_layout != EmbeddedIndexLayout::Canonical {
-            note(
-                report,
-                "index_layout",
-                "Shared-metric bitmap runs store zero vertical big metrics; \
-                 horizontal metrics and pixels are unchanged",
-            );
-        }
     }
     /// OS/2 average width under the selected arithmetic.
     pub(super) fn average(&self, advances: impl Iterator<Item = u16>) -> Result<i16> {

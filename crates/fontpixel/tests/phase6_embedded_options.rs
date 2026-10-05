@@ -731,7 +731,7 @@ mod metadata {
                         .iter()
                         .filter(|e| e.code == "embedded.index_layout")
                         .count(),
-                    1
+                    usize::from(runs > 0)
                 );
                 assert_eq!(decoded(&bytes, kind), decoded(&canonical.0, kind));
             }

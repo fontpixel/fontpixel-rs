@@ -41,14 +41,20 @@ def zero_checksum_adjustment(data):
     return bytes(data)
 
 
-def directory(data):
+def directory(data, timestamps=False):
     records = {}
     for i in range(int.from_bytes(data[4:6], 'big')):
         record = data[12 + 16 * i:28 + 16 * i]
         offset, length = int.from_bytes(record[8:12], 'big'), int.from_bytes(record[12:16], 'big')
         table = bytearray(data[offset:offset + length])
-        if record[:4] == b'head': table[8:12] = b'\0\0\0\0'
-        records[bytes(record[:4])] = {'checksum': record[4:8].hex(), 'offset': offset, 'length': length,
+        checksum = record[4:8].hex()
+        if record[:4] == b'head':
+            table[8:12] = b'\0\0\0\0'
+            if timestamps:
+                # Producer timestamps are classified separately; the head
+                # directory checksum is derived from them.
+                table[20:36] = bytes(16); checksum = None
+        records[bytes(record[:4])] = {'checksum': checksum, 'offset': offset, 'length': length,
                                       'data': bytes(table)}
     return data[:12], records
 
@@ -75,9 +81,13 @@ def compare(source, native, reference):
     native_bytes, reference_bytes = native.read_bytes(), reference.read_bytes()
     zeroed = zero_checksum_adjustment(native_bytes) == zero_checksum_adjustment(reference_bytes)
     (header_a, tables_a), (header_b, tables_b) = directory(native_bytes), directory(reference_bytes)
-    placement_only = (header_a == header_b and tables_a.keys() == tables_b.keys() and all(
-        {k: v for k, v in tables_a[tag].items() if k != 'offset'} == {k: v for k, v in tables_b[tag].items() if k != 'offset'}
-        for tag in tables_a))
+    def same_except_placement(left, right):
+        (header_l, tables_l), (header_r, tables_r) = left, right
+        return header_l == header_r and tables_l.keys() == tables_r.keys() and all(
+            {k: v for k, v in tables_l[tag].items() if k != 'offset'} == {k: v for k, v in tables_r[tag].items() if k != 'offset'}
+            for tag in tables_l)
+    placement_only = same_except_placement((header_a, tables_a), (header_b, tables_b))
+    placement_and_timestamps = same_except_placement(directory(native_bytes, True), directory(reference_bytes, True))
     adjustments_valid = checksum_adjustment_valid(native_bytes) and checksum_adjustment_valid(reference_bytes)
     order = lambda tables: [tag.decode() for tag, _ in sorted(tables.items(), key=lambda item: item[1]['offset'])]
     classified = {}
@@ -86,6 +96,10 @@ def compare(source, native, reference):
             if zeroed or (placement_only and adjustments_valid):
                 classified[field] = ('derived: every table byte-identical with checkSumAdjustment zeroed, '
                                      'directory differs only in table data offsets, both adjustments valid')
+            elif placement_and_timestamps and adjustments_valid:
+                classified[field] = ('derived: every table byte-identical with checkSumAdjustment and the '
+                                     'separately classified head timestamps zeroed, directory differs only in '
+                                     'table data offsets and the head checksum, both adjustments valid')
             else:
                 classified[field] = 'UNRESOLVED: other bytes differ'
         elif field in ('head.created', 'head.modified'):

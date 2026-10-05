@@ -1592,7 +1592,16 @@ fn write_impl(
     let tables = match options.metadata.index_layout {
         EmbeddedIndexLayout::Canonical => sbit::encode(&strikes, kind, count, limits)?,
         EmbeddedIndexLayout::SharedMetricRuns { minimum_run } => {
-            sbit::encode_shared_metric_runs(&strikes, kind, count, minimum_run, limits)?.tables
+            let runs = sbit::encode_shared_metric_runs(&strikes, kind, count, minimum_run, limits)?;
+            if runs.shared_runs > 0 {
+                note(
+                    &mut report,
+                    "index_layout",
+                    "Shared-metric bitmap runs store zero vertical big metrics; \
+                     horizontal metrics and pixels are unchanged",
+                );
+            }
+            runs.tables
         }
     };
     let mut builder = SfntBuilder::new(Flavor::TrueType);
