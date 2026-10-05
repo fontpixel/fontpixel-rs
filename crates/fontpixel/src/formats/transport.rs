@@ -78,16 +78,50 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
         if !self.0.owns_model() {
             return OwnedWrite::Declined(fonts);
         }
-        OwnedWrite::Written(if let Some(common) = &options.transport_limits {
-            let limits = self.0.budget().intersect(common);
-            fonts.validate(&limits.resources).and_then(|()| {
-                self.0
-                    .restricted(&limits)
-                    .write_owned_native(fonts, options)
-            })
+        OwnedWrite::Written(self.owned_limits(&fonts, options).and_then(|limits| {
+            fonts.validate(&limits.resources)?;
+            self.0
+                .restricted(&limits)
+                .write_owned_native(fonts, options)
+        }))
+    }
+}
+
+impl<C: Budget> NativeWriter<C> {
+    /// The owned route's single allowance: the model's retained usage plus
+    /// exactly what the borrowing route would give the codec, i.e. its own
+    /// budget intersected with the common limits less the model. The codec's
+    /// budget therefore keeps bounding its working stages as before, and the
+    /// model's charge can be reused once the codec has dropped it.
+    fn owned_limits(&self, fonts: &FontSet, options: &WriteOptions) -> Result<TransportLimits> {
+        let budget = self.0.budget();
+        let (model, mut limits) = if let Some(common) = &options.transport_limits {
+            let total = common.resources.max_total_bytes;
+            let model = fonts.retained_usage(total)?.bytes;
+            let error = || crate::Error::ResourceLimit {
+                resource: "writer model bytes",
+                limit: total,
+            };
+            let mut working = common.clone();
+            working.resources.max_total_bytes = total.checked_sub(model).ok_or_else(error)?;
+            working.max_output_bytes = common
+                .max_output_bytes
+                .checked_sub(model)
+                .ok_or_else(error)?;
+            (model, budget.intersect(&working))
         } else {
-            self.0.write_owned_native(fonts, options)
-        })
+            let model = fonts.retained_usage(usize::MAX)?.bytes;
+            (model, budget)
+        };
+        let total = limits.resources.max_total_bytes;
+        limits.resources.max_total_bytes =
+            total
+                .checked_add(model)
+                .ok_or(crate::Error::ResourceLimit {
+                    resource: "writer model bytes",
+                    limit: total,
+                })?;
+        Ok(limits)
     }
 }
 

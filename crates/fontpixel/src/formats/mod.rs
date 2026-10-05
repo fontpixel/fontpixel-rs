@@ -835,12 +835,12 @@ pub trait FormatWriter<M>: Send + Sync {
     }
 
     /// Encode a model the caller hands over, so the writer can drop parts of
-    /// it before its later stages. The model's storage then belongs to the
-    /// writer's allowance (`options.transport_limits`, or the writer's own
-    /// limits), which it must charge before relying on it. Output and report
-    /// must equal [`write`](Self::write). The default declines and hands the
-    /// model back; [`Registry::write_owned`] then reserves the model and
-    /// uses the borrowing path.
+    /// it before its later stages. `options.transport_limits` then includes
+    /// the model, which the writer must charge exactly before relying on it;
+    /// what the borrowing route would allow besides the model stays the bound
+    /// on everything else. Output and report must equal [`write`](Self::write).
+    /// The default declines and hands the model back; [`Registry::write_owned`]
+    /// then reserves the model and uses the borrowing path.
     fn write_owned(&self, fonts: M, _options: &WriteOptions) -> OwnedWrite<M> {
         OwnedWrite::Declined(fonts)
     }
@@ -1231,16 +1231,19 @@ impl Registry<crate::FontSet> {
     /// over the model so its storage can be released before later encoder
     /// stages. Output and report are identical.
     ///
-    /// `options.transport_limits` (or, without it, the writer's own limits) is
-    /// the allowance *including* this model, which the registry or the writer
-    /// charges; the caller still accounts for the incoming `report`. Writers
-    /// with an owned route (the outline writers `ttf`, `otf`, `woff`, `woff2`,
-    /// `ttc` and `vector-raster`) charge [`FontSet::retained_usage`] on their
-    /// own ledger and drop the model before encoding tables or the webfont
-    /// envelope. Every other writer, and any gzip-named output (whose envelope
-    /// replays the writer with the model), first has the model's
-    /// `retained_usage` removed from the allowance and then runs the borrowing
-    /// route; the model drops when it returns.
+    /// `options.transport_limits` is the allowance *including* this model,
+    /// which the registry or the writer charges exactly
+    /// ([`FontSet::retained_usage`]); the caller still accounts for the
+    /// incoming `report`. A writer's own budget bounds what it may use besides
+    /// the model, exactly as on the borrowing route. Writers with an owned
+    /// route (the outline writers `ttf`, `otf`, `woff`, `woff2`, `ttc` and
+    /// `vector-raster`) charge the model on their own ledger and drop it before
+    /// encoding tables or the webfont envelope, so its charge is reused there.
+    /// Every other writer, and any gzip-named output (whose envelope replays the
+    /// writer with the model), has the model's `retained_usage` removed from the
+    /// transport allowance and runs the borrowing route; the model drops when it
+    /// returns. Without transport limits the writer's own budget applies to
+    /// everything except the model, on either route.
     ///
     /// [`FontSet::retained_usage`]: crate::FontSet::retained_usage
     pub fn write_owned(
@@ -1266,35 +1269,28 @@ impl Registry<crate::FontSet> {
                 OwnedWrite::Declined(fonts) => fonts,
             }
         };
-        let mut limits = options
-            .transport_limits
-            .clone()
-            .unwrap_or_else(|| writer.transport_limits());
-        let model = fonts
-            .retained_usage(limits.resources.max_total_bytes)?
-            .bytes;
-        let limit = limits.resources.max_total_bytes;
-        let error = || Error::ResourceLimit {
-            resource: "writer model bytes",
-            limit,
-        };
-        let resources = &mut limits.resources;
-        resources.max_total_bytes = resources
-            .max_total_bytes
-            .checked_sub(model)
-            .ok_or_else(error)?;
-        resources.max_input_bytes = resources.max_input_bytes.min(resources.max_total_bytes);
-        resources.max_resource_bytes = resources.max_resource_bytes.min(resources.max_total_bytes);
-        resources.max_decompressed_bytes = resources
-            .max_decompressed_bytes
-            .min(resources.max_total_bytes);
-        resources.max_table_bytes = resources.max_table_bytes.min(resources.max_total_bytes);
-        limits.max_output_bytes = limits
-            .max_output_bytes
-            .checked_sub(model)
-            .ok_or_else(error)?;
         let mut reserved = options.clone();
-        reserved.transport_limits = Some(limits);
+        if let Some(limits) = &mut reserved.transport_limits {
+            let limit = limits.resources.max_total_bytes;
+            let model = fonts.retained_usage(limit)?.bytes;
+            let error = || Error::ResourceLimit {
+                resource: "writer model bytes",
+                limit,
+            };
+            let resources = &mut limits.resources;
+            resources.max_total_bytes = limit.checked_sub(model).ok_or_else(error)?;
+            resources.max_input_bytes = resources.max_input_bytes.min(resources.max_total_bytes);
+            resources.max_resource_bytes =
+                resources.max_resource_bytes.min(resources.max_total_bytes);
+            resources.max_decompressed_bytes = resources
+                .max_decompressed_bytes
+                .min(resources.max_total_bytes);
+            resources.max_table_bytes = resources.max_table_bytes.min(resources.max_total_bytes);
+            limits.max_output_bytes = limits
+                .max_output_bytes
+                .checked_sub(model)
+                .ok_or_else(error)?;
+        }
         let result = writer.write(&fonts, &reserved);
         let written = Self::complete(writer, result, Some(&fonts), &reserved, report);
         drop(fonts);

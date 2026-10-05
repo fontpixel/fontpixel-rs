@@ -83,6 +83,30 @@ def writable_formats(binary: Path) -> list[tuple[str, str]]:
     return formats
 
 
+def mapped_scalars(path: Path) -> list[int]:
+    """Unicode scalars of an sfnt's Windows Unicode cmap (format 12, else 4)."""
+    data = path.read_bytes()
+    u16 = lambda o: int.from_bytes(data[o:o + 2], "big")
+    u32 = lambda o: int.from_bytes(data[o:o + 4], "big")
+    cmap = next(u32(12 + 16 * i + 8) for i in range(u16(4)) if data[12 + 16 * i:16 + 16 * i] == b"cmap")
+    subtables = {(u16(cmap + 4 + 8 * i), u16(cmap + 6 + 8 * i)): cmap + u32(cmap + 8 + 8 * i)
+                 for i in range(u16(cmap + 2))}
+    scalars: set[int] = set()
+    if (3, 10) in subtables and u16(subtables[(3, 10)]) == 12:
+        table = subtables[(3, 10)]
+        for g in range(u32(table + 12)):
+            start, end = u32(table + 16 + 12 * g), u32(table + 20 + 12 * g)
+            scalars.update(range(start, end + 1))
+    else:
+        table = subtables[(3, 1)]
+        segments = u16(table + 6) // 2
+        ends, starts = table + 14, table + 16 + 2 * segments
+        for s in range(segments):
+            scalars.update(range(u16(starts + 2 * s), u16(ends + 2 * s) + 1))
+        scalars.discard(0xFFFF)
+    return sorted(c for c in scalars if not 0xD800 <= c <= 0xDFFF)
+
+
 def cases(a: argparse.Namespace) -> list[tuple[str, list[str]]]:
     out = []
     for fid, ext in writable_formats(a.binary):
@@ -90,9 +114,12 @@ def cases(a: argparse.Namespace) -> list[tuple[str, list[str]]]:
     for label, source in [("tong-ttf", a.tong_ttf), ("tong-otf", a.tong_otf)]:
         for kind in ["woff", "woff2"]:
             out.append((f"{label}.{kind}", ["convert", source, "-o", f"font.{kind}"]))
-    for label, ranges in [("ascii", "U+0020-007E"), ("all-mapped", "U+0000-D7FF,U+E000-10FFFF")]:
-        out.append((f"subset.tong-ttf.{label}.woff2", ["subset", a.tong_ttf, "--unicodes", ranges,
-                                                       "-o", "subset.woff2"]))
+    # Every scalar the font maps, as a UTF-8 text file outside the case directories.
+    mapped = a.output / "inputs" / "tong-ttf-mapped.txt"
+    mapped.parent.mkdir(parents=True, exist_ok=True)
+    mapped.write_text("".join(map(chr, mapped_scalars(a.tong_ttf))), "utf-8", newline="")
+    for label, selection in [("ascii", ["--unicodes", "U+0020-007E"]), ("all-mapped", ["--text-file", mapped])]:
+        out.append((f"subset.tong-ttf.{label}.woff2", ["subset", a.tong_ttf, *selection, "-o", "subset.woff2"]))
     for kind in ["ttf", "woff2"]:
         out.append((f"merge.unifont-latin.{kind}", ["merge", "--family", "Unifont Western Mix",
                     "--part", a.latin_bdf, "--take", "western", "--part", a.unifont, "--take", "all",
@@ -149,14 +176,22 @@ def main() -> None:
         record = {"case": name, "command": command}
         record.update(run_measured([a.binary] + command, a.output / "default" / name))
         record["status"] = classify(record)
-        if record["status"] == "resource-limit":
+        if record["status"] == "resource-limit" and command[0] not in BUDGET_COMMANDS:
+            record["verdict"] = "not probed: this command has no --max-total-bytes option"
+        elif record["status"] == "resource-limit":
             probe = run_measured([a.binary] + with_budget(command, a.probe_budget), a.output / "probe" / name)
-            genuine = probe["exit"] == 0 and probe["peak_rss_bytes"] > DEFAULT_CAP
             record["probe"] = probe
-            record["verdict"] = ("genuine: peak RSS with a larger budget exceeds the 256 MiB default cap"
-                                 if genuine else
-                                 "ledger over-count: succeeds with a larger budget below the 256 MiB cap"
-                                 if probe["exit"] == 0 else "fails even with the probe budget")
+            over = probe["peak_rss_bytes"] > DEFAULT_CAP
+            rss = f"{probe['peak_rss_bytes'] / 2**20:.0f} MiB"
+            if over:
+                record["verdict"] = (f"genuine: peak RSS {rss} with the probe budget exceeds the 256 MiB cap"
+                                     + ("" if probe["exit"] == 0 else " (and it still fails: "
+                                        + " ".join(probe["stderr_tail"])[-120:] + ")"))
+            elif probe["exit"] == 0:
+                record["verdict"] = f"ledger over-count: succeeds with the probe budget at {rss} peak RSS"
+            else:
+                record["verdict"] = (f"still fails with the probe budget at {rss} peak RSS "
+                                     "(a fixed codec/format limit): " + " ".join(probe["stderr_tail"])[-120:])
         if a.compare and record["exit"] == 0:
             other = run_measured([a.compare.resolve()] + with_budget(command, a.compare_budget),
                                  a.output / "compare" / name)

@@ -196,3 +196,29 @@ fn incoming_errors_and_strict_loss_precede_owned_accounting() {
         Err(Error::ResourceLimit { .. })
     ));
 }
+
+#[test]
+fn a_writer_budget_still_bounds_everything_but_the_owned_model() {
+    // With a large common allowance the codec's own budget binds. The owned
+    // route adds the model to that budget, so it never needs a larger codec
+    // budget than the borrowing route, where the caller holds the model.
+    let set = model(1);
+    for (id, name) in [("woff2", "a.woff2"), ("otf", "a.otf"), ("ttc", "a.ttc")] {
+        let registry = |budget: usize| {
+            let mut registry = fontpixel::registry();
+            let mut o = fontpixel::formats::vector_raster::WriteOptions::default();
+            o.outline.limits.sfnt.resources.max_total_bytes = budget;
+            registry.set_vector_write_options(o);
+            registry
+        };
+        let large = 4 * DEFAULT;
+        let (owned, written) = minimal(|budget| {
+            registry(budget).write_owned(set.clone(), id, &options(name, large), Report::default())
+        });
+        let (borrowed, expected) = minimal(|budget| {
+            registry(budget).write_with_report(&set, id, &options(name, large), Report::default())
+        });
+        assert_eq!(written, expected, "{id}");
+        assert!(owned <= borrowed, "{id}: {owned} > {borrowed}");
+    }
+}
