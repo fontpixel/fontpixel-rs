@@ -10,6 +10,13 @@
   Brotli stream parallelism. The product is capped at 64. Byte/work limits are
   per font, with separate batch input/output/count limits; callers choose a
   worker count that fits concurrent compressor working memory.
+- Each font operation shares one working ledger of `max_total_bytes` across
+  every owned stage (directories, tables, transforms, compressor buffers,
+  output). The Brotli encoder's own heap cannot be refused cell by cell, so
+  `woff2::brotli_encoder_heap_bound` (a source-derived bound for the locked
+  `brotli 9.0.0`) is admitted before each stream; at quality >= 10 that bound
+  exceeds the 256 MiB default for inputs above a few tens of KiB. Measurements:
+  `crates/fontpixel-heap-check`; decision record: `strict/ACCEPTANCE-A.md`.
 - Read/write diagnostics are explicit. WOFF2 removes invalidated DSIG signatures
   and reports loss. A strict caller should reject `report.has_loss()` before
   persisting output.
