@@ -17,6 +17,9 @@ struct State {
     used: AtomicUsize,
     maximum: usize,
     resource: &'static str,
+    /// High-water mark of admitted bytes, for exact-capacity regressions.
+    #[cfg(test)]
+    peak: AtomicUsize,
 }
 
 #[derive(Clone)]
@@ -28,7 +31,15 @@ impl Budget {
             used: AtomicUsize::new(0),
             maximum,
             resource,
+            #[cfg(test)]
+            peak: AtomicUsize::new(0),
         }))
+    }
+
+    /// Highest simultaneous admitted total observed by this ledger.
+    #[cfg(test)]
+    pub(crate) fn peak(&self) -> usize {
+        self.0.peak.load(Ordering::Relaxed)
     }
 
     pub(crate) fn error(&self) -> Error {
@@ -50,6 +61,10 @@ impl Budget {
                     .filter(|&next| next <= self.0.maximum)
             })
             .map_err(|_| self.error())?;
+        #[cfg(test)]
+        self.0
+            .peak
+            .fetch_max(self.0.used.load(Ordering::Relaxed), Ordering::Relaxed);
         Ok(Lease {
             budget: self.clone(),
             bytes,
@@ -230,6 +245,16 @@ impl<T> Vector<T> {
     pub(crate) fn with_capacity(budget: &Budget, capacity: usize) -> Result<Self> {
         let mut result = Self::new(budget)?;
         result.reserve_exact(capacity)?;
+        Ok(result)
+    }
+
+    /// Admit and copy borrowed values into new owned storage.
+    pub(crate) fn from_slice(budget: &Budget, values: &[T]) -> Result<Self>
+    where
+        T: Copy,
+    {
+        let mut result = Self::with_capacity(budget, values.len())?;
+        result.extend(values)?;
         Ok(result)
     }
 

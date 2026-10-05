@@ -1,6 +1,14 @@
 //! WOFF2 collection directory, shared table records, and paired transforms.
+//!
+//! The collection paths share the caller operation's working ledger. A table
+//! referenced by several faces moves (with its lease) into one payload and is
+//! retained once; per-face working copies and transforms are charged while
+//! they live. `crate::sfnt::collection` keeps its own internal ledgers, so its
+//! complete heap use is reserved here from a source-derived bound before each
+//! call (see [`parse_bound`] and [`assemble_bound`]).
 use super::*;
-use crate::sfnt::collection::{Collection, Limits as CollectionLimits};
+use crate::sfnt::collection::{Collection, Face, Limits as CollectionLimits};
+use std::mem::size_of;
 fn limits(l: &Limits) -> CollectionLimits {
     CollectionLimits {
         sfnt: l.sfnt.clone(),
@@ -9,8 +17,114 @@ fn limits(l: &Limits) -> CollectionLimits {
         max_expanded_bytes: l.max_batch_bytes,
     }
 }
-fn read_records(cursor: &mut Cursor<'_>, n: usize, l: &Limits) -> Result<(Vec<Record>, usize)> {
-    let mut records = Vec::with_capacity(n);
+/// Live bytes of a `Vec<T>` grown by repeated `push` to `len` elements,
+/// including the superseded buffer during its last reallocation. std doubles
+/// capacity with a small minimum, so capacity <= max(2 * len, 8) and the old
+/// buffer is at most half of it.
+fn pushed_vec<T>(len: usize) -> Option<usize> {
+    len.max(8)
+        .checked_mul(3)?
+        .checked_mul(size_of::<T>().max(1))
+}
+fn checked_sum(parts: &[Option<usize>]) -> Option<usize> {
+    parts
+        .iter()
+        .try_fold(0usize, |total, part| total.checked_add((*part)?))
+}
+/// Conservative heap bound of `sfnt::collection::Collection::parse` for this
+/// input, from that function's allocation sites: `spans` grows by one entry
+/// for the header, the optional signature, each face directory and each
+/// non-empty table; `faces` is `Vec::with_capacity(count)`; each face's records
+/// are `Vec::with_capacity(n)` and its transient tag `BTreeSet` holds `n` tags.
+/// Counts are read from the header exactly as the parser reads them, and the
+/// parser's own face/table/reference caps are applied in the same order, so a
+/// header that the parser rejects cannot allocate beyond this bound.
+fn parse_bound(data: &[u8], l: &CollectionLimits, budget: &Budget) -> Result<usize> {
+    let overflow = || invalid("TTC bound overflow");
+    let count = (u32_at(data, 8).unwrap_or(0) as usize).min(l.max_faces);
+    let table_cap = l.sfnt.max_tables.min(4095);
+    let (mut references, mut largest) = (0usize, 0usize);
+    for i in 0..count {
+        let Ok(offset) = u32_at(data, 12 + i * 4) else {
+            break;
+        };
+        let Ok(n) = u16_at(data, offset as usize + 4) else {
+            break;
+        };
+        let n = (n as usize).min(table_cap);
+        references = references.saturating_add(n);
+        largest = largest.max(n);
+    }
+    let references = references.min(l.max_table_references);
+    let spans = 2usize
+        .checked_add(count)
+        .and_then(|n| n.checked_add(references))
+        .ok_or_else(overflow)?;
+    checked_sum(&[
+        pushed_vec::<(usize, usize, u8)>(spans),
+        count.checked_mul(size_of::<Face<'_>>()),
+        references.checked_mul(size_of::<sfnt::TableRecord<'_>>()),
+        budget.tree_bytes::<[u8; 4], ()>(largest).ok(),
+    ])
+    .ok_or_else(overflow)
+}
+/// Conservative heap bound of `sfnt::collection::encode(fonts, ..)` (its own
+/// ledgers are separate from this operation's). Sites, in that function's
+/// order: the `parsed` vector of `Sfnt` (collected from a fallible iterator,
+/// so it grows by push) plus each `Sfnt::parse` directory and its transient tag
+/// tree/span list; one owned copy of every table (`t.data.to_vec()`), plus one
+/// transient duplicate that is dropped after comparison; the `payloads`,
+/// per-face `rows` and `records` vectors; the `shared` tree and its per-key
+/// id vectors; `offsets`; and the zero-filled output of the final size.
+fn assemble_bound(fonts: &[Owned<Vec<u8>>], budget: &Budget) -> Result<usize> {
+    let overflow = || invalid("TTC bound overflow");
+    let faces = fonts.len();
+    let mut references = 0usize;
+    let mut bytes = 0usize;
+    let mut largest_table = 0usize;
+    let mut largest_face = 0usize;
+    for font in fonts {
+        let n = u16_at(font, 4)? as usize;
+        references = references.checked_add(n).ok_or_else(overflow)?;
+        bytes = bytes.checked_add(font.len()).ok_or_else(overflow)?;
+        largest_face = largest_face.max(n);
+        largest_table = largest_table.max(font.len());
+    }
+    let parse_transient = checked_sum(&[
+        budget.tree_bytes::<[u8; 4], ()>(largest_face).ok(),
+        largest_face.checked_mul(size_of::<(usize, usize)>()),
+    ]);
+    let output = checked_sum(&[
+        Some(24),
+        faces.checked_mul(16),
+        references.checked_mul(16 + 3),
+        Some(bytes),
+    ]);
+    checked_sum(&[
+        pushed_vec::<sfnt::Sfnt<'_>>(faces),
+        references.checked_mul(size_of::<sfnt::TableRecord<'_>>()),
+        parse_transient,
+        Some(bytes),
+        Some(largest_table),
+        pushed_vec::<([u8; 4], Vec<u8>)>(references),
+        pushed_vec::<([u8; 4], usize)>(references),
+        faces.checked_mul(24 * 3),
+        budget
+            .tree_bytes::<([u8; 4], usize, u64), Vec<usize>>(references)
+            .ok(),
+        pushed_vec::<usize>(references).and_then(|v| v.checked_add(references.checked_mul(96)?)),
+        references.checked_mul(size_of::<usize>()),
+        output,
+    ])
+    .ok_or_else(overflow)
+}
+fn read_records(
+    cursor: &mut Cursor<'_>,
+    n: usize,
+    l: &Limits,
+    budget: &Budget,
+) -> Result<(Vector<Record>, usize)> {
+    let mut records = Vector::with_capacity(budget, n)?;
     let mut size = 0usize;
     for _ in 0..n {
         let flags = cursor.byte()?;
@@ -64,7 +178,7 @@ fn read_records(cursor: &mut Cursor<'_>, n: usize, l: &Limits) -> Result<(Vec<Re
             original,
             length,
             transformed,
-        });
+        })?;
     }
     // In collections every glyf must be followed immediately by its associated loca.
     for (i, r) in records.iter().enumerate() {
@@ -79,7 +193,27 @@ fn read_records(cursor: &mut Cursor<'_>, n: usize, l: &Limits) -> Result<(Vec<Re
     }
     Ok((records, size))
 }
-pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
+/// A tag set whose tree nodes are admitted before each insertion.
+struct TagSet {
+    set: std::collections::BTreeSet<[u8; 4]>,
+    nodes: crate::working::Lease,
+}
+impl TagSet {
+    fn new(budget: &Budget) -> Result<Self> {
+        Ok(Self {
+            set: std::collections::BTreeSet::new(),
+            nodes: budget.reserve(0)?,
+        })
+    }
+    fn insert(&mut self, budget: &Budget, tag: [u8; 4]) -> Result<bool> {
+        if !self.set.contains(&tag) {
+            self.nodes
+                .grow_to(budget.tree_bytes::<[u8; 4], ()>(self.set.len() + 1)?)?;
+        }
+        Ok(self.set.insert(tag))
+    }
+}
+pub(in crate::woff) fn decode(data: &[u8], l: &Limits, budget: &Budget) -> Result<Decoded> {
     bounded(
         data.len(),
         l.sfnt.resources.max_input_bytes,
@@ -94,7 +228,7 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         return Err(invalid("empty collection directory"));
     }
     let mut cursor = Cursor { data, pos: 48 };
-    let (records, size) = read_records(&mut cursor, n, l)?;
+    let (records, size) = read_records(&mut cursor, n, l, budget)?;
     let version = u32::from_be_bytes(cursor.take(4)?.try_into().map_err(invalid)?);
     if ![0x10000, 0x20000].contains(&version) {
         return Err(invalid("unsupported collection version"));
@@ -104,7 +238,7 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
     if count == 0 {
         return Err(invalid("empty collection"));
     }
-    let mut faces = Vec::with_capacity(count);
+    let mut faces = Vector::with_capacity(budget, count)?;
     let mut reference_count = 0usize;
     for _ in 0..count {
         let nt = cursor.ushort255()? as usize;
@@ -119,15 +253,15 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         let f = flavor(u32::from_be_bytes(
             cursor.take(4)?.try_into().map_err(invalid)?,
         ))?;
-        let mut indices = Vec::with_capacity(nt);
-        let mut tags = std::collections::BTreeSet::new();
+        let mut indices = Vector::with_capacity(budget, nt)?;
+        let mut tags = TagSet::new(budget)?;
         let (mut g, mut a) = (None, None);
         for _ in 0..nt {
             let i = cursor.ushort255()? as usize;
             let r = records
                 .get(i)
                 .ok_or_else(|| invalid("collection table index out of range"))?;
-            if !tags.insert(r.tag) {
+            if !tags.insert(budget, r.tag)? {
                 return Err(invalid("duplicate collection face tag"));
             }
             if r.tag == *b"glyf" {
@@ -136,35 +270,31 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             if r.tag == *b"loca" {
                 a = Some(i);
             }
-            indices.push(i);
+            indices.push(i)?;
         }
         if g.map(|i| i + 1) != a {
             return Err(invalid("mismatched collection glyf/loca indices"));
         }
-        faces.push((f, indices));
+        faces.push((f, indices))?;
     }
-    let raw = decompress(
-        cursor.take(u32_at(data, 20)? as usize)?,
-        size,
-        l.sfnt.resources.max_total_bytes,
-    )?;
-    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, |data, expected| {
-        decompress(data, expected, l.sfnt.resources.max_total_bytes)
+    let raw = decompress(cursor.take(u32_at(data, 20)? as usize)?, size, budget)?;
+    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, budget, |data, expected| {
+        decompress(data, expected, budget)
     })?;
-    let mut offsets = Vec::with_capacity(n);
+    let mut offsets = Vector::with_capacity(budget, n)?;
     let mut offset = 0;
-    for r in &records {
-        offsets.push(offset);
+    for r in records.iter() {
+        offsets.push(offset)?;
         offset += r.length;
     }
-    let mut fonts = Vec::with_capacity(count);
+    let mut fonts = Vector::with_capacity(budget, count)?;
     let mut total = 0usize;
-    for (f, indices) in faces {
-        let mut tables = BTreeMap::new();
-        let mut original = BTreeMap::new();
-        let mut transformed = std::collections::BTreeSet::new();
+    for (f, indices) in faces.iter() {
+        let mut tables = Tables::new(budget)?;
+        let mut original = Vector::with_capacity(budget, indices.len())?;
+        let mut transformed = TagSet::new(budget)?;
         let (mut expanded, mut estimate) = (0usize, 12 + indices.len() * 16);
-        for i in indices {
+        for &i in indices.iter() {
             let r = &records[i];
             estimate = estimate
                 .checked_add(align(r.original)?)
@@ -174,13 +304,18 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 l.max_batch_bytes.min(l.sfnt.resources.max_total_bytes),
                 "WOFF2 face bytes",
             )?;
-            tables.insert(r.tag, slice(&raw, offsets[i], r.length)?.to_vec());
-            original.insert(r.tag, r.original);
+            tables.insert(
+                budget,
+                r.tag,
+                copy(budget, slice(&raw, offsets[i], r.length)?)?,
+            )?;
+            original.push((r.tag, r.original))?;
             if r.transformed {
-                transformed.insert(r.tag);
+                transformed.insert(budget, r.tag)?;
             }
         }
-        if transformed.contains(b"glyf") {
+        let original_len = |tag: &[u8; 4]| original.iter().find(|(t, _)| t == tag).map(|(_, n)| *n);
+        if transformed.set.contains(b"glyf") {
             let ng = u16_at(
                 tables.get(b"maxp").ok_or_else(|| invalid("missing maxp"))?,
                 4,
@@ -189,8 +324,9 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 tables.get(b"glyf").ok_or_else(|| invalid("missing glyf"))?,
                 ng,
                 l,
+                budget,
             )?;
-            if original.get(b"loca") != Some(&e.loca.len()) {
+            if original_len(b"loca") != Some(e.loca.len()) {
                 return Err(invalid("wrong collection original loca length"));
             }
             let head = tables
@@ -198,11 +334,11 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 .ok_or_else(|| invalid("missing head"))?;
             slice(head, 0, 54)?;
             head[50..52].copy_from_slice(&e.index_format.to_be_bytes());
-            tables.insert(*b"glyf", e.glyf);
-            tables.insert(*b"loca", e.loca);
+            tables.insert(budget, *b"glyf", e.glyf)?;
+            tables.insert(budget, *b"loca", e.loca)?;
         }
-        if transformed.contains(b"hmtx") {
-            let xmins = transform::xmins(&tables, l)?;
+        if transformed.set.contains(b"hmtx") {
+            let xmins = transform::xmins(&tables, l, budget)?;
             let h = u16_at(
                 tables.get(b"hhea").ok_or_else(|| invalid("missing hhea"))?,
                 34,
@@ -211,12 +347,16 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 tables.get(b"hmtx").ok_or_else(|| invalid("missing hmtx"))?,
                 &xmins,
                 h,
+                budget,
             )?;
-            if original.get(b"hmtx") != Some(&hmtx.len()) {
+            drop(xmins);
+            if original_len(b"hmtx") != Some(hmtx.len()) {
                 return Err(invalid("wrong collection hmtx length"));
             }
-            tables.insert(*b"hmtx", hmtx);
+            tables.insert(budget, *b"hmtx", hmtx)?;
         }
+        drop(transformed);
+        drop(original);
         if tables.remove(b"DSIG").is_some() {
             loss(
                 &mut report,
@@ -224,8 +364,7 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 "Collection reconstruction invalidates face digital signature; DSIG removed",
             );
         }
-        let mut builder = sfnt::SfntBuilder::new(f);
-        for (tag, t) in tables {
+        for t in tables.map.values() {
             expanded = expanded
                 .checked_add(t.len())
                 .ok_or_else(|| invalid("collection expanded overflow"))?;
@@ -234,9 +373,11 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
                 l.sfnt.resources.max_total_bytes,
                 "WOFF2 face expanded bytes",
             )?;
-            builder.insert(tag, t)?;
         }
-        let bytes = builder.build(&l.sfnt)?;
+        let (builder, table_lease) = tables.into_builder(budget, *f)?;
+        let bytes = builder.build_with_budget(&l.sfnt, budget)?;
+        drop(builder);
+        drop(table_lease);
         total = total
             .checked_add(bytes.len())
             .ok_or_else(|| invalid("collection total overflow"))?;
@@ -245,31 +386,52 @@ pub(super) fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             l.max_batch_bytes.min(l.sfnt.resources.max_total_bytes),
             "WOFF2 total face bytes",
         )?;
-        fonts.push(bytes);
+        fonts.push(bytes)?;
     }
-    let refs = fonts.iter().map(Vec::as_slice).collect::<Vec<_>>();
+    drop(offsets);
+    drop(raw);
+    drop(faces);
+    drop(records);
+    // The TTC assembler keeps its own ledgers; reserve its complete heap here.
+    let assembler = budget.reserve(assemble_bound(&fonts, budget)?)?;
+    let mut refs = Vector::with_capacity(budget, fonts.len())?;
+    for font in fonts.iter() {
+        refs.push(font.as_slice())?;
+    }
     let (sfnt, r) = crate::sfnt::collection::encode(&refs, version, &limits(l))?;
     report.extend(r);
     bounded(
-        sfnt.len()
-            + auxiliary.metadata.as_ref().map_or(0, Vec::len)
-            + auxiliary.private_data.as_ref().map_or(0, Vec::len),
+        sfnt.len() + auxiliary.bytes(),
         l.sfnt.resources.max_total_bytes,
         "WOFF2 decoded collection bytes",
     )?;
-    Ok(Decoded {
+    drop(refs);
+    drop(fonts);
+    let result = Decoded {
         sfnt,
-        auxiliary,
+        auxiliary: auxiliary.release(),
         report,
-    })
+    };
+    // The assembled collection now belongs to the caller.
+    drop(assembler);
+    Ok(result)
 }
 struct Payload {
     record: Record,
-    bytes: Vec<u8>,
+    bytes: Owned<Vec<u8>>,
 }
-pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
+pub(in crate::woff) fn encode(
+    data: &[u8],
+    o: &Options,
+    l: &Limits,
+    budget: &Budget,
+) -> Result<Encoded> {
     check_options(o, l)?;
-    let c = Collection::parse(data, &limits(l))?;
+    let collection_limits = limits(l);
+    // The parsed directory is retained for the whole call; reserve its bound
+    // before the parser allocates it.
+    let parsed = budget.reserve(parse_bound(data, &collection_limits, budget)?)?;
+    let c = Collection::parse(data, &collection_limits)?;
     let mut report = Report::default();
     if c.signature.is_some() {
         loss(
@@ -279,41 +441,40 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
         );
     }
     // WOFF2 requires sharing to preserve complete associated glyf/loca pairs.
-    let (mut g_to_l, mut l_to_g) = (BTreeMap::new(), BTreeMap::new());
-    for f in &c.faces {
-        let g = f.tables.iter().find(|t| t.tag == *b"glyf");
-        let a = f.tables.iter().find(|t| t.tag == *b"loca");
-        match (g, a) {
-            (Some(g), Some(a)) => {
-                if g_to_l
-                    .insert(g.offset, a.offset)
-                    .is_some_and(|v| v != a.offset)
-                    || l_to_g
-                        .insert(a.offset, g.offset)
-                        .is_some_and(|v| v != g.offset)
-                {
-                    return Err(invalid(
-                        "WOFF2 collections require both glyf and loca to share as one pair",
-                    ));
+    {
+        let mut pairs = Vector::with_capacity(budget, c.faces.len())?;
+        for f in &c.faces {
+            let g = f.tables.iter().find(|t| t.tag == *b"glyf");
+            let a = f.tables.iter().find(|t| t.tag == *b"loca");
+            match (g, a) {
+                (Some(g), Some(a)) => {
+                    if pairs.iter().any(|&(pg, pa)| {
+                        (pg == g.offset && pa != a.offset) || (pa == a.offset && pg != g.offset)
+                    }) {
+                        return Err(invalid(
+                            "WOFF2 collections require both glyf and loca to share as one pair",
+                        ));
+                    }
+                    pairs.push((g.offset, a.offset))?;
                 }
+                (None, None) => {}
+                _ => return Err(invalid("missing collection glyf/loca pair")),
             }
-            (None, None) => {}
-            _ => return Err(invalid("missing collection glyf/loca pair")),
         }
     }
-    let mut payloads = Vec::<Payload>::new();
-    let mut shared = BTreeMap::<([u8; 4], u32), usize>::new();
-    let mut faces = Vec::new();
+    let mut payloads = Vector::<Payload>::new(budget)?;
+    let mut shared = std::collections::BTreeMap::<([u8; 4], u32), usize>::new();
+    let mut shared_nodes = budget.reserve(0)?;
+    let mut faces = Vector::with_capacity(budget, c.faces.len())?;
     let (mut raw_size, mut total_sfnt) = (
         0usize,
         12 + c.faces.len() * 4 + if c.version == 0x20000 { 12 } else { 0 },
     );
     for face in &c.faces {
-        let mut tables = face
-            .tables
-            .iter()
-            .map(|r| (r.tag, r.data.to_vec()))
-            .collect::<BTreeMap<_, _>>();
+        let mut tables = Tables::new(budget)?;
+        for r in &face.tables {
+            tables.insert(budget, r.tag, copy(budget, r.data)?)?;
+        }
         if tables.remove(b"DSIG").is_some() {
             loss(
                 &mut report,
@@ -322,16 +483,17 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
             );
         }
         let have_glyf = tables.contains_key(b"glyf");
-        let mut transformed = BTreeMap::new();
+        let mut transformed = Tables::new(budget)?;
         if have_glyf && !o.transform_glyf {
             return Err(invalid(
                 "WOFF2 collection glyf transforms are required by specification",
             ));
         }
         if have_glyf {
-            transform::normalize(&mut tables, l)?;
-            transformed.insert(*b"glyf", transform::encode(&tables, l)?);
-            transformed.insert(*b"loca", Vec::new());
+            transform::normalize(&mut tables, l, budget)?;
+            let glyf = transform::encode(&tables, l, budget)?;
+            transformed.insert(budget, *b"glyf", glyf)?;
+            transformed.insert(budget, *b"loca", Buffer::new(budget)?.into_owned())?;
         }
         // hmtx null transforms avoid sharing a context-dependent transform across faces.
         let head = tables
@@ -341,28 +503,32 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
         head[16..18].copy_from_slice(&flags.to_be_bytes());
         slice(head, 0, 12)?;
         head[8..12].fill(0);
-        let mut order = tables
-            .keys()
-            .copied()
-            .filter(|t| *t != *b"loca")
-            .collect::<Vec<_>>();
-        if have_glyf {
-            let i = order
-                .iter()
-                .position(|t| *t == *b"glyf")
-                .ok_or_else(|| invalid("glyf"))?;
-            order.insert(i + 1, *b"loca");
+        let mut order = Vector::with_capacity(budget, tables.len())?;
+        for &tag in tables.map.keys() {
+            if tag == *b"loca" {
+                continue;
+            }
+            order.push(tag)?;
+            if have_glyf && tag == *b"glyf" {
+                order.push(*b"loca")?;
+            }
         }
-        let mut indices = Vec::new();
+        let mut indices = Vector::with_capacity(budget, order.len())?;
         total_sfnt = total_sfnt
             .checked_add(12 + order.len() * 16)
             .ok_or_else(|| invalid("collection size overflow"))?;
-        for tag in order {
-            let original = tables[&tag].len();
+        for &tag in order.iter() {
+            let original = tables
+                .get(&tag)
+                .ok_or_else(|| invalid("missing table"))?
+                .len();
             let transformed_flag = transformed.contains_key(&tag);
-            let body = transformed
-                .remove(&tag)
-                .unwrap_or_else(|| tables.remove(&tag).unwrap_or_default());
+            let body = match transformed.remove(&tag) {
+                Some(body) => body,
+                None => tables
+                    .remove(&tag)
+                    .ok_or_else(|| invalid("missing table"))?,
+            };
             let source = face
                 .tables
                 .iter()
@@ -371,9 +537,10 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
             let key = (tag, source.offset);
             let id = if let Some(&id) = shared.get(&key) {
                 let p = &payloads[id];
-                if p.record.original != original || p.bytes != body {
+                if p.record.original != original || p.bytes.as_slice() != body.as_slice() {
                     return Err(invalid("shared table has inconsistent transformed context"));
                 }
+                // A repeated reference keeps only the payload's single copy.
                 id
             } else {
                 raw_size = raw_size
@@ -392,6 +559,8 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
                     .ok_or_else(|| invalid("collection size overflow"))?;
                 let id = payloads.len();
                 bounded(id + 1, 65535, "WOFF2 collection table count")?;
+                shared_nodes
+                    .grow_to(budget.tree_bytes::<([u8; 4], u32), usize>(shared.len() + 1)?)?;
                 payloads.push(Payload {
                     record: Record {
                         tag,
@@ -400,60 +569,62 @@ pub(super) fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
                         transformed: transformed_flag,
                     },
                     bytes: body,
-                });
+                })?;
                 shared.insert(key, id);
                 id
             };
-            indices.push(id);
+            indices.push(id)?;
         }
-        faces.push((face.flavor, indices));
+        faces.push((face.flavor, indices))?;
     }
-    let mut out = vec![0; 48];
+    drop(shared);
+    drop(shared_nodes);
+    let mut out = Buffer::with_capacity(budget, 48)?;
+    out.resize(48, 0)?;
     out[..4].copy_from_slice(b"wOF2");
     out[4..8].copy_from_slice(b"ttcf");
     out[12..14].copy_from_slice(&(payloads.len() as u16).to_be_bytes());
     set32(&mut out, 16, total_sfnt)?;
-    let mut raw = Vec::with_capacity(raw_size);
-    for p in &payloads {
+    let mut raw = Buffer::with_capacity(budget, raw_size)?;
+    for p in payloads.iter() {
         let r = &p.record;
-        let version = if [*b"glyf", *b"loca"].contains(&r.tag) {
-            if r.transformed { 0 } else { 3 }
-        } else if r.transformed {
-            1
-        } else {
-            0
-        };
-        let index = TAGS.iter().position(|t| *t == r.tag).unwrap_or(63);
-        out.push(index as u8 | version << 6);
-        if index == 63 {
-            out.extend(r.tag);
-        }
-        base128(&mut out, as32(r.original)?);
-        if r.transformed {
-            base128(&mut out, as32(r.length)?);
-        }
-        raw.extend(&p.bytes);
+        directory_entry(
+            &mut out,
+            r.tag,
+            r.original,
+            r.transformed.then_some(r.length),
+        )?;
+        put(&mut raw, &p.bytes)?;
     }
-    p32(&mut out, c.version);
-    ushort255(&mut out, u16::try_from(faces.len()).map_err(invalid)?);
-    for (f, indices) in faces {
-        ushort255(&mut out, indices.len() as u16);
-        p32(&mut out, f.version());
-        for i in indices {
-            ushort255(&mut out, i as u16);
+    drop(payloads);
+    p32(&mut out, c.version)?;
+    ushort255(&mut out, u16::try_from(faces.len()).map_err(invalid)?)?;
+    for (f, indices) in faces.iter() {
+        ushort255(&mut out, indices.len() as u16)?;
+        p32(&mut out, f.version())?;
+        for &i in indices.iter() {
+            ushort255(&mut out, i as u16)?;
         }
     }
-    let compressed = compress(&raw, o, l)?;
+    drop(faces);
+    let compressed = compress(&raw, o, l, budget)?;
+    drop(raw);
     set32(&mut out, 20, compressed.len())?;
     bounded(
         out.len().saturating_add(compressed.len()),
         l.sfnt.resources.max_total_bytes,
         "WOFF2 collection output bytes",
     )?;
-    out.extend(compressed);
-    out.resize(align(out.len())?, 0);
-    write_aux(&mut out, 24, &o.auxiliary, l, |d| compress(d, o, l))?;
+    put(&mut out, &compressed)?;
+    drop(compressed);
+    pad(&mut out)?;
+    write_aux(&mut out, 24, &o.auxiliary, l, |d| compress(d, o, l, budget))?;
     let len = out.len();
     set32(&mut out, 8, len)?;
-    Ok(Encoded { bytes: out, report })
+    drop(c);
+    drop(parsed);
+    Ok(Encoded {
+        bytes: release(out.into_owned()),
+        report,
+    })
 }

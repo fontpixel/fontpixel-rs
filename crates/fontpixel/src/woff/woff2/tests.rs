@@ -30,16 +30,18 @@ fn basic_roundtrip() {
 }
 #[test]
 fn integers() {
+    let budget = Budget::new(64, "integer test bytes");
     for n in 0..=u16::MAX {
-        let mut v = Vec::new();
-        ushort255(&mut v, n);
+        let mut v = Buffer::new(&budget).unwrap();
+        ushort255(&mut v, n).unwrap();
         assert_eq!(Cursor::new(&v).ushort255().unwrap(), n);
     }
     for n in [0, 1, 127, 128, 16383, 16384, u32::MAX] {
-        let mut v = Vec::new();
-        base128(&mut v, n);
+        let mut v = Buffer::new(&budget).unwrap();
+        base128(&mut v, n).unwrap();
         assert_eq!(Cursor::new(&v).base128().unwrap(), n);
     }
+    assert_eq!(budget.remaining(), 64);
     for v in [
         &[0x80, 0][..],
         &[0xff; 6][..],

@@ -1,9 +1,13 @@
 //! WOFF2 Brotli coding, glyf/loca and hmtx transforms, and bounded parallel jobs.
+//!
+//! Each public font operation shares one working ledger (`max_total_bytes`)
+//! across its directory, raw stream, table map, transforms, compressor buffers
+//! and output.
 use super::*;
-use std::collections::BTreeMap;
+use crate::working::Vector;
 mod brotli_decode;
 #[cfg(feature = "ttc")]
-mod collection;
+pub(in crate::woff) mod collection;
 mod transform;
 #[rustfmt::skip]
 const TAGS:[[u8;4];63]=[
@@ -89,29 +93,32 @@ impl<'a> Cursor<'a> {
         }
     }
 }
-fn base128(out: &mut Vec<u8>, n: u32) {
+fn base128(out: &mut Buffer, n: u32) -> Result<()> {
     let bytes = ((32 - n.leading_zeros()).max(1) as usize).div_ceil(7);
     for i in (0..bytes).rev() {
-        out.push(((n >> (i * 7)) & 127) as u8 | if i == 0 { 0 } else { 128 });
+        out.push(((n >> (i * 7)) & 127) as u8 | if i == 0 { 0 } else { 128 })?;
     }
+    Ok(())
 }
-fn ushort255(out: &mut Vec<u8>, n: u16) {
+fn ushort255(out: &mut Buffer, n: u16) -> Result<()> {
     match n {
         0..=252 => out.push(n as u8),
-        253..=505 => out.extend([255, (n - 253) as u8]),
-        506..=761 => out.extend([254, (n - 506) as u8]),
+        253..=505 => put(out, &[255, (n - 253) as u8]),
+        506..=761 => put(out, &[254, (n - 506) as u8]),
         _ => {
-            out.push(253);
-            p16(out, n);
+            out.push(253)?;
+            p16(out, n)
         }
     }
 }
-fn decompress(data: &[u8], expected: usize, limit: usize) -> Result<Vec<u8>> {
-    let budget = sfnt::working::Budget::new(limit, "WOFF2 decompression working bytes");
-    let (bytes, _lease) = brotli_decode::decompress(data, expected, &budget)?.into_parts();
-    Ok(bytes)
+fn decompress(data: &[u8], expected: usize, budget: &Budget) -> Result<Owned<Vec<u8>>> {
+    brotli_decode::decompress(data, expected, budget)
 }
-fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
+/// Inputs below this size use one Brotli stream even with several workers:
+/// small streams do not amortize worker creation/dictionary preparation. The
+/// size-based choice is deterministic and independent of CPU count.
+const PARALLEL_MIN_BYTES: usize = 128 * 1024;
+fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Owned<Vec<u8>>> {
     use brotli::enc::{BrotliEncoderParams, backward_references::BrotliEncoderMode};
     let params = BrotliEncoderParams {
         quality: o.quality as i32,
@@ -120,19 +127,13 @@ fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
         size_hint: data.len(),
         ..Default::default()
     };
-    // Small streams do not amortize worker creation/dictionary preparation.
-    // The size-based choice is deterministic and independent of CPU count.
-    if o.compression_threads == 1 || data.len() < 128 * 1024 {
-        let budget = sfnt::working::Budget::new(
-            l.sfnt.resources.max_total_bytes,
-            "WOFF2 compressed working bytes",
-        );
-        let mut out = sfnt::working::Buffer::new(&budget)?;
-        brotli::BrotliCompress(&mut &data[..], &mut out, &params).map_err(invalid)?;
-        let (bytes, _lease) = out.into_parts();
-        Ok(bytes)
+    if o.compression_threads == 1 || data.len() < PARALLEL_MIN_BYTES {
+        let mut out = Buffer::new(budget)?;
+        // A ledger failure inside the writer comes back as the original error.
+        brotli::BrotliCompress(&mut &data[..], &mut out, &params).map_err(io_error)?;
+        Ok(out.into_owned())
     } else {
-        use brotli::enc::{Owned, SendAlloc, StandardAlloc, backward_references::UnionHasher};
+        use brotli::enc::{SendAlloc, StandardAlloc, backward_references::UnionHasher};
         let size = brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(
             data.len(),
             o.compression_threads,
@@ -142,22 +143,33 @@ fn compress(data: &[u8], o: &Options, l: &Limits) -> Result<Vec<u8>> {
             l.sfnt.resources.max_total_bytes,
             "WOFF2 parallel compressed capacity",
         )?;
-        let mut out = buffer(size)?;
-        out.resize(size, 0);
-        let mut allocators = (0..o.compression_threads)
-            .map(|_| SendAlloc::new(StandardAlloc::default(), UnionHasher::Uninit))
-            .collect::<Vec<_>>();
+        // Output capacity, the allocator descriptors and the owned input clone
+        // are admitted before any of them is allocated.
+        let mut out = Buffer::with_capacity(budget, size)?;
+        out.resize(size, 0)?;
+        let mut allocators = Vector::with_capacity(budget, o.compression_threads)?;
+        for _ in 0..o.compression_threads {
+            allocators.push(SendAlloc::new(
+                StandardAlloc::default(),
+                UnionHasher::Uninit,
+            ))?;
+        }
         struct Bytes(Vec<u8>);
         impl brotli::SliceWrapper<u8> for Bytes {
             fn slice(&self) -> &[u8] {
                 &self.0
             }
         }
-        let mut owned = Owned::new(Bytes(data.to_vec()));
+        let (input, input_lease) = Buffer::from_slice(budget, data)?.into_parts();
+        let mut owned = brotli::enc::Owned::new(Bytes(input));
+        // compress_multi joins every worker before it returns.
         let size = brotli::enc::compress_multi(&params, &mut owned, &mut out, &mut allocators)
             .map_err(|e| invalid(format!("parallel Brotli: {e:?}")))?;
+        drop(owned);
+        drop(input_lease);
+        drop(allocators);
         out.truncate(size);
-        Ok(out)
+        Ok(out.into_owned())
     }
 }
 fn check_options(o: &Options, l: &Limits) -> Result<()> {
@@ -176,14 +188,18 @@ struct Record {
 /// Decode WOFF2 into standalone sfnt. Advisory original glyf/font lengths are
 /// not used as allocation sizes or strict equality checks.
 pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
+    let budget = ledger(l);
     #[cfg(feature = "ttc")]
     if data.get(4..8) == Some(b"ttcf") {
-        return collection::decode(data, l);
+        return collection::decode(data, l, &budget);
     }
-
+    decode_with_budget(data, l, &budget)
+}
+pub(super) fn decode_with_budget(data: &[u8], l: &Limits, budget: &Budget) -> Result<Decoded> {
     let (flavor, n) = input(data, b"wOF2", 48, l)?;
     let mut cursor = Cursor { data, pos: 48 };
-    let mut records = Vec::with_capacity(n);
+    let mut records = Vector::with_capacity(budget, n)?;
+    let mut tags_lease = budget.reserve(0)?;
     let mut tags = std::collections::BTreeSet::new();
     let mut size = 0usize;
     for _ in 0..n {
@@ -193,6 +209,9 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         } else {
             TAGS[(flags & 63) as usize]
         };
+        if valid_tag(tag) && !tags.contains(&tag) {
+            tags_lease.grow_to(budget.tree_bytes::<[u8; 4], ()>(tags.len() + 1)?)?;
+        }
         if !valid_tag(tag) || !tags.insert(tag) {
             return Err(invalid("invalid or duplicate WOFF2 tag"));
         }
@@ -234,8 +253,10 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             original,
             length,
             transformed,
-        });
+        })?;
     }
+    drop(tags);
+    drop(tags_lease);
     let gi = records.iter().position(|r| r.tag == *b"glyf");
     let li = records.iter().position(|r| r.tag == *b"loca");
     match (gi, li) {
@@ -244,26 +265,29 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         _ => return Err(invalid("missing, misordered or mismatched glyf/loca pair")),
     }
     let compressed = u32_at(data, 20)? as usize;
-    let raw = decompress(
-        cursor.take(compressed)?,
-        size,
-        l.sfnt.resources.max_total_bytes,
-    )?;
-    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, |data, expected| {
-        decompress(data, expected, l.sfnt.resources.max_total_bytes)
+    let raw = decompress(cursor.take(compressed)?, size, budget)?;
+    let (auxiliary, mut report) = read_aux(data, 24, cursor.pos, l, budget, |data, expected| {
+        decompress(data, expected, budget)
     })?;
-    let mut tables = BTreeMap::new();
+    // The raw stream stays live and charged while every table copies from it.
+    let mut tables = Tables::new(budget)?;
     let mut offset = 0;
-    for r in &records {
-        tables.insert(r.tag, slice(&raw, offset, r.length)?.to_vec());
+    for r in records.iter() {
+        tables.insert(budget, r.tag, copy(budget, slice(&raw, offset, r.length)?)?)?;
         offset += r.length;
     }
+    drop(raw);
     if let Some(g) = gi.filter(|g| records[*g].transformed) {
         let maxp = tables
             .get(b"maxp")
             .ok_or_else(|| invalid("transform missing maxp"))?;
         let ng = u16_at(maxp, 4)?;
-        let e = transform::decode(tables.get(b"glyf").ok_or_else(|| invalid("glyf"))?, ng, l)?;
+        let e = transform::decode(
+            tables.get(b"glyf").ok_or_else(|| invalid("glyf"))?,
+            ng,
+            l,
+            budget,
+        )?;
         let loca_record = &records[li.ok_or_else(|| invalid("loca"))?];
         if e.loca.len() != loca_record.original {
             return Err(invalid("wrong original loca length"));
@@ -273,11 +297,12 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             .ok_or_else(|| invalid("transform missing head"))?;
         slice(head, 0, 54)?;
         head[50..52].copy_from_slice(&e.index_format.to_be_bytes());
-        tables.insert(records[g].tag, e.glyf);
-        tables.insert(*b"loca", e.loca);
+        // Each replacement was admitted while the transformed source was live.
+        tables.insert(budget, records[g].tag, e.glyf)?;
+        tables.insert(budget, *b"loca", e.loca)?;
     }
     if records.iter().any(|r| r.tag == *b"hmtx" && r.transformed) {
-        let xmins = transform::xmins(&tables, l)?;
+        let xmins = transform::xmins(&tables, l, budget)?;
         let h = u16_at(
             tables
                 .get(b"hhea")
@@ -288,7 +313,9 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             tables.get(b"hmtx").ok_or_else(|| invalid("hmtx"))?,
             &xmins,
             h,
+            budget,
         )?;
+        drop(xmins);
         let expected = records
             .iter()
             .find(|r| r.tag == *b"hmtx")
@@ -297,8 +324,9 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
         if hmtx.len() != expected {
             return Err(invalid("wrong original hmtx length"));
         }
-        tables.insert(*b"hmtx", hmtx);
+        tables.insert(budget, *b"hmtx", hmtx)?;
     }
+    drop(records);
     // WOFF2 signatures are invalid after table reconstruction, even null transforms.
     if tables.remove(b"DSIG").is_some() {
         loss(
@@ -307,40 +335,75 @@ pub fn decode(data: &[u8], l: &Limits) -> Result<Decoded> {
             "WOFF2 reconstruction invalidates the sfnt digital signature; DSIG removed",
         );
     }
-    let mut builder = sfnt::SfntBuilder::new(flavor);
-    table_sum(tables.len(), tables.values().map(Vec::len), l)?;
-    for (tag, table) in tables {
-        builder.insert(tag, table)?;
-    }
-    let sfnt = builder.build(&l.sfnt)?;
+    table_sum(tables.len(), tables.map.values().map(|t| t.len()), l)?;
+    let (builder, table_lease) = tables.into_builder(budget, flavor)?;
+    let sfnt = builder.build_with_budget(&l.sfnt, budget)?;
+    // Table bytes are released only after the builder that owns them drops.
+    drop(builder);
+    drop(table_lease);
     bounded(
-        sfnt.len()
-            + auxiliary.metadata.as_ref().map_or(0, Vec::len)
-            + auxiliary.private_data.as_ref().map_or(0, Vec::len),
+        sfnt.len() + auxiliary.bytes(),
         l.sfnt.resources.max_total_bytes,
         "WOFF decoded bytes",
     )?;
     Ok(Decoded {
-        sfnt,
-        auxiliary,
+        sfnt: release(sfnt),
+        auxiliary: auxiliary.release(),
         report,
     })
 }
 /// Encode a standalone sfnt with actual glyf/loca preprocessing. Unknown and
 /// non-transformed tables are retained, except invalidated DSIG (reported).
 pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
+    let budget = ledger(l);
     #[cfg(feature = "ttc")]
     if data.starts_with(b"ttcf") {
-        return collection::encode(data, o, l);
+        return collection::encode(data, o, l, &budget);
     }
-
+    encode_with_budget(data, o, l, &budget)
+}
+/// Version bits of a directory entry for this tag and transform state.
+fn transform_version(tag: [u8; 4], transformed: bool) -> u8 {
+    if [*b"glyf", *b"loca"].contains(&tag) {
+        if transformed { 0 } else { 3 }
+    } else if transformed {
+        1
+    } else {
+        0
+    }
+}
+/// Append one WOFF2 table directory entry.
+fn directory_entry(
+    out: &mut Buffer,
+    tag: [u8; 4],
+    original: usize,
+    transformed: Option<usize>,
+) -> Result<()> {
+    let index = TAGS.iter().position(|t| *t == tag).unwrap_or(63);
+    out.push(index as u8 | transform_version(tag, transformed.is_some()) << 6)?;
+    if index == 63 {
+        put(out, &tag)?;
+    }
+    base128(out, as32(original)?)?;
+    if let Some(length) = transformed {
+        base128(out, as32(length)?)?;
+    }
+    Ok(())
+}
+pub(super) fn encode_with_budget(
+    data: &[u8],
+    o: &Options,
+    l: &Limits,
+    budget: &Budget,
+) -> Result<Encoded> {
     check_options(o, l)?;
-    let font = sfnt::Sfnt::parse(data, &l.sfnt)?;
-    let mut tables = font
-        .tables()
-        .iter()
-        .map(|r| (r.tag, r.data.to_vec()))
-        .collect::<BTreeMap<_, _>>();
+    let font = sfnt::Sfnt::parse_with_budget(data, &l.sfnt, budget)?;
+    let mut tables = Tables::new(budget)?;
+    for r in font.tables() {
+        tables.insert(budget, r.tag, copy(budget, r.data)?)?;
+    }
+    let flavor = font.flavor();
+    drop(font);
     let mut report = Report::default();
     if tables.remove(b"DSIG").is_some() {
         loss(
@@ -354,12 +417,12 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
         return Err(invalid("missing glyf/loca pair"));
     }
     if have_glyf && o.transform_glyf {
-        transform::normalize(&mut tables, l)?;
+        transform::normalize(&mut tables, l, budget)?;
     }
-    let total = table_sum(tables.len(), tables.values().map(Vec::len), l)?;
-    let mut transformed = BTreeMap::new();
+    let total = table_sum(tables.len(), tables.map.values().map(|t| t.len()), l)?;
+    let mut transformed = Tables::new(budget)?;
     if have_glyf && o.transform_hmtx && tables.contains_key(b"hmtx") {
-        let xmins = transform::xmins(&tables, l)?;
+        let xmins = transform::xmins(&tables, l, budget)?;
         let h = u16_at(
             tables.get(b"hhea").ok_or_else(|| invalid("missing hhea"))?,
             34,
@@ -368,13 +431,15 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
             tables.get(b"hmtx").ok_or_else(|| invalid("hmtx"))?,
             &xmins,
             h,
+            budget,
         )? {
-            transformed.insert(*b"hmtx", t);
+            transformed.insert(budget, *b"hmtx", t)?;
         }
     }
     if have_glyf && o.transform_glyf {
-        transformed.insert(*b"glyf", transform::encode(&tables, l)?);
-        transformed.insert(*b"loca", Vec::new());
+        let glyf = transform::encode(&tables, l, budget)?;
+        transformed.insert(budget, *b"glyf", glyf)?;
+        transformed.insert(budget, *b"loca", Buffer::new(budget)?.into_owned())?;
     }
     // WOFF2 §5 requires this flag for every encoded font, including CFF and
     // null-transform fonts, because envelope reconstruction can change bytes.
@@ -387,67 +452,67 @@ pub fn encode(data: &[u8], o: &Options, l: &Limits) -> Result<Encoded> {
     }
     // The writer emits adjacent transformed glyf/loca; decoder accepts the less
     // restrictive standalone order allowed by W3C §5.5.
-    let mut order = tables
-        .keys()
-        .copied()
-        .filter(|t| *t != *b"loca")
-        .collect::<Vec<_>>();
-    if have_glyf {
-        let pos = order
-            .iter()
-            .position(|t| *t == *b"glyf")
-            .ok_or_else(|| invalid("glyf"))?;
-        order.insert(pos + 1, *b"loca");
+    let mut order = Vector::with_capacity(budget, tables.len())?;
+    for &tag in tables.map.keys() {
+        if tag == *b"loca" {
+            continue;
+        }
+        order.push(tag)?;
+        if have_glyf && tag == *b"glyf" {
+            order.push(*b"loca")?;
+        }
     }
-    let mut out = vec![0; 48];
+    let mut out = Buffer::with_capacity(budget, 48)?;
+    out.resize(48, 0)?;
     out[..4].copy_from_slice(b"wOF2");
-    out[4..8].copy_from_slice(&font.flavor().version().to_be_bytes());
+    out[4..8].copy_from_slice(&flavor.version().to_be_bytes());
     out[12..14].copy_from_slice(&(tables.len() as u16).to_be_bytes());
     set32(&mut out, 16, total)?;
-    let mut raw = Vec::new();
-    for tag in order {
-        let table = &tables[&tag];
-        let encoded = transformed.get(&tag);
-        let version = if [*b"glyf", *b"loca"].contains(&tag) {
-            if encoded.is_some() { 0 } else { 3 }
-        } else if encoded.is_some() {
-            1
-        } else {
-            0
-        };
-        let index = TAGS.iter().position(|t| *t == tag).unwrap_or(63);
-        out.push(index as u8 | version << 6);
-        if index == 63 {
-            out.extend(tag);
-        }
-        base128(&mut out, as32(table.len())?);
-        if let Some(encoded) = encoded {
-            base128(&mut out, as32(encoded.len())?);
-        }
-        let body = encoded.unwrap_or(table);
+    // Check the stream budget in directory order before admitting its storage.
+    let mut raw_size = 0usize;
+    for tag in order.iter() {
+        let body = transformed
+            .get(tag)
+            .or_else(|| tables.get(tag))
+            .ok_or_else(|| invalid("missing ordered table"))?;
         bounded(
-            raw.len().saturating_add(body.len()),
+            raw_size.saturating_add(body.len()),
             l.sfnt
                 .resources
                 .max_decompressed_bytes
                 .min(l.sfnt.resources.max_total_bytes),
             "WOFF2 transformed bytes",
         )?;
-        raw.extend(body);
+        raw_size += body.len();
     }
-    let compressed = compress(&raw, o, l)?;
+    let mut raw = Buffer::with_capacity(budget, raw_size)?;
+    for &tag in order.iter() {
+        let table = tables.get(&tag).ok_or_else(|| invalid("missing table"))?;
+        let encoded = transformed.get(&tag);
+        directory_entry(&mut out, tag, table.len(), encoded.map(<[u8]>::len))?;
+        put(&mut raw, encoded.unwrap_or(table))?;
+    }
+    drop(order);
+    drop(transformed);
+    drop(tables);
+    let compressed = compress(&raw, o, l, budget)?;
+    drop(raw);
     set32(&mut out, 20, compressed.len())?;
     bounded(
         out.len().saturating_add(compressed.len()),
         l.sfnt.resources.max_total_bytes,
         "WOFF2 output bytes",
     )?;
-    out.extend(compressed);
+    put(&mut out, &compressed)?;
+    drop(compressed);
     // Pad the compressed block even without auxiliary blocks (Google decoder
     // advances its source cursor to a four-byte boundary).
-    pad(&mut out);
-    write_aux(&mut out, 24, &o.auxiliary, l, |d| compress(d, o, l))?;
-    Ok(Encoded { bytes: out, report })
+    pad(&mut out)?;
+    write_aux(&mut out, 24, &o.auxiliary, l, |d| compress(d, o, l, budget))?;
+    Ok(Encoded {
+        bytes: release(out.into_owned()),
+        report,
+    })
 }
 /// Encode several independent fonts with bounded worker count, retaining input
 /// order. Jobs must be 1..=64; the product with compression_threads must be <=64.
