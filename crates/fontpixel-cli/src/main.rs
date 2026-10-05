@@ -140,6 +140,8 @@ enum Command {
         names: metadata::NameArguments,
         #[command(flatten)]
         projection: metadata::ProjectionArguments,
+        // Unit D hookup slot: flatten the embedded (bitmap sfnt) metadata flag
+        // group here and apply it next to `pcf.apply`/`vector.apply` below.
         /// Diagnostic format.
         #[arg(long, value_enum, default_value = "text")]
         report: ReportStyle,
@@ -275,29 +277,42 @@ struct PcfArguments {
     /// PCF bitmap scan unit in bytes (1, 2 or 4).
     #[arg(long = "scanunit", alias = "scan-unit", value_parser = ["1", "2", "4"])]
     scan_unit: Option<String>,
+    /// Whether edited size/resolution rewrite existing PCF POINT_SIZE and
+    /// RESOLUTION* properties (normalized-edits, the default) or the existing
+    /// properties are kept and each disagreement is reported as loss.
+    #[arg(long, value_enum)]
+    pcf_metadata_precedence: Option<MetadataPrecedenceArgument>,
 }
 #[derive(Clone, Copy, ValueEnum)]
 enum Significance {
     Msb,
     Lsb,
 }
+#[derive(Clone, Copy, ValueEnum)]
+enum MetadataPrecedenceArgument {
+    NormalizedEdits,
+    ExplicitProperties,
+}
 impl PcfArguments {
     fn apply(&self, id: &str, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         let requested = self.byte_order.is_some()
             || self.bit_order.is_some()
             || self.glyph_pad.is_some()
-            || self.scan_unit.is_some();
+            || self.scan_unit.is_some()
+            || self.pcf_metadata_precedence.is_some();
         if !requested {
             return Ok(());
         }
         if id != "pcf" {
             return Err(Error::InvalidInput(
-                "PCF layout options require --to pcf".into(),
+                "PCF layout and metadata options require --to pcf".into(),
             ));
         }
         #[cfg(feature = "pcf")]
         {
-            use fontpixel::formats::pcf::{GlyphPad, Order, PcfWriteOptions, ScanUnit};
+            use fontpixel::formats::pcf::{
+                GlyphPad, MetadataPrecedence, Order, PcfWriteOptions, ScanUnit,
+            };
             let order = |v| match v {
                 Some(Significance::Lsb) => Order::Lsb,
                 _ => Order::Msb,
@@ -315,6 +330,12 @@ impl PcfArguments {
                     Some("2") => ScanUnit::Two,
                     Some("4") => ScanUnit::Four,
                     _ => ScanUnit::One,
+                },
+                metadata_precedence: match self.pcf_metadata_precedence {
+                    Some(MetadataPrecedenceArgument::ExplicitProperties) => {
+                        MetadataPrecedence::ExplicitProperties
+                    }
+                    _ => MetadataPrecedence::NormalizedEdits,
                 },
                 ..PcfWriteOptions::default()
             })
@@ -917,12 +938,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     fonts.fonts = vec![selected];
                 }
                 metadata::apply(&mut fonts, &names, &mut report, &group_limits)?;
-                metadata::project(
-                    &mut fonts,
-                    projection.projection(),
-                    &mut report,
-                    &group_limits,
-                )?;
+                metadata::project(&mut fonts, &projection, &mut report, &group_limits)?;
                 let filename = group
                     .output
                     .file_name()
