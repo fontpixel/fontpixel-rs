@@ -249,6 +249,8 @@ impl FormatWriter<FontSet> for EmbeddedCodec {
 }
 impl EmbeddedCodec {
     /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    /// Only the registered OTB/bdat/color writers route here.
+    #[cfg(any(feature = "otb", feature = "bdat", feature = "color"))]
     pub(crate) fn write_reserved(
         &self,
         fonts: &FontSet,
