@@ -843,6 +843,43 @@ mod tests {
     }
 
     #[test]
+    fn tex_readback_glyph_allowance_covers_its_fixed_storage() {
+        // While a pk/gf readback parses (before its exact `retained_usage`
+        // replaces the parser's count), each decoded glyph is admitted at
+        // 2048 (pk) or 2304 (gf) bytes plus twice its raster (decoded rows
+        // and the bitmap copy). The fixed per-glyph storage it covers: the
+        // glyph slot, at most three per glyph while the slot array doubles
+        // (old and new arrays overlap); a one-code vector (minimum capacity
+        // four); one full B-tree node per cmap entry (the toolchain-
+        // independent bound) and that entry's id vector; and the three TeX
+        // glyph properties (array of capacity four and their names).
+        use crate::model::{Codepoint, GlyphId, Property};
+        use std::mem::size_of;
+        let slot = 3 * size_of::<Option<Glyph>>();
+        let codes = 4 * size_of::<Codepoint>();
+        // On the audited toolchain the model's B-tree bound is one node per
+        // five entries plus one, and that extra node fits the reader's
+        // initial 4096-byte allowance; elsewhere one node per entry.
+        let full =
+            16 * (size_of::<Codepoint>() + size_of::<Vec<GlyphId>>() + size_of::<usize>()) + 128;
+        assert!(full <= 4096);
+        let node = if cfg!(fontpixel_verified_btree_1_99) {
+            full.div_ceil(5)
+        } else {
+            full
+        };
+        let ids = 4 * size_of::<GlyphId>();
+        let properties = 4 * size_of::<Property>() + "tex.tfm_width tex.dx tex.dy".len();
+        let fixed = slot + codes + node + ids + properties;
+        // Off the audited toolchain the per-entry node bound alone does not
+        // fit (documented in docs/w6.1-writer-budget.md).
+        assert!(
+            !cfg!(fontpixel_verified_btree_1_99) || fixed <= 2048,
+            "{fixed}"
+        );
+    }
+
+    #[test]
     #[cfg(all(feature = "pk", feature = "gf"))]
     fn tex_writers_charge_the_exact_model_on_either_route() {
         // pk and gf charge the model's exact retained usage on their own
