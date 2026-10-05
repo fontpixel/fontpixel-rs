@@ -302,10 +302,9 @@ strikes (`ttfexport.py:1-8`, `73-80`). The native task writes the OTB profile
 | `post` underline | 2 | 0 | Cozette ×2: source `UNDERLINE_POSITION -19`, `UNDERLINE_THICKNESS 13` scaled to −1462/1000 |
 | `OS/2.version`, `head.flags`, `head.lowestRecPPEM` | 21 each | fontTools `FontBuilder` defaults 3, 3, 3 (not set by `ttfexport.py`) | 4, 11, 8 |
 
-None of these rows has a fontpixel option. The original's encoded-only glyph set,
-synthetic half-em `.notdef` and zero LSBs would need an explicit projection that
-reports the dropped source glyphs as loss; the current projection API does not
-cover them.
+The table above records the default-profile run. Every row except the dropped
+unencoded glyphs now has an explicit option; see
+[Explicit sfnt profile](#explicit-sfnt-profile) below.
 
 ### Vector TTF and WOFF2 downloads (42 + 41 files)
 
@@ -338,6 +337,52 @@ Encoded glyph outlines and advances are not among the differing fields.
 | `head.created`/`modified` | 104 | fixed 3660681600, 2020-01-01 (`ttfexport.py:17-20`, `:180`; `vectorize.py:338`) so rebuilds are byte-stable | raw 0 (fontTools displays it as 2082840000 with a plausibility warning); also deterministic | no option |
 | `head.checkSumAdjustment` | 104 | derived from the file bytes | derived from the file bytes | not a semantic field: it differs whenever any byte differs. The validator recomputes it per file (rule `repr-01`, demonstrated on six real sfnt) |
 | `cmap` subtables | 104 | (0,3) and (3,1) format 4 in 94 files, plus (3,10) format 12 in 10 | (0,3) and (3,1) format 4 plus (0,4) and (3,10) format 12 in all 104 | no; the mapped code points are identical in 104 of 104 files |
+
+The "Reproducible?" column describes the default-profile run; the options below
+now reproduce every row except `head.checkSumAdjustment`.
+
+### Explicit sfnt profile
+
+`benches/phase6_catalogue.py --profile explicit` (unit F) adds these options,
+with values taken from the original's own policy inputs: `name_records()`
+(`ttfexport.py:24-41`) through fontTools `setupNameTable`
+(`fontBuilder.py:440-490`, Windows 3/1/0x409 plus Mac 1/0/0 when Mac Roman
+encodes the text), and the fontTools `FontBuilder` defaults
+(`fontBuilder.py:140-192`, `_getOS2Defaults` `:267-308`). Line numbers of
+fontTools refer to the oracle copy in `local-work/oracles`.
+
+| Original policy | Bitmap TTF (`convert --to otb`) | Vector (`variants`) |
+| --- | --- | --- |
+| Name IDs 0–6 on both platforms | `--otb-name-record P/E/L/ID=TEXT` | `--name-record P/E/L/ID=TEXT` (same syntax and parser) |
+| `fsType` 4, `fsSelection` 0, `usBreakChar` 32, `achVendID` `????` | `--otb-fs-type 4 --otb-fs-selection 0 --otb-break-char 32 --otb-vendor '????'` | `--fs-type 4 --fs-selection 0 --break-char 32 --vendor '????'` |
+| Code pages not computed (0) | — (already equal) | `--code-page-ranges 0,0` |
+| OS/2 v3, `head.flags` 3, `lowestRecPPEM` 3 | `--otb-os2-version 3 --otb-head-flags 3 --otb-lowest-rec-ppem 3` | — (already equal) |
+| Fixed timestamps (`ttfexport.py:17-20`, `:180`) | `--otb-created/--otb-modified 3660681600` | `--created/--modified 3660681600` |
+| `post` format 3, `isFixedPitch` 0 (`:107`) | `--otb-post-names omit --otb-fixed-pitch false` (omitting names is loss) | `--fixed-pitch false` |
+| `post` underline 0 (`fontBuilder.py:185-186`) | `--otb-underline 0,0` (loss when the source has underline metrics) | — |
+| cmap: format 12 only above U+FFFF, under (3,10) (`fontBuilder.py:399-421`) | `--otb-cmap-unicode-full when-needed` | `--cmap-unicode-full when-needed` |
+| `maxp.maxZones` 2 (`fontBuilder.py:167`), no `gasp` | `--otb-outline-tables empty-glyf --otb-max-zones 2` (empty glyf/loca, maxp 1.0, zero outline extents and bearings, `:76-80`) | `--max-zones 2 --gasp omit` |
+| Glyph order `.notdef` + sorted code points (`:65-71`; `vectorize.py:290-292`) | `--otb-glyph-order codepoint` | `--glyph-order codepoint`, round: `--dot-glyph after-notdef` |
+| `.notdef` without bitmap, advance 500 (`:84`) | `--otb-notdef empty --otb-notdef-advance 500` (replacing a source `.notdef` is loss) | `--notdef empty --notdef-advance N --notdef-lsb 0` (unit E) |
+| hmtx trailing-advance compaction (`_h_m_t_x.py:93-104`) | `--otb-hmtx compact-trailing` | — (already compacted) |
+| EBLC line metrics (`:140-154`) | `--otb-width-max advance --otb-caret-slope 0,1 --otb-line-extremes zero --otb-vertical-line-metrics mirror-horizontal` | — |
+| One index subtable per strike (`:164-169`); strikes by size (`:62`) | `--otb-index-layout spanning`; the adapter passes the inputs in pixel-size order | — |
+
+`convert --to ttf/otf/woff/woff2/ttc` also accepts `--notdef`,
+`--notdef-advance` and `--notdef-lsb`. Batch files use the underscore names.
+
+Results (2026-10-05, `local-work/strict-f/`): unresolved fonts 132 (unit E) →
+73; all 42 vector TTFs and 17 of 21 bitmap TTFs pass. Every remaining field is
+classified: 28 BDF keep source `COMMENT` lines (original-lossy, as above); 41
+WOFF2 differ only in `head.checkSumAdjustment` (derived, rule `repr-01`: the
+original's WOFF2 value differs from its own TTF's, for example 2694500144 vs
+2962985748 for `tom-thumb-6px-square`, while native WOFF2 carries its TTF's
+value; both TTFs pass); 4 bitmap TTFs (3x5-block ×2, Capsigrany,
+Tinypixel) keep unencoded source glyphs that `ttfexport.py:65-71` drops
+(original-lossy), and their glyph count, `numberOfHMetrics`,
+`xAvgCharWidth`, unencoded glyph records and EBLC glyph ranges equal the
+original when recomputed without those glyphs; `spleen-64px-round.woff2`
+stays the consumer limitation below.
 
 ### Packaging and consumer limitation
 

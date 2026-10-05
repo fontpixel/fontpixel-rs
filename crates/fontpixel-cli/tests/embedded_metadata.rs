@@ -158,6 +158,7 @@ fn expected_options() -> EmbeddedMetadataOptions {
         cmap_unicode_full: EmbeddedCmapUnicodeFull::NonBmpOnly,
         width_max: EmbeddedWidthMax::Advance,
         index_layout: EmbeddedIndexLayout::SharedMetricRuns { minimum_run: 4 },
+        ..Default::default()
     }
 }
 fn library(format: &str, metadata: EmbeddedMetadataOptions) -> fontpixel::resources::Written {

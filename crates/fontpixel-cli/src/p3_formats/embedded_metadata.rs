@@ -1,23 +1,13 @@
 //! Explicit OTB/bdat metadata flags. Every flag is opt-in; without them native
 //! output is unchanged. Parsing stays available in feature-reduced builds so an
 //! explicit request reports the disabled feature instead of an unknown option.
+#[cfg(any(feature = "otb", feature = "bdat"))]
+use crate::name_records::Records;
+use crate::name_records::{number, record_hex, record_text};
 use clap::Args;
+#[cfg(any(feature = "otb", feature = "bdat"))]
 use fontpixel::{Error, Result};
 
-fn number<T: TryFrom<u64>>(value: &str) -> std::result::Result<T, String> {
-    let parsed = if let Some(hex) = value
-        .strip_prefix("0x")
-        .or_else(|| value.strip_prefix("0X"))
-    {
-        u64::from_str_radix(hex, 16)
-    } else {
-        value.parse()
-    };
-    parsed
-        .ok()
-        .and_then(|n| T::try_from(n).ok())
-        .ok_or_else(|| format!("{value:?} is not a decimal or 0x-hexadecimal number in range"))
-}
 fn word(value: &str) -> std::result::Result<u16, String> {
     number(value)
 }
@@ -59,44 +49,6 @@ fn ranges(value: &str) -> std::result::Result<[u32; 4], String> {
         .try_into()
         .map_err(|_| "expected four Unicode range words".into())
 }
-/// `P/E/L/ID` record key: platform, encoding, language and name IDs.
-fn key(value: &str) -> Result<[u16; 4]> {
-    let fields = value
-        .split('/')
-        .map(word)
-        .collect::<std::result::Result<Vec<_>, _>>()
-        .map_err(Error::InvalidInput)?;
-    fields.try_into().map_err(|_| {
-        Error::InvalidInput(format!(
-            "name record key {value:?} must be PLATFORM/ENCODING/LANGUAGE/NAME_ID"
-        ))
-    })
-}
-fn record_text(value: &str) -> std::result::Result<String, String> {
-    let (left, _) = value
-        .split_once('=')
-        .ok_or("expected PLATFORM/ENCODING/LANGUAGE/NAME_ID=TEXT")?;
-    key(left).map_err(|e| e.to_string())?;
-    Ok(value.to_owned())
-}
-fn record_hex(value: &str) -> std::result::Result<String, String> {
-    let (left, right) = value
-        .split_once('=')
-        .ok_or("expected PLATFORM/ENCODING/LANGUAGE/NAME_ID=HEX")?;
-    key(left).map_err(|e| e.to_string())?;
-    hex(right)?;
-    Ok(value.to_owned())
-}
-fn hex(value: &str) -> std::result::Result<Vec<u8>, String> {
-    if !value.len().is_multiple_of(2) || !value.bytes().all(|b| b.is_ascii_hexdigit()) {
-        return Err("expected an even number of hexadecimal digits".into());
-    }
-    (0..value.len())
-        .step_by(2)
-        .map(|i| u8::from_str_radix(&value[i..i + 2], 16).map_err(|e| e.to_string()))
-        .collect()
-}
-
 #[derive(Args, Default)]
 #[group(skip)]
 pub(super) struct MetadataArguments {
@@ -169,19 +121,79 @@ pub(super) struct MetadataArguments {
     /// post.isFixedPitch override; absent follows the source spacing.
     #[arg(long, value_parser = clap::value_parser!(bool))]
     otb_fixed_pitch: Option<bool>,
-    /// cmap (0,4) record: always (native) or non-bmp (omit it for BMP-only maps;
-    /// (3,10) and all mappings are unchanged).
-    #[arg(long, value_parser = ["always", "non-bmp"])]
+    /// cmap format-12 records: always (native: (0,4) and (3,10)), non-bmp
+    /// (omit (0,4) for BMP-only maps) or when-needed (format 12 only when
+    /// format 4 cannot hold the map, under (3,10) only). Mappings never change.
+    #[arg(long, value_parser = ["always", "non-bmp", "when-needed"])]
     otb_cmap_unicode_full: Option<String>,
     /// EBLC/bloc widthMax: bitmap (largest bitmap width, native) or advance.
     #[arg(long, value_parser = ["bitmap", "advance"])]
     otb_width_max: Option<String>,
-    /// EBLC/bloc index layout: canonical (native) or shared-runs.
-    #[arg(long, value_parser = ["canonical", "shared-runs"])]
+    /// EBLC/bloc index layout: canonical (native), shared-runs, or spanning
+    /// (one format-1 subtable across glyph IDs absent from a strike).
+    #[arg(long, value_parser = ["canonical", "shared-runs", "spanning"])]
     otb_index_layout: Option<String>,
     /// Shortest shared-metric run with --otb-index-layout shared-runs (default 8).
     #[arg(long, requires = "otb_index_layout", value_parser = positive_word)]
     otb_index_min_run: Option<u16>,
+    /// TrueType outline tables: none (native OTB) or empty-glyf (one-byte glyf,
+    /// short loca, maxp 1.0; outline-derived bounds and bearings become zero).
+    #[arg(long, value_parser = ["none", "empty-glyf"])]
+    otb_outline_tables: Option<String>,
+    /// maxp.maxZones (1 or 2) with --otb-outline-tables empty-glyf (default 1).
+    #[arg(long, value_parser = ["1", "2"])]
+    otb_max_zones: Option<String>,
+    /// Glyph 0: preserve (native) or empty (no bitmap in any strike, hmtx
+    /// advance from --otb-notdef-advance; replacing a source .notdef is loss).
+    #[arg(long, value_parser = ["preserve", "empty"])]
+    otb_notdef: Option<String>,
+    /// Empty .notdef advance width in design units.
+    #[arg(long, value_parser = word)]
+    otb_notdef_advance: Option<u16>,
+    /// EBLC/bloc caret slope RISE,RUN of every strike (native 1,0: upright).
+    #[arg(long, value_parser = caret_slope, allow_hyphen_values = true)]
+    otb_caret_slope: Option<[i8; 2]>,
+    /// EBLC/bloc minOriginSB/minAdvanceSB/maxBeforeBL/minAfterBL: computed (native) or zero.
+    #[arg(long, value_parser = ["computed", "zero"])]
+    otb_line_extremes: Option<String>,
+    /// Vertical line record of horizontal-only strikes: zero (native) or
+    /// mirror-horizontal (a copy of the horizontal record).
+    #[arg(long, value_parser = ["zero", "mirror-horizontal"])]
+    otb_vertical_line_metrics: Option<String>,
+    /// post underline POSITION,THICKNESS in design units; replacing source
+    /// underline metrics is reported as loss.
+    #[arg(long, value_parser = underline, allow_hyphen_values = true)]
+    otb_underline: Option<[i16; 2]>,
+    /// hmtx: full (native, one long metric per glyph) or compact-trailing.
+    #[arg(long, value_parser = ["full", "compact-trailing"])]
+    otb_hmtx: Option<String>,
+    /// Glyph IDs: first-seen (native) or codepoint (encoded glyphs by smallest
+    /// scalar, then unencoded glyphs in first-seen order).
+    #[arg(long, value_parser = ["first-seen", "codepoint"])]
+    otb_glyph_order: Option<String>,
+}
+fn pair<T: std::str::FromStr>(value: &str, what: &str) -> std::result::Result<[T; 2], String> {
+    let parts = value
+        .split(',')
+        .map(|part| {
+            part.trim()
+                .parse::<T>()
+                .map_err(|_| format!("invalid {what} {part:?}"))
+        })
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    parts
+        .try_into()
+        .map_err(|_| format!("expected two comma-separated {what} values"))
+}
+fn caret_slope(value: &str) -> std::result::Result<[i8; 2], String> {
+    let slope = pair::<i8>(value, "caret slope")?;
+    if slope == [0, 0] {
+        return Err("caret slope rise and run cannot both be 0".into());
+    }
+    Ok(slope)
+}
+fn underline(value: &str) -> std::result::Result<[i16; 2], String> {
+    pair::<i16>(value, "underline")
 }
 
 impl MetadataArguments {
@@ -207,6 +219,16 @@ impl MetadataArguments {
             || self.otb_width_max.is_some()
             || self.otb_index_layout.is_some()
             || self.otb_index_min_run.is_some()
+            || self.otb_outline_tables.is_some()
+            || self.otb_max_zones.is_some()
+            || self.otb_notdef.is_some()
+            || self.otb_notdef_advance.is_some()
+            || self.otb_caret_slope.is_some()
+            || self.otb_line_extremes.is_some()
+            || self.otb_vertical_line_metrics.is_some()
+            || self.otb_underline.is_some()
+            || self.otb_hmtx.is_some()
+            || self.otb_glyph_order.is_some()
     }
     /// Bytes the caller retains for these arguments and one built name table,
     /// including spare capacity and the shared table's `Arc` header.
@@ -224,16 +246,7 @@ impl MetadataArguments {
                 .ok_or_else(error)?;
             Ok(())
         };
-        for list in [
-            &self.otb_name_record,
-            &self.otb_name_record_hex,
-            &self.otb_name_language_tag,
-        ] {
-            add(list.capacity().checked_mul(size_of::<String>()))?;
-            for value in list {
-                add(Some(value.capacity()))?;
-            }
-        }
+        add(Some(self.records().argument_bytes(limit)?))?;
         for value in [
             &self.otb_os2_version,
             &self.otb_vendor,
@@ -243,6 +256,13 @@ impl MetadataArguments {
             &self.otb_cmap_unicode_full,
             &self.otb_width_max,
             &self.otb_index_layout,
+            &self.otb_outline_tables,
+            &self.otb_max_zones,
+            &self.otb_notdef,
+            &self.otb_line_extremes,
+            &self.otb_vertical_line_metrics,
+            &self.otb_hmtx,
+            &self.otb_glyph_order,
         ] {
             add(Some(value.as_ref().map_or(0, String::capacity)))?;
         }
@@ -253,84 +273,18 @@ impl MetadataArguments {
         Ok(total)
     }
     #[cfg(any(feature = "otb", feature = "bdat"))]
-    fn names(&self, limit: usize) -> Result<Option<fontpixel::sfnt::name::NameTable>> {
-        use fontpixel::sfnt::name::{NameRecord, NameTable};
-        if self.otb_name_record.is_empty()
-            && self.otb_name_record_hex.is_empty()
-            && self.otb_name_language_tag.is_empty()
-        {
-            return Ok(None);
-        }
-        let error = || Error::ResourceLimit {
+    fn records(&self) -> Records<'_> {
+        Records {
+            text: &self.otb_name_record,
+            hex: &self.otb_name_record_hex,
+            tags: &self.otb_name_language_tag,
             resource: "OTB/bdat metadata arguments",
-            limit,
-        };
-        let count = self.otb_name_record.len() + self.otb_name_record_hex.len();
-        if count.saturating_mul(size_of::<NameRecord>()) > limit {
-            return Err(error());
+            hex_flag: "--otb-name-record-hex",
         }
-        let mut table = NameTable::default();
-        table
-            .records
-            .try_reserve_exact(count)
-            .map_err(|_| error())?;
-        let mac_roman = fontpixel::charset::CharsetCodec::from_key("macroman", None)
-            .map_err(|e| Error::InvalidInput(e.to_string()))?;
-        for value in &self.otb_name_record {
-            let (left, text) = value
-                .split_once('=')
-                .ok_or_else(|| Error::InvalidInput("name record requires =".into()))?;
-            let [platform_id, encoding_id, language_id, name_id] = key(left)?;
-            let bytes: Vec<u8> =
-                if platform_id == 0 || (platform_id == 3 && [0, 1, 10].contains(&encoding_id)) {
-                    text.encode_utf16().flat_map(u16::to_be_bytes).collect()
-                } else if (platform_id, encoding_id) == (1, 0) {
-                    text.chars()
-                        .map(|c| {
-                            mac_roman
-                            .char2cp(c)
-                            .and_then(|code| u8::try_from(code).ok())
-                            .ok_or_else(|| {
-                                Error::InvalidInput(format!(
-                                    "name record {left}: {c:?} is not representable in Mac Roman"
-                                ))
-                            })
-                        })
-                        .collect::<Result<_>>()?
-                } else {
-                    return Err(Error::InvalidInput(format!(
-                        "name record {left}: use --otb-name-record-hex for this platform encoding"
-                    )));
-                };
-            table.records.push(NameRecord {
-                platform_id,
-                encoding_id,
-                language_id,
-                name_id,
-                value: bytes,
-            });
-        }
-        for value in &self.otb_name_record_hex {
-            let (left, right) = value
-                .split_once('=')
-                .ok_or_else(|| Error::InvalidInput("name record requires =".into()))?;
-            let [platform_id, encoding_id, language_id, name_id] = key(left)?;
-            table.records.push(NameRecord {
-                platform_id,
-                encoding_id,
-                language_id,
-                name_id,
-                value: hex(right).map_err(Error::InvalidInput)?,
-            });
-        }
-        table
-            .language_tags
-            .try_reserve_exact(self.otb_name_language_tag.len())
-            .map_err(|_| error())?;
-        table
-            .language_tags
-            .extend(self.otb_name_language_tag.iter().cloned());
-        Ok(Some(table))
+    }
+    #[cfg(any(feature = "otb", feature = "bdat"))]
+    fn names(&self, limit: usize) -> Result<Option<fontpixel::sfnt::name::NameTable>> {
+        self.records().table(limit)
     }
     /// Typed library options. Validation errors surface before any input is read.
     #[cfg(any(feature = "otb", feature = "bdat"))]
@@ -339,8 +293,10 @@ impl MetadataArguments {
         limits: &fontpixel::ResourceLimits,
     ) -> Result<fontpixel::formats::embedded::EmbeddedMetadataOptions> {
         use fontpixel::formats::embedded::{
-            EmbeddedAverageWidth, EmbeddedCmapUnicodeFull, EmbeddedIndexLayout,
-            EmbeddedMetadataOptions, EmbeddedPostNames, EmbeddedUnicodeRanges, EmbeddedWidthMax,
+            EmbeddedAverageWidth, EmbeddedCmapUnicodeFull, EmbeddedGlyphOrder, EmbeddedHmtx,
+            EmbeddedIndexLayout, EmbeddedLineExtremes, EmbeddedMetadataOptions, EmbeddedNotdef,
+            EmbeddedOutlineTables, EmbeddedPostNames, EmbeddedUnicodeRanges,
+            EmbeddedVerticalLineMetrics, EmbeddedWidthMax,
         };
         let names = self.names(limits.max_total_bytes)?;
         if let Some(table) = &names {
@@ -384,26 +340,76 @@ impl MetadataArguments {
                 EmbeddedPostNames::Keep
             },
             fixed_pitch: self.otb_fixed_pitch,
-            cmap_unicode_full: if self.otb_cmap_unicode_full.as_deref() == Some("non-bmp") {
-                EmbeddedCmapUnicodeFull::NonBmpOnly
-            } else {
-                EmbeddedCmapUnicodeFull::Always
+            cmap_unicode_full: match self.otb_cmap_unicode_full.as_deref() {
+                Some("non-bmp") => EmbeddedCmapUnicodeFull::NonBmpOnly,
+                Some("when-needed") => EmbeddedCmapUnicodeFull::WhenNeeded,
+                _ => EmbeddedCmapUnicodeFull::Always,
             },
             width_max: if self.otb_width_max.as_deref() == Some("advance") {
                 EmbeddedWidthMax::Advance
             } else {
                 EmbeddedWidthMax::BitmapWidth
             },
-            index_layout: if self.otb_index_layout.as_deref() == Some("shared-runs") {
-                EmbeddedIndexLayout::SharedMetricRuns {
+            index_layout: match self.otb_index_layout.as_deref() {
+                Some("shared-runs") => EmbeddedIndexLayout::SharedMetricRuns {
                     minimum_run: self.otb_index_min_run.unwrap_or(8),
-                }
+                },
+                Some("spanning") => EmbeddedIndexLayout::Spanning,
+                _ => EmbeddedIndexLayout::Canonical,
+            },
+            outline_tables: if self.otb_outline_tables.as_deref() == Some("empty-glyf") {
+                EmbeddedOutlineTables::EmptyGlyf
             } else {
-                EmbeddedIndexLayout::Canonical
+                EmbeddedOutlineTables::None
+            },
+            max_zones: self
+                .otb_max_zones
+                .as_deref()
+                .map(|z| if z == "2" { 2 } else { 1 }),
+            notdef: match (self.otb_notdef.as_deref(), self.otb_notdef_advance) {
+                (Some("empty"), Some(advance_width)) => EmbeddedNotdef::Empty { advance_width },
+                (Some("empty"), None) => {
+                    return Err(Error::InvalidInput(
+                        "--otb-notdef empty requires --otb-notdef-advance".into(),
+                    ));
+                }
+                (_, None) => EmbeddedNotdef::Preserve,
+                (_, Some(_)) => {
+                    return Err(Error::InvalidInput(
+                        "--otb-notdef-advance requires --otb-notdef empty".into(),
+                    ));
+                }
+            },
+            caret_slope: self.otb_caret_slope,
+            line_extremes: if self.otb_line_extremes.as_deref() == Some("zero") {
+                EmbeddedLineExtremes::Zero
+            } else {
+                EmbeddedLineExtremes::Computed
+            },
+            vertical_line_metrics: if self.otb_vertical_line_metrics.as_deref()
+                == Some("mirror-horizontal")
+            {
+                EmbeddedVerticalLineMetrics::MirrorHorizontal
+            } else {
+                EmbeddedVerticalLineMetrics::Zero
+            },
+            underline: self.otb_underline,
+            hmtx: if self.otb_hmtx.as_deref() == Some("compact-trailing") {
+                EmbeddedHmtx::CompactTrailing
+            } else {
+                EmbeddedHmtx::Full
+            },
+            glyph_order: if self.otb_glyph_order.as_deref() == Some("codepoint") {
+                EmbeddedGlyphOrder::Codepoint
+            } else {
+                EmbeddedGlyphOrder::FirstSeen
             },
         };
         if self.otb_index_min_run.is_some()
-            && options.index_layout == EmbeddedIndexLayout::Canonical
+            && !matches!(
+                options.index_layout,
+                EmbeddedIndexLayout::SharedMetricRuns { .. }
+            )
         {
             return Err(Error::InvalidInput(
                 "--otb-index-min-run requires --otb-index-layout shared-runs".into(),

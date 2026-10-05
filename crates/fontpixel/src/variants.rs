@@ -14,10 +14,12 @@ use std::{
 mod dot_rows;
 mod export;
 mod ledger;
+mod metadata;
 mod notdef;
 mod planner;
 mod tables;
 pub use export::{DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single};
+pub use metadata::{DotGlyph, GaspPolicy, GlyphOrder, MetadataOptions};
 pub use notdef::NotdefPolicy;
 
 /// A language-specific face with explicit OpenType script selection.

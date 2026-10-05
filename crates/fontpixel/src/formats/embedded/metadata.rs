@@ -39,16 +39,11 @@ pub enum EmbeddedUnicodeRanges {
     /// Exact caller bits. Reserved bits 123..=127 must be clear.
     Exact([u32; 4]),
 }
-/// Unicode-platform full-repertoire cmap record (0, 4).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum EmbeddedCmapUnicodeFull {
-    /// List the format-12 subtable under (0, 4) and (3, 10) (native default).
-    #[default]
-    Always,
-    /// Omit the redundant (0, 4) record when the cmap has no supplementary
-    /// scalar; (3, 10) and every decoded mapping are unchanged.
-    NonBmpOnly,
-}
+/// Full-repertoire cmap records: `Always` (native default) lists format 12
+/// under (0, 4) and (3, 10); `NonBmpOnly` omits the redundant (0, 4) record
+/// for BMP-only maps; `WhenNeeded` writes format 12 only when format 4 cannot
+/// hold the map, under (3, 10) only. Shared with outline export.
+pub type EmbeddedCmapUnicodeFull = crate::sfnt::cmap::FullRecords;
 /// Source of the EBLC/bloc horizontal `widthMax` line metric.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum EmbeddedWidthMax {
@@ -75,6 +70,76 @@ pub enum EmbeddedIndexLayout {
         /// Shortest run stored with shared metrics, at least 1.
         minimum_run: u16,
     },
+    /// Like `Canonical`, but one index subtable spans glyph IDs that are absent
+    /// from the strike, giving them zero-length entries (allowed for index
+    /// format 1), so a strike with gaps needs one subtable per image format run.
+    Spanning,
+}
+/// Optional TrueType outline tables of a bitmap-only font.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedOutlineTables {
+    /// No `glyf`/`loca`; `maxp` version 0.5 (native OTB default).
+    #[default]
+    None,
+    /// Empty `glyf` (one zero byte, as OTS and Windows require of an all-empty
+    /// table) with a short `loca` and `maxp` version 1.0. Every outline is
+    /// empty, so the outline-derived fields follow: `head` bounds, hmtx left
+    /// side bearings and the hhea extrema are zero. Bitmap metrics are
+    /// unchanged in the strikes.
+    EmptyGlyf,
+}
+/// Glyph 0 of the bitmap font.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedNotdef {
+    /// The source `.notdef` when present, otherwise an empty zero-advance
+    /// bitmap in every strike (native default).
+    #[default]
+    Preserve,
+    /// No bitmap in any strike and this hmtx advance in design units. Replacing
+    /// a source `.notdef` glyph is reported as loss.
+    Empty {
+        /// hmtx advance width in design units.
+        advance_width: u16,
+    },
+}
+/// EBLC/bloc `minOriginSB`, `minAdvanceSB`, `maxBeforeBL`, `minAfterBL`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedLineExtremes {
+    /// Computed from the strike's glyph metrics (native default).
+    #[default]
+    Computed,
+    /// Written as zero (no extreme information).
+    Zero,
+}
+/// EBLC/bloc vertical line metrics of strikes without vertical glyph metrics.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedVerticalLineMetrics {
+    /// Zero (native default).
+    #[default]
+    Zero,
+    /// A copy of the horizontal record. Strikes with vertical glyph metrics
+    /// keep their computed record.
+    MirrorHorizontal,
+}
+/// hmtx storage of trailing glyphs that share the last advance.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedHmtx {
+    /// One long metric per glyph (native default).
+    #[default]
+    Full,
+    /// Trailing glyphs whose advance equals the last long metric store only
+    /// their bearing; decoded advances are identical.
+    CompactTrailing,
+}
+/// Glyph ID order of the bitmap glyphs (glyph 0 stays `.notdef`).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum EmbeddedGlyphOrder {
+    /// First appearance across the FontSet's strikes (native default).
+    #[default]
+    FirstSeen,
+    /// Encoded glyphs in ascending order of their smallest Unicode scalar,
+    /// then unencoded glyphs in first-seen order.
+    Codepoint,
 }
 /// Explicit head, OS/2, post, name and strike-table controls for OTB/bdat.
 ///
@@ -124,6 +189,27 @@ pub struct EmbeddedMetadataOptions {
     pub width_max: EmbeddedWidthMax,
     /// EBLC/bloc index subtable organisation.
     pub index_layout: EmbeddedIndexLayout,
+    /// Optional empty TrueType outline tables.
+    pub outline_tables: EmbeddedOutlineTables,
+    /// `maxp.maxZones` (1 or 2) with [`EmbeddedOutlineTables::EmptyGlyf`];
+    /// absent writes 1 (no instructions use the twilight zone).
+    pub max_zones: Option<u16>,
+    /// Glyph 0 policy.
+    pub notdef: EmbeddedNotdef,
+    /// EBLC/bloc caret slope numerator and denominator for every strike's
+    /// horizontal record (native default 1, 0: upright).
+    pub caret_slope: Option<[i8; 2]>,
+    /// EBLC/bloc line-metric extremes.
+    pub line_extremes: EmbeddedLineExtremes,
+    /// EBLC/bloc vertical record of horizontal-only strikes.
+    pub vertical_line_metrics: EmbeddedVerticalLineMetrics,
+    /// `post.underlinePosition` and `underlineThickness` in design units.
+    /// Replacing a source underline metric is reported as loss.
+    pub underline: Option<[i16; 2]>,
+    /// hmtx storage.
+    pub hmtx: EmbeddedHmtx,
+    /// Glyph ID order.
+    pub glyph_order: EmbeddedGlyphOrder,
 }
 
 /// Bytes of an `Arc` allocation header (strong and weak counts).
@@ -150,6 +236,19 @@ impl EmbeddedMetadataOptions {
         if self.lowest_rec_ppem == Some(0) {
             return Err(invalid("lowest recommended ppem must be positive"));
         }
+        if let Some(zones) = self.max_zones {
+            if !(1..=2).contains(&zones) {
+                return Err(invalid("maxZones must be 1 or 2"));
+            }
+            if self.outline_tables != EmbeddedOutlineTables::EmptyGlyf {
+                return Err(invalid("maxZones requires the empty glyf outline tables"));
+            }
+        }
+        if self.caret_slope == Some([0, 0]) {
+            return Err(invalid(
+                "caret slope numerator and denominator cannot both be 0",
+            ));
+        }
         if self
             .os2_version
             .is_some_and(|version| !(3..=4).contains(&version))
@@ -168,22 +267,10 @@ impl EmbeddedMetadataOptions {
             return Err(invalid("OS/2 Unicode range bits 123..=127 are reserved"));
         }
         if let Some(flags) = self.embedding_flags {
-            if flags & !0x030e != 0 {
-                return Err(invalid("OS/2 fsType sets a reserved bit"));
-            }
-            if (flags & 0x000e).count_ones() > 1 {
-                return Err(invalid(
-                    "OS/2 fsType may set at most one usage permission bit",
-                ));
-            }
+            os2::check_embedding_flags(flags).map_err(invalid)?;
         }
         if let Some(flags) = self.selection_flags {
-            if flags & 0xfc00 != 0 {
-                return Err(invalid("OS/2 fsSelection bits 10..=15 are reserved"));
-            }
-            if flags & 0x0380 != 0 && self.os2_version.unwrap_or(4) < 4 {
-                return Err(invalid("OS/2 fsSelection bits 7..=9 require version 4"));
-            }
+            os2::check_selection_flags(flags, self.os2_version.unwrap_or(4)).map_err(invalid)?;
         }
         if self.index_layout == (EmbeddedIndexLayout::SharedMetricRuns { minimum_run: 0 }) {
             return Err(invalid("shared-metric run length must be positive"));
@@ -210,16 +297,26 @@ impl EmbeddedMetadataOptions {
     /// and encoded output for the rest of the writer. Without explicit names
     /// the writer budget is untouched.
     pub(super) fn prepare(&self, fonts: &FontSet, limits: &sbit::Limits) -> Result<Prepared> {
-        let Some(table) = &self.names else {
-            return Ok(Prepared {
-                limits: None,
-                names: None,
-            });
-        };
         let maximum = limits.sfnt.resources.max_total_bytes;
         let error = || crate::Error::ResourceLimit {
             resource: "embedded metadata bytes",
             limit: maximum,
+        };
+        let extra = self.working_bytes(fonts).ok_or_else(error)?;
+        let Some(table) = &self.names else {
+            if extra == 0 {
+                return Ok(Prepared {
+                    limits: None,
+                    names: None,
+                });
+            }
+            let mut remaining = limits.clone();
+            remaining.sfnt.resources.max_total_bytes =
+                maximum.checked_sub(extra).ok_or_else(error)?;
+            return Ok(Prepared {
+                limits: Some(remaining),
+                names: None,
+            });
         };
         let configured = self.retained_bytes(maximum)?;
         let source = fonts
@@ -235,11 +332,35 @@ impl EmbeddedMetadataOptions {
         remaining.sfnt.resources.max_total_bytes = maximum
             .checked_sub(configured)
             .and_then(|n| n.checked_sub(bytes.capacity()))
+            .and_then(|n| n.checked_sub(extra))
             .ok_or_else(error)?;
         Ok(Prepared {
             limits: Some(remaining),
             names: Some(bytes),
         })
+    }
+    /// Upper bound of the writer storage these controls add, reserved before
+    /// the writer runs: the empty outline tables (one `glyf` byte, a short
+    /// `loca` of `glyphs + 1` entries, a 32-byte `maxp`) and the codepoint
+    /// reordering scratch (one sort key and one new ID per glyph, plus the
+    /// reordered name array). `glyphs` is bounded by every source glyph plus
+    /// `.notdef`, at most 65,536. `None` on overflow.
+    pub(super) fn working_bytes(&self, fonts: &FontSet) -> Option<usize> {
+        use std::mem::size_of;
+        let glyphs = fonts
+            .fonts
+            .iter()
+            .try_fold(1usize, |n, font| n.checked_add(font.len()))?
+            .min(65_536);
+        let mut extra = 0usize;
+        if self.outline_tables == EmbeddedOutlineTables::EmptyGlyf {
+            extra = glyphs.checked_add(1)?.checked_mul(2)?.checked_add(1 + 32)?;
+        }
+        if self.glyph_order == EmbeddedGlyphOrder::Codepoint {
+            let per_glyph = size_of::<(u32, u16)>() + size_of::<u16>() + size_of::<String>();
+            extra = extra.checked_add(glyphs.checked_mul(per_glyph)?)?;
+        }
+        Some(extra)
     }
     /// Record the explicit configuration and every source value it drops.
     pub(super) fn audit(&self, fonts: &FontSet, report: &mut Diagnostics) {
@@ -293,6 +414,27 @@ impl EmbeddedMetadataOptions {
                     None,
                     format!("Nameless post format 3 omits {named} source glyph names"),
                 );
+            }
+        }
+        if let EmbeddedNotdef::Empty { .. } = self.notdef {
+            for (fi, font) in fonts.fonts.iter().enumerate() {
+                if let Some((id, _)) = font.glyphs().find(|(_, glyph)| {
+                    // The same rule that assigns a source glyph to glyph 0.
+                    glyph.name.as_deref() == Some(".notdef")
+                        && !glyph.codepoints.iter().any(|cp| {
+                            matches!(cp, crate::model::Codepoint::Unicode(c)
+                                if char::from_u32(*c).is_some())
+                        })
+                }) {
+                    loss(
+                        report,
+                        "notdef_replaced",
+                        Some(fi),
+                        Some(id.index()),
+                        "The source .notdef glyph was replaced by the explicit empty .notdef \
+                         policy; source model unchanged",
+                    );
+                }
             }
         }
     }

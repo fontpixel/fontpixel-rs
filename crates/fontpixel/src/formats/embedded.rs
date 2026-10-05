@@ -19,8 +19,10 @@ use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
 
 mod metadata;
 pub use metadata::{
-    EmbeddedAverageWidth, EmbeddedCmapUnicodeFull, EmbeddedIndexLayout, EmbeddedMetadataOptions,
-    EmbeddedPostNames, EmbeddedUnicodeRanges, EmbeddedWidthMax,
+    EmbeddedAverageWidth, EmbeddedCmapUnicodeFull, EmbeddedGlyphOrder, EmbeddedHmtx,
+    EmbeddedIndexLayout, EmbeddedLineExtremes, EmbeddedMetadataOptions, EmbeddedNotdef,
+    EmbeddedOutlineTables, EmbeddedPostNames, EmbeddedUnicodeRanges, EmbeddedVerticalLineMetrics,
+    EmbeddedWidthMax,
 };
 
 /// Options for bitmap FontSet extraction.
@@ -1008,6 +1010,37 @@ impl GlyphIdSet {
         fresh
     }
 }
+/// Renumber glyphs 1.. by their smallest mapped scalar; unmapped glyphs follow
+/// in their first-seen order. Glyph 0 stays `.notdef`.
+fn reorder_by_codepoint(
+    names: &mut Vec<String>,
+    mapping: &mut cmap::Mapping,
+    assigned: &mut [Vec<(u16, &Glyph)>],
+) {
+    let mut keys: Vec<(u32, u16)> = (1..names.len()).map(|id| (u32::MAX, id as u16)).collect();
+    for (&cp, &gid) in mapping.iter() {
+        if let Some(key) = keys.get_mut(usize::from(gid).wrapping_sub(1)) {
+            key.0 = key.0.min(cp);
+        }
+    }
+    keys.sort_unstable();
+    let mut new_id = vec![0u16; names.len()];
+    for (rank, &(_, gid)) in keys.iter().enumerate() {
+        new_id[usize::from(gid)] = (rank + 1) as u16;
+    }
+    let mut old = std::mem::take(names);
+    names.reserve_exact(old.len());
+    names.push(std::mem::take(&mut old[0]));
+    for &(_, gid) in &keys {
+        names.push(std::mem::take(&mut old[usize::from(gid)]));
+    }
+    for gid in mapping.values_mut() {
+        *gid = new_id[usize::from(*gid)];
+    }
+    for (gid, _) in assigned.iter_mut().flatten() {
+        *gid = new_id[usize::from(*gid)];
+    }
+}
 fn key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> Key {
     if let [Codepoint::Unicode(cp)] = g.codepoints.as_slice()
         && char::from_u32(*cp).is_some()
@@ -1189,6 +1222,37 @@ fn line_record(f: &Font, strike: &sbit::Strike, vertical: bool) -> Result<sbit::
         line[3] = 1;
     }
     Ok(sbit::LineMetrics(line))
+}
+/// Explicit EBLC/bloc line-metric controls after native derivation.
+fn apply_line_metrics(
+    metadata: &EmbeddedMetadataOptions,
+    strike: &mut sbit::Strike,
+    fi: usize,
+    report: &mut Diagnostics,
+) {
+    for line in [&mut strike.horizontal, &mut strike.vertical] {
+        if metadata.line_extremes == EmbeddedLineExtremes::Zero {
+            line.0[6..10].fill(0);
+        }
+    }
+    if let Some([numerator, denominator]) = metadata.caret_slope {
+        strike.horizontal.0[3] = numerator as u8;
+        strike.horizontal.0[4] = denominator as u8;
+    }
+    if metadata.vertical_line_metrics == EmbeddedVerticalLineMetrics::MirrorHorizontal
+        && strike.flags == 1
+    {
+        if strike.vertical.0 != [0; 12] && strike.vertical.0 != strike.horizontal.0 {
+            loss(
+                report,
+                "vertical_line_metrics",
+                Some(fi),
+                None,
+                "A retained vertical line record was replaced by the horizontal record",
+            );
+        }
+        strike.vertical = sbit::LineMetrics(strike.horizontal.0);
+    }
 }
 fn ignored_fields(f: &Font, fi: usize, report: &mut Diagnostics, sbix: bool) {
     for (source, props) in [("header", &f.headers), ("property", &f.properties)] {
@@ -1483,6 +1547,11 @@ fn write_impl(
         return Err(invalid("cmap mapping budget exceeded"));
     }
     let count = u16::try_from(ids.len()).map_err(|_| invalid("too many sfnt glyphs"))?;
+    drop(ids);
+    if options.metadata.glyph_order == EmbeddedGlyphOrder::Codepoint {
+        // Scratch reserved by `EmbeddedMetadataOptions::working_bytes`.
+        reorder_by_codepoint(&mut names, &mut mapping, &mut assigned);
+    }
     if sbix {
         #[cfg(feature = "color")]
         return write_native_sbix(fonts, &assigned, count, &mapping, names, limits, report);
@@ -1552,14 +1621,19 @@ fn write_impl(
         } else {
             1
         };
-        glyphs.entry(0).or_insert_with(|| sbit::BitmapGlyph {
-            metrics: sbit::Metrics {
-                horizontal: Some(sbit::Bearing::default()),
-                vertical: (flags != 1).then(sbit::Bearing::default),
-                ..Default::default()
-            },
-            bitmap: GlyphBitmap::Mono(Bitmap::default()),
-        });
+        if let EmbeddedNotdef::Empty { .. } = options.metadata.notdef {
+            // Glyph 0 has no bitmap in any strike; its advance is in hmtx.
+            glyphs.remove(&0);
+        } else {
+            glyphs.entry(0).or_insert_with(|| sbit::BitmapGlyph {
+                metrics: sbit::Metrics {
+                    horizontal: Some(sbit::Bearing::default()),
+                    vertical: (flags != 1).then(sbit::Bearing::default),
+                    ..Default::default()
+                },
+                bitmap: GlyphBitmap::Mono(Bitmap::default()),
+            });
+        }
         // A strike with mixed small directions cannot carry one direction flag.
         // Promote only metrics actually available: reject rather than fabricate.
         let mut strike = sbit::Strike {
@@ -1581,6 +1655,7 @@ fn write_impl(
                 .max()
                 .unwrap_or(0);
         }
+        apply_line_metrics(&options.metadata, &mut strike, fi, &mut report);
         strikes.push(strike);
     }
     let mut sizes = BTreeSet::new();
@@ -1591,6 +1666,7 @@ fn write_impl(
     }
     let tables = match options.metadata.index_layout {
         EmbeddedIndexLayout::Canonical => sbit::encode(&strikes, kind, count, limits)?,
+        EmbeddedIndexLayout::Spanning => sbit::encode_spanning(&strikes, kind, count, limits)?,
         EmbeddedIndexLayout::SharedMetricRuns { minimum_run } => {
             let runs = sbit::encode_shared_metric_runs(&strikes, kind, count, minimum_run, limits)?;
             if runs.shared_runs > 0 {
@@ -2152,12 +2228,29 @@ fn common_design_tables(
             .ok_or_else(|| invalid("descent overflow"))?,
     )?;
     header.line_gap = global(metric_font.metrics.line_gap.unwrap_or(0))?;
+    let empty_glyf = metadata.outline_tables == EmbeddedOutlineTables::EmptyGlyf;
+    if empty_glyf {
+        // Every outline is empty, so the outline-derived bearings, extents and
+        // bounds are zero; the strikes keep the exact bitmap metrics.
+        for m in &mut horizontal {
+            m.bearing = 0;
+        }
+        ink.fill(None);
+        (left, bottom, right, top) = (0, 0, 0, 0);
+    }
+    if let EmbeddedNotdef::Empty { advance_width } = metadata.notdef {
+        horizontal[0] = metrics::LongMetric {
+            advance: advance_width,
+            bearing: 0,
+        };
+        ink[0] = None;
+    }
     header.recompute(&horizontal, &ink)?;
     let hm = metrics::encode(
         metrics::Axis::Horizontal,
         &header,
         &horizontal,
-        false,
+        metadata.hmtx == EmbeddedHmtx::CompactTrailing,
         limits,
     )?;
     builder.insert(*b"hhea", hm.header)?;
@@ -2176,15 +2269,24 @@ fn common_design_tables(
     head[48..50].copy_from_slice(&2u16.to_be_bytes());
     metadata.apply_head(&mut head);
     builder.insert(*b"head", head)?;
-    let mut maxp = 0x5000u32.to_be_bytes().to_vec();
-    maxp.extend(count.to_be_bytes());
-    builder.insert(*b"maxp", maxp)?;
-    let encoded = cmap::encode_records(
-        mapping,
-        count,
-        limits,
-        metadata.cmap_unicode_full == EmbeddedCmapUnicodeFull::Always,
-    )?;
+    if empty_glyf {
+        // maxp 1.0: every outline maximum is zero; maxZones as requested (no
+        // instructions, so 1 by default). Storage reserved in `prepare`.
+        let mut maxp = vec![0; 32];
+        maxp[0..4].copy_from_slice(&0x10000u32.to_be_bytes());
+        maxp[4..6].copy_from_slice(&count.to_be_bytes());
+        maxp[14..16].copy_from_slice(&metadata.max_zones.unwrap_or(1).to_be_bytes());
+        builder.insert(*b"maxp", maxp)?;
+        // One zero byte: OTS and Windows reject a zero-length glyf. Short loca
+        // (head.indexToLocFormat 0) with every glyph at offset 0.
+        builder.insert(*b"glyf", vec![0])?;
+        builder.insert(*b"loca", vec![0; 2 * (usize::from(count) + 1)])?;
+    } else {
+        let mut maxp = 0x5000u32.to_be_bytes().to_vec();
+        maxp.extend(count.to_be_bytes());
+        builder.insert(*b"maxp", maxp)?;
+    }
+    let encoded = cmap::encode_with_records(mapping, count, limits, metadata.cmap_unicode_full)?;
     builder.insert(*b"cmap", encoded.data)?;
     let mut os2 = os2::Os2Table::default();
     os2.set_unicode_coverage(&mapping.keys().copied().collect())?;
@@ -2231,8 +2333,34 @@ fn common_design_tables(
         metric_font.metrics.spacing,
         Some(Spacing::Monospaced | Spacing::CharacterCell)
     )));
-    post.header.underline_position = global(metric_font.metrics.underline_position.unwrap_or(0))?;
-    post.header.underline_thickness = global(metric_font.metrics.underline_thickness.unwrap_or(0))?;
+    let source_underline = [
+        metric_font.metrics.underline_position,
+        metric_font.metrics.underline_thickness,
+    ];
+    let derived = [
+        global(source_underline[0].unwrap_or(0))?,
+        global(source_underline[1].unwrap_or(0))?,
+    ];
+    let underline = match metadata.underline {
+        Some(explicit) => {
+            if (0..2).any(|i| source_underline[i].is_some() && derived[i] != explicit[i]) {
+                loss(
+                    report,
+                    "underline",
+                    Some(reference),
+                    None,
+                    "Explicit post underline values replace the source underline metrics; \
+                     source model unchanged",
+                );
+            }
+            explicit
+        }
+        None => derived,
+    };
+    [
+        post.header.underline_position,
+        post.header.underline_thickness,
+    ] = underline;
     builder.insert(*b"post", post.encode(count, limits)?)?;
     if strikes
         .iter()

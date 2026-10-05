@@ -8,10 +8,13 @@ mod image_formats;
 mod input_budget;
 mod merge;
 mod metadata;
+mod name_records;
 use image_formats::WriteArguments as ImageArguments;
 mod extra_formats;
 #[cfg(feature = "opentype")]
 mod opentype;
+#[cfg(feature = "opentype")]
+mod outline_metadata;
 mod p2_formats;
 mod p3_formats;
 use clap::{Args, Parser, Subcommand, ValueEnum, builder::PossibleValuesParser};
@@ -1872,8 +1875,37 @@ struct VectorArguments {
     woff2_threads: Option<u32>,
     #[arg(long)]
     collection_v2: bool,
+    /// Glyph 0 of TTF/OTF/WOFF/WOFF2/TTC output: preserve (the source .notdef,
+    /// otherwise an empty glyph) or empty (empty outline with exact design-unit
+    /// metrics; requires --notdef-advance; replacing a source .notdef is loss).
+    #[arg(long, value_parser = ["preserve", "empty"])]
+    notdef: Option<String>,
+    /// Empty .notdef advance width in design units.
+    #[arg(long)]
+    notdef_advance: Option<u16>,
+    /// Empty .notdef left side bearing in design units (default 0).
+    #[arg(long, allow_hyphen_values = true)]
+    notdef_lsb: Option<i16>,
 }
 impl VectorArguments {
+    /// Explicit glyph-0 policy; validated before any input is read.
+    #[cfg(feature = "opentype")]
+    fn notdef(&self) -> fontpixel::Result<fontpixel::variants::NotdefPolicy> {
+        use fontpixel::variants::NotdefPolicy;
+        match (self.notdef.as_deref(), self.notdef_advance, self.notdef_lsb) {
+            (Some("empty"), Some(advance_width), lsb) => Ok(NotdefPolicy::Empty {
+                advance_width,
+                left_side_bearing: lsb.unwrap_or(0),
+            }),
+            (Some("empty"), None, _) => Err(Error::InvalidInput(
+                "--notdef empty requires --notdef-advance".into(),
+            )),
+            (_, None, None) => Ok(NotdefPolicy::Preserve),
+            _ => Err(Error::InvalidInput(
+                "--notdef-advance/--notdef-lsb require --notdef empty".into(),
+            )),
+        }
+    }
     fn apply(&self, id: &str, registry: &mut fontpixel::FontRegistry) -> fontpixel::Result<()> {
         let explicit = self.shape.is_some()
             || self.dotsize.is_some()
@@ -1966,7 +1998,10 @@ impl VectorArguments {
             || self.woff2_source.is_some()
             || self.woff2_quality.is_some()
             || self.woff2_threads.is_some()
-            || self.collection_v2;
+            || self.collection_v2
+            || self.notdef.is_some()
+            || self.notdef_advance.is_some()
+            || self.notdef_lsb.is_some();
         #[cfg(feature = "svg")]
         if id == "svg" {
             if self.upm.is_some()
@@ -1976,6 +2011,9 @@ impl VectorArguments {
                 || self.woff2_quality.is_some()
                 || self.woff2_threads.is_some()
                 || self.collection_v2
+                || self.notdef.is_some()
+                || self.notdef_advance.is_some()
+                || self.notdef_lsb.is_some()
             {
                 return Err(Error::InvalidInput(
                     "OpenType container options cannot apply to SVG output".into(),
@@ -2035,6 +2073,7 @@ impl VectorArguments {
             o.woff2.quality = self.woff2_quality.unwrap_or(11);
             o.woff2.compression_threads = self.woff2_threads.unwrap_or(2) as usize;
             o.collection_v2 = self.collection_v2;
+            o.outline.notdef = self.notdef()?;
             registry.set_vector_write_options(o);
         }
         #[cfg(not(feature = "opentype"))]

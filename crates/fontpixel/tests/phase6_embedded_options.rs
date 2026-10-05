@@ -509,6 +509,7 @@ mod metadata {
             cmap_unicode_full: CmapFull::NonBmpOnly,
             width_max: WidthMax::Advance,
             index_layout: Layout::SharedMetricRuns { minimum_run: 8 },
+            ..Default::default()
         }
     }
     fn decoded(bytes: &[u8], kind: Kind) -> Vec<(Vec<Codepoint>, String, i64, Option<Vector>)> {

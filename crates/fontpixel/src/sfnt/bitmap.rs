@@ -893,6 +893,20 @@ pub fn encode(strikes: &[Strike], kind: Kind, num_glyphs: u16, limits: &Limits) 
         encode_with_budget(strikes, kind, num_glyphs, limits, &budget)?.into_parts();
     Ok(tables)
 }
+/// [`encode`] with one index subtable per same-image-format run that spans
+/// glyph IDs absent from the strike: those get zero-length index format 1
+/// entries instead of starting a new subtable. Decoded strikes are identical.
+pub fn encode_spanning(
+    strikes: &[Strike],
+    kind: Kind,
+    num_glyphs: u16,
+    limits: &Limits,
+) -> Result<Tables> {
+    let budget = root(limits);
+    let (tables, _lease) =
+        encode_layout(strikes, kind, num_glyphs, limits, &budget, true)?.into_parts();
+    Ok(tables)
+}
 /// Upper bound of EBDT/bdat image bytes for already-validated model rasters;
 /// capped by the table limit the encoder enforces anyway.
 fn data_capacity(strikes: &[Strike], kind: Kind, limits: &Limits) -> usize {
@@ -921,6 +935,16 @@ pub(crate) fn encode_with_budget(
     num_glyphs: u16,
     limits: &Limits,
     ledger: &Ledger,
+) -> Result<Owned<Tables>> {
+    encode_layout(strikes, kind, num_glyphs, limits, ledger, false)
+}
+fn encode_layout(
+    strikes: &[Strike],
+    kind: Kind,
+    num_glyphs: u16,
+    limits: &Limits,
+    ledger: &Ledger,
+    span_gaps: bool,
 ) -> Result<Owned<Tables>> {
     if kind == Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color bitmap writing requires the color feature"));
@@ -1048,9 +1072,20 @@ pub(crate) fn encode_with_budget(
                     .checked_add(encoded.len())
                     .ok_or_else(|| invalid("bitmap output overflow"))?,
             )?;
-            let extend = groups
-                .last()
-                .is_some_and(|g| g.1.checked_add(1) == Some(gid) && g.2 == format);
+            let extend = groups.last().is_some_and(|g| {
+                g.2 == format && (g.1.checked_add(1) == Some(gid) || (span_gaps && g.1 < gid))
+            });
+            if extend && span_gaps {
+                // Absent IDs inside the run: zero-length entries at the
+                // current end offset (index format 1 only, as written here).
+                let (last, end) = (
+                    groups.last().map_or(gid, |g| g.1),
+                    offsets.last().copied().unwrap_or(0),
+                );
+                for _ in u32::from(last) + 1..u32::from(gid) {
+                    offsets.push(end)?;
+                }
+            }
             if !extend {
                 groups.push((gid, gid, format, data.len(), offsets.len()))?;
                 offsets.push(0)?;
