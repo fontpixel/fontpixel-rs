@@ -134,13 +134,19 @@ impl<'a> Tables<'a> {
         let (data, lease) = table.into_parts();
         self.put_parts([(tag, data)], lease)
     }
-    /// Insert tables sharing one charge; explicitly dropped tags are discarded
-    /// (their storage drops before the charge does).
+    /// Insert tables sharing one charge; explicitly dropped tags are discarded.
+    /// When every part is dropped (the vhea/vmtx pair), the storage and then
+    /// its charge are released at once; otherwise the shared charge stays.
     fn put_parts<const N: usize>(
         &mut self,
         parts: [([u8; 4], Vec<u8>); N],
         mut lease: Lease,
     ) -> Result<()> {
+        if parts.iter().all(|(tag, _)| self.dropped.contains(tag)) {
+            drop(parts);
+            drop(lease);
+            return Ok(());
+        }
         if let Err(error) = self.lease.merge(&mut lease) {
             drop(parts);
             return Err(error);
