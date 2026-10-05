@@ -595,9 +595,11 @@ mod tests {
         }
         let at = run(hi).unwrap();
         assert_eq!(at, expected, "minimal total changed the output");
-        // Legacy writers carry the limit inside their omission report.
+        // Legacy writers carry the limit inside their omission report; the
+        // embedded writers' glyph-count gate is an input error.
         match run(hi - 1) {
             Err(Error::ResourceLimit { .. }) => {}
+            Err(Error::InvalidInput(m)) if m.contains("budget exceeded") => {}
             Err(Error::ReportedErrors(r))
                 if r.entries
                     .last()
@@ -674,25 +676,28 @@ mod tests {
     }
 
     #[test]
-    fn reserved_color_skips_only_the_model_admission() {
+    fn reserved_embedded_writers_skip_only_the_model_admission() {
+        // `write_preflight` admits an estimate of the model alone; the owned
+        // route skips it. For OTB it binds, so the owned route needs strictly
+        // less than the borrowing route plus the model. For color the fused
+        // `color_memory_preflight` envelope binds either way.
         let registry = crate::registry();
         let set = model();
         let used = set.retained_usage(usize::MAX).unwrap().bytes;
-        let (owned, written) = minimal(|total| {
-            registry.write_owned(
-                set.clone(),
-                "color",
-                &options("a.ttf", total),
-                Report::default(),
-            )
-        });
-        let (borrowed, expected) = minimal(|total| {
-            registry.write_with_report(&set, "color", &options("a.ttf", total), Report::default())
-        });
-        assert_eq!(written, expected);
-        assert!(
-            owned > used && owned <= borrowed + used,
-            "{owned} {borrowed} {used}"
-        );
+        for (id, name, strict) in [("otb", "a.otb", true), ("color", "a.ttf", false)] {
+            let (owned, written) = minimal(|total| {
+                registry.write_owned(set.clone(), id, &options(name, total), Report::default())
+            });
+            let (borrowed, expected) = minimal(|total| {
+                registry.write_with_report(&set, id, &options(name, total), Report::default())
+            });
+            assert_eq!(written, expected, "{id}");
+            assert!(owned > used, "{id}: {owned} {used}");
+            if strict {
+                assert!(owned < borrowed + used, "{id}: {owned} {borrowed} {used}");
+            } else {
+                assert!(owned <= borrowed + used, "{id}: {owned} {borrowed} {used}");
+            }
+        }
     }
 }
