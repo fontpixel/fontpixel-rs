@@ -1,4 +1,3 @@
-//! Phase-6 reconstruction from recorded edits; pending compilation.
 //! Explicit, budgeted normalized naming changes shared by conversion commands.
 use clap::Args;
 use fontpixel::model::{Rational, Vector};

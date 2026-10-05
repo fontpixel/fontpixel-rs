@@ -1,4 +1,4 @@
-//! Reconstructed structural validator; pending compilation and renewed acceptance.
+//! Structural sfnt validator.
 //! Every allocating decoder receives limits derived from remaining owned storage.
 #[cfg(feature = "opentype")]
 use super::report_bytes;

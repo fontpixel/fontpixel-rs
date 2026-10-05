@@ -1,7 +1,6 @@
 //! Reconstructed full-input single-call driver. Five fresh processes are owned
 //! by scripts/phase6_perf.py; this example performs one warmup and one observation.
-//! Artifact materialization is outside each inner timer. No historical result
-//! validates this restored, currently uncompiled driver.
+//! Artifact materialization is outside each inner timer.
 use fontpixel::{
     FontSet, ReadOptions, ResourceLimits, ResourcePath, WriteOptions,
     bitmap::{Alignment, Bitmap, Direction, Mono},

@@ -1,4 +1,3 @@
-//! Phase-6 reconstruction: pending compilation and renewed acceptance.
 //! Native semantic comparison, structural validation and exact charset mapping.
 use crate::{RasterArguments, ReportStyle, assets, batch, input_budget::InputBudget};
 use clap::Args;

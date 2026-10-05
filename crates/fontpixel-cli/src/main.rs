@@ -793,7 +793,6 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             raster,
             vector,
         } => {
-            // Reconstructed phase-6 grouped conversion; pending compiler validation.
             if inputs.len() > 1024 {
                 return Err(Error::InvalidInput(
                     "convert accepts at most 1024 inputs".into(),

@@ -98,8 +98,8 @@ def check(require_rustdoc_link: bool):
 
     example = ROOT / contract["example"]
     text = example.read_text()
-    if "uncompiled" not in text or "untested" not in text:
-        raise ValueError("example must retain its current uncompiled/untested status")
+    if "uncompiled" in text or "untested" in text:
+        raise ValueError("example must not carry the obsolete uncompiled/untested status")
     for forbidden in ["std::fs", "std::process", "Command::new", "include_bytes!"]:
         if forbidden in text:
             raise ValueError(f"filesystem-free example has an unexpected dependency: {forbidden}")

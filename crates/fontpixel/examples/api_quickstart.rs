@@ -1,9 +1,9 @@
-//! Filesystem-free native API walkthrough reconstructed from current public APIs.
+//! Filesystem-free native API walkthrough of the current public APIs.
 //!
-//! CURRENT STATUS: uncompiled and untested after workspace recovery. The checks
-//! below are executable examples for later authorized validation, not pass claims.
+//! Every assertion below runs: `scripts/check.sh` executes the all-features build,
+//! and phase-6 validation also runs it with no default features, the defaults and
+//! the yaff-, pcf-, image-, otb-, sfnt- and woff2-only profiles.
 //! No fonts or images are read/written on disk; diagnostics go to stdout.
-//! Run default, no-default-features and all-features separately when permitted.
 use fontpixel::metadata::{NameOverrides, apply_names};
 use fontpixel::model::{Codepoint, Vector};
 use fontpixel::{Bitmap, Error, Font, FontSet, Glyph, ResourceLimits, Result};

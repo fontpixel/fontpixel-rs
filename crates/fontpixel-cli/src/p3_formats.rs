@@ -1,5 +1,4 @@
 //! Explicit options for embedded bitmaps, Korean components, IIgs, terminal and color fonts.
-//! Phase-6 embedded-option reconstruction remains pending compilation.
 mod device;
 mod embedded_metadata;
 mod historical;

@@ -1,4 +1,3 @@
-//! Phase-6 reconstruction: pending compilation and renewed acceptance.
 //! Typed parallel jobs, bounded reports and transactional output preparation.
 use crate::{Cli, assets, execute};
 use clap::{Args, Parser};
