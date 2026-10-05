@@ -1,4 +1,5 @@
 //! Shared horizontal/vertical headers and compact advance/bearing arrays.
+use super::working::{Budget, Owned, Vector};
 use super::{Limits, buffer, invalid, p16, p32, pi16, to16, u16_at, u32_at};
 use crate::Result;
 use read_fonts::{
@@ -126,6 +127,31 @@ pub fn encode(
     compact: bool,
     limits: &Limits,
 ) -> Result<EncodedMetrics> {
+    encode_into(axis, header, metrics, compact, limits, &mut buffer)
+}
+/// Encode into exact-capacity buffers charged to the caller's shared ledger.
+pub(crate) fn encode_with_budget(
+    axis: Axis,
+    header: &Header,
+    metrics: &[LongMetric],
+    compact: bool,
+    limits: &Limits,
+    budget: &Budget,
+) -> Result<Owned<EncodedMetrics>> {
+    let mut lease = budget.reserve(0)?;
+    let encoded = encode_into(axis, header, metrics, compact, limits, &mut |n| {
+        budget.vec_into(n, &mut lease)
+    })?;
+    Ok(Owned::from_parts(encoded, lease))
+}
+fn encode_into(
+    axis: Axis,
+    header: &Header,
+    metrics: &[LongMetric],
+    compact: bool,
+    limits: &Limits,
+    buffer: &mut dyn FnMut(usize) -> Result<Vec<u8>>,
+) -> Result<EncodedMetrics> {
     validate_version(axis, header.version)?;
     limits.glyphs(metrics.len())?;
     let mut count = metrics.len();
@@ -181,6 +207,60 @@ pub fn decode(
     num_glyphs: u16,
     limits: &Limits,
 ) -> Result<(Header, Vec<LongMetric>)> {
+    let h = decode_header(axis, header, data, num_glyphs, limits)?;
+    let mut result = Vec::new();
+    result
+        .try_reserve_exact(num_glyphs as usize)
+        .map_err(|_| invalid("metric allocation failed"))?;
+    for gid in 0..num_glyphs {
+        result.push(metric(data, h.num_long_metrics, gid)?);
+    }
+    Ok((h, result))
+}
+/// Validate exactly what `decode` validates, including the complete array
+/// length for all `num_glyphs`, but allocate only the selected glyphs' metrics
+/// (in ascending glyph order) under the caller's shared ledger.
+pub(crate) fn decode_selected_with_budget(
+    axis: Axis,
+    header: &[u8],
+    data: &[u8],
+    num_glyphs: u16,
+    selected: &std::collections::BTreeSet<u16>,
+    limits: &Limits,
+    budget: &Budget,
+) -> Result<(Header, Owned<Vec<LongMetric>>)> {
+    let h = decode_header(axis, header, data, num_glyphs, limits)?;
+    let mut result = Vector::with_capacity(budget, selected.len())?;
+    for &gid in selected {
+        if gid >= num_glyphs {
+            return Err(invalid("selected metric glyph out of range"));
+        }
+        result.push(metric(data, h.num_long_metrics, gid)?)?;
+    }
+    Ok((h, result.into_owned()))
+}
+/// One expanded metric; trailing entries share the last long advance.
+fn metric(data: &[u8], count: u16, gid: u16) -> Result<LongMetric> {
+    Ok(if gid < count {
+        let off = usize::from(gid) * 4;
+        LongMetric {
+            advance: u16_at(data, off)?,
+            bearing: u16_at(data, off + 2)? as i16,
+        }
+    } else {
+        LongMetric {
+            advance: u16_at(data, usize::from(count - 1) * 4)?,
+            bearing: u16_at(data, usize::from(count) * 4 + usize::from(gid - count) * 2)? as i16,
+        }
+    })
+}
+fn decode_header(
+    axis: Axis,
+    header: &[u8],
+    data: &[u8],
+    num_glyphs: u16,
+    limits: &Limits,
+) -> Result<Header> {
     limits.table(header.len())?;
     limits.table(data.len())?;
     limits.glyphs(num_glyphs as usize)?;
@@ -218,23 +298,5 @@ pub fn decode(
         caret_offset: i(22)?,
         num_long_metrics: count,
     };
-    let mut result = Vec::new();
-    result
-        .try_reserve_exact(num_glyphs as usize)
-        .map_err(|_| invalid("metric allocation failed"))?;
-    let mut last_advance = 0;
-    for gid in 0..num_glyphs {
-        let bearing = if gid < count {
-            let off = usize::from(gid) * 4;
-            last_advance = u16_at(data, off)?;
-            u16_at(data, off + 2)? as i16
-        } else {
-            u16_at(data, usize::from(count) * 4 + usize::from(gid - count) * 2)? as i16
-        };
-        result.push(LongMetric {
-            advance: last_advance,
-            bearing,
-        });
-    }
-    Ok((h, result))
+    Ok(h)
 }

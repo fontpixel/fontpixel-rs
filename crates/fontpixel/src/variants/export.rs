@@ -75,6 +75,8 @@ pub struct Options {
     pub license_url: Option<String>,
     /// Replace generated names with an exact caller-supplied name table.
     pub names: Option<NameTable>,
+    /// Glyph 0 policy; the default keeps the source/generated `.notdef`.
+    pub notdef: super::NotdefPolicy,
     /// Layout, source and output limits.
     pub limits: LayoutLimits,
 }
@@ -100,6 +102,7 @@ impl Default for Options {
             license: None,
             license_url: None,
             names: None,
+            notdef: super::NotdefPolicy::Preserve,
             limits: LayoutLimits::default(),
         }
     }
@@ -281,7 +284,13 @@ fn encode_planned(
         });
     let mut report = Report::default();
     let retain_names = source_notdef.is_some();
-    let notdef = source_notdef.map_or_else(notdef, Ok)?;
+    let empty_notdef = o.notdef.empty_metrics();
+    let notdef = match empty_notdef {
+        Some((advance, _)) => {
+            super::notdef::empty_glyph(advance, o.units_per_pixel, o.embed_bitmaps)?
+        }
+        None => source_notdef.map_or_else(notdef, Ok)?,
+    };
     let sources = std::iter::once((".notdef", &notdef))
         .chain(plan.glyphs.iter().map(|(n, g)| (n.as_str(), g)))
         .collect::<Vec<_>>();
@@ -464,6 +473,10 @@ fn encode_planned(
                 });
             }
         }
+        let (advance, bearing) = match empty_notdef {
+            Some(exact) if i == 0 => exact,
+            _ => (advance, bearing),
+        };
         hm.push(LongMetric { advance, bearing });
         extents.push(width);
         match o.flavor {
@@ -871,6 +884,13 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
         names.insert("fontpixel.dot".into());
     }
     let mut report = Report::default();
+    if notdef_id.is_some() && o.notdef.empty_metrics().is_some() {
+        note(
+            &mut report,
+            "variants.notdef.replaced",
+            "The source .notdef glyph was replaced by the explicit empty .notdef policy",
+        );
+    }
     for (id, g) in font.glyphs() {
         let gid = if Some(id) == notdef_id {
             0

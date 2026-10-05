@@ -1,6 +1,11 @@
 //! Phase-6 reconstruction from recorded edits; pending compilation.
 //! Explicit, budgeted normalized naming changes shared by conversion commands.
 use clap::Args;
+use fontpixel::model::{Rational, Vector};
+use fontpixel::projection::{
+    BitmapProjection, EditValue, MAX_PROPERTY_EDITS, PropertyEdit, ScalableAdvance, SizeProjection,
+    apply_bitmap_projection,
+};
 use fontpixel::{
     Error, FontSet, Report, ReportEntry, ResourceLimits, Result, metadata::NameOverrides,
 };
@@ -156,7 +161,8 @@ pub(crate) fn apply(
     Ok(())
 }
 
-/// Explicit target-application metric projection; omitted means no change.
+/// Explicit target-application projection; omitted means no change. Every
+/// replaced or removed source value is reported as loss, so --strict rejects it.
 #[derive(Args, Default)]
 #[group(skip)]
 pub(crate) struct ProjectionArguments {
@@ -168,39 +174,146 @@ pub(crate) struct ProjectionArguments {
     /// Scalable units per em for --swidth-ppem (BDF uses 1000).
     #[arg(long, requires = "swidth_ppem", value_parser = clap::value_parser!(u32).range(1..))]
     swidth_units: Option<u32>,
+    /// Exact FONT/XLFD name. The decomposed XLFD fields and an existing FONT
+    /// property follow it; other name properties are not rewritten.
+    #[arg(long, value_parser = identity)]
+    font_name: Option<String>,
+    /// Point size (BDF SIZE); requires --resolution.
+    #[arg(long, requires = "resolution", value_parser = clap::value_parser!(u32).range(1..))]
+    point_size: Option<u32>,
+    /// Resolution as X,Y dots per inch (BDF SIZE); requires --point-size.
+    #[arg(long, requires = "point_size", value_parser = resolution)]
+    resolution: Option<(u32, u32)>,
+    /// Set an integer property, NAME=VALUE (repeatable). PIXEL_SIZE,
+    /// FONT_ASCENT/DESCENT and other integer metrics keep the model in sync.
+    #[arg(long, value_name = "NAME=VALUE")]
+    set_integer_property: Vec<String>,
+    /// Set a text property, NAME=TEXT (repeatable).
+    #[arg(long, value_name = "NAME=TEXT")]
+    set_text_property: Vec<String>,
+    /// Remove every record of a property (repeatable). Comments and
+    /// copyright/notice/licence properties cannot be removed.
+    #[arg(long, value_name = "NAME")]
+    remove_property: Vec<String>,
+}
+fn resolution(value: &str) -> std::result::Result<(u32, u32), String> {
+    let parse = |s: &str| {
+        s.trim()
+            .parse::<u32>()
+            .ok()
+            .filter(|v| (1..=i32::MAX as u32).contains(v))
+    };
+    value
+        .split_once(',')
+        .and_then(|(x, y)| Some((parse(x)?, parse(y)?)))
+        .ok_or_else(|| "expected X,Y with two positive integers".into())
+}
+fn assignment(value: &str) -> Result<(&str, &str)> {
+    value
+        .split_once('=')
+        .filter(|(name, _)| !name.is_empty())
+        .ok_or_else(|| Error::InvalidInput(format!("expected NAME=VALUE, found {value:?}")))
 }
 impl ProjectionArguments {
-    pub(crate) fn projection(&self) -> Option<fontpixel::projection::BitmapProjection> {
-        self.swidth_ppem.map(|ppem| {
-            fontpixel::projection::BitmapProjection::scalable_from_device(
-                self.swidth_units.unwrap_or(1000),
-                ppem,
-            )
-        })
+    fn edit_count(&self) -> usize {
+        self.set_integer_property.len() + self.set_text_property.len() + self.remove_property.len()
+    }
+    /// Heap bytes of the argument strings retained while the projection runs.
+    fn argument_bytes(&self) -> usize {
+        self.font_name.as_ref().map_or(0, String::capacity)
+            + [
+                &self.set_integer_property,
+                &self.set_text_property,
+                &self.remove_property,
+            ]
+            .iter()
+            .map(|values| {
+                values.capacity() * size_of::<String>()
+                    + values.iter().map(String::capacity).sum::<usize>()
+            })
+            .sum::<usize>()
+    }
+    fn parse_edits<'a>(&'a self, edits: &mut Vec<PropertyEdit<'a>>) -> Result<()> {
+        for value in &self.set_integer_property {
+            let (name, number) = assignment(value)?;
+            let number = number.trim().parse::<i64>().map_err(|_| {
+                Error::InvalidInput(format!("property {name} needs an integer value"))
+            })?;
+            edits.push(PropertyEdit::Set {
+                name,
+                value: EditValue::Integer(number),
+            });
+        }
+        for value in &self.set_text_property {
+            let (name, text) = assignment(value)?;
+            edits.push(PropertyEdit::Set {
+                name,
+                value: EditValue::Text(text),
+            });
+        }
+        for name in &self.remove_property {
+            edits.push(PropertyEdit::Remove { name });
+        }
+        Ok(())
+    }
+    fn projection<'a>(&'a self, edits: &'a [PropertyEdit<'a>]) -> Option<BitmapProjection<'a>> {
+        let mut projection = BitmapProjection::default();
+        if let Some(ppem) = self.swidth_ppem {
+            projection.scalable_advance = ScalableAdvance::FromDevice {
+                units_per_em: self.swidth_units.unwrap_or(1000),
+                reference_ppem: ppem,
+            };
+        }
+        projection.font_name = self.font_name.as_deref();
+        if let (Some(point), Some((x, y))) = (self.point_size, self.resolution) {
+            projection.size = Some(SizeProjection {
+                point_size: Rational::integer(i64::from(point)),
+                resolution: Vector::new(i64::from(x), i64::from(y)),
+            });
+        }
+        projection.properties = edits;
+        (!projection.is_identity()).then_some(projection)
     }
 }
 
 /// Apply an explicit projection after naming and before writing. Earlier
-/// diagnostics and the live model are reserved before the projection's own
-/// staging, and its diagnostics join the report before strict checks.
+/// diagnostics, the live model and the argument storage are reserved before
+/// the projection's own staging, and its diagnostics join the report before
+/// strict checks.
 pub(crate) fn project(
     fonts: &mut FontSet,
-    projection: Option<fontpixel::projection::BitmapProjection>,
+    arguments: &ProjectionArguments,
     report: &mut Report,
     limits: &ResourceLimits,
 ) -> Result<()> {
-    let Some(projection) = projection else {
-        return Ok(());
-    };
     let limit = limits.max_total_bytes;
     let error = || Error::ResourceLimit {
         resource: "CLI projection and retained diagnostics",
         limit,
     };
+    let count = arguments.edit_count();
+    if count > MAX_PROPERTY_EDITS {
+        return Err(Error::InvalidInput(format!(
+            "at most {MAX_PROPERTY_EDITS} property edits are allowed"
+        )));
+    }
     let mut retained = report_bytes(report, limit)?;
+    add(&mut retained, arguments.argument_bytes(), limit)?;
+    add(
+        &mut retained,
+        count
+            .checked_mul(size_of::<PropertyEdit<'_>>())
+            .ok_or_else(error)?,
+        limit,
+    )?;
+    let mut edits = Vec::new();
+    edits.try_reserve_exact(count).map_err(|_| error())?;
+    arguments.parse_edits(&mut edits)?;
+    let Some(projection) = arguments.projection(&edits) else {
+        return Ok(());
+    };
     add(&mut retained, fonts.retained_usage(limit)?.bytes, limit)?;
-    let outcome =
-        fontpixel::projection::apply_bitmap_projection(fonts, &projection, limit - retained)?;
+    let outcome = apply_bitmap_projection(fonts, &projection, limit - retained)?;
     add(&mut retained, outcome.retained_bytes(), limit)?;
     let count = report
         .entries

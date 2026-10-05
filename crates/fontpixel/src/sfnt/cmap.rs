@@ -134,8 +134,24 @@ fn format4(mapping: &Mapping, budget: &Budget) -> Result<Option<Owned<Vec<u8>>>>
 /// Encode all mappings; invalid scalars or glyph IDs fail, never clamp/omit.
 /// Unicode and Windows platform records share the same subtable bytes.
 pub fn encode(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<EncodedCmap> {
+    encode_records(mapping, num_glyphs, limits, true)
+}
+/// [`encode`] with an explicit Unicode-platform record choice for maps without
+/// supplementary-plane scalars. `unicode_full_for_bmp == true` (the [`encode`]
+/// default) lists the format-12 subtable under both (0, 4) and (3, 10);
+/// `false` omits the redundant (0, 4) record for a BMP-only map. Maps with a
+/// supplementary scalar always keep both records. Subtable bytes, and therefore
+/// every decoded mapping, are identical either way.
+pub fn encode_records(
+    mapping: &Mapping,
+    num_glyphs: u16,
+    limits: &Limits,
+    unicode_full_for_bmp: bool,
+) -> Result<EncodedCmap> {
     let budget = Budget::new(limits.resources.max_total_bytes, "sfnt working bytes");
-    let (encoded, _lease) = encode_with_budget(mapping, num_glyphs, limits, &budget)?.into_parts();
+    let (encoded, _lease) =
+        encode_records_with_budget(mapping, num_glyphs, limits, &budget, unicode_full_for_bmp)?
+            .into_parts();
     Ok(encoded)
 }
 /// Encode into the caller's ledger without charging its borrowed input map.
@@ -144,6 +160,15 @@ pub(crate) fn encode_with_budget(
     num_glyphs: u16,
     limits: &Limits,
     budget: &Budget,
+) -> Result<Owned<EncodedCmap>> {
+    encode_records_with_budget(mapping, num_glyphs, limits, budget, true)
+}
+fn encode_records_with_budget(
+    mapping: &Mapping,
+    num_glyphs: u16,
+    limits: &Limits,
+    budget: &Budget,
+    unicode_full_for_bmp: bool,
 ) -> Result<Owned<EncodedCmap>> {
     check(mapping, num_glyphs, limits)?;
     let max = mapping
@@ -162,7 +187,9 @@ pub(crate) fn encode_with_budget(
     }
     let bmp = format4(mapping, budget)?;
     let has_bmp_subtable = bmp.is_some();
-    let count = if has_bmp_subtable { 4 } else { 2 };
+    let unicode_full =
+        unicode_full_for_bmp || mapping.last_key_value().is_some_and(|(&cp, _)| cp > 0xffff);
+    let count = if has_bmp_subtable { 3 } else { 1 } + usize::from(unicode_full);
     let header = 4 + 8 * count;
     let full_offset = header + bmp.as_ref().map_or(0, |bytes| bytes.len());
     let full_len = 16 + 12 * group_count;
@@ -178,7 +205,7 @@ pub(crate) fn encode_with_budget(
         (3, 10, full_offset),
     ];
     for (index, &(platform, encoding, offset)) in records.iter().enumerate() {
-        if !has_bmp_subtable && (index == 0 || index == 2) {
+        if (!has_bmp_subtable && (index == 0 || index == 2)) || (!unicode_full && index == 1) {
             continue;
         }
         out.extend(&platform.to_be_bytes())?;

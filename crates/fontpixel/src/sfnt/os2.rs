@@ -1,4 +1,5 @@
 //! Complete OS/2 versions 0–5 and conservative, explicit coverage calculation.
+use super::working::{Budget, Owned};
 use super::{Limits, buffer, data::UNICODE_RANGES, invalid, p16, p32, pi16};
 use crate::{Result, charset::CharsetCodec};
 use read_fonts::{FontData, FontRead, tables::os2::Os2};
@@ -109,6 +110,21 @@ impl Os2Table {
         self.base.last_char = codepoints.last().copied().unwrap_or(0).min(65535) as u16;
         Ok(())
     }
+    /// Same as `set_unicode_coverage`, reading the keys of an existing mapping
+    /// in place instead of copying them into a temporary set.
+    pub(crate) fn set_unicode_coverage_map<V>(
+        &mut self,
+        mapping: &std::collections::BTreeMap<u32, V>,
+    ) -> Result<()> {
+        self.base.unicode_ranges = ranges(mapping.keys().copied(), |start, end| {
+            mapping.range(start..=end).next().is_some()
+        })?;
+        let first = mapping.first_key_value().map_or(0, |(&k, _)| k);
+        let last = mapping.last_key_value().map_or(0, |(&k, _)| k);
+        self.base.first_char = first.min(65535) as u16;
+        self.base.last_char = last.min(65535) as u16;
+        Ok(())
+    }
     /// Read all version-defined fields through Fontations, preserving bit flags.
     pub fn decode(data: &[u8], limits: &Limits) -> Result<Self> {
         limits.table(data.len())?;
@@ -213,6 +229,23 @@ impl Os2Table {
     /// Serialize the exact requested version. Invalid classes and combinations
     /// of version/extension fields fail rather than discarding metadata.
     pub fn encode(&self, limits: &Limits) -> Result<Vec<u8>> {
+        self.encode_into(limits, &mut buffer)
+    }
+    /// Encode into an exact-capacity buffer charged to a shared ledger.
+    pub(crate) fn encode_with_budget(
+        &self,
+        limits: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Vec<u8>>> {
+        let mut lease = budget.reserve(0)?;
+        let out = self.encode_into(limits, &mut |n| budget.vec_into(n, &mut lease))?;
+        Ok(Owned::from_parts(out, lease))
+    }
+    fn encode_into(
+        &self,
+        limits: &Limits,
+        buffer: &mut dyn FnMut(usize) -> Result<Vec<u8>>,
+    ) -> Result<Vec<u8>> {
         if self.version > 5
             || (self.version >= 1) != self.code_page_ranges.is_some()
             || (self.version >= 2) != self.extension.is_some()
@@ -286,16 +319,21 @@ impl Os2Table {
 /// OpenType Unicode-range bits: any scalar in a block sets its bit. Bit 57
 /// additionally means supplementary-plane coverage, not surrogate coverage.
 pub fn unicode_ranges(codepoints: &BTreeSet<u32>) -> Result<[u32; 4]> {
-    if codepoints.iter().any(|cp| char::from_u32(*cp).is_none()) {
+    ranges(codepoints.iter().copied(), |start, end| {
+        codepoints.range(start..=end).next().is_some()
+    })
+}
+fn ranges(mut all: impl Iterator<Item = u32>, any: impl Fn(u32, u32) -> bool) -> Result<[u32; 4]> {
+    if all.any(|cp| char::from_u32(cp).is_none()) {
         return Err(invalid("coverage contains non-scalar codepoint"));
     }
     let mut result = [0; 4];
     for &(start, end, bit) in UNICODE_RANGES {
-        if codepoints.range(start..=end).next().is_some() {
+        if any(start, end) {
             result[usize::from(bit / 32)] |= 1 << (bit % 32);
         }
     }
-    if codepoints.range(0x10000..).next().is_some() {
+    if any(0x10000, u32::MAX) {
         result[1] |= 1 << 25;
     }
     Ok(result)
