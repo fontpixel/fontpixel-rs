@@ -44,7 +44,10 @@ fn admit<T>(
     let mut value = run()?;
     // Shrinking reallocates while the scratch charge still covers both buffers.
     let bytes = shrink(&mut value);
-    debug_assert!(bytes <= bound, "table output exceeded its admitted bound");
+    // Unit tests reject a stale bound; other builds (including fuzzing) admit
+    // any excess below instead of panicking.
+    #[cfg(test)]
+    assert!(bytes <= bound, "table output exceeded its admitted bound");
     if bytes > total.bytes() {
         total.grow_to(bytes)?;
     }

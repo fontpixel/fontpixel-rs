@@ -171,6 +171,36 @@ fn prepared_encodes_charge_the_shared_plan_once_per_call() {
 }
 
 #[test]
+fn same_label_alternates_take_numbered_names_under_an_exact_ledger() {
+    // zh-Hant and zh-HK both label "tc"; distinct glyphs need suffixes.
+    let mut v = fontpixel::Variants::new(fixture::face(&[(0x42, "###\n#.#\n###", 4)]));
+    for pattern in ["###\n#..\n###", "###\n..#\n###", "#.#\n#.#\n###"] {
+        let language = if pattern.starts_with("#.#") {
+            "zh-Hant"
+        } else {
+            "zh-HK"
+        };
+        v.languages.push(fontpixel::variants::LanguageVariant {
+            language: variants::language_tag(language).unwrap(),
+            scripts: vec![*b"hani"],
+            font: fixture::face(&[(0x42, pattern, 4)]),
+        });
+    }
+    // The first and third faces share ZHH and its script; give each a route.
+    v.languages[2].scripts = vec![*b"kana"];
+    v.languages[1].scripts = vec![*b"hang"];
+    let (_, names) = minimal(|total| {
+        let plan = v.plan(&layout(total))?;
+        Ok(plan.glyphs.into_iter().map(|(n, _)| n).collect::<Vec<_>>())
+    });
+    assert_eq!(
+        names,
+        ["uni0042", "uni0042.tc", "uni0042.tc1", "uni0042.tc2"]
+    );
+    minimal(|total| variants::encode(&v, &options(total)).map(|e| e.bytes));
+}
+
+#[test]
 fn single_font_export_has_an_exact_ledger_threshold() {
     let font = fixture::single();
     for (shape, dot_size, flavor) in [

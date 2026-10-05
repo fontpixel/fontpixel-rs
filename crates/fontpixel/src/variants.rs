@@ -672,3 +672,46 @@ pub fn language_tag(value: &str) -> Result<Tag> {
         .map_err(|_| invalid("unmapped BCP-47 language; provide an OpenType tag"))?;
     Ok(sfnt::languages::LANGUAGES[i].1)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn labels_and_names_format_without_temporary_strings() {
+        // The generic branch matches the former lossy/trim/lowercase chain.
+        for tag in [
+            *b"ZHS ",
+            *b"A.B ",
+            *b"Ab C",
+            [0xff, b'A', b' ', b' '],
+            [b'x', 0xc3, 0xa9, b'Y'],
+            [b' ', b'Q', 0x80, b' '],
+        ] {
+            assert_eq!(
+                Label::Language(tag).to_string(),
+                String::from_utf8_lossy(&tag).trim().to_ascii_lowercase(),
+                "{tag:?}"
+            );
+        }
+        for (tag, label) in [
+            (*b"ZHT ", "tc"),
+            (*b"ZHH ", "tc"),
+            (*b"JAN ", "jp"),
+            (*b"KOR ", "kr"),
+        ] {
+            assert_eq!(Label::Language(tag).to_string(), label);
+        }
+        assert_eq!(Label::Script(0).to_string(), "latin");
+        assert_eq!(Label::Script(3).to_string(), "script3");
+        for (cp, label, name) in [
+            (0x41, None, "uni0041"),
+            (0x1f600, None, "u1F600"),
+            (0x10ffff, None, "u10FFFF"),
+            (0x4e00, Some(("tc", 0)), "uni4E00.tc"),
+            (0x20000, Some(("tc", 12)), "u20000.tc12"),
+        ] {
+            assert_eq!(GlyphName { cp, label }.to_string(), name);
+        }
+    }
+}
