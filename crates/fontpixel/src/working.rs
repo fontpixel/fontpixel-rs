@@ -356,6 +356,23 @@ impl<T> Vector<T> {
         Ok(())
     }
 
+    /// Let an infallible encoder append to (or truncate) the underlying
+    /// vector in place. Callers [`reserve`](Self::reserve) the exact bytes
+    /// the encoder will add first, so no reallocation happens here; if the
+    /// encoder grew the vector anyway, its new capacity is charged before
+    /// returning (an error if the allowance cannot cover it).
+    #[cfg(feature = "cff")]
+    pub(crate) fn append_with<R>(&mut self, write: impl FnOnce(&mut Vec<T>) -> R) -> Result<R> {
+        let result = write(&mut self.values);
+        let bytes = self
+            .values
+            .capacity()
+            .checked_mul(size_of::<T>())
+            .ok_or_else(|| self.lease.budget.error())?;
+        self.lease.grow_to(bytes)?;
+        Ok(result)
+    }
+
     pub(crate) fn extend(&mut self, values: &[T]) -> Result<()>
     where
         T: Copy,

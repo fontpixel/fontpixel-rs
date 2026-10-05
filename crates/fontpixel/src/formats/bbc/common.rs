@@ -231,6 +231,21 @@ pub(super) fn source(set: &FontSet, o: &NativeWriteOptions) -> Result<Budget> {
     b.add(set.source_format.as_ref().map_or(0, String::len))?;
     Ok(b)
 }
+/// [`source`] unless the caller has reserved the model, which then includes
+/// the container's `source_format`.
+#[cfg(feature = "zapfont")]
+pub(super) fn source_for(
+    set: &FontSet,
+    o: &NativeWriteOptions,
+    charge: super::ModelCharge,
+) -> Result<Budget> {
+    match charge {
+        super::ModelCharge::Estimate => source(set, o),
+        super::ModelCharge::Reserved => {
+            super::legacy_common::source_budget_for(set, &o.limits, charge)
+        }
+    }
+}
 #[cfg(any(
     feature = "bbc",
     feature = "wyse",

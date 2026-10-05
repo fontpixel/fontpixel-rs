@@ -1,6 +1,8 @@
 //! Original bounded primitives shared by native image-font families.
 #[cfg(any(feature = "sfont", feature = "vlw"))]
 pub use super::legacy_common::int;
+#[cfg(feature = "vlw")]
+pub use super::legacy_common::source_budget_for;
 pub use super::legacy_common::{
     Budget, audit, bitmap_limits, check, finish, invalid, source_budget,
 };

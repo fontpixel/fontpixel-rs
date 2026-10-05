@@ -78,6 +78,21 @@ impl Diagnostics {
         d.reserve(source_cost(f, l)?)?;
         Ok(d)
     }
+    /// [`for_font`](Self::for_font), except that a model the caller has
+    /// reserved is only validated, not charged.
+    #[cfg(feature = "pf2")]
+    pub fn for_font_charged(
+        format: &'static str,
+        f: &Font,
+        l: &ResourceLimits,
+        charge: super::ModelCharge,
+    ) -> Result<Self> {
+        if charge == super::ModelCharge::Estimate {
+            return Self::for_font(format, f, l);
+        }
+        source_cost(f, &unbounded(l))?;
+        Ok(Self::new(format, l))
+    }
     pub fn reserve(&mut self, n: usize) -> Result<()> {
         self.used = self.used.saturating_add(n);
         check(self.used, self.max, "font aggregate writer bytes")
@@ -136,12 +151,24 @@ impl Diagnostics {
     }
 }
 pub(super) fn container(set: &FontSet, d: &mut Diagnostics) -> Result<()> {
+    container_charged(set, d, super::ModelCharge::Estimate)
+}
+/// [`container`]; a reserved model's container properties are validated
+/// but not charged.
+pub(super) fn container_charged(
+    set: &FontSet,
+    d: &mut Diagnostics,
+    charge: super::ModelCharge,
+) -> Result<()> {
     let mut retained = Budget {
         used: 0,
-        max: d.max,
+        max: match charge {
+            super::ModelCharge::Estimate => d.max,
+            super::ModelCharge::Reserved => usize::MAX,
+        },
     };
     property_cost(&set.properties, &mut retained)?;
-    d.reserve(retained.used)?;
+    d.reserve(charge.of(retained.used))?;
     for p in set.properties.iter() {
         d.loss(
             "write.container_property",
@@ -550,6 +577,15 @@ pub(super) fn joined_code(code: u32) -> bool {
     code & 0xc000_0000 != 0 && char::from_u32(code & 0x3fff_ffff).is_some()
 }
 
+/// `l` without its aggregate byte cap, for validating a reserved model's
+/// estimate without charging it.
+#[cfg(feature = "pf2")]
+fn unbounded(l: &ResourceLimits) -> ResourceLimits {
+    ResourceLimits {
+        max_total_bytes: usize::MAX,
+        ..l.clone()
+    }
+}
 // Allocation-free source accounting includes retained glyph slots, cmap entries,
 // strings, aliases, sequences, raw records, and recursively structured properties.
 pub(super) fn source_cost(f: &Font, l: &ResourceLimits) -> Result<usize> {

@@ -108,6 +108,7 @@ pub fn write(s: &FontSet, o: &WriteOptions, p: &PfrWriteOptions) -> Result<Writt
         &p.limits,
         p.max_output_bytes,
         "pfr",
+        super::ModelCharge::Estimate,
         |b, r| wire::encode(s, p, b, r),
         wire::decode,
     )

@@ -36,8 +36,15 @@ fn section(out: &mut Vec<u8>, tag: &[u8], body: &[u8], o: &Pf2WriteOptions) -> R
 }
 /// Encode Unicode mappings and per-glyph signed metrics without external tools.
 pub fn write(f: &Font, o: &Pf2WriteOptions) -> Result<(Vec<u8>, Report)> {
+    write_charged(f, o, crate::formats::ModelCharge::Estimate)
+}
+pub(super) fn write_charged(
+    f: &Font,
+    o: &Pf2WriteOptions,
+    charge: crate::formats::ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
     f.validate(&o.limits)?;
-    let mut d = Diagnostics::for_font("pf2", f, &o.limits)?;
+    let mut d = Diagnostics::for_font_charged("pf2", f, &o.limits, charge)?;
     let map = mappings(
         f,
         "unicode",

@@ -123,6 +123,31 @@ impl TransportLimits {
         }
     }
 
+    /// This allowance less a borrowed model's exact retained usage, which the
+    /// caller keeps reserved while the writer runs. Every per-item limit is
+    /// clamped to the remaining total.
+    pub(crate) fn without_model(&self, model: usize) -> Result<Self> {
+        let limit = self.resources.max_total_bytes;
+        let error = || Error::ResourceLimit {
+            resource: "writer model bytes",
+            limit,
+        };
+        let mut limits = self.clone();
+        let resources = &mut limits.resources;
+        resources.max_total_bytes = limit.checked_sub(model).ok_or_else(error)?;
+        resources.max_input_bytes = resources.max_input_bytes.min(resources.max_total_bytes);
+        resources.max_resource_bytes = resources.max_resource_bytes.min(resources.max_total_bytes);
+        resources.max_decompressed_bytes = resources
+            .max_decompressed_bytes
+            .min(resources.max_total_bytes);
+        resources.max_table_bytes = resources.max_table_bytes.min(resources.max_total_bytes);
+        limits.max_output_bytes = limits
+            .max_output_bytes
+            .checked_sub(model)
+            .ok_or_else(error)?;
+        Ok(limits)
+    }
+
     /// Reserve already retained envelope/report memory for native validation.
     pub(crate) fn without_retained(&self, retained: usize) -> Result<Self> {
         let mut limits = self.clone();

@@ -296,7 +296,13 @@ impl EmbeddedMetadataOptions {
     /// table and its encoding scratch coexist; then reserve the configuration
     /// and encoded output for the rest of the writer. Without explicit names
     /// the writer budget is untouched.
-    pub(super) fn prepare(&self, fonts: &FontSet, limits: &sbit::Limits) -> Result<Prepared> {
+    /// A model the caller has reserved (`charge`) is not charged again.
+    pub(super) fn prepare(
+        &self,
+        fonts: &FontSet,
+        limits: &sbit::Limits,
+        charge: crate::formats::ModelCharge,
+    ) -> Result<Prepared> {
         let maximum = limits.sfnt.resources.max_total_bytes;
         let error = || crate::Error::ResourceLimit {
             resource: "embedded metadata bytes",
@@ -319,9 +325,11 @@ impl EmbeddedMetadataOptions {
             });
         };
         let configured = self.retained_bytes(maximum)?;
-        let source = fonts
-            .retained_usage(maximum.checked_sub(configured).ok_or_else(error)?)?
-            .bytes;
+        let available = maximum.checked_sub(configured).ok_or_else(error)?;
+        let source = match charge {
+            crate::formats::ModelCharge::Estimate => fonts.retained_usage(available)?.bytes,
+            crate::formats::ModelCharge::Reserved => 0,
+        };
         let mut encoding = limits.sfnt.clone();
         encoding.resources.max_total_bytes = maximum
             .checked_sub(source)

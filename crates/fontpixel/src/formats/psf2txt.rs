@@ -31,6 +31,18 @@ impl FormatWriter<FontSet> for Psf2txtCodec {
         write(s, o, &self.write_options)
     }
 }
+impl Psf2txtCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        w5a1_common::write_charged(
+            s,
+            o,
+            &self.write_options,
+            "psf2txt",
+            super::ModelCharge::Reserved,
+        )
+    }
+}
 /// Inspect native content without constructing a font model.
 pub fn detect(b: &[u8]) -> Confidence {
     w5a1_common::detect("psf2txt", b)

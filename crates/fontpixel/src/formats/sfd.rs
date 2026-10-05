@@ -1,6 +1,8 @@
 //! Bounded FontForge SFD bitmap strikes; outline omission is always reported.
 use super::editor_fidelity as fidelity;
-use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions, WriteOptions};
+use super::{
+    Confidence, FormatDetector, FormatReader, FormatWriter, ModelCharge, ReadOptions, WriteOptions,
+};
 use crate::bitmap::{Bitmap, BitmapLimits, Gray8, Mono};
 use crate::model::{Codepoint, Font, FontSet, Glyph, GlyphBitmap, Property, PropertyValue, Vector};
 use crate::resources::{OutputBundle, ReadContext, Written};
@@ -47,7 +49,16 @@ impl FormatReader<FontSet> for SfdCodec {
 }
 impl FormatWriter<FontSet> for SfdCodec {
     fn write(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
-        let (b, r) = write(s, &self.write_options)?;
+        self.write_charged(s, o, ModelCharge::Estimate)
+    }
+}
+impl SfdCodec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(s, o, ModelCharge::Reserved)
+    }
+    fn write_charged(&self, s: &FontSet, o: &WriteOptions, charge: ModelCharge) -> Result<Written> {
+        let (b, r) = write_charged(s, &self.write_options, charge)?;
         Ok(Written {
             output: OutputBundle::single(o.primary_name.clone(), b),
             report: r,
@@ -83,15 +94,24 @@ pub fn read(b: &[u8], l: &ResourceLimits) -> Result<(FontSet, Report)> {
 }
 /// Encode bitmap strikes with outline identity stubs and report unsupported fields.
 pub fn write(s: &FontSet, o: &SfdWriteOptions) -> Result<(Vec<u8>, Report)> {
-    let extra = fidelity::properties_bytes(&s.properties)?
-        .saturating_add(s.source_format.as_ref().map_or(0, String::capacity))
-        .saturating_add(
-            s.fonts
-                .capacity()
-                .saturating_mul(std::mem::size_of::<Font>()),
-        );
-    writer::write(s, o)
-        .map_err(|e| fidelity::failed_write(e, "sfd", s.fonts.iter().enumerate(), extra, &o.limits))
+    write_charged(s, o, ModelCharge::Estimate)
+}
+fn write_charged(
+    s: &FontSet,
+    o: &SfdWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    let extra = charge.of(fidelity::container_bytes(s)?);
+    writer::write(s, o, charge).map_err(|e| {
+        fidelity::failed_write(
+            e,
+            "sfd",
+            s.fonts.iter().enumerate(),
+            extra,
+            &o.limits,
+            charge,
+        )
+    })
 }
 #[derive(Default)]
 struct Identity {

@@ -17,11 +17,11 @@ const FDARRAY: u16 = 0x0c24;
 const FDSELECT: u16 = 0x0c25;
 
 /// Output sink: a layout counter or the final ledger buffer.
-trait Out {
+pub(super) trait Out {
     fn put(&mut self, bytes: &[u8]) -> Result<()>;
     fn len(&self) -> usize;
 }
-struct Count(usize);
+pub(super) struct Count(pub(super) usize);
 impl Out for Count {
     fn put(&mut self, bytes: &[u8]) -> Result<()> {
         self.0 = self
@@ -129,7 +129,7 @@ fn rewritten_len(data: &[u8], replacements: &[(u16, &[usize])]) -> Result<usize>
     Ok(count.0)
 }
 /// Canonical CFF1 INDEX with minimal offset size, identical to `write::index`.
-fn index<O: Out>(
+pub(super) fn index<O: Out + ?Sized>(
     out: &mut O,
     count: usize,
     length: impl Fn(usize) -> Result<usize>,

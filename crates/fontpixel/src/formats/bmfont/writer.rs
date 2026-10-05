@@ -20,7 +20,12 @@ struct Placement<'a> {
     y: u32,
     page: usize,
 }
-pub(super) fn write(f: &Font, primary: &ResourcePath, o: &BmfontWriteOptions) -> Result<Written> {
+pub(super) fn write(
+    f: &Font,
+    primary: &ResourcePath,
+    o: &BmfontWriteOptions,
+    charge: super::ModelCharge,
+) -> Result<Written> {
     f.validate(&o.limits)?;
     if o.page_width == 0
         || o.page_height == 0
@@ -32,7 +37,8 @@ pub(super) fn write(f: &Font, primary: &ResourcePath, o: &BmfontWriteOptions) ->
     let area =
         usize::try_from(u64::from(o.page_width) * u64::from(o.page_height)).map_err(invalid)?;
     bound(area, o.limits.max_decompressed_bytes, "BMFont atlas pixels")?;
-    let source_bytes = fidelity::model_bytes(f)?;
+    // Held for the whole write; zero when the caller reserved the model.
+    let source_bytes = charge.of(fidelity::model_bytes(f)?);
     let mut budget = Budget::new(source_bytes, &o.limits)?;
     budget.add(fidelity::properties_bytes(&f.properties)?)?;
     let face_bytes = f.names.family.as_ref().map_or(0, String::len);

@@ -1,6 +1,6 @@
 use super::{GdrReadOptions, GdrVersion, GdrWriteOptions, reader, wire::*};
-use crate::formats::WriteOptions;
 use crate::formats::legacy_common::*;
+use crate::formats::{ModelCharge, WriteOptions};
 use crate::model::{Codepoint, Font, FontSet, Glyph, PropertyValue, Spacing};
 use crate::resources::{OutputBundle, Written};
 use crate::{Report, Result};
@@ -19,8 +19,16 @@ struct Strike {
 }
 /// Write a native direct-file-store GDR, including bitmap compression and typeface mappings.
 pub fn write(s: &FontSet, w: &WriteOptions, o: &GdrWriteOptions) -> Result<Written> {
+    write_charged(s, w, o, ModelCharge::Estimate)
+}
+pub(crate) fn write_charged(
+    s: &FontSet,
+    w: &WriteOptions,
+    o: &GdrWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut r = Report::default();
-    let result = encode(s, w, o, &mut r);
+    let result = encode(s, w, o, charge, &mut r);
     finish(result, r, "gdr", w.strict)
 }
 fn byte(n: i64) -> Result<u8> {
@@ -35,9 +43,10 @@ fn encode(
     s: &FontSet,
     w: &WriteOptions,
     o: &GdrWriteOptions,
+    charge: ModelCharge,
     r: &mut Report,
 ) -> Result<OutputBundle> {
-    let mut budget = source_budget(s, &o.limits)?;
+    let mut budget = source_budget_for(s, &o.limits, charge)?;
     let fonts = convert_gray(s, o.gray_threshold, &o.limits, &mut budget)?;
     if fonts.fonts.is_empty() {
         return Err(invalid("GDR needs at least one strike"));

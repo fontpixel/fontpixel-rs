@@ -1,6 +1,6 @@
 //! Native Processing PFont VLW versions 8 through 11.
 use super::image_bundle_common::*;
-use super::{Confidence, WriteOptions};
+use super::{Confidence, ModelCharge, WriteOptions};
 use crate::model::{Codepoint, Font, FontSet, Property, PropertyValue, Vector};
 use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
@@ -237,9 +237,23 @@ fn parse(b: &[u8], l: &ResourceLimits, budget: &mut Budget) -> Result<(FontSet, 
 }
 /// Write native coverage with deterministic directory order and fidelity audit.
 pub fn write(s: &FontSet, o: &WriteOptions, v: &VlwWriteOptions) -> Result<Written> {
+    write_charged(s, o, v, ModelCharge::Estimate)
+}
+impl VlwCodec {
+    /// [`write`](super::FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, s: &FontSet, o: &WriteOptions) -> Result<Written> {
+        write_charged(s, o, &self.write_options, ModelCharge::Reserved)
+    }
+}
+fn write_charged(
+    s: &FontSet,
+    o: &WriteOptions,
+    v: &VlwWriteOptions,
+    charge: ModelCharge,
+) -> Result<Written> {
     let mut report = Report::default();
     let result = (|| {
-        let mut budget = source_budget(s, &v.limits)?;
+        let mut budget = source_budget_for(s, &v.limits, charge)?;
         budget.add(o.primary_name.as_str().len().saturating_mul(4))?;
         let f = s.single()?;
         let map = select(f, true, 0x10ffff, false, &mut budget)?;

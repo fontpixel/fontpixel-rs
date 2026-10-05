@@ -44,11 +44,25 @@ impl FormatReader<FontSet> for Pf2Codec {
 }
 impl FormatWriter<FontSet> for Pf2Codec {
     fn write(&self, set: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(set, o, super::ModelCharge::Estimate)
+    }
+}
+impl Pf2Codec {
+    /// [`write`](FormatWriter::write) with the model reserved by the caller.
+    pub(crate) fn write_reserved(&self, set: &FontSet, o: &WriteOptions) -> Result<Written> {
+        self.write_charged(set, o, super::ModelCharge::Reserved)
+    }
+    fn write_charged(
+        &self,
+        set: &FontSet,
+        o: &WriteOptions,
+        charge: super::ModelCharge,
+    ) -> Result<Written> {
         let mut d = Diagnostics::new("pf2", &self.write_options.limits);
-        container(set, &mut d)?;
+        container_charged(set, &mut d, charge)?;
         let mut options = self.write_options.clone();
         options.limits.max_total_bytes = options.limits.max_total_bytes.saturating_sub(d.cost());
-        let (bytes, r) = match write(set.single()?, &options) {
+        let (bytes, r) = match writer::write_charged(set.single()?, &options, charge) {
             Ok(out) => out,
             Err(crate::Error::ReportedErrors(report)) => {
                 d.report.extend(report);
