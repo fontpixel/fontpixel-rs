@@ -10,6 +10,7 @@ import concurrent.futures
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import time
 from phase6_reference import family_plan, load_module, load_tong
@@ -30,13 +31,68 @@ def expected_fonts():
     return names
 
 
-def jobs_toml(bdf, output, ref, variant_limit=0):
+def export_rs_name_text(reference_root):
+    """Literal name-table strings from the original exporter source (otb.rs name_table)."""
+    source = (reference_root / 'reference/tong-pixel-sans/tools/export-rs/src/otb.rs').read_text()
+    body = source[source.index('fn name_table('):]
+    body = body[:body.index('\n}\n')]
+    copyright = re.search(r'let copyright = "([^"]*)";', body).group(1)
+    literals = re.findall(r'\(\s*(13|14),\s*"([^"]*)"', body)
+    found = {int(key): value for key, value in literals}
+    if set(found) != {13, 14}: raise ValueError('unexpected export-rs name_table layout')
+    return copyright, found[13], found[14]
+
+
+def otb_parity_options(path, names, timestamps):
+    """Explicit per-file OTB options reproducing export-rs otb.rs policy.
+
+    Application policy stays here, never in the library: Mono is decided by the
+    original exporter's family-prefix rule because the Tong BDFs declare
+    SPACING "P"; the supplementary-plane Unicode bit follows the actual cmap.
+    """
+    properties = {}
+    for line in path.read_text().splitlines():
+        key, _, value = line.partition(' ')
+        if key == 'CHARS': break
+        properties.setdefault(key, value)
+    family = properties['FAMILY_NAME'].strip('"')
+    mono = family.startswith('Tong Pixel Sans Mono ') or properties['SPACING'].strip('"') in ('M', 'C')
+    copyright, license_text, license_url = names; version = '1.0'
+    records = [(0, copyright), (1, family), (2, 'Regular'), (3, f'{family} Regular {version}'),
+               (4, f'{family} Regular'), (5, f'Version {version}'), (6, family.replace(' ', '') + '-Regular'),
+               (13, license_text), (14, license_url), (16, family), (17, 'Regular')]
+    options = {'otb_name_record': [f'3/1/0x409/{key}={value}' for key, value in records],
+               'otb_vendor': 'TONG', 'otb_panose': '2,11,5,' + ('9' if mono else '3') + ',0,0,0,0,0,0',
+               'otb_head_flags': 3, 'otb_lowest_rec_ppem': 14, 'otb_break_char': 32,
+               'otb_unicode_ranges': 'non-bmp', 'otb_average_width': 'floor', 'otb_post_names': 'omit',
+               'otb_fixed_pitch': 'true' if mono else 'false', 'otb_cmap_unicode_full': 'non-bmp',
+               'otb_width_max': 'advance',
+               'otb_index_layout': 'shared-runs', 'otb_index_min_run': 8}
+    if timestamps is not None:
+        raw = (timestamps / (path.stem + '.otb')).read_bytes()
+        tables = {raw[12 + 16 * i:16 + 16 * i]: int.from_bytes(raw[20 + 16 * i:24 + 16 * i], 'big')
+                  for i in range(int.from_bytes(raw[4:6], 'big'))}
+        head = tables[b'head']
+        options['otb_created'] = int.from_bytes(raw[head + 20:head + 28], 'big', signed=True)
+        options['otb_modified'] = int.from_bytes(raw[head + 28:head + 36], 'big', signed=True)
+    return options
+
+
+def toml_value(value):
+    if isinstance(value, list): return '[' + ', '.join(toml_value(v) for v in value) + ']'
+    return json.dumps(value)
+
+
+def jobs_toml(bdf, output, ref, variant_limit=0, otb_parity=None):
     lines = ['version = 1']
     for path in sorted(bdf.glob('*.bdf')):
         for kind in ['pcf', 'otb']:
             lines.extend(['', '[[tasks]]', 'id = ' + json.dumps(path.stem + '.' + kind),
                 'kind = "convert"', 'inputs = ' + json.dumps([str(path.resolve())]), 'from = "bdf"',
                 'to = ' + json.dumps(kind), 'output = ' + json.dumps(str(output / kind / (path.stem + '.' + kind)))])
+            if kind == 'otb' and otb_parity is not None:
+                lines.append('[tasks.options]')
+                lines.extend(key + ' = ' + toml_value(value) for key, value in otb_parity(path).items())
     for size in ['Large', 'Small']:
         for spacing in ['prop', 'mono']:
             stem = 'TongPixelSans' + ('Mono' if spacing == 'mono' else '') + '14' + size
@@ -67,7 +123,14 @@ def main():
     p.add_argument('--jobs', type=int); p.add_argument('--quality', type=int, default=11)
     p.add_argument('--threads', type=int, default=1); p.add_argument('--dot-reuse', choices=['literal', 'rows', 'patterns'], default='patterns')
     p.add_argument('--variant-max-total-bytes', type=int, default=0)
-    a = p.parse_args(); a.output.mkdir(parents=True, exist_ok=True)
+    p.add_argument('--profile', choices=['default', 'parity'], default='default',
+                   help='batch only: parity adds explicit export-rs OTB metadata options; default is unchanged')
+    p.add_argument('--parity-timestamps', type=Path,
+                   help='parity only: directory of reference OTBs whose head timestamps are copied explicitly')
+    a = p.parse_args()
+    if a.profile == 'parity' and a.engine != 'batch': raise ValueError('the parity profile is a batch CLI profile')
+    if a.parity_timestamps is not None and a.profile != 'parity': raise ValueError('--parity-timestamps requires --profile parity')
+    a.output.mkdir(parents=True, exist_ok=True)
     if any(a.output.iterdir()): raise ValueError('fresh output directory required')
     out = a.output.resolve() / 'export'; sources = sorted(a.bdf.glob('*.bdf'))
     if len(sources) != 20: raise ValueError('full Tong workflow requires exactly 20 BDF sources')
@@ -91,13 +154,19 @@ def main():
             raise ValueError('batch default profile does not accept API-only tuning arguments')
         for kind in KINDS: (out / kind).mkdir(parents=True)
         for source in sources: shutil.copyfile(source, out / 'bdf' / source.name)
-        taskfile = a.output / 'jobs.toml'; taskfile.write_text(jobs_toml(a.bdf, out, ref, a.variant_max_total_bytes))
+        parity = None
+        if a.profile == 'parity':
+            names = export_rs_name_text(a.reference_root)
+            parity = lambda path: otb_parity_options(path, names, a.parity_timestamps)
+        taskfile = a.output / 'jobs.toml'; taskfile.write_text(jobs_toml(a.bdf, out, ref, a.variant_max_total_bytes, parity))
         command = [a.binary, 'batch', taskfile.resolve()]
         if a.jobs is not None: command += ['--jobs', str(a.jobs)]
         calls.append(invoke(command, a.output / 'batch'))
         metrics['pipeline_wall'] = time.perf_counter_ns() - start
         header = batch_header(a.output / 'batch.stdout', 64)
-        profile = {'kind': 'actual-batch-cli-full-reports-v2', 'default_options': a.jobs is None and not a.variant_max_total_bytes,
+        profile = {'kind': 'actual-batch-cli-full-reports-v2' if a.profile == 'default' else 'actual-batch-cli-otb-parity-v1',
+                   'default_options': a.jobs is None and not a.variant_max_total_bytes and a.profile == 'default',
+                   'otb_profile': a.profile, 'otb_parity_timestamps': str(a.parity_timestamps) if a.parity_timestamps else None,
                    'batch': header, 'variant_max_total_bytes_override': a.variant_max_total_bytes,
                    'codec_options': 'CLI defaults: quality 11, WOFF2 threads 2, patterns reuse; model/report/pending budgets unchanged'}
     else:

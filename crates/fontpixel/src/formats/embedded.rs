@@ -17,6 +17,12 @@ use crate::sfnt::{
 use crate::{Report, Result};
 use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
 
+mod metadata;
+pub use metadata::{
+    EmbeddedAverageWidth, EmbeddedCmapUnicodeFull, EmbeddedIndexLayout, EmbeddedMetadataOptions,
+    EmbeddedPostNames, EmbeddedUnicodeRanges, EmbeddedWidthMax,
+};
+
 /// Options for bitmap FontSet extraction.
 #[derive(Clone, Debug, Default)]
 pub struct EmbeddedReadOptions {
@@ -41,6 +47,9 @@ pub struct EmbeddedWriteOptions {
     pub reference_strike: EmbeddedReferenceStrike,
     /// Pixel-to-design scaling only; the OS/2 average retains ties-up rounding.
     pub rounding: EmbeddedRounding,
+    /// Explicit head/OS/2/post/name/strike-table metadata; the default keeps
+    /// native output byte for byte.
+    pub metadata: EmbeddedMetadataOptions,
 }
 /// Source of shared design metrics for native OTB/bdat output.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -299,7 +308,35 @@ fn loss(
     gi: Option<usize>,
     message: impl Into<String>,
 ) {
-    let message = message.into();
+    push(
+        report,
+        (Level::Warning, Impact::Loss),
+        code,
+        Location {
+            font_index: fi,
+            glyph_index: gi,
+            ..Default::default()
+        },
+        message.into(),
+    );
+}
+/// Informational audit with no source information changed.
+fn note(report: &mut Diagnostics, code: &str, message: &str) {
+    push(
+        report,
+        (Level::Info, Impact::None),
+        code,
+        Location::default(),
+        message.to_owned(),
+    );
+}
+fn push(
+    report: &mut Diagnostics,
+    (level, impact): (Level, Impact),
+    code: &str,
+    location: Location,
+    message: String,
+) {
     let size = 256usize
         .saturating_add(message.len())
         .saturating_add(code.len());
@@ -309,14 +346,10 @@ fn loss(
     }
     report.bytes += size;
     report.report.push(ReportEntry {
-        level: Level::Warning,
-        impact: Impact::Loss,
+        level,
+        impact,
         code: format!("embedded.{code}"),
-        location: Location {
-            font_index: fi,
-            glyph_index: gi,
-            ..Default::default()
-        },
+        location,
         message,
     });
 }
@@ -1334,7 +1367,9 @@ fn write_impl(
     }
     let design_options = DesignOptions::from(options);
     design_options.validate(fonts.fonts.len(), kind)?;
-    let limits = &options.limits;
+    options.metadata.validate(kind)?;
+    let prepared = options.metadata.prepare(fonts, &options.limits)?;
+    let limits = prepared.limits.as_ref().unwrap_or(&options.limits);
     write_preflight(fonts, &limits.sfnt)?;
     #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
@@ -1348,6 +1383,7 @@ fn write_impl(
         return Err(invalid("too many strikes"));
     }
     let mut report = Diagnostics::new(limits.sfnt.resources.max_total_bytes);
+    options.metadata.audit(fonts, &mut report);
     let mut ids = BTreeMap::from([(Key::Notdef, 0u16)]);
     let mut mapping = cmap::Mapping::new();
     let mut assigned = Vec::new();
@@ -1537,6 +1573,14 @@ fn write_impl(
         };
         strike.horizontal = line_record(f, &strike, false)?;
         strike.vertical = line_record(f, &strike, true)?;
+        if options.metadata.width_max == EmbeddedWidthMax::Advance {
+            strike.horizontal.0[2] = strike
+                .glyphs
+                .values()
+                .filter_map(|g| g.metrics.horizontal.map(|h| h.advance))
+                .max()
+                .unwrap_or(0);
+        }
         strikes.push(strike);
     }
     let mut sizes = BTreeSet::new();
@@ -1545,7 +1589,21 @@ fn write_impl(
             return Err(invalid("duplicate physical strike size"));
         }
     }
-    let tables = sbit::encode(&strikes, kind, count, limits)?;
+    let tables = match options.metadata.index_layout {
+        EmbeddedIndexLayout::Canonical => sbit::encode(&strikes, kind, count, limits)?,
+        EmbeddedIndexLayout::SharedMetricRuns { minimum_run } => {
+            let runs = sbit::encode_shared_metric_runs(&strikes, kind, count, minimum_run, limits)?;
+            if runs.shared_runs > 0 {
+                note(
+                    &mut report,
+                    "index_layout",
+                    "Shared-metric bitmap runs store zero vertical big metrics; \
+                     horizontal metrics and pixels are unchanged",
+                );
+            }
+            runs.tables
+        }
+    };
     let mut builder = SfntBuilder::new(Flavor::TrueType);
     let (dt, lt) = kind.tags();
     builder.insert(dt, tables.data)?;
@@ -1591,7 +1649,11 @@ fn write_impl(
         names,
         &limits.sfnt,
         &mut report,
-        design_options,
+        CommonOptions {
+            design: design_options,
+            metadata: &options.metadata,
+            names: prepared.names,
+        },
     )?;
     let report = report.finish()?;
     Ok((builder.build(&limits.sfnt)?, report))
@@ -1849,7 +1911,11 @@ fn write_native_sbix(
         names,
         &limits.sfnt,
         &mut report,
-        DesignOptions::default(),
+        CommonOptions {
+            design: DesignOptions::default(),
+            metadata: &EmbeddedMetadataOptions::default(),
+            names: None,
+        },
     )?;
     let bytes = builder.build(&limits.sfnt)?;
     let font = Sfnt::parse(&bytes, &limits.sfnt)?;
@@ -1915,6 +1981,12 @@ struct DesignStrike {
     descent: i64,
     glyphs: Vec<DesignGlyph>,
 }
+/// Design-metric policy, explicit metadata and a prepared explicit name table.
+struct CommonOptions<'a> {
+    design: DesignOptions,
+    metadata: &'a EmbeddedMetadataOptions,
+    names: Option<Vec<u8>>,
+}
 #[allow(clippy::too_many_arguments)]
 fn common_tables(
     builder: &mut SfntBuilder,
@@ -1925,7 +1997,7 @@ fn common_tables(
     glyph_names: Vec<String>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
-    options: DesignOptions,
+    options: CommonOptions<'_>,
 ) -> Result<()> {
     let design: Vec<_> = strikes
         .iter()
@@ -1972,8 +2044,13 @@ fn common_design_tables(
     glyph_names: Vec<String>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
-    options: DesignOptions,
+    common: CommonOptions<'_>,
 ) -> Result<()> {
+    let CommonOptions {
+        design: options,
+        metadata,
+        names: explicit_names,
+    } = common;
     let order = options.priority(strikes, limits)?;
     let reference = order.first().copied().unwrap_or(0);
     let strike = &strikes[reference];
@@ -2097,49 +2174,63 @@ fn common_design_tables(
     }
     head[46..48].copy_from_slice(&8u16.to_be_bytes());
     head[48..50].copy_from_slice(&2u16.to_be_bytes());
+    metadata.apply_head(&mut head);
     builder.insert(*b"head", head)?;
     let mut maxp = 0x5000u32.to_be_bytes().to_vec();
     maxp.extend(count.to_be_bytes());
     builder.insert(*b"maxp", maxp)?;
-    let encoded = cmap::encode(mapping, count, limits)?;
+    let encoded = cmap::encode_records(
+        mapping,
+        count,
+        limits,
+        metadata.cmap_unicode_full == EmbeddedCmapUnicodeFull::Always,
+    )?;
     builder.insert(*b"cmap", encoded.data)?;
     let mut os2 = os2::Os2Table::default();
     os2.set_unicode_coverage(&mapping.keys().copied().collect())?;
-    os2.base.average_width = os2::average_width(horizontal.iter().map(|m| m.advance))?;
+    os2.base.average_width = metadata.average(horizontal.iter().map(|m| m.advance))?;
     os2.base.typo_metrics = [header.ascender, header.descender, header.line_gap];
     os2.base.windows_metrics = [
         header.ascender.max(0) as u16,
         (-i32::from(header.descender)).max(0) as u16,
     ];
+    metadata.apply_os2(
+        &mut os2,
+        mapping.last_key_value().is_some_and(|(&cp, _)| cp > 0xffff),
+    )?;
     builder.insert(*b"OS/2", os2.encode(limits)?)?;
-    let family = f.names.family.as_deref().unwrap_or("Fontpixel");
-    let style = f.names.style.as_deref().unwrap_or("Regular");
-    let full = format!("{family} {style}");
-    let mut nt = name::NameTable::default();
-    for (id, value) in [
-        (0, f.names.copyright.as_deref()),
-        (1, Some(family)),
-        (2, Some(style)),
-        (4, Some(f.names.full.as_deref().unwrap_or(&full))),
-        (5, Some(f.names.version.as_deref().unwrap_or("Version 1.0"))),
-        (6, f.names.postscript.as_deref()),
-        (8, f.names.foundry.as_deref()),
-        (13, f.names.license.as_deref()),
-        (14, f.names.license_url.as_deref()),
-    ] {
-        if let Some(value) = value {
-            nt.records.push(name::NameRecord::unicode(id, 0x409, value));
+    if let Some(bytes) = explicit_names {
+        builder.insert(*b"name", bytes)?;
+    } else {
+        let family = f.names.family.as_deref().unwrap_or("Fontpixel");
+        let style = f.names.style.as_deref().unwrap_or("Regular");
+        let full = format!("{family} {style}");
+        let mut nt = name::NameTable::default();
+        for (id, value) in [
+            (0, f.names.copyright.as_deref()),
+            (1, Some(family)),
+            (2, Some(style)),
+            (4, Some(f.names.full.as_deref().unwrap_or(&full))),
+            (5, Some(f.names.version.as_deref().unwrap_or("Version 1.0"))),
+            (6, f.names.postscript.as_deref()),
+            (8, f.names.foundry.as_deref()),
+            (13, f.names.license.as_deref()),
+            (14, f.names.license_url.as_deref()),
+        ] {
+            if let Some(value) = value {
+                nt.records.push(name::NameRecord::unicode(id, 0x409, value));
+            }
         }
+        builder.insert(*b"name", nt.encode(limits)?)?;
     }
-    builder.insert(*b"name", nt.encode(limits)?)?;
     let mut post = post::PostTable {
-        names: Some(glyph_names),
+        names: (metadata.post_names == EmbeddedPostNames::Keep).then_some(glyph_names),
         ..Default::default()
     };
-    post.header.is_fixed_pitch = u32::from(matches!(
+    post.header.is_fixed_pitch = u32::from(metadata.fixed_pitch.unwrap_or(matches!(
         metric_font.metrics.spacing,
         Some(Spacing::Monospaced | Spacing::CharacterCell)
-    ));
+    )));
     post.header.underline_position = global(metric_font.metrics.underline_position.unwrap_or(0))?;
     post.header.underline_thickness = global(metric_font.metrics.underline_thickness.unwrap_or(0))?;
     builder.insert(*b"post", post.encode(count, limits)?)?;
