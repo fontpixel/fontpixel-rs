@@ -776,12 +776,10 @@ mod tests {
             - 1024;
         let editor = super::super::editor_fidelity::model_bytes(font).unwrap()
             + super::super::editor_fidelity::container_bytes(&set).unwrap();
-        let pf2 = super::super::w42_common::source_cost(font, &limits).unwrap();
         for (id, name, estimate) in [
             ("snf", "a.snf", legacy),
             ("u8m", "a.u8m", legacy),
             ("kbits", "a.kbits", editor),
-            ("pf2", "a.pf2", pf2),
         ] {
             let (owned, written) = minimal(|total| {
                 registry.write_owned(set.clone(), id, &options(name, total), Report::default())
@@ -794,6 +792,91 @@ mod tests {
             // owned route charges the exact model in its place.
             assert_eq!(owned, borrowed - estimate + used, "{id}");
         }
+    }
+
+    #[test]
+    fn pf2_charges_its_working_storage_exactly() {
+        // PF2 writes on one exact working ledger. With container properties
+        // whose (exactly charged) diagnostics bind, the owned minimum is the
+        // borrowing minimum less the codec's model and container estimates
+        // plus the model's exact usage: everything else is charged the same.
+        let registry = crate::registry();
+        let mut set = model();
+        for i in 0..8 {
+            let name = format!("opaque-{i}-{}", "x".repeat(4000));
+            set.properties.push(crate::model::Property::new(
+                name,
+                crate::model::PropertyValue::Flag,
+            ));
+        }
+        let used = set.retained_usage(usize::MAX).unwrap().bytes;
+        let limits = ResourceLimits::default();
+        let estimate = super::super::w42_common::source_cost(set.single().unwrap(), &limits)
+            .unwrap()
+            + super::super::w42_common::container_cost(&set).unwrap();
+        let (owned, written) = minimal(|total| {
+            registry.write_owned(
+                set.clone(),
+                "pf2",
+                &options("a.pf2", total),
+                Report::default(),
+            )
+        });
+        let (borrowed, expected) = minimal(|total| {
+            registry.write_with_report(&set, "pf2", &options("a.pf2", total), Report::default())
+        });
+        assert_eq!(written, expected);
+        assert_eq!(owned, borrowed - estimate + used);
+        // Only the diagnostics' exact strings and entries (no 512-byte
+        // per-entry allowance, no doubled model) remain beyond the model.
+        let strings: usize = written
+            .report
+            .entries
+            .iter()
+            .map(|e| e.code.len() + e.message.len())
+            .sum();
+        assert!(owned - used >= strings, "{owned} {used} {strings}");
+        assert!(
+            owned - used < strings + 16 * 1024,
+            "{owned} {used} {strings}"
+        );
+    }
+
+    #[test]
+    fn tex_readback_glyph_allowance_covers_its_fixed_storage() {
+        // While a pk/gf readback parses (before its exact `retained_usage`
+        // replaces the parser's count), each decoded glyph is admitted at
+        // 2048 (pk) or 2304 (gf) bytes plus twice its raster (decoded rows
+        // and the bitmap copy). The fixed per-glyph storage it covers: the
+        // glyph slot, at most three per glyph while the slot array doubles
+        // (old and new arrays overlap); a one-code vector (minimum capacity
+        // four); one full B-tree node per cmap entry (the toolchain-
+        // independent bound) and that entry's id vector; and the three TeX
+        // glyph properties (array of capacity four and their names).
+        use crate::model::{Codepoint, GlyphId, Property};
+        use std::mem::size_of;
+        let slot = 3 * size_of::<Option<Glyph>>();
+        let codes = 4 * size_of::<Codepoint>();
+        // On the audited toolchain the model's B-tree bound is one node per
+        // five entries plus one, and that extra node fits the reader's
+        // initial 4096-byte allowance; elsewhere one node per entry.
+        let full =
+            16 * (size_of::<Codepoint>() + size_of::<Vec<GlyphId>>() + size_of::<usize>()) + 128;
+        assert!(full <= 4096);
+        let node = if cfg!(fontpixel_verified_btree_1_99) {
+            full.div_ceil(5)
+        } else {
+            full
+        };
+        let ids = 4 * size_of::<GlyphId>();
+        let properties = 4 * size_of::<Property>() + "tex.tfm_width tex.dx tex.dy".len();
+        let fixed = slot + codes + node + ids + properties;
+        // Off the audited toolchain the per-entry node bound alone does not
+        // fit (documented in docs/w6.1-writer-budget.md).
+        assert!(
+            !cfg!(fontpixel_verified_btree_1_99) || fixed <= 2048,
+            "{fixed}"
+        );
     }
 
     #[test]

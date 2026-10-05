@@ -62,6 +62,23 @@ pub(super) struct Diagnostics {
     used: usize,
     max: usize,
     max_mappings: usize,
+    /// Exact working ledger (PF2): every reservation, mapping-tree node and
+    /// report allocation is admitted on it before it is made.
+    #[cfg(feature = "pf2")]
+    ledger: Option<Ledger>,
+}
+/// The live charges of a ledger-backed [`Diagnostics`].
+#[cfg(feature = "pf2")]
+struct Ledger {
+    budget: crate::working::Budget,
+    /// The report's entry array capacity.
+    entries: crate::working::Lease,
+    /// The report's code and message strings.
+    strings: crate::working::Lease,
+    /// The output mapping tree.
+    tree: crate::working::Lease,
+    /// Explicit reservations.
+    misc: crate::working::Lease,
 }
 impl Diagnostics {
     pub fn new(format: &'static str, l: &ResourceLimits) -> Self {
@@ -71,31 +88,110 @@ impl Diagnostics {
             max_mappings: l.max_glyphs,
             used: 0,
             max: l.max_total_bytes,
+            #[cfg(feature = "pf2")]
+            ledger: None,
         }
     }
+    /// Diagnostics whose every allocation is admitted on `budget` first.
+    #[cfg(feature = "pf2")]
+    pub fn charged(
+        format: &'static str,
+        l: &ResourceLimits,
+        budget: &crate::working::Budget,
+    ) -> Result<Self> {
+        let mut d = Self::new(format, l);
+        d.ledger = Some(Ledger {
+            budget: budget.clone(),
+            entries: budget.reserve(0)?,
+            strings: budget.reserve(0)?,
+            tree: budget.reserve(0)?,
+            misc: budget.reserve(0)?,
+        });
+        Ok(d)
+    }
+    /// The exact working ledger, if any.
+    #[cfg(feature = "pf2")]
+    pub fn budget(&self) -> Option<&crate::working::Budget> {
+        self.ledger.as_ref().map(|l| &l.budget)
+    }
+    /// Admit one more entry and exactly `strings` more string bytes. A full
+    /// entry array grows into a new allocation admitted while the old one is
+    /// still live; the old charge goes only after the old array has dropped.
+    #[cfg(feature = "pf2")]
+    fn admit_entry(&mut self, strings: usize) -> Result<()> {
+        let Some(l) = &mut self.ledger else {
+            return Ok(());
+        };
+        let charged = l
+            .strings
+            .bytes()
+            .checked_add(strings)
+            .ok_or_else(|| l.budget.error())?;
+        l.strings.grow_to(charged)?;
+        let entries = &mut self.report.entries;
+        if entries.len() < entries.capacity() {
+            return Ok(());
+        }
+        let size = std::mem::size_of::<ReportEntry>();
+        let capacity = entries.capacity().saturating_mul(2).max(4);
+        let mut lease = l.budget.reserve_array::<ReportEntry>(capacity)?;
+        let mut next = Vec::new();
+        next.try_reserve_exact(capacity)
+            .map_err(|_| l.budget.error())?;
+        lease.grow_to(
+            next.capacity()
+                .checked_mul(size)
+                .ok_or_else(|| l.budget.error())?,
+        )?;
+        next.append(entries);
+        drop(std::mem::replace(entries, next));
+        l.entries = lease;
+        Ok(())
+    }
+    /// Account for a mapping tree that will hold `entries` entries, before
+    /// the last of them is inserted: on a ledger, the model's B-tree node
+    /// bound; otherwise the legacy 192-byte per-mapping estimate.
+    fn admit_mapping(&mut self, entries: usize) -> Result<()> {
+        #[cfg(feature = "pf2")]
+        if let Some(l) = &mut self.ledger {
+            let slot = std::mem::size_of::<u32>()
+                + std::mem::size_of::<GlyphId>()
+                + std::mem::size_of::<usize>();
+            let bytes =
+                crate::model::budget::tree_node_bound(entries, cfg!(fontpixel_verified_btree_1_99))
+                    .and_then(|nodes| nodes.checked_mul(slot * 16 + 128))
+                    .ok_or_else(|| l.budget.error())?;
+            return l.tree.grow_to(bytes);
+        }
+        let _ = entries;
+        self.reserve(192)
+    }
+    #[cfg(any(feature = "fontx2", feature = "hzk"))]
     pub fn for_font(format: &'static str, f: &Font, l: &ResourceLimits) -> Result<Self> {
         let mut d = Self::new(format, l);
         d.reserve(source_cost(f, l)?)?;
         Ok(d)
     }
-    /// [`for_font`](Self::for_font), except that a model the caller has
-    /// reserved is only validated, not charged.
-    #[cfg(feature = "pf2")]
-    pub fn for_font_charged(
-        format: &'static str,
-        f: &Font,
-        l: &ResourceLimits,
-        charge: super::ModelCharge,
-    ) -> Result<Self> {
-        if charge == super::ModelCharge::Estimate {
-            return Self::for_font(format, f, l);
-        }
-        source_cost(f, &unbounded(l))?;
-        Ok(Self::new(format, l))
-    }
     pub fn reserve(&mut self, n: usize) -> Result<()> {
+        #[cfg(feature = "pf2")]
+        if let Some(l) = &mut self.ledger {
+            let charged = l
+                .misc
+                .bytes()
+                .checked_add(n)
+                .ok_or_else(|| l.budget.error())?;
+            return l.misc.grow_to(charged);
+        }
         self.used = self.used.saturating_add(n);
         check(self.used, self.max, "font aggregate writer bytes")
+    }
+    /// `format.code` in a string of exactly that length.
+    fn code(&self, code: &str) -> String {
+        let mut s = String::with_capacity(self.format.len() + 1 + code.len());
+        s.push_str(self.format);
+        s.push('.');
+        s.push_str(code);
+        s
     }
     pub fn emit(
         &mut self,
@@ -103,17 +199,44 @@ impl Diagnostics {
         impact: Impact,
         glyph: Option<usize>,
         cp: Option<u32>,
-        message: impl Into<String>,
+        message: impl AsRef<str> + Into<String>,
     ) -> Result<()> {
-        let message = message.into();
-        self.used = self
-            .used
-            .saturating_add(message.len().saturating_add(code.len()).saturating_add(512));
-        check(self.used, self.max, "font diagnostics")?;
+        let len = message.as_ref().len();
+        self.emit_with(code, impact, glyph, cp, len, || message.into())
+    }
+    /// Push one warning whose message (`len` bytes) `message` builds. On a
+    /// ledger the entry slot, the code and the message are admitted first.
+    fn emit_with(
+        &mut self,
+        code: &str,
+        impact: Impact,
+        glyph: Option<usize>,
+        cp: Option<u32>,
+        len: usize,
+        message: impl FnOnce() -> String,
+    ) -> Result<()> {
+        #[cfg(feature = "pf2")]
+        if self.ledger.is_some() {
+            let code_len = self.format.len() + 1 + code.len();
+            self.admit_entry(code_len.saturating_add(len))?;
+        } else {
+            self.used = self
+                .used
+                .saturating_add(len.saturating_add(code.len()).saturating_add(512));
+            check(self.used, self.max, "font diagnostics")?;
+        }
+        #[cfg(not(feature = "pf2"))]
+        {
+            self.used = self
+                .used
+                .saturating_add(len.saturating_add(code.len()).saturating_add(512));
+            check(self.used, self.max, "font diagnostics")?;
+        }
+        let message = message();
         self.report.push(ReportEntry {
             level: Level::Warning,
             impact,
-            code: format!("{}.{}", self.format, code),
+            code: self.code(code),
             location: Location {
                 font_index: Some(0),
                 glyph_index: glyph,
@@ -129,29 +252,95 @@ impl Diagnostics {
         code: &str,
         glyph: Option<usize>,
         cp: Option<u32>,
-        message: impl Into<String>,
+        message: impl AsRef<str> + Into<String>,
     ) -> Result<()> {
         self.emit(code, Impact::Loss, glyph, cp, message)
     }
-    pub fn fatal(mut self, message: impl Into<String>) -> Error {
+    /// [`loss`](Self::loss) with a message formatted only after its exact
+    /// length has been admitted.
+    pub fn loss_fmt(
+        &mut self,
+        code: &str,
+        glyph: Option<usize>,
+        cp: Option<u32>,
+        message: std::fmt::Arguments<'_>,
+    ) -> Result<()> {
+        let len = formatted_len(message);
+        self.emit_with(code, Impact::Loss, glyph, cp, len, || {
+            let mut s = String::with_capacity(len);
+            let _ = std::fmt::Write::write_fmt(&mut s, message);
+            s
+        })
+    }
+    #[cfg(any(feature = "fontx2", feature = "hzk"))]
+    pub fn fatal(mut self, message: impl AsRef<str> + Into<String>) -> Error {
+        self.fatal_mut(message)
+    }
+    /// [`fatal`](Self::fatal) for diagnostics the caller keeps. On a ledger
+    /// the final entry's slot and strings are admitted first; when they do
+    /// not fit, that resource error is returned instead of the report.
+    pub fn fatal_mut(&mut self, message: impl AsRef<str> + Into<String>) -> Error {
+        #[cfg(feature = "pf2")]
+        if let Err(error) =
+            self.admit_entry(self.format.len() + ".write.failed".len() + message.as_ref().len())
+        {
+            return error;
+        }
+        let code = self.code("write.failed");
         self.report.push(ReportEntry {
             level: Level::Error,
             impact: Impact::None,
-            code: format!("{}.write.failed", self.format),
+            code,
             location: Location {
                 font_index: Some(0),
                 ..Default::default()
             },
             message: message.into(),
         });
-        Error::ReportedErrors(self.report)
+        Error::ReportedErrors(std::mem::take(&mut self.report))
     }
     pub fn cost(&self) -> usize {
+        #[cfg(feature = "pf2")]
+        if let Some(l) = &self.ledger {
+            return l.entries.bytes() + l.strings.bytes() + l.tree.bytes() + l.misc.bytes();
+        }
         self.used
     }
 }
+/// Exact byte length of formatted text, without allocating it.
+pub(super) fn formatted_len(args: std::fmt::Arguments<'_>) -> usize {
+    struct Count(usize);
+    impl std::fmt::Write for Count {
+        fn write_str(&mut self, s: &str) -> std::fmt::Result {
+            self.0 += s.len();
+            Ok(())
+        }
+    }
+    let mut count = Count(0);
+    let _ = std::fmt::Write::write_fmt(&mut count, args);
+    count.0
+}
+#[cfg(any(feature = "fontx2", feature = "hzk"))]
 pub(super) fn container(set: &FontSet, d: &mut Diagnostics) -> Result<()> {
     container_charged(set, d, super::ModelCharge::Estimate)
+}
+/// The container property estimate [`container`] charges for a model the
+/// caller has not reserved.
+#[cfg(all(
+    test,
+    feature = "snf",
+    feature = "u8m",
+    feature = "kbits",
+    feature = "pf2",
+    feature = "color"
+))]
+pub(crate) fn container_cost(set: &FontSet) -> Result<usize> {
+    let mut retained = Budget {
+        used: 0,
+        max: usize::MAX,
+    };
+    property_cost(&set.properties, &mut retained)?;
+    Ok(retained.used)
 }
 /// [`container`]; a reserved model's container properties are validated
 /// but not charged.
@@ -170,11 +359,11 @@ pub(super) fn container_charged(
     property_cost(&set.properties, &mut retained)?;
     d.reserve(charge.of(retained.used))?;
     for p in set.properties.iter() {
-        d.loss(
+        d.loss_fmt(
             "write.container_property",
             None,
             None,
-            format!("Container property {:?} is not representable", p.name),
+            format_args!("Container property {:?} is not representable", p.name),
         )?;
     }
     Ok(())
@@ -189,20 +378,20 @@ pub(super) fn properties(
     if source == output {
         return Ok(());
     }
-    d.loss(
+    d.loss_fmt(
         "write.property_order",
         id,
         None,
-        format!("{kind} ordered properties or duplicate multiplicity change"),
+        format_args!("{kind} ordered properties or duplicate multiplicity change"),
     )?;
     let mut destination = output.iter();
     for p in source.iter() {
         if destination.next() != Some(p) {
-            d.loss(
+            d.loss_fmt(
                 "write.property",
                 id,
                 None,
-                format!(
+                format_args!(
                     "{kind} property {:?} is changed, reordered, or not retained",
                     p.name
                 ),
@@ -336,11 +525,11 @@ pub(super) fn mono(
         GlyphBitmap::Gray8(b) => {
             let t = threshold
                 .ok_or_else(|| invalid("Gray input requires an explicit gray_threshold"))?;
-            d.loss(
+            d.loss_fmt(
                 "write.gray_threshold",
                 Some(id),
                 None,
-                format!("Grayscale quantized at threshold {t}"),
+                format_args!("Grayscale quantized at threshold {t}"),
             )?;
             b.to_mono(t)
         }
@@ -428,12 +617,7 @@ pub(super) fn mappings(
             let mapped = match result {
                 Ok(value) => value.filter(|&v| accept(v)),
                 Err(e) => {
-                    d.loss(
-                        "write.unmapped",
-                        Some(id.index()),
-                        Some(cp.value()),
-                        e.to_string(),
-                    )?;
+                    d.loss("write.unmapped", Some(id.index()), Some(cp.value()), e)?;
                     None
                 }
             };
@@ -444,7 +628,7 @@ pub(super) fn mappings(
                         d.max_mappings,
                         "output mapping count",
                     )?;
-                    d.reserve(192)?;
+                    d.admit_mapping(map.len() + 1)?;
                 }
                 if let Some(old) = map.insert(code, id)
                     && old != id
@@ -459,19 +643,19 @@ pub(super) fn mappings(
                 if cp != Codepoint::Legacy(code) && target != "unicode"
                     || target == "unicode" && cp != Codepoint::Unicode(code)
                 {
-                    d.loss(
+                    d.loss_fmt(
                         "write.codepoint",
                         Some(id.index()),
                         Some(cp.value()),
-                        format!("Code mapping becomes {target} 0x{code:X}"),
+                        format_args!("Code mapping becomes {target} 0x{code:X}"),
                     )?;
                 }
             } else {
-                d.loss(
+                d.loss_fmt(
                     "write.omitted",
                     Some(id.index()),
                     Some(cp.value()),
-                    format!("Code is outside the selected {target} repertoire"),
+                    format_args!("Code is outside the selected {target} repertoire"),
                 )?;
             }
         }
@@ -580,7 +764,7 @@ pub(super) fn joined_code(code: u32) -> bool {
 /// `l` without its aggregate byte cap, for validating a reserved model's
 /// estimate without charging it.
 #[cfg(feature = "pf2")]
-fn unbounded(l: &ResourceLimits) -> ResourceLimits {
+pub(super) fn unbounded(l: &ResourceLimits) -> ResourceLimits {
     ResourceLimits {
         max_total_bytes: usize::MAX,
         ..l.clone()

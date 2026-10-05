@@ -511,6 +511,62 @@ impl<'a> Charged<'a> {
         )?;
         Ok(text)
     }
+    /// The final error entry of a writer with no representable glyphs,
+    /// admitted like every other entry; the whole report goes into the error.
+    /// When the entry does not fit, that resource error is returned instead.
+    pub fn fatal(&mut self, id: &str, message: &str) -> Error {
+        match self.entry(
+            Level::Error,
+            format_args!("{id}.no_representable_glyphs"),
+            format_args!("{message}"),
+        ) {
+            Ok(()) => Error::ReportedErrors(std::mem::take(self.report)),
+            Err(error) => error,
+        }
+    }
+    /// Keep every omission already found when a later writer check fails:
+    /// the failure is appended as one admitted entry (or a reported error's
+    /// entries are absorbed). When that does not fit, the ledger's resource
+    /// error is returned instead.
+    pub fn fail(&mut self, error: Error, id: &str) -> Error {
+        if self.report.entries.is_empty() {
+            return error;
+        }
+        let admitted = match error {
+            Error::ReportedErrors(other) => self.absorb(other),
+            error => self.entry(
+                Level::Error,
+                format_args!("{id}.write_failed"),
+                format_args!("{error}"),
+            ),
+        };
+        match admitted {
+            Ok(()) => Error::ReportedErrors(std::mem::take(self.report)),
+            Err(error) => error,
+        }
+    }
+    /// Push one entry without a glyph location, everything admitted first.
+    fn entry(
+        &mut self,
+        level: Level,
+        code: std::fmt::Arguments<'_>,
+        message: std::fmt::Arguments<'_>,
+    ) -> Result<()> {
+        self.reserve(1)?;
+        let code = self.string(code)?;
+        let message = self.string(message)?;
+        self.report.entries.push(ReportEntry {
+            level,
+            impact: Impact::None,
+            code,
+            location: Location {
+                font_index: Some(0),
+                ..Default::default()
+            },
+            message,
+        });
+        Ok(())
+    }
     /// Move another report's entries in. Their strings are already live and
     /// are charged here from now on; the moved-from array stays charged until
     /// it has dropped.
@@ -557,6 +613,7 @@ impl Losses for Charged<'_> {
         Ok(())
     }
 }
+#[cfg(feature = "plan9")]
 pub(crate) fn fatal(mut r: Report, id: &str, message: &str) -> Error {
     r.push(ReportEntry {
         level: Level::Error,
@@ -861,14 +918,14 @@ pub(crate) fn write_charged(
 ) -> Result<(Vec<u8>, Report)> {
     let budget = crate::working::Budget::new(l.max_total_bytes, "TeX/Plan 9 aggregate bytes");
     let mut report = Report::default();
+    f.validate(l)?;
+    let model = match container {
+        Some(set) => set.retained_usage(l.max_total_bytes)?.bytes,
+        None => f.retained_usage(l.max_total_bytes)?.bytes,
+    };
+    let _model = budget.reserve(charge.of(model))?;
+    let mut sink = Charged::new(&budget, &mut report)?;
     let result = (|| {
-        f.validate(l)?;
-        let model = match container {
-            Some(set) => set.retained_usage(l.max_total_bytes)?.bytes,
-            None => f.retained_usage(l.max_total_bytes)?.bytes,
-        };
-        let _model = budget.reserve(charge.of(model))?;
-        let mut sink = Charged::new(&budget, &mut report)?;
         let bytes = encode(&budget, &mut sink)?;
         if let Some(set) = container {
             container_losses(set, id, &mut sink)?;
@@ -876,8 +933,12 @@ pub(crate) fn write_charged(
         Ok(bytes)
     })();
     match result {
-        Ok(bytes) => Ok((bytes, report)),
-        Err(error) => Err(write_error(error, report, id)),
+        Ok(bytes) => {
+            drop(sink);
+            Ok((bytes, report))
+        }
+        // The failure entry is admitted while every charge is still live.
+        Err(error) => Err(sink.fail(error, id)),
     }
 }
 /// Admit a decoded readback model that its reader built within the remaining
@@ -1016,16 +1077,13 @@ pub(crate) fn mappings<'a>(
         }
     }
     if v.is_empty() {
-        return Err(fatal(
-            std::mem::take(r.report),
-            id,
-            "No mapped glyphs can be written",
-        ));
+        return Err(r.fatal(id, "No mapped glyphs can be written"));
     }
     Ok(v)
 }
 
 /// Preserve every omission already found when a later writer check is fatal.
+#[cfg(feature = "plan9")]
 pub(crate) fn write_error(error: Error, mut report: Report, id: &str) -> Error {
     if report.entries.is_empty() {
         return error;

@@ -59,11 +59,7 @@ fn write_inner(
     }
     drop(candidates);
     if maps.is_empty() {
-        return Err(fatal(
-            std::mem::take(r.report),
-            "gf",
-            "No glyphs have representable shared metrics",
-        ));
+        return Err(r.fatal("gf", "No glyphs have representable shared metrics"));
     }
     let mut out = Output::charged(o.max_output_bytes.min(o.limits.max_input_bytes), budget)?;
     let comment = bytes(&f.headers, "tex.comment").unwrap_or(&[]);

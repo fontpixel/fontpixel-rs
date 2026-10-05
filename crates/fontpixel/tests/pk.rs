@@ -241,6 +241,48 @@ fn late_fatal_error_retains_prior_omissions() {
 }
 
 #[test]
+fn late_failure_entry_is_admitted_exactly() {
+    // The failure entry appended after earlier omissions is admitted on the
+    // writer's ledger while every other charge is live: at the smallest
+    // total that keeps it the report equals the unconstrained one, and one
+    // byte less is a plain resource error.
+    let (mut f, _) =
+        pk::read(&short(224, 3, 3, &[0xf7, 0x80]), &ResourceLimits::default()).unwrap();
+    let id = f.glyphs().next().unwrap().0;
+    let mut unencoded = f.glyph(id).unwrap().clone();
+    unencoded.codepoints.clear();
+    f.add_glyph(unencoded).unwrap();
+    f.edit_glyph(id, |g| {
+        g.metrics.bounds.x = i64::MIN;
+        Ok(())
+    })
+    .unwrap();
+    let run = |total: usize| {
+        let mut o = PkWriteOptions::default();
+        o.limits.max_total_bytes = total;
+        pk::write(&f, &o).unwrap_err()
+    };
+    let kept = |e: &Error| {
+        e.report()
+            .is_some_and(|r| r.entries.iter().any(|e| e.code == "pk.write_failed"))
+    };
+    let expected = run(1 << 20);
+    assert!(kept(&expected));
+    let (mut lo, mut hi) = (0usize, 1usize << 20);
+    while hi - lo > 1 {
+        let mid = lo + (hi - lo) / 2;
+        if kept(&run(mid)) {
+            hi = mid;
+        } else {
+            lo = mid;
+        }
+    }
+    assert_eq!(format!("{:?}", run(hi)), format!("{expected:?}"));
+    let short = run(hi - 1);
+    assert!(matches!(short, Error::ResourceLimit { .. }), "{short:?}");
+}
+
+#[test]
 fn source_provenance_and_escaped_properties_are_preflighted() {
     use fontpixel::formats::{FormatWriter, WriteOptions};
     use fontpixel::resources::ResourcePath;
