@@ -201,6 +201,31 @@ fn same_label_alternates_take_numbered_names_under_an_exact_ledger() {
 }
 
 #[test]
+fn owned_encodes_charge_sources_once_and_release_them_after_planning() {
+    let v = fixture::variants();
+    let usage = v.retained_usage(usize::MAX).unwrap();
+    let (borrowed, bytes) = minimal(|total| variants::encode(&v, &options(total)).map(|e| e.bytes));
+    let (owned, owned_bytes) =
+        minimal(|total| v.clone().encode_owned(&options(total)).map(|e| e.bytes));
+    assert_eq!(owned_bytes, bytes);
+    // The sources are admitted on the same ledger, so the owned total covers
+    // them; dropping faces lets planning and export reuse their allowance.
+    assert!(owned > usage, "{owned} <= {usage}");
+    assert!(owned <= borrowed + usage, "{owned} > {borrowed} + {usage}");
+    let (_, prepared) = minimal(|total| {
+        let prepared = v.clone().into_prepared(&layout(total))?;
+        assert!(prepared.retained_bytes() <= total);
+        prepared.encode(&options(total)).map(|e| e.bytes)
+    });
+    assert_eq!(prepared, bytes);
+    // A total below the model's own usage is refused before planning.
+    assert!(matches!(
+        v.clone().encode_owned(&options(usage - 1)),
+        Err(Error::ResourceLimit { .. })
+    ));
+}
+
+#[test]
 fn single_font_export_has_an_exact_ledger_threshold() {
     let font = fixture::single();
     for (shape, dot_size, flavor) in [

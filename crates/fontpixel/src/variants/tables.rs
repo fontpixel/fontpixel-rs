@@ -13,7 +13,7 @@
 //! adapters should be replaced by those entry points.
 use crate::{
     Result, outline,
-    sfnt::{self, bitmap as sbit, glyf, metrics, name::NameTable, post::PostTable},
+    sfnt::{self, glyf, name::NameTable},
     working::{Budget, Lease, Owned},
 };
 use std::mem::size_of;
@@ -331,25 +331,8 @@ pub(super) fn cff(
     )
 }
 
-/// `metrics::encode` (sfnt/metrics.rs): two exact buffers.
-pub(super) fn metrics(
-    axis: metrics::Axis,
-    header: &metrics::Header,
-    values: &[metrics::LongMetric],
-    limits: &sfnt::Limits,
-    budget: &Budget,
-) -> Result<Owned<metrics::EncodedMetrics>> {
-    let bound = sum(&[36, values.len().saturating_mul(4)]);
-    admit(
-        budget,
-        bound,
-        || metrics::encode(axis, header, values, true, limits),
-        |e| exact(&mut e.header).saturating_add(exact(&mut e.metrics)),
-    )
-}
-
-/// Fixed-size encoders: `head`, `maxp`, `OS/2` (at most 100 bytes) and `gasp`
-/// each fill one exact buffer of at most this many bytes.
+/// Fixed-size encoders: unhinted `maxp` (32 bytes) and `gasp` (8 bytes for
+/// one range) each fill one exact buffer of at most this many bytes.
 pub(super) fn small(
     budget: &Budget,
     run: impl FnOnce() -> Result<Vec<u8>>,
@@ -365,31 +348,6 @@ pub(super) fn code_pages(
 ) -> Result<[u32; 2]> {
     let _scratch = budget.reserve(4096)?;
     run()
-}
-
-/// `PostTable::encode` (sfnt/post.rs): string references, indices, the
-/// name-to-index tree and one exact output.
-pub(super) fn post(
-    table: &PostTable,
-    num_glyphs: u16,
-    limits: &sfnt::Limits,
-    budget: &Budget,
-) -> Result<Owned<Vec<u8>>> {
-    let (n, text) = table.names.as_ref().map_or((0, 0), |names| {
-        (
-            names.len(),
-            names.iter().fold(0usize, |a, s| a.saturating_add(s.len())),
-        )
-    });
-    let bound = sum(&[
-        grown::<&str>(n),
-        grown::<u16>(n),
-        super::ledger::tree_bytes::<&str, u16>(budget, n)?,
-        34,
-        n.saturating_mul(3),
-        text,
-    ]);
-    admit(budget, bound, || table.encode(num_glyphs, limits), exact)
 }
 
 /// `NameTable::encode` (sfnt/name.rs): record references and their stable sort
@@ -422,50 +380,6 @@ pub(super) fn name(
         sum(&[8, records.saturating_mul(12), pool]),
     ]);
     admit(budget, bound, || table.encode(limits), exact)
-}
-
-/// `bitmap::encode` (sfnt/bitmap.rs) for one monochrome strike: growing data
-/// and location buffers, glyph-run groups with offset arrays, and one glyph's
-/// encoded image at a time.
-pub(super) fn embedded(
-    strike: &sbit::Strike,
-    num_glyphs: u16,
-    limits: &sbit::Limits,
-    budget: &Budget,
-) -> Result<Owned<sbit::Tables>> {
-    let n = strike.glyphs.len();
-    let mut images = 4usize;
-    let mut largest = 0usize;
-    for g in strike.glyphs.values() {
-        let stride = (g.bitmap.width() as usize).div_ceil(8);
-        let bytes = sum(&[8, stride.saturating_mul(g.bitmap.height() as usize)]);
-        images = images.saturating_add(bytes);
-        largest = largest.max(bytes);
-    }
-    let location = sum(&[56, n.saturating_mul(24)]);
-    let bound = sum(&[
-        grown::<u8>(images),
-        grown::<u8>(location),
-        size_of::<usize>(),
-        grown::<(u16, u16, u16, usize, Vec<u32>)>(n),
-        // Each run's offsets start at one entry and grow from four:
-        // at most 3 * max(len + 1, 4) entries per run, with runs <= glyphs.
-        grown::<u32>(n.saturating_mul(5)),
-        grown::<u8>(largest),
-    ]);
-    admit(
-        budget,
-        bound,
-        || {
-            sbit::encode(
-                std::slice::from_ref(strike),
-                sbit::Kind::OpenType,
-                num_glyphs,
-                limits,
-            )
-        },
-        |t| exact(&mut t.data).saturating_add(exact(&mut t.location)),
-    )
 }
 
 /// Assembled sfnt tables that keep their admitted bytes until the output is built.

@@ -6,7 +6,7 @@ use crate::{
     report::{Impact, Level},
     sfnt::{
         Flavor, bitmap as sbit, glyf,
-        metrics::{Axis, Header, LongMetric},
+        metrics::{self, Axis, Header, LongMetric},
         name::{NameRecord, NameTable},
         os2::Os2Table,
         post::PostTable,
@@ -339,6 +339,21 @@ pub fn encode(variants: &Variants, o: &Options) -> Result<Encoded> {
     let plan = variants.plan_with_budget(&o.limits, &budget)?;
     let encoded = encode_planned(&variants.base, o, &plan, None, &budget)?;
     drop(plan);
+    Ok(encoded.into_parts().0)
+}
+/// [`Variants::encode_owned`]: plan while dropping source faces, then export
+/// with only the plan and the base metadata live.
+pub(super) fn encode_owned(variants: Variants, o: &Options) -> Result<Encoded> {
+    validate_names(o)?;
+    if !(o.dot_size > 0. && o.dot_size <= 1.5) || (o.shape == Shape::Square && o.dot_size != 1.) {
+        return Err(invalid("invalid dot size for the chosen outline shape"));
+    }
+    let budget = ledger::budget(o.limits.sfnt.resources.max_total_bytes);
+    let (plan, metadata, sources) = variants.consume(&o.limits, &budget)?;
+    let encoded = encode_planned(&metadata, o, &plan, None, &budget)?;
+    drop(plan);
+    drop(metadata);
+    drop(sources);
     Ok(encoded.into_parts().0)
 }
 pub(super) fn encode_prepared(
@@ -868,7 +883,8 @@ fn encode_planned(
             .ok_or_else(|| invalid("line gap overflow"))?,
     )?;
     h.recompute(&hm, &extents)?;
-    let (he, lease) = tables::metrics(Axis::Horizontal, &h, &hm, l, budget)?.into_parts();
+    let (he, lease) =
+        metrics::encode_with_budget(Axis::Horizontal, &h, &hm, true, l, budget)?.into_parts();
     b.charge(lease)?;
     b.insert_charged(*b"hhea", he.header)?;
     b.insert_charged(*b"hmtx", he.metrics)?;
@@ -877,7 +893,8 @@ fn encode_planned(
         vh.ascender = (upm / 2) as i16;
         vh.descender = -((upm - upm / 2) as i16);
         vh.recompute(&vm, &vertical_extents)?;
-        let (e, lease) = tables::metrics(Axis::Vertical, &vh, &vm, l, budget)?.into_parts();
+        let (e, lease) =
+            metrics::encode_with_budget(Axis::Vertical, &vh, &vm, true, l, budget)?.into_parts();
         b.charge(lease)?;
         b.insert_charged(*b"vhea", e.header)?;
         b.insert_charged(*b"vmtx", e.metrics)?;
@@ -918,7 +935,7 @@ fn encode_planned(
         drop(cps);
         drop(cps_lease);
     }
-    b.insert(*b"OS/2", tables::small(budget, || os.encode(l))?)?;
+    b.insert(*b"OS/2", os.encode_with_budget(l, budget)?)?;
     {
         let (cmap, lease) =
             sfnt::cmap::encode_with_budget(&plan.cmap, count as u16, l, budget)?.into_parts();
@@ -958,7 +975,7 @@ fn encode_planned(
             base.metrics.spacing,
             Some(crate::model::Spacing::Monospaced | crate::model::Spacing::CharacterCell)
         ));
-        b.insert(*b"post", tables::post(&post, count as u16, l, budget)?)?;
+        b.insert(*b"post", post.encode_with_budget(count as u16, l, budget)?)?;
         drop(post);
         drop(names_lease);
     }
@@ -1042,8 +1059,9 @@ fn encode_planned(
             vertical: sbit::LineMetrics::default(),
             glyphs: std::mem::take(&mut bitmaps),
         };
-        let (e, lease) = tables::embedded(
-            &strike,
+        let (e, lease) = sbit::encode_with_budget(
+            std::slice::from_ref(&strike),
+            sbit::Kind::OpenType,
             count as u16,
             &sbit::Limits {
                 sfnt: l.clone(),

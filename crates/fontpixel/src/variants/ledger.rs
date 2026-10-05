@@ -51,16 +51,12 @@ pub(super) fn string(budget: &Budget, value: impl Display) -> Result<Owned<Strin
     Ok(Owned::from_parts(out, lease))
 }
 
-/// Nodes a standard-library tree of `entries` may own. On the exactly audited
-/// toolchain (`fontpixel_verified_btree_1_99`, set only by build.rs), every
-/// non-root node holds at least five entries, as `model::budget` relies on;
-/// other builds keep the one-node-per-entry-plus-root fallback.
+/// Nodes a standard-library tree of `entries` may own: the model accounting's
+/// bound, using the audited minimum node occupancy only when build.rs sets
+/// `fontpixel_verified_btree_1_99`. An insertion only allocates nodes, so the
+/// completed tree's bound for the new length covers it.
 fn tree_nodes(entries: usize) -> Option<usize> {
-    if cfg!(fontpixel_verified_btree_1_99) {
-        1usize.checked_add(entries.saturating_sub(1) / 5)
-    } else {
-        entries.checked_add(1)
-    }
+    crate::model::budget::tree_node_bound(entries, cfg!(fontpixel_verified_btree_1_99))
 }
 
 /// Conservative tree storage (`Budget::tree_bytes` node size, audited node count).

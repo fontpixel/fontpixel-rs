@@ -203,43 +203,10 @@ fn auxiliary_bytes(aux: &woff::Auxiliary, limit: usize) -> Result<usize> {
     charge(&mut used, 0, limit)?;
     Ok(used)
 }
+/// The library's own count, so the charge `Variants::encode_owned` admits and
+/// releases face by face is exactly the one reserved here.
 fn variants_bytes(value: &Variants, limit: usize) -> Result<usize> {
-    let mut used = size_of::<Variants>();
-    charge(
-        &mut used,
-        array_bytes::<variants::LanguageVariant>(value.languages.capacity(), limit)?,
-        limit,
-    )?;
-    charge(
-        &mut used,
-        array_bytes::<ScriptVariant>(value.scripts.capacity(), limit)?,
-        limit,
-    )?;
-    for tags in value
-        .languages
-        .iter()
-        .map(|v| &v.scripts)
-        .chain(value.scripts.iter().map(|v| &v.scripts))
-    {
-        charge(
-            &mut used,
-            array_bytes::<[u8; 4]>(tags.capacity(), limit)?,
-            limit,
-        )?;
-    }
-    for font in std::iter::once(&value.base)
-        .chain(value.languages.iter().map(|v| &v.font))
-        .chain(value.scripts.iter().map(|v| &v.font))
-    {
-        // Each inline Font header is already in Variants or its route array.
-        let heap = font
-            .retained_usage(limit)?
-            .bytes
-            .checked_sub(size_of::<Font>())
-            .ok_or_else(|| retained_error(limit))?;
-        charge(&mut used, heap, limit)?;
-    }
-    Ok(used)
+    value.retained_usage(limit)
 }
 fn codec_limits(limits: &ResourceLimits, retained: usize) -> Result<ResourceLimits> {
     let mut available = limits.clone();
@@ -610,7 +577,11 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
             ));
         }
     };
-    let encode_limits = variants_limits(&v, &report, &limits)?;
+    // Sources plus report must fit first (same check and error as before).
+    // Export then runs on everything except the report: the library admits the
+    // sources on its own ledger and releases each face after planning it.
+    variants_limits(&v, &report, &limits)?;
+    let encode_limits = codec_limits(&limits, report_bytes(&report, limits.max_total_bytes)?)?;
     let o = Options {
         shape,
         dot_reuse: dot_reuse(Some(&a.dot_reuse)),
@@ -639,8 +610,7 @@ pub(super) fn variants(a: VariantsArgs, out: &mut dyn Write) -> Result<()> {
         },
         ..Default::default()
     };
-    let e = variants::encode(&v, &o)?;
-    drop(v);
+    let e = v.encode_owned(&o)?;
     drop(o);
     append_report(
         &mut report,

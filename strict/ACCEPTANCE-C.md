@@ -160,3 +160,36 @@ Status key: [x] done, [~] done with a stated limit, [ ] not done.
   `Budget::reserve` now records the test-only peak. `ledger::tree_nodes`
   copies `model::budget::tree_node_bound`, which could be made `pub(crate)`
   and shared.
+
+## H. Resume after main 417bee2 (units A, B, D, E merged)
+
+- [x] H1. Merged main. `working.rs` keeps main's single `Lease::split`/`Budget::peak`.
+  Unit E's `.notdef` policy is carried into the ledgered export: the empty
+  glyph's name is admitted, glyph 0 keeps exact metrics, and
+  `variants.notdef.replaced` is an admitted note.
+- [x] H2. Default-workload fix, with no cap raised and no credit guessed.
+  `Variants::encode_owned` (used by the CLI and batch) admits
+  `Variants::retained_usage`. That is the same counter the CLI reserves, and
+  the CLI's `variants_bytes` now calls it. Planning keeps alternative-only
+  glyphs and new alternates as admitted copies. Each alternative face is dropped
+  after its pass, and only then is its exact `Font::retained_usage` share
+  released. The base is dropped after its glyphs are copied into the final
+  order, keeping metrics and names; the release is its share minus the kept
+  metadata's charge. `Variants::into_prepared` does the same for a reusable
+  prepared value.
+  - Full Tong Large regional square/dot TTF/OTF at the default 256 MiB (default
+    features) are all byte-identical to 6297998.
+  - Minimum `--max-total-bytes` is 262,635,981 (250.46 MiB) for all four, set by
+    source loading exactly as at baseline.
+  - Peak RSS, new vs baseline: square TTF 238.7 vs 374.1 MB, square OTF 250.5
+    vs 552.3 MB, dot TTF 238.8 vs 335.2 MB, dot OTF 238.4 vs 353.5 MB.
+  - The default Tong batch (an all-features build, as frozen-binaries-v2 was
+    built) reproduces all 84 hashes of gate 100-v2. A default-feature build
+    lacks `cjk-charsets` and differs in 24 OS/2 code-page bits; 6297998 differs
+    in exactly the same way.
+- [x] H3. hhea/hmtx/vhea/vmtx, OS/2, post and EBDT/EBLC now use unit B's
+  `*_with_budget` encoders. glyf, CFF, name, maxp, gasp and code pages keep
+  source-derived bounds, because no ledger entry point exists for them yet.
+  `ledger::tree_nodes` calls `model::budget::tree_node_bound`, now `pub(crate)`.
+- [x] H4. `docs/w6.1-writer-budget.md`: the "Variants planner and export" bullet
+  is marked closed.
