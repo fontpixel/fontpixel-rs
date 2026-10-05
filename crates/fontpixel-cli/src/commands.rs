@@ -73,13 +73,35 @@ pub(crate) fn caller_writer_limits(
     report: Report,
     strict: bool,
 ) -> Result<(ResourceLimits, Report)> {
+    reserve_caller(Some(fonts), limits, report, strict)
+}
+/// As [`caller_writer_limits`] for a model that is then moved into
+/// `Registry::write_owned`: only the incoming diagnostics are reserved here.
+/// The returned allowance still contains the model, which the owned writer
+/// (or the registry's borrowing fallback) charges exactly.
+pub(crate) fn caller_report_limits(
+    limits: &ResourceLimits,
+    report: Report,
+    strict: bool,
+) -> Result<(ResourceLimits, Report)> {
+    reserve_caller(None, limits, report, strict)
+}
+fn reserve_caller(
+    fonts: Option<&FontSet>,
+    limits: &ResourceLimits,
+    report: Report,
+    strict: bool,
+) -> Result<(ResourceLimits, Report)> {
     if report.has_errors() {
         return Err(Error::ReportedErrors(report));
     }
     if strict && report.has_loss() {
         return Err(Error::StrictLoss(report));
     }
-    let mut retained = fonts.retained_usage(limits.max_total_bytes)?.bytes;
+    let mut retained = match fonts {
+        Some(fonts) => fonts.retained_usage(limits.max_total_bytes)?.bytes,
+        None => 0,
+    };
     charge(
         &mut retained,
         report_bytes(&report, limits.max_total_bytes)?,

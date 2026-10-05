@@ -957,18 +957,20 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                 let mut write_options =
                     fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
                 write_options.strict = strict;
-                // Reserve this live model and incoming diagnostics in addition
-                // to earlier --each outputs/reports already removed from group_limits.
-                // Native source estimates receive no guessed credit; see the
-                // shared helper's explicit conservative-double-counting contract.
+                // Reserve incoming diagnostics in addition to earlier --each
+                // outputs/reports already removed from group_limits, then move
+                // the model into the writer. The allowance passed on includes
+                // the model: outline writers charge its exact retained usage
+                // on their own ledger and drop it before encoding tables or
+                // the webfont envelope; every other writer has it reserved by
+                // the registry before the borrowing route. No guessed credit.
                 let (writer_limits, report) =
-                    commands::caller_writer_limits(&fonts, &group_limits, report, strict)?;
+                    commands::caller_report_limits(&group_limits, report, strict)?;
                 write_options.transport_limits = Some(fontpixel::formats::TransportLimits {
                     max_output_bytes: writer_limits.max_total_bytes,
                     resources: writer_limits,
                 });
-                let written = registry.write_with_report(&fonts, &id, &write_options, report)?;
-                drop(fonts);
+                let written = registry.write_owned(fonts, &id, &write_options, report)?;
                 let bytes = written.output.assets().iter().try_fold(0usize, |n, a| {
                     n.checked_add(a.bytes.len())
                         .ok_or_else(|| conversion_limit(limits.max_total_bytes))

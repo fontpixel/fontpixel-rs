@@ -976,89 +976,18 @@ pub struct WriteOptions {
     pub woff2: crate::woff::woff2::Options,
 }
 /// Encode a native FontSet as one outline font, a webfont, or one TTC face per Font.
+///
+/// The borrowed model stays outside every working ledger; the caller accounts
+/// for it. [`write_owned`] produces identical output while charging the model.
 pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
-    if fonts.fonts.is_empty() || id != "ttc" && fonts.fonts.len() != 1 {
-        return Err(invalid(
-            "standalone outline output requires one Font; use TTC for multiple faces",
-        ));
-    }
+    check_faces(fonts, id)?;
     let mut report = Report::default();
     let mut encoded = Vec::new();
     let mut total = 0usize;
-    if !fonts.properties.is_empty() {
-        note(
-            &mut report,
-            "container_properties",
-            "Source container properties are not copied into regenerated outline tables",
-        );
-    }
+    container_note(fonts, &mut report);
     for f in &fonts.fonts {
-        let mut options = o.outline.clone();
-        if id == "otf" {
-            options.flavor = crate::variants::OutlineFlavor::Cff;
-        } else if id == "ttf" {
-            options.flavor = crate::variants::OutlineFlavor::TrueType;
-        }
-        if options.style.is_none() {
-            options.style = f.names.style.clone();
-        }
-        if options.names.is_none() {
-            use sfnt::name::{NameRecord, NameTable};
-            let family = options
-                .family
-                .as_deref()
-                .or(f.names.family.as_deref())
-                .unwrap_or("Fontpixel");
-            let style = options.style.as_deref().unwrap_or("Regular");
-            let full = format!("{family} {style}");
-            let postscript = format!(
-                "{}-{}",
-                family
-                    .chars()
-                    .filter(|c| c.is_ascii_alphanumeric())
-                    .collect::<String>(),
-                style
-                    .chars()
-                    .filter(|c| c.is_ascii_alphanumeric())
-                    .collect::<String>()
-            );
-            let version = format!("Version {}", options.version);
-            let mut table = NameTable::default();
-            for (id, value) in [
-                (
-                    0,
-                    options
-                        .copyright
-                        .as_deref()
-                        .or(f.names.copyright.as_deref()),
-                ),
-                (1, Some(family)),
-                (2, Some(style)),
-                (4, Some(f.names.full.as_deref().unwrap_or(&full))),
-                (5, Some(f.names.version.as_deref().unwrap_or(&version))),
-                (
-                    6,
-                    Some(f.names.postscript.as_deref().unwrap_or(&postscript)),
-                ),
-                (8, f.names.foundry.as_deref()),
-                (
-                    13,
-                    options.license.as_deref().or(f.names.license.as_deref()),
-                ),
-                (
-                    14,
-                    options
-                        .license_url
-                        .as_deref()
-                        .or(f.names.license_url.as_deref()),
-                ),
-            ] {
-                if let Some(value) = value {
-                    table.records.push(NameRecord::unicode(id, 0x409, value));
-                }
-            }
-            options.names = Some(table);
-        }
+        let options = face_options(f, id, o);
+        let notes = FaceNotes::of(f);
         let e = crate::variants::encode_single(f, &options)?;
         report.extend(e.report);
         charge(
@@ -1068,59 +997,287 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
             "native OpenType output bytes",
         )?;
         encoded.push(e.bytes);
-        if !f.headers.is_empty()
-            || !f.properties.is_empty()
-            || f.charset != Default::default()
-            || f.names.xlfd.is_some()
-            || !f.names.localized.is_empty()
-        {
+        notes.push(&mut report);
+    }
+    finish(encoded, report, id, o, &o.outline.limits.sfnt.resources)
+}
+/// As [`write`], consuming the model to lower peak memory. Output and report
+/// are identical.
+///
+/// `o.outline.limits.sfnt.resources.max_total_bytes` is the whole allowance and
+/// must include this model: its [`FontSet::retained_usage`] is charged first.
+/// Each face is handed to [`crate::variants::encode_single_owned`], which drops
+/// it (keeping only metrics and names) once its glyphs are copied and releases
+/// exactly that charge before any table is encoded. Faces still waiting, the
+/// container metadata, encoded sfnt capacity and diagnostics are subtracted
+/// from each stage's allowance. The whole model has dropped before a TTC,
+/// WOFF or WOFF2 encoder is admitted, which then receives the allowance minus
+/// the retained sfnt bytes and diagnostics.
+pub fn write_owned(fonts: FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Report)> {
+    check_faces(&fonts, id)?;
+    let limits = &o.outline.limits.sfnt.resources;
+    let max = limits.max_total_bytes;
+    let mut remaining = fonts.retained_usage(max)?.bytes;
+    let mut report = Report::default();
+    container_note(&fonts, &mut report);
+    let FontSet {
+        fonts: faces,
+        properties,
+        source_format,
+    } = fonts;
+    let mut encoded = Vec::new();
+    encoded
+        .try_reserve_exact(faces.len())
+        .map_err(|_| owned_limit(max))?;
+    let mut retained = encoded
+        .capacity()
+        .checked_mul(std::mem::size_of::<Vec<u8>>())
+        .ok_or_else(|| owned_limit(max))?;
+    let mut total = 0usize;
+    for f in faces {
+        let mut options = face_options(&f, id, o);
+        let notes = FaceNotes::of(&f);
+        // The face's own charge (header included) moves to the encoder's
+        // ledger; its slot in the model's array stays charged here.
+        let heap = f
+            .retained_usage(max)?
+            .bytes
+            .checked_sub(std::mem::size_of::<Font>())
+            .ok_or_else(|| invalid("face usage below its inline header"))?;
+        let waiting = remaining
+            .checked_sub(heap)
+            .ok_or_else(|| invalid("face usage exceeds its model charge"))?;
+        let outside = live_outside(waiting, retained, &report, max)?;
+        options.limits.sfnt.resources = reduced(limits, outside)?;
+        let e = crate::variants::encode_single_owned(f, &options)?;
+        remaining = waiting;
+        report.extend(e.report);
+        charge(
+            &mut total,
+            e.bytes.len(),
+            max,
+            "native OpenType output bytes",
+        )?;
+        retained = retained
+            .checked_add(e.bytes.capacity())
+            .ok_or_else(|| owned_limit(max))?;
+        encoded.push(e.bytes);
+        notes.push(&mut report);
+    }
+    // The faces' array dropped with the loop; the rest of the model follows.
+    drop(properties);
+    drop(source_format);
+    let outside = live_outside(0, retained, &report, max)?;
+    let container = reduced(limits, outside)?;
+    finish(encoded, report, id, o, &container)
+}
+fn owned_limit(limit: usize) -> Error {
+    Error::ResourceLimit {
+        resource: "native OpenType working bytes",
+        limit,
+    }
+}
+/// Caller-side bytes live during one owned stage: the waiting model, encoded
+/// sfnt storage and diagnostics.
+fn live_outside(model: usize, retained: usize, report: &Report, max: usize) -> Result<usize> {
+    model
+        .checked_add(retained)
+        .and_then(|n| n.checked_add(crate::resources::report_bytes(report, max).ok()?))
+        .filter(|n| *n <= max)
+        .ok_or_else(|| owned_limit(max))
+}
+/// Allowance left for one stage after `outside` live bytes, with per-input
+/// bounds clamped to it.
+fn reduced(limits: &crate::ResourceLimits, outside: usize) -> Result<crate::ResourceLimits> {
+    let mut l = limits.clone();
+    l.max_total_bytes = limits
+        .max_total_bytes
+        .checked_sub(outside)
+        .ok_or_else(|| owned_limit(limits.max_total_bytes))?;
+    l.max_input_bytes = l.max_input_bytes.min(l.max_total_bytes);
+    l.max_resource_bytes = l.max_resource_bytes.min(l.max_total_bytes);
+    l.max_decompressed_bytes = l.max_decompressed_bytes.min(l.max_total_bytes);
+    l.max_table_bytes = l.max_table_bytes.min(l.max_total_bytes);
+    Ok(l)
+}
+fn check_faces(fonts: &FontSet, id: &str) -> Result<()> {
+    if fonts.fonts.is_empty() || id != "ttc" && fonts.fonts.len() != 1 {
+        return Err(invalid(
+            "standalone outline output requires one Font; use TTC for multiple faces",
+        ));
+    }
+    Ok(())
+}
+fn container_note(fonts: &FontSet, report: &mut Report) {
+    if !fonts.properties.is_empty() {
+        note(
+            report,
+            "container_properties",
+            "Source container properties are not copied into regenerated outline tables",
+        );
+    }
+}
+/// Outline options for one face, with its default name table.
+fn face_options(f: &Font, id: &str, o: &WriteOptions) -> crate::variants::Options {
+    let mut options = o.outline.clone();
+    if id == "otf" {
+        options.flavor = crate::variants::OutlineFlavor::Cff;
+    } else if id == "ttf" {
+        options.flavor = crate::variants::OutlineFlavor::TrueType;
+    }
+    if options.style.is_none() {
+        options.style = f.names.style.clone();
+    }
+    if options.names.is_none() {
+        use sfnt::name::{NameRecord, NameTable};
+        let family = options
+            .family
+            .as_deref()
+            .or(f.names.family.as_deref())
+            .unwrap_or("Fontpixel");
+        let style = options.style.as_deref().unwrap_or("Regular");
+        let full = format!("{family} {style}");
+        let postscript = format!(
+            "{}-{}",
+            family
+                .chars()
+                .filter(|c| c.is_ascii_alphanumeric())
+                .collect::<String>(),
+            style
+                .chars()
+                .filter(|c| c.is_ascii_alphanumeric())
+                .collect::<String>()
+        );
+        let version = format!("Version {}", options.version);
+        let mut table = NameTable::default();
+        for (id, value) in [
+            (
+                0,
+                options
+                    .copyright
+                    .as_deref()
+                    .or(f.names.copyright.as_deref()),
+            ),
+            (1, Some(family)),
+            (2, Some(style)),
+            (4, Some(f.names.full.as_deref().unwrap_or(&full))),
+            (5, Some(f.names.version.as_deref().unwrap_or(&version))),
+            (
+                6,
+                Some(f.names.postscript.as_deref().unwrap_or(&postscript)),
+            ),
+            (8, f.names.foundry.as_deref()),
+            (
+                13,
+                options.license.as_deref().or(f.names.license.as_deref()),
+            ),
+            (
+                14,
+                options
+                    .license_url
+                    .as_deref()
+                    .or(f.names.license_url.as_deref()),
+            ),
+        ] {
+            if let Some(value) = value {
+                table.records.push(NameRecord::unicode(id, 0x409, value));
+            }
+        }
+        options.names = Some(table);
+    }
+    options
+}
+/// Source fields of one face that regenerated outline tables do not carry,
+/// determined before an owned face is consumed.
+struct FaceNotes {
+    source_metadata: bool,
+    font_metrics: bool,
+    glyph_metadata: bool,
+}
+impl FaceNotes {
+    fn of(f: &Font) -> Self {
+        let m = &f.metrics;
+        Self {
+            source_metadata: !f.headers.is_empty()
+                || !f.properties.is_empty()
+                || f.charset != Default::default()
+                || f.names.xlfd.is_some()
+                || !f.names.localized.is_empty(),
+            font_metrics: m.point_size.is_some()
+                || m.resolution.is_some()
+                || m.bounds.is_some()
+                || m.line_height.is_some()
+                || m.default_character.is_some()
+                || m.default_glyph.is_some()
+                || m.space_width.is_some()
+                || m.metrics_set.is_some()
+                || m.glyph_defaults.scalable_advance.is_some()
+                || m.glyph_defaults.vertical_scalable_advance.is_some()
+                || m.glyph_defaults.abc.is_some()
+                || m.glyph_defaults.left_bearing.is_some()
+                || m.glyph_defaults.right_bearing.is_some()
+                || m.glyph_defaults.image_offset.is_some(),
+            glyph_metadata: f.glyphs().any(|(_, g)| {
+                !g.unicode_sequences.is_empty()
+                    || !g.properties.is_empty()
+                    || g.metrics.scalable_advance.is_some()
+                    || g.metrics.vertical_scalable_advance.is_some()
+                    || g.metrics.abc.is_some()
+                    || g.metrics.left_bearing.is_some()
+                    || g.metrics.right_bearing.is_some()
+                    || g.metrics.image_offset.is_some()
+            }),
+        }
+    }
+    fn push(&self, report: &mut Report) {
+        // A face's report can hold one entry per glyph; grow by exactly these
+        // notes instead of doubling that array.
+        report.entries.reserve_exact(
+            usize::from(self.source_metadata)
+                + usize::from(self.font_metrics)
+                + usize::from(self.glyph_metadata),
+        );
+        if self.source_metadata {
             note(
-                &mut report,
+                report,
                 "source_metadata",
                 "Source properties, charset and localized/XLFD names are not copied into regenerated outline tables",
             );
         }
-        let m = &f.metrics;
-        if m.point_size.is_some()
-            || m.resolution.is_some()
-            || m.bounds.is_some()
-            || m.line_height.is_some()
-            || m.default_character.is_some()
-            || m.default_glyph.is_some()
-            || m.space_width.is_some()
-            || m.metrics_set.is_some()
-            || m.glyph_defaults.scalable_advance.is_some()
-            || m.glyph_defaults.vertical_scalable_advance.is_some()
-            || m.glyph_defaults.abc.is_some()
-            || m.glyph_defaults.left_bearing.is_some()
-            || m.glyph_defaults.right_bearing.is_some()
-            || m.glyph_defaults.image_offset.is_some()
-        {
+        if self.font_metrics {
             note(
-                &mut report,
+                report,
                 "font_metrics",
                 "Independent source cell bounds, point/resolution/default/spacing or scalable fields are not retained as independent OpenType values",
             );
         }
-        for (_, g) in f.glyphs() {
-            if !g.unicode_sequences.is_empty()
-                || !g.properties.is_empty()
-                || g.metrics.scalable_advance.is_some()
-                || g.metrics.vertical_scalable_advance.is_some()
-                || g.metrics.abc.is_some()
-                || g.metrics.left_bearing.is_some()
-                || g.metrics.right_bearing.is_some()
-                || g.metrics.image_offset.is_some()
-            {
-                note(
-                    &mut report,
-                    "glyph_metadata",
-                    "Source sequence/property/scalable or auxiliary spacing fields are not represented in generated outlines",
-                );
-                break;
-            }
+        if self.glyph_metadata {
+            note(
+                report,
+                "glyph_metadata",
+                "Source sequence/property/scalable or auxiliary spacing fields are not represented in generated outlines",
+            );
         }
     }
+}
+/// Wrap encoded faces as TTC, WOFF or WOFF2, or return the single sfnt.
+/// `resources` is the allowance for the container encoder.
+fn finish(
+    mut encoded: Vec<Vec<u8>>,
+    report: Report,
+    id: &str,
+    o: &WriteOptions,
+    resources: &crate::ResourceLimits,
+) -> Result<(Vec<u8>, Report)> {
+    #[cfg(any(feature = "ttc", feature = "woff", feature = "woff2"))]
+    let mut report = report;
+    #[cfg(any(feature = "ttc", feature = "woff", feature = "woff2"))]
+    let sfnt_limits = sfnt::Limits {
+        resources: resources.clone(),
+        ..o.outline.limits.sfnt.clone()
+    };
+    #[cfg(not(any(feature = "ttc", feature = "woff", feature = "woff2")))]
+    let _ = (resources, o);
     if id == "ttc" {
         #[cfg(feature = "ttc")]
         {
@@ -1129,7 +1286,7 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
                 &refs,
                 if o.collection_v2 { 0x20000 } else { 0x10000 },
                 &sfnt::collection::Limits {
-                    sfnt: o.outline.limits.sfnt.clone(),
+                    sfnt: sfnt_limits,
                     ..Default::default()
                 },
             )?;
@@ -1140,9 +1297,10 @@ pub fn write(fonts: &FontSet, id: &str, o: &WriteOptions) -> Result<(Vec<u8>, Re
         return Err(invalid("TTC feature is disabled"));
     }
     let bytes = encoded.remove(0);
+    drop(encoded);
     #[cfg(any(feature = "woff", feature = "woff2"))]
     let l = crate::woff::Limits {
-        sfnt: o.outline.limits.sfnt.clone(),
+        sfnt: sfnt_limits,
         ..Default::default()
     };
     match id {

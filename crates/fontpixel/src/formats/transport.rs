@@ -1,5 +1,5 @@
 //! Registry-only budget adapters; frozen native codecs keep their own profiles.
-use super::{FormatWriter, TransportLimits, WriteOptions};
+use super::{FormatWriter, OwnedWrite, TransportLimits, WriteOptions};
 use crate::{FontSet, Result, resources::Written};
 
 pub(super) fn merge_validation_report(
@@ -39,6 +39,16 @@ trait Budget: FormatWriter<FontSet> + Clone {
         drop(self.restricted(limits).write(fonts, options)?);
         Ok(())
     }
+    /// Whether [`write_owned_native`](Self::write_owned_native) is a real
+    /// owned route that charges the model itself.
+    fn owns_model(&self) -> bool {
+        false
+    }
+    /// Owned route with the model inside this codec's (restricted) limits.
+    /// Only called when [`owns_model`](Self::owns_model) is true.
+    fn write_owned_native(&self, fonts: FontSet, options: &WriteOptions) -> Result<Written> {
+        self.write(&fonts, options)
+    }
 }
 
 #[allow(dead_code)]
@@ -63,6 +73,55 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
         limits: &TransportLimits,
     ) -> Result<()> {
         self.0.validate_native(fonts, options, limits)
+    }
+    fn write_owned(&self, fonts: FontSet, options: &WriteOptions) -> OwnedWrite<FontSet> {
+        if !self.0.owns_model() {
+            return OwnedWrite::Declined(fonts);
+        }
+        OwnedWrite::Written(self.owned_limits(&fonts, options).and_then(|limits| {
+            fonts.validate(&limits.resources)?;
+            self.0
+                .restricted(&limits)
+                .write_owned_native(fonts, options)
+        }))
+    }
+}
+
+impl<C: Budget> NativeWriter<C> {
+    /// The owned route's single allowance: the model's retained usage plus
+    /// exactly what the borrowing route would give the codec, i.e. its own
+    /// budget intersected with the common limits less the model. The codec's
+    /// budget therefore keeps bounding its working stages as before, and the
+    /// model's charge can be reused once the codec has dropped it.
+    fn owned_limits(&self, fonts: &FontSet, options: &WriteOptions) -> Result<TransportLimits> {
+        let budget = self.0.budget();
+        let (model, mut limits) = if let Some(common) = &options.transport_limits {
+            let total = common.resources.max_total_bytes;
+            let model = fonts.retained_usage(total)?.bytes;
+            let error = || crate::Error::ResourceLimit {
+                resource: "writer model bytes",
+                limit: total,
+            };
+            let mut working = common.clone();
+            working.resources.max_total_bytes = total.checked_sub(model).ok_or_else(error)?;
+            working.max_output_bytes = common
+                .max_output_bytes
+                .checked_sub(model)
+                .ok_or_else(error)?;
+            (model, budget.intersect(&working))
+        } else {
+            let model = fonts.retained_usage(usize::MAX)?.bytes;
+            (model, budget)
+        };
+        let total = limits.resources.max_total_bytes;
+        limits.resources.max_total_bytes =
+            total
+                .checked_add(model)
+                .ok_or(crate::Error::ResourceLimit {
+                    resource: "writer model bytes",
+                    limit: total,
+                })?;
+        Ok(limits)
     }
 }
 
@@ -360,11 +419,30 @@ resource_codec!(zapfont, ZapfontCodec, write_options.limits);
 #[cfg(feature = "svg")]
 resource_codec!(svg, SvgCodec, write_options.limits.resources; max_output_bytes);
 #[cfg(feature = "vector-raster")]
-resource_codec!(
-    vector_raster,
-    Codec,
-    write_options.outline.limits.sfnt.resources
-);
+impl Budget for super::vector_raster::Codec {
+    fn budget(&self) -> TransportLimits {
+        TransportLimits {
+            resources: self.write_options.outline.limits.sfnt.resources.clone(),
+            max_output_bytes: usize::MAX,
+        }
+    }
+    fn restricted(&self, limits: &TransportLimits) -> Self {
+        let mut codec = self.clone();
+        codec.write_options.outline.limits.sfnt.resources = limits.resources.clone();
+        codec
+    }
+    fn owns_model(&self) -> bool {
+        true
+    }
+    fn write_owned_native(&self, fonts: FontSet, options: &WriteOptions) -> Result<Written> {
+        let (bytes, report) =
+            super::vector_raster::write_owned(fonts, self.id, &self.write_options)?;
+        Ok(Written {
+            output: crate::OutputBundle::single(options.primary_name.clone(), bytes),
+            report,
+        })
+    }
+}
 
 #[cfg(any(feature = "otb", feature = "bdat", feature = "color"))]
 impl Budget for super::embedded::EmbeddedCodec {
