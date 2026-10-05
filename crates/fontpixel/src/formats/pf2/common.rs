@@ -166,6 +166,7 @@ impl Diagnostics {
         let _ = entries;
         self.reserve(192)
     }
+    #[cfg(any(feature = "fontx2", feature = "hzk"))]
     pub fn for_font(format: &'static str, f: &Font, l: &ResourceLimits) -> Result<Self> {
         let mut d = Self::new(format, l);
         d.reserve(source_cost(f, l)?)?;
@@ -271,6 +272,7 @@ impl Diagnostics {
             s
         })
     }
+    #[cfg(any(feature = "fontx2", feature = "hzk"))]
     pub fn fatal(mut self, message: impl AsRef<str> + Into<String>) -> Error {
         self.fatal_mut(message)
     }
@@ -318,12 +320,20 @@ pub(super) fn formatted_len(args: std::fmt::Arguments<'_>) -> usize {
     let _ = std::fmt::Write::write_fmt(&mut count, args);
     count.0
 }
+#[cfg(any(feature = "fontx2", feature = "hzk"))]
 pub(super) fn container(set: &FontSet, d: &mut Diagnostics) -> Result<()> {
     container_charged(set, d, super::ModelCharge::Estimate)
 }
 /// The container property estimate [`container`] charges for a model the
 /// caller has not reserved.
-#[cfg(all(test, feature = "pf2"))]
+#[cfg(all(
+    test,
+    feature = "snf",
+    feature = "u8m",
+    feature = "kbits",
+    feature = "pf2",
+    feature = "color"
+))]
 pub(crate) fn container_cost(set: &FontSet) -> Result<usize> {
     let mut retained = Budget {
         used: 0,
