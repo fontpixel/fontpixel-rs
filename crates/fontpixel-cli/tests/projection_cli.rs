@@ -354,3 +354,70 @@ fn batch_options_cover_every_metadata_projection() {
     assert_eq!(swidths(&out), ["SWIDTH 462 0"]);
     assert!(w.0.join("out.pcf").exists());
 }
+
+#[cfg(feature = "opentype")]
+fn table<'a>(font: &'a [u8], tag: &[u8; 4]) -> &'a [u8] {
+    let count = usize::from(u16::from_be_bytes([font[4], font[5]]));
+    for record in font[12..12 + 16 * count].as_chunks::<16>().0 {
+        if &record[..4] == tag {
+            let offset = u32::from_be_bytes(record[8..12].try_into().unwrap()) as usize;
+            let length = u32::from_be_bytes(record[12..16].try_into().unwrap()) as usize;
+            return &font[offset..offset + length];
+        }
+    }
+    panic!("missing table {tag:?}");
+}
+
+#[cfg(feature = "opentype")]
+#[test]
+fn variants_empty_notdef_has_exact_design_metrics_and_empty_outline() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    let base = [
+        "variants", "--base", "in.bdf", "--ppu", "76", "--upm", "988",
+    ];
+    success(&w.run(&args(&base, &["-o", "box.ttf"])));
+    success(&w.run(&args(
+        &base,
+        &[
+            "-o",
+            "empty.ttf",
+            "--notdef",
+            "empty",
+            "--notdef-advance",
+            "494",
+            "--notdef-lsb",
+            "0",
+        ],
+    )));
+    let boxed = fs::read(w.0.join("box.ttf")).unwrap();
+    let empty = fs::read(w.0.join("empty.ttf")).unwrap();
+    let hmtx = |font: &[u8]| {
+        let t = table(font, b"hmtx");
+        (
+            u16::from_be_bytes([t[0], t[1]]),
+            i16::from_be_bytes([t[2], t[3]]),
+        )
+    };
+    // Default: the generated 7-pixel box with a one-pixel bearing.
+    assert_eq!(hmtx(&boxed), (7 * 76, 76));
+    assert_eq!(hmtx(&empty), (494, 0));
+    let long = i16::from_be_bytes(table(&empty, b"head")[50..52].try_into().unwrap()) != 0;
+    let loca = table(&empty, b"loca");
+    let (first, second) = if long {
+        (
+            u32::from_be_bytes(loca[0..4].try_into().unwrap()),
+            u32::from_be_bytes(loca[4..8].try_into().unwrap()),
+        )
+    } else {
+        (
+            u32::from(u16::from_be_bytes([loca[0], loca[1]])),
+            u32::from(u16::from_be_bytes([loca[2], loca[3]])),
+        )
+    };
+    assert_eq!(first, second, "glyph 0 has no outline");
+    for extra in [&["--notdef", "empty"][..], &["--notdef-advance", "494"][..]] {
+        let o = w.run(&args(&base, &[&["-o", "bad.ttf"][..], extra].concat()));
+        assert!(!o.status.success(), "{extra:?}");
+    }
+}
