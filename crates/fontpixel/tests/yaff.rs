@@ -295,3 +295,23 @@ fn duplicate_properties_and_empty_multiline_values() {
     assert_eq!(set.fonts[0].glyphs().next().unwrap().1.properties.len(), 2);
     roundtrip(&set);
 }
+
+#[test]
+fn unicode_whitespace_at_value_edges_survives() {
+    // The reader trims all Unicode whitespace, so the writer must quote values
+    // that start or end with any of it, not only ASCII space and tab.
+    for name in [
+        "Name\u{a0}",
+        "\u{a0}Name",
+        "Name\u{3000}",
+        "\u{2003}Name\u{2003}",
+    ] {
+        let mut font = Font::from_glyphs([Glyph::new("#".parse::<Bitmap>().unwrap())]).unwrap();
+        font.names.family = Some(name.into());
+        let set = FontSet::from(font);
+        roundtrip(&set);
+        let (bytes, _) = yaff::write(&set, &YaffWriteOptions::default()).unwrap();
+        let back = yaff::read(&bytes, &ResourceLimits::default()).unwrap().0;
+        assert_eq!(back.fonts[0].names.family.as_deref(), Some(name));
+    }
+}

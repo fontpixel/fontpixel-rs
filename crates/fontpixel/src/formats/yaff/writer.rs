@@ -111,9 +111,13 @@ impl Output {
         Ok(())
     }
     fn quoted(&mut self, v: &str) -> Result<()> {
+        // The reader trims every Unicode whitespace character (str::trim), so
+        // quote any value with leading or trailing whitespace, not only ASCII.
         if v.is_empty()
-            || v.starts_with([' ', '\t', ':', '.', '@', '"'])
-            || v.ends_with([' ', '\t', ':', '"'])
+            || v.starts_with([':', '.', '@', '"'])
+            || v.ends_with([':', '"'])
+            || v.starts_with(char::is_whitespace)
+            || v.ends_with(char::is_whitespace)
             || v == "-"
         {
             self.text("\"")?;
