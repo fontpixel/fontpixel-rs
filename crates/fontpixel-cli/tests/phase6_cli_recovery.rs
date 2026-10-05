@@ -1519,3 +1519,69 @@ fn convert_each_keeps_prepared_outputs_and_reports_in_the_next_writer_budget() {
     );
     assert_eq!(fs::read_to_string(w.0.join("a.bdf")).unwrap(), source);
 }
+
+/// `convert` moves the model into the outline writer, which charges it on the
+/// same allowance and drops it before encoding. The smallest accepted total
+/// still produces the default bytes, one byte less is a clean limit failure,
+/// and in `--each` the earlier output keeps reducing the next group's budget.
+#[cfg(feature = "opentype")]
+#[test]
+fn convert_moves_the_model_into_owned_outline_writers_with_an_exact_budget() {
+    let w = Work::new();
+    let source = bdf(&[65, 66, 67, 0x4e00]);
+    w.write("a.bdf", &source);
+    w.write("b.bdf", &source);
+    for (ext, extra) in [
+        ("woff2", &[][..]),
+        ("woff", &[]),
+        ("ttf", &["--shape", "dot"]),
+    ] {
+        let output = format!("single.{ext}");
+        let run = |limit: Option<usize>| {
+            let mut args = vec!["convert", "a.bdf", "-o", &output];
+            args.extend_from_slice(extra);
+            let limit = limit.map(|l| l.to_string());
+            if let Some(limit) = &limit {
+                args.extend(["--max-total-bytes", limit]);
+            }
+            let _ = fs::remove_file(w.0.join(&output));
+            w.run(&args)
+        };
+        let expected = run(None);
+        success(&expected);
+        let expected = fs::read(w.0.join(&output)).unwrap();
+        let mut low = 0;
+        let mut high = 256 * 1024 * 1024;
+        while high - low > 1 {
+            let middle = low + (high - low) / 2;
+            if run(Some(middle)).status.success() {
+                high = middle;
+            } else {
+                low = middle;
+            }
+        }
+        success(&run(Some(high)));
+        assert_eq!(fs::read(w.0.join(&output)).unwrap(), expected, "{ext}");
+        let short = run(Some(high - 1));
+        assert_eq!(short.status.code(), Some(1), "{ext}");
+        assert!(String::from_utf8_lossy(&short.stderr).contains("limit"));
+        assert!(!w.0.join(&output).exists());
+        let dir = format!("out-{ext}");
+        fs::create_dir(w.0.join(&dir)).unwrap();
+        w.write(&format!("{dir}/a.{ext}"), "existing first output");
+        let limit = high.to_string();
+        let mut args = vec![
+            "convert", "a.bdf", "b.bdf", "--each", "--to", ext, "-o", &dir,
+        ];
+        args.extend_from_slice(extra);
+        args.extend(["--max-total-bytes", &limit]);
+        let failed = w.run(&args);
+        assert_eq!(failed.status.code(), Some(1), "{ext}");
+        assert!(String::from_utf8_lossy(&failed.stderr).contains("limit"));
+        assert_eq!(
+            fs::read_to_string(w.0.join(format!("{dir}/a.{ext}"))).unwrap(),
+            "existing first output"
+        );
+        assert!(!w.0.join(format!("{dir}/b.{ext}")).exists());
+    }
+}

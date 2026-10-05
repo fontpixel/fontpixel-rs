@@ -1274,8 +1274,54 @@ fn encode_planned(
 /// Unlike regional planning this preserves physical glyph identity and order.
 ///
 /// Glyph copies, names, mapping, diagnostics and export storage share one
-/// working ledger of `o.limits.sfnt.resources.max_total_bytes`.
+/// working ledger of `o.limits.sfnt.resources.max_total_bytes`. The borrowed
+/// font itself is outside that ledger; the caller accounts for it.
 pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
+    let budget = ledger::budget(o.limits.sfnt.resources.max_total_bytes);
+    let planned = plan_single(font, o, &budget)?;
+    finish_single(font, o, planned, &budget)
+}
+/// As [`encode_single`], consuming the font so that it is dropped as soon as
+/// the plan has copied its glyphs. Output and report are identical.
+///
+/// `o.limits.sfnt.resources.max_total_bytes` must include this font: its
+/// [`Font::retained_usage`] is admitted first on the same working ledger as
+/// planning and export. Once the glyph copies exist, everything except the
+/// metrics and names (all that export reads) is dropped, and exactly that
+/// share of the charge is released before any table is encoded. The metadata
+/// stays charged until the encoded bytes exist.
+pub fn encode_single_owned(mut font: Font, o: &Options) -> Result<Encoded> {
+    let max = o.limits.sfnt.resources.max_total_bytes;
+    let budget = ledger::budget(max);
+    let charge = font.retained_usage(max)?.bytes;
+    let mut source = budget.reserve(charge)?;
+    let planned = plan_single(&font, o, &budget)?;
+    let mut metadata = Font::default();
+    metadata.metrics = std::mem::take(&mut font.metrics);
+    metadata.names = std::mem::take(&mut font.names);
+    drop(font);
+    let kept = metadata.retained_usage(max)?.bytes;
+    let released = charge
+        .checked_sub(kept)
+        .ok_or_else(|| invalid("retained metadata exceeds its font charge"))?;
+    drop(source.split(released)?);
+    let encoded = finish_single(&metadata, o, planned, &budget)?;
+    drop(metadata);
+    drop(source);
+    Ok(encoded)
+}
+/// Planned single-font glyph order, its leases, glyph 0 and diagnostics.
+struct SinglePlan {
+    plan: Plan,
+    glyphs_lease: Lease,
+    mapping_lease: Lease,
+    source_notdef: Owned<Glyph>,
+    notes: Notes,
+}
+/// Copy every glyph, name and mapping of `font` into an admitted plan. Export
+/// afterwards reads only the font's metrics and names.
+fn plan_single(font: &Font, o: &Options, budget: &Budget) -> Result<SinglePlan> {
+    let budget = budget.clone();
     validate_names(o)?;
     font.validate(&o.limits.sfnt.resources)?;
     let mut native_bytes = 0usize;
@@ -1294,7 +1340,6 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
             "native outline source bytes",
         )?;
     }
-    let budget = ledger::budget(o.limits.sfnt.resources.max_total_bytes);
     let mut mapping_lease = budget.reserve(0)?;
     let mut mapping = BTreeMap::new();
     let mut glyphs = Nested::<(String, Glyph)>::with_capacity(&budget, font.len())?;
@@ -1425,8 +1470,30 @@ pub fn encode_single(font: &Font, o: &Options) -> Result<Encoded> {
         cmap: mapping,
         gsub: Gsub::default(),
     };
+    Ok(SinglePlan {
+        plan,
+        glyphs_lease,
+        mapping_lease,
+        source_notdef,
+        notes,
+    })
+}
+/// Export a single-font plan; `base` supplies only metrics and names.
+fn finish_single(
+    base: &Font,
+    o: &Options,
+    planned: SinglePlan,
+    budget: &Budget,
+) -> Result<Encoded> {
+    let SinglePlan {
+        plan,
+        glyphs_lease,
+        mapping_lease,
+        source_notdef,
+        notes,
+    } = planned;
     let (mut encoded, encoded_lease) =
-        encode_planned(font, o, &plan, Some(source_notdef), &budget)?.into_parts();
+        encode_planned(base, o, &plan, Some(source_notdef), budget)?.into_parts();
     drop(plan);
     drop(glyphs_lease);
     drop(mapping_lease);

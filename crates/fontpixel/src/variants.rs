@@ -18,7 +18,9 @@ mod metadata;
 mod notdef;
 mod planner;
 mod tables;
-pub use export::{DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single};
+pub use export::{
+    DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single, encode_single_owned,
+};
 pub use metadata::{DotGlyph, GaspPolicy, GlyphOrder, MetadataOptions};
 pub use notdef::NotdefPolicy;
 

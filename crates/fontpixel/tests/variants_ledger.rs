@@ -254,6 +254,37 @@ fn single_font_export_has_an_exact_ledger_threshold() {
 }
 
 #[test]
+fn owned_single_font_export_charges_the_font_and_releases_it_before_tables() {
+    // Clones drop spare capacity; use one so `usage` describes every clone.
+    let font = fixture::single().clone();
+    let usage = font.retained_usage(usize::MAX).unwrap().bytes;
+    for flavor in [OutlineFlavor::TrueType, OutlineFlavor::Cff] {
+        let run_options = |total| {
+            let mut o = options(total);
+            o.flavor = flavor;
+            o.gray_threshold = Some(128);
+            o
+        };
+        let (borrowed, expected) = minimal(|total| {
+            variants::encode_single(&font, &run_options(total)).map(|e| (e.bytes, e.report))
+        });
+        let (owned, actual) = minimal(|total| {
+            variants::encode_single_owned(font.clone(), &run_options(total))
+                .map(|e| (e.bytes, e.report))
+        });
+        assert_eq!(actual, expected);
+        // The font is admitted on the same ledger; its glyph storage is
+        // released once copied, so export never needs both at once.
+        assert!(owned > usage, "{owned} <= {usage}");
+        assert!(owned <= borrowed + usage, "{owned} > {borrowed} + {usage}");
+        assert!(matches!(
+            variants::encode_single_owned(font.clone(), &run_options(usage - 1)),
+            Err(Error::ResourceLimit { .. })
+        ));
+    }
+}
+
+#[test]
 fn ledger_exhaustion_is_a_resource_error_for_every_entry_point() {
     let v = fixture::variants();
     let font = fixture::single();

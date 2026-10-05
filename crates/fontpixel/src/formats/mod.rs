@@ -833,6 +833,26 @@ pub trait FormatWriter<M>: Send + Sync {
     ) -> Result<()> {
         Ok(())
     }
+
+    /// Encode a model the caller hands over, so the writer can drop parts of
+    /// it before its later stages. The model's storage then belongs to the
+    /// writer's allowance (`options.transport_limits`, or the writer's own
+    /// limits), which it must charge before relying on it. Output and report
+    /// must equal [`write`](Self::write). The default declines and hands the
+    /// model back; [`Registry::write_owned`] then reserves the model and
+    /// uses the borrowing path.
+    fn write_owned(&self, fonts: M, _options: &WriteOptions) -> OwnedWrite<M> {
+        OwnedWrite::Declined(fonts)
+    }
+}
+
+/// Outcome of [`FormatWriter::write_owned`].
+#[derive(Debug)]
+pub enum OwnedWrite<M> {
+    /// The writer consumed the model and returned its normal write result.
+    Written(Result<Written>),
+    /// The writer has no owned route; the untouched model is handed back.
+    Declined(M),
 }
 
 /// One catalogue entry with independently installable capabilities.
@@ -1083,8 +1103,21 @@ impl<M> Registry<M> {
         fonts: &M,
         id: &str,
         options: &WriteOptions,
-        mut report: Report,
+        report: Report,
     ) -> Result<Written> {
+        let (writer, report) = self.admit_writer(id, options, report)?;
+        let result = writer.write(fonts, options);
+        Self::complete(writer, result, Some(fonts), options, report)
+    }
+
+    /// Writer for `id` once incoming reported errors and, in strict mode,
+    /// incoming loss have been rejected.
+    fn admit_writer(
+        &self,
+        id: &str,
+        options: &WriteOptions,
+        report: Report,
+    ) -> Result<(&dyn FormatWriter<M>, Report)> {
         self.ensure_writable(id)?;
         if report.has_errors() {
             return Err(Error::ReportedErrors(report));
@@ -1095,12 +1128,25 @@ impl<M> Registry<M> {
         let writer = self
             .entry(id)?
             .writer
-            .as_ref()
+            .as_deref()
             .ok_or_else(|| Error::NotImplemented {
                 format: id.into(),
                 operation: Operation::Write,
             })?;
-        let written = match writer.write(fonts, options) {
+        Ok((writer, report))
+    }
+
+    /// Merge the writer's diagnostics, apply strict mode and the registry
+    /// envelope/output budgets. A gzip envelope replays the native writer and
+    /// therefore needs the borrowed model.
+    fn complete(
+        writer: &dyn FormatWriter<M>,
+        result: Result<Written>,
+        fonts: Option<&M>,
+        options: &WriteOptions,
+        mut report: Report,
+    ) -> Result<Written> {
+        let written = match result {
             Ok(written) => written,
             Err(Error::ReportedErrors(writer_report)) => {
                 report.extend(writer_report);
@@ -1121,6 +1167,9 @@ impl<M> Registry<M> {
             return Err(Error::StrictLoss(report));
         }
         let output = if crate::resources::uses_gzip(&written.output) {
+            let fonts = fonts.ok_or_else(|| {
+                Error::InvalidInput("a gzip envelope needs the borrowed model for replay".into())
+            })?;
             let mut limits = writer.transport_limits();
             if let Some(common) = &options.transport_limits {
                 limits = limits.intersect(common);
@@ -1174,6 +1223,82 @@ impl<M> Registry<M> {
             written.output
         };
         Ok(Written { output, report })
+    }
+}
+
+impl Registry<crate::FontSet> {
+    /// As [`write_with_report`](Self::write_with_report), but the caller hands
+    /// over the model so its storage can be released before later encoder
+    /// stages. Output and report are identical.
+    ///
+    /// `options.transport_limits` (or, without it, the writer's own limits) is
+    /// the allowance *including* this model, which the registry or the writer
+    /// charges; the caller still accounts for the incoming `report`. Writers
+    /// with an owned route (the outline writers `ttf`, `otf`, `woff`, `woff2`,
+    /// `ttc` and `vector-raster`) charge [`FontSet::retained_usage`] on their
+    /// own ledger and drop the model before encoding tables or the webfont
+    /// envelope. Every other writer, and any gzip-named output (whose envelope
+    /// replays the writer with the model), first has the model's
+    /// `retained_usage` removed from the allowance and then runs the borrowing
+    /// route; the model drops when it returns.
+    ///
+    /// [`FontSet::retained_usage`]: crate::FontSet::retained_usage
+    pub fn write_owned(
+        &self,
+        fonts: crate::FontSet,
+        id: &str,
+        options: &WriteOptions,
+        report: Report,
+    ) -> Result<Written> {
+        let (writer, report) = self.admit_writer(id, options, report)?;
+        let gzip = options
+            .primary_name
+            .as_str()
+            .rsplit_once('.')
+            .is_some_and(|(_, suffix)| suffix.eq_ignore_ascii_case("gz"));
+        let fonts = if gzip {
+            fonts
+        } else {
+            match writer.write_owned(fonts, options) {
+                OwnedWrite::Written(result) => {
+                    return Self::complete(writer, result, None, options, report);
+                }
+                OwnedWrite::Declined(fonts) => fonts,
+            }
+        };
+        let mut limits = options
+            .transport_limits
+            .clone()
+            .unwrap_or_else(|| writer.transport_limits());
+        let model = fonts
+            .retained_usage(limits.resources.max_total_bytes)?
+            .bytes;
+        let limit = limits.resources.max_total_bytes;
+        let error = || Error::ResourceLimit {
+            resource: "writer model bytes",
+            limit,
+        };
+        let resources = &mut limits.resources;
+        resources.max_total_bytes = resources
+            .max_total_bytes
+            .checked_sub(model)
+            .ok_or_else(error)?;
+        resources.max_input_bytes = resources.max_input_bytes.min(resources.max_total_bytes);
+        resources.max_resource_bytes = resources.max_resource_bytes.min(resources.max_total_bytes);
+        resources.max_decompressed_bytes = resources
+            .max_decompressed_bytes
+            .min(resources.max_total_bytes);
+        resources.max_table_bytes = resources.max_table_bytes.min(resources.max_total_bytes);
+        limits.max_output_bytes = limits
+            .max_output_bytes
+            .checked_sub(model)
+            .ok_or_else(error)?;
+        let mut reserved = options.clone();
+        reserved.transport_limits = Some(limits);
+        let result = writer.write(&fonts, &reserved);
+        let written = Self::complete(writer, result, Some(&fonts), &reserved, report);
+        drop(fonts);
+        written
     }
 }
 
