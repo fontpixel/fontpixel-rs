@@ -271,7 +271,7 @@ impl Variants {
     /// working ledger as planning and export. Each alternative face is dropped
     /// and its charge released after its planning pass; the base face is
     /// dropped once the plan has copied its glyphs, keeping only metrics and
-    /// names. Output is identical to [`encode`](crate::variants::encode).
+    /// names. Output is identical to [`encode`].
     pub fn encode_owned(self, o: &Options) -> Result<Encoded> {
         export::encode_owned(self, o)
     }
