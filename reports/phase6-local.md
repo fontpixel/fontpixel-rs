@@ -1,10 +1,10 @@
 # 第 6 阶段本地接续记录
 
-日期：2026-10-04 UTC。状态：按用户要求暂停，未验收。最新完整状态、六个 worker
-的中断草稿、41 个 gate、恢复入口见 [2026-10-05 暂停记录](../docs/LOCAL-PAUSE-20261005.zh.md)。
-暂停时两个 Tong paired gate 已主动终止；下文表中的 running 是当时状态，不是仍在运行。
-等待用户明确恢复。原授权顺序是先完成第 6 阶段，之后依次第 7、8
-阶段；不启动第 9 阶段，不 push、publish 或 deploy。western-rest 不属于本项目。
+日期：2026-10-04 UTC 起。**2026-10-05 用户明确恢复，范围只做第 6 阶段**（不做第 7、8、9
+阶段，不 push、publish 或 deploy；western-rest 不属于本项目）。恢复后的进展见文末
+「2026-10-05 恢复」一节；暂停时的完整状态见
+[2026-10-05 暂停记录](../docs/LOCAL-PAUSE-20261005.zh.md)。下文较早段落中的 running、
+pending、待重测等字样是当时状态。
 
 ## 导入与保护
 
@@ -174,3 +174,83 @@ fixture 出现 duplicate physical strike size、validate cmap fixture 的 stderr
 源码文件/全部 refs，4,725 evidence members 全部读回；为降低频繁完整备份的 CPU
 成本，证据改为未压缩 tar，源码仍保留压缩包。只有 gate/031–032 尚未完结并标为
 partial。这次备份也只是本机保存，不能称为异机副本。
+
+## 2026-10-05 恢复（Claude Code，Opus 5.5）
+
+用户 2026-10-05 明确「恢复，只做第六阶段」。恢复前核对：当前源码、HEAD 与 refs 与暂停
+备份 `checkpoints/user-stop-20261004T2250Z-final/source.json` 逐文件完全相同。
+
+### 验收范围决定（用户选择）
+
+PLAN.md §9.6 只要求解压大小、字形数、单字形像素数、表大小等有可配上限、超限返回错误，
+加每个读取器 ≥10 分钟模糊测试。用户 2026-10-05 选择**按 PLAN 原文验收**：
+
+- 资源：保留现有可配上限及其测试，补齐每类上限至少一项测试；各 codec 内部（WOFF/WOFF2、
+  variants、subset 内部表、Brotli 编码器堆）的完整分配账本**不再作为验收条件**，
+  在文档中作为已知限制写明。不降低任何现有上限或 strict/loss/报告行为。
+- catalogue：保留 SWIDTH 投影并作为 CLI/batch 显式选项；其余与原 Python 下载流程的差异
+  按已有 181 项分类写入迁移说明（PLAN §11 允许写明差异和原因），不再要求逐项追平。
+
+此前云端/Codex 协调者审计加入的「全账本」「逐项语义追平」门槛来自交接清单，不是 PLAN 原文。
+
+### 源码修正
+
+- 新增 `crates/fontpixel/src/projection.rs`（暂停时已登记模块但文件缺失）：
+  `apply_bitmap_projection` 以精确整数 half-even 把每个物理字形（含 unencoded、重复码位）
+  的水平 SWIDTH 设为 `DWIDTH*units/ppem`；先验证并暂存全部改动，再无分配提交，失败时
+  FontSet 不变；覆盖有效源值记 Loss、补缺记 Repair；返回逐字形审计。6 个单元测试 +
+  1 个 doctest。CLI `convert --swidth-ppem N [--swidth-units U]`，batch 用
+  `[tasks.options] swidth_ppem`；新增 `crates/fontpixel-cli/tests/projection_cli.rs` 5 项。
+- 暂停时未编译的草稿（working/outline/GSUB/subset/CLI 回归修正）补上 projection 后**一次
+  编译通过**，没有出现级联错误。CLI 三个回归修正首次重测即通过。
+- **已提交的 `a1b40b0` 本身存在、此前未被发现的问题**（不是暂停草稿引入）：
+  1. CLI 单元测试 `direct_sfnt_is_counted_once_and_codec_errors_precede_strict_loss` 失败：
+     `a1b40b0` 让 `Sfnt::parse` 按 `max_total_bytes` 建工作预算，而 CLI 直出 sfnt 路径把
+     全部总额度交给 parse，忽略 CLI 已持有的 sfnt/报告/aux。修正：parse 只拿剩余额度
+     （与 WOFF 路径一致）；测试改为精确边界：先独立测出目录校验所需 working，再断言
+     `exact+working-1` 资源超限、`exact+working` 得到 StrictLoss，以此证明 sfnt 只计一次。
+  2. `cargo clippy -D warnings`（两个 profile）在已提交代码上就不通过：assets/batch/main/
+     p3_formats/commands（8 参数）、merge 与 model/budget、sfnt/cmap 测试、
+     catalogue export-name 示例、outline spec（8 参数）。均按 lint 做等价改写，无 allow。
+  3. `RUSTDOCFLAGS=-D warnings cargo doc` 不通过：`charset/merge_categories.rs` 裸 URL。
+  4. 未用的 `working::Vector::capacity` 删除；`tree_bytes/reserve_tree` 仅 sfnt 与测试使用，
+     加 `cfg(any(feature = "sfnt", test))`。
+
+### gate 与备份
+
+| gate | 结果 |
+| --- | --- |
+| 042 `scripts/check.sh`（生成表、fmt、两个 Clippy、workspace 全/默认测试、最小/BDF+PCF/CJK、deny） | exit 0，source_unchanged=true；688 个测试套件共 3,453 项通过；deny advisories/bans/licenses/sources ok |
+| 043 check.sh + `-D warnings` rustdoc + doctests（含 projection CLI） | exit 0；693 个测试套件共 3,480 项通过；rustdoc/doctest/deny 通过；期间只有本记录文件变化 |
+| 044 冻结 v2 release 二进制 | `WORK/frozen-binaries-v2/manifest.json`；构建期间只有 `fuzz/Cargo.lock` 变化 |
+| 100–121（验证 subagent） | 用 v2 完成全部真实字体对照，见 `WORK/full-correctness-v2/v2-gate-index.json` 和 [第 6 阶段报告](phase-6.md)；无原生缺陷，输出与 v1 逐字节相同 |
+| 045 最终冻结 v3 | 代码与 v2 相同，树中加入文档、fuzz 种子与 campaign 脚本；因 `include_str!` 的 rustdoc 文档变化，二进制哈希不同 |
+| 046 v3 通格 batch 等价 | 84/84 产物与 v2 哈希完全相同 |
+| 047 W62 文档 CLI 冒烟回放（v3） | 18 个 case 全部 pass，源码前后一致 |
+| 048 最终 ASAN campaign | 104/104 目标 PASS，各约 611 s，301,696,538 次执行，rss 上限 2048 MB，源码前后一致；`WORK/fuzz-final/phase6-final-20261005T040104Z/` |
+| 049 正式五轮测速 | 22 个 case × 5 = 110 个进程，全部 exit 0，源码前后一致；`WORK/perf-final/run-01/` |
+| 050 | 审计命令参数写错（`--result`），exit 2，未执行审计；保留记录 |
+| 051 独立测速审计 | pass：2,893 个冻结文件、110 次调用、220 个原始流、9,215 个归档产物哈希、22 行中位数独立重算 |
+
+### subagent 分工
+
+用户 2026-10-05 允许按需使用 subagent。三个 subagent 分别负责：ASAN 准备（盘点、
+`scripts/phase6_fuzz_campaign.py`、补种子 `fuzz/seed_phase6.py`）；文档（迁移说明、
+格式页面核对、过时状态清理，清单在 `WORK/docs-stale-status.md`）；真实字体对照重跑
+（gate 100–121）。源码修正、冻结、ASAN 与测速的启动由协调者执行。
+
+`checkpoints/resume-042-green-20261005/`：源码 3,255 文件 + 全部 refs 空目录恢复校验通过
+（本机备份，非异机）。
+
+### 非正式性能探测（单次，非正式五轮）
+
+本机 20 核 / 62 GB。`phase6_timing native`（常驻输入，一次 warmup 后一次计时）：
+parse 51 ms、public parse 48 ms、BDF→PCF 84 ms、→OTB 118 ms、→YAFF 135 ms、
+→方点 TTF 434 ms。gate 024（与其他 gate 并行时）完整 Tong 默认 batch CLI
+pipeline_wall 30.3 s。均只是方向性观察，正式结论以冻结后安静窗口的五轮测量为准。
+
+### 测速结果
+
+PLAN §10 全部硬目标达标（五轮中位数）：解析 53.3 ms；→PCF/OTB/yaff 88.2/119.9/144.9 ms；
+→方点 TTF 449.4 ms；通格默认 batch 32.2 s；57,106 字形拼合 0.36 s；收录站全部下载
+5.50 s（原 Python 43.54 s）。完整表格见 [benches/REPORT.md](../benches/REPORT.md)。

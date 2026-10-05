@@ -1,88 +1,131 @@
-# 第 6 阶段：本地接续交接报告，尚未验收
+# 第 6 阶段交付报告：CLI 完善、批量、文档、测速、健壮性、拼合
 
-**2026-10-05 本地已按用户要求停止：** 请先读 [详细暂停记录](../docs/LOCAL-PAUSE-20261005.zh.md)。
-六个 worker 已停止，当前工作区含未编译草稿，两个 full Tong 对照为用户中断的 partial。
-等待明确恢复后继续；下面较早的「接续中」及云端状态不覆盖此停止指令。
+日期：2026-10-05。用户在 2026-10-05 恢复本阶段，范围只做第 6 阶段。按 PLAN.md 原文
+验收（用户当天的决定，见下文「验收范围」）。第 7、8 阶段尚未开始，第 9 阶段未授权；
+没有 push、publish 或 deploy。
 
-**本地接续更新：** 已完成独立恢复、导入原项目路径及首次真实普通类型检查；
-新增执行证据与仍未完成项见 [本地接续记录](phase6-local.md)。下文保留云端交接时
-状态，历史工具链阻塞不代表本机现状。第 6 阶段仍未验收。
+逐轮过程、每个 gate 的命令与结果见 [本地接续记录](phase6-local.md)；暂停前的历史
+状态见 [暂停记录](../docs/LOCAL-PAUSE-20261005.zh.md)。本地证据目录为
+`../local-work/phase6-local-20261004/`（下称 WORK），gate 记录在 `WORK/gates/NNN-*/`，
+每个都有命令、源码前后快照、完整输出和退出码。
 
-日期：2026-10-04 UTC。交接包名 `fontpixel-rs-local-codex-handoff-20261004.zip`。最终源码提交、refs、文件与证据 SHA 由包内 `HANDOFF-MANIFEST.json` 决定；本文不写自身最终提交号。
+## 结论
 
-## 结论与停止边界
+第 6 阶段的 PLAN 工作项 W6.1–W6.6 全部完成并通过验收：
 
-第 6 阶段已有恢复/重建的实现、文档、回归源码和完整工作负载工具，但**尚未通过正常编译、测试、原生独立对照或正式性能验收**。官方 Cargo 获取受网络策略阻止，libstd、rustfmt/Clippy 也不完整。在线可安全完成的源码审查、parser-only、文档/工具检查与外部-only oracle 已做并保留；本次交付是供本地 Codex 继续的未验收源码包。
+- 完整 `scripts/check.sh` 通过：生成表、fmt、两个 Clippy profile `-D warnings`、
+  workspace 全 feature/默认/最小/BDF+PCF/CJK 测试、`cargo deny`。另有无警告 rustdoc
+  和 doctest。
+- 用冻结的 release 二进制完成全部真实字体对照，没有发现原生缺陷。
+- 104 个 fuzz 目标各跑 ASAN 10 分钟以上，全部无崩溃。
+- PLAN §10 全部性能硬目标在正式五轮测量中达标。
 
-用户最新要求在线 fontpixel 在交接后停止，后续软件工作转本地。另行授权在线恢复 western-rest 字形修补不属于本包。本地须先完成第 6 阶段，再按授权依序继续第 7、8 阶段；本包本身不满足此前置。第 9 阶段、push、package publish、website deploy 不在当前授权中。
+## 验收范围（用户 2026-10-05 决定）
 
-详细操作、源文件清单、所有边界和命令见 [本地交接](../docs/LOCAL-CODEX-HANDOFF.zh.md)；可直接复制 [本地接续 prompt](../docs/PROMPT-FOR-LOCAL-CODEX.zh.md)。[TODO](../TODO.md) 是当前行动清单。
+PLAN §9.6 原文要求：解压大小、字形数、单字形像素数、表大小等有可配上限且超限报错；
+每个读取器一个 fuzz 目标、各跑 ≥10 分钟；proptest 往返；clippy/fmt/deny 通过。
+这几项均已满足。
 
-## 来源与恢复程度
+此前云端/Codex 协调者审计额外加入了两项门槛，它们不是 PLAN 原文，用户选择不作为验收条件：
 
-约18:33 UTC 原工作区/工具链/未外备份 Git objects、二进制、raw logs 和 generated outputs 不可访问，原因未确认。随后从完整校验的原始阶段5交接包恢复 main `12710057e9787318d1db70db41a60fca016ad53c` 和原54 refs。原 ZIP SHA `8cc36c6f817347f808c1ef6f2ab1450715380d715bca2f4e80106e2df9bcb524`，53,478,221 bytes。原始参考、样本、validation inputs 保留只读。
+- 各 codec 内部（WOFF/WOFF2、variants、subset 内部表、Brotli 编码器堆）的完整字节账本；
+  作为已知限制写入 [writer budget](../docs/w6.1-writer-budget.md#known-limitations-accepted-for-phase-6-2026-10-05)。
+- catalogue 下载与原 Python 输出逐项追平；差异按类别写入
+  [迁移说明](../docs/migration-fontpixel.md)（PLAN §11 要求写明差异和原因）。
+  SWIDTH 约定可用新选项 `--swidth-ppem` 复现。
 
-恢复过程混合了有旧hash的逐字节恢复（compat lookup生产/测试、三个文档示例）、记录补丁重放、新实现和新的源级修正。重建 checkpoint `e4f65fe5372b65d31e97254b7b67869efd90aaa7` 之后又有已记录的未提交 owner 改动，最终包清单才标明真正交付源码。组件 provenance 放 `handoff-evidence/recovery-provenance/`，旧快照不会覆盖最终 main/source audit。
+## W6.1–W6.6 验收
 
-旧 phase-6 的2,918执行/649套件、完整compat、18文档CLI/84mini tasks、已生成字体与五轮性能raw证据没有完整恢复；历史summary/hash不能代替其内容，更不能验证重写后的组合。第5阶段原报告保留，但只属于原版本。
+| 工作项 | 验收证据 |
+| --- | --- |
+| W6.1 `batch`/`diff`/`validate`/`charset`，帮助与示例 | 12 个子命令的 `--help` 都有示例；CLI 单元与集成测试全部通过；W62 文档回放用冻结 v3 二进制执行 40 条命令全部符合预期（18 个 CLI 冒烟 case、84 个 tiny 产物、各子命令帮助），gate 047；新增 `convert --swidth-ppem` 及 batch `options.swidth_ppem`（5 项 CLI 测试） |
+| W6.2 文档 | README、API、99 个格式页面齐全（`fontpixel formats --json` 的 99 个 ID 都有页面）；README 和 docs 中 105 处 CLI 示例的参数都与当前 `--help` 核对；`RUSTDOCFLAGS=-D warnings cargo doc` 和 doctest 通过；workspace `missing_docs` 配合 Clippy `-D warnings` 保证公共项都有说明；两份迁移说明已更新（catalogue 差异按类别和数量列出） |
+| W6.3 测速报告 | [benches/REPORT.md](../benches/REPORT.md)：22 个 case 各五个新进程，独立审计通过（gate 049/051），硬目标见下表 |
+| W6.4 健壮性 | 104 个 ASAN fuzz 目标覆盖全部 99 个读取器 ID，各跑约 611 秒，共 301,696,538 次执行，0 崩溃/超时/OOM/泄漏，源码前后一致（gate 048）；逐目标执行次数与覆盖率见 [phase6-validation/fuzz-final.md](phase6-validation/fuzz-final.md)；各类资源上限都有测试；proptest 往返测试保留 |
+| W6.5 拼合（库） | merge 单元/集成测试通过；Unifont 57,086 + Tong Latin → 57,106 字形，字形证明与来源审计 0 错误（gate 105–107） |
+| W6.6 拼合（CLI） | 通格真实地区拼合 4 个 profile × 20 个 case = 80/80 通过，900 个产物，0 字形/报告错误（gate 104）；57,106 字形拼合并写 BDF 0.36 s |
 
-## W6.1–W6.6 状态
+## PLAN §10 性能（正式五轮中位数）
 
-| 项目 | 已有源码/资料 | 当前剩余验收 |
+测试机：i7-12700H，20 逻辑 CPU，62 GB，Linux 7.0.0。测量时没有构建、测试或其他验证
+任务；桌面会话（文件索引、浏览器）未关闭，如实记录在测量结果里。
+
+| 任务 | 目标 | 中位数 |
 | --- | --- | --- |
-| W6.1 CLI/batch | main/batch/commands/sfnt_validate/assets/input_budget/metadata/opentype/p3_formats；并行TOML、diff/validate/charset、--each、命名与嵌入度量、整组事务/源保护/report spool | 所有普通/最小feature编译、Clippy、运行期测试；报告/退出码/strict/容量/alias/sidecar/目录/rollback/spool stress |
-| W6.2 文档 | README、API/rustdoc、bitmap-model、99格式索引、两迁移、batch/Tong示例、重写api_quickstart、静态checkers、中文本地交接 | Rustdoc无警告/doctest、公共API覆盖、example矩阵、全部CLI真实smoke、99格式profile文档审查及真实迁移输出 |
-| W6.3 性能 | recorder/独立auditor、22cases准备、Python/JS/fontTools/Tong/catalogue/native helper与完整validator源码 | helpers编译；默认真实full native correctness；全部配对和五次测量；raw/member/median独立审计；硬目标未取消 |
-| W6.4 健壮性 | PFR共享物理表cache、8项专用回归源码；99reader/104target/22proptest文件inventory；共享预算回归 | 所有性质/资源/feature gates，最后源码逐required reader≥10分钟有效ASAN；明确用户本地待做 |
-| W6.5 merge库 | merge模块、Unicode17分类/选择、spacing/baseline/fallback、license/RFN/full notices、结构化报告、metadata escaped诊断预算 | synthetic与真实输入、全部分支/错误/strict/resource测试；所有临时分配边界与源码保持 |
-| W6.6 mergeCLI | 顺序绑定parts/outputs、显式from/to/font-index、多输出事务、batch接入、CLI回归 | 真实Tong地区CJK+Latinfixture尚缺实现/执行；Unifont完整union和<1s；license/name/report/现有文件保护与mixed输出 |
+| 解析 SC 38,653 字形 | ≤ 100 ms | 53.3 ms |
+| → PCF / OTB / yaff | 各 ≤ 200 ms | 88.2 / 119.9 / 144.9 ms |
+| → 方点 TTF | ≤ 1 s | 449.4 ms（CLI 全流程 653.6 ms） |
+| 通格整套默认导出 | ≤ 40 s | 32.2 s（`fontpixel batch` 默认） |
+| 57,106 字形拼合写 BDF | < 1 s | 0.36 s |
+| 收录站全部下载 | 报告 | 5.50 s，原 Python 43.54 s |
 
-已有 BDF ASCII row、YAFF、OTB、compat lookup 热点优化及共享模型预算 guard；所有当前原生性能/正确性仍待执行，不能称“已恢复历史性能”。
+与 bdfparser、bdfparser-js、fontTools、export-rs 的逐项对比，包括兼容层哪些操作反而更慢，
+见 [benches/REPORT.md](../benches/REPORT.md)。
 
-## 当前新证据及其严格范围
+## 真实字体对照（冻结二进制 v2，gate 100–121）
 
-1. **最终语法快照，20:41 UTC**：600个Rust文件+10 context，600 parser exit0，无syntax-error spans，捕获/检查期间文件稳定。官方rustc `parse-crate-root-only`，不依赖解析、宏展开、features、build.rs、类型/借用、链接或测试。诊断bootstrap仅限隔离子进程，不能用于生产。归档在 `handoff-evidence/fontpixel-final-rust-syntax-only.tar.gz`。
-2. **最终source-only audit**：48文件身份及已修复/剩余项在 `handoff-evidence/final-interface-audit.md` 和 `final-interface-audit-source-checks.json`。没有发现新的确证API调用拼写缺陷，不等于整个工程类型正确。
-3. **协调者20:46 checks**：API文档checker86源片段/27文档要点/64links；标准库performance scripts9、workload4、catalogue6 tests通过。初次聚合unittest因import路径失败，随后正确direct scripts通过；两者都保留。没有Rust执行。日志在 `handoff-evidence/coordinator-final-checks/`。
-4. **外部-only fixtures**：9个直接Python pins、Node/esbuild准备；631reference文件复制前后hash一致；原Python/Node full SC七产物byte parity；FreeType核对38,067 PCF BMP与38,653 TTF glyph pixels/advance；fontTools/OTS；103glyph web fixture/48 shaping；原Python catalogue181 outputs/105 sfnt应用字段/8ZIP CRC+members。原生Rust/export-rs尚未build或pair，正式timing未做。详见 [oracle setup](../benches/phase6-oracle-setup/README.md)。
+所有原生输出与 v1 逐字节相同；v3 只因文档变化重编译，通格 84 个产物与 v2 逐字节相同
+（gate 046）。
 
-外部evidence ZIP：759,210bytes/74members，SHA `ecea9b1bbb1fa446ea7972b5976e4ee3391061ded35196bea63308143b2da65e`；generated fonts ZIP：16,392,704bytes/199members，SHA `60e5b57832a2e580a31cecf4e0020716f1a37d152de09e6950cf35b98783d32b`。这些hash标识已验证外部材料，不是Rust结果。
+| 对照 | 结果 |
+| --- | --- |
+| 通格 batch CLI 与 API，各 72 条记录 | 20 PCF FreeType 逐像素通过；20 OTB FreeType 逐像素全部一致（633,028 个字形），这正是 PLAN §9.4 对 OTB 的要求（「FreeType 逐像素一致」）。OTB 另有元数据差异（见下节），不在 §9.4 要求内；16 个矢量字体完整几何/度量/14,592 批 shaping 通过；16 个网页字体通过（8 个 OTS 拒绝全部来自原导出器） |
+| 通格地区拼合 | 80/80 通过 |
+| Unifont 拼合 | 通过 |
+| SC 编解码 | 11/11，Rust、Python、Node 七个产物逐字节一致 |
+| SC 矢量、同一 sfnt 网页字体 | 38,654 字形全量几何与 912 批 shaping 通过；方点/圆点网页字体通过（首次执行） |
+| 收录站 173 个字体 + 8 个 ZIP | 8 个完全一致，164 个只有已分类差异（无新类别、无像素/字形集/cmap 差异），1 个是 Spleen 64px 在 FreeType 14ppem 下 U+2502 光栅溢出（消费端限制）；8 个 ZIP 打包结构全部通过 |
+| bdfparser 差分（legacy parity） | 67 个字符集表一致；2,000 random + 1,000 random_all + 41 探测 + 251 个语料文件：0 个新差异，7 个属于已登记的 K12-ragged-bitmap |
 
-## 最新修正与仍然存在的源级范围
+PLAN §9.4 对矢量字体要求 cmap、字形数、hmtx/hhea/OS/2 关键字段、name 一致，轮廓栅格化逐像素一致，HarfBuzz `locl` 塑形一致；验证脚本 `benches/phase6_validate.py` 对这些逐项断言，16 对全部通过。
 
-最终source audit确认：显式format/feature验证、resolver capacity、NativeWriter common limits和plain所有asset length cap、CLI真实caller model/report保留、merge初始两数组、escaped audit诊断、typed OTB flags、helper feature注册、测试专属wrapper cfg等都已在源码。旧proposal/FINDINGS中“尚未修”的对应条目属历史。
+### 通格 OTB 元数据差异（PLAN 未要求，如实列出）
 
-必须继续闭环：
+两条路径的 20 个 OTB 与 export-rs 相比，在以下字段不同（20 个文件一致）：OS/2 achVendID、
+panose 4 项、ulUnicodeRange1–3、usBreakChar（10 个文件还有 xAvgCharWidth）；head
+checkSumAdjustment、created/modified、flags、lowestRecPPEM；post formatType/extraNames
+（10 个文件还有 isFixedPitch）；EBLC 的 widthMax 与索引子表组织。名字表方面，原生 OTB 只写
+name ID 0、1、2、4、5、8，export-rs 还写 3、6、13、14、16、17。**其中 13/14 是许可证说明与
+许可证 URL**，对 OFL 字体有实际意义；PLAN 没有要求，但若希望 OTB 也带这两条记录，可作为
+后续改进。
 
-- standalone Sources 未附 batch那样的aggregate identity ledger。
-- CLI Variants caller overlap已修，core planner/export/WOFF全部同时存活transients和subset read/selection/internal code仍未完整覆盖。
-- zero guessed source credit可能保守重复收费；InputBudget也保留已释放选择前storage的保守reserve。默认fullTong/Unifont/catalogue必须重测，不删收费/抬默认cap/删报告强行通过。
-- W6.6真实Tong CJK+Latin对应区域构建的fixture缺少。现有Unifont union或Tong variants/locl都不能替代；须新增地区/尺寸/spacing映射、完整逐glyph验证和差异类别说明。
-- catalogue旧检查遗漏bitmap family/style/copyright。reference policy/defaults现已识别且v2 adapter/flags存在，native完整metadata/metric/name/notice/pixel/.notdef/table/ZIP配对仍缺。原fontTools fsType/selection/breakChar默认不等于许可指示。
-- 原生产opf_vector source/binary缺失，只能明示supplied fontTools fallback；不声称其生产速度。variable axes/hints/per-glyph offsets真实未实现项保留外部fallback，不伪装原生覆盖。
+## 本次恢复中修正的问题
 
-所有ResourceLimits实际默认保持256MiB；batch working1GiB/pending512MiB/单task report64MiB/总report2GiB。pending包括outputs+共享identity capacities，identity admission失败sticky禁全部提交；job/path/task限额独立。plain common cap检查返回asset length，不能阻止所有codec先分配；None/gzip/default路径不变。没有process RSS保证。更完整说明见 [writer budget](../docs/w6.1-writer-budget.md) 和 [模型](../docs/bitmap-model.md)。
+- 补写 `projection` 模块（暂停时已登记但文件缺失），实现 SWIDTH 投影的事务、审计与报告。
+- 已提交的 `a1b40b0` 中 CLI 直出 sfnt 时把全部额度交给 `Sfnt::parse`，忽略 CLI 已持有的
+  数据，导致 1 项 CLI 单元测试失败；改为只给剩余额度，测试改为精确边界证明 sfnt 只计一次。
+- 已提交代码在 `-D warnings` Clippy（两个 profile）和 rustdoc 下不通过，均做等价改写修正，
+  没有使用 allow。
+- 7 个 fuzz 目标的种子过弱，补充了可复现的小种子（`fuzz/seed_phase6.py` 与 manifest，
+  只用 MIT/OFL 来源）。
 
-## 性能：未达标/待测，禁止改门槛
+## 已知限制（如实保留）
 
-| 必需工作负载 | 目标 | 最后历史观察，仅供方向 |
-| --- | --- | --- |
-| Full SC单线程parse | ≤100ms | direct113.54ms未过；public98.89ms是另一口径；raw已失踪 |
-| Full SC→PCF/OTB/YAFF | 各≤200ms | PCF194.90、OTB249.72、YAFF278.59ms；后两项未过 |
-| Full SC→squareTTF | ≤1s | 793.06ms仅历史 |
-| 默认完整Tong8vector families+20PCF+20OTB | ≤40s | 66.77/63.38s为两次诊断，非五轮final，未过 |
-| Unifont+Latin→57,106glyph BDF | <1s | 正式五轮尚未完成 |
-| 全catalogue与Python、bdfparser/JS/fontTools/export-rs/WOFF2 | 报完整同语义比较/时间/体积 | 最终22cases五进程suite未完成 |
+- codec 内部完整字节账本未覆盖的路径见上文链接；这些路径都受输入、表、字形、像素、点数
+  上限约束，也都在 fuzz 范围内，但没有一个覆盖全部同时存活临时分配的统一字节上限。
+  所有上限都不是进程 RSS 上限。
+- catalogue 与原 Python 的差异（名字表、OS/2/head 标志与时间戳、`.notdef`、未编码字形、
+  BDF/PCF 属性、校验和派生值等）按类别写入迁移说明。fontpixel 保留原 Python 会丢弃的
+  COMMENT/版权文字，这是有意保留，不是缺陷。
+- 收录站生产用的 `opf_vector` 扩展没有提供，矢量对照与测速使用原 fontTools 后备实现。
+- 正式测速在用户的桌面工作站上进行，桌面会话保持打开。
+- 默认 batch CLI 与默认 API 示例的 84 个通格产物中 76 个逐字节相同；8 个 WOFF2 不同，
+  因为 CLI 默认用 2 个 Brotli 线程压缩，API 示例用 1 个；8 个都用 fontTools 解压后
+  得到逐字节相同的 sfnt，只有压缩流不同。
+- 少量源码注释仍是暂停前的过时状态措辞（例如 `crates/fontpixel/src/lib.rs` 模块说明
+  「Current phase-6 reconstruction is unvalidated」、`docs/api-rustdoc.md` 中的状态句，
+  清单见 `WORK/docs-stale-status.md` C 节）。改动它们会改变编译产物、使冻结二进制的证据
+  绑定失效，所以留到第 7 阶段开始时一并修改。
 
-新机器需完整correctness后冻结source/input/dependency/binary，五个新进程/实际quiet window/全raw与outputarchives/独立audit。不能用API、tiny、改变defaultcap、删reports或移动计时范围取代目标。详见 [性能合同](../benches/phase6-README.md)。
+## 冻结与交付源码的关系
 
-## 本地完成顺序与安全边界
+ASAN（gate 048）、测速（049/051）和文档回放（047）都在冻结 v3 的源码树上执行，前后源码一致。
+冻结之后到交付只改了文档与报告：README.md、TODO.md、benches/REPORT.md、
+benches/phase6-README.md、docs/api.md、docs/recovery-status.md、docs/w6.1-cli.md、
+docs/w6.1-writer-budget.md、reports/ 下的报告和 fuzz 结果表；`crates/`、`Cargo.*`、`fuzz/`、
+`scripts/` 和测试均未改动，所以冻结二进制的证据适用于交付源码。
 
-1. 按包根verify/restore/verify-checkout恢复全新空目录，核对最终manifest；不要覆盖旧项目。
-2. 官方完整工具链、最先backup后fmt/typecheck/scripts/check.sh/rustdoc/feature/fuzz-dependency；真实失败按源码ownership修复，保留失败记录。
-3. 全共享预算/transaction/merge/PFR/metadata tests、API examples、fullparity/corpus、99profiles、CLI docs smokes；做缺失真实Tong mergefixture。
-4. 完整native/oracle真实字体配对；metadata/defaults/metrics/notice独立审计；保留能力边界。
-5. 正式性能五轮与全部日志/archive复核；所要求ASAN最终源码每required reader≥10分钟由用户本机完成，遵守实际权限。不把被拒绝/中断/短smoke/旧71campaign称通过。
-6. phase6整体完成、记录全部验收后交付，然后phase7、8。两绑定必须覆盖所有native公开能力+独立legacy compatibility；逐type/operation/option/feature/result/error覆盖表和tests，平台差异显式，不静默省略。见 [绑定范围](../docs/bindings-scope.md)。
+## 备份
 
-建议六Astra/xhigh/fork-none workers；用户已要求尝试fast mode，须按本地实际支持配置/记录，不能设置或核实就如实说明；在线接口未能设置验证。协调者统一共享代码与build/timing窗口。只读siblings不改，产物放local-work；重大改动和长验证前后频繁外部durable backups，hash读回+空目录restore。final ZIP/all-ref完整性、外部保存成功以最终delivery record为准，不能提前宣称。
+全部源码、refs、未提交改动与证据在 `WORK/checkpoints/` 下做了本机备份并在空目录独立恢复
+校验。只是本机副本，没有异机备份。本阶段改动尚未提交到 Git。

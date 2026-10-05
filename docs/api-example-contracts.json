@@ -40,6 +40,15 @@
       ]
     },
     {
+      "capability": "explicit metric projection",
+      "source": "crates/fontpixel/src/projection.rs",
+      "declarations": [
+        "pub struct BitmapProjection",
+        "pub fn apply_bitmap_projection",
+        "pub struct ProjectionOutcome"
+      ]
+    },
+    {
       "capability": "render and SVG",
       "source": "crates/fontpixel/src/render/image.rs",
       "declarations": [
@@ -178,6 +187,15 @@
       ]
     },
     {
+      "capability": "CLI metric projection",
+      "source": "crates/fontpixel-cli/src/metadata.rs",
+      "declarations": [
+        "struct ProjectionArguments",
+        "swidth_ppem: Option<u32>",
+        "swidth_units: Option<u32>"
+      ]
+    },
+    {
       "capability": "CLI regional naming",
       "source": "crates/fontpixel-cli/src/opentype.rs",
       "declarations": [
@@ -296,10 +314,13 @@
         "otb_upm",
         "otb_reference",
         "otb_rounding",
-        "remain uncompiled/untested"
+        "--swidth-ppem",
+        "swidth_ppem",
+        "apply_bitmap_projection"
       ],
       "forbidden": [
-        "Embedded controls are not currently CLI flags"
+        "Embedded controls are not currently CLI flags",
+        "remain uncompiled/untested"
       ]
     }
   ],

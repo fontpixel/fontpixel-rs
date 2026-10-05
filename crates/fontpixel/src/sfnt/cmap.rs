@@ -547,8 +547,10 @@ mod working_tests {
             decode_with_budget(&data, 2, &Limits::default(), Some(&selected), &budget).unwrap();
         assert_eq!(*mapping, BTreeMap::from([(65, 1)]));
         drop(mapping);
-        let mut limits = Limits::default();
-        limits.max_cmap_mappings = 100;
+        let limits = Limits {
+            max_cmap_mappings: 100,
+            ..Limits::default()
+        };
         assert!(matches!(
             decode_with_budget(&data, 2, &limits, Some(&selected), &budget),
             Err(crate::Error::ResourceLimit {

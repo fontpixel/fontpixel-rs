@@ -280,10 +280,9 @@ impl WriteArguments {
             }
             feature(
                 true,
-                if id == "otb" {
-                    cfg!(feature = "otb")
-                } else {
-                    cfg!(feature = "bdat")
+                match id {
+                    "otb" => cfg!(feature = "otb"),
+                    _ => cfg!(feature = "bdat"),
                 },
                 id,
             )?;

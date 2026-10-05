@@ -1,6 +1,6 @@
 # Bitmap and model API
 
-**Recovery status (2026-10-04):** this phase-6 documentation/source reconstruction is uncompiled and untested. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
+**Status (2026-10-05):** the reconstructed phase-6 source compiles; `scripts/check.sh` passed (3,453 tests, clippy `-D warnings`, cargo-deny) and `cargo doc` with `RUSTDOCFLAGS=-D warnings` is clean. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
 
 This is the core used by readers, writers, rendering, and compatibility
 adapters. `fontpixel::registry()` (`Registry<FontSet>`) installs the enabled

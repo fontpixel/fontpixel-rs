@@ -515,6 +515,9 @@ pub(crate) struct CharsetArgs {
     strict: bool,
     #[arg(long, value_enum, default_value = "text")]
     report: ReportStyle,
+    /// Maximum native output table bytes; source decoding keeps its input limits.
+    #[arg(long)]
+    max_table_bytes: Option<usize>,
     #[command(flatten)]
     raster: Box<RasterArguments>,
 }
@@ -556,9 +559,7 @@ fn loss(
     used: &mut usize,
     limit: usize,
     code: &str,
-    font_index: usize,
-    glyph_index: Option<usize>,
-    cp: Option<u32>,
+    location: Location,
     message: &str,
 ) -> Result<()> {
     // Reserve receiving-vector growth plus both owned strings before allocation.
@@ -573,12 +574,7 @@ fn loss(
         impact: Impact::Loss,
         code: code.into(),
         message: message.into(),
-        location: Location {
-            font_index: Some(font_index),
-            glyph_index,
-            codepoint: cp,
-            asset: None,
-        },
+        location,
     });
     Ok(())
 }
@@ -664,9 +660,12 @@ pub(crate) fn charset(args: CharsetArgs, out: &mut dyn Write) -> Result<()> {
                         &mut alias_budget,
                         limits.max_total_bytes,
                         "charset.unmappable_code",
-                        font_index,
-                        Some(glyph_id.index()),
-                        Some(cp.value()),
+                        Location {
+                            font_index: Some(font_index),
+                            glyph_index: Some(glyph_id.index()),
+                            codepoint: Some(cp.value()),
+                            asset: None,
+                        },
                         "glyph code cannot be represented in the destination charset",
                     )?;
                 }
@@ -698,9 +697,12 @@ pub(crate) fn charset(args: CharsetArgs, out: &mut dyn Write) -> Result<()> {
                     &mut retained,
                     limits.max_total_bytes,
                     "charset.unmappable_default_character",
-                    font_index,
-                    None,
-                    Some(old.value()),
+                    Location {
+                        font_index: Some(font_index),
+                        glyph_index: None,
+                        codepoint: Some(old.value()),
+                        asset: None,
+                    },
                     "default character cannot be represented in the destination charset",
                 )?;
             }
@@ -735,8 +737,12 @@ pub(crate) fn charset(args: CharsetArgs, out: &mut dyn Write) -> Result<()> {
             .filter(|n| *n <= limits.max_total_bytes)
             .ok_or_else(|| limit_error(limits.max_total_bytes))?;
     }
+    let mut writer_resources = limits.clone();
+    if let Some(maximum) = args.max_table_bytes {
+        writer_resources.max_table_bytes = writer_resources.max_table_bytes.min(maximum);
+    }
     let (writer_limits, report) =
-        caller_writer_limits(&loaded.fonts, &limits, loaded.report, args.strict)?;
+        caller_writer_limits(&loaded.fonts, &writer_resources, loaded.report, args.strict)?;
     loaded.fonts.validate(&limits)?;
     let filename = args
         .output

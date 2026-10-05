@@ -4,18 +4,20 @@ A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
 The requirements and surveyed 99-format scope are in [PLAN.md](PLAN.md) and
 [FORMATS.md](FORMATS.md).
 
-## Current status: phase-6 recovery, not acceptance
+## Current status: phase 6 delivered (2026-10-05)
 
-The phase-5 baseline and its historical reports are retained. The phase-6
-workspace disappeared; the current phase-6 source and documentation are being
-reconstructed and are **uncompiled and untested**. Old observed passes do not
-validate this source. Read [recovery status](docs/recovery-status.md) before using
-historical results or the restored phase-6 commands below.
+Phase 6 (CLI, batch, documentation, benchmarks, robustness, merge) is complete;
+see the [phase 6 report](reports/phase-6.md). `scripts/check.sh`, warning-free
+rustdoc, full Tong/catalogue/SC/merge/legacy-parity comparisons against frozen
+release binaries, a 104-target ASAN fuzz campaign and the formal PLAN §10
+benchmarks ([benches/REPORT.md](benches/REPORT.md)) all passed. The phase-6
+source was reconstructed after the earlier workspace was lost; the
+[recovery status](docs/recovery-status.md) explains which historical results
+predate this source.
 
-The baseline catalogue still contains the same 99 IDs and documented profiles.
-No format was added by this restoration. Catalogue semantic replacement remains
-open: bitmap family/style/copyright were omitted from an earlier comparison,
-and implicit FontTools defaults and metric differences still need inventory.
+The catalogue contains the same 99 IDs and documented profiles. Differences
+between catalogue downloads and the original Python pipeline are documented in
+[catalogue download differences](docs/migration-fontpixel.md#catalogue-download-differences).
 
 After phase-6 delivery, work is authorized through phase 7 then phase 8, with
 full native Python and WASM/JS APIs plus separate legacy compatibility APIs.
@@ -385,8 +387,8 @@ fontpixel merge --family 'Example Mix' --part cjk.bdf --take cjk --part latin.bd
 fontpixel batch examples/batch.toml --jobs 2 > report.json
 ```
 
-Current reconstructed source registers `vectorize` as a visible alias of convert;
-runtime help verification remains pending. Native conversion is through the bitmap
+The CLI registers `vectorize` as a visible alias of convert (shown in
+`fontpixel --help`). Native conversion is through the bitmap
 model; it is not a table-preserving wrapper conversion. Select an explicit
 `--font-index` for a multi-font input when needed. Reconstructed `--each` needs explicit `--to`
 and an existing output directory; all outputs share one normal-error rollback
@@ -399,7 +401,8 @@ Standalone commands reserve input identities from the original total byte limit
 1 MiB identity storage and 255 MiB working allowance. The full identity slice
 stays reserved through the command, including sidecar discovery and persistence;
 unused table space is not returned to the working allowance. This tightens the
-effective working budget and needs fresh default-workload validation. See the
+effective working budget; the full default Tong, Unifont and catalogue workloads
+pass under it (phase 6 report). See the
 [budget contract](docs/w6.1-writer-budget.md) for retained-capacity accounting and
 its limits; it does not cover every codec transient or bound process RSS.
 
@@ -419,8 +422,8 @@ part; `--to` binds to the preceding output. Positive dy raises ink. Geometric
 half/full is a width policy separate from source selection. Full preserves
 supplied geometry metrics; it does not synthesize a fullwidth glyph. Reconstructed strict BDF
 merge rejects multiline-notice projection even with known licences; YAFF can
-retain the model's full names directly. Those restored code paths are still
-uncompiled/untested; historical results do not validate them.
+retain the model's full names directly. Those restored code paths compile and
+the workspace tests pass; historical results do not validate them.
 
 Strictness checks accumulated reader/transformation/writer loss. Warning severity
 alone does not determine loss. Respect all sidecar assets, resource budgets and
@@ -430,14 +433,15 @@ protection in addition to lexical ResourcePath validation.
 
 Read [the native API guide](docs/api.md), [Tong migration](docs/migration-tong.md),
 [catalogue migration and open gaps](docs/migration-fontpixel.md), and the
-[batch/inspection contract](docs/w6.1-cli.md). The commands here are unexecuted
-restoration examples; all output directories must be created explicitly.
+[batch/inspection contract](docs/w6.1-cli.md). Every flag in the commands here
+matches the current `--help` (checked 2026-10-05); all output directories must be
+created explicitly.
 
 The filesystem-free [API quickstart](crates/fontpixel/examples/api_quickstart.rs)
 has been rewritten against current source signatures, including names, retained
 budgets, merge, sidecars, embedded metrics, regional names, subsets and WOFF2.
-Its assertions and the [crate-root guide](docs/api-rustdoc.md) are uncompiled and
-unexecuted. [Static documentation checks](examples/check_api_documentation.py)
+It compiles under `cargo clippy --all-targets` but is not run by `scripts/check.sh`;
+the [crate-root guide](docs/api-rustdoc.md) examples run as doctests. [Static documentation checks](examples/check_api_documentation.py)
 inspect files and declarations only; they do not compile Rust or invoke the CLI.
 
 The [documentation smoke runner](examples/README.md#recording-cli-smokes) records

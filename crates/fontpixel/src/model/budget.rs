@@ -377,9 +377,11 @@ mod tests {
                         1 => 119 - i,
                         _ => (i * 37) % 120,
                     };
-                let mut g = Glyph::default();
-                g.codepoints = vec![Codepoint::Unicode(cp), Codepoint::Unicode(cp)];
-                g.unicode_sequences = vec![vec![cp, 0xfe0f], vec![cp, 0xfe0f]];
+                let g = Glyph {
+                    codepoints: vec![Codepoint::Unicode(cp), Codepoint::Unicode(cp)],
+                    unicode_sequences: vec![vec![cp, 0xfe0f], vec![cp, 0xfe0f]],
+                    ..Glyph::default()
+                };
                 ids.push(font.add_glyph(g).unwrap());
                 let usage = font.retained_usage(usize::MAX).unwrap();
                 assert_eq!(font.retained_usage(usage.bytes).unwrap(), usage);

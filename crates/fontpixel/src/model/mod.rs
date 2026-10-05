@@ -857,6 +857,17 @@ impl Font {
         self.replace_glyph(id, glyph)?;
         Ok(())
     }
+    /// Commit an already staged scalable-advance edit without allocating or
+    /// touching glyph indexes. The projection transaction must validate every
+    /// ID while exclusively borrowing the FontSet and must not remove glyphs
+    /// between validation and this infallible commit phase.
+    pub(crate) fn set_scalable_advance_prevalidated(&mut self, id: GlyphId, value: Option<Vector>) {
+        self.glyphs[id.0]
+            .as_mut()
+            .expect("projection prevalidated live glyph")
+            .metrics
+            .scalable_advance = value;
+    }
     /// Remove a glyph without renumbering other IDs. Default-glyph reference is
     /// cleared if it points here; the original default-character code is retained.
     pub fn remove_glyph(&mut self, id: GlyphId) -> Option<Glyph> {

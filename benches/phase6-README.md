@@ -1,11 +1,8 @@
 # Complete phase 6 benchmark contracts
 
-Status: source reconstruction after workspace replacement. The restored Rust
-implementation and examples are uncompiled; Cargo dependency access is blocked.
-No new formal measurement exists. Historical results cannot validate restored code.
-Pinned Python/JS oracle setup and external-only valid-font fixtures now pass;
-see [the setup evidence](phase6-oracle-setup/README.md). Native build, paired
-correctness and all formal performance acceptance remain pending.
+Status (2026-10-05): the formal five-run measurement of the final phase-6 source
+passed its independent audit; results are in [REPORT.md](REPORT.md). The oracle
+setup evidence is in [phase6-oracle-setup/README.md](phase6-oracle-setup/README.md).
 
 ## Required complete cases
 

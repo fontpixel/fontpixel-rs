@@ -112,7 +112,7 @@ enum Command {
     /// Convert fonts with loss reporting and safe output replacement.
     #[command(
         visible_alias = "vectorize",
-        after_help = "Examples:\n  fontpixel convert input.bdf -o output.pcf\n  fontpixel convert one.bdf two.bdf --each --to pcf -o existing-directory\n  fontpixel vectorize input.bdf -o output.ttf --shape square"
+        after_help = "Examples:\n  fontpixel convert input.bdf -o output.pcf\n  fontpixel convert input.bdf -o output.bdf --swidth-ppem 13\n  fontpixel convert one.bdf two.bdf --each --to pcf -o existing-directory\n  fontpixel vectorize input.bdf -o output.ttf --shape square"
     )]
     Convert {
         /// One or more inputs, combined as ordered strikes in a FontSet.
@@ -138,6 +138,8 @@ enum Command {
         font_index: Option<usize>,
         #[command(flatten)]
         names: metadata::NameArguments,
+        #[command(flatten)]
+        projection: metadata::ProjectionArguments,
         /// Diagnostic format.
         #[arg(long, value_enum, default_value = "text")]
         report: ReportStyle,
@@ -760,6 +762,7 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
             font_index,
             each,
             names,
+            projection,
             report: style,
             pcf,
             console,
@@ -914,6 +917,12 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     fonts.fonts = vec![selected];
                 }
                 metadata::apply(&mut fonts, &names, &mut report, &group_limits)?;
+                metadata::project(
+                    &mut fonts,
+                    projection.projection(),
+                    &mut report,
+                    &group_limits,
+                )?;
                 let filename = group
                     .output
                     .file_name()
@@ -1462,10 +1471,10 @@ impl serde::Serialize for UnicodeBlocks<'_> {
                     codec.as_ref().and_then(|c| c.cp2unicode(value))
                 }
             };
-            if let Some(block) = scalar.and_then(unicode_block) {
-                if let Ok(index) = UNICODE_BLOCKS.binary_search_by_key(&block.start, |b| b.start) {
-                    counts[index] += 1;
-                }
+            if let Some(block) = scalar.and_then(unicode_block)
+                && let Ok(index) = UNICODE_BLOCKS.binary_search_by_key(&block.start, |b| b.start)
+            {
+                counts[index] += 1;
             }
         }
         let mut seq = serializer.serialize_seq(None)?;

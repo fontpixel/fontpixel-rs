@@ -1,0 +1,5745 @@
+{
+ "generator": "fuzz/seed_phase6.py",
+ "binary": "/home/chen/githubprojects/fontpixel/local-work/phase6-local-20261004/frozen-binaries-v2/release/fontpixel",
+ "binary_sha256": "6c62fb1a323b0789297f8d3084f48103900693e8081dac1355793abd3cb34f4e",
+ "binary_version": "fontpixel 0.1.0",
+ "max_seed_bytes": 65536,
+ "sources": {
+  "cell16.bdf": {
+   "origin": "fuzz/seed_phase6.py synth_cell16()",
+   "sha256": "54356f907949e96bf0ab87d896602d5939bf125bff9945817dc1ef522823c8ef",
+   "bytes": 13081,
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  "prop7.bdf": {
+   "origin": "fuzz/seed_phase6.py synth_prop7()",
+   "sha256": "147c39776f36f9083ee9ebd902e2dd0d6347002d6b2e32563040df19f3693609",
+   "bytes": 3072,
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  "cell16-jp.bdf": {
+   "origin": "fuzz/seed_phase6.py synth_cell16(3)",
+   "sha256": "6cd3f24d8e7896cd9b57863979197b345d9e69cf38af5975ea0faabaa0d9fd06",
+   "bytes": 13087,
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  "mini.bdf": {
+   "origin": "tests/data/compat/mini-circle-1.0-0.bdf",
+   "sha256": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+   "bytes": 490,
+   "license": "MIT (tests/data/compat/SOURCES.json)"
+  },
+  "block.bdf": {
+   "origin": "tests/data/bdf/3x5-block.bdf",
+   "sha256": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de",
+   "bytes": 9512,
+   "license": "OFL-1.1 (LICENSES/bdf-fonts/3x5-block.txt)"
+  }
+ },
+ "per_target": {
+  "bdf": 121,
+  "cff": 14,
+  "collection": 3,
+  "compat_ttf": 12,
+  "fnt": 12,
+  "glyf": 16,
+  "gsub": 1,
+  "hex": 7,
+  "pcf": 137,
+  "psf": 7,
+  "sfnt": 32,
+  "subset": 21,
+  "svg": 3,
+  "vector_raster": 67,
+  "woff1": 8,
+  "woff2": 8,
+  "yaff": 2
+ },
+ "skipped": [
+  {
+   "target": "svg",
+   "name": "cell16.svg",
+   "bytes": 73947,
+   "reason": "exceeds MAX_SEED"
+  }
+ ],
+ "seeds": [
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-cell16.ttf",
+   "sha256": "4c3a6a5153c368a9594a5a270a2b244ce2a528296e388afbd3c1612ad43f87c9",
+   "bytes": 35072,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "ttf",
+    "-o",
+    "cell16.ttf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-cell16.otf",
+   "sha256": "acd3a9ecd1050a5205b512a596ed2651e8bacd2f14947a8aa4471e38c612864c",
+   "bytes": 25848,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "otf",
+    "-o",
+    "cell16.otf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-cell16.woff",
+   "sha256": "29a3a02febed8d1c6d38b0d771df97c3cec9f4004cce2b4880505e5f0be5f3eb",
+   "bytes": 2584,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "woff",
+    "-o",
+    "cell16.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-cell16.woff",
+   "sha256": "29a3a02febed8d1c6d38b0d771df97c3cec9f4004cce2b4880505e5f0be5f3eb",
+   "bytes": 2584,
+   "source": "cell16.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-cell16.woff2",
+   "sha256": "f9a33bcac4b6985f5a3098efa3247c2dac59a7bc38c1c9e40cb774fd21dfb5e5",
+   "bytes": 1696,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "woff2",
+    "-o",
+    "cell16.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-cell16.woff2",
+   "sha256": "f9a33bcac4b6985f5a3098efa3247c2dac59a7bc38c1c9e40cb774fd21dfb5e5",
+   "bytes": 1696,
+   "source": "cell16.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-cell16-bitmaps.woff",
+   "sha256": "310533ee229f59cd31f9b6b304668d48555e222f5ee67966166e256bbaf871bc",
+   "bytes": 3660,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "woff",
+    "--embed-bitmaps",
+    "--shape",
+    "dot",
+    "-o",
+    "cell16-bitmaps.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-cell16-bitmaps.woff",
+   "sha256": "310533ee229f59cd31f9b6b304668d48555e222f5ee67966166e256bbaf871bc",
+   "bytes": 3660,
+   "source": "cell16.bdf",
+   "command": [
+    "(copy of woff1 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-cell16-bitmaps.woff2",
+   "sha256": "46920dbb16d3c43be6aa78d0a634eb0fb9de6513ae1ed57bfae03171422ab2c7",
+   "bytes": 2092,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "woff2",
+    "--embed-bitmaps",
+    "-o",
+    "cell16-bitmaps.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-cell16-v1.fnt",
+   "sha256": "2630ffc9cc9c28905d50892ee06d824968ccae64d9007d6c1de50d60406cca09",
+   "bytes": 1670,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "1",
+    "-o",
+    "cell16-v1.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-cell16-v2.fnt",
+   "sha256": "5f996368bea4ea99266fa42605706b073d5a34019a18959e105af1cd4181145f",
+   "bytes": 2055,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "2",
+    "-o",
+    "cell16-v2.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-cell16-v3.fnt",
+   "sha256": "1afd62bd288bd9acfe351244e8dc06086b5ade350ffed9c63696ff9849b8848b",
+   "bytes": 2277,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "3",
+    "-o",
+    "cell16-v3.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-cell16-v2.psf",
+   "sha256": "4c83daa4ee8b6b2cb3cbdcb6ca7b1dcc433933bc05b4c4bc8202c0fbc8dbd9ca",
+   "bytes": 3370,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "psf",
+    "--psf-version",
+    "2",
+    "-o",
+    "cell16-v2.psf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-cell16.hex",
+   "sha256": "01d9bf82124b01de621f62e7f03f131103b577071c44902acf4e9faa659118b3",
+   "bytes": 3820,
+   "source": "cell16.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "--to",
+    "hex",
+    "--hex-descent",
+    "2",
+    "-o",
+    "cell16.hex"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-prop7.ttf",
+   "sha256": "5081be4f2e8939d25ac29e2fd814869cd346faaebf39953b1a70a386f6c8b7e4",
+   "bytes": 3644,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "ttf",
+    "-o",
+    "prop7.ttf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-prop7.otf",
+   "sha256": "1f6b65da12fdcad4a482ad2b5496dd301fe25768d8544220989c88d85dbb6413",
+   "bytes": 3100,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "otf",
+    "-o",
+    "prop7.otf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-prop7.woff",
+   "sha256": "b10be5bcc823cadfdcc34770807789ba8b7f40b2c8dddaabe0b8532394639784",
+   "bytes": 1520,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "woff",
+    "-o",
+    "prop7.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-prop7.woff",
+   "sha256": "b10be5bcc823cadfdcc34770807789ba8b7f40b2c8dddaabe0b8532394639784",
+   "bytes": 1520,
+   "source": "prop7.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-prop7.woff2",
+   "sha256": "339b52274a8a4b94a03ec744530fd93de349ffd261456324dd4ce44188c920bc",
+   "bytes": 1088,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "woff2",
+    "-o",
+    "prop7.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-prop7.woff2",
+   "sha256": "339b52274a8a4b94a03ec744530fd93de349ffd261456324dd4ce44188c920bc",
+   "bytes": 1088,
+   "source": "prop7.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-prop7-bitmaps.woff",
+   "sha256": "e42dd86b87791c92b13883427f46e14893cd6c2b7f67027afcc53e40d46281fe",
+   "bytes": 1928,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "woff",
+    "--embed-bitmaps",
+    "--shape",
+    "dot",
+    "-o",
+    "prop7-bitmaps.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-prop7-bitmaps.woff",
+   "sha256": "e42dd86b87791c92b13883427f46e14893cd6c2b7f67027afcc53e40d46281fe",
+   "bytes": 1928,
+   "source": "prop7.bdf",
+   "command": [
+    "(copy of woff1 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-prop7-bitmaps.woff2",
+   "sha256": "ac57d33926bf55d004de377359c23964f769304fde98daeadfa830f2c9a30c1d",
+   "bytes": 1380,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "woff2",
+    "--embed-bitmaps",
+    "-o",
+    "prop7-bitmaps.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "svg",
+   "file": "svg/p6-prop7.svg",
+   "sha256": "bcd07b506854447c51cfda0fe67efe1fd4fba6308822df2746a3a3bd74391881",
+   "bytes": 6928,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "svg",
+    "-o",
+    "prop7.svg"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-prop7-v1.fnt",
+   "sha256": "6489c5f217deab44a1fb752335ad873fae6e24f4cd9e4276a3b1e01e690abeab",
+   "bytes": 542,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "1",
+    "-o",
+    "prop7-v1.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-prop7-v2.fnt",
+   "sha256": "c266e819f19455c8954d86751a6bf3cfec7cd2186505b563153f5dc34ff8b631",
+   "bytes": 841,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "2",
+    "-o",
+    "prop7-v2.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-prop7-v3.fnt",
+   "sha256": "5b23fa8219249db819403160ec76c8d1669650f339291f788895761fa6359534",
+   "bytes": 1105,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "3",
+    "-o",
+    "prop7-v3.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-prop7-v1.psf",
+   "sha256": "90ae3f9d19ccfcd31f9226985554b1066afbfda75f3acd460b6f488db95059d1",
+   "bytes": 2622,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "psf",
+    "--psf-version",
+    "1",
+    "-o",
+    "prop7-v1.psf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-prop7-v2.psf",
+   "sha256": "f7ce0933745a91c9a73986429e883b741a3058151932e296368a134bf3334f6d",
+   "bytes": 326,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "psf",
+    "--psf-version",
+    "2",
+    "-o",
+    "prop7-v2.psf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-prop7.hex",
+   "sha256": "b4eba90f0c2e97dbe8e901618fa5299b4b8b5cf7e1ee58289b650cf309a1e356",
+   "bytes": 1102,
+   "source": "prop7.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:prop7.bdf>",
+    "--to",
+    "hex",
+    "--hex-descent",
+    "2",
+    "-o",
+    "prop7.hex"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-mini.ttf",
+   "sha256": "3f3fa082bda1d00cf76e5cc9ff02b98fb77e6d4f7040896ad75b21c890caa33f",
+   "bytes": 900,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "ttf",
+    "-o",
+    "mini.ttf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-mini.otf",
+   "sha256": "67cc41623f09c4d7f271fa28dbb504e1e1f1f6e75a2f214ea8fdca3b9f9a0aed",
+   "bytes": 920,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "otf",
+    "-o",
+    "mini.otf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-mini.woff",
+   "sha256": "7190a15cd70fdb59fae1975a2c1a826c16845143d4e020f90971e9da5c6cdf6e",
+   "bytes": 792,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "woff",
+    "-o",
+    "mini.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-mini.woff",
+   "sha256": "7190a15cd70fdb59fae1975a2c1a826c16845143d4e020f90971e9da5c6cdf6e",
+   "bytes": 792,
+   "source": "mini.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-mini.woff2",
+   "sha256": "3920ca061f93145c23db1dacaf70c4915d107f9b31c6ea67d50370526f3725d3",
+   "bytes": 472,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "woff2",
+    "-o",
+    "mini.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-mini.woff2",
+   "sha256": "3920ca061f93145c23db1dacaf70c4915d107f9b31c6ea67d50370526f3725d3",
+   "bytes": 472,
+   "source": "mini.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-mini-bitmaps.woff",
+   "sha256": "7b12d14ac085e0056411e1b8ee36b9687fafe7c0a7a1389a654d0aa87e62b9a7",
+   "bytes": 988,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "woff",
+    "--embed-bitmaps",
+    "--shape",
+    "dot",
+    "-o",
+    "mini-bitmaps.woff"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-mini-bitmaps.woff",
+   "sha256": "7b12d14ac085e0056411e1b8ee36b9687fafe7c0a7a1389a654d0aa87e62b9a7",
+   "bytes": 988,
+   "source": "mini.bdf",
+   "command": [
+    "(copy of woff1 seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-mini-bitmaps.woff2",
+   "sha256": "7591dac4c4b16352635d9d49b31192a87b5e38992f1076ffea593292e84a4739",
+   "bytes": 516,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "woff2",
+    "--embed-bitmaps",
+    "-o",
+    "mini-bitmaps.woff2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "svg",
+   "file": "svg/p6-mini.svg",
+   "sha256": "41204e77826e346405f6651b410f709054ce6e3dd749d4c68a2edb58ef80f6ee",
+   "bytes": 779,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "svg",
+    "-o",
+    "mini.svg"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-mini-v1.fnt",
+   "sha256": "012b2c4f335796e71a967661a1e2ec6a1eba708a4c6bd45d2cb966afc764baae",
+   "bytes": 227,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "1",
+    "-o",
+    "mini-v1.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-mini-v2.fnt",
+   "sha256": "dda0a5491534c8ba9fd33706af35909adae24d6cf18708c29174e3a002197f7e",
+   "bytes": 300,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "2",
+    "-o",
+    "mini-v2.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-mini-v3.fnt",
+   "sha256": "00fb61a4b99925ce6f1eddfebe61184907d9227644d525a5ee80ad97a9db4b22",
+   "bytes": 402,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "3",
+    "-o",
+    "mini-v3.fnt"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-mini-v1.psf",
+   "sha256": "062d2b05e1ef03ea75442b92f38b3661d0bbc3bf9fc3ce18fb8b0016a3ee664b",
+   "bytes": 2314,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "psf",
+    "--psf-version",
+    "1",
+    "-o",
+    "mini-v1.psf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-mini-v2.psf",
+   "sha256": "20311e0036899d6e95403d5953d0bd48891c31d8a0a028f30b36118f6a2cff5d",
+   "bytes": 59,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "psf",
+    "--psf-version",
+    "2",
+    "-o",
+    "mini-v2.psf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-mini.hex",
+   "sha256": "75b7d65beda435b7c9ddb89ed5a2672392492cc353f2f43207db1a0013499dfd",
+   "bytes": 114,
+   "source": "mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:mini.bdf>",
+    "--to",
+    "hex",
+    "-o",
+    "mini.hex"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-block.ttf",
+   "sha256": "24db4e354462d9fcf19342d98cb21de0b5a926a63cef799b8f89a54796b94e47",
+   "bytes": 5484,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "ttf",
+    "-o",
+    "block.ttf"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-block.otf",
+   "sha256": "cc41f87e315e35e437bf66afee613b97e72658177412be174229537711809b4d",
+   "bytes": 4668,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "otf",
+    "-o",
+    "block.otf"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-block.woff",
+   "sha256": "d29b85f5af60bcba77c9ec16333ffbb578d9e225b308359696fcc369d8ba426f",
+   "bytes": 2488,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "woff",
+    "-o",
+    "block.woff"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-block.woff",
+   "sha256": "d29b85f5af60bcba77c9ec16333ffbb578d9e225b308359696fcc369d8ba426f",
+   "bytes": 2488,
+   "source": "block.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-block.woff2",
+   "sha256": "b45538e18cc2091a892bd99838650c3f6bc90261445e69b43efcbeef4d8d642f",
+   "bytes": 1844,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "woff2",
+    "-o",
+    "block.woff2"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-block.woff2",
+   "sha256": "b45538e18cc2091a892bd99838650c3f6bc90261445e69b43efcbeef4d8d642f",
+   "bytes": 1844,
+   "source": "block.bdf",
+   "command": [
+    "(copy of woff1/woff2 seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "woff1",
+   "file": "woff1/p6-block-bitmaps.woff",
+   "sha256": "86dd9ff2c6201db2ff83985e43538a51c40c2ace810c99192d58e8658d0bbb15",
+   "bytes": 2588,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "woff",
+    "--embed-bitmaps",
+    "--shape",
+    "dot",
+    "-o",
+    "block-bitmaps.woff"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-block-bitmaps.woff",
+   "sha256": "86dd9ff2c6201db2ff83985e43538a51c40c2ace810c99192d58e8658d0bbb15",
+   "bytes": 2588,
+   "source": "block.bdf",
+   "command": [
+    "(copy of woff1 seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "woff2",
+   "file": "woff2/p6-block-bitmaps.woff2",
+   "sha256": "7c5d55f12e49ba24cce72704a1299aab7523b6646de73a0fca30ca7da2e7d342",
+   "bytes": 2324,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "woff2",
+    "--embed-bitmaps",
+    "-o",
+    "block-bitmaps.woff2"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "svg",
+   "file": "svg/p6-block.svg",
+   "sha256": "b77eadb9a0692618b0abd1c894b077c901f8e46e5a9ed2baf8c24e6c96c2a341",
+   "bytes": 14856,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "svg",
+    "-o",
+    "block.svg"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-block-v1.fnt",
+   "sha256": "6fa60aab5cc4b78bf22e0ce0ad46a3d48ba1f827a179af10440bc37e837377cf",
+   "bytes": 662,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "1",
+    "-o",
+    "block-v1.fnt"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-block-v2.fnt",
+   "sha256": "97f2491128c55b40b0f53bd672329a876290bf5edce0594c59f208ac26e53f7f",
+   "bytes": 1217,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "2",
+    "-o",
+    "block-v2.fnt"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "fnt",
+   "file": "fnt/p6-block-v3.fnt",
+   "sha256": "3f406d8de50bff656b837bc87495c336ea62c78bf55a63ffaa9e04d7f2258328",
+   "bytes": 1489,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "fnt",
+    "--fnt-version",
+    "3",
+    "-o",
+    "block-v3.fnt"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-block-v1.psf",
+   "sha256": "20753828ca1ec7febeee5bfd19964968d24fc65a5704b5ce5788ac2d566e9a28",
+   "bytes": 2250,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "psf",
+    "--psf-version",
+    "1",
+    "-o",
+    "block-v1.psf"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "psf",
+   "file": "psf/p6-block-v2.psf",
+   "sha256": "45e3366b02d65d530f86119f88f99553acad4d1782d052d76f7efda7f2f36011",
+   "bytes": 853,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "psf",
+    "--psf-version",
+    "2",
+    "-o",
+    "block-v2.psf"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-block.hex",
+   "sha256": "6e5d85e3c36c496203be35cba4d64797eaf0cf0317253970452520bc4a6f547e",
+   "bytes": 3762,
+   "source": "block.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:block.bdf>",
+    "--family",
+    "P6 Seed Block",
+    "--full-name",
+    "P6 Seed Block",
+    "--postscript-name",
+    "P6SeedBlock",
+    "--to",
+    "hex",
+    "--hex-descent",
+    "2",
+    "-o",
+    "block.hex"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "collection",
+   "file": "collection/p6-pair.ttc",
+   "sha256": "fa21338b74711a4bf0c172a981a82e101e3d49005256ae688398fbbb175a243d",
+   "bytes": 26780,
+   "source": "cell16.bdf+mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "<src:mini.bdf>",
+    "--to",
+    "ttc",
+    "-o",
+    "pair.ttc"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-pair.ttc",
+   "sha256": "fa21338b74711a4bf0c172a981a82e101e3d49005256ae688398fbbb175a243d",
+   "bytes": 26780,
+   "source": "cell16.bdf+mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "<src:mini.bdf>",
+    "--to",
+    "ttc",
+    "-o",
+    "pair.ttc"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "collection",
+   "file": "collection/p6-pair-v2.ttc",
+   "sha256": "17ddbe777ac07516566eb5218736d6f5afed1c3571437403010d132df1be0456",
+   "bytes": 26792,
+   "source": "cell16.bdf+mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "<src:mini.bdf>",
+    "--to",
+    "ttc",
+    "--collection-v2",
+    "-o",
+    "pair-v2.ttc"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-pair-v2.ttc",
+   "sha256": "17ddbe777ac07516566eb5218736d6f5afed1c3571437403010d132df1be0456",
+   "bytes": 26792,
+   "source": "cell16.bdf+mini.bdf",
+   "command": [
+    "fontpixel",
+    "convert",
+    "<src:cell16.bdf>",
+    "<src:mini.bdf>",
+    "--to",
+    "ttc",
+    "--collection-v2",
+    "-o",
+    "pair-v2.ttc"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-synthetic-8x16.hex",
+   "sha256": "2f7ef7a3e150829181bdefcc932bb2ed359c367752c0a486280b89f716a81c6d",
+   "bytes": 988,
+   "source": "fuzz/seed_phase6.py synth_hex()",
+   "command": [
+    "synthetic"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-synthetic-mixed-16.hex",
+   "sha256": "c123b2573559c8309033a8979b89bbe367cb42fc686dfbb6e4bd487d49a008d2",
+   "bytes": 292,
+   "source": "fuzz/seed_phase6.py synth_hex()",
+   "command": [
+    "synthetic"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "hex",
+   "file": "hex/p6-synthetic-8x8.hex",
+   "sha256": "cd71150f5e64403d1ea03f81837af7bc86eaffe2d1e4cf69eff1bc45f67c7167",
+   "bytes": 220,
+   "source": "fuzz/seed_phase6.py synth_hex()",
+   "command": [
+    "synthetic"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-locl.otf",
+   "sha256": "79e959bf408958c44ef14ad3f5cc8fcb3f2842981c5347023abf797d213662e5",
+   "bytes": 27268,
+   "source": "cell16.bdf+cell16-jp.bdf",
+   "command": [
+    "fontpixel",
+    "variants",
+    "--base",
+    "<src:cell16.bdf>",
+    "--lang",
+    "ja=<src:cell16-jp.bdf>",
+    "--family",
+    "P6 Locl",
+    "-o",
+    "locl.otf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-locl.otf",
+   "sha256": "79e959bf408958c44ef14ad3f5cc8fcb3f2842981c5347023abf797d213662e5",
+   "bytes": 27268,
+   "source": "cell16.bdf+cell16-jp.bdf",
+   "command": [
+    "fontpixel",
+    "variants",
+    "--base",
+    "<src:cell16.bdf>",
+    "--lang",
+    "ja=<src:cell16-jp.bdf>",
+    "--family",
+    "P6 Locl",
+    "-o",
+    "locl.otf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "gsub",
+   "file": "gsub/p6-locl.GSUB",
+   "sha256": "fbe8c3642b8029bad1926cd0b47b142d40aba7a48c63eccbc9e2f97b50dfae1c",
+   "bytes": 218,
+   "source": "locl.otf",
+   "command": [
+    "fontpixel",
+    "variants",
+    "--base",
+    "<src:cell16.bdf>",
+    "--lang",
+    "ja=<src:cell16-jp.bdf>",
+    "--family",
+    "P6 Locl",
+    "-o",
+    "locl.otf",
+    "| extract GSUB"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16.ttf",
+   "sha256": "4c3a6a5153c368a9594a5a270a2b244ce2a528296e388afbd3c1612ad43f87c9",
+   "bytes": 35072,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-cell16.ttf",
+   "sha256": "4c3a6a5153c368a9594a5a270a2b244ce2a528296e388afbd3c1612ad43f87c9",
+   "bytes": 35072,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-cell16.ttf",
+   "sha256": "4c3a6a5153c368a9594a5a270a2b244ce2a528296e388afbd3c1612ad43f87c9",
+   "bytes": 35072,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-cell16.ttf",
+   "sha256": "4c3a6a5153c368a9594a5a270a2b244ce2a528296e388afbd3c1612ad43f87c9",
+   "bytes": 35072,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-cell16.glyf",
+   "sha256": "95cbdb1d7a95b3d3e653242c6cceb7f60d1d5b6e726491d860c2e33aa0622cb1",
+   "bytes": 32868,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract glyf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.cmap",
+   "sha256": "3025f3036a03a17e25d0584edf3246cbfdd04c58fe90fd63f90f001fd92ae51d",
+   "bytes": 156,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract cmap"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.name",
+   "sha256": "74b197e186749ce08d8edf527f1a1e4d0b04f02e14e58d5877e0b0e12e186823",
+   "bytes": 220,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract name"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.post",
+   "sha256": "0cfa2af61ecddfb5fdd96c1392b1c17ba20b9eb0c8194cd2587ec8e32b76c6fe",
+   "bytes": 820,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract post"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.OS_2",
+   "sha256": "dba8bcc319817b6ad1903c1c8a885b43b89fdf62a7c60bd1bdd70b5e87266a99",
+   "bytes": 96,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract OS/2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.hhea",
+   "sha256": "e517f40ed7be4ad6a591a4b36b447feb685edcfb6fa5500995e0424e1fe0f75d",
+   "bytes": 36,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract hhea"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.hmtx",
+   "sha256": "6e3975afe051085ee60251f87d5db913bb487d1c75721deda6f1bb8b8e81bf87",
+   "bytes": 392,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract hmtx"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-ttf.gasp",
+   "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23",
+   "bytes": 8,
+   "source": "cell16.ttf",
+   "command": [
+    "| extract gasp"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16.otf",
+   "sha256": "acd3a9ecd1050a5205b512a596ed2651e8bacd2f14947a8aa4471e38c612864c",
+   "bytes": 25848,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-cell16.otf",
+   "sha256": "acd3a9ecd1050a5205b512a596ed2651e8bacd2f14947a8aa4471e38c612864c",
+   "bytes": 25848,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-cell16.otf",
+   "sha256": "acd3a9ecd1050a5205b512a596ed2651e8bacd2f14947a8aa4471e38c612864c",
+   "bytes": 25848,
+   "source": "cell16",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-cell16.cff",
+   "sha256": "cbd7aaf757e46048490ab27e68c3987e538b09881a26f1be2d21ae9ee831ad5a",
+   "bytes": 23884,
+   "source": "cell16.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-cell16.cff",
+   "sha256": "cbd7aaf757e46048490ab27e68c3987e538b09881a26f1be2d21ae9ee831ad5a",
+   "bytes": 23884,
+   "source": "cell16.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.cmap",
+   "sha256": "3025f3036a03a17e25d0584edf3246cbfdd04c58fe90fd63f90f001fd92ae51d",
+   "bytes": 156,
+   "source": "cell16.otf",
+   "command": [
+    "| extract cmap"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.name",
+   "sha256": "74b197e186749ce08d8edf527f1a1e4d0b04f02e14e58d5877e0b0e12e186823",
+   "bytes": 220,
+   "source": "cell16.otf",
+   "command": [
+    "| extract name"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.post",
+   "sha256": "0cfa2af61ecddfb5fdd96c1392b1c17ba20b9eb0c8194cd2587ec8e32b76c6fe",
+   "bytes": 820,
+   "source": "cell16.otf",
+   "command": [
+    "| extract post"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.OS_2",
+   "sha256": "dba8bcc319817b6ad1903c1c8a885b43b89fdf62a7c60bd1bdd70b5e87266a99",
+   "bytes": 96,
+   "source": "cell16.otf",
+   "command": [
+    "| extract OS/2"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.hhea",
+   "sha256": "e517f40ed7be4ad6a591a4b36b447feb685edcfb6fa5500995e0424e1fe0f75d",
+   "bytes": 36,
+   "source": "cell16.otf",
+   "command": [
+    "| extract hhea"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.hmtx",
+   "sha256": "6e3975afe051085ee60251f87d5db913bb487d1c75721deda6f1bb8b8e81bf87",
+   "bytes": 392,
+   "source": "cell16.otf",
+   "command": [
+    "| extract hmtx"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-cell16-otf.gasp",
+   "sha256": "b6d9b4cae009145c7bac254c2acf0b55fd1ef08f22e3f781be4abf7c9be9ed23",
+   "bytes": 8,
+   "source": "cell16.otf",
+   "command": [
+    "| extract gasp"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-prop7.ttf",
+   "sha256": "5081be4f2e8939d25ac29e2fd814869cd346faaebf39953b1a70a386f6c8b7e4",
+   "bytes": 3644,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-prop7.ttf",
+   "sha256": "5081be4f2e8939d25ac29e2fd814869cd346faaebf39953b1a70a386f6c8b7e4",
+   "bytes": 3644,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-prop7.ttf",
+   "sha256": "5081be4f2e8939d25ac29e2fd814869cd346faaebf39953b1a70a386f6c8b7e4",
+   "bytes": 3644,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-prop7.ttf",
+   "sha256": "5081be4f2e8939d25ac29e2fd814869cd346faaebf39953b1a70a386f6c8b7e4",
+   "bytes": 3644,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-prop7.glyf",
+   "sha256": "eb7ee690f4d46bd6d99ab4eb224c56d3017387871405d00bbd95e95b5c586df5",
+   "bytes": 2410,
+   "source": "prop7.ttf",
+   "command": [
+    "| extract glyf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-prop7.otf",
+   "sha256": "1f6b65da12fdcad4a482ad2b5496dd301fe25768d8544220989c88d85dbb6413",
+   "bytes": 3100,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-prop7.otf",
+   "sha256": "1f6b65da12fdcad4a482ad2b5496dd301fe25768d8544220989c88d85dbb6413",
+   "bytes": 3100,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-prop7.otf",
+   "sha256": "1f6b65da12fdcad4a482ad2b5496dd301fe25768d8544220989c88d85dbb6413",
+   "bytes": 3100,
+   "source": "prop7",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-prop7.cff",
+   "sha256": "1bd56191ad99da2407a50f9f1b4981b3c45aca2ebe5ddb6670be6aceec4febb2",
+   "bytes": 1970,
+   "source": "prop7.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-prop7.cff",
+   "sha256": "1bd56191ad99da2407a50f9f1b4981b3c45aca2ebe5ddb6670be6aceec4febb2",
+   "bytes": 1970,
+   "source": "prop7.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-mini.ttf",
+   "sha256": "3f3fa082bda1d00cf76e5cc9ff02b98fb77e6d4f7040896ad75b21c890caa33f",
+   "bytes": 900,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-mini.ttf",
+   "sha256": "3f3fa082bda1d00cf76e5cc9ff02b98fb77e6d4f7040896ad75b21c890caa33f",
+   "bytes": 900,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-mini.ttf",
+   "sha256": "3f3fa082bda1d00cf76e5cc9ff02b98fb77e6d4f7040896ad75b21c890caa33f",
+   "bytes": 900,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-mini.ttf",
+   "sha256": "3f3fa082bda1d00cf76e5cc9ff02b98fb77e6d4f7040896ad75b21c890caa33f",
+   "bytes": 900,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-mini.glyf",
+   "sha256": "c5461d0c4ae24b5e1462a7535d9f57ed95aee6a3baae5efcdf0a88e3ca5a9e18",
+   "bytes": 138,
+   "source": "mini.ttf",
+   "command": [
+    "| extract glyf"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-mini.otf",
+   "sha256": "67cc41623f09c4d7f271fa28dbb504e1e1f1f6e75a2f214ea8fdca3b9f9a0aed",
+   "bytes": 920,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-mini.otf",
+   "sha256": "67cc41623f09c4d7f271fa28dbb504e1e1f1f6e75a2f214ea8fdca3b9f9a0aed",
+   "bytes": 920,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-mini.otf",
+   "sha256": "67cc41623f09c4d7f271fa28dbb504e1e1f1f6e75a2f214ea8fdca3b9f9a0aed",
+   "bytes": 920,
+   "source": "mini",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-mini.cff",
+   "sha256": "62da60b5cf779623315a88735a0e6ab94b4e8a257314d069b47345a6e93d35f1",
+   "bytes": 209,
+   "source": "mini.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-mini.cff",
+   "sha256": "62da60b5cf779623315a88735a0e6ab94b4e8a257314d069b47345a6e93d35f1",
+   "bytes": 209,
+   "source": "mini.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-block.ttf",
+   "sha256": "24db4e354462d9fcf19342d98cb21de0b5a926a63cef799b8f89a54796b94e47",
+   "bytes": 5484,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-block.ttf",
+   "sha256": "24db4e354462d9fcf19342d98cb21de0b5a926a63cef799b8f89a54796b94e47",
+   "bytes": 5484,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-block.ttf",
+   "sha256": "24db4e354462d9fcf19342d98cb21de0b5a926a63cef799b8f89a54796b94e47",
+   "bytes": 5484,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-block.ttf",
+   "sha256": "24db4e354462d9fcf19342d98cb21de0b5a926a63cef799b8f89a54796b94e47",
+   "bytes": 5484,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-block.glyf",
+   "sha256": "43c5864022bf5c9ce4051ffa8bb2d4bc45f2f4e6f60708e9d18cfee8ba5ec479",
+   "bytes": 3902,
+   "source": "block.ttf",
+   "command": [
+    "| extract glyf"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-block.otf",
+   "sha256": "cc41f87e315e35e437bf66afee613b97e72658177412be174229537711809b4d",
+   "bytes": 4668,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-block.otf",
+   "sha256": "cc41f87e315e35e437bf66afee613b97e72658177412be174229537711809b4d",
+   "bytes": 4668,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-block.otf",
+   "sha256": "cc41f87e315e35e437bf66afee613b97e72658177412be174229537711809b4d",
+   "bytes": 4668,
+   "source": "block",
+   "command": [
+    "(copy of vector_raster seed)"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-block.cff",
+   "sha256": "27c77668622ef77a42a89ee2807fe034ef69d8bf34b8960f579365a46f0f5fec",
+   "bytes": 3336,
+   "source": "block.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-block.cff",
+   "sha256": "27c77668622ef77a42a89ee2807fe034ef69d8bf34b8960f579365a46f0f5fec",
+   "bytes": 3336,
+   "source": "block.otf",
+   "command": [
+    "| extract CFF"
+   ],
+   "license": "OFL-1.1 modified version, renamed (LICENSES/bdf-fonts/3x5-block.txt, LICENSES/OFL-1.1.txt)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-truncated-format4.cmap",
+   "sha256": "05cecce20d51ab4b06edafaf983bdaa438eae3136f2e0627ec039253a4f7d7df",
+   "bytes": 105,
+   "source": "tests/data/sfnt/truncated-format4.cmap",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/sfnt/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-circle-0.7-0.ttf",
+   "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-circle-0.7-1.ttf",
+   "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-circle-1.0-1.ttf",
+   "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-square-0.7-0.ttf",
+   "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+   "bytes": 1316,
+   "source": "tests/data/compat/mini-square-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-square-0.7-1.ttf",
+   "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+   "bytes": 2116,
+   "source": "tests/data/compat/mini-square-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-square-1.0-0.ttf",
+   "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+   "bytes": 960,
+   "source": "tests/data/compat/mini-square-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "sfnt",
+   "file": "sfnt/p6-fixture-mini-square-1.0-1.ttf",
+   "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+   "bytes": 1760,
+   "source": "tests/data/compat/mini-square-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-circle-0.7-0.ttf",
+   "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-circle-0.7-1.ttf",
+   "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-circle-1.0-1.ttf",
+   "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-square-0.7-0.ttf",
+   "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+   "bytes": 1316,
+   "source": "tests/data/compat/mini-square-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-square-0.7-1.ttf",
+   "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+   "bytes": 2116,
+   "source": "tests/data/compat/mini-square-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-square-1.0-0.ttf",
+   "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+   "bytes": 960,
+   "source": "tests/data/compat/mini-square-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "glyf",
+   "file": "glyf/p6-fixture-mini-square-1.0-1.ttf",
+   "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+   "bytes": 1760,
+   "source": "tests/data/compat/mini-square-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-circle-0.7-0.ttf",
+   "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-circle-0.7-1.ttf",
+   "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-circle-1.0-1.ttf",
+   "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-square-0.7-0.ttf",
+   "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+   "bytes": 1316,
+   "source": "tests/data/compat/mini-square-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-square-0.7-1.ttf",
+   "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+   "bytes": 2116,
+   "source": "tests/data/compat/mini-square-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-square-1.0-0.ttf",
+   "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+   "bytes": 960,
+   "source": "tests/data/compat/mini-square-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "compat_ttf",
+   "file": "compat_ttf/p6-fixture-mini-square-1.0-1.ttf",
+   "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+   "bytes": 1760,
+   "source": "tests/data/compat/mini-square-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-circle-0.7-0.ttf",
+   "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-circle-0.7-1.ttf",
+   "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-circle-1.0-1.ttf",
+   "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-square-0.7-0.ttf",
+   "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+   "bytes": 1316,
+   "source": "tests/data/compat/mini-square-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-square-0.7-1.ttf",
+   "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+   "bytes": 2116,
+   "source": "tests/data/compat/mini-square-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-square-1.0-0.ttf",
+   "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+   "bytes": 960,
+   "source": "tests/data/compat/mini-square-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "subset",
+   "file": "subset/p6-fixture-mini-square-1.0-1.ttf",
+   "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+   "bytes": 1760,
+   "source": "tests/data/compat/mini-square-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-dot-holes-offsets-native.cff",
+   "sha256": "f31c07d8b8cafb7e892174c5f4d9f78032876ac1f2ce8fb58df6287b90b92f8e",
+   "bytes": 323,
+   "source": "tests/data/cff/dot-holes-offsets-native.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-external-cid-format0.cff",
+   "sha256": "500c4f4530c29a8ab2f448c77f931f9124d941844171aa0daa699fd3bba064dd",
+   "bytes": 294,
+   "source": "tests/data/cff/external-cid-format0.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-external-cid.cff",
+   "sha256": "1ac04b867371e41f58349c665073c81026690e979871cab7d36cef5f505e64b1",
+   "bytes": 301,
+   "source": "tests/data/cff/external-cid.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-external-fontmatrix.cff",
+   "sha256": "ab060dc5b58dd35ce3ba9eb18a7f7c722462673e03532df889c7b08ee16a8c26",
+   "bytes": 260,
+   "source": "tests/data/cff/external-fontmatrix.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-external-operators.cff",
+   "sha256": "85fb4c3290dac8b215b21a54b15cfc2a43ff79011e762178ed124526c30f7847",
+   "bytes": 260,
+   "source": "tests/data/cff/external-operators.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "cff",
+   "file": "cff/p6-fixture-separate-holes-offsets-native.cff",
+   "sha256": "e584612debc4a30bcc855fd04cf2eddecf27bebe5b921d732334968c8c08b855",
+   "bytes": 271,
+   "source": "tests/data/cff/separate-holes-offsets-native.cff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/cff/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-circle-0.7-0.ttf",
+   "sha256": "101c176b0cc7755273254ce2ca4b0f69572f6f53f0c925a67dfd621309a1883c",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-circle-0.7-1.ttf",
+   "sha256": "c78fe8439d4ea9cf0b07497bedf79cd77aadf6925389df2ff3ecd16fbda2138a",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-circle-1.0-1.ttf",
+   "sha256": "1ea96c4b5eac34aefbd721075fc546ae66d94b8e484bf2606d2b1703514d3783",
+   "bytes": 2876,
+   "source": "tests/data/compat/mini-circle-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-square-0.7-0.ttf",
+   "sha256": "e524068229b46dfa66cbaadd7a3ef7959f4ff088c17e41b39c96fddeabf1dc2a",
+   "bytes": 1316,
+   "source": "tests/data/compat/mini-square-0.7-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-square-0.7-1.ttf",
+   "sha256": "1bd63dc317794033f3bd6ac4a221d3955bf2c89770e0e535a402ef3699eb568c",
+   "bytes": 2116,
+   "source": "tests/data/compat/mini-square-0.7-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-square-1.0-0.ttf",
+   "sha256": "a73f99e152d0670cffa44543e50b1e4309e1ae923d7dad38a131ce4be941a296",
+   "bytes": 960,
+   "source": "tests/data/compat/mini-square-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-mini-square-1.0-1.ttf",
+   "sha256": "f3f83eb20a48cc0714745c4cd5080d0adffc2bbd66f17af7eacf609b181ec721",
+   "bytes": 1760,
+   "source": "tests/data/compat/mini-square-1.0-1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i1-f1-d1.ttf",
+   "sha256": "5c340360bcaa8e73792a1cec395fba494289ebdb392b76c6580a2035ee7b03a3",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/bdat-i1-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i1-f2-d1.ttf",
+   "sha256": "57f222566a12f1e3f02f96f9d86d2ac76f7570ffbcf7ce7293078261ec0e4b43",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/bdat-i1-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i1-f6-d1.ttf",
+   "sha256": "646e415a0b74c35b24c755b6b93c92c3933ae3a9d16680321e6d41acde4532f2",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/bdat-i1-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i1-f7-d1.ttf",
+   "sha256": "00143a9a0aa8127e173e2120c1fb5166a54a16df63ef82dfac1795f84092f6f7",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/bdat-i1-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i2-f5-d1.ttf",
+   "sha256": "7a57a68a38edc3685f158d1ea45ec680a0738351834d0b3f39cc557eec2f5ef6",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/bdat-i2-f5-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i3-f1-d1.ttf",
+   "sha256": "749ea837a06d00e5fddf4ecc1e006faca6d15d6bbca32858e92becfe88c7947e",
+   "bytes": 976,
+   "source": "tests/data/embedded-bitmap/bdat-i3-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i3-f2-d1.ttf",
+   "sha256": "6eef8c0fd2d3918f3b93268544fd034b03f31c4e638645982df911d86a7832b6",
+   "bytes": 976,
+   "source": "tests/data/embedded-bitmap/bdat-i3-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i3-f6-d1.ttf",
+   "sha256": "0797d9feb37a9e60bf8c6a20341848d273f9389536bd04a4102316e3e90450a0",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/bdat-i3-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i3-f7-d1.ttf",
+   "sha256": "5decfa0fa065d87bae3d586652a166d51bd18cf45743245c0baeab22739d2239",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/bdat-i3-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i4-f1-d1.ttf",
+   "sha256": "cf7c54f395d0961ae1220592e2e23a44bb10dbc7a188fa5d5117a1646bc37d86",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/bdat-i4-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i4-f2-d1.ttf",
+   "sha256": "808c910388bac4d8453b7cb8a9da73b08d87a1cc721ec67b1368a80960e18609",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/bdat-i4-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i4-f6-d1.ttf",
+   "sha256": "d02aacd4b6eaf96c8865ddd52fe600e05a0894dbd27ef75fd97c6752dfa130a0",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/bdat-i4-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i4-f7-d1.ttf",
+   "sha256": "d8ae06d276e2ca9cc1282cdbda27ee4e4cd314a62c0c641c33459e147d9f7dbc",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/bdat-i4-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-bdat-i5-f5-d1.ttf",
+   "sha256": "bf91fe41c1206692fd302885f8b5df28183a285fb1e1d1182b91ac3d1a078354",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/bdat-i5-f5-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-color-i1-f17.ttf",
+   "sha256": "61172de482f93a07f2a9271c63a776081b8cf07911c14868b6f399a4acde02c4",
+   "bytes": 1068,
+   "source": "tests/data/embedded-bitmap/color-i1-f17.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-color-i2-f19.ttf",
+   "sha256": "d8b4bb1f4ef247855624814b6ffc24748b92d4376564eb79f72a63c00c94afff",
+   "bytes": 1068,
+   "source": "tests/data/embedded-bitmap/color-i2-f19.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-color-i3-f18.ttf",
+   "sha256": "b80826d1e57aca16bb5c38a51f914731d36f8ffcb7f4b5edfde3ceb9fcc63465",
+   "bytes": 1068,
+   "source": "tests/data/embedded-bitmap/color-i3-f18.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-color-i5-f19.ttf",
+   "sha256": "53acc946907e22c82a7f7684c9d3847c10374b0a15db82fad9ae73f1d102227f",
+   "bytes": 1076,
+   "source": "tests/data/embedded-bitmap/color-i5-f19.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-composite-f8.ttf",
+   "sha256": "ef8c8809a80eda830b5fcb38686bb11931d47a1a95da13ab5a69f9e27a72bd5d",
+   "bytes": 1016,
+   "source": "tests/data/embedded-bitmap/composite-f8.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-composite-f9.ttf",
+   "sha256": "60e3a8d806a230fa16dc17ec809da6ac3e032d10824807acf66b3a88f77eaa3c",
+   "bytes": 1020,
+   "source": "tests/data/embedded-bitmap/composite-f9.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-composite-gray-overlap.ttf",
+   "sha256": "cae6a9e143286390acd6227fe85bb4ba6b415b01f3e2e8e7646499ca830c56cf",
+   "bytes": 1040,
+   "source": "tests/data/embedded-bitmap/composite-gray-overlap.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i1-f1-d1.ttf",
+   "sha256": "e6d61bbe115d1419639f0c09614a7f1d24ff840870f83beed8dd93de1e556444",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/otb-i1-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i1-f2-d1.ttf",
+   "sha256": "ec05d6de32efded74932e962bbd600f45caa14b4c68feb77376e53985d09c277",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/otb-i1-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i1-f6-d1.ttf",
+   "sha256": "fc39f7f09b924c2cda78d6874c846a1c14c2ccb742d11514aad653157ccac0a5",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/otb-i1-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i1-f7-d1.ttf",
+   "sha256": "916bc5ce2e0d0373fec33ccc8b1c79695c5ee444416c34e0681a030df98f5a29",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/otb-i1-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i2-f5-d1.ttf",
+   "sha256": "674b20df7120e92572823438960319fed4b51726772893cfeb250ecd046ad4bc",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/otb-i2-f5-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i3-f1-d1.ttf",
+   "sha256": "aa0181f9a6211274825fb87e4934150df1f0802ee9f6002290a593529347e8aa",
+   "bytes": 976,
+   "source": "tests/data/embedded-bitmap/otb-i3-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i3-f2-d1.ttf",
+   "sha256": "8397d3a0b047438e6ab17104cac8c58080a0ae9f79bc63ad0dc1249dfa7ee3bb",
+   "bytes": 976,
+   "source": "tests/data/embedded-bitmap/otb-i3-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i3-f6-d1.ttf",
+   "sha256": "8f2062afabeb53c0e14ba006d5c07a7efa0578ed083d8290c19cab570ed5e901",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/otb-i3-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i3-f7-d1.ttf",
+   "sha256": "1744a1eb19bf1d5a6c62ecbb960ef115b8fdc365b038a43b0a9e164d9606c319",
+   "bytes": 980,
+   "source": "tests/data/embedded-bitmap/otb-i3-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i4-f1-d1.ttf",
+   "sha256": "8f981d3fcfd7f114e0465b7127b67a356a9de9155e7eb03eb57cc3ac2bc2542e",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/otb-i4-f1-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i4-f2-d1.ttf",
+   "sha256": "dc3ca57c029fe17a9570cb9717368cee499db25f9d4474e037acab84de8441f0",
+   "bytes": 984,
+   "source": "tests/data/embedded-bitmap/otb-i4-f2-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i4-f6-d1.ttf",
+   "sha256": "296a18bf707e68698d51643ed4f40e73bb0d269957f02374bd77c048e10a18a3",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/otb-i4-f6-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i4-f7-d1.ttf",
+   "sha256": "365f1ecaa609dd788856caa1368ded93f6a4af3ae31ba44d20ccf592fda2e388",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/otb-i4-f7-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-otb-i5-f5-d1.ttf",
+   "sha256": "f66bd6b0cfcb7683c42cf96262afed3165e515df15782b496151e221642fd276",
+   "bytes": 988,
+   "source": "tests/data/embedded-bitmap/otb-i5-f5-d1.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-sbix-False.ttf",
+   "sha256": "19e47f3c8f64f8cb403d5a0057a32cb2f25f0c30120f1ad44b963bd9d83cfc21",
+   "bytes": 1012,
+   "source": "tests/data/embedded-bitmap/sbix-False.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "vector_raster",
+   "file": "vector_raster/p6-fixture-sbix-True.ttf",
+   "sha256": "a3825830805cab28e8745248ce8f1a188413d0dc0571906146faa704a942e2a4",
+   "bytes": 1032,
+   "source": "tests/data/embedded-bitmap/sbix-True.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/embedded-bitmap/SOURCES*)"
+  },
+  {
+   "target": "collection",
+   "file": "collection/p6-fixture-mini-circle-1.0-0.ttf",
+   "sha256": "ba62ccc14eb5c3b54aa2b7fb1b3c4aa821f159353d8da424ba216a6506aeb797",
+   "bytes": 2076,
+   "source": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-fixture-3x5-block.bdf",
+   "sha256": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de",
+   "bytes": 9512,
+   "source": "tests/data/bdf/3x5-block.bdf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "OFL-1.1 verbatim (LICENSES/bdf-fonts/3x5-block.txt)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-fixture-mini-circle-0.7-0.bdf",
+   "sha256": "9ab6a45905e3d8dd257e0c2fe4da06c0729cebdd61aa2650074d060652ec8def",
+   "bytes": 490,
+   "source": "tests/data/compat/mini-circle-0.7-0.bdf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-fixture-mini-circle-0.7-1.bdf",
+   "sha256": "bff2ac191f67c2586e6a40c4635b26451986e8bd3f7fed39e61eae57bb3e618d",
+   "bytes": 554,
+   "source": "tests/data/compat/mini-circle-0.7-1.bdf",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/compat/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.i.pcf.gz",
+   "sha256": "b5b499dfed6e11abc71c041f0067ca84182b71261156d6cb25284d869cfc9cf6",
+   "bytes": 522,
+   "source": "tests/data/pcf/syn-proportional.i.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.lsbbit-lsbbyte.pcf.gz",
+   "sha256": "12e577f56ee20e269c44f4073f31185d1e58db248ed6f84b0bd9ecec74f19339",
+   "bytes": 522,
+   "source": "tests/data/pcf/syn-proportional.lsbbit-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.lsbbit.pcf.gz",
+   "sha256": "aaef575f4a02999d4da29d419a440e4cf617a824f44593e1685c8e9dc1db9775",
+   "bytes": 523,
+   "source": "tests/data/pcf/syn-proportional.lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.lsbbyte.pcf.gz",
+   "sha256": "f88e0800321fefecef2a679d5283e7c84a74605bb11db1ebd9dac77a382fe89e",
+   "bytes": 525,
+   "source": "tests/data/pcf/syn-proportional.lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p1-lsbbit.pcf.gz",
+   "sha256": "3e01b02094be90af905e3d8c5963545106bb0f99ba1dd739974d090ff208ad31",
+   "bytes": 519,
+   "source": "tests/data/pcf/syn-proportional.p1-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p1-lsbbyte.pcf.gz",
+   "sha256": "15bd4fc90962cacc3543f9e45915cb0656e14305cf6fa7204df7bddc747753ac",
+   "bytes": 518,
+   "source": "tests/data/pcf/syn-proportional.p1-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p1-u1-lsbbit-lsbbyte.pcf.gz",
+   "sha256": "535714d6347031ea68f26039a5810ff3bf23ee7edc5799ae67b96ca6487bafda",
+   "bytes": 513,
+   "source": "tests/data/pcf/syn-proportional.p1-u1-lsbbit-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p1.pcf.gz",
+   "sha256": "9c6bcfad8f1b9c796d4871a91597b4b878374d5a27849ff95358a89acef1984f",
+   "bytes": 520,
+   "source": "tests/data/pcf/syn-proportional.p1.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p2-u2-lsbbit.pcf.gz",
+   "sha256": "0fa9f70ea1727f56d4145ad71de61ef16c3f3f8021113ca684c4128e21081ff7",
+   "bytes": 521,
+   "source": "tests/data/pcf/syn-proportional.p2-u2-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p2-u2-lsbbyte.pcf.gz",
+   "sha256": "7fd24952c3c8ba66ca9b01c6ce91ec8f9274f1a9a771e01f2d0de4ba685db661",
+   "bytes": 521,
+   "source": "tests/data/pcf/syn-proportional.p2-u2-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p2-u4.pcf.gz",
+   "sha256": "562952f1c286572b06d41951f20eb69e6f3e1d2d584c777909b61a2b8f90f06e",
+   "bytes": 520,
+   "source": "tests/data/pcf/syn-proportional.p2-u4.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p2.pcf.gz",
+   "sha256": "6fc7c751dbb523db95bc2f1d8e9c1698235e69e465ac3d4f28571faf3a4f5b6a",
+   "bytes": 519,
+   "source": "tests/data/pcf/syn-proportional.p2.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p4-u2-lsbbit-msbbyte.pcf.gz",
+   "sha256": "c585a316f82586baec1bd8b7e1e406fc42333bd3d8bf98ed15c0a7ddb7ecbb55",
+   "bytes": 525,
+   "source": "tests/data/pcf/syn-proportional.p4-u2-lsbbit-msbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+   "sha256": "cba7ff4fb7718e767148419d47dc9add70940abf7efda44a1f2ab25c22ef8849",
+   "bytes": 525,
+   "source": "tests/data/pcf/syn-proportional.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p4-u4-lsbbit.pcf.gz",
+   "sha256": "2e16b69b38121d934899a8c41eb0e49bbdab8d86b69d5784fe534395f66d5dbc",
+   "bytes": 525,
+   "source": "tests/data/pcf/syn-proportional.p4-u4-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.p4-u4-lsbbyte-msbbit.pcf.gz",
+   "sha256": "4809d2bc8272fb22bea5eec2cd03dcb59d78a8bb702f51b39c5b0ddc0b898c86",
+   "bytes": 526,
+   "source": "tests/data/pcf/syn-proportional.p4-u4-lsbbyte-msbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.u2.pcf.gz",
+   "sha256": "10081edad7baff9b380edcd1fff23806a5c7d66fb2cefcb720f29a494fd3a150",
+   "bytes": 522,
+   "source": "tests/data/pcf/syn-proportional.u2.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-proportional.u4.pcf.gz",
+   "sha256": "23552ebbec105fe1108b1d3060c58fdcab74e685beed6cffa788d9ce24302955",
+   "bytes": 522,
+   "source": "tests/data/pcf/syn-proportional.u4.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.i.pcf.gz",
+   "sha256": "3efd842aa46b20c595934047f287a4969090c96595cbcb36808a173b3733e1f1",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.i.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.lsbbit-lsbbyte.pcf.gz",
+   "sha256": "a75ad1f7a60c4e7fbce32f2750d8cb67ad7b5c629e68f081716b8e8bcf3b9104",
+   "bytes": 499,
+   "source": "tests/data/pcf/syn-terminal.lsbbit-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.lsbbit.pcf.gz",
+   "sha256": "0d426d62cc21272a25d5cb599ea4bec240ef89c424671b7e140dc91b3e36e362",
+   "bytes": 499,
+   "source": "tests/data/pcf/syn-terminal.lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.lsbbyte.pcf.gz",
+   "sha256": "13df0a124b2b7061672ba9169b3ea09aa870ed0a01f7ddbca3003fa41225610a",
+   "bytes": 497,
+   "source": "tests/data/pcf/syn-terminal.lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p1-lsbbit.pcf.gz",
+   "sha256": "b9436628f647a05a25b1d7208ef8b6571c73b9795943e49403823fb9d909ded0",
+   "bytes": 496,
+   "source": "tests/data/pcf/syn-terminal.p1-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p1-lsbbyte.pcf.gz",
+   "sha256": "db294f5be1f7831953cf04ac71026e316db12595a4863b53806e704a5812c01e",
+   "bytes": 492,
+   "source": "tests/data/pcf/syn-terminal.p1-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p1-u1-lsbbit-lsbbyte.pcf.gz",
+   "sha256": "6c75737a7ab4d1f42c28b2e3bb2d6ea4ebac006049c481862f125052247bcb6f",
+   "bytes": 487,
+   "source": "tests/data/pcf/syn-terminal.p1-u1-lsbbit-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p1.pcf.gz",
+   "sha256": "b19a07c591b896b344b358499d19bd3458d40e46f58645cd7a4885bdade93ff0",
+   "bytes": 495,
+   "source": "tests/data/pcf/syn-terminal.p1.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p2-u2-lsbbit.pcf.gz",
+   "sha256": "7db141f8287544b28d03058a8c6c22904b93966676b2a54319c8372463d62b99",
+   "bytes": 502,
+   "source": "tests/data/pcf/syn-terminal.p2-u2-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p2-u2-lsbbyte.pcf.gz",
+   "sha256": "b73eac8318019d1f98d581a8da91db3b655401897025937f527de85b688b6d2a",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.p2-u2-lsbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p2-u4.pcf.gz",
+   "sha256": "87b99144367ba6f4d4b28507ea8adb2bbfa9b13827f6e311fc4ba0350869600a",
+   "bytes": 503,
+   "source": "tests/data/pcf/syn-terminal.p2-u4.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p2.pcf.gz",
+   "sha256": "b4f105cefe553916017ec8ef9d75ac30758c9b250deb62236b0d2b2e8f93bd4f",
+   "bytes": 503,
+   "source": "tests/data/pcf/syn-terminal.p2.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p4-u2-lsbbit-msbbyte.pcf.gz",
+   "sha256": "149665dbbd623d2ede8a9d7d8090bf9f561be6a8186d94ddcc202b403188c97e",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.p4-u2-lsbbit-msbbyte.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+   "sha256": "be000e46dcc2082718423c686185bab0cc88d9a7584fe1b1c1e8a3348203acdb",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.p4-u4-lsbbit-lsbbyte-t-i.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p4-u4-lsbbit.pcf.gz",
+   "sha256": "9e412ac2ff93ce8649a8f16ccf01f6aa9724a575c3dd153f1985917cb21d1636",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.p4-u4-lsbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.p4-u4-lsbbyte-msbbit.pcf.gz",
+   "sha256": "643064183d1fd1c795f9d23c24f1f5bdb5d3acabef5ad18606fd9d563922bd7a",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.p4-u4-lsbbyte-msbbit.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.u2.pcf.gz",
+   "sha256": "5faf0e8a1b9ca90329bd5f6ac9611894b9e0ab3e7eaf588f5cac6053aa7e422f",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.u2.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-terminal.u4.pcf.gz",
+   "sha256": "ece27a0d1bb1e5bc6044800506b65a20e3ccccc2493afbdc0146dcb7d9564577",
+   "bytes": 501,
+   "source": "tests/data/pcf/syn-terminal.u4.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-two-rows.pcf.gz",
+   "sha256": "274cdfc738549c94a4de9720a9f55adb48394e6fd8bdf5096bb8feed5f575e95",
+   "bytes": 469,
+   "source": "tests/data/pcf/syn-two-rows.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-fixture-syn-unencoded-only.pcf.gz",
+   "sha256": "9a0cb1a810c86784f03b7c6df9eaf9c768dff8a7b8e6366e420285d2c0874270",
+   "bytes": 485,
+   "source": "tests/data/pcf/syn-unencoded-only.pcf.gz",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/pcf/SOURCES*)"
+  },
+  {
+   "target": "yaff",
+   "file": "yaff/p6-fixture-portable.golden.yaff",
+   "sha256": "51b60c55ab993b87c0577c215a904969a57384caa6594f4d8908843d50da31ef",
+   "bytes": 3005,
+   "source": "tests/data/yaff/portable.golden.yaff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/yaff/SOURCES*)"
+  },
+  {
+   "target": "yaff",
+   "file": "yaff/p6-fixture-portable.yaff",
+   "sha256": "6d1b08238f4ba4b2f975bf232f05b2f696ba3140e1d81b2751255fb8291e7697",
+   "bytes": 526,
+   "source": "tests/data/yaff/portable.yaff",
+   "command": [
+    "verbatim copy"
+   ],
+   "license": "MIT (tests/data/yaff/SOURCES*)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0000",
+   "sha256": "c3906ca0e42390e41bbfa27a5d15cecf5e878c1ad8e325d393fdabeca6e13235",
+   "bytes": 198,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0001",
+   "sha256": "3a34c4ce86475baf52b880c00964bdfa978674906aa56d3c05bc0fb5951e005c",
+   "bytes": 169,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0002",
+   "sha256": "6200d8ae91577ae7514f2f9cda8a2243572780e8ec7dd84cb8287ba5bd4b41d3",
+   "bytes": 204,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0003",
+   "sha256": "6f32af4cb2c09e3fb68a177c06c76718f58f4456bce136cfcf4e4dace5855ec7",
+   "bytes": 201,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0004",
+   "sha256": "3629e19a6dcba51c63479591a6f92f44f0398a70a8bcb85eb100005e2eb51757",
+   "bytes": 181,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0005",
+   "sha256": "9d8321315bae068193cbdf065e9f21362398bdb1933126836d864a24279ececd",
+   "bytes": 176,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0006",
+   "sha256": "24b818e04c610b2ccfb8c76222d74ef8248736751347e40de4d8578e7ea8c006",
+   "bytes": 175,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0007",
+   "sha256": "e4c284ec8bd2301c10164724aa37175c0ffa2530c5252397dea0faa726e8c721",
+   "bytes": 188,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0008",
+   "sha256": "a5eac97182842ea1c6366d3b024d38d0da09d646832eba7be8960d5234d633ec",
+   "bytes": 183,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0009",
+   "sha256": "1b7d2883b3af80962e4b18a3b45c5096e159179290d8913e5d144d1256c9ebbc",
+   "bytes": 173,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0010",
+   "sha256": "9085cc1df7a4f973201f82cb18baab634c6fce8182d341eae1061a4b899866ad",
+   "bytes": 184,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0011",
+   "sha256": "692c2beb784905987e4fa698bd5174ded024edfa739d6a718660c525d40eb18f",
+   "bytes": 175,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0012",
+   "sha256": "10a68d57402de84a7622eea84bf17a57656882070af52d658953b8b8c6a84237",
+   "bytes": 176,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0013",
+   "sha256": "9e37524176e67aec61f60535a81705e97902f69a228ac6d43a750eaa752e83d2",
+   "bytes": 183,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0014",
+   "sha256": "9449fae526c23268ba7a161150e4d258944d1c039e79593e079ccfe5b8754740",
+   "bytes": 170,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0015",
+   "sha256": "63ec02377d9ce7bfa574d031fd1ac620843f989f6400f2bd98b1c1214d46a26e",
+   "bytes": 166,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0016",
+   "sha256": "5ae54fba8b3ab82ab89cfc6554bfeb8a075f381744f457024be284d8a9757de8",
+   "bytes": 165,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0017",
+   "sha256": "0adff4cdfe4c8884c07aa423e56cb576e785baa82d242047a1f71cd9773b724e",
+   "bytes": 180,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0018",
+   "sha256": "32da7df65042fbe9981ecf451fb1416a117e88ebedb7e6683040f71785456691",
+   "bytes": 193,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0019",
+   "sha256": "25a05aa9366e46e98adcf4b1aa99b088e30e3ec2d9d72c87f2654b779f8f615a",
+   "bytes": 198,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0020",
+   "sha256": "13234fcfa3f31d3fa845b1c3491b0486ecb4b59d05c8a583498361a6415f22b7",
+   "bytes": 180,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0021",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "bytes": 0,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0022",
+   "sha256": "f924606e18b7de91890e8cad295d7d8def5f2f66cc64e469cb661ed21a87b16f",
+   "bytes": 202,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0023",
+   "sha256": "6267295f2565ac2593031d36b84811ecc4b7f24d0ded41a2891fc5c3ebd05021",
+   "bytes": 212,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0024",
+   "sha256": "5d283e5102f9d1e595b1ef1b7265e0f62217393117920b7677ec1c6213ad40d0",
+   "bytes": 222,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0025",
+   "sha256": "e90d8f3828e78474326bc55d68734404480a03d9b3183a41017488cc79bd2906",
+   "bytes": 214,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0026",
+   "sha256": "19b31253eb77f2e8fd406058ef67dc4dc76b2c9d78201e471f0a41c07f4c13d0",
+   "bytes": 161,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0027",
+   "sha256": "3dfb4f781962fe06e28d8f821c4391d106de83bdbcb86db1c43d940f503b7557",
+   "bytes": 194,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0028",
+   "sha256": "348b9f0f92cb59334adf512236ad63ab6cd3fbab4e12d196b769738c9603c3ef",
+   "bytes": 205,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0029",
+   "sha256": "63432612c073449108d7eb23b7d72afacca86dfd9a057462cda04e65335450a0",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0030",
+   "sha256": "dab6daf97d9755246eb4603b40a11e66ad53104240ef442c612e98417203b6c0",
+   "bytes": 184,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0031",
+   "sha256": "d43035c0575738e1668f4b4e75f5e270b1340a4a8efd7542e26f6aebbef2504a",
+   "bytes": 166,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0032",
+   "sha256": "08b03e5b1f4e25249ef40e21efd030ceb53dfc1474d2603394638f42ad563e68",
+   "bytes": 191,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0033",
+   "sha256": "ecc02ef7c7a9cf8b459dfc036f38c11de2e2bc4eee5431227612f778635369da",
+   "bytes": 151,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0034",
+   "sha256": "a0404136ef4bfb69db590578c29cd298ac40622f5d880f5020ec6900549e2cb5",
+   "bytes": 205,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0035",
+   "sha256": "03604c9f6ad84f5bef27ce8b68f2c8bff07b03333408de0276085aed1f81ec5a",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0036",
+   "sha256": "e84e70d6d55f569d12b183f68805dae35b7cfe5e7bbfb3c7bbc1d01b3b61156d",
+   "bytes": 194,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0037",
+   "sha256": "47ed886530b5dc2af565f92c04acbc3272bb31a27f06470d9369de6f9af72ddd",
+   "bytes": 162,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0038",
+   "sha256": "de6b53edbc972ce4550e58fab2dfd4479f6809cee747864f767887d62c8a2d87",
+   "bytes": 171,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0039",
+   "sha256": "62ada6e675189fb30286c7bda3b6a27c5ac7365e1ed685227c661ccddf466297",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0040",
+   "sha256": "51f9e760b6a07d59fb9dfad13da3796ce8410e841849aa5e8d95f5b4e4aba2b9",
+   "bytes": 167,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0041",
+   "sha256": "ae550d8825f8f030a5660e0817efe02844e752b6597f8f5a4c525510a61d747f",
+   "bytes": 176,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0042",
+   "sha256": "d39a438cf6727204397f16a0af80172a9d66db3125836d0ee6ea250298066d2c",
+   "bytes": 191,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0043",
+   "sha256": "f6dc3a1ca2bf9e59503dd7d35cc3b074262d91d10d1e561d9cdcde7505e6a77f",
+   "bytes": 162,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0044",
+   "sha256": "7d5639aa7e039d844e42f3ee1f46e45db6c8a64958423adf4cb72fcbde8bba76",
+   "bytes": 197,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0045",
+   "sha256": "ae6e7c5ed6990c0bcd253c77979ef1490b80fe16924ce0eb72646930db0e6bfd",
+   "bytes": 158,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0046",
+   "sha256": "9e4ebadc3a99e511c655127668cbf6c8175a5584f31b30b9b18171447dea606f",
+   "bytes": 195,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0047",
+   "sha256": "589a205deeb50aa9b97e1e60e647612989565e08310982c080a4e10c9b7c48fa",
+   "bytes": 188,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0048",
+   "sha256": "a26b83619c9c1776f0ca9489a27b509dcb765d2d8b91a54dcce77a61edf54997",
+   "bytes": 175,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0049",
+   "sha256": "44c80e8e0726ecae256bf2acd5dd428fedf427cfc29d5bcd257c14759b50c89a",
+   "bytes": 182,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0050",
+   "sha256": "7df71dc60cc5ca0b9005a44b906f68e49cea357e308433e97dbade5803f83745",
+   "bytes": 157,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0051",
+   "sha256": "600cc22ac005f719f306b59fa48d792658bb09a36c3ff9433f5a5b8d2b8d706d",
+   "bytes": 180,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0052",
+   "sha256": "ace38bc6b402de9d86f4c80d4059bbecee4a283c52e3ce41f2bfdf68a2dd449e",
+   "bytes": 192,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0053",
+   "sha256": "fd0db64f7358f217cbf2c27cad64f2052f34f1a78de77b0934fe8e5855daecf2",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0054",
+   "sha256": "94b2638e104fe47f6c52264975eed52dae1e006c18d5d7514e8f54860443fc13",
+   "bytes": 194,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0055",
+   "sha256": "7450c53ef9fb4192ff5202de789d2f675c3b668860eb9dd4e803b8f930a464a0",
+   "bytes": 189,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0056",
+   "sha256": "c74ea70e0fbf30a7057f375f92842b1c870f01e3c959f26fba8473638eebb2f6",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0057",
+   "sha256": "69cb35e9ce5cb33cda98657c8e52cadc216dcb3046bc29fb72332bcbcbc17f83",
+   "bytes": 201,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0058",
+   "sha256": "fdaf44d9e84aaaef1d20f6e9abaeca0c5115cfd7b39771a7d06cdbcef20a9b68",
+   "bytes": 174,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0059",
+   "sha256": "83dd9c58279163450ed24252883cdcd0e88df9c2d13e4d3427055cb74f470f40",
+   "bytes": 181,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0060",
+   "sha256": "551c7859f238cca954a638faba3cd8599fc17b7072f3d1ea57af5e95c7adcb0f",
+   "bytes": 196,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0061",
+   "sha256": "b4c4ffe0640ced81cbfffec6f294bb203d3afb4dea07e8c9e4a7a55b169afb8e",
+   "bytes": 187,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0062",
+   "sha256": "04af270a5d0e3330b627b07a98d75b7119192ba58e3dde59660acf3cd04414cc",
+   "bytes": 182,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0063",
+   "sha256": "00039452467ce0a32f9abba305919543fc99438a28daf19a9577946c87c94e26",
+   "bytes": 199,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0064",
+   "sha256": "49ab4f7d531796b2635ffb09b8a3ee05dccfd4395157d43d4f9cfdb3a005cc6e",
+   "bytes": 190,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0065",
+   "sha256": "71d638d454c2f69f5910f7b705252f1de772f72a0375d6eecf2c1cd274b84260",
+   "bytes": 167,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0066",
+   "sha256": "5ee300c7b279f19148fdcaad3cd9c72cbebcd3b63434714955b089022eb710ed",
+   "bytes": 201,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0067",
+   "sha256": "9665ea3a3161f947de686d6387cdf0cc0eaee99309ed12668897005b1c1b6ba5",
+   "bytes": 173,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0068",
+   "sha256": "0a707eb4c1f095c577fd7076dfdeda204307b8436bea9b2375f942da9943f804",
+   "bytes": 185,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0069",
+   "sha256": "a0c83a69067250106835e86a6d8084907a2d8670495aa200aac1b11c7e8a40f7",
+   "bytes": 164,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0070",
+   "sha256": "a19b71fdecb056fce0054c765c00d8eba7e4749d752985afc4ef88c2f3c243f6",
+   "bytes": 155,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0071",
+   "sha256": "46ebc7bb63dbaf5762bcaab926243a966ecfef0807471e99805e67da5f57ae39",
+   "bytes": 182,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0072",
+   "sha256": "74a34ababef0b35d91b789ed8052aabafc926b3d82c2c941255fe7f3a20b66ea",
+   "bytes": 189,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0073",
+   "sha256": "ffe093aafdaf39483d9d6637b7f7ecf95ca975efd0d20bb20ae2ccb2c0784c52",
+   "bytes": 172,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0074",
+   "sha256": "7ae92ad2e81264949ba5a3f6ce14891b2cb14e28409ba64bd7451069c6f1f070",
+   "bytes": 173,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0075",
+   "sha256": "85fe85af2cf0e3c6e8b29dcaa355c5905abeeff7c5d31058490a1c905bb79c33",
+   "bytes": 176,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0076",
+   "sha256": "f935ca6ea9788a0281ace05e2cfae4d92e803ac3eab717f557257802880d339a",
+   "bytes": 813,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0077",
+   "sha256": "001531d4b71c43d0ecc832a780cdfcdf2f8dc039b0127b45cd70503cdc6323e7",
+   "bytes": 634,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0078",
+   "sha256": "986e7849f7f3abc3adae78f74696ffda8079045e3ddc010c68bc5f48528cc931",
+   "bytes": 1375,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0079",
+   "sha256": "95eb6c4ac5e891d753b6ea51d8dd42958dc947cad13a866f72e089738dc10659",
+   "bytes": 1977,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0080",
+   "sha256": "ca3f6790c8990f3b3fdde58c2cc339e50492f479df46f7e9de473fc5ccf01ae6",
+   "bytes": 893,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0081",
+   "sha256": "3a04252c756f20e307347f4451c2670ecd15d49fdc29cb2e37444920502ba8f5",
+   "bytes": 690,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0082",
+   "sha256": "fe67f77b680c99a59875495182c4d91a5f04d47b69f795d3da990f7e8028e3bc",
+   "bytes": 410,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0083",
+   "sha256": "72634bd843bdc8b048a4e588df9190c7ba95538fe6c3af1870a24935b2b5c101",
+   "bytes": 483,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0084",
+   "sha256": "1212a4135a10489647f62de1b08f3e4cbdec89f71987b64ecec983f52444d4f5",
+   "bytes": 505,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0085",
+   "sha256": "6e83e0ddc942aaaebde84a3b6b04d34b831d7bae4eb61db44bac88d151f3be21",
+   "bytes": 751,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0086",
+   "sha256": "43ce1ea45aaa32211e7da29e0c6f0f50a1fbb034fc20f3507929851904b2ed90",
+   "bytes": 804,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0087",
+   "sha256": "7c74ff3429869d49ee6f532f5d6a62d2a12cc06f6848107967db23055912c982",
+   "bytes": 716,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0088",
+   "sha256": "4ba51eef18c20e182c6f19c785b5200f4a62ed4a789bfcbacae23174589cba9f",
+   "bytes": 1503,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0089",
+   "sha256": "857647ba7de4b0c9634e5903826962a519321616576c6c974ef5b54b81e20e13",
+   "bytes": 680,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0090",
+   "sha256": "b74743cea837d666452e47cc599dcbf9c079902919ca679227af7bb8356277c9",
+   "bytes": 766,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0091",
+   "sha256": "e40938009d6eb0e0a23218432232931bf8e9a7acc6464cde0ec2c435dd030cf0",
+   "bytes": 738,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0092",
+   "sha256": "0b291f49710ed31ab56cdbe78bc0d55baa684391f2316e86cc676ca1cb32e583",
+   "bytes": 1514,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0093",
+   "sha256": "4fdd907ed6f28f120c91fb709e45e86d0c0049cb2237740a4670d77f44c48fa5",
+   "bytes": 1502,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0094",
+   "sha256": "9cbd68a1ee9c78d10dd55b433c0dba541014df06d81be36152d514ff158c0d8a",
+   "bytes": 1118,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0095",
+   "sha256": "678ab9fa9337f1280104e1eb9abce6d21394129ad90c4695eb5fe7437ca0df78",
+   "bytes": 200,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0096",
+   "sha256": "0015cd79f675625dde77c175e88c42b264efb8ec36120eb031a1263d05a92cd1",
+   "bytes": 1144,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0097",
+   "sha256": "216f917e7cd62890990c58677739833d3df7a53115aae5c47bbef1aeef88ae2f",
+   "bytes": 911,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0098",
+   "sha256": "a56e3486abc73960798eb9563de521df387445a1bd0df6fbbae45adece50f35a",
+   "bytes": 362,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0099",
+   "sha256": "ff27a927e5c43eaf734b79e91daa48754eef1ff5a03fd8af758e60e9d7604c10",
+   "bytes": 1044,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0100",
+   "sha256": "14be471056d673119cd0d42d216a575a4f5db60ec54a576d979b4a88a0e4fc3d",
+   "bytes": 473,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0101",
+   "sha256": "f7da822ca92c8838dcdb886144cf9f5eecbff0d25cdf18b20362cffc867a8d9c",
+   "bytes": 1528,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0102",
+   "sha256": "db2f31f09eb28b1adcbdb1f564dfc1a2adc7296d6a348461f0171131ec7f6feb",
+   "bytes": 936,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0103",
+   "sha256": "a15d536e0ced2c04b8876fbffdd143bf7abc75ff1832d3a6d5c881069e63574e",
+   "bytes": 899,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0104",
+   "sha256": "a0be7054071a2fc726a9d9f1055f16b84be0424a0702fe7ee8fb192bd40cc636",
+   "bytes": 200,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0105",
+   "sha256": "3a2f6eb47f82485d04f87a2df93f58d05a1051ba03d212510f54df29010cc331",
+   "bytes": 622,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0106",
+   "sha256": "844920ccbd0a65c683b9f17feaa5e4fad82ecde0c1d68a44404d8021c482e60b",
+   "bytes": 1104,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0107",
+   "sha256": "8da37689b33bdd9d2e6fe3d8a4109cc8960752ae174ad7b311b343a2495059b4",
+   "bytes": 1058,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0108",
+   "sha256": "c2c61942a59571c55865d3acf5f6fb51992edb5d6bc30d1c85edd5175f830b13",
+   "bytes": 200,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0109",
+   "sha256": "ad1df2a6fe8a4694949bc785943597f8a77181e4c29a9f14e06f53c1c7231441",
+   "bytes": 1546,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0110",
+   "sha256": "d22a511138534af72fe5435ee6c226e0d2fddeb0b1c578dc1d3f0cb95bc70ec6",
+   "bytes": 976,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0111",
+   "sha256": "58b924cec36c9c65b648c2a25e8b1882b3966ac6fa9850e09b4974454d49a4e9",
+   "bytes": 333,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0112",
+   "sha256": "61f444196f21c99a4fa17a18cd46e7b5d2880dcf1d159b8c5f5e04a425071a06",
+   "bytes": 1214,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0113",
+   "sha256": "3271311d274b2880771cdbef42bfd7379922b36cef3e439b2f0d1cdc75a10ca1",
+   "bytes": 1436,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0114",
+   "sha256": "ecd5d38065d435101989b9c92ecda0cdb350c27b946a65110c53fef98a74e155",
+   "bytes": 1203,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-oracle-0115",
+   "sha256": "5c9970ca059088259a52f96960cc3e2e0f51372a535050ee2ba5c4510a0aff0f",
+   "bytes": 1218,
+   "source": "crates/fontpixel/tests/data/bdf_reference.json",
+   "command": [
+    "every 8th case['source']"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0000",
+   "sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+   "bytes": 1036,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0001",
+   "sha256": "a5a800ccd13f36de503cf5f551eceeef0c6394b20cac6e1e4ada9ca7eaf1d1ff",
+   "bytes": 1092,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0002",
+   "sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0003",
+   "sha256": "bc06c5c211ae6e0193382d3e9fb8c1cc23d09cfca8dab2cbbd7ad24cbc682b3e",
+   "bytes": 1036,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0004",
+   "sha256": "09f8cd48468a8c3d63088a70b695cd9634f87ded050eede9a37f2d0c995fc2f8",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0005",
+   "sha256": "48f718c4a4a1427f54c2e3d4bcf36449ca33e5b422cb73451245e9f127988da6",
+   "bytes": 1428,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0006",
+   "sha256": "90a27313017aad9c6092b046f37821fccc1a2c54a337a145762e96b6ff4c07c8",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0007",
+   "sha256": "c203fc7b631751340e8c1f60e6135b01dadf1593d450f2bbc719624697f4a464",
+   "bytes": 1428,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0008",
+   "sha256": "d14030765aca2a83276719fb690cab3963504b68e89d06b12429e25e34e2891d",
+   "bytes": 1036,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0009",
+   "sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0010",
+   "sha256": "d32cd1695e3cb65d0ee00d997f8e9a20025a995d15f51e2985ac9b83fe647791",
+   "bytes": 1428,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0011",
+   "sha256": "57e5f46262f7d5577ac48bbbd5238904ddc67b213cd7a30ac9d68ab31d318d96",
+   "bytes": 2964,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0012",
+   "sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0013",
+   "sha256": "50d9e38483c74bc86cb0995339cc3639a3399adb678d5cddfee43e5c96fd3463",
+   "bytes": 3072,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0014",
+   "sha256": "0109804cfcc498ee2e0562b6f963293f61157e0a3f9a811cd9d7dfa249ea4152",
+   "bytes": 2976,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0015",
+   "sha256": "c56e93518ca93ac24f8ada975382ab9ccd57c6ba0e1ae2b40b973fafc55ed490",
+   "bytes": 3072,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0016",
+   "sha256": "d586caf80abb4b870aa5f5fb5d117b7f61b370315ec4805952c32afcc868f46f",
+   "bytes": 2976,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0017",
+   "sha256": "cb92b98ab45347125f1c3486d144c272c6cfba136af19f64a77d0db31b59ecfd",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0018",
+   "sha256": "af1413f54191cd7c05d88b9faaa5a2a27f339260f24fb3642f975753b121c4bc",
+   "bytes": 2964,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0019",
+   "sha256": "b4a60c157ee6b5ea5554f06dfb70751ab96b15781ec8b43a0bf5b2f1dc99d935",
+   "bytes": 2976,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0020",
+   "sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0021",
+   "sha256": "40a182f5e018a33694b6d921fd509ba6f506dc735e44d67d4f818a17f6252d3e",
+   "bytes": 18496,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0022",
+   "sha256": "702a30c901416bcbca7396877056858525a29f4888e1d8c768931889a1557243",
+   "bytes": 18592,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0023",
+   "sha256": "eb59495cf570827a0b851536a411423d9f1a944eebb99a153598500e4b6852e0",
+   "bytes": 18784,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0024",
+   "sha256": "a33ae8d3196b82acffc8bcf1b9b558dd6b9e27a40702de529e522091c58038bc",
+   "bytes": 18496,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0025",
+   "sha256": "97916bf1ec4f563182169f750bab04cfc43ceb3e53d6a7c1c1797942ae1ba032",
+   "bytes": 18784,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0026",
+   "sha256": "6cd001efb4aabc73465841c939c707eb894e058d03f969770ec6258418d2b68b",
+   "bytes": 18496,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0027",
+   "sha256": "a3cb969b39c00dff8a5681957aeb92936c95877328bee50ff858474547c12fda",
+   "bytes": 18592,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0028",
+   "sha256": "022ed5f88d0a9a76f6cc68783c7f035674bc44bb92e7652a3546157c105ad396",
+   "bytes": 18496,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0029",
+   "sha256": "4e0d5a15ac0a0eec9652f26ee197154227d8cf9f00658faccd9e840f3a633283",
+   "bytes": 18496,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0030",
+   "sha256": "49539421c9738913a212683b6f9f6940c04825f8e09b4994c7d726a5b7be7d48",
+   "bytes": 18592,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0031",
+   "sha256": "5e4ea05b07be59cff4d7a0d14ecb808f4ea6070734c5bd381626f45f3fe2419f",
+   "bytes": 1336,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0032",
+   "sha256": "9e5be18bfee6a74a71efce76bfc15beeb090b073131e15d19bf8e98eb2337504",
+   "bytes": 2164,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0033",
+   "sha256": "b02b952ff74efb7637a86cd1b37330ffc51577c58a75794993e930b820d6b9b7",
+   "bytes": 4036,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0034",
+   "sha256": "bbf5fcbd1b01a530cb90279b6ee3ff5264fcbc9faf6a3969ca540ee350c366d4",
+   "bytes": 4328,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0035",
+   "sha256": "d88b27c17ea549c8d1506dc46835dfe3e2f5af615f7e738b9f52a0b429508fd5",
+   "bytes": 2848,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0036",
+   "sha256": "b7b3acca3658caad606264ca61ed06feda823c116f1417e9bf42f298e6d880fe",
+   "bytes": 3428,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0037",
+   "sha256": "b18e04f74b23dbf6cf71a28048290958f0467884000358a9be5427421565c6c8",
+   "bytes": 3964,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0038",
+   "sha256": "06ae833b0ff3e6057c95d59255c92a7b61763ff2e8b6b61f155030115642e428",
+   "bytes": 2616,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0039",
+   "sha256": "399f8d1f3178402233cdeb152a9475f39c2ef648a75344197e66a9a8690dd13d",
+   "bytes": 1836,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0040",
+   "sha256": "ad4f10ee64540215f25c81dfd52a21d37f954f62b788f64f270142a02798fac5",
+   "bytes": 3472,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0041",
+   "sha256": "240b01007b59caded3c5d2923b5e9dc3c524a69fefa1d2b8317f60bb915697dc",
+   "bytes": 3116,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0042",
+   "sha256": "2b0b8252657ced211d33f4a583e2c67b43173882abbf88bb588679359cbbbd6e",
+   "bytes": 3904,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0043",
+   "sha256": "5e44aa525df14c58e5d6177bdd18dae471b090d20a6ee4f2afcb2b99fedf4f1f",
+   "bytes": 2856,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0044",
+   "sha256": "1b243db61ae0adb344029a79b816e488097fb2d4f9eea4f5bf8a4327500990c7",
+   "bytes": 900,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0045",
+   "sha256": "86195a934de76b680c37ac6db65ad83f6132fdf7e756f7048d3151821a4877dc",
+   "bytes": 4208,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0046",
+   "sha256": "14c9f3704d98a54bc263cc31494688eeb903dfa9c3228523ad4e311c5fb6fd1d",
+   "bytes": 1472,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0047",
+   "sha256": "17e9f1cc8584273b74cc778408817ca4baa6fce7aaca9f87e353c31864bc42d4",
+   "bytes": 3488,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0048",
+   "sha256": "b6f3bc174b46dd0a9d96e522fca80edd693656db1e91f69619b25bf3225392d8",
+   "bytes": 3620,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0049",
+   "sha256": "7f3df67a38acc57c48e966bcf324575f183d84af71c3ca45d3f0336789e5b6b5",
+   "bytes": 748,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0050",
+   "sha256": "2d0158f725e5563ad81178cac58bfeb654affc8cd65b6d632a975d35c00444ec",
+   "bytes": 4152,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0051",
+   "sha256": "1110d168b8ade5eeaabc89c0f189106b004ca56fb8bceee601c321627ecf6470",
+   "bytes": 2624,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0052",
+   "sha256": "74773490d78e9b376e286b31eb109fdf6b7c99f9c6d015825b5661c38d542a2b",
+   "bytes": 4612,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0053",
+   "sha256": "7c387eb29f965195e735b88e0839fd50c1ce5a4636e60d13f9df3d91ef649d68",
+   "bytes": 3992,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0054",
+   "sha256": "ad6093165c41d5e32b1cbb2dba610a6f469963c64481441a3b34f23d0495d3e0",
+   "bytes": 3732,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0055",
+   "sha256": "09031bf35b419575df4b859bb6c5cc1188d1f6abb3fdcf6de963846f40cbcf5b",
+   "bytes": 692,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0056",
+   "sha256": "208494420c07e9d3bc404201b5095c42ffabc1ef1f7379d089b365acf2ab3b98",
+   "bytes": 2020,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0057",
+   "sha256": "d26d17d48057db94acf5ddc44932d64d03f3f74cceefa1a6a9b608920f02e894",
+   "bytes": 1512,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0058",
+   "sha256": "f003db698571dbdfd89758fce8a64facb228fbc6f98ae79ba654f77d43e8e552",
+   "bytes": 3504,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0059",
+   "sha256": "17be9d9d7b660d418725764ab3293c8eda6ecfc25d9ade626f15a751de587760",
+   "bytes": 3956,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0060",
+   "sha256": "25d7281be911129d25c00b05b689951273833007067d05d7f13f56107a92e7c7",
+   "bytes": 3728,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0061",
+   "sha256": "41156a44bc9f21f0e6624d6ebf61f352f6b57c2aa50322dcc240387a4e89b192",
+   "bytes": 3516,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0062",
+   "sha256": "a8411337526e13027b2c0f68fbaeafb2eed60643a34b86d535296b761f73add2",
+   "bytes": 2416,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0063",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0064",
+   "sha256": "53c7d2c62d9d5f806ca9aa1c3b8cae4310b36d6114a02568208ba6711f7e0a1c",
+   "bytes": 824,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0065",
+   "sha256": "ea3a4a46820cdcb728140c792bd99ff6d4874ab54cb22c9509b66841be85d41c",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0066",
+   "sha256": "0f80fb50c116750b662aaa649858aee7a2f022d4e50564d2234eff36cad25082",
+   "bytes": 688,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0067",
+   "sha256": "3133917ded5947c91c6c467e562b0b54e654c96a6d2b2d42f6c6d84ce5ce5a6e",
+   "bytes": 700,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0068",
+   "sha256": "5aa0c6d6d52c70b6d8e927304e4d1edc6abf74b8e2d71a0228d287746329e2bc",
+   "bytes": 692,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0069",
+   "sha256": "5e8f0efc50fc8f504beda3d0748329361c3532170f406c6989a292874703181f",
+   "bytes": 700,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0070",
+   "sha256": "88cda42e396e7ed249835987dc2bef5ef7f0951af36874c7fa8e2f29d5fafb78",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0071",
+   "sha256": "88cda42e396e7ed249835987dc2bef5ef7f0951af36874c7fa8e2f29d5fafb78",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0072",
+   "sha256": "e069ef923fb23c46e2fc3e3ae9fd737b4ef08f78e048a87611dc554e4f5bc13d",
+   "bytes": 604,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0073",
+   "sha256": "793c0f760ebf7d1ad0c2fe19971baf5a502c0620711ffa871b37a17b49e9f746",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0074",
+   "sha256": "88cda42e396e7ed249835987dc2bef5ef7f0951af36874c7fa8e2f29d5fafb78",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0075",
+   "sha256": "88cda42e396e7ed249835987dc2bef5ef7f0951af36874c7fa8e2f29d5fafb78",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0076",
+   "sha256": "0fc34dcf9c8d71dd02be6e7ca741a1248be841011f31ea129b55e94fb5201d25",
+   "bytes": 628,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0077",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0078",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0079",
+   "sha256": "94d6caa75f26ff7056b003c79fd5c9e3e0fd14f58522f53a7c2c2dafe814ff3e",
+   "bytes": 648,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0080",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0081",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0082",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0083",
+   "sha256": "6a7b21135cc46b88b3fcdf102722b9f47469f33490f965fdc6669a74e4f44c4e",
+   "bytes": 936,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0084",
+   "sha256": "e5afb8df76c662328d08465e7e10a0e518523d72f4dea1abb60fdc856b44b6f1",
+   "bytes": 756,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0085",
+   "sha256": "2a217e9bedd6e6a50ad464ecc3b59a732e2df72b6d11eec679e327193ce3ea15",
+   "bytes": 692,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0086",
+   "sha256": "5ba4b2bb89ca380e988c7dcf4d80e6310d029cbe84f7ab02cd1984599367cc64",
+   "bytes": 676,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0087",
+   "sha256": "4ef1c2d495f09c19334df1dd5c1afd7a4560bd444ffa529b73b7907466b37d41",
+   "bytes": 600,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0088",
+   "sha256": "c1e97a10193b28ca8a97e5f3463b3c250df1094ee644f000231b01f8fa0058d9",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0089",
+   "sha256": "9cb6ab9139e36c79f572e9bcb2c53a0ae3e2c758f5127177777ab6b81333fdde",
+   "bytes": 2964,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0090",
+   "sha256": "5918550bf503352cca07eb249d35b6dc13a230a420c41d23e4570bec7b42f718",
+   "bytes": 2976,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0091",
+   "sha256": "757aa59ee6e0a7e061449cb76902ab946be50c1ab81b0fcf2f2839317c7960e3",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0092",
+   "sha256": "8febeb504df929311a2feafb0c122f9ef77b9c8ab84cdaed45136dc747930db3",
+   "bytes": 3008,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0093",
+   "sha256": "5864babe43255d195ba2f3ec37febf0966a2c24f08c7b2a180095bb3a728aeaa",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0094",
+   "sha256": "bd2a24804cea3eda0d3928e788c8c4aeb017e4243f2d8f541d57197aa722f28b",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0095",
+   "sha256": "bcbfa09f4e6f6e1c844c2c9370f6c86a4aaa4a53efea4f5aea1c3d4ff3056b08",
+   "bytes": 1036,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0096",
+   "sha256": "8f8e348ba127c0cb03f5e44f14c10ce947300c94743b7fbe5dbcd8097eb06bb0",
+   "bytes": 1092,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0097",
+   "sha256": "3639dba7ab2b8638e6edea1d643deee17296d97f8e21b87a79aaa4ec5ec7e1d9",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "pcf",
+   "file": "pcf/p6-oracle-0098",
+   "sha256": "4f2681be6d6bab5ed4fe8c881f75ff1559168f3ebb7541ba827f5bc074f79728",
+   "bytes": 1204,
+   "source": "crates/fontpixel/tests/data/pcf_reference.json.gz",
+   "command": [
+    "every 4th case['pcf'] <= 64 KiB"
+   ],
+   "license": "MIT (tests/data/SOURCES.md)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-synthetic-cell16.bdf",
+   "sha256": "54356f907949e96bf0ab87d896602d5939bf125bff9945817dc1ef522823c8ef",
+   "bytes": 13081,
+   "source": "cell16.bdf",
+   "command": [
+    "synthetic"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  },
+  {
+   "target": "bdf",
+   "file": "bdf/p6-synthetic-prop7.bdf",
+   "sha256": "147c39776f36f9083ee9ebd902e2dd0d6347002d6b2e32563040df19f3693609",
+   "bytes": 3072,
+   "source": "prop7.bdf",
+   "command": [
+    "synthetic"
+   ],
+   "license": "MIT (project-owned; LICENSE)"
+  }
+ ]
+}

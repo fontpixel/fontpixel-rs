@@ -1452,15 +1452,15 @@ mod audit_budget_tests {
     }
 
     fn full_report() -> Report {
-        let mut entries = Vec::with_capacity(1);
-        entries.push(ReportEntry {
-            level: Level::Info,
-            impact: Impact::None,
-            code: String::new(),
-            location: Location::default(),
-            message: String::new(),
-        });
-        Report { entries }
+        Report {
+            entries: vec![ReportEntry {
+                level: Level::Info,
+                impact: Impact::None,
+                code: String::new(),
+                location: Location::default(),
+                message: String::new(),
+            }],
+        }
     }
 
     #[test]

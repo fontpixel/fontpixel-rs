@@ -1,7 +1,7 @@
 # Native API quick start
 
-Recovery status: the present phase-6 source is reconstructed, uncompiled and untested.
-Historical test reports are not acceptance of this source. See the repository
+Status (2026-10-05): the reconstructed phase-6 source compiles and these examples run
+as doctests. Historical test reports are not acceptance of this source. See the repository
 docs/recovery-status.md for known gaps.
 
 The native API keeps data, diagnostics and output assets separate. It performs
@@ -49,7 +49,6 @@ assert!(!audit.has_loss());
 Intentional normalized edits return an audit report. Raw properties, XLFD and
 other provenance remain separate; editing a notice does not establish permission.
 Changing family/style clears stale generated full/PostScript names unless supplied.
-The reconstructed example and this doctest remain uncompiled and untested.
 
 ## Read and write with complete reports
 

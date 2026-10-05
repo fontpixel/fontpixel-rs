@@ -445,7 +445,10 @@ impl Output {
                 e.bytes
             }
             _ => {
-                let f = sfnt::Sfnt::parse(&sfnt, &sfnt_limits(resources))?;
+                // Directory validation is a codec transient beside the retained
+                // sfnt, report and auxiliary data; it only gets the remainder.
+                let available = codec_limits(resources, retained)?;
+                let f = sfnt::Sfnt::parse(&sfnt, &sfnt_limits(&available))?;
                 if (kind == "otf") != (f.flavor() == sfnt::Flavor::Cff)
                     || (kind == "otb"
                         && (f.table(*b"glyf").is_some() || f.table(*b"CFF ").is_some()))
@@ -1489,11 +1492,57 @@ mod tests {
         let exact = bytes.capacity()
             + report_bytes(&report, usize::MAX).unwrap()
             + auxiliary_bytes(&aux, usize::MAX).unwrap();
+        // The retained sfnt, report and auxiliary data fit exactly, but the
+        // directory validation transient has no allowance left.
         let limits = ResourceLimits {
             max_total_bytes: exact,
             ..Default::default()
         };
         let mut emitted = Vec::new();
+        assert!(matches!(
+            strict_output("must-not-exist.ttf").save(
+                bytes.clone(),
+                report.clone(),
+                aux.clone(),
+                &limits,
+                &mut emitted
+            ),
+            Err(Error::ResourceLimit { .. })
+        ));
+        assert!(emitted.is_empty());
+        // Directory validation alone needs `working` bytes. The save boundary is
+        // exactly retained + working, so the sfnt is charged once, not twice.
+        let parses = |total| {
+            let limits = ResourceLimits {
+                max_total_bytes: total,
+                ..Default::default()
+            };
+            sfnt::Sfnt::parse(&bytes, &sfnt_limits(&limits)).is_ok()
+        };
+        let working = (0..1_000_000usize)
+            .find(|total| parses(*total))
+            .expect("tiny sfnt directory parses");
+        let saves = |margin: usize| {
+            let limits = ResourceLimits {
+                max_total_bytes: exact + margin,
+                ..Default::default()
+            };
+            strict_output("must-not-exist.ttf").save(
+                bytes.clone(),
+                report.clone(),
+                aux.clone(),
+                &limits,
+                &mut Vec::new(),
+            )
+        };
+        assert!(matches!(
+            saves(working - 1),
+            Err(Error::ResourceLimit { .. })
+        ));
+        let limits = ResourceLimits {
+            max_total_bytes: exact + working,
+            ..Default::default()
+        };
         assert!(matches!(
             strict_output("must-not-exist.ttf").save(bytes, report, aux, &limits, &mut emitted),
             Err(Error::StrictLoss(_))

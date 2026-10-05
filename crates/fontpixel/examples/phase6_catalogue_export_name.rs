@@ -494,10 +494,11 @@ mod enabled {
             &font.charset.name,
             &font.charset.registry,
             &font.charset.encoding,
-        ] {
-            if let Some(s) = s {
-                budget.charge(s.capacity())?;
-            }
+        ]
+        .into_iter()
+        .flatten()
+        {
+            budget.charge(s.capacity())?;
         }
         budget.array::<String>(font.names.xlfd_fields.capacity())?;
         for s in &font.names.xlfd_fields {
@@ -739,10 +740,10 @@ mod enabled {
         fn cleanup(&mut self) -> std::io::Result<()> {
             let mut first = None;
             while let Some(path) = self.files.pop() {
-                if let Err(error) = std::fs::remove_file(path) {
-                    if first.is_none() {
-                        first = Some(error);
-                    }
+                if let Err(error) = std::fs::remove_file(path)
+                    && first.is_none()
+                {
+                    first = Some(error);
                 }
             }
             first.map_or(Ok(()), Err)

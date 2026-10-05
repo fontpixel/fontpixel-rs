@@ -2,7 +2,11 @@
 //!
 //! Geometry is independent of sfnt. TrueType encoding requires integral int16
 //! coordinates; composite flattening and rasterization can retain fractions.
-use crate::{Bitmap, Error, Result, bitmap::BitmapLimits};
+use crate::{
+    Bitmap, Error, Result,
+    bitmap::BitmapLimits,
+    working::{Budget, Lease, Owned, Vector},
+};
 mod packed;
 pub mod path;
 mod spec;
@@ -104,6 +108,18 @@ pub fn spec_bitmap_contours(
 }
 /// Trace a packed monochrome bitmap. Gray/label thresholding must be explicit.
 pub fn contours(bitmap: &Bitmap, options: &Options, limits: &Limits) -> Result<Vec<Contour>> {
+    let budget = Budget::new(usize::MAX, "outline working bytes");
+    Ok(contours_with_budget(bitmap, options, limits, &budget)?
+        .into_parts()
+        .0)
+}
+
+pub(crate) fn contours_with_budget(
+    bitmap: &Bitmap,
+    options: &Options,
+    limits: &Limits,
+    budget: &Budget,
+) -> Result<Owned<Vec<Contour>>> {
     validate(options)?;
     bound(
         (bitmap.width() as usize)
@@ -113,90 +129,167 @@ pub fn contours(bitmap: &Bitmap, options: &Options, limits: &Limits) -> Result<V
         "outline pixels",
     )?;
     if bitmap.as_bytes().is_empty() {
-        // Both square tracers reject this origin even for an empty raster.
-        // Preserve that validation before bypassing dimension-only row storage.
+        // Preserve the Square origin validation even for zero-area rasters.
         if options.shape == Shape::Square
             && (options.origin.0 == i32::MIN || options.origin.1 == i32::MIN)
         {
             return Err(invalid("outline coordinate budget exceeded"));
         }
-        return Ok(Vec::new());
+        return Ok(Vector::new(budget)?.into_owned());
     }
     if options.shape == Shape::Square {
         let vertices = packed::vertex_count(bitmap.width() as usize, bitmap.height() as usize);
         if vertices.is_some_and(|n| n <= packed::MAX_VERTICES) {
-            return packed::square(bitmap, options, limits);
+            return packed::square_with_budget(bitmap, options, limits, budget);
         }
-        let rows = (0..bitmap.height())
-            .map(|y| {
-                (0..bitmap.width())
-                    .map(|x| {
-                        if bitmap.get_pixel(x, y).unwrap_or(0) == 0 {
-                            '0'
-                        } else {
-                            '1'
-                        }
-                    })
-                    .collect()
-            })
-            .collect::<Vec<String>>();
-        return spec::spec_contours(
+        // The general tracer reads borrowed rows. Charge this packed-to-SPEC
+        // adapter, including every row, until tracing has finished.
+        let mut rows = crate::working::Nested::with_capacity(budget, bitmap.height() as usize)?;
+        for y in 0..bitmap.height() {
+            let mut row = Vector::with_capacity(budget, bitmap.width() as usize)?;
+            for x in 0..bitmap.width() {
+                row.push(if bitmap.get_pixel(x, y)? == 0 {
+                    b'0'
+                } else {
+                    b'1'
+                })?;
+            }
+            let (bytes, lease) = row.into_parts();
+            let value = String::from_utf8(bytes).map_err(|_| invalid("invalid outline row"))?;
+            rows.push(Owned::from_parts(value, lease))?;
+        }
+        return spec::spec_contours_with_budget(
             &rows,
             "square",
             1.0,
             i64::from(options.units_per_pixel),
-            i64::from(options.origin.0),
-            i64::from(options.origin.1),
+            (i64::from(options.origin.0), i64::from(options.origin.1)),
             limits,
+            budget,
         );
     }
-    let mut out = Vec::new();
-    let base = pixel_contour(options)?;
-    for (x, y) in pixel_origins(bitmap, options, limits)? {
-        bound(
-            (out.len() + 1)
-                .checked_mul(base.len())
-                .ok_or_else(|| invalid("point count overflow"))?,
-            limits.max_points,
-            "outline points",
-        )?;
-        out.push(base.iter().map(|p| (p.0 + x, p.1 + y, p.2)).collect());
+    let base = pixel_contour_with_budget(options, budget)?;
+    let origins = pixel_origins_with_budget(bitmap, options, limits, budget)?;
+    let points = origins
+        .len()
+        .checked_mul(base.len())
+        .ok_or_else(|| invalid("point count overflow"))?;
+    bound(points, limits.max_points, "outline points")?;
+    let mut out = IndependentContours::new(origins.len(), points, budget)?;
+    for &(x, y) in origins.iter() {
+        out.push(base.len(), base.iter().map(|p| (p.0 + x, p.1 + y, p.2)))?;
     }
-    Ok(out)
+    out.finish()
 }
+
+/// Independent contours admit all point storage once, instead of performing an
+/// atomic admission for every ink pixel. Extra allocator capacity is checked
+/// before insertion; fields drop all nested arrays before releasing the lease.
+struct IndependentContours {
+    values: Vector<Contour>,
+    points: Lease,
+    remaining: usize,
+    budget: Budget,
+}
+impl IndependentContours {
+    fn new(count: usize, points: usize, budget: &Budget) -> Result<Self> {
+        let lease = budget.reserve_array::<Point>(points)?;
+        Ok(Self {
+            values: Vector::with_capacity(budget, count)?,
+            points: lease,
+            remaining: points,
+            budget: budget.clone(),
+        })
+    }
+    fn push(&mut self, count: usize, values: impl Iterator<Item = Point>) -> Result<()> {
+        if count > self.remaining {
+            return Err(invalid("outline point admission mismatch"));
+        }
+        let mut contour = Vec::new();
+        contour
+            .try_reserve_exact(count)
+            .map_err(|_| self.budget.error())?;
+        let extra = contour
+            .capacity()
+            .saturating_sub(count)
+            .checked_mul(std::mem::size_of::<Point>())
+            .ok_or_else(|| self.budget.error())?;
+        self.points.grow_to(
+            self.points
+                .bytes()
+                .checked_add(extra)
+                .ok_or_else(|| self.budget.error())?,
+        )?;
+        for point in values {
+            if contour.len() == count {
+                return Err(invalid("outline point admission mismatch"));
+            }
+            contour.push(point);
+        }
+        if contour.len() != count {
+            return Err(invalid("outline point admission mismatch"));
+        }
+        self.values.push(contour)?;
+        self.remaining -= count;
+        Ok(())
+    }
+    fn finish(mut self) -> Result<Owned<Vec<Contour>>> {
+        let (values, mut lease) = self.values.into_parts();
+        lease.merge(&mut self.points)?;
+        Ok(Owned::from_parts(values, lease))
+    }
+}
+
 /// A single independent square/dot inside the cell beginning at `(0, 0)`.
 /// Dot control points and integer rounding match Tong's Python exporter.
 pub fn pixel_contour(o: &Options) -> Result<Contour> {
+    let budget = Budget::new(usize::MAX, "outline working bytes");
+    Ok(pixel_contour_with_budget(o, &budget)?.into_parts().0)
+}
+pub(crate) fn pixel_contour_with_budget(o: &Options, budget: &Budget) -> Result<Owned<Contour>> {
     validate(o)?;
     let center = f64::from(o.units_per_pixel) / 2.0;
     let radius = o.dot_size * center;
     let round = |v: f64| (v + 0.5).floor();
+    let mut out = Vector::with_capacity(budget, if o.shape == Shape::Dot { 8 } else { 4 })?;
     if o.shape != Shape::Dot {
-        return Ok(vec![
+        out.extend(&[
             (round(center - radius), round(center - radius), true),
             (round(center - radius), round(center + radius), true),
             (round(center + radius), round(center + radius), true),
             (round(center + radius), round(center - radius), true),
-        ]);
+        ])?;
+    } else {
+        let c = 0.9142135623730951 * radius;
+        for (x, y, on) in [
+            (radius, 0.0, true),
+            (c, c, false),
+            (0.0, radius, true),
+            (-c, c, false),
+            (-radius, 0.0, true),
+            (-c, -c, false),
+            (0.0, -radius, true),
+            (c, -c, false),
+        ] {
+            out.push((round(center + x), round(center + y), on))?;
+        }
     }
-    let c = 0.9142135623730951 * radius;
-    Ok([
-        (radius, 0.0, true),
-        (c, c, false),
-        (0.0, radius, true),
-        (-c, c, false),
-        (-radius, 0.0, true),
-        (-c, -c, false),
-        (0.0, -radius, true),
-        (c, -c, false),
-    ]
-    .into_iter()
-    .map(|(x, y, on)| (round(center + x), round(center + y), on))
-    .collect())
+    Ok(out.into_owned())
 }
 /// Lower-left positions of ink cells, in stable top-to-bottom source order.
 /// Useful for shared-dot composite glyphs.
 pub fn pixel_origins(bitmap: &Bitmap, o: &Options, limits: &Limits) -> Result<Vec<(f64, f64)>> {
+    let budget = Budget::new(usize::MAX, "outline working bytes");
+    Ok(pixel_origins_with_budget(bitmap, o, limits, &budget)?
+        .into_parts()
+        .0)
+}
+pub(crate) fn pixel_origins_with_budget(
+    bitmap: &Bitmap,
+    o: &Options,
+    limits: &Limits,
+    budget: &Budget,
+) -> Result<Owned<Vec<(f64, f64)>>> {
     validate(o)?;
     bound(
         (bitmap.width() as usize)
@@ -205,23 +298,29 @@ pub fn pixel_origins(bitmap: &Bitmap, o: &Options, limits: &Limits) -> Result<Ve
         limits.max_pixels,
         "outline pixels",
     )?;
-    let mut result = Vec::new();
     if bitmap.as_bytes().is_empty() {
-        return Ok(result);
+        return Ok(Vector::new(budget)?.into_owned());
     }
+    let mut count = 0usize;
+    for y in 0..bitmap.height() {
+        for x in 0..bitmap.width() {
+            count += usize::from(bitmap.get_pixel(x, y)? != 0);
+        }
+    }
+    bound(count, limits.max_points, "outline components")?;
+    let mut result = Vector::with_capacity(budget, count)?;
     for y in 0..bitmap.height() {
         for x in 0..bitmap.width() {
             if bitmap.get_pixel(x, y)? != 0 {
-                bound(result.len() + 1, limits.max_points, "outline components")?;
                 result.push((
                     (f64::from(o.origin.0) + f64::from(x)) * f64::from(o.units_per_pixel),
                     (f64::from(o.origin.1) + f64::from(bitmap.height() - y - 1))
                         * f64::from(o.units_per_pixel),
-                ));
+                ))?;
             }
         }
     }
-    Ok(result)
+    Ok(result.into_owned())
 }
 /// Outline segments with implied on-curve midpoints resolved.
 #[derive(Clone, Copy, Debug, PartialEq)]

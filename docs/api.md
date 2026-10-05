@@ -1,17 +1,17 @@
 # Rust native API — reconstructed recovery guide
 
-**Recovery status (2026-10-04):** this phase-6 documentation/source reconstruction is uncompiled and untested. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
+**Status (2026-10-05):** the reconstructed phase-6 source compiles; `scripts/check.sh` passed (3,453 tests, clippy `-D warnings`, cargo-deny) and `cargo doc` with `RUSTDOCFLAGS=-D warnings` is clean. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
 
 This is a semantic reconstruction. The recovered crate-root examples are in `api-rustdoc.md`; the model
 contract is in [bitmap-model.md](bitmap-model.md). Reconcile this guide with recovered source
-before integration; no examples were executed during recovery.
+before integration; the crate-root examples run as doctests in `scripts/check.sh`.
 
 The rewritten [api_quickstart.rs](../crates/fontpixel/examples/api_quickstart.rs)
 constructs its own small font and performs no filesystem I/O. Its model/name,
 atomic-error, rendering/charset and merge checks require no format feature.
 YAFF, PCF, atlas sidecars, OTB metric controls, regional/subset and WOFF2 portions
-are guarded by their actual Cargo features. All code remains uncompiled/untested;
-the source-reference checklist is [api-example-contracts.json](api-example-contracts.json).
+are guarded by their actual Cargo features. The example compiles under
+`cargo clippy --all-targets`; `scripts/check.sh` does not run it. The source-reference checklist is [api-example-contracts.json](api-example-contracts.json).
 
 ## Registry, model and reports
 
@@ -49,9 +49,21 @@ It stages explicit normalized name/notice replacements across strikes, keeps raw
 source records separate, and audits intentional changes as non-loss information.
 A family/style change clears a stale full/PostScript name unless explicitly
 replaced; identical values generate no audit. Empty notices may clear normalized
-text without deleting provenance or establishing permission. This API is
-uncompiled/untested in the current reconstruction; catalogue metadata/default/metric
-equivalence remains an independent open requirement.
+text without deleting provenance or establishing permission. This API compiles
+and has unit/integration tests; catalogue metadata/default/metric differences
+are documented in [migration-fontpixel.md](migration-fontpixel.md#catalogue-download-differences).
+
+`projection::apply_bitmap_projection(&mut FontSet, &BitmapProjection, max_working_bytes)`
+applies explicit target-application metric conventions between reading and writing.
+The default projection changes nothing. `BitmapProjection::scalable_from_device(units, ppem)`
+sets every live glyph's horizontal scalable advance (BDF `SWIDTH` x), including
+unencoded and duplicate-code records, to `round_half_even(DWIDTH x * units / ppem)`
+in exact integer arithmetic; vertical and all other metrics stay unchanged. The whole
+set is validated and staged before an allocation-free commit, so an error leaves it
+unchanged. `ProjectionOutcome` lists every changed glyph (strike, ID, glyph-level and
+effective prior value, device advance, new value). Replacing an effective source value
+is `Loss` (strict mode rejects it); deriving an absent one is `Repair`. The CLI exposes
+it as `convert --swidth-ppem N [--swidth-units U]` and batch `options.swidth_ppem`.
 
 ## Resources and limits
 
@@ -149,8 +161,8 @@ through their scalar `options`. Explicit flags require OTB/bdat output and the
 corresponding enabled feature; color and other outputs reject them, even when
 the requested value matches a default. Vector `--upm` remains a separate control.
 See the [CLI examples](w6.1-cli.md#conversion-naming-and-metric-controls).
-These reconstructed paths and the feature-gated Rust quickstart remain
-uncompiled and unexecuted.
+These paths and the feature-gated Rust quickstart compile; `scripts/check.sh`
+does not run the quickstart.
 
 ## Merge API
 
@@ -183,7 +195,7 @@ assessment. Unknown/prohibited licence states reject strict mode. Full ordered
 source notices plus merge provenance remain in names. Reconstructed BDF source now
 contains the notice projection: multiline COMMENTs plus a flattened property,
 with bdf.write.notice_line_breaks loss and strict refusal. This supersedes the
-earlier missing-source finding; compilation and runtime checks remain pending.
+earlier missing-source finding; it compiles and `crates/fontpixel/tests/phase6_notice_metadata.rs` covers it.
 Report supports complete Display,
 dependency-free to_json and optional serde.
 

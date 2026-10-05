@@ -1,6 +1,6 @@
 //! Unicode 17.0.0 font-merge categories, reconstructed generator output.
-//! Sources: https://www.unicode.org/Public/17.0.0/ucd/Blocks.txt and
-//! https://www.unicode.org/Public/17.0.0/ucd/EastAsianWidth.txt.
+//! Sources: <https://www.unicode.org/Public/17.0.0/ucd/Blocks.txt> and
+//! <https://www.unicode.org/Public/17.0.0/ucd/EastAsianWidth.txt>.
 //! Unicode License V3 attribution must accompany these data.
 //! CJK is an explicit block policy, not an East Asian Width script heuristic.
 /// Pinned Unicode version.

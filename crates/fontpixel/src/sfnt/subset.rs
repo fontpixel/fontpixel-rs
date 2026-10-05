@@ -137,7 +137,7 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         None
     } else {
         f.table(*b"GSUB")
-            .map(|b| Gsub::decode(b, count, &o.limits))
+            .map(|b| Gsub::decode_with_budget(b, count, &o.limits, &working))
             .transpose()?
     };
     if gsub
@@ -147,10 +147,16 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
     {
         report.push(ReportEntry{level:Level::Warning,impact:Impact::Repair,code:"subset.dflt_langsys_repaired".into(),location:Default::default(),message:"Added the required empty DFLT default language system; explicit language routing is unchanged".into()});
     }
-    let mut keep = cmap.values().copied().collect::<BTreeSet<_>>();
-    keep.insert(0);
+    let mut keep_lease = working.reserve(0)?;
+    let mut keep = BTreeSet::new();
+    for glyph in std::iter::once(0).chain(cmap.values().copied()) {
+        if !keep.contains(&glyph) {
+            keep_lease.grow_to(working.tree_bytes::<u16, ()>(keep.len() + 1)?)?;
+            keep.insert(glyph);
+        }
+    }
     if let Some(g) = &gsub {
-        g.closure(&mut keep);
+        g.closure_with_budget(&mut keep, &mut keep_lease, &working)?;
     }
     let gl = glyf::Limits {
         sfnt: l.clone(),
@@ -162,22 +168,31 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
         None
     };
     if let Some(table) = &glyf {
-        let mut queue = keep.iter().copied().collect::<Vec<_>>();
-        while let Some(gid) = queue.pop() {
+        let mut queue = WorkingVector::with_capacity(&working, keep.len())?;
+        for &glyph in &keep {
+            queue.push(glyph)?;
+        }
+        let mut next = 0;
+        while next < queue.len() {
+            let gid = queue[next];
+            next += 1;
             if let Glyph::Composite(g) = &table.glyphs[usize::from(gid)] {
                 for c in &g.components {
-                    if keep.insert(c.glyph_id) {
-                        queue.push(c.glyph_id);
+                    if !keep.contains(&c.glyph_id) {
+                        keep_lease.grow_to(working.tree_bytes::<u16, ()>(keep.len() + 1)?)?;
+                        queue.reserve(1)?;
+                        keep.insert(c.glyph_id);
+                        queue.push(c.glyph_id)?;
                     }
                 }
             }
         }
     }
-    let mapping = keep
-        .iter()
-        .enumerate()
-        .map(|(i, &g)| (g, i as u16))
-        .collect::<BTreeMap<_, _>>();
+    let _mapping_lease = working.reserve_tree::<u16, u16>(keep.len())?;
+    let mut mapping = BTreeMap::new();
+    for (index, &glyph) in keep.iter().enumerate() {
+        mapping.insert(glyph, index as u16);
+    }
     let n = keep.len() as u16;
     // Leases precede the table owners so errors drop actual table storage first.
     // Budget-aware encoders transfer their charge through final sfnt assembly.
@@ -246,10 +261,14 @@ pub fn subset(data: &[u8], o: &Options) -> Result<Subset> {
             .collect();
     }
     replacements.insert(*b"post", post.encode(n, l)?);
-    if let Some(g) = gsub {
-        let g = g.subset(&mapping);
+    if let Some(source) = gsub {
+        let g = source.subset_with_budget(&mapping, &working)?;
+        drop(source);
         if !g.features.is_empty() {
-            replacements.insert(*b"GSUB", g.encode(n, &o.limits)?);
+            replacement_leases.reserve(1)?;
+            let (data, lease) = g.encode_with_budget(n, &o.limits, &working)?.into_parts();
+            replacements.insert(*b"GSUB", data);
+            replacement_leases.push(lease)?;
         }
     }
     let bl = bitmap::Limits {

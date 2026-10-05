@@ -12,8 +12,8 @@ writes CFF OpenType from the model. This corrects the earlier W2.3-only status;
 it adds no codec or dialect. Low-level CFF/sfnt APIs remain available separately.
 See [vector-raster.md](vector-raster.md), [cff.md](cff.md) and [ttc.md](ttc.md)
 for geometry, table-preservation and collection boundaries. Variable CFF2 and
-hint interpreter execution are not implied. Phase-6 recovery changes remain
-uncompiled/untested, as recorded in [recovery status](../recovery-status.md).
+hint interpreter execution are not implied. Phase-6 recovery history is
+recorded in [recovery status](../recovery-status.md).
 
 Native CFF axis-aligned paths pack alternating hlineto/vlineto operands in runs
 of at most 40 (below the Type 2 48-entry stack limit), splitting at other command

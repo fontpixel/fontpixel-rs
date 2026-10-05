@@ -1,7 +1,9 @@
 //! Shared SPEC contour tracing; ordering is a byte-compatibility contract.
 use super::{Contour, invalid};
-use crate::Result;
-use std::collections::BTreeMap;
+use crate::{
+    Result,
+    working::{Budget, Nested, Owned, Vector},
+};
 /// Generate merged square or individual square/circle contours in SPEC order.
 pub(crate) fn spec_contours(
     rows: &[String],
@@ -12,6 +14,25 @@ pub(crate) fn spec_contours(
     yoff: i64,
     limits: &super::Limits,
 ) -> Result<Vec<Contour>> {
+    let budget = Budget::new(usize::MAX, "outline working bytes");
+    Ok(
+        spec_contours_with_budget(rows, shape, dotsize, ppu, (xoff, yoff), limits, &budget)?
+            .into_parts()
+            .0,
+    )
+}
+
+/// As [`spec_contours`], charging working storage to `budget`; `origin` is (x, y) offset.
+pub(crate) fn spec_contours_with_budget(
+    rows: &[String],
+    shape: &str,
+    dotsize: f64,
+    ppu: i64,
+    origin: (i64, i64),
+    limits: &super::Limits,
+    budget: &Budget,
+) -> Result<Owned<Vec<Contour>>> {
+    let (xoff, yoff) = origin;
     if !matches!(shape, "square" | "circle") || !(0.0 < dotsize && dotsize <= 1.5) || ppu < 1 {
         return Err(invalid("invalid shape, dotsize or ppu"));
     }
@@ -28,13 +49,21 @@ pub(crate) fn spec_contours(
     {
         return Err(invalid("outline coordinate budget exceeded"));
     }
-    let rows = rows
-        .iter()
-        .rev()
-        .map(|s| s.bytes().map(|b| b != b'0').collect::<Vec<_>>())
-        .collect::<Vec<_>>();
     if shape != "square" || dotsize != 1.0 {
-        let mut out = Vec::new();
+        let count = rows
+            .iter()
+            .flat_map(|r| r.bytes())
+            .filter(|&b| b != b'0')
+            .count();
+        // Preserve SPEC's historical four-point admission even for circles.
+        if count > limits.max_points / 4 {
+            return Err(invalid("outline point budget exceeded"));
+        }
+        let per_contour = if shape == "square" { 4 } else { 8 };
+        let points = count
+            .checked_mul(per_contour)
+            .ok_or_else(|| invalid("outline point count overflow"))?;
+        let mut out = super::IndependentContours::new(count, points, budget)?;
         let s = dotsize * ppu as f64 / 2.0;
         let rr = s * 1.082392200292394;
         let d = std::f64::consts::FRAC_1_SQRT_2;
@@ -49,45 +78,49 @@ pub(crate) fn spec_contours(
             (-d, d),
         ];
         let round = |n: f64| (n + 0.5).floor();
-        for (r, row) in rows.iter().enumerate() {
-            for (c, v) in row.iter().enumerate() {
-                if !v {
+        for (r, row) in rows.iter().rev().enumerate() {
+            for (c, v) in row.bytes().enumerate() {
+                if v == b'0' {
                     continue;
                 }
                 let cx = (xoff as f64 + c as f64 + 0.5) * ppu as f64;
                 let cy = (yoff as f64 + r as f64 + 0.5) * ppu as f64;
-                if out.len() >= limits.max_points / 4 {
-                    return Err(invalid("outline point budget exceeded"));
-                }
-                out.push(if shape == "square" {
-                    vec![
-                        (round(cx - s), round(cy - s), true),
-                        (round(cx - s), round(cy + s), true),
-                        (round(cx + s), round(cy + s), true),
-                        (round(cx + s), round(cy - s), true),
-                    ]
+                if shape == "square" {
+                    out.push(
+                        4,
+                        [
+                            (round(cx - s), round(cy - s), true),
+                            (round(cx - s), round(cy + s), true),
+                            (round(cx + s), round(cy + s), true),
+                            (round(cx + s), round(cy - s), true),
+                        ]
+                        .into_iter(),
+                    )?;
                 } else {
-                    dirs.iter()
-                        .map(|(x, y)| (round(cx + rr * x), round(cy + rr * y), false))
-                        .collect()
-                });
+                    out.push(
+                        8,
+                        dirs.iter()
+                            .map(|(x, y)| (round(cx + rr * x), round(cy + rr * y), false)),
+                    )?;
+                }
             }
         }
-        return Ok(out);
+        return out.finish();
     }
     let ink = |c: i64, r: i64| {
         r >= 0
             && c >= 0
             && rows
-                .get(r as usize)
-                .and_then(|row| row.get(c as usize))
-                .copied()
-                .unwrap_or(false)
+                .len()
+                .checked_sub(r as usize + 1)
+                .and_then(|i| rows.get(i))
+                .and_then(|row| row.as_bytes().get(c as usize))
+                .is_some_and(|&b| b != b'0')
     };
-    let mut edges = Vec::<(i64, i64, i64, i64)>::new();
-    for (r, row) in rows.iter().enumerate() {
-        for (c, v) in row.iter().enumerate() {
-            if !v {
+    let mut edges = Vector::<(i64, i64, i64, i64)>::new(budget)?;
+    for (r, row) in rows.iter().rev().enumerate() {
+        for (c, v) in row.bytes().enumerate() {
+            if v == b'0' {
                 continue;
             }
             let (c, r) = (c as i64, r as i64);
@@ -95,25 +128,30 @@ pub(crate) fn spec_contours(
                 return Err(invalid("outline edge budget exceeded"));
             }
             if !ink(c, r - 1) {
-                edges.push((c + 1, r, -1, 0));
+                edges.push((c + 1, r, -1, 0))?;
             }
             if !ink(c - 1, r) {
-                edges.push((c, r, 0, 1));
+                edges.push((c, r, 0, 1))?;
             }
             if !ink(c, r + 1) {
-                edges.push((c, r + 1, 1, 0));
+                edges.push((c, r + 1, 1, 0))?;
             }
             if !ink(c + 1, r) {
-                edges.push((c + 1, r + 1, 0, -1));
+                edges.push((c + 1, r + 1, 0, -1))?;
             }
         }
     }
-    let mut outgoing = BTreeMap::<(i64, i64), Vec<usize>>::new();
+    // Sorting by vertex and original edge index preserves candidate insertion
+    // order without an allocation for every outgoing-edge tree entry.
+    let mut outgoing = Vector::with_capacity(budget, edges.len())?;
     for (i, e) in edges.iter().enumerate() {
-        outgoing.entry((e.0, e.1)).or_default().push(i);
+        outgoing.push((e.0, e.1, i))?;
     }
-    let mut used = vec![false; edges.len()];
-    let mut out = Vec::new();
+    outgoing.sort_unstable();
+    let mut used = Vector::with_capacity(budget, edges.len())?;
+    used.resize(edges.len(), false)?;
+    let mut walk = Vector::with_capacity(budget, edges.len())?;
+    let mut out = Nested::with_capacity(budget, 0)?;
     let mut points = 0usize;
     for first in 0..edges.len() {
         if used[first] {
@@ -121,17 +159,21 @@ pub(crate) fn spec_contours(
         }
         let (sx, sy, mut dx, mut dy) = edges[first];
         let (mut x, mut y) = (sx + dx, sy + dy);
-        let mut walk = vec![first];
+        walk.truncate(0);
+        walk.push(first)?;
         used[first] = true;
         while (x, y) != (sx, sy) {
-            let candidates = outgoing
-                .get(&(x, y))
-                .ok_or_else(|| invalid("outline vertex has no outgoing edge"))?;
+            let start = outgoing.partition_point(|&(a, b, _)| (a, b) < (x, y));
+            let end = start + outgoing[start..].partition_point(|&(a, b, _)| (a, b) == (x, y));
+            let candidates = &outgoing[start..end];
+            if candidates.is_empty() {
+                return Err(invalid("outline vertex has no outgoing edge"));
+            }
             let mut chosen = None;
             for want in [(dy, -dx), (dx, dy), (-dy, dx)] {
-                for i in candidates {
-                    if !used[*i] && (edges[*i].2, edges[*i].3) == want {
-                        chosen = Some(*i);
+                for &(_, _, i) in candidates {
+                    if !used[i] && (edges[i].2, edges[i].3) == want {
+                        chosen = Some(i);
                         break;
                     }
                 }
@@ -141,37 +183,34 @@ pub(crate) fn spec_contours(
             }
             let i = chosen.ok_or_else(|| invalid("outline tracing failed"))?;
             used[i] = true;
-            walk.push(i);
+            walk.push(i)?;
             dx = edges[i].2;
             dy = edges[i].3;
             x += dx;
             y += dy;
         }
-        let mut verts = Vec::new();
-        for k in 0..walk.len() {
+        let corner = |k: usize| {
             let e = edges[walk[k]];
-            let p = edges[walk[(k + walk.len() - 1) % walk.len()]];
-            if (p.2, p.3) != (e.2, e.3) {
-                verts.push((e.0, e.1));
-            }
-        }
-        let best = verts
-            .iter()
-            .enumerate()
-            .min_by_key(|(_, v)| (v.1, v.0))
-            .map(|(i, _)| i)
-            .unwrap_or(0);
-        verts.rotate_left(best);
-        points = points.saturating_add(verts.len());
+            let previous = edges[walk[(k + walk.len() - 1) % walk.len()]];
+            ((previous.2, previous.3) != (e.2, e.3)).then_some((e.0, e.1))
+        };
+        let count = (0..walk.len()).filter_map(corner).count();
+        points = points.saturating_add(count);
         if points > limits.max_points {
             return Err(invalid("outline point budget exceeded"));
         }
-        out.push(
-            verts
-                .into_iter()
-                .map(|(x, y)| (((xoff + x) * ppu) as f64, ((yoff + y) * ppu) as f64, true))
-                .collect(),
-        );
+        let first_corner = (0..walk.len())
+            .filter_map(|k| corner(k).map(|v| (k, v)))
+            .min_by_key(|(_, (x, y))| (*y, *x))
+            .map(|(k, _)| k)
+            .unwrap_or(0);
+        let mut contour = Vector::with_capacity(budget, count)?;
+        for offset in 0..walk.len() {
+            if let Some((x, y)) = corner((first_corner + offset) % walk.len()) {
+                contour.push((((xoff + x) * ppu) as f64, ((yoff + y) * ppu) as f64, true))?;
+            }
+        }
+        out.push(contour.into_owned())?;
     }
-    Ok(out)
+    out.into_owned()
 }

@@ -1,5 +1,18 @@
 # Phase-6 source and documentation recovery status
 
+**Phase 6 delivered, 2026-10-05:** the full Tong/catalogue/SC/merge/legacy-parity
+comparisons against frozen release binaries, the 104-target ASAN campaign and the
+formal PLAN §10 benchmarks all passed; see the [phase 6 report](../reports/phase-6.md).
+The pending items in the paragraphs below are the historical record.
+
+**Update, 2026-10-05:** the reconstructed phase-6 source now compiles.
+`scripts/check.sh` passed (3,453 tests, clippy `-D warnings`, cargo-deny) and
+`RUSTDOCFLAGS=-D warnings cargo doc` is clean. This replaces the "uncompiled and
+untested" statements below, which are kept as the 2026-10-04 record. It is not a
+result of the full Tong/catalogue paired validation, performance or ASAN gates.
+Catalogue output differences are documented in
+[catalogue migration](migration-fontpixel.md#catalogue-download-differences).
+
 As of 2026-10-04, the present phase-6 source reconstruction is **uncompiled and
 untested**. The earlier workspace disappeared at approximately 18:33 UTC. The
 phase-5 baseline was restored separately, then recovered and reconstructed phase-6

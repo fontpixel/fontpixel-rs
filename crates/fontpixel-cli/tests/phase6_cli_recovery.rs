@@ -710,10 +710,7 @@ fn validate_sfnt_rejects_checksum_repaired_bad_glyph_structure() {
     assert_eq!(o.status.code(), Some(1));
 }
 #[cfg(feature = "opentype")]
-#[test]
-fn validate_cmap_expansion_is_bounded_independently_of_wire_size() {
-    let w = Work::new();
-    let original = sfnt_fixture(&w);
+fn constant_cmap_group(start: u32, end: u32) -> Vec<u8> {
     let mut cmap = Vec::new();
     cmap.extend(0u16.to_be_bytes());
     cmap.extend(1u16.to_be_bytes());
@@ -725,9 +722,20 @@ fn validate_cmap_expansion_is_bounded_independently_of_wire_size() {
     cmap.extend(28u32.to_be_bytes());
     cmap.extend(0u32.to_be_bytes());
     cmap.extend(1u32.to_be_bytes());
-    cmap.extend(0u32.to_be_bytes());
-    cmap.extend(0x10ffffu32.to_be_bytes());
+    cmap.extend(start.to_be_bytes());
+    cmap.extend(end.to_be_bytes());
     cmap.extend(1u32.to_be_bytes());
+    cmap
+}
+
+#[cfg(feature = "opentype")]
+#[test]
+fn validate_cmap_expansion_is_bounded_independently_of_wire_size() {
+    let w = Work::new();
+    let original = sfnt_fixture(&w);
+    // A valid supplementary-only span keeps the wire tiny while requiring
+    // over a million mappings. Surrogate rejection is tested independently.
+    let cmap = constant_cmap_group(0x10000, 0x10ffff);
     w.write("wide.ttf", replace_table(&original, *b"cmap", cmap));
     let o = w.run(&[
         "validate",
@@ -737,7 +745,26 @@ fn validate_cmap_expansion_is_bounded_independently_of_wire_size() {
         "1048576",
     ]);
     assert_eq!(o.status.code(), Some(1));
-    assert!(String::from_utf8_lossy(&o.stderr).contains("limit"));
+    let error = String::from_utf8_lossy(&o.stderr);
+    assert!(
+        error.contains("sfnt cmap mappings") && error.contains("limit"),
+        "{error}"
+    );
+}
+
+#[cfg(feature = "opentype")]
+#[test]
+fn validate_rejects_cmap_ranges_crossing_surrogates() {
+    let w = Work::new();
+    let original = sfnt_fixture(&w);
+    w.write(
+        "surrogates.ttf",
+        replace_table(&original, *b"cmap", constant_cmap_group(0, 0x10ffff)),
+    );
+    let output = w.run(&["validate", "surrogates.ttf", "--json"]);
+    assert_eq!(output.status.code(), Some(1));
+    let error = String::from_utf8_lossy(&output.stderr);
+    assert!(error.contains("invalid cmap group range"), "{error}");
 }
 
 #[cfg(feature = "yaff")]
@@ -1116,6 +1143,7 @@ fn embedded_controls_match_public_writer_and_batch_and_preserve_defaults() {
     let w = Work::new();
     let small = bdf(&[65]);
     let large = small
+        .replace("-normal--2-20-75-75-", "-normal--4-40-75-75-")
         .replace("SIZE 2 75 75", "SIZE 4 75 75")
         .replace("FONTBOUNDINGBOX 2 2 0 0", "FONTBOUNDINGBOX 2 4 0 0")
         .replace("FONT_ASCENT 2", "FONT_ASCENT 4")
@@ -1134,6 +1162,9 @@ fn embedded_controls_match_public_writer_and_batch_and_preserve_defaults() {
             .unwrap();
         fonts.fonts.extend(loaded.fonts.fonts);
     }
+    assert_eq!(fonts.fonts.len(), 2);
+    assert_eq!(fonts.fonts[0].metrics.pixel_size, Some(2));
+    assert_eq!(fonts.fonts[1].metrics.pixel_size, Some(4));
     registry.set_embedded_write_options(EmbeddedWriteOptions {
         units_per_em: Some(1000),
         reference_strike: EmbeddedReferenceStrike::LargestPpem,
@@ -1363,10 +1394,46 @@ fn charset_strict_loss_precedes_native_writer_limit_and_preserves_existing_outpu
         "--report",
         "json",
     ];
+    // A permissive conversion establishes that mapping reaches its loss report
+    // and the default native writer can complete. Supplying the existing table
+    // allowance explicitly must preserve both output bytes and the full report.
+    let cap_index = args
+        .iter()
+        .position(|arg| *arg == "--max-table-bytes")
+        .unwrap();
+    let mut defaults = args.to_vec();
+    defaults.drain(cap_index..cap_index + 2);
+    let baseline = w.run(&defaults);
+    success(&baseline);
+    let baseline_bytes = fs::read(w.0.join("out.otb")).unwrap();
+    let baseline_report = json(&baseline);
+    assert_eq!(baseline_report["charset"], "cp1252");
+    assert!(
+        baseline_report["report"]["entries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|entry| entry["code"] == "charset.unmappable_code")
+    );
+    let default_table_cap = fontpixel::ResourceLimits::default()
+        .max_table_bytes
+        .to_string();
+    let mut explicit_default = args.to_vec();
+    explicit_default[cap_index + 1] = &default_table_cap;
+    let explicit_default = w.run(&explicit_default);
+    success(&explicit_default);
+    assert_eq!(fs::read(w.0.join("out.otb")).unwrap(), baseline_bytes);
+    assert_eq!(json(&explicit_default), baseline_report);
+    w.write("out.otb", "existing output");
     let mut strict_args = args.to_vec();
     strict_args.push("--strict");
     let strict = w.run(&strict_args);
-    assert_eq!(strict.status.code(), Some(3));
+    assert_eq!(
+        strict.status.code(),
+        Some(3),
+        "{}",
+        String::from_utf8_lossy(&strict.stderr)
+    );
     let report: serde_json::Value = serde_json::from_slice(&strict.stderr).unwrap();
     assert!(
         report["report"]["entries"]
@@ -1376,7 +1443,12 @@ fn charset_strict_loss_precedes_native_writer_limit_and_preserves_existing_outpu
             .any(|entry| entry["code"] == "charset.unmappable_code")
     );
     let permissive = w.run(&args);
-    assert_eq!(permissive.status.code(), Some(1));
+    assert_eq!(
+        permissive.status.code(),
+        Some(1),
+        "{}",
+        String::from_utf8_lossy(&permissive.stderr)
+    );
     assert!(String::from_utf8_lossy(&permissive.stderr).contains("limit"));
     assert_eq!(
         fs::read_to_string(w.0.join("out.otb")).unwrap(),

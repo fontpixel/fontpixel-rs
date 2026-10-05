@@ -1,8 +1,8 @@
 # Development tools and test scope
 
-The present phase-6 reconstruction is uncompiled and untested. Historical checks
-below describe their original source snapshots, not this recovery. Commands are
-for later authorized verification; none was run during documentation restoration.
+As of 2026-10-05 the reconstructed phase-6 source compiles and `scripts/check.sh`
+passes (3,453 tests, clippy `-D warnings`, cargo-deny). Historical checks below
+describe their original source snapshots, not this recovery.
 
 Rust 1.99.0 is pinned in rust-toolchain.toml. Install the official toolchain with
 rustfmt/clippy and cargo-deny 0.20.2 from crates.io. Do not depend on an old
@@ -152,7 +152,8 @@ release settings. An interrupted/full-disk run is never counted as passing.
 ## Reconstructed API documentation checks
 
 The filesystem-free `api_quickstart` example has been rewritten against current
-declarations. It is uncompiled/untested. A safe source-only check is:
+declarations. It compiles under `cargo clippy --all-targets`; `scripts/check.sh`
+does not run it. A safe source-only check is:
 
 ```sh
 python3 -B examples/check_api_documentation.py --require-rustdoc-link

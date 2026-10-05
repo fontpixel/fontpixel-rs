@@ -21,6 +21,7 @@ import zipfile
 from phase6_catalogue_bitmap import profile as bitmap_profile, compare_profiles, differences
 from phase6_catalogue_metadata import POLICIES, bitmap_properties, sfnt_metadata, plain
 from phase6_support import digest
+from phase6_sfnt_validity import sfnt_file_validity
 from phase6_validate import outlines, web_equivalent
 
 
@@ -120,7 +121,26 @@ def check_sfnt(task,left,right,work):
     n,r=TTFont(left),TTFont(right)
     try:
         n.ensureDecompiled();r.ensureDecompiled();metadata=sfnt_metadata(task,n,r)
+        checksum_proofs={};derived_fields={}
+        for label,path,font in [('native',left,n),('python',right,r)]:
+            if font.flavor is None:
+                proof=sfnt_file_validity(path)
+                assert font['head'].checkSumAdjustment==proof['stored_checkSumAdjustment'],(task['file'],label,'decoded/raw checksum adjustment')
+                checksum_proofs[label]=proof
+            else:
+                # A web container has no raw sfnt directory. Do not manufacture
+                # a new sfnt, validate that, and claim the original checksum is
+                # valid. Its original same-engine source is checked separately.
+                source=path.with_suffix('.ttf')
+                checksum_proofs[label]={'scope':'web container; source raw sfnt only, embedded adjustment not waived',
+                                        'web_sha256':digest(path),'source':sfnt_file_validity(source)}
+        if n.flavor is None and r.flavor is None:
+            observed=metadata['policy_differences'].pop('head.checkSumAdjustment',None)
+            if observed:
+                derived_fields['head.checkSumAdjustment']={'observed':observed,
+                    'proof':'Each side independently passes every table checksum, directory bounds and the complete raw sfnt checksum; adjustment is recomputed from its own bytes.'}
         nc,rc=n.getBestCmap(),r.getBestCmap();assert set(nc)==set(rc),'complete cmap coverage'
+        mapped_names={'native':set(nc.values()),'python':set(rc.values())}
         rendered={label:rendered_glyphs(path,font,task) for label,path,font in [('native',left,n),('python',right,r)]}
         ni,ri=rendered['native'],rendered['python']
         assert set(ni['all_glyphs_by_ppem'])==set(ri['all_glyphs_by_ppem']),'physical strike sizes'
@@ -135,7 +155,7 @@ def check_sfnt(task,left,right,work):
                     for key in ['bitmap_metrics','glyph_metrics']:
                         if ng[key]!=rg[key]:metric_diffs.setdefault(ppem,{}).setdefault(str(cp),{})[key]={'native':ng[key],'python':rg[key]}
                     checks+=1
-            unmapped={label:{name:{key:value for key,value in glyph.items() if key!='gid'} for name,glyph in data.items() if name not in set(cmap.values())}
+            unmapped={label:{name:{key:value for key,value in glyph.items() if key!='gid'} for name,glyph in data.items() if name not in mapped_names[label]}
                       for label,data,cmap in [('native',names,nc),('python',other,rc)]}
             if unmapped['native']!=unmapped['python']:unencoded[ppem]=unmapped
         if metric_diffs:metadata['policy_differences']['encoded_raster_metrics']=metric_diffs
@@ -146,7 +166,7 @@ def check_sfnt(task,left,right,work):
             assert geometry['native'] is not None and geometry['python'] is not None,'vector outlines missing'
             for cp in sorted(nc):
                 assert geometry['native'][nc[cp]]==geometry['python'][rc[cp]],(task['file'],cp,'exact decomposed outline, including winding/control points')
-            extras={label:{name:value for name,value in values.items() if name not in set(cmap.values())}
+            extras={label:{name:value for name,value in values.items() if name not in mapped_names[label]}
                     for label,values,cmap in [('native',geometry['native'],nc),('python',geometry['python'],rc)]}
             if extras['native']!=extras['python']:metadata['policy_differences']['unencoded_outline_geometry']=extras
         elif geometry['python'] is not None:
@@ -176,7 +196,8 @@ def check_sfnt(task,left,right,work):
             for label,path in [('native',left),('python',right)]:
                 source=path.with_suffix('.ttf');assert source.is_file(),('missing same-engine uncompressed catalogue vector',source)
                 web_checks[label]=web_equivalent(source,path,work)
-        return {'metadata':metadata,'glyphs':len(nc),'render_checks':checks,
+        return {'metadata':metadata,'independent_checksum_proofs':checksum_proofs,'verified_derived_fields':derived_fields,
+                'glyphs':len(nc),'render_checks':checks,
                 'native_sfnt_glyphs':n['maxp'].numGlyphs,'python_sfnt_glyphs':r['maxp'].numGlyphs,
                 'complete_glyph_raster_inventory':rendered,'complete_outline_inventory':geometry,
                 'ots':ots_checks,'same_sfnt_web_validation':web_checks,
@@ -200,6 +221,15 @@ def check_zip(slug,tasks,native,python):
                 assert b==gzip.decompress((python/task['file']).read_bytes()),(slug,name,'reference ZIP BDF identity')
             result['members'].append({'name':name,'native_sha256':hashlib.sha256(a).hexdigest(),'python_sha256':hashlib.sha256(b).hexdigest(),'native_bytes':len(a),'python_bytes':len(b)})
     return result
+
+
+def archive_member_dependencies(slug,tasks,fonts):
+    expected={task['file'] for task in tasks if task['slug']==slug and task['kind']=='bdf'}
+    actual={item['file']:item for item in fonts if item['file'] in expected}
+    assert expected and set(actual)==expected,(slug,'archive font proof inventory')
+    return [{'file':name,'status':actual[name]['status'],'proof':actual[name]['proof'],
+             'proof_sha256':actual[name]['proof_sha256']} for name in sorted(expected)
+            if actual[name]['status']!='pass']
 
 
 def main():
@@ -262,16 +292,21 @@ def main():
                                   'unresolved_fields':sorted(record.get('unresolved_differences',{}))})
         save();print(name,record['status'],flush=True)
     for slug in slugs:
-        try:record=check_zip(slug,tasks,a.native,a.python);record['status']='pass'
+        try:
+            record=check_zip(slug,tasks,a.native,a.python)
+            blocked=archive_member_dependencies(slug,tasks,result['results'])
+            record.update(packaging_status='pass',status='unresolved-font-members' if blocked else 'pass',
+                          blocking_font_members=blocked)
         except Exception as error:record={'file':slug+'.zip','status':'fail','error_type':type(error).__name__,'error':str(error),'traceback':traceback.format_exc()}
         result['archives'].append(record);save()
     assert all(digest(path)==identity for path,identity in inputs.items()),'source input changed during validation'
     failed=sum(record['status']=='fail' for record in result['results']+result['archives'])
     unresolved=sum(record['status']=='unresolved-differences' for record in result['results'])
-    passed=not failed and not unresolved
+    unresolved_archives=sum(record['status']=='unresolved-font-members' for record in result['archives'])
+    passed=not failed and not unresolved and not unresolved_archives
     result.update(partial=not passed,status='pass' if passed else 'fail',font_files=173,archive_count=8,
-                  failed_artifacts=failed,unresolved_metadata_files=unresolved)
-    save();print(json.dumps({'complete':passed,'font_files':173,'archives':8,'failed_artifacts':failed,'unresolved_metadata_files':unresolved}))
+                  failed_artifacts=failed,unresolved_metadata_files=unresolved,unresolved_archives=unresolved_archives)
+    save();print(json.dumps({'complete':passed,'font_files':173,'archives':8,'failed_artifacts':failed,'unresolved_metadata_files':unresolved,'unresolved_archives':unresolved_archives}))
     return 0 if passed else 1
 
 if __name__=='__main__':raise SystemExit(main())

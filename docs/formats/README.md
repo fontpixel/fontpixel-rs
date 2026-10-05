@@ -3,8 +3,8 @@
 Before implementing a format, add <id>.md with public specification references, field/model mapping, ambiguities and choices, and write-time information loss. Catalogue entries alone are not format implementations.
 
 This index reflects the unchanged 99 IDs in [FORMATS.md](../../FORMATS.md). It
-is a documentation inventory, not fresh read/write or variant validation. Current
-phase-6 reconstruction is uncompiled/untested; see [recovery status](../recovery-status.md).
+is a documentation inventory, not fresh read/write or variant validation. Every ID
+listed by `fontpixel formats` has a page here; see [recovery status](../recovery-status.md).
 
 | ID | Existing catalogue name | Extensions |
 | --- | --- | --- |

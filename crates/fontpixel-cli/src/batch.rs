@@ -1355,10 +1355,10 @@ fn prepare(
                 }
                 message.truncate(end);
             }
-            if let Ok(mut stored) = reports.storage_error.lock() {
-                if stored.is_none() {
-                    *stored = Some(message.clone());
-                }
+            if let Ok(mut stored) = reports.storage_error.lock()
+                && stored.is_none()
+            {
+                *stored = Some(message.clone());
             }
             reports.exceeded.store(true, Ordering::Relaxed);
             report.success = false;

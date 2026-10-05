@@ -1,45 +1,92 @@
-# Phase 6 recovery status
+# Phase 6 performance report (PLAN §10), 2026-10-05
 
-**The restored phase 6 implementation has not been compiled or measured.**
-The earlier working environment was replaced on 2026-10-04. Its native binaries,
-raw timing logs and generated output archives are unavailable. Reconstructed
-source and historical summaries cannot validate this restored implementation.
+Formal five-run measurement of the final phase-6 source (freeze v3). Every case
+ran in five fresh processes; values are medians. The recorder and the independent
+auditor are `scripts/phase6_perf.py` and `scripts/phase6_perf_audit.py`; case
+contracts are in [phase6-README.md](phase6-README.md). The audit re-verified 2,893
+frozen input/binary/source files, 110 invocations, 220 raw streams and 9,215
+archived output members, and recomputed all 22 median rows independently.
 
-The benchmark recorder, independent auditor and corrected catalogue task adapter
-are restored as source. Standard-library contract tests cover unique dotted case IDs,
-five observations, immutable identities, archive members, independent medians,
-full report retention and explicit application metadata. These are tooling tests,
-not the PLAN §10 performance gate or codec correctness acceptance.
+**Machine:** 12th Gen Intel Core i7-12700H, 20 logical CPUs (14 cores), 62 GB,
+Linux 7.0.0. Local desktop workstation: no build, test, fuzz or validation jobs
+ran during measurement, but the desktop session (file indexer, browser) stayed
+open. Rust 1.99.0 release builds; Python 3.12.13 and Node with the pinned oracles.
+Local evidence: `../local-work/phase6-local-20261004/perf-final/run-01/` (gates
+049 measurement, 051 audit).
 
-The latest historical native medians were direct BDF parse 113.54 ms, public read
-98.89 ms, PCF conversion 194.90 ms, OTB 249.72 ms, YAFF 278.59 ms and square TTF
-793.06 ms. These are unavailable-evidence historical observations only. OTB, YAFF
-and direct parse had not passed their targets. The complete comparison suite,
-including the actual catalogue with corrected metadata, remained unfinished.
+## PLAN §10 targets
 
-Current contracts, dependencies and reproduction steps are in
-[phase6-README.md](phase6-README.md). Complete native and independent-oracle
-validation followed by five fresh processes per case is required after the
-restored source builds. No older result is labelled an acceptance of this code.
+| Task | Target | Median | Result |
+| --- | --- | --- | --- |
+| Parse `TongPixelSans14Large-SC.bdf` (5.7 MB, 38,653 glyphs), single thread | ≤ 100 ms | 53.3 ms (public `read` 49.2 ms) | pass |
+| Same file → PCF | ≤ 200 ms | 88.2 ms | pass |
+| Same file → OTB | ≤ 200 ms | 119.9 ms | pass |
+| Same file → yaff | ≤ 200 ms | 144.9 ms | pass |
+| Same file → square TTF (with `glyf`) | ≤ 1 s | 449.4 ms in-process; 653.6 ms CLI pipeline | pass |
+| Full Tong export (8 vector families × TTF/OTF/WOFF2 with `locl`, 20 PCF, 20 OTB), default settings | ≤ 40 s | 32.2 s (`fontpixel batch`, default options) | pass |
+| Unifont 57,086 + Tong Latin merge → 57,106-glyph BDF with full report | < 1 s | 0.36 s whole process | pass |
+| Catalogue: all 34 sources → 173 downloads + 8 family ZIPs | report | 5.50 s native vs 43.54 s original Python | 7.9× faster |
 
-Fresh external oracle preparation on 2026-10-04 has now passed independently of
-Rust. All nine handoff-pinned Python packages and lock-pinned esbuild 0.27.7 are
-installed in local-work. Python and Node produce identical seven-artifact output
-for the complete 38,653-glyph SC input. FreeType verifies every encoded PCF/TTF
-pixel and advance; OTS, fontTools, HarfBuzz, Brotli and monobit pass the documented
-valid-font fixtures. The original catalogue creates all 181 downloads, with all
-105 sfnt application names/copyright/version/UPM checked and all 8 ZIPs hashed.
-These are external-only correctness fixtures, not formal timing or native parity.
-The [setup record](phase6-oracle-setup/README.md),
-[complete evidence](phase6-oracle-setup/oracle-setup-evidence.zip) and
-[archive member SHA index](phase6-oracle-setup/oracle-setup-evidence.index.json)
-retain exact versions, source/input identities, commands, logs and readback scope.
-The absent production opf_vector extension is explicitly replaced by its supplied
-fontTools oracle; Bun and native Rust validation remain unperformed.
+Conversion times include parsing and destroying the temporary model and read
+report; returned bytes are written outside the inner timer.
 
-The historical reports below retain their original source, machine and scope.
+## Full Tong export variants
 
----
+| Profile | Median wall | 8 WOFF2 total | Note |
+| --- | --- | --- | --- |
+| `fontpixel batch`, defaults (quality 11, 2 WOFF2 threads, 4 workers) | 32.2 s | 8,753,280 B | the default path; ≤ 40 s target |
+| original `tools/export-rs` | 66.3 s | 7,460,280 B | prepare 28.0 s, vectors 38.4 s |
+| native API example, default (quality 11, 1 thread) | 79.8 s | 8,781,608 B | bitmap 49.6 s + vector 20.6 s, families in sequence |
+| native API, WOFF2 quality 8 / 5 | 62.1 s / 57.2 s | 10,252,448 / 11,147,708 B | vector stage 2.5 s / 2.0 s |
+| native API, serial (1 job) | 208.0 s | 8,781,608 B | single-threaded baseline |
+| native API, 2 jobs × 4 threads | 101.7 s | 8,753,724 B | |
+| native API, dot reuse literal / rows | 119.6 s / 88.3 s | 7,634,592 / 7,758,360 B | smaller WOFF2, slower than the default pattern reuse |
+
+The dot-reuse setting trades size for time: literal outlines compress to 13% smaller
+WOFF2 than the default pattern reuse but take 1.5× as long. export-rs WOFF2 output
+is 15% smaller than the default.
+
+The API example builds the families in sequence. The batch CLI schedules all 64
+exports across workers, which is why it is faster than the same work through the
+example. Default batch and default API outputs are byte-identical for 76 of 84
+artifacts (correctness gates 100/101). The 8 WOFF2 files differ because the CLI
+compresses with 2 Brotli threads by default and the API example with 1. All 8
+decompress (fontTools) to byte-identical sfnt fonts; only the Brotli stream differs.
+
+## Single operations versus bdfparser (Python) and bdfparser-js (Node)
+
+Same 38,653-glyph file. Rust columns are in-process medians; the compat column is
+the bdfparser-compatible Rust API.
+
+| Operation | Rust native | Rust compat | Python bdfparser | bdfparser-js |
+| --- | --- | --- | --- | --- |
+| Parse | 53.3 ms | 124.1 ms | 437.4 ms | 244.5 ms |
+| Write BDF | 36.5 ms | 77.8 ms | 58.1 ms | 48.0 ms |
+| Write PCF | 32.4 ms | 103.5 ms | 436.6 ms | 569.1 ms |
+| Write TTF | 401.1 ms | 1,094.0 ms | 9,258.4 ms | 1,223.0 ms |
+| Render a 2,000-character line | 0.8 ms | 75.8 ms | 52.6 ms | 11.4 ms |
+| `drawall` (mode 1) | 17.4 ms | 117.6 ms | 9,423.0 ms | 2,583.1 ms |
+| Crop a 64×64 bitmap to 31×31 | 0.55 µs | 0.37 µs | 17.6 µs | 11.2 µs |
+| Concat two 64×64 bitmaps | 0.75 µs | 1.04 µs | 69.0 µs | 50.3 µs |
+
+The compat layer keeps bdfparser's row-string semantics, so it is slower than the
+native API throughout. Against the originals it is faster at parsing, PCF, TTF and
+`drawall`, but slower at writing BDF than both (77.8 ms vs 58.1/48.0 ms) and slower
+at rendering a text line than both (75.8 ms vs 52.6/11.4 ms). These single-call
+numbers exclude any binding overhead and feed the phase 7/8 decision on whether
+bindings are worth using as an accelerator.
+
+## fontTools comparisons
+
+| Task | Rust | fontTools | Ratio |
+| --- | --- | --- | --- |
+| Full SC → square TTF (Tong `python_reference.py`) | 0.75 s | 12.82 s | 17× |
+| WOFF2 of the same square sfnt (quality 11, 1 worker) | 9.58 s encode | 25.33 s encode | 2.6× |
+| WOFF2 of the same Latin dot sfnt | 1.02 s encode | 1.66 s encode | 1.6× |
+
+WOFF2 sizes and the acceleration options are recorded in the W2.5 section below
+and in the archived outputs. The catalogue's production `opf_vector` extension
+was not supplied, so its vector side uses the original fontTools fallback.
 
 # W1.1 core benchmark report
 

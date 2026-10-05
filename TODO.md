@@ -1,9 +1,14 @@
-# 当前进度：第 6 阶段按用户要求暂停，尚未验收
+# 当前进度：第 6 阶段已完成（2026-10-05）
 
-2026-10-05 00:50 Europe/Paris 用户要求「停止，把进度详细记下来」。所有 worker
-和运行中的验证已停止。先读 **[详细暂停记录](docs/LOCAL-PAUSE-20261005.zh.md)**。
-当前工作区含未编译草稿，尤其 `projection` 已登记但实现文件尚未写出；此前类型
-检查不代表现在的源码通过。等待用户明确恢复，不自动执行下面的后续任务。
+用户 2026-10-05 恢复并指定只做第 6 阶段，按 PLAN.md 原文验收。交付报告见
+**[reports/phase-6.md](reports/phase-6.md)**，测速见 [benches/REPORT.md](benches/REPORT.md)，
+逐 gate 记录见 [reports/phase6-local.md](reports/phase6-local.md)。
+
+- [x] 第 6 阶段 W6.1–W6.6：check.sh、rustdoc、真实字体对照、104 目标 ASAN、PLAN §10 正式测速全部通过。
+- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API），等待用户指示后开始。
+- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API），在第 7 阶段之后。
+- [ ] 第 9 阶段：拼合网页，未授权。
+- 不 push、不 publish、不 deploy。
 
 以下本地接续/云端交接文字是历史过程；最终暂停状态以最新记录及 checkpoint 为准。
 

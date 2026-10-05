@@ -155,3 +155,71 @@ pub(crate) fn apply(
     report.extend(audit);
     Ok(())
 }
+
+/// Explicit target-application metric projection; omitted means no change.
+#[derive(Args, Default)]
+#[group(skip)]
+pub(crate) struct ProjectionArguments {
+    /// Replace every glyph's scalable advance (BDF SWIDTH x) with
+    /// round-half-even(DWIDTH x * --swidth-units / PPEM). Overwritten source
+    /// values are reported as loss, so --strict rejects them.
+    #[arg(long, value_parser = clap::value_parser!(u32).range(1..))]
+    swidth_ppem: Option<u32>,
+    /// Scalable units per em for --swidth-ppem (BDF uses 1000).
+    #[arg(long, requires = "swidth_ppem", value_parser = clap::value_parser!(u32).range(1..))]
+    swidth_units: Option<u32>,
+}
+impl ProjectionArguments {
+    pub(crate) fn projection(&self) -> Option<fontpixel::projection::BitmapProjection> {
+        self.swidth_ppem.map(|ppem| {
+            fontpixel::projection::BitmapProjection::scalable_from_device(
+                self.swidth_units.unwrap_or(1000),
+                ppem,
+            )
+        })
+    }
+}
+
+/// Apply an explicit projection after naming and before writing. Earlier
+/// diagnostics and the live model are reserved before the projection's own
+/// staging, and its diagnostics join the report before strict checks.
+pub(crate) fn project(
+    fonts: &mut FontSet,
+    projection: Option<fontpixel::projection::BitmapProjection>,
+    report: &mut Report,
+    limits: &ResourceLimits,
+) -> Result<()> {
+    let Some(projection) = projection else {
+        return Ok(());
+    };
+    let limit = limits.max_total_bytes;
+    let error = || Error::ResourceLimit {
+        resource: "CLI projection and retained diagnostics",
+        limit,
+    };
+    let mut retained = report_bytes(report, limit)?;
+    add(&mut retained, fonts.retained_usage(limit)?.bytes, limit)?;
+    let outcome =
+        fontpixel::projection::apply_bitmap_projection(fonts, &projection, limit - retained)?;
+    add(&mut retained, outcome.retained_bytes(), limit)?;
+    let count = report
+        .entries
+        .len()
+        .checked_add(outcome.report.entries.len())
+        .ok_or_else(error)?;
+    if count > report.entries.capacity() {
+        add(
+            &mut retained,
+            count
+                .checked_mul(size_of::<ReportEntry>())
+                .ok_or_else(error)?,
+            limit,
+        )?;
+    }
+    report
+        .entries
+        .try_reserve_exact(outcome.report.entries.len())
+        .map_err(|_| error())?;
+    report.extend(outcome.report);
+    Ok(())
+}

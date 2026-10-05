@@ -1018,12 +1018,9 @@ fn persist_group<'a>(
                 }
                 Ok(opened)
             })();
-            let opened = match opened {
-                Ok(opened) => Arc::new(opened),
-                // If opening failed we have no identity proof. Leaving an
-                // empty new directory is safer than removing a replacement.
-                Err(error) => return Err(error),
-            };
+            // If opening failed we have no identity proof. Leaving an
+            // empty new directory is safer than removing a replacement.
+            let opened = Arc::new(opened?);
             if created {
                 tx.created.push(CreatedDirectory {
                     parent: Arc::clone(&dir),

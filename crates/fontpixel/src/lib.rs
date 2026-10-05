@@ -15,6 +15,7 @@ pub mod metadata;
 pub mod model;
 pub use merge::merge;
 pub mod outline;
+pub mod projection;
 pub mod render;
 pub mod report;
 pub mod resources;
@@ -22,6 +23,7 @@ pub mod resources;
 pub mod sfnt;
 #[cfg(feature = "sfnt")]
 pub mod variants;
+mod working;
 
 pub use error::{Error, Operation, Result};
 pub use formats::{ReadOptions, Registry, WriteOptions};
