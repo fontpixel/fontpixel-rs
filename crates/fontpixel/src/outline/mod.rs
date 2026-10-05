@@ -502,3 +502,123 @@ pub fn rasterize(
     }
     Ok(out)
 }
+
+#[cfg(test)]
+mod ledger_tests {
+    use super::*;
+    use std::mem::size_of;
+
+    /// Run on an unlimited ledger, then prove its high-water mark is the exact
+    /// admission threshold: the same result at the peak, `ResourceLimit` one
+    /// byte below it, and every charge released afterwards.
+    fn exact<T: std::fmt::Debug + PartialEq>(run: impl Fn(&Budget) -> Result<Owned<T>>) -> usize {
+        let open = Budget::new(usize::MAX, "outline working bytes");
+        let expected = run(&open).unwrap().into_parts().0;
+        assert_eq!(open.remaining(), usize::MAX);
+        let peak = open.peak();
+        assert!(peak > 0);
+        let fits = Budget::new(peak, "outline working bytes");
+        assert_eq!(run(&fits).unwrap().into_parts().0, expected);
+        assert_eq!(fits.remaining(), peak);
+        let short = Budget::new(peak - 1, "outline working bytes");
+        assert!(matches!(run(&short), Err(Error::ResourceLimit { .. })));
+        assert_eq!(short.remaining(), peak - 1);
+        peak
+    }
+
+    fn square(o: &Options) -> Options {
+        Options {
+            origin: (-2, 3),
+            ..o.clone()
+        }
+    }
+
+    #[test]
+    fn packed_square_admits_its_grid_edges_and_contours_exactly() {
+        let bitmap: Bitmap = "##\n##".parse().unwrap();
+        let o = square(&Options::default());
+        let peak = exact(|b| contours_with_budget(&bitmap, &o, &Limits::default(), b));
+        // Edge capacity 2wh+w+h, the (w+1)(h+1) vertex grid, used/walk arrays
+        // over the 8 boundary edges, one contour slot and its 4 points.
+        let expected = 12 * size_of::<(usize, usize, i8, i8)>()
+            + 9 * size_of::<[usize; 2]>()
+            + 8
+            + size_of::<[usize; 8]>()
+            + size_of::<Contour>()
+            + 4 * size_of::<Point>();
+        assert_eq!(peak, expected);
+    }
+
+    #[test]
+    fn general_square_tracer_admits_rows_edges_and_contours_exactly() {
+        // 70x70 exceeds the packed vertex grid and uses the SPEC row adapter.
+        let mut bitmap = Bitmap::new(70, 70).unwrap();
+        for (x, y) in [(0, 0), (1, 0), (69, 69), (35, 20), (36, 21)] {
+            bitmap.set_pixel(x, y, 1).unwrap();
+        }
+        let o = square(&Options::default());
+        exact(|b| contours_with_budget(&bitmap, &o, &Limits::default(), b));
+    }
+
+    #[test]
+    fn independent_squares_and_dots_admit_points_before_contours() {
+        let bitmap: Bitmap = "#.\n.#".parse().unwrap();
+        for (shape, dot_size, per) in [(Shape::SquareSeparate, 0.8, 4), (Shape::Dot, 0.9, 8)] {
+            let o = Options {
+                shape,
+                dot_size,
+                ..square(&Options::default())
+            };
+            let peak = exact(|b| contours_with_budget(&bitmap, &o, &Limits::default(), b));
+            // Base contour, two origins, two contour slots and their points.
+            let expected = per * size_of::<Point>()
+                + 2 * size_of::<(f64, f64)>()
+                + 2 * size_of::<Contour>()
+                + 2 * per * size_of::<Point>();
+            assert_eq!(peak, expected, "{shape:?}");
+        }
+    }
+
+    #[test]
+    fn origins_and_single_contours_admit_exact_arrays() {
+        let bitmap: Bitmap = "#.#\n.#.".parse().unwrap();
+        let o = Options {
+            shape: Shape::Dot,
+            dot_size: 0.9,
+            ..Options::default()
+        };
+        assert_eq!(
+            exact(|b| pixel_origins_with_budget(&bitmap, &o, &Limits::default(), b)),
+            3 * size_of::<(f64, f64)>()
+        );
+        assert_eq!(
+            exact(|b| pixel_contour_with_budget(&o, b)),
+            8 * size_of::<Point>()
+        );
+    }
+
+    #[test]
+    fn point_admission_precedes_contour_allocation() {
+        // A failed point admission leaves nothing charged and no partial output.
+        let bitmap: Bitmap = "###\n###".parse().unwrap();
+        let o = Options {
+            shape: Shape::Dot,
+            dot_size: 0.9,
+            ..Options::default()
+        };
+        let open = Budget::new(usize::MAX, "outline working bytes");
+        drop(contours_with_budget(&bitmap, &o, &Limits::default(), &open).unwrap());
+        let points = 6 * 8 * size_of::<Point>();
+        let tight = Budget::new(open.peak() - points, "outline working bytes");
+        assert!(matches!(
+            contours_with_budget(&bitmap, &o, &Limits::default(), &tight),
+            Err(Error::ResourceLimit { .. })
+        ));
+        // Only the base contour and origins were admitted before the refusal.
+        assert_eq!(
+            tight.peak(),
+            8 * size_of::<Point>() + 6 * size_of::<(f64, f64)>()
+        );
+        assert_eq!(tight.remaining(), open.peak() - points);
+    }
+}

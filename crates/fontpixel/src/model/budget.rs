@@ -33,7 +33,7 @@ pub struct ModelUsage {
 // https://raw.githubusercontent.com/rust-lang/rust/1.99.0/library/alloc/src/collections/btree/map.rs
 // https://raw.githubusercontent.com/rust-lang/rust/1.99.0/library/alloc/src/collections/btree/node.rs
 // build.rs enables the tight bound only for the audited compiler/target identity.
-fn tree_node_bound(entries: usize, verified: bool) -> Option<usize> {
+pub(crate) fn tree_node_bound(entries: usize, verified: bool) -> Option<usize> {
     if verified {
         1usize.checked_add(entries.saturating_sub(1) / 5)
     } else {

@@ -4,14 +4,19 @@ use crate::sfnt::{
     self,
     gsub::{Feature, Gsub, LanguageSystem, LayoutLimits, Script, Tag},
 };
+use crate::working::{Budget, Lease, Nested, Owned, Vector};
 use crate::{Error, Font, Glyph, Result};
 use std::{
-    collections::{BTreeMap, HashMap},
-    hash::{Hash, Hasher},
+    collections::{BTreeMap, BTreeSet},
+    fmt,
+    mem::size_of,
 };
 mod dot_rows;
 mod export;
+mod ledger;
 mod notdef;
+mod planner;
+mod tables;
 pub use export::{DotReuse, Encoded, Options, OutlineFlavor, encode, encode_single};
 pub use notdef::NotdefPolicy;
 
@@ -57,11 +62,18 @@ impl Variants {
     /// The immutable plan can be shared across bounded caller-owned threads.
     /// Encoding options must retain these exact layout/resource limits; prepare
     /// again to change them, rather than bypassing source-validation budgets.
+    ///
+    /// Planning runs on one working ledger of `limits.sfnt.resources.max_total_bytes`.
+    /// The retained plan's admitted size is recorded and charged once to every
+    /// later [`PreparedVariants::encode`] ledger.
     pub fn prepare(&self, limits: &LayoutLimits) -> Result<PreparedVariants<'_>> {
+        let budget = ledger::budget(limits.sfnt.resources.max_total_bytes);
+        let (plan, lease) = self.plan_with_budget(limits, &budget)?.into_parts();
         Ok(PreparedVariants {
-            base: &self.base,
-            plan: self.plan(limits)?,
+            base: std::borrow::Cow::Borrowed(&self.base),
+            plan,
             limits: limits.clone(),
+            retained: lease.bytes(),
         })
     }
     /// Add a BCP-47/OpenType language with Tong's default CJK script scope.
@@ -74,7 +86,32 @@ impl Variants {
         Ok(())
     }
     /// Build Unicode glyph order, alternate deduplication and exact locl routing.
+    ///
+    /// Planning storage is admitted on one working ledger whose maximum is
+    /// `limits.sfnt.resources.max_total_bytes`; the returned plan is then owned
+    /// by the caller.
     pub fn plan(&self, limits: &LayoutLimits) -> Result<Plan> {
+        let budget = ledger::budget(limits.sfnt.resources.max_total_bytes);
+        Ok(self.plan_with_budget(limits, &budget)?.into_parts().0)
+    }
+    /// Plan on a caller's ledger. The returned lease covers the retained plan.
+    pub(crate) fn plan_with_budget(
+        &self,
+        limits: &LayoutLimits,
+        budget: &Budget,
+    ) -> Result<Owned<Plan>> {
+        let alternatives = self.check(limits, budget)?;
+        let mut planner = planner::Planner::new(&self.base, alternatives, limits, budget)?;
+        for v in &self.languages {
+            planner.face(&v.font, Label::Language(v.language), limits, budget)?;
+        }
+        for (i, v) in self.scripts.iter().enumerate() {
+            planner.face(&v.font, Label::Script(i), limits, budget)?;
+        }
+        planner.finish(&self.languages, &self.scripts, limits, budget)
+    }
+    /// Validate routes, duplicate script faces and every source face.
+    fn check(&self, limits: &LayoutLimits, budget: &Budget) -> Result<usize> {
         let alternatives = self
             .languages
             .len()
@@ -92,11 +129,16 @@ impl Variants {
             routes = routes.saturating_add(scripts.len());
             sfnt::bounded(routes, limits.max_records, "variant script routes")?;
         }
-        let mut script_tags = std::collections::BTreeSet::new();
-        for v in &self.scripts {
-            for &tag in &v.scripts {
-                if !script_tags.insert(tag) {
-                    return Err(invalid("duplicate script variant"));
+        {
+            let mut lease = budget.reserve(0)?;
+            let mut script_tags = BTreeSet::new();
+            for v in &self.scripts {
+                for &tag in &v.scripts {
+                    if script_tags.contains(&tag) {
+                        return Err(invalid("duplicate script variant"));
+                    }
+                    ledger::tree::<Tag, ()>(&mut lease, budget, script_tags.len() + 1)?;
+                    script_tags.insert(tag);
                 }
             }
         }
@@ -123,194 +165,187 @@ impl Variants {
                 return Err(invalid("variant pixel sizes differ"));
             }
         }
-        let mut records = BTreeMap::<String, Glyph>::new();
-        let mut cmap = BTreeMap::<u32, String>::new();
-        for entry in effective(&self.base) {
-            let (cp, g) = entry?;
-            limits.sfnt.glyphs(records.len().saturating_add(2))?;
-            sfnt::bounded(
-                cmap.len().saturating_add(1),
-                limits.sfnt.max_cmap_mappings,
-                "variant Unicode mappings",
-            )?;
-            let name = gname(cp);
-            cmap.insert(cp, name.clone());
-            records.insert(name, planned_glyph(&self.base, g));
-        }
-        let mut signatures = HashMap::<u64, Vec<String>>::new();
-        let mut maps = Vec::new();
-        for (font, label) in self
+        Ok(alternatives)
+    }
+    /// Retained storage of this model as an owning caller charges it: the
+    /// inline header, the language/script route arrays at capacity, their
+    /// script-tag arrays, and each face's heap (`Font::retained_usage` without
+    /// its inline header, which the header or a route array already counts).
+    ///
+    /// [`encode_owned`](Self::encode_owned) and [`into_prepared`](Self::into_prepared)
+    /// admit exactly this amount and release each face's part when it drops.
+    pub fn retained_usage(&self, max_bytes: usize) -> Result<usize> {
+        let error = || Error::ResourceLimit {
+            resource: "retained variants bytes",
+            limit: max_bytes,
+        };
+        let mut used = size_of::<Self>();
+        let mut add = |bytes: Option<usize>| -> Result<()> {
+            used = bytes
+                .and_then(|n| used.checked_add(n))
+                .filter(|&n| n <= max_bytes)
+                .ok_or_else(error)?;
+            Ok(())
+        };
+        add(self
+            .languages
+            .capacity()
+            .checked_mul(size_of::<LanguageVariant>()))?;
+        add(self
+            .scripts
+            .capacity()
+            .checked_mul(size_of::<ScriptVariant>()))?;
+        for tags in self
             .languages
             .iter()
-            .map(|v| (&v.font, language_label(v.language)))
-            .chain(self.scripts.iter().enumerate().map(|(i, v)| {
-                (
-                    &v.font,
-                    if i == 0 {
-                        "latin".into()
-                    } else {
-                        format!("script{i}")
-                    },
-                )
-            }))
+            .map(|v| &v.scripts)
+            .chain(self.scripts.iter().map(|v| &v.scripts))
         {
-            let mut substitutions = BTreeMap::new();
-            for entry in effective(font) {
-                let (cp, source) = entry?;
-                if !cmap.contains_key(&cp) {
-                    limits.sfnt.glyphs(records.len().saturating_add(2))?;
-                    sfnt::bounded(
-                        cmap.len().saturating_add(1),
-                        limits.sfnt.max_cmap_mappings,
-                        "variant Unicode mappings",
-                    )?;
-                }
-                let g = planned_glyph(font, source);
-                let name = if let Some(n) = cmap.get(&cp) {
-                    n.clone()
-                } else {
-                    let n = gname(cp);
-                    cmap.insert(cp, n.clone());
-                    records.insert(n, g);
-                    continue;
-                };
-                let base = records
-                    .get(&name)
-                    .ok_or_else(|| invalid("missing planned glyph"))?;
-                if equivalent(&g, base) {
-                    continue;
-                }
-                let hash = signature(&g);
-                let existing = signatures
-                    .get(&hash)
-                    .and_then(|names| {
-                        names
-                            .iter()
-                            .find(|n| records.get(*n).is_some_and(|v| equivalent(v, &g)))
-                    })
-                    .cloned();
-                let replacement = if let Some(n) = existing {
-                    n
-                } else {
-                    limits.sfnt.glyphs(records.len().saturating_add(2))?;
-                    let mut n = format!("{}.{label}", gname(cp));
-                    let mut suffix = 1;
-                    while records.contains_key(&n) {
-                        n = format!("{}.{label}{suffix}", gname(cp));
-                        suffix += 1;
-                    }
-                    records.insert(n.clone(), g);
-                    signatures.entry(hash).or_default().push(n.clone());
-                    n
-                };
-                substitutions.insert(name, replacement);
+            add(tags.capacity().checked_mul(size_of::<Tag>()))?;
+        }
+        for font in std::iter::once(&self.base)
+            .chain(self.languages.iter().map(|v| &v.font))
+            .chain(self.scripts.iter().map(|v| &v.font))
+        {
+            add(Some(face_heap(font, max_bytes)?))?;
+        }
+        Ok(used)
+    }
+    /// Plan while dropping each alternative face as soon as its pass ends, then
+    /// keep only the base face's metrics and names for export.
+    ///
+    /// Admits [`retained_usage`](Self::retained_usage) first, then releases
+    /// each face's exact share once that face has actually dropped. The base
+    /// releases its share less the charge of the metadata kept. The returned
+    /// lease still charges the metadata and the routing arrays until dropped.
+    fn consume(
+        mut self,
+        limits: &LayoutLimits,
+        budget: &Budget,
+    ) -> Result<(Owned<Plan>, Font, Lease)> {
+        let max = limits.sfnt.resources.max_total_bytes;
+        let mut sources = budget.reserve(self.retained_usage(max)?)?;
+        let alternatives = self.check(limits, budget)?;
+        let plan = {
+            let mut planner = planner::Planner::new(&self.base, alternatives, limits, budget)?;
+            for i in 0..self.languages.len() {
+                let font = std::mem::take(&mut self.languages[i].font);
+                let charge = face_heap(&font, max)?;
+                planner.face(
+                    &font,
+                    Label::Language(self.languages[i].language),
+                    limits,
+                    budget,
+                )?;
+                drop(font);
+                drop(sources.split(charge)?);
             }
-            maps.push(substitutions);
-            limits.sfnt.glyphs(records.len().saturating_add(1))?;
-        }
-        // Tong sorts by base name, then full alternate name; BTree string order agrees.
-        let glyphs = records.into_iter().collect::<Vec<_>>();
-        limits.sfnt.glyphs(glyphs.len().saturating_add(1))?;
-        let ids = glyphs
-            .iter()
-            .enumerate()
-            .map(|(i, (name, _))| (name.clone(), (i + 1) as u16))
-            .collect::<BTreeMap<_, _>>();
-        let mut gsub = Gsub::default();
-        for map in &maps {
-            gsub.lookups
-                .push(map.iter().map(|(a, b)| (ids[a], ids[b])).collect());
-        }
-        let mut feature_ids = BTreeMap::<Vec<u16>, u16>::new();
-        let mut systems = BTreeMap::<(Tag, Option<Tag>), Vec<u16>>::new();
-        for (i, v) in self.scripts.iter().enumerate() {
-            for &script in &v.scripts {
-                validate_tag(script)?;
-                systems
-                    .entry((script, None))
-                    .or_default()
-                    .push((self.languages.len() + i) as u16);
+            for i in 0..self.scripts.len() {
+                let font = std::mem::take(&mut self.scripts[i].font);
+                let charge = face_heap(&font, max)?;
+                planner.face(&font, Label::Script(i), limits, budget)?;
+                drop(font);
+                drop(sources.split(charge)?);
             }
-        }
-        for (i, v) in self.languages.iter().enumerate() {
-            validate_tag(v.language)?;
-            for &script in &v.scripts {
-                validate_tag(script)?;
-                let key = (script, Some(v.language));
-                if systems.contains_key(&key) {
-                    return Err(invalid("duplicate script/language variant"));
-                }
-                let mut values = vec![i as u16];
-                values.extend(systems.get(&(script, None)).into_iter().flatten());
-                systems.insert(key, values);
-            }
-        }
-        // Preserve explicit empty language systems: they prevent accidental fallback.
-        for ((tag, language), ids) in systems {
-            let ids = ids
-                .into_iter()
-                .filter(|&id| !gsub.lookups[usize::from(id)].is_empty())
-                .collect::<Vec<_>>();
-            let features = if ids.is_empty() {
-                vec![]
-            } else {
-                let id = if let Some(&id) = feature_ids.get(&ids) {
-                    id
-                } else {
-                    let id = sfnt::to16(gsub.features.len())?;
-                    feature_ids.insert(ids.clone(), id);
-                    gsub.features.push(Feature {
-                        tag: *b"locl",
-                        lookups: ids,
-                    });
-                    id
-                };
-                vec![id]
-            };
-            let s = gsub.scripts.entry(tag).or_insert_with(|| Script {
-                default: Some(LanguageSystem::default()),
-                languages: Default::default(),
-            });
-            let value = LanguageSystem {
-                required: None,
-                features,
-            };
-            if let Some(lang) = language {
-                s.languages.insert(lang, value);
-            } else {
-                s.default = Some(value);
-            }
-        }
-        let mapping = (0..=glyphs.len() as u16).map(|i| (i, i)).collect();
-        let gsub = gsub.subset(&mapping);
-        gsub.encode((glyphs.len() + 1) as u16, limits)?;
-        Ok(Plan {
-            glyphs,
-            cmap: cmap.into_iter().map(|(cp, n)| (cp, ids[&n])).collect(),
-            gsub,
+            planner.finish(&self.languages, &self.scripts, limits, budget)?
+        };
+        let mut base = std::mem::take(&mut self.base);
+        let charge = face_heap(&base, max)?;
+        let mut metadata = Font::default();
+        metadata.metrics = std::mem::take(&mut base.metrics);
+        metadata.names = std::mem::take(&mut base.names);
+        drop(base);
+        let kept = face_heap(&metadata, max)?;
+        let released = charge
+            .checked_sub(kept)
+            .ok_or_else(|| invalid("retained metadata exceeds its face charge"))?;
+        drop(sources.split(released)?);
+        Ok((plan, metadata, sources))
+    }
+    /// Plan and encode, dropping the source faces after planning.
+    ///
+    /// `o.limits.sfnt.resources.max_total_bytes` must include this model: its
+    /// [`retained_usage`](Self::retained_usage) is admitted first on the same
+    /// working ledger as planning and export. Each alternative face is dropped
+    /// and its charge released after its planning pass; the base face is
+    /// dropped once the plan has copied its glyphs, keeping only metrics and
+    /// names. Output is identical to [`encode`](crate::variants::encode).
+    pub fn encode_owned(self, o: &Options) -> Result<Encoded> {
+        export::encode_owned(self, o)
+    }
+    /// As [`prepare`](Self::prepare), but consuming the model: faces are
+    /// dropped during planning as in [`encode_owned`](Self::encode_owned), and
+    /// the prepared value owns the base metrics and names it needs.
+    pub fn into_prepared(self, limits: &LayoutLimits) -> Result<PreparedVariants<'static>> {
+        let budget = ledger::budget(limits.sfnt.resources.max_total_bytes);
+        let (plan, metadata, sources) = self.consume(limits, &budget)?;
+        let (plan, lease) = plan.into_parts();
+        let kept = face_heap(&metadata, limits.sfnt.resources.max_total_bytes)?;
+        let retained = lease
+            .bytes()
+            .checked_add(kept)
+            .ok_or_else(|| budget.error())?;
+        drop(lease);
+        drop(sources);
+        Ok(PreparedVariants {
+            base: std::borrow::Cow::Owned(metadata),
+            plan,
+            limits: limits.clone(),
+            retained,
         })
     }
+}
+/// Heap a face retains: `Font::retained_usage` without its inline header.
+fn face_heap(font: &Font, max_bytes: usize) -> Result<usize> {
+    font.retained_usage(max_bytes)?
+        .bytes
+        .checked_sub(size_of::<Font>())
+        .ok_or_else(|| invalid("face usage below its inline header"))
 }
 /// Reusable immutable plan borrowing its source font for global metadata.
 #[derive(Debug)]
 pub struct PreparedVariants<'a> {
-    base: &'a Font,
+    base: std::borrow::Cow<'a, Font>,
     plan: Plan,
     limits: LayoutLimits,
+    /// Admitted bytes of the retained plan, charged once per encode ledger.
+    retained: usize,
 }
 impl PreparedVariants<'_> {
     /// Inspect the exact immutable glyph order and layout plan.
     pub fn plan(&self) -> &Plan {
         &self.plan
     }
+    /// Admitted bytes retained by the shared plan.
+    pub fn retained_bytes(&self) -> usize {
+        self.retained
+    }
+    /// Working bytes one [`encode`](Self::encode) call may admit besides the plan:
+    /// `limits.sfnt.resources.max_total_bytes` minus [`retained_bytes`](Self::retained_bytes).
+    ///
+    /// Each call has its own ledger. Concurrent calls together may admit this
+    /// allowance once per call in addition to the single shared plan; callers that
+    /// need one process-wide total must divide it between their threads.
+    pub fn encode_allowance(&self) -> usize {
+        self.limits
+            .sfnt
+            .resources
+            .max_total_bytes
+            .saturating_sub(self.retained)
+    }
     /// Encode with identical safety limits, without replanning or cloning glyphs.
+    ///
+    /// The call's ledger charges the retained plan once, then admits export
+    /// storage against the remaining [`encode_allowance`](Self::encode_allowance).
     pub fn encode(&self, options: &Options) -> Result<Encoded> {
         if options.limits != self.limits {
             return Err(invalid(
                 "prepared variants require matching layout limits; prepare again to change limits",
             ));
         }
-        export::encode_prepared(self.base, options, &self.plan)
+        let budget = ledger::budget(self.limits.sfnt.resources.max_total_bytes);
+        let _plan = budget.reserve(self.retained)?;
+        export::encode_prepared(&self.base, options, &self.plan, &budget)
     }
 }
 /// Planned encoded and unencoded glyphs; implicit glyph 0 is `.notdef`.
@@ -341,58 +376,71 @@ fn effective(font: &Font) -> impl Iterator<Item = Result<(u32, &Glyph)>> {
         ))
     })
 }
-fn planned_glyph(font: &Font, g: &Glyph) -> Glyph {
-    // Defaults belong to each source face, not to the eventual combined font.
-    // Resolve them before comparison so inherited and explicit equal metrics
-    // deduplicate, while different regional defaults remain distinct.
-    let d = &font.metrics.glyph_defaults;
-    let m = &g.metrics;
-    Glyph {
-        metrics: crate::model::GlyphMetrics {
-            bounds: m.bounds,
-            advance: m.advance.or(d.advance),
-            scalable_advance: m.scalable_advance.or(d.scalable_advance),
-            vertical_advance: m.vertical_advance.or(d.vertical_advance),
-            vertical_scalable_advance: m.vertical_scalable_advance.or(d.vertical_scalable_advance),
-            vertical_origin: m.vertical_origin.or(d.vertical_origin),
-            abc: m.abc.or(d.abc),
-            left_bearing: m.left_bearing.or(d.left_bearing),
-            right_bearing: m.right_bearing.or(d.right_bearing),
-            image_offset: m.image_offset.or(d.image_offset),
-        },
-        bitmap: g.bitmap.clone(),
-        ..Default::default()
+fn index(n: usize) -> Result<u32> {
+    u32::try_from(n).map_err(|_| invalid("planned glyph index overflow"))
+}
+/// A deterministic PostScript glyph name, formatted without temporary strings.
+struct GlyphName<'a> {
+    cp: u32,
+    /// Alternate label and collision suffix (0 means no suffix).
+    label: Option<(&'a str, usize)>,
+}
+impl GlyphName<'_> {
+    fn base(cp: u32) -> Self {
+        Self { cp, label: None }
     }
 }
-fn equivalent(a: &Glyph, b: &Glyph) -> bool {
-    a.bitmap == b.bitmap && a.metrics == b.metrics
-}
-fn signature(g: &Glyph) -> u64 {
-    let mut h = std::collections::hash_map::DefaultHasher::new();
-    std::mem::discriminant(&g.bitmap).hash(&mut h);
-    g.bitmap.width().hash(&mut h);
-    g.bitmap.height().hash(&mut h);
-    g.bitmap.as_bytes().hash(&mut h);
-    // Hash only common metrics; full equality below resolves every collision and
-    // also distinguishes all less-common metrics without copying source metadata.
-    g.metrics.bounds.hash(&mut h);
-    g.metrics.advance.hash(&mut h);
-    g.metrics.vertical_advance.hash(&mut h);
-    h.finish()
-}
-fn gname(cp: u32) -> String {
-    if cp <= 0xffff {
-        format!("uni{cp:04X}")
-    } else {
-        format!("u{cp:05X}")
+impl fmt::Display for GlyphName<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.cp <= 0xffff {
+            write!(f, "uni{:04X}", self.cp)?;
+        } else {
+            write!(f, "u{:05X}", self.cp)?;
+        }
+        match self.label {
+            None => Ok(()),
+            Some((label, 0)) => write!(f, ".{label}"),
+            Some((label, suffix)) => write!(f, ".{label}{suffix}"),
+        }
     }
 }
-fn language_label(tag: Tag) -> String {
-    match &tag {
-        b"ZHT " | b"ZHH " => "tc".into(),
-        b"JAN " => "jp".into(),
-        b"KOR " => "kr".into(),
-        _ => String::from_utf8_lossy(&tag).trim().to_ascii_lowercase(),
+/// Alternate-name label for a language or script face.
+enum Label {
+    Language(Tag),
+    Script(usize),
+}
+impl fmt::Display for Label {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Language(tag) => match tag {
+                b"ZHT " | b"ZHH " => f.write_str("tc"),
+                b"JAN " => f.write_str("jp"),
+                b"KOR " => f.write_str("kr"),
+                // Lossy UTF-8, trimmed and ASCII-lowercased; at most four chars.
+                _ => {
+                    let mut chars = ['\0'; 4];
+                    let mut len = 0;
+                    for chunk in tag.utf8_chunks() {
+                        let replacement = (!chunk.invalid().is_empty()).then_some('\u{fffd}');
+                        for c in chunk.valid().chars().chain(replacement) {
+                            chars[len] = c;
+                            len += 1;
+                        }
+                    }
+                    let chars = &chars[..len];
+                    let start = chars.iter().position(|c| !c.is_whitespace());
+                    let end = chars.iter().rposition(|c| !c.is_whitespace());
+                    if let (Some(start), Some(end)) = (start, end) {
+                        for c in &chars[start..=end] {
+                            write!(f, "{}", c.to_ascii_lowercase())?;
+                        }
+                    }
+                    Ok(())
+                }
+            },
+            Self::Script(0) => f.write_str("latin"),
+            Self::Script(i) => write!(f, "script{i}"),
+        }
     }
 }
 fn validate_tag(tag: Tag) -> Result<()> {
@@ -453,4 +501,47 @@ pub fn language_tag(value: &str) -> Result<Tag> {
         .binary_search_by_key(&parts[0], |(key, _)| *key)
         .map_err(|_| invalid("unmapped BCP-47 language; provide an OpenType tag"))?;
     Ok(sfnt::languages::LANGUAGES[i].1)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn labels_and_names_format_without_temporary_strings() {
+        // The generic branch matches the former lossy/trim/lowercase chain.
+        for tag in [
+            *b"ZHS ",
+            *b"A.B ",
+            *b"Ab C",
+            [0xff, b'A', b' ', b' '],
+            [b'x', 0xc3, 0xa9, b'Y'],
+            [b' ', b'Q', 0x80, b' '],
+        ] {
+            assert_eq!(
+                Label::Language(tag).to_string(),
+                String::from_utf8_lossy(&tag).trim().to_ascii_lowercase(),
+                "{tag:?}"
+            );
+        }
+        for (tag, label) in [
+            (*b"ZHT ", "tc"),
+            (*b"ZHH ", "tc"),
+            (*b"JAN ", "jp"),
+            (*b"KOR ", "kr"),
+        ] {
+            assert_eq!(Label::Language(tag).to_string(), label);
+        }
+        assert_eq!(Label::Script(0).to_string(), "latin");
+        assert_eq!(Label::Script(3).to_string(), "script3");
+        for (cp, label, name) in [
+            (0x41, None, "uni0041"),
+            (0x1f600, None, "u1F600"),
+            (0x10ffff, None, "u10FFFF"),
+            (0x4e00, Some(("tc", 0)), "uni4E00.tc"),
+            (0x20000, Some(("tc", 12)), "u20000.tc12"),
+        ] {
+            assert_eq!(GlyphName { cp, label }.to_string(), name);
+        }
+    }
 }

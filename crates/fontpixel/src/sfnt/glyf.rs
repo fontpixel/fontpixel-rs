@@ -151,20 +151,42 @@ impl Glyph {
         shared_glyph: u16,
         limits: &Limits,
     ) -> Result<Self> {
-        let origins = outline::pixel_origins(bitmap, options, &limits.geometry)?;
+        let budget = Budget::new(usize::MAX, "outline working bytes");
+        Ok(
+            Self::pixels_with_budget(bitmap, options, shared_glyph, limits, &budget)?
+                .into_parts()
+                .0,
+        )
+    }
+    /// As [`Glyph::pixels`], admitting origins and components on `budget`
+    /// before allocation. The returned lease covers the component array.
+    pub(crate) fn pixels_with_budget(
+        bitmap: &crate::Bitmap,
+        options: &outline::Options,
+        shared_glyph: u16,
+        limits: &Limits,
+        budget: &Budget,
+    ) -> Result<Owned<Self>> {
+        let origins =
+            outline::pixel_origins_with_budget(bitmap, options, &limits.geometry, budget)?;
         bounded(origins.len(), limits.max_components, "glyf components")?;
-        let mut components = Vec::with_capacity(origins.len());
-        for (x, y) in origins {
-            components.push(Component::translated(shared_glyph, coord(x)?, coord(y)?));
+        let mut components = Vector::with_capacity(budget, origins.len())?;
+        for &(x, y) in origins.iter() {
+            components.push(Component::translated(shared_glyph, coord(x)?, coord(y)?))?;
         }
-        Ok(if components.is_empty() {
-            Self::Empty
-        } else {
-            Self::Composite(CompositeGlyph {
-                components,
-                instructions: Vec::new(),
-            })
-        })
+        drop(origins);
+        let (components, lease) = components.into_parts();
+        Ok(Owned::from_parts(
+            if components.is_empty() {
+                Self::Empty
+            } else {
+                Self::Composite(CompositeGlyph {
+                    components,
+                    instructions: Vec::new(),
+                })
+            },
+            lease,
+        ))
     }
 }
 /// Parsed glyph order, beginning with glyph 0 (`.notdef`).

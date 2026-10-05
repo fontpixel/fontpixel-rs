@@ -1,0 +1,18 @@
+# Out-of-workspace audit harness for the unit C variants ledger.
+# The workspace forbids unsafe code, and a counting #[global_allocator] needs
+# an `unsafe impl GlobalAlloc`, so this crate is its own workspace root and is
+# never built by the main workspace, its lints or its gates.
+#
+#   cp ../../Cargo.lock . && cargo build --release --offline
+#   target/release/alloccheck            # fixtures
+#   target/release/alloccheck --tong     # plus full Tong Large regional exports
+[package]
+name = "alloccheck"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+fontpixel = { path = "../../crates/fontpixel", features = ["bdf", "ttf", "otf", "bdat", "cjk-charsets"] }
+
+[workspace]
