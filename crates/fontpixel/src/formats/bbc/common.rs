@@ -252,7 +252,6 @@ pub(super) fn source_for(
     feature = "grasp",
     feature = "hrcg",
     feature = "xbin",
-    feature = "zapfont",
     feature = "comfont"
 ))]
 pub(super) fn output_check(n: usize, l: &ResourceLimits, b: &mut Budget) -> Result<()> {

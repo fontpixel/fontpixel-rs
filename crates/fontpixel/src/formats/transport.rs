@@ -620,6 +620,68 @@ impl Budget for super::bdf::BdfCodec {
     }
 }
 
+#[cfg(all(test, feature = "vector-raster"))]
+mod outline_budget_tests {
+    //! The outline writers' common-limit rule ([`Budget::limits_for`]).
+    use super::{Budget, TransportLimits};
+    use crate::ResourceLimits;
+
+    fn common(total: usize) -> TransportLimits {
+        TransportLimits {
+            resources: ResourceLimits {
+                max_total_bytes: total,
+                ..ResourceLimits::default()
+            },
+            max_output_bytes: total,
+        }
+    }
+
+    #[test]
+    fn a_larger_explicit_total_raises_only_the_default_outline_budget() {
+        let default = ResourceLimits::default().max_total_bytes;
+        let codec = super::super::vector_raster::Codec::new("woff2");
+        assert_eq!(codec.budget().resources.max_total_bytes, default);
+        // Without common limits (or at or below the default) nothing changes.
+        for total in [1, default - 1, default] {
+            assert_eq!(
+                codec.limits_for(&common(total)),
+                codec.budget().intersect(&common(total))
+            );
+        }
+        // A larger explicit total becomes the codec total; every other field
+        // still intersects (the default 64 MiB table limit stays).
+        let raised = codec.limits_for(&common(default + 1));
+        assert_eq!(raised.resources.max_total_bytes, default + 1);
+        assert_eq!(
+            raised.resources.max_table_bytes,
+            ResourceLimits::default().max_table_bytes
+        );
+        assert_eq!(raised.max_output_bytes, default + 1);
+        // A configured, non-default codec total is never enlarged.
+        let mut small = codec.clone();
+        small
+            .write_options
+            .outline
+            .limits
+            .sfnt
+            .resources
+            .max_total_bytes = 4096;
+        assert_eq!(
+            small.limits_for(&common(1 << 30)).resources.max_total_bytes,
+            4096
+        );
+        // Other codecs keep the plain intersection.
+        #[cfg(feature = "snf")]
+        {
+            let snf = super::super::snf::SnfCodec::default();
+            assert_eq!(
+                snf.limits_for(&common(1 << 30)).resources.max_total_bytes,
+                default
+            );
+        }
+    }
+}
+
 #[cfg(all(
     test,
     feature = "snf",
@@ -732,6 +794,74 @@ mod tests {
             // owned route charges the exact model in its place.
             assert_eq!(owned, borrowed - estimate + used, "{id}");
         }
+    }
+
+    #[test]
+    #[cfg(all(feature = "pk", feature = "gf"))]
+    fn tex_writers_charge_the_exact_model_on_either_route() {
+        // pk and gf charge the model's exact retained usage on their own
+        // ledger when it is borrowed, and nothing when it is reserved, so the
+        // owned (reserved) and borrowing minima are equal, with equal output.
+        let registry = crate::registry();
+        let mut set = model();
+        for font in &mut set.fonts {
+            font.metrics.point_size = Some(crate::model::Rational::new(8, 1).unwrap());
+        }
+        for (id, name) in [("pk", "a.pk"), ("gf", "a.gf")] {
+            let (owned, written) = minimal(|total| {
+                registry.write_owned(set.clone(), id, &options(name, total), Report::default())
+            });
+            let (borrowed, expected) = minimal(|total| {
+                registry.write_with_report(&set, id, &options(name, total), Report::default())
+            });
+            assert_eq!(written, expected, "{id}");
+            assert_eq!(owned, borrowed, "{id}");
+        }
+    }
+
+    #[test]
+    #[cfg(feature = "zapfont")]
+    fn zapfont_releases_rasters_and_readback_estimates() {
+        // Exact boundary on both routes: the smallest total succeeds with the
+        // default output and one byte less is a resource error. Released
+        // per-cell rasters and the readback true-up keep the owned minimum
+        // within the borrowing minimum less the legacy model estimate plus
+        // the model's exact usage (the binding stage may differ by a few
+        // bytes, since the estimate is charged before validation).
+        let registry = crate::registry();
+        let mut set = model();
+        for font in &mut set.fonts {
+            let ids: Vec<_> = font.glyphs().map(|(id, _)| id).collect();
+            for (i, id) in ids.into_iter().enumerate() {
+                font.edit_glyph(id, |g| {
+                    g.codepoints = vec![Codepoint::Legacy(0x41 + i as u32)];
+                    Ok(())
+                })
+                .unwrap();
+            }
+        }
+        let used = set.retained_usage(usize::MAX).unwrap().bytes;
+        let legacy = super::super::legacy_common::source_budget(&set, &ResourceLimits::default())
+            .unwrap()
+            .used
+            - 1024;
+        let (owned, written) = minimal(|total| {
+            registry.write_owned(
+                set.clone(),
+                "zapfont",
+                &options("a.zap", total),
+                Report::default(),
+            )
+        });
+        let (borrowed, expected) = minimal(|total| {
+            registry.write_with_report(&set, "zapfont", &options("a.zap", total), Report::default())
+        });
+        assert_eq!(written, expected);
+        assert!(owned > used, "{owned} {used}");
+        assert!(
+            owned <= borrowed - legacy + used,
+            "{owned} {borrowed} {legacy} {used}"
+        );
     }
 
     #[test]

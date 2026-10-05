@@ -342,7 +342,24 @@ fn append_glyph(
 ) -> Result<()> {
     let pixels = raster(g, c, l, b)?;
     out.extend(pixels.as_bytes().iter().map(|v| v.reverse_bits()));
-    Ok(())
+    drop(pixels);
+    b.release(raster_charge(c, l)?)
+}
+/// What [`raster`] admits for one cell bitmap, returned once it has dropped.
+fn raster_charge(c: crate::bitmap::Bounds, l: &ResourceLimits) -> Result<usize> {
+    size(c.width, c.height, l)?
+        .checked_mul(2)
+        .ok_or_else(|| invalid("Zap raster size overflow"))
+}
+/// An exactly sized zeroed buffer of `n` bytes, admitted before allocation.
+fn exact(n: usize, b: &mut Budget) -> Result<Vec<u8>> {
+    b.add(n)?;
+    let mut v = Vec::new();
+    v.try_reserve_exact(n)
+        .map_err(|_| invalid("Zap allocation failed"))?;
+    v.resize(n, 0);
+    b.add(v.capacity() - n)?;
+    Ok(v)
 }
 /// Emit the native selected variant; chunked output always includes chunk zero.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &ZapfontWriteOptions) -> Result<Written> {
@@ -381,7 +398,7 @@ fn write_charged(
                 .checked_mul(n)
                 .and_then(|v| v.checked_add(32))
                 .ok_or_else(|| invalid("Zap output size overflow"))?;
-            out = allocated(total, &mut b)?;
+            out = exact(total, &mut b)?;
             out[..8].copy_from_slice(b"ZapFont\r");
             put32(&mut out, 8, c.width);
             put32(&mut out, 12, c.height);
@@ -392,6 +409,8 @@ fn write_charged(
                 for (a, v) in wire.iter_mut().zip(pixels.as_bytes()) {
                     *a = v.reverse_bits();
                 }
+                drop(pixels);
+                b.release(raster_charge(c, &p.limits)?)?;
             }
         } else {
             let mut map = BTreeMap::new();
@@ -440,10 +459,13 @@ fn write_charged(
                 })
                 .ok_or_else(|| invalid("Zap output size overflow"))?;
             check(total, u32::MAX as usize, "Zap 32-bit offsets")?;
-            b.add(total.saturating_mul(2))?;
-            out = vec![0u8; 32 + directory];
-            out.try_reserve_exact(total - out.len())
+            // The whole file is allocated once at its final size.
+            b.add(total)?;
+            out = Vec::new();
+            out.try_reserve_exact(total)
                 .map_err(|_| invalid("Zap allocation failed"))?;
+            b.add(out.capacity() - total)?;
+            out.resize(32 + directory, 0);
             out[..4].copy_from_slice(b"ZRUF");
             put32(&mut out, 8, c.width);
             put32(&mut out, 12, c.height);
@@ -469,9 +491,30 @@ fn write_charged(
                 }
             }
         }
-        output_check(out.len(), &p.limits, &mut b)?;
+        // The readback parses `out` in place; no copy of the input is made.
+        check(
+            out.len(),
+            p.limits.max_input_bytes,
+            "native output readback input bytes",
+        )?;
+        let before = b.used;
         let (back, r) = parse(&out, &Default::default(), &p.limits, &mut b)?;
-        report.extend(r);
+        // The parser admitted each glyph and its temporaries before allocating
+        // them. Once it returns only the decoded model and its report remain,
+        // so their exact retained bytes replace those admissions.
+        let live = back
+            .retained_usage(b.max)?
+            .bytes
+            .checked_add(crate::resources::report_bytes(&r, b.max)?)
+            .ok_or_else(|| invalid("Zap readback size overflow"))?;
+        b.release(b.used - before)?;
+        b.add(live)?;
+        if report.entries.is_empty() {
+            // Moving the reader's report allocates nothing new.
+            report = r;
+        } else {
+            report.extend(r);
+        }
         audit(s, &back, "zapfont", &mut report, &mut b)?;
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
