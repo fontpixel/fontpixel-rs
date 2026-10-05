@@ -123,6 +123,67 @@ def inventory(api, all_families, output):
     return tasks
 
 
+PROFILES = ('default', 'explicit')
+VECTOR_KINDS = ('ttf-square', 'ttf-round', 'woff2-square', 'woff2-round')
+
+
+def is_pcf(path):
+    return str(path).lower().endswith(('.pcf', '.pcf.gz'))
+
+
+def toml_value(value):
+    return str(value) if isinstance(value, int) and not isinstance(value, bool) else json.dumps(value)
+
+
+def explicit_options(task, parsed):
+    """Explicit native options reproducing the original download policy.
+
+    Every value is an explicit fontpixel option; no native default changes.
+    BDF: ingest/bdfwrite.py:18-21 FONT (source PCF FONT property, otherwise the
+    -opf- template, since parsers/bdf.py:78-89 never stores a BDF FONT), :22
+    SIZE {px} 75 75, :26-30 drops the FONT property and writes FONT_ASCENT,
+    FONT_DESCENT and PIXEL_SIZE, :44 SWIDTH round(DWIDTH*1000/px). PCF:
+    downloads.py:261-267 copies an unrenamed, unmerged PCF source (here: a
+    direct PCF to PCF conversion without the charset step), otherwise :268-278
+    compiles that BDF with bdftopcf, which keeps existing POINT_SIZE and
+    RESOLUTION_X/Y properties (explicit-properties precedence). Vector:
+    vectorize.py:301-302 empty .notdef with advance max(unit*px//2, 1), LSB 0.
+    The original COMMENT lines are NOT dropped (bdfwrite.py writes none); that
+    remains a documented original-lossy difference.
+    """
+    kind = task['kind']
+    if kind in ('bdf', 'pcf'):
+        source = task['inputs'][0]
+        font = parsed[str(Path(source).resolve())]
+        if kind == 'pcf' and is_pcf(source) and not task.get('rename') and not font.merged:
+            return {'pcf_copy': True}
+        px = font.pixel_size
+        options = {'swidth_ppem': px, 'point_size': px, 'resolution': '75,75',
+                   'set_integer_property': [f'PIXEL_SIZE={px}', f'FONT_ASCENT={font.ascent}',
+                                            f'FONT_DESCENT={font.descent}']}
+        if not task.get('rename'):
+            # The export_name helper already wrote the renamed FONT for those tasks.
+            options['font_name'] = str(font.props.get('FONT', '')) or (
+                f'-opf-{font.family_slug}-medium-r-normal--{px}-{px * 10}-75-75-p-{px * 10}-iso10646-1')
+        if kind == 'bdf':
+            options['remove_property'] = ['FONT']
+        else:
+            options['pcf_metadata_precedence'] = 'explicit-properties'
+        return options
+    if kind in VECTOR_KINDS:
+        px = task['pixel_size']; unit = 1000 // max(px, 1)
+        return {'notdef': 'empty', 'notdef_advance': max(unit * px // 2, 1), 'notdef_lsb': 0,
+                'vendor': '????'}
+    return {}
+
+
+def attach_profile(tasks, all_families, profile):
+    if profile == 'default':
+        return tasks
+    parsed = {str(font.path.resolve()): font for family in all_families for font, _ in family['fonts']}
+    return [dict(task, explicit=explicit_options(task, parsed)) for task in tasks]
+
+
 def jobfile(tasks, target):
     lines = ['version = 1']
     for index, task in enumerate(tasks):
@@ -138,6 +199,9 @@ def jobfile(tasks, target):
                 for key in ['style', 'full_name', 'postscript_name', 'font_version', 'copyright']:
                     lines.append(key + ' = ' + json.dumps(task[key]))
                 lines.extend(['otb_upm = 1000', 'otb_reference = "largest"', 'otb_rounding = "ties-even"'])
+            elif task.get('explicit') and not task['explicit'].get('pcf_copy'):
+                lines.append('[tasks.options]')
+                lines.extend(f'{key} = {toml_value(value)}' for key, value in task['explicit'].items())
         else:
             assert kind in ['ttf-square', 'ttf-round', 'woff2-square', 'woff2-round']
             pixel = task['pixel_size']; ppu = 1000 // pixel
@@ -151,6 +215,7 @@ def jobfile(tasks, target):
                           'dotsize = 1.0', 'dot_reuse = "literal"', 'ppu = ' + str(ppu), 'upm = ' + str(ppu * pixel),
                           'woff2_source = "ttf"', 'font_version = ' + json.dumps(task['font_version']),
                           'copyright = ' + json.dumps(task['copyright'])])
+            lines.extend(f'{key} = {toml_value(value)}' for key, value in task.get('explicit', {}).items())
     return '\n'.join(lines) + '\n'
 
 
@@ -159,7 +224,10 @@ def prepare_native_inputs(tasks, binary, rename_binary, output):
         raise ValueError('native catalogue requires --rename-binary for export_name policy')
     normalized = output / 'normalized'; normalized.mkdir()
     remapped = {}
-    sources = sorted({name for task in tasks for name in task['inputs'] if '.pcf' in name.lower()})
+    # The explicit profile converts an unrenamed PCF download directly from the
+    # source PCF (downloads.py:261-267), so only other PCF uses need Unicode.
+    sources = sorted({name for task in tasks for name in task['inputs'] if '.pcf' in name.lower()
+                      and not task.get('explicit', {}).get('pcf_copy')})
     for index, source in enumerate(sources):
         target = normalized.resolve() / f'charset-{index}.bdf'
         command = [str(binary), 'charset', source, '--source-charset', 'iso8859-1',
@@ -191,7 +259,7 @@ def prepare_native_inputs(tasks, binary, rename_binary, output):
         if task.get('rename'):
             source = task['inputs'][0]
             task['inputs'] = [renamed[source, json.dumps(task['rename'], sort_keys=True)]]
-        else:
+        elif not task.get('explicit', {}).get('pcf_copy'):
             task['inputs'] = [remapped.get(name, name) for name in task['inputs']]
         prepared.append(task)
     return prepared
@@ -216,6 +284,8 @@ def main():
     p.add_argument('--reference', type=Path, required=True); p.add_argument('--samples', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True); p.add_argument('--binary', type=Path)
     p.add_argument('--rename-binary', type=Path); p.add_argument('--plan', type=Path)
+    p.add_argument('--profile', choices=PROFILES, default='default',
+                   help='native option profile; explicit adds the application projection options')
     a = p.parse_args()
     if a.engine == 'native' and (a.binary is None or a.plan is None):
         p.error('native requires --binary and --plan')
@@ -246,7 +316,8 @@ def main():
         plan = json.loads(a.plan.read_text())
         if plan.get('version') != PLAN_VERSION:
             raise ValueError('regenerate catalogue plan: historical plans omit required application metadata')
-        tasks = prepare_native_inputs(plan['tasks'], a.binary, a.rename_binary, a.output)
+        tasks = prepare_native_inputs(attach_profile(plan['tasks'], all_families, a.profile),
+                                      a.binary, a.rename_binary, a.output)
         jobs = a.output / 'jobs.toml'; jobs.write_text(jobfile(tasks, destination.resolve()))
         with (a.output / 'batch.stdout').open('xb') as stdout, (a.output / 'batch.stderr').open('xb') as stderr:
             process = subprocess.run([str(a.binary), 'batch', str(jobs)], stdout=stdout, stderr=stderr)
@@ -254,7 +325,7 @@ def main():
         metrics['batch_export'] = time.perf_counter_ns() - stage
         stage = time.perf_counter_ns(); native_archives(all_families, tasks, destination)
         metrics['download_archives'] = time.perf_counter_ns() - stage
-        result = {'engine': 'native-batch+native-export-name-helper+same-family-packaging',
+        result = {'engine': 'native-batch+native-export-name-helper+same-family-packaging', 'profile': a.profile,
                   'batch': batch_header(a.output / 'batch.stdout', len(tasks)),
                   'full_json_report_file': 'batch.stdout', 'full_json_report_bytes': (a.output / 'batch.stdout').stat().st_size}
     metrics['pipeline_wall'] = time.perf_counter_ns() - started

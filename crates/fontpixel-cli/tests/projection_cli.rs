@@ -1,4 +1,5 @@
-//! Explicit scalable-advance projection through `convert` and `batch`.
+//! Explicit model projections and writer/variants application options
+//! through `convert`, `variants` and `batch`.
 #![cfg(feature = "bdf")]
 use std::{
     fs,
@@ -153,4 +154,203 @@ fn batch_options_use_the_same_projection() {
         swidths(&w.read("out.bdf")),
         ["SWIDTH 462 0", "SWIDTH 923 0"]
     );
+}
+
+/// Cozette-like source: SIZE 12 with POINT_SIZE 120 and 72 dpi properties.
+const METADATA: &str = "STARTFONT 2.1\nFONT -test-meta-medium-r-normal--13-120-72-72-c-60-iso10646-1\nSIZE 12 72 72\nFONTBOUNDINGBOX 6 13 0 -3\nCOMMENT \"(c) 2026 Example notice\"\nSTARTPROPERTIES 6\nFONT \"-test-meta-medium-r-normal--13-120-72-72-c-60-iso10646-1\"\nPOINT_SIZE 120\nRESOLUTION_X 72\nRESOLUTION_Y 72\nFONT_ASCENT 10\nFONT_DESCENT 3\nENDPROPERTIES\nCHARS 1\nSTARTCHAR A\nENCODING 65\nSWIDTH 500 0\nDWIDTH 6 0\nBBX 1 1 0 0\nBITMAP\n80\nENDCHAR\nENDFONT\n";
+const APP_NAME: &str = "-opf-meta-medium-r-normal--13-130-75-75-p-130-iso10646-1";
+
+fn args<'a>(base: &[&'a str], extra: &[&'a str]) -> Vec<&'a str> {
+    base.iter().chain(extra).copied().collect()
+}
+
+#[test]
+fn convert_projects_name_size_and_properties_with_full_report() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    let name = format!("--font-name={APP_NAME}");
+    let o = w.run(&[
+        "convert",
+        "in.bdf",
+        "-o",
+        "out.bdf",
+        &name,
+        "--point-size",
+        "13",
+        "--resolution",
+        "75,75",
+        "--set-integer-property",
+        "PIXEL_SIZE=13",
+        "--set-text-property",
+        "WEIGHT_NAME=Medium",
+        "--remove-property",
+        "FONT",
+        "--report",
+        "json",
+    ]);
+    success(&o);
+    let out = w.read("out.bdf");
+    assert!(out.contains(&format!("\nFONT {APP_NAME}\n")));
+    assert!(out.contains("\nSIZE 13 75 75\n"));
+    assert!(out.contains("COMMENT \"(c) 2026 Example notice\""));
+    assert!(out.contains("\nPOINT_SIZE 120\n"));
+    assert!(out.contains("\nRESOLUTION_X 72\n"));
+    assert!(out.contains("\nPIXEL_SIZE 13\n"));
+    assert!(out.contains("\nWEIGHT_NAME \"Medium\"\n"));
+    assert!(!out.contains("\nFONT \""));
+    let report = String::from_utf8_lossy(&o.stdout);
+    for code in [
+        "projection.font_name.replaced",
+        "projection.font_name.property_synced",
+        "projection.point_size.replaced",
+        "projection.resolution.replaced",
+        "projection.property.added",
+        "projection.property.removed",
+    ] {
+        assert!(report.contains(code), "{code}: {report}");
+    }
+    // The same projection under --strict is rejected and writes nothing.
+    let o = w.run(&["convert", "in.bdf", "-o", "strict.bdf", &name, "--strict"]);
+    assert_eq!(o.status.code(), Some(3));
+    assert!(!w.0.join("strict.bdf").exists());
+}
+
+#[test]
+fn projections_equal_to_the_source_leave_output_byte_identical() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    for (output, to) in [("plain.bdf", "bdf"), ("plain.pcf", "pcf")] {
+        success(&w.run(&["convert", "in.bdf", "-o", output, "--to", to]));
+    }
+    let name = "--font-name=-test-meta-medium-r-normal--13-120-72-72-c-60-iso10646-1";
+    let same = [
+        name,
+        "--point-size",
+        "12",
+        "--resolution",
+        "72,72",
+        "--set-integer-property",
+        "FONT_ASCENT=10",
+    ];
+    success(&w.run(&args(
+        &["convert", "in.bdf", "-o", "same.bdf", "--to", "bdf"],
+        &same,
+    )));
+    success(
+        &w.run(&args(
+            &["convert", "in.bdf", "-o", "same.pcf", "--to", "pcf"],
+            &[
+                &same[..],
+                &["--pcf-metadata-precedence", "explicit-properties"],
+            ]
+            .concat(),
+        )),
+    );
+    success(&w.run(&[
+        "convert",
+        "in.bdf",
+        "-o",
+        "default.pcf",
+        "--pcf-metadata-precedence",
+        "normalized-edits",
+    ]));
+    let bytes = |path: &str| fs::read(w.0.join(path)).unwrap();
+    assert_eq!(bytes("plain.bdf"), bytes("same.bdf"));
+    assert_eq!(bytes("plain.pcf"), bytes("same.pcf"));
+    assert_eq!(bytes("plain.pcf"), bytes("default.pcf"));
+}
+
+#[test]
+fn pcf_precedence_is_explicit_and_reports_kept_properties() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    let size = ["--point-size", "13", "--resolution", "75,75"];
+    let o = w.run(&args(
+        &[
+            "convert",
+            "in.bdf",
+            "-o",
+            "explicit.pcf",
+            "--report",
+            "json",
+        ],
+        &[
+            &size[..],
+            &["--pcf-metadata-precedence", "explicit-properties"],
+        ]
+        .concat(),
+    ));
+    success(&o);
+    let report = String::from_utf8_lossy(&o.stdout);
+    assert_eq!(report.matches("pcf.write.property_precedence").count(), 3);
+    let o = w.run(&args(
+        &[
+            "convert",
+            "in.bdf",
+            "-o",
+            "normalized.pcf",
+            "--report",
+            "json",
+        ],
+        &size,
+    ));
+    success(&o);
+    assert!(!String::from_utf8_lossy(&o.stdout).contains("property_precedence"));
+    assert_ne!(
+        fs::read(w.0.join("explicit.pcf")).unwrap(),
+        fs::read(w.0.join("normalized.pcf")).unwrap()
+    );
+    // The precedence option is PCF-only.
+    let o = w.run(&[
+        "convert",
+        "in.bdf",
+        "-o",
+        "x.bdf",
+        "--pcf-metadata-precedence",
+        "explicit-properties",
+    ]);
+    assert!(!o.status.success());
+}
+
+#[test]
+fn unsafe_or_incomplete_metadata_edits_are_rejected() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    for extra in [
+        &["--remove-property", "COMMENT"][..],
+        &["--remove-property", "COPYRIGHT"][..],
+        &["--set-text-property", "NOTICE=x"][..],
+        &["--set-text-property", "FAMILY_NAME=x"][..],
+        &["--set-text-property", "FONT=x"][..],
+        &["--set-integer-property", "PIXEL_SIZE=x"][..],
+        &["--set-integer-property", "=1"][..],
+        &["--point-size", "13"][..],
+        &["--resolution", "75,75"][..],
+        &["--point-size", "13", "--resolution", "75"][..],
+        &["--font-name", " "][..],
+    ] {
+        let o = w.run(&args(&["convert", "in.bdf", "-o", "out.bdf"], extra));
+        assert!(!o.status.success(), "{extra:?}");
+    }
+    assert!(!w.0.join("out.bdf").exists());
+}
+
+#[test]
+fn batch_options_cover_every_metadata_projection() {
+    let w = Work::new();
+    w.write("in.bdf", METADATA);
+    w.write(
+        "jobs.toml",
+        format!(
+            "version=1\n[[tasks]]\nid='b'\nkind='convert'\ninputs=['in.bdf']\noutput='out.bdf'\n[tasks.options]\nswidth_ppem=13\nfont_name='{APP_NAME}'\npoint_size=13\nresolution='75,75'\nset_integer_property=['PIXEL_SIZE=13','FONT_ASCENT=10']\nremove_property=['FONT']\n\
+[[tasks]]\nid='p'\nkind='convert'\ninputs=['in.bdf']\noutput='out.pcf'\n[tasks.options]\npoint_size=13\nresolution='75,75'\npcf_metadata_precedence='explicit-properties'\n"
+        ),
+    );
+    success(&w.run(&["batch", "jobs.toml"]));
+    let out = w.read("out.bdf");
+    assert!(out.contains(&format!("\nFONT {APP_NAME}\n")));
+    assert!(out.contains("\nSIZE 13 75 75\n"));
+    assert!(out.contains("\nPIXEL_SIZE 13\n"));
+    assert_eq!(swidths(&out), ["SWIDTH 462 0"]);
+    assert!(w.0.join("out.pcf").exists());
 }

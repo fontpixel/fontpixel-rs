@@ -128,7 +128,11 @@ fn token(name: &str) -> Vec<u8> {
         .take(99)
         .collect()
 }
-fn effective_properties(font: &Font, report: &mut Report) -> Result<Properties> {
+fn effective_properties(
+    font: &Font,
+    precedence: MetadataPrecedence,
+    report: &mut Report,
+) -> Result<Properties> {
     let (_, mut properties) = x11::reconcile(font, false)?;
     let original = x11::original(font);
     // PCF's FONT property is also the normalized XLFD. A semantic edit must
@@ -136,24 +140,45 @@ fn effective_properties(font: &Font, report: &mut Report) -> Result<Properties> 
     if font.names.xlfd != original.names.xlfd && properties.get("FONT").is_some() {
         properties.set("FONT", font.names.xlfd.clone().unwrap_or_default());
     }
+    // Under ExplicitProperties an existing property is kept; PCF has no other
+    // place for the edited model value, so a disagreement is a loss.
+    let explicit = precedence == MetadataPrecedence::ExplicitProperties;
+    let mut update = |properties: &mut Properties, name: &str, value: i64| {
+        if !explicit {
+            properties.set(name, value);
+        } else if properties.get(name).and_then(integer) != Some(value) {
+            loss(
+                report,
+                "property_precedence",
+                None,
+                format!(
+                    "Existing {name} property kept over the edited model value {value} (explicit-properties precedence)"
+                ),
+            );
+        }
+    };
     if font.metrics.point_size != original.metrics.point_size
         && properties.get("POINT_SIZE").is_some()
     {
         let point = ((rational(font.metrics.point_size) as f32) as f64 * 10.0).trunc() as i64;
-        properties.set("POINT_SIZE", point);
+        update(&mut properties, "POINT_SIZE", point);
     }
     if font.metrics.resolution != original.metrics.resolution {
         let r = font.metrics.resolution.unwrap_or(Vector::new(75, 75));
         let x = if r.x < 1 { 75 } else { r.x };
         let y = if r.y < 1 { 75 } else { r.y };
         if properties.get("RESOLUTION_X").is_some() {
-            properties.set("RESOLUTION_X", x);
+            update(&mut properties, "RESOLUTION_X", x);
         }
         if properties.get("RESOLUTION_Y").is_some() {
-            properties.set("RESOLUTION_Y", y);
+            update(&mut properties, "RESOLUTION_Y", y);
         }
         if x == y && properties.get("RESOLUTION").is_some() {
-            properties.set("RESOLUTION", (x as f64 * 100.0 / 72.27).trunc() as i64);
+            update(
+                &mut properties,
+                "RESOLUTION",
+                (x as f64 * 100.0 / 72.27).trunc() as i64,
+            );
         }
     }
     if font.source_format.as_deref() != Some("bdf") {
@@ -523,7 +548,7 @@ pub(super) fn write(font: &Font, options: &PcfWriteOptions) -> Result<(Vec<u8>, 
     font.validate(&options.limits)?;
     let mut report = Report::default();
     model_losses(font, &mut report);
-    let properties = effective_properties(font, &mut report)?;
+    let properties = effective_properties(font, options.metadata_precedence, &mut report)?;
     let mut plist = Vec::<Property>::new();
     let mut special = BTreeMap::<String, usize>::new();
     let mut asc = None;
