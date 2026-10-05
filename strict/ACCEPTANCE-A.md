@@ -291,3 +291,10 @@ match it).
   original budget), `woff_budget`, the lib unit tests, `vector_raster`,
   `contracts`, `embedded_bitmap`, `model`, `bdf`, and the CLI `cli`,
   `merge_phase6`, `phase6_cli_recovery` tests pass.
+- Whole-call check (`fontpixel-heap-check/tests/codecs.rs`, release, with the
+  `vector-native` Tong sfnt): every WOFF1/WOFF2/TTC case stays within its
+  smallest succeeding `max_total_bytes` plus report strings. Default WOFF2
+  options (q11, 2 threads, transforms on) need 237.4 MB of `max_total_bytes`
+  (observed whole-call heap 177.3 MB), within the 256 MiB library default.
+  With transforms off (not a default) the same font needs 262.1 MB, just under
+  the library default and above the 255 MiB CLI working allowance.
