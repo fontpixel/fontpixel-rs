@@ -951,12 +951,13 @@ mod tests {
     fn reserved_embedded_writers_skip_only_the_model_admission() {
         // `write_preflight` admits an estimate of the model alone; the owned
         // route skips it. For OTB it binds, so the owned route needs strictly
-        // less than the borrowing route plus the model. For color the fused
-        // `color_memory_preflight` envelope binds either way.
+        // less than the borrowing route plus the model. Color charges the
+        // model's exact usage on its working ledger only when borrowing, so
+        // the owned route also needs less than the borrowing route plus it.
         let registry = crate::registry();
         let set = model();
         let used = set.retained_usage(usize::MAX).unwrap().bytes;
-        for (id, name, strict) in [("otb", "a.otb", true), ("color", "a.ttf", false)] {
+        for (id, name, strict) in [("otb", "a.otb", true), ("color", "a.ttf", true)] {
             let (owned, written) = minimal(|total| {
                 registry.write_owned(set.clone(), id, &options(name, total), Report::default())
             });

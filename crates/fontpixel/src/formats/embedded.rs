@@ -16,8 +16,10 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::sfnt::{
     self, Flavor, Sfnt, SfntBuilder, bitmap as sbit, cmap, metrics, name, os2, post,
 };
+use crate::working::{self, Budget as Ledger, Lease, Owned};
 use crate::{Report, Result};
 use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
+use std::mem::size_of;
 
 mod metadata;
 pub use metadata::{
@@ -297,11 +299,22 @@ fn required<'a>(font: &Sfnt<'a>, tag: [u8; 4]) -> Result<&'a [u8]> {
 }
 // Diagnostics have their own pre-allocation budget. A sparse cmap can generate
 // many missing-image notices even when there are almost no bitmap payload bytes.
+// On a writer's working ledger (color) the entry array and every code and
+// message string are instead admitted at their exact size before allocation.
 struct Diagnostics {
     report: Report,
     bytes: usize,
     limit: usize,
     exhausted: bool,
+    charged: Option<Charges>,
+}
+/// Ledger charges of a report. The first refused admission is kept and
+/// returned by `finish`; later entries are skipped, as with the allowance.
+struct Charges {
+    budget: Ledger,
+    entries: Lease,
+    strings: Lease,
+    failed: Option<crate::Error>,
 }
 impl Diagnostics {
     fn new(total: usize) -> Self {
@@ -310,16 +323,48 @@ impl Diagnostics {
             bytes: 0,
             limit: (total / 4).min(64 * 1024 * 1024),
             exhausted: false,
+            charged: None,
         }
     }
+    /// Entries admitted exactly on `budget` instead of a separate allowance.
+    #[cfg(feature = "color")]
+    fn charged(budget: &Ledger) -> Result<Self> {
+        Ok(Self {
+            report: Report::default(),
+            bytes: 0,
+            limit: usize::MAX,
+            exhausted: false,
+            charged: Some(Charges {
+                budget: budget.clone(),
+                entries: budget.reserve(0)?,
+                strings: budget.reserve(0)?,
+                failed: None,
+            }),
+        })
+    }
     fn finish(self) -> Result<Report> {
+        self.finish_held().map(|(report, _)| report)
+    }
+    /// The report and, on a ledger, the charge of its storage, which the
+    /// caller keeps until the report has dropped.
+    fn finish_held(mut self) -> Result<(Report, Option<Lease>)> {
+        if let Some(mut charges) = self.charged.take() {
+            // Declared after the charges, so any early return drops the
+            // report's storage before its charges are released.
+            let report = std::mem::take(&mut self.report);
+            if let Some(error) = charges.failed.take() {
+                return Err(error);
+            }
+            charges.entries.merge(&mut charges.strings)?;
+            return Ok((report, Some(charges.entries)));
+        }
         if self.exhausted {
             Err(crate::Error::ResourceLimit {
                 resource: "embedded diagnostic bytes",
                 limit: self.limit,
             })
         } else {
-            Ok(self.report)
+            Ok((self.report, None))
         }
     }
 }
@@ -328,7 +373,7 @@ fn loss(
     code: &str,
     fi: Option<usize>,
     gi: Option<usize>,
-    message: impl Into<String>,
+    message: impl std::fmt::Display,
 ) {
     push(
         report,
@@ -339,7 +384,7 @@ fn loss(
             glyph_index: gi,
             ..Default::default()
         },
-        message.into(),
+        message,
     );
 }
 /// Informational audit with no source information changed.
@@ -349,7 +394,7 @@ fn note(report: &mut Diagnostics, code: &str, message: &str) {
         (Level::Info, Impact::None),
         code,
         Location::default(),
-        message.to_owned(),
+        message,
     );
 }
 fn push(
@@ -357,8 +402,34 @@ fn push(
     (level, impact): (Level, Impact),
     code: &str,
     location: Location,
-    message: String,
+    message: impl std::fmt::Display,
 ) {
+    if let Some(charges) = &mut report.charged {
+        if charges.failed.is_some() {
+            return;
+        }
+        let entries = &mut report.report.entries;
+        let admitted = working::grow_vec(&charges.budget, entries, &mut charges.entries, 1)
+            .and_then(|()| {
+                let code =
+                    working::exact_string(&mut charges.strings, format_args!("embedded.{code}"))?;
+                let message =
+                    working::exact_string(&mut charges.strings, format_args!("{message}"))?;
+                Ok((code, message))
+            });
+        match admitted {
+            Ok((code, message)) => entries.push(ReportEntry {
+                level,
+                impact,
+                code,
+                location,
+                message,
+            }),
+            Err(error) => charges.failed = Some(error),
+        }
+        return;
+    }
+    let message = message.to_string();
     let size = 256usize
         .saturating_add(message.len())
         .saturating_add(code.len());
@@ -1017,6 +1088,9 @@ impl Eq for Key {}
 #[derive(Default)]
 struct GlyphIdSet(Vec<u64>);
 impl GlyphIdSet {
+    /// Most live bytes of the word array: at most 1024 words (see the unit
+    /// test), plus a previous array of at most 512 words while it grows.
+    const MAX_BYTES: usize = 1536 * size_of::<u64>();
     fn insert(&mut self, gid: u16) -> bool {
         let word = usize::from(gid) / 64;
         if self.0.len() <= word {
@@ -1061,13 +1135,28 @@ fn reorder_by_codepoint(
         *gid = new_id[usize::from(*gid)];
     }
 }
-fn key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> Key {
+/// The glyph's identity key; the returned lease charges the key's own storage
+/// (an alias vector or a copied name), admitted before it is allocated.
+fn key(
+    g: &Glyph,
+    index: usize,
+    fi: usize,
+    report: &mut Diagnostics,
+    budget: &Ledger,
+) -> Result<(Key, Lease)> {
     if let [Codepoint::Unicode(cp)] = g.codepoints.as_slice()
         && char::from_u32(*cp).is_some()
     {
-        return Key::Code(*cp);
+        return Ok((Key::Code(*cp), budget.reserve(0)?));
     }
-    let mut cps = Vec::new();
+    let scalars = g
+        .codepoints
+        .iter()
+        .filter(|cp| matches!(cp, Codepoint::Unicode(cp) if char::from_u32(*cp).is_some()))
+        .count();
+    let mut lease = budget.reserve_array::<u32>(scalars)?;
+    let mut cps = Vec::with_capacity(scalars);
+    lease.grow_to(cps.capacity() * size_of::<u32>())?;
     for cp in &g.codepoints {
         if let Codepoint::Unicode(cp) = cp
             && char::from_u32(*cp).is_some()
@@ -1079,21 +1168,23 @@ fn key(g: &Glyph, index: usize, fi: usize, report: &mut Diagnostics) -> Key {
                 "codepoint",
                 Some(fi),
                 Some(index),
-                format!("Cannot put {cp:?} in a Unicode cmap"),
+                format_args!("Cannot put {cp:?} in a Unicode cmap"),
             );
         }
     }
     cps.sort_unstable();
     cps.dedup();
-    if !cps.is_empty() {
+    let key = if !cps.is_empty() {
         Key::Codes(cps)
     } else if g.name.as_deref() == Some(".notdef") {
         Key::Notdef
     } else if let Some(name) = &g.name {
+        lease.grow_to(lease.bytes().saturating_add(name.len()))?;
         Key::Name(name.clone())
     } else {
         Key::Slot(index)
-    }
+    };
+    Ok((key, lease))
 }
 fn byte(n: i64, what: &str) -> Result<u8> {
     u8::try_from(n).map_err(|_| invalid(format!("{what} does not fit uint8")))
@@ -1412,12 +1503,12 @@ fn write_charged(
     options: &EmbeddedWriteOptions,
     charge: ModelCharge,
 ) -> Result<(Vec<u8>, Report)> {
-    let result = write_impl(fonts, kind, options, false, charge)?;
     #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
-        color_readback(&result.0, &options.limits)?;
+        return write_color_ledgered(fonts, options, false, charge);
     }
-    Ok(result)
+    let (bytes, report, _) = write_impl(fonts, kind, options, false, charge, None)?;
+    Ok((bytes, report))
 }
 
 /// Write coverage as black PNG alpha, preserving aliases and physical strikes.
@@ -1432,38 +1523,76 @@ fn write_color_charged(
     options: &ColorWriteOptions,
     charge: ModelCharge,
 ) -> Result<(Vec<u8>, Report)> {
-    let result = write_impl(
+    write_color_ledgered(
         fonts,
-        sbit::Kind::Color,
         &EmbeddedWriteOptions {
             limits: options.limits.clone(),
             ..Default::default()
         },
         options.flavor == ColorFlavor::Sbix,
         charge,
-    )?;
-    color_readback(&result.0, &options.limits)?;
-    Ok(result)
+    )
 }
+/// Every color write runs on one working ledger of the writer's total: the
+/// model's exact `retained_usage` unless the caller reserved it, then every
+/// allocation of the writer (admitted before it is made, released when it
+/// drops), the output and report, and the native readback within whatever
+/// the ledger has left while the output and report are still charged.
 #[cfg(feature = "color")]
-fn color_readback(bytes: &[u8], limits: &sbit::Limits) -> Result<()> {
+fn write_color_ledgered(
+    fonts: &FontSet,
+    options: &EmbeddedWriteOptions,
+    sbix: bool,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    let maximum = options.limits.sfnt.resources.max_total_bytes;
+    let ledger = Ledger::new(maximum, "embedded color working bytes");
+    let _model = match charge {
+        ModelCharge::Estimate => ledger.reserve(fonts.retained_usage(maximum)?.bytes)?,
+        ModelCharge::Reserved => ledger.reserve(0)?,
+    };
+    let (bytes, report, held) = write_impl(
+        fonts,
+        sbit::Kind::Color,
+        options,
+        sbix,
+        charge,
+        Some(&ledger),
+    )?;
+    color_readback(&bytes, &options.limits, &ledger)?;
+    drop(held);
+    Ok((bytes, report))
+}
+/// Read the output back as a FontSet within the allowance the ledger has
+/// left; the reader's own counters bound what it allocates, and all of it
+/// drops before this returns.
+#[cfg(feature = "color")]
+fn color_readback(bytes: &[u8], limits: &sbit::Limits, ledger: &Ledger) -> Result<()> {
+    let reread = sbit::within_remaining(limits, ledger);
     read(
         bytes,
         sbit::Kind::Color,
         &EmbeddedReadOptions {
-            limits: limits.clone(),
+            limits: reread.clone(),
             ..Default::default()
         },
-    )?;
+    )
+    .map_err(|error| sbit::readback_error(error, &reread, ledger))?;
     Ok(())
 }
+/// Shared bitmap-only sfnt writer. `ledger` is the color writer's working
+/// ledger; OTB and bdat (`None`) keep their model preflight, diagnostic
+/// allowance and standalone table encoders, and their stage charges below go
+/// to an unbounded local ledger. The returned lease charges the output and
+/// report on the color ledger.
 fn write_impl(
     fonts: &FontSet,
     kind: sbit::Kind,
     options: &EmbeddedWriteOptions,
     sbix: bool,
     charge: ModelCharge,
-) -> Result<(Vec<u8>, Report)> {
+    ledger: Option<&Ledger>,
+) -> Result<(Vec<u8>, Report, Lease)> {
     if kind == sbit::Kind::Color && !cfg!(feature = "color") {
         return Err(invalid("color writing requires the color feature"));
     }
@@ -1473,13 +1602,14 @@ fn write_impl(
     let prepared = options.metadata.prepare(fonts, &options.limits, charge)?;
     let limits = prepared.limits.as_ref().unwrap_or(&options.limits);
     // An admission check of the model estimate alone: a model the caller
-    // has reserved exactly is not admitted again.
-    if charge == ModelCharge::Estimate {
+    // has reserved exactly is not admitted again. The color ledger charges
+    // the model exactly instead.
+    if charge == ModelCharge::Estimate && ledger.is_none() {
         write_preflight(fonts, &limits.sfnt)?;
     }
     #[cfg(feature = "color")]
     if kind == sbit::Kind::Color {
-        color_memory_preflight(fonts, limits)?;
+        color_pixel_preflight(fonts, limits)?;
     }
     let first = fonts
         .fonts
@@ -1488,12 +1618,38 @@ fn write_impl(
     if fonts.fonts.len() > limits.max_strikes {
         return Err(invalid("too many strikes"));
     }
-    let mut report = Diagnostics::new(limits.sfnt.resources.max_total_bytes);
+    let unbounded;
+    let led = match ledger {
+        Some(ledger) => ledger,
+        None => {
+            unbounded = Ledger::new(usize::MAX, "embedded working bytes");
+            &unbounded
+        }
+    };
+    let mut report = match ledger {
+        #[cfg(feature = "color")]
+        Some(ledger) => Diagnostics::charged(ledger)?,
+        _ => Diagnostics::new(limits.sfnt.resources.max_total_bytes),
+    };
     options.metadata.audit(fonts, &mut report);
+    // The ID tree: its nodes (the shared conservative bound, grown before
+    // each insertion) and the keys' own alias vectors and names.
+    let mut ids_tree = led.reserve_tree::<Key, u16>(1)?;
+    let mut ids_keys = led.reserve(0)?;
     let mut ids = BTreeMap::from([(Key::Notdef, 0u16)]);
+    let mut mapping_tree = led.reserve(0)?;
     let mut mapping = cmap::Mapping::new();
-    let mut assigned = Vec::new();
-    let mut names = vec![".notdef".to_owned()];
+    let mut assigned_lease = led.reserve_array::<Vec<(u16, &Glyph)>>(fonts.fonts.len())?;
+    let mut assigned = Vec::with_capacity(fonts.fonts.len());
+    assigned_lease.grow_to(assigned.capacity() * size_of::<Vec<(u16, &Glyph)>>())?;
+    let mut names_array = led.reserve(0)?;
+    let mut names_text = led.reserve(0)?;
+    let mut names = Vec::new();
+    working::grow_vec(led, &mut names, &mut names_array, 1)?;
+    names.push(working::exact_string(
+        &mut names_text,
+        format_args!(".notdef"),
+    )?);
     let mut total = 0usize;
     for (fi, f) in fonts.fonts.iter().enumerate() {
         f.validate(&limits.sfnt.resources)?;
@@ -1514,16 +1670,24 @@ fn write_impl(
         total = total
             .checked_add(f.len())
             .ok_or_else(|| invalid("glyph total overflow"))?;
+        // The per-glyph estimate is an admission check of the allowance-based
+        // writers only; the color ledger admits the actual storage.
         if total > limits.sfnt.resources.max_glyphs
-            || total.saturating_mul(2048) > limits.sfnt.resources.max_total_bytes
+            || ledger.is_none()
+                && total.saturating_mul(2048) > limits.sfnt.resources.max_total_bytes
         {
             return Err(invalid("bitmap model/glyph budget exceeded"));
         }
-        let mut selected = Vec::new();
+        let mut selected_lease = led.reserve_array::<(u16, &Glyph)>(f.len())?;
+        let mut selected = Vec::with_capacity(f.len());
+        selected_lease.grow_to(selected.capacity() * size_of::<(u16, &Glyph)>())?;
+        let _seen_lease = led.reserve(GlyphIdSet::MAX_BYTES)?;
         let mut seen = GlyphIdSet::default();
         for (id, g) in f.glyphs() {
-            let key = key(g, id.index(), fi, &mut report);
+            let (key, mut key_lease) = key(g, id.index(), fi, &mut report, led)?;
             let next_id = ids.len();
+            // One more node bound before a possible insertion.
+            ids_tree.grow_to(led.tree_bytes::<Key, u16>(next_id + 1)?)?;
             let entry = match ids.entry(key) {
                 Entry::Occupied(entry) => {
                     let gid = *entry.get();
@@ -1550,6 +1714,7 @@ fn write_impl(
                         return Err(invalid("sfnt requires at most 65535 glyphs"));
                     }
                     let entry = entry.insert_entry(gid);
+                    ids_keys.merge(&mut key_lease)?;
                     // A newly allocated ID cannot have appeared in this strike.
                     seen.insert(gid);
                     let name = g.name.as_deref().filter(|n| {
@@ -1567,13 +1732,20 @@ fn write_impl(
                             "Glyph name cannot be encoded in post format 2",
                         );
                     }
-                    names.push(name.map_or_else(|| format!("glyph{gid}"), str::to_owned));
+                    working::grow_vec(led, &mut names, &mut names_array, 1)?;
+                    names.push(match name {
+                        Some(name) => {
+                            working::exact_string(&mut names_text, format_args!("{name}"))?
+                        }
+                        None => working::exact_string(&mut names_text, format_args!("glyph{gid}"))?,
+                    });
                     entry
                 }
             };
             let gid = *entry.get();
             if let Some(cps) = entry.key().codepoints() {
                 for &cp in cps {
+                    mapping_tree.grow_to(led.tree_bytes::<u32, u16>(mapping.len() + 1)?)?;
                     if let Some(old) = mapping.insert(cp, gid)
                         && old != gid
                     {
@@ -1584,23 +1756,33 @@ fn write_impl(
             selected.push((gid, g));
         }
         assigned.push(selected);
+        assigned_lease.merge(&mut selected_lease)?;
     }
     if mapping.len() > limits.sfnt.max_cmap_mappings {
         return Err(invalid("cmap mapping budget exceeded"));
     }
     let count = u16::try_from(ids.len()).map_err(|_| invalid("too many sfnt glyphs"))?;
     drop(ids);
+    drop(ids_tree);
+    drop(ids_keys);
     if options.metadata.glyph_order == EmbeddedGlyphOrder::Codepoint {
         // Scratch reserved by `EmbeddedMetadataOptions::working_bytes`.
         reorder_by_codepoint(&mut names, &mut mapping, &mut assigned);
     }
+    names_array.merge(&mut names_text)?;
+    let names = Owned::from_parts(names, names_array);
+    let assembly = Assembly::new(led, ledger.is_some())?;
     if sbix {
         #[cfg(feature = "color")]
-        return write_native_sbix(fonts, &assigned, count, &mapping, names, limits, report);
+        return write_native_sbix(
+            fonts, &assigned, count, &mapping, names, limits, report, assembly,
+        );
         #[cfg(not(feature = "color"))]
         return Err(invalid("sbix requires the color feature"));
     }
-    let mut strikes = Vec::new();
+    let mut strikes_lease = led.reserve_array::<sbit::Strike>(fonts.fonts.len())?;
+    let mut strikes = Vec::with_capacity(fonts.fonts.len());
+    strikes_lease.grow_to(strikes.capacity() * size_of::<sbit::Strike>())?;
     for (fi, (f, selected)) in fonts.fonts.iter().zip(&assigned).enumerate() {
         let ppem = f
             .metrics
@@ -1619,6 +1801,10 @@ fn write_impl(
         } else {
             1
         };
+        // The strike's tree (node bound grown before each insertion) and the
+        // exact rows of every cloned raster, admitted before the clone.
+        let mut glyph_tree = led.reserve(0)?;
+        let mut glyph_rows = led.reserve(0)?;
         let mut glyphs = BTreeMap::new();
         let mut horiz = false;
         let mut vert = false;
@@ -1635,6 +1821,13 @@ fn write_impl(
                     "Mono represented as Gray8 coverage without changing samples",
                 );
             }
+            glyph_tree.grow_to(led.tree_bytes::<u16, sbit::BitmapGlyph>(glyphs.len() + 1)?)?;
+            glyph_rows.grow_to(
+                glyph_rows
+                    .bytes()
+                    .checked_add(g.bitmap.as_bytes().len())
+                    .ok_or_else(|| led.error())?,
+            )?;
             glyphs.insert(
                 gid,
                 sbit::BitmapGlyph {
@@ -1667,6 +1860,7 @@ fn write_impl(
             // Glyph 0 has no bitmap in any strike; its advance is in hmtx.
             glyphs.remove(&0);
         } else {
+            glyph_tree.grow_to(led.tree_bytes::<u16, sbit::BitmapGlyph>(glyphs.len() + 1)?)?;
             glyphs.entry(0).or_insert_with(|| sbit::BitmapGlyph {
                 metrics: sbit::Metrics {
                     horizontal: Some(sbit::Bearing::default()),
@@ -1699,17 +1893,35 @@ fn write_impl(
         }
         apply_line_metrics(&options.metadata, &mut strike, fi, &mut report);
         strikes.push(strike);
+        strikes_lease.merge(&mut glyph_tree)?;
+        strikes_lease.merge(&mut glyph_rows)?;
     }
+    let _sizes_lease = led.reserve_tree::<(u8, u8), ()>(strikes.len())?;
     let mut sizes = BTreeSet::new();
     for s in &strikes {
         if !sizes.insert((s.ppem_x, s.ppem_y)) {
             return Err(invalid("duplicate physical strike size"));
         }
     }
-    let tables = match options.metadata.index_layout {
-        EmbeddedIndexLayout::Canonical => sbit::encode(&strikes, kind, count, limits)?,
-        EmbeddedIndexLayout::Spanning => sbit::encode_spanning(&strikes, kind, count, limits)?,
-        EmbeddedIndexLayout::SharedMetricRuns { minimum_run } => {
+    let mut assembly = assembly;
+    let (tables, tables_lease) = match (ledger, options.metadata.index_layout) {
+        (Some(ledger), _) => {
+            // `color_readback` decodes these tables again with the same limits.
+            #[cfg(feature = "color")]
+            let tables = sbit::encode_read_back_later(&strikes, kind, count, limits, ledger)?;
+            #[cfg(not(feature = "color"))]
+            let tables = sbit::encode_with_budget(&strikes, kind, count, limits, ledger)?;
+            tables.into_parts()
+        }
+        (None, EmbeddedIndexLayout::Canonical) => (
+            sbit::encode(&strikes, kind, count, limits)?,
+            led.reserve(0)?,
+        ),
+        (None, EmbeddedIndexLayout::Spanning) => (
+            sbit::encode_spanning(&strikes, kind, count, limits)?,
+            led.reserve(0)?,
+        ),
+        (None, EmbeddedIndexLayout::SharedMetricRuns { minimum_run }) => {
             let runs = sbit::encode_shared_metric_runs(&strikes, kind, count, minimum_run, limits)?;
             if runs.shared_runs > 0 {
                 note(
@@ -1719,30 +1931,37 @@ fn write_impl(
                      horizontal metrics and pixels are unchanged",
                 );
             }
-            runs.tables
+            (runs.tables, led.reserve(0)?)
         }
     };
-    let mut builder = SfntBuilder::new(Flavor::TrueType);
     let (dt, lt) = kind.tags();
-    builder.insert(dt, tables.data)?;
-    builder.insert(lt, tables.location)?;
+    assembly.insert(dt, tables.data, tables_lease)?;
+    assembly.insert(lt, tables.location, led.reserve(0)?)?;
     let source_scaling = fonts.properties.get("sfnt.EBSC");
     let scales = if options.scaling.is_empty() {
         if let Some(PropertyValue::Bytes(bytes)) = source_scaling {
-            sbit::decode_scaling(bytes, limits)?
+            match ledger {
+                Some(ledger) => sbit::decode_scaling_with_budget(bytes, limits, ledger)?,
+                None => Owned::from_parts(sbit::decode_scaling(bytes, limits)?, led.reserve(0)?),
+            }
         } else {
-            Vec::new()
+            Owned::from_parts(Vec::new(), led.reserve(0)?)
         }
     } else {
-        options.scaling.clone()
+        let lease = led.reserve_array::<sbit::Scale>(options.scaling.len())?;
+        Owned::from_parts(options.scaling.clone(), lease)
     };
-    for s in &scales {
+    for s in scales.iter() {
         if !sizes.contains(&(s.source[0], s.source[1])) {
             return Err(invalid("EBSC references missing physical size"));
         }
     }
     if !scales.is_empty() {
-        builder.insert(*b"EBSC", sbit::encode_scaling(&scales, limits)?)?;
+        let (table, lease) = match ledger {
+            Some(ledger) => sbit::encode_scaling_with_budget(&scales, limits, ledger)?.into_parts(),
+            None => (sbit::encode_scaling(&scales, limits)?, led.reserve(0)?),
+        };
+        assembly.insert(*b"EBSC", table, lease)?;
     }
     for p in fonts.properties.iter() {
         if p.name != "sfnt.EBSC" {
@@ -1751,7 +1970,7 @@ fn write_impl(
                 "container_property",
                 None,
                 None,
-                format!(
+                format_args!(
                     "Container property {:?} is not copied into regenerated sfnt tables",
                     p.name
                 ),
@@ -1759,7 +1978,7 @@ fn write_impl(
         }
     }
     common_tables(
-        &mut builder,
+        &mut assembly,
         &fonts.fonts,
         &strikes,
         count,
@@ -1773,8 +1992,15 @@ fn write_impl(
             names: prepared.names,
         },
     )?;
-    let report = report.finish()?;
-    Ok((builder.build(&limits.sfnt)?, report))
+    // The strike copies are no longer needed while the file is assembled.
+    drop(strikes);
+    drop(strikes_lease);
+    let (report, report_lease) = report.finish_held()?;
+    let (bytes, mut held) = assembly.build(&limits.sfnt)?;
+    if let Some(mut report_lease) = report_lease {
+        held.merge(&mut report_lease)?;
+    }
+    Ok((bytes, report, held))
 }
 #[cfg(feature = "color")]
 fn color_global_losses(first: &Font, f: &Font, fi: usize, report: &mut Diagnostics) -> Result<()> {
@@ -1826,32 +2052,14 @@ fn color_global_losses(first: &Font, f: &Font, fi: usize, report: &mut Diagnosti
     Ok(())
 }
 #[cfg(feature = "color")]
-fn color_memory_preflight(fonts: &FontSet, limits: &sbit::Limits) -> Result<()> {
-    // Conservative cumulative envelope, including source/assigned rasters,
-    // stored PNG scratch and payloads, table assembly copies, native readback,
-    // decoder row/inflate buffers, per-glyph indexes and bounded diagnostics.
-    // Every multiplication is saturating so impossible sizes fail closed.
-    // Reserve the complete diagnostic allowance alongside the allocation envelope.
-    let mut total = 32768 + (limits.sfnt.resources.max_total_bytes / 4).min(64 * 1024 * 1024);
+fn color_pixel_preflight(fonts: &FontSet, limits: &sbit::Limits) -> Result<()> {
+    // Pixel work of the encoder and both readbacks, bounded up front. Storage
+    // is admitted stage by stage on the writer's working ledger instead.
     let mut pixels = 0usize;
     for f in &fonts.fonts {
-        charge(
-            &mut total,
-            8192 + name_bytes(&f.names).saturating_mul(8),
-            &limits.sfnt,
-        )?;
         for (_, g) in f.glyphs() {
             let area = (g.bitmap.width() as usize).saturating_mul(g.bitmap.height() as usize);
             pixels = pixels.saturating_add(area.saturating_mul(3));
-            charge(
-                &mut total,
-                4096usize
-                    .saturating_add(area.saturating_mul(48))
-                    .saturating_add(g.bitmap.height() as usize * 8)
-                    .saturating_add(g.codepoints.len().saturating_mul(256))
-                    .saturating_add(g.name.as_ref().map_or(0, String::len).saturating_mul(8)),
-                &limits.sfnt,
-            )?;
         }
     }
     crate::sfnt::bounded(
@@ -1868,13 +2076,20 @@ fn write_native_sbix(
     assigned: &[Vec<(u16, &Glyph)>],
     count: u16,
     mapping: &cmap::Mapping,
-    names: Vec<String>,
+    names: Owned<Vec<String>>,
     limits: &sbit::Limits,
     mut report: Diagnostics,
-) -> Result<(Vec<u8>, Report)> {
+    mut assembly: Assembly,
+) -> Result<(Vec<u8>, Report, Lease)> {
     use sbit::color::{Sbix, SbixGlyph, SbixStrike};
-    let mut strikes = Vec::new();
-    let mut design = Vec::new();
+    let led = assembly.ledger.clone();
+    let strike_count = fonts.fonts.len();
+    let mut strikes_lease = led.reserve_array::<SbixStrike>(strike_count)?;
+    let mut strikes = Vec::with_capacity(strike_count);
+    strikes_lease.grow_to(strikes.capacity() * size_of::<SbixStrike>())?;
+    let mut design_lease = led.reserve_array::<DesignStrike>(strike_count)?;
+    let mut design = Vec::with_capacity(strike_count);
+    design_lease.grow_to(design.capacity() * size_of::<DesignStrike>())?;
     for (fi, (f, selected)) in fonts.fonts.iter().zip(assigned).enumerate() {
         let ppem = f
             .metrics
@@ -1910,8 +2125,12 @@ fn write_native_sbix(
             }
             None => 72,
         };
+        let mut glyph_tree = led.reserve(0)?;
+        let mut glyph_rows = led.reserve(0)?;
         let mut glyphs = BTreeMap::new();
-        let mut design_glyphs = Vec::new();
+        let mut design_glyphs_lease = led.reserve_array::<DesignGlyph>(selected.len())?;
+        let mut design_glyphs = Vec::with_capacity(selected.len());
+        design_glyphs_lease.grow_to(design_glyphs.capacity() * size_of::<DesignGlyph>())?;
         for &(gid, g) in selected {
             let b = g.metrics.bounds;
             let advance = g
@@ -1972,6 +2191,13 @@ fn write_native_sbix(
                     "Mono represented as Gray8 coverage without changing samples",
                 );
             }
+            glyph_tree.grow_to(led.tree_bytes::<u16, SbixGlyph>(glyphs.len() + 1)?)?;
+            glyph_rows.grow_to(
+                glyph_rows
+                    .bytes()
+                    .checked_add(g.bitmap.as_bytes().len())
+                    .ok_or_else(|| led.error())?,
+            )?;
             glyphs.insert(
                 gid,
                 SbixGlyph {
@@ -2000,7 +2226,10 @@ fn write_native_sbix(
             descent,
             glyphs: design_glyphs,
         });
+        design_lease.merge(&mut design_glyphs_lease)?;
         strikes.push(SbixStrike { ppem, ppi, glyphs });
+        strikes_lease.merge(&mut glyph_tree)?;
+        strikes_lease.merge(&mut glyph_rows)?;
     }
     for p in fonts.properties.iter() {
         loss(
@@ -2008,7 +2237,7 @@ fn write_native_sbix(
             "container_property",
             None,
             None,
-            format!(
+            format_args!(
                 "Container property {:?} is not copied into regenerated sbix tables",
                 p.name
             ),
@@ -2018,10 +2247,16 @@ fn write_native_sbix(
         draw_outlines: false,
         strikes,
     };
-    let mut builder = SfntBuilder::new(Flavor::TrueType);
-    builder.insert(*b"sbix", sbit::color::encode_sbix(&sbix, count, limits)?)?;
+    // `color_readback` decodes this table again with the same limits.
+    let (table, lease) =
+        sbit::color::encode_sbix_with_budget(&sbix, count, limits, &led, false)?.into_parts();
+    // The raster copies are no longer needed once their images are encoded.
+    drop(sbix);
+    drop(strikes_lease);
+    assembly.insert(*b"sbix", table, lease)?;
+    let design = Owned::from_parts(design, design_lease);
     common_design_tables(
-        &mut builder,
+        &mut assembly,
         &fonts.fonts,
         &design,
         count,
@@ -2035,9 +2270,10 @@ fn write_native_sbix(
             names: None,
         },
     )?;
-    let bytes = builder.build(&limits.sfnt)?;
-    let font = Sfnt::parse(&bytes, &limits.sfnt)?;
+    let (bytes, held) = assembly.build(&limits.sfnt)?;
+    let font = Sfnt::parse_with_budget(&bytes, &limits.sfnt, &led)?;
     let upem = i64::from(u16at(required(&font, *b"head")?, 18)?);
+    let _metrics_lease = led.reserve_array::<metrics::LongMetric>(usize::from(count))?;
     let (header, metrics) = metrics::decode(
         metrics::Axis::Horizontal,
         required(&font, *b"hhea")?,
@@ -2079,12 +2315,19 @@ fn write_native_sbix(
                     "sbix_line_metric",
                     Some(fi),
                     None,
-                    format!("Per-strike {field} changed to the rounded shared design metric"),
+                    format_args!("Per-strike {field} changed to the rounded shared design metric"),
                 );
             }
         }
     }
-    Ok((bytes, report.finish()?))
+    drop(metrics);
+    drop(font);
+    let (report, report_lease) = report.finish_held()?;
+    let mut held = held;
+    if let Some(mut report_lease) = report_lease {
+        held.merge(&mut report_lease)?;
+    }
+    Ok((bytes, report, held))
 }
 struct DesignGlyph {
     id: u16,
@@ -2099,6 +2342,58 @@ struct DesignStrike {
     descent: i64,
     glyphs: Vec<DesignGlyph>,
 }
+/// The output tables. The builder (and every table it owns) drops before the
+/// lease that admitted its tree and table storage.
+struct Assembly {
+    builder: SfntBuilder,
+    tables: Lease,
+    ledger: Ledger,
+    /// Whether the tables are encoded on `ledger` (color) rather than by the
+    /// standalone encoders with their own allowances (OTB/bdat).
+    charged: bool,
+}
+impl Assembly {
+    /// Most tables a bitmap-only sfnt here has: the two strike tables, EBSC,
+    /// hhea, hmtx, head, maxp, glyf, loca, cmap, OS/2, name and post.
+    const MAX_TABLES: usize = 13;
+    fn new(ledger: &Ledger, charged: bool) -> Result<Self> {
+        Ok(Self {
+            tables: ledger.reserve_tree::<[u8; 4], Vec<u8>>(Self::MAX_TABLES)?,
+            builder: SfntBuilder::new(Flavor::TrueType),
+            ledger: ledger.clone(),
+            charged,
+        })
+    }
+    /// The working ledger when tables are charged on it.
+    fn charged(&self) -> Option<&Ledger> {
+        self.charged.then_some(&self.ledger)
+    }
+    /// Insert a table whose storage `lease` admitted (or that a lease passed
+    /// with another table already covers).
+    fn insert(&mut self, tag: [u8; 4], data: Vec<u8>, mut lease: Lease) -> Result<()> {
+        self.tables.merge(&mut lease)?;
+        self.builder.insert(tag, data)
+    }
+    /// A small fixed table, admitted at its exact size before allocation.
+    fn fixed(&mut self, tag: [u8; 4], write: impl FnOnce(&mut Vec<u8>), size: usize) -> Result<()> {
+        let mut lease = self.ledger.reserve(size)?;
+        let mut data = Vec::with_capacity(size);
+        lease.grow_to(data.capacity())?;
+        write(&mut data);
+        debug_assert_eq!(data.len(), size);
+        self.insert(tag, data, lease)
+    }
+    /// Assemble the file; the returned lease charges the output, the tables
+    /// and their charges having been released.
+    fn build(self, limits: &sfnt::Limits) -> Result<(Vec<u8>, Lease)> {
+        let output = match self.charged() {
+            Some(ledger) => self.builder.build_with_budget(limits, ledger)?,
+            None => Owned::from_parts(self.builder.build(limits)?, self.ledger.reserve(0)?),
+        };
+        drop(self);
+        Ok(output.into_parts())
+    }
+}
 /// Design-metric policy, explicit metadata and a prepared explicit name table.
 struct CommonOptions<'a> {
     design: DesignOptions,
@@ -2107,41 +2402,46 @@ struct CommonOptions<'a> {
 }
 #[allow(clippy::too_many_arguments)]
 fn common_tables(
-    builder: &mut SfntBuilder,
+    assembly: &mut Assembly,
     fonts: &[Font],
     strikes: &[sbit::Strike],
     count: u16,
     mapping: &cmap::Mapping,
-    glyph_names: Vec<String>,
+    glyph_names: Owned<Vec<String>>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
     options: CommonOptions<'_>,
 ) -> Result<()> {
-    let design: Vec<_> = strikes
-        .iter()
-        .map(|s| DesignStrike {
+    // Exactly sized design arrays, admitted before allocation.
+    let ledger = assembly.ledger.clone();
+    let mut lease = ledger.reserve_array::<DesignStrike>(strikes.len())?;
+    let mut design = Vec::with_capacity(strikes.len());
+    lease.grow_to(design.capacity() * size_of::<DesignStrike>())?;
+    for s in strikes {
+        let mut glyphs_lease = ledger.reserve_array::<DesignGlyph>(s.glyphs.len())?;
+        let mut glyphs = Vec::with_capacity(s.glyphs.len());
+        glyphs_lease.grow_to(glyphs.capacity() * size_of::<DesignGlyph>())?;
+        glyphs.extend(s.glyphs.iter().map(|(&id, g)| {
+            let bearing = |b: sbit::Bearing| [i64::from(b.x), i64::from(b.y), i64::from(b.advance)];
+            DesignGlyph {
+                id,
+                width: u32::from(g.metrics.width),
+                height: u32::from(g.metrics.height),
+                horizontal: g.metrics.horizontal.map(bearing),
+                vertical: g.metrics.vertical.map(bearing),
+            }
+        }));
+        design.push(DesignStrike {
             ppem: [u32::from(s.ppem_x), u32::from(s.ppem_y)],
             ascent: i64::from(s.horizontal.ascender()),
             descent: -i64::from(s.horizontal.descender()),
-            glyphs: s
-                .glyphs
-                .iter()
-                .map(|(&id, g)| {
-                    let bearing =
-                        |b: sbit::Bearing| [i64::from(b.x), i64::from(b.y), i64::from(b.advance)];
-                    DesignGlyph {
-                        id,
-                        width: u32::from(g.metrics.width),
-                        height: u32::from(g.metrics.height),
-                        horizontal: g.metrics.horizontal.map(bearing),
-                        vertical: g.metrics.vertical.map(bearing),
-                    }
-                })
-                .collect(),
-        })
-        .collect();
+            glyphs,
+        });
+        lease.merge(&mut glyphs_lease)?;
+    }
+    let design = Owned::from_parts(design, lease);
     common_design_tables(
-        builder,
+        assembly,
         fonts,
         &design,
         count,
@@ -2154,12 +2454,12 @@ fn common_tables(
 }
 #[allow(clippy::too_many_arguments)]
 fn common_design_tables(
-    builder: &mut SfntBuilder,
+    assembly: &mut Assembly,
     fonts: &[Font],
     strikes: &[DesignStrike],
     count: u16,
     mapping: &cmap::Mapping,
-    glyph_names: Vec<String>,
+    glyph_names: Owned<Vec<String>>,
     limits: &sfnt::Limits,
     report: &mut Diagnostics,
     common: CommonOptions<'_>,
@@ -2169,6 +2469,13 @@ fn common_design_tables(
         metadata,
         names: explicit_names,
     } = common;
+    let ledger = assembly.ledger.clone();
+    // `priority` allocates an order only for a later reference strike.
+    let ordered = !matches!(
+        options.reference_strike,
+        EmbeddedReferenceStrike::First | EmbeddedReferenceStrike::Index(0)
+    );
+    let _order_lease = ledger.reserve_array::<usize>(if ordered { strikes.len() } else { 0 })?;
     let order = options.priority(strikes, limits)?;
     let reference = order.first().copied().unwrap_or(0);
     let strike = &strikes[reference];
@@ -2191,8 +2498,11 @@ fn common_design_tables(
         i16::try_from(round_design(value, i128::from(ppem), options.rounding))
             .map_err(|_| invalid("design metric does not fit int16"))
     };
+    let _horizontal_lease = ledger.reserve_array::<metrics::LongMetric>(count as usize)?;
     let mut horizontal = vec![metrics::LongMetric::default(); count as usize];
-    let mut ink = vec![None; count as usize];
+    let _ink_lease = ledger.reserve_array::<Option<u16>>(count as usize)?;
+    let mut ink: Vec<Option<u16>> = vec![None; count as usize];
+    let _seen_lease = ledger.reserve(GlyphIdSet::MAX_BYTES)?;
     let mut seen = GlyphIdSet::default();
     let (mut left, mut bottom, mut right, mut top) = (0i64, 0i64, 0i64, 0i64);
     for index in 0..strikes.len() {
@@ -2288,16 +2598,21 @@ fn common_design_tables(
         ink[0] = None;
     }
     header.recompute(&horizontal, &ink)?;
-    let hm = metrics::encode(
-        metrics::Axis::Horizontal,
-        &header,
-        &horizontal,
-        metadata.hmtx == EmbeddedHmtx::CompactTrailing,
-        limits,
-    )?;
-    builder.insert(*b"hhea", hm.header)?;
-    builder.insert(*b"hmtx", hm.metrics)?;
-    let mut head = vec![0; 54];
+    let compact = metadata.hmtx == EmbeddedHmtx::CompactTrailing;
+    let axis = metrics::Axis::Horizontal;
+    let (hm, lease) = match assembly.charged() {
+        Some(ledger) => {
+            metrics::encode_with_budget(axis, &header, &horizontal, compact, limits, ledger)?
+                .into_parts()
+        }
+        None => (
+            metrics::encode(axis, &header, &horizontal, compact, limits)?,
+            ledger.reserve(0)?,
+        ),
+    };
+    assembly.insert(*b"hhea", hm.header, lease)?;
+    assembly.insert(*b"hmtx", hm.metrics, ledger.reserve(0)?)?;
+    let mut head = [0; 54];
     head[0..4].copy_from_slice(&0x10000u32.to_be_bytes());
     head[4..8].copy_from_slice(&0x10000u32.to_be_bytes());
     head[12..16].copy_from_slice(&0x5f0f3cf5u32.to_be_bytes());
@@ -2310,28 +2625,44 @@ fn common_design_tables(
     head[46..48].copy_from_slice(&8u16.to_be_bytes());
     head[48..50].copy_from_slice(&2u16.to_be_bytes());
     metadata.apply_head(&mut head);
-    builder.insert(*b"head", head)?;
+    assembly.fixed(*b"head", |out| out.extend_from_slice(&head), head.len())?;
     if empty_glyf {
         // maxp 1.0: every outline maximum is zero; maxZones as requested (no
         // instructions, so 1 by default). Storage reserved in `prepare`.
-        let mut maxp = vec![0; 32];
+        let mut maxp = [0; 32];
         maxp[0..4].copy_from_slice(&0x10000u32.to_be_bytes());
         maxp[4..6].copy_from_slice(&count.to_be_bytes());
         maxp[14..16].copy_from_slice(&metadata.max_zones.unwrap_or(1).to_be_bytes());
-        builder.insert(*b"maxp", maxp)?;
+        assembly.fixed(*b"maxp", |out| out.extend_from_slice(&maxp), maxp.len())?;
         // One zero byte: OTS and Windows reject a zero-length glyf. Short loca
         // (head.indexToLocFormat 0) with every glyph at offset 0.
-        builder.insert(*b"glyf", vec![0])?;
-        builder.insert(*b"loca", vec![0; 2 * (usize::from(count) + 1)])?;
+        assembly.fixed(*b"glyf", |out| out.push(0), 1)?;
+        let loca = 2 * (usize::from(count) + 1);
+        assembly.fixed(*b"loca", |out| out.resize(loca, 0), loca)?;
     } else {
-        let mut maxp = 0x5000u32.to_be_bytes().to_vec();
-        maxp.extend(count.to_be_bytes());
-        builder.insert(*b"maxp", maxp)?;
+        assembly.fixed(
+            *b"maxp",
+            |out| {
+                out.extend_from_slice(&0x5000u32.to_be_bytes());
+                out.extend_from_slice(&count.to_be_bytes());
+            },
+            6,
+        )?;
     }
-    let encoded = cmap::encode_with_records(mapping, count, limits, metadata.cmap_unicode_full)?;
-    builder.insert(*b"cmap", encoded.data)?;
+    let records = metadata.cmap_unicode_full;
+    let (encoded, lease) = match assembly.charged() {
+        Some(ledger) => {
+            cmap::encode_records_with_budget(mapping, count, limits, ledger, records)?.into_parts()
+        }
+        None => (
+            cmap::encode_with_records(mapping, count, limits, records)?,
+            ledger.reserve(0)?,
+        ),
+    };
+    assembly.insert(*b"cmap", encoded.data, lease)?;
     let mut os2 = os2::Os2Table::default();
-    os2.set_unicode_coverage(&mapping.keys().copied().collect())?;
+    // The mapping's keys are read in place, not copied into a set.
+    os2.set_unicode_coverage_map(mapping)?;
     os2.base.average_width = metadata.average(horizontal.iter().map(|m| m.advance))?;
     os2.base.typo_metrics = [header.ascender, header.descender, header.line_gap];
     os2.base.windows_metrics = [
@@ -2342,31 +2673,19 @@ fn common_design_tables(
         &mut os2,
         mapping.last_key_value().is_some_and(|(&cp, _)| cp > 0xffff),
     )?;
-    builder.insert(*b"OS/2", os2.encode(limits)?)?;
+    let (table, lease) = match assembly.charged() {
+        Some(ledger) => os2.encode_with_budget(limits, ledger)?.into_parts(),
+        None => (os2.encode(limits)?, ledger.reserve(0)?),
+    };
+    assembly.insert(*b"OS/2", table, lease)?;
     if let Some(bytes) = explicit_names {
-        builder.insert(*b"name", bytes)?;
+        // Reserved by `EmbeddedMetadataOptions::prepare`.
+        assembly.insert(*b"name", bytes, ledger.reserve(0)?)?;
     } else {
-        let family = f.names.family.as_deref().unwrap_or("Fontpixel");
-        let style = f.names.style.as_deref().unwrap_or("Regular");
-        let full = format!("{family} {style}");
-        let mut nt = name::NameTable::default();
-        for (id, value) in [
-            (0, f.names.copyright.as_deref()),
-            (1, Some(family)),
-            (2, Some(style)),
-            (4, Some(f.names.full.as_deref().unwrap_or(&full))),
-            (5, Some(f.names.version.as_deref().unwrap_or("Version 1.0"))),
-            (6, f.names.postscript.as_deref()),
-            (8, f.names.foundry.as_deref()),
-            (13, f.names.license.as_deref()),
-            (14, f.names.license_url.as_deref()),
-        ] {
-            if let Some(value) = value {
-                nt.records.push(name::NameRecord::unicode(id, 0x409, value));
-            }
-        }
-        builder.insert(*b"name", nt.encode(limits)?)?;
+        let (table, lease) = name_table(&f.names, limits, &ledger)?.into_parts();
+        assembly.insert(*b"name", table, lease)?;
     }
+    let (glyph_names, _names_lease) = glyph_names.into_parts();
     let mut post = post::PostTable {
         names: (metadata.post_names == EmbeddedPostNames::Keep).then_some(glyph_names),
         ..Default::default()
@@ -2403,7 +2722,11 @@ fn common_design_tables(
         post.header.underline_position,
         post.header.underline_thickness,
     ] = underline;
-    builder.insert(*b"post", post.encode(count, limits)?)?;
+    let (table, lease) = match assembly.charged() {
+        Some(ledger) => post.encode_with_budget(count, limits, ledger)?.into_parts(),
+        None => (post.encode(count, limits)?, ledger.reserve(0)?),
+    };
+    assembly.insert(*b"post", table, lease)?;
     if strikes
         .iter()
         .any(|s| s.glyphs.iter().any(|g| g.vertical.is_some()))
@@ -2417,6 +2740,83 @@ fn common_design_tables(
         );
     }
     Ok(())
+}
+/// Live bytes of a byte vector grown by amortized doubling to `n` bytes,
+/// including the previous buffer during its last reallocation.
+fn grown_bytes(n: usize) -> usize {
+    n.max(8).saturating_mul(3)
+}
+/// The generated name table. One source-derived bound is admitted before any
+/// of it is built: the record array, every UTF-16 value (collected through an
+/// iterator without a size hint, so grown by doubling), the combined full
+/// name, and `NameTable::encode`'s sorted record references and sort scratch,
+/// string pool, dedup tree with copied keys and exact output. Once the
+/// temporaries have dropped, only the output's capacity stays charged.
+fn name_table(names: &FontNames, limits: &sfnt::Limits, ledger: &Ledger) -> Result<Owned<Vec<u8>>> {
+    const RECORDS: usize = 9;
+    let family = names.family.as_deref().unwrap_or("Fontpixel");
+    let style = names.style.as_deref().unwrap_or("Regular");
+    let full_len = family.len() + 1 + style.len();
+    let lens = [
+        names.copyright.as_deref().map(str::len),
+        Some(family.len()),
+        Some(style.len()),
+        Some(names.full.as_deref().map_or(full_len, str::len)),
+        Some(names.version.as_deref().unwrap_or("Version 1.0").len()),
+        names.postscript.as_deref().map(str::len),
+        names.foundry.as_deref().map(str::len),
+        names.license.as_deref().map(str::len),
+        names.license_url.as_deref().map(str::len),
+    ];
+    let pool = lens
+        .iter()
+        .flatten()
+        .fold(0usize, |n, len| n.saturating_add(len.saturating_mul(2)));
+    let values = lens.iter().flatten().fold(0usize, |n, len| {
+        n.saturating_add(grown_bytes(len.saturating_mul(2)))
+    });
+    let bound = [
+        grown_bytes(full_len),
+        RECORDS * size_of::<name::NameRecord>(),
+        values,
+        RECORDS.saturating_mul(2 * size_of::<usize>()),
+        grown_bytes(pool),
+        ledger.tree_bytes::<Vec<u8>, u16>(RECORDS)?,
+        pool,
+        6usize.saturating_add(RECORDS * 12).saturating_add(pool),
+    ]
+    .iter()
+    .fold(0usize, |n, b| n.saturating_add(*b));
+    let mut total = ledger.reserve(bound)?;
+    let full = format!("{family} {style}");
+    let mut nt = name::NameTable {
+        records: Vec::with_capacity(RECORDS),
+        ..Default::default()
+    };
+    for (id, value) in [
+        (0, names.copyright.as_deref()),
+        (1, Some(family)),
+        (2, Some(style)),
+        (4, Some(names.full.as_deref().unwrap_or(&full))),
+        (5, Some(names.version.as_deref().unwrap_or("Version 1.0"))),
+        (6, names.postscript.as_deref()),
+        (8, names.foundry.as_deref()),
+        (13, names.license.as_deref()),
+        (14, names.license_url.as_deref()),
+    ] {
+        if let Some(value) = value {
+            nt.records.push(name::NameRecord::unicode(id, 0x409, value));
+        }
+    }
+    let bytes = nt.encode(limits)?;
+    drop(nt);
+    drop(full);
+    if bytes.capacity() > total.bytes() {
+        total.grow_to(bytes.capacity())?;
+    }
+    let output = total.split(bytes.capacity())?;
+    drop(total);
+    Ok(Owned::from_parts(bytes, output))
 }
 #[cfg(test)]
 mod key_tests {
@@ -2625,7 +3025,8 @@ mod key_tests {
                 for budget in [0, 1024, 16 * 1024 * 1024] {
                     let mut actual_report = Diagnostics::new(budget);
                     let mut expected_report = Diagnostics::new(budget);
-                    let actual = key(&glyph, 42, 3, &mut actual_report);
+                    let ledger = Ledger::new(usize::MAX, "test working bytes");
+                    let (actual, _lease) = key(&glyph, 42, 3, &mut actual_report, &ledger).unwrap();
                     let expected = old_key(&glyph, 42, 3, &mut expected_report);
                     assert_eq!(old(&actual), expected);
                     if let [U(cp)] = codes.as_slice()
@@ -2642,6 +3043,96 @@ mod key_tests {
                     }
                 }
             }
+        }
+    }
+}
+#[cfg(all(test, feature = "color"))]
+mod color_ledger_tests {
+    use super::*;
+    use crate::bitmap::{BitmapLimits, Gray8};
+
+    /// Mono and gray glyphs, an alias, an unencodable name and a container
+    /// property, so diagnostics, names, mapping and both image kinds are
+    /// all on the ledger.
+    fn model() -> FontSet {
+        let mut f = Font::default();
+        f.metrics.pixel_size = Some(12);
+        f.metrics.ascent = Some(9);
+        f.metrics.descent = Some(3);
+        f.names.family = Some("Ledger".into());
+        for (i, pattern) in ["#.\n##", "###\n#.#\n###", "#.#\n.#.\n#.#"]
+            .into_iter()
+            .enumerate()
+        {
+            let mut g = Glyph::new(pattern.parse::<Bitmap>().unwrap());
+            g.codepoints = vec![Codepoint::Unicode(0x41 + i as u32)];
+            g.metrics.advance = Some(Vector::new(4, 0));
+            f.add_glyph(g).unwrap();
+        }
+        let mut g = Glyph::new(
+            Bitmap::<Gray8>::from_raw(3, 2, &[0, 1, 64, 128, 254, 255], BitmapLimits::default())
+                .unwrap(),
+        );
+        g.codepoints = vec![Codepoint::Unicode(0x61), Codepoint::Unicode(0x10000)];
+        g.name = Some("bad/name".into());
+        g.metrics.advance = Some(Vector::new(4, 0));
+        f.add_glyph(g).unwrap();
+        let mut set = FontSet::from(f);
+        set.properties.push(Property::new("UNKNOWN", 1i64));
+        set
+    }
+
+    fn write(
+        set: &FontSet,
+        flavor: ColorFlavor,
+        charge: ModelCharge,
+        total: usize,
+    ) -> Result<(Vec<u8>, Report)> {
+        let mut options = ColorWriteOptions {
+            flavor,
+            ..Default::default()
+        };
+        options.limits.sfnt.resources.max_total_bytes = total;
+        write_color_charged(set, &options, charge)
+    }
+
+    /// Smallest succeeding total; it gives the default output and one byte
+    /// less is the working ledger's own resource error.
+    fn minimal(set: &FontSet, flavor: ColorFlavor, charge: ModelCharge) -> usize {
+        let expected = write(set, flavor, charge, 1 << 30).unwrap();
+        let (mut lo, mut hi) = (0usize, 1 << 30);
+        while hi - lo > 1 {
+            let mid = lo + (hi - lo) / 2;
+            if write(set, flavor, charge, mid).is_ok() {
+                hi = mid;
+            } else {
+                lo = mid;
+            }
+        }
+        assert_eq!(write(set, flavor, charge, hi).unwrap(), expected);
+        match write(set, flavor, charge, hi - 1) {
+            Err(crate::Error::ResourceLimit {
+                resource: "embedded color working bytes",
+                limit,
+            }) => assert_eq!(limit, hi - 1),
+            other => panic!("one byte short must be the ledger's error: {other:?}"),
+        }
+        hi
+    }
+
+    #[test]
+    fn color_ledger_exact_boundary_on_both_routes() {
+        let set = model();
+        let used = set.retained_usage(usize::MAX).unwrap().bytes;
+        for flavor in [ColorFlavor::Cbdt, ColorFlavor::Sbix] {
+            let estimate = minimal(&set, flavor, ModelCharge::Estimate);
+            let reserved = minimal(&set, flavor, ModelCharge::Reserved);
+            // The borrowing route charges exactly the model's usage on top.
+            assert_eq!(estimate, reserved + used, "{flavor:?}");
+            assert_eq!(
+                write(&set, flavor, ModelCharge::Estimate, estimate).unwrap(),
+                write(&set, flavor, ModelCharge::Reserved, reserved).unwrap(),
+            );
         }
     }
 }
