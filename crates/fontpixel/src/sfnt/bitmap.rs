@@ -12,6 +12,8 @@ use std::collections::BTreeMap;
 
 #[cfg(feature = "color")]
 pub mod color;
+mod runs;
+pub use runs::{RunTables, encode_shared_metric_runs};
 
 /// Resource, graph and image-work budgets shared by embedded bitmap readers.
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -1,6 +1,7 @@
 //! Explicit options for embedded bitmaps, Korean components, IIgs, terminal and color fonts.
 //! Phase-6 embedded-option reconstruction remains pending compilation.
 mod device;
+mod embedded_metadata;
 mod historical;
 mod native_console;
 mod portable;
@@ -237,6 +238,8 @@ pub(crate) struct WriteArguments {
     /// OTB/bdat pixel-to-design rounding; absent preserves native half-away rounding.
     #[arg(long, value_parser = ["half-away", "ties-even"])]
     otb_rounding: Option<String>,
+    #[command(flatten)]
+    otb_metadata: embedded_metadata::MetadataArguments,
     /// DRCS output cell width; requires --drcs-cell-height.
     #[arg(long, requires = "drcs_cell_height", value_parser = clap::value_parser!(u32).range(1..))]
     drcs_cell_width: Option<u32>,
@@ -261,6 +264,17 @@ pub(crate) struct WriteArguments {
 }
 
 impl WriteArguments {
+    /// Caller-retained bytes of explicit OTB/bdat metadata arguments and the
+    /// name table built from them; reserve once before reading inputs. Zero
+    /// when no metadata flag is present.
+    #[cfg(any(feature = "otb", feature = "bdat"))]
+    pub fn reserved_bytes(&self, limit: usize) -> Result<usize> {
+        if self.otb_metadata.requested() {
+            self.otb_metadata.reserved_bytes(limit)
+        } else {
+            Ok(0)
+        }
+    }
     pub fn apply(
         &self,
         id: &str,
@@ -269,21 +283,25 @@ impl WriteArguments {
         threshold: Option<u8>,
         registry: &mut FontRegistry,
     ) -> Result<()> {
-        let embedded_requested =
-            self.otb_upm.is_some() || self.otb_reference.is_some() || self.otb_rounding.is_some();
+        let embedded_requested = self.otb_upm.is_some()
+            || self.otb_reference.is_some()
+            || self.otb_rounding.is_some()
+            || self.otb_metadata.requested();
         if embedded_requested {
             if !matches!(id, "otb" | "bdat") {
                 return Err(Error::InvalidInput(
-                    "--otb-upm, --otb-reference and --otb-rounding require otb or bdat output"
+                    "--otb-* options (upm, reference, rounding and metadata) require otb or bdat output"
                         .into(),
                 ));
             }
             feature(
                 true,
-                match id {
-                    "otb" => cfg!(feature = "otb"),
-                    _ => cfg!(feature = "bdat"),
-                },
+                [
+                    ("otb", cfg!(feature = "otb")),
+                    ("bdat", cfg!(feature = "bdat")),
+                ]
+                .iter()
+                .any(|&(format, enabled)| format == id && enabled),
                 id,
             )?;
         }
@@ -307,9 +325,20 @@ impl WriteArguments {
                 } else {
                     EmbeddedRounding::NearestTiesAwayFromZero
                 },
+                metadata: self.otb_metadata.options(limits)?,
                 ..Default::default()
             };
             options.limits.sfnt.resources = limits.clone();
+            // The registry keeps these CLI-owned arguments and the built table
+            // alive while the writer runs; the writer never receives that credit.
+            let reserved = self.reserved_bytes(limits.max_total_bytes)?;
+            options.limits.sfnt.resources.max_total_bytes = limits
+                .max_total_bytes
+                .checked_sub(reserved)
+                .ok_or(Error::ResourceLimit {
+                    resource: "OTB/bdat metadata arguments",
+                    limit: limits.max_total_bytes,
+                })?;
             registry.set_embedded_write_options(options);
         }
         self.portable.apply(
