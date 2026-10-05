@@ -176,71 +176,105 @@ pub(super) fn glyf(
     )
 }
 
+/// `cff/write.rs` 16.16 rounding of operands and tracked coordinates.
+#[cfg(feature = "cff")]
+fn fixed(x: f64) -> f64 {
+    (x * 65536.).round() / 65536.
+}
+
 /// Bytes `cff/write.rs` `number()` writes: 1/2/3-byte integers, else 5 bytes.
 #[cfg(feature = "cff")]
 fn operand(v: f64) -> usize {
-    if !v.is_finite() || v.fract() != 0. {
+    let q = fixed(v);
+    if !q.is_finite() || q.fract() != 0. {
         5
-    } else if (-107. ..=107.).contains(&v) {
+    } else if (-107. ..=107.).contains(&q) {
         1
-    } else if (-1131. ..=1131.).contains(&v) {
+    } else if (-1131. ..=1131.).contains(&q) {
         2
-    } else if (-32768. ..=32767.).contains(&v) {
+    } else if (-32768. ..=32767.).contains(&q) {
         3
     } else {
         5
     }
 }
 
-/// Operand bytes for a move between two coordinates. The writer tracks a
-/// rounded current point, so any fractional endpoint takes the 5-byte form.
-#[cfg(feature = "cff")]
-fn step(from: f64, to: f64) -> usize {
-    if from.fract() != 0. || to.fract() != 0. {
-        5
-    } else {
-        operand(to - from)
-    }
-}
-
-/// Upper bound of one Type 2 charstring (sfnt/cff/write.rs `PathWriter` and the
-/// dot loop): the advance, two operands plus an operator per move/line (a
-/// merged h/v line run writes fewer), six operands plus an operator per curve,
-/// a move plus a two-byte `callgsubr` per dot, and `endchar`.
+/// Length of one Type 2 charstring as `cff/write.rs` writes it: the advance,
+/// `PathWriter` moves (one omitted zero operand), alternating h/v line runs
+/// of up to 40 operands sharing one operator, other lines and curves with all
+/// operands, each shared dot as a move plus `callgsubr`, then `endchar`.
+/// Deltas follow the writer's rounded current point.
 #[cfg(feature = "cff")]
 fn charstring(g: &sfnt::cff::Glyph, dots: sfnt::cff::DotOptions) -> usize {
     use sfnt::cff::{Command, Outline};
-    let mut bytes = operand(g.advance).saturating_add(1);
+    fn delta(at: &mut (f64, f64), p: (f64, f64)) -> (f64, f64) {
+        let d = (fixed(p.0 - at.0), fixed(p.1 - at.1));
+        *at = (at.0 + d.0, at.1 + d.1);
+        d
+    }
+    fn moved(d: (f64, f64)) -> usize {
+        1 + if d.0 == 0. {
+            operand(d.1)
+        } else if d.1 == 0. {
+            operand(d.0)
+        } else {
+            operand(d.0) + operand(d.1)
+        }
+    }
+    let mut bytes = operand(g.advance) + 1;
     let mut at = (0., 0.);
-    let mut to = |bytes: &mut usize, p: (f64, f64)| {
-        *bytes = bytes.saturating_add(step(at.0, p.0) + step(at.1, p.1));
-        at = p;
-    };
     match &g.outline {
         Outline::Path(path) => {
+            let mut run: Option<(u8, usize)> = None;
             for &c in path {
-                match c {
-                    Command::MoveTo(p) | Command::LineTo(p) => {
-                        to(&mut bytes, p);
-                        bytes = bytes.saturating_add(1);
+                let added = match c {
+                    Command::MoveTo(p) => {
+                        run = None;
+                        moved(delta(&mut at, p))
+                    }
+                    Command::LineTo(p) => {
+                        let (dx, dy) = delta(&mut at, p);
+                        if dx == 0. || dy == 0. {
+                            let (operator, value) = if dx == 0. { (7, dy) } else { (6, dx) };
+                            let joined = run.filter(|&(first, count)| {
+                                count < 40
+                                    && operator == if count % 2 == 0 { first } else { 13 - first }
+                            });
+                            if let Some((first, count)) = joined {
+                                run = Some((first, count + 1));
+                                operand(value)
+                            } else {
+                                run = Some((operator, 1));
+                                operand(value) + 1
+                            }
+                        } else {
+                            run = None;
+                            operand(dx) + operand(dy) + 1
+                        }
                     }
                     Command::CurveTo(a, b, p) => {
-                        to(&mut bytes, a);
-                        to(&mut bytes, b);
-                        to(&mut bytes, p);
-                        bytes = bytes.saturating_add(1);
+                        run = None;
+                        let mut n = 1;
+                        for t in [a, b, p] {
+                            let (dx, dy) = delta(&mut at, t);
+                            n += operand(dx) + operand(dy);
+                        }
+                        n
                     }
-                    Command::Close => {}
-                }
+                    Command::Close => {
+                        run = None;
+                        0
+                    }
+                };
+                bytes = bytes.saturating_add(added);
             }
         }
         Outline::Dots(origins) => {
-            let fixed = |x: f64| (x * 65536.).round() / 65536.;
             let r = fixed(dots.diameter / 2.);
             let center = fixed(dots.cell_size / 2.);
             for &(x, y) in origins {
-                to(&mut bytes, (x + center + r, y + center));
-                bytes = bytes.saturating_add(3);
+                let d = delta(&mut at, (x + center + r, y + center));
+                bytes = bytes.saturating_add(moved(d) + 2);
             }
         }
     }
@@ -474,5 +508,77 @@ impl Builder {
         drop(self.tables);
         drop(self.tree);
         Ok(output)
+    }
+}
+
+#[cfg(all(test, feature = "cff"))]
+mod tests {
+    use super::*;
+    use sfnt::cff::{Command, DotOptions, Font, Glyph, Outline};
+
+    fn glyph(name: &str, advance: f64, outline: Outline) -> Glyph {
+        Glyph {
+            name: name.into(),
+            advance,
+            outline,
+        }
+    }
+
+    #[test]
+    fn charstring_lengths_match_the_writer_exactly() {
+        // 50 alternating h/v lines exceed one 40-operand run.
+        let mut stairs = vec![Command::MoveTo((0., 0.))];
+        let (mut x, mut y) = (0., 0.);
+        for i in 0..50 {
+            if i % 2 == 0 {
+                x += 100.;
+            } else {
+                y += 100.;
+            }
+            stairs.push(Command::LineTo((x, y)));
+        }
+        stairs.extend([Command::LineTo((0., y)), Command::Close]);
+        let mixed = vec![
+            Command::MoveTo((10.5, 3.25)),
+            Command::LineTo((200., 3.25)),
+            Command::LineTo((150., 400.)),
+            Command::CurveTo((160.125, 500.), (300., 520.), (400., 0.)),
+            Command::LineTo((400., -2000.)),
+            Command::LineTo((400., -2000.)),
+            Command::Close,
+            Command::MoveTo((400., 120.)),
+            Command::LineTo((-800., 120.)),
+            Command::Close,
+        ];
+        let font = Font {
+            postscript_name: "Ledger".into(),
+            full_name: "Ledger".into(),
+            units_per_em: 1000,
+            glyphs: vec![
+                glyph(".notdef", 500., Outline::Path(Vec::new())),
+                glyph("stairs", 2600., Outline::Path(stairs)),
+                glyph("mixed", 612.5, Outline::Path(mixed)),
+                glyph(
+                    "dots",
+                    300.,
+                    Outline::Dots(vec![(0., 0.), (100., 0.), (100., 100.), (2000., -100.)]),
+                ),
+            ],
+            dots: DotOptions {
+                cell_size: 100.,
+                diameter: 87.3,
+            },
+        };
+        let encoded = font.encode(&Default::default()).unwrap();
+        let parsed = sfnt::cff::Cff::parse(&encoded.data, 1000, &Default::default()).unwrap();
+        let programs = parsed.fontations().charstrings();
+        for (i, g) in font.glyphs.iter().enumerate() {
+            assert_eq!(
+                programs.get(i).unwrap().len(),
+                charstring(g, font.dots),
+                "{}",
+                g.name
+            );
+        }
     }
 }
