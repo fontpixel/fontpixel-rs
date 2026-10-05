@@ -404,7 +404,7 @@ fn with_scope<T>(scope: SourceScope, f: impl FnOnce() -> T) -> T {
     drop(restore);
     result
 }
-#[cfg(test)]
+#[cfg(all(test, feature = "opentype", feature = "bdf"))]
 pub(crate) fn with_source_scope<T>(f: impl FnOnce() -> T) -> T {
     with_scope(
         SourceScope {

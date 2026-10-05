@@ -11,7 +11,7 @@ struct Work(PathBuf);
 impl Work {
     fn new() -> Self {
         static NEXT: AtomicUsize = AtomicUsize::new(0);
-        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../local-work/w6.1-tests");
+        let root = Path::new(env!("CARGO_TARGET_TMPDIR")).join("w6.1-tests");
         fs::create_dir_all(&root).unwrap();
         let path = root.join(format!(
             "projection-{}-{}",

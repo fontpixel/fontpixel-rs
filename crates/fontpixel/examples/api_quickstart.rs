@@ -148,6 +148,7 @@ fn typed_pcf(fonts: &FontSet) -> Result<()> {
         &WriteOptions::new(ResourcePath::new("example.pcf")?),
     )?;
     show_report("PCF write (metadata may be lost)", &written.report);
+    let written_report = written.report;
     let bytes = written.output.into_single()?;
     let loaded = registry.read(
         &Input::new(&bytes),
@@ -166,7 +167,24 @@ fn typed_pcf(fonts: &FontSet) -> Result<()> {
         .single()?
         .glyph_for_codepoint(Codepoint::Unicode(65))
         .ok_or_else(|| missing("PCF A is missing"))?;
-    assert_eq!(decoded.bitmap, original.bitmap);
+    // This monospace font uses bdftopcf terminal semantics: every glyph box is
+    // padded to the shared cell and the writer reports that as loss. The ink
+    // itself and the advance survive unchanged.
+    assert!(
+        written_report
+            .entries
+            .iter()
+            .any(|e| e.code == "pcf.write.terminal_reshape")
+    );
+    let ink = |bitmap: &fontpixel::model::GlyphBitmap| -> Result<(u32, u32, Vec<u8>)> {
+        let cropped = bitmap.crop(bitmap.bbox())?;
+        Ok((
+            cropped.width(),
+            cropped.height(),
+            cropped.as_bytes().to_vec(),
+        ))
+    };
+    assert_eq!(ink(&decoded.bitmap)?, ink(&original.bitmap)?);
     assert_eq!(decoded.metrics.advance, original.metrics.advance);
     Ok(())
 }
