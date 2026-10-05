@@ -121,7 +121,7 @@ fn write_inner(
             bytes,
         });
     } else {
-        let mut manifest = Output::new(cap.min(o.limits.max_input_bytes));
+        let mut manifest = Output::new(cap.min(o.limits.max_input_bytes))?;
         manifest.put(format!("{} {}\n", global.0, global.1).as_bytes())?;
         let full = primary.as_str();
         let (parent, name) = full.rsplit_once('/').map_or(("", full), |(p, n)| (p, n));
@@ -173,7 +173,7 @@ fn write_inner(
         }
         assets.push(OutputAsset {
             path: primary.clone(),
-            bytes: manifest.b,
+            bytes: manifest.into_bytes(),
         });
     }
     let size = assets.iter().try_fold(0usize, |n, a| {
@@ -198,8 +198,10 @@ fn write_inner(
     let mut context = ReadContext::new(&input, &limits)?;
     let (target, rr) = reader::read(&mut context)?;
     r.extend(rr);
-    compare_font(f, &target, "plan9", r);
-    compare_mapped(&target, &emitted, "plan9", r);
+    compare_font(f, &target, "plan9", r)?;
+    // The seen flags stay outside this writer's envelope, as before.
+    let flags = crate::working::Budget::new(usize::MAX, "Plan 9 seen flags");
+    compare_mapped(&target, &emitted, f.slot_count(), "plan9", r, &flags)?;
     report_cost(r, &mut budget)?;
     Ok(bundle)
 }
@@ -398,7 +400,7 @@ fn encode(
             .filter(|v| v.len() == 4)
             .unwrap_or(&[0; 4]),
     );
-    let mut out = Output::new(cap);
+    let mut out = Output::new(cap)?;
     if o.compression == Compression::Literal {
         out.put(b"compressed\n")?;
     }
@@ -435,5 +437,5 @@ fn encode(
         image::header(&mut out, &v.to_string())?
     }
     out.put(&chars)?;
-    Ok(out.b)
+    Ok(out.into_bytes())
 }

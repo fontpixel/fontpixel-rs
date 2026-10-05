@@ -67,6 +67,9 @@ fn strict(report: &Report, requested: bool) -> bool {
 /// preserves default limits, but default-workload acceptance needs real testing;
 /// it is not a complete codec-transient or process-RSS proof.
 /// Reported errors and strict losses precede accounting without report clones.
+/// The commands now move their model into `Registry::write_owned`
+/// ([`caller_report_limits`]); this borrowing form backs the boundary tests.
+#[cfg(test)]
 pub(crate) fn caller_writer_limits(
     fonts: &FontSet,
     limits: &ResourceLimits,
@@ -762,8 +765,10 @@ pub(crate) fn charset(args: CharsetArgs, out: &mut dyn Write) -> Result<()> {
     if let Some(maximum) = args.max_table_bytes {
         writer_resources.max_table_bytes = writer_resources.max_table_bytes.min(maximum);
     }
+    // The model moves into the writer, which (or the registry's reserved
+    // fallback) charges its exact retained usage on this allowance.
     let (writer_limits, report) =
-        caller_writer_limits(&loaded.fonts, &writer_resources, loaded.report, args.strict)?;
+        caller_report_limits(&writer_resources, loaded.report, args.strict)?;
     loaded.fonts.validate(&limits)?;
     let filename = args
         .output
@@ -776,9 +781,8 @@ pub(crate) fn charset(args: CharsetArgs, out: &mut dyn Write) -> Result<()> {
         max_output_bytes: writer_limits.max_total_bytes,
         resources: writer_limits,
     });
-    let written = registry.write_with_report(&loaded.fonts, &id, &options, report)?;
     let font_count = loaded.fonts.fonts.len();
-    drop(loaded.fonts);
+    let written = registry.write_owned(loaded.fonts, &id, &options, report)?;
     let sources = batch::sources();
     batch::persist_outputs(
         vec![assets::PendingOutput {

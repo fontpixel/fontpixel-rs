@@ -27,6 +27,12 @@ pub(super) fn merge_validation_report(
 trait Budget: FormatWriter<FontSet> + Clone {
     fn budget(&self) -> TransportLimits;
     fn restricted(&self, limits: &TransportLimits) -> Self;
+    /// This codec's limits under the caller's common allowance: its own
+    /// budget intersected with `common`, so a common setting cannot enlarge
+    /// it. The outline writers override this (see their impl).
+    fn limits_for(&self, common: &TransportLimits) -> TransportLimits {
+        self.budget().intersect(common)
+    }
     fn validate_native(
         &self,
         fonts: &FontSet,
@@ -49,7 +55,7 @@ trait Budget: FormatWriter<FontSet> + Clone {
     fn write_owned_native(&self, fonts: FontSet, options: &WriteOptions) -> Result<Written> {
         self.write(&fonts, options)
     }
-    /// Whether [`write_reserved`](Self::write_reserved) skips this codec's
+    /// Whether [`write_reserved_native`](Self::write_reserved_native) skips this codec's
     /// own estimate of the borrowed model.
     fn reserves_model(&self) -> bool {
         false
@@ -59,8 +65,24 @@ trait Budget: FormatWriter<FontSet> + Clone {
     /// codec does not charge its estimate of that model again
     /// ([`ModelCharge::Reserved`](super::ModelCharge::Reserved)). Only called
     /// when [`reserves_model`](Self::reserves_model) is true.
-    fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+    fn write_reserved_native(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
         self.write(fonts, options)
+    }
+    /// [`validate_native`](Self::validate_native) on the reserved route.
+    fn validate_native_reserved(
+        &self,
+        fonts: &FontSet,
+        options: &WriteOptions,
+        limits: &TransportLimits,
+    ) -> Result<()> {
+        if !self.reserves_model() {
+            return self.validate_native(fonts, options, limits);
+        }
+        drop(
+            self.restricted(limits)
+                .write_reserved_native(fonts, options)?,
+        );
+        Ok(())
     }
 }
 
@@ -69,7 +91,7 @@ struct NativeWriter<C>(C);
 impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
     fn write(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
         if let Some(common) = &options.transport_limits {
-            let limits = self.0.budget().intersect(common);
+            let limits = self.0.limits_for(common);
             fonts.validate(&limits.resources)?;
             self.0.restricted(&limits).write(fonts, options)
         } else {
@@ -78,6 +100,32 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
     }
     fn transport_limits(&self) -> TransportLimits {
         self.0.budget()
+    }
+    fn common_transport_limits(&self, common: &TransportLimits) -> TransportLimits {
+        self.0.limits_for(common)
+    }
+    fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+        // The caller keeps the model's exact retained usage reserved outside
+        // these limits, so the codec is told not to charge its estimate.
+        let Some(common) = &options.transport_limits else {
+            return self.write(fonts, options);
+        };
+        if !self.0.reserves_model() {
+            return self.write(fonts, options);
+        }
+        let limits = self.0.limits_for(common);
+        fonts.validate(&limits.resources)?;
+        self.0
+            .restricted(&limits)
+            .write_reserved_native(fonts, options)
+    }
+    fn validate_transport_reserved(
+        &self,
+        fonts: &FontSet,
+        options: &WriteOptions,
+        limits: &TransportLimits,
+    ) -> Result<()> {
+        self.0.validate_native_reserved(fonts, options, limits)
     }
     fn validate_transport(
         &self,
@@ -100,12 +148,9 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
                 let model = fonts
                     .retained_usage(common.resources.max_total_bytes)?
                     .bytes;
-                let common = common.without_model(model)?;
-                let limits = self.0.budget().intersect(&common);
                 let mut reserved = options.clone();
-                reserved.transport_limits = Some(common);
-                fonts.validate(&limits.resources)?;
-                self.0.restricted(&limits).write_reserved(&fonts, &reserved)
+                reserved.transport_limits = Some(common.without_model(model)?);
+                self.write_reserved(&fonts, &reserved)
             })();
             drop(fonts);
             return OwnedWrite::Written(result);
@@ -119,7 +164,6 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
         // budget therefore keeps bounding its working stages as before, and the
         // model's charge can be reused once the codec has dropped it.
         let owned_limits = || -> Result<TransportLimits> {
-            let budget = self.0.budget();
             let (model, mut limits) = if let Some(common) = &options.transport_limits {
                 let total = common.resources.max_total_bytes;
                 let model = fonts.retained_usage(total)?.bytes;
@@ -133,10 +177,10 @@ impl<C: Budget> FormatWriter<FontSet> for NativeWriter<C> {
                     .max_output_bytes
                     .checked_sub(model)
                     .ok_or_else(error)?;
-                (model, budget.intersect(&working))
+                (model, self.0.limits_for(&working))
             } else {
                 let model = fonts.retained_usage(usize::MAX)?.bytes;
-                (model, budget)
+                (model, self.0.budget())
             };
             let total = limits.resources.max_total_bytes;
             limits.resources.max_total_bytes =
@@ -182,7 +226,7 @@ macro_rules! resource_codec {
                 fn reserves_model(&self) -> bool {
                     true
                 }
-                fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+                fn write_reserved_native(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
                     self.$reserved(fonts, options)
                 }
             )?
@@ -274,7 +318,7 @@ resource_codec!(gem, GemCodec, write_options.limits; max_output_bytes);
 resource_codec!(geos, GeosCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "gf")]
-resource_codec!(gf, GfCodec, write_options.limits; max_output_bytes);
+resource_codec!(gf, GfCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "gpi")]
 resource_codec!(gpi, GpiCodec, write_options.limits; max_output_bytes);
@@ -355,7 +399,7 @@ resource_codec!(pfr, PfrCodec, write_options.limits; max_output_bytes);
 resource_codec!(pilfont, PilfontCodec, write_options.limits; max_output_bytes);
 
 #[cfg(feature = "pk")]
-resource_codec!(pk, PkCodec, write_options.limits; max_output_bytes);
+resource_codec!(pk, PkCodec, write_options.limits; max_output_bytes => write_reserved);
 
 #[cfg(feature = "plan9")]
 resource_codec!(plan9, Plan9Codec, write_options.limits; max_output_bytes);
@@ -471,6 +515,21 @@ impl Budget for super::vector_raster::Codec {
         codec.write_options.outline.limits.sfnt.resources = limits.resources.clone();
         codec
     }
+    /// A caller's common total larger than this codec's own total replaces
+    /// it when that own total is still the library default (256 MiB): an
+    /// explicit larger budget (CLI `--max-total-bytes`, batch
+    /// `max_total_bytes` or a library `TransportLimits`) can then admit a
+    /// genuinely larger outline or webfont job. A configured codec total
+    /// other than the default is never enlarged, every other field is still
+    /// intersected, and without common limits the default stays 256 MiB.
+    fn limits_for(&self, common: &TransportLimits) -> TransportLimits {
+        let mut budget = self.budget();
+        let total = &mut budget.resources.max_total_bytes;
+        if *total == crate::ResourceLimits::default().max_total_bytes {
+            *total = (*total).max(common.resources.max_total_bytes);
+        }
+        budget.intersect(common)
+    }
     fn owns_model(&self) -> bool {
         true
     }
@@ -512,7 +571,7 @@ impl Budget for super::embedded::EmbeddedCodec {
     fn reserves_model(&self) -> bool {
         true
     }
-    fn write_reserved(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
+    fn write_reserved_native(&self, fonts: &FontSet, options: &WriteOptions) -> Result<Written> {
         super::embedded::EmbeddedCodec::write_reserved(self, fonts, options)
     }
 }

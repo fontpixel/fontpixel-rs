@@ -447,9 +447,8 @@ fn writer_limits(
         .checked_sub(retained)
         .ok_or_else(|| limit_error(limits.max_total_bytes))?;
     let mut resources = limits.clone();
-    // The caller still owns the model, reports and earlier bundles. No public
-    // codec contract identifies an identical source reservation to credit back.
-    // Some writers may therefore count source storage conservatively again.
+    // `retained` holds the reports, earlier bundles and, for a borrowing
+    // output, the model, which the writer is told is reserved.
     resources.max_total_bytes = available;
     Ok(fontpixel::formats::TransportLimits {
         resources,
@@ -840,7 +839,12 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
         limits.max_total_bytes.saturating_sub(retained),
     )?;
     vector_bytes(&summaries, &mut retained, limits.max_total_bytes)?;
-    for (spec, id) in outputs.iter().zip(&formats) {
+    let glyphs = fonts.fonts[0].len();
+    // The last output takes the merged model, so the writer can release it
+    // before its later stages; earlier outputs borrow it reserved.
+    let mut fonts = Some(fonts);
+    let last = outputs.len().saturating_sub(1);
+    for (index, (spec, id)) in outputs.iter().zip(&formats).enumerate() {
         let filename = spec
             .destination
             .file_name()
@@ -849,9 +853,26 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
         let mut write_options =
             fontpixel::WriteOptions::new(fontpixel::ResourcePath::new(filename)?);
         write_options.strict = raw.strict;
-        write_options.transport_limits = Some(writer_limits(&limits, retained)?);
         let registry = writer_registry(&raw, id, &spec.destination, any_vector)?;
-        let written = match registry.write(&fonts, id, &write_options) {
+        let result = if index == last {
+            // The allowance includes the model, which the owned route (or the
+            // registry's reserved fallback) charges exactly and then drops.
+            let model = fonts
+                .take()
+                .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+            retained = retained
+                .checked_sub(model_bytes)
+                .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+            write_options.transport_limits = Some(writer_limits(&limits, retained)?);
+            registry.write_owned(model, id, &write_options, Report::default())
+        } else {
+            let model = fonts
+                .as_ref()
+                .ok_or_else(|| limit_error(limits.max_total_bytes))?;
+            write_options.transport_limits = Some(writer_limits(&limits, retained)?);
+            registry.write_reserved_with_report(model, id, &write_options, Report::default())
+        };
+        let written = match result {
             Ok(written) => written,
             Err(error) => {
                 return Err(combined_error(
@@ -923,7 +944,7 @@ pub(crate) fn run(args: MergeArgs, output: &mut dyn Write) -> Result<()> {
                 output,
                 &CompleteReport {
                     family: &raw.family,
-                    glyphs: fonts.fonts[0].len(),
+                    glyphs,
                     merge: &merged.report,
                     outputs: OutputReports {
                         specs: &outputs,

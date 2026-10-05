@@ -1,23 +1,40 @@
 use super::{GfWriteOptions, reader};
+use crate::formats::ModelCharge;
 use crate::formats::tex_common::*;
-use crate::model::Font;
+use crate::model::{Font, FontSet};
+use crate::working::Budget;
 use crate::{Report, Result};
 /// Encode GF run commands with complete per-residue metrics and backpointer chains.
+///
+/// One working ledger of `o.limits.max_total_bytes` holds the font's exact
+/// retained usage and everything this writer allocates, each admitted first.
 pub fn write(f: &Font, o: &GfWriteOptions) -> Result<(Vec<u8>, Report)> {
-    let mut report = Report::default();
-    match write_inner(f, o, &mut report) {
-        Ok(bytes) => Ok((bytes, report)),
-        Err(error) => Err(write_error(error, report, "gf")),
-    }
+    write_charged(f, None, &o.limits, "gf", ModelCharge::Estimate, |b, r| {
+        write_inner(f, o, b, r)
+    })
 }
-fn write_inner(f: &Font, o: &GfWriteOptions, r: &mut Report) -> Result<Vec<u8>> {
-    let mut budget = model_budget(f, &o.limits)?;
-    let candidates = mappings(f, "gf", r, &o.limits)?;
-    budget.add(candidates.len().saturating_mul(64))?;
+/// As [`write`] for a whole set; its container losses follow the font's.
+pub(crate) fn write_set(
+    s: &FontSet,
+    o: &GfWriteOptions,
+    charge: ModelCharge,
+) -> Result<(Vec<u8>, Report)> {
+    let f = s.single()?;
+    write_charged(f, Some(s), &o.limits, "gf", charge, |b, r| {
+        write_inner(f, o, b, r)
+    })
+}
+fn write_inner(
+    f: &Font,
+    o: &GfWriteOptions,
+    budget: &Budget,
+    r: &mut Charged<'_>,
+) -> Result<Vec<u8>> {
+    let candidates = mappings(f, "gf", r, &o.limits, budget)?;
     let (ds, cs, hp, vp) = header_values(f, o)?;
     let mut metrics = [None; 256];
-    let mut maps = Vec::new();
-    for item in candidates {
+    let mut maps = crate::working::Vector::with_capacity(budget, candidates.len())?;
+    for &item in candidates.iter() {
         let (tfm, dx, dy) = glyph_values(item.2, hp, ds)?;
         let metric = (
             tfm,
@@ -26,31 +43,29 @@ fn write_inner(f: &Font, o: &GfWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
         );
         let residue = item.1 as u8 as usize;
         if metrics[residue].is_some_and(|v| v != metric) {
-            loss(
-                r,
+            r.loss(
                 "gf",
                 "shared_metric",
                 Some(item.0),
                 Some(item.1),
-                "Glyph omitted because its modulo-256 residue has different GF metrics",
-            );
+                format_args!(
+                    "Glyph omitted because its modulo-256 residue has different GF metrics"
+                ),
+            )?;
         } else {
             metrics[residue] = Some(metric);
-            maps.push(item);
+            maps.push(item)?;
         }
     }
+    drop(candidates);
     if maps.is_empty() {
         return Err(fatal(
-            std::mem::take(r),
+            std::mem::take(r.report),
             "gf",
             "No glyphs have representable shared metrics",
         ));
     }
-    let mut out = Output::new(
-        o.max_output_bytes
-            .min(o.limits.max_input_bytes)
-            .min(budget.remaining() / 2),
-    );
+    let mut out = Output::charged(o.max_output_bytes.min(o.limits.max_input_bytes), budget)?;
     let comment = bytes(&f.headers, "tex.comment").unwrap_or(&[]);
     check(comment.len(), 255, "GF comment bytes")?;
     out.put(&[247, 131, comment.len() as u8])?;
@@ -58,7 +73,7 @@ fn write_inner(f: &Font, o: &GfWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
     let mut pointers = [-1i32; 256];
     let (mut minx, mut maxx, mut miny, mut maxy) = (i64::MAX, i64::MIN, i64::MAX, i64::MIN);
     let mut boundary = out.b.len();
-    for &(_, cp, g) in &maps {
+    for &(_, cp, g) in maps.iter() {
         let b = g.metrics.bounds;
         let x = i32::try_from(b.x).map_err(|_| invalid("GF x outside i32"))?;
         let right = i32::try_from(b.x + i64::from(b.width))
@@ -75,7 +90,7 @@ fn write_inner(f: &Font, o: &GfWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
         }
         pointers[residue] = pointer;
         write_specials(&g.properties, "gf", 239, &mut out, &o.limits)?;
-        let bitmap = mono(g, o.gray_threshold, &o.limits)?;
+        let (bitmap, _copy) = mono_charged(g, o.gray_threshold, &o.limits, budget)?;
         let (w, h) = (b.width as usize, b.height as usize);
         let stride = w.div_ceil(8);
         if w > 0 {
@@ -142,15 +157,14 @@ fn write_inner(f: &Font, o: &GfWriteOptions, r: &mut Report) -> Result<Vec<u8>> 
     while !out.b.len().is_multiple_of(4) {
         out.byte(223)?
     }
-    budget.add(out.b.len())?;
     let mut reread = o.limits.clone();
     reread.max_total_bytes = budget.remaining();
     let (target, rr) = reader::read(&out.b, &reread)?;
-    r.extend(rr);
-    compare_font(f, &target, "gf", r);
-    compare_mapped(&target, &maps, "gf", r);
-    report_cost(r, &mut budget)?;
-    Ok(out.b)
+    let _target = readback(budget, &target)?;
+    r.absorb(rr)?;
+    compare_font(f, &target, "gf", r)?;
+    compare_mapped(&target, &maps, f.slot_count(), "gf", r, budget)?;
+    Ok(out.into_bytes())
 }
 fn run(b: &[u8], mut x: usize, end: usize, ink: bool) -> usize {
     let start = x;
