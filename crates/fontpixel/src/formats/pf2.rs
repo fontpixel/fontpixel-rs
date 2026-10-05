@@ -58,22 +58,16 @@ impl Pf2Codec {
         o: &WriteOptions,
         charge: super::ModelCharge,
     ) -> Result<Written> {
-        let mut d = Diagnostics::new("pf2", &self.write_options.limits);
+        // One exact working ledger for the container diagnostics and the
+        // writer, so its report grows in place instead of being merged.
+        let limits = &self.write_options.limits;
+        let ledger = crate::working::Budget::new(limits.max_total_bytes, "PF2 aggregate bytes");
+        let mut d = Diagnostics::charged("pf2", limits, &ledger)?;
         container_charged(set, &mut d, charge)?;
-        let mut options = self.write_options.clone();
-        options.limits.max_total_bytes = options.limits.max_total_bytes.saturating_sub(d.cost());
-        let (bytes, r) = match writer::write_charged(set.single()?, &options, charge) {
-            Ok(out) => out,
-            Err(crate::Error::ReportedErrors(report)) => {
-                d.report.extend(report);
-                return Err(crate::Error::ReportedErrors(d.report));
-            }
-            Err(e) => return Err(e),
-        };
-        d.report.extend(r);
+        let bytes = writer::write_into(set.single()?, &self.write_options, charge, &mut d)?;
         Ok(Written {
             output: OutputBundle::single(o.primary_name.clone(), bytes),
-            report: d.report,
+            report: std::mem::take(&mut d.report),
         })
     }
 }
@@ -325,8 +319,12 @@ fn parse(
     normalize_metrics(&mut f)?;
     Ok((f, d.report))
 }
+fn section_key_len(tag: &[u8]) -> usize {
+    "pf2.section.".len() + 2 * tag.len()
+}
 fn section_key(tag: &[u8]) -> String {
-    let mut s = String::from("pf2.section.");
+    let mut s = String::with_capacity(section_key_len(tag));
+    s.push_str("pf2.section.");
     for b in tag {
         use std::fmt::Write;
         let _ = write!(s, "{b:02X}");
