@@ -249,6 +249,7 @@ impl<T> Vector<T> {
     }
 
     /// Admit and copy borrowed values into new owned storage.
+    #[cfg(any(feature = "woff", feature = "woff2", test))]
     pub(crate) fn from_slice(budget: &Budget, values: &[T]) -> Result<Self>
     where
         T: Copy,
@@ -398,6 +399,18 @@ mod tests {
         assert_eq!(budget.remaining(), 10);
         assert!(budget.reserve(usize::MAX).is_err());
         assert_eq!(budget.remaining(), 10);
+    }
+
+    #[test]
+    fn peak_records_the_highest_simultaneous_admission() {
+        let budget = Budget::new(100, "test working bytes");
+        let first = budget.reserve(30).unwrap();
+        let second = budget.reserve(50).unwrap();
+        drop(first);
+        let copied = Vector::from_slice(&budget, b"0123456789").unwrap();
+        assert_eq!(copied.as_slice(), b"0123456789");
+        drop((second, copied));
+        assert_eq!((budget.peak(), budget.remaining()), (80, 100));
     }
 
     #[test]
