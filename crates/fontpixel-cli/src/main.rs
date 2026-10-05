@@ -140,8 +140,6 @@ enum Command {
         names: metadata::NameArguments,
         #[command(flatten)]
         projection: metadata::ProjectionArguments,
-        // Unit D hookup slot: flatten the embedded (bitmap sfnt) metadata flag
-        // group here and apply it next to `pcf.apply`/`vector.apply` below.
         /// Diagnostic format.
         #[arg(long, value_enum, default_value = "text")]
         report: ReportStyle,
@@ -869,6 +867,14 @@ fn execute(command: Command, output: &mut dyn Write) -> fontpixel::Result<()> {
                     limits.max_total_bytes,
                 )?;
             }
+            // Explicit OTB/bdat metadata strings and the name table built from
+            // them stay live through every group; reserve them before reading.
+            #[cfg(any(feature = "otb", feature = "bdat"))]
+            conversion_charge(
+                &mut retained,
+                p3.reserved_bytes(limits.max_total_bytes)?,
+                limits.max_total_bytes,
+            )?;
             let sources = batch::sources();
             let mut allow_single_in_place = false;
             for group in &groups {

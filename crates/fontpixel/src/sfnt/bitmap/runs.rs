@@ -5,9 +5,8 @@
 //! index). Every other glyph uses index format 3 with bit-aligned image format 2
 //! (per-glyph small metrics, 16-bit offsets), split before 64 KiB. This is a
 //! storage layout only: decoded pixels and horizontal metrics are unchanged.
-use super::{
-    Budget, Kind, Limits, Strike, Tables, bounded, buffer, invalid, p16, p32, sample, to32,
-};
+use super::super::{buffer, p16};
+use super::{Budget, Kind, Limits, Strike, Tables, bounded, invalid, p32, sample, to32};
 use crate::Result;
 use crate::model::GlyphBitmap;
 
