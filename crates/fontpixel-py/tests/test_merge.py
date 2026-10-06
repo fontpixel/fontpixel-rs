@@ -78,7 +78,7 @@ def test_merge_selection_and_enums():
     assert 0x41 in s and 0x45 not in s
     assert s.expression == "U+41-5A,-U+45"
     assert merge.Selection.parse("U+41").scalar_count() == 1
-    assert repr(s) == "Selection('U+41-5A,-U+45')" or repr(s) == 'Selection("U+41-5A,-U+45")'
+    assert repr(s) == 'Selection("U+41-5A,-U+45")'
     with pytest.raises(fontpixel.InvalidInputError):
         merge.Selection("not a range")
     assert [merge.spacing_as_str(v) for v in ["auto", "mono", "prop"]] == ["auto", "mono", "prop"]
