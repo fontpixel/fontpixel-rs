@@ -11,7 +11,7 @@ shapes at run time.
 
 ## Modules
 
-- [`fontpixel`](#fontpixel) (457) fontpixel: bitmap font toolkit (Python bindings).
+- [`fontpixel`](#fontpixel) (458) fontpixel: bitmap font toolkit (Python bindings).
 - [`fontpixel.compat`](#fontpixelcompat) (0) Compatibility layers over the native fontpixel core.
 - [`fontpixel.compat.bdfparser`](#fontpixelcompatbdfparser) (87) bdfparser-compatible API (bdfparser 3.0 / SPEC-v3) on the fontpixel Rust core.
 - [`fontpixel.compat.bdfparser.bitmap`](#fontpixelcompatbdfparserbitmap) (1) `Bitmap` of the bdfparser-compatible API.
@@ -501,6 +501,10 @@ Options deriving scalable advances from device advances
 ### `fontpixel.CJK_RANGES: tuple[UnicodeRange, ...]`
 
 *constant*
+
+### `fontpixel.CancelledError(FontpixelError)`
+
+*exception* -- A progress callback cancelled the operation (returned False); nothing was written.
 
 ### `fontpixel.CharsetCodec(name: str, gl: bool | None = ...) -> CharsetCodec`
 
@@ -3440,7 +3444,7 @@ Direct codec functions of `fontpixel::formats::bdf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.bdf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.bdf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -3524,7 +3528,7 @@ Direct codec functions of `fontpixel::formats::bmfont`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.bmfont.read(data: ReadInput | None = ..., options: BmfontReadOptions | None = ..., *, name: str | None = ..., resources: Resources | None = ..., limits: ResourceLimits | None = ..., directory: str | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.bmfont.read(data: ReadInput | None = ..., options: BmfontReadOptions | None = ..., *, name: str | None = ..., resources: Resources | None = ..., limits: ResourceLimits | None = ..., directory: str | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -4201,7 +4205,7 @@ DEFAULT and unknown identifiers (`fnt::charset_name`).
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.fnt.read(data: Buffer | Sequence[int], options: FntReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.fnt.read(data: Buffer | Sequence[int], options: FntReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -4274,7 +4278,7 @@ Direct codec functions of `fontpixel::formats::fontx2`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.fontx2.read(data: Buffer | Sequence[int], options: Fontx2ReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.fontx2.read(data: Buffer | Sequence[int], options: Fontx2ReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -4600,7 +4604,7 @@ Direct codec functions of `fontpixel::formats::hbf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.hbf.read(data: ReadInput | None = ..., *, name: str | None = ..., resources: Resources | None = ..., limits: ResourceLimits | None = ..., directory: str | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.hbf.read(data: ReadInput | None = ..., *, name: str | None = ..., resources: Resources | None = ..., limits: ResourceLimits | None = ..., directory: str | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -4634,7 +4638,7 @@ Direct codec functions of `fontpixel::formats::hex`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.hex.read(data: Buffer | Sequence[int], options: HexReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.hex.read(data: Buffer | Sequence[int], options: HexReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -4888,7 +4892,7 @@ Direct codec functions of `fontpixel::formats::kbits`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.kbits.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.kbits.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -5170,7 +5174,7 @@ Direct codec functions of `fontpixel::formats::pbf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.pbf.read(data: Buffer | Sequence[int], options: PbfReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.pbf.read(data: Buffer | Sequence[int], options: PbfReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -5203,7 +5207,7 @@ Direct codec functions of `fontpixel::formats::pcf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.pcf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.pcf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -5309,7 +5313,7 @@ Direct codec functions of `fontpixel::formats::pf2`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.pf2.read(data: Buffer | Sequence[int], options: Pf2ReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.pf2.read(data: Buffer | Sequence[int], options: Pf2ReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -5661,7 +5665,7 @@ Direct codec functions of `fontpixel::formats::psf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.psf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
+### `fontpixel.formats.psf.read(data: Buffer | Sequence[int], *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
 
 *function*
 
@@ -6840,6 +6844,15 @@ status), ``kind`` and, for strict-loss and reported errors, the full
 ``report``. The GIL is released while an operation runs, so calls from several
 threads proceed in parallel.
 
+:func:`merge`, :func:`convert` and :func:`vectorize` accept
+``progress=callback``: the callback receives a :class:`fontpixel.types.Progress`
+dict (``step`` ``"read"``, ``"merge"`` or ``"encode"``, ``done``, ``total``,
+``item``, ``glyphs``, ``bytes``) after each step, on the calling thread with
+the GIL held, before anything is written. Returning ``False`` (exactly) cancels
+the operation with :class:`fontpixel.CancelledError` (``exit_code`` 1);
+raising cancels it and re-raises that exception. Nothing is written or
+returned after a cancellation, and results never depend on the callback.
+
 Example::
 
     from fontpixel import ops
@@ -7029,13 +7042,19 @@ Platform capabilities of this build: `filesystem`, `threads` and
 Remap glyph codes into another charset and write the result
 (`fontpixel charset`).
 
-### `fontpixel.ops.convert(request: ConvertRequest | None = ..., /, *, files: Files | None = ..., **options: Any) -> OperationResult`
+### `fontpixel.ops.convert(request: ConvertRequest | None = ..., /, *, files: Files | None = ..., progress: Callable[[Progress], object] | None = ..., **options: Any) -> OperationResult`
 
 *function*
 
 Convert inputs into one output, or each input into its own output
 (`fontpixel convert`). Request keys: `inputs`, `output`, `from`, `to`,
 `each`, `strict`, `font_index`, `report` and every reader/writer option.
+
+`progress`, if given, is called with a dict
+`{"step", "done", "total", "item", "glyphs", "bytes"}` after each input
+is read (`step` `"read"`) and each output is encoded (`"encode"`).
+Returning `False` cancels with `CancelledError`; raising cancels and
+re-raises; nothing is written either way. Results do not depend on it.
 
 ### `fontpixel.ops.diff(request: DiffRequest | None = ..., /, *, files: Files | None = ..., **options: Any) -> OperationResult`
 
@@ -7072,7 +7091,7 @@ operation would reject the request before running.
 
 *function* -- The memory-storage key of a path: `.` removed, `..` folded, `/` separators.
 
-### `fontpixel.ops.merge(request: MergeRequest | None = ..., /, *, files: Files | None = ..., **options: Any) -> OperationResult`
+### `fontpixel.ops.merge(request: MergeRequest | None = ..., /, *, files: Files | None = ..., progress: Callable[[Progress], object] | None = ..., **options: Any) -> OperationResult`
 
 *function*
 
@@ -7080,6 +7099,13 @@ Merge selected glyphs from ordered parts and write every output as one
 group (`fontpixel merge`). Request keys: `parts` (list of
 `{input, take, dy, from, font_index}`), `outputs` (list of
 `{destination, format}`), `family` and the merge/writer options.
+
+`progress`, if given, is called with a dict
+`{"step", "done", "total", "item", "glyphs", "bytes"}` after each part
+is read (`"read"`), after the merge (`"merge"`) and after each output
+is encoded (`"encode"`), before anything is written. Returning `False`
+cancels with `CancelledError`; raising cancels and re-raises; nothing
+is written either way. Results do not depend on it.
 
 ### `fontpixel.ops.output_format_for(destination: StrPath) -> str`
 
@@ -7136,14 +7162,15 @@ Lay out text (or every mapping with `all=True`) into a PNG or SVG image
 Build a locl-enabled OpenType font from regional and script faces
 (`fontpixel variants`).
 
-### `fontpixel.ops.vectorize(request: 'ConvertRequest | None' = None, /, *, files: 'Files | None' = None, **options: 'Any') -> 'OperationResult'`
+### `fontpixel.ops.vectorize(request: 'ConvertRequest | None' = None, /, *, files: 'Files | None' = None, progress: 'Callable[[Progress], object] | None' = None, **options: 'Any') -> 'OperationResult'`
 
 *function*
 
 Vectorize (``fontpixel vectorize``): the same operation as :func:`convert`.
 
 The command-line ``vectorize`` is an alias of ``convert``; the result is
-identical, including its JSON and text documents.
+identical, including its JSON and text documents. ``progress`` behaves as
+in :func:`convert`.
 
 ## fontpixel.outline
 

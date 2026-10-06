@@ -34,7 +34,7 @@ def read(
     resources: _t.Resources | None = ...,
     limits: _t.ResourceLimits | None = ...,
     directory: str | None = ...,
-) -> tuple[FontSet, _t.Report]:
+) -> tuple[Font, _t.Report]:
     """
     Decode one input through this module's context reader
     (`resources` supplies sidecars). Returns `(model, report)`.

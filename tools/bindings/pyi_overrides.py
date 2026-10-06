@@ -269,6 +269,7 @@ PARAMS = {
         "glyph": "_t.GlyphLike",
         "tag": "_t.Tag",
         "files": "_t.Files",
+        "progress": "_c.Callable[[_t.Progress], object]",
     },
 }
 

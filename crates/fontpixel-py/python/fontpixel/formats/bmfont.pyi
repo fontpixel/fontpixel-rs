@@ -35,7 +35,7 @@ def read(
     resources: _t.Resources | None = ...,
     limits: _t.ResourceLimits | None = ...,
     directory: str | None = ...,
-) -> tuple[FontSet, _t.Report]:
+) -> tuple[Font, _t.Report]:
     """
     Decode one input through this module's context reader. `options`
     is the module's read-options dict; `resources` supplies sidecars;

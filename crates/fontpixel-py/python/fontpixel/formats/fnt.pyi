@@ -40,7 +40,7 @@ def read(
     options: _t.FntReadOptions | None = ...,
     *,
     limits: _t.ResourceLimits | None = ...,
-) -> tuple[FontSet, _t.Report]:
+) -> tuple[Font, _t.Report]:
     """
     Decode standalone bytes with this module's read-options dict under
     `limits`. Returns `(model, report)`.
