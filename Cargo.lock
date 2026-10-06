@@ -519,6 +519,7 @@ dependencies = [
 name = "fontpixel-py"
 version = "0.1.0"
 dependencies = [
+ "clap",
  "fontpixel",
  "fontpixel-ops",
  "pyo3",

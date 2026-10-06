@@ -16,17 +16,22 @@ use std::{
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct PreviewRequest {
     /// Input, text, layout and budgets.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub layout: LayoutOptions,
     /// Exactly two characters: ink then paper.
     #[cfg_attr(feature = "clap", arg(long, default_value = "#."))]
     pub chars: String,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(PreviewRequest);
 impl PreviewRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -102,6 +107,7 @@ pub(crate) fn preview(request: PreviewRequest) -> fontpixel::Result<PreviewRespo
 }
 
 const RENDER_REQUEST_TO: [&str; 2] = ["png", "svg"];
+#[cfg(feature = "clap")]
 const RENDER_REQUEST_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
 /// Render text (or every mapping) to a PNG or SVG image.
 #[derive(Debug, Clone, PartialEq)]
@@ -109,12 +115,15 @@ const RENDER_REQUEST_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct RenderRequest {
     /// Input, text, layout and budgets.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub layout: LayoutOptions,
     /// PNG or SVG output; written only after successful validation.
     #[cfg_attr(feature = "clap", arg(short, long))]
@@ -127,19 +136,19 @@ pub struct RenderRequest {
     pub scale: u32,
     /// Ink color: #RGB, #RGBA, #RRGGBB, #RRGGBBAA, or transparent.
     #[cfg_attr(feature = "clap", arg(long, default_value = "#000000"))]
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_text::rgba"))]
     pub color: fontpixel::render::Rgba,
     /// Paper color, in the same syntax as --color.
     #[cfg_attr(feature = "clap", arg(long, default_value = "#ffffff"))]
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_text::rgba"))]
     pub background: fontpixel::render::Rgba,
     /// SVG pixel shape (PNG uses square pixels).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = RENDER_REQUEST_SHAPE))]
-    pub shape: Option<String>,
+    #[cfg_attr(feature = "clap", arg(long, value_parser = clap::builder::TypedValueParser::map(clap::builder::PossibleValuesParser::new(RENDER_REQUEST_SHAPE), crate::options::parse_shape)))]
+    pub shape: Option<fontpixel::outline::Shape>,
     /// SVG dot diameter or separate-square side relative to one pixel.
     #[cfg_attr(feature = "clap", arg(long))]
     pub dotsize: Option<f64>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(RenderRequest);
 impl RenderRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -149,9 +158,10 @@ impl RenderRequest {
             check_choice("to", value, &RENDER_REQUEST_TO)?;
         }
         check_range("scale", i128::from(self.scale), 1, i128::from(u32::MAX))?;
-        if let Some(value) = self.shape.as_deref() {
-            check_choice("shape", value, &RENDER_REQUEST_SHAPE)?;
-        }
+        crate::options::check_required(&[(
+            crate::options::given(&self.output),
+            "--output <OUTPUT>",
+        )])?;
         Ok(())
     }
 }
@@ -267,7 +277,7 @@ pub(crate) fn render(request: RenderRequest) -> fontpixel::Result<RenderResponse
     let bytes = if kind == "svg" {
         #[cfg(feature = "svg")]
         {
-            let shape = crate::options::svg_shape(shape.as_deref());
+            let shape = shape.unwrap_or(fontpixel::outline::Shape::Square);
             fontpixel::formats::svg::image(
                 &rendered.bitmap,
                 &fontpixel::formats::svg::ImageOptions {

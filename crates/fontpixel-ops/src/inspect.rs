@@ -13,13 +13,15 @@ use std::{io::Write, path::PathBuf};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct FormatsRequest {
     /// Emit machine-readable metadata and capability flags.
     #[cfg_attr(feature = "clap", arg(long))]
     pub json: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(FormatsRequest);
 impl FormatsRequest {
     /// Check the value constraints the command-line parser enforces; this
     /// group has none beyond its field types.
@@ -90,7 +92,7 @@ pub(crate) fn formats(_request: &FormatsRequest) -> FormatsResponse {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct InfoRequest {
     /// Primary input asset.
@@ -103,9 +105,14 @@ pub struct InfoRequest {
     pub json: bool,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: RasterOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(InfoRequest);
 impl InfoRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -114,6 +121,7 @@ impl InfoRequest {
             check_format("from", value)?;
         }
         self.raster.validate()?;
+        crate::options::check_required(&[(crate::options::given(&self.input), "<INPUT>")])?;
         Ok(())
     }
 }

@@ -81,8 +81,10 @@ impl TaskKind {
     serde(tag = "kind", rename_all = "lowercase")
 )]
 pub enum TaskRequest {
-    /// Convert or vectorize.
+    /// Convert.
     Convert(Box<ConvertRequest>),
+    /// Vectorize: the same operation as convert, reported as `vectorize`.
+    Vectorize(Box<ConvertRequest>),
     /// Regional OpenType variants.
     #[cfg(feature = "opentype")]
     Variants(Box<VariantsRequest>),
@@ -99,11 +101,11 @@ pub enum TaskRequest {
     Diff(Box<DiffRequest>),
 }
 impl TaskRequest {
-    /// The task kind (`Convert` for conversions; use [`TaskKind::Vectorize`]
-    /// explicitly in [`BatchTask`] to report the alias).
+    /// The task kind reported in the batch document.
     pub fn kind(&self) -> TaskKind {
         match self {
             Self::Convert(_) => TaskKind::Convert,
+            Self::Vectorize(_) => TaskKind::Vectorize,
             #[cfg(feature = "opentype")]
             Self::Variants(_) => TaskKind::Variants,
             #[cfg(feature = "opentype")]
@@ -117,7 +119,7 @@ impl TaskRequest {
     /// The task's original total byte limit, its working-ledger weight.
     pub fn weight(&self) -> usize {
         match self {
-            Self::Convert(r) => r.source_identity_total_bytes(),
+            Self::Convert(r) | Self::Vectorize(r) => r.source_identity_total_bytes(),
             #[cfg(feature = "opentype")]
             Self::Variants(r) => r.source_identity_total_bytes(),
             #[cfg(feature = "opentype")]
@@ -131,7 +133,7 @@ impl TaskRequest {
     /// Every input path the task reads, protected from all batch outputs.
     pub fn declared_inputs(&self) -> Vec<PathBuf> {
         match self {
-            Self::Convert(r) => r.inputs.clone(),
+            Self::Convert(r) | Self::Vectorize(r) => r.inputs.clone(),
             #[cfg(feature = "opentype")]
             Self::Variants(r) => {
                 let mut paths = vec![r.base.clone()];
@@ -155,7 +157,7 @@ impl TaskRequest {
     /// Check the value constraints of the wrapped request.
     pub fn validate(&self) -> Result<()> {
         match self {
-            Self::Convert(r) => r.validate(),
+            Self::Convert(r) | Self::Vectorize(r) => r.validate(),
             #[cfg(feature = "opentype")]
             Self::Variants(r) => r.validate(),
             #[cfg(feature = "opentype")]
@@ -169,7 +171,7 @@ impl TaskRequest {
     /// Force machine-readable output, as every batch task reports JSON.
     fn into_json(mut self) -> Self {
         match &mut self {
-            Self::Convert(r) => r.report = ReportStyle::Json,
+            Self::Convert(r) | Self::Vectorize(r) => r.report = ReportStyle::Json,
             #[cfg(feature = "opentype")]
             Self::Variants(r) => r.output.report = ReportStyle::Json,
             #[cfg(feature = "opentype")]
@@ -186,7 +188,9 @@ impl TaskRequest {
     fn execute(self, out: &mut dyn Write) -> Result<()> {
         self.validate()?;
         match self {
-            Self::Convert(r) => crate::convert::run(*r)?.write_json(out, false),
+            Self::Convert(r) | Self::Vectorize(r) => {
+                crate::convert::run(*r)?.write_json(out, false)
+            }
             #[cfg(feature = "opentype")]
             Self::Variants(r) => {
                 crate::opentype::variants(*r)?.write(ReportStyle::Json, out, false)

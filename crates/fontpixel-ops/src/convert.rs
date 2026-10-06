@@ -20,7 +20,7 @@ use std::{
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ConvertRequest {
     /// One or more inputs, combined as ordered strikes in a FontSet.
@@ -46,52 +46,87 @@ pub struct ConvertRequest {
     pub font_index: Option<usize>,
     /// Normalized naming overrides.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub names: metadata::NameOptions,
     /// Size, resolution and metric projection options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub projection: metadata::ProjectionOptions,
     /// Diagnostic format.
     #[cfg_attr(feature = "clap", arg(long, value_enum, default_value = "text"))]
     pub report: ReportStyle,
     /// PCF output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub pcf: PcfOptions,
     /// PSF and FNT/FON output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub console: ConsoleOptions,
     /// Image atlas and directory output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub image: image_formats::WriteOptions,
     /// C header output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub c: COutputOptions,
     /// Additional format output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub extra: extra_formats::WriteOptions,
     /// Second-priority format output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p2: Box<p2_formats::WriteOptions>,
     /// Third-priority format output options, including OTB/bdat metadata.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p3: Box<p3_formats::WriteOptions>,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: Box<RasterOptions>,
     /// SVG and OpenType outline output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub vector: VectorOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ConvertRequest);
 impl ConvertRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -113,6 +148,14 @@ impl ConvertRequest {
         self.p3.validate()?;
         self.raster.validate()?;
         self.vector.validate()?;
+        crate::options::check_required(&[
+            (
+                !self.inputs.is_empty() && self.inputs.iter().all(|p| crate::options::given(p)),
+                "<INPUTS>...",
+            ),
+            (crate::options::given(&self.output), "--output <OUTPUT>"),
+        ])?;
+        crate::options::check_requires(self.each, &[(self.to.is_some(), "--to <TO>")])?;
         Ok(())
     }
 }

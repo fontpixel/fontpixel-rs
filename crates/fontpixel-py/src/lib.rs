@@ -22,6 +22,7 @@ pub mod handles;
 pub mod merge;
 pub mod metadata;
 pub mod model;
+pub mod ops;
 pub mod outline;
 pub mod render;
 pub mod resources;
@@ -50,5 +51,6 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     outline::register(m)?;
     variants::register(m)?;
     merge::register(m)?;
+    ops::register(m)?;
     Ok(())
 }

@@ -14,7 +14,7 @@ const READ_OPTIONS_BEOS_READ_COVERAGE: [&str; 2] = ["native8", "full-nibble"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Include the later GEOS DEL slot when interpreting a native strike.
@@ -51,6 +51,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub beos_read_round_fractional_metrics: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -87,6 +89,16 @@ impl ReadOptions {
                 &READ_OPTIONS_BEOS_READ_COVERAGE,
             )?;
         }
+        crate::options::check_conflict(
+            (
+                self.fbit_apple_double_resource.is_some(),
+                "--fbit-apple-double-resource <FBIT_APPLE_DOUBLE_RESOURCE>",
+            ),
+            (
+                self.fbit_read_data_fork.is_some(),
+                "--fbit-read-data-fork <FBIT_READ_DATA_FORK>",
+            ),
+        )?;
         Ok(())
     }
 }
@@ -197,7 +209,7 @@ const WRITE_OPTIONS_BEOS_COVERAGE: [&str; 2] = ["native8", "full-nibble"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// GEOS output resource envelope (default preserves source, otherwise cvt).
@@ -297,6 +309,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub beos_round_fractional_metrics: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -362,6 +376,30 @@ impl WriteOptions {
         if let Some(value) = self.beos_coverage.as_deref() {
             check_choice("beos_coverage", value, &WRITE_OPTIONS_BEOS_COVERAGE)?;
         }
+        crate::options::check_requires(
+            self.vtfont_cell_width.is_some(),
+            &[(
+                self.vtfont_cell_height.is_some(),
+                "--vtfont-cell-height <VTFONT_CELL_HEIGHT>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.vtfont_cell_height.is_some(),
+            &[(
+                self.vtfont_cell_width.is_some(),
+                "--vtfont-cell-width <VTFONT_CELL_WIDTH>",
+            )],
+        )?;
+        crate::options::check_conflict(
+            (
+                self.symbos_writing_system.is_some(),
+                "--symbos-writing-system <SYMBOS_WRITING_SYSTEM>",
+            ),
+            (
+                self.symbos_layout.is_some(),
+                "--symbos-layout <SYMBOS_LAYOUT>",
+            ),
+        )?;
         Ok(())
     }
 }

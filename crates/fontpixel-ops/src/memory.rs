@@ -378,16 +378,22 @@ pub(crate) fn read_primary(
     })
 }
 
-/// Every asset key a prepared output group would create.
-pub(crate) fn asset_keys(outputs: &[PreparedOutput]) -> impl Iterator<Item = String> + '_ {
-    outputs.iter().flat_map(|output| {
-        let parent = output.destination.parent().map(key).unwrap_or_default();
-        output
-            .bundle
+impl PreparedOutput {
+    /// Every asset with its storage key: the destination's parent key joined
+    /// with the asset's bundle path (the primary asset is the destination).
+    pub fn keyed_assets(&self) -> impl Iterator<Item = (String, &[u8])> + '_ {
+        let parent = self.destination.parent().map(key).unwrap_or_default();
+        self.bundle
             .assets()
             .iter()
-            .map(move |asset| join(&parent, asset.path.as_str()))
-    })
+            .map(move |asset| (join(&parent, asset.path.as_str()), asset.bytes.as_slice()))
+    }
+}
+/// Every asset key a prepared output group would create.
+pub(crate) fn asset_keys(outputs: &[PreparedOutput]) -> impl Iterator<Item = String> + '_ {
+    outputs
+        .iter()
+        .flat_map(|output| output.keyed_assets().map(|(key, _)| key))
 }
 /// Validate a memory output group as one unit: every asset needs a distinct
 /// destination that is neither an ancestor nor a member of another asset.

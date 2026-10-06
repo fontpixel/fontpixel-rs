@@ -72,7 +72,7 @@ const METADATA_ARGUMENTS_OTB_GLYPH_ORDER: [&str; 2] = ["first-seen", "codepoint"
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct MetadataArguments {
     /// Complete OTB/bdat name table record PLATFORM/ENCODING/LANGUAGE/NAME_ID=TEXT.
@@ -201,6 +201,8 @@ pub struct MetadataArguments {
     #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_GLYPH_ORDER))]
     pub otb_glyph_order: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(MetadataArguments);
 impl MetadataArguments {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -304,6 +306,21 @@ impl MetadataArguments {
                 &METADATA_ARGUMENTS_OTB_GLYPH_ORDER,
             )?;
         }
+        crate::options::check_requires(
+            self.otb_created.is_some(),
+            &[(self.otb_modified.is_some(), "--otb-modified <OTB_MODIFIED>")],
+        )?;
+        crate::options::check_requires(
+            self.otb_modified.is_some(),
+            &[(self.otb_created.is_some(), "--otb-created <OTB_CREATED>")],
+        )?;
+        crate::options::check_requires(
+            self.otb_index_min_run.is_some(),
+            &[(
+                self.otb_index_layout.is_some(),
+                "--otb-index-layout <OTB_INDEX_LAYOUT>",
+            )],
+        )?;
         Ok(())
     }
 }
