@@ -34,7 +34,10 @@ impl JsCompatBitmap {
         f(&*handles::borrow(&self.inner, "BdfparserRawBitmap")?)
     }
     fn write<R>(&self, f: impl FnOnce(&mut bp::Bitmap) -> JsResult<R>) -> JsResult<R> {
-        f(&mut *handles::borrow_mut(&self.inner, "BdfparserRawBitmap")?)
+        f(&mut *handles::borrow_mut(
+            &self.inner,
+            "BdfparserRawBitmap",
+        )?)
     }
     fn edit(&self, f: impl FnOnce(&mut bp::Bitmap) -> fontpixel::Result<()>) -> JsResult<()> {
         self.write(|b| done(f(b)))
@@ -197,7 +200,10 @@ impl JsCompatBitmap {
     /// relative to the current one, y up (`Bitmap::crop`).
     pub fn crop(&self, w: f64, h: f64, xoff: f64, yoff: f64) -> JsResult<()> {
         let (w, h) = (conv::int::<i64>(w, "w")?, conv::int::<i64>(h, "h")?);
-        let (x, y) = (conv::int::<i64>(xoff, "xoff")?, conv::int::<i64>(yoff, "yoff")?);
+        let (x, y) = (
+            conv::int::<i64>(xoff, "xoff")?,
+            conv::int::<i64>(yoff, "yoff")?,
+        );
         self.edit(|b| b.crop(w, h, x, y).map(|_| ()))
     }
 
@@ -238,7 +244,10 @@ impl JsCompatBitmap {
 
     /// Add a label-2 shadow (`Bitmap::shadow`).
     pub fn shadow(&self, xoff: f64, yoff: f64) -> JsResult<()> {
-        let (x, y) = (conv::int::<i64>(xoff, "xoff")?, conv::int::<i64>(yoff, "yoff")?);
+        let (x, y) = (
+            conv::int::<i64>(xoff, "xoff")?,
+            conv::int::<i64>(yoff, "yoff")?,
+        );
         self.edit(|b| b.shadow(x, y).map(|_| ()))
     }
 
@@ -277,7 +286,11 @@ impl JsCompatBitmap {
     /// (`Bitmap::label_rows`).
     #[wasm_bindgen(js_name = labels)]
     pub fn labels(&self) -> JsResult<Uint8Array> {
-        self.read(|b| Ok(conv::bytes_to_js(&b.label_rows().flatten().copied().collect::<Vec<_>>())))
+        self.read(|b| {
+            Ok(conv::bytes_to_js(
+                &b.label_rows().flatten().copied().collect::<Vec<_>>(),
+            ))
+        })
     }
 
     /// Pillow `Image.frombytes` data for mode `'1'`, `'L'`, `'RGB'` or
@@ -358,7 +371,10 @@ impl JsCompatBitmap {
 
     /// Shear rows: one pixel per `step` rows above `base` (`Bitmap::italic`).
     pub fn italic(&self, step: f64, base: f64) -> JsResult<()> {
-        let (s, b0) = (conv::int::<i64>(step, "step")?, conv::int::<i64>(base, "base")?);
+        let (s, b0) = (
+            conv::int::<i64>(step, "step")?,
+            conv::int::<i64>(base, "base")?,
+        );
         self.edit(|b| b.italic(s, b0).map(|_| ()))
     }
 

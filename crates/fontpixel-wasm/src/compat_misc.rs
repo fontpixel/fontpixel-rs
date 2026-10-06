@@ -241,6 +241,11 @@ pub fn rasterize(
 ) -> JsResult<JsCompatBitmap> {
     let cs: Vec<bp::outline::Contour> = conv::from_js(&contours)?;
     let int = |v: &JsValue, what: &str| conv::int_from_js::<i64>(v, what);
-    let (xmin, ymin, w, h) = (int(&xmin, "xmin")?, int(&ymin, "ymin")?, int(&w, "w")?, int(&h, "h")?);
+    let (xmin, ymin, w, h) = (
+        int(&xmin, "xmin")?,
+        int(&ymin, "ymin")?,
+        int(&w, "w")?,
+        int(&h, "h")?,
+    );
     done(bp::outline::rasterize(&cs, ppu, xmin, ymin, w, h)).map(JsCompatBitmap::wrap)
 }

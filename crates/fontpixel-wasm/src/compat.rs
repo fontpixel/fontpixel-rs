@@ -114,28 +114,32 @@ pub(crate) fn code_point_string(cp: u32) -> JsValue {
 
 /// Wrap a JS `(char: string) => number | null | undefined` as a numeric converter.
 fn char2cp_converter(f: Function) -> bp::Converter {
-    bp::Converter::new(move |n| match f.call1(&JsValue::UNDEFINED, &code_point_string(n)) {
-        Ok(r) => r
-            .as_f64()
-            .filter(|v| v.fract() == 0.0 && *v >= 0.0 && *v <= f64::from(u32::MAX))
-            .map(|v| v as u32),
-        Err(e) => {
-            stash(e);
-            None
-        }
-    })
+    bp::Converter::new(
+        move |n| match f.call1(&JsValue::UNDEFINED, &code_point_string(n)) {
+            Ok(r) => r
+                .as_f64()
+                .filter(|v| v.fract() == 0.0 && *v >= 0.0 && *v <= f64::from(u32::MAX))
+                .map(|v| v as u32),
+            Err(e) => {
+                stash(e);
+                None
+            }
+        },
+    )
 }
 
 /// Wrap a JS `(cp: number) => string | null | undefined` as a numeric converter
 /// (a result of exactly one code point; anything else is "not representable").
 fn cp2char_converter(f: Function) -> bp::Converter {
-    bp::Converter::new(move |n| match f.call1(&JsValue::UNDEFINED, &JsValue::from(n)) {
-        Ok(r) => single_code_point(&r),
-        Err(e) => {
-            stash(e);
-            None
-        }
-    })
+    bp::Converter::new(
+        move |n| match f.call1(&JsValue::UNDEFINED, &JsValue::from(n)) {
+            Ok(r) => single_code_point(&r),
+            Err(e) => {
+                stash(e);
+                None
+            }
+        },
+    )
 }
 
 /// A JS reader object (`read(n) => Uint8Array | null`) as a Rust reader.
@@ -179,15 +183,15 @@ impl std::io::Write for JsWriter {
             .ok()
             .and_then(|f| f.dyn_into::<Function>().ok())
             .ok_or_else(|| {
-                stash(errors::invalid("the writer object has no write(bytes) method"));
+                stash(errors::invalid(
+                    "the writer object has no write(bytes) method",
+                ));
                 std::io::Error::other("no write method")
             })?;
-        write
-            .call1(&self.0, &conv::bytes_to_js(buf))
-            .map_err(|e| {
-                stash(e);
-                std::io::Error::other("write() failed")
-            })?;
+        write.call1(&self.0, &conv::bytes_to_js(buf)).map_err(|e| {
+            stash(e);
+            std::io::Error::other("write() failed")
+        })?;
         Ok(buf.len())
     }
     fn flush(&mut self) -> std::io::Result<()> {
@@ -321,7 +325,8 @@ impl JsCompatFont {
     pub fn create(
         #[wasm_bindgen(unchecked_optional_param_type = "CreateOptions")] options: Option<JsValue>,
     ) -> JsResult<JsCompatFont> {
-        let o: bp::CreateOptions = conv::from_js_or_default(&options.unwrap_or(JsValue::UNDEFINED))?;
+        let o: bp::CreateOptions =
+            conv::from_js_or_default(&options.unwrap_or(JsValue::UNDEFINED))?;
         done(bp::Font::create(&o)).map(Self::wrap)
     }
 
@@ -699,8 +704,12 @@ impl JsCompatFont {
         let mode: i64 = conv::int(mode, "mode")?;
         self.write(|f| {
             done(
-                f.transform(|b| crate::compat_bitmap::call_bitmap_fn(&function, b), &r, mode)
-                    .map(|_| ()),
+                f.transform(
+                    |b| crate::compat_bitmap::call_bitmap_fn(&function, b),
+                    &r,
+                    mode,
+                )
+                .map(|_| ()),
             )
         })
     }

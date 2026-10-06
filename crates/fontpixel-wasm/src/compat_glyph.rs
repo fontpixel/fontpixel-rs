@@ -93,7 +93,9 @@ impl JsCompatGlyph {
     pub fn draw(
         &self,
         mode: f64,
-        #[wasm_bindgen(unchecked_param_type = "[number, number, number, number] | null | undefined")]
+        #[wasm_bindgen(
+            unchecked_param_type = "[number, number, number, number] | null | undefined"
+        )]
         bb: JsValue,
     ) -> JsResult<JsCompatBitmap> {
         let mode: i64 = conv::int(mode, "mode")?;
@@ -137,7 +139,9 @@ impl JsCompatGlyph {
         &self,
         bitmap: &JsCompatBitmap,
         mode: f64,
-        #[wasm_bindgen(unchecked_param_type = "[number, number, number, number] | null | undefined")]
+        #[wasm_bindgen(
+            unchecked_param_type = "[number, number, number, number] | null | undefined"
+        )]
         bb: JsValue,
         trim: bool,
     ) -> JsResult<()> {
