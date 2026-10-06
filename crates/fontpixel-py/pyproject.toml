@@ -22,3 +22,5 @@ module-name = "fontpixel._native"
 # Only maturin enables pyo3/extension-module, so `cargo test --workspace
 # --all-features` still links the crate against libpython.
 features = ["pyo3/extension-module"]
+# Never package bytecode that `maturin develop` or test runs leave behind.
+exclude = ["**/__pycache__/**", "**/*.pyc"]
