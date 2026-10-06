@@ -1762,8 +1762,9 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
 > in the last bit on 88,636 of 16.7M inputs. Enabling brotli's `portable-float`
 > feature made native and wasm identical in an uncommitted experiment, but it
 > also changes native WOFF2 bytes (Tong SC 892,576 B), so the phase-6 frozen
-> references would need rebuilding. Waiting for the owner's decision; see
-> TODO.md "第 8 阶段暂停记录".
+> references would need rebuilding. **Owner decision (2026-10-06): enable
+> `portable-float`** so wasm and native WOFF2 bytes are identical; implemented
+> when phase 8 resumes (TODO.md "第 8 阶段暂停记录").
 
 **Context:** Phase 8 binds the full native API with wasm-bindgen
 (`wasm32-unknown-unknown`). That target compiles `std` but has no threads,

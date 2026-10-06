@@ -23,7 +23,7 @@
 | `p8-js-ops` | J5 ops 全部 22 个操作 + W8.3 `info`/`merge`/`render` + Worker/进度/取消 + Node 文件辅助 | `a5cbbd3` | 126 条规则完成；5.7 万字 Unifont+Tong Latin 拼合 BDF 与 CLI 逐字节相同；WOFF2 逐字节 TODO；check_wasm.sh 未跑完 | `../local-work/p8-j5/HANDOFF.md` |
 | `p8-js-compat` | J6 bdfparser-js 兼容 API + 参考测试 | `6f85876` | 自测 27 过；参考套件 1178 过 / 11 败 / 3 跳（慢测试 1181/11），11 个失败已写入 KNOWN_DIFFERENCES.md；改了 Rust 兼容核心 3 处文本，Python 仍 1262 过、参考 1755/8/10 不变；check.sh 中途停、check_wasm.sh 未跑、参考结果 JSON 需重跑 | `../local-work/p8-j6/HANDOFF.md` |
 
-### 2. 需要用户决定：WOFF2 在 wasm 与原生不逐字节相同
+### 2. WOFF2 在 wasm 与原生不逐字节相同——**用户已决定采用方案 (a) `portable-float`（2026-10-06）**，接续时实施
 
 - 现象：同一个字体，wasm 生成的 WOFF2 与原生 CLI 不同（解压后的表完全相同）。例：Tong SC CFF→WOFF2 原生 890,304 B，
   wasm 890,000 B；Tong 拼合 wasm 949,852 B / 原生 953,060 B。BDF 等其他输出逐字节相同。
@@ -53,7 +53,9 @@
       Python 慢测试参考运行被中断，需重跑。
    每合并一个：`scripts/build_wasm.sh full` + `node --test crates/fontpixel-wasm/tests/*.test.mjs`；全部合并后跑一次
    `scripts/check_wasm.sh`（最后一步是 `tools/bindings/gate.sh python,js`，必须 0 错误）和 `scripts/check.sh`。
-2. 按第 2 节的决定处理 WOFF2（若选 (a)：改 Cargo.toml、重建冻结参考、更新相关测试与报告）。
+2. 实施 WOFF2 方案 (a)：`crates/fontpixel/Cargo.toml` 给 brotli 开 `portable-float`；重新核对 brotli 堆上界
+   （`brotli_encode.rs` 经验包络、`fontpixel-heap-check`）；重建冻结参考二进制；更新受影响的 WOFF2 字节测试、
+   phase 6 报告里引用的 WOFF2 大小/哈希（注明是改动后的新值）；把 J4/J5 的 WOFF2 逐字节 TODO 测试改成正式断言。
 3. 第 8 阶段剩余工作：
    - 浏览器测试：Playwright，Chromium/Firefox/WebKit（浏览器已在 `~/.cache/ms-playwright`；playwright npm 包装在
      `../local-work/` 下，不要装进仓库或 reference/）；WebKit ≠ Safari 的措辞要写清。
