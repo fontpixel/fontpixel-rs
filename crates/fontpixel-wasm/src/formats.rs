@@ -50,11 +50,11 @@ impl JsLoaded {
 #[wasm_bindgen]
 pub fn read(
     #[wasm_bindgen(unchecked_param_type = "BytesLike")] data: JsValue,
-    #[wasm_bindgen(unchecked_param_type = "ReadArgs")] options: JsValue,
+    #[wasm_bindgen(unchecked_optional_param_type = "ReadArgs")] options: Option<JsValue>,
 ) -> JsResult<JsLoaded> {
     let data = conv::bytes_from_js(&data, "data")?;
     let options = Options::new(
-        &options,
+        &options.unwrap_or(JsValue::UNDEFINED),
         &["format", "name", "resources", "limits"],
         "read options",
     )?;
@@ -62,7 +62,9 @@ pub fn read(
     let resources = ResourcesArg::new(&options.get("resources")?.unwrap_or(JsValue::UNDEFINED))?;
     let read_options = ReadOptions {
         format: options.string("format")?,
-        limits: options.plain::<ResourceLimits>("limits")?.unwrap_or_default(),
+        limits: options
+            .plain::<ResourceLimits>("limits")?
+            .unwrap_or_default(),
     };
     let mut input = Input::new(&data).with_resources(resources.resolver());
     if let Some(name) = name.as_deref() {

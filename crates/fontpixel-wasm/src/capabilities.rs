@@ -87,10 +87,7 @@ const TOML_BATCH: Capability = missing(
 );
 
 #[cfg(feature = "compat-bdfparser")]
-const COMPAT: Capability = available(
-    "compat_bdfparser",
-    "The bdfparser-js compatible API.",
-);
+const COMPAT: Capability = available("compat_bdfparser", "The bdfparser-js compatible API.");
 #[cfg(not(feature = "compat-bdfparser"))]
 const COMPAT: Capability = missing(
     "compat_bdfparser",
@@ -163,7 +160,10 @@ pub fn require_capability(name: &str) -> JsResult<()> {
     if cap.available {
         Ok(())
     } else {
-        Err(unsupported(cap.name, &format!("requireCapability({name:?})")))
+        Err(unsupported(
+            cap.name,
+            &format!("requireCapability({name:?})"),
+        ))
     }
 }
 

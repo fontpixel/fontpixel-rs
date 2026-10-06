@@ -83,14 +83,18 @@ impl JsBitmap {
         height: f64,
         #[wasm_bindgen(unchecked_param_type = "BytesLike")] data: JsValue,
         #[wasm_bindgen(
-            unchecked_param_type = "{ layout?: ByteLayout; depth?: Depth; limits?: BitmapLimits }"
+            unchecked_optional_param_type = "{ layout?: ByteLayout; depth?: Depth; limits?: BitmapLimits }"
         )]
-        options: JsValue,
+        options: Option<JsValue>,
     ) -> JsResult<JsBitmap> {
         let width: u32 = conv::int(width, "width")?;
         let height: u32 = conv::int(height, "height")?;
         let data = conv::bytes_from_js(&data, "data")?;
-        let options = Options::new(&options, &["layout", "depth", "limits"], "fromBytes options")?;
+        let options = Options::new(
+            &options.unwrap_or(JsValue::UNDEFINED),
+            &["layout", "depth", "limits"],
+            "fromBytes options",
+        )?;
         let layout: ByteLayout = options.plain("layout")?.unwrap_or_default();
         let limits: BitmapLimits = options.plain("limits")?.unwrap_or_default();
         Ok(JsBitmap::new(match depth_arg(options.string("depth")?)? {

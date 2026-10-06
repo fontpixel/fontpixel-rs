@@ -47,8 +47,9 @@ normalize_table! {
 #[wasm_bindgen(unchecked_return_type = "unknown")]
 pub fn normalize(
     #[wasm_bindgen(js_name = typeName)] type_name: &str,
-    #[wasm_bindgen(unchecked_param_type = "unknown")] value: JsValue,
+    #[wasm_bindgen(unchecked_optional_param_type = "unknown")] value: Option<JsValue>,
 ) -> JsResult<JsValue> {
+    let value = value.unwrap_or(JsValue::UNDEFINED);
     let value = if value.is_undefined() || value.is_null() {
         js_sys::Object::new().into()
     } else {

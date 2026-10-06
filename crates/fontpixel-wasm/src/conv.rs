@@ -492,7 +492,10 @@ mod tests {
     #[test]
     fn wide_integers_become_marked_strings_per_value() {
         let small = PropertyValue::Unsigned(MAX_SAFE_INTEGER);
-        assert_eq!(text(&small), (r#"{"Unsigned":9007199254740991}"#.into(), false));
+        assert_eq!(
+            text(&small),
+            (r#"{"Unsigned":9007199254740991}"#.into(), false)
+        );
         let wide = PropertyValue::Unsigned(MAX_SAFE_INTEGER + 1);
         assert_eq!(
             text(&wide),
@@ -508,7 +511,10 @@ mod tests {
     #[test]
     fn integer_map_keys_stay_plain_strings() {
         let map: BTreeMap<u64, u8> = [(u64::MAX, 1), (2, 3)].into();
-        assert_eq!(text(&map), (r#"{"2":3,"18446744073709551615":1}"#.into(), false));
+        assert_eq!(
+            text(&map),
+            (r#"{"2":3,"18446744073709551615":1}"#.into(), false)
+        );
         let back: BTreeMap<u64, u8> = parse_text(r#"{"2":3,"18446744073709551615":1}"#).unwrap();
         assert_eq!(back, map);
     }
@@ -519,7 +525,10 @@ mod tests {
             write_text(&"\u{0}fp:n1").unwrap(),
             Written::Value(_)
         ));
-        assert!(matches!(write_text(&"a\u{0}").unwrap(), Written::Text { .. }));
+        assert!(matches!(
+            write_text(&"a\u{0}").unwrap(),
+            Written::Text { .. }
+        ));
         let raw = serde_json::value::RawValue::from_string("[12345678901234567]".into()).unwrap();
         assert!(matches!(write_text(&raw).unwrap(), Written::Value(_)));
     }
@@ -535,7 +544,10 @@ mod tests {
         assert!(err.contains("floating point"), "{err}");
         let err = parse_text::<u8>("256").unwrap_err();
         assert!(err.contains("expected u8"), "{err}");
-        assert_eq!(parse_text::<f64>("1.152921504606847e18").unwrap(), 2f64.powi(60));
+        assert_eq!(
+            parse_text::<f64>("1.152921504606847e18").unwrap(),
+            2f64.powi(60)
+        );
     }
 
     #[derive(serde::Deserialize)]
@@ -552,7 +564,15 @@ mod tests {
     fn buffered_floats_in_shortest_form_survive_arbitrary_precision() {
         // encodePlain's float spellings (JS shortest round trip, `+` removed),
         // buffered through a Value as the fontpixel-ops requests do.
-        for text in ["0.1", "2.5", "1e21", "1e-7", "1.152921504606847e18", "-3.25e-300", "12"] {
+        for text in [
+            "0.1",
+            "2.5",
+            "1e21",
+            "1e-7",
+            "1.152921504606847e18",
+            "-3.25e-300",
+            "12",
+        ] {
             let json = format!(r#"{{"x":{text}}}"#);
             let value: serde_json::Value = serde_json::from_str(&json).unwrap();
             let flat: Flat =
@@ -565,10 +585,9 @@ mod tests {
     fn flattened_and_tagged_requests_keep_numbers() {
         // `RenderRequest` flattens `LayoutOptions` (i64 `line_limit`) through
         // the strict buffered map; `TaskRequest` is tagged by `kind`.
-        let request: fontpixel_ops::RenderRequest = parse_text(
-            r#"{"input":"a.bdf","output":"a.png","text":"A","line_limit":-1000}"#,
-        )
-        .unwrap();
+        let request: fontpixel_ops::RenderRequest =
+            parse_text(r#"{"input":"a.bdf","output":"a.png","text":"A","line_limit":-1000}"#)
+                .unwrap();
         assert_eq!(request.layout.line_limit, -1000);
         let (out, _) = text(&request);
         assert!(out.contains(r#""line_limit":-1000"#), "{out}");

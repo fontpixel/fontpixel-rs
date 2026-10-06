@@ -214,10 +214,7 @@ impl JsGlyph {
 }
 
 fn missing_glyph(id: GlyphId) -> JsValue {
-    errors::invalid(format!(
-        "glyph {} no longer exists in its font",
-        id.index()
-    ))
+    errors::invalid(format!("glyph {} no longer exists in its font", id.index()))
 }
 
 /// A Mono or Gray8 raster (`fontpixel::model::GlyphBitmap`). Always owned:

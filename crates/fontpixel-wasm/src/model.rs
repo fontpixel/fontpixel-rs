@@ -85,7 +85,9 @@ impl JsFontSet {
             let len = s.fonts.len();
             let index = match index {
                 Some(i) => conv::int::<usize>(i, "index")?,
-                None => len.checked_sub(1).ok_or_else(|| invalid("pop from an empty FontSet"))?,
+                None => len
+                    .checked_sub(1)
+                    .ok_or_else(|| invalid("pop from an empty FontSet"))?,
             };
             if index >= len {
                 return Err(invalid(format!(
@@ -159,7 +161,11 @@ impl JsFont {
     #[wasm_bindgen(js_name = removeGlyph)]
     pub fn remove_glyph(&self, id: f64) -> JsResult<Option<JsGlyph>> {
         let id: usize = conv::int(id, "id")?;
-        self.write(|f| Ok(live(f, id).and_then(|id| f.remove_glyph(id)).map(JsGlyph::new)))
+        self.write(|f| {
+            Ok(live(f, id)
+                .and_then(|id| f.remove_glyph(id))
+                .map(JsGlyph::new))
+        })
     }
     /// An independent owned deep copy (also of a view).
     pub fn copy(&self) -> JsResult<JsFont> {
@@ -176,15 +182,24 @@ impl JsGlyph {
     #[wasm_bindgen(constructor)]
     pub fn constructor(
         bitmap: &JsBitmap,
-        #[wasm_bindgen(unchecked_param_type = "{ codepoints?: CodepointLike[] }")] options: JsValue,
+        #[wasm_bindgen(unchecked_optional_param_type = "{ codepoints?: CodepointLike[] }")] options: Option<
+            JsValue,
+        >,
     ) -> JsResult<JsGlyph> {
-        let options = Options::new(&options, &["codepoints"], "Glyph options")?;
+        let options = Options::new(
+            &options.unwrap_or(JsValue::UNDEFINED),
+            &["codepoints"],
+            "Glyph options",
+        )?;
         let mut glyph = Glyph::new(bitmap.snapshot()?);
         if let Some(list) = options.get("codepoints")? {
             let list: Array = list
                 .dyn_into()
                 .map_err(|_| invalid("Glyph options: `codepoints` must be an array"))?;
-            glyph.codepoints = list.iter().map(|v| codepoint_arg(&v)).collect::<JsResult<_>>()?;
+            glyph.codepoints = list
+                .iter()
+                .map(|v| codepoint_arg(&v))
+                .collect::<JsResult<_>>()?;
         }
         Ok(JsGlyph::new(glyph))
     }

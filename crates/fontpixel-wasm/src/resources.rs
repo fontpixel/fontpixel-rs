@@ -94,7 +94,9 @@ fn is_missing(error: &JsValue) -> bool {
 }
 
 fn callback_failed(what: &str) -> Error {
-    Error::Io(std::io::Error::other(format!("resource {what} callback threw")))
+    Error::Io(std::io::Error::other(format!(
+        "resource {what} callback threw"
+    )))
 }
 
 impl JsResolver {
