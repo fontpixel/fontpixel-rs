@@ -7,6 +7,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Reference origin for the empirical glyph directory.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CatalystOffsetBase {
     /// Relative to the resource body after its size word.
     #[default]
@@ -16,12 +18,16 @@ pub enum CatalystOffsetBase {
 }
 /// Explicit directory interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CatalystReadOptions {
     /// Directory reference origin.
     pub offset_base: CatalystOffsetBase,
 }
 /// Bounded native collection output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CatalystWriteOptions {
     /// Directory origin.
     pub offset_base: CatalystOffsetBase,
@@ -56,6 +62,8 @@ impl Default for CatalystWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CatalystCodec {
     /// Input interpretation.
     pub read_options: CatalystReadOptions,
@@ -370,4 +378,23 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &CatalystWriteOptions) -> Result<
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
     finish(result, report, "catalyst", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(
+            round_trip(&CatalystOffsetBase::ResourceBody),
+            "resource_body"
+        );
+        assert_eq!(round_trip(&CatalystOffsetBase::GlyphData), "glyph_data");
+        rejects::<CatalystOffsetBase>(r#""not_a_variant""#);
+        defaults::<CatalystReadOptions>();
+        defaults::<CatalystWriteOptions>();
+        defaults::<CatalystCodec>();
+    }
 }

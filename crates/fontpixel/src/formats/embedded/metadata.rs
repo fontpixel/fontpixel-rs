@@ -10,6 +10,8 @@ use std::sync::Arc;
 
 /// Arithmetic for OS/2 `xAvgCharWidth` over nonzero design advances.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedAverageWidth {
     /// Nearest integer, halfway values rounded up (native default).
     #[default]
@@ -19,6 +21,8 @@ pub enum EmbeddedAverageWidth {
 }
 /// Whether the post table carries glyph names.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedPostNames {
     /// Format 2 with one name per glyph (native default).
     #[default]
@@ -29,6 +33,8 @@ pub enum EmbeddedPostNames {
 }
 /// OS/2 `ulUnicodeRange1..4` policy.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedUnicodeRanges {
     /// Every range bit covered by the actual cmap (native default).
     #[default]
@@ -46,6 +52,8 @@ pub enum EmbeddedUnicodeRanges {
 pub type EmbeddedCmapUnicodeFull = crate::sfnt::cmap::FullRecords;
 /// Source of the EBLC/bloc horizontal `widthMax` line metric.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedWidthMax {
     /// Greatest physical bitmap width in the strike (native default).
     #[default]
@@ -56,6 +64,11 @@ pub enum EmbeddedWidthMax {
 }
 /// EBLC/bloc index subtable organisation; never changes decoded glyphs.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(rename_all = "snake_case", deny_unknown_fields)
+)]
 pub enum EmbeddedIndexLayout {
     /// Contiguous same-format runs in index format 1 with byte-aligned
     /// images (native default).
@@ -77,6 +90,8 @@ pub enum EmbeddedIndexLayout {
 }
 /// Optional TrueType outline tables of a bitmap-only font.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedOutlineTables {
     /// No `glyf`/`loca`; `maxp` version 0.5 (native OTB default).
     #[default]
@@ -90,6 +105,11 @@ pub enum EmbeddedOutlineTables {
 }
 /// Glyph 0 of the bitmap font.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(rename_all = "snake_case", deny_unknown_fields)
+)]
 pub enum EmbeddedNotdef {
     /// The source `.notdef` when present, otherwise an empty zero-advance
     /// bitmap in every strike (native default).
@@ -104,6 +124,8 @@ pub enum EmbeddedNotdef {
 }
 /// EBLC/bloc `minOriginSB`, `minAdvanceSB`, `maxBeforeBL`, `minAfterBL`.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedLineExtremes {
     /// Computed from the strike's glyph metrics (native default).
     #[default]
@@ -113,6 +135,8 @@ pub enum EmbeddedLineExtremes {
 }
 /// EBLC/bloc vertical line metrics of strikes without vertical glyph metrics.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedVerticalLineMetrics {
     /// Zero (native default).
     #[default]
@@ -123,6 +147,8 @@ pub enum EmbeddedVerticalLineMetrics {
 }
 /// hmtx storage of trailing glyphs that share the last advance.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedHmtx {
     /// One long metric per glyph (native default).
     #[default]
@@ -133,6 +159,8 @@ pub enum EmbeddedHmtx {
 }
 /// Glyph ID order of the bitmap glyphs (glyph 0 stays `.notdef`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedGlyphOrder {
     /// First appearance across the FontSet's strikes (native default).
     #[default]
@@ -150,9 +178,12 @@ pub enum EmbeddedGlyphOrder {
 /// omitted source glyph names are reported as loss. Color output rejects any
 /// nondefault value.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct EmbeddedMetadataOptions {
     /// Complete name table. The `Arc` lets registry and transport clones share
     /// one allocation, which the writer charges once to its own budget.
+    #[cfg_attr(feature = "serde", serde(with = "shared_names"))]
     pub names: Option<Arc<name::NameTable>>,
     /// Exact `head.flags`; reserved bit 15 must be clear.
     pub head_flags: Option<u16>,
@@ -210,6 +241,26 @@ pub struct EmbeddedMetadataOptions {
     pub hmtx: EmbeddedHmtx,
     /// Glyph ID order.
     pub glyph_order: EmbeddedGlyphOrder,
+}
+/// Serde for the shared name table: the `Arc` is transparent, so the table
+/// serializes as its contents and each deserialized table gets a fresh `Arc`.
+#[cfg(feature = "serde")]
+mod shared_names {
+    use super::{Arc, name::NameTable};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    pub(super) fn serialize<S: Serializer>(
+        value: &Option<Arc<NameTable>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error> {
+        value.as_deref().serialize(serializer)
+    }
+
+    pub(super) fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<Arc<NameTable>>, D::Error> {
+        Ok(Option::<NameTable>::deserialize(deserializer)?.map(Arc::new))
+    }
 }
 
 /// Bytes of an `Arc` allocation header (strong and weak counts).
@@ -522,4 +573,78 @@ fn source_names(names: &FontNames) -> [(u16, Option<&str>); 9] {
         (13, names.license.as_deref()),
         (14, names.license_url.as_deref()),
     ]
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&EmbeddedAverageWidth::Nearest), "nearest");
+        assert_eq!(round_trip(&EmbeddedAverageWidth::Floor), "floor");
+        rejects::<EmbeddedAverageWidth>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedPostNames::Keep), "keep");
+        assert_eq!(round_trip(&EmbeddedPostNames::Omit), "omit");
+        rejects::<EmbeddedPostNames>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedUnicodeRanges::Coverage), "coverage");
+        assert_eq!(
+            round_trip(&EmbeddedUnicodeRanges::NonBmpOnly),
+            "non_bmp_only"
+        );
+        rejects::<EmbeddedUnicodeRanges>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedWidthMax::BitmapWidth), "bitmap_width");
+        assert_eq!(round_trip(&EmbeddedWidthMax::Advance), "advance");
+        rejects::<EmbeddedWidthMax>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedIndexLayout::Canonical), "canonical");
+        assert_eq!(round_trip(&EmbeddedIndexLayout::Spanning), "spanning");
+        rejects::<EmbeddedIndexLayout>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedOutlineTables::None), "none");
+        assert_eq!(round_trip(&EmbeddedOutlineTables::EmptyGlyf), "empty_glyf");
+        rejects::<EmbeddedOutlineTables>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedNotdef::Preserve), "preserve");
+        rejects::<EmbeddedNotdef>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedLineExtremes::Computed), "computed");
+        assert_eq!(round_trip(&EmbeddedLineExtremes::Zero), "zero");
+        rejects::<EmbeddedLineExtremes>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedVerticalLineMetrics::Zero), "zero");
+        assert_eq!(
+            round_trip(&EmbeddedVerticalLineMetrics::MirrorHorizontal),
+            "mirror_horizontal"
+        );
+        rejects::<EmbeddedVerticalLineMetrics>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedHmtx::Full), "full");
+        assert_eq!(
+            round_trip(&EmbeddedHmtx::CompactTrailing),
+            "compact_trailing"
+        );
+        rejects::<EmbeddedHmtx>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&EmbeddedGlyphOrder::FirstSeen), "first_seen");
+        assert_eq!(round_trip(&EmbeddedGlyphOrder::Codepoint), "codepoint");
+        rejects::<EmbeddedGlyphOrder>(r#""not_a_variant""#);
+        defaults::<EmbeddedMetadataOptions>();
+        assert_eq!(
+            round_trip(&EmbeddedUnicodeRanges::Exact([1, 2, 3, 4])),
+            serde_json::json!({"exact": [1, 2, 3, 4]})
+        );
+        rejects::<EmbeddedUnicodeRanges>(r#"{"exact":[1,2,3]}"#);
+        assert_eq!(
+            round_trip(&EmbeddedIndexLayout::SharedMetricRuns { minimum_run: 3 }),
+            serde_json::json!({"shared_metric_runs": {"minimum_run": 3}})
+        );
+        rejects::<EmbeddedIndexLayout>(r#"{"shared_metric_runs":{"minimum_run":3,"extra":1}}"#);
+        assert_eq!(
+            round_trip(&EmbeddedNotdef::Empty { advance_width: 8 }),
+            serde_json::json!({"empty": {"advance_width": 8}})
+        );
+        rejects::<EmbeddedNotdef>(r#"{"empty":{}}"#);
+        let named = EmbeddedMetadataOptions {
+            names: Some(Arc::new(name::NameTable::default())),
+            ..Default::default()
+        };
+        let json = round_trip(&named);
+        let back: EmbeddedMetadataOptions = serde_json::from_value(json).unwrap();
+        assert_eq!(back, named);
+    }
 }

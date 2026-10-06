@@ -5,6 +5,8 @@ use std::fmt::Write as _;
 
 /// Deterministic HBF header and bitmap-asset choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HbfWriteOptions {
     /// Bitmap name relative to the header directory; default is the header stem plus `.bin`.
     pub bitmap_name: Option<ResourcePath>,
@@ -767,4 +769,15 @@ pub fn write(font: &Font, primary: &ResourcePath, options: &HbfWriteOptions) -> 
         output: OutputBundle::new(primary.clone(), assets)?,
         report,
     })
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<HbfWriteOptions>();
+    }
 }

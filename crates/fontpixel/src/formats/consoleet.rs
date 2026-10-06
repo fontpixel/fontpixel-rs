@@ -8,6 +8,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 /// Meaning of numeric hexadecimal filenames.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CodepointMode {
     /// Preserve encoding-unspecified native positions.
     #[default]
@@ -17,6 +19,8 @@ pub enum CodepointMode {
 }
 /// Native directory interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ConsoleetReadOptions {
     /// Baseline below each bitmap top.
     pub baseline: Option<i64>,
@@ -27,6 +31,8 @@ pub struct ConsoleetReadOptions {
 }
 /// Native directory output choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ConsoleetWriteOptions {
     /// Optional common cell; omitted preserves each bitmap rectangle.
     pub cell: Option<Bounds>,
@@ -41,6 +47,8 @@ pub struct ConsoleetWriteOptions {
 }
 /// Consoleet directory codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ConsoleetCodec {
     /// Reader options.
     pub read_options: ConsoleetReadOptions,
@@ -326,4 +334,20 @@ pub fn write(s: &FontSet, o: &WriteOptions, p: &ConsoleetWriteOptions) -> Result
         OutputBundle::directory(o.primary_name.clone(), assets)
     })();
     finish(result, report, "consoleet", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&CodepointMode::Legacy), "legacy");
+        assert_eq!(round_trip(&CodepointMode::Unicode), "unicode");
+        rejects::<CodepointMode>(r#""not_a_variant""#);
+        defaults::<ConsoleetReadOptions>();
+        defaults::<ConsoleetWriteOptions>();
+        defaults::<ConsoleetCodec>();
+    }
 }

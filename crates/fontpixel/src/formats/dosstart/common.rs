@@ -11,6 +11,8 @@ use std::collections::BTreeMap;
 
 /// Explicit conversion and allocation choices for the small native formats.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NativeWriteOptions {
     /// Explicit grayscale-to-monochrome threshold.
     pub gray_threshold: Option<u8>,
@@ -1536,4 +1538,15 @@ fn write_psf2txt(
         }
     }
     Ok(())
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<NativeWriteOptions>();
+    }
 }

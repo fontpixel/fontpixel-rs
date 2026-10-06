@@ -15,6 +15,8 @@ mod wire;
 mod writer;
 /// AngelCode descriptor serialization.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum BmfontEncoding {
     /// Standard key/value lines.
     #[default]
@@ -28,12 +30,16 @@ pub enum BmfontEncoding {
 }
 /// Explicit coverage conversion on input.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BmfontReadOptions {
     /// Convert Gray8 coverage to mono at this threshold.
     pub gray_threshold: Option<u8>,
 }
 /// Deterministic shelf-packing and serialization controls.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BmfontWriteOptions {
     /// Descriptor encoding.
     pub encoding: BmfontEncoding,
@@ -59,6 +65,8 @@ impl Default for BmfontWriteOptions {
 }
 /// Native BMFont registry adapter.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BmfontCodec {
     /// Input conversion controls.
     pub read_options: BmfontReadOptions,
@@ -286,5 +294,23 @@ fn bl(l: &ResourceLimits) -> BitmapLimits {
         max_dimension: u16::MAX as u32,
         max_pixels: l.max_pixels_per_glyph,
         max_bytes: l.max_total_bytes,
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&BmfontEncoding::Text), "text");
+        assert_eq!(round_trip(&BmfontEncoding::Xml), "xml");
+        assert_eq!(round_trip(&BmfontEncoding::Binary), "binary");
+        assert_eq!(round_trip(&BmfontEncoding::Json), "json");
+        rejects::<BmfontEncoding>(r#""not_a_variant""#);
+        defaults::<BmfontReadOptions>();
+        defaults::<BmfontWriteOptions>();
+        defaults::<BmfontCodec>();
     }
 }

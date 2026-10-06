@@ -9,6 +9,8 @@ mod reader;
 mod writer;
 /// Native resource packaging.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GeosContainer {
     /// One VLIR strike, without directory metadata or auxiliary records.
     Bare,
@@ -17,6 +19,8 @@ pub enum GeosContainer {
 }
 /// GEOS strike families, including the documented Bits'N'Picas extensions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GeosVariant {
     /// Original byte-coded strip with advance equal to slice width.
     Standard,
@@ -31,12 +35,16 @@ pub enum GeosVariant {
 }
 /// Ambiguous final character policy.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GeosReadOptions {
     /// Decode the later DEL entry; false accepts original 95-character resources.
     pub include_del: bool,
 }
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GeosWriteOptions {
     /// Container; absent preserves source packaging, otherwise CVT.
     pub container: Option<GeosContainer>,
@@ -80,6 +88,8 @@ impl Default for GeosWriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GeosCodec {
     /// Input policy.
     pub read_options: GeosReadOptions,
@@ -134,4 +144,26 @@ pub fn write(s: &FontSet, w: &WriteOptions, o: &GeosWriteOptions) -> Result<Writ
     let mut r = Report::default();
     let result = writer::encode(s, w, o, &mut r);
     finish(result, r, "geos", w.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&GeosContainer::Bare), "bare");
+        assert_eq!(round_trip(&GeosContainer::Cvt), "cvt");
+        rejects::<GeosContainer>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&GeosVariant::Standard), "standard");
+        assert_eq!(round_trip(&GeosVariant::Extended), "extended");
+        assert_eq!(round_trip(&GeosVariant::Utf8), "utf8");
+        assert_eq!(round_trip(&GeosVariant::Mega), "mega");
+        assert_eq!(round_trip(&GeosVariant::MegaUtf8), "mega_utf8");
+        rejects::<GeosVariant>(r#""not_a_variant""#);
+        defaults::<GeosReadOptions>();
+        defaults::<GeosWriteOptions>();
+        defaults::<GeosCodec>();
+    }
 }

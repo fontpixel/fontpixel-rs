@@ -7,9 +7,13 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// FZX reader options; the standard has a single wire layout.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FzxReadOptions {}
 /// Bounded FZX writing choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FzxWriteOptions {
     /// Explicit line height; otherwise use model line height or pixel size.
     pub height: Option<u8>,
@@ -38,6 +42,8 @@ impl Default for FzxWriteOptions {
 }
 /// Registry codec for FZX.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FzxCodec {
     /// Typed input choices.
     pub read_options: FzxReadOptions,
@@ -377,4 +383,17 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &FzxWriteOptions) -> Result<Writt
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
     finish(result, report, "fzx", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<FzxReadOptions>();
+        defaults::<FzxWriteOptions>();
+        defaults::<FzxCodec>();
+    }
 }

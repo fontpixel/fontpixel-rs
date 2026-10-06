@@ -14,6 +14,8 @@ use crate::{Bitmap, FontSet, Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Native record kind. HFNT has no magic and needs explicit selection for bare input.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ResourceKind {
     /// Resolvable Kanji bitmap resource.
     #[default]
@@ -23,6 +25,8 @@ pub enum ResourceKind {
 }
 /// Supported native font-definition storage layouts.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Definition {
     /// fdef 0, inline bitmap bytes.
     #[default]
@@ -34,6 +38,8 @@ pub enum Definition {
 }
 /// Explicit record and external data-fork interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FbitReadOptions {
     /// Kind of a bare resource; envelope resource types are authoritative.
     pub kind: ResourceKind,
@@ -46,6 +52,8 @@ pub struct FbitReadOptions {
 }
 /// Bounded native output policy.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FbitWriteOptions {
     /// Resource kind for newly generated output.
     pub kind: ResourceKind,
@@ -77,6 +85,8 @@ impl Default for FbitWriteOptions {
 }
 /// Registry adapter for fbit and explicitly selected HFNT.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FbitCodec {
     /// Native input policy.
     pub read_options: FbitReadOptions,
@@ -836,5 +846,25 @@ fn encode_record(
         external.resize(end.max(external.len()), 0);
         external[offset..end].copy_from_slice(&raster);
         Ok((header, Some(external)))
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&ResourceKind::Fbit), "fbit");
+        assert_eq!(round_trip(&ResourceKind::Hfnt), "hfnt");
+        rejects::<ResourceKind>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&Definition::Inline), "inline");
+        assert_eq!(round_trip(&Definition::DataFork5), "data_fork5");
+        assert_eq!(round_trip(&Definition::DataFork7), "data_fork7");
+        rejects::<Definition>(r#""not_a_variant""#);
+        defaults::<FbitReadOptions>();
+        defaults::<FbitWriteOptions>();
+        defaults::<FbitCodec>();
     }
 }

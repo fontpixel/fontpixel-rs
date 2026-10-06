@@ -7,9 +7,13 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed edwin input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct EdwinReadOptions {}
 /// Native edwin registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct EdwinCodec {
     /// Input profile choices.
     pub read_options: EdwinReadOptions,
@@ -42,4 +46,16 @@ pub fn read(c: &mut ReadContext<'_>, _options: &EdwinReadOptions) -> Result<(Fon
 /// Encode one font, auditing every changed or omitted model field.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &EdwinWriteOptions) -> Result<Written> {
     w5a1_common::write(s, o, p, "edwin")
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<EdwinReadOptions>();
+        defaults::<EdwinCodec>();
+    }
 }

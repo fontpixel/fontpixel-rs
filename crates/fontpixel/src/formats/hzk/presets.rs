@@ -1,6 +1,9 @@
 use super::{CodeSpace, Geometry, Storage};
 /// Named conventional layouts. Explicit geometry can override every preset.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+// Lowercase matches `Preset::name` and `FromStr` ("hzk16f", "asc12").
+#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
 pub enum Preset {
     /// 12-pixel square, 16 storage bits per row.
     Hzk12,

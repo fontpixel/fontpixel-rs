@@ -7,12 +7,16 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed drhalo input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DrhaloReadOptions {
     /// Override the historically inferred first legacy position.
     pub first_codepoint: Option<u32>,
 }
 /// Native drhalo registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DrhaloCodec {
     /// Input profile choices.
     pub read_options: DrhaloReadOptions,
@@ -45,4 +49,16 @@ pub fn read(c: &mut ReadContext<'_>, options: &DrhaloReadOptions) -> Result<(Fon
 /// Encode one font, auditing every changed or omitted model field.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &DrhaloWriteOptions) -> Result<Written> {
     w5a1_common::write(s, o, p, "drhalo")
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<DrhaloReadOptions>();
+        defaults::<DrhaloCodec>();
+    }
 }

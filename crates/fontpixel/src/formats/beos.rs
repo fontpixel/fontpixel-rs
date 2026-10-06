@@ -13,6 +13,8 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::{BTreeMap, BTreeSet};
 /// The native author specifies eight coverage levels in four-bit storage.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum BeosCoverage {
     /// Original BeOS format, nibble values 0 through 7.
     #[default]
@@ -27,6 +29,8 @@ impl BeosCoverage {
 }
 /// Native reading and explicit compatibility choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BeosReadOptions {
     /// Coverage interpretation; defaults to the original eight-level format.
     pub coverage: BeosCoverage,
@@ -35,6 +39,8 @@ pub struct BeosReadOptions {
 }
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BeosWriteOptions {
     /// Coverage palette; absent preserves source or chooses native eight levels.
     pub coverage: Option<BeosCoverage>,
@@ -63,6 +69,8 @@ impl Default for BeosWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BeosCodec {
     /// Input choices.
     pub read_options: BeosReadOptions,
@@ -619,4 +627,20 @@ fn encode(
     budget.add(b.used)?;
     audit(s, &back, "beos", r, &mut budget)?;
     Ok(OutputBundle::single(w.primary_name.clone(), out))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&BeosCoverage::Native8), "native8");
+        assert_eq!(round_trip(&BeosCoverage::FullNibble), "full_nibble");
+        rejects::<BeosCoverage>(r#""not_a_variant""#);
+        defaults::<BeosReadOptions>();
+        defaults::<BeosWriteOptions>();
+        defaults::<BeosCodec>();
+    }
 }

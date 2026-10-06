@@ -9,6 +9,8 @@ use crate::{Error, Report, ResourceLimits, Result};
 pub use presets::Preset;
 /// Slot numbering independent of bitmap storage.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CodeSpace {
     /// GB2312 EUC bytes, 94 positions per zone, including unassigned slots.
     Gb2312,
@@ -17,6 +19,8 @@ pub enum CodeSpace {
 }
 /// Byte-padded raster orientation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Storage {
     /// Top-to-bottom rows, MSB at the left.
     Rows,
@@ -25,6 +29,8 @@ pub enum Storage {
 }
 /// Complete interpretation of a headerless file; no field is inferred from its name.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Geometry {
     /// Logical bitmap width, excluding low padding bits.
     pub width: u16,
@@ -89,6 +95,8 @@ impl Geometry {
 }
 /// Explicit HZK/ASC read configuration. Defaults intentionally require a preset.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HzkReadOptions {
     /// Conventional named layout.
     pub preset: Option<Preset>,
@@ -99,6 +107,8 @@ pub struct HzkReadOptions {
 }
 /// Deterministic raw-font output configuration.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HzkWriteOptions {
     /// Conventional named layout.
     pub preset: Option<Preset>,
@@ -127,6 +137,8 @@ impl Default for HzkWriteOptions {
 }
 /// Registry codec. The registry deliberately does not install a content detector.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HzkCodec {
     /// Explicit input interpretation.
     pub read_options: HzkReadOptions,
@@ -417,4 +429,41 @@ pub fn write(f: &Font, o: &HzkWriteOptions) -> Result<(Vec<u8>, Report)> {
     metadata(f, &base(g), &mut d)?;
 
     Ok((out, d.report))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&CodeSpace::Gb2312), "gb2312");
+        assert_eq!(round_trip(&CodeSpace::Ascii), "ascii");
+        rejects::<CodeSpace>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&Storage::Rows), "rows");
+        assert_eq!(round_trip(&Storage::Columns), "columns");
+        rejects::<Storage>(r#""not_a_variant""#);
+        defaults::<HzkReadOptions>();
+        defaults::<HzkWriteOptions>();
+        defaults::<HzkCodec>();
+    }
+
+    #[test]
+    fn preset_names_match_from_str_and_geometry_is_complete() {
+        for preset in Preset::ALL {
+            assert_eq!(round_trip(preset), preset.name());
+        }
+        rejects::<Preset>(r#""hzk16_f""#);
+        let geometry = Preset::Hzk24.geometry();
+        let json = round_trip(&geometry);
+        assert_eq!(json["code_space"], "gb2312");
+        assert_eq!(json["storage"], "columns");
+        rejects::<Geometry>(r#"{"width":16,"height":16}"#);
+        rejects::<Geometry>(
+            r#"{"width":-1,"height":16,"first_code":0,"last_code":1,"code_space":"ascii","storage":"rows"}"#,
+        );
+        let options: HzkReadOptions = serde_json::from_str(r#"{"preset":"hzk16f"}"#).unwrap();
+        assert_eq!(options.preset, Some(Preset::Hzk16F));
+    }
 }

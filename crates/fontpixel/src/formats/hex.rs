@@ -9,6 +9,8 @@ use crate::{Report, ResourceLimits, Result};
 
 /// Geometry not encoded in a HEX file. Defaults to height 16 and descent zero.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HexReadOptions {
     /// Positive number of rows in each glyph; never guessed from record length.
     pub height: u32,
@@ -25,6 +27,8 @@ impl Default for HexReadOptions {
 }
 /// Deterministic HEX writer choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HexWriteOptions {
     /// Geometry used by the consumer; must match its read options.
     pub geometry: HexReadOptions,
@@ -47,6 +51,8 @@ impl Default for HexWriteOptions {
 }
 /// Registry codec; read/write options are independent.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HexCodec {
     /// Explicit input geometry.
     pub read_options: HexReadOptions,
@@ -391,4 +397,17 @@ pub fn write(font: &Font, options: &HexWriteOptions) -> Result<(Vec<u8>, Report)
         true,
     );
     Ok((out.bytes, report))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<HexReadOptions>();
+        defaults::<HexWriteOptions>();
+        defaults::<HexCodec>();
+    }
 }

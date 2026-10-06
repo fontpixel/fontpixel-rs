@@ -11,6 +11,8 @@ use std::collections::BTreeMap;
 const BE: ByteOrder = ByteOrder::Big;
 /// Amiga output packaging.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Packaging {
     /// `.font` primary names or multiple strikes produce contents plus sidecars.
     #[default]
@@ -22,9 +24,13 @@ pub enum Packaging {
 }
 /// Amiga input options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct AmigaReadOptions {}
 /// Amiga output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct AmigaWriteOptions {
     /// Contents bundle or direct hunk.
     pub packaging: Packaging,
@@ -53,6 +59,8 @@ impl Default for AmigaWriteOptions {
 }
 /// Amiga registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct AmigaCodec {
     /// Input interpretation.
     pub read_options: AmigaReadOptions,
@@ -1113,4 +1121,21 @@ fn color_coverage(depth: u8, flags: u16, palette: Option<&PropertyValue>) -> Res
         }
     }
     Ok(out)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Packaging::Auto), "auto");
+        assert_eq!(round_trip(&Packaging::Contents), "contents");
+        assert_eq!(round_trip(&Packaging::Strike), "strike");
+        rejects::<Packaging>(r#""not_a_variant""#);
+        defaults::<AmigaReadOptions>();
+        defaults::<AmigaWriteOptions>();
+        defaults::<AmigaCodec>();
+    }
 }

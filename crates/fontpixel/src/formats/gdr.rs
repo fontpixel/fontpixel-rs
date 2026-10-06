@@ -10,6 +10,8 @@ pub use reader::read;
 pub use writer::write;
 /// Supported native strike descriptor versions.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GdrVersion {
     /// Nokia 7650 shared-metric layout.
     V39,
@@ -23,6 +25,8 @@ pub enum GdrVersion {
 }
 /// Input character interpretation.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GdrReadOptions {
     /// Interpret native 16-bit character codes as Unicode, default true.
     pub unicode: bool,
@@ -34,6 +38,8 @@ impl Default for GdrReadOptions {
 }
 /// Bounded native GDR output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GdrWriteOptions {
     /// Native strike descriptor layout.
     pub version: GdrVersion,
@@ -62,6 +68,8 @@ impl Default for GdrWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GdrCodec {
     /// Character interpretation.
     pub read_options: GdrReadOptions,
@@ -91,5 +99,23 @@ impl GdrCodec {
     /// [`write`](FormatWriter::write) with the model reserved by the caller.
     pub(crate) fn write_reserved(&self, s: &FontSet, w: &WriteOptions) -> Result<Written> {
         writer::write_charged(s, w, &self.write_options, super::ModelCharge::Reserved)
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&GdrVersion::V39), "v39");
+        assert_eq!(round_trip(&GdrVersion::V40), "v40");
+        assert_eq!(round_trip(&GdrVersion::V41), "v41");
+        assert_eq!(round_trip(&GdrVersion::V42), "v42");
+        rejects::<GdrVersion>(r#""not_a_variant""#);
+        defaults::<GdrReadOptions>();
+        defaults::<GdrWriteOptions>();
+        defaults::<GdrCodec>();
     }
 }

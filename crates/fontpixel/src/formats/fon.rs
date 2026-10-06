@@ -8,6 +8,8 @@ use std::collections::BTreeSet;
 
 /// Immutable FON codec; output always uses an NE resource-only container.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FonCodec {
     /// FNT legacy charset interpretation for every resource.
     pub read_options: FntReadOptions,
@@ -600,4 +602,15 @@ pub fn write(set: &FontSet, o: &FntWriteOptions) -> Result<(Vec<u8>, Report)> {
         out[starts[i + 1]..starts[i + 1] + b.len()].copy_from_slice(b);
     }
     Ok((out, report))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<FonCodec>();
+    }
 }

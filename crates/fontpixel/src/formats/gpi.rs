@@ -13,6 +13,8 @@ mod reader;
 mod writer;
 /// Native GPI resource packaging.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GpiContainer {
     /// One raw font record stream.
     Bare,
@@ -23,6 +25,8 @@ pub enum GpiContainer {
 }
 /// Native character increment representation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GpiKind {
     /// Type 1, fixed increment.
     Fixed,
@@ -33,6 +37,8 @@ pub enum GpiKind {
 }
 /// Native optional-glyph policy.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GpiReadOptions {
     /// Retain the extra unmapped .null descriptor when the table has one.
     pub include_unmapped_null: bool,
@@ -46,6 +52,8 @@ impl Default for GpiReadOptions {
 }
 /// Bounded native output policy.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GpiWriteOptions {
     /// Container; absent preserves source, otherwise bare for one strike and LX for many.
     pub container: Option<GpiContainer>,
@@ -83,6 +91,8 @@ impl Default for GpiWriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GpiCodec {
     /// Input policy.
     pub read_options: GpiReadOptions,
@@ -152,4 +162,25 @@ pub fn write(s: &FontSet, w: &WriteOptions, o: &GpiWriteOptions) -> Result<Writt
     let mut r = Report::default();
     let result = writer::encode(s, w, o, &mut r);
     finish(result, r, "gpi", w.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&GpiContainer::Bare), "bare");
+        assert_eq!(round_trip(&GpiContainer::Ne), "ne");
+        assert_eq!(round_trip(&GpiContainer::Lx), "lx");
+        rejects::<GpiContainer>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&GpiKind::Fixed), "fixed");
+        assert_eq!(round_trip(&GpiKind::Proportional), "proportional");
+        assert_eq!(round_trip(&GpiKind::Abc), "abc");
+        rejects::<GpiKind>(r#""not_a_variant""#);
+        defaults::<GpiReadOptions>();
+        defaults::<GpiWriteOptions>();
+        defaults::<GpiCodec>();
+    }
 }
