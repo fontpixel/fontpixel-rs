@@ -33,7 +33,7 @@ reason = "exception attribute (dict)"
 pattern = "fontpixel::error::Operation"
 status = "adapted"
 python = "NotImplementedFormatError.operation"
-python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
+python_test = "crates/fontpixel-py/tests/test_formats_registry.py::test_planned_registry_has_no_codecs"
 reason = "exception attribute; only format operations raise NotImplemented, so the formats unit's tests exercise it"
 
 [[rule]]
