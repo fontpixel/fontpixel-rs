@@ -209,6 +209,17 @@ def primary_name(status):
     return f"font.{exts[0]}" if exts else "font"
 
 
+def assets_of(written):
+    """`{path: bytes}` of a `Written` or `OutputBundle`."""
+    bundle = getattr(written, "output", written)
+    return {a.path: a.data for a in bundle.assets}
+
+
+def single(written):
+    """The only asset's bytes of a `Written`."""
+    return written.output.into_single()
+
+
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 

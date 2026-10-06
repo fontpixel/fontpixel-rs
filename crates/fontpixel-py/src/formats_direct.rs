@@ -19,10 +19,11 @@
 use crate::conv;
 use crate::errors::IntoPy;
 use crate::formats::{
-    InputArgs, PyRegistry, PyWritten, SetArg, WriteArgs, WriteMode, bytes_arg, limits_arg,
+    InputArgs, PyRegistry, SetArg, WriteArgs, WriteMode, bytes_arg, limits_arg,
     path_arg, with_font, write_options,
 };
 use crate::handles::{PyFont, PyFontSet};
+use crate::resources::PyWritten;
 use fontpixel::formats::{self as f, Confidence, FormatDetector};
 use fontpixel::resources::{ReadContext, ResourcePath, Written};
 use fontpixel::{Font, FontSet, Report, ResourceLimits};
@@ -99,7 +100,7 @@ fn options<O: DeserializeOwned + Default>(obj: Option<&Bound<'_, PyAny>>) -> PyR
 
 /// `read(c: &mut ReadContext, o: &Options)` shape.
 pub fn read_ctx_opts<M, O>(
-    input: &InputArgs<'_>,
+    input: &InputArgs,
     options_obj: Option<&Bound<'_, PyAny>>,
     limits: Option<&Bound<'_, PyAny>>,
     f: impl for<'a, 'b> FnOnce(&'a mut ReadContext<'b>, &O) -> fontpixel::Result<(M, Report)> + Send,
@@ -123,7 +124,7 @@ where
 
 /// `read(c: &mut ReadContext)` shape.
 pub fn read_ctx<M: IntoPyModel>(
-    input: &InputArgs<'_>,
+    input: &InputArgs,
     limits: Option<&Bound<'_, PyAny>>,
     f: impl for<'a, 'b> FnOnce(&'a mut ReadContext<'b>) -> fontpixel::Result<(M, Report)> + Send,
 ) -> PyResult<ModelReport> {
@@ -269,7 +270,7 @@ pub fn detect_codec<C: FormatDetector>(
 /// without direct functions).
 pub fn read_registry(
     id: &str,
-    input: &InputArgs<'_>,
+    input: &InputArgs,
     options_obj: Option<&Bound<'_, PyAny>>,
     limits: Option<&Bound<'_, PyAny>>,
 ) -> PyResult<ModelReport> {

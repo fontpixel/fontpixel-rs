@@ -17,10 +17,12 @@ from formats_support import (
     FIXTURES,
     REPO,
     SOURCES,
+    assets_of,
     case,
     load_golden,
     primary_name,
     sha,
+    single,
     source_bytes,
 )
 
@@ -37,7 +39,7 @@ def namespace(fid):
 
 
 def yaff_of(loaded):
-    return fontpixel.write(loaded.fonts, "yaff", report=loaded.report).into_single()
+    return single(fontpixel.write(loaded.fonts, "yaff", report=loaded.report))
 
 
 def load_source(fid):
@@ -74,7 +76,7 @@ def test_roundtrip_matches_cli(fid):
     if "source" in g:
         assert sha(yaff_of(load_source(fid))) == g["source"]["yaff"]
     written = write_case(fid)
-    assert {k: sha(v) for k, v in written.assets.items()} == g["write"]["assets"]
+    assert {k: sha(v) for k, v in assets_of(written).items()} == g["write"]["assets"]
     back = fontpixel.read(written, fid, c.read or None)
     assert back.format == fid
     assert sha(yaff_of(back)) == g["readback"]["yaff"]
@@ -88,7 +90,7 @@ def test_plain_conversion_matches_cli(fid):
     args = dict(primary_name=primary_name(STATUS[fid]), report=loaded.report)
     if "assets" in g:
         w = fontpixel.write(loaded.fonts, fid, CLI_IMPLICIT.get(fid), **args)
-        assert {k: sha(v) for k, v in w.assets.items()} == g["assets"]
+        assert {k: sha(v) for k, v in assets_of(w).items()} == g["assets"]
     else:
         with pytest.raises(fontpixel.FontpixelError) as e:
             fontpixel.write(loaded.fonts, fid, CLI_IMPLICIT.get(fid), **args)
@@ -107,7 +109,7 @@ def test_direct_namespace_matches_registry(fid):
     g = GOLDEN["formats"][fid]
     written = write_case(fid)
     primary = written.output.primary
-    assets = written.assets
+    assets = assets_of(written)
     data = assets.get(primary)
     resources = {k: v for k, v in assets.items() if k != primary}
     if written.output.is_directory:
@@ -158,7 +160,7 @@ def test_direct_namespace_matches_registry(fid):
         return [(e["level"], e["impact"], e["code"], e["message"]) for e in rep["entries"]]
 
     assert entries(report) == entries(registry_back.report)
-    direct = fontpixel.write(model, "yaff", report=report).into_single()
+    direct = single(fontpixel.write(model, "yaff", report=report))
     assert direct == yaff_of(registry_back)
 
     # write: the registry wraps the same codec, so the bytes agree
@@ -186,7 +188,7 @@ def test_direct_namespace_matches_registry(fid):
         assert isinstance(rep, dict)
         assert sha(out) == g["write"]["assets"][primary]
     else:
-        assert {k: sha(v) for k, v in result.assets.items()} == g["write"]["assets"]
+        assert {k: sha(v) for k, v in assets_of(result).items()} == g["write"]["assets"]
 
 
 @pytest.mark.parametrize("key", sorted(FIXTURES))

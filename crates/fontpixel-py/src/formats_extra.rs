@@ -5,7 +5,8 @@
 //! catalogue (`fontpixel.formats.CATALOGUE`).
 use crate::conv;
 use crate::errors::{IntoPy, InvalidInputError};
-use crate::formats::{InputArgs, PyWritten, SetArg, bytes_arg};
+use crate::formats::{InputArgs, SetArg, bytes_arg};
+use crate::resources::PyWritten;
 use crate::formats_direct::{
     GENERATED, ModelReport, bytes_report, detect_codec, read_bytes_limits,
     read_bytes_opts, read_ctx_opts, write_x_opts, write_x_primary_opts,

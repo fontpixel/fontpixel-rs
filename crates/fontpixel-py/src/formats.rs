@@ -8,53 +8,36 @@
 //!   set with `set_read_options(format, dict)` / `set_write_options(format, dict)`
 //!   or the per-format `set_<module>_read_options(dict)` methods.
 //! - `read`, `write`, `detect`, `registry`, `list_formats` module functions.
-//! - `Loaded`, `Written`, `OutputBundle`, `OutputAsset`, `ResourcePath` classes.
+//! - `Loaded` (read result); writes return the `Written` / `OutputBundle`
+//!   classes of [`crate::resources`].
 //! - `fontpixel.formats`: per-module namespaces with the direct codec functions
 //!   (see [`crate::formats_direct`]) plus `normalize`/`option_types` for every
 //!   serde type of the format layer (see [`crate::formats_options`]).
 //!
-//! Inputs are `bytes`, `bytearray` or `memoryview`. Sidecar resources are an
-//! explicit `dict[str, bytes]`, a callable `resolve(path, max_bytes)`, or an
-//! object with `resolve(path, max_bytes)` and optionally
-//! `list(directory, max_entries, max_bytes)` methods. Nothing reads the
+//! Inputs are bytes-like, an `Input`, or an `OutputBundle`/`Written` (read
+//! back with its own name and sidecars). Sidecar resources are anything
+//! [`crate::resources::resolver_arg`] accepts: a `ResourceSet`, a
+//! `dict[str, bytes]`, a resolver object or a callable. Nothing reads the
 //! filesystem implicitly.
+pub use crate::bitmap::bytes_arg;
 use crate::conv;
 use crate::errors::{IntoPy, InvalidInputError};
 use crate::handles::{PyFont, PyFontSet};
+pub use crate::resources::path_arg;
+use crate::resources::{InputParts, PyInput, PyOutputBundle, PyWritten, input_arg, resolver_arg};
 use fontpixel::formats::{Loaded, ReadOptions, WriteOptions};
 use fontpixel::resources::{
-    Input, OutputAsset, OutputBundle, ResourceLimits, ResourcePath, ResourceResolver,
-    TransportLimits, Written,
+    Input, OutputBundle, ResourceLimits, ResourcePath, ResourceResolver, TransportLimits,
 };
 use fontpixel::{Error, FontRegistry, FontSet, Report};
 use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;
-use pyo3::types::{PyByteArray, PyBytes, PyDict, PyMemoryView};
-use std::borrow::Cow;
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 // ---------------------------------------------------------------------------
 // Argument helpers
 // ---------------------------------------------------------------------------
-
-/// Borrow or copy a bytes-like argument (`bytes`, `bytearray`, `memoryview`).
-pub fn bytes_arg<'a>(obj: &'a Bound<'_, PyAny>) -> PyResult<Cow<'a, [u8]>> {
-    if let Ok(b) = obj.cast::<PyBytes>() {
-        return Ok(Cow::Borrowed(b.as_bytes()));
-    }
-    if let Ok(b) = obj.cast::<PyByteArray>() {
-        return Ok(Cow::Owned(b.to_vec()));
-    }
-    if obj.cast::<PyMemoryView>().is_ok() {
-        let copied = obj.call_method0("tobytes")?;
-        let copied = copied.cast::<PyBytes>()?;
-        return Ok(Cow::Owned(copied.as_bytes().to_vec()));
-    }
-    Err(PyTypeError::new_err(format!(
-        "expected bytes, bytearray or memoryview, got {}",
-        obj.get_type().name()?
-    )))
-}
 
 /// Optional `ResourceLimits` dict (`None` = defaults).
 pub fn limits_arg(obj: Option<&Bound<'_, PyAny>>) -> PyResult<ResourceLimits> {
@@ -73,11 +56,6 @@ pub fn transport_arg(obj: Option<&Bound<'_, PyAny>>) -> PyResult<Option<Transpor
 /// Optional report dict carried into a write (`None` = empty report).
 pub fn report_arg(obj: Option<&Bound<'_, PyAny>>) -> PyResult<Report> {
     conv::from_py(obj)
-}
-
-/// Validated relative output/resource path.
-pub fn path_arg(path: &str) -> PyResult<ResourcePath> {
-    ResourcePath::new(path).py()
 }
 
 /// A font-set argument: a `FontSet` handle (shared, read in place) or a `Font`
@@ -144,307 +122,172 @@ pub fn with_font<R>(
 }
 
 // ---------------------------------------------------------------------------
-// Resources
+// Inputs
 // ---------------------------------------------------------------------------
 
-enum ResolverKind {
-    /// Explicit named resources, copied at call time.
-    Map(BTreeMap<String, Vec<u8>>),
-    /// `resolve(path, max_bytes)` callable.
-    Callable(Py<PyAny>),
-    /// Object with `resolve` and optionally `list` methods.
-    Object(Py<PyAny>),
-}
-
-/// A caller-supplied resource source implementing `ResourceResolver`.
-pub struct PyResolver {
-    kind: ResolverKind,
-}
-
-fn resolver_error(py: Python<'_>, path: &str, err: PyErr) -> Error {
-    if err.is_instance_of::<pyo3::exceptions::PyKeyError>(py)
-        || err.is_instance_of::<pyo3::exceptions::PyFileNotFoundError>(py)
-        || err.is_instance_of::<crate::errors::MissingResourceError>(py)
-    {
-        return Error::MissingResource(path.into());
+/// An `OutputBundle` (or a `Written`'s bundle) passed as read input.
+fn bundle_arg(obj: &Bound<'_, PyAny>) -> PyResult<Option<OutputBundle>> {
+    if let Ok(b) = obj.cast::<PyOutputBundle>() {
+        return Ok(Some(b.get().bundle.clone()));
     }
-    if err.is_instance_of::<crate::errors::ResourceLimitError>(py) {
-        let limit = err
-            .value(py)
-            .getattr("limit")
-            .and_then(|l| l.extract::<usize>())
-            .unwrap_or(0);
-        return Error::ResourceLimit {
-            resource: "resource bytes",
-            limit,
-        };
+    if obj.cast::<PyWritten>().is_ok() {
+        let output = obj.getattr("output")?;
+        return Ok(Some(output.cast::<PyOutputBundle>()?.get().bundle.clone()));
     }
-    Error::Io(std::io::Error::other(format!(
-        "resource resolver failed for '{path}': {err}"
-    )))
+    Ok(None)
 }
 
-fn checked_resource(path: &str, bytes: &[u8], max_bytes: usize) -> fontpixel::Result<Vec<u8>> {
-    if bytes.len() > max_bytes {
-        return Err(Error::ResourceLimit {
-            resource: "resource bytes",
-            limit: max_bytes,
-        });
-    }
-    let _ = path;
-    // `to_vec` allocates exactly `len` bytes, so capacity stays within budget.
-    Ok(bytes.to_vec())
-}
-
-fn resolved_bytes(
-    py: Python<'_>,
-    path: &str,
-    value: PyResult<Bound<'_, PyAny>>,
-    max_bytes: usize,
-) -> fontpixel::Result<Vec<u8>> {
-    let value = value.map_err(|e| resolver_error(py, path, e))?;
-    if value.is_none() {
-        return Err(Error::MissingResource(path.into()));
-    }
-    let bytes = bytes_arg(&value).map_err(|e| resolver_error(py, path, e))?;
-    checked_resource(path, &bytes, max_bytes)
-}
-
-impl ResourceResolver for PyResolver {
-    fn resolve(&self, path: &ResourcePath, max_bytes: usize) -> fontpixel::Result<Vec<u8>> {
-        let name = path.as_str();
-        match &self.kind {
-            ResolverKind::Map(map) => match map.get(name) {
-                Some(bytes) => checked_resource(name, bytes, max_bytes),
-                None => Err(Error::MissingResource(name.into())),
-            },
-            ResolverKind::Callable(f) => Python::attach(|py| {
-                resolved_bytes(py, name, f.bind(py).call1((name, max_bytes)), max_bytes)
-            }),
-            ResolverKind::Object(o) => Python::attach(|py| {
-                resolved_bytes(
-                    py,
-                    name,
-                    o.bind(py).call_method1("resolve", (name, max_bytes)),
-                    max_bytes,
-                )
-            }),
+/// The input a reader sees for a written bundle: a file bundle's primary
+/// bytes with every other asset as a sidecar (paths relative to the entry
+/// point's parent), or a directory bundle's entry point with its assets
+/// relative to the directory.
+pub fn bundle_input(bundle: &OutputBundle) -> InputParts {
+    let primary = bundle.primary().as_str();
+    let mut files = BTreeMap::new();
+    let mut data = Vec::new();
+    if bundle.is_directory() {
+        let prefix = format!("{primary}/");
+        for a in bundle.assets() {
+            if let Some(rest) = a.path.as_str().strip_prefix(&prefix) {
+                files.insert(rest.to_owned(), a.bytes.clone());
+            }
         }
+    } else {
+        for a in bundle.assets() {
+            if a.path.as_str() == primary {
+                data = a.bytes.clone();
+            } else {
+                files.insert(a.path.as_str().to_owned(), a.bytes.clone());
+            }
+        }
+    }
+    InputParts {
+        data: Arc::new(data),
+        name: Some(primary.to_owned()),
+        resolver: Arc::new(MapResolver(files)),
+        directory: bundle.is_directory(),
+    }
+}
+
+/// In-memory files of a bundle input.
+struct MapResolver(BTreeMap<String, Vec<u8>>);
+
+impl ResourceResolver for MapResolver {
+    fn resolve(&self, path: &ResourcePath, max_bytes: usize) -> fontpixel::Result<Vec<u8>> {
+        let bytes = self
+            .0
+            .get(path.as_str())
+            .ok_or_else(|| Error::MissingResource(path.as_str().into()))?;
+        if bytes.len() > max_bytes {
+            return Err(Error::ResourceLimit {
+                resource: "resource bytes",
+                limit: max_bytes,
+            });
+        }
+        Ok(bytes.to_vec())
     }
 
     fn list(
         &self,
         directory: Option<&ResourcePath>,
         max_entries: usize,
-        max_bytes: usize,
+        _max_bytes: usize,
     ) -> fontpixel::Result<Vec<ResourcePath>> {
-        match &self.kind {
-            ResolverKind::Map(map) => {
-                let prefix = directory.map(|d| format!("{}/", d.as_str()));
-                let mut out = Vec::new();
-                let mut used = 0usize;
-                for key in map.keys() {
-                    let rest = match &prefix {
-                        Some(p) => match key.strip_prefix(p.as_str()) {
-                            Some(rest) => rest,
-                            None => continue,
-                        },
-                        None => key.as_str(),
-                    };
-                    if rest.is_empty() || rest.contains('/') {
-                        continue;
-                    }
-                    if out.len() >= max_entries {
-                        return Err(Error::ResourceLimit {
-                            resource: "directory entries",
-                            limit: max_entries,
-                        });
-                    }
-                    used = used.saturating_add(
-                        std::mem::size_of::<ResourcePath>()
-                            .saturating_add(key.len())
-                            .saturating_mul(2),
-                    );
-                    if used > max_bytes {
-                        return Err(Error::ResourceLimit {
-                            resource: "directory listing bytes",
-                            limit: max_bytes,
-                        });
-                    }
-                    out.push(ResourcePath::new(key.clone())?);
-                }
-                Ok(out)
+        let prefix = directory.map(|d| format!("{}/", d.as_str()));
+        let mut out = Vec::new();
+        for key in self.0.keys() {
+            let rest = match &prefix {
+                Some(p) => match key.strip_prefix(p.as_str()) {
+                    Some(rest) => rest,
+                    None => continue,
+                },
+                None => key.as_str(),
+            };
+            if rest.is_empty() || rest.contains('/') {
+                continue;
             }
-            ResolverKind::Object(o) => Python::attach(|py| {
-                let o = o.bind(py);
-                let dir = directory.map(|d| d.as_str().to_owned());
-                if !o.hasattr("list").unwrap_or(false) {
-                    return Err(Error::InvalidInput(
-                        "resource enumeration is unavailable".into(),
-                    ));
-                }
-                let listed = o
-                    .call_method1("list", (dir.clone(), max_entries, max_bytes))
-                    .and_then(|v| v.extract::<Vec<String>>())
-                    .map_err(|e| resolver_error(py, dir.as_deref().unwrap_or(""), e))?;
-                listed.into_iter().map(ResourcePath::new).collect()
-            }),
-            ResolverKind::Callable(_) => Err(Error::InvalidInput(
-                "resource enumeration is unavailable".into(),
-            )),
-        }
-    }
-}
-
-impl PyResolver {
-    /// Build from `None`, a `dict[str, bytes]`, a resolver object or a callable.
-    pub fn extract(obj: Option<&Bound<'_, PyAny>>) -> PyResult<Option<Self>> {
-        let Some(obj) = obj else { return Ok(None) };
-        if obj.is_none() {
-            return Ok(None);
-        }
-        if let Ok(dict) = obj.cast::<PyDict>() {
-            let mut map = BTreeMap::new();
-            for (k, v) in dict.iter() {
-                let key: String = k.extract()?;
-                ResourcePath::new(key.clone()).py()?;
-                map.insert(key, bytes_arg(&v)?.into_owned());
+            if out.len() >= max_entries {
+                return Err(Error::ResourceLimit {
+                    resource: "directory entries",
+                    limit: max_entries,
+                });
             }
-            return Ok(Some(Self {
-                kind: ResolverKind::Map(map),
-            }));
+            out.push(ResourcePath::new(key.clone())?);
         }
-        if obj.hasattr("resolve")? {
-            return Ok(Some(Self {
-                kind: ResolverKind::Object(obj.clone().unbind()),
-            }));
-        }
-        if obj.is_callable() {
-            return Ok(Some(Self {
-                kind: ResolverKind::Callable(obj.clone().unbind()),
-            }));
-        }
-        Err(PyTypeError::new_err(
-            "resources must be a dict[str, bytes], a resolve(path, max_bytes) callable \
-             or an object with a resolve method",
-        ))
+        Ok(out)
     }
 }
 
-/// An `OutputBundle` (or the bundle of a `Written`) passed as read input.
-fn bundle_arg(obj: &Bound<'_, PyAny>) -> Option<Py<PyOutputBundle>> {
-    if let Ok(b) = obj.cast::<PyOutputBundle>() {
-        return Some(b.clone().unbind());
-    }
-    obj.cast::<PyWritten>()
-        .ok()
-        .map(|w| w.get().output.clone_ref(obj.py()))
+/// Owned input built from Python arguments.
+pub struct InputArgs {
+    parts: InputParts,
 }
 
-/// Owned pieces of an `Input`, built from Python arguments.
-pub struct InputArgs<'a> {
-    data: Cow<'a, [u8]>,
-    name: Option<String>,
-    resolver: Option<PyResolver>,
-    directory: bool,
-}
-
-impl<'a> InputArgs<'a> {
-    /// Collect `data`, `name`, `resources` and `directory` arguments.
-    /// `directory` is a directory entry-point name (`Input::directory`); it
-    /// excludes primary bytes and replaces `name`.
+impl InputArgs {
+    /// Collect the `data`, `name`, `resources` and `directory` arguments.
+    ///
+    /// `data` is bytes-like, an `Input`, or an `OutputBundle`/`Written` (read
+    /// back with its own name and sidecars). `resources` is anything
+    /// `resources::resolver_arg` accepts. `directory` names a directory entry
+    /// point (`Input::directory`); it excludes primary bytes and `name`.
     pub fn new(
-        data: Option<&'a Bound<'_, PyAny>>,
+        data: Option<&Bound<'_, PyAny>>,
         name: Option<String>,
         resources: Option<&Bound<'_, PyAny>>,
         directory: Option<String>,
     ) -> PyResult<Self> {
-        if let Some(bundle) = data.and_then(|d| bundle_arg(d)) {
-            if name.is_some() || resources.is_some_and(|r| !r.is_none()) || directory.is_some()
-            {
-                return Err(InvalidInputError::new_err(
-                    "an OutputBundle input already carries its name and resources",
-                ));
+        let data = data.filter(|d| !d.is_none());
+        let has_resources = resources.is_some_and(|r| !r.is_none());
+        if let Some(d) = data {
+            let carried = if let Some(bundle) = bundle_arg(d)? {
+                Some(bundle_input(&bundle))
+            } else if d.cast::<PyInput>().is_ok() {
+                Some(input_arg(d)?)
+            } else {
+                None
+            };
+            if let Some(parts) = carried {
+                if name.is_some() || has_resources || directory.is_some() {
+                    return Err(InvalidInputError::new_err(
+                        "an Input or OutputBundle already carries its name and resources",
+                    ));
+                }
+                return Ok(Self { parts });
             }
-            return Ok(Self::from_bundle(&bundle.get().bundle));
         }
-        let resolver = PyResolver::extract(resources)?;
-        let data = match data {
-            Some(d) if !d.is_none() => bytes_arg(d)?,
-            _ => Cow::Borrowed(&[][..]),
-        };
+        let resolver = resolver_arg(resources)?;
         if let Some(dir) = directory {
-            if !data.is_empty() || name.is_some() {
+            if data.is_some() || name.is_some() {
                 return Err(InvalidInputError::new_err(
                     "a directory input takes no primary bytes or name; pass directory and resources",
                 ));
             }
             return Ok(Self {
-                data,
-                name: Some(dir),
-                resolver,
-                directory: true,
+                parts: InputParts {
+                    data: Arc::new(Vec::new()),
+                    name: Some(dir),
+                    resolver,
+                    directory: true,
+                },
             });
         }
+        let data = match data {
+            Some(d) => bytes_arg(d)?,
+            None => Vec::new(),
+        };
         Ok(Self {
-            data,
-            name,
-            resolver,
-            directory: false,
+            parts: InputParts {
+                data: Arc::new(data),
+                name,
+                resolver,
+                directory: false,
+            },
         })
-    }
-
-    /// The input a reader sees for a written bundle: a file bundle's primary
-    /// bytes with every asset as a sidecar (paths relative to the entry
-    /// point's parent), or a directory bundle's entry point with its assets
-    /// relative to the directory.
-    pub fn from_bundle(bundle: &OutputBundle) -> Self {
-        let primary = bundle.primary().as_str();
-        let mut map = BTreeMap::new();
-        let mut data = Vec::new();
-        if bundle.is_directory() {
-            let prefix = format!("{primary}/");
-            for a in bundle.assets() {
-                if let Some(rest) = a.path.as_str().strip_prefix(&prefix) {
-                    map.insert(rest.to_owned(), a.bytes.clone());
-                }
-            }
-        } else {
-            for a in bundle.assets() {
-                if a.path.as_str() == primary {
-                    data = a.bytes.clone();
-                } else {
-                    map.insert(a.path.as_str().to_owned(), a.bytes.clone());
-                }
-            }
-        }
-        Self {
-            data: Cow::Owned(data),
-            name: Some(primary.to_owned()),
-            resolver: Some(PyResolver {
-                kind: ResolverKind::Map(map),
-            }),
-            directory: bundle.is_directory(),
-        }
     }
 
     /// Build the borrowed `Input` and run `f` with it.
     pub fn with<R>(&self, f: impl FnOnce(&Input<'_>) -> R) -> R {
-        let none = fontpixel::resources::NoResources;
-        let resolver: &dyn ResourceResolver = match &self.resolver {
-            Some(r) => r,
-            None => &none,
-        };
-        let input = if self.directory {
-            Input::directory(self.name.as_deref().unwrap_or_default(), resolver)
-        } else {
-            let mut input = Input::new(&self.data).with_resources(resolver);
-            if let Some(name) = &self.name {
-                input = input.with_name(name);
-            }
-            input
-        };
-        f(&input)
+        self.parts.with(f)
     }
 }
 
@@ -526,246 +369,6 @@ pub fn static_format_id(id: &str) -> PyResult<&'static str> {
         .ok_or_else(|| crate::errors::to_py(Error::UnknownFormat(id.into())))
 }
 
-/// One output asset: a validated relative path and its exact bytes
-/// (`fontpixel::resources::OutputAsset`).
-#[pyclass(name = "OutputAsset", module = "fontpixel", frozen)]
-pub struct PyOutputAsset {
-    asset: OutputAsset,
-}
-
-#[pymethods]
-impl PyOutputAsset {
-    /// Create an asset; the path is validated like `ResourcePath`.
-    #[new]
-    #[pyo3(signature = (path, data))]
-    fn new(path: &str, data: &Bound<'_, PyAny>) -> PyResult<Self> {
-        Ok(Self {
-            asset: OutputAsset {
-                path: path_arg(path)?,
-                bytes: bytes_arg(data)?.into_owned(),
-            },
-        })
-    }
-    /// Relative path, including any subdirectory.
-    #[getter]
-    fn path(&self) -> &str {
-        self.asset.path.as_str()
-    }
-    /// The asset bytes (a copy).
-    #[getter]
-    fn bytes<'py>(&self, py: Python<'py>) -> Bound<'py, PyBytes> {
-        PyBytes::new(py, &self.asset.bytes)
-    }
-    fn __repr__(&self) -> String {
-        format!(
-            "OutputAsset({:?}, {} bytes)",
-            self.asset.path.as_str(),
-            self.asset.bytes.len()
-        )
-    }
-    fn __eq__(&self, other: &Bound<'_, PyAny>) -> bool {
-        other
-            .cast::<PyOutputAsset>()
-            .is_ok_and(|o| o.get().asset == self.asset)
-    }
-}
-
-/// Complete validated output: one entry point plus sidecars
-/// (`fontpixel::resources::OutputBundle`).
-#[pyclass(name = "OutputBundle", module = "fontpixel", frozen)]
-pub struct PyOutputBundle {
-    /// The Rust bundle.
-    pub bundle: OutputBundle,
-}
-
-fn assets_arg(assets: &Bound<'_, PyAny>) -> PyResult<Vec<OutputAsset>> {
-    let mut out = Vec::new();
-    if let Ok(dict) = assets.cast::<PyDict>() {
-        for (k, v) in dict.iter() {
-            out.push(OutputAsset {
-                path: path_arg(&k.extract::<String>()?)?,
-                bytes: bytes_arg(&v)?.into_owned(),
-            });
-        }
-        return Ok(out);
-    }
-    for item in assets.try_iter()? {
-        let item = item?;
-        if let Ok(a) = item.cast::<PyOutputAsset>() {
-            out.push(a.get().asset.clone());
-        } else {
-            let (path, data): (String, Bound<'_, PyAny>) = item.extract()?;
-            out.push(OutputAsset {
-                path: path_arg(&path)?,
-                bytes: bytes_arg(&data)?.into_owned(),
-            });
-        }
-    }
-    Ok(out)
-}
-
-#[pymethods]
-impl PyOutputBundle {
-    /// Validate a bundle (`OutputBundle::new`, or `OutputBundle::directory`
-    /// when `directory=True`). `assets` is a `dict[str, bytes]`, or an
-    /// iterable of `OutputAsset` / `(path, bytes)` pairs.
-    #[new]
-    #[pyo3(signature = (primary, assets, directory = false))]
-    fn new(primary: &str, assets: &Bound<'_, PyAny>, directory: bool) -> PyResult<Self> {
-        let primary = path_arg(primary)?;
-        let assets = assets_arg(assets)?;
-        let bundle = if directory {
-            OutputBundle::directory(primary, assets)
-        } else {
-            OutputBundle::new(primary, assets)
-        }
-        .py()?;
-        Ok(Self { bundle })
-    }
-    /// A one-file bundle (`OutputBundle::single`).
-    #[staticmethod]
-    #[pyo3(signature = (path, data))]
-    fn single(path: &str, data: &Bound<'_, PyAny>) -> PyResult<Self> {
-        Ok(Self {
-            bundle: OutputBundle::single(path_arg(path)?, bytes_arg(data)?.into_owned()),
-        })
-    }
-    /// A native directory bundle (`OutputBundle::directory`).
-    #[staticmethod]
-    #[pyo3(signature = (primary, assets))]
-    fn directory(primary: &str, assets: &Bound<'_, PyAny>) -> PyResult<Self> {
-        Self::new(primary, assets, true)
-    }
-    /// Entry-point path.
-    #[getter]
-    fn primary(&self) -> &str {
-        self.bundle.primary().as_str()
-    }
-    /// Whether the entry point is a directory.
-    #[getter]
-    fn is_directory(&self) -> bool {
-        self.bundle.is_directory()
-    }
-    /// `{path: bytes}` for every asset, sorted by path (copies).
-    #[getter]
-    fn assets<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
-        let d = PyDict::new(py);
-        for a in self.bundle.assets() {
-            d.set_item(a.path.as_str(), PyBytes::new(py, &a.bytes))?;
-        }
-        Ok(d)
-    }
-    /// Every asset as `OutputAsset` objects, sorted by path (copies;
-    /// `OutputBundle::into_assets`).
-    fn into_assets(&self) -> Vec<PyOutputAsset> {
-        self.bundle
-            .assets()
-            .iter()
-            .map(|a| PyOutputAsset { asset: a.clone() })
-            .collect()
-    }
-    /// The bytes of a one-file bundle; raises `MultipleAssetsError` when the
-    /// bundle has sidecars (`OutputBundle::into_single`).
-    fn into_single<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyBytes>> {
-        let bytes = self.bundle.clone().into_single().py()?;
-        Ok(PyBytes::new(py, &bytes))
-    }
-    /// Owned storage of this bundle, bounded by `max_bytes`
-    /// (`OutputBundle::retained_bytes`).
-    #[pyo3(signature = (max_bytes = usize::MAX))]
-    fn retained_bytes(&self, max_bytes: usize) -> PyResult<usize> {
-        self.bundle.retained_bytes(max_bytes).py()
-    }
-    fn __len__(&self) -> usize {
-        self.bundle.assets().len()
-    }
-    fn __repr__(&self) -> String {
-        format!(
-            "OutputBundle(primary={:?}, assets={}, directory={})",
-            self.bundle.primary().as_str(),
-            self.bundle.assets().len(),
-            self.bundle.is_directory()
-        )
-    }
-    fn __eq__(&self, other: &Bound<'_, PyAny>) -> bool {
-        other
-            .cast::<PyOutputBundle>()
-            .is_ok_and(|o| o.get().bundle == self.bundle)
-    }
-}
-
-/// Encoded assets and the combined read/write report
-/// (`fontpixel::resources::Written`).
-#[pyclass(name = "Written", module = "fontpixel", frozen)]
-pub struct PyWritten {
-    /// All encoded assets.
-    #[pyo3(get)]
-    pub output: Py<PyOutputBundle>,
-    /// Conversion diagnostics as a dict.
-    #[pyo3(get)]
-    pub report: Py<PyAny>,
-}
-
-impl PyWritten {
-    /// Wrap a `Written`.
-    pub fn new(py: Python<'_>, written: Written) -> PyResult<Self> {
-        Ok(Self {
-            output: Py::new(
-                py,
-                PyOutputBundle {
-                    bundle: written.output,
-                },
-            )?,
-            report: conv::to_py(py, &written.report)?.unbind(),
-        })
-    }
-}
-
-#[pymethods]
-impl PyWritten {
-    /// `{path: bytes}` for every asset (shortcut for `output.assets`).
-    #[getter]
-    fn assets<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
-        self.output.get().assets(py)
-    }
-    /// The bytes of a one-file result; raises `MultipleAssetsError` otherwise.
-    fn into_single<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyBytes>> {
-        self.output.get().into_single(py)
-    }
-    fn __repr__(&self) -> String {
-        format!("Written({})", self.output.get().__repr__())
-    }
-}
-
-/// A validated relative resource path (`fontpixel::resources::ResourcePath`).
-#[pyclass(name = "ResourcePath", module = "fontpixel", frozen, eq, hash)]
-#[derive(PartialEq, Eq, Hash)]
-pub struct PyResourcePath {
-    path: ResourcePath,
-}
-
-#[pymethods]
-impl PyResourcePath {
-    /// Validate a relative path; empty, `.`/`..` components, backslashes,
-    /// colons and control characters raise `InvalidInputError`.
-    #[new]
-    fn new(path: String) -> PyResult<Self> {
-        Ok(Self {
-            path: path_arg(&path)?,
-        })
-    }
-    /// The path string.
-    fn as_str(&self) -> &str {
-        self.path.as_str()
-    }
-    fn __str__(&self) -> &str {
-        self.path.as_str()
-    }
-    fn __repr__(&self) -> String {
-        format!("ResourcePath({:?})", self.path.as_str())
-    }
-}
-
 // ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
@@ -836,7 +439,7 @@ impl PyRegistry {
     pub fn read_impl(
         &self,
         py: Python<'_>,
-        input: &InputArgs<'_>,
+        input: &InputArgs,
         format: Option<String>,
         limits: ResourceLimits,
     ) -> PyResult<PyLoaded> {
@@ -851,7 +454,7 @@ impl PyRegistry {
     pub fn detect_impl<'py>(
         &self,
         py: Python<'py>,
-        input: &InputArgs<'_>,
+        input: &InputArgs,
         limits: ResourceLimits,
     ) -> PyResult<Bound<'py, PyAny>> {
         let detected = py
@@ -1239,10 +842,6 @@ fn detect<'py>(
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyRegistry>()?;
     m.add_class::<PyLoaded>()?;
-    m.add_class::<PyWritten>()?;
-    m.add_class::<PyOutputBundle>()?;
-    m.add_class::<PyOutputAsset>()?;
-    m.add_class::<PyResourcePath>()?;
     m.add_function(wrap_pyfunction!(registry, m)?)?;
     m.add_function(wrap_pyfunction!(list_formats, m)?)?;
     m.add_function(wrap_pyfunction!(read, m)?)?;
