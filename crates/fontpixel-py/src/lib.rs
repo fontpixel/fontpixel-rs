@@ -18,6 +18,10 @@ pub mod conv;
 pub mod errors;
 pub mod handles;
 
+pub mod compat;
+pub mod compat_bitmap;
+pub mod compat_glyph;
+
 use pyo3::prelude::*;
 
 /// Native extension module. Area modules add their classes and functions here.
@@ -26,5 +30,6 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     errors::register(m)?;
     handles::register(m)?;
+    compat::register(m)?;
     Ok(())
 }
