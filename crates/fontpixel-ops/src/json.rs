@@ -18,7 +18,7 @@ pub fn write<T: serde::Serialize + ?Sized>(
     writeln!(out)?;
     Ok(())
 }
-/// Serialize `value` into a string with [`write`]'s layout.
+/// Serialize `value` into a string with [`write()`]'s layout.
 pub fn to_string<T: serde::Serialize + ?Sized>(value: &T, pretty: bool) -> Result<String> {
     let mut bytes = Vec::new();
     write(&mut bytes, value, pretty)?;

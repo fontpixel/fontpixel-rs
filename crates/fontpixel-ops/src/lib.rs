@@ -2,7 +2,7 @@
 //! language bindings.
 //!
 //! Every command-line capability is a typed request and a function returning a
-//! typed response: [`convert`], [`batch::run`], [`merge`], [`variants`],
+//! typed response: [`convert()`], [`batch::run`], [`merge()`], [`variants`],
 //! [`subset`], [`charset`], [`validate`], [`diff`], [`info`], [`preview`],
 //! [`render`] and [`formats`]. Option groups mirror the command-line argument
 //! groups field for field (see [`options`] and the format option modules).
