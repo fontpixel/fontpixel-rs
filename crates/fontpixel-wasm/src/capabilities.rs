@@ -116,10 +116,46 @@ const SYNC_RESOLVERS: Capability = available(
     "Synchronous JS resolver and file-provider callbacks invoked while a call runs (asynchronous sources go through withAsyncResources).",
 );
 
+#[cfg(feature = "toml")]
+const CLI_PARSER: Capability = available(
+    "cli_parser",
+    "Parsing `fontpixel` command lines into typed requests with the shared command-line definition (`ops.parseArgs`).",
+);
+#[cfg(not(feature = "toml"))]
+const CLI_PARSER: Capability = missing(
+    "cli_parser",
+    "Parsing `fontpixel` command lines into typed requests with the shared command-line definition (`ops.parseArgs`).",
+    "Compiled out of this build profile: the command-line parser (clap, fontpixel_ops::cli) comes with the fontpixel-wasm feature `toml`.",
+    "scripts/build_wasm.sh enables `toml` (and with it fontpixel-ops `clap`) only in the `full` profile.",
+    "Pass request objects to the ops functions directly (ops.inspectRequest validates and normalizes them in every profile), or load the `full` build.",
+);
+
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+const SFNT_OPERATIONS: Capability = available(
+    "sfnt_operations",
+    "The OpenType operations `ops.variants` (locl-enabled regional faces) and `ops.subset` (sfnt/WOFF/WOFF2 subsetting), and their batch task kinds.",
+);
+#[cfg(not(any(feature = "all-formats", feature = "merge")))]
+const SFNT_OPERATIONS: Capability = missing(
+    "sfnt_operations",
+    "The OpenType operations `ops.variants` (locl-enabled regional faces) and `ops.subset` (sfnt/WOFF/WOFF2 subsetting), and their batch task kinds.",
+    "Compiled out of this build profile (fontpixel-ops feature `opentype`, which needs the TTF/OTF/WOFF/WOFF2 codecs).",
+    "scripts/build_wasm.sh builds fontpixel-ops with `opentype` in the `full` and `merge` profiles; `minimal` has BDF, PCF and YAFF only.",
+    "Load the `full` or `merge` build.",
+);
+
 /// Every capability this build reports, in a fixed order. Area modules
 /// append entries for the unavailable items they expose.
-pub const CAPABILITIES: &[Capability] =
-    &[FILESYSTEM, THREADS, TOML_BATCH, COMPAT, CJK, SYNC_RESOLVERS];
+pub const CAPABILITIES: &[Capability] = &[
+    FILESYSTEM,
+    THREADS,
+    TOML_BATCH,
+    COMPAT,
+    CJK,
+    SYNC_RESOLVERS,
+    CLI_PARSER,
+    SFNT_OPERATIONS,
+];
 
 /// The capability records with the operations layer's own answers applied
 /// (`fontpixel_ops::capabilities()`: `threads` is false on `wasm32`).

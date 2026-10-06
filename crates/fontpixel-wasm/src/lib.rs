@@ -31,6 +31,8 @@ pub mod formats;
 pub mod handles;
 pub mod model;
 pub mod normalize;
+pub mod ops;
+pub mod ops_page;
 pub mod resources;
 pub mod types;
 

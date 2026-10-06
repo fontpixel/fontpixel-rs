@@ -24,6 +24,15 @@ export {
   CancelledError,
 } from "./errors.js";
 export { withAsyncResources, AsyncResourceOptions } from "./resources.js";
+export {
+  FontpixelWorker,
+  CreateWorkerOptions,
+  WorkerCallOptions,
+  WorkerMergeOptions,
+  compileModule,
+  createWorker,
+  mergeInWorker,
+} from "./ops-client.js";
 
 /** URL of the WebAssembly module shipped next to the package entry point. */
 export declare const wasmUrl: URL;

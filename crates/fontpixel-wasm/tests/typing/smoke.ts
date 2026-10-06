@@ -10,11 +10,20 @@ import {
   MissingResourceError,
   ResourceLimitError,
   UnsupportedError,
+  BatchResult,
+  FontpixelWorker,
+  OperationResult,
   capabilities,
+  createWorker,
+  info,
   init,
   initSync,
+  merge,
+  mergeInWorker,
   normalize,
+  ops,
   read,
+  render,
   requireCapability,
   version,
   wasmUrl,
@@ -22,6 +31,10 @@ import {
 } from "fontpixel";
 import type {
   Capability,
+  InfoDocument,
+  MergeFilesResult,
+  Progress,
+  RenderResult,
   FontMetrics,
   FontSetDict,
   GlyphBitmap,
@@ -103,6 +116,30 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
     using scoped = Bitmap.fromText("#.");
     void scoped.width;
   }
+
+  // ops and the W8.3 calls
+  const converted: OperationResult = ops.convert(
+    { inputs: ["a.bdf"], output: "a.pcf" },
+    { files: { "a.bdf": bytes }, progress: (p: Progress) => p.step !== "encode" },
+  );
+  const outputs: Record<string, Uint8Array> = converted.outputs;
+  const doc: string = converted.json(false);
+  const batch: BatchResult = ops.batch({ tasks: [{ id: "a", kind: "validate", input: "a.bdf" }] }, { files: new Map([["a.bdf", bytes]]) });
+  const code: number = batch.exitCode;
+  const infoDoc: InfoDocument = info(bytes, { name: "a.bdf" });
+  const merged: MergeFilesResult = merge([{ bytes, take: "western", name: "a.bdf" }], { family: "Mix", outputs: ["m.bdf"] });
+  const files: Record<string, Uint8Array> = merged.files;
+  const pixels: RenderResult = render(bytes, "Hi", { format: "rgba", scale: 2 });
+  const worker: FontpixelWorker = await createWorker({ module, cancellation: "auto" });
+  const viaWorker: MergeFilesResult = await worker.merge([{ bytes, take: "all" }], { family: "Mix", outputs: ["m.woff2"] }, {
+    onProgress: (p) => void p.done,
+    signal: new AbortController().signal,
+  });
+  const once: MergeFilesResult = await mergeInWorker([{ bytes, take: "all" }], { family: "Mix", outputs: ["m.bdf"] });
+  worker.terminate();
+  void [outputs, doc, code, infoDoc, files, pixels.data, viaWorker, once];
+  // @ts-expect-error progress cannot cross into a worker
+  await worker.merge([{ bytes, take: "all" }], { family: "Mix", outputs: ["m.bdf"], progress: () => false });
 
   // @ts-expect-error unknown option keys are not ReadArgs
   read(bytes, { formt: "bdf" });
