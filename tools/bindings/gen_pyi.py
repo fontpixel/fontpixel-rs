@@ -137,7 +137,15 @@ def text_params(obj):
     return out
 
 
+# CPython supplies the docstrings of slot wrappers (`__contains__`, ...), and
+# their wording changes between versions; the stubs use one text
+# (tools/bindings/pyapi.py keeps the same table for the reference).
+SLOT_DOCS = {"__contains__": "Return key in self."}
+
+
 def clean_doc(obj):
+    if type(obj).__name__ == "wrapper_descriptor" and getattr(obj, "__name__", None) in SLOT_DOCS:
+        return SLOT_DOCS[obj.__name__]
     return inspect.cleandoc(getattr(obj, "__doc__", None) or "")
 
 

@@ -391,7 +391,7 @@ checked by the test suite). Modules:
 | [`fontpixel.compat.bdfparser.errors`](python-api-reference.md#fontpixelcompatbdfparsererrors) | 0 |
 | [`fontpixel.compat.bdfparser.font`](python-api-reference.md#fontpixelcompatbdfparserfont) | 0 |
 | [`fontpixel.compat.bdfparser.glyph`](python-api-reference.md#fontpixelcompatbdfparserglyph) | 1 |
-| [`fontpixel.compat.bdfparser.outline`](python-api-reference.md#fontpixelcompatbdfparseroutline) | 4 |
+| [`fontpixel.compat.bdfparser.outline`](python-api-reference.md#fontpixelcompatbdfparseroutline) | 2 |
 | [`fontpixel.compat.bdfparser.pcf`](python-api-reference.md#fontpixelcompatbdfparserpcf) | 3 |
 | [`fontpixel.compat.bdfparser.ttf`](python-api-reference.md#fontpixelcompatbdfparserttf) | 2 |
 | [`fontpixel.formats`](python-api-reference.md#fontpixelformats) | 3 |
@@ -510,6 +510,6 @@ checked by the test suite). Modules:
 | [`fontpixel.woff.woff1`](python-api-reference.md#fontpixelwoffwoff1) | 2 |
 | [`fontpixel.woff.woff2`](python-api-reference.md#fontpixelwoffwoff2) | 5 |
 
-127 modules, 1070 documented callables, classes and properties.
+127 modules, 1068 documented callables, classes and properties.
 
 <!-- end reference index -->

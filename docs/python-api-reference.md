@@ -20,7 +20,7 @@ shapes at run time.
 - [`fontpixel.compat.bdfparser.errors`](#fontpixelcompatbdfparsererrors) (0) Warning and exception classes of the bdfparser-compatible API.
 - [`fontpixel.compat.bdfparser.font`](#fontpixelcompatbdfparserfont) (0) `Font` of the bdfparser-compatible API (handle over the Rust compat font).
 - [`fontpixel.compat.bdfparser.glyph`](#fontpixelcompatbdfparserglyph) (1) `Glyph` of the bdfparser-compatible API (handle over the Rust compat glyph).
-- [`fontpixel.compat.bdfparser.outline`](#fontpixelcompatbdfparseroutline) (4) Bitmap outlines of the bdfparser-compatible API (SPEC-v3 §7.1, §7.2, §7.4).
+- [`fontpixel.compat.bdfparser.outline`](#fontpixelcompatbdfparseroutline) (2) Bitmap outlines of the bdfparser-compatible API (SPEC-v3 §7.1, §7.2, §7.4).
 - [`fontpixel.compat.bdfparser.pcf`](#fontpixelcompatbdfparserpcf) (3) PCF input/output of the bdfparser-compatible API (SPEC-v3 §6).
 - [`fontpixel.compat.bdfparser.ttf`](#fontpixelcompatbdfparserttf) (2) Pixel TrueType output/input of the bdfparser-compatible API (SPEC-v3 §8, §8.1).
 - [`fontpixel.formats`](#fontpixelformats) (3) Per-codec namespaces (`fontpixel.formats.<module>`) and typed option helpers.
@@ -3221,25 +3221,13 @@ Bitmap outlines of the bdfparser-compatible API (SPEC-v3 §7.1, §7.2, §7.4).
 `bitmap_contours` and `rasterize` run the Rust SPEC outline code. A contour is
 a list of `(x, y, on_curve)` points in font units, y up.
 
-### `fontpixel.compat.bdfparser.outline.Contour(iterable=(), /)`
+### `fontpixel.compat.bdfparser.outline.Contour`
 
-*class*
+*type alias* -- `Contour = list[tuple[float, float, bool]]`
 
-Built-in mutable sequence.
+### `fontpixel.compat.bdfparser.outline.Point`
 
-If no argument is given, the constructor creates a new empty list.
-The argument must be an iterable if specified.
-
-### `fontpixel.compat.bdfparser.outline.Point(iterable=(), /)`
-
-*class*
-
-Built-in immutable sequence.
-
-If no argument is given, the constructor returns an empty tuple.
-If iterable is specified the tuple is initialized from iterable's items.
-
-If the argument is a tuple, the return value is the same object.
+*type alias* -- `Point = tuple[float, float, bool]`
 
 ### `fontpixel.compat.bdfparser.outline.bitmap_contours(bindata: 'Sequence[str]', shape: 'str' = 'square', dotsize: 'float' = 1.0, ppu: 'int' = 1, xoff: 'int' = 0, yoff: 'int' = 0) -> 'list[Contour]'`
 
