@@ -34,6 +34,10 @@ pub struct FormatsResponse {
     pub formats: Vec<FormatStatus>,
 }
 impl FormatsResponse {
+    /// The status of one format identifier.
+    pub fn get(&self, id: &str) -> Option<&FormatStatus> {
+        self.formats.iter().find(|status| status.format.id == id)
+    }
     /// Write the command-line JSON document.
     pub fn write_json(&self, out: &mut dyn Write, pretty: bool) -> fontpixel::Result<()> {
         crate::json::write(out, &serde_json::json!({ "formats": self.formats }), pretty)

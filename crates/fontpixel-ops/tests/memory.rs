@@ -73,6 +73,12 @@ impl Drop for Scratch {
 #[test]
 fn formats_lists_the_catalogue_with_compiled_status() {
     let response = fontpixel_ops::formats(&FormatsRequest::default());
+    assert!(response.get("pcf").is_some_and(|status| status.write));
+    assert!(response.get("no-such-format").is_none());
+    assert_eq!(
+        fontpixel_ops::convert::output_format_for(Path::new("x/font.woff2")).unwrap(),
+        "woff2"
+    );
     assert!(
         response
             .formats

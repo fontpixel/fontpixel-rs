@@ -573,6 +573,11 @@ pub(crate) fn conversion_report_bytes(
     }
     Ok(bytes)
 }
+/// The output format `convert` infers for a destination path: the OpenType
+/// container extensions first, then the registry's filename hints.
+pub fn output_format_for(destination: &Path) -> fontpixel::Result<String> {
+    infer_output_format(&fontpixel::registry(), destination)
+}
 fn infer_output_format(
     registry: &fontpixel::FontRegistry,
     destination: &Path,
