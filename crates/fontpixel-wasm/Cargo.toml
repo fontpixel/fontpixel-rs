@@ -30,7 +30,7 @@ toml = ["fontpixel-ops/toml"]
 minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "png"]
 # W8.3 merge page: bitmap inputs and every merge output (BDF, PCF, OTB,
 # TTF/OTF/WOFF/WOFF2) plus the CJK selection tables.
-merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "fontpixel/cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
+merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["serde"] }
