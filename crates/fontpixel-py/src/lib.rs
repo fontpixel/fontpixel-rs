@@ -17,6 +17,7 @@
 pub mod conv;
 pub mod errors;
 pub mod handles;
+pub mod ops;
 
 use pyo3::prelude::*;
 
@@ -26,5 +27,6 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     errors::register(m)?;
     handles::register(m)?;
+    ops::register(m)?;
     Ok(())
 }
