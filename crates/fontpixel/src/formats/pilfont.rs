@@ -6,12 +6,16 @@ use crate::resources::{OutputAsset, OutputBundle, ReadContext, ResourcePath, Wri
 use crate::{Error, Report, ResourceLimits, Result};
 /// Native input resource selection.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PilfontReadOptions {
     /// Explicit authorized mask image; otherwise try the native same-stem names.
     pub atlas: Option<ResourcePath>,
 }
 /// Native PILfont output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PilfontWriteOptions {
     /// Maximum atlas shelf width, default 800; glyphs wider than this fail.
     pub max_width: u32,

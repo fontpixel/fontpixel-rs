@@ -132,6 +132,8 @@ macro_rules! codec {
     ($codec:ident,$read:ident,$write:ident) => {
         /// Native format codec and typed options.
         #[derive(Debug, Clone, Default)]
+        #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+        #[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
         pub struct $codec {
             /// Native reader options.
             pub read_options: $read,

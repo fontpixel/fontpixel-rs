@@ -10,12 +10,16 @@ use crate::{FontSet, Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Explicit legacy encoding label for bitmap codes.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct LisaReadOptions {
     /// Optional charset label; codes remain native bytes.
     pub charset: Option<String>,
 }
 /// Native per-resource compression.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Compression {
     /// Preserve native representation; compress newly authored records.
     #[default]
@@ -27,6 +31,8 @@ pub enum Compression {
 }
 /// Bounded Lisa font library output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct LisaWriteOptions {
     /// Native compression policy.
     pub compression: Compression,
@@ -49,6 +55,8 @@ impl Default for LisaWriteOptions {
 }
 /// Registry implementation of native Lisa font.lib.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct LisaCodec {
     /// Input interpretation.
     pub read_options: LisaReadOptions,

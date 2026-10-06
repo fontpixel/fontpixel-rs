@@ -9,6 +9,8 @@ use std::collections::BTreeMap;
 use std::io::{Cursor, Write};
 /// Native image organization.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ImageLayout {
     /// One atlas with a separate mapping document.
     #[default]
@@ -18,6 +20,8 @@ pub enum ImageLayout {
 }
 /// Domain supplied by the caller; filenames themselves carry only integers.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ImageSetDomain {
     /// Original encoding numbers.
     #[default]
@@ -27,6 +31,8 @@ pub enum ImageSetDomain {
 }
 /// Explicit coverage projection for the native glyph images.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ImageSetBackground {
     /// Black background, white foreground; grayscale is coverage.
     #[default]
@@ -38,6 +44,8 @@ pub enum ImageSetBackground {
 }
 /// Native directory naming and interpretation, with no private metadata file.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageSetOptions {
     /// Literal filename prefix, default empty; must contain no path separator.
     pub prefix: String,

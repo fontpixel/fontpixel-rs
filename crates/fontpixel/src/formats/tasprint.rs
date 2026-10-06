@@ -7,6 +7,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Tasprint platform layouts.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum TasprintVersion {
     /// Headerless Spectrum/QL 96-character strikes.
     #[default]
@@ -20,6 +22,8 @@ pub enum TasprintVersion {
 }
 /// Explicit interpretation for headerless input.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TasprintReadOptions {
     /// Absent uses signatures and bounded size heuristics.
     pub version: Option<TasprintVersion>,
@@ -28,6 +32,8 @@ pub struct TasprintReadOptions {
 }
 /// Bounded native encoding choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TasprintWriteOptions {
     /// Platform layout.
     pub version: TasprintVersion,
@@ -59,6 +65,8 @@ impl Default for TasprintWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TasprintCodec {
     /// Read interpretation.
     pub read_options: TasprintReadOptions,

@@ -10,6 +10,8 @@ mod pft;
 mod png;
 /// Native output representations.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PlaydateFlavor {
     /// Standalone FNT with base64 PNG.
     #[default]
@@ -21,6 +23,8 @@ pub enum PlaydateFlavor {
 }
 /// Explicit sidecar choice for source files without cell dimensions.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PlaydateReadOptions {
     /// Caller-authorized PNG atlas path. If absent, derive from FNT name and dimensions.
     pub atlas: Option<ResourcePath>,
@@ -31,6 +35,8 @@ pub struct PlaydateReadOptions {
 }
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PlaydateWriteOptions {
     /// Native source or compiled representation.
     pub flavor: PlaydateFlavor,

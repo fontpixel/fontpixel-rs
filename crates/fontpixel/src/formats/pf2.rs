@@ -12,9 +12,13 @@ use std::collections::BTreeMap;
 pub use writer::{Pf2WriteOptions, write};
 /// PF2 currently has one defined, uncompressed reader representation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Pf2ReadOptions {}
 /// Native PF2 registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Pf2Codec {
     /// Reader configuration.
     pub read_options: Pf2ReadOptions,

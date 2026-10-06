@@ -13,6 +13,8 @@ pub use writer::write;
 
 /// PBF wire version.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Six-byte metadata, no buckets, 16-bit word offsets and eight-byte glyph headers.
     One,
@@ -24,6 +26,8 @@ pub enum Version {
 }
 /// Bitmap storage; RLE4 is available only in v3.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Compression {
     /// Continuous LSB-first pixels.
     #[default]
@@ -33,6 +37,8 @@ pub enum Compression {
 }
 /// Glyph offset field width (v1 always u16 words, v2 always u32 bytes).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum OffsetWidth {
     /// Smallest field that fits, for v3.
     #[default]
@@ -44,12 +50,16 @@ pub enum OffsetWidth {
 }
 /// Optional catalogue-compatible trimming.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PbfReadOptions {
     /// Crop blank margins, reporting changed rectangles as loss.
     pub trim: bool,
 }
 /// Explicit, bounded Pebble output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PbfWriteOptions {
     /// Wire version, default v3.
     pub version: Version,
@@ -90,6 +100,8 @@ impl Default for PbfWriteOptions {
 }
 /// Registry codec; no filesystem or external resources are accessed.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PbfCodec {
     /// Reader normalization.
     pub read_options: PbfReadOptions,

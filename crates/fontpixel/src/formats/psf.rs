@@ -9,6 +9,8 @@ use crate::{Report, ResourceLimits, Result};
 
 /// PSF wire format, independent of the source font's format.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Eight-wide, 256/512 cells, BMP-only mappings.
     One,
@@ -18,6 +20,8 @@ pub enum Version {
 }
 /// Whether to emit a Unicode table.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum UnicodeTable {
     /// Omit only for precisely positional legacy mappings; otherwise include.
     #[default]
@@ -29,6 +33,8 @@ pub enum UnicodeTable {
 }
 /// Bounded deterministic PSF writer options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PsfWriteOptions {
     /// PSF version (default 2).
     pub version: Version,
@@ -57,6 +63,8 @@ impl Default for PsfWriteOptions {
 }
 /// Immutable registry codec for PSF1 and PSF2, including gzip transport.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PsfCodec {
     /// Writer options; reads use the caller's shared resource limits.
     pub write_options: PsfWriteOptions,

@@ -10,6 +10,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// SNF input options. Bitmap layout is not part of the historical SNF header.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SnfReadOptions {
     /// Integer byte order; absent uses both version stamps.
     pub byte_order: Option<ByteOrder>,
@@ -18,6 +20,8 @@ pub struct SnfReadOptions {
 }
 /// SNF output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SnfWriteOptions {
     /// Integer byte order and corresponding native C bitfield allocation.
     pub byte_order: ByteOrder,
@@ -49,6 +53,8 @@ impl Default for SnfWriteOptions {
 }
 /// SNF registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SnfCodec {
     /// Explicit input interpretation.
     pub read_options: SnfReadOptions,

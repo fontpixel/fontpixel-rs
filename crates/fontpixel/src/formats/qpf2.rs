@@ -12,9 +12,13 @@ use crate::{Bitmap, FontSet, Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// QPF2 never implicitly opens a linked outline font.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Qpf2ReadOptions {}
 /// Raster representation declared by the QPF2 header.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GlyphFormat {
     /// Byte alpha samples, consumed by Qt 4's QPF2 engine.
     #[default]
@@ -25,6 +29,8 @@ pub enum GlyphFormat {
 }
 /// Native QPF2 output policy.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Qpf2WriteOptions {
     /// Native raster layout for newly encoded or edited data.
     pub glyph_format: GlyphFormat,
@@ -47,6 +53,8 @@ impl Default for Qpf2WriteOptions {
 }
 /// Registry adapter with explicit native options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Qpf2Codec {
     /// Input policy.
     pub read_options: Qpf2ReadOptions,

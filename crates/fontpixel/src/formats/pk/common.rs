@@ -10,6 +10,8 @@ use crate::{Error, Report, ResourceLimits, Result};
 /// Common output controls for TeX PK and GF.
 #[cfg(any(feature = "pk", feature = "gf"))]
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TexWriteOptions {
     /// Override design size in TeX points (72.27 points per inch).
     pub design_size: Option<Rational>,

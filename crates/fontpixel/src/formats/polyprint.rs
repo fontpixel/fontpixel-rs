@@ -7,12 +7,16 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Explicit Polyprint input interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PolyprintReadOptions {
     /// Baseline override; absent uses the documented format convention.
     pub baseline: Option<i64>,
 }
 /// Bounded Polyprint output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PolyprintWriteOptions {
     /// Explicitly allow Unicode numbers as legacy code positions.
     pub unicode_as_legacy: bool,
@@ -35,6 +39,8 @@ impl Default for PolyprintWriteOptions {
 }
 /// Registry codec for Polyprint.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PolyprintCodec {
     /// Typed reading options.
     pub read_options: PolyprintReadOptions,

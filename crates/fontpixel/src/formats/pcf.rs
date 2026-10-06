@@ -17,6 +17,8 @@ mod writer;
 
 /// Byte/bit significance order, independently selectable in PCF.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Order {
     /// Most significant byte/bit first (the default).
     #[default]
@@ -26,6 +28,8 @@ pub enum Order {
 }
 /// Alignment of each bitmap row in bytes.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GlyphPad {
     /// One byte.
     One,
@@ -49,6 +53,8 @@ impl GlyphPad {
 }
 /// Bitmap byte-swap unit when bit and byte order differ.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ScanUnit {
     /// One byte (the default).
     #[default]
@@ -73,6 +79,8 @@ impl ScanUnit {
 /// PCF has no `SIZE` header: point size and resolution live only in the
 /// `POINT_SIZE`, `RESOLUTION_X`, `RESOLUTION_Y` and `RESOLUTION` properties.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum MetadataPrecedence {
     /// Normalized edits rewrite those existing properties (the default).
     #[default]
@@ -85,6 +93,8 @@ pub enum MetadataPrecedence {
 }
 /// PCF-specific deterministic output choices.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcfWriteOptions {
     /// Integer byte order inside tables.
     pub byte_order: Order,
@@ -119,6 +129,8 @@ impl Default for PcfWriteOptions {
 }
 /// Actual PCF registry hooks, with strongly typed writer configuration.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcfCodec {
     /// Options for registry writes.
     pub write_options: PcfWriteOptions,

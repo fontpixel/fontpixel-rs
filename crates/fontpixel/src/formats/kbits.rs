@@ -11,12 +11,16 @@ use fidelity::{Budget, audit, bound, loss};
 mod wire;
 /// Bounded native output options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct KbitsWriteOptions {
     /// Input/model and output allocation limits.
     pub limits: ResourceLimits,
 }
 /// Native Kbits registry adapter.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct KbitsCodec {
     /// Native output controls.
     pub write_options: KbitsWriteOptions,

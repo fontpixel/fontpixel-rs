@@ -10,6 +10,8 @@ use crate::{Report, ReportEntry, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Native grayscale precision.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 #[repr(u8)]
 pub enum PrebuiltDepth {
     /// One bit, represented as Mono.
@@ -24,6 +26,8 @@ pub enum PrebuiltDepth {
 }
 /// Explicit input profile.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrebuiltReadOptions {
     /// Require an endian variant; absent follows the header selector.
     pub byte_order: Option<PrebuiltByteOrder>,
@@ -40,6 +44,8 @@ impl Default for PrebuiltReadOptions {
 }
 /// Native collection output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrebuiltWriteOptions {
     /// Numeric field byte order.
     pub byte_order: PrebuiltByteOrder,
@@ -77,6 +83,8 @@ impl Default for PrebuiltWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrebuiltCodec {
     /// Input choices.
     pub read_options: PrebuiltReadOptions,

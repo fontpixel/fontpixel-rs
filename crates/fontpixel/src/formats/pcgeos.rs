@@ -13,6 +13,8 @@ mod reader;
 mod writer;
 /// Native layout families.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PcgeosVariant {
     /// Major 1: byte codes, 20-byte family, 10-byte point entries.
     Sbcs,
@@ -21,6 +23,8 @@ pub enum PcgeosVariant {
 }
 /// Native input policy.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcgeosReadOptions {
     /// Override major-version layout selection when importing a native resource.
     pub variant: Option<PcgeosVariant>,
@@ -29,6 +33,8 @@ pub struct PcgeosReadOptions {
 }
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcgeosWriteOptions {
     /// Layout; absent preserves source, otherwise SBCS.
     pub variant: Option<PcgeosVariant>,
@@ -69,6 +75,8 @@ impl Default for PcgeosWriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcgeosCodec {
     /// Input policy.
     pub read_options: PcgeosReadOptions,

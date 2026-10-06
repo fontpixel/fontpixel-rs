@@ -13,12 +13,16 @@ use crate::{Bitmap, FontSet, Report, ResourceLimits, Result};
 
 /// Explicit legacy character interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MgtkReadOptions {
     /// Optional charset label; byte codes are not remapped implicitly.
     pub charset: Option<String>,
 }
 /// Raster storage width.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Columns {
     /// Preserve native width, otherwise choose according to actual glyph widths.
     #[default]
@@ -30,6 +34,8 @@ pub enum Columns {
 }
 /// Bounded native output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MgtkWriteOptions {
     /// One or two seven-bit strips.
     pub columns: Columns,
@@ -52,6 +58,8 @@ impl Default for MgtkWriteOptions {
 }
 /// Registry reader/writer with typed format options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MgtkCodec {
     /// Input interpretation.
     pub read_options: MgtkReadOptions,

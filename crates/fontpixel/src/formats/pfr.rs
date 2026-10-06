@@ -6,6 +6,8 @@ use crate::{FontSet, Report, ResourceLimits, Result};
 mod wire;
 /// Bitmap image encoding within native glyph programs.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PfrCompression {
     /// Continuous, MSB-first packed bits.
     #[default]
@@ -17,12 +19,16 @@ pub enum PfrCompression {
 }
 /// Typed input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PfrReadOptions {
     /// Override structural dialect identification for ambiguous native tables.
     pub dialect: Option<PfrDialect>,
 }
 /// Native conventions whose published specification and FreeType consumer differ.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PfrDialect {
     /// DAVIC Annex A offsets, fixed-point positions and polarity.
     Davic,
@@ -31,6 +37,8 @@ pub enum PfrDialect {
 }
 /// Native output and explicit conversion choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PfrWriteOptions {
     /// Raster encoding.
     pub compression: PfrCompression,
@@ -65,6 +73,8 @@ impl Default for PfrWriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PfrCodec {
     /// Typed reader options.
     pub read_options: PfrReadOptions,

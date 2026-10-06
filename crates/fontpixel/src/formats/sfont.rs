@@ -8,6 +8,8 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::{BTreeMap, BTreeSet};
 /// Native marker-image dialect.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum SfontFlavor {
     /// SDL SFont, implicit ASCII 33..126 by default.
     #[default]
@@ -17,6 +19,8 @@ pub enum SfontFlavor {
 }
 /// Caller-declared interpretation of native image fields.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SfontReadOptions {
     /// Force a dialect; absent detects RFont's control columns/chunks.
     pub flavor: Option<SfontFlavor>,
@@ -27,6 +31,8 @@ pub struct SfontReadOptions {
 }
 /// Deterministic native PNG output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SfontWriteOptions {
     /// Native dialect, default SFont.
     pub flavor: SfontFlavor,

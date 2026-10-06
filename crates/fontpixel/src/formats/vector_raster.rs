@@ -16,6 +16,8 @@ use std::collections::BTreeMap;
 
 /// Limits shared by all vector-reader paths and accumulated model output.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Input, sfnt table and glyph limits.
     pub sfnt: sfnt::Limits,
@@ -41,6 +43,8 @@ impl Default for Limits {
 }
 /// Explicit overrides distinguish rasterization from automatic grid recovery.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// None detects a native grid or extracts every physical embedded size.
     pub ppem: Option<u16>,
@@ -963,6 +967,8 @@ fn read_sfnt(data: &[u8], o: &Options) -> Result<(FontSet, Report)> {
 /// Container/output choices for native vectorization; outline generation reuses
 /// the independently verified variants writer without inventing language routes.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WriteOptions {
     /// Shape, units, names, bitmap attachment and resource limits.
     pub outline: crate::variants::Options,

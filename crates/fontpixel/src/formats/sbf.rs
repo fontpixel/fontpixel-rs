@@ -6,9 +6,13 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// SBF native positions remain Legacy codepoints.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SbfReadOptions {}
 /// Bounded native SBF output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SbfWriteOptions {
     /// Permit numerical Unicode-to-native byte mapping.
     pub unicode_as_legacy: bool,

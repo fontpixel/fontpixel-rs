@@ -10,12 +10,16 @@ pub use reader::{detect, read};
 pub use writer::write;
 /// Explicit interpretation of otherwise unlabelled byte character codes.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct IigsReadOptions {
     /// Legacy charset name. Codes are never implicitly converted to Unicode.
     pub charset: Option<String>,
 }
 /// QuickDraw II font record version.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Preserve native version, otherwise use 1.1 unless a 32-bit offset is needed.
     #[default]
@@ -27,6 +31,8 @@ pub enum Version {
 }
 /// Outer representation of one QuickDraw II font data fork.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Container {
     /// Native ProDOS font data fork.
     #[default]
@@ -36,6 +42,8 @@ pub enum Container {
 }
 /// Deterministic bounded QuickDraw II output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct IigsWriteOptions {
     /// Native data fork or segmented text transport.
     pub container: Container,
@@ -61,6 +69,8 @@ impl Default for IigsWriteOptions {
 }
 /// Registry codec with independent read and write choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct IigsCodec {
     /// Legacy code interpretation.
     pub read_options: IigsReadOptions,

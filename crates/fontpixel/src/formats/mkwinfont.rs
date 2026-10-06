@@ -7,9 +7,13 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed mkwinfont input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MkwinfontReadOptions {}
 /// Native mkwinfont registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MkwinfontCodec {
     /// Input profile choices.
     pub read_options: MkwinfontReadOptions,

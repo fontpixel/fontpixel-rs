@@ -14,6 +14,8 @@ use crate::{Report, ReportEntry, ResourceLimits, Result};
 use std::collections::{BTreeMap, BTreeSet};
 /// Native bitmap file generation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RiscosVersion {
     /// Original x90y45 multi-strike container.
     Xy,
@@ -31,6 +33,8 @@ pub enum RiscosVersion {
 }
 /// Native bitmap depth.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RiscosDepth {
     /// Packed one-bit ink.
     #[default]
@@ -40,6 +44,8 @@ pub enum RiscosDepth {
 }
 /// Native one-bit storage.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RiscosCompression {
     /// Continuous bottom-up pixels.
     #[default]
@@ -49,6 +55,8 @@ pub enum RiscosCompression {
 }
 /// Optional native scalable-metrics output version.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RiscosMetricsVersion {
     /// Original mapped eight-bit directory.
     V0,
@@ -58,6 +66,8 @@ pub enum RiscosMetricsVersion {
 }
 /// Input profile and scoped sidecar.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RiscosReadOptions {
     /// Require a file generation.
     pub version: Option<RiscosVersion>,
@@ -66,6 +76,8 @@ pub struct RiscosReadOptions {
 }
 /// Native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RiscosWriteOptions {
     /// Bitmap file generation.
     pub version: RiscosVersion,
@@ -106,6 +118,8 @@ impl Default for RiscosWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RiscosCodec {
     /// Reading choices.
     pub read_options: RiscosReadOptions,

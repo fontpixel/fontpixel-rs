@@ -11,12 +11,16 @@ mod writer;
 
 /// Explicit conversion of native grayscale, if requested by a caller.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct KbitxReadOptions {
     /// Samples at least this value become ink; `None` retains exact grayscale.
     pub gray_threshold: Option<u8>,
 }
 /// Bounded deterministic native XML output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct KbitxWriteOptions {
     /// Model, bitmap and cumulative allocation limits.
     pub limits: ResourceLimits,
@@ -33,6 +37,8 @@ impl Default for KbitxWriteOptions {
 }
 /// Native KBITX registry reader, detector and writer.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct KbitxCodec {
     /// Independent input choices.
     pub read_options: KbitxReadOptions,

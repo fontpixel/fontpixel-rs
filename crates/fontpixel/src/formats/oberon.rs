@@ -8,9 +8,13 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Input policy for the documented bitmap wire format.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct OberonReadOptions {}
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct OberonWriteOptions {
     /// Native family byte; absent preserves its source property.
     pub family: Option<u8>,
@@ -39,6 +43,8 @@ impl Default for OberonWriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct OberonCodec {
     /// Input options.
     pub read_options: OberonReadOptions,

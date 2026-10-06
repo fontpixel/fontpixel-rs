@@ -8,6 +8,8 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::resources::{OutputBundle, ReadContext, Written};
 /// Native wyse codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WyseCodec {
     /// Reader interpretation.
     pub read_options: WyseReadOptions,

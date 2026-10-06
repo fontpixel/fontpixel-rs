@@ -4,6 +4,8 @@ use crate::model::GlyphMetrics;
 use crate::working::{Budget as Ledger, Lease, Vector};
 /// Native, deterministic uncompressed PF2 output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Pf2WriteOptions {
     /// Explicit threshold required for grayscale input.
     pub gray_threshold: Option<u8>,

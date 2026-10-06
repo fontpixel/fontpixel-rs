@@ -7,9 +7,13 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Native header detection also accepts an optional two-byte load address.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct U8mReadOptions {}
 /// Bounded U8/M output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct U8mWriteOptions {
     /// Optional load-address prefix; otherwise retain a source prefix if present.
     pub load_address: Option<u16>,

@@ -6,6 +6,8 @@ use crate::resources::{OutputAsset, OutputBundle, ReadContext, ResourcePath, Wri
 use crate::{Report, ResourceLimits, Result};
 /// PXL storage alignment.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PxlVersion {
     /// Word pointers and 32-bit row padding.
     #[default]
@@ -26,6 +28,8 @@ impl PxlVersion {
 }
 /// Optional explicit TFM resource; no implicit filename lookup.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PxlReadOptions {
     /// Require one PXL identifier.
     pub version: Option<PxlVersion>,
@@ -34,6 +38,8 @@ pub struct PxlReadOptions {
 }
 /// Bounded output and optional TFM generation.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PxlWriteOptions {
     /// Raster variant.
     pub version: PxlVersion,
@@ -65,6 +71,8 @@ impl Default for PxlWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PxlCodec {
     /// Input choices.
     pub read_options: PxlReadOptions,

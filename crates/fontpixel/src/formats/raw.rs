@@ -6,6 +6,8 @@ use crate::{FontSet, Report, ResourceLimits, Result};
 mod packed;
 /// Alignment of raw bitmap rows and glyph boundaries.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RawPacking {
     /// Each row in a horizontal strike starts on a byte boundary.
     #[default]
@@ -15,6 +17,8 @@ pub enum RawPacking {
 }
 /// Byte ordering inside a horizontal strike.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RawByteOrder {
     /// Store complete rows consecutively.
     #[default]
@@ -24,6 +28,8 @@ pub enum RawByteOrder {
 }
 /// Binary cell layout; no field is inferred from arbitrary input bytes.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct RawLayout {
     /// Cell width in pixels.
     pub width: u32,
@@ -75,6 +81,8 @@ impl RawLayout {
 }
 /// Common layouts selected explicitly by name.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RawPreset {
     /// IBM VGA 8 by 8, 256 positions.
     Vga8,
@@ -93,6 +101,7 @@ pub enum RawPreset {
     /// MSX 8 by 8, 256 positions.
     Msx,
     /// monobit README Harlekin III: 512 cells in one 4096×8 strike.
+    #[cfg_attr(feature = "serde", serde(rename = "harlekin_iii"))]
     HarlekinIII,
     /// Atari Harlekin description: 256 cells in one 2048×8 strike.
     Harlekin8,
@@ -101,12 +110,16 @@ pub enum RawPreset {
 }
 /// Explicit raw import configuration.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RawReadOptions {
     /// Required layout or explicitly selected preset.
     pub layout: Option<RawLayout>,
 }
 /// Raw export settings.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RawWriteOptions {
     /// Explicit output layout; absent uses uniform source cells.
     pub layout: Option<RawLayout>,
@@ -129,6 +142,8 @@ impl Default for RawWriteOptions {
 }
 /// Raw registry codec; its default reader refuses unspecified layouts.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RawCodec {
     /// Import configuration.
     pub read_options: RawReadOptions,

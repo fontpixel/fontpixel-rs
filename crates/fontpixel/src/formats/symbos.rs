@@ -8,6 +8,8 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Native record layout.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum SymbosVersion {
     /// One width byte and fifteen raster rows.
     Medium,
@@ -18,6 +20,11 @@ pub enum SymbosVersion {
 }
 /// Interpretation of the second byte in a 255-character file.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(rename_all = "snake_case", deny_unknown_fields)
+)]
 pub enum SymbosExtendedInfo {
     /// Native writing-system identifier, 2 through 31.
     WritingSystem(u8),
@@ -29,12 +36,16 @@ pub enum SymbosExtendedInfo {
 }
 /// Explicit input compatibility choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SymbosReadOptions {
     /// Accept a short medium/small character range; native files normally end at 127 or 255.
     pub allow_short_range: bool,
 }
 /// Native bounded output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SymbosWriteOptions {
     /// Layout; absent preserves source layout or uses medium.
     pub version: Option<SymbosVersion>,
@@ -69,6 +80,8 @@ impl Default for SymbosWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SymbosCodec {
     /// Input choices.
     pub read_options: SymbosReadOptions,

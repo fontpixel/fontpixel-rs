@@ -9,6 +9,8 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 /// Native Rockbox font generations.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RockboxFlavor {
     /// Row-packed little-endian words, with embedded name fields.
     Rb11,
@@ -18,6 +20,8 @@ pub enum RockboxFlavor {
 }
 /// Native raster encoding.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RockboxDepth {
     /// One-bit coverage, depth field zero.
     Mono,
@@ -26,9 +30,13 @@ pub enum RockboxDepth {
 }
 /// Both native generations are recognized from their signatures.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RockboxReadOptions {}
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RockboxWriteOptions {
     /// Native file generation.
     pub flavor: RockboxFlavor,

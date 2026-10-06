@@ -10,9 +10,13 @@ mod reader;
 mod writer;
 /// Native input policy.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VtfontReadOptions {}
 /// Native bounded output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VtfontWriteOptions {
     /// Width of one half-cell; absent preserves source metadata or derives it.
     pub cell_width: Option<u8>,
@@ -44,6 +48,8 @@ impl Default for VtfontWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VtfontCodec {
     /// Native input policy.
     pub read_options: VtfontReadOptions,

@@ -7,9 +7,13 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed plus3dos input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Plus3dosReadOptions {}
 /// Native plus3dos registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Plus3dosCodec {
     /// Input profile choices.
     pub read_options: Plus3dosReadOptions,

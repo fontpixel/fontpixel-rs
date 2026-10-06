@@ -7,6 +7,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Signum! editor/printer raster family.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum SignumVersion {
     /// Sixteen-column editor font.
     #[default]
@@ -38,6 +40,8 @@ impl SignumVersion {
 }
 /// Explicit overrides for Signum's inferred baseline convention.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SignumReadOptions {
     /// Require this format variant; absent detects magic.
     pub version: Option<SignumVersion>,
@@ -48,6 +52,8 @@ pub struct SignumReadOptions {
 }
 /// Bounded Signum output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SignumWriteOptions {
     /// Variant, default editor E24.
     pub version: SignumVersion,
@@ -73,6 +79,8 @@ impl Default for SignumWriteOptions {
 }
 /// Registry codec for all four Signum families.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SignumCodec {
     /// Input interpretation.
     pub read_options: SignumReadOptions,

@@ -12,6 +12,8 @@ pub use writer::write;
 
 /// Palm font wrapper.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PalmContainer {
     /// One bare NFNT or multi-density nfnt resource.
     Bare,
@@ -23,6 +25,8 @@ pub enum PalmContainer {
 }
 /// Bitmap resource version.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PalmVersion {
     /// Classic 72-dpi NFNT.
     #[default]
@@ -40,6 +44,8 @@ pub enum PalmVersion {
 }
 /// Interpretation of fractional 108-dpi coordinates.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PalmRounding {
     /// Require every scaled coordinate to be integral.
     #[default]
@@ -49,6 +55,8 @@ pub enum PalmRounding {
 }
 /// Explicit Palm input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PalmReadOptions {
     /// Override automatic wrapper recognition.
     pub container: Option<PalmContainer>,
@@ -57,6 +65,8 @@ pub struct PalmReadOptions {
 }
 /// Bounded native Palm output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PalmWriteOptions {
     /// Output wrapper.
     pub container: PalmContainer,
@@ -88,6 +98,8 @@ impl Default for PalmWriteOptions {
 }
 /// Registry codec with independent read/write choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PalmCodec {
     /// Reader options.
     pub read_options: PalmReadOptions,

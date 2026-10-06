@@ -185,6 +185,8 @@ pub struct NativeGlyph {
 }
 /// Atlas mapping or native directory interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageReadOptions {
     /// Filename labels and coverage for a native directory input.
     pub imageset: ImageSetOptions,
@@ -195,6 +197,8 @@ pub struct ImageReadOptions {
 }
 /// Mapping serialization.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum MappingFormat {
     /// Compact deterministic JSON.
     #[default]
@@ -204,6 +208,8 @@ pub enum MappingFormat {
 }
 /// Image container choice; default infers it from the output name.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Encoding {
     /// PNG, lossless and grayscale-capable.
     Png,
@@ -250,6 +256,8 @@ impl Encoding {
 }
 /// Bounded deterministic atlas or native directory output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageWriteOptions {
     /// Atlas with mapping, or native separately labelled glyph images.
     pub layout: ImageLayout,
@@ -281,6 +289,8 @@ impl Default for ImageWriteOptions {
 }
 /// Image codec installed by the `image` feature.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageCodec {
     /// Input mapping and native directory profile.
     pub read_options: ImageReadOptions,

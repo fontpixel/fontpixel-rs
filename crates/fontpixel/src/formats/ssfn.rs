@@ -9,6 +9,8 @@ mod ascii;
 mod binary;
 /// Native SSFN representation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum SsfnEncoding {
     /// Binary SFN2, or SFNC for several fonts.
     #[default]
@@ -18,9 +20,13 @@ pub enum SsfnEncoding {
 }
 /// Typed input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SsfnReadOptions {}
 /// Native output and explicit conversion choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SsfnWriteOptions {
     /// Binary or ASCII output.
     pub encoding: SsfnEncoding,
@@ -46,6 +52,8 @@ impl Default for SsfnWriteOptions {
 }
 /// Registry codec with typed read/write choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SsfnCodec {
     /// Reader options.
     pub read_options: SsfnReadOptions,

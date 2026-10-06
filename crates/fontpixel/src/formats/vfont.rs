@@ -9,12 +9,16 @@ use crate::{Report, ResourceLimits, Result};
 
 /// Explicit vfont input interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VfontReadOptions {
     /// Require this integer order; absent detects it from the magic.
     pub byte_order: Option<ByteOrder>,
 }
 /// Bounded vfont output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VfontWriteOptions {
     /// Integer byte order, default little endian.
     pub byte_order: ByteOrder,
@@ -40,6 +44,8 @@ impl Default for VfontWriteOptions {
 }
 /// Registry codec for Berkeley vfont.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct VfontCodec {
     /// Typed reading choices.
     pub read_options: VfontReadOptions,

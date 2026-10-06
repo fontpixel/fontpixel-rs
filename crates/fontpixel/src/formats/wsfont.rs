@@ -11,6 +11,8 @@ use crate::{Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Native order tag, independently applicable to bits and bytes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum WsfontOrder {
     /// Driver-specific known order, interpreted by the input policy.
     Known,
@@ -38,6 +40,8 @@ impl WsfontOrder {
 }
 /// Native raster class; the wire selects alpha when stride is at least width.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum WsfontDepth {
     /// Packed one-bit rows.
     Mono,
@@ -46,6 +50,8 @@ pub enum WsfontDepth {
 }
 /// Explicit interpretation of driver-specific order zero.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WsfontReadOptions {
     /// Meaning of a KNOWN bit-order tag, default left-to-right.
     pub known_bit_order: WsfontOrder,
@@ -62,6 +68,8 @@ impl Default for WsfontReadOptions {
 }
 /// Native bounded output policy.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WsfontWriteOptions {
     /// Native character encoding identifier; absent preserves its source property.
     pub encoding: Option<u32>,
@@ -102,6 +110,8 @@ impl Default for WsfontWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WsfontCodec {
     /// Native read choices.
     pub read_options: WsfontReadOptions,

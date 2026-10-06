@@ -14,6 +14,8 @@ const NS: &str = "http://www.w3.org/2000/svg";
 const FP: &str = "https://fontpixel.org/ns/svg/1";
 /// Explicit aggregate XML, geometry and raster budgets.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Input bytes, per-record bytes, glyph count and per-glyph pixels.
     pub resources: ResourceLimits,
@@ -48,6 +50,8 @@ impl Default for Limits {
 }
 /// SVG-font raster projection options.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ReadOptions {
     /// Explicit pixel size, 1..=4096; otherwise native extension or exhaustive grid.
     pub ppem: Option<u16>,
@@ -58,6 +62,8 @@ pub struct ReadOptions {
 }
 /// Native SVG-font serialization options.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WriteOptions {
     /// Positive design units per source pixel.
     pub units_per_pixel: u16,
@@ -86,6 +92,8 @@ impl Default for WriteOptions {
 }
 /// Standalone image options. Paths use y-down coordinates and no font resources.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageOptions {
     /// Palette, integer scale and image/output limits.
     pub image: crate::render::ImageOptions,
@@ -108,6 +116,8 @@ impl Default for ImageOptions {
 }
 /// Registered SVG-font codec (standalone images are deliberately output-only).
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SvgCodec {
     /// Font reader options.
     pub read_options: ReadOptions,

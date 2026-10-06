@@ -16,6 +16,8 @@ mod writer;
 
 /// Resource bounds for deterministic YAFF serialization.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct YaffWriteOptions {
     /// Maximum encoded UTF-8 bytes, enforced as bytes are written.
     pub max_output_bytes: usize,
@@ -32,6 +34,8 @@ impl Default for YaffWriteOptions {
 }
 /// Registered YAFF detector, reader and writer.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct YaffCodec {
     /// Bounded write configuration.
     pub write_options: YaffWriteOptions,

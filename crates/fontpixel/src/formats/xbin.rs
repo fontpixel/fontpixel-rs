@@ -6,6 +6,8 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::resources::{OutputBundle, ReadContext, Written};
 /// Number of native font slots.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CharacterCount {
     /// Select from the largest supported source position.
     #[default]
@@ -17,6 +19,8 @@ pub enum CharacterCount {
 }
 /// Treatment of native non-font sections.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ScreenMode {
     /// Retain validated native screen/palette properties.
     #[default]
@@ -26,6 +30,8 @@ pub enum ScreenMode {
 }
 /// XBIN output projection.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct XbinWriteOptions {
     /// Output cell rectangle; width must be eight.
     pub cell: Option<Bounds>,
@@ -52,6 +58,8 @@ impl XbinWriteOptions {
 }
 /// Native XBIN codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct XbinCodec {
     /// Reader interpretation.
     pub read_options: XbinReadOptions,

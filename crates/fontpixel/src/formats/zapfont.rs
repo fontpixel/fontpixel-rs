@@ -7,6 +7,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use std::collections::{BTreeMap, BTreeSet};
 /// Native container layout.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ZapVariant {
     /// Original contiguous numeric-cell format.
     Old,
@@ -16,6 +18,8 @@ pub enum ZapVariant {
 }
 /// Native font interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ZapfontReadOptions {
     /// Require a particular native variant; default detects magic.
     pub variant: Option<ZapVariant>,
@@ -26,6 +30,8 @@ pub struct ZapfontReadOptions {
 }
 /// Native writer profile.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ZapfontWriteOptions {
     /// Native output variant.
     pub variant: ZapVariant,
@@ -50,6 +56,8 @@ impl ZapfontWriteOptions {
 }
 /// Native Zap font codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ZapfontCodec {
     /// Input choices.
     pub read_options: ZapfontReadOptions,

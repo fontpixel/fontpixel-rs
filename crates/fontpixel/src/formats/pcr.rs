@@ -7,9 +7,13 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed pcr input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcrReadOptions {}
 /// Native pcr registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PcrCodec {
     /// Input profile choices.
     pub read_options: PcrReadOptions,

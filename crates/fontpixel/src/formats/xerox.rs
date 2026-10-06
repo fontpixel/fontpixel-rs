@@ -13,6 +13,8 @@ use crate::{Report, ReportEntry, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Xerox native raster family.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum XeroxVariant {
     /// AL screen fonts with extension chains.
     Alto,
@@ -24,6 +26,8 @@ pub enum XeroxVariant {
 }
 /// BITBLT native layout.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum XeroxBitbltLayout {
     /// Raster columns equal character advances.
     Plain,
@@ -37,6 +41,8 @@ pub enum XeroxBitbltLayout {
 }
 /// Input interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct XeroxReadOptions {
     /// Require a family; absent distinguishes structural headers before trying AL.
     pub variant: Option<XeroxVariant>,
@@ -45,6 +51,8 @@ pub struct XeroxReadOptions {
 }
 /// Bounded native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct XeroxWriteOptions {
     /// Output family.
     pub variant: XeroxVariant,
@@ -79,6 +87,8 @@ impl Default for XeroxWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct XeroxCodec {
     /// Input choices.
     pub read_options: XeroxReadOptions,

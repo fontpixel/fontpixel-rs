@@ -13,12 +13,16 @@ mod ascii85;
 mod writer;
 /// Controls deterministic bitmap-only SFD output.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SfdWriteOptions {
     /// Cumulative model, input and output budgets.
     pub limits: ResourceLimits,
 }
 /// SFD registry adapter, retaining all bitmap strikes.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct SfdCodec {
     /// Native writer controls.
     pub write_options: SfdWriteOptions,

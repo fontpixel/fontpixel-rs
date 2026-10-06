@@ -13,12 +13,16 @@ use std::collections::BTreeMap;
 
 /// Metadata explicitly supplied from outside the headerless QPF record.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct QpfReadOptions {
     /// Family name, conventionally carried in a QPF filename rather than bytes.
     pub family: Option<String>,
 }
 /// Native packed QPF output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct QpfWriteOptions {
     /// Explicit Gray8-to-Mono conversion; absence preserves native Gray8.
     pub gray_threshold: Option<u8>,
@@ -38,6 +42,8 @@ impl Default for QpfWriteOptions {
 }
 /// Registry adapter for the packed legacy QPF format.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct QpfCodec {
     /// Explicit external input metadata.
     pub read_options: QpfReadOptions,

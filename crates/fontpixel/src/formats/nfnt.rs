@@ -15,6 +15,8 @@ pub use writer::{write, write_bundle};
 
 /// Outer representation for Macintosh bitmap font resources.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Container {
     /// One bare NFNT/FONT resource.
     Bare,
@@ -36,6 +38,8 @@ pub enum Container {
 }
 /// Bitmap resource type.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ResourceType {
     /// Flexible resource IDs linked by FOND.
     #[default]
@@ -45,6 +49,8 @@ pub enum ResourceType {
 }
 /// Explicit interpretation of Macintosh legacy codes and paired resources.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NfntReadOptions {
     /// Legacy encoding label; no implicit remapping to Unicode.
     pub charset: Option<String>,
@@ -53,6 +59,8 @@ pub struct NfntReadOptions {
 }
 /// Deterministic, bounded Macintosh font output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NfntWriteOptions {
     /// Outer representation.
     pub container: Container,
@@ -78,6 +86,8 @@ impl Default for NfntWriteOptions {
 }
 /// Registry implementation with strongly typed options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NfntCodec {
     /// Input interpretation.
     pub read_options: NfntReadOptions,

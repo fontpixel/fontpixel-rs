@@ -6,12 +6,16 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Explicit Printshop input interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrintshopReadOptions {
     /// Baseline override; absent uses the documented format convention.
     pub baseline: Option<i64>,
 }
 /// Bounded Printshop output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrintshopWriteOptions {
     /// Explicitly allow Unicode numbers as legacy code positions.
     pub unicode_as_legacy: bool,
@@ -34,6 +38,8 @@ impl Default for PrintshopWriteOptions {
 }
 /// Registry codec for Printshop.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PrintshopCodec {
     /// Typed reading options.
     pub read_options: PrintshopReadOptions,

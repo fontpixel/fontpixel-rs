@@ -9,6 +9,8 @@ pub use reader::{detect, read};
 pub use writer::write;
 /// Select the external Plan 9 representation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Container {
     /// A Unicode font manifest and relative subfont assets.
     #[default]
@@ -18,6 +20,8 @@ pub enum Container {
 }
 /// Plan 9 image storage within generated subfonts.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Compression {
     /// Uncompressed packed image rows.
     #[default]
@@ -27,6 +31,8 @@ pub enum Compression {
 }
 /// Typed Plan 9 output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Plan9WriteOptions {
     /// Manifest bundle or direct subfont.
     pub container: Container,
@@ -55,6 +61,8 @@ impl Default for Plan9WriteOptions {
 }
 /// Registry codec for both Plan 9 representations.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Plan9Codec {
     /// Typed output choices.
     pub write_options: Plan9WriteOptions,

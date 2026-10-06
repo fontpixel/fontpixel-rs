@@ -9,6 +9,8 @@ pub use reader::read;
 pub use writer::write;
 /// Registry codec for PK font packets.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PkCodec {
     /// Typed TeX output choices.
     pub write_options: PkWriteOptions,
