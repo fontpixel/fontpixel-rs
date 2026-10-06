@@ -156,6 +156,33 @@ InspectedRequest = TypedDict("InspectedRequest", {
     "source_identity_total_bytes": int, "declared_inputs": List[str], "weight": int,
     "error": str}, total=False)
 """A validated, normalized request (``inspect_request``, ``parse_batch_toml``)."""
+CodepointKind = Literal["unicode", "legacy"]
+"""The kind of a ``Codepoint``: a Unicode scalar or a legacy charset code."""
+TableRecord = TypedDict("TableRecord", {"tag": str, "checksum": int, "offset": int, "data": bytes})
+"""One sfnt table directory record (``Sfnt.tables()``)."""
+CollectionFace = TypedDict("CollectionFace", {"flavor": "Flavor", "offset": int, "tables": List[TableRecord]})
+"""One face of a TrueType collection (``Collection.faces()``)."""
+LanguageVariantItem = TypedDict("LanguageVariantItem", {"language": str, "scripts": List[str], "font": "Font"})
+"""A language alternative as returned by ``Variants.languages`` (font handle copy)."""
+LanguageVariantArgs = TypedDict("LanguageVariantArgs", {"language": Tag, "scripts": Sequence[Tag], "font": FontLike})
+"""A language alternative as assigned to ``Variants.languages``."""
+ScriptVariantItem = TypedDict("ScriptVariantItem", {"scripts": List[str], "font": "Font"})
+"""A script alternative as returned by ``Variants.scripts``."""
+ScriptVariantArgs = TypedDict("ScriptVariantArgs", {"scripts": Sequence[Tag], "font": FontLike})
+"""A script alternative as assigned to ``Variants.scripts``."""
+SharedMetricRuns = TypedDict("SharedMetricRuns", {"tables": "TablesBytes", "shared_runs": int})
+"""``sfnt.bitmap.encode_shared_metric_runs``: the encoded tables and the number of shared runs."""
+SubsetResult = TypedDict("SubsetResult", {"bytes": bytes, "glyph_mapping": "dict[int, int]", "report": "Report"})
+"""``fontpixel.sfnt.subset.subset``: the subset sfnt, old-to-new glyph IDs and the report."""
+WoffAuxiliary = TypedDict("WoffAuxiliary", {
+    "major_version": int, "minor_version": int, "metadata": Union[bytes, None], "private_data": Union[bytes, None]})
+"""Version and the optional metadata / private-data blocks of a WOFF file."""
+WoffDecoded = TypedDict("WoffDecoded", {"sfnt": bytes, "auxiliary": WoffAuxiliary, "report": "Report"})
+"""A decoded WOFF/WOFF2: the standalone sfnt, the preserved envelope fields and the report."""
+ParsedBatch = TypedDict("ParsedBatch", {
+    "jobs": Union[int, None], "max_working_bytes": int, "max_pending_bytes": int, "max_report_bytes": int,
+    "max_task_report_bytes": int, "tasks": List[InspectedRequest]})
+"""``fontpixel.ops.parse_batch_toml``: the job's budgets and its prepared tasks."""
 ParsedArgs = TypedDict("ParsedArgs", {
     "command": str, "request": Mapping[str, Any], "report_style": str,
     "source_identity_total_bytes": int})
@@ -2990,18 +3017,6 @@ class ImageFormatsWriteOptions(TypedDict, total=False):
     """Output glyph baseline measured down from the image top."""
 
 
-class ImageImageOptions(TypedDict, total=False):
-    """`fontpixel::render::image::ImageOptions`: Image export options shared by PNG and SVG."""
-    scale: int
-    """Positive integer nearest-neighbor scale (SVG viewBox remains unscaled)."""
-    foreground: Rgba
-    """Ink color."""
-    background: Rgba
-    """Paper color; transparent is supported explicitly."""
-    limits: BitmapLimits
-    """Scaled dimensions/pixels and encoded-output byte budget."""
-
-
 class ImageMapping(TypedDict, total=False):
     """`fontpixel::formats::image::Mapping`: A catalogue-compatible mapping, optionally carrying native metadata."""
     fontpixel_image: int | None
@@ -3026,6 +3041,18 @@ class ImageMapping(TypedDict, total=False):
     """Optional catalogue variant name (not a font family assignment)."""
     native: NativeMetadata | None
     """Exact native font/container metadata."""
+
+
+class ImageOptions(TypedDict, total=False):
+    """`fontpixel::render::image::ImageOptions`: Image export options shared by PNG and SVG."""
+    scale: int
+    """Positive integer nearest-neighbor scale (SVG viewBox remains unscaled)."""
+    foreground: Rgba
+    """Ink color."""
+    background: Rgba
+    """Paper color; transparent is supported explicitly."""
+    limits: BitmapLimits
+    """Scaled dimensions/pixels and encoded-output byte budget."""
 
 
 class ImageReadOptions(TypedDict, total=False):
@@ -5568,8 +5595,14 @@ OutputAssetDict = TypedDict("OutputAssetDict", {"path": "ResourcePath", "bytes":
 """`fontpixel::resources::OutputAsset`: One in-memory output asset; the caller decides where to persist it."""
 
 
-class OutputBundleDict(TypedDict, total=False):
+class OutputBundleDict(TypedDict):
     """`fontpixel::resources::OutputBundle`: Complete validated output, with one entry point and zero or more sidecars."""
+    primary: str
+    """Entry point (a file name, or the directory name)."""
+    assets: list[OutputAssetDict]
+    """Every asset in order."""
+    directory: bool
+    """Whether the entry point names a directory."""
 
 
 class P2FormatsReadOptions(TypedDict, total=False):
@@ -7280,8 +7313,12 @@ class RasterOptions(TypedDict, total=False):
     """Reviewed vertical translation in pixel units."""
 
 
-class Rational(TypedDict, total=False):
+class Rational(TypedDict):
     """`fontpixel::model::Rational`: Exact rational metric, avoiding float rounding and preserving equality. Unreduced fractions are allowed so the source's scale remains expressible."""
+    numerator: int
+    """Signed numerator."""
+    denominator: int
+    """Nonzero denominator."""
 
 
 class RawCodec(TypedDict, total=False):
@@ -8012,7 +8049,7 @@ class SvgCodec(TypedDict, total=False):
 
 class SvgImageOptions(TypedDict, total=False):
     """`fontpixel::formats::svg::ImageOptions`: Standalone image options. Paths use y-down coordinates and no font resources."""
-    image: ImageImageOptions
+    image: ImageOptions
     """Palette, integer scale and image/output limits."""
     shape: Shape
     """Pixel outline shape."""
@@ -9096,3 +9133,812 @@ TaskRequest = Union[TaskRequestConvert, TaskRequestVectorize, TaskRequestVariant
 
 WindowsCharset = Union[Literal["system_ansi", "system_oem", "system_mac", "symbol"], WindowsCharsetCodePage, WindowsCharsetUnknown]
 """`fontpixel::charset::WindowsCharset`: A Windows FNT `dfCharSet` requirement; contextual/symbol sets aren't guessed."""
+
+
+# ------------------------------------------------------------------ binding-level extensions
+
+
+class CffEncodedBytes(TypedDict):
+    """
+    `fontpixel::sfnt::cff::Encoded`: Encoded CFF table plus matching sfnt fields.
+
+    As returned by the bindings: ``data``, ``maxp`` are ``bytes``.
+    """
+    data: bytes
+    """Bytes for the `CFF ` table."""
+    bounds: list[int]
+    """Outward-rounded geometric bounds for `head` and FontBBox."""
+    maxp: bytes
+    """Six-byte maxp version 0.5 table."""
+
+
+class EncodedCmapBytes(TypedDict):
+    """
+    `fontpixel::sfnt::cmap::EncodedCmap`: Serialized cmap and a compatibility fact callers can report.
+
+    As returned by the bindings: ``data`` are ``bytes``.
+    """
+    data: bytes
+    """Complete table bytes, including full-Unicode format 12 unless [`FullRecords::WhenNeeded`] found format 4 sufficient."""
+    has_bmp_subtable: bool
+    """Whether a complete representable BMP format 4 is included (U+FFFF is only in format 12). False never means the full-Unicode map was truncated."""
+
+
+class EncodedMetricsBytes(TypedDict):
+    """
+    `fontpixel::sfnt::metrics::EncodedMetrics`: Header + metric array bytes. The header's count matches compact storage.
+
+    As returned by the bindings: ``header``, ``metrics`` are ``bytes``.
+    """
+    header: bytes
+    """hhea or vhea bytes."""
+    metrics: bytes
+    """hmtx or vmtx bytes."""
+    num_long_metrics: int
+    """Count of full pairs before trailing bearing-only entries."""
+
+
+class GlyfEncodedBytes(TypedDict):
+    """
+    `fontpixel::sfnt::glyf::Encoded`: Encoded outlines and values the caller must reconcile with head/maxp.
+
+    As returned by the bindings: ``glyf``, ``loca`` are ``bytes``.
+    """
+    glyf: bytes
+    """Glyph data, each entry aligned to two bytes."""
+    loca: bytes
+    """Location table with `numGlyphs + 1` entries."""
+    index_to_loc_format: int
+    """Value for head.indexToLocFormat (0 or 1)."""
+    bounds: list[int]
+    """Whole-font control-point bounds, or zeros for all-empty fonts."""
+    statistics: Statistics
+    """Recomputed geometry maxima."""
+
+
+class TablesBytes(TypedDict):
+    """
+    `fontpixel::sfnt::bitmap::Tables`: Encoded bitmap pair; insert using `kind.tags()` into a shared sfnt builder.
+
+    As returned by the bindings: ``data``, ``location`` are ``bytes``.
+    """
+    data: bytes
+    """EBDT or bdat bytes."""
+    location: bytes
+    """EBLC or bloc bytes."""
+
+
+
+class CharsetTableEntry(CharsetInfo):
+    """A ``charset_table()`` row: ``CharsetInfo`` plus whether its table is compiled in."""
+    available: bool
+
+
+# ------------------------------------------------------------------ Rust path index
+
+SERDE_TYPES: dict[str, Any] = {
+    "Bitmap": BitmapDict,
+    "Font": FontDict,
+    "FontSet": FontSetDict,
+    "Glyph": GlyphDict,
+    "Operation": Operation,
+    "OutputAsset": OutputAssetDict,
+    "OutputBundle": OutputBundleDict,
+    "ReadOptions": FormatsReadOptions,
+    "Report": Report,
+    "ReportEntry": ReportEntry,
+    "ResourceLimits": ResourceLimits,
+    "ResourcePath": ResourcePath,
+    "Variants": VariantsDict,
+    "WriteOptions": FormatsWriteOptions,
+    "bitmap::Alignment": Alignment,
+    "bitmap::BitOrder": BitOrder,
+    "bitmap::Bitmap": BitmapDict,
+    "bitmap::BitmapLimits": BitmapLimits,
+    "bitmap::Bounds": Bounds,
+    "bitmap::ByteLayout": ByteLayout,
+    "bitmap::ByteOrder": ByteOrder,
+    "bitmap::CompositeMode": CompositeMode,
+    "bitmap::Direction": Direction,
+    "bitmap::RowOrder": RowOrder,
+    "bitmap::bytes::BitOrder": BitOrder,
+    "bitmap::bytes::ByteLayout": ByteLayout,
+    "bitmap::bytes::ByteOrder": ByteOrder,
+    "bitmap::bytes::RowOrder": RowOrder,
+    "bitmap::geometry::Alignment": Alignment,
+    "bitmap::geometry::Direction": Direction,
+    "charset::CharsetError": CharsetError,
+    "charset::CharsetInfo": CharsetInfo,
+    "charset::Kind": CharsetKind,
+    "charset::WindowsCharset": WindowsCharset,
+    "charset::merge_categories::EastAsianWidth": EastAsianWidth,
+    "charset::merge_categories::UnicodeRange": UnicodeRange,
+    "compat::bdfparser::CreateOptions": CreateOptions,
+    "compat::bdfparser::font::CreateOptions": CreateOptions,
+    "compat::bdfparser::ttf::TtfOptions": TtfOptions,
+    "error::Operation": Operation,
+    "formats::Confidence": Confidence,
+    "formats::Detected": Detected,
+    "formats::FormatInfo": FormatInfo,
+    "formats::FormatStatus": FormatStatus,
+    "formats::Loaded": LoadedDict,
+    "formats::ReadOptions": FormatsReadOptions,
+    "formats::TransportLimits": TransportLimits,
+    "formats::WriteOptions": FormatsWriteOptions,
+    "formats::amiga::AmigaCodec": AmigaCodec,
+    "formats::amiga::AmigaReadOptions": AmigaReadOptions,
+    "formats::amiga::AmigaWriteOptions": AmigaWriteOptions,
+    "formats::amiga::Packaging": Packaging,
+    "formats::bbc::BbcCodec": BbcCodec,
+    "formats::bbc::BbcReadOptions": NativeReadOptions,
+    "formats::bbc::BbcWriteOptions": W5a2CommonNativeWriteOptions,
+    "formats::bdf::BdfCodec": BdfCodec,
+    "formats::bdf::BdfWriteOptions": BdfWriteOptions,
+    "formats::beos::BeosCodec": BeosCodec,
+    "formats::beos::BeosCoverage": BeosCoverage,
+    "formats::beos::BeosReadOptions": BeosReadOptions,
+    "formats::beos::BeosWriteOptions": BeosWriteOptions,
+    "formats::bmfont::BmfontCodec": BmfontCodec,
+    "formats::bmfont::BmfontEncoding": BmfontEncoding,
+    "formats::bmfont::BmfontReadOptions": BmfontReadOptions,
+    "formats::bmfont::BmfontWriteOptions": BmfontWriteOptions,
+    "formats::c::ArrayOptions": ArrayOptions,
+    "formats::c::CCodec": CCodec,
+    "formats::c::CContainer": CContainer,
+    "formats::c::CReadOptions": CReadOptions,
+    "formats::c::CWriteOptions": CWriteOptions,
+    "formats::c::Family": Family,
+    "formats::c::LvglBpp": LvglBpp,
+    "formats::c::LvglCompression": LvglCompression,
+    "formats::c::U8glibFormat": U8glibFormat,
+    "formats::catalyst::CatalystCodec": CatalystCodec,
+    "formats::catalyst::CatalystOffsetBase": CatalystOffsetBase,
+    "formats::catalyst::CatalystReadOptions": CatalystReadOptions,
+    "formats::catalyst::CatalystWriteOptions": CatalystWriteOptions,
+    "formats::chiwriter::ChiwriterCodec": ChiwriterCodec,
+    "formats::chiwriter::ChiwriterLayout": ChiwriterLayout,
+    "formats::chiwriter::ChiwriterReadOptions": ChiwriterReadOptions,
+    "formats::chiwriter::ChiwriterVersion": ChiwriterVersion,
+    "formats::chiwriter::ChiwriterWriteOptions": ChiwriterWriteOptions,
+    "formats::comfont::ComfontCodec": ComfontCodec,
+    "formats::comfont::ComfontReadOptions": ComfontReadOptions,
+    "formats::comfont::ComfontVariant": ComfontVariant,
+    "formats::comfont::ComfontWriteOptions": ComfontWriteOptions,
+    "formats::comfont::CpmTarget": CpmTarget,
+    "formats::consoleet::CodepointMode": CodepointMode,
+    "formats::consoleet::ConsoleetCodec": ConsoleetCodec,
+    "formats::consoleet::ConsoleetReadOptions": ConsoleetReadOptions,
+    "formats::consoleet::ConsoleetWriteOptions": ConsoleetWriteOptions,
+    "formats::cpi::CpiCodec": CpiCodec,
+    "formats::cpi::CpiReadOptions": CpiReadOptions,
+    "formats::cpi::CpiWriteOptions": CpiWriteOptions,
+    "formats::cpi::PointerMode": PointerMode,
+    "formats::cpi::Version": CpiVersion,
+    "formats::cybiko::CybikoCodec": CybikoCodec,
+    "formats::cybiko::CybikoReadOptions": CybikoReadOptions,
+    "formats::cybiko::CybikoWriteOptions": CybikoWriteOptions,
+    "formats::daisy::DaisyCodec": DaisyCodec,
+    "formats::daisy::DaisyReadOptions": DaisyReadOptions,
+    "formats::daisy::DaisyVersion": DaisyVersion,
+    "formats::daisy::DaisyWriteOptions": DaisyWriteOptions,
+    "formats::dashen::DashenCodec": DashenCodec,
+    "formats::dashen::DashenReadOptions": DashenReadOptions,
+    "formats::dashen::DashenVersion": DashenVersion,
+    "formats::dashen::DashenWriteOptions": DashenWriteOptions,
+    "formats::dosstart::DosstartCodec": DosstartCodec,
+    "formats::dosstart::DosstartReadOptions": DosstartReadOptions,
+    "formats::dosstart::DosstartWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::draw::DrawCodec": DrawCodec,
+    "formats::draw::DrawWriteOptions": DrawWriteOptions,
+    "formats::drcs::DrcsCharset": DrcsCharset,
+    "formats::drcs::DrcsCodec": DrcsCodec,
+    "formats::drcs::DrcsReadOptions": DrcsReadOptions,
+    "formats::drcs::DrcsWriteOptions": DrcsWriteOptions,
+    "formats::drcs::Terminal": Terminal,
+    "formats::drhalo::DrhaloCodec": DrhaloCodec,
+    "formats::drhalo::DrhaloReadOptions": DrhaloReadOptions,
+    "formats::drhalo::DrhaloWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::edwin::EdwinCodec": EdwinCodec,
+    "formats::edwin::EdwinReadOptions": EdwinReadOptions,
+    "formats::edwin::EdwinWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::embedded::ColorFlavor": ColorFlavor,
+    "formats::embedded::ColorWriteOptions": ColorWriteOptions,
+    "formats::embedded::EmbeddedAverageWidth": EmbeddedAverageWidth,
+    "formats::embedded::EmbeddedCodec": EmbeddedCodec,
+    "formats::embedded::EmbeddedGlyphOrder": EmbeddedGlyphOrder,
+    "formats::embedded::EmbeddedHmtx": EmbeddedHmtx,
+    "formats::embedded::EmbeddedIndexLayout": EmbeddedIndexLayout,
+    "formats::embedded::EmbeddedLineExtremes": EmbeddedLineExtremes,
+    "formats::embedded::EmbeddedMetadataOptions": EmbeddedMetadataOptions,
+    "formats::embedded::EmbeddedNotdef": EmbeddedNotdef,
+    "formats::embedded::EmbeddedOutlineTables": EmbeddedOutlineTables,
+    "formats::embedded::EmbeddedPostNames": EmbeddedPostNames,
+    "formats::embedded::EmbeddedReadOptions": EmbeddedReadOptions,
+    "formats::embedded::EmbeddedReferenceStrike": EmbeddedReferenceStrike,
+    "formats::embedded::EmbeddedRounding": EmbeddedRounding,
+    "formats::embedded::EmbeddedUnicodeRanges": EmbeddedUnicodeRanges,
+    "formats::embedded::EmbeddedVerticalLineMetrics": EmbeddedVerticalLineMetrics,
+    "formats::embedded::EmbeddedWidthMax": EmbeddedWidthMax,
+    "formats::embedded::EmbeddedWriteOptions": EmbeddedWriteOptions,
+    "formats::embedded::metadata::EmbeddedAverageWidth": EmbeddedAverageWidth,
+    "formats::embedded::metadata::EmbeddedGlyphOrder": EmbeddedGlyphOrder,
+    "formats::embedded::metadata::EmbeddedHmtx": EmbeddedHmtx,
+    "formats::embedded::metadata::EmbeddedIndexLayout": EmbeddedIndexLayout,
+    "formats::embedded::metadata::EmbeddedLineExtremes": EmbeddedLineExtremes,
+    "formats::embedded::metadata::EmbeddedMetadataOptions": EmbeddedMetadataOptions,
+    "formats::embedded::metadata::EmbeddedNotdef": EmbeddedNotdef,
+    "formats::embedded::metadata::EmbeddedOutlineTables": EmbeddedOutlineTables,
+    "formats::embedded::metadata::EmbeddedPostNames": EmbeddedPostNames,
+    "formats::embedded::metadata::EmbeddedUnicodeRanges": EmbeddedUnicodeRanges,
+    "formats::embedded::metadata::EmbeddedVerticalLineMetrics": EmbeddedVerticalLineMetrics,
+    "formats::embedded::metadata::EmbeddedWidthMax": EmbeddedWidthMax,
+    "formats::fbit::Definition": Definition,
+    "formats::fbit::FbitCodec": FbitCodec,
+    "formats::fbit::FbitReadOptions": FbitReadOptions,
+    "formats::fbit::FbitWriteOptions": FbitWriteOptions,
+    "formats::fbit::ResourceKind": ResourceKind,
+    "formats::figlet::FigletCodec": FigletCodec,
+    "formats::figlet::FigletReadOptions": FigletReadOptions,
+    "formats::figlet::FigletWriteOptions": FigletWriteOptions,
+    "formats::fnt::FntCodec": FntCodec,
+    "formats::fnt::FntReadOptions": FntReadOptions,
+    "formats::fnt::FntWriteOptions": FntWriteOptions,
+    "formats::fnt::Version": FntVersion,
+    "formats::fon::FonCodec": FonCodec,
+    "formats::fontx2::CodeMode": CodeMode,
+    "formats::fontx2::Fontx2Codec": Fontx2Codec,
+    "formats::fontx2::Fontx2ReadOptions": Fontx2ReadOptions,
+    "formats::fontx2::Fontx2WriteOptions": Fontx2WriteOptions,
+    "formats::fzx::FzxCodec": FzxCodec,
+    "formats::fzx::FzxReadOptions": FzxReadOptions,
+    "formats::fzx::FzxWriteOptions": FzxWriteOptions,
+    "formats::gdr::GdrCodec": GdrCodec,
+    "formats::gdr::GdrReadOptions": GdrReadOptions,
+    "formats::gdr::GdrVersion": GdrVersion,
+    "formats::gdr::GdrWriteOptions": GdrWriteOptions,
+    "formats::gem::ByteOrder": ByteOrder,
+    "formats::gem::GemCodec": GemCodec,
+    "formats::gem::GemReadOptions": GemReadOptions,
+    "formats::gem::GemWriteOptions": GemWriteOptions,
+    "formats::geos::GeosCodec": GeosCodec,
+    "formats::geos::GeosContainer": GeosContainer,
+    "formats::geos::GeosReadOptions": GeosReadOptions,
+    "formats::geos::GeosVariant": GeosVariant,
+    "formats::geos::GeosWriteOptions": GeosWriteOptions,
+    "formats::gf::GfCodec": GfCodec,
+    "formats::gf::GfWriteOptions": TexWriteOptions,
+    "formats::gpi::GpiCodec": GpiCodec,
+    "formats::gpi::GpiContainer": GpiContainer,
+    "formats::gpi::GpiKind": GpiKind,
+    "formats::gpi::GpiReadOptions": GpiReadOptions,
+    "formats::gpi::GpiWriteOptions": GpiWriteOptions,
+    "formats::grasp::GraspCodec": GraspCodec,
+    "formats::grasp::GraspReadOptions": NativeReadOptions,
+    "formats::grasp::GraspWriteOptions": W5a2CommonNativeWriteOptions,
+    "formats::hanfont::HanfontCodec": HanfontCodec,
+    "formats::hanfont::HanfontReadOptions": HanfontReadOptions,
+    "formats::hanfont::HanfontWriteOptions": HanfontWriteOptions,
+    "formats::hanfont::Layout": Layout,
+    "formats::hanfont::ReadMode": ReadMode,
+    "formats::hbf::HbfCodec": HbfCodec,
+    "formats::hbf::HbfWriteOptions": HbfWriteOptions,
+    "formats::hbf::writer::HbfWriteOptions": HbfWriteOptions,
+    "formats::hex::HexCodec": HexCodec,
+    "formats::hex::HexReadOptions": HexReadOptions,
+    "formats::hex::HexWriteOptions": HexWriteOptions,
+    "formats::hmzk::HmzkCodec": HmzkCodec,
+    "formats::hmzk::HmzkReadOptions": HmzkReadOptions,
+    "formats::hmzk::HmzkWriteOptions": HmzkWriteOptions,
+    "formats::hppcl::HppclCodec": HppclCodec,
+    "formats::hppcl::HppclCompression": HppclCompression,
+    "formats::hppcl::HppclOrientation": HppclOrientation,
+    "formats::hppcl::HppclReadOptions": HppclReadOptions,
+    "formats::hppcl::HppclWriteOptions": HppclWriteOptions,
+    "formats::hrcg::HrcgCodec": HrcgCodec,
+    "formats::hrcg::HrcgReadOptions": NativeReadOptions,
+    "formats::hrcg::HrcgWriteOptions": W5a2CommonNativeWriteOptions,
+    "formats::hzk::CodeSpace": CodeSpace,
+    "formats::hzk::Geometry": Geometry,
+    "formats::hzk::HzkCodec": HzkCodec,
+    "formats::hzk::HzkReadOptions": HzkReadOptions,
+    "formats::hzk::HzkWriteOptions": HzkWriteOptions,
+    "formats::hzk::Preset": Preset,
+    "formats::hzk::Storage": Storage,
+    "formats::hzk::presets::Preset": Preset,
+    "formats::iigs::Container": IigsContainer,
+    "formats::iigs::IigsCodec": IigsCodec,
+    "formats::iigs::IigsReadOptions": IigsReadOptions,
+    "formats::iigs::IigsWriteOptions": IigsWriteOptions,
+    "formats::iigs::Version": IigsVersion,
+    "formats::image::Cell": Cell,
+    "formats::image::Encoding": Encoding,
+    "formats::image::ImageCodec": ImageCodec,
+    "formats::image::ImageLayout": ImageLayout,
+    "formats::image::ImageReadOptions": ImageReadOptions,
+    "formats::image::ImageSetBackground": ImageSetBackground,
+    "formats::image::ImageSetDomain": ImageSetDomain,
+    "formats::image::ImageSetOptions": ImageSetOptions,
+    "formats::image::ImageWriteOptions": ImageWriteOptions,
+    "formats::image::Mapping": ImageMapping,
+    "formats::image::MappingFormat": MappingFormat,
+    "formats::image::NativeGlyph": NativeGlyph,
+    "formats::image::NativeMetadata": NativeMetadata,
+    "formats::image::imageset::ImageLayout": ImageLayout,
+    "formats::image::imageset::ImageSetBackground": ImageSetBackground,
+    "formats::image::imageset::ImageSetDomain": ImageSetDomain,
+    "formats::image::imageset::ImageSetOptions": ImageSetOptions,
+    "formats::kbits::KbitsCodec": KbitsCodec,
+    "formats::kbits::KbitsWriteOptions": KbitsWriteOptions,
+    "formats::kbitx::KbitxCodec": KbitxCodec,
+    "formats::kbitx::KbitxReadOptions": KbitxReadOptions,
+    "formats::kbitx::KbitxWriteOptions": KbitxWriteOptions,
+    "formats::lisa::Compression": LisaCompression,
+    "formats::lisa::LisaCodec": LisaCodec,
+    "formats::lisa::LisaReadOptions": LisaReadOptions,
+    "formats::lisa::LisaWriteOptions": LisaWriteOptions,
+    "formats::mgtk::Columns": Columns,
+    "formats::mgtk::MgtkCodec": MgtkCodec,
+    "formats::mgtk::MgtkReadOptions": MgtkReadOptions,
+    "formats::mgtk::MgtkWriteOptions": MgtkWriteOptions,
+    "formats::mkwinfont::MkwinfontCodec": MkwinfontCodec,
+    "formats::mkwinfont::MkwinfontReadOptions": MkwinfontReadOptions,
+    "formats::mkwinfont::MkwinfontWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::nfnt::Container": NfntContainer,
+    "formats::nfnt::NfntCodec": NfntCodec,
+    "formats::nfnt::NfntReadOptions": NfntReadOptions,
+    "formats::nfnt::NfntWriteOptions": NfntWriteOptions,
+    "formats::nfnt::ResourceType": ResourceType,
+    "formats::oberon::OberonCodec": OberonCodec,
+    "formats::oberon::OberonReadOptions": OberonReadOptions,
+    "formats::oberon::OberonWriteOptions": OberonWriteOptions,
+    "formats::palm::PalmCodec": PalmCodec,
+    "formats::palm::PalmContainer": PalmContainer,
+    "formats::palm::PalmReadOptions": PalmReadOptions,
+    "formats::palm::PalmRounding": PalmRounding,
+    "formats::palm::PalmVersion": PalmVersion,
+    "formats::palm::PalmWriteOptions": PalmWriteOptions,
+    "formats::pbf::Compression": PbfCompression,
+    "formats::pbf::OffsetWidth": OffsetWidth,
+    "formats::pbf::PbfCodec": PbfCodec,
+    "formats::pbf::PbfReadOptions": PbfReadOptions,
+    "formats::pbf::PbfWriteOptions": PbfWriteOptions,
+    "formats::pbf::Version": PbfVersion,
+    "formats::pcf::GlyphPad": GlyphPad,
+    "formats::pcf::MetadataPrecedence": MetadataPrecedence,
+    "formats::pcf::Order": Order,
+    "formats::pcf::PcfCodec": PcfCodec,
+    "formats::pcf::PcfWriteOptions": PcfWriteOptions,
+    "formats::pcf::ScanUnit": ScanUnit,
+    "formats::pcgeos::PcgeosCodec": PcgeosCodec,
+    "formats::pcgeos::PcgeosReadOptions": PcgeosReadOptions,
+    "formats::pcgeos::PcgeosVariant": PcgeosVariant,
+    "formats::pcgeos::PcgeosWriteOptions": PcgeosWriteOptions,
+    "formats::pcr::PcrCodec": PcrCodec,
+    "formats::pcr::PcrReadOptions": PcrReadOptions,
+    "formats::pcr::PcrWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::pf2::Pf2Codec": Pf2Codec,
+    "formats::pf2::Pf2ReadOptions": Pf2ReadOptions,
+    "formats::pf2::Pf2WriteOptions": Pf2WriteOptions,
+    "formats::pf2::writer::Pf2WriteOptions": Pf2WriteOptions,
+    "formats::pfr::PfrCodec": PfrCodec,
+    "formats::pfr::PfrCompression": PfrCompression,
+    "formats::pfr::PfrDialect": PfrDialect,
+    "formats::pfr::PfrReadOptions": PfrReadOptions,
+    "formats::pfr::PfrWriteOptions": PfrWriteOptions,
+    "formats::pilfont::PilfontCodec": PilfontCodec,
+    "formats::pilfont::PilfontReadOptions": PilfontReadOptions,
+    "formats::pilfont::PilfontWriteOptions": PilfontWriteOptions,
+    "formats::pk::PkCodec": PkCodec,
+    "formats::pk::PkWriteOptions": TexWriteOptions,
+    "formats::plan9::Compression": Plan9Compression,
+    "formats::plan9::Container": Plan9Container,
+    "formats::plan9::Plan9Codec": Plan9Codec,
+    "formats::plan9::Plan9WriteOptions": Plan9WriteOptions,
+    "formats::playdate::PlaydateCodec": PlaydateCodec,
+    "formats::playdate::PlaydateFlavor": PlaydateFlavor,
+    "formats::playdate::PlaydateReadOptions": PlaydateReadOptions,
+    "formats::playdate::PlaydateWriteOptions": PlaydateWriteOptions,
+    "formats::plus3dos::Plus3dosCodec": Plus3dosCodec,
+    "formats::plus3dos::Plus3dosReadOptions": Plus3dosReadOptions,
+    "formats::plus3dos::Plus3dosWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::polyprint::PolyprintCodec": PolyprintCodec,
+    "formats::polyprint::PolyprintReadOptions": PolyprintReadOptions,
+    "formats::polyprint::PolyprintWriteOptions": PolyprintWriteOptions,
+    "formats::prebuilt::PrebuiltBitOrder": BitOrder,
+    "formats::prebuilt::PrebuiltByteOrder": ByteOrder,
+    "formats::prebuilt::PrebuiltCodec": PrebuiltCodec,
+    "formats::prebuilt::PrebuiltDepth": PrebuiltDepth,
+    "formats::prebuilt::PrebuiltReadOptions": PrebuiltReadOptions,
+    "formats::prebuilt::PrebuiltWriteOptions": PrebuiltWriteOptions,
+    "formats::printshop::PrintshopCodec": PrintshopCodec,
+    "formats::printshop::PrintshopReadOptions": PrintshopReadOptions,
+    "formats::printshop::PrintshopWriteOptions": PrintshopWriteOptions,
+    "formats::psf2txt::Psf2txtCodec": Psf2txtCodec,
+    "formats::psf2txt::Psf2txtReadOptions": Psf2txtReadOptions,
+    "formats::psf2txt::Psf2txtWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::psf::PsfCodec": PsfCodec,
+    "formats::psf::PsfWriteOptions": PsfWriteOptions,
+    "formats::psf::UnicodeTable": UnicodeTable,
+    "formats::psf::Version": PsfVersion,
+    "formats::pxl::PxlCodec": PxlCodec,
+    "formats::pxl::PxlReadOptions": PxlReadOptions,
+    "formats::pxl::PxlVersion": PxlVersion,
+    "formats::pxl::PxlWriteOptions": PxlWriteOptions,
+    "formats::qpf2::GlyphFormat": GlyphFormat,
+    "formats::qpf2::Qpf2Codec": Qpf2Codec,
+    "formats::qpf2::Qpf2ReadOptions": Qpf2ReadOptions,
+    "formats::qpf2::Qpf2WriteOptions": Qpf2WriteOptions,
+    "formats::qpf::QpfCodec": QpfCodec,
+    "formats::qpf::QpfReadOptions": QpfReadOptions,
+    "formats::qpf::QpfWriteOptions": QpfWriteOptions,
+    "formats::raw::RawByteOrder": RawByteOrder,
+    "formats::raw::RawCodec": RawCodec,
+    "formats::raw::RawLayout": RawLayout,
+    "formats::raw::RawPacking": RawPacking,
+    "formats::raw::RawPreset": RawPreset,
+    "formats::raw::RawReadOptions": RawReadOptions,
+    "formats::raw::RawWriteOptions": RawWriteOptions,
+    "formats::riscos::RiscosCodec": RiscosCodec,
+    "formats::riscos::RiscosCompression": RiscosCompression,
+    "formats::riscos::RiscosDepth": RiscosDepth,
+    "formats::riscos::RiscosMetricsVersion": RiscosMetricsVersion,
+    "formats::riscos::RiscosReadOptions": RiscosReadOptions,
+    "formats::riscos::RiscosVersion": RiscosVersion,
+    "formats::riscos::RiscosWriteOptions": RiscosWriteOptions,
+    "formats::rockbox::RockboxCodec": RockboxCodec,
+    "formats::rockbox::RockboxDepth": RockboxDepth,
+    "formats::rockbox::RockboxFlavor": RockboxFlavor,
+    "formats::rockbox::RockboxReadOptions": RockboxReadOptions,
+    "formats::rockbox::RockboxWriteOptions": RockboxWriteOptions,
+    "formats::sbf::SbfCodec": SbfCodec,
+    "formats::sbf::SbfReadOptions": SbfReadOptions,
+    "formats::sbf::SbfWriteOptions": SbfWriteOptions,
+    "formats::sfd::SfdCodec": SfdCodec,
+    "formats::sfd::SfdWriteOptions": SfdWriteOptions,
+    "formats::sfont::SfontCodec": SfontCodec,
+    "formats::sfont::SfontFlavor": SfontFlavor,
+    "formats::sfont::SfontReadOptions": SfontReadOptions,
+    "formats::sfont::SfontWriteOptions": SfontWriteOptions,
+    "formats::signum::SignumCodec": SignumCodec,
+    "formats::signum::SignumReadOptions": SignumReadOptions,
+    "formats::signum::SignumVersion": SignumVersion,
+    "formats::signum::SignumWriteOptions": SignumWriteOptions,
+    "formats::snf::ByteOrder": ByteOrder,
+    "formats::snf::SnfCodec": SnfCodec,
+    "formats::snf::SnfReadOptions": SnfReadOptions,
+    "formats::snf::SnfWriteOptions": SnfWriteOptions,
+    "formats::ssfn::SsfnCodec": SsfnCodec,
+    "formats::ssfn::SsfnEncoding": SsfnEncoding,
+    "formats::ssfn::SsfnReadOptions": SsfnReadOptions,
+    "formats::ssfn::SsfnWriteOptions": SsfnWriteOptions,
+    "formats::svg::ImageOptions": SvgImageOptions,
+    "formats::svg::Limits": SvgLimits,
+    "formats::svg::ReadOptions": SvgReadOptions,
+    "formats::svg::SvgCodec": SvgCodec,
+    "formats::svg::WriteOptions": SvgWriteOptions,
+    "formats::symbos::SymbosCodec": SymbosCodec,
+    "formats::symbos::SymbosExtendedInfo": SymbosExtendedInfo,
+    "formats::symbos::SymbosReadOptions": SymbosReadOptions,
+    "formats::symbos::SymbosVersion": SymbosVersion,
+    "formats::symbos::SymbosWriteOptions": SymbosWriteOptions,
+    "formats::tasprint::TasprintCodec": TasprintCodec,
+    "formats::tasprint::TasprintReadOptions": TasprintReadOptions,
+    "formats::tasprint::TasprintVersion": TasprintVersion,
+    "formats::tasprint::TasprintWriteOptions": TasprintWriteOptions,
+    "formats::tex_common::TexWriteOptions": TexWriteOptions,
+    "formats::u8m::U8mCodec": U8mCodec,
+    "formats::u8m::U8mReadOptions": U8mReadOptions,
+    "formats::u8m::U8mWriteOptions": U8mWriteOptions,
+    "formats::vector_raster::Limits": VectorRasterLimits,
+    "formats::vector_raster::Options": VectorRasterOptions,
+    "formats::vector_raster::WriteOptions": VectorRasterWriteOptions,
+    "formats::vfont::ByteOrder": ByteOrder,
+    "formats::vfont::VfontCodec": VfontCodec,
+    "formats::vfont::VfontReadOptions": VfontReadOptions,
+    "formats::vfont::VfontWriteOptions": VfontWriteOptions,
+    "formats::vlw::VlwCodec": VlwCodec,
+    "formats::vlw::VlwReadOptions": VlwReadOptions,
+    "formats::vlw::VlwVersion": VlwVersion,
+    "formats::vlw::VlwWriteOptions": VlwWriteOptions,
+    "formats::vtfont::VtfontCodec": VtfontCodec,
+    "formats::vtfont::VtfontReadOptions": VtfontReadOptions,
+    "formats::vtfont::VtfontWriteOptions": VtfontWriteOptions,
+    "formats::w5a1_common::NativeWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::w5a2_common::NativeReadOptions": NativeReadOptions,
+    "formats::w5a2_common::NativeWriteOptions": W5a2CommonNativeWriteOptions,
+    "formats::writeon::WriteonCodec": WriteonCodec,
+    "formats::writeon::WriteonReadOptions": WriteonReadOptions,
+    "formats::writeon::WriteonWriteOptions": W5a1CommonNativeWriteOptions,
+    "formats::wsfont::WsfontCodec": WsfontCodec,
+    "formats::wsfont::WsfontDepth": WsfontDepth,
+    "formats::wsfont::WsfontOrder": WsfontOrder,
+    "formats::wsfont::WsfontReadOptions": WsfontReadOptions,
+    "formats::wsfont::WsfontWriteOptions": WsfontWriteOptions,
+    "formats::wyse::WyseCodec": WyseCodec,
+    "formats::wyse::WyseReadOptions": NativeReadOptions,
+    "formats::wyse::WyseWriteOptions": W5a2CommonNativeWriteOptions,
+    "formats::xbin::CharacterCount": CharacterCount,
+    "formats::xbin::ScreenMode": ScreenMode,
+    "formats::xbin::XbinCodec": XbinCodec,
+    "formats::xbin::XbinReadOptions": NativeReadOptions,
+    "formats::xbin::XbinWriteOptions": XbinWriteOptions,
+    "formats::xerox::XeroxBitbltLayout": XeroxBitbltLayout,
+    "formats::xerox::XeroxCodec": XeroxCodec,
+    "formats::xerox::XeroxReadOptions": XeroxReadOptions,
+    "formats::xerox::XeroxVariant": XeroxVariant,
+    "formats::xerox::XeroxWriteOptions": XeroxWriteOptions,
+    "formats::yaff::YaffCodec": YaffCodec,
+    "formats::yaff::YaffWriteOptions": YaffWriteOptions,
+    "formats::zapfont::ZapVariant": ZapVariant,
+    "formats::zapfont::ZapfontCodec": ZapfontCodec,
+    "formats::zapfont::ZapfontReadOptions": ZapfontReadOptions,
+    "formats::zapfont::ZapfontWriteOptions": ZapfontWriteOptions,
+    "merge::AdjustmentKind": AdjustmentKind,
+    "merge::CodepointRange": CodepointRange,
+    "merge::GeometricWidth": GeometricWidth,
+    "merge::LicenseReport": LicenseReport,
+    "merge::MergeOptions": MergeOptions,
+    "merge::MergeReport": MergeReport,
+    "merge::MergeResult": MergeResult,
+    "merge::MergeSpacing": MergeSpacing,
+    "merge::MetricsReport": MetricsReport,
+    "merge::MissingBlock": MissingBlock,
+    "merge::ModificationPermission": ModificationPermission,
+    "merge::PartLicense": PartLicense,
+    "merge::PartMetrics": PartMetrics,
+    "merge::PartReport": PartReport,
+    "merge::Selection": SelectionDict,
+    "merge::SpacingAdjustment": SpacingAdjustment,
+    "merge::report::AdjustmentKind": AdjustmentKind,
+    "merge::report::LicenseReport": LicenseReport,
+    "merge::report::MergeReport": MergeReport,
+    "merge::report::MetricsReport": MetricsReport,
+    "merge::report::MissingBlock": MissingBlock,
+    "merge::report::PartMetrics": PartMetrics,
+    "merge::report::PartReport": PartReport,
+    "merge::report::SpacingAdjustment": SpacingAdjustment,
+    "merge::selection::CodepointRange": CodepointRange,
+    "merge::selection::Selection": SelectionDict,
+    "metadata::NameOverrides": NameOverrides,
+    "model::AbcWidths": AbcWidths,
+    "model::Codepoint": CodepointDict,
+    "model::Font": FontDict,
+    "model::FontCharset": FontCharset,
+    "model::FontMetrics": FontMetrics,
+    "model::FontNames": FontNames,
+    "model::FontSet": FontSetDict,
+    "model::Glyph": GlyphDict,
+    "model::GlyphBitmap": GlyphBitmap,
+    "model::GlyphId": GlyphId,
+    "model::GlyphMetrics": GlyphMetrics,
+    "model::ModelUsage": ModelUsage,
+    "model::Properties": PropertiesDict,
+    "model::Property": Property,
+    "model::PropertyValue": PropertyValue,
+    "model::Rational": Rational,
+    "model::Spacing": Spacing,
+    "model::Vector": Vector,
+    "model::budget::ModelUsage": ModelUsage,
+    "model::properties::Properties": PropertiesDict,
+    "model::properties::Property": Property,
+    "model::properties::PropertyValue": PropertyValue,
+    "outline::Limits": OutlineLimits,
+    "outline::Options": OutlineOptions,
+    "outline::Segment": Segment,
+    "outline::Shape": Shape,
+    "outline::path::Edge": Edge,
+    "projection::MetadataChange": MetadataChange,
+    "projection::MetadataField": MetadataField,
+    "projection::MetadataValue": MetadataValue,
+    "projection::ProjectionOutcome": ProjectionOutcome,
+    "projection::ScalableAdvance": ScalableAdvance,
+    "projection::ScalableAdvanceChange": ScalableAdvanceChange,
+    "projection::SizeProjection": SizeProjection,
+    "projection::SyncedMetric": SyncedMetric,
+    "render::GlyphOrder": RenderGlyphOrder,
+    "render::ImageOptions": ImageOptions,
+    "render::MissingGlyph": MissingGlyph,
+    "render::RenderLimits": RenderLimits,
+    "render::RenderMode": RenderMode,
+    "render::RenderOptions": RenderOptions,
+    "render::Rendered": RenderedDict,
+    "render::Rgba": Rgba,
+    "render::WritingDirection": WritingDirection,
+    "render::image::ImageOptions": ImageOptions,
+    "render::image::Rgba": Rgba,
+    "report::Impact": Impact,
+    "report::Level": Level,
+    "report::Location": Location,
+    "report::Report": Report,
+    "report::ReportEntry": ReportEntry,
+    "resources::OutputAsset": OutputAssetDict,
+    "resources::OutputBundle": OutputBundleDict,
+    "resources::ResourceLimits": ResourceLimits,
+    "resources::ResourcePath": ResourcePath,
+    "resources::TransportLimits": TransportLimits,
+    "resources::Written": WrittenDict,
+    "sfnt::Flavor": Flavor,
+    "sfnt::Limits": SfntLimits,
+    "sfnt::bitmap::Bearing": Bearing,
+    "sfnt::bitmap::BitmapGlyph": BitmapGlyph,
+    "sfnt::bitmap::Kind": BitmapKind,
+    "sfnt::bitmap::Limits": SfntBitmapLimits,
+    "sfnt::bitmap::LineMetrics": LineMetrics,
+    "sfnt::bitmap::Metrics": Metrics,
+    "sfnt::bitmap::RunTables": RunTables,
+    "sfnt::bitmap::Scale": Scale,
+    "sfnt::bitmap::Strike": Strike,
+    "sfnt::bitmap::Tables": Tables,
+    "sfnt::bitmap::color::Sbix": Sbix,
+    "sfnt::bitmap::color::SbixGlyph": SbixGlyph,
+    "sfnt::bitmap::color::SbixStrike": SbixStrike,
+    "sfnt::bitmap::runs::RunTables": RunTables,
+    "sfnt::cff::Command": Command,
+    "sfnt::cff::DecodedGlyph": DecodedGlyph,
+    "sfnt::cff::DotOptions": DotOptions,
+    "sfnt::cff::Encoded": CffEncoded,
+    "sfnt::cff::Font": CffFont,
+    "sfnt::cff::Glyph": SfntCffGlyph,
+    "sfnt::cff::Limits": CffLimits,
+    "sfnt::cff::Outline": Outline,
+    "sfnt::cmap::EncodedCmap": EncodedCmap,
+    "sfnt::cmap::FullRecords": FullRecords,
+    "sfnt::collection::Limits": CollectionLimits,
+    "sfnt::container::Flavor": Flavor,
+    "sfnt::gasp::GaspTable": GaspTable,
+    "sfnt::gasp::Range": Range,
+    "sfnt::glyf::Anchor": Anchor,
+    "sfnt::glyf::Component": Component,
+    "sfnt::glyf::CompositeGlyph": CompositeGlyph,
+    "sfnt::glyf::Encoded": GlyfEncoded,
+    "sfnt::glyf::GlyfTable": GlyfTable,
+    "sfnt::glyf::Glyph": SfntGlyfGlyph,
+    "sfnt::glyf::Limits": GlyfLimits,
+    "sfnt::glyf::LocaFormat": LocaFormat,
+    "sfnt::glyf::OffsetMode": OffsetMode,
+    "sfnt::glyf::SimpleGlyph": SimpleGlyph,
+    "sfnt::glyf::Statistics": Statistics,
+    "sfnt::gsub::Feature": Feature,
+    "sfnt::gsub::Gsub": Gsub,
+    "sfnt::gsub::LanguageSystem": LanguageSystem,
+    "sfnt::gsub::LayoutLimits": LayoutLimits,
+    "sfnt::gsub::Script": Script,
+    "sfnt::metrics::Axis": Axis,
+    "sfnt::metrics::EncodedMetrics": EncodedMetrics,
+    "sfnt::metrics::Header": MetricsHeader,
+    "sfnt::metrics::LongMetric": LongMetric,
+    "sfnt::name::NameRecord": NameRecord,
+    "sfnt::name::NameTable": NameTable,
+    "sfnt::os2::Base": Base,
+    "sfnt::os2::Extension": Extension,
+    "sfnt::os2::Os2Table": Os2Table,
+    "sfnt::post::Header": PostHeader,
+    "sfnt::post::PostTable": PostTable,
+    "sfnt::subset::Options": SubsetOptions,
+    "sfnt::subset::Subset": Subset,
+    "variants::DotGlyph": DotGlyph,
+    "variants::DotReuse": DotReuse,
+    "variants::Encoded": ExportEncoded,
+    "variants::GaspPolicy": GaspPolicy,
+    "variants::GlyphOrder": MetadataGlyphOrder,
+    "variants::LanguageVariant": LanguageVariant,
+    "variants::MetadataOptions": MetadataOptions,
+    "variants::NotdefPolicy": NotdefPolicy,
+    "variants::Options": ExportOptions,
+    "variants::OutlineFlavor": OutlineFlavor,
+    "variants::Plan": Plan,
+    "variants::ScriptVariant": ScriptVariant,
+    "variants::Variants": VariantsDict,
+    "variants::export::DotReuse": DotReuse,
+    "variants::export::Encoded": ExportEncoded,
+    "variants::export::Options": ExportOptions,
+    "variants::export::OutlineFlavor": OutlineFlavor,
+    "variants::metadata::DotGlyph": DotGlyph,
+    "variants::metadata::GaspPolicy": GaspPolicy,
+    "variants::metadata::GlyphOrder": MetadataGlyphOrder,
+    "variants::metadata::MetadataOptions": MetadataOptions,
+    "variants::notdef::NotdefPolicy": NotdefPolicy,
+    "woff::Auxiliary": Auxiliary,
+    "woff::Decoded": Decoded,
+    "woff::Encoded": WoffEncoded,
+    "woff::Limits": WoffLimits,
+    "woff::woff1::Options": Woff1Options,
+    "woff::woff2::Options": Woff2Options,
+    "fontpixel_ops::CharsetRequest": CharsetRequest,
+    "fontpixel_ops::CharsetResponse": CharsetResponse,
+    "fontpixel_ops::ConvertRequest": ConvertRequest,
+    "fontpixel_ops::DiffRequest": DiffRequest,
+    "fontpixel_ops::Difference": Difference,
+    "fontpixel_ops::FaceValidation": FaceValidation,
+    "fontpixel_ops::FormatsRequest": FormatsRequest,
+    "fontpixel_ops::InfoRequest": InfoRequest,
+    "fontpixel_ops::MergeInput": MergeInput,
+    "fontpixel_ops::MergeOutput": MergeOutput,
+    "fontpixel_ops::MergeRequest": MergeRequest,
+    "fontpixel_ops::MergeSettings": MergeSettings,
+    "fontpixel_ops::PreviewRequest": PreviewRequest,
+    "fontpixel_ops::RenderRequest": RenderRequest,
+    "fontpixel_ops::RenderResponse": RenderResponse,
+    "fontpixel_ops::ReportStyle": ReportStyle,
+    "fontpixel_ops::ResourceOptions": ResourceOptions,
+    "fontpixel_ops::SfntOutputOptions": SfntOutputOptions,
+    "fontpixel_ops::SubsetRequest": SubsetRequest,
+    "fontpixel_ops::TaskKind": TaskKind,
+    "fontpixel_ops::TaskRequest": TaskRequest,
+    "fontpixel_ops::ValidateRequest": ValidateRequest,
+    "fontpixel_ops::VariantsRequest": VariantsRequest,
+    "fontpixel_ops::batch::TaskKind": TaskKind,
+    "fontpixel_ops::batch::TaskRequest": TaskRequest,
+    "fontpixel_ops::commands::CharsetRequest": CharsetRequest,
+    "fontpixel_ops::commands::CharsetResponse": CharsetResponse,
+    "fontpixel_ops::commands::DiffRequest": DiffRequest,
+    "fontpixel_ops::commands::Difference": Difference,
+    "fontpixel_ops::commands::FaceValidation": FaceValidation,
+    "fontpixel_ops::commands::ValidateRequest": ValidateRequest,
+    "fontpixel_ops::convert::AssetSummary": ConvertAssetSummary,
+    "fontpixel_ops::convert::ConversionSummary": ConversionSummary,
+    "fontpixel_ops::convert::ConvertRequest": ConvertRequest,
+    "fontpixel_ops::extra_formats::ReadOptions": ExtraFormatsReadOptions,
+    "fontpixel_ops::extra_formats::WriteOptions": ExtraFormatsWriteOptions,
+    "fontpixel_ops::image_formats::ReadOptions": ImageFormatsReadOptions,
+    "fontpixel_ops::image_formats::WriteOptions": ImageFormatsWriteOptions,
+    "fontpixel_ops::inspect::FormatsRequest": FormatsRequest,
+    "fontpixel_ops::inspect::InfoRequest": InfoRequest,
+    "fontpixel_ops::merge::AssetSummary": MergeAssetSummary,
+    "fontpixel_ops::merge::MergeInput": MergeInput,
+    "fontpixel_ops::merge::MergeOutput": MergeOutput,
+    "fontpixel_ops::merge::MergeRequest": MergeRequest,
+    "fontpixel_ops::merge::MergeSettings": MergeSettings,
+    "fontpixel_ops::metadata::NameOptions": NameOptions,
+    "fontpixel_ops::metadata::ProjectionOptions": ProjectionOptions,
+    "fontpixel_ops::opentype::ResourceOptions": ResourceOptions,
+    "fontpixel_ops::opentype::SfntOutputOptions": SfntOutputOptions,
+    "fontpixel_ops::opentype::SubsetRequest": SubsetRequest,
+    "fontpixel_ops::opentype::VariantsRequest": VariantsRequest,
+    "fontpixel_ops::options::COutputOptions": COutputOptions,
+    "fontpixel_ops::options::ConsoleOptions": ConsoleOptions,
+    "fontpixel_ops::options::DrawMode": DrawMode,
+    "fontpixel_ops::options::DrawOrder": DrawOrder,
+    "fontpixel_ops::options::LayoutOptions": LayoutOptions,
+    "fontpixel_ops::options::PcfMetadataPrecedence": PcfMetadataPrecedence,
+    "fontpixel_ops::options::PcfOptions": PcfOptions,
+    "fontpixel_ops::options::RasterOptions": RasterOptions,
+    "fontpixel_ops::options::ReportStyle": ReportStyle,
+    "fontpixel_ops::options::Significance": Significance,
+    "fontpixel_ops::options::VectorOptions": VectorOptions,
+    "fontpixel_ops::outline_metadata::OutlineMetadataOptions": OutlineMetadataOptions,
+    "fontpixel_ops::p2_formats::ReadOptions": P2FormatsReadOptions,
+    "fontpixel_ops::p2_formats::WriteOptions": P2FormatsWriteOptions,
+    "fontpixel_ops::p2_formats::cjk::ReadOptions": CjkReadOptions,
+    "fontpixel_ops::p2_formats::cjk::WriteOptions": CjkWriteOptions,
+    "fontpixel_ops::p2_formats::console::ReadOptions": ConsoleReadOptions,
+    "fontpixel_ops::p2_formats::console::WriteOptions": ConsoleWriteOptions,
+    "fontpixel_ops::p2_formats::editor::ReadOptions": EditorReadOptions,
+    "fontpixel_ops::p2_formats::editor::WriteOptions": EditorWriteOptions,
+    "fontpixel_ops::p2_formats::legacy::ReadOptions": LegacyReadOptions,
+    "fontpixel_ops::p2_formats::legacy::WriteOptions": LegacyWriteOptions,
+    "fontpixel_ops::p2_formats::mac::ReadOptions": MacReadOptions,
+    "fontpixel_ops::p2_formats::mac::WriteOptions": MacWriteOptions,
+    "fontpixel_ops::p2_formats::tex::WriteOptions": P2FormatsTexWriteOptions,
+    "fontpixel_ops::p3_formats::ReadOptions": P3FormatsReadOptions,
+    "fontpixel_ops::p3_formats::WriteOptions": P3FormatsWriteOptions,
+    "fontpixel_ops::p3_formats::device::ReadOptions": DeviceReadOptions,
+    "fontpixel_ops::p3_formats::device::WriteOptions": DeviceWriteOptions,
+    "fontpixel_ops::p3_formats::embedded_metadata::MetadataArguments": MetadataArguments,
+    "fontpixel_ops::p3_formats::historical::ReadOptions": HistoricalReadOptions,
+    "fontpixel_ops::p3_formats::historical::WriteOptions": HistoricalWriteOptions,
+    "fontpixel_ops::p3_formats::native_console::ReadOptions": NativeConsoleReadOptions,
+    "fontpixel_ops::p3_formats::native_console::WriteOptions": NativeConsoleWriteOptions,
+    "fontpixel_ops::p3_formats::portable::ReadOptions": PortableReadOptions,
+    "fontpixel_ops::p3_formats::portable::WriteOptions": PortableWriteOptions,
+    "fontpixel_ops::p3_formats::system::ReadOptions": SystemReadOptions,
+    "fontpixel_ops::p3_formats::system::WriteOptions": SystemWriteOptions,
+    "fontpixel_ops::p3_formats::workstation::ReadOptions": WorkstationReadOptions,
+    "fontpixel_ops::p3_formats::workstation::WriteOptions": WorkstationWriteOptions,
+    "fontpixel_ops::render::PreviewRequest": PreviewRequest,
+    "fontpixel_ops::render::RenderRequest": RenderRequest,
+    "fontpixel_ops::render::RenderResponse": RenderResponse,
+}
+"""Every serde type by its public Rust path (crate prefix `fontpixel::` dropped,
+as `fontpixel.formats.normalize()` and `option_types()` spell it; `fontpixel_ops::`
+kept): the `TypedDict` class or `Literal`/`Union` alias of its plain-data shape."""

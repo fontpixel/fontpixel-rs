@@ -364,7 +364,7 @@ def bitmap_contours(
     ppu: int = ...,
     xoff: int = ...,
     yoff: int = ...,
-) -> list[Any]:
+) -> list[list[tuple[float, float, bool]]]:
     """
     `bitmap_contours(bindata, shape, dotsize, ppu, xoff, yoff)`: SPEC outlines as
     lists of `(x, y, on_curve)` tuples (integral coordinates as `int`).

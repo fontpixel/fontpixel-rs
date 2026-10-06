@@ -225,5 +225,5 @@ def normalize(type_name: str, value: _c.Mapping[str, Any] | str | None = ...) ->
 def option_types() -> list[str]:
     """Every type name `normalize` accepts."""
 
-CATALOGUE: list[dict[str, bool | list[Any] | str] | dict[str, bool | list[str] | str]]
+CATALOGUE: list[_t.FormatInfo]
 MODULES: list[str]

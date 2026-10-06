@@ -68,7 +68,7 @@ def encode(
     kind: _t.BitmapKind,
     num_glyphs: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> _t.Tables:
+) -> _t.TablesBytes:
     """`bitmap::encode`: `{data, location}` bytes for strike dicts."""
 
 def encode_sbix(sbix: _t.Sbix, num_glyphs: int, limits: _t.SfntBitmapLimits | None = ...) -> bytes:
@@ -86,7 +86,7 @@ def encode_shared_metric_runs(
     num_glyphs: int,
     minimum_run: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> _t.Tables:
+) -> _t.SharedMetricRuns:
     """`runs::encode_shared_metric_runs`: `{tables: {data, location}, shared_runs}`."""
 
 def encode_spanning(
@@ -94,7 +94,7 @@ def encode_spanning(
     kind: _t.BitmapKind,
     num_glyphs: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> _t.Tables:
+) -> _t.TablesBytes:
     """`bitmap::encode_spanning`: as `encode`, with index subtables spanning gaps."""
 
 def kind_tags(kind: _t.BitmapKind) -> tuple[str, str]:

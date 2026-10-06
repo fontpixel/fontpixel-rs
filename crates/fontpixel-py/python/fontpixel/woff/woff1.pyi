@@ -17,7 +17,10 @@ __all__ = [
     "encode",
 ]
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> _t.Decoded:
+def decode(
+    data: _t.Buffer | _c.Sequence[int],
+    limits: _t.WoffLimits | None = ...,
+) -> _t.WoffDecoded:
     """`woff1::decode`: reconstruct the standalone sfnt from WOFF1 bytes."""
 
 def encode(

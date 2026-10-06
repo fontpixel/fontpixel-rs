@@ -37,7 +37,7 @@ class PreparedVariants:
         `PreparedVariants::encode`: export without replanning; `options.limits`
         must equal the limits given to `prepare`.
         """
-    def encode_allowance(self) -> _t.EncodedFont:
+    def encode_allowance(self) -> int:
         """
         `PreparedVariants::encode_allowance`: bytes one `encode` may admit
         besides the plan.
@@ -96,13 +96,13 @@ class Variants:
     def into_prepared(self, limits: _t.LayoutLimits | None = ...) -> PreparedVariants:
         """`Variants::into_prepared`: as `prepare`, consuming this handle's model."""
     @property
-    def languages(self) -> list[Any]:
+    def languages(self) -> list[_t.LanguageVariantItem]:
         """
         Language alternatives as `[{language, scripts, font}]` (OpenType tag
         strings, `Font` handle copies), in application order.
         """
     @languages.setter
-    def languages(self, value: list[Any]) -> None: ...
+    def languages(self, value: _c.Iterable[_t.LanguageVariantArgs]) -> None: ...
     def plan(self, limits: _t.LayoutLimits | None = ...) -> _t.Plan:
         """
         `Variants::plan`: glyph order, deduplication and locl routing as a Plan
@@ -121,10 +121,10 @@ class Variants:
         them; raises `ResourceLimitError` above `max_bytes`.
         """
     @property
-    def scripts(self) -> list[Any]:
+    def scripts(self) -> list[_t.ScriptVariantItem]:
         """Script alternatives as `[{scripts, font}]`."""
     @scripts.setter
-    def scripts(self, value: list[Any]) -> None: ...
+    def scripts(self, value: _c.Iterable[_t.ScriptVariantArgs]) -> None: ...
     def to_dict(self) -> _t.VariantsDict:
         """The serde Variants dict (fonts as font dicts)."""
 

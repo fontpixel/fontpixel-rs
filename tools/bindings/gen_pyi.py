@@ -383,7 +383,7 @@ class Typer:
             return self.pyany(pos, hint)
         if name == "Self":
             return cls_name or "Any"
-        if name in self.py_of_rust:
+        if self.binding_class(name):
             return self.class_ref(self.py_of_rust[name])
         if name in ovr.RUST_TYPES:
             return ovr.RUST_TYPES[name]
@@ -405,9 +405,19 @@ class Typer:
             return self.pyany(pos, hint)
         if name == "Self":
             return cls_name or "Any"
-        if name in self.py_of_rust:
+        if self.binding_class(name):
             return self.class_ref(self.py_of_rust[name])
         return "Any"
+
+    def binding_class(self, name):
+        """Whether `name` (as written in the current file) is a binding
+        `#[pyclass]` struct rather than a core type of the same name."""
+        rc = self.py_of_rust.get(name)
+        if rc is None:
+            return False
+        if name.startswith("Py") or rc.file == self.cur_file or self.cur_file is None:
+            return True
+        return rust_scan.USES.get(self.cur_file, {}).get(name, "").startswith("crate::")
 
     def pyany(self, pos, hint):
         if hint is None:
@@ -509,6 +519,17 @@ class Typer:
             return None
         return qualify_serde(out, self.serde)
 
+    bytes_views: dict = {}
+
+    def bytes_view(self, name, fields):
+        """`fontpixel.types` name of serde shape `name` with `fields` as `bytes`
+        (results the bindings build with `with_bytes`)."""
+        view = name + "Bytes"
+        if view in self.serde.names.values():
+            raise SystemExit(f"bytes view {view} clashes with a serde type name")
+        self.bytes_views[view] = (name, tuple(fields))
+        return "_t." + view
+
     def class_ref(self, rc):
         return f"@{rc.module or 'fontpixel'}.{rc.py_name}"
 
@@ -572,6 +593,18 @@ class Typer:
         if kind == "x_opts":
             sig["return"] = "tuple[bytes, _t.Report]"
         return sig
+
+
+ALLOWED_ANY = ("_c.Mapping[str, Any]", "dict[str, Any]", "_c.Callable[..., Any]", "list[Any]")
+
+
+def has_any(t):
+    """Whether `t` contains an unexplained `Any`."""
+    if t is None:
+        return True
+    for ok in ALLOWED_ANY[:3]:
+        t = t.replace(ok, "")
+    return re.search(r"(?<![\w.])Any(?![\w])", t) is not None
 
 
 def norm(doc):
@@ -838,7 +871,7 @@ class Renderer:
                 field_t = next((f for f in (rc.fields if rc else []) if f[0] == mm.name), None)
                 if field_t:
                     t = typer.rust_type(field_t[1], "return", c.name)
-            if t is None or "Any" in split_union(t) or t == "Any":
+            if has_any(t):
                 if not ovr.explicit_any(mm.qual):
                     typer.counts["properties_any"] += 1
                     typer.unresolved.append(f"{mm.qual} -> {t}")
@@ -961,7 +994,7 @@ class Renderer:
             t = "Any"
         if t is None and p.name in ("_memo", "memo"):
             t = "Any"
-        if t is None or "Any" in split_union(t):
+        if has_any(t):
             if not (ovr.explicit_any(f.qual + ":" + p.name) or p.kind == "var_keyword" or p.name in ("memo", "_memo")):
                 typer.counts["params_any"] += 1
                 typer.unresolved.append(f"{f.qual}({p.name}) -> {t}")
@@ -983,11 +1016,13 @@ class Renderer:
                 t = typer.rust_type(rust.ret, "return", cls_name)
                 if "Any" in split_union(t):
                     alt = typer.ret_hint_type(rust.ret_hint)
+                    if alt and rust.bytes_fields and re.fullmatch(r"_t\.\w+", alt):
+                        alt = typer.bytes_view(alt[3:], rust.bytes_fields)
                     if alt:
                         t = union(alt, "None") if "None" in split_union(t) else alt
         if t is None and f.name in DUNDER_RETURNS:
             t = DUNDER_RETURNS[f.name]
-        if t is None or "Any" in split_union(t):
+        if has_any(t):
             if not ovr.explicit_any(f.qual + ":return"):
                 typer.counts["returns_any"] += 1
                 typer.unresolved.append(f"{f.qual} -> {t}")
@@ -1063,7 +1098,7 @@ def docstring(doc, indent):
 # ------------------------------------------------------------------ types.py
 
 
-def render_types(serde):
+def render_types(serde, bytes_views=None):
     out = [HEADER.rstrip("\n"),
            '"""Typed shapes of the plain data that crosses the fontpixel binding boundary.',
            "",
@@ -1142,7 +1177,51 @@ def render_types(serde):
         out.append("")
         out.append(f"{name} = {expr}")
         out.append(attr_doc(s))
+    out.append("")
+    out.append("")
+    out.append("# " + "-" * 66 + " binding-level extensions")
+    by_name = {s.name: s for s in serde.shapes.values()}
+    for view, (base, fields) in sorted((bytes_views or {}).items()):
+        shape = by_name[base]
+        copy = serde_shapes.Shape(shape.path, "struct", doc=shape.doc + (
+            "\n\nAs returned by the bindings: " + ", ".join(f"``{f}``" for f in fields) + " are ``bytes``."),
+            name=view, fields=[serde_shapes.Field(f.key, "bytes" if f.key in fields else f.type, f.required, f.doc)
+                               for f in shape.fields])
+        out.append("")
+        out.append("")
+        out += render_typeddict(copy)
+    out.append("")
+    out.append("")
+    out.append(ovr.POSTLUDE.rstrip())
+    out.append("")
+    out.append("")
+    out.append("# " + "-" * 66 + " Rust path index")
+    out.append("")
+    out.append("SERDE_TYPES: dict[str, Any] = {")
+    for path, name in serde_index(serde):
+        out.append(f"    {json.dumps(path)}: {name},")
+    out.append("}")
+    out.append('"""Every serde type by its public Rust path (crate prefix `fontpixel::` dropped,')
+    out.append("as `fontpixel.formats.normalize()` and `option_types()` spell it; `fontpixel_ops::`")
+    out.append('kept): the `TypedDict` class or `Literal`/`Union` alias of its plain-data shape."""')
     return "\n".join(out).rstrip() + "\n"
+
+
+def serde_index(serde):
+    """(public path, Python name) for every serde shape, re-export paths included."""
+    rows = {}
+    for path, name in serde.names.items():
+        rows[path] = name
+    for public, (n, key, owner) in serde.public.items():
+        if owner is None:
+            canon = serde.path_of.get((n, key))
+            if canon in serde.names:
+                rows.setdefault(public, serde.names[canon])
+    out = []
+    for path, name in sorted(rows.items()):
+        short = path[len("fontpixel::"):] if path.startswith("fontpixel::") else path
+        out.append((short, name))
+    return out
 
 
 def attr_doc(s):
@@ -1242,9 +1321,11 @@ def build(rustdoc_dir):
     ovr.bind_serde(serde)
     typer = Typer(serde, fns, classes, class_home)
     renderer = Renderer(model, typer, class_home)
-    files = {PKG / "types.py": render_types(serde)}
+    rendered = {}
     for name, m in model.items():
-        files[PKG / m.path] = renderer.render(m)
+        rendered[PKG / m.path] = renderer.render(m)
+    files = {PKG / "types.py": render_types(serde, typer.bytes_views)}
+    files.update(rendered)
     files[ALLOWLIST] = render_allowlist(serde, renderer.allow)
     return files, typer, model
 

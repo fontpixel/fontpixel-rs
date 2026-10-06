@@ -13,6 +13,9 @@ fontpixel(\..+)?\.Bitmap\.__rmul__
 # running the module is the bdfparser command line (it exits on import)
 fontpixel.compat.bdfparser.__main__
 
+# tuples of plain dicts typed as TypedDict rows: stubtest infers the runtime value's type as tuple[dict[Any, Any], ...] and cannot match it against a TypedDict
+fontpixel(\._native)?\.(CJK_RANGES|GEOMETRIC_RANGES|UNICODE_BLOCKS)
+
 # fontpixel.types: `X = Literal[...]` aliases are real typing objects at runtime;
 # stubtest expects a multi-value Literal alias to be a typing.Union at runtime
 # ("is not a Union") and does not recognise single-value Literal aliases.
@@ -32,6 +35,7 @@ fontpixel.types.ChiwriterLayout
 fontpixel.types.ChiwriterVersion
 fontpixel.types.CodeMode
 fontpixel.types.CodeSpace
+fontpixel.types.CodepointKind
 fontpixel.types.CodepointMode
 fontpixel.types.ColorFlavor
 fontpixel.types.Columns

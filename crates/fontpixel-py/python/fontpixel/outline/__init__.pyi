@@ -46,7 +46,7 @@ def pixel_origins(
     """`outline::pixel_origins`: lower-left positions of ink cells, top-to-bottom."""
 
 def rasterize(
-    contours: _c.Sequence[Any],
+    contours: _c.Sequence[_t.Contour],
     units_per_pixel: float,
     origin: tuple[int, int],
     width: int,

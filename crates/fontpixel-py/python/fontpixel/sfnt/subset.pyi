@@ -20,7 +20,10 @@ __all__ = [
 def options_text(text: str) -> _t.SubsetOptions:
     """`subset::Options::text`: options selecting every scalar of `text`."""
 
-def subset(data: _t.Buffer | _c.Sequence[int], options: _t.SubsetOptions | None = ...) -> _t.Subset:
+def subset(
+    data: _t.Buffer | _c.Sequence[int],
+    options: _t.SubsetOptions | None = ...,
+) -> _t.SubsetResult:
     """
     `subset::subset`: subset a standalone sfnt. Returns
     `{bytes, glyph_mapping, report}`; `glyph_mapping` maps old to new glyph IDs.

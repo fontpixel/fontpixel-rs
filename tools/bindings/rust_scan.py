@@ -32,6 +32,7 @@ class RustFn:
     ret: str
     hints: dict = field(default_factory=dict)   # param -> ("type"|"helper", rust text, file)
     ret_hint: tuple | None = None
+    bytes_fields: list | None = None   # result fields returned as bytes (with_bytes)
 
 
 @dataclass
@@ -41,6 +42,7 @@ class RustClass:
     module: str | None
     fields: list = field(default_factory=list)   # [(py name, rust type, doc, writable)]
     options: set = field(default_factory=set)    # bare #[pyclass] options: frozen, eq, ord, ...
+    file: str = ""
 
 
 class Lexer:
@@ -212,6 +214,7 @@ def _scan_region(lx, start, end, impl_cls, fns, classes, rel, text):
         m = re.match(r"(?:pub(?:\([^)]*\))?\s+)?struct\s+(\w+)", text[i:i + 200])
         if m and any(a.startswith("pyclass") for a in attrs):
             cls = _pyclass(m.group(1), next(a for a in attrs if a.startswith("pyclass")))
+            cls.file = rel
             k = lx.item_end(i)
             body = text[i:k]
             if "{" in body:
@@ -302,6 +305,9 @@ def _parse_fn(lx, i, m, impl_cls, docs, attrs, fns, rel, text):
     is_py = impl_cls is not None or "pyfunction" in attrs
     if not is_py and "$" not in name:
         HELPER_RETURNS.setdefault(rel, {})[name] = " ".join(ret.split())
+        fields = bytes_fields(body, rel)
+        if fields:
+            BYTES_HELPERS.setdefault(rel, {})[name] = fields
     if not is_py or "$" in name:
         return end
     kind = "function" if impl_cls is None else "method"
@@ -342,8 +348,26 @@ def _parse_fn(lx, i, m, impl_cls, docs, attrs, fns, rel, text):
     fn = RustFn(rel, line, name, py_name, kind, impl_cls, "\n".join(docs).strip(), params,
                 " ".join(ret.split()), hints)
     fn.ret_hint = _ret_hint(body, rel)
+    fn.bytes_fields = bytes_fields(body, rel)
     fns.append(fn)
     return end
+
+
+WITH_BYTES = re.compile(r"with_bytes\(\s*py\s*,\s*&?\s*\w+\s*,\s*&\[(.*?)\]\s*\)", re.S)
+
+
+def bytes_fields(body, rel):
+    """Fields a body returns as `bytes` through `with_bytes` (directly or via a
+    helper such as `encoded_cmap`), or None."""
+    tail = body.rstrip().rstrip("}").rstrip()
+    last = tail[tail.rfind(";") + 1:] if ";" in tail else tail.lstrip("{")
+    m = WITH_BYTES.search(last)
+    if m:
+        return re.findall(r'\(\s*"(\w+)"', m.group(1))
+    h = re.match(r"\s*(?:Ok\(\s*)?(?:[\w.]+\(\|\w+\|\s*)?(\w+)\(\s*py\s*,", last)
+    if h and h.group(1) in BYTES_HELPERS.get(rel, {}):
+        return BYTES_HELPERS[rel][h.group(1)]
+    return None
 
 
 def _ret_hint(body, rel):
@@ -361,15 +385,21 @@ def _ret_hint(body, rel):
     m = re.match(conv + r"([\w:]+?)(?:::<[^>]*>)?\s*\(", last)
     if m and "::" in m.group(1):
         return ("call", m.group(1), rel)
-    m = re.match(conv + r"(\w+)\s*\)", last)
+    m = re.match(conv + r"(\w+)\s*[,)]", last)
     if m:
         var = m.group(1)
         t = re.search(rf"let\s+(?:mut\s+)?{var}\s*:\s*([\w:<>, ]+?)\s*=", body)
         if t:
             return ("type", t.group(1), rel)
-        c = re.search(rf"let\s+(?:mut\s+)?{var}\s*=\s*([\w:]+?)(?:::<[^>]*>)?\s*\(", body)
+        c = re.search(rf"let\s+(?:mut\s+)?{var}\s*=\s*(?:py\.detach\(\|\|\s*)?([\w:]+?)(?:::<[^>]*>)?\s*\(", body)
         if c and "::" in c.group(1):
             return ("call", c.group(1), rel)
+        # `let e = t.encode(..)` with `let t: Type = ..`: the method `Type::encode`.
+        c = re.search(rf"let\s+(?:mut\s+)?{var}\s*=\s*(?:py\.detach\(\|\|\s*)?(\w+)\.(\w+)\s*\(", body)
+        if c:
+            t = re.search(rf"let\s+(?:mut\s+)?{c.group(1)}\s*:\s*([\w:]+)\s*=", body)
+            if t:
+                return ("call", f"{t.group(1)}::{c.group(2)}", rel)
     return None
 
 
@@ -426,10 +456,12 @@ def _hints(body, params):
 
 
 HELPER_RETURNS: dict = {}   # file -> {non-Python fn name: Rust return type}
+BYTES_HELPERS: dict = {}    # file -> {helper fn name: fields it returns as bytes}
 
 
 def scan(src: Path):
     HELPER_RETURNS.clear()
+    BYTES_HELPERS.clear()
     USES.clear()
     fns, classes = [], []
     for p in sorted(src.glob("*.rs")):

@@ -29,10 +29,10 @@ class Collection:
     @property
     def data(self) -> bytes:
         """The collection bytes this handle owns."""
-    def extract(self, index: int, limits: _t.SfntLimits | None = ...) -> tuple[Any, Any]:
+    def extract(self, index: int, limits: _t.SfntLimits | None = ...) -> tuple[bytes, _t.Report]:
         """Extract face `index` as a standalone sfnt: `(bytes, report)`."""
     @property
-    def faces(self) -> list[Any]:
+    def faces(self) -> list[_t.CollectionFace]:
         """Faces as dicts `{flavor, offset, tables}` with table records as in `Sfnt.tables()`."""
     @staticmethod
     def parse(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Collection:
@@ -47,10 +47,10 @@ class Collection:
         """TTC version (`0x00010000` or `0x00020000`)."""
 
 def encode(
-    fonts: _c.Sequence[Any],
+    fonts: _c.Sequence[_t.Buffer],
     version: int,
     limits: _t.CollectionLimits | None = ...,
-) -> tuple[Any, Any]:
+) -> tuple[bytes, _t.Report]:
     """
     `collection::encode`: build a collection from standalone fonts, sharing
     identical tables. Returns `(bytes, report)`.

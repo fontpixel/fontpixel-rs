@@ -291,7 +291,7 @@ def parse_args(argv: _c.Sequence[str]) -> _t.ParsedArgs:
     parser's message and `exit_code` (0 for `--help`/`--version`).
     """
 
-def parse_batch_toml(text: str, /, *, base: _t.StrPath | None = ...) -> list[_t.InspectedRequest]:
+def parse_batch_toml(text: str, /, *, base: _t.StrPath | None = ...) -> _t.ParsedBatch:
     """
     Parse a TOML job text without running it: the tasks as dicts with `id`,
     `kind`, `declared_inputs` and either `request` (the normalized request)

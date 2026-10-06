@@ -38,7 +38,10 @@ def brotli_encoder_proven_heap_bound(
     of all encoder heap for the same call shape, or `None` on overflow.
     """
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> _t.Decoded:
+def decode(
+    data: _t.Buffer | _c.Sequence[int],
+    limits: _t.WoffLimits | None = ...,
+) -> _t.WoffDecoded:
     """`woff2::decode`: reconstruct the sfnt (or `ttcf` collection) from WOFF2."""
 
 def encode(
@@ -49,11 +52,11 @@ def encode(
     """`woff2::encode`: deterministic WOFF2 of an sfnt or `ttcf` collection."""
 
 def encode_many(
-    inputs: _c.Sequence[Any],
+    inputs: _c.Sequence[_t.Buffer],
     options: _t.Woff2Options | None = ...,
     limits: _t.WoffLimits | None = ...,
     jobs: int = ...,
-) -> list[Any]:
+) -> list[_t.EncodedFont]:
     """
     `woff2::encode_many`: encode several fonts with up to `jobs` worker
     threads (bounded by `max_batch_fonts`/`max_batch_bytes`); output order

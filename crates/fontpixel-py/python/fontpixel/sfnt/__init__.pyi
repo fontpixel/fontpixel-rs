@@ -77,7 +77,7 @@ class Sfnt:
         """
     def table(self, tag: _t.Tag) -> bytes | None:
         """The bytes of table `tag` (`str` such as `"OS/2"` or 4 `bytes`), or `None`."""
-    def tables(self) -> list[Any]:
+    def tables(self) -> list[_t.TableRecord]:
         """Directory records in tag order: dicts `{tag, checksum, offset, data}`."""
     def validate_checksums(self) -> None:
         """Check every table checksum and the head checksum adjustment."""

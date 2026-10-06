@@ -29,7 +29,7 @@ def codec(kind: _t.BitmapKind) -> _t.EmbeddedCodec:
     """The default codec of `kind` as a dict (`EmbeddedCodec::new(kind)`)."""
 
 def detect(
-    data: _t.Buffer,
+    data: _t.Buffer | _c.Sequence[int],
     kind: _t.BitmapKind,
     *,
     name: str | None = ...,
@@ -44,7 +44,7 @@ def metadata_retained_bytes(options: _t.EmbeddedMetadataOptions, maximum: int = 
     """
 
 def read(
-    data: _t.Buffer,
+    data: _t.Buffer | _c.Sequence[int],
     kind: _t.BitmapKind,
     options: _t.EmbeddedReadOptions | None = ...,
 ) -> tuple[FontSet | Font, _t.Report]:
@@ -64,7 +64,7 @@ def write(
     fonts: FontSet | Font,
     kind: _t.BitmapKind,
     options: _t.EmbeddedWriteOptions | None = ...,
-) -> tuple[bytes, Any]:
+) -> tuple[bytes, _t.Report]:
     """
     Write strikes as a bitmap-only sfnt (`embedded::write`). `options` is an
     `EmbeddedWriteOptions` dict. Returns `(bytes, report)`.
@@ -73,7 +73,7 @@ def write(
 def write_color(
     fonts: FontSet | Font,
     options: _t.ColorWriteOptions | None = ...,
-) -> tuple[bytes, Any]:
+) -> tuple[bytes, _t.Report]:
     """
     Write coverage as CBDT/CBLC or sbix color bitmaps (`embedded::write_color`).
     `options` is a `ColorWriteOptions` dict. Returns `(bytes, report)`.

@@ -157,10 +157,44 @@ InspectedRequest = TypedDict("InspectedRequest", {
     "source_identity_total_bytes": int, "declared_inputs": List[str], "weight": int,
     "error": str}, total=False)
 """A validated, normalized request (``inspect_request``, ``parse_batch_toml``)."""
+CodepointKind = Literal["unicode", "legacy"]
+"""The kind of a ``Codepoint``: a Unicode scalar or a legacy charset code."""
+TableRecord = TypedDict("TableRecord", {"tag": str, "checksum": int, "offset": int, "data": bytes})
+"""One sfnt table directory record (``Sfnt.tables()``)."""
+CollectionFace = TypedDict("CollectionFace", {"flavor": "Flavor", "offset": int, "tables": List[TableRecord]})
+"""One face of a TrueType collection (``Collection.faces()``)."""
+LanguageVariantItem = TypedDict("LanguageVariantItem", {"language": str, "scripts": List[str], "font": "Font"})
+"""A language alternative as returned by ``Variants.languages`` (font handle copy)."""
+LanguageVariantArgs = TypedDict("LanguageVariantArgs", {"language": Tag, "scripts": Sequence[Tag], "font": FontLike})
+"""A language alternative as assigned to ``Variants.languages``."""
+ScriptVariantItem = TypedDict("ScriptVariantItem", {"scripts": List[str], "font": "Font"})
+"""A script alternative as returned by ``Variants.scripts``."""
+ScriptVariantArgs = TypedDict("ScriptVariantArgs", {"scripts": Sequence[Tag], "font": FontLike})
+"""A script alternative as assigned to ``Variants.scripts``."""
+SharedMetricRuns = TypedDict("SharedMetricRuns", {"tables": "TablesBytes", "shared_runs": int})
+"""``sfnt.bitmap.encode_shared_metric_runs``: the encoded tables and the number of shared runs."""
+SubsetResult = TypedDict("SubsetResult", {"bytes": bytes, "glyph_mapping": "dict[int, int]", "report": "Report"})
+"""``fontpixel.sfnt.subset.subset``: the subset sfnt, old-to-new glyph IDs and the report."""
+WoffAuxiliary = TypedDict("WoffAuxiliary", {
+    "major_version": int, "minor_version": int, "metadata": Union[bytes, None], "private_data": Union[bytes, None]})
+"""Version and the optional metadata / private-data blocks of a WOFF file."""
+WoffDecoded = TypedDict("WoffDecoded", {"sfnt": bytes, "auxiliary": WoffAuxiliary, "report": "Report"})
+"""A decoded WOFF/WOFF2: the standalone sfnt, the preserved envelope fields and the report."""
+ParsedBatch = TypedDict("ParsedBatch", {
+    "jobs": Union[int, None], "max_working_bytes": int, "max_pending_bytes": int, "max_report_bytes": int,
+    "max_task_report_bytes": int, "tasks": List[InspectedRequest]})
+"""``fontpixel.ops.parse_batch_toml``: the job's budgets and its prepared tasks."""
 ParsedArgs = TypedDict("ParsedArgs", {
     "command": str, "request": Mapping[str, Any], "report_style": str,
     "source_identity_total_bytes": int})
 """A parsed ``fontpixel`` command line (``fontpixel.ops.parse_args``)."""
+'''
+
+# Written at the end of fontpixel/types.py (may extend generated shapes).
+POSTLUDE = '''
+class CharsetTableEntry(CharsetInfo):
+    """A ``charset_table()`` row: ``CharsetInfo`` plus whether its table is compiled in."""
+    available: bool
 '''
 
 # `*_arg` helper -> accepted Python type.
@@ -190,6 +224,9 @@ HELPERS = {
     "SetArg::extract": "@fontpixel.FontSet | @fontpixel.Font",
     "with_font": "@fontpixel.Font | @fontpixel.FontSet",
     "bitmap.rs:limits_arg": "_t.BitmapLimits",
+    "mono_arg": "_t.BitmapLike",
+    "missing_arg": "_t.GlyphLike",
+    "mono": "_t.BitmapLike",
 }
 
 # Rust (binding-local or core) type names that are not serde shapes.
@@ -202,9 +239,9 @@ RUST_TYPES = {
 PARAMS = {
     "fontpixel.sfnt*": {"data": "_t.Buffer", "limits": "_t.SfntLimits"},
     "fontpixel.woff*": {"data": "_t.Buffer"},
+    "fontpixel._native.Bitmap.*": {"limits": "_t.BitmapLimits", "depth": "_t.Depth"},
+    "fontpixel.formats*": {"data": "_t.Buffer | _c.Sequence[int]", "limits": "_t.ResourceLimits"},
     "*": {
-        "data": "_t.Buffer",
-        "limits": "_t.ResourceLimits",
         "transport_limits": "_t.TransportLimits",
         "resources": "_t.Resources",
         "report": "_t.Report",
@@ -321,7 +358,7 @@ SIGNATURES = {
     f"{O}.batch": {"request": "_t.BatchRequest", "return": "@fontpixel.ops.BatchResult"},
     f"{O}.inspect_request": {"request": "_c.Mapping[str, Any]", "return": "_t.InspectedRequest"},
     f"{O}.parse_args": {"return": "_t.ParsedArgs"},
-    f"{O}.parse_batch_toml": {"return": "list[_t.InspectedRequest]"},
+    f"{O}.parse_batch_toml": {"return": "_t.ParsedBatch"},
     # ---- merge / outline ------------------------------------------------------------
     "fontpixel.merge.Selection.ranges": {"return": "list[_t.CodepointRange]"},
     "fontpixel.merge.defaults": {"return": "_t.MergeDefaults"},
@@ -341,19 +378,17 @@ SIGNATURES = {
     "fontpixel.sfnt.cff.Cff.glyph": {"return": "_t.DecodedGlyph"},
     "fontpixel.sfnt.cff.Cff.glyph_name": {"return": "bytes | None"},
     "fontpixel.sfnt.cff.Cff.read_all": {"return": "list[_t.DecodedGlyph]"},
-    "fontpixel.sfnt.cff.Cff.subset": {"return": "_t.CffEncoded"},
-    "fontpixel.sfnt.cff.encode": {"return": "_t.CffEncoded"},
+    "fontpixel.sfnt.cff.Cff.subset": {"return": "_t.CffEncodedBytes"},
     "fontpixel.sfnt.bitmap.*": {"kind": "_t.BitmapKind"},
-    "fontpixel.sfnt.bitmap.encode": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
-    "fontpixel.sfnt.bitmap.encode_spanning": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
-    "fontpixel.sfnt.bitmap.encode_shared_metric_runs": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
+
     "fontpixel.sfnt.glyf.contours": {"return": "list[_t.Contour]"},
-    "fontpixel.sfnt.glyf.encode": {"format": "_t.LocaFormat", "return": "_t.GlyfEncoded"},
+    "fontpixel.sfnt.glyf.encode": {"format": "_t.LocaFormat"},
+    "fontpixel.sfnt.bitmap.encode_shared_metric_runs": {"kind": "_t.BitmapKind", "return": "_t.SharedMetricRuns"},
     "fontpixel.sfnt.glyf.glyph_simple": {"contours": "_c.Sequence[_t.Contour]"},
     "fontpixel.sfnt.gsub.subset": {"return": "_t.Gsub"},
     "fontpixel.sfnt.metrics.*": {"axis": "_t.Axis"},
-    "fontpixel.sfnt.metrics.encode": {"axis": "_t.Axis", "return": "_t.EncodedMetrics"},
-    "fontpixel.sfnt.subset.subset": {"return": "_t.Subset"},
+
+    "fontpixel.sfnt.subset.subset": {"return": "_t.SubsetResult"},
     # ---- variants / woff -----------------------------------------------------------
     "fontpixel.variants.defaults": {"return": "_t.VariantsDefaults"},
     "fontpixel.variants.Variants.add_language_variant": {"scripts": "_c.Iterable[_t.Tag]"},
@@ -362,11 +397,11 @@ SIGNATURES = {
     "fontpixel.variants.Variants.to_dict": {"return": "_t.VariantsDict"},
     "fontpixel.variants.Variants.plan": {"return": "_t.Plan"},
     "fontpixel.variants.PreparedVariants.plan": {"return": "_t.Plan"},
-    "fontpixel.variants.*encode*": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
+    "fontpixel.variants.encode*": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
     "fontpixel.variants.Variants.encode*": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
     "fontpixel.variants.PreparedVariants.encode": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
     "fontpixel.woff.defaults": {"return": "_t.WoffDefaults"},
-    "fontpixel.woff.woff*.decode": {"return": "_t.Decoded"},
+    "fontpixel.woff.woff*.decode": {"return": "_t.WoffDecoded"},
     "fontpixel.woff.woff*.encode": {"return": "_t.EncodedFont"},
     # ---- compat native half (private; wrapped by fontpixel.compat.bdfparser) --------
     f"{B}.Bitmap.__new__": {"bin_bitmap_list": "_c.Iterable[str]"},
@@ -407,13 +442,62 @@ SIGNATURES = {
     f"{B}.RawGlyph.__new__": {"meta": "_c.Mapping[str, Any]"},
     f"{B}.RawGlyph.meta": {"return": "list[Any]"},
     f"{B}.RawGlyph.setmeta": {"fields": "_c.Mapping[str, Any]"},
+
+    # ---- second pass: containers and handle round trips -------------------------
+    f"{N}.Bitmap.from_dict": {"data": "_t.GlyphBitmap"},
+    f"{N}.Bitmap.depth": {"return": "_t.Depth"},
+    f"{N}.Font.from_dict": {"data": "_t.FontDict"},
+    f"{N}.FontSet.from_dict": {"data": "_t.FontSetDict"},
+    f"{N}.Glyph.from_dict": {"data": "_t.GlyphDict"},
+    f"{N}.OutputBundle.from_dict": {"data": "_t.OutputBundleDict"},
+    f"{N}.Codepoint.__new__": {"kind": "_t.CodepointKind"},
+    f"{N}.Codepoint.kind": {"return": "_t.CodepointKind"},
+    f"{N}.Font.__iter__": {"return": "_c.Iterator[@fontpixel.Glyph]"},
+    f"{N}.FontSet.__iter__": {"return": "_c.Iterator[@fontpixel.Font]"},
+    f"{N}.Properties.__iter__": {"return": "_c.Iterator[_t.Property]"},
+    f"{N}.Properties.to_list": {"return": "list[_t.Property]"},
+    f"{N}.BitmapProjection.properties": {"return": "list[_t.PropertyEdit]"},
+    f"{N}.Registry.formats": {"return": "list[_t.FormatStatus]"},
+    f"{N}.list_formats": {"return": "list[_t.FormatStatus]"},
+    f"{N}.charset_table": {"return": "list[_t.CharsetTableEntry]"},
+    "fontpixel.formats.embedded.write*": {"return": "tuple[bytes, _t.Report]"},
+    "fontpixel.formats.vector_raster.write*": {"return": "tuple[bytes, _t.Report]"},
+    "fontpixel.sfnt.metrics.decode": {"axis": "_t.Axis", "return": "tuple[_t.MetricsHeader, list[_t.LongMetric]]"},
+    "fontpixel.sfnt.Sfnt.tables": {"return": "list[_t.TableRecord]"},
+    "fontpixel.sfnt.collection.Collection.extract": {"return": "tuple[bytes, _t.Report]"},
+    "fontpixel.sfnt.collection.Collection.faces": {"return": "list[_t.CollectionFace]"},
+    "fontpixel.sfnt.collection.encode": {"fonts": "_c.Sequence[_t.Buffer]", "return": "tuple[bytes, _t.Report]"},
+    "fontpixel.outline.rasterize": {"contours": "_c.Sequence[_t.Contour]"},
+    "fontpixel.variants.Variants.languages": {"return": "list[_t.LanguageVariantItem]",
+                                              "set": "_c.Iterable[_t.LanguageVariantArgs]"},
+    "fontpixel.variants.Variants.scripts": {"return": "list[_t.ScriptVariantItem]",
+                                            "set": "_c.Iterable[_t.ScriptVariantArgs]"},
+    "fontpixel.woff.woff2.encode_many": {"inputs": "_c.Sequence[_t.Buffer]", "return": "list[_t.EncodedFont]"},
+    f"{B}.bitmap_contours": {"return": "list[list[tuple[float, float, bool]]]"},
 }
-CONSTANTS: dict = {}
+CONSTANTS = {
+    "fontpixel.formats.CATALOGUE": "list[_t.FormatInfo]",
+    "fontpixel._native.CJK_RANGES": "tuple[_t.UnicodeRange, ...]",
+    "fontpixel._native.GEOMETRIC_RANGES": "tuple[_t.UnicodeRange, ...]",
+    "fontpixel._native.UNICODE_BLOCKS": "tuple[_t.UnicodeRange, ...]",
+    "fontpixel._native.RGBA_*": "_t.Rgba",
+}
+# Attributes set on raised exceptions (errors.rs `to_py`, ops.rs `with_exit_code`).
 EXCEPTION_ATTRS = {
     "fontpixel._native.FontpixelError": {
         "kind": "str",
         "exit_code": "int",
     },
+    "fontpixel._native.UnknownFormatError": {"format": "str"},
+    "fontpixel._native.FeatureDisabledError": {"format": "str"},
+    "fontpixel._native.NotImplementedFormatError": {"format": "str", "operation": "str"},
+    "fontpixel._native.AmbiguousFormatError": {"candidates": "list[str]"},
+    "fontpixel._native.BdfParseError": {"line": "int"},
+    "fontpixel._native.ResourceLimitError": {"resource": "str", "limit": "int"},
+    "fontpixel._native.MissingResourceError": {"path": "str"},
+    "fontpixel._native.MultipleAssetsError": {"count": "int"},
+    "fontpixel._native.StrictLossError": {"report": "_t.Report"},
+    "fontpixel._native.ReportedErrorsError": {"report": "_t.Report"},
 }
 EXPLICIT_ANY = {
     # normalize() returns the serialized form of whichever Rust type it names.
@@ -422,6 +506,7 @@ EXPLICIT_ANY = {
     # values, range specifications, data layouts and file objects.
     "fontpixel._native._bdfparser.Bitmap.todata:return",
     "fontpixel._native._bdfparser.RawFont.getprop:return",
+    "fontpixel._native._bdfparser.RawGlyph.meta:return",
     "fontpixel._native._bdfparser.RawFont.setprop:value",
     "fontpixel._native._bdfparser.RawFont.set_altcode:altcode",
     "fontpixel._native._bdfparser.RawFont.*:r",
@@ -474,6 +559,10 @@ def explicit_any(key):
 STUBTEST_ALLOW = {
     "running the module is the bdfparser command line (it exits on import)": [
         "fontpixel.compat.bdfparser.__main__",
+    ],
+    "tuples of plain dicts typed as TypedDict rows: stubtest infers the runtime value's "
+    "type as tuple[dict[Any, Any], ...] and cannot match it against a TypedDict": [
+        r"fontpixel(\._native)?\.(CJK_RANGES|GEOMETRIC_RANGES|UNICODE_BLOCKS)",
     ],
     "functools.cache wrapper: typeshed types it as (*args, **kwargs)": [
         "fontpixel.compat.bdfparser.encoding._rows",

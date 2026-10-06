@@ -47,7 +47,7 @@ def read(
     """
 
 def read_default(
-    data: _t.Buffer,
+    data: _t.Buffer | _c.Sequence[int],
     *,
     limits: _t.ResourceLimits | None = ...,
 ) -> tuple[FontSet | Font, _t.Report]:

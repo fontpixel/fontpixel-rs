@@ -25,7 +25,7 @@ def decode(
     data: _t.Buffer | _c.Sequence[int],
     num_glyphs: int,
     limits: _t.SfntLimits | None = ...,
-) -> tuple[Any, Any]:
+) -> tuple[_t.MetricsHeader, list[_t.LongMetric]]:
     """`metrics::decode`: `(header, metrics)` from the header and metrics tables."""
 
 def encode(
@@ -34,7 +34,7 @@ def encode(
     metrics: _c.Sequence[_t.LongMetric],
     compact: bool,
     limits: _t.SfntLimits | None = ...,
-) -> _t.EncodedMetrics:
+) -> _t.EncodedMetricsBytes:
     """`metrics::encode`: `{header: bytes, metrics: bytes, num_long_metrics}`."""
 
 def header_new(axis: _t.Axis) -> _t.MetricsHeader:

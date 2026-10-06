@@ -31,7 +31,7 @@ def codec(format: str) -> _t.VectorRasterCodecDict:
     """
 
 def detect(
-    data: _t.Buffer,
+    data: _t.Buffer | _c.Sequence[int],
     format: str = ...,
     *,
     name: str | None = ...,
@@ -50,7 +50,7 @@ def detect_native_ppem(
     """
 
 def read(
-    data: _t.Buffer,
+    data: _t.Buffer | _c.Sequence[int],
     options: _t.VectorRasterOptions | None = ...,
 ) -> tuple[FontSet | Font, _t.Report]:
     """
@@ -62,7 +62,7 @@ def write(
     fonts: FontSet | Font,
     format: str,
     options: _t.VectorRasterWriteOptions | None = ...,
-) -> tuple[bytes, Any]:
+) -> tuple[bytes, _t.Report]:
     """
     Vectorize strikes as `format` (`vector_raster::write`). `options` is a
     `vector_raster::WriteOptions` dict. Returns `(bytes, report)`.
@@ -72,7 +72,7 @@ def write_owned(
     fonts: FontSet | Font,
     format: str,
     options: _t.VectorRasterWriteOptions | None = ...,
-) -> tuple[bytes, Any]:
+) -> tuple[bytes, _t.Report]:
     """
     As `write`, but the model is handed over (`vector_raster::write_owned`):
     a `FontSet` handle is left empty afterwards. Output and report are equal.

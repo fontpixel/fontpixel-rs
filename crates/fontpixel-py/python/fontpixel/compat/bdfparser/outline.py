@@ -12,7 +12,7 @@ from ..._native import _bdfparser as _n
 
 __all__ = ['bitmap_contours', 'rasterize', 'Contour', 'Point']
 
-Point = tuple[int, int, bool]
+Point = tuple[float, float, bool]
 Contour = list[Point]
 
 #: 1 / cos(22.5°)

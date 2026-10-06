@@ -57,10 +57,14 @@ class Cff:
         """Parse a raw `CFF ` table with the containing font's units per em."""
     def read_all(self, limits: _t.SfntLimits | None = ...) -> list[_t.DecodedGlyph]:
         """Evaluate every glyph under one whole-font budget."""
-    def subset(self, glyphs: _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> _t.CffEncoded:
+    def subset(
+        self,
+        glyphs: _c.Sequence[int],
+        limits: _t.SfntLimits | None = ...,
+    ) -> _t.CffEncodedBytes:
         """Subset to `glyphs` (old IDs in new order, `.notdef` first): CFF bytes."""
 
-def encode(font: _t.CffFont, limits: _t.CffLimits | None = ...) -> _t.CffEncoded:
+def encode(font: _t.CffFont, limits: _t.CffLimits | None = ...) -> _t.CffEncodedBytes:
     """
     `cff::Font::encode`: encode a CFF Font dict; returns `{data, bounds, maxp}`
     with `data`/`maxp` as `bytes`.

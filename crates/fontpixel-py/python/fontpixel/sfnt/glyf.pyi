@@ -47,7 +47,7 @@ def encode(
     table: _t.GlyfTable,
     format: _t.LocaFormat,
     limits: _t.GlyfLimits | None = ...,
-) -> _t.GlyfEncoded:
+) -> _t.GlyfEncodedBytes:
     """
     `GlyfTable::encode`: `{glyf, loca, index_to_loc_format, bounds, statistics}`
     with `glyf`/`loca` as `bytes`; `format` is `"short"`, `"long"` or `"auto"`.

@@ -19,7 +19,6 @@ from fontpixel import outline as outline
 from fontpixel import sfnt as sfnt
 from fontpixel import variants as variants
 from fontpixel import woff as woff
-from fontpixel._native._bdfparser import Bitmap as _bdfparser_Bitmap
 
 __all__ = [
     "__version__",
@@ -122,12 +121,15 @@ __all__ = [
 
 class AmbiguousFormatError(FontpixelError):
     """Several formats match; pass an explicit format."""
+    candidates: list[str]
 
 class BdfParseError(FontpixelError):
     """Fatal BDF syntax error."""
+    line: int
 
 class FeatureDisabledError(FontpixelError):
     """Format compiled out of this build."""
+    format: str
 
 class FontpixelError(Exception):
     """Base class of all fontpixel errors."""
@@ -142,24 +144,33 @@ class InvalidInputError(FontpixelError):
 
 class MissingResourceError(FontpixelError):
     """A referenced sidecar was not supplied."""
+    path: str
 
 class MultipleAssetsError(FontpixelError):
     """Several output assets where one was expected."""
+    count: int
 
 class NotImplementedFormatError(FontpixelError):
     """Capability not implemented for this format."""
+    format: str
+    operation: str
 
 class ReportedErrorsError(FontpixelError):
     """A codec reported error diagnostics."""
+    report: _t.Report
 
 class ResourceLimitError(FontpixelError):
     """A configured resource limit was exceeded."""
+    resource: str
+    limit: int
 
 class StrictLossError(FontpixelError):
     """Strict mode rejected an information loss."""
+    report: _t.Report
 
 class UnknownFormatError(FontpixelError):
     """Unknown format identifier."""
+    format: str
 
 class UnrecognizedFormatError(FontpixelError):
     """No detector recognized the input."""
@@ -178,7 +189,7 @@ class Bitmap:
         width: int = ...,
         height: int = ...,
         depth: _t.Depth = ...,
-        limits: _t.ResourceLimits | None = ...,
+        limits: _t.BitmapLimits | None = ...,
     ) -> Bitmap:
         ...
     def __copy__(self) -> Bitmap:
@@ -264,7 +275,7 @@ class Bitmap:
         also `GlyphBitmap::crop`).
         """
     @property
-    def depth(self) -> str:
+    def depth(self) -> _t.Depth:
         """`"mono"` or `"gray8"`."""
     def enlarge(self, x: int, y: int | None = ...) -> Bitmap:
         """Scale by integer factors (`Bitmap::enlarge`; `y` defaults to `x`)."""
@@ -295,7 +306,7 @@ class Bitmap:
         `scan_unit`, `row_order` "top-down"/"bottom-up") (`Bitmap::from_bytes`).
         """
     @staticmethod
-    def from_dict(data: _t.Buffer) -> Bitmap:
+    def from_dict(data: _t.GlyphBitmap) -> Bitmap:
         """From the plain-data form produced by `to_dict`."""
     @staticmethod
     def from_hex_rows(
@@ -443,7 +454,7 @@ class Bitmap:
     def width(self) -> int:
         """Width in pixels."""
     @staticmethod
-    def with_limits(width: int, height: int, limits: _t.ResourceLimits, depth: str = ...) -> Bitmap:
+    def with_limits(width: int, height: int, limits: _t.BitmapLimits, depth: str = ...) -> Bitmap:
         """A blank raster under explicit limits (`Bitmap::with_limits`)."""
 
 @final
@@ -475,7 +486,7 @@ class BitmapProjection:
     def is_identity(self) -> bool:
         """Whether these options change nothing (`BitmapProjection::is_identity`)."""
     @property
-    def properties(self) -> list[Any]:
+    def properties(self) -> list[_t.PropertyEdit]:
         """The property edits, as dicts."""
     def property_names(self) -> list[str]:
         """The edited property names in order (`PropertyEdit::name`)."""
@@ -540,7 +551,7 @@ class Codepoint:
     one-character `str` (Unicode) or the plain-data dict `{"Unicode": n}` /
     `{"Legacy": n}`.
     """
-    def __new__(cls, value: int, kind: str = ...) -> Codepoint:
+    def __new__(cls, value: int, kind: _t.CodepointKind = ...) -> Codepoint:
         ...
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
@@ -565,7 +576,7 @@ class Codepoint:
     def is_unicode(self) -> bool:
         """Whether this is a Unicode codepoint."""
     @property
-    def kind(self) -> str:
+    def kind(self) -> _t.CodepointKind:
         """`"unicode"` or `"legacy"`."""
     @staticmethod
     def legacy(value: int) -> Codepoint:
@@ -598,7 +609,7 @@ class Font:
     def __getitem__(self, key: int, /) -> Glyph:
         """Return self[key]."""
     __hash__: None  # type: ignore[assignment]
-    def __iter__(self) -> _c.Iterator[Any]:
+    def __iter__(self) -> _c.Iterator[Glyph]:
         """Implement iter(self)."""
     def __len__(self) -> int:
         """Return len(self)."""
@@ -642,7 +653,7 @@ class Font:
         self,
         text: str,
         options: _t.RenderOptions | None = ...,
-        missing_glyph: _t.GlyphDict | None = ...,
+        missing_glyph: _t.GlyphLike | None = ...,
     ) -> Rendered:
         """
         Render Unicode `text` through the font's charset map
@@ -654,7 +665,7 @@ class Font:
         order: _t.RenderGlyphOrder | None = ...,
         ranges: _c.Sequence[tuple[int, int]] | None = ...,
         options: _t.RenderOptions | None = ...,
-        missing_glyph: _t.GlyphDict | None = ...,
+        missing_glyph: _t.GlyphLike | None = ...,
     ) -> Rendered:
         """
         Render every effective mapping in `order` (`"ascending"`,
@@ -665,7 +676,7 @@ class Font:
         self,
         codes: _c.Iterable[_t.CodepointLike | None],
         options: _t.RenderOptions | None = ...,
-        missing_glyph: _t.GlyphDict | None = ...,
+        missing_glyph: _t.GlyphLike | None = ...,
     ) -> Rendered:
         """
         Render explicit codes; `None` entries stand for unencodable
@@ -678,7 +689,7 @@ class Font:
         changes if it raises (`Font::edit_glyph`).
         """
     @staticmethod
-    def from_dict(data: _t.Buffer) -> Font:
+    def from_dict(data: _t.FontDict) -> Font:
         """
         Build from the plain-data form produced by `to_dict` (serde shape;
         `glyphs` keeps `None` for removed slots so IDs survive).
@@ -791,7 +802,7 @@ class FontSet:
     def __getitem__(self, key: int, /) -> Font:
         """Return self[key]."""
     __hash__: None  # type: ignore[assignment]
-    def __iter__(self) -> _c.Iterator[Any]:
+    def __iter__(self) -> _c.Iterator[Font]:
         """Implement iter(self)."""
     def __len__(self) -> int:
         """Return len(self)."""
@@ -810,7 +821,7 @@ class FontSet:
     @fonts.setter
     def fonts(self, value: _c.Iterable[_t.FontLike]) -> None: ...
     @staticmethod
-    def from_dict(data: _t.Buffer) -> FontSet:
+    def from_dict(data: _t.FontSetDict) -> FontSet:
         """Build from the plain-data form produced by `to_dict` (serde shape)."""
     def into_single(self) -> Font:
         """
@@ -897,7 +908,7 @@ class Glyph:
     def copy(self) -> Glyph:
         """An owned copy."""
     @staticmethod
-    def from_dict(data: _t.Buffer) -> Glyph:
+    def from_dict(data: _t.GlyphDict) -> Glyph:
         """Build from the plain-data form produced by `to_dict` (serde shape)."""
     @property
     def id(self) -> int | None:
@@ -1048,7 +1059,7 @@ class OutputBundle:
     def assets(self) -> list[OutputAsset]:
         """Copies of every asset in order (`OutputBundle::assets`)."""
     @staticmethod
-    def from_dict(data: _t.Buffer) -> OutputBundle:
+    def from_dict(data: _t.OutputBundleDict) -> OutputBundle:
         """
         From the plain-data form (`{"primary", "assets": [{"path", "bytes"}],
         "directory"}`), validated like the constructors.
@@ -1103,7 +1114,7 @@ class Properties:
     def __getitem__(self, key: int, /) -> _t.Property:
         """Return self[key]."""
     __hash__: None  # type: ignore[assignment]
-    def __iter__(self) -> _c.Iterator[Any]:
+    def __iter__(self) -> _c.Iterator[_t.Property]:
         """Implement iter(self)."""
     def __len__(self) -> int:
         """Return len(self)."""
@@ -1143,7 +1154,7 @@ class Properties:
         Replace the last property whose name matches case-insensitively, or
         append a new one (`Properties::set`).
         """
-    def to_list(self) -> list[Any]:
+    def to_list(self) -> list[_t.Property]:
         """A list of property dicts (`Properties::iter` / `into_vec`)."""
 
 @final
@@ -1227,7 +1238,7 @@ class Registry:
         The unique `FormatInfo` for a filename; raises `UnrecognizedFormatError`
         or `AmbiguousFormatError` (with `candidates`).
         """
-    def formats(self) -> list[Any]:
+    def formats(self) -> list[_t.FormatStatus]:
         """
         Every catalogue format with its capabilities, as `FormatStatus` dicts
         (`{"format": {"id", "name", "extensions", "feature_enabled"}, "detect",
@@ -1799,7 +1810,7 @@ def charset_canonical_name(font_or_charset: _t.FontCharset) -> str:
 def charset_props(key: str) -> tuple[str, str]:
     """`(CHARSET_REGISTRY, CHARSET_ENCODING)` for a key (`charset_props`)."""
 
-def charset_table() -> list[Any]:
+def charset_table() -> list[_t.CharsetTableEntry]:
     """
     Every canonical charset (`charset_table`), as dicts with `key`,
     `python_codec`, `kind`, `gl_capable`, `force_gl`, `properties`,
@@ -1812,7 +1823,7 @@ def default_bitmap_limits() -> _t.BitmapLimits:
 def default_byte_layout() -> _t.ByteLayout:
     """Default `ByteLayout` as a dict."""
 
-def default_image_options() -> _t.ImageImageOptions:
+def default_image_options() -> _t.ImageOptions:
     """Default `ImageOptions` as a dict."""
 
 def default_render_limits() -> _t.RenderLimits:
@@ -1872,7 +1883,7 @@ def is_western(cp: int) -> bool:
 def kuten_to_euc(row: int, cell: int) -> int | None:
     """One-based 94×94 row/cell to an EUC code, or `None` (`kuten_to_euc`)."""
 
-def list_formats() -> list[Any]:
+def list_formats() -> list[_t.FormatStatus]:
     """Every catalogue format with its capabilities (`FormatStatus` dicts)."""
 
 def name_overrides_is_empty(overrides: _t.NameOverrides) -> bool:
@@ -1940,14 +1951,14 @@ def rgba(red: int, green: int, blue: int, alpha: int = ...) -> _t.Rgba:
 def sanitize_charset(registry: str | None = ..., encoding: str | None = ...) -> str:
     """Canonical key from XLFD registry/encoding (`sanitize_charset`)."""
 
-def to_png(bitmap: _bdfparser_Bitmap, options: _t.ImageImageOptions | None = ...) -> bytes:
+def to_png(bitmap: _t.BitmapLike, options: _t.ImageOptions | None = ...) -> bytes:
     """
     Encode a Mono bitmap as an indexed 1-bit PNG (`render::image::to_png`).
     `options` is an `ImageOptions` dict (`scale`, `foreground`, `background`,
     `limits`); colors are `{red, green, blue, alpha}` dicts.
     """
 
-def to_svg(bitmap: _bdfparser_Bitmap, options: _t.ImageImageOptions | None = ...) -> str:
+def to_svg(bitmap: _t.BitmapLike, options: _t.ImageOptions | None = ...) -> str:
     """Export a Mono bitmap as a standalone SVG string (`render::image::to_svg`)."""
 
 def unicode_block(cp: int) -> _t.UnicodeRange | None:
@@ -1985,15 +1996,15 @@ def writing_direction_from_spec(spec: str) -> _t.WritingDirection:
     (`WritingDirection::from_spec`). Returns `{"glyphs", "lines"}`.
     """
 
-CJK_RANGES: tuple[dict[str, int | str], ...]
-GEOMETRIC_RANGES: tuple[dict[str, int | str], ...]
+CJK_RANGES: tuple[_t.UnicodeRange, ...]
+GEOMETRIC_RANGES: tuple[_t.UnicodeRange, ...]
 MAX_FONT_NAME_BYTES: int
 MAX_PROPERTY_EDITS: int
 MAX_PROPERTY_NAME_BYTES: int
 MAX_PROPERTY_TEXT_BYTES: int
-RGBA_BLACK: dict[str, int]
-RGBA_TRANSPARENT: dict[str, int]
-RGBA_WHITE: dict[str, int]
-UNICODE_BLOCKS: tuple[dict[str, int | str], ...]
+RGBA_BLACK: _t.Rgba
+RGBA_TRANSPARENT: _t.Rgba
+RGBA_WHITE: _t.Rgba
+UNICODE_BLOCKS: tuple[_t.UnicodeRange, ...]
 UNICODE_VERSION: str
 __version__: str

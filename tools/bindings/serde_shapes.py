@@ -43,10 +43,22 @@ MANUAL = {
         ("headers", "PropertiesDict", True, "Format header properties."),
         ("properties", "PropertiesDict", True, "Font properties."),
     ]),
+    # Private fields (`serde(try_from = "...Raw")` mirrors them).
+    "fontpixel::model::Rational": ("struct", [
+        ("numerator", "int", True, "Signed numerator."),
+        ("denominator", "int", True, "Nonzero denominator."),
+    ]),
+    "fontpixel::resources::OutputBundle": ("struct", [
+        ("primary", "str", True, "Entry point (a file name, or the directory name)."),
+        ("assets", "list[OutputAssetDict]", True, "Every asset in order."),
+        ("directory", "bool", True, "Whether the entry point names a directory."),
+    ]),
     # Newtypes with private fields (derived serde = the inner value).
     "fontpixel::model::GlyphId": ("alias", "int"),
     "fontpixel::model::properties::Properties": ("alias", "list[Property]"),
 }
+# Structs whose private fields are all `serde(skip)`: the public fields are the shape.
+SKIPPED_PRIVATE = {"fontpixel::charset::CharsetInfo"}
 # Plain-data shapes of types that also have a handle class keep the handle's
 # name free: `fontpixel.Font` is the handle, `fontpixel.types.FontDict` its dict.
 FIXED_NAMES = {
@@ -255,6 +267,10 @@ class SerdeModel:
                 # The one entry already at the shortest depth keeps its name.
                 low = min(depth[p] for p in ps)
                 keep = [p for p in ps if depth[p] == low and p not in fixed]
+                if len(keep) > 1:
+                    # A core type keeps the short name over format and ops types.
+                    core = [p for p in keep if not p.startswith(("fontpixel::formats::", "fontpixel_ops::"))]
+                    keep = core if len(core) == 1 else keep
                 for p in ps:
                     if p in fixed or (len(keep) == 1 and p == keep[0]):
                         continue
@@ -529,6 +545,8 @@ class SerdeModel:
 
     def _struct(self, key, it, parts, path, name, doc):
         kind = it["inner"]["struct"]["kind"]
+        if "plain" in kind and kind["plain"].get("has_stripped_fields") and path not in SKIPPED_PRIVATE:
+            raise SystemExit(f"{path}: serde struct with private fields needs a MANUAL shape")
         if "plain" in kind:
             fields = self._fields(key, kind["plain"]["fields"], parts)
             return Shape(path, "struct", doc=doc, fields=fields, name=name)
