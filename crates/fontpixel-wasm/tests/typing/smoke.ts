@@ -112,3 +112,34 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
   // @ts-expect-error plain data is not a handle
   font.addGlyph(dict.fonts[0].glyphs[0]);
 }
+
+// OpenType, WOFF, variants and library merge (unit J4).
+import { Cff, Collection, Selection, Sfnt, SfntBuilder, Variants, merge, sfnt, variants, woff } from "fontpixel";
+import type { BytesWithReport, MergeLibResult, NameTable, SfntTableRecord, VariantsEncoded, WoffDecoded } from "fontpixel";
+
+export function smokeOpenType(bytes: Uint8Array, base: Font): void {
+  const s = new Sfnt(bytes, { max_tables: 64 });
+  const records: SfntTableRecord[] = s.tables();
+  const os2: Uint8Array | undefined = s.table("OS/2");
+  const name: NameTable = sfnt.name.decode(s.table("name") ?? new Uint8Array());
+  const rebuilt = new SfntBuilder(s.flavor);
+  for (const r of records) rebuilt.insert(r.tag, r.data);
+  const checksum: number = sfnt.checksum(rebuilt.build());
+  const cmap: Uint8Array = sfnt.cmap.encode({ 65: 1 }, 2).data;
+  const glyphs: number = Cff.fromSfnt(s).length;
+  const faces = new Collection(bytes).faces.map((f) => f.tables.length);
+  const web: BytesWithReport = woff.woff2.encode(bytes, { quality: 5 });
+  const back: WoffDecoded = woff.woff2.decode(web.bytes);
+  const metadata: Uint8Array | null = back.auxiliary.metadata;
+  const v = new Variants(base);
+  v.addLanguage("zh-Hant", base.toDict());
+  const out: VariantsEncoded = v.encode({ flavor: "cff" });
+  const single: Uint8Array = variants.encodeSingle(base).bytes;
+  const merged: MergeLibResult = merge.merge([{ font: base, selection: new Selection("U+41-5A"), dy: 1n }], { family: "X" });
+  const mergedFont: Font = merged.font;
+  void [os2, name, checksum, cmap, glyphs, faces, metadata, out, single, mergedFont];
+  // @ts-expect-error the merge family is required
+  merge.merge([], {});
+  // @ts-expect-error tags are strings or bytes
+  s.table(1);
+}
