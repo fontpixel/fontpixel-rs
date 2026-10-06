@@ -34,7 +34,7 @@ status = "adapted"
 python = "FontpixelError.report"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
 js = "FontpixelError.report (complete plain data)"
-js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font.draw, drawCodepoints and drawAll"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::strict errors carry the report"
 reason = "exception attribute (dict)"
 
 [[rule]]

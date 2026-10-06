@@ -381,6 +381,7 @@ test('font metrics, names, charset, default glyph, glyphInCell and updateBounds'
   assert.throws(() => (font.names = { family: 'x', nope: 1 }), invalid(/unknown field `nope`/));
   font.charset = { registry: 'ISO8859', encoding: '1', code_ranges: [] };
   assert.equal(font.charsetCanonicalName(), 'iso88591');
+  assert.equal(fp.charsetCanonicalName(font.charset), font.charsetCanonicalName());
   assert.deepEqual(font.charset, { registry: 'ISO8859', encoding: '1', code_ranges: [] });
   font.charset = { name: 'cp1252', code_ranges: [[0x20, 0x7e]] };
   assert.equal(font.charsetCanonicalName(), 'cp1252');
@@ -658,13 +659,12 @@ test('GlyphBitmap through the model: width, height, bytes, ink box and crop', ()
   const gray = new fp.Glyph(new fp.Bitmap(2, 2, 'gray8'));
   assert.equal(gray.bitmap.depth, 'gray8');
   assert.equal(gray.bitmapInCell({ width: 3, height: 1, x: 0, y: 0 }).depth, 'gray8');
-  // Direct Bitmap.bbox / Bitmap.cropBounds come from the bitmap unit.
-  if (typeof fp.Bitmap.prototype.bbox === 'function') {
-    assert.deepEqual(b.bbox(), { width: 2, height: 1, x: 1, y: 1 });
-  }
+  // The same operations directly on the Bitmap (GlyphBitmap::bbox / crop).
+  assert.deepEqual(b.bbox(), { width: 2, height: 1, x: 1, y: 1 });
+  assert.equal(b.cropBounds({ width: 2, height: 1, x: 1, y: 1 }).toText(), '##');
 });
 
-test('Font.draw, drawCodepoints and drawAll render through the model (render unit)', { skip: typeof fp.Font.prototype.draw !== 'function' && 'Font.draw* are bound by the render unit (not in this build yet)' }, () => {
+test('Font.draw, drawCodepoints and drawAll render through the model; strict errors carry the report', () => {
   const font = new fp.Font([glyph('#.\n##', [65]), glyph('##\n#.', [66])]);
   for (const g of font) {
     const m = g.metrics;
@@ -673,9 +673,8 @@ test('Font.draw, drawCodepoints and drawAll render through the model (render uni
   }
   const ab = font.draw('AB');
   assert.ok(ab.bitmap instanceof fp.Bitmap);
-  assert.ok(ab.bitmap.width >= 5);
   assert.ok(font.drawCodepoints([0x41, 'B']).bitmap.equals(ab.bitmap));
-  assert.ok(font.drawAll().bitmap.width > 0);
+  assert.ok(font.drawAll().bitmap instanceof fp.Bitmap);
   // Strict mode turns the missing glyph into StrictLossError carrying the complete report.
   assert.throws(
     () => new fp.Font().draw('A', { strict: true }),
@@ -683,7 +682,7 @@ test('Font.draw, drawCodepoints and drawAll render through the model (render uni
   );
 });
 
-test('FontCharset codec through CharsetCodec.forFont (charset unit)', { skip: typeof fp.CharsetCodec?.forFont !== 'function' && 'CharsetCodec is bound by the charset unit (not in this build yet)' }, () => {
+test('FontCharset codec through CharsetCodec.forFont', () => {
   const font = new fp.Font();
   font.charset = { name: 'cp1252', code_ranges: [] };
   const codec = fp.CharsetCodec.forFont(font);

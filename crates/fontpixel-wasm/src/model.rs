@@ -31,9 +31,11 @@ use crate::errors::{IntoJs, JsResult, invalid};
 use crate::handles::{
     self, FontLoc, GlyphLoc, JsBitmap, JsFont, JsFontSet, JsGlyph, read_font, write_font,
 };
+/// Kept here for the areas that import it from the pilot location.
+pub use crate::model_args::codepoint_arg;
 use crate::model_args::{
-    Handle, PropsLoc, bitmap_arg, codepoint_arg, codepoints_arg, fonts_arg, glyph_arg, glyphs_arg,
-    handle_arg, property_value_arg, sequence_arg, stash, wrong_handle,
+    Handle, PropsLoc, bitmap_arg, codepoints_arg, fonts_arg, glyph_arg, glyphs_arg, handle_arg,
+    property_value_arg, sequence_arg, stash, wrong_handle,
 };
 use fontpixel::ResourceLimits;
 use fontpixel::bitmap::Bounds;
