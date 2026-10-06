@@ -22,6 +22,15 @@
 //! input as its custom dictionary. `StandardAlloc::alloc_cell(len)` allocates
 //! exactly `len * size_of::<T>()` bytes (`alloc-stdlib-0.3.0/src/heap_alloc.rs`).
 //!
+//! Both spawners drive the same `threading::CompressMulti`: native targets use
+//! brotli's thread pool (`new_work_pool(threads - 1)`, as `compress_multi`
+//! does), `wasm` targets `singlethreading::SingleThreadedSpawner`, which runs
+//! worker `i` to completion before worker `i + 1` starts. Every worker still
+//! owns its own `StandardAlloc` and the same cells, but at most one encoder
+//! instance is live at a time and only the finished workers' output cells
+//! accumulate, so the sequential peak is at most the concurrent one and the
+//! same admission (`threads` instances) is an upper bound on both.
+//!
 //! # Method
 //!
 //! Every production allocation site reachable from that call shape is counted

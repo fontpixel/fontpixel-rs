@@ -29,7 +29,10 @@ pub struct Options {
     /// Apply hmtx transform when a full LSB array is reconstructible (default true).
     pub transform_hmtx: bool,
     /// Intra-font Brotli workers, 1..=16. Default two; more changes compression
-    /// decisions/size but still emits one standard Brotli stream.
+    /// decisions/size but still emits one standard Brotli stream. The value
+    /// selects how the stream is split, not how it is scheduled: on targets
+    /// without threads (`wasm`) the workers run in sequence and the bytes are
+    /// identical to the native multithreaded output.
     pub compression_threads: usize,
     /// Envelope version and optional blocks.
     pub auxiliary: Auxiliary,
@@ -120,15 +123,20 @@ fn decompress(data: &[u8], expected: usize, budget: &Budget) -> Result<Owned<Vec
 }
 /// Brotli window used for every WOFF2 stream.
 const LGWIN: u32 = 22;
-fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Owned<Vec<u8>>> {
+/// The encoder parameters of every WOFF2 stream (the call shape covered by
+/// [`brotli_encoder_heap_bound`]).
+fn encoder_params(quality: u32, len: usize) -> brotli::enc::BrotliEncoderParams {
     use brotli::enc::{BrotliEncoderParams, backward_references::BrotliEncoderMode};
-    let params = BrotliEncoderParams {
-        quality: o.quality as i32,
+    BrotliEncoderParams {
+        quality: quality as i32,
         mode: BrotliEncoderMode::BROTLI_MODE_FONT,
         lgwin: LGWIN as i32,
-        size_hint: data.len(),
+        size_hint: len,
         ..Default::default()
-    };
+    }
+}
+fn compress(data: &[u8], o: &Options, l: &Limits, budget: &Budget) -> Result<Owned<Vec<u8>>> {
+    let params = encoder_params(o.quality, data.len());
     // The encoder's own heap cannot be refused cell by cell; reserve its
     // admitted bound (proven for q0-9, empirical for q10-11) first and hold it
     // until every worker has joined.
@@ -155,44 +163,76 @@ fn compress_admitted(
         brotli::BrotliCompress(&mut &data[..], &mut out, params).map_err(io_error)?;
         Ok(out.into_owned())
     } else {
-        use brotli::enc::{SendAlloc, StandardAlloc, backward_references::UnionHasher};
-        let size = brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(
-            data.len(),
-            o.compression_threads,
-        );
-        bounded(
-            size,
-            l.sfnt.resources.max_total_bytes,
-            "WOFF2 parallel compressed capacity",
-        )?;
-        // Output capacity, the allocator descriptors and the owned input clone
-        // are admitted before any of them is allocated.
-        let mut out = Buffer::with_capacity(budget, size)?;
-        out.resize(size, 0)?;
-        let mut allocators = Vector::with_capacity(budget, o.compression_threads)?;
-        for _ in 0..o.compression_threads {
-            allocators.push(SendAlloc::new(
-                StandardAlloc::default(),
-                UnionHasher::Uninit,
-            ))?;
-        }
-        struct Bytes(Vec<u8>);
-        impl brotli::SliceWrapper<u8> for Bytes {
-            fn slice(&self) -> &[u8] {
-                &self.0
-            }
-        }
-        let (input, input_lease) = Buffer::from_slice(budget, data)?.into_parts();
-        let mut owned = brotli::enc::Owned::new(Bytes(input));
-        // compress_multi joins every worker before it returns.
-        let size = brotli::enc::compress_multi(params, &mut owned, &mut out, &mut allocators)
-            .map_err(|e| invalid(format!("parallel Brotli: {e:?}")))?;
-        drop(owned);
-        drop(input_lease);
-        drop(allocators);
-        out.truncate(size);
-        Ok(out.into_owned())
+        // Native targets run the workers on brotli's thread pool, exactly as
+        // `brotli::enc::compress_multi` does. Targets without threads run the
+        // same chunked algorithm (same worker count, ranges and dictionaries)
+        // with brotli's single-threaded spawner, so the bytes are identical.
+        #[cfg(not(target_family = "wasm"))]
+        let mut spawner = brotli::enc::new_work_pool(o.compression_threads - 1);
+        #[cfg(target_family = "wasm")]
+        let mut spawner = brotli::enc::singlethreading::SingleThreadedSpawner::default();
+        compress_parallel(data, o, l, budget, params, &mut spawner)
     }
+}
+/// Input wrapper owned by the parallel Brotli workers.
+struct Bytes(Vec<u8>);
+impl brotli::SliceWrapper<u8> for Bytes {
+    fn slice(&self) -> &[u8] {
+        &self.0
+    }
+}
+type EncoderAlloc = brotli::enc::StandardAlloc;
+/// The parallel (`compression_threads` chunks) Brotli stream, with the worker
+/// spawner as the only variable: production passes the target's spawner and
+/// the identity tests pass both.
+fn compress_parallel<S>(
+    data: &[u8],
+    o: &Options,
+    l: &Limits,
+    budget: &Budget,
+    params: &brotli::enc::BrotliEncoderParams,
+    spawner: &mut S,
+) -> Result<Owned<Vec<u8>>>
+where
+    S: brotli::enc::BatchSpawnableLite<
+            brotli::enc::CompressionThreadResult<EncoderAlloc>,
+            brotli::enc::backward_references::UnionHasher<EncoderAlloc>,
+            EncoderAlloc,
+            (Bytes, brotli::enc::BrotliEncoderParams),
+        >,
+{
+    use brotli::enc::{SendAlloc, backward_references::UnionHasher};
+    let size =
+        brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(data.len(), o.compression_threads);
+    bounded(
+        size,
+        l.sfnt.resources.max_total_bytes,
+        "WOFF2 parallel compressed capacity",
+    )?;
+    // Output capacity, the allocator descriptors and the owned input clone
+    // are admitted before any of them is allocated.
+    let mut out = Buffer::with_capacity(budget, size)?;
+    out.resize(size, 0)?;
+    let mut allocators = Vector::with_capacity(budget, o.compression_threads)?;
+    for _ in 0..o.compression_threads {
+        allocators.push(SendAlloc::new(EncoderAlloc::default(), UnionHasher::Uninit))?;
+    }
+    let (input, input_lease) = Buffer::from_slice(budget, data)?.into_parts();
+    let mut owned = brotli::enc::Owned::new(Bytes(input));
+    // CompressMulti joins every worker before it returns.
+    let size = brotli::enc::threading::CompressMulti(
+        params,
+        &mut owned,
+        &mut out,
+        &mut allocators,
+        spawner,
+    )
+    .map_err(|e| invalid(format!("parallel Brotli: {e:?}")))?;
+    drop(owned);
+    drop(input_lease);
+    drop(allocators);
+    out.truncate(size);
+    Ok(out.into_owned())
 }
 fn check_options(o: &Options, l: &Limits) -> Result<()> {
     if o.quality > 11 || !(1..=16).contains(&o.compression_threads) {
@@ -541,6 +581,11 @@ pub(super) fn encode_with_budget(
 /// Per-font limits and aggregate batch input/output/count budgets all apply.
 /// Callers choose worker count for concurrent compressor working memory.
 /// An error returns no partially successful output to the caller.
+///
+/// On targets without threads (`wasm`) the jobs run one after another in
+/// input order with the same validation and budgets; the outputs are the same.
+/// Each font's own Brotli workers likewise run in sequence there, producing
+/// the same bytes as the native thread pool (see [`Options::compression_threads`]).
 pub fn encode_many(inputs: &[&[u8]], o: &Options, l: &Limits, jobs: usize) -> Result<Vec<Encoded>> {
     check_options(o, l)?;
     if !(1..=64).contains(&jobs) || jobs.saturating_mul(o.compression_threads) > 64 {
@@ -555,8 +600,33 @@ pub fn encode_many(inputs: &[&[u8]], o: &Options, l: &Limits, jobs: usize) -> Re
     if inputs.is_empty() {
         return Ok(Vec::new());
     }
-    let next = std::sync::atomic::AtomicUsize::new(0);
     let output_bytes = std::sync::atomic::AtomicUsize::new(0);
+    // One job: encode one font and charge its output to the batch output budget.
+    let job = |input: &[u8]| {
+        encode(input, o, l).and_then(|encoded| {
+            output_bytes
+                .try_update(
+                    std::sync::atomic::Ordering::Relaxed,
+                    std::sync::atomic::Ordering::Relaxed,
+                    |n| {
+                        n.checked_add(encoded.bytes.len())
+                            .filter(|n| *n <= l.max_batch_bytes)
+                    },
+                )
+                .map_err(|_| Error::ResourceLimit {
+                    resource: "WOFF2 batch output bytes",
+                    limit: l.max_batch_bytes,
+                })?;
+            Ok(encoded)
+        })
+    };
+    if cfg!(target_family = "wasm") {
+        // No threads on this target: run the jobs in input order and stop at
+        // the first failure. Each output depends only on its own input, so a
+        // successful result equals the threaded one.
+        return inputs.iter().map(|input| job(input)).collect();
+    }
+    let next = std::sync::atomic::AtomicUsize::new(0);
     let stop = std::sync::atomic::AtomicBool::new(false);
     let slots = std::sync::Mutex::new((0..inputs.len()).map(|_| None).collect::<Vec<_>>());
     std::thread::scope(|scope| -> Result<()> {
@@ -564,8 +634,8 @@ pub fn encode_many(inputs: &[&[u8]], o: &Options, l: &Limits, jobs: usize) -> Re
         for _ in 0..jobs.min(inputs.len()) {
             let next = &next;
             let slots = &slots;
-            let output_bytes = &output_bytes;
             let stop = &stop;
+            let job = &job;
             handles.push(
                 std::thread::Builder::new()
                     .spawn_scoped(scope, move || -> Result<()> {
@@ -577,22 +647,7 @@ pub fn encode_many(inputs: &[&[u8]], o: &Options, l: &Limits, jobs: usize) -> Re
                             if i >= inputs.len() {
                                 break;
                             }
-                            let value = encode(inputs[i], o, l).and_then(|encoded| {
-                                output_bytes
-                                    .try_update(
-                                        std::sync::atomic::Ordering::Relaxed,
-                                        std::sync::atomic::Ordering::Relaxed,
-                                        |n| {
-                                            n.checked_add(encoded.bytes.len())
-                                                .filter(|n| *n <= l.max_batch_bytes)
-                                        },
-                                    )
-                                    .map_err(|_| Error::ResourceLimit {
-                                        resource: "WOFF2 batch output bytes",
-                                        limit: l.max_batch_bytes,
-                                    })?;
-                                Ok(encoded)
-                            });
+                            let value = job(inputs[i]);
                             if value.is_err() {
                                 stop.store(true, std::sync::atomic::Ordering::Relaxed);
                             }
