@@ -35,7 +35,8 @@ fontpixel as an accelerator.
 - CPython 3.10.20 (pyenv) for all three engines. bdfparser 3.0.0 runs from a
   copy of `reference/bdfparser/src` (tree SHA-256 `e44e944f…`). fontpixel 0.1.0
   comes from the x86_64 manylinux wheel below (`_native.abi3.so` SHA-256
-  `974ba9fe…`), built from commit `5356121`.
+  `974ba9fe…`), built from commit `5356121`. Both runs used the harness at that
+  commit; later commits changed only the `summarize`/`compare` output code.
 
 The machine is a shared desktop. During both runs other work was active:
 browsers, other agents' Python jobs and Rust builds. Each measured process ran
