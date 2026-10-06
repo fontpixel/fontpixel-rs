@@ -14,7 +14,7 @@
 //!   is returned in `outputs`.
 //! - `files=<object>` with `entry(path)`, `read(path)` and `list(directory)`
 //!   methods: memory mode over a caller-supplied resolver (see
-//!   [`PyProvider`]).
+//!   `PyProvider`).
 //!
 //! Results render the command-line documents byte for byte: `json()` is the
 //! `--report json`/`--json` stdout and `text()` the text-mode stdout.

@@ -11,7 +11,7 @@
 //! - Fonts, glyphs and bitmaps stay in Rust behind handle classes; pixel data
 //!   is copied out only when Python asks for it.
 //! - Each area lives in its own module file with a `register` function, called
-//!   from [`_native`] in a fixed order.
+//!   from `_native` in a fixed order.
 #![deny(unsafe_code)]
 
 pub mod bitmap;
