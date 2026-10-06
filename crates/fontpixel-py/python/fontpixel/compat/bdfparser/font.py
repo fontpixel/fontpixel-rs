@@ -205,7 +205,7 @@ class _UnencodedView(list):
     def append(self, entry: Mapping[str, Any] | Iterable[Any]) -> None:
         if not isinstance(entry, Mapping):  # a bare meta list (accepted by bdfparser writers)
             entry = {'altcode': None, 'meta': list(entry)}
-        meta = list(entry['meta'])
+        meta = list(entry['meta'])  # type: ignore[arg-type]  # validated by the native writer
         fields = dict(zip(META_TITLES, meta, strict=False))
         fields['codepoint'] = -1
         raw = self._font._raw
@@ -326,7 +326,7 @@ class Font:
         if m is None:
             if cp not in self._cpset():
                 raise KeyError(cp)
-            m = _MetaList(self, cp, self._raw.glyphbycp(cp).meta())
+            m = _MetaList(self, cp, self._raw.glyphbycp(cp).meta())  # type: ignore[union-attr]  # cp is encoded
             st['metas'][cp] = m
         return m
 
@@ -777,7 +777,7 @@ class Font:
         finally:
             self._skip_warnings()
         if raw is None:
-            return self.glyphbycp(self.char2cp(character))
+            return self.glyphbycp(self.char2cp(character))  # type: ignore[arg-type]  # as bdfparser: char2cp result passed through
         return Glyph._wrap(raw, self)
 
     def lacksglyphs(self, string: str) -> list[str] | None:
