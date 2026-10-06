@@ -30,7 +30,7 @@ class Selection:
     category names such as `"cjk"`.
     """
     def __new__(cls, expression: str) -> Selection:
-        ...
+        """`Selection::parse`: parse a selection expression."""
     def __contains__(self, key: int, /) -> bool:
         """Return key in self."""
     def contains(self, codepoint: int) -> bool:

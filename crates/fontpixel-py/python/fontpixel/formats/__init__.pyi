@@ -207,7 +207,7 @@ __all__ = [
     "MODULES",
 ]
 
-def configurable_formats() -> dict[str, Any]:
+def configurable_formats() -> dict[str, list[str]]:
     """
     Format IDs whose registry readers / writers take typed options:
     `{"read": [...], "write": [...]}`.

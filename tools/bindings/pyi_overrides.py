@@ -184,6 +184,8 @@ ParsedBatch = TypedDict("ParsedBatch", {
     "jobs": Union[int, None], "max_working_bytes": int, "max_pending_bytes": int, "max_report_bytes": int,
     "max_task_report_bytes": int, "tasks": List[InspectedRequest]})
 """``fontpixel.ops.parse_batch_toml``: the job's budgets and its prepared tasks."""
+Capabilities = TypedDict("Capabilities", {"filesystem": bool, "threads": bool, "toml_batch": bool})
+"""``fontpixel.ops.capabilities()``: what this build and platform support."""
 ParsedArgs = TypedDict("ParsedArgs", {
     "command": str, "request": Mapping[str, Any], "report_style": str,
     "source_identity_total_bytes": int})
@@ -350,6 +352,11 @@ SIGNATURES = {
     "fontpixel.formats.svg.path_data": {"shape": "_t.Shape"},
     # ---- ops results ----------------------------------------------------------------
     f"{O}.OperationResult.document": {"return": "dict[str, Any]"},
+    f"{O}.*.outputs": {"return": "dict[str, bytes]"},
+    f"{O}.*.bundles": {"return": "dict[str, @fontpixel.OutputBundle]"},
+    f"{O}.capabilities": {"return": "_t.Capabilities"},
+    "fontpixel.formats.configurable_formats": {"return": "dict[str, list[str]]"},
+    f"{N}.ResourceSet.__new__": {"files": "_c.Mapping[str, _t.Buffer]"},
     f"{O}.OperationResult.summary": {"return": "dict[str, Any]"},
     f"{O}.OperationResult.report": {"return": "_t.Report | None"},
     f"{O}.OperationResult.format_status": {"return": "_t.FormatStatus | None"},
@@ -387,6 +394,7 @@ SIGNATURES = {
     "fontpixel.sfnt.glyf.glyph_simple": {"contours": "_c.Sequence[_t.Contour]"},
     "fontpixel.sfnt.gsub.subset": {"return": "_t.Gsub"},
     "fontpixel.sfnt.metrics.*": {"axis": "_t.Axis"},
+    "fontpixel.sfnt.os2.*": {"codepoints": "_c.Iterable[int]"},
 
     "fontpixel.sfnt.subset.subset": {"return": "_t.SubsetResult"},
     # ---- variants / woff -----------------------------------------------------------

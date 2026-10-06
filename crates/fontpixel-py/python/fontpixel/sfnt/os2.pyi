@@ -36,10 +36,7 @@ def check_embedding_flags(flags: int) -> str | None:
 def check_selection_flags(flags: int, version: int) -> str | None:
     """`os2::check_selection_flags`: `None` when valid for `version`, else the reason."""
 
-def code_page_ranges(
-    codepoints: _c.Iterable[_t.CodepointLike],
-    pages: _c.Sequence[int],
-) -> list[int]:
+def code_page_ranges(codepoints: _c.Iterable[int], pages: _c.Sequence[int]) -> list[int]:
     """
     `os2::code_page_ranges`: the two ulCodePageRange words for `codepoints`
     and explicitly declared Windows code `pages`.
@@ -51,14 +48,11 @@ def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ..
 def encode(table: _t.Os2Table, limits: _t.SfntLimits | None = ...) -> bytes:
     """`Os2Table::encode`: OS/2 table bytes of the dict's version."""
 
-def set_unicode_coverage(
-    table: _t.Os2Table,
-    codepoints: _c.Iterable[_t.CodepointLike],
-) -> _t.Os2Table:
+def set_unicode_coverage(table: _t.Os2Table, codepoints: _c.Iterable[int]) -> _t.Os2Table:
     """
     `Os2Table::set_unicode_coverage`: a copy of `table` with Unicode ranges and
     first/last character indexes derived from `codepoints`.
     """
 
-def unicode_ranges(codepoints: _c.Iterable[_t.CodepointLike]) -> list[int]:
+def unicode_ranges(codepoints: _c.Iterable[int]) -> list[int]:
     """`os2::unicode_ranges`: the four ulUnicodeRange words."""

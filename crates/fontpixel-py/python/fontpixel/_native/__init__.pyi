@@ -191,7 +191,12 @@ class Bitmap:
         depth: _t.Depth = ...,
         limits: _t.BitmapLimits | None = ...,
     ) -> Bitmap:
-        ...
+        """
+        Bitmap(width=0, height=0, depth="mono", limits=None)
+
+        A blank raster (`Bitmap::new`, or `Bitmap::with_limits` when `limits`
+        is given).
+        """
     def __copy__(self) -> Bitmap:
         ...
     def __deepcopy__(self, _memo: Any) -> Bitmap:
@@ -477,7 +482,7 @@ class BitmapProjection:
         size: _t.SizeProjection | None = ...,
         properties: _c.Iterable[_t.PropertyEdit] | None = ...,
     ) -> BitmapProjection:
-        ...
+        """BitmapProjection(scalable_advance=None, font_name=None, size=None, properties=None)"""
     def apply(self, font_set: FontSet, max_working_bytes: int | None = ...) -> _t.ProjectionOutcome:
         """Apply to every strike of `font_set` (`apply_bitmap_projection`)."""
     @property
@@ -507,7 +512,13 @@ class BitmapProjection:
 class CharsetCodec:
     """An exact charset mapping (`fontpixel::charset::CharsetCodec`)."""
     def __new__(cls, name: str, gl: bool | None = ...) -> CharsetCodec:
-        ...
+        """
+        CharsetCodec(name, gl=None)
+
+        Resolve a user-facing charset name (`CharsetCodec::new`). `gl=None`
+        selects GL for `iso2022cn` only. Unknown names give an identity codec
+        with `known == False`.
+        """
     def char2cp(self, value: str) -> int | None:
         """Glyph code for a character, or `None` (`CharsetCodec::char2cp`)."""
     def cp2char(self, code: int) -> str | None:
@@ -552,7 +563,11 @@ class Codepoint:
     `{"Legacy": n}`.
     """
     def __new__(cls, value: int, kind: _t.CodepointKind = ...) -> Codepoint:
-        ...
+        """
+        Codepoint(value, kind="unicode")
+
+        `kind` is `"unicode"` or `"legacy"`.
+        """
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
     def __ge__(self, value: Codepoint, /) -> bool:
@@ -599,7 +614,12 @@ class Codepoint:
 class Font:
     """One strike (`fontpixel::model::Font`), owned or a view into a `FontSet`."""
     def __new__(cls, glyphs: _c.Iterable[_t.GlyphLike] | None = ...) -> Font:
-        ...
+        """
+        Font(glyphs=None)
+
+        A strike built from copies of `glyphs` (`Font::from_glyphs`); glyph
+        IDs are assigned in order from 0.
+        """
     def __copy__(self) -> Font:
         ...
     def __deepcopy__(self, _memo: Any) -> Font:
@@ -788,11 +808,15 @@ class FontSet:
     """A set of strikes (`fontpixel::model::FontSet`)."""
     def __new__(
         cls,
-        fonts: FontSet | Font | None = ...,
+        fonts: _c.Iterable[_t.FontLike] | None = ...,
         properties: _t.PropertiesLike | None = ...,
         source_format: str | None = ...,
     ) -> FontSet:
-        ...
+        """
+        FontSet(fonts=None, properties=None, source_format=None)
+
+        A set of strikes. `fonts` are copied into the set.
+        """
     def __copy__(self) -> FontSet:
         ...
     def __deepcopy__(self, _memo: Any) -> FontSet:
@@ -874,7 +898,11 @@ class Glyph:
         codepoints: _c.Iterable[_t.CodepointLike] | None = ...,
         name: str | None = ...,
     ) -> Glyph:
-        ...
+        """
+        Glyph(bitmap=None, codepoints=None, name=None)
+
+        A glyph whose bounds match `bitmap` at offset (0, 0) (`Glyph::new`).
+        """
     def __copy__(self) -> Glyph:
         ...
     def __deepcopy__(self, _memo: Any) -> Glyph:
@@ -970,7 +998,12 @@ class Input:
         name: str | None = ...,
         resources: _t.Resources | None = ...,
     ) -> Input:
-        ...
+        """
+        Input(data, name=None, resources=None)
+
+        Standalone input (`Input::new`), optionally with a filename hint
+        (`Input::with_name`) and sidecars (`Input::with_resources`).
+        """
     def __len__(self) -> int:
         """Return len(self)."""
     @property
@@ -1018,7 +1051,7 @@ class Loaded:
 class OutputAsset:
     """One in-memory output file (`fontpixel::resources::OutputAsset`)."""
     def __new__(cls, path: str, data: _t.Buffer | _c.Sequence[int]) -> OutputAsset:
-        ...
+        """OutputAsset(path, data)"""
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
     __hash__: None  # type: ignore[assignment]
@@ -1045,7 +1078,13 @@ class OutputBundle:
         assets: _c.Iterable[OutputAsset | _t.OutputAssetDict],
         directory: bool = ...,
     ) -> OutputBundle:
-        ...
+        """
+        OutputBundle(primary, assets, directory=False)
+
+        `assets` holds `OutputAsset`s or `(path, bytes)` pairs. A file bundle
+        must contain `primary` (`OutputBundle::new`); a directory bundle
+        names its directory (`OutputBundle::directory`).
+        """
     def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
     __hash__: None  # type: ignore[assignment]
@@ -1104,7 +1143,12 @@ class Properties:
     Values are returned in the tagged form, which keeps every variant.
     """
     def __new__(cls, items: _t.PropertiesLike | None = ...) -> Properties:
-        ...
+        """
+        Properties(items=None)
+
+        A standalone list from another `Properties` or a list of
+        `{"name": str, "value": <tagged value>, "raw"?: bytes}` dicts.
+        """
     def __copy__(self) -> Properties:
         ...
     def __deepcopy__(self, _memo: Any) -> Properties:
@@ -1173,7 +1217,12 @@ class ReadContext:
         input: Input | _t.Buffer,
         limits: _t.ResourceLimits | None = ...,
     ) -> ReadContext:
-        ...
+        """
+        ReadContext(input, limits=None)
+
+        `input` is an `Input` or plain bytes; `limits` a `ResourceLimits` dict
+        (`ReadContext::new`).
+        """
     def bytes(self) -> _b.bytes:
         """Primary bytes after transport decoding (`ReadContext::bytes`)."""
     @property
@@ -1209,7 +1258,11 @@ class ReadContext:
 class Registry:
     """The format registry (`fontpixel::Registry<FontSet>`)."""
     def __new__(cls, builtin: bool = ...) -> Registry:
-        ...
+        """
+        The built-in registry with every compiled codec (`fontpixel::registry()`),
+        or with `builtin=False` the planned catalogue without codecs
+        (`Registry::new`).
+        """
     def detect(
         self,
         data: _t.ReadInput | None = ...,
@@ -1726,8 +1779,12 @@ class ResourceSet:
     `ResourceResolver`). Paths are validated `ResourcePath`s (`/`-separated,
     relative, no `.`/`..`).
     """
-    def __new__(cls, files: dict[str, Any] | None = ...) -> ResourceSet:
-        ...
+    def __new__(cls, files: _c.Mapping[str, _t.Buffer] | None = ...) -> ResourceSet:
+        """
+        ResourceSet(files=None)
+
+        `files` maps paths to `bytes`/`bytearray`/`memoryview` (copied).
+        """
     def __contains__(self, key: str, /) -> bool:
         """Return key in self."""
     def __len__(self) -> int:
@@ -1760,7 +1817,7 @@ class Written:
     (`fontpixel::resources::Written`).
     """
     def __new__(cls, output: OutputBundle, report: _t.Report | None = ...) -> Written:
-        ...
+        """Written(output, report=None)"""
     @property
     def output(self) -> OutputBundle:
         """Output files."""
@@ -1801,7 +1858,7 @@ def apply_names(
 def canonical_charset(name: str) -> str:
     """Canonical key for a user-facing name (`canonical_charset`)."""
 
-def charset_canonical_name(font_or_charset: _t.FontCharset) -> str:
+def charset_canonical_name(font_or_charset: Font | _t.FontCharset) -> str:
     """
     Canonical charset name of a `FontCharset` dict or `Font`
     (`FontCharset::canonical_name`).

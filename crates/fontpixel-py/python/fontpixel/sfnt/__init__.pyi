@@ -57,7 +57,7 @@ class Sfnt:
         data: _t.Buffer | _c.Sequence[int],
         limits: _t.SfntLimits | None = ...,
     ) -> Sfnt:
-        ...
+        """Parse a standalone sfnt (`Sfnt.parse`); same as `Sfnt.parse(data, limits)`."""
     @property
     def data(self) -> bytes:
         """The font bytes this handle owns."""
@@ -86,7 +86,7 @@ class Sfnt:
 class SfntBuilder:
     """Assembles a standalone sfnt (`fontpixel::sfnt::SfntBuilder`)."""
     def __new__(cls, flavor: _t.Flavor) -> SfntBuilder:
-        ...
+        """Start an empty font of `flavor` (`"true_type"`, `"cff"`, `"apple_true_type"`)."""
     def build(self, limits: _t.SfntLimits | None = ...) -> bytes:
         """Build the font with sorted tables, checksums and head adjustment."""
     def insert(self, tag: _t.Tag, table: _t.Buffer | _c.Sequence[int]) -> None:

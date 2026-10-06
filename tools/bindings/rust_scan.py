@@ -33,6 +33,7 @@ class RustFn:
     hints: dict = field(default_factory=dict)   # param -> ("type"|"helper", rust text, file)
     ret_hint: tuple | None = None
     bytes_fields: list | None = None   # result fields returned as bytes (with_bytes)
+    casts: dict = field(default_factory=dict)   # param -> [binding classes it is cast to]
 
 
 @dataclass
@@ -349,6 +350,13 @@ def _parse_fn(lx, i, m, impl_cls, docs, attrs, fns, rel, text):
                 " ".join(ret.split()), hints)
     fn.ret_hint = _ret_hint(body, rel)
     fn.bytes_fields = bytes_fields(body, rel)
+    for m in re.finditer(r"\b(\w+)\s*\.\s*cast(?:_into)?::<\s*(Py\w+)\s*>\s*\(\)", body):
+        if m.group(1) in [p for p, _ in params] and m.group(2) not in ("PyDict", "PyList", "PyTuple",
+                                                                       "PyString", "PyBytes", "PyByteArray",
+                                                                       "PyInt", "PyFloat", "PyBool"):
+            fn.casts.setdefault(m.group(1), [])
+            if m.group(2) not in fn.casts[m.group(1)]:
+                fn.casts[m.group(1)].append(m.group(2))
     fns.append(fn)
     return end
 
@@ -431,6 +439,17 @@ OPTS_CALL = re.compile(r"\b(?:read_bytes_opts|write_x_opts|read_ctx_opts|write_x
 
 def _hints(body, params):
     hints = {}
+    # `match param { Some(x) .. => helper(x) }` / `if let Some(x) = param`:
+    # conversions of `x` describe `param`.
+    alias = {}
+    for m in re.finditer(r"match\s+(\w+)\s*\{\s*Some\s*\(\s*(\w+)\s*\)", body):
+        alias[m.group(2)] = m.group(1)
+    for m in re.finditer(r"if\s+let\s+Some\s*\(\s*(\w+)\s*\)\s*=\s*(\w+)", body):
+        alias[m.group(1)] = m.group(2)
+    for m in re.finditer(r"(\w+)\s*\.\s*filter\(\s*\|(\w+)\|", body):
+        alias.setdefault(m.group(2), m.group(1))
+    alias = {a: p for a, p in alias.items() if p in params and a not in params}
+    params = list(params) + list(alias)
     # Generic codec adapters: the last turbofish type is the options type.
     for m in OPTS_CALL.finditer(body):
         opts = split_top(m.group(1))[-1].strip()
@@ -452,6 +471,10 @@ def _hints(body, params):
         helper, arg = m.groups()
         if arg in params and arg not in hints:
             hints[arg] = ("helper", helper)
+    for a, p in alias.items():
+        if a in hints:
+            hints.setdefault(p, hints[a])
+        hints.pop(a, None)
     return hints
 
 

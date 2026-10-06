@@ -57,7 +57,7 @@ class Variants:
     model and release the lock (and the GIL) while working.
     """
     def __new__(cls, base: _t.FontLike) -> Variants:
-        ...
+        """`Variants::new`: start with a default face (`Font` handle or font dict)."""
     def add_language(self, language: str, font: _t.FontLike) -> None:
         """
         `Variants::add_language`: add a BCP-47/OpenType language with the

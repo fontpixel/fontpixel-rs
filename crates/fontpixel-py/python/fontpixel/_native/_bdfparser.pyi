@@ -32,7 +32,7 @@ class Bitmap:
     raster. Equality compares pixels; instances are unhashable (mutable).
     """
     def __new__(cls, bin_bitmap_list: _c.Iterable[str]) -> Bitmap:
-        ...
+        """`Bitmap(bin_bitmap_list)`: rows of equal length made of `'0'`, `'1'`, `'2'`."""
     def __add__(self, value: Self, /) -> Self:
         """Return self+value."""
     def __copy__(self) -> Self:
@@ -162,7 +162,7 @@ class Bitmap:
 class RawFont:
     """Handle over `fontpixel::compat::bdfparser::Font` (wrapped by the Python `Font`)."""
     def __new__(cls) -> RawFont:
-        ...
+        """An empty font (`Font::default`)."""
     def add_handle(self, glyph: RawGlyph, replace: bool = ...) -> None:
         """Add and attach a glyph handle (`Font::add_handle`)."""
     def addglyph(self, fields: _c.Mapping[str, Any], replace: bool = ...) -> None:
@@ -316,7 +316,7 @@ class RawFont:
 class RawGlyph:
     """Glyph metadata snapshot with an optional live attachment."""
     def __new__(cls, meta: _c.Mapping[str, Any], font: RawFont) -> RawGlyph:
-        ...
+        """Detached glyph from a metadata dict owned by `font` (`Glyph::new`)."""
     def chr(self) -> str | None:
         """Character through the owner's charset (`Glyph::chr`)."""
     def clone(self) -> RawGlyph:

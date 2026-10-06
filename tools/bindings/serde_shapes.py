@@ -574,8 +574,9 @@ class SerdeModel:
             if any(p in ("skip", "skip_deserializing") for p in vparts):
                 continue
             vname = (attr_value(vparts, "rename") or [rename(var["name"], rule)])[0]
-            aliases += attr_value(vparts, "alias")
             vk = var["inner"]["variant"]["kind"]
+            if vk == "plain" and not tag:
+                aliases += attr_value(vparts, "alias")
             vdoc = first_para(var.get("docs") or "")
             if vk == "plain":
                 if tag:
@@ -609,7 +610,9 @@ class SerdeModel:
             extra.append(sub)
             members.append(sub.name)
         if aliases:
-            doc = (doc + "\n\n" if doc else "") + "Also accepted on input: " + ", ".join(f"``{a}``" for a in aliases) + "."
+            # serde accepts the aliases on input (results use the main names).
+            doc = (doc + "\n\n" if doc else "") + "Input aliases: " + ", ".join(f"``{a}``" for a in aliases) + "."
+            literals += [a for a in aliases if a not in literals]
         if literals and not members:
             return Shape(path, "literal", doc=doc, values=literals, name=name)
         if literals:

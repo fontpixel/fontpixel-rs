@@ -25,7 +25,7 @@ class Collection:
     Owns the bytes and limits; each call re-parses (every face is checked).
     """
     def __new__(cls, data: _t.Buffer, limits: _t.SfntLimits | None = ...) -> Collection:
-        ...
+        """Parse a `ttcf` collection; same as `Collection.parse(data, limits)`."""
     @property
     def data(self) -> bytes:
         """The collection bytes this handle owns."""

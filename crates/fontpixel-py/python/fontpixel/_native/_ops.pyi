@@ -11,7 +11,7 @@ from typing import Any, Literal, final, overload
 from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
-from fontpixel._native import FontSet
+from fontpixel._native import FontSet, OutputBundle
 
 __all__ = [
     "__doc__",
@@ -47,7 +47,7 @@ __all__ = [
 class BatchResult:
     """The result of a batch: the complete JSON document plus typed summaries."""
     @property
-    def bundles(self) -> dict[str, Any]:
+    def bundles(self) -> dict[str, OutputBundle]:
         """
         Committed outputs as `{destination key: fontpixel.OutputBundle}`
         (memory mode only).
@@ -64,7 +64,7 @@ class BatchResult:
     def json(self) -> str:
         """The complete batch JSON document exactly as `fontpixel batch` prints it."""
     @property
-    def outputs(self) -> dict[str, Any]:
+    def outputs(self) -> dict[str, bytes]:
         """Committed outputs as `{storage key: bytes}` (memory mode only)."""
     @property
     def tasks(self) -> list[_t.BatchTaskOutcome]:
@@ -88,7 +88,7 @@ class OperationResult:
     prepared asset's storage key to its bytes (memory mode only).
     """
     @property
-    def bundles(self) -> dict[str, Any]:
+    def bundles(self) -> dict[str, OutputBundle]:
         """
         Every prepared output as `{destination key: fontpixel.OutputBundle}`
         (memory mode; the bundle holds the primary asset and its sidecars or
@@ -122,7 +122,7 @@ class OperationResult:
     def operation(self) -> str:
         """Operation name (`"convert"`, `"merge"`, …)."""
     @property
-    def outputs(self) -> dict[str, Any]:
+    def outputs(self) -> dict[str, bytes]:
         """
         Every prepared asset as `{storage key: bytes}` (memory mode; empty
         after filesystem mode, where the outputs were already committed).
@@ -179,7 +179,7 @@ def batch_toml(
     worker ceiling.
     """
 
-def capabilities() -> dict[str, Any]:
+def capabilities() -> _t.Capabilities:
     """
     Platform capabilities of this build: `filesystem`, `threads` and
     `toml_batch` (bools).
@@ -222,11 +222,7 @@ def diff(
     result (`summary["equal"]`, `exit_code` 1), not raised.
     """
 
-def formats(
-    request: _t.FormatsRequest | None = ...,
-    /,
-    **options: dict[str, Any] | None,
-) -> OperationResult:
+def formats(request: _t.FormatsRequest | None = ..., /, **options: Any) -> OperationResult:
     """
     List every catalogue format with the reader/writer compiled into this
     build (`fontpixel formats`).
@@ -248,7 +244,7 @@ def inspect_request(
     operation: str,
     request: _c.Mapping[str, Any] | None = ...,
     /,
-    **options: dict[str, Any] | None,
+    **options: Any,
 ) -> _t.InspectedRequest:
     """
     Validate a request for `operation` and describe it: the normalized

@@ -612,10 +612,12 @@ def norm(doc):
 
 
 def union(a, b):
-    parts = split_union(a)
-    if b in parts or a == "Any":
+    """`a | b` without repeating members."""
+    if a == "Any":
         return a
-    return f"{a} | {b}"
+    parts = split_union(a)
+    parts += [x for x in split_union(b) if x not in parts]
+    return " | ".join(parts)
 
 
 def split_union(t):
@@ -916,6 +918,8 @@ class Renderer:
         typer = self.typer
         if rust is None and c is None:
             rust = typer.rust_for(m.name, None, f)
+        if f.kind == "new" and not f.doc and rust is not None:
+            f.doc = inspect.cleandoc(rust.doc)
         indent = "    " if c else ""
         cls_name = c.name if c else None
         params = list(f.params)
@@ -979,11 +983,19 @@ class Renderer:
         if f.name in ("__eq__", "__ne__"):
             return "object"
         t = ovr.lookup(ovr.SIGNATURES, f.qual, p.name)
+        if t is None and p.kind == "var_keyword":
+            return "Any"
         if t is None and rust is None:
             t = (typer.macro_sig(f) or {}).get(p.name)
         if t is None and rust is not None and p.name in rmap:
             with typer.in_file(rust.file):
                 t = typer.rust_type(rmap[p.name], "param", cls_name, rust.hints.get(p.name))
+                casts = rust.casts.get(p.name, [])
+                if casts and p.name in rust.hints and not has_any(t):
+                    # `obj.cast::<PyFont>()` first, then a serde/helper conversion.
+                    for cast in casts:
+                        if typer.binding_class(cast):
+                            t = union(typer.class_ref(typer.py_of_rust[cast]), t)
             if "Any" in split_union(t):
                 alt = ovr.param_rule(f.qual, p.name)
                 if alt:
@@ -1043,6 +1055,7 @@ def _renamed_hints(rust, params):
     names = {rp[0]: p.name for p, rp in zip(params, rust.params)}
     r.params = [(names[n], t) for n, t in rust.params]
     r.hints = {names.get(k, k): v for k, v in rust.hints.items()}
+    r.casts = {names.get(k, k): v for k, v in rust.casts.items()}
     return r
 
 

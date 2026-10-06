@@ -5,9 +5,15 @@ build-backend = "maturin"
 [project]
 name = "fontpixel"
 description = "Bitmap font toolkit: complete native API plus a bdfparser-compatible layer"
+readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-classifiers = ["Programming Language :: Rust", "Programming Language :: Python :: 3"]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",
+]
 dynamic = ["version"]
 
 [tool.maturin]

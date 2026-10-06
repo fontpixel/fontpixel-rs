@@ -183,6 +183,8 @@ ParsedBatch = TypedDict("ParsedBatch", {
     "jobs": Union[int, None], "max_working_bytes": int, "max_pending_bytes": int, "max_report_bytes": int,
     "max_task_report_bytes": int, "tasks": List[InspectedRequest]})
 """``fontpixel.ops.parse_batch_toml``: the job's budgets and its prepared tasks."""
+Capabilities = TypedDict("Capabilities", {"filesystem": bool, "threads": bool, "toml_batch": bool})
+"""``fontpixel.ops.capabilities()``: what this build and platform support."""
 ParsedArgs = TypedDict("ParsedArgs", {
     "command": str, "request": Mapping[str, Any], "report_style": str,
     "source_identity_total_bytes": int})
@@ -202,10 +204,10 @@ Axis = Literal["horizontal", "vertical"]
 BeosCoverage = Literal["native8", "full_nibble"]
 """`fontpixel::formats::beos::BeosCoverage`: The native author specifies eight coverage levels in four-bit storage."""
 
-BitOrder = Literal["msb", "lsb"]
+BitOrder = Literal["msb", "lsb", "msb_first", "lsb_first"]
 """`fontpixel::bitmap::bytes::BitOrder`: Bit significance inside a stored byte.
 
-Also accepted on input: ``msb_first``, ``lsb_first``."""
+Input aliases: ``msb_first``, ``lsb_first``."""
 
 BitmapKind = Literal["open_type", "apple", "color"]
 """`fontpixel::sfnt::bitmap::Kind`: Wire family; color decoding requires the `color` feature."""
@@ -282,10 +284,10 @@ DotGlyph = Literal["last", "after_notdef"]
 DotReuse = Literal["literal", "rows", "patterns"]
 """`fontpixel::variants::export::DotReuse`: Native default-scale dot composite representation; pixels and glyph IDs agree."""
 
-DrawMode = Literal["advance", "cell", "ink"]
+DrawMode = Literal["advance", "cell", "ink", "1", "0"]
 """`fontpixel_ops::options::DrawMode`: Glyph spacing mode for rendering.
 
-Also accepted on input: ``1``, ``0``."""
+Input aliases: ``1``, ``0``."""
 
 DrawOrder = Literal["ascending", "descending", "file", "reverse-file"]
 """`fontpixel_ops::options::DrawOrder`: Glyph ordering for `--all` rendering."""
@@ -500,10 +502,10 @@ RawByteOrder = Literal["row-major", "column-major"]
 RawPacking = Literal["byte-rows", "bit-aligned"]
 """`fontpixel::formats::raw::RawPacking`: Alignment of raw bitmap rows and glyph boundaries."""
 
-RawPreset = Literal["vga8", "vga14", "vga16", "c64", "64c", "spectrum", "ch8", "msx", "harlekin", "harlekin8", "harlekin16"]
+RawPreset = Literal["vga8", "vga14", "vga16", "c64", "64c", "spectrum", "ch8", "msx", "harlekin", "harlekin8", "harlekin16", "vga-8x8", "vga-8x14", "vga-8x16", "c64-prg", "zx-spectrum", "harlekin-iii", "harlekin512"]
 """`fontpixel::formats::raw::RawPreset`: Common layouts selected explicitly by name.
 
-Also accepted on input: ``vga-8x8``, ``vga-8x14``, ``vga-8x16``, ``c64-prg``, ``zx-spectrum``, ``harlekin-iii``, ``harlekin512``."""
+Input aliases: ``vga-8x8``, ``vga-8x14``, ``vga-8x16``, ``c64-prg``, ``zx-spectrum``, ``harlekin-iii``, ``harlekin512``."""
 
 ReadMode = Literal["syllables", "components"]
 """`fontpixel::formats::hanfont::ReadMode`: Model projection of a native component font."""
