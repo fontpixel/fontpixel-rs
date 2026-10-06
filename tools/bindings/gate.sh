@@ -15,6 +15,10 @@ for crate in fontpixel fontpixel-ops; do
   fi
 done
 python3 tools/bindings/inventory.py "$target/inventory.json" "${docs[@]}"
+# Generated format tables must match the inventory (a new serde type or
+# format function must not be absorbed silently by a module catch-all).
+python3 tools/bindings/gen_formats_types.py "$target/inventory.json" --check
+python3 tools/bindings/gen_formats_coverage.py "$target/inventory.json" --check
 args=("$target/inventory.json")
 [ -n "$require" ] && args+=(--require "$require")
 [ -n "$report" ] && args+=(--report "$report")

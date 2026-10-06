@@ -1,4 +1,5 @@
 // Generated from the rustdoc inventory: one row per serde type.
+// Regenerate with tools/bindings/gen_formats_types.py; do not edit by hand.
 // Every serde type of `fontpixel::formats` and `fontpixel::resources`.
 normalize_table! {
     "formats::Confidence" => fontpixel::formats::Confidence,
