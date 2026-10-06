@@ -13,7 +13,12 @@ use pyo3::types::{PyBytes, PyDict, PyInt, PyString};
 
 /// A bitmap of `'0'`/`'1'`/`'2'` rows (row 0 at the top), backed by a native
 /// raster. Equality compares pixels; instances are unhashable (mutable).
-#[pyclass(name = "Bitmap", module = "fontpixel.compat.bdfparser", subclass, skip_from_py_object)]
+#[pyclass(
+    name = "Bitmap",
+    module = "fontpixel.compat.bdfparser",
+    subclass,
+    skip_from_py_object
+)]
 #[derive(Clone)]
 pub struct Bitmap {
     /// The Rust compatibility bitmap.
@@ -220,14 +225,23 @@ impl Bitmap {
     /// Crop/extend to `w`×`h`; `(xoff, yoff)` is the new bottom-left corner
     /// relative to the current one, y up (`Bitmap::crop`).
     #[pyo3(signature = (w, h, xoff=0, yoff=0))]
-    fn crop(mut slf: PyRefMut<'_, Self>, w: i64, h: i64, xoff: i64, yoff: i64) -> PyResult<PyRefMut<'_, Self>> {
+    fn crop(
+        mut slf: PyRefMut<'_, Self>,
+        w: i64,
+        h: i64,
+        xoff: i64,
+        yoff: i64,
+    ) -> PyResult<PyRefMut<'_, Self>> {
         done(slf.inner.crop(w, h, xoff, yoff).map(|_| ()))?;
         Ok(slf)
     }
 
     /// Overlay another bitmap aligned top-left, keeping this size; warns when the
     /// sizes differ (`Bitmap::overlay`).
-    fn overlay<'py>(mut slf: PyRefMut<'py, Self>, bitmap: PyRef<'_, Bitmap>) -> PyResult<PyRefMut<'py, Self>> {
+    fn overlay<'py>(
+        mut slf: PyRefMut<'py, Self>,
+        bitmap: PyRef<'_, Bitmap>,
+    ) -> PyResult<PyRefMut<'py, Self>> {
         let py = slf.py();
         if slf.inner.height() != bitmap.inner.height() {
             warn(py, "the bitmaps to overlay have different height")?;
@@ -251,7 +265,10 @@ impl Bitmap {
         align: i64,
         offsetlist: Option<Vec<i64>>,
     ) -> PyResult<Py<PyAny>> {
-        let bs = bitmaplist.iter().map(|b| b.inner.clone()).collect::<Vec<_>>();
+        let bs = bitmaplist
+            .iter()
+            .map(|b| b.inner.clone())
+            .collect::<Vec<_>>();
         let b = done(bp::Bitmap::concatall(
             &bs,
             direction,
@@ -298,7 +315,11 @@ impl Bitmap {
         offset: i64,
     ) -> PyResult<PyRefMut<'py, Self>> {
         let other = bitmap.inner.clone();
-        done(slf.inner.concat(&other, direction, align, offset).map(|_| ()))?;
+        done(
+            slf.inner
+                .concat(&other, direction, align, offset)
+                .map(|_| ()),
+        )?;
         Ok(slf)
     }
 
@@ -346,7 +367,9 @@ impl Bitmap {
     #[pyo3(signature = (datatype=1))]
     fn todata<'py>(&self, py: Python<'py>, datatype: i64) -> PyResult<Bound<'py, PyAny>> {
         if !(0..=5).contains(&datatype) {
-            return Err(PyValueError::new_err(format!("Unknown datatype {datatype}")));
+            return Err(PyValueError::new_err(format!(
+                "Unknown datatype {datatype}"
+            )));
         }
         v2py(py, &done(self.inner.todata(datatype))?)
     }
@@ -400,7 +423,9 @@ impl Bitmap {
     ) -> PyResult<PyRefMut<'py, Self>> {
         let v = match value {
             None => 1,
-            Some(v) if v.is_instance_of::<PyInt>() && !v.is_instance_of::<pyo3::types::PyBool>() => {
+            Some(v)
+                if v.is_instance_of::<PyInt>() && !v.is_instance_of::<pyo3::types::PyBool>() =>
+            {
                 v.extract::<i64>().unwrap_or(-1)
             }
             Some(v) => {
@@ -455,7 +480,7 @@ impl Bitmap {
     /// Ink bounding box `(w, h, xoff, yoff)`, bottom-left origin (`Bitmap::bbox`).
     fn bbox(&self) -> (u32, u32, i64, i64) {
         let b = self.inner.bbox();
-        (b.width, b.height, i64::from(b.x), i64::from(b.y))
+        (b.width, b.height, b.x, b.y)
     }
 
     /// Remove empty outer rows and columns (`Bitmap::trim`).
@@ -480,7 +505,12 @@ impl Bitmap {
 
     /// Paste non-zero pixels of `bitmap` at `(x, y)` (top-left origin) (`Bitmap::paste`).
     #[pyo3(signature = (bitmap, x=0, y=0))]
-    fn paste<'py>(mut slf: PyRefMut<'py, Self>, bitmap: PyRef<'_, Bitmap>, x: i64, y: i64) -> PyRefMut<'py, Self> {
+    fn paste<'py>(
+        mut slf: PyRefMut<'py, Self>,
+        bitmap: PyRef<'_, Bitmap>,
+        x: i64,
+        y: i64,
+    ) -> PyRefMut<'py, Self> {
         let other = bitmap.inner.clone();
         slf.inner.paste(&other, x, y);
         slf
@@ -498,13 +528,19 @@ impl Bitmap {
         yoff: f64,
         shape: &str,
     ) -> PyResult<String> {
-        done(self.inner.tosvg(pixelsize, format, inverted, xoff, yoff, shape))
+        done(
+            self.inner
+                .tosvg(pixelsize, format, inverted, xoff, yoff, shape),
+        )
     }
 }
 
 impl Bitmap {
     fn check_xy(&self, x: i64, y: i64) -> PyResult<()> {
-        let (w, h) = (i64::from(self.inner.width()), i64::from(self.inner.height()));
+        let (w, h) = (
+            i64::from(self.inner.width()),
+            i64::from(self.inner.height()),
+        );
         if !(0 <= y && y < h && 0 <= x && x < w) {
             return Err(PyIndexError::new_err(format!(
                 "Pixel ({x}, {y}) is out of range of the {w}x{h} bitmap"

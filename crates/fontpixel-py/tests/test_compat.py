@@ -343,7 +343,8 @@ def test_charset_encoding_and_converters():
     assert f.glyph('a').cp() == 65 and f.cp2char(65) == 'a'
     assert f.clone().char2cp('a') == 65
     assert f.lacksglyphs('ab') == ['b']
-    f.charsetconvert('iso10646')
+    with pytest.warns(BDFParserWarning, match='could not be converted'):
+        f.charsetconvert('iso10646')
     assert f.char2cp('a') == 97 and f._char2cp_override is None
 
     def boom(c):

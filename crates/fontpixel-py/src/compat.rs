@@ -108,7 +108,10 @@ pub(crate) fn v2py<'py>(py: Python<'py>, v: &V) -> PyResult<Bound<'py, PyAny>> {
         }
         V::String(s) => PyString::new(py, s).into_any(),
         V::Array(a) => {
-            let items = a.iter().map(|x| v2py(py, x)).collect::<PyResult<Vec<_>>>()?;
+            let items = a
+                .iter()
+                .map(|x| v2py(py, x))
+                .collect::<PyResult<Vec<_>>>()?;
             PyList::new(py, items)?.into_any()
         }
         V::Object(o) => {
@@ -257,13 +260,10 @@ struct PyReader(Py<PyAny>);
 impl std::io::Read for PyReader {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         Python::attach(|py| {
-            let chunk = self
-                .0
-                .call_method1(py, "read", (buf.len(),))
-                .map_err(|e| {
-                    stash(e);
-                    std::io::Error::other("Python read() failed")
-                })?;
+            let chunk = self.0.call_method1(py, "read", (buf.len(),)).map_err(|e| {
+                stash(e);
+                std::io::Error::other("Python read() failed")
+            })?;
             let chunk = chunk.bind(py);
             let data: Vec<u8> = if let Ok(s) = chunk.cast::<PyString>() {
                 s.to_str()
@@ -280,7 +280,9 @@ impl std::io::Read for PyReader {
                 })?
             };
             if data.len() > buf.len() {
-                stash(PyValueError::new_err("read() returned more data than requested"));
+                stash(PyValueError::new_err(
+                    "read() returned more data than requested",
+                ));
                 return Err(std::io::Error::other("oversized read"));
             }
             buf[..data.len()].copy_from_slice(&data);
@@ -318,7 +320,10 @@ pub(crate) fn ttf_options(opts: Option<&Bound<'_, PyAny>>) -> PyResult<bp::ttf::
     crate::conv::from_py(opts)
 }
 
-fn save_options(format: Option<&str>, opts: Option<&Bound<'_, PyAny>>) -> PyResult<Option<bp::SaveOptions>> {
+fn save_options(
+    format: Option<&str>,
+    opts: Option<&Bound<'_, PyAny>>,
+) -> PyResult<Option<bp::SaveOptions>> {
     Ok(match format.map(str::to_ascii_lowercase).as_deref() {
         None => None,
         Some("bdf") => Some(bp::SaveOptions::Bdf),
@@ -432,8 +437,10 @@ fn replace_headers(core: &mut fontpixel::model::Font, headers: &Map<String, V>) 
                     .collect(),
             )
         };
-        core.headers
-            .push(fontpixel::model::Property::new(name, property_value(&value)));
+        core.headers.push(fontpixel::model::Property::new(
+            name,
+            property_value(&value),
+        ));
     }
 }
 
@@ -458,7 +465,11 @@ impl RawFont {
     /// Load auto-detected BDF/PCF/TTF bytes (`Font::load_bytes_with_options`).
     #[pyo3(signature = (data, pixelsize=None))]
     fn load_bytes(&mut self, data: &[u8], pixelsize: Option<i64>) -> PyResult<()> {
-        let ctx = if data.starts_with(b"\x01fcp") { "pcf" } else { "" };
+        let ctx = if data.starts_with(b"\x01fcp") {
+            "pcf"
+        } else {
+            ""
+        };
         done_ctx(
             self.font
                 .load_bytes_with_options(data, pixelsize)
@@ -571,13 +582,13 @@ impl RawFont {
     fn remove_unencoded(&mut self, index: Option<usize>) -> PyResult<()> {
         self.rebuild(|core| {
             let ids = unencoded_ids(core);
-            let selected = match index {
-                None => ids,
-                Some(i) => vec![
-                    *ids.get(i)
-                        .ok_or_else(|| PyIndexError::new_err("unencoded glyph index out of range"))?,
-                ],
-            };
+            let selected =
+                match index {
+                    None => ids,
+                    Some(i) => vec![*ids.get(i).ok_or_else(|| {
+                        PyIndexError::new_err("unencoded glyph index out of range")
+                    })?],
+                };
             for id in selected {
                 core.remove_glyph(id);
             }
@@ -750,7 +761,11 @@ impl RawFont {
         let r = opt2v(r)?;
         done(
             self.font
-                .transform(|b| crate::compat_bitmap::call_bitmap_fn(&function, b), &r, mode)
+                .transform(
+                    |b| crate::compat_bitmap::call_bitmap_fn(&function, b),
+                    &r,
+                    mode,
+                )
                 .map(|_| ()),
         )
     }
@@ -772,14 +787,22 @@ impl RawFont {
 
     /// Serialize PCF with `PcfWriteOptions` field names (`Font::topcf`).
     #[pyo3(signature = (options=None))]
-    fn topcf<'py>(&self, py: Python<'py>, options: Option<&Bound<'_, PyAny>>) -> PyResult<Bound<'py, PyBytes>> {
+    fn topcf<'py>(
+        &self,
+        py: Python<'py>,
+        options: Option<&Bound<'_, PyAny>>,
+    ) -> PyResult<Bound<'py, PyBytes>> {
         let o = pcf_options(options)?;
         done_ctx(self.font.topcf(&o), "pcf").map(|b| PyBytes::new(py, &b))
     }
 
     /// Serialize TrueType with `TtfOptions` field names (`Font::tottf`).
     #[pyo3(signature = (options=None))]
-    fn tottf<'py>(&self, py: Python<'py>, options: Option<&Bound<'_, PyAny>>) -> PyResult<Bound<'py, PyBytes>> {
+    fn tottf<'py>(
+        &self,
+        py: Python<'py>,
+        options: Option<&Bound<'_, PyAny>>,
+    ) -> PyResult<Bound<'py, PyBytes>> {
         let o = ttf_options(options)?;
         done(self.font.tottf(&o)).map(|b| PyBytes::new(py, &b))
     }
@@ -793,7 +816,10 @@ impl RawFont {
         controlcharnoskip: bool,
         unicodeformat: &str,
     ) -> PyResult<String> {
-        done(self.font.tosvgfont(xoff, yoff, controlcharnoskip, unicodeformat))
+        done(
+            self.font
+                .tosvgfont(xoff, yoff, controlcharnoskip, unicodeformat),
+        )
     }
 
     /// Save to a path; `format` (bdf/pcf/ttf/svg) or the extension selects the
@@ -906,7 +932,11 @@ fn bitmap_contours<'py>(
         for (x, y, on) in c {
             pts.append(PyTuple::new(
                 py,
-                [point(py, x)?, point(py, y)?, PyBool::new(py, on).to_owned().into_any()],
+                [
+                    point(py, x)?,
+                    point(py, y)?,
+                    PyBool::new(py, on).to_owned().into_any(),
+                ],
             )?)?;
         }
         out.append(pts)?;
