@@ -9,7 +9,9 @@ their formats.
 
 - Structs reject unknown fields. Option and limit types that have a documented
   `Default` fill omitted fields from that default, so `{}` is the default value.
-  Value, table, report and result types require every field.
+  Value, table, report and result types require every field, except that model
+  types (`model::*`) omit an absent optional field and treat it as absent when it
+  is missing.
 - New enums use `snake_case` variant names. Types that were already serialized
   keep their earlier shapes: model enums such as `Codepoint`, `Spacing` and
   `PropertyValue` keep their variant spelling, which the YAFF native metadata
