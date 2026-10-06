@@ -1,22 +1,20 @@
-# 当前进度：第 6 阶段严格标准补完进行中，已按用户指示暂停（2026-10-05 下午）
+# 当前进度：第 6 阶段已按严格标准完成（2026-10-06）
 
-**恢复入口：[docs/LOCAL-PAUSE-20261005-STRICT.zh.md](docs/LOCAL-PAUSE-20261005-STRICT.zh.md)**
-
-第 6 阶段已按 PLAN 原文交付，见 [reports/phase-6.md](reports/phase-6.md)。之后用户要求按更严标准补完，
-并一路做到第 9 阶段；本地提交可以，不 push、不发布、不部署。
+交付报告 **[reports/phase-6.md](reports/phase-6.md)**；测速 [benches/REPORT.md](benches/REPORT.md)；
+ASAN 与默认负载巡检 [reports/phase6-validation/](reports/phase6-validation/)；逐 gate 记录
+[reports/phase6-local.md](reports/phase6-local.md)。用户指示「第 6 阶段完成了再停止」，现已停止，
+等待用户指示再开始第 7 阶段。
 
 - [x] 第 6 阶段按 PLAN 原文交付（`6297998`）。
-- [ ] 第 6 阶段严格标准补完：
-  - [x] 单元 E 收录站投影追平（已合并）
-  - [x] 单元 B subset 账本（已合并）
-  - [x] 单元 D OTB/bdat 元数据（已合并）
-  - [~] 单元 A：WOFF 账本已合并；Brotli 编码器上界待处理，方案已定，见暂停记录第 3 节
-  - [~] 单元 C variants 账本：已完成但未合并，默认通格导出会超预算，方案已定，见暂停记录第 3 节
-  - [ ] 单元 F 矢量字体元数据选项；若干小问题与文档（暂停记录第 4 节）
-  - [ ] 最终冻结 + 对照全量重跑 + ASAN + 空闲时正式测速 + 更新报告
-- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）
-- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）
-- [ ] 第 9 阶段：拼合网页 `web/merge/`
+- [x] 第 6 阶段严格标准：单元 A–K 全账本与追平选项，最终源码 `8cd6d66`，冻结 v5；
+  完整检查、109 种 feature 组合 Clippy、真实字体对照、104 目标 ASAN、默认负载巡检、正式测速与 A/B。
+- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）。已授权，等待用户开始指令。
+  工具已就绪：`../local-work/py-bindings-venv`（maturin、pytest）、Docker（manylinux）。
+- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。wasm32 target、wasm-pack、Node 24 已就绪。
+- [ ] 第 9 阶段：拼合网页 `web/merge/`（已授权）。注意 PLAN 要求「静态网页不使用前端框架」。
+- 只做本地提交；不 push、不发布、不部署。
+
+已知限制见 reports/phase-6.md「已知限制」。
 
 以下本地接续/云端交接文字是历史过程；最终暂停状态以最新记录及 checkpoint 为准。
 

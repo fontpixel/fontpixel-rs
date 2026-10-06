@@ -1,0 +1,2372 @@
+{
+  "binary": "../local-work/phase6-local-20261004/frozen-binaries-v5/release/fontpixel",
+  "compare": "../local-work/phase6-local-20261004/frozen-binaries-v4/release/fontpixel",
+  "compare_budget": 1073741824,
+  "default_cap": 268435456,
+  "cases": [
+    {
+      "case": "sc-bdf.bdf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "bdf",
+        "-o",
+        "sc.bdf"
+      ],
+      "exit": 0,
+      "wall_s": 0.182,
+      "peak_rss_bytes": 67137536,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.195,
+        "peak_rss_bytes": 67207168,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pcf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pcf",
+        "-o",
+        "sc.pcf"
+      ],
+      "exit": 0,
+      "wall_s": 0.196,
+      "peak_rss_bytes": 74231808,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.186,
+        "peak_rss_bytes": 74174464,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.snf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "snf",
+        "-o",
+        "sc.snf"
+      ],
+      "exit": 0,
+      "wall_s": 0.247,
+      "peak_rss_bytes": 131719168,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.287,
+        "peak_rss_bytes": 134778880,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.hex",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hex",
+        "-o",
+        "sc.hex"
+      ],
+      "exit": 1,
+      "wall_s": 0.115,
+      "peak_rss_bytes": 63524864,
+      "stderr_tail": [
+        "fontpixel: HEX glyph does not fit the selected height/descent or has a negative left bearing"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.draw",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "draw",
+        "-o",
+        "sc.txt"
+      ],
+      "exit": 1,
+      "wall_s": 0.593,
+      "peak_rss_bytes": 114434048,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [draw.write.failed] None: console cell dimensions must be positive"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.psf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "psf",
+        "-o",
+        "sc.psf"
+      ],
+      "exit": 0,
+      "wall_s": 0.279,
+      "peak_rss_bytes": 140771328,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.287,
+        "peak_rss_bytes": 140771328,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.cpi",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "cpi",
+        "-o",
+        "sc.cpi"
+      ],
+      "exit": 1,
+      "wall_s": 0.611,
+      "peak_rss_bytes": 114393088,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [cpi.write.failed] None: CPI output requires code_page metadata or an explicit fallback"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.raw",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "raw",
+        "-o",
+        "sc.f08"
+      ],
+      "exit": 1,
+      "wall_s": 0.618,
+      "peak_rss_bytes": 114241536,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [raw.write.failed] None: console cell dimensions must be positive"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.yaff",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "yaff",
+        "-o",
+        "sc.yaff"
+      ],
+      "exit": 0,
+      "wall_s": 0.253,
+      "peak_rss_bytes": 94351360,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.28,
+        "peak_rss_bytes": 93450240,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pf2",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pf2",
+        "-o",
+        "sc.pf2"
+      ],
+      "exit": 0,
+      "wall_s": 0.268,
+      "peak_rss_bytes": 106979328,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.306,
+        "peak_rss_bytes": 143261696,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.fnt",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "fnt",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 0,
+      "wall_s": 0.2,
+      "peak_rss_bytes": 87744512,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.2,
+        "peak_rss_bytes": 87195648,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.fon",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "fon",
+        "-o",
+        "sc.fon"
+      ],
+      "exit": 0,
+      "wall_s": 0.184,
+      "peak_rss_bytes": 87941120,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.195,
+        "peak_rss_bytes": 87326720,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.fontx2",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "fontx2",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 0,
+      "wall_s": 0.199,
+      "peak_rss_bytes": 89432064,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.209,
+        "peak_rss_bytes": 89522176,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.hzk",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hzk",
+        "-o",
+        "sc.hzk"
+      ],
+      "exit": 1,
+      "wall_s": 0.124,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: HZK/ASC requires an explicit preset or complete geometry"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.hbf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hbf",
+        "-o",
+        "sc.hbf"
+      ],
+      "exit": 1,
+      "wall_s": 0.124,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: HBF: empty bitmap cell"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.hanfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hanfont",
+        "-o",
+        "sc.han"
+      ],
+      "exit": 1,
+      "wall_s": 0.127,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: hanfont writing syllables requires retained native components; inverse decomposition is undefined"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.nfnt",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "nfnt",
+        "-o",
+        "sc.dfont"
+      ],
+      "exit": 1,
+      "wall_s": 0.229,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [nfnt.no_representable_glyphs] Loss: No legacy byte mappings or designated missing glyph can be encoded"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.bdat",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "bdat",
+        "-o",
+        "sc.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 0.269,
+      "peak_rss_bytes": 116088832,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.267,
+        "peak_rss_bytes": 134664192,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.iigs",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "iigs",
+        "-o",
+        "sc.fon"
+      ],
+      "exit": 1,
+      "wall_s": 0.135,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: IIgs output requires at least one legacy byte mapping"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.otb",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "otb",
+        "-o",
+        "sc.otb"
+      ],
+      "exit": 0,
+      "wall_s": 0.284,
+      "peak_rss_bytes": 115769344,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.278,
+        "peak_rss_bytes": 134017024,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.ttf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "ttf",
+        "-o",
+        "sc.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 0.684,
+      "peak_rss_bytes": 134914048,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.707,
+        "peak_rss_bytes": 184979456,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.otf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "otf",
+        "-o",
+        "sc.otf"
+      ],
+      "exit": 0,
+      "wall_s": 0.743,
+      "peak_rss_bytes": 92958720,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.796,
+        "peak_rss_bytes": 276348928,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.woff",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "woff",
+        "-o",
+        "sc.woff"
+      ],
+      "exit": 0,
+      "wall_s": 1.303,
+      "peak_rss_bytes": 93319168,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 1.304,
+        "peak_rss_bytes": 276504576,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.woff2",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "woff2",
+        "-o",
+        "sc.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 8.442,
+      "peak_rss_bytes": 249892864,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 9.081,
+        "peak_rss_bytes": 363737088,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.ttc",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "ttc",
+        "-o",
+        "sc.ttc"
+      ],
+      "exit": 0,
+      "wall_s": 1.011,
+      "peak_rss_bytes": 93523968,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.969,
+        "peak_rss_bytes": 276557824,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.color",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "color",
+        "-o",
+        "sc.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 0.709,
+      "peak_rss_bytes": 189677568,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.761,
+        "peak_rss_bytes": 194449408,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.vector-raster",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "vector-raster",
+        "-o",
+        "sc.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 0.854,
+      "peak_rss_bytes": 93212672,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.874,
+        "peak_rss_bytes": 276787200,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.svg",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "svg",
+        "-o",
+        "sc.svg"
+      ],
+      "exit": 0,
+      "wall_s": 0.934,
+      "peak_rss_bytes": 92540928,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.964,
+        "peak_rss_bytes": 92057600,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.bmfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "bmfont",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 0,
+      "wall_s": 1.3,
+      "peak_rss_bytes": 202706944,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 1.205,
+        "peak_rss_bytes": 202498048,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.image",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "image",
+        "-o",
+        "sc.png"
+      ],
+      "exit": 0,
+      "wall_s": 0.58,
+      "peak_rss_bytes": 136568832,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.593,
+        "peak_rss_bytes": 135581696,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.c",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "c",
+        "-o",
+        "sc.h"
+      ],
+      "exit": 1,
+      "wall_s": 0.158,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: C aggregate bytes exceeds configured limit 213681376"
+      ],
+      "status": "resource-limit",
+      "probe": {
+        "exit": 1,
+        "wall_s": 0.477,
+        "peak_rss_bytes": 151678976,
+        "stderr_tail": [
+          "fontpixel: I/O error: C output exceeds byte budget"
+        ]
+      },
+      "verdict": "still fails with the probe budget at 145 MiB peak RSS (a fixed codec/format limit): fontpixel: I/O error: C output exceeds byte budget"
+    },
+    {
+      "case": "sc-bdf.kbitx",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "kbitx",
+        "-o",
+        "sc.kbitx"
+      ],
+      "exit": 0,
+      "wall_s": 0.282,
+      "peak_rss_bytes": 92459008,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.279,
+        "peak_rss_bytes": 91312128,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.kbits",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "kbits",
+        "-o",
+        "sc.kbits"
+      ],
+      "exit": 0,
+      "wall_s": 0.285,
+      "peak_rss_bytes": 133771264,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.286,
+        "peak_rss_bytes": 136519680,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pbf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pbf",
+        "-o",
+        "sc.pbf"
+      ],
+      "exit": 1,
+      "wall_s": 0.135,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: PBF aggregate bytes exceeds configured limit 213681374"
+      ],
+      "status": "resource-limit",
+      "probe": {
+        "exit": 1,
+        "wall_s": 0.218,
+        "peak_rss_bytes": 94683136,
+        "stderr_tail": [
+          "fontpixel: PBF bucket table offset exceeds u16"
+        ]
+      },
+      "verdict": "still fails with the probe budget at 90 MiB peak RSS (a fixed codec/format limit): fontpixel: PBF bucket table offset exceeds u16"
+    },
+    {
+      "case": "sc-bdf.sfd",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "sfd",
+        "-o",
+        "sc.sfd"
+      ],
+      "exit": 0,
+      "wall_s": 0.313,
+      "peak_rss_bytes": 129650688,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.304,
+        "peak_rss_bytes": 129191936,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pk",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pk",
+        "-o",
+        "sc.pk"
+      ],
+      "exit": 0,
+      "wall_s": 0.344,
+      "peak_rss_bytes": 145899520,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.333,
+        "peak_rss_bytes": 154746880,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.gf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "gf",
+        "-o",
+        "sc.gf"
+      ],
+      "exit": 0,
+      "wall_s": 0.189,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.208,
+        "peak_rss_bytes": 82681856,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.plan9",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "plan9",
+        "-o",
+        "sc.font"
+      ],
+      "exit": 1,
+      "wall_s": 0.131,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: TeX/Plan 9 aggregate bytes exceeds configured limit 213681373"
+      ],
+      "status": "resource-limit",
+      "probe": {
+        "exit": 1,
+        "wall_s": 0.165,
+        "peak_rss_bytes": 82681856,
+        "stderr_tail": [
+          "fontpixel: Plan 9 output sidecars exceeds configured limit 1024"
+        ]
+      },
+      "verdict": "still fails with the probe budget at 79 MiB peak RSS (a fixed codec/format limit): fontpixel: Plan 9 output sidecars exceeds configured limit 1024"
+    },
+    {
+      "case": "sc-bdf.amiga",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "amiga",
+        "-o",
+        "sc.font"
+      ],
+      "exit": 0,
+      "wall_s": 0.218,
+      "peak_rss_bytes": 86654976,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.233,
+        "peak_rss_bytes": 85811200,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.gem",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "gem",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.293,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [gem.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.vfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "vfont",
+        "-o",
+        "sc.vfont"
+      ],
+      "exit": 1,
+      "wall_s": 0.272,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [vfont.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.fzx",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "fzx",
+        "-o",
+        "sc.fzx"
+      ],
+      "exit": 1,
+      "wall_s": 0.31,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [fzx.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.figlet",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "figlet",
+        "-o",
+        "sc.flf"
+      ],
+      "exit": 1,
+      "wall_s": 0.142,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: FIGfont cell cannot contain glyph bounds and advance without clipping"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.palm",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "palm",
+        "-o",
+        "sc.pdb"
+      ],
+      "exit": 1,
+      "wall_s": 0.27,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [palm.write.failed] Loss: Palm font has no representable character slots"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.gdr",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "gdr",
+        "-o",
+        "sc.gdr"
+      ],
+      "exit": 0,
+      "wall_s": 0.328,
+      "peak_rss_bytes": 116867072,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.356,
+        "peak_rss_bytes": 119377920,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.drcs",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "drcs",
+        "-o",
+        "sc.drcs"
+      ],
+      "exit": 1,
+      "wall_s": 0.146,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: DRCS output has no representable Legacy glyphs"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.bbc",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "bbc",
+        "-o",
+        "sc.bbc"
+      ],
+      "exit": 1,
+      "wall_s": 0.144,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.beos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "beos",
+        "-o",
+        "sc.beos"
+      ],
+      "exit": 0,
+      "wall_s": 0.467,
+      "peak_rss_bytes": 175239168,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.457,
+        "peak_rss_bytes": 174366720,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.catalyst",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "catalyst",
+        "-o",
+        "sc.catalyst"
+      ],
+      "exit": 1,
+      "wall_s": 0.279,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [catalyst.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.chiwriter",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "chiwriter",
+        "-o",
+        "sc.set"
+      ],
+      "exit": 1,
+      "wall_s": 0.32,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [chiwriter.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.comfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "comfont",
+        "-o",
+        "sc.com"
+      ],
+      "exit": 1,
+      "wall_s": 0.147,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.consoleet",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "consoleet",
+        "-o",
+        "sc.txt"
+      ],
+      "exit": 1,
+      "wall_s": 0.157,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: Consoleet requires storable code labels"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.daisy",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "daisy",
+        "-o",
+        "sc.nlq"
+      ],
+      "exit": 1,
+      "wall_s": 0.406,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [daisy.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.dashen",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "dashen",
+        "-o",
+        "sc.pft"
+      ],
+      "exit": 1,
+      "wall_s": 0.357,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [dashen.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.dosstart",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "dosstart",
+        "-o",
+        "sc.dsf"
+      ],
+      "exit": 1,
+      "wall_s": 0.158,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.drhalo",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "drhalo",
+        "-o",
+        "sc.fon"
+      ],
+      "exit": 1,
+      "wall_s": 0.154,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.edwin",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "edwin",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.142,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.fbit",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "fbit",
+        "-o",
+        "sc.dfont"
+      ],
+      "exit": 1,
+      "wall_s": 0.151,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: fbit needs mapped nonempty cells"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.geos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "geos",
+        "-o",
+        "sc.cvt"
+      ],
+      "exit": 1,
+      "wall_s": 0.15,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: GEOS byte-coded output requires explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.gpi",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "gpi",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.141,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: GPI output requires word legacy codes (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.grasp",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "grasp",
+        "-o",
+        "sc.set"
+      ],
+      "exit": 1,
+      "wall_s": 0.151,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.hppcl",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hppcl",
+        "-o",
+        "sc.sft"
+      ],
+      "exit": 1,
+      "wall_s": 0.279,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [hppcl.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.hrcg",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hrcg",
+        "-o",
+        "sc.set"
+      ],
+      "exit": 1,
+      "wall_s": 0.146,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.lisa",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "lisa",
+        "-o",
+        "sc.bin"
+      ],
+      "exit": 1,
+      "wall_s": 0.278,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [nfnt.no_representable_glyphs] Loss: No legacy byte mappings or designated missing glyph can be encoded"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.mgtk",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "mgtk",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.138,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: MGTK needs a legacy byte mapping"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.mkwinfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "mkwinfont",
+        "-o",
+        "sc.fd"
+      ],
+      "exit": 1,
+      "wall_s": 0.136,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.oberon",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "oberon",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 0,
+      "wall_s": 0.203,
+      "peak_rss_bytes": 86310912,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.209,
+        "peak_rss_bytes": 85725184,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pcgeos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pcgeos",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.18,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: PC/GEOS SBCS requires explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.pcr",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pcr",
+        "-o",
+        "sc.pcr"
+      ],
+      "exit": 1,
+      "wall_s": 0.143,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.pilfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pilfont",
+        "-o",
+        "sc.pil"
+      ],
+      "exit": 1,
+      "wall_s": 0.15,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: no representable image-font mappings"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.plus3dos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "plus3dos",
+        "-o",
+        "sc.plus3dos"
+      ],
+      "exit": 1,
+      "wall_s": 0.137,
+      "peak_rss_bytes": 82681856,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.psf2txt",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "psf2txt",
+        "-o",
+        "sc.txt"
+      ],
+      "exit": 0,
+      "wall_s": 0.749,
+      "peak_rss_bytes": 173465600,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.691,
+        "peak_rss_bytes": 188411904,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.polyprint",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "polyprint",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.372,
+      "peak_rss_bytes": 82690048,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [polyprint.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.prebuilt",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "prebuilt",
+        "-o",
+        "sc.bepf"
+      ],
+      "exit": 1,
+      "wall_s": 0.147,
+      "peak_rss_bytes": 82690048,
+      "stderr_tail": [
+        "fontpixel: Prebuilt requires 1..32767 character names"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.printshop",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "printshop",
+        "-o",
+        "sc.pnf"
+      ],
+      "exit": 1,
+      "wall_s": 0.276,
+      "peak_rss_bytes": 82690048,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [printshop.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.pxl",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pxl",
+        "-o",
+        "sc.pxl"
+      ],
+      "exit": 1,
+      "wall_s": 0.284,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [pxl.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.riscos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "riscos",
+        "-o",
+        "sc.riscos"
+      ],
+      "exit": 1,
+      "wall_s": 0.293,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [riscos.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.sfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "sfont",
+        "-o",
+        "sc.png"
+      ],
+      "exit": 0,
+      "wall_s": 0.2,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.256,
+        "peak_rss_bytes": 82853888,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.signum",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "signum",
+        "-o",
+        "sc.e24"
+      ],
+      "exit": 1,
+      "wall_s": 0.303,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [signum.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.symbos",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "symbos",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.29,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [symbos.write.failed] Loss: SymbOS cell height cannot contain source glyphs"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.tasprint",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "tasprint",
+        "-o",
+        "sc.tasprint"
+      ],
+      "exit": 1,
+      "wall_s": 0.29,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [tasprint.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.vtfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "vtfont",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.155,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: VFNT source ink does not fit the selected cell"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.writeon",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "writeon",
+        "-o",
+        "sc.wof"
+      ],
+      "exit": 1,
+      "wall_s": 0.155,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.wsfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "wsfont",
+        "-o",
+        "sc.wsf"
+      ],
+      "exit": 1,
+      "wall_s": 0.151,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [wsfont.write.failed] Loss: WSF cells cannot contain negative left bearings"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.wyse",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "wyse",
+        "-o",
+        "sc.wyse"
+      ],
+      "exit": 1,
+      "wall_s": 0.162,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.xbin",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "xbin",
+        "-o",
+        "sc.xb"
+      ],
+      "exit": 1,
+      "wall_s": 0.137,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.xerox",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "xerox",
+        "-o",
+        "sc.al"
+      ],
+      "exit": 1,
+      "wall_s": 0.312,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [xerox.no_representable_glyphs] Loss: No representable character mappings remain"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.zapfont",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "zapfont",
+        "-o",
+        "sc.zapfont"
+      ],
+      "exit": 0,
+      "wall_s": 0.398,
+      "peak_rss_bytes": 159297536,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.441,
+        "peak_rss_bytes": 173903872,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.rockbox",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "rockbox",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.163,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: glyph does not fit native device cell without clipping"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.u8m",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "u8m",
+        "-o",
+        "sc.u8m"
+      ],
+      "exit": 0,
+      "wall_s": 0.433,
+      "peak_rss_bytes": 142233600,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.412,
+        "peak_rss_bytes": 157458432,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.cybiko",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "cybiko",
+        "-o",
+        "sc.cyf"
+      ],
+      "exit": 1,
+      "wall_s": 0.171,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: no representable device font mappings"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.playdate",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "playdate",
+        "-o",
+        "sc.fnt"
+      ],
+      "exit": 1,
+      "wall_s": 0.139,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: glyph does not fit native device cell without clipping"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.hmzk",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "hmzk",
+        "-o",
+        "sc.bin"
+      ],
+      "exit": 1,
+      "wall_s": 0.153,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: HMZK directory entries exceeds configured limit 32767"
+      ],
+      "status": "resource-limit",
+      "probe": {
+        "exit": 1,
+        "wall_s": 0.149,
+        "peak_rss_bytes": 82853888,
+        "stderr_tail": [
+          "fontpixel: HMZK directory entries exceeds configured limit 32767"
+        ]
+      },
+      "verdict": "still fails with the probe budget at 79 MiB peak RSS (a fixed codec/format limit): fontpixel: HMZK directory entries exceeds configured limit 32767"
+    },
+    {
+      "case": "sc-bdf.sbf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "sbf",
+        "-o",
+        "sc.sbf"
+      ],
+      "exit": 1,
+      "wall_s": 0.149,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: no representable device font mappings"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "sc-bdf.qpf",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "qpf",
+        "-o",
+        "sc.qpf"
+      ],
+      "exit": 0,
+      "wall_s": 0.175,
+      "peak_rss_bytes": 83632128,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.183,
+        "peak_rss_bytes": 83054592,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.qpf2",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "qpf2",
+        "-o",
+        "sc.qpf2"
+      ],
+      "exit": 0,
+      "wall_s": 0.197,
+      "peak_rss_bytes": 100233216,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.201,
+        "peak_rss_bytes": 98885632,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.ssfn",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "ssfn",
+        "-o",
+        "sc.sfn"
+      ],
+      "exit": 0,
+      "wall_s": 0.4,
+      "peak_rss_bytes": 131883008,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.409,
+        "peak_rss_bytes": 143859712,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.vlw",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "vlw",
+        "-o",
+        "sc.vlw"
+      ],
+      "exit": 0,
+      "wall_s": 0.38,
+      "peak_rss_bytes": 167047168,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.42,
+        "peak_rss_bytes": 181645312,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "sc-bdf.pfr",
+      "command": [
+        "convert",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--to",
+        "pfr",
+        "-o",
+        "sc.pfr"
+      ],
+      "exit": 1,
+      "wall_s": 0.148,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [
+        "fontpixel: operation reported errors; no output returned",
+        "Error [pfr.write.failed] Loss: PFR Unicode-to-legacy conversion must be explicit"
+      ],
+      "status": "rejected"
+    },
+    {
+      "case": "tong-ttf.woff",
+      "command": [
+        "convert",
+        "../local-work/phase6-local-20261004/full-correctness-v2/vector-native/font.ttf",
+        "-o",
+        "font.woff"
+      ],
+      "exit": 0,
+      "wall_s": 1.9,
+      "peak_rss_bytes": 139427840,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 2.346,
+        "peak_rss_bytes": 257916928,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "tong-ttf.woff2",
+      "command": [
+        "convert",
+        "../local-work/phase6-local-20261004/full-correctness-v2/vector-native/font.ttf",
+        "-o",
+        "font.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 16.859,
+      "peak_rss_bytes": 302309376,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 16.731,
+        "peak_rss_bytes": 349224960,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "tong-otf.woff",
+      "command": [
+        "convert",
+        "../local-work/strict-c/tong-batch-base/export/otf/TongPixelSans14Large-square.otf",
+        "-o",
+        "font.woff"
+      ],
+      "exit": 0,
+      "wall_s": 3.803,
+      "peak_rss_bytes": 83238912,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 3.879,
+        "peak_rss_bytes": 300793856,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "tong-otf.woff2",
+      "command": [
+        "convert",
+        "../local-work/strict-c/tong-batch-base/export/otf/TongPixelSans14Large-square.otf",
+        "-o",
+        "font.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 15.702,
+      "peak_rss_bytes": 266588160,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 9.96,
+        "peak_rss_bytes": 364441600,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "subset.tong-ttf.ascii.woff2",
+      "command": [
+        "subset",
+        "../local-work/phase6-local-20261004/full-correctness-v2/vector-native/font.ttf",
+        "--unicodes",
+        "U+0020-007E",
+        "-o",
+        "subset.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 0.081,
+      "peak_rss_bytes": 82853888,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 0.081,
+        "peak_rss_bytes": 82853888,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "subset.tong-ttf.all-mapped.woff2",
+      "command": [
+        "subset",
+        "../local-work/phase6-local-20261004/full-correctness-v2/vector-native/font.ttf",
+        "--text-file",
+        "../local-work/phase6-local-20261004/full-correctness-v5/default-sweep/inputs/tong-ttf-mapped.txt",
+        "-o",
+        "subset.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 6.818,
+      "peak_rss_bytes": 180736000,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 6.823,
+        "peak_rss_bytes": 180948992,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "merge.unifont-latin.ttf",
+      "command": [
+        "merge",
+        "--family",
+        "Unifont Western Mix",
+        "--part",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+        "--take",
+        "western",
+        "--part",
+        "../local-work/phase6-local-20261004/performance-work/reference/bdfparser/tests/fonts/unifont-13.0.04.bdf",
+        "--take",
+        "all",
+        "--spacing",
+        "prop",
+        "-o",
+        "merged.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 1.077,
+      "peak_rss_bytes": 204886016,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 1.14,
+        "peak_rss_bytes": 274718720,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "variants.tong-large.ttf",
+      "command": [
+        "variants",
+        "--base",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--lang",
+        "zh-Hant,zh-HK=../samples/tong-pixel-sans/TongPixelSans14Large-TC.bdf",
+        "--lang",
+        "ja=../samples/tong-pixel-sans/TongPixelSans14Large-JP.bdf",
+        "--lang",
+        "ko=../samples/tong-pixel-sans/TongPixelSans14Large-KR.bdf",
+        "--script",
+        "latn,grek,cyrl=../samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+        "--family",
+        "Tong Pixel Sans 14 Large",
+        "-o",
+        "family.ttf"
+      ],
+      "exit": 0,
+      "wall_s": 1.021,
+      "peak_rss_bytes": 247078912,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 1.116,
+        "peak_rss_bytes": 246071296,
+        "stderr_tail": []
+      },
+      "identical": true
+    },
+    {
+      "case": "merge.unifont-latin.woff2",
+      "command": [
+        "merge",
+        "--family",
+        "Unifont Western Mix",
+        "--part",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+        "--take",
+        "western",
+        "--part",
+        "../local-work/phase6-local-20261004/performance-work/reference/bdfparser/tests/fonts/unifont-13.0.04.bdf",
+        "--take",
+        "all",
+        "--spacing",
+        "prop",
+        "-o",
+        "merged.woff2"
+      ],
+      "exit": 1,
+      "wall_s": 1.227,
+      "peak_rss_bytes": 146112512,
+      "stderr_tail": [
+        "fontpixel: WOFF working bytes exceeds configured limit 244990729"
+      ],
+      "status": "resource-limit",
+      "probe": {
+        "exit": 0,
+        "wall_s": 12.388,
+        "peak_rss_bytes": 305418240,
+        "stderr_tail": []
+      },
+      "verdict": "genuine: peak RSS 291 MiB with the probe budget exceeds the 256 MiB cap"
+    },
+    {
+      "case": "variants.tong-large.woff2",
+      "command": [
+        "variants",
+        "--base",
+        "../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf",
+        "--lang",
+        "zh-Hant,zh-HK=../samples/tong-pixel-sans/TongPixelSans14Large-TC.bdf",
+        "--lang",
+        "ja=../samples/tong-pixel-sans/TongPixelSans14Large-JP.bdf",
+        "--lang",
+        "ko=../samples/tong-pixel-sans/TongPixelSans14Large-KR.bdf",
+        "--script",
+        "latn,grek,cyrl=../samples/tong-pixel-sans/TongPixelSans14Large-Latin.bdf",
+        "--family",
+        "Tong Pixel Sans 14 Large",
+        "-o",
+        "family.woff2"
+      ],
+      "exit": 0,
+      "wall_s": 9.188,
+      "peak_rss_bytes": 287354880,
+      "stderr_tail": [],
+      "status": "ok",
+      "compare": {
+        "exit": 0,
+        "wall_s": 9.254,
+        "peak_rss_bytes": 345157632,
+        "stderr_tail": []
+      },
+      "identical": true
+    }
+  ],
+  "nonzero_at_defaults": [
+    "sc-bdf.hex",
+    "sc-bdf.draw",
+    "sc-bdf.cpi",
+    "sc-bdf.raw",
+    "sc-bdf.hzk",
+    "sc-bdf.hbf",
+    "sc-bdf.hanfont",
+    "sc-bdf.nfnt",
+    "sc-bdf.iigs",
+    "sc-bdf.c",
+    "sc-bdf.pbf",
+    "sc-bdf.plan9",
+    "sc-bdf.gem",
+    "sc-bdf.vfont",
+    "sc-bdf.fzx",
+    "sc-bdf.figlet",
+    "sc-bdf.palm",
+    "sc-bdf.drcs",
+    "sc-bdf.bbc",
+    "sc-bdf.catalyst",
+    "sc-bdf.chiwriter",
+    "sc-bdf.comfont",
+    "sc-bdf.consoleet",
+    "sc-bdf.daisy",
+    "sc-bdf.dashen",
+    "sc-bdf.dosstart",
+    "sc-bdf.drhalo",
+    "sc-bdf.edwin",
+    "sc-bdf.fbit",
+    "sc-bdf.geos",
+    "sc-bdf.gpi",
+    "sc-bdf.grasp",
+    "sc-bdf.hppcl",
+    "sc-bdf.hrcg",
+    "sc-bdf.lisa",
+    "sc-bdf.mgtk",
+    "sc-bdf.mkwinfont",
+    "sc-bdf.pcgeos",
+    "sc-bdf.pcr",
+    "sc-bdf.pilfont",
+    "sc-bdf.plus3dos",
+    "sc-bdf.polyprint",
+    "sc-bdf.prebuilt",
+    "sc-bdf.printshop",
+    "sc-bdf.pxl",
+    "sc-bdf.riscos",
+    "sc-bdf.signum",
+    "sc-bdf.symbos",
+    "sc-bdf.tasprint",
+    "sc-bdf.vtfont",
+    "sc-bdf.writeon",
+    "sc-bdf.wsfont",
+    "sc-bdf.wyse",
+    "sc-bdf.xbin",
+    "sc-bdf.xerox",
+    "sc-bdf.rockbox",
+    "sc-bdf.cybiko",
+    "sc-bdf.playdate",
+    "sc-bdf.hmzk",
+    "sc-bdf.sbf",
+    "sc-bdf.pfr",
+    "merge.unifont-latin.woff2"
+  ],
+  "resource_limit_failures": [
+    "sc-bdf.c",
+    "sc-bdf.pbf",
+    "sc-bdf.plan9",
+    "sc-bdf.hmzk",
+    "merge.unifont-latin.woff2"
+  ],
+  "compare_mismatches": []
+}

@@ -144,3 +144,41 @@ The design units per em match: export-rs uses 1400 and native automatic scaling
 gives 100 units per pixel at 14 ppem. Changing `--otb-upm` is not a fix for any row.
 The regional square/dot TTF/OTF/WOFF2 outputs have no complete field inventory
 yet; the comparison so far selects hhea, OS/2 and head fields only.
+
+### Reproducing export-rs OTB output
+
+Defaults keep fontpixel's own metadata. To reproduce export-rs (`otb.rs`) explicitly, pass the
+`--otb-*` options. `benches/phase6_tong.py batch --profile parity` writes them per file. For a
+proportional Large font they are:
+
+```toml
+[tasks.options]
+otb_name_record = ["3/1/0x409/0=<copyright>", "3/1/0x409/1=<family>", "3/1/0x409/2=Regular",
+  "3/1/0x409/3=<family> Regular 1.0", "3/1/0x409/4=<family> Regular", "3/1/0x409/5=Version 1.0",
+  "3/1/0x409/6=<PostScript>-Regular", "3/1/0x409/13=<license>", "3/1/0x409/14=<license URL>",
+  "3/1/0x409/16=<family>", "3/1/0x409/17=Regular"]
+otb_vendor = "TONG"
+otb_panose = "2,11,5,3,0,0,0,0,0,0"   # 2,11,5,9,… for Mono families
+otb_head_flags = 3
+otb_lowest_rec_ppem = 14
+otb_break_char = 32
+otb_unicode_ranges = "non-bmp"
+otb_average_width = "floor"
+otb_post_names = "omit"
+otb_fixed_pitch = "false"             # "true" for Mono families
+otb_cmap_unicode_full = "non-bmp"
+otb_width_max = "advance"
+otb_index_layout = "shared-runs"
+otb_index_min_run = 8
+# otb_created / otb_modified: export-rs uses the wall clock; copy them to compare
+```
+
+With these options, all 20 OTB files equal export-rs in every name record, cmap record, global
+table field, strike size field, index subtable and physical glyph record. Pixels are equal for all
+633,028 glyphs. The only remaining difference is `head.checkSumAdjustment`, which is derived: the
+table bytes are identical, but fontpixel writes the tables in tag order and export-rs in its own
+recommended order. Both checksums are valid for their files.
+
+Three export-rs behaviours lose information: it replaces the source BDF copyright with its own
+shorter notice, drops the FOUNDRY name (ID 8), and drops post glyph names. They are reproduced only
+on request and reported as `Loss`, so `--strict` rejects them.

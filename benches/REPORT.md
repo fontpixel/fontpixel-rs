@@ -1,92 +1,86 @@
-# Phase 6 performance report (PLAN §10), 2026-10-05
+# Phase 6 performance report (PLAN §10), final strict source
 
-Formal five-run measurement of the final phase-6 source (freeze v3). Every case
-ran in five fresh processes; values are medians. The recorder and the independent
-auditor are `scripts/phase6_perf.py` and `scripts/phase6_perf_audit.py`; case
-contracts are in [phase6-README.md](phase6-README.md). The audit re-verified 2,893
-frozen input/binary/source files, 110 invocations, 220 raw streams and 9,215
-archived output members, and recomputed all 22 median rows independently.
+Two formal five-run measurements exist for phase 6. Each case runs in five fresh processes and
+values are medians. The recorder is `scripts/phase6_perf.py` and the independent auditor is
+`scripts/phase6_perf_audit.py`; case contracts are in [phase6-README.md](phase6-README.md).
 
-**Machine:** 12th Gen Intel Core i7-12700H, 20 logical CPUs (14 cores), 62 GB,
-Linux 7.0.0. Local desktop workstation: no build, test, fuzz or validation jobs
-ran during measurement, but the desktop session (file indexer, browser) stayed
-open. Rust 1.99.0 release builds; Python 3.12.13 and Node with the pinned oracles.
-Local evidence: `../local-work/phase6-local-20261004/perf-final/run-01/` (gates
-049 measurement, 051 audit).
+- **v3** (2026-10-05 morning, source of the PLAN-text delivery `6297998`). Measured in a quiet
+  window: 1-minute load about 1–2. Gates 049/051.
+- **v5** (2026-10-06, final strict source `8cd6d66`, with the full codec ledgers). Measured at
+  CPU weight 10000 while the desktop and other user agents kept running: load median 5.2, peak 17.
+  Gates 078/079. The audit re-verified 2,918 frozen files, 110 invocations, 220 raw streams and
+  9,215 archived output members, and recomputed all 22 medians.
+
+The v5 run was slowed by outside load. The original programs, which did not change, ran about
+1.33× slower than in the quiet v3 window (export-rs 88.4 s against 66.3 s; the Python catalogue
+48.0 s against 43.5 s). An interleaved A/B run therefore compares v3 and v5 directly under
+identical conditions: gate 080, `../local-work/phase6-local-20261004/perf-ab/ab.py`, five rounds
+alternating A and B, load 1.7–7.1.
+
+**Machine:** 12th Gen Intel Core i7-12700H, 20 logical CPUs (14 cores), 62 GB, Linux 7.0.0;
+Rust 1.99.0 release builds with all features; Python 3.12.13 and Node with the pinned oracles.
 
 ## PLAN §10 targets
 
-| Task | Target | Median | Result |
-| --- | --- | --- | --- |
-| Parse `TongPixelSans14Large-SC.bdf` (5.7 MB, 38,653 glyphs), single thread | ≤ 100 ms | 53.3 ms (public `read` 49.2 ms) | pass |
-| Same file → PCF | ≤ 200 ms | 88.2 ms | pass |
-| Same file → OTB | ≤ 200 ms | 119.9 ms | pass |
-| Same file → yaff | ≤ 200 ms | 144.9 ms | pass |
-| Same file → square TTF (with `glyf`) | ≤ 1 s | 449.4 ms in-process; 653.6 ms CLI pipeline | pass |
-| Full Tong export (8 vector families × TTF/OTF/WOFF2 with `locl`, 20 PCF, 20 OTB), default settings | ≤ 40 s | 32.2 s (`fontpixel batch`, default options) | pass |
-| Unifont 57,086 + Tong Latin merge → 57,106-glyph BDF with full report | < 1 s | 0.36 s whole process | pass |
-| Catalogue: all 34 sources → 173 downloads + 8 family ZIPs | report | 5.50 s native vs 43.54 s original Python | 7.9× faster |
+| Task | Target | v3 quiet | v5 under load | A/B v3 → v5 (same load) | Result |
+| --- | --- | --- | --- | --- | --- |
+| Parse full SC BDF (5.7 MB, 38,653 glyphs), single thread | ≤ 100 ms | 53.3 ms | 57.2 ms | 59.5 → 59.9 ms | pass |
+| → PCF | ≤ 200 ms | 88.2 ms | 94.5 ms | 93.1 → 93.4 ms | pass |
+| → OTB | ≤ 200 ms | 119.9 ms | 130.3 ms | 123.1 → 134.7 ms (+9 %) | pass |
+| → yaff | ≤ 200 ms | 144.9 ms | 150.3 ms | 145.3 → 149.7 ms | pass |
+| → square TTF (with `glyf`) | ≤ 1 s | 449.4 ms; CLI 653.6 ms | 500.1 ms; CLI 597.1 ms | 490.7 → 497.8 ms | pass |
+| Full Tong export (8 vector families × TTF/OTF/WOFF2 with `locl`, 20 PCF, 20 OTB), `fontpixel batch` defaults | ≤ 40 s | 32.2 s | 43.7 s | 30.1 → 30.6 s | pass on the A/B and quiet runs; the 43.7 s formal v5 median reflects outside load |
+| Unifont 57,086 + Tong Latin merge → 57,106-glyph BDF with full report | < 1 s | 0.36 s | 0.36 s | 0.40 → 0.44 s | pass |
+| Catalogue: 34 sources → 173 downloads + 8 ZIPs | report | 5.50 s vs Python 43.54 s | 5.74 s vs Python 48.04 s | — | 7.9–8.4× faster |
 
-Conversion times include parsing and destroying the temporary model and read
-report; returned bytes are written outside the inner timer.
+Conversion times include parsing and destroying the temporary model and read report; returned
+bytes are written outside the inner timer. The strict ledgers cost about 9 % on BDF→OTB (embedded
+writer accounting) and nothing measurable elsewhere.
 
-## Full Tong export variants
+## Full Tong export variants (v5 formal)
 
 | Profile | Median wall | 8 WOFF2 total | Note |
 | --- | --- | --- | --- |
-| `fontpixel batch`, defaults (quality 11, 2 WOFF2 threads, 4 workers) | 32.2 s | 8,753,280 B | the default path; ≤ 40 s target |
-| original `tools/export-rs` | 66.3 s | 7,460,280 B | prepare 28.0 s, vectors 38.4 s |
-| native API example, default (quality 11, 1 thread) | 79.8 s | 8,781,608 B | bitmap 49.6 s + vector 20.6 s, families in sequence |
-| native API, WOFF2 quality 8 / 5 | 62.1 s / 57.2 s | 10,252,448 / 11,147,708 B | vector stage 2.5 s / 2.0 s |
-| native API, serial (1 job) | 208.0 s | 8,781,608 B | single-threaded baseline |
-| native API, 2 jobs × 4 threads | 101.7 s | 8,753,724 B | |
-| native API, dot reuse literal / rows | 119.6 s / 88.3 s | 7,634,592 / 7,758,360 B | smaller WOFF2, slower than the default pattern reuse |
+| `fontpixel batch`, defaults (quality 11, 2 WOFF2 threads, 4 workers) | 43.7 s (A/B 30.6 s) | 8,753,280 B | default path |
+| original `tools/export-rs` | 88.4 s (v3 quiet 66.3 s) | 7,457,432 B | prepare + vectors |
+| native API example, default (quality 11, 1 thread) | 111.2 s | 8,781,608 B | families in sequence |
+| native API, WOFF2 quality 8 / 5 | 68.7 s / 77.1 s | 10,252,448 / 11,147,708 B | |
+| native API, serial (1 job) | 265.2 s | 8,781,608 B | single-threaded baseline |
+| native API, 2 jobs × 4 WOFF2 threads | 125.5 s | 8,753,724 B | needs an explicit 400 MiB per-call WOFF2 budget (minimum 385.75 MiB): four concurrent quality-11 Brotli workers exceed the 256 MiB default |
+| native API, dot reuse literal / rows | 149.1 s / 122.1 s | 7,634,592 / 7,758,360 B | smaller WOFF2, slower |
 
-The dot-reuse setting trades size for time: literal outlines compress to 13% smaller
-WOFF2 than the default pattern reuse but take 1.5× as long. export-rs WOFF2 output
-is 15% smaller than the default.
+Default batch and default API outputs are byte-identical for 76 of 84 artifacts. The 8 WOFF2 files
+differ only in the Brotli stream (2 threads against 1) and decompress to identical sfnt fonts.
+literal outlines give 13 % smaller WOFF2 than the default pattern reuse at 1.3–1.5× the time.
 
-The API example builds the families in sequence. The batch CLI schedules all 64
-exports across workers, which is why it is faster than the same work through the
-example. Default batch and default API outputs are byte-identical for 76 of 84
-artifacts (correctness gates 100/101). The 8 WOFF2 files differ because the CLI
-compresses with 2 Brotli threads by default and the API example with 1. All 8
-decompress (fontTools) to byte-identical sfnt fonts; only the Brotli stream differs.
-
-## Single operations versus bdfparser (Python) and bdfparser-js (Node)
-
-Same 38,653-glyph file. Rust columns are in-process medians; the compat column is
-the bdfparser-compatible Rust API.
+## Single operations versus bdfparser (Python) and bdfparser-js (Node), v5 formal
 
 | Operation | Rust native | Rust compat | Python bdfparser | bdfparser-js |
 | --- | --- | --- | --- | --- |
-| Parse | 53.3 ms | 124.1 ms | 437.4 ms | 244.5 ms |
-| Write BDF | 36.5 ms | 77.8 ms | 58.1 ms | 48.0 ms |
-| Write PCF | 32.4 ms | 103.5 ms | 436.6 ms | 569.1 ms |
-| Write TTF | 401.1 ms | 1,094.0 ms | 9,258.4 ms | 1,223.0 ms |
-| Render a 2,000-character line | 0.8 ms | 75.8 ms | 52.6 ms | 11.4 ms |
-| `drawall` (mode 1) | 17.4 ms | 117.6 ms | 9,423.0 ms | 2,583.1 ms |
-| Crop a 64×64 bitmap to 31×31 | 0.55 µs | 0.37 µs | 17.6 µs | 11.2 µs |
-| Concat two 64×64 bitmaps | 0.75 µs | 1.04 µs | 69.0 µs | 50.3 µs |
+| Parse | 57.2 ms | 136.1 ms | 497.8 ms | 289.8 ms |
+| Write BDF | 39.8 ms | 89.2 ms | 63.4 ms | 54.2 ms |
+| Write PCF | 35.2 ms | 110.0 ms | 509.6 ms | 691.1 ms |
+| Write TTF | 452.2 ms | 1,408.5 ms | 12,002.9 ms | 1,387.4 ms |
+| Render a 2,000-character line | 0.9 ms | 91.2 ms | 57.1 ms | 12.2 ms |
+| `drawall` (mode 1) | 18.5 ms | 135.1 ms | 10,148.8 ms | 2,993.8 ms |
+| Crop a 64×64 bitmap to 31×31 | 0.47 µs | 0.48 µs | 21.9 µs | 8.7 µs |
+| Concat two 64×64 bitmaps | 0.78 µs | 1.20 µs | 67.7 µs | 87.8 µs |
 
-The compat layer keeps bdfparser's row-string semantics, so it is slower than the
-native API throughout. Against the originals it is faster at parsing, PCF, TTF and
-`drawall`, but slower at writing BDF than both (77.8 ms vs 58.1/48.0 ms) and slower
-at rendering a text line than both (75.8 ms vs 52.6/11.4 ms). These single-call
-numbers exclude any binding overhead and feed the phase 7/8 decision on whether
-bindings are worth using as an accelerator.
+The compat layer keeps bdfparser's row-string semantics, so it is slower than the native API
+throughout. Against the originals it is faster at parsing, PCF, TTF (versus Python) and
+`drawall`, but slower than both at writing BDF and at rendering a text line, and about equal to
+bdfparser-js at writing TTF. These single-call numbers exclude any binding overhead.
 
-## fontTools comparisons
+## fontTools comparisons (v5 formal)
 
 | Task | Rust | fontTools | Ratio |
 | --- | --- | --- | --- |
-| Full SC → square TTF (Tong `python_reference.py`) | 0.75 s | 12.82 s | 17× |
-| WOFF2 of the same square sfnt (quality 11, 1 worker) | 9.58 s encode | 25.33 s encode | 2.6× |
-| WOFF2 of the same Latin dot sfnt | 1.02 s encode | 1.66 s encode | 1.6× |
+| Full SC → square TTF (Tong `python_reference.py`) | 0.70 s | 13.38 s | 19× |
+| WOFF2 of the same square sfnt (quality 11, 1 worker) | 10.04 s encode | 25.94 s encode | 2.6× |
+| WOFF2 of the same Latin dot sfnt | 1.03 s encode | 1.70 s encode | 1.6× |
 
-WOFF2 sizes and the acceleration options are recorded in the W2.5 section below
-and in the archived outputs. The catalogue's production `opf_vector` extension
-was not supplied, so its vector side uses the original fontTools fallback.
+The catalogue's production `opf_vector` extension was not supplied, so its vector side uses the
+original fontTools fallback.
 
 # W1.1 core benchmark report
 

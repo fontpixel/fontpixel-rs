@@ -1,114 +1,114 @@
-# Phase 6 final ASAN fuzz campaign
+# Phase 6 final ASAN fuzz campaign (strict source)
 
-Label `phase6-final-20261005T040104Z` (gate 048), evaluated 2026-10-05T05:22:59.119041+00:00. Criterion: exit==0 and no crash-/timeout-/oom-/leak- artifacts and elapsed>=required and libFuzzer final stats present with executions>0
+Label `phase6-strict-v5-20261005T225900Z` (gate 077) on the final strict source `8cd6d66`, evaluated 2026-10-06T00:50:51.241808+00:00. Criterion: exit==0 and no crash-/timeout-/oom-/leak- artifacts and elapsed>=required and libFuzzer final stats present with executions>0
 
-Limits: libFuzzer `-max_total_time=610`, `-rss_limit_mb=2048`, `-timeout=10`, 16 targets in parallel; AddressSanitizer with leak detection (defaults).
+Limits: libFuzzer `-max_total_time=610`, `-rss_limit_mb=2048`, `-timeout=10`, 12 targets in parallel; AddressSanitizer with leak detection (defaults).
 
-Result: 104/104 targets passed, 0 failed, 301,696,538 executions in total. Every one of the 99 reader IDs is reached by at least one target (see `fuzz-final.json` and the inventory in local-work).
+Result: 104/104 targets passed, 0 failed, 298,741,042 executions in total. Every one of the 99 reader IDs is reached by at least one target. Earlier campaigns on superseded sources (2026-10-05: 301,696,538 and 261,993,213 executions) also passed 104/104.
 
 | Target | Reader entry points | Also reaches | Profile | Elapsed (s) | Executions | cov | ft | Peak RSS (MB) | Exit |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|
-| bdf | bdf |  | baseline | 612.1 | 262,433 | 3734 | 16320 | 583 | 0 |
-| pcf | pcf |  | baseline | 611.6 | 1,020,044 | 4822 | 15572 | 485 | 0 |
-| yaff | yaff |  | baseline | 611.3 | 1,247,382 | 5918 | 24760 | 535 | 0 |
-| sfnt |  | ttf, otf | baseline | 611.6 | 2,613,786 | 3017 | 8767 | 497 | 0 |
-| glyf |  | ttf | baseline | 611.6 | 1,925,042 | 1528 | 6667 | 494 | 0 |
-| compat_ttf |  | ttf | baseline | 612.1 | 37,389 | 3588 | 13104 | 750 | 0 |
-| cff |  | otf | baseline | 611.5 | 3,510,249 | 2824 | 8406 | 463 | 0 |
-| embedded_bitmap | otb, bdat |  | embedded-only | 611.9 | 2,839,732 | 4776 | 11761 | 484 | 0 |
-| color_bitmap | color |  | color-only | 611.6 | 182,705 | 6060 | 22431 | 495 | 0 |
-| woff1 | woff |  | baseline | 611.3 | 5,887,218 | 998 | 3173 | 391 | 0 |
-| woff2 | woff2 |  | baseline | 611.3 | 1,650,868 | 3633 | 12884 | 468 | 0 |
-| gsub |  | ttf, otf | baseline | 611.4 | 3,688,456 | 2017 | 7564 | 580 | 0 |
-| subset |  | ttf, otf | baseline | 611.8 | 3,153,871 | 6105 | 17243 | 496 | 0 |
-| vector_raster | vector-raster, ttf, otf, woff, woff2, ttc |  | baseline | 611.5 | 375,842 | 10561 | 32953 | 590 | 0 |
-| collection | ttc | woff, woff2 | baseline | 611.3 | 2,325,593 | 1076 | 2388 | 410 | 0 |
-| svg | svg |  | baseline | 611.3 | 1,182,425 | 4643 | 17671 | 486 | 0 |
-| hex | hex |  | baseline | 611.6 | 2,760,018 | 1041 | 5349 | 474 | 0 |
-| psf | psf |  | baseline | 611.4 | 767,058 | 1209 | 5008 | 436 | 0 |
-| fnt | fnt |  | baseline | 611.6 | 481,520 | 1678 | 5095 | 438 | 0 |
-| fon | fon | fnt | fon-only | 612.0 | 10,552,416 | 685 | 1250 | 561 | 0 |
-| image | image |  | image-c | 611.8 | 1,730,981 | 12135 | 38737 | 688 | 0 |
-| c | c |  | c-only | 611.5 | 416,248 | 7455 | 28425 | 556 | 0 |
-| kbitx | kbitx |  | kbitx-only | 611.5 | 1,195,317 | 5044 | 19641 | 500 | 0 |
-| pbf | pbf |  | pbf-only | 611.6 | 1,605,536 | 1586 | 6212 | 457 | 0 |
-| hbf | hbf |  | hbf-only | 611.7 | 9,795,926 | 2621 | 7545 | 485 | 0 |
-| draw | draw |  | draw-only | 611.7 | 2,121,425 | 1104 | 4851 | 470 | 0 |
-| raw | raw |  | raw-only | 611.6 | 342,217 | 1139 | 4378 | 420 | 0 |
-| cpi | cpi |  | cpi-only | 611.6 | 92,308 | 1973 | 8272 | 455 | 0 |
-| pf2 | pf2 |  | pf2-only | 612.0 | 3,360,612 | 1995 | 4678 | 556 | 0 |
-| fontx2 | fontx2 |  | fontx2-only | 611.5 | 335,253 | 1596 | 5282 | 439 | 0 |
-| hzk | hzk |  | hzk-only | 611.3 | 234,962 | 1191 | 4257 | 405 | 0 |
-| nfnt | nfnt |  | nfnt-only | 611.8 | 1,056,908 | 3617 | 11738 | 519 | 0 |
-| bmfont | bmfont |  | bmfont-only | 611.3 | 3,606,738 | 8196 | 26892 | 464 | 0 |
-| sfd | sfd |  | sfd-only | 611.8 | 2,333,571 | 2284 | 11342 | 533 | 0 |
-| kbits | kbits |  | kbits-only | 611.8 | 4,929,609 | 1383 | 4547 | 503 | 0 |
-| pk | pk |  | pk-only | 611.7 | 1,587,343 | 1418 | 5416 | 441 | 0 |
-| gf | gf |  | gf-only | 611.3 | 7,408,167 | 1483 | 3433 | 512 | 0 |
-| plan9 | plan9 |  | plan9-only | 612.0 | 12,645,394 | 2423 | 7467 | 498 | 0 |
-| amiga | amiga |  | amiga-only | 611.2 | 4,014,975 | 2106 | 5680 | 361 | 0 |
-| gem | gem |  | gem-only | 613.9 | 981,557 | 1754 | 5933 | 435 | 0 |
-| snf | snf |  | snf-only | 611.7 | 5,846,736 | 1688 | 6344 | 486 | 0 |
-| vfont | vfont |  | vfont-only | 611.3 | 983,988 | 1271 | 4604 | 460 | 0 |
-| fzx | fzx |  | fzx-only | 611.4 | 1,095,763 | 1219 | 2158 | 373 | 0 |
-| figlet | figlet |  | figlet-only | 611.7 | 382,747 | 1684 | 6108 | 426 | 0 |
-| hanfont | hanfont |  | hanfont-only | 611.6 | 2,818 | 827 | 835 | 325 | 0 |
-| iigs | iigs |  | iigs-only | 611.4 | 503,081 | 1820 | 4256 | 572 | 0 |
-| drcs | drcs |  | drcs-only | 611.6 | 2,218,771 | 1374 | 5764 | 428 | 0 |
-| palm | palm |  | palm-only | 611.6 | 201,789 | 3077 | 13156 | 483 | 0 |
-| gdr | gdr |  | gdr-only | 611.8 | 496,470 | 2406 | 7433 | 339 | 0 |
-| dosstart | dosstart |  | dosstart-only | 611.6 | 1,697,947 | 1561 | 5730 | 447 | 0 |
-| edwin | edwin |  | edwin-only | 611.7 | 4,607,359 | 1517 | 6108 | 444 | 0 |
-| mkwinfont | mkwinfont |  | mkwinfont-only | 611.8 | 1,732,359 | 1585 | 6307 | 470 | 0 |
-| psf2txt | psf2txt |  | psf2txt-only | 612.0 | 4,098,606 | 1882 | 7488 | 510 | 0 |
-| pcr | pcr |  | pcr-only | 611.6 | 2,258,549 | 893 | 926 | 381 | 0 |
-| plus3dos | plus3dos |  | plus3dos-only | 611.4 | 4,119,217 | 1171 | 1235 | 367 | 0 |
-| drhalo | drhalo |  | drhalo-only | 611.5 | 132,725 | 1243 | 4661 | 415 | 0 |
-| writeon | writeon |  | writeon-only | 611.5 | 7,031,656 | 1108 | 3399 | 398 | 0 |
-| daisy | daisy |  | daisy-only | 611.7 | 814,247 | 1506 | 2334 | 453 | 0 |
-| polyprint | polyprint |  | polyprint-only | 611.6 | 156,933 | 1317 | 1440 | 364 | 0 |
-| printshop | printshop |  | printshop-only | 611.5 | 1,087,845 | 1231 | 1481 | 361 | 0 |
-| tasprint | tasprint |  | tasprint-only | 611.6 | 364,360 | 1381 | 3728 | 419 | 0 |
-| pxl | pxl |  | pxl-only | 611.6 | 2,029,444 | 1814 | 7011 | 536 | 0 |
-| signum | signum |  | signum-only | 611.9 | 1,033,180 | 1510 | 6292 | 463 | 0 |
-| rockbox_bitmap | rockbox |  | rockbox-only | 611.9 | 1,018,733 | 1901 | 7729 | 470 | 0 |
-| u8m_bitmap | u8m |  | u8m-only | 611.7 | 1,830,862 | 1567 | 6587 | 513 | 0 |
-| cybiko_bitmap | cybiko |  | cybiko-only | 611.7 | 2,915,702 | 1064 | 3630 | 461 | 0 |
-| playdate_bitmap | playdate |  | playdate-only | 611.4 | 5,857,268 | 6027 | 21286 | 497 | 0 |
-| hmzk_bitmap | hmzk |  | hmzk-only | 611.7 | 9,194,410 | 842 | 2024 | 417 | 0 |
-| sbf_bitmap | sbf |  | sbf-only | 611.3 | 2,362,923 | 991 | 3706 | 473 | 0 |
-| fbit | fbit |  | fbit-only | 611.7 | 271,278 | 2278 | 7492 | 453 | 0 |
-| lisa | lisa |  | lisa-only | 611.3 | 2,594,018 | 1942 | 7410 | 433 | 0 |
-| mgtk | mgtk |  | mgtk-only | 611.5 | 209,832 | 1010 | 2688 | 487 | 0 |
-| qpf | qpf |  | qpf-only | 611.7 | 1,943,638 | 1332 | 4483 | 466 | 0 |
-| qpf2 | qpf2 |  | qpf2-only | 612.0 | 395,797 | 2494 | 8935 | 452 | 0 |
-| beos | beos |  | beos-only | 612.0 | 4,805,561 | 1498 | 5336 | 489 | 0 |
-| oberon | oberon |  | oberon-only | 611.6 | 3,442,011 | 1214 | 3893 | 439 | 0 |
-| symbos | symbos |  | symbos-only | 611.7 | 1,016,188 | 1314 | 4840 | 496 | 0 |
-| wsfont | wsfont |  | wsfont-only | 611.4 | 9,315,694 | 1326 | 3675 | 480 | 0 |
-| bbc | bbc |  | bbc-only | 611.5 | 6,012,098 | 916 | 2871 | 435 | 0 |
-| wyse | wyse |  | wyse-only | 611.8 | 10,570,974 | 1087 | 3363 | 513 | 0 |
-| grasp | grasp |  | grasp-only | 611.5 | 8,386,529 | 838 | 1592 | 567 | 0 |
-| hrcg | hrcg |  | hrcg-only | 611.6 | 340,141 | 1005 | 1143 | 379 | 0 |
-| xbin | xbin |  | xbin-only | 611.4 | 897,783 | 858 | 1135 | 409 | 0 |
-| consoleet | consoleet |  | consoleet-only | 612.3 | 14,219,229 | 1208 | 1954 | 510 | 0 |
-| zapfont | zapfont |  | zapfont-only | 611.3 | 89,084 | 1811 | 5529 | 371 | 0 |
-| comfont | comfont |  | comfont-only | 611.7 | 330,406 | 1316 | 1955 | 404 | 0 |
-| vtfont | vtfont |  | vtfont-only | 611.9 | 769,071 | 2050 | 8945 | 447 | 0 |
-| geos | geos |  | geos-only | 611.5 | 897,536 | 2386 | 8720 | 440 | 0 |
-| gpi | gpi |  | gpi-only | 611.5 | 7,721,322 | 2118 | 5414 | 471 | 0 |
-| pcgeos | pcgeos |  | pcgeos-only | 611.8 | 3,538,346 | 1672 | 4880 | 508 | 0 |
-| pilfont_bitmap | pilfont |  | pilfont-only | 611.5 | 6,399,377 | 3695 | 9244 | 445 | 0 |
-| sfont_bitmap | sfont |  | sfont-only | 611.6 | 1,075,480 | 6106 | 15044 | 447 | 0 |
-| vlw_bitmap | vlw |  | vlw-only | 611.7 | 7,330,857 | 1274 | 3261 | 437 | 0 |
-| imageset_bitmap | image |  | imageset-only | 611.5 | 6,053,505 | 4733 | 14156 | 456 | 0 |
-| ssfn | ssfn |  | ssfn-only | 611.4 | 1,770,767 | 3504 | 12836 | 444 | 0 |
-| pfr | pfr |  | pfr-only | 611.8 | 17,241,313 | 1932 | 4384 | 471 | 0 |
-| catalyst | catalyst |  | catalyst-only | 611.6 | 257,148 | 1361 | 4487 | 433 | 0 |
-| chiwriter | chiwriter |  | chiwriter-only | 611.3 | 230,185 | 1604 | 8502 | 478 | 0 |
-| dashen | dashen |  | dashen-only | 611.7 | 1,052,213 | 2186 | 10963 | 498 | 0 |
-| hppcl | hppcl |  | hppcl-only | 611.6 | 1,132,170 | 2005 | 10997 | 487 | 0 |
-| prebuilt | prebuilt |  | prebuilt-only | 611.9 | 1,077,235 | 1584 | 3611 | 464 | 0 |
-| riscos | riscos |  | riscos-only | 611.6 | 3,639,882 | 2969 | 11282 | 474 | 0 |
-| xerox | xerox |  | xerox-only | 611.7 | 3,766,387 | 2473 | 7310 | 458 | 0 |
-| transport | raw, bdf, ssfn |  | transport-only | 611.5 | 567,901 | 7134 | 32279 | 510 | 0 |
+| bdf | bdf |  | baseline | 612.9 | 259,140 | 3739 | 16190 | 567 | 0 |
+| pcf | pcf |  | baseline | 611.8 | 938,281 | 4875 | 15564 | 488 | 0 |
+| yaff | yaff |  | baseline | 611.8 | 950,360 | 5833 | 23559 | 540 | 0 |
+| sfnt |  | ttf, otf | baseline | 612.7 | 2,168,276 | 3052 | 8628 | 498 | 0 |
+| glyf |  | ttf | baseline | 612.3 | 1,868,665 | 1636 | 6882 | 498 | 0 |
+| compat_ttf |  | ttf | baseline | 611.7 | 44,001 | 3756 | 13307 | 767 | 0 |
+| cff |  | otf | baseline | 611.9 | 4,539,703 | 2628 | 7657 | 454 | 0 |
+| embedded_bitmap | otb, bdat |  | embedded-only | 612.1 | 2,888,927 | 5300 | 12630 | 490 | 0 |
+| color_bitmap | color |  | color-only | 611.3 | 188,639 | 6656 | 24379 | 485 | 0 |
+| woff1 | woff |  | baseline | 611.2 | 5,970,056 | 1118 | 3400 | 398 | 0 |
+| woff2 | woff2 |  | baseline | 611.5 | 1,426,321 | 3796 | 12987 | 465 | 0 |
+| gsub |  | ttf, otf | baseline | 611.5 | 21,113,700 | 1688 | 4642 | 523 | 0 |
+| subset |  | ttf, otf | baseline | 612.0 | 3,036,399 | 6045 | 16571 | 466 | 0 |
+| vector_raster | vector-raster, ttf, otf, woff, woff2, ttc |  | baseline | 612.6 | 354,047 | 10676 | 32919 | 586 | 0 |
+| collection | ttc | woff, woff2 | baseline | 611.4 | 3,350,827 | 1353 | 2878 | 427 | 0 |
+| svg | svg |  | baseline | 611.7 | 983,116 | 4694 | 17489 | 493 | 0 |
+| hex | hex |  | baseline | 612.0 | 3,345,933 | 1049 | 5394 | 522 | 0 |
+| psf | psf |  | baseline | 611.5 | 777,795 | 1229 | 4897 | 420 | 0 |
+| fnt | fnt |  | baseline | 611.3 | 384,332 | 1667 | 4984 | 422 | 0 |
+| fon | fon | fnt | fon-only | 613.2 | 10,625,396 | 688 | 1279 | 559 | 0 |
+| image | image |  | image-c | 611.4 | 1,747,531 | 12070 | 38975 | 693 | 0 |
+| c | c |  | c-only | 611.2 | 421,187 | 7432 | 28342 | 560 | 0 |
+| kbitx | kbitx |  | kbitx-only | 611.3 | 1,238,202 | 5039 | 19418 | 492 | 0 |
+| pbf | pbf |  | pbf-only | 611.6 | 1,682,392 | 1584 | 6200 | 454 | 0 |
+| hbf | hbf |  | hbf-only | 611.8 | 7,340,894 | 2627 | 7530 | 459 | 0 |
+| draw | draw |  | draw-only | 611.3 | 1,835,734 | 1104 | 4841 | 487 | 0 |
+| raw | raw |  | raw-only | 611.6 | 331,084 | 1140 | 4379 | 417 | 0 |
+| cpi | cpi |  | cpi-only | 612.0 | 109,804 | 1983 | 7727 | 438 | 0 |
+| pf2 | pf2 |  | pf2-only | 612.8 | 4,996,223 | 2099 | 4746 | 557 | 0 |
+| fontx2 | fontx2 |  | fontx2-only | 611.3 | 427,925 | 1598 | 5295 | 443 | 0 |
+| hzk | hzk |  | hzk-only | 611.9 | 245,534 | 1193 | 4277 | 408 | 0 |
+| nfnt | nfnt |  | nfnt-only | 611.5 | 1,283,070 | 3617 | 11667 | 535 | 0 |
+| bmfont | bmfont |  | bmfont-only | 611.2 | 3,089,349 | 8106 | 26755 | 464 | 0 |
+| sfd | sfd |  | sfd-only | 611.5 | 2,053,534 | 2281 | 11446 | 507 | 0 |
+| kbits | kbits |  | kbits-only | 612.0 | 3,831,436 | 1382 | 4607 | 518 | 0 |
+| pk | pk |  | pk-only | 612.1 | 2,238,990 | 1529 | 5454 | 498 | 0 |
+| gf | gf |  | gf-only | 611.9 | 6,684,508 | 1636 | 3615 | 488 | 0 |
+| plan9 | plan9 |  | plan9-only | 611.9 | 11,765,310 | 2486 | 7636 | 494 | 0 |
+| amiga | amiga |  | amiga-only | 611.8 | 4,301,676 | 2103 | 5766 | 487 | 0 |
+| gem | gem |  | gem-only | 611.8 | 1,111,693 | 1634 | 5323 | 416 | 0 |
+| snf | snf |  | snf-only | 612.0 | 4,223,337 | 1697 | 6357 | 449 | 0 |
+| vfont | vfont |  | vfont-only | 611.9 | 762,504 | 1274 | 4623 | 451 | 0 |
+| fzx | fzx |  | fzx-only | 612.1 | 1,033,168 | 1222 | 2164 | 372 | 0 |
+| figlet | figlet |  | figlet-only | 611.3 | 331,426 | 1680 | 6113 | 423 | 0 |
+| hanfont | hanfont |  | hanfont-only | 612.9 | 2,968 | 827 | 835 | 324 | 0 |
+| iigs | iigs |  | iigs-only | 611.5 | 598,906 | 1821 | 4379 | 592 | 0 |
+| drcs | drcs |  | drcs-only | 611.3 | 2,102,446 | 1374 | 5939 | 421 | 0 |
+| palm | palm |  | palm-only | 611.7 | 178,368 | 3078 | 12944 | 484 | 0 |
+| gdr | gdr |  | gdr-only | 611.6 | 398,520 | 2416 | 7594 | 347 | 0 |
+| dosstart | dosstart |  | dosstart-only | 611.8 | 1,628,700 | 1567 | 5770 | 443 | 0 |
+| edwin | edwin |  | edwin-only | 611.6 | 4,001,537 | 1522 | 6113 | 468 | 0 |
+| mkwinfont | mkwinfont |  | mkwinfont-only | 611.8 | 1,722,007 | 1595 | 6319 | 475 | 0 |
+| psf2txt | psf2txt |  | psf2txt-only | 612.2 | 3,142,805 | 1918 | 7465 | 495 | 0 |
+| pcr | pcr |  | pcr-only | 611.8 | 1,775,654 | 896 | 929 | 380 | 0 |
+| plus3dos | plus3dos |  | plus3dos-only | 611.8 | 3,658,712 | 1176 | 1240 | 367 | 0 |
+| drhalo | drhalo |  | drhalo-only | 611.2 | 133,036 | 1248 | 4679 | 410 | 0 |
+| writeon | writeon |  | writeon-only | 612.2 | 5,742,271 | 1113 | 3424 | 501 | 0 |
+| daisy | daisy |  | daisy-only | 612.4 | 765,542 | 1537 | 2787 | 442 | 0 |
+| polyprint | polyprint |  | polyprint-only | 611.8 | 148,785 | 1323 | 1447 | 364 | 0 |
+| printshop | printshop |  | printshop-only | 611.7 | 982,040 | 1233 | 1485 | 360 | 0 |
+| tasprint | tasprint |  | tasprint-only | 611.8 | 319,530 | 1385 | 3747 | 414 | 0 |
+| pxl | pxl |  | pxl-only | 612.4 | 983,296 | 1822 | 7080 | 443 | 0 |
+| signum | signum |  | signum-only | 611.8 | 790,770 | 1513 | 6307 | 435 | 0 |
+| rockbox_bitmap | rockbox |  | rockbox-only | 611.7 | 1,067,978 | 1914 | 7818 | 561 | 0 |
+| u8m_bitmap | u8m |  | u8m-only | 611.4 | 1,604,856 | 1573 | 6661 | 507 | 0 |
+| cybiko_bitmap | cybiko |  | cybiko-only | 611.9 | 1,719,539 | 1066 | 3607 | 411 | 0 |
+| playdate_bitmap | playdate |  | playdate-only | 611.2 | 6,106,747 | 6051 | 21536 | 503 | 0 |
+| hmzk_bitmap | hmzk |  | hmzk-only | 611.9 | 7,936,140 | 845 | 2032 | 417 | 0 |
+| sbf_bitmap | sbf |  | sbf-only | 611.8 | 1,593,433 | 993 | 3919 | 447 | 0 |
+| fbit | fbit |  | fbit-only | 611.4 | 245,216 | 2279 | 7485 | 451 | 0 |
+| lisa | lisa |  | lisa-only | 611.8 | 4,127,856 | 1959 | 7505 | 461 | 0 |
+| mgtk | mgtk |  | mgtk-only | 612.2 | 165,708 | 1011 | 2662 | 425 | 0 |
+| qpf | qpf |  | qpf-only | 612.2 | 1,091,486 | 1332 | 4604 | 464 | 0 |
+| qpf2 | qpf2 |  | qpf2-only | 612.5 | 389,976 | 2511 | 9001 | 452 | 0 |
+| beos | beos |  | beos-only | 612.3 | 3,965,777 | 1501 | 5331 | 488 | 0 |
+| oberon | oberon |  | oberon-only | 611.8 | 4,324,865 | 1215 | 3824 | 441 | 0 |
+| symbos | symbos |  | symbos-only | 611.8 | 880,153 | 1317 | 4834 | 448 | 0 |
+| wsfont | wsfont |  | wsfont-only | 612.0 | 8,020,458 | 1312 | 3264 | 474 | 0 |
+| bbc | bbc |  | bbc-only | 612.0 | 4,916,420 | 918 | 2948 | 511 | 0 |
+| wyse | wyse |  | wyse-only | 611.9 | 13,416,065 | 1086 | 3295 | 451 | 0 |
+| grasp | grasp |  | grasp-only | 612.2 | 8,215,402 | 839 | 1661 | 519 | 0 |
+| hrcg | hrcg |  | hrcg-only | 612.0 | 326,616 | 1007 | 1145 | 378 | 0 |
+| xbin | xbin |  | xbin-only | 611.8 | 990,709 | 859 | 1114 | 402 | 0 |
+| consoleet | consoleet |  | consoleet-only | 611.5 | 12,788,974 | 1211 | 1962 | 514 | 0 |
+| zapfont | zapfont |  | zapfont-only | 611.9 | 94,176 | 1878 | 5686 | 366 | 0 |
+| comfont | comfont |  | comfont-only | 612.0 | 280,264 | 1317 | 1959 | 429 | 0 |
+| vtfont | vtfont |  | vtfont-only | 611.8 | 882,367 | 2053 | 8945 | 450 | 0 |
+| geos | geos |  | geos-only | 611.6 | 662,280 | 2362 | 8031 | 436 | 0 |
+| gpi | gpi |  | gpi-only | 611.8 | 8,803,783 | 2118 | 5422 | 508 | 0 |
+| pcgeos | pcgeos |  | pcgeos-only | 612.2 | 2,534,191 | 1680 | 4905 | 489 | 0 |
+| pilfont_bitmap | pilfont |  | pilfont-only | 611.7 | 5,377,063 | 3698 | 9476 | 447 | 0 |
+| sfont_bitmap | sfont |  | sfont-only | 611.3 | 1,181,478 | 6230 | 15579 | 432 | 0 |
+| vlw_bitmap | vlw |  | vlw-only | 611.9 | 5,756,145 | 1280 | 3248 | 456 | 0 |
+| imageset_bitmap | image |  | imageset-only | 611.4 | 6,332,346 | 4700 | 13826 | 458 | 0 |
+| ssfn | ssfn |  | ssfn-only | 611.3 | 2,298,842 | 3530 | 12990 | 461 | 0 |
+| pfr | pfr |  | pfr-only | 612.1 | 11,747,176 | 1934 | 4283 | 468 | 0 |
+| catalyst | catalyst |  | catalyst-only | 611.6 | 233,229 | 1362 | 4537 | 433 | 0 |
+| chiwriter | chiwriter |  | chiwriter-only | 612.2 | 231,116 | 1605 | 8528 | 455 | 0 |
+| dashen | dashen |  | dashen-only | 611.5 | 1,169,441 | 2194 | 11023 | 502 | 0 |
+| hppcl | hppcl |  | hppcl-only | 612.0 | 1,111,892 | 2011 | 10938 | 492 | 0 |
+| prebuilt | prebuilt |  | prebuilt-only | 612.1 | 800,126 | 1583 | 3618 | 459 | 0 |
+| riscos | riscos |  | riscos-only | 611.6 | 4,882,968 | 2966 | 11189 | 476 | 0 |
+| xerox | xerox |  | xerox-only | 612.2 | 2,467,642 | 2470 | 7297 | 468 | 0 |
+| transport | raw, bdf, ssfn |  | transport-only | 611.2 | 623,825 | 7128 | 32230 | 511 | 0 |

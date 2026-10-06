@@ -1,131 +1,117 @@
-# 第 6 阶段交付报告：CLI 完善、批量、文档、测速、健壮性、拼合
+# 第 6 阶段交付报告：CLI 完善、批量、文档、测速、健壮性、拼合（严格标准）
 
-日期：2026-10-05。用户在 2026-10-05 恢复本阶段，范围只做第 6 阶段。按 PLAN.md 原文
-验收（用户当天的决定，见下文「验收范围」）。第 7、8 阶段尚未开始，第 9 阶段未授权；
-没有 push、publish 或 deploy。
-
-逐轮过程、每个 gate 的命令与结果见 [本地接续记录](phase6-local.md)；暂停前的历史
-状态见 [暂停记录](../docs/LOCAL-PAUSE-20261005.zh.md)。本地证据目录为
-`../local-work/phase6-local-20261004/`（下称 WORK），gate 记录在 `WORK/gates/NNN-*/`，
-每个都有命令、源码前后快照、完整输出和退出码。
+日期：2026-10-06。最终源码 main `8cd6d66`，冻结二进制 v5。第 7、8、9 阶段尚未开始；只有本地提交，
+没有 push、publish 或 deploy。逐 gate 的命令和结果见 [本地接续记录](phase6-local.md)，本地证据目录
+`../local-work/phase6-local-20261004/`（下称 WORK），每个 gate 在 `WORK/gates/NNN-*/` 保存命令、源码
+前后快照、完整输出和退出码。
 
 ## 结论
 
-第 6 阶段的 PLAN 工作项 W6.1–W6.6 全部完成并通过验收：
+第 6 阶段按**严格标准**完成。PLAN 原文要求的 W6.1–W6.6 全部验收，严格标准的两项也已做到：
 
-- 完整 `scripts/check.sh` 通过：生成表、fmt、两个 Clippy profile `-D warnings`、
-  workspace 全 feature/默认/最小/BDF+PCF/CJK 测试、`cargo deny`。另有无警告 rustdoc
-  和 doctest。
-- 用冻结的 release 二进制完成全部真实字体对照，没有发现原生缺陷。
-- 104 个 fuzz 目标各跑 ASAN 10 分钟以上，全部无崩溃。
-- PLAN §10 全部性能硬目标在正式五轮测量中达标。
+1. **全账本**：每个编解码器自有的分配都在分配之前计入调用方的同一预算，释放后才退还；默认上限都没有提高。
+2. **追平**：默认行为和输出不变；用显式选项后，收录站和通格 OTB 与原程序的每一处差异，要么消除，
+   要么归入三类之一：原程序有损（不应照抄）、派生值、消费端限制。
 
-## 验收范围（用户 2026-10-05 决定）
+最终源码通过的检查：
 
-PLAN §9.6 原文要求：解压大小、字形数、单字形像素数、表大小等有可配上限且超限报错；
-每个读取器一个 fuzz 目标、各跑 ≥10 分钟；proptest 往返；clippy/fmt/deny 通过。
-这几项均已满足。
+- 完整 `scripts/check.sh`：731 个套件 3,759 项测试，两个 Clippy profile `-D warnings`，最小 CLI
+  feature Clippy，`api_quickstart` 运行，deny；
+- 无警告 rustdoc 和 doctest；
+- `api_quickstart` 的 9 个 feature profile 都能运行并通过 Clippy；
+- fontpixel 的 108 个 feature 加上不开 feature，共 109 种组合，各自单独跑 Clippy `-D warnings`（gate 075）；
+- 用冻结二进制做真实字体对照，没有原生缺陷；
+- 104 个 ASAN 目标，每个约 611 s，共 298,741,042 次执行，0 崩溃（gate 077）；
+- 默认负载巡检 109 个 case，没有一个因为多算而被拒；
+- PLAN §10 性能目标在安静窗口和 A/B 对比中都达标（见下文）。
 
-此前云端/Codex 协调者审计额外加入了两项门槛，它们不是 PLAN 原文，用户选择不作为验收条件：
+## 范围决定的经过（2026-10-05）
 
-- 各 codec 内部（WOFF/WOFF2、variants、subset 内部表、Brotli 编码器堆）的完整字节账本；
-  作为已知限制写入 [writer budget](../docs/w6.1-writer-budget.md#known-limitations-accepted-for-phase-6-2026-10-05)。
-- catalogue 下载与原 Python 输出逐项追平；差异按类别写入
-  [迁移说明](../docs/migration-fontpixel.md)（PLAN §11 要求写明差异和原因）。
-  SWIDTH 约定可用新选项 `--swidth-ppem` 复现。
+1. 用户恢复第 6 阶段后，先选择按 PLAN 原文验收，当天上午交付了 `6297998`。
+2. 之后用户要求「按那个更严的标准来」「一干到底」，第 9 阶段也包括在内。中途用户要求暂停一次，
+   恢复后又要求「第 6 阶段完成了再停止」。本报告对应的就是这个严格标准下的第 6 阶段。
 
 ## W6.1–W6.6 验收
 
-| 工作项 | 验收证据 |
+| 工作项 | 证据 |
 | --- | --- |
-| W6.1 `batch`/`diff`/`validate`/`charset`，帮助与示例 | 12 个子命令的 `--help` 都有示例；CLI 单元与集成测试全部通过；W62 文档回放用冻结 v3 二进制执行 40 条命令全部符合预期（18 个 CLI 冒烟 case、84 个 tiny 产物、各子命令帮助），gate 047；新增 `convert --swidth-ppem` 及 batch `options.swidth_ppem`（5 项 CLI 测试） |
-| W6.2 文档 | README、API、99 个格式页面齐全（`fontpixel formats --json` 的 99 个 ID 都有页面）；README 和 docs 中 105 处 CLI 示例的参数都与当前 `--help` 核对；`RUSTDOCFLAGS=-D warnings cargo doc` 和 doctest 通过；workspace `missing_docs` 配合 Clippy `-D warnings` 保证公共项都有说明；两份迁移说明已更新（catalogue 差异按类别和数量列出） |
-| W6.3 测速报告 | [benches/REPORT.md](../benches/REPORT.md)：22 个 case 各五个新进程，独立审计通过（gate 049/051），硬目标见下表 |
-| W6.4 健壮性 | 104 个 ASAN fuzz 目标覆盖全部 99 个读取器 ID，各跑约 611 秒，共 301,696,538 次执行，0 崩溃/超时/OOM/泄漏，源码前后一致（gate 048）；逐目标执行次数与覆盖率见 [phase6-validation/fuzz-final.md](phase6-validation/fuzz-final.md)；各类资源上限都有测试；proptest 往返测试保留 |
-| W6.5 拼合（库） | merge 单元/集成测试通过；Unifont 57,086 + Tong Latin → 57,106 字形，字形证明与来源审计 0 错误（gate 105–107） |
-| W6.6 拼合（CLI） | 通格真实地区拼合 4 个 profile × 20 个 case = 80/80 通过，900 个产物，0 字形/报告错误（gate 104）；57,106 字形拼合并写 BDF 0.36 s |
+| W6.1 `batch`/`diff`/`validate`/`charset`，帮助与示例 | 12 个子命令都有示例；CLI 测试全部通过；W62 文档回放 v5 跑了 40 条命令，全部符合预期（18 个 CLI 冒烟、84 个 tiny 产物、各子命令帮助），gate 160 |
+| W6.2 文档 | 99 个格式页面齐全；README/docs 的 CLI 示例和 `--help` 一致；rustdoc 无警告；迁移说明写了显式追平选项和剩余差异的分类 |
+| W6.3 测速报告 | [benches/REPORT.md](../benches/REPORT.md)：v3、v5 两次正式五轮测量，加 A/B 对比 |
+| W6.4 健壮性 | 见 [fuzz-final.md](phase6-validation/fuzz-final.md) 和 [default-sweep.md](phase6-validation/default-sweep.md)：<ul><li>ASAN 104/104 通过，逐目标的执行次数和覆盖率都有记录；</li><li>每类资源上限都有测试，另有 proptest；</li><li>全账本，见 [writer budget](../docs/w6.1-writer-budget.md#codec-working-ledgers-strict-phase-6-2026-10-05)</li></ul> |
+| W6.5 拼合（库） | Unifont 57,086 + Tong Latin → 57,106 字形，字形证明和来源审计 0 错误 |
+| W6.6 拼合（CLI） | 通格真实地区拼合 4 个 profile × 20 个 case = 80/80 通过；57,106 字形拼合写 BDF 用时 0.36 s |
 
-## PLAN §10 性能（正式五轮中位数）
+## 严格标准：单元与结果
 
-测试机：i7-12700H，20 逻辑 CPU，62 GB，Linux 7.0.0。测量时没有构建、测试或其他验证
-任务；桌面会话（文件索引、浏览器）未关闭，如实记录在测量结果里。
-
-| 任务 | 目标 | 中位数 |
+| 单元 | 内容 | 结果 |
 | --- | --- | --- |
-| 解析 SC 38,653 字形 | ≤ 100 ms | 53.3 ms |
-| → PCF / OTB / yaff | 各 ≤ 200 ms | 88.2 / 119.9 / 144.9 ms |
-| → 方点 TTF | ≤ 1 s | 449.4 ms（CLI 全流程 653.6 ms） |
-| 通格整套默认导出 | ≤ 40 s | 32.2 s（`fontpixel batch` 默认） |
-| 57,106 字形拼合写 BDF | < 1 s | 0.36 s |
-| 收录站全部下载 | 报告 | 5.50 s，原 Python 43.54 s |
+| A | WOFF1/WOFF2 全生命周期账本；Brotli 编码器堆在调用前按上界预留 | 质量 0–9 用由源码证明的上界；质量 10–11 用经验包络（816 个案例的计数分配器矩阵，余量 ≥1.54×），文档标明「经验、非证明」 |
+| B | subset 内部所有表共用一个账本 | 255 个 subset 案例、30 个 CFF 输出逐字节不变 |
+| C | variants 规划、导出和轮廓接入账本；规划后释放源模型并精确退还 | 默认 Tong variants 在 256 MiB 内完成，峰值 RSS 从 552 MB 降到 250 MB |
+| D | OTB/bdat 完整元数据显式选项（`--otb-*`） | Tong OTB parity profile：20/20 只剩 `head.checkSumAdjustment` 不同（表的字节相同，只是在文件里的顺序不同，属于派生值）；633,028 个字形像素全部一致 |
+| E、F | 收录站投影扩展、PCF 属性优先级、矢量和位图 TTF 的元数据选项、`.notdef` 策略 | explicit profile：173 个字体中 99 个通过，73 个未解决但全部已分类，1 个是消费端限制，0 个未分类 |
+| G | 所有权写出路线：`convert` 把模型交给轮廓写出器 | 完整 CJK 字体的 `convert` 到 WOFF2/OTF/WOFF/TTC 可在默认上限内完成，输出不变 |
+| H | 去掉 10 个写出器对模型的重复计费；CFF 流式编码 | SC→OTF 的最小预算从 214.7 MiB 降到 85.7 MiB；Unifont 拼合→OTF 可在默认上限内完成 |
+| I | 显式预算能抬高轮廓写出器的上限；merge/charset/`.gz` 走保留路线；pk/gf/zapfont 精确计费 | pk/gf 的「先分配后计费」已修正 |
+| J | pf2 精确账本；TeX 失败条目在计费后才分配 | SC→pf2 最小预算从 319 MiB 降到 131.9 MiB |
+| K | color（CBDT/sbix）走同一个精确账本 | SC→color 最小预算从 548.9 MiB 降到 219.9 MiB |
 
-与 bdfparser、bdfparser-js、fontTools、export-rs 的逐项对比，包括兼容层哪些操作反而更慢，
-见 [benches/REPORT.md](../benches/REPORT.md)。
+收尾时还修了这些问题：
 
-## 真实字体对照（冻结二进制 v2，gate 100–121）
+- yaff 写出器没有给首尾的 Unicode 空白加引号（proptest 发现），导致 U+00A0 往返丢失且没有报告；
+- `api_quickstart` 断言写错；
+- 精简 feature 组合下的死代码；
+- 一个有歧义的 rustdoc 链接。
 
-所有原生输出与 v1 逐字节相同；v3 只因文档变化重编译，通格 84 个产物与 v2 逐字节相同
-（gate 046）。
+## 真实字体对照（v4 全量重跑，v5 以输出一致沿用）
+
+v4（gate 122–146）全量重跑了下列配对验证。v5（gate 150–161）重新生成全部产物，字体和输出文件与 v4
+**逐字节相同**，所以 v4 的配对结论直接沿用；legacy parity 和 W62 回放在 v5 上重新跑过。
 
 | 对照 | 结果 |
 | --- | --- |
-| 通格 batch CLI 与 API，各 72 条记录 | 20 PCF FreeType 逐像素通过；20 OTB FreeType 逐像素全部一致（633,028 个字形），这正是 PLAN §9.4 对 OTB 的要求（「FreeType 逐像素一致」）。OTB 另有元数据差异（见下节），不在 §9.4 要求内；16 个矢量字体完整几何/度量/14,592 批 shaping 通过；16 个网页字体通过（8 个 OTS 拒绝全部来自原导出器） |
-| 通格地区拼合 | 80/80 通过 |
+| Tong batch CLI 与 API（各 72 条记录） | <ul><li>20 PCF、20 OTB FreeType 逐像素一致，PLAN §9.4 对 OTB 只要求这一项；</li><li>16 个矢量字体：cmap、hhea、OS/2 关键字段、name、轮廓栅格逐像素、14,592 批 locl 塑形，全部一致；</li><li>16 个网页字体通过</li></ul> |
+| Tong OTB parity profile | 见单元 D |
+| 通格地区拼合 | 80/80 |
 | Unifont 拼合 | 通过 |
 | SC 编解码 | 11/11，Rust、Python、Node 七个产物逐字节一致 |
-| SC 矢量、同一 sfnt 网页字体 | 38,654 字形全量几何与 912 批 shaping 通过；方点/圆点网页字体通过（首次执行） |
-| 收录站 173 个字体 + 8 个 ZIP | 8 个完全一致，164 个只有已分类差异（无新类别、无像素/字形集/cmap 差异），1 个是 Spleen 64px 在 FreeType 14ppem 下 U+2502 光栅溢出（消费端限制）；8 个 ZIP 打包结构全部通过 |
-| bdfparser 差分（legacy parity） | 67 个字符集表一致；2,000 random + 1,000 random_all + 41 探测 + 251 个语料文件：0 个新差异，7 个属于已登记的 K12-ragged-bitmap |
+| SC 矢量、同 sfnt 网页字体 | 38,654 字形几何加 912 批塑形；方点和圆点都通过 |
+| 收录站默认 profile | 8 个通过，164 个未解决（已文档化的类别），1 个是消费端限制 |
+| 收录站 explicit profile | 99 个通过；73 个未解决全部已分类：<ul><li>41 个 WOFF2 只差派生的校验和；</li><li>28 个 BDF 只差源 COMMENT（fontpixel 保留，原程序丢弃）；</li><li>4 个位图 TTF：原程序只保留已编码的字形；</li></ul>1 个是 Spleen64 的 FreeType error 98 |
+| bdfparser 差分 | 67 个表一致；2,000 random + 1,000 random_all + 41 probes + 251 个语料：0 个新差异，7 个是已登记的 K12 |
 
-PLAN §9.4 对矢量字体要求 cmap、字形数、hmtx/hhea/OS/2 关键字段、name 一致，轮廓栅格化逐像素一致，HarfBuzz `locl` 塑形一致；验证脚本 `benches/phase6_validate.py` 对这些逐项断言，16 对全部通过。
+## 性能（PLAN §10）
 
-### 通格 OTB 元数据差异（PLAN 未要求，如实列出）
+| 任务 | 目标 | v3 安静窗口 | v5 正式（有外部负载） | A/B v3→v5 |
+| --- | --- | --- | --- | --- |
+| 解析 SC | ≤100 ms | 53.3 ms | 57.2 ms | 59.5→59.9 ms |
+| → PCF / OTB / yaff | 各 ≤200 ms | 88 / 120 / 145 ms | 95 / 130 / 150 ms | OTB +9 %，其余 ≤3 % |
+| → 方点 TTF | ≤1 s | 449 ms | 500 ms | 491→498 ms |
+| Tong 整套默认导出 | ≤40 s | 32.2 s | 43.7 s | 30.1→30.6 s |
+| 57,106 字形拼合写 BDF | <1 s | 0.36 s | 0.36 s | 0.40→0.44 s |
 
-两条路径的 20 个 OTB 与 export-rs 相比，在以下字段不同（20 个文件一致）：OS/2 achVendID、
-panose 4 项、ulUnicodeRange1–3、usBreakChar（10 个文件还有 xAvgCharWidth）；head
-checkSumAdjustment、created/modified、flags、lowestRecPPEM；post formatType/extraNames
-（10 个文件还有 isFixedPitch）；EBLC 的 widthMax 与索引子表组织。名字表方面，原生 OTB 只写
-name ID 0、1、2、4、5、8，export-rs 还写 3、6、13、14、16、17。**其中 13/14 是许可证说明与
-许可证 URL**，对 OFL 字体有实际意义；PLAN 没有要求，但若希望 OTB 也带这两条记录，可作为
-后续改进。
+v5 正式测量期间，桌面和其他 agent 仍在运行，负载中位数 5.2，峰值 17。从未改动的原程序在同一窗口也慢了
+约 1.33 倍：export-rs 88.4 s 对 66.3 s，Python 收录站 48.0 s 对 43.5 s。在同样负载下交替运行 v3 和 v5 的
+A/B 对比中，Tong 整套导出为 30.6 s 对 30.1 s。由此判断 v5 的 43.7 s 来自外部负载，而不是代码退化。
+严格账本只让 BDF→OTB 慢了约 9%（仍远低于 200 ms），其他项目没有可测的变化。
 
-## 本次恢复中修正的问题
+## 已知限制
 
-- 补写 `projection` 模块（暂停时已登记但文件缺失），实现 SWIDTH 投影的事务、审计与报告。
-- 已提交的 `a1b40b0` 中 CLI 直出 sfnt 时把全部额度交给 `Sfnt::parse`，忽略 CLI 已持有的
-  数据，导致 1 项 CLI 单元测试失败；改为只给剩余额度，测试改为精确边界证明 sfnt 只计一次。
-- 已提交代码在 `-D warnings` Clippy（两个 profile）和 rustdoc 下不通过，均做等价改写修正，
-  没有使用 allow。
-- 7 个 fuzz 目标的种子过弱，补充了可复现的小种子（`fuzz/seed_phase6.py` 与 manifest，
-  只用 MIT/OFL 来源）。
-
-## 已知限制（如实保留）
-
-- codec 内部完整字节账本未覆盖的路径见上文链接；这些路径都受输入、表、字形、像素、点数
-  上限约束，也都在 fuzz 范围内，但没有一个覆盖全部同时存活临时分配的统一字节上限。
-  所有上限都不是进程 RSS 上限。
-- catalogue 与原 Python 的差异（名字表、OS/2/head 标志与时间戳、`.notdef`、未编码字形、
-  BDF/PCF 属性、校验和派生值等）按类别写入迁移说明。fontpixel 保留原 Python 会丢弃的
-  COMMENT/版权文字，这是有意保留，不是缺陷。
-- 收录站生产用的 `opf_vector` 扩展没有提供，矢量对照与测速使用原 fontTools 后备实现。
-- 正式测速在用户的桌面工作站上进行，桌面会话保持打开。
-- 默认 batch CLI 与默认 API 示例的 84 个通格产物中 76 个逐字节相同；8 个 WOFF2 不同，
-  因为 CLI 默认用 2 个 Brotli 线程压缩，API 示例用 1 个；8 个都用 fontTools 解压后
-  得到逐字节相同的 sfnt，只有压缩流不同。
-- 少量源码注释仍是暂停前的过时状态措辞（例如 `crates/fontpixel/src/lib.rs` 模块说明
-  「Current phase-6 reconstruction is unvalidated」、`docs/api-rustdoc.md` 中的状态句，
-  清单见 `WORK/docs-stale-status.md` C 节）。改动它们会改变编译产物、使冻结二进制的证据
-  绑定失效，所以留到第 7 阶段开始时一并修改。
-
-## 冻结与交付源码的关系
-
-ASAN（gate 048）、测速（049/051）和文档回放（047）都在冻结 v3 的源码树上执行，前后源码一致。
-冻结之后到交付只改了文档与报告：README.md、TODO.md、benches/REPORT.md、
-benches/phase6-README.md、docs/api.md、docs/recovery-status.md、docs/w6.1-cli.md、
-docs/w6.1-writer-budget.md、reports/ 下的报告和 fuzz 结果表；`crates/`、`Cargo.*`、`fuzz/`、
-`scripts/` 和测试均未改动，所以冻结二进制的证据适用于交付源码。
+- **Brotli 质量 10–11**：预留量是经验包络，不是证明的上界；聚类分配远超所有实测输入的数据可能超出它。
+- **仍按源码推导的保守上界计费的部分**：variants 导出里的 glyf/name/maxp/gasp；共享的 B-tree
+  节点估计；pk/gf 读回时按每字形 2,048 B 预留（有测试核对）；color 写出时的 ID 树和映射树；zapfont
+  诊断按 2× 计（zapfont 在默认上限内仍可完成）。所有上限都不是 RSS 上限，也不计分配器开销。
+- **真实超过 256 MiB 的工作负载**：Unifont 拼合→WOFF2（峰值 RSS 291 MiB），在默认上限下干净地报
+  `ResourceLimit`；显式给 `--max-total-bytes` ≥303.9 MiB 后可以完成。Tong 2 jobs × 4 个 WOFF2 线程
+  这种非默认配置，需要显式给每次调用 400 MiB 的 WOFF2 预算。
+- **格式自身的限制**：c、pbf、plan9、hmzk 装不下 38k 字形的 CJK 字体，给 1 GiB 预算也一样。
+- **收录站默认 profile 的位图 `.ttf`**：用 OTB 写出，没有轮廓表，所以过不了 OTS。浏览器能加载的位图 TTF
+  要用 `--otb-outline-tables empty-glyf`；explicit profile 下 21/21 都过了 OTS。
+- 收录站生产用的 `opf_vector` 扩展没有提供，矢量对照用的是 fontTools 后备。
+- 正式测速在用户的桌面工作站上进行，没有办法得到完全空闲的窗口。
 
 ## 备份
 
-全部源码、refs、未提交改动与证据在 `WORK/checkpoints/` 下做了本机备份并在空目录独立恢复
-校验。只是本机副本，没有异机备份。本阶段改动尚未提交到 Git。
+源码和全部 refs 在 Git main；证据在 WORK。本机检查点保存在 `WORK/checkpoints/`，并在空目录中独立恢复验证过。
+没有异机备份。

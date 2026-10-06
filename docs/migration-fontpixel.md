@@ -139,6 +139,44 @@ against the pure fontTools oracle precisely.
 
 ## Catalogue download differences
 
+### Final status after the strict phase 6 (2026-10-06)
+
+Defaults are unchanged: the tables in the subsections below describe the **default profile** (the
+first paired run), where "intentional" or "no option" means "not reproduced by default". Every
+difference the original application makes on purpose can now be reproduced with an explicit
+option. `benches/phase6_catalogue.py --profile explicit` passes them, with values read from the
+application's own policy inputs:
+
+| Difference category | Explicit option(s) |
+| --- | --- |
+| BDF/PCF `FONT` XLFD, `SIZE` point size and resolution | `--font-name`, `--point-size` with `--resolution X,Y` |
+| BDF/PCF properties added, removed or rewritten by `bdfwrite.py` | `--set-integer-property`, `--set-text-property`, `--remove-property` |
+| Glyph `SWIDTH` from the device advance | `--swidth-ppem` (`--swidth-units`, default 1000) |
+| PCF `POINT_SIZE`/`RESOLUTION*` taken from existing properties | `--pcf-metadata-precedence explicit-properties` |
+| Proggy PCF download copied from the source PCF | the adapter converts the source PCF directly (no charset→BDF detour) |
+| Vector `.notdef` (empty outline, original advance and LSB) | `--notdef`, `--notdef-advance`, `--notdef-lsb` (`variants` and `convert --to ttf/otf/woff/woff2`) |
+| Vector name table, OS/2 `fsType`/`fsSelection`/break char/code pages, timestamps, fixed pitch, `maxZones`, `gasp`, cmap subtables, glyph order, dot glyph placement | `variants --name-record/--name-record-hex/--name-language-tag --fs-type --fs-selection --break-char --code-page-ranges --created --modified --fixed-pitch --max-zones --gasp --cmap-unicode-full --glyph-order --dot-glyph`, `--vendor` |
+| Bitmap TTF name table, OS/2, head, post, EBLC `widthMax` and index layout, empty `glyf`/`loca` with maxp 1.0, `.notdef`, line metrics, underline, hmtx, glyph order | the `--otb-*` options (`--otb-name-record`, `--otb-outline-tables empty-glyf`, `--otb-width-max`, `--otb-index-layout`, `--otb-glyph-order`, `--otb-underline`, …; see `convert --help`) |
+
+With the explicit profile, 99 of the 173 fonts are identical in every compared field. That covers all
+34 PCF, 6 BDF, all 42 vector TTF and 17 of the 21 bitmap TTF. The **73 remaining files are all
+classified**, and none is unexplained:
+
+- **Original-lossy, not copied (32 files).** 28 BDF differ only by source `COMMENT` lines, which
+  fontpixel keeps and the original never stores (`parsers/bdf.py`) or writes
+  (`ingest/bdfwrite.py:16-54`). 4 bitmap TTF (3x5 Block ×2, Capsigrany, Tinypixel) differ because the
+  original keeps only encoded glyphs (`ttfexport.py:65-71`) while fontpixel keeps the unencoded ones;
+  their glyph counts, `numberOfHMetrics`, `xAvgCharWidth` and EBLC ranges follow from that.
+- **Derived (41 files).** The WOFF2 downloads differ only in `head.checkSumAdjustment`; the
+  matching TTF files are identical.
+- **Consumer limitation (1 file).** `spleen-64px-round.woff2`: FreeType raster overflow (error 98)
+  at 14 ppem on U+2502.
+
+Five family ZIPs are identical; the other three differ only through their BDF members' `COMMENT`
+lines. In the default profile the bitmap `.ttf` downloads are written as OTB, which has no outline
+table and therefore fails OTS. Browsers need `--otb-outline-tables empty-glyf`; with it, all 21 native
+bitmap TTF pass OTS, the same as the original.
+
 ### Evidence and scope
 
 The numbers in this section come from one paired run of the original Python
