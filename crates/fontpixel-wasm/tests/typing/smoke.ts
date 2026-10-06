@@ -20,6 +20,8 @@ import {
   wasmUrl,
   withAsyncResources,
 } from "fontpixel";
+import * as bdfparser from "fontpixel/compat/bdfparser";
+import { main as bdfparserMain } from "fontpixel/compat/bdfparser/cli";
 import type {
   Capability,
   FontMetrics,
@@ -111,4 +113,17 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
   void bad;
   // @ts-expect-error plain data is not a handle
   font.addGlyph(dict.fonts[0].glyphs[0]);
+
+  // bdfparser-js compatible API (fontpixel/compat/bdfparser)
+  const compat: bdfparser.Font = bdfparser.Font.create({ pixelsize: 8 });
+  const g: bdfparser.Glyph = compat.newglyph(65, bdfparser.Bitmap.fromstring("#."), { mode: 1 });
+  const meta: bdfparser.GlyphMetaInFont | undefined = compat.glyphs.get(65);
+  const rows: string[] = compat.draw("A").bindata;
+  const pcf: Uint8Array = compat.topcf({ glyphpad: 4 });
+  const codec: bdfparser.CharsetCodec = bdfparser.getCodec("gb2312", { gl: true });
+  const prev: bdfparser.WarningHandler | null = bdfparser.setWarningHandler((m: string) => void m);
+  const code: number = bdfparserMain(["--version"], { stdout: () => undefined, stderr: () => undefined });
+  void [g.cp(), meta, rows, pcf, codec.char2cp("A"), prev, code];
+  // @ts-expect-error bdfparser-js's option names
+  compat.topcf({ glyph_pad: "4" });
 }

@@ -1,0 +1,3613 @@
+{
+ "reference": "/home/chen/githubprojects/fontpixel/reference/bdfparser-js",
+ "fontpixel": "0.1.0",
+ "bdfparser_api": "3.0.0",
+ "node": "v24.21.0",
+ "vitest": "5.0.3",
+ "slow": true,
+ "restored_fonts": 18,
+ "vitest_exit_code": 1,
+ "seconds": 102.7,
+ "counts": {
+  "passed": 1181,
+  "failed": 11,
+  "error": 2
+ },
+ "tests": {
+  "test/bdfwrite.test.ts::tobdf format headers, metrics, comments, properties, unencoded altcode": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf format integral version, no properties, property comments only": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf format missing headers": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf: byte-identical round trip of FontForge-written fonts HanWangYanKai-26 keeps its unencoded glyphs": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf: byte-identical round trip of FontForge-written fonts HanWangYanKai-26.bdf": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf: byte-identical round trip of FontForge-written fonts unifont-13.0.04-for-test.bdf": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf: byte-identical round trip of FontForge-written fonts unifont-13.0.04-reduced.bdf": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::tobdf: byte-identical round trip of FontForge-written fonts unifont-13.0.04.bdf": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::topcf / tottf wrappers topcf": {
+   "outcome": "passed"
+  },
+  "test/bdfwrite.test.ts::topcf / tottf wrappers tottf": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap alter crop": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap alter crop_default": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap alter replace": {
+   "outcome": "failed",
+   "message": "Error: Bitmap rows must be rectangular labels 0, 1, 2"
+  },
+  "test/bitmap.test.ts::Bitmap basic bindata": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap basic clone": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap basic height": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap basic width": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concat": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_align_0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_0_align_0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_2": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_2_align_0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_m1": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_direction_m1_align_0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_offsetlist": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap concat concatall_onlyone": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap effect glow 0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap effect glow 1": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap effect shadow": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap enlarge enlarge": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap overlay overlay": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap pad bytepad": {
+   "outcome": "failed",
+   "message": "Error: Invalid character \"3\" in bitmap row 2 (only '0', '1' and '2' are pixels)"
+  },
+  "test/bitmap.test.ts::Bitmap pad bytepad4": {
+   "outcome": "failed",
+   "message": "Error: Invalid character \"3\" in bitmap row 2 (only '0', '1' and '2' are pixels)"
+  },
+  "test/bitmap.test.ts::Bitmap str repr repr": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap str repr str": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata0": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata1_default": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata2": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata3": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata4": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata4_error": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata5": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap todata todata5_error": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 10 path true": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 2, pathOnly, false, {x: -5, y: 12}": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 2, pathOnly, false, {x: 0, y: 0}": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 4 path": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 4 pathOnly false": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg 4 rect true": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg defaults": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined pathOnly true": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined rect": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined, path, true, {y: -2}": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined, path, true, {y: 0}": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined, rect, undefined, {x: 0, y: 0}": {
+   "outcome": "passed"
+  },
+  "test/bitmap.test.ts::Bitmap tosvg undefined, rect, undefined, {x: 2, y: -5}": {
+   "outcome": "passed"
+  },
+  "test/browser.test.ts::<suite>": {
+   "outcome": "error",
+   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-j6/ref-run/test/browser.test.ts"
+  },
+  "test/build.test.ts::<suite>": {
+   "outcome": "error",
+   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-j6/ref-run/test/build.test.ts"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ascii: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) big5: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) big5hkscs: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) canonicalisation vectors": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1250: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1251: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1252: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1253: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1254: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1255: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1256: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1257: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp1258: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp437: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp850: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp852: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp866: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp874: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp932: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp936: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp949: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) cp950: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) euccn: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) eucjp: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) euckr: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) gb18030: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) gb2312/gl: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) gb2312: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) gbk: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso10646: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso2022cn: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso646: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885910: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885911: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885913: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885914: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885915: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso885916: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88591: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88592: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88593: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88594: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88595: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88596: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88597: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88598: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) iso88599: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) jisx0201: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) jisx0208/gl: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) jisx0208: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) johab: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) koi8r: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) koi8u: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ksc5601/gl: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ksc5601: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) macroman: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) shiftjis: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) the fixture covers every key of the JS table, and only those": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) tis620: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ucs2: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ucs4: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ucs: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) unicode: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) utf16: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) utf32: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) utf7: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) utf8: cp2char over the code space, char2cp over the characters": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: spot checks a GB 2312 font: charset, GL detection, conversion, charsetconvert": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: spot checks charsets no longer known: hz, WHATWG-only labels (Unicode + one warning)": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: spot checks registerCharsetTables: validation, re-registration": {
+   "outcome": "passed"
+  },
+  "test/charsets.test.ts::charset tables: spot checks strict round trip and byte-length rule (SPEC-v3 §11.1)": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli TTF without BDFP needs --pixelsize": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli convert to every format, including .pcf.gz input": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli convert with --charset": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli help and version": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli info (same output as the Python CLI)": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli preview": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli runs as a script": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli runtime errors": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"convert\",\"./test/fonts/spec_example_fixed.bdf\",\"o.ttf\",\"--dotsize\",\"big\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"convert\",\"./test/fonts/spec_example_fixed.bdf\",\"o.ttf\",\"--shape\",\"star\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"convert\",\"./test/fonts/spec_example_fixed.bdf\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"frob\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"info\",\"./test/fonts/spec_example_fixed.bdf\",\"--bogus\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"info\",\"./test/fonts/spec_example_fixed.bdf\",\"--pixelsize\",\"x\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"info\",\"./test/fonts/spec_example_fixed.bdf\",\"--pixelsize\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"info\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error [\"preview\",\"./test/fonts/spec_example_fixed.bdf\"]": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli usage error []": {
+   "outcome": "passed"
+  },
+  "test/cli.test.ts::cli warnings go to stderr unless --quiet": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing bold": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing fliph / flipv / invert": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing fromstring / toString / blank / equals": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing getpixel / setpixel": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing italic": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing overlay / concat edge cases": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing paste": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing rotate": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing shift / bbox / trim": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing todata with wide rows (no precision loss)": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Bitmap editing width of an empty bitmap is 0": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing Font.create": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing addglyph": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing charsetconvert": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing charsetconvert collisions: the later glyph wins": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing clone, subset, merge": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing font.transform": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing newglyph": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing removeglyph": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing setprop / getprop / delprop": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing swidth": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Font editing updatebbox": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing a glyph obtained before charsetconvert() keeps its new codepoint": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing changing the codepoint moves the glyph (overwrite, to/from unencoded)": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing defaultglyphname": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing detached glyphs do not write back; removed glyphs become detached": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing draw and origin errors": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing setbitmap is the inverse of draw (no trim)": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing setbitmap modes, trim, offsets and hex format": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing setmeta, shift, transform, clone, changebitmap": {
+   "outcome": "passed"
+  },
+  "test/edit.test.ts::Glyph editing stale views of the same glyph do not revert each other": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"A\" in ASCII": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"A\" in UTF-16": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"A\" in UTF-32": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"A\" in UTF-8": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"A\" in Unicode": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"é\" in ISO-8859-1": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"é\" in MacRoman": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"č\" in ISO-8859-2": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"Я\" in ISO-8859-5": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"Я\" in KOI8-R": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"ё\" in Windows-1251": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"ะ\" in TIS-620": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"€\" in Windows-1250": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"あ\" in Shift-JIS": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"你\" in Big5": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"你\" in GB18030": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"你\" in GB2312": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"你\" in GBK": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"你\" in ISO-2022-CN": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils char2cp() cp2char() for \"가\" in EUC-KR": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding encoding utils sanitizeCharsetName()": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .char2cp() gb2312": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .char2cp() overwritten": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .char2cp() unicode": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .cp2char() gb2312": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .cp2char() overwritten": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties .cp2char() unicode": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties charset forced by .encoding() before loading persists (v3)": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties charset overwritten by .encoding()": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding font loading and encoding-related properties normal": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A\" in ASCII": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A\" in UTF-16": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A\" in UTF-32": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A\" in UTF-8": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A\" in Unicode": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"Aœ\" bitmap in cp1252 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"Ať\" bitmap in cp1250 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"AЭ\" bitmap in cp1251 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in big5 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in euckr font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in gb2312 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in iso10646 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in iso2022cn font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in shiftjis font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in unicode font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"A人光\" bitmap in utf8 font": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"é\" in ISO-8859-1": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"é\" in MacRoman": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"č\" in ISO-8859-2": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"Я\" in ISO-8859-5": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"Я\" in KOI8-R": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"ё\" in Windows-1251": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"ะ\" in TIS-620": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"€\" in Windows-1250": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"あ\" in Shift-JIS": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"你\" in Big5": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"你\" in GB18030": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"你\" in GB2312": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"你\" in GBK": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"你\" in ISO-2022-CN": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::Encoding various encodings \"가\" in EUC-KR": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets JIS X 0208, KS C 5601 (GL), JIS X 0201": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets Unicode font: astral characters, invalid input": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets canonical names, props, codecs": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets encoding(): charset override, clearing, setter, custom functions": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets issue tomchen/bdfparser#4: GB2312.1980-0 font in GL form": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets multi-byte charsets without bdfparser/cjk: iconv-lite instead of TextDecoder": {
+   "outcome": "failed",
+   "message": "AssertionError: expected 45217 to be null"
+  },
+  "test/encoding.test.ts::v3 charsets multi-byte charsets without bdfparser/cjk: restricted TextDecoder, one warning": {
+   "outcome": "failed",
+   "message": "AssertionError: expected true to be false // Object.is equality"
+  },
+  "test/encoding.test.ts::v3 charsets multi-byte charsets: 0x00-0x7F is ASCII in every runtime": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets single-byte charsets": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets single-byte charsets do not depend on the runtime TextDecoder": {
+   "outcome": "passed"
+  },
+  "test/encoding.test.ts::v3 charsets unknown charset: Unicode identity, warned once per font": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic glyphs_a": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic glyphs_len": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic headers": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic init": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic length": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font basic props": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font charsetconvert charsetconvert": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_btlr_linelimit40": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_default": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_lrbt_linelimit30": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_mode0": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_nonexistent_default": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_nonexistent_default_withmissingglyphmeta": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_nonexistent_default_withmissingglyphobj": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_nonexistent_mode0_linelimit80": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_nonexistent_tb_linelimit40": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_rl": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_rl_with_ucgs": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_rl_without_ucgs": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw draw_tbrl_linelimit40": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw drawall": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font draw drawcps": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph glyph_a": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph glyph_nonexistent": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph glyphbycp_a": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph glyphbycp_nonexistent": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph lacksglyphs": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font get glyph lacksglyphs_none": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_cp_first": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_cp_reversed_first": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_file_first": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_file_reversed_first": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_list_len": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_range": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter itercps_range2": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter iterglyphs_cp_first": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font iter iterglyphs_list_len": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font loading load_filelines": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont defaults": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont generate font (whole test font)": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont pathOffsets: {x: -2, y: 4}, unicodeAttr: {controlCharNoSkip: true, format: \"decncr\"}": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont pathOffsets: {y: -2}": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont pathOffsets: {}, unicodeAttr: {format: \"char\"}": {
+   "outcome": "passed"
+  },
+  "test/font.test.ts::Font tosvgfont unicodeAttr: {controlCharNoSkip: true, format: undefined}": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph basic chr": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph basic cp": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph basic font": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph basic init": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph basic meta": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw default": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw mode1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw mode2": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw mode_m1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw mode_m1_without_bb": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec j default": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec j mode1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec j mode2": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec j mode_m1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec quoteright default": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec quoteright mode1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec quoteright mode2": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec quoteright mode_m1": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph draw spec quoteright origin": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph str repr repr": {
+   "outcome": "passed"
+  },
+  "test/glyph.test.ts::Glyph str repr str": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(-0) = 0": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(-1.5e-7) = -1.5e-07": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(-1e+22) = -10000000000000000000000": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(0) = 0": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(0.00001) = 1e-05": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(0.0001) = 0.0001": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(0.1) = 0.1": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(1.5) = 1.5": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(1000000000000000000000000000000n) = 1000000000000000000000000000000": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(123456.789) = 123456.789": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(18446744073709552000) = 18446744073709551616": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(1e+21) = 1000000000000000000000": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(7) = 7": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::Python-compatible number formatting (fmtnum) fmtnum(9007199254740994) = 9007199254740994": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::public types without DOM: URL-like sources $Font and load_url accept any object with a string href": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers PCF writer range guards, before allocating": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers STARTFONT versions with the strict syntax": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \".5\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"0x10\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"1e1\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"2.\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"2_1\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"Infinity\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"inf\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed STARTFONT version \"nan\"": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: BBX 1_0": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: BBX Infinity": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: ENCODING 0x10": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: ENCODING 1_2": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: ENCODING ٣ (non-ASCII digit)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers malformed integer: SWIDTH 1e3": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers numeric fields must fit signed 32-bit": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers todata(4|5) of zero-width rows": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers todata(5): RangeError for rows wider than 53 pixels": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.2 numbers unquoted property integers: -2**31 .. 2**32-1, else raw strings": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.3 properties COMMENT-like property lines are comments, with a warning (K06c/d)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.3 properties file order is kept for integer-like names (K06a)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.3 properties null-prototype props: __proto__, constructor, toString (K06b)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.3 properties props.comment that is not a list (like Python: iterated, falsy = none)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing ASCII whitespace only; a leading BOM is skipped (K07)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing Bitmap.crop with a negative size: RangeError (K03)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing COMMENT lines inside BITMAP are ignored": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing Font.transform visits font.glyphs order, then unencoded": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing U+FEFF is kept everywhere except a leading BOM (load_bytes, PCF strings)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing a non-hex hex row: Error naming the glyph and the row": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing negative BBX / FONTBOUNDINGBOX sizes: BDFParseError (K03)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing overlay keeps its size, aligns at the top-left, clips (K04)": {
+   "outcome": "failed",
+   "message": "Error: Bitmap rows have different lengths"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing removeglyph of a removed (detached) Glyph is a no-op (K09)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.4 parsing and drawing vertical concatall skips empty bitmaps with the offset before them (K16)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.5 outputs TTF cmap: no surrogates (the glyphs stay, unmapped)": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.5 outputs readTtf guard message": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.5 outputs tosvgfont uses cp2char (Unicode values), unmapped glyphs get no unicode": {
+   "outcome": "passed"
+  },
+  "test/hardening.test.ts::§11.5 outputs tosvgfont: integer properties beyond 2**53 are exact": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::Empty line and special cases unifont_emptylines": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::Shortcuts $Bitmap creates bitmap correctly": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::Shortcuts $Font creates and loads font correctly": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::Shortcuts $Font with encoding options works": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::Shortcuts $Glyph creates glyph correctly": {
+   "outcome": "passed"
+  },
+  "test/others.test.ts::tobdf unifont tobdf()": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: separate dots circle dots with dotsize and offsets": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: separate dots circle dots: 8 off-curve points clockwise from the top": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: separate dots square dots, dotsize 0.5, ppu 10": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: separate dots square dots, dotsize 1.5: overlapping squares are kept separate": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) 2x2 block": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) U shape (concave) and nested rings": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) checkerboard: one square per pixel": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) diagonally touching pixels form two contours": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) empty bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) ring touching itself diagonally: hole opens to the outside": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) ring with a hole: outer clockwise, hole counter-clockwise": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) row and column are merged without collinear points": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) rows of different lengths: missing characters are not ink": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) single pixel": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) single pixel with ppu and offsets": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::bitmapContours: square, dotsize 1 (merged outline) validation": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::cross-language golden contours (generated by Python bdfparser) bitmap_contours output is identical": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::flattenContour all off-curve: starts at implied midpoint, 16 lines per curve": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::flattenContour degenerate inputs": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::flattenContour mixed on/off points": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::flattenContour polygon is returned closed": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b circle dotsize 0.5, ppu 2/4/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b circle dotsize 0.6, ppu 2/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b circle dotsize 1, ppu 2/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b circle dotsize 1.5, ppu 2/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b square dotsize 0.5, ppu 2/4/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b square dotsize 0.6, ppu 2/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b square dotsize 1, ppu 1/2/3/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::property tests: rasterize(bitmapContours(b)) == b square dotsize 1.5, ppu 2/10/64: 600 random bitmaps": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::rasterize empty": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::rasterize hole (opposite orientation) and overlap (same orientation)": {
+   "outcome": "passed"
+  },
+  "test/outline.test.ts::rasterize square and orientation independence (non-zero winding)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 0": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 1": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 10": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 11": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 12": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 13": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 14": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 2": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 3": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 4": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 5": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 6": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 7": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 8": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError 9": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::BDFParseError without line number": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section ENCODING -1 [altcode], unencoded glyphs": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section after ENDPROPERTIES: STARTCHAR without CHARS, ENDFONT, junk": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section duplicate codepoint: later wins (moved to the end)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section end of file inside a glyph, missing ENDFONT, CHARS mismatch": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section fewer hex rows than BBX height: padded when drawing, warned once": {
+   "outcome": "failed",
+   "message": "Error: Bitmap rows must be rectangular labels 0, 1, 2"
+  },
+  "test/parse.test.ts::glyph section glyph name with spaces; repeated keywords: first wins; unknown keyword": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section lines after ENDFONT are ignored; second CHARS warns": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section missing ENDCHAR (before STARTCHAR / ENDFONT, in BITMAP or not)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section negative ENCODING other than -1, missing ENCODING": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::glyph section no STARTPROPERTIES, STARTCHAR directly / ENDFONT directly": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::headers VVECTOR delimiter: comma and/or whitespace (v3-rc bug fix)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::headers all header keywords": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::headers metricsset defaults to 0": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::headers the v2 \"empty lines\" test font": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::headers unknown header keywords are ignored with a warning": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace BOM": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace CR": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace CRLF": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace LF": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace blank lines": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace load_filelines accepts sync iterables and multi-line chunks": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace load_filelines with readlineiter": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::line endings and whitespace tabs & spaces": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font $Font with string, bytes, ArrayBuffer, iterables, URL": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font BDF bytes (Uint8Array, ArrayBuffer, DataView)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font OTTO and gzip errors": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font PCF and TTF detection": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font gunzip errors": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font invalid UTF-8 is replaced": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font load_bytes_async decompresses gzip (BDF and PCF)": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font load_url: gzip body, HTTP errors, init passed through": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::load_bytes / load_bytes_async / $Font loading resets the previous content but keeps encoding options": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties count mismatch warns": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties malformed STARTPROPERTIES count": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties missing ENDPROPERTIES before 0": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties missing ENDPROPERTIES before 1": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties missing ENDPROPERTIES before 2": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties missing closing quote": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties original names kept": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::properties typed values": {
+   "outcome": "passed"
+  },
+  "test/parse.test.ts::warning handler setWarningHandler returns previous; null silences; undefined restores": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -L": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -L -p2 -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -L -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -M": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -i": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -l": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -l -L -p1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -l -L -u4 -p8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -l -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -l -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -m": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -p1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -p2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -p8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -t": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants terminal bdftopcf -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants the terminal font exercises terminal padding and ink metrics": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -L": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -L -p2 -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -L -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -M": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -i": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -l": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -l -L -p1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -l -L -u4 -p8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -l -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -l -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -m": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -p1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -p2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -p8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -t": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -u2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::bdftopcf flag variants unifont-13.0.04-for-test bdftopcf -u4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::external validation (fc-query / FreeType) {\"byteorder\":\"lsb\",\"bitorder\":\"lsb\",\"glyphpad\":2,\"scanunit\":2}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::external validation (fc-query / FreeType) {\"byteorder\":\"lsb\",\"scanunit\":4}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::external validation (fc-query / FreeType) {\"glyphpad\":1,\"bitorder\":\"lsb\"}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::external validation (fc-query / FreeType) {\"glyphpad\":8}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::external validation (fc-query / FreeType) {}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::more edge cases readPcfAsync without DecompressionStream": {
+   "outcome": "failed",
+   "message": "Error: promise resolved \"Font{ headers: { …(10) }, …(4), …(1) }\" instead of rejecting"
+  },
+  "test/pcf.test.ts::more edge cases reader: other views, partial scan unit groups": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::more edge cases reader: properties written by other tools": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::more edge cases writer: unusual model values": {
+   "outcome": "failed",
+   "message": "AssertionError: expected true to be false // Object.is equality"
+  },
+  "test/pcf.test.ts::readPcf accepts ArrayBuffer and offset views": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::readPcf malformed input gives clear errors": {
+   "outcome": "failed",
+   "message": "AssertionError: expected [Function] to throw error matching /truncated/ but got 'PCF table range overflow'"
+  },
+  "test/pcf.test.ts::readPcf missing optional tables": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::readPcf non-UTF-8 strings are decoded as Latin-1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::readPcf readPcfAsync: gzip and plain input": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::readPcf uncompressed metrics and all-zero glyphs": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 1": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 10": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 100": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 101": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 102": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 103": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 104": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 105": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 106": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 107": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 108": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 109": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 11": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 110": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 111": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 112": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 113": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 114": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 115": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 116": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 117": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 118": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 119": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 12": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 120": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 121": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 122": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 123": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 124": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 125": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 126": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 127": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 128": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 129": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 13": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 130": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 131": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 132": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 133": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 134": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 135": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 136": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 137": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 138": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 139": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 14": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 140": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 141": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 142": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 143": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 144": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 145": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 146": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 147": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 148": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 149": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 15": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 150": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 151": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 152": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 153": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 154": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 155": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 156": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 157": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 158": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 159": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 16": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 160": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 161": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 162": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 163": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 164": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 165": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 166": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 167": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 168": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 169": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 17": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 170": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 171": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 172": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 173": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 174": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 175": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 176": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 177": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 178": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 179": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 18": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 180": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 181": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 182": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 183": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 184": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 185": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 186": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 187": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 188": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 189": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 19": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 190": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 191": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 192": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 193": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 194": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 195": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 196": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 197": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 198": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 199": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 2": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 20": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 200": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 201": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 202": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 203": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 204": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 205": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 206": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 207": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 208": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 209": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 21": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 210": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 211": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 212": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 213": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 214": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 215": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 216": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 217": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 218": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 219": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 22": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 220": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 221": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 222": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 223": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 224": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 225": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 226": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 227": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 228": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 229": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 23": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 230": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 231": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 232": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 233": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 234": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 235": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 236": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 237": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 238": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 239": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 24": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 240": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 241": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 242": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 243": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 244": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 245": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 246": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 247": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 248": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 249": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 25": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 250": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 251": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 252": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 253": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 254": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 255": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 256": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 257": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 258": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 259": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 26": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 260": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 261": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 262": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 263": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 264": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 265": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 266": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 267": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 268": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 269": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 27": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 270": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 271": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 272": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 273": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 274": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 275": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 276": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 277": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 278": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 279": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 28": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 280": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 281": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 282": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 283": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 284": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 285": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 286": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 287": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 288": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 289": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 29": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 290": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 291": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 292": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 293": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 294": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 295": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 296": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 297": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 298": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 299": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 3": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 30": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 300": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 301": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 302": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 303": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 304": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 305": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 306": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 307": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 308": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 309": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 31": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 310": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 311": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 312": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 313": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 314": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 315": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 316": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 317": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 318": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 319": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 32": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 320": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 321": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 322": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 323": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 324": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 325": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 326": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 327": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 328": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 329": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 33": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 330": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 331": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 332": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 333": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 334": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 335": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 336": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 337": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 338": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 339": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 34": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 340": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 341": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 342": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 343": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 344": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 345": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 346": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 347": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 348": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 349": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 35": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 350": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 351": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 352": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 353": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 354": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 355": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 356": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 357": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 358": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 359": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 36": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 360": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 361": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 362": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 363": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 364": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 365": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 366": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 367": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 368": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 369": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 37": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 370": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 371": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 372": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 373": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 374": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 375": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 376": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 377": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 378": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 379": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 38": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 380": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 381": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 382": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 383": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 384": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 385": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 386": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 387": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 388": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 389": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 39": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 390": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 391": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 392": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 393": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 394": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 395": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 396": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 397": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 398": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 399": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 4": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 40": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 400": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 41": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 42": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 43": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 44": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 45": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 46": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 47": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 48": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 49": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 5": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 50": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 51": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 52": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 53": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 54": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 55": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 56": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 57": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 58": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 59": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 6": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 60": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 61": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 62": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 63": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 64": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 65": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 66": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 67": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 68": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 69": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 7": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 70": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 71": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 72": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 73": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 74": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 75": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 76": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 77": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 78": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 79": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 80": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 81": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 82": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 83": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 84": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 85": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 86": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 87": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 88": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 89": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 9": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 90": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 91": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 92": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 93": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 94": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 95": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 96": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 97": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 98": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::seeded random fonts seed 99": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases codepoints > 0xFFFF, altcodes, no encoded glyph at all": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases fallbacks for missing FONT_ASCENT/FONT_DESCENT, DWIDTH, SWIDTH": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases font without headers (not loaded): defaults, like Python": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases glyph names: first token, max 99 bytes": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases hex rows: missing, extra, odd, lowercase, invalid digits": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases negative or out of range metrics are rejected": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf edge cases property handling": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) HanWangYanKai-26": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) spec_example_fixed": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-2atest": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-big5": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-cp1250": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-cp1251": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-cp1252": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-euckr": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-gb2312": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-iso10646": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-iso2022cn": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-shiftjis": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-unicode": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-enctest-utf8": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-for-test": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-for-test-emptylines": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf is byte-identical to bdftopcf (test fonts) unifont-13.0.04-reduced": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options invalid options": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"bitorder\":\"lsb\",\"byteorder\":\"lsb\",\"glyphpad\":1}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"bitorder\":\"lsb\",\"byteorder\":\"lsb\",\"scanunit\":4,\"glyphpad\":4}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"bitorder\":\"lsb\",\"scanunit\":2,\"glyphpad\":2}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"bitorder\":\"lsb\"}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"byteorder\":\"lsb\",\"scanunit\":4,\"glyphpad\":8}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"byteorder\":\"lsb\"}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"glyphpad\":1}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"glyphpad\":2}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"glyphpad\":8}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"scanunit\":2}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {\"scanunit\":4}": {
+   "outcome": "passed"
+  },
+  "test/pcf.test.ts::writePcf options round trip {}": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.draw2canvas defaults": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.draw2canvas options {x, y, pixelsize, pixelcolors} (issue #2)": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.draw2canvas v2 / v3-rc signature (pixelcolors, xoff, yoff) still works": {
+   "outcome": "failed",
+   "message": "Error: Invalid character \"3\" in bitmap row 0 (only '0', '1' and '2' are pixels)"
+  },
+  "test/svg.test.ts::Bitmap.tosvg circle": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg empty bitmaps": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg fractional pixel sizes use the shortest representation": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg invalid arguments": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg path (merged outline, holes)": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg random bitmaps: the path covers exactly the ink pixels": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Bitmap.tosvg rect: unchanged greedy rectangles; \"2\" pixels filled black": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Font.tosvgfont (v3 fixes) empty font, vertical metrics attributes": {
+   "outcome": "passed"
+  },
+  "test/svg.test.ts::Font.tosvgfont (v3 fixes) metadata lines are emitted when their own property exists; Foundry": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) edge": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-big5": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-cp1250": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-cp1251": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-cp1252": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-euckr": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-gb2312": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-iso10646": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-iso2022cn": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-shiftjis": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-unicode": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) enctest-utf8": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) names, header and props from the name table (edge.bdf)": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) pixelsize validation": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) spec_example_fixed": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) unifont-2atest": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf without BDFP (metadata=false + pixelsize) unifont-for-test": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors CFF-based OpenType": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors bad BDFP table": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors bad glyph data": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors composite glyph cycle": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors huge glyph boxes are rejected instead of exhausting the memory": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors input types: views, foreign-realm ArrayBuffer, invalid": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors missing required table": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors name table: invalid UTF-16 records are skipped, priorities": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors not a font / too short / truncated": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: errors short (spec) BDFP glyph entries [gid, cp, name]": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) cmap (0,3) format 6 preferred over (1,0) format 0": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) cmap format 4 with idRangeOffset, post 1.0, name platforms 0 / 1": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) composite glyphs are the union of their transformed components": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) font without ink: FONTBOUNDINGBOX fallback": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-cmap0-6 pixelsize 16 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-cmap4-rangeoffset pixelsize 12 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-cmap4-rangeoffset pixelsize 16 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-composite pixelsize 13 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-composite pixelsize 20 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-composite pixelsize 7 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-composite-post3 pixelsize 20 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) fonttools-empty pixelsize 16 equals Python read_ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: fontTools-built fonts (quadratic curves, composites) post format 3: default glyph names": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F ArrayBuffer input": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F HanWangYanKai-26 (14160 glyphs), circle 0.9 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F HanWangYanKai-26 (14160 glyphs), square": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F edge": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-big5": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-cp1250": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-cp1251": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-cp1252": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-euckr": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-gb2312": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-iso10646": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-iso2022cn": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-shiftjis": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-unicode": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F enctest-utf8": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F full unifont (57086 glyphs), both shapes": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F spec_example_fixed": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F unifont reduced (5441 glyphs), both shapes": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F unifont-2atest": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::readTtf: round trip readTtf(writeTtf(F)) == F unifont-for-test": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) big5-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) cp1252-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) edge-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) euckr-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) gb2312-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) hanwang-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) manifest present": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) reading golden files restores the BDF font": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) shiftjis-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) spec-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-circle-0.7-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-circle-0.7-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-circle-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-circle-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-metadataFalse.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-shapecircle-dotsize1.5-ppu4.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-shapesquare-dotsize0.5-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-square-0.8-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-square-0.8-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-square-1-ppu10.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-square-1-ppu64.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: cross-language golden files (Python bdfparser) unifont-timestamp1700000000-ppu2.ttf": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) .notdef copies DEFAULT_CHAR": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) BDFP JSON": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) OS/2": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) advance without DWIDTH = bbxoff + bbw": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) cmap: format 4 excludes U+FFFF, format 12 has everything": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) glyf: flags without REPEAT, short and long coordinates": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) glyph order and names": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) head": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) hhea / maxp": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) hmtx lsb = xMin": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) name": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) post": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) prep: dropout control program": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: field values (edge.bdf) timestamp and metadata=false": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation deterministic": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation font without glyphs": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation non-Unicode charset: cmap goes through cp2char": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation unitsPerEm range": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation values that do not fit their TrueType field throw": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { dotsize: 0 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { dotsize: 1.51 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { ppu: 0 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { ppu: 2.5 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { ppu: 3 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { ppu: 64.0000001 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { shape: 'hexagon' } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: option validation { timestamp: 1.5 } throws": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing edge circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing edge square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-big5 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-big5 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1250 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1250 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1251 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1251 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1252 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-cp1252 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-euckr circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-euckr square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-gb2312 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-gb2312 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-iso10646 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-iso10646 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-iso2022cn circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-iso2022cn square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-shiftjis circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-shiftjis square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-unicode circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-unicode square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-utf8 circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing enctest-utf8 square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing spec_example_fixed circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing spec_example_fixed square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing unifont-2atest circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing unifont-2atest square 1 ppu 64": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing unifont-for-test circle 0.8 ppu 10": {
+   "outcome": "passed"
+  },
+  "test/ttf.test.ts::writeTtf: structure and opentype.js parsing unifont-for-test square 1 ppu 64": {
+   "outcome": "passed"
+  }
+ }
+}

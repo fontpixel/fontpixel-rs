@@ -340,6 +340,10 @@ test('compat: headers and props views write through', { skip }, () => {
   // renaming through _propnames keeps the property order
   f._propnames.set('lower_key', 'Lower_Key');
   assert.ok(f.tobdf().includes('\nLower_Key 1\n'));
+  // assigning a new props object keeps the remembered spellings
+  f.props = { ...f.props, added: 'x' };
+  assert.ok(f.tobdf().includes('\nLower_Key 1\n'));
+  assert.ok(f.tobdf().includes('\nADDED "x"\n'));
 });
 
 test('compat: glyphs and unencoded views', { skip }, () => {
@@ -364,8 +368,11 @@ test('compat: glyphs and unencoded views', { skip }, () => {
   const model = bp.rawHandle(f).model();
   assert.deepEqual(model.glyphs.map(([cp]) => cp), [32, 65, 66]);
   assert.equal(model.unencoded[0][0], 7);
+  const u = f.newglyph(-1, new bp.Bitmap(['1']));
+  assert.deepEqual([...u._store], [...f.unencoded[1].meta]);
   f.unencoded.length = 0;
   assert.equal(f.unencoded.length, 0);
+  assert.equal(u._store, null);
   assert.ok(!f.tobdf().includes('ENCODING -1'));
   f.glyphs.clear();
   assert.equal(f.glyphs.size, 0);

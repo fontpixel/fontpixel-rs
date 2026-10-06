@@ -1045,10 +1045,10 @@ export class Glyph {
     const font = this.font;
     const cp = this[S].raw.cp();
     if (cp >= 0) return font.glyphs.get(cp) ?? null;
-    // an unencoded glyph: the entry whose handle is this slot
-    const raw = this[S].raw;
+    // an unencoded glyph: the entry holding this glyph's values
+    const mine = JSON.stringify(this[S].raw.meta());
     for (const e of font.unencoded) {
-      if (e[S]?.raw && slotEquals(e.meta, raw.meta())) return e.meta;
+      if (JSON.stringify([...e.meta]) === mine) return e.meta;
     }
     return null;
   }
@@ -1125,15 +1125,27 @@ const modelOf = (font) => {
   return c.model;
 };
 
-const setRaw = (font, raw) => {
+/**
+ * Install a freshly loaded model. With `binary`, the notes of the native PCF
+ * decoder (`pcf.read.*`: unknown or duplicate tables, format words) stay in
+ * the report only: bdfparser's binary readers emit no warnings.
+ */
+const setRaw = (font, raw, binary = false) => {
   const st = font[S];
   st.raw = raw;
   st.epoch++;
   st.wcur = 0;
   st.short = new Set();
   st.names = new Map();
+  let early = [];
+  if (binary) {
+    const entries = raw.report().entries;
+    early = entries.filter((e) => e.level !== 'info' && !e.code.startsWith('pcf.read.')).map((e) => e.message);
+    st.wcur = entries.length;
+  }
   if (st.charset) raw.encoding(st.charset);
   applyConverters(font);
+  for (const m of early) warn(jsText(m));
   changed(font);
   return font;
 };
@@ -1145,7 +1157,7 @@ const applyConverters = (font) => {
   }
 };
 
-const fontOf = (raw, like) => {
+const fontOf = (raw, like, binary = false) => {
   const font = new Font();
   if (like instanceof Font) {
     const a = like[S];
@@ -1155,7 +1167,7 @@ const fontOf = (raw, like) => {
     b.char2cp = a.char2cp;
     b.cp2char = a.cp2char;
   }
-  return setRaw(font, raw);
+  return setRaw(font, raw, binary);
 };
 
 /* ------------------------------------------------------------------------ */
@@ -1583,11 +1595,13 @@ export class Font {
         get: () => views.props,
         set: (value) => {
           const entries = Object.entries(value);
+          // the remembered spellings stay (bdfparser-js keeps `_propnames`)
+          const names = new Map(modelOf(this).propnames);
           call(
             this,
             (raw) => {
               for (const k of Object.keys(raw.props())) raw.delprop(k);
-              for (const [k, v] of entries) raw.setprop(k === 'comment' ? k : k.toUpperCase(), v);
+              for (const [k, v] of entries) raw.setprop(k === 'comment' ? k : (names.get(k) ?? k.toUpperCase()), v);
             },
             true,
           );
@@ -1645,7 +1659,7 @@ export class Font {
     const b = toBytes(data);
     const magic = magicOf(b);
     if (magic === '\x01fcp') {
-      return setRaw(this, readPcf(b)[S].raw);
+      return setRaw(this, pcfRaw(b), true);
     }
     if (isGzip(b)) {
       throw new Error(
@@ -1656,7 +1670,7 @@ export class Font {
       throw new Error('CFF-based OpenType is not supported');
     }
     if (magic === '\x00\x01\x00\x00' || magic === 'true') {
-      return setRaw(this, readTtf(b, { pixelsize: options.pixelsize })[S].raw);
+      return setRaw(this, ttfRaw(b, { pixelsize: options.pixelsize }));
     }
     // BDF text (UTF-8, invalid sequences replaced; one leading BOM skipped)
     const raw = new RawFont();
@@ -1679,9 +1693,7 @@ export class Font {
       return this.load_bytes(b, options);
     }
     // gzip transport is decoded by the Rust loader (bounded, no DecompressionStream)
-    const raw = new RawFont();
-    guard(() => raw.loadBytes(b, options.pixelsize ?? undefined));
-    return setRaw(this, raw);
+    return setRaw(this, gzipRaw(b, options), true);
   }
 
   static create(options = {}) {
@@ -2043,8 +2055,8 @@ export function writePcf(font, options = {}) {
   return call(f, (raw) => raw.topcf(opts));
 }
 
-/** Read a PCF font (uncompressed; use `readPcfAsync` for `.pcf.gz`). */
-export function readPcf(data) {
+/** A native handle loaded from PCF bytes (uncompressed). */
+const pcfRaw = (data) => {
   const u8 = toBytes(data, 'PCF data must be a Uint8Array or an ArrayBuffer');
   if (isGzip(u8)) {
     throw new Error(
@@ -2056,7 +2068,19 @@ export function readPcf(data) {
   }
   const raw = new RawFont();
   guard(() => raw.loadBytes(knownPcfTables(u8)));
-  return fontOf(raw);
+  return raw;
+};
+
+/** A native handle loaded from gzip-compressed bytes (decoded by the Rust loader). */
+const gzipRaw = (u8, options = {}) => {
+  const raw = new RawFont();
+  guard(() => raw.loadBytes(u8, options.pixelsize ?? undefined));
+  return raw;
+};
+
+/** Read a PCF font (uncompressed; use `readPcfAsync` for `.pcf.gz`). */
+export function readPcf(data) {
+  return fontOf(pcfRaw(data), undefined, true);
 }
 
 const PCF_TABLE_TYPES = [1, 2, 4, 8, 16, 32, 64, 128, 256];
@@ -2089,17 +2113,16 @@ export async function readPcfAsync(data) {
   if (!isGzip(u8)) {
     return readPcf(u8);
   }
-  const raw = new RawFont();
+  let raw;
   try {
-    raw.loadBytes(u8);
+    raw = gzipRaw(u8);
   } catch (e) {
-    const t = translate(e);
-    if (/^Malformed gzip data/.test(t.message)) {
-      throw new Error(`Cannot decompress gzip-compressed PCF: ${t.message}`, { cause: t });
+    if (/^Malformed gzip data/.test(e.message)) {
+      throw new Error(`Cannot decompress gzip-compressed PCF: ${e.message}`, { cause: e });
     }
-    throw t;
+    throw e;
   }
-  return fontOf(raw);
+  return fontOf(raw, undefined, true);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -2139,7 +2162,10 @@ export const writeTtf = (font, options = {}) => {
  * are restored losslessly from their `BDFP` table, others are rasterized at
  * `pixelsize` pixels per em (required then).
  */
-export const readTtf = (data, options = {}) => {
+export const readTtf = (data, options = {}) => fontOf(ttfRaw(data, options));
+
+/** A native handle loaded from TrueType bytes (see `readTtf`). */
+const ttfRaw = (data, options = {}) => {
   let bytes;
   if (ArrayBuffer.isView(data)) {
     bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
@@ -2161,13 +2187,13 @@ export const readTtf = (data, options = {}) => {
   if (pixelsize !== undefined && !(isInt(pixelsize) && pixelsize > 0)) {
     // bdfparser-js checks `pixelsize` only for fonts without a BDFP table
     try {
-      return fontOf(glue.bdfparserReadTtf(bytes, undefined));
+      return glue.bdfparserReadTtf(bytes, undefined);
     } catch (e) {
       if (!/pixelsize/.test(e?.message ?? '')) throw translate(e);
       throw new RangeError(`pixelsize must be a positive integer, not ${String(pixelsize)}`);
     }
   }
-  return fontOf(guard(() => glue.bdfparserReadTtf(bytes, pixelsize)));
+  return guard(() => glue.bdfparserReadTtf(bytes, pixelsize));
 };
 
 /* ------------------------------------------------------------------------ */
@@ -2255,9 +2281,7 @@ export const loadFontBytes = (data, options = {}) => {
   if (!isGzip(b)) {
     return new Font().load_bytes(b, options);
   }
-  const raw = new RawFont();
-  guard(() => raw.loadBytes(b, options.pixelsize ?? undefined));
-  return fontOf(raw);
+  return fontOf(gzipRaw(b, options), undefined, true);
 };
 
 /** `new Glyph(meta_obj, font)` */

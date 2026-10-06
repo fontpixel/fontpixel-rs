@@ -298,6 +298,73 @@ with a reason (`has(fp, 'compat_bdfparser')`, `fp.optionTypes()`). Coverage
 rules name tests as `crates/fontpixel-wasm/tests/<area>.test.mjs::<test name>`
 (the checker looks for the file and the name in it).
 
+### bdfparser-js compatibility (`fontpixel/compat/bdfparser`)
+
+The independent legacy API mirrors bdfparser-js 3.0.0 (SPEC-v3): `Font`,
+`Glyph`, `Bitmap` with bdfparser-js's lowercase method names, option objects
+and defaults, `readPcf`/`readPcfAsync`/`writePcf`, `readTtf`/`writeTtf`,
+`bitmapContours`/`rasterize`, the charset functions (`getCodec`,
+`canonicalCharset`, `sanitizeCharset`, `charsetProps`, `detectGL`,
+`char2cp`/`cp2char`, ...), `fmtnum`, `defaultglyphname`, the constants,
+`$Font`/`$Glyph`/`$Bitmap`, `BDFParseError` and the warning handler
+(`setWarningHandler`, `warn`, `defaultWarningHandler`). Package subpaths
+(`full` build only, capability `compat_bdfparser`):
+
+```
+fontpixel/compat/bdfparser       js/compat_bdfparser.js (+ .d.ts)
+fontpixel/compat/bdfparser/cjk   side-effect module kept for bdfparser-js's
+                                 `bdfparser/cjk` import (the exact tables are built in)
+fontpixel/compat/bdfparser/cli   loadFontFile, main (Node.js; node:fs in JS, in-process)
+```
+
+- The module initializes the instance itself (top-level `await init()`), so
+  `import { Font } from 'fontpixel/compat/bdfparser'` is ready to use; a
+  Worker that wants `initSync(module)` calls it before importing the module.
+  In a build without the layer the import rejects with `UnsupportedError`.
+- Data stays in Rust: the shared `fontpixel::compat::bdfparser` model (the
+  same one the Python `fontpixel.compat.bdfparser` uses) behind the handles
+  `BdfparserRawFont`, `BdfparserRawGlyph`, `BdfparserRawBitmap`
+  (`src/compat*.rs`; `BdfparserRawBitmapList` for `concatall`,
+  `BdfparserRawCodec` for charsets, `bdfparser*` module functions). They are
+  public (also reachable with `rawHandle(obj)`) and expose the Rust compat
+  API one to one, e.g. `BdfparserRawFont.core()` (a native `Font` copy) and
+  `fromCore`, `report()`, `saveTo(writer, format, options)` over a JS writer
+  object, `loadFileObj(reader)`; `loadFilePath`/`save(path)` throw
+  `UnsupportedError` (`filesystem`).
+- `font.headers` (a Proxy), `font.props` (a Proxy with a null prototype),
+  `font.glyphs` (a `Map` subclass), `font.unencoded` (an array Proxy) and
+  `font._propnames` (a `Map` subclass) are live views: reads project the
+  model (cached until the next edit), writes edit it in place, so glyph
+  handles stay attached. Item assignment into a 17-slot meta list
+  (`font.glyphs.get(cp)[i] = v`, `font.unencoded[i].meta[k] = v`) and to
+  `font.unencoded[i].altcode` is written back; `push`, `splice` and
+  `length = n` on `font.unencoded` edit the font. Values read are copies
+  (pushing into a returned array does not change the font).
+- `Glyph.meta` is a plain object; direct edits are written with the next
+  editing method (only the changed keys, so another handle's edits are not
+  reverted). `Bitmap.bindata` is an accessor building the rows on each read.
+  Handles live in non-enumerable symbol properties, so `toEqual`-style
+  comparisons see bdfparser-js's attributes only.
+- Warnings: the Rust model records them in its report; after each call the
+  layer passes the new warning-level entries to the current handler (with
+  bdfparser-js's quoting: `JSON.stringify` for numbers in parse messages,
+  plain single quotes for keywords). bdfparser-js's own JS-side warnings
+  (overlay size mismatch, `addglyph` without `replace`, unknown charsets of
+  the module functions) are emitted by the JS layer. The native PCF
+  decoder's notes stay in the report (bdfparser's binary readers are silent).
+- Errors: Rust failures become bdfparser-js's classes (`BDFParseError` with
+  `lineno`/`msg`, `RangeError`, `TypeError`, `Error`) with the same message;
+  the original `FontpixelError` is the `cause` and its fields (`kind`,
+  `exitCode`, `line`, ...) are copied. Exceptions of JS callbacks
+  (converters, `transform` functions, reader/writer objects) are rethrown
+  unchanged.
+- Charsets always use fontpixel's exact tables (`getCodec(...).exact` is
+  `true`; `iconv` options are accepted and unused).
+- The unmodified bdfparser-js suite (vitest 5.0.3) runs through
+  `tests/compat_bdfparser/run_reference.mjs` (shim modules for every
+  `../src/*` import); every remaining failure is explained in
+  `tests/compat_bdfparser/KNOWN_DIFFERENCES.md`.
+
 ## Coverage gate
 
 `tools/bindings/gate.sh python` (phase 7) and `tools/bindings/gate.sh python,js`

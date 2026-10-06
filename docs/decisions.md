@@ -1907,3 +1907,50 @@ bindings-design.md, "JS/WASM".
   `capabilities`/`requireCapability`, `normalize`/`optionTypes` (a few
   types), `read`/`Loaded`, `FontSet`/`Font`/`Glyph` basics, `Bitmap` basics,
   `withAsyncResources`, `init`/`initSync`/`wasmUrl`.
+
+## 2026-10-06 — bdfparser-js compatible API (`fontpixel/compat/bdfparser`)
+
+**Context:** Phase 8 needs an independent bdfparser-js 3.0 compatible API next
+to the native JS API, verified by bdfparser-js's own (unmodified) vitest suite.
+bdfparser-js exposes mutable plain data (`font.headers`, `font.props`,
+`font.glyphs` as a `Map`, `font.unencoded`, `Glyph.meta`, `Bitmap.bindata`)
+and words some messages differently from the Python bdfparser, while the
+shared Rust compatibility core (`fontpixel::compat::bdfparser`) follows Python.
+
+**Choices:**
+- Data stays in Rust: wasm handles `BdfparserRawFont`/`RawGlyph`/`RawBitmap`
+  bind the shared core one to one (`crates/fontpixel-wasm/src/compat*.rs`, glue
+  names that cannot collide with the native `Font`/`Glyph`/`Bitmap`);
+  `js/compat_bdfparser.js` wraps them in bdfparser-js's classes. The mutable
+  attributes are live views (Proxies and `Map` subclasses) that project the
+  model on read (cached per edit revision) and edit it in place on write,
+  including item assignment into 17-slot meta lists and `unencoded` array
+  mutations; `Glyph.meta` is a plain object whose direct edits are written by
+  the next editing method (changed keys only). Handles sit behind
+  non-enumerable symbols so equality helpers see bdfparser-js's attributes.
+- Package subpaths `./compat/bdfparser`, `./compat/bdfparser/cjk` (marker
+  module: the exact CJK tables are always built in) and
+  `./compat/bdfparser/cli` (in-process `main`/`loadFontFile`, the only module
+  touching `node:fs`). The module awaits `init()` itself and throws
+  `UnsupportedError` in builds without `compat-bdfparser`.
+- JS-specific wording and policies live in the JS layer, not in the shared
+  core: Python-`repr` quoting in parse diagnostics is rewritten to
+  bdfparser-js's, `glyphbycp`/`glyph` do not warn, the missing-rows warning is
+  emitted once per glyph, native PCF decoder notes stay in the report, PCF
+  directory entries of unknown types are ignored, non-integral numeric
+  properties are written unquoted by `tobdf`, Rust errors become `RangeError`/
+  `TypeError`/`BDFParseError`/`Error` with the original as `cause`.
+- Core fixes (both bindings; Python suite re-run): the TrueType writer
+  reports a non-hex row with SPEC-v3 §11.6's message; the BDFP reader uses
+  bdfparser's `Malformed BDFP table: …` texts (`bad ppu`, `bad structure`,
+  `missing key`, `bad glyph entry`) and reads a non-object `propnames` as
+  empty, as bdfparser-js; `tobdf` iterates a `comment` value as bdfparser
+  does (falsy → none, a string → one line per character, another truthy
+  value → error) instead of silently ignoring it.
+- Reference run (`tests/compat_bdfparser/run_reference.mjs`, results JSON and
+  KNOWN_DIFFERENCES.md committed): 1178 passed, 11 failed, 3 skipped (1181/11/0
+  with the slow tests); `build.test.ts`/`browser.test.ts` test bdfparser-js's
+  `tsup` bundles and do not load. The 11 failures are design boundaries
+  (labels 0–2, rectangular rasters, always-exact charsets, gzip without
+  `DecompressionStream`, booleans as integers) and the native PCF decoder's
+  wording for three malformed inputs.
