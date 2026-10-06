@@ -26,6 +26,18 @@ pub fn modules() -> Vec<String> {
     names.into_iter().map(str::to_owned).collect()
 }
 
+/// The IDs of `ids` this build compiles (catalogue `feature_enabled`).
+pub fn compiled(ids: &[&str]) -> Vec<String> {
+    ids.iter()
+        .filter(|id| {
+            fontpixel::formats::catalogue::CATALOGUE
+                .iter()
+                .any(|f| f.id == **id && f.feature_enabled)
+        })
+        .map(|id| (*id).to_owned())
+        .collect()
+}
+
 const SPECIAL: &[&str] = &[
     #[cfg(any(feature = "all-formats", feature = "merge"))]
     "embedded",
@@ -164,10 +176,10 @@ pub mod embedded {
         Ok(o.retained_bytes(max).js()? as f64)
     }
 
-    /// The catalogue format IDs this namespace serves.
+    /// The catalogue format IDs this namespace serves in this build.
     #[wasm_bindgen(js_namespace = ["formats", "embedded"], js_name = formatIds)]
     pub fn format_ids() -> Vec<String> {
-        ["otb", "bdat", "color"].map(str::to_owned).to_vec()
+        super::compiled(&["otb", "bdat", "color"])
     }
 }
 
@@ -300,10 +312,10 @@ pub mod vector_raster {
         v::detect_native_ppem(&bytes, &l).js()
     }
 
-    /// The catalogue format IDs this namespace serves.
+    /// The catalogue format IDs this namespace serves in this build.
     #[wasm_bindgen(js_namespace = ["formats", "vectorRaster"], js_name = formatIds)]
     pub fn format_ids() -> Vec<String> {
-        IDS.map(str::to_owned).to_vec()
+        super::compiled(&IDS)
     }
 }
 

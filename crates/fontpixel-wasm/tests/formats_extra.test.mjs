@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { PROFILE, REPO, load } from './helpers.mjs';
-import { GOLDEN, NATIVE, enabled, hashes, sha, sourceFile } from './formats_support.mjs';
+import { REPO, load } from './helpers.mjs';
+import { GOLDEN, NATIVE, PROFILE, enabled, hashes, sha, sourceFile } from './formats_support.mjs';
 
 const fp = await load();
 const UNI3 = fp.read(sourceFile('uni3'));
@@ -132,13 +132,14 @@ test('embedded codecs', { skip: needs('otb') }, () => {
   assert.throws(() => F.embedded.read(data, 'png'), fp.InvalidInputError);
   const codec = F.embedded.codec('apple');
   assert.equal(codec.kind, 'apple');
-  assert.deepEqual(new Set(Object.keys(codec)), new Set(['kind', 'read_options', 'write_options', 'color_write_options']));
+  const keys = ['kind', 'read_options', 'write_options', ...(enabled(fp, 'color') ? ['color_write_options'] : [])];
+  assert.deepEqual(new Set(Object.keys(codec)), new Set(keys));
   const md = fp.normalize('formats::embedded::metadata::EmbeddedMetadataOptions');
   assert.equal(F.embedded.validateMetadata(md, 'open_type'), undefined);
   assert.equal(F.embedded.metadataRetainedBytes(md), 0);
   assert.equal(F.embedded.metadataRetainedBytes(md, 10), 0);
   assert.throws(() => F.embedded.validateMetadata({ ...md, glyph_order: 'codepoint' }, 'color'), fp.InvalidInputError);
-  assert.deepEqual(F.embedded.formatIds(), ['otb', 'bdat', 'color']);
+  assert.deepEqual(F.embedded.formatIds(), ['otb', 'bdat', 'color'].filter((f) => enabled(fp, f)));
   if (FULL) {
     const { data: color } = F.embedded.writeColor(UNI3.fonts);
     assert.equal(sha(color), GOLDEN.formats.color.write.assets['font.ttf']);
@@ -171,7 +172,7 @@ test('vector raster helpers', { skip: needs('ttf') }, () => {
   assert.throws(() => F.vectorRaster.read(fixture), fp.InvalidInputError);
   const { model: circle } = F.vectorRaster.read(fixture, { options: { ppem: 16 } });
   if (enabled(fp, 'yaff')) assert.equal(sha(yaff(circle)), GOLDEN.fixtures['ttf-mini-circle'].yaff);
-  assert.deepEqual(F.vectorRaster.formatIds(), ['ttf', 'otf', 'woff', 'woff2', 'ttc', 'vector-raster']);
+  assert.deepEqual(F.vectorRaster.formatIds(), ['ttf', 'otf', 'woff', 'woff2', 'ttc', 'vector-raster'].filter((f) => enabled(fp, f)));
 });
 
 test('svg image helpers', { skip: needs('svg') }, () => {

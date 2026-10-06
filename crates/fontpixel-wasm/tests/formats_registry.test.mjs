@@ -4,8 +4,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { gunzipSync, gzipSync } from 'node:zlib';
-import { HAS_CLI, PROFILE, cliFiles, load } from './helpers.mjs';
-import { GOLDEN, assetsOf, caseOf, enabled, hashes, sha, sourceFile } from './formats_support.mjs';
+import { HAS_CLI, cliFiles, load } from './helpers.mjs';
+import { GOLDEN, PROFILE, assetsOf, caseOf, enabled, hashes, sha, sourceFile } from './formats_support.mjs';
 
 const fp = await load();
 const UNI3 = sourceFile('uni3');

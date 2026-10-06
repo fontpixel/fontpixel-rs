@@ -15,22 +15,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { HAS_CLI, PROFILE, REPO, cliFiles, load } from './helpers.mjs';
-import {
-  CLI_IMPLICIT,
-  FIXTURES,
-  GOLDEN,
-  assetsOf,
-  callAdaptive,
-  caseOf,
-  enabled,
-  hashes,
-  namespaceOf,
-  primaryName,
-  sha,
-  sourceBytes,
-  sourceFile,
-} from './formats_support.mjs';
+import { HAS_CLI, REPO, cliFiles, load } from './helpers.mjs';
+import { CLI_IMPLICIT, FIXTURES, GOLDEN, PROFILE, assetsOf, callAdaptive, caseOf, enabled, hashes, namespaceOf, primaryName, sha, sourceBytes, sourceFile } from './formats_support.mjs';
 
 const fp = await load();
 const STATUS = Object.fromEntries(fp.listFormats().map((s) => [s.format.id, s]));
@@ -70,23 +56,28 @@ function writeCase(fid) {
   });
 }
 
-/** Read-back model check: YAFF hash against the golden file, else BDF bytes against a live CLI run. */
+/**
+ * Read-back model check: YAFF hash against the golden file. Builds without
+ * the YAFF writer (merge) compare the OTB both sides write for the read-back
+ * model in a live CLI run (the CLI's BDF writer needs headers that fonts read
+ * from OpenType files do not have).
+ */
 function assertReadback(t, fid, back, written) {
   const g = GOLDEN.formats[fid];
   if (HAS_YAFF) {
     assert.equal(sha(yaffOf(back.fonts, back.report)), g.readback.yaff);
     return;
   }
-  if (!HAS_CLI) {
-    t.diagnostic('no YAFF writer in this build and no native CLI: read-back model not compared');
+  if (!HAS_CLI || !enabled(fp, 'otb')) {
+    t.diagnostic('no YAFF or OTB writer in this build, or no native CLI: read-back model not compared');
     return;
   }
   const c = caseOf(fp, fid);
   const primary = written.output.primary;
-  const cli = cliFiles(assetsOf(written), ['convert', primary, '--from', fid, ...c.cliRead, '-o', 'back.bdf']);
+  const cli = cliFiles(assetsOf(written), ['convert', primary, '--from', fid, ...c.cliRead, '-o', 'back.otb', '--to', 'otb']);
   assert.equal(cli.code, 0, cli.stderr);
-  const ours = fp.write(back.fonts, 'bdf', { report: back.report }).output.intoSingle();
-  assert.deepEqual(ours, cli.files['back.bdf']);
+  const ours = fp.write(back.fonts, 'otb', { report: back.report }).output.intoSingle();
+  assert.deepEqual(ours, cli.files['back.otb']);
 }
 
 test('catalogue matches cli listing', () => {
@@ -247,7 +238,7 @@ for (const [key, [rel, format, options]] of Object.entries(FIXTURES)) {
   });
 }
 
-test('compiled-out formats report FeatureDisabledError, never empty success', (t) => {
+test('compiled-out formats fail with typed errors, never empty success', (t) => {
   const off = IDS.filter((fid) => !STATUS[fid].format.feature_enabled);
   if (PROFILE === 'full') assert.deepEqual(off, []);
   t.diagnostic(`${off.length} formats compiled out of the ${PROFILE} build`);
@@ -257,16 +248,19 @@ test('compiled-out formats report FeatureDisabledError, never empty success', (t
   for (const fid of off) {
     const st = STATUS[fid];
     assert.deepEqual([st.detect, st.read, st.write], [false, false, false]);
+    // The registry has no codec for it: the native NotImplemented error with
+    // format and operation (as a native build without the feature); the
+    // typed setters say why (FeatureDisabled).
     assert.throws(
       () => fp.write(loaded.fonts, fid),
-      (e) => e instanceof fp.FeatureDisabledError && e.kind === 'FeatureDisabled' && e.format === fid,
+      (e) => e instanceof fp.NotImplementedFormatError && e.kind === 'NotImplemented' && e.format === fid && e.operation === 'Write',
     );
     assert.throws(
       () => fp.read(new Uint8Array(8), { format: fid }),
-      (e) => e instanceof fp.FeatureDisabledError && e.format === fid,
+      (e) => e instanceof fp.NotImplementedFormatError && e.format === fid && e.operation === 'Read',
     );
-    assert.throws(() => reg.ensureWritable(fid), fp.FeatureDisabledError);
-    assert.throws(() => reg.setWriteOptions(fid, {}), (e) => e instanceof fp.FeatureDisabledError && e.format === fid);
+    assert.throws(() => reg.ensureWritable(fid), fp.NotImplementedFormatError);
+    assert.throws(() => reg.setWriteOptions(fid, {}), (e) => e instanceof fp.FeatureDisabledError && e.kind === 'FeatureDisabled' && e.format === fid);
     assert.ok(!served.has(fid), `${fid} has no namespace in this build`);
   }
   // Every compiled format has a namespace.

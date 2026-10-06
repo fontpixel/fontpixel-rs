@@ -13,7 +13,10 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { REPO } from './helpers.mjs';
+import { REPO, buildInfo } from './helpers.mjs';
+
+/** Profile of the loaded package (build-info.json; FONTPIXEL_WASM_PKG may point at any profile). */
+export const PROFILE = buildInfo().profile;
 
 export const PY_DATA = path.join(REPO, 'crates', 'fontpixel-py', 'tests', 'data', 'formats');
 export const GOLDEN = JSON.parse(readFileSync(path.join(PY_DATA, 'cli_golden.json'), 'utf8'));
@@ -180,7 +183,7 @@ export const FIXTURES = {
 /** The case of `fid` (default: the Unicode 3x5 font, no options), with the raw layout resolved. */
 export function caseOf(fp, fid) {
   const c = CASES[fid] ?? makeCase();
-  if (c.read.layout === RAW_LAYOUT) return { ...c, read: { layout: fp.formats.raw.rawLayout(3, 6) } };
+  if (c.read.layout === RAW_LAYOUT && fp.formats.raw) return { ...c, read: { layout: fp.formats.raw.rawLayout(3, 6) } };
   return c;
 }
 

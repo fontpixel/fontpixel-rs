@@ -7,8 +7,8 @@ import test from 'node:test';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { PROFILE, REPO, load } from './helpers.mjs';
-import { assetsOf, caseOf, enabled, sourceFile } from './formats_support.mjs';
+import { REPO, load } from './helpers.mjs';
+import { PROFILE, assetsOf, caseOf, enabled, sourceFile } from './formats_support.mjs';
 
 const fp = await load();
 const TYPES = fp.optionTypes();
