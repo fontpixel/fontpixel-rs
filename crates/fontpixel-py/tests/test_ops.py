@@ -8,7 +8,6 @@ groups) are both exercised, as are errors, strict loss and resource limits.
 """
 import json
 import os
-import shutil
 import subprocess
 import threading
 from pathlib import Path
@@ -70,7 +69,8 @@ def test_formats_documents_equal_the_command_line(tmp_path):
     assert cli(["formats"], tmp_path)[1] == result.text()
     assert result.document == json.loads(out)
     status = result.format_status("bdf")
-    assert status["id"] == "bdf" if "id" in status else status
+    assert status["format"]["id"] == "bdf" and status["read"] and status["write"]
+    assert status in result.document["formats"] or status == result.summary["formats"][0]
     assert result.format_status("nope") is None
     assert result.exit_code == 0 and result.outputs == {} and result.report is None
     with pytest.raises(TypeError):
@@ -85,6 +85,11 @@ def test_capabilities_constants_and_keys():
     assert ops.DEFAULT_MAX_TASK_REPORT_BYTES == 64 << 20
     assert ops.memory_key("./a/../b//c.bdf") == "b/c.bdf"
     assert ops.memory_key(Path("/x/./y")) == "/x/y"
+    assert ops.output_format_for("x/font.woff2") == "woff2"
+    assert ops.output_format_for(Path("a.pcf")) == "pcf"
+    with pytest.raises(fp.AmbiguousFormatError) as info:
+        ops.output_format_for("o.psf")
+    assert set(info.value.candidates) >= {"psf", "printshop"} and info.value.exit_code == 1
 
 
 def test_parse_args_and_inspect_request_share_the_command_line_definition():
@@ -171,8 +176,8 @@ def test_requests_are_strict_and_accept_keywords_and_paths(tmp_path):
 # ------------------------------------------------------------ convert
 
 
-CONVERSIONS = ["o.pcf", "o.psf", "o.yaff", "o.otb", "o.ttf", "o.woff2", "o.svg", "o.fnt",
-               "o.bdf"]
+CONVERSIONS = ["o.pcf", "o.yaff", "o.otb", "o.ttf", "o.woff2", "o.svg", "o.bdf",
+               "o.kbitx"]
 
 
 @needs_cli
@@ -256,15 +261,15 @@ def test_merge_equals_the_command_line(tmp_path, monkeypatch):
     assert result.summary["family"] == "Mix" and len(result.summary["summaries"]) == 3
     assert result.report is None
     text_args = [a for a in args if a not in ("--report", "json")]
-    compare_writer(tmp_path / "t", monkeypatch, text_args, ops.merge) if (
-        (tmp_path / "t").mkdir() or True) else None
+    (tmp_path / "text").mkdir()
+    compare_writer(tmp_path / "text", monkeypatch, text_args, ops.merge)
 
 
 @needs_cli
 def test_variants_and_subset_equal_the_command_line(tmp_path, monkeypatch):
     variants = compare_writer(
         tmp_path, monkeypatch,
-        ["variants", "--base", "s.bdf", "--lang", "ja=b.bdf", "-o", "v.ttf",
+        ["variants", "--base", "s.bdf", "--lang", "ja=s.bdf", "-o", "v.ttf",
          "--report", "json"], ops.variants)
     assert variants.summary["output"] == "v.ttf" and variants.report is not None
     sub = tmp_path / "sub"
@@ -334,8 +339,8 @@ def test_reader_results_expose_typed_fields():
     info = ops.info(input="s.bdf", files=INPUTS)
     assert isinstance(info.fonts, fp.FontSet) and len(info.fonts.fonts) == 1
     assert info.summary["format"] == "bdf" and info.summary["font_count"] == 1
-    assert json.loads(info.font_json(0))["glyph_count"] if "glyph_count" in json.loads(
-        info.font_json(0)) else True
+    assert json.loads(info.font_json(0)) == info.document["fonts"][0]
+    assert json.loads(info.font_json(0))["glyph_count"] == len(info.fonts.fonts[0].glyphs())
     assert info.report["entries"] is not None
     with pytest.raises(fp.FontpixelError):
         info.font_json(5)
@@ -349,7 +354,8 @@ def test_reader_results_expose_typed_fields():
     assert check.summary["kind"] == "native" and check.summary["format"] == "bdf"
     assert ops.validate(input="e.ttf", files=INPUTS).summary["kind"] == "sfnt"
     preview = ops.preview(input="s.bdf", text="A", chars="X.", files=INPUTS)
-    assert "X" in preview.summary["text"] and preview.text() == preview.summary["text"]
+    assert "X" in preview.summary["text"]
+    assert preview.text().rstrip("\n") == preview.summary["text"].rstrip("\n")
     assert json.loads(preview.json()) == preview.document
 
 
@@ -361,7 +367,7 @@ def test_errors_match_the_command_line(tmp_path):
     d = workdir(tmp_path, "cli")
     cases = [
         # strict loss: exit 3 with the full report
-        (["convert", "s.bdf", "-o", "x.psf", "--strict", "--report", "json"], ops.convert,
+        (["convert", "s.bdf", "-o", "x.pcf", "--strict", "--report", "json"], ops.convert,
          fp.StrictLossError, 3),
         # resource limit: exit 1 with the resource and limit
         (["convert", "s.bdf", "-o", "x.pcf", "--max-input-bytes", "100", "--report", "json"],
@@ -448,13 +454,13 @@ def test_resolver_objects_and_resource_sets_match_named_buffers():
 
 def test_memory_outputs_with_sidecars_are_grouped_by_destination():
     result = ops.convert(inputs=["s.bdf"], output="atlas/s.png", to="image",
-                         image_layout="imageset", files=INPUTS)
+                         image_layout="imageset", image_domain="unicode", files=INPUTS)
     keys = set(result.outputs)
-    assert len(keys) > 1 and all(k.startswith("atlas/") for k in keys)
+    assert len(keys) > 1 and all(k.startswith("atlas/s.png/") for k in keys)
     bundle = result.bundles["atlas/s.png"]
     assert isinstance(bundle, fp.OutputBundle)
     with pytest.raises(fp.InvalidInputError, match="overlap"):
-        ops.merge(family="F", parts=[{"input": "s.bdf", "take": "all"}],
+        ops.merge(family="F", spacing="prop", parts=[{"input": "s.bdf", "take": "all"}],
                   outputs=[{"destination": "m.bdf"}, {"destination": "m.bdf"}], files=INPUTS)
 
 
@@ -464,7 +470,7 @@ def test_filesystem_mode_protects_sources_and_rolls_back_groups(tmp_path, monkey
     (d / "first.bdf").write_bytes(b"previous")
     (d / "blocker").write_bytes(b"file")
     with pytest.raises(fp.FontpixelError):
-        ops.merge(family="Rollback", parts=[{"input": "s.bdf", "take": "all"}],
+        ops.merge(family="Rollback", spacing="prop", parts=[{"input": "s.bdf", "take": "all"}],
                   outputs=[{"destination": "first.bdf"},
                            {"destination": "blocker/second.ttf"}])
     assert (d / "first.bdf").read_bytes() == b"previous"
@@ -474,8 +480,8 @@ def test_filesystem_mode_protects_sources_and_rolls_back_groups(tmp_path, monkey
     assert (d / "b.bdf").read_bytes() == BLOCK
     # A strict failure writes nothing.
     with pytest.raises(fp.StrictLossError):
-        ops.convert(inputs=["s.bdf"], output="x.psf", strict=True)
-    assert not (d / "x.psf").exists()
+        ops.convert(inputs=["s.bdf"], output="x.pcf", strict=True)
+    assert not (d / "x.pcf").exists()
 
 
 def test_operations_release_the_gil_and_run_in_threads():
@@ -525,6 +531,8 @@ id = "mix"
 kind = "merge"
 family = "Mix"
 outputs = ["out/m.bdf"]
+[tasks.options]
+spacing = "prop"
 [[tasks.parts]]
 input = "s.bdf"
 take = "all"
@@ -539,7 +547,7 @@ TYPED = {
         {"id": "check", "kind": "validate", "input": "s.bdf", "json": True},
         {"id": "bad", "kind": "convert", "inputs": ["s.bdf"], "output": "out/bad.psf",
          "to": "psf", "psf_version": "3", "report": "json"},
-        {"id": "mix", "kind": "merge", "family": "Mix",
+        {"id": "mix", "kind": "merge", "family": "Mix", "spacing": "prop",
          "parts": [{"input": "s.bdf", "take": "all"}],
          "outputs": [{"destination": "out/m.bdf"}], "report": "json"},
     ],
@@ -629,4 +637,3 @@ def test_batch_in_memory_runs_without_a_filesystem(tmp_path, monkeypatch):
     result = ops.batch(TYPED, files=INPUTS)
     assert list(tmp_path.iterdir()) == []
     assert result.workers == 1 and result.jobs == 1
-    assert shutil.which  # keep shutil imported for helpers

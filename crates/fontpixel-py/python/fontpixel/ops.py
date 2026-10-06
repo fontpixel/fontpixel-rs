@@ -14,11 +14,12 @@ Storage is chosen per call with ``files``:
   (``str`` or ``os.PathLike``), sidecars are discovered beside their primary
   file, sources are protected from being overwritten and every multi-output
   group is written transactionally, exactly as ``fontpixel`` does.
-* ``files={"name.bdf": b"...", ...}`` -- memory mode: paths are keys into the
-  named buffers (``bytes``, ``bytearray`` or ``memoryview``); sidecars resolve
-  beside their primary key and a key prefix acts as a directory. Nothing is
-  read from or written to disk; ``result.outputs`` maps each prepared asset's
-  key to its bytes.
+* ``files={"name.bdf": b"...", ...}`` or a :class:`fontpixel.ResourceSet` --
+  memory mode: paths are keys into the named buffers (``bytes``, ``bytearray``
+  or ``memoryview``); sidecars resolve beside their primary key and a key
+  prefix acts as a directory. Nothing is read from or written to disk;
+  ``result.outputs`` maps each prepared asset's key to its bytes and
+  ``result.bundles`` each destination to its :class:`fontpixel.OutputBundle`.
 * ``files=<resolver>`` -- memory mode over an object with ``entry(path)``
   (``None``, a file length or ``"directory"``), ``read(path) -> bytes`` and
   ``list(directory) -> list[str]``; an exception raised by a callback is
@@ -61,6 +62,7 @@ batch_file = _ops.batch_file
 parse_batch_toml = _ops.parse_batch_toml
 capabilities = _ops.capabilities
 memory_key = _ops.memory_key
+output_format_for = _ops.output_format_for
 parse_args = _ops.parse_args
 inspect_request = _ops.inspect_request
 
@@ -83,7 +85,7 @@ __all__ = [
     "OperationResult", "BatchResult", "convert", "vectorize", "merge", "variants",
     "subset", "charset", "render", "validate", "diff", "info", "preview",
     "formats", "batch", "batch_toml", "batch_file", "parse_batch_toml",
-    "capabilities", "memory_key", "parse_args", "inspect_request",
+    "capabilities", "memory_key", "output_format_for", "parse_args", "inspect_request",
     "DEFAULT_MAX_WORKING_BYTES", "DEFAULT_MAX_PENDING_BYTES",
     "DEFAULT_MAX_REPORT_BYTES", "DEFAULT_MAX_TASK_REPORT_BYTES",
 ]

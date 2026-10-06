@@ -494,7 +494,9 @@ impl PyOperationResult {
     fn format_status<'py>(&self, py: Python<'py>, id: &str) -> PyResult<Option<Bound<'py, PyAny>>> {
         match &self.response {
             Response::Formats(r) => r.get(id).map(|s| conv::to_py(py, s)).transpose(),
-            _ => Err(PyTypeError::new_err("format_status() applies to formats results")),
+            _ => Err(PyTypeError::new_err(
+                "format_status() applies to formats results",
+            )),
         }
     }
     fn __repr__(&self) -> String {
@@ -757,15 +759,17 @@ fn batch_task(value: Value) -> PyResult<BatchTask> {
         None => return Err(request_error(format!("task {id} needs a kind"))),
     };
     let declared_inputs = declared_paths(&map);
-    Ok(match serde_json::from_value::<TaskRequest>(Value::Object(map)) {
-        Ok(request) => BatchTask::new(id, request),
-        Err(error) => BatchTask {
-            id,
-            kind,
-            declared_inputs,
-            action: TaskAction::Invalid(error.to_string()),
+    Ok(
+        match serde_json::from_value::<TaskRequest>(Value::Object(map)) {
+            Ok(request) => BatchTask::new(id, request),
+            Err(error) => BatchTask {
+                id,
+                kind,
+                declared_inputs,
+                action: TaskAction::Invalid(error.to_string()),
+            },
         },
-    })
+    )
 }
 
 /// A whole-batch failure: the exception carries `document`, the failure JSON
@@ -868,8 +872,7 @@ fn parse_batch_toml<'py>(
     text: &str,
     base: Option<PathBuf>,
 ) -> PyResult<Bound<'py, PyAny>> {
-    let request =
-        batch::toml::parse(text, &base.unwrap_or_default()).map_err(op_error)?;
+    let request = batch::toml::parse(text, &base.unwrap_or_default()).map_err(op_error)?;
     let tasks = request
         .tasks
         .iter()
@@ -936,6 +939,14 @@ fn capabilities(py: Python<'_>) -> PyResult<Bound<'_, PyDict>> {
 #[pyfunction]
 fn memory_key(path: PathBuf) -> String {
     fontpixel_ops::memory::key(&path)
+}
+
+/// The output format `convert` infers for a destination path (OpenType
+/// container extensions first, then the registry's filename hints); an
+/// ambiguous or unknown extension raises like `convert` without `to`.
+#[pyfunction]
+fn output_format_for(destination: PathBuf) -> PyResult<String> {
+    fontpixel_ops::convert::output_format_for(&destination).map_err(op_error)
 }
 
 fn command_name(command: &Command) -> &'static str {
@@ -1041,7 +1052,10 @@ fn inspect_request<'py>(
         }
         "merge" => {
             let r: MergeRequest = parse(&object)?;
-            (Command::Merge(Box::new(r.clone())), Some(TaskRequest::Merge(Box::new(r))))
+            (
+                Command::Merge(Box::new(r.clone())),
+                Some(TaskRequest::Merge(Box::new(r))),
+            )
         }
         "variants" => {
             let r: VariantsRequest = parse(&object)?;
@@ -1052,11 +1066,17 @@ fn inspect_request<'py>(
         }
         "subset" => {
             let r: SubsetRequest = parse(&object)?;
-            (Command::Subset(Box::new(r.clone())), Some(TaskRequest::Subset(Box::new(r))))
+            (
+                Command::Subset(Box::new(r.clone())),
+                Some(TaskRequest::Subset(Box::new(r))),
+            )
         }
         "charset" => {
             let r: CharsetRequest = parse(&object)?;
-            (Command::Charset(Box::new(r.clone())), Some(TaskRequest::Charset(Box::new(r))))
+            (
+                Command::Charset(Box::new(r.clone())),
+                Some(TaskRequest::Charset(Box::new(r))),
+            )
         }
         "validate" => {
             let r: ValidateRequest = parse(&object)?;
@@ -1067,11 +1087,23 @@ fn inspect_request<'py>(
         }
         "diff" => {
             let r: DiffRequest = parse(&object)?;
-            (Command::Diff(Box::new(r.clone())), Some(TaskRequest::Diff(Box::new(r))))
+            (
+                Command::Diff(Box::new(r.clone())),
+                Some(TaskRequest::Diff(Box::new(r))),
+            )
         }
-        "info" => (Command::Info(Box::new(parse::<InfoRequest>(&object)?)), None),
-        "preview" => (Command::Preview(Box::new(parse::<PreviewRequest>(&object)?)), None),
-        "render" => (Command::Render(Box::new(parse::<RenderRequest>(&object)?)), None),
+        "info" => (
+            Command::Info(Box::new(parse::<InfoRequest>(&object)?)),
+            None,
+        ),
+        "preview" => (
+            Command::Preview(Box::new(parse::<PreviewRequest>(&object)?)),
+            None,
+        ),
+        "render" => (
+            Command::Render(Box::new(parse::<RenderRequest>(&object)?)),
+            None,
+        ),
         "formats" => (Command::Formats(parse::<FormatsRequest>(&object)?), None),
         other => return Err(request_error(format!("unknown operation {other:?}"))),
     };
@@ -1104,6 +1136,7 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
         wrap_pyfunction!(parse_batch_toml, &ops)?,
         wrap_pyfunction!(capabilities, &ops)?,
         wrap_pyfunction!(memory_key, &ops)?,
+        wrap_pyfunction!(output_format_for, &ops)?,
         wrap_pyfunction!(parse_args, &ops)?,
         wrap_pyfunction!(inspect_request, &ops)?,
     ] {
@@ -1111,8 +1144,14 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     }
     ops.add_class::<PyOperationResult>()?;
     ops.add_class::<PyBatchResult>()?;
-    ops.add("DEFAULT_MAX_WORKING_BYTES", batch::DEFAULT_MAX_WORKING_BYTES)?;
-    ops.add("DEFAULT_MAX_PENDING_BYTES", batch::DEFAULT_MAX_PENDING_BYTES)?;
+    ops.add(
+        "DEFAULT_MAX_WORKING_BYTES",
+        batch::DEFAULT_MAX_WORKING_BYTES,
+    )?;
+    ops.add(
+        "DEFAULT_MAX_PENDING_BYTES",
+        batch::DEFAULT_MAX_PENDING_BYTES,
+    )?;
     ops.add("DEFAULT_MAX_REPORT_BYTES", batch::DEFAULT_MAX_REPORT_BYTES)?;
     ops.add(
         "DEFAULT_MAX_TASK_REPORT_BYTES",
