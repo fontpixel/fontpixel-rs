@@ -63,7 +63,13 @@
    - wasm 体积（full/merge/minimal，含与不含 WOFF2/brotli、CJK 字符集、矢量化）与初始化时间（Node、浏览器）。
    - JS 文档（类似 `docs/python-api.md`）、示例、TS 类型检查；Node 18 加载验证（目前只在 Node 24 跑过）。
    - 第 8 阶段报告 `reports/phase-8.md` 与 `benches/PHASE8-REPORT.md`。
-4. 第 9 阶段 `web/merge/`：纯静态 HTML + 原生 JS 模块 + wasm（PLAN 明确不用前端框架，decisions.md 已记录，这一点
+4. 第 9 阶段 `web/merge/`。**wasm 体积决定（用户 2026-10-06 同意）**：
+   - npm 包维持完整原生 API，按构建配置分档（full / merge / minimal），没编入的格式调用时明确报 `UnsupportedError`；
+   - 网页专门做一个只含常用格式的瘦身配置（新增 profile，如 `web`）：读 BDF、PCF、PSF、FNT/FON、OTB、
+     Unifont hex、YAFF 等常见点阵格式，写 BDF、PCF、OTB、TTF/OTF、WOFF2，加拼合与预览渲染；CJK 编码表看样例
+     字体是否需要，需要时考虑按需加载；记录体积与加载时间；
+   - 用户上传冷门格式时提示「不支持此格式，请先用命令行转换」，不按需加载完整版。
+   其余要求：纯静态 HTML + 原生 JS 模块 + wasm（PLAN 明确不用前端框架，decisions.md 已记录，这一点
    优先于用户「新前端默认 Svelte 5」的通用规则）；`docs/web-merge.md` 定义 catalogue.json；样例目录只用许可证允许的
    `../samples/fontpixel-catalogue/*`（各有 family.toml 与许可证）和 `../samples/tong-pixel-sans`（OFL）；中英 i18n；
    Playwright 端到端（等宽/比例拼合导出 BDF 和 WOFF2 与 CLI 逐字节比较、等宽错误提示、保留名拦截、5 万字不卡）；报告。
