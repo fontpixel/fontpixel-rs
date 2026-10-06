@@ -1572,3 +1572,39 @@ Normalized metadata edits, optional variants naming overrides and explicit embed
 UPM/reference-strike/rounding controls preserve prior defaults. Catalogue omissions
 must be fixed; implicit FontTools defaults such as fsType are not user license
 instructions and must not be blindly copied. Document remaining differences.
+
+## 2026-10-06 — Phases 7–9 architecture
+
+**Context:** The owner asked to continue through phases 7, 8 and 9 and the final
+report after the strict phase 6 delivery (local commits only; no push, publish or
+deploy). Probes on `8cd6d66`: the core builds for `wasm32-unknown-unknown` with all
+features unchanged; the public surface (nightly rustdoc JSON) is about 946 items
+plus 537 inherent methods, 648 of them under `formats`; only 1 of about 197
+option-like types derives `Deserialize`; brotli 9.0.0 ships a single-threaded
+`compress_multi` driving the same chunked algorithm as the threaded one.
+
+**Choices:**
+- CLI orchestration (convert, batch, merge, variants, subset, charset, validate,
+  diff, info, preview/render) moves into a new library crate `fontpixel-ops` with
+  typed requests. It has an in-memory bundle mode and a filesystem mode that keeps
+  source-alias protection and transactional outputs. `fontpixel-cli` becomes clap
+  parsing plus I/O over it; CLI output must stay byte-identical (checked with the
+  phase 6 identity flow). Bindings never spawn the CLI.
+- Typed options for every format and operation get serde `Deserialize`/`Serialize`
+  behind the existing `serde` feature, keeping each type's validation (constructors
+  or `try_from`). Bindings accept them as Python dicts / JS objects; this is the
+  idiomatic adaptation of Rust option structs, not a reduced surface.
+- Coverage gate: `tools/bindings/inventory.py` lists every public item from rustdoc
+  JSON; `bindings/coverage.toml` maps each to its Python and JS entry, status
+  (`bound`, `adapted`, `unavailable` with reason and evidence) and test. The checker
+  fails on any unmapped or stale entry and runs in each phase gate.
+- Python: pyo3 0.28, abi3 for CPython >= 3.10, maturin; `extension-module` is enabled
+  only by maturin so `cargo test --workspace` keeps linking. manylinux wheels are
+  built locally with `maturin --zig` (the Docker daemon is not running); not published.
+- WASM: wasm-bindgen with `serde-wasm-bindgen`; WOFF2 uses brotli's single-threaded
+  `compress_multi` with the same chunk count, so output equals the native CLI default
+  (verified by tests in phase 8). Batch parallelism, filesystem paths and threads are
+  queryable `unavailable` items with explicit errors.
+- Phase 9 uses no front-end framework: PLAN and the addendum require plain HTML and
+  JS/TS modules plus wasm. This overrides the owner's general Svelte 5 default for
+  new front ends, which is meant for projects without such a requirement.
