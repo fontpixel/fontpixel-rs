@@ -70,7 +70,9 @@ fi
 
 # Package layout: replace only the files this script writes.
 files=(fontpixel_wasm.js fontpixel_wasm.d.ts fontpixel_wasm_bg.wasm fontpixel_wasm_bg.wasm.d.ts)
-js=(index.js index.d.ts errors.js errors.d.ts plain.js guard.js resources.js resources.d.ts)
+js=(index.js index.d.ts errors.js errors.d.ts plain.js guard.js resources.js resources.d.ts
+  compat_bdfparser.js compat_bdfparser.d.ts compat_bdfparser_cjk.js compat_bdfparser_cjk.d.ts
+  compat_bdfparser_cli.js compat_bdfparser_cli.d.ts)
 for f in "${files[@]}"; do cp -- "$stage/$f" "$out/$f"; done
 for f in "${js[@]}"; do cp -- "crates/fontpixel-wasm/js/$f" "$out/$f"; done
 version="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n 1)"
