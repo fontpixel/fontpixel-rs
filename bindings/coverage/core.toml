@@ -6,6 +6,8 @@ pattern = "fontpixel::error"
 status = "adapted"
 python = "fontpixel exception classes"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
+js = "error classes (FontpixelError and subclasses)"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::core errors map to their classes"
 reason = "errors are exceptions (errors.rs)"
 
 [[rule]]
@@ -13,6 +15,8 @@ pattern = "fontpixel::error::Error"
 status = "adapted"
 python = "fontpixel.FontpixelError and subclasses"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
+js = "FontpixelError subclass per variant (kind, exitCode, structured fields)"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::core errors map to their classes"
 reason = "one exception class per variant carrying kind and the variant fields as attributes"
 
 [[rule]]
@@ -20,6 +24,8 @@ pattern = "fontpixel::error::Error::exit_code"
 status = "adapted"
 python = "FontpixelError.exit_code"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
+js = "FontpixelError.exitCode"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::core errors map to their classes"
 reason = "exception attribute"
 
 [[rule]]
@@ -339,6 +345,8 @@ pattern = "fontpixel::resources::ResourceLimits"
 status = "adapted"
 python = "limits dict; fontpixel.default_resource_limits"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_resource_paths_and_limits"
+js = "ResourceLimits plain object (usize fields are numbers)"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::integers: number up to 2^53 - 1, bigint beyond"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -366,6 +374,8 @@ pattern = "fontpixel::resources::ResourceResolver"
 status = "adapted"
 python = "fontpixel.ResourceSet, dict[str, bytes], resolver object or callable"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_python_resolvers"
+js = "ResourcesLike: resolver function or {resolve, list} object; withAsyncResources"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::sidecars from objects, Maps, functions and resolver objects"
 reason = "Python resolvers implement the trait through resources::resolver_arg"
 
 [[rule]]

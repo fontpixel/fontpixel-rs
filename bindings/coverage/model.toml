@@ -6,6 +6,8 @@ pattern = "fontpixel::model"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+js = "model classes (FontSet, Font, Glyph)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::edits through FontSet -> Font view -> Glyph view"
 
 [[rule]]
 pattern = "fontpixel::model::AbcWidths"
@@ -31,6 +33,8 @@ pattern = "fontpixel::model::Font"
 status = "bound"
 python = "fontpixel.Font"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::edits through FontSet -> Font view -> Glyph view"
 
 [[rule]]
 pattern = "fontpixel::model::Font::from_glyphs"
@@ -44,6 +48,8 @@ pattern = "fontpixel::model::Font::len"
 status = "adapted"
 python = "len(fontpixel.Font)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.length"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::copies are independent"
 reason = "Python __len__ protocol"
 
 [[rule]]
@@ -57,6 +63,8 @@ pattern = "fontpixel::model::Font::glyph"
 status = "bound"
 python = "fontpixel.Font.glyph"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.glyph(id)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::edits through FontSet -> Font view -> Glyph view"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph_id"
@@ -111,6 +119,8 @@ pattern = "fontpixel::model::Font::add_glyph"
 status = "bound"
 python = "fontpixel.Font.add_glyph"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+js = "Font.addGlyph(glyph)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::copies are independent"
 
 [[rule]]
 pattern = "fontpixel::model::Font::replace_glyph"
@@ -123,6 +133,8 @@ pattern = "fontpixel::model::Font::remove_glyph"
 status = "bound"
 python = "fontpixel.Font.remove_glyph"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+js = "Font.removeGlyph(id)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::views fail with InvalidInputError"
 
 [[rule]]
 pattern = "fontpixel::model::Font::edit_glyph"
@@ -219,6 +231,8 @@ pattern = "fontpixel::model::FontSet"
 status = "bound"
 python = "fontpixel.FontSet"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+js = "FontSet"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::edits through FontSet -> Font view -> Glyph view"
 
 [[rule]]
 pattern = "fontpixel::model::FontSet::*"
@@ -238,6 +252,8 @@ pattern = "fontpixel::model::Glyph"
 status = "bound"
 python = "fontpixel.Glyph"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+js = "Glyph"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::copies are independent"
 
 [[rule]]
 pattern = "fontpixel::model::Glyph::*"
@@ -250,6 +266,8 @@ pattern = "fontpixel::model::Glyph::new"
 status = "adapted"
 python = "fontpixel.Glyph(bitmap)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+js = "new Glyph(bitmap, {codepoints})"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::copies are independent"
 reason = "Python constructor"
 
 [[rule]]
@@ -257,6 +275,8 @@ pattern = "fontpixel::model::GlyphBitmap"
 status = "adapted"
 python = "fontpixel.Bitmap"
 python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_buffers_and_rows"
+js = "GlyphBitmap plain data / Bitmap handle"
+js_test = "crates/fontpixel-wasm/tests/bitmap.test.mjs::bitmap round trip"
 reason = "one Bitmap class holds either variant; `depth` names it and to_dict/from_dict use the serde shape"
 
 [[rule]]

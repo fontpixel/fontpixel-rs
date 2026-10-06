@@ -19,6 +19,8 @@ done
 # format function must not be absorbed silently by a module catch-all).
 "${PYTHON:-python3}" tools/bindings/gen_formats_types.py "$target/inventory.json" --check
 "${PYTHON:-python3}" tools/bindings/gen_formats_coverage.py "$target/inventory.json" --check
+# Phase 8: the generated TypeScript plain-data types must match too.
+case ",$require," in *,js,*) "${PYTHON:-python3}" tools/bindings/gen_dts.py --rustdoc "$target/doc" --check ;; esac
 args=("$target/inventory.json")
 [ -n "$require" ] && args+=(--require "$require")
 [ -n "$report" ] && args+=(--report "$report")
