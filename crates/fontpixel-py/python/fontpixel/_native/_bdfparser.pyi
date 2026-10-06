@@ -19,6 +19,7 @@ __all__ = [
     "META_TITLES",
     "defaultglyphname",
     "fmtnum",
+    "fmtver",
     "read_ttf",
     "write_ttf",
     "bitmap_contours",
@@ -202,7 +203,11 @@ class RawFont:
     def glyph(self, ch: str) -> RawGlyph | None:
         """Attached handle by character (`Font::glyph`)."""
     def glyphbycp(self, cp: int) -> RawGlyph | None:
-        """Attached handle, or None with a warning (`Font::glyphbycp`)."""
+        """
+        Attached handle, or None with a warning (`Font::glyphbycp`). An exception
+        raised by a `cp2char` converter while describing the missing code is
+        ignored, as in bdfparser.
+        """
     def headers(self) -> dict[str, Any]:
         """Projected SPEC headers (`Font::headers`)."""
     def itercps(self, order: int = ..., r: Any = ...) -> list[int]:
@@ -228,6 +233,8 @@ class RawFont:
         """Load BDF text (`Font::load_string`)."""
     def load_ttf(self, data: _t.Buffer, pixelsize: int | None = ...) -> None:
         """Load glyph-based TrueType bytes (`Font::load_ttf`)."""
+    def lookup(self, cp: int) -> RawGlyph | None:
+        """Attached handle, or None without a warning (`Font::lookup`)."""
     def merge(self, other: RawFont, replace: bool = ...) -> None:
         """Copy encoded glyphs from another font (`Font::merge`)."""
     def model(self) -> dict[str, Any]:
@@ -241,14 +248,26 @@ class RawFont:
         dwidth: int | None = ...,
     ) -> RawGlyph:
         """Create an attached glyph (`Font::newglyph`)."""
+    def prepare_meta(self, fields: _c.Mapping[str, Any]) -> list[Any]:
+        """
+        17 metadata slots from a dict, as `addglyph` normalizes them
+        (`Font::prepare_meta`).
+        """
     def props(self) -> dict[str, Any]:
         """Case-normalized properties (`Font::props`)."""
+    def put_with_alt(self, fields: _c.Mapping[str, Any], altcode: Any = ...) -> None:
+        """
+        Add normalized glyph metadata and, for an unencoded glyph, its alternate
+        code (`Font::prepare_meta` + `Font::put_with_alt`).
+        """
     def remove_handle(self, glyph: RawGlyph) -> None:
         """Remove exactly a handle's slot (`Font::remove_handle`)."""
+    def remove_header(self, key: str) -> bool:
+        """Remove one header key; False if absent (`Font::remove_header`)."""
     def remove_unencoded(self, index: int | None = ...) -> None:
         """
         Remove the `index`-th unencoded glyph, or all of them when `index` is None
-        (rebuilds the model; attached glyph handles detach).
+        (`Font::remove_unencoded`). Handles on removed slots detach.
         """
     def removeglyph(self, cp: int) -> None:
         """Remove a code; missing codes are a no-op (`Font::removeglyph`)."""
@@ -268,8 +287,8 @@ class RawFont:
         """Serialize to a binary file object with `write(bytes)` (`Font::save_to`)."""
     def set_altcode(self, index: int, altcode: Any = ...) -> None:
         """
-        Set the alternate code (`bdf.altcode`) of the `index`-th unencoded glyph;
-        None removes it (rebuilds the model; attached glyph handles detach).
+        Set the alternate code of the `index`-th unencoded glyph; None removes it
+        (`Font::set_unencoded_altcode`). Glyph handles stay attached.
         """
     def set_converters(
         self,
@@ -277,8 +296,12 @@ class RawFont:
         cp2char: _c.Callable[[int], str | None] | None = ...,
     ) -> None:
         """Install Python converters; None restores the charset table (`Font::set_converters`)."""
+    def set_header(self, key: str, value: Any = ...) -> None:
+        """Set one header key, appended when new (`Font::set_header`)."""
     def set_headers(self, headers: _c.Mapping[str, Any]) -> None:
-        """Replace all headers (rebuilds the model; attached glyph handles detach)."""
+        """Replace all headers in place (`Font::set_headers`); glyph handles stay attached."""
+    def set_unencoded_meta(self, index: int, fields: _c.Mapping[str, Any]) -> None:
+        """Set metadata keys of the `index`-th unencoded glyph (`Font::set_unencoded_meta`)."""
     def setprop(self, key: str, value: Any = ...) -> None:
         """Set a property (`Font::setprop`)."""
     def subset(self, r: Any) -> RawFont:
@@ -301,6 +324,15 @@ class RawFont:
         """Serialize TrueType with `TtfOptions` field names (`Font::tottf`)."""
     def transform(self, function: _c.Callable[..., Any], r: Any = ..., mode: int = ...) -> None:
         """Apply a Python bitmap function to glyphs (`Font::transform`)."""
+    def unencoded_altcode(self, index: int) -> Any:
+        """Alternate code of the `index`-th unencoded glyph (`Font::unencoded_altcode`)."""
+    def unencoded_handle(self, index: int) -> RawGlyph | None:
+        """
+        Attached handle of the `index`-th unencoded glyph, or None
+        (`Font::unencoded_handle`).
+        """
+    def unencoded_handles(self) -> list[RawGlyph]:
+        """Attached handles of the unencoded glyphs in order (`Font::unencoded_handles`)."""
     def unicode2cp(self, code: int) -> int | None:
         """Unicode scalar → code (`Font::unicode2cp`)."""
     def updatebbox(self) -> None:
@@ -334,6 +366,8 @@ class RawGlyph:
         """Whether the original slot still exists unreplaced (`Glyph::is_attached`)."""
     def meta(self) -> list[Any]:
         """The 17 metadata slots in `META_TITLES` order (`Glyph::meta`)."""
+    def meta_dict(self) -> dict[str, Any]:
+        """The 17 slots as a dict keyed by `META_TITLES` (`Glyph::meta`)."""
     def origin(
         self,
         mode: int = ...,
@@ -375,6 +409,9 @@ def defaultglyphname(cp: int, charset_is_unicode: bool = ...) -> str:
 
 def fmtnum(n: float) -> str:
     """`fmtnum(n)`: shortest round-trip number text used by SVG output."""
+
+def fmtver(v: float) -> str:
+    """`fmtver(v)`: BDF version text (`2` -> `'2.0'`, `2.1` -> `'2.1'`)."""
 
 def rasterize(
     contours: _c.Sequence[_c.Sequence[tuple[float, float, bool]]],

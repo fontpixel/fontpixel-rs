@@ -6,7 +6,7 @@ set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 venv="${1:-$(dirname "$PWD")/local-work/py310-venv}"
 if [ ! -x "$venv/bin/python" ]; then
-  echo "missing venv $venv (create it with CPython 3.10 and pip install maturin pytest)" >&2
+  echo "missing venv $venv (create it with CPython 3.10 and pip install maturin pytest mypy)" >&2
   exit 2
 fi
 # The coverage tools need Python >= 3.11 (tomllib); keep the system interpreter.

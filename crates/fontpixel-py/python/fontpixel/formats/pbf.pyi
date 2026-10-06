@@ -32,7 +32,7 @@ def read(
     options: _t.PbfReadOptions | None = ...,
     *,
     limits: _t.ResourceLimits | None = ...,
-) -> tuple[Font, _t.Report]:
+) -> tuple[FontSet, _t.Report]:
     """
     Decode standalone bytes with this module's read-options dict under
     `limits`. Returns `(model, report)`.

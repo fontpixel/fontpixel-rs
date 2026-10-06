@@ -3182,9 +3182,10 @@ attributes (`kind`, `resource`, `limit`, `line`, `report`, ...).
 
 The font data stays in the Rust model (`fontpixel::compat::bdfparser::Font`).
 `headers`, `props`, `glyphs` and `unencoded` are live views: reading them
-projects the current model, writing through them edits it. Values read from
-them are fresh copies (editing a returned list does not change the font,
-except for the 17-slot lists of `font.glyphs[cp]`, whose item assignment is
+projects the current model, writing through them edits it in place (glyph
+handles stay attached). Values read from them are fresh copies (editing a
+returned list does not change the font, except for the 17-slot meta lists of
+`font.glyphs[cp]` and `font.unencoded[i]['meta']`, whose item assignment is
 written back). Warnings collected by the Rust model are re-emitted as
 `BDFParserWarning`s through the `warnings` module after each call.
 
@@ -5169,7 +5170,7 @@ Direct codec functions of `fontpixel::formats::pbf`.
 Structural detector of this format (no filename evidence). Returns
 `"no_match"`, `"possible"` or `"certain"`.
 
-### `fontpixel.formats.pbf.read(data: Buffer | Sequence[int], options: PbfReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[Font, Report]`
+### `fontpixel.formats.pbf.read(data: Buffer | Sequence[int], options: PbfReadOptions | None = ..., *, limits: ResourceLimits | None = ...) -> tuple[FontSet, Report]`
 
 *function*
 
