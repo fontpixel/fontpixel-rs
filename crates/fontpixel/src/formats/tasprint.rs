@@ -12,6 +12,7 @@ use crate::{Report, ResourceLimits, Result};
 pub enum TasprintVersion {
     /// Headerless Spectrum/QL 96-character strikes.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "48k"))]
     Spectrum48k,
     /// +3DOS 16-column strike with width word.
     Plus3,

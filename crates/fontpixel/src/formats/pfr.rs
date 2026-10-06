@@ -33,6 +33,7 @@ pub enum PfrDialect {
     /// DAVIC Annex A offsets, fixed-point positions and polarity.
     Davic,
     /// FreeType-compatible offsets and integer positions.
+    #[cfg_attr(feature = "serde", serde(rename = "freetype"))]
     FreeType,
 }
 /// Native output and explicit conversion choices.

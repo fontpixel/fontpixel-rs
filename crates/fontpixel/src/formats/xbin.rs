@@ -13,8 +13,10 @@ pub enum CharacterCount {
     #[default]
     Auto,
     /// Exactly 256 glyphs.
+    #[cfg_attr(feature = "serde", serde(rename = "256"))]
     Chars256,
     /// Exactly 512 glyphs.
+    #[cfg_attr(feature = "serde", serde(rename = "512"))]
     Chars512,
 }
 /// Treatment of native non-font sections.
@@ -26,6 +28,7 @@ pub enum ScreenMode {
     #[default]
     Preserve,
     /// Emit only the font and report omitted screen metadata.
+    #[cfg_attr(feature = "serde", serde(rename = "font-only"))]
     FontOnly,
 }
 /// XBIN output projection.

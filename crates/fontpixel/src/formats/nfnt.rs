@@ -21,6 +21,7 @@ pub enum Container {
     /// One bare NFNT/FONT resource.
     Bare,
     /// A classic resource fork.
+    #[cfg_attr(feature = "serde", serde(rename = "resource-fork"))]
     ResourceFork,
     /// A resource fork stored in the data fork.
     #[default]
@@ -28,12 +29,16 @@ pub enum Container {
     /// A font suitcase resource fork.
     Suitcase,
     /// A MacBinary II envelope (reader also accepts I/III).
+    #[cfg_attr(feature = "serde", serde(rename = "macbinary"))]
     MacBinary,
     /// AppleSingle version 2.
+    #[cfg_attr(feature = "serde", serde(rename = "apple-single"))]
     AppleSingle,
     /// AppleDouble version 2 and a separate data asset.
+    #[cfg_attr(feature = "serde", serde(rename = "apple-double"))]
     AppleDouble,
     /// BinHex 4.0 HQX/RLE transport with checked header and fork CRCs.
+    #[cfg_attr(feature = "serde", serde(rename = "binhex"))]
     BinHex,
 }
 /// Bitmap resource type.

@@ -48,18 +48,55 @@ combinations), and serde follows that design. Deserialization rejects:
 - unknown enum names, including Rust-cased names such as `"V1_5"`;
 - unsafe sidecar paths, through `ResourcePath`'s validating `try_from`.
 
-Semantic validation then runs exactly as it does for Rust callers. One serde
-quirk remains: a struct also deserializes from a JSON array of its fields in
-declaration order, so `[]` produces the defaults. Bindings should pass
-dicts/objects.
+Semantic validation then runs exactly as it does for Rust callers. The
+coordinator accepted this policy on 2026-10-06. One serde
+quirk remains, and it was left as is by decision: a struct also deserializes from
+a JSON array of its fields in declaration order, so `[]` produces the defaults.
+Bindings should pass dicts/objects.
 
-## Naming notes
+## Enum value names
 
-- Enum names come from mechanical `snake_case`. `RawPreset::HarlekinIII` has an
-  explicit `"harlekin_iii"`, because the mechanical form would be `harlekin_i_i_i`.
-- `PrebuiltDepth` serializes by name (`"gray4"`), not by its `repr(u8)` value.
-- `RawPreset`'s `FromStr` CLI aliases (`"64c"`, `"vga-8x16"`, `"harlekin-iii"`, …)
-  are not serde aliases. Its serde names are the variant names (`"c64_prg"`,
-  `"vga16"`, `"harlekin_iii"`). The CLI tokens `binscii`, `fontsubst` and
-  `freetype` likewise correspond to the serde names `bin_scii`, `font_subst` and
-  `free_type`.
+The coordinator decided (2026-10-06) that a serialized enum value must equal the
+CLI value name wherever the CLI has one. The CLI names are the `possible values`
+of `fontpixel convert --help`. Batch TOML `options` pass through to the same
+flags, so they use the same names. Variants with no CLI value, and variants whose
+CLI name already equals the `snake_case` form, keep `snake_case`. Explicit
+renames:
+
+| Type | Variant → serialized name |
+| --- | --- |
+| `iigs::Version` | `V1_1` → `1.1`, `V1_5` → `1.5` |
+| `iigs::Container` | `BinScii` → `binscii` |
+| `nfnt::Container` | `ResourceFork` → `resource-fork`, `MacBinary` → `macbinary`, `AppleSingle` → `apple-single`, `AppleDouble` → `apple-double`, `BinHex` → `binhex` |
+| `palm::PalmVersion` | `V1` → `1`, `V2` → `2`, `FontSubst` → `fontsubst` |
+| `pbf::Version` | `One`/`Two`/`Three` → `1`/`2`/`3` |
+| `pbf::OffsetWidth` | `U16` → `16`, `U32` → `32` |
+| `pcf::GlyphPad` | `One`/`Two`/`Four`/`Eight` → `1`/`2`/`4`/`8` |
+| `pcf::ScanUnit` | `One`/`Two`/`Four` → `1`/`2`/`4` |
+| `pcf::MetadataPrecedence` | `NormalizedEdits` → `normalized-edits`, `ExplicitProperties` → `explicit-properties` |
+| `pfr::PfrDialect` | `FreeType` → `freetype` |
+| `playdate::PlaydateFlavor` | `FntEmbedded` → `fnt-embedded`, `FntPng` → `fnt-png` |
+| `psf::Version` | `One`/`Two` → `1`/`2` |
+| `pxl::PxlVersion` | `V1001` → `1001`, `V1002` → `1002` |
+| `raw::RawPacking` | `ByteAlignedRows` → `byte-rows`, `BitAligned` → `bit-aligned` |
+| `raw::RawByteOrder` | `RowMajor` → `row-major`, `ColumnMajor` → `column-major` |
+| `raw::RawPreset` | `Vga8`/`Vga14`/`Vga16` → `vga8`/`vga14`/`vga16`, `C64Prg` → `64c`, `HarlekinIII` → `harlekin`. Every other `FromStr` spelling is also a serde alias: `vga-8x8`, `vga-8x14`, `vga-8x16`, `c64-prg`, `zx-spectrum`, `harlekin-iii`, `harlekin512`. |
+| `riscos::RiscosVersion` | `V4`…`V8` → `4`…`8` (`Xy` stays `xy`) |
+| `riscos::RiscosMetricsVersion` | `V0` → `0`, `V2` → `2` |
+| `tasprint::TasprintVersion` | `Spectrum48k` → `48k` |
+| `vlw::VlwVersion` | `V8`…`V11` → `8`…`11` |
+| `wsfont::WsfontOrder` | `LeftToRight` → `left`, `RightToLeft` → `right` |
+| `xbin::CharacterCount` | `Chars256` → `256`, `Chars512` → `512` |
+| `xbin::ScreenMode` | `FontOnly` → `font-only` |
+| `xerox::XeroxBitbltLayout` | `PlainIndex` → `plain-index`, `KernedIndex` → `kerned-index` |
+
+Numeric CLI values serialize as JSON strings (`"1.5"`, `"16"`), not as numbers.
+`PrebuiltDepth` serializes by name (`"gray4"`), not by its `repr(u8)` value.
+`SymbosExtendedInfo` stays externally tagged (`{"writing_system": 3}` /
+`{"layout": {"wysiwyg": true}}`). The CLI's `--symbos-layout screen|wysiwyg`
+chooses the `wysiwyg` boolean and does not name a variant.
+
+Core enums embedded here belong to S1. Their CLI names differ from mechanical
+`snake_case`, so S1 needs to apply the same rule to them: `BitOrder` (`msb`/`lsb`),
+`RowOrder` (`top-down`/`bottom-up`), `outline::Shape` (`square-separate`) and
+`cmap::FullRecords` (`non-bmp`/`when-needed`).

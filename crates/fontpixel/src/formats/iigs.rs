@@ -25,8 +25,10 @@ pub enum Version {
     #[default]
     Auto,
     /// Version 1.1 with 16-bit offset/width word offset.
+    #[cfg_attr(feature = "serde", serde(rename = "1.1"))]
     V1_1,
     /// Version 1.5 with the additional offset/width high word.
+    #[cfg_attr(feature = "serde", serde(rename = "1.5"))]
     V1_5,
 }
 /// Outer representation of one QuickDraw II font data fork.
@@ -38,6 +40,7 @@ pub enum Container {
     #[default]
     Bare,
     /// CRC-checked segmented BinSCII text transport.
+    #[cfg_attr(feature = "serde", serde(rename = "binscii"))]
     BinScii,
 }
 /// Deterministic bounded QuickDraw II output options.

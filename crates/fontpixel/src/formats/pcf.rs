@@ -32,13 +32,17 @@ pub enum Order {
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GlyphPad {
     /// One byte.
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     One,
     /// Two bytes.
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     Two,
     /// Four bytes (the default).
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "4"))]
     Four,
     /// Eight bytes.
+    #[cfg_attr(feature = "serde", serde(rename = "8"))]
     Eight,
 }
 impl GlyphPad {
@@ -58,10 +62,13 @@ impl GlyphPad {
 pub enum ScanUnit {
     /// One byte (the default).
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     One,
     /// Two bytes.
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     Two,
     /// Four bytes.
+    #[cfg_attr(feature = "serde", serde(rename = "4"))]
     Four,
 }
 impl ScanUnit {
@@ -84,11 +91,13 @@ impl ScanUnit {
 pub enum MetadataPrecedence {
     /// Normalized edits rewrite those existing properties (the default).
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "normalized-edits"))]
     NormalizedEdits,
     /// Existing properties are kept unchanged; absent ones are still generated
     /// from the edited model. Every kept property that disagrees with the
     /// edited model is reported as loss. An edited font name still replaces
     /// the `FONT` property, which is the name itself.
+    #[cfg_attr(feature = "serde", serde(rename = "explicit-properties"))]
     ExplicitProperties,
 }
 /// PCF-specific deterministic output choices.

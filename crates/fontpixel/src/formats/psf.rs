@@ -13,9 +13,11 @@ use crate::{Report, ResourceLimits, Result};
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Eight-wide, 256/512 cells, BMP-only mappings.
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     One,
     /// Arbitrary dimensions/count and full Unicode scalars.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     Two,
 }
 /// Whether to emit a Unicode table.

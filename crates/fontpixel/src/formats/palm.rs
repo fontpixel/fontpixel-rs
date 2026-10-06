@@ -30,12 +30,15 @@ pub enum PalmContainer {
 pub enum PalmVersion {
     /// Classic 72-dpi NFNT.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     V1,
     /// Extended nfnt with density records.
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     V2,
     /// Little-endian ARM native extended resource.
     Afnx,
     /// FontSubst afnx variant with fontType 0x0200.
+    #[cfg_attr(feature = "serde", serde(rename = "fontsubst"))]
     FontSubst,
     /// GrayFont version 1 in a PRC resource database.
     Gray1,

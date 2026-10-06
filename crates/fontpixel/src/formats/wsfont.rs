@@ -17,8 +17,10 @@ pub enum WsfontOrder {
     /// Driver-specific known order, interpreted by the input policy.
     Known,
     /// Most significant bit / leftmost byte first.
+    #[cfg_attr(feature = "serde", serde(rename = "left"))]
     LeftToRight,
     /// Least significant bit / rightmost byte first.
+    #[cfg_attr(feature = "serde", serde(rename = "right"))]
     RightToLeft,
 }
 impl WsfontOrder {

@@ -10,13 +10,17 @@ use crate::{Report, ResourceLimits, Result};
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum VlwVersion {
     /// Legacy bitmap-only version 8.
+    #[cfg_attr(feature = "serde", serde(rename = "8"))]
     V8,
     /// Legacy bitmap-only version 9.
+    #[cfg_attr(feature = "serde", serde(rename = "9"))]
     V9,
     /// Names use Java modified UTF-8.
+    #[cfg_attr(feature = "serde", serde(rename = "10"))]
     V10,
     /// Names and smooth flag.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "11"))]
     V11,
 }
 impl VlwVersion {

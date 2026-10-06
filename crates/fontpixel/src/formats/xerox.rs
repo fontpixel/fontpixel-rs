@@ -35,8 +35,10 @@ pub enum XeroxBitbltLayout {
     #[default]
     Kerned,
     /// One or more plain strike bodies with a code map.
+    #[cfg_attr(feature = "serde", serde(rename = "plain-index"))]
     PlainIndex,
     /// One or more kerned strike bodies with a code map.
+    #[cfg_attr(feature = "serde", serde(rename = "kerned-index"))]
     KernedIndex,
 }
 /// Input interpretation.

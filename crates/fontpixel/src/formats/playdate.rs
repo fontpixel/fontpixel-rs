@@ -15,8 +15,10 @@ mod png;
 pub enum PlaydateFlavor {
     /// Standalone FNT with base64 PNG.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "fnt-embedded"))]
     FntEmbedded,
     /// FNT plus a native PNG image-table sidecar.
+    #[cfg_attr(feature = "serde", serde(rename = "fnt-png"))]
     FntPng,
     /// Uncompressed compiled font accepted by the runtime.
     Pft,

@@ -11,8 +11,10 @@ mod packed;
 pub enum RawPacking {
     /// Each row in a horizontal strike starts on a byte boundary.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "byte-rows"))]
     ByteAlignedRows,
     /// Pixels continue across rows and glyphs, with only final-byte padding.
+    #[cfg_attr(feature = "serde", serde(rename = "bit-aligned"))]
     BitAligned,
 }
 /// Byte ordering inside a horizontal strike.
@@ -22,8 +24,10 @@ pub enum RawPacking {
 pub enum RawByteOrder {
     /// Store complete rows consecutively.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "row-major"))]
     RowMajor,
     /// Store each byte column through all rows before the next column.
+    #[cfg_attr(feature = "serde", serde(rename = "column-major"))]
     ColumnMajor,
 }
 /// Binary cell layout; no field is inferred from arbitrary input bytes.
@@ -85,23 +89,31 @@ impl RawLayout {
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RawPreset {
     /// IBM VGA 8 by 8, 256 positions.
+    #[cfg_attr(feature = "serde", serde(rename = "vga8", alias = "vga-8x8"))]
     Vga8,
     /// IBM VGA 8 by 14, 256 positions.
+    #[cfg_attr(feature = "serde", serde(rename = "vga14", alias = "vga-8x14"))]
     Vga14,
     /// IBM VGA 8 by 16, 256 positions.
+    #[cfg_attr(feature = "serde", serde(rename = "vga16", alias = "vga-8x16"))]
     Vga16,
     /// C64 screen-code order, 256 positions.
     C64,
     /// C64 .64c with a PRG load address and an exact, inferred glyph count.
+    #[cfg_attr(feature = "serde", serde(rename = "64c", alias = "c64-prg"))]
     C64Prg,
     /// ZX Spectrum printable character ROM, codes 32 through 127.
+    #[cfg_attr(feature = "serde", serde(rename = "spectrum", alias = "zx-spectrum"))]
     Spectrum,
     /// Generic .ch8 glyphs, with unknown legacy charset.
     Ch8,
     /// MSX 8 by 8, 256 positions.
     Msx,
     /// monobit README Harlekin III: 512 cells in one 4096×8 strike.
-    #[cfg_attr(feature = "serde", serde(rename = "harlekin_iii"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(rename = "harlekin", alias = "harlekin-iii", alias = "harlekin512")
+    )]
     HarlekinIII,
     /// Atari Harlekin description: 256 cells in one 2048×8 strike.
     Harlekin8,

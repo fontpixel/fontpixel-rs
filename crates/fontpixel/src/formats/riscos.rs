@@ -20,15 +20,20 @@ pub enum RiscosVersion {
     /// Original x90y45 multi-strike container.
     Xy,
     /// FONT v4.
+    #[cfg_attr(feature = "serde", serde(rename = "4"))]
     V4,
     /// FONT v5.
+    #[cfg_attr(feature = "serde", serde(rename = "5"))]
     V5,
     /// FONT v6.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "6"))]
     V6,
     /// FONT v7, per-chunk flags.
+    #[cfg_attr(feature = "serde", serde(rename = "7"))]
     V7,
     /// FONT v8, relocated and expandable chunk directory.
+    #[cfg_attr(feature = "serde", serde(rename = "8"))]
     V8,
 }
 /// Native bitmap depth.
@@ -59,9 +64,11 @@ pub enum RiscosCompression {
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RiscosMetricsVersion {
     /// Original mapped eight-bit directory.
+    #[cfg_attr(feature = "serde", serde(rename = "0"))]
     V0,
     /// Version 2 with direct character indexing.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     V2,
 }
 /// Input profile and scoped sidecar.

@@ -17,11 +17,14 @@ pub use writer::write;
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Six-byte metadata, no buckets, 16-bit word offsets and eight-byte glyph headers.
+    #[cfg_attr(feature = "serde", serde(rename = "1"))]
     One,
     /// Eight-byte metadata and 32-bit byte offsets.
+    #[cfg_attr(feature = "serde", serde(rename = "2"))]
     Two,
     /// Ten-byte metadata with selectable offsets and compression.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "3"))]
     Three,
 }
 /// Bitmap storage; RLE4 is available only in v3.
@@ -44,8 +47,10 @@ pub enum OffsetWidth {
     #[default]
     Auto,
     /// Two-byte field.
+    #[cfg_attr(feature = "serde", serde(rename = "16"))]
     U16,
     /// Four-byte field.
+    #[cfg_attr(feature = "serde", serde(rename = "32"))]
     U32,
 }
 /// Optional catalogue-compatible trimming.

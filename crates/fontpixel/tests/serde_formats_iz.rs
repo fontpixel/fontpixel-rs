@@ -122,10 +122,10 @@ fn iigs() {
     defaults::<IigsCodec>();
     variants(&[
         (Version::Auto, "auto"),
-        (Version::V1_1, "v1_1"),
-        (Version::V1_5, "v1_5"),
+        (Version::V1_1, "1.1"),
+        (Version::V1_5, "1.5"),
     ]);
-    variants(&[(Container::Bare, "bare"), (Container::BinScii, "bin_scii")]);
+    variants(&[(Container::Bare, "bare"), (Container::BinScii, "binscii")]);
     rejects_common::<IigsReadOptions>();
     rejects_write::<IigsWriteOptions>();
     rejects_output::<IigsWriteOptions>();
@@ -261,13 +261,13 @@ fn nfnt() {
     defaults::<NfntCodec>();
     variants(&[
         (Container::Bare, "bare"),
-        (Container::ResourceFork, "resource_fork"),
+        (Container::ResourceFork, "resource-fork"),
         (Container::Dfont, "dfont"),
         (Container::Suitcase, "suitcase"),
-        (Container::MacBinary, "mac_binary"),
-        (Container::AppleSingle, "apple_single"),
-        (Container::AppleDouble, "apple_double"),
-        (Container::BinHex, "bin_hex"),
+        (Container::MacBinary, "macbinary"),
+        (Container::AppleSingle, "apple-single"),
+        (Container::AppleDouble, "apple-double"),
+        (Container::BinHex, "binhex"),
     ]);
     variants(&[(ResourceType::Nfnt, "nfnt"), (ResourceType::Font, "font")]);
     rejects_common::<NfntReadOptions>();
@@ -302,10 +302,10 @@ fn palm() {
         (PalmContainer::Prc, "prc"),
     ]);
     variants(&[
-        (PalmVersion::V1, "v1"),
-        (PalmVersion::V2, "v2"),
+        (PalmVersion::V1, "1"),
+        (PalmVersion::V2, "2"),
         (PalmVersion::Afnx, "afnx"),
-        (PalmVersion::FontSubst, "font_subst"),
+        (PalmVersion::FontSubst, "fontsubst"),
         (PalmVersion::Gray1, "gray1"),
         (PalmVersion::Gray2, "gray2"),
     ]);
@@ -327,15 +327,15 @@ fn pbf() {
     defaults::<PbfWriteOptions>();
     defaults::<PbfCodec>();
     variants(&[
-        (Version::One, "one"),
-        (Version::Two, "two"),
-        (Version::Three, "three"),
+        (Version::One, "1"),
+        (Version::Two, "2"),
+        (Version::Three, "3"),
     ]);
     variants(&[(Compression::Raw, "raw"), (Compression::Rle4, "rle4")]);
     variants(&[
         (OffsetWidth::Auto, "auto"),
-        (OffsetWidth::U16, "u16"),
-        (OffsetWidth::U32, "u32"),
+        (OffsetWidth::U16, "16"),
+        (OffsetWidth::U32, "32"),
     ]);
     rejects_common::<PbfReadOptions>();
     rejects_write::<PbfWriteOptions>();
@@ -351,31 +351,31 @@ fn pcf() {
     defaults::<PcfCodec>();
     variants(&[(Order::Msb, "msb"), (Order::Lsb, "lsb")]);
     variants(&[
-        (GlyphPad::One, "one"),
-        (GlyphPad::Two, "two"),
-        (GlyphPad::Four, "four"),
-        (GlyphPad::Eight, "eight"),
+        (GlyphPad::One, "1"),
+        (GlyphPad::Two, "2"),
+        (GlyphPad::Four, "4"),
+        (GlyphPad::Eight, "8"),
     ]);
     variants(&[
-        (ScanUnit::One, "one"),
-        (ScanUnit::Two, "two"),
-        (ScanUnit::Four, "four"),
+        (ScanUnit::One, "1"),
+        (ScanUnit::Two, "2"),
+        (ScanUnit::Four, "4"),
     ]);
     variants(&[
-        (MetadataPrecedence::NormalizedEdits, "normalized_edits"),
+        (MetadataPrecedence::NormalizedEdits, "normalized-edits"),
         (
             MetadataPrecedence::ExplicitProperties,
-            "explicit_properties",
+            "explicit-properties",
         ),
     ]);
     let explicit: PcfWriteOptions =
-        serde_json::from_str(r#"{"byte_order": "lsb", "glyph_pad": "one"}"#).unwrap();
+        serde_json::from_str(r#"{"byte_order": "lsb", "glyph_pad": "1"}"#).unwrap();
     assert_eq!(explicit.byte_order, Order::Lsb);
     assert_eq!(explicit.glyph_pad, GlyphPad::One);
     assert_eq!(explicit.scan_unit, PcfWriteOptions::default().scan_unit);
     rejects_write::<PcfWriteOptions>();
     rejects_output::<PcfWriteOptions>();
-    rejects::<PcfWriteOptions>(r#"{"scan_unit": "eight"}"#);
+    rejects::<PcfWriteOptions>(r#"{"scan_unit": "8"}"#);
 }
 
 #[cfg(feature = "pcgeos")]
@@ -429,7 +429,7 @@ fn pfr() {
     ]);
     variants(&[
         (PfrDialect::Davic, "davic"),
-        (PfrDialect::FreeType, "free_type"),
+        (PfrDialect::FreeType, "freetype"),
     ]);
     rejects_common::<PfrReadOptions>();
     rejects_write::<PfrWriteOptions>();
@@ -484,8 +484,8 @@ fn playdate() {
     defaults::<PlaydateWriteOptions>();
     defaults::<PlaydateCodec>();
     variants(&[
-        (PlaydateFlavor::FntEmbedded, "fnt_embedded"),
-        (PlaydateFlavor::FntPng, "fnt_png"),
+        (PlaydateFlavor::FntEmbedded, "fnt-embedded"),
+        (PlaydateFlavor::FntPng, "fnt-png"),
         (PlaydateFlavor::Pft, "pft"),
     ]);
     rejects_common::<PlaydateReadOptions>();
@@ -557,7 +557,7 @@ fn psf() {
     use fontpixel::formats::psf::*;
     defaults::<PsfWriteOptions>();
     defaults::<PsfCodec>();
-    variants(&[(Version::One, "one"), (Version::Two, "two")]);
+    variants(&[(Version::One, "1"), (Version::Two, "2")]);
     variants(&[
         (UnicodeTable::Auto, "auto"),
         (UnicodeTable::Include, "include"),
@@ -586,7 +586,7 @@ fn pxl() {
     defaults::<PxlReadOptions>();
     defaults::<PxlWriteOptions>();
     defaults::<PxlCodec>();
-    variants(&[(PxlVersion::V1001, "v1001"), (PxlVersion::V1002, "v1002")]);
+    variants(&[(PxlVersion::V1001, "1001"), (PxlVersion::V1002, "1002")]);
     rejects_common::<PxlReadOptions>();
     rejects_path::<PxlReadOptions>("tfm");
     rejects_path::<PxlWriteOptions>("tfm");
@@ -627,26 +627,46 @@ fn raw() {
     defaults::<RawWriteOptions>();
     defaults::<RawCodec>();
     variants(&[
-        (RawPacking::ByteAlignedRows, "byte_aligned_rows"),
-        (RawPacking::BitAligned, "bit_aligned"),
+        (RawPacking::ByteAlignedRows, "byte-rows"),
+        (RawPacking::BitAligned, "bit-aligned"),
     ]);
     variants(&[
-        (RawByteOrder::RowMajor, "row_major"),
-        (RawByteOrder::ColumnMajor, "column_major"),
+        (RawByteOrder::RowMajor, "row-major"),
+        (RawByteOrder::ColumnMajor, "column-major"),
     ]);
     variants(&[
         (RawPreset::Vga8, "vga8"),
         (RawPreset::Vga14, "vga14"),
         (RawPreset::Vga16, "vga16"),
         (RawPreset::C64, "c64"),
-        (RawPreset::C64Prg, "c64_prg"),
+        (RawPreset::C64Prg, "64c"),
         (RawPreset::Spectrum, "spectrum"),
         (RawPreset::Ch8, "ch8"),
         (RawPreset::Msx, "msx"),
-        (RawPreset::HarlekinIII, "harlekin_iii"),
+        (RawPreset::HarlekinIII, "harlekin"),
         (RawPreset::Harlekin8, "harlekin8"),
         (RawPreset::Harlekin16, "harlekin16"),
     ]);
+    // Every spelling `RawPreset::from_str` (the CLI) accepts also deserializes.
+    for (alias, preset) in [
+        ("vga-8x8", RawPreset::Vga8),
+        ("vga-8x14", RawPreset::Vga14),
+        ("vga-8x16", RawPreset::Vga16),
+        ("c64-prg", RawPreset::C64Prg),
+        ("zx-spectrum", RawPreset::Spectrum),
+        ("harlekin-iii", RawPreset::HarlekinIII),
+        ("harlekin512", RawPreset::HarlekinIII),
+    ] {
+        let json = format!("\"{alias}\"");
+        assert_eq!(serde_json::from_str::<RawPreset>(&json).unwrap(), preset);
+        assert_eq!(alias.parse::<RawPreset>().unwrap(), preset);
+    }
+    for (preset, name) in [
+        (RawPreset::C64Prg, "64c"),
+        (RawPreset::HarlekinIII, "harlekin"),
+    ] {
+        assert_eq!(name.parse::<RawPreset>().unwrap(), preset);
+    }
     for preset in [RawPreset::Vga16, RawPreset::C64Prg, RawPreset::HarlekinIII] {
         let layout = preset.layout();
         let json = serde_json::to_string(&layout).unwrap();
@@ -679,11 +699,11 @@ fn riscos() {
     defaults::<RiscosCodec>();
     variants(&[
         (RiscosVersion::Xy, "xy"),
-        (RiscosVersion::V4, "v4"),
-        (RiscosVersion::V5, "v5"),
-        (RiscosVersion::V6, "v6"),
-        (RiscosVersion::V7, "v7"),
-        (RiscosVersion::V8, "v8"),
+        (RiscosVersion::V4, "4"),
+        (RiscosVersion::V5, "5"),
+        (RiscosVersion::V6, "6"),
+        (RiscosVersion::V7, "7"),
+        (RiscosVersion::V8, "8"),
     ]);
     variants(&[(RiscosDepth::Mono, "mono"), (RiscosDepth::Gray4, "gray4")]);
     variants(&[
@@ -691,8 +711,8 @@ fn riscos() {
         (RiscosCompression::Packed, "packed"),
     ]);
     variants(&[
-        (RiscosMetricsVersion::V0, "v0"),
-        (RiscosMetricsVersion::V2, "v2"),
+        (RiscosMetricsVersion::V0, "0"),
+        (RiscosMetricsVersion::V2, "2"),
     ]);
     rejects_common::<RiscosReadOptions>();
     rejects_path::<RiscosReadOptions>("metrics_path");
@@ -870,7 +890,7 @@ fn tasprint() {
     defaults::<TasprintWriteOptions>();
     defaults::<TasprintCodec>();
     variants(&[
-        (TasprintVersion::Spectrum48k, "spectrum48k"),
+        (TasprintVersion::Spectrum48k, "48k"),
         (TasprintVersion::Plus3, "plus3"),
         (TasprintVersion::Cpc, "cpc"),
         (TasprintVersion::Pcw, "pcw"),
@@ -932,10 +952,10 @@ fn vlw() {
     defaults::<VlwWriteOptions>();
     defaults::<VlwCodec>();
     variants(&[
-        (VlwVersion::V8, "v8"),
-        (VlwVersion::V9, "v9"),
-        (VlwVersion::V10, "v10"),
-        (VlwVersion::V11, "v11"),
+        (VlwVersion::V8, "8"),
+        (VlwVersion::V9, "9"),
+        (VlwVersion::V10, "10"),
+        (VlwVersion::V11, "11"),
     ]);
     rejects_common::<VlwReadOptions>();
     rejects_common::<VlwWriteOptions>();
@@ -975,8 +995,8 @@ fn wsfont() {
     defaults::<WsfontCodec>();
     variants(&[
         (WsfontOrder::Known, "known"),
-        (WsfontOrder::LeftToRight, "left_to_right"),
-        (WsfontOrder::RightToLeft, "right_to_left"),
+        (WsfontOrder::LeftToRight, "left"),
+        (WsfontOrder::RightToLeft, "right"),
     ]);
     variants(&[(WsfontDepth::Mono, "mono"), (WsfontDepth::Alpha, "alpha")]);
     rejects_common::<WsfontReadOptions>();
@@ -1004,12 +1024,12 @@ fn xbin() {
     defaults::<XbinCodec>();
     variants(&[
         (CharacterCount::Auto, "auto"),
-        (CharacterCount::Chars256, "chars256"),
-        (CharacterCount::Chars512, "chars512"),
+        (CharacterCount::Chars256, "256"),
+        (CharacterCount::Chars512, "512"),
     ]);
     variants(&[
         (ScreenMode::Preserve, "preserve"),
-        (ScreenMode::FontOnly, "font_only"),
+        (ScreenMode::FontOnly, "font-only"),
     ]);
     rejects_write::<XbinWriteOptions>();
     rejects::<XbinWriteOptions>(r#"{"cell": {"width": 8}}"#);
@@ -1030,8 +1050,8 @@ fn xerox() {
     variants(&[
         (XeroxBitbltLayout::Plain, "plain"),
         (XeroxBitbltLayout::Kerned, "kerned"),
-        (XeroxBitbltLayout::PlainIndex, "plain_index"),
-        (XeroxBitbltLayout::KernedIndex, "kerned_index"),
+        (XeroxBitbltLayout::PlainIndex, "plain-index"),
+        (XeroxBitbltLayout::KernedIndex, "kerned-index"),
     ]);
     rejects_common::<XeroxReadOptions>();
     rejects_write::<XeroxWriteOptions>();

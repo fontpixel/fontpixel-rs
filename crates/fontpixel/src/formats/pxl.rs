@@ -11,8 +11,10 @@ use crate::{Report, ResourceLimits, Result};
 pub enum PxlVersion {
     /// Word pointers and 32-bit row padding.
     #[default]
+    #[cfg_attr(feature = "serde", serde(rename = "1001"))]
     V1001,
     /// Byte pointers and 8-bit row padding.
+    #[cfg_attr(feature = "serde", serde(rename = "1002"))]
     V1002,
 }
 impl PxlVersion {
