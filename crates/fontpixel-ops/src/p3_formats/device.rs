@@ -1,5 +1,6 @@
 //! Explicit device font containers, bitmap storage and related input metadata.
 use super::{feature, target};
+use crate::options::{check_choice, check_range};
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
 /// Read options: explicit device font containers, bitmap storage and related input metadata.
@@ -30,6 +31,29 @@ pub struct ReadOptions {
     /// Family name supplied externally for a QPF font.
     #[cfg_attr(feature = "clap", arg(long))]
     pub qpf_read_family: Option<String>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.playdate_read_cell_width {
+            check_range(
+                "playdate_read_cell_width",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.playdate_read_cell_height {
+            check_range(
+                "playdate_read_cell_height",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -82,6 +106,12 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_VLW_VERSION: [&str; 4] = ["8", "9", "10", "11"];
+const WRITE_OPTIONS_ROCKBOX_FLAVOR: [&str; 2] = ["rb11", "rb12"];
+const WRITE_OPTIONS_ROCKBOX_DEPTH: [&str; 2] = ["mono", "gray4"];
+const WRITE_OPTIONS_PLAYDATE_FLAVOR: [&str; 3] = ["fnt-embedded", "fnt-png", "pft"];
+const WRITE_OPTIONS_QPF2_GLYPH_FORMAT: [&str; 2] = ["gray8", "mono"];
+const WRITE_OPTIONS_MGTK_COLUMNS: [&str; 3] = ["auto", "single", "double"];
 /// Write options: explicit device font containers, bitmap storage and related input metadata.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -96,22 +126,22 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u32).range(1..=32767)))]
     pub pilfont_max_width: Option<u32>,
     /// Processing VLW generation (default 11).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["8", "9", "10", "11"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_VLW_VERSION))]
     pub vlw_version: Option<String>,
     /// Explicit VLW smoothing hint; preserves source hint when omitted.
     #[cfg_attr(feature = "clap", arg(long, action=clap::ArgAction::Set))]
     pub vlw_smooth: Option<bool>,
     /// Rockbox file generation (default rb12).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["rb11", "rb12"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_ROCKBOX_FLAVOR))]
     pub rockbox_flavor: Option<String>,
     /// Rockbox native coverage representation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["mono", "gray4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_ROCKBOX_DEPTH))]
     pub rockbox_depth: Option<String>,
     /// U8/M load address in decimal.
     #[cfg_attr(feature = "clap", arg(long))]
     pub u8m_load_address: Option<u16>,
     /// Playdate descriptor/atlas or compiled font (default fnt-embedded).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["fnt-embedded", "fnt-png", "pft"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PLAYDATE_FLAVOR))]
     pub playdate_flavor: Option<String>,
     /// Playdate output atlas cell width.
     #[cfg_attr(feature = "clap", arg(long, requires="playdate_cell_height", value_parser=clap::value_parser!(u32).range(1..)))]
@@ -123,11 +153,55 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub playdate_tracking: Option<i16>,
     /// QPF2 native glyph coverage storage (default gray8).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["gray8", "mono"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_QPF2_GLYPH_FORMAT))]
     pub qpf2_glyph_format: Option<String>,
     /// MGTK one/two seven-bit raster strips (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["auto", "single", "double"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_MGTK_COLUMNS))]
     pub mgtk_columns: Option<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.pilfont_max_width {
+            check_range("pilfont_max_width", i128::from(value), 1, 32767)?;
+        }
+        if let Some(value) = self.vlw_version.as_deref() {
+            check_choice("vlw_version", value, &WRITE_OPTIONS_VLW_VERSION)?;
+        }
+        if let Some(value) = self.rockbox_flavor.as_deref() {
+            check_choice("rockbox_flavor", value, &WRITE_OPTIONS_ROCKBOX_FLAVOR)?;
+        }
+        if let Some(value) = self.rockbox_depth.as_deref() {
+            check_choice("rockbox_depth", value, &WRITE_OPTIONS_ROCKBOX_DEPTH)?;
+        }
+        if let Some(value) = self.playdate_flavor.as_deref() {
+            check_choice("playdate_flavor", value, &WRITE_OPTIONS_PLAYDATE_FLAVOR)?;
+        }
+        if let Some(value) = self.playdate_cell_width {
+            check_range(
+                "playdate_cell_width",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.playdate_cell_height {
+            check_range(
+                "playdate_cell_height",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.qpf2_glyph_format.as_deref() {
+            check_choice("qpf2_glyph_format", value, &WRITE_OPTIONS_QPF2_GLYPH_FORMAT)?;
+        }
+        if let Some(value) = self.mgtk_columns.as_deref() {
+            check_choice("mgtk_columns", value, &WRITE_OPTIONS_MGTK_COLUMNS)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

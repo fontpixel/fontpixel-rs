@@ -7,6 +7,7 @@ use crate::options::format_parser;
 use crate::options::{
     COutputOptions, ConsoleOptions, PcfOptions, RasterOptions, ReportStyle, VectorOptions,
 };
+use crate::options::{check_choice, check_parsed, check_range};
 use crate::{extra_formats, image_formats, p2_formats, p3_formats};
 #[cfg(feature = "clap")]
 use clap::{ArgAction, ArgMatches, Args, Command, FromArgMatches, error::ErrorKind};
@@ -27,7 +28,6 @@ use std::{
 #[cfg(feature = "clap")]
 const HELP: &str = "Each --take, --dy, --from and --font-index applies to the immediately preceding --part. Each part requires --take. Each --to applies to the immediately preceding -o/--output.\n\nExamples:\n  fontpixel merge --family Mix --part CJK.bdf --take cjk --part Latin.bdf --take western,geometric --dy=-1 -o Mix.bdf -o Mix.woff2 --spacing prop\n  fontpixel merge --family Mix --part input.bdf --take all -o ambiguous.dat --to pcf";
 
-#[cfg(feature = "clap")]
 fn family_parser(value: &str) -> std::result::Result<String, String> {
     let value = value.trim();
     if value.is_empty() {
@@ -59,6 +59,8 @@ struct RawMergeArgs {
     settings: MergeSettings,
 }
 
+const MERGE_SETTINGS_SPACING: [&str; 3] = ["auto", "mono", "prop"];
+const MERGE_SETTINGS_GEOMETRIC_WIDTH: [&str; 2] = ["half", "full"];
 /// Merge-wide settings and writer options shared by every output.
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -73,10 +75,10 @@ pub struct MergeSettings {
     #[cfg_attr(feature = "clap", arg(long, required = true, value_parser = family_parser, help = None::<&str>, long_help = None::<&str>))]
     pub family: String,
     /// Spacing policy: `auto`, `mono` or `prop`.
-    #[cfg_attr(feature = "clap", arg(long, default_value = "auto", value_parser = ["auto", "mono", "prop"], help = None::<&str>, long_help = None::<&str>))]
+    #[cfg_attr(feature = "clap", arg(long, default_value = "auto", value_parser = MERGE_SETTINGS_SPACING, help = None::<&str>, long_help = None::<&str>))]
     pub spacing: String,
     /// Width of geometric symbols: `half` or `full`.
-    #[cfg_attr(feature = "clap", arg(long, default_value = "half", value_parser = ["half", "full"], help = None::<&str>, long_help = None::<&str>))]
+    #[cfg_attr(feature = "clap", arg(long, default_value = "half", value_parser = MERGE_SETTINGS_GEOMETRIC_WIDTH, help = None::<&str>, long_help = None::<&str>))]
     pub geometric_width: String,
     /// Accept parts whose baselines or cells do not align.
     #[cfg_attr(feature = "clap", arg(long, help = None::<&str>, long_help = None::<&str>))]
@@ -132,6 +134,40 @@ pub struct MergeSettings {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub vector: VectorOptions,
+}
+impl MergeSettings {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        {
+            let value = self.family.as_str();
+            check_parsed("family", value, family_parser)?;
+        }
+        {
+            let value = self.spacing.as_str();
+            check_choice("spacing", value, &MERGE_SETTINGS_SPACING)?;
+        }
+        {
+            let value = self.geometric_width.as_str();
+            check_choice("geometric_width", value, &MERGE_SETTINGS_GEOMETRIC_WIDTH)?;
+        }
+        if let Some(value) = self.ascent {
+            check_range("ascent", i128::from(value), 0, i128::from(i64::MAX))?;
+        }
+        if let Some(value) = self.descent {
+            check_range("descent", i128::from(value), 0, i128::from(i64::MAX))?;
+        }
+        self.pcf.validate()?;
+        self.console.validate()?;
+        self.image.validate()?;
+        self.c.validate()?;
+        self.extra.validate()?;
+        self.p2.validate()?;
+        self.p3.validate()?;
+        self.raster.validate()?;
+        self.vector.validate()?;
+        Ok(())
+    }
 }
 impl Default for MergeSettings {
     /// The command-line defaults; `family` is empty and must be set.
@@ -237,6 +273,21 @@ impl FromArgMatches for MergeRequest {
     }
 }
 impl MergeRequest {
+    /// Check the value constraints the command-line parser enforces for every
+    /// part, output and setting; operations call this first.
+    pub fn validate(&self) -> Result<()> {
+        for part in &self.parts {
+            if let Some(from) = part.from.as_deref() {
+                crate::options::check_format("from", from)?;
+            }
+        }
+        for output in &self.outputs {
+            if let Some(format) = output.format.as_deref() {
+                crate::options::check_format("format", format)?;
+            }
+        }
+        self.settings.validate()
+    }
     /// Presentation selected by `report`.
     pub fn report_style(&self) -> ReportStyle {
         self.settings.report

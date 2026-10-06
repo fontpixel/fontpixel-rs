@@ -1,6 +1,18 @@
 //! Native console fonts, executable loaders and glyph directories.
 use super::{feature, target};
+use crate::options::check_choice;
 use fontpixel::{FontRegistry, ResourceLimits, Result};
+const READ_OPTIONS_COMFONT_READ_VARIANT: [&str; 7] = [
+    "fontedit",
+    "frapt",
+    "frapt-tsr",
+    "letafont",
+    "mania",
+    "psfcom",
+    "udg",
+];
+const READ_OPTIONS_CONSOLEET_READ_CODES: [&str; 2] = ["legacy", "unicode"];
+const READ_OPTIONS_ZAPFONT_READ_VARIANT: [&str; 2] = ["old", "redraw"];
 /// Read options: native console fonts, executable loaders and glyph directories.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -18,14 +30,42 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub native_read_charset: Option<String>,
     /// Require one executable font loader variant.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["fontedit", "frapt", "frapt-tsr", "letafont", "mania", "psfcom", "udg"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_COMFONT_READ_VARIANT))]
     pub comfont_read_variant: Option<String>,
     /// Meaning of Consoleet numeric filenames (default legacy).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["legacy", "unicode"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CONSOLEET_READ_CODES))]
     pub consoleet_read_codes: Option<String>,
     /// Require one Zap font layout.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["old", "redraw"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_ZAPFONT_READ_VARIANT))]
     pub zapfont_read_variant: Option<String>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.comfont_read_variant.as_deref() {
+            check_choice(
+                "comfont_read_variant",
+                value,
+                &READ_OPTIONS_COMFONT_READ_VARIANT,
+            )?;
+        }
+        if let Some(value) = self.consoleet_read_codes.as_deref() {
+            check_choice(
+                "consoleet_read_codes",
+                value,
+                &READ_OPTIONS_CONSOLEET_READ_CODES,
+            )?;
+        }
+        if let Some(value) = self.zapfont_read_variant.as_deref() {
+            check_choice(
+                "zapfont_read_variant",
+                value,
+                &READ_OPTIONS_ZAPFONT_READ_VARIANT,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -105,6 +145,20 @@ impl ReadOptions {
         Ok(())
     }
 }
+const WRITE_OPTIONS_COMFONT_VARIANT: [&str; 7] = [
+    "fontedit",
+    "frapt",
+    "frapt-tsr",
+    "letafont",
+    "mania",
+    "psfcom",
+    "udg",
+];
+const WRITE_OPTIONS_COMFONT_CPM_TARGET: [&str; 3] = ["pcw", "cpc", "spectrum"];
+const WRITE_OPTIONS_CONSOLEET_CODES: [&str; 2] = ["legacy", "unicode"];
+const WRITE_OPTIONS_XBIN_COUNT: [&str; 3] = ["auto", "256", "512"];
+const WRITE_OPTIONS_XBIN_SCREEN: [&str; 2] = ["preserve", "font-only"];
+const WRITE_OPTIONS_ZAPFONT_VARIANT: [&str; 2] = ["old", "redraw"];
 /// Write options: native console fonts, executable loaders and glyph directories.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -116,23 +170,52 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Executable font loader variant (default frapt).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["fontedit", "frapt", "frapt-tsr", "letafont", "mania", "psfcom", "udg"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_COMFONT_VARIANT))]
     pub comfont_variant: Option<String>,
     /// CP/M target for PSFCOM and UDG native loaders (default pcw).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["pcw", "cpc", "spectrum"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_COMFONT_CPM_TARGET))]
     pub comfont_cpm_target: Option<String>,
     /// Meaning of Consoleet output filenames (default legacy).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["legacy", "unicode"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_CONSOLEET_CODES))]
     pub consoleet_codes: Option<String>,
     /// XBIN glyph-slot count (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["auto", "256", "512"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_XBIN_COUNT))]
     pub xbin_count: Option<String>,
     /// Retain validated XBIN screen metadata or write font alone.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["preserve", "font-only"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_XBIN_SCREEN))]
     pub xbin_screen: Option<String>,
     /// Zap output layout (default redraw).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["old", "redraw"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_ZAPFONT_VARIANT))]
     pub zapfont_variant: Option<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.comfont_variant.as_deref() {
+            check_choice("comfont_variant", value, &WRITE_OPTIONS_COMFONT_VARIANT)?;
+        }
+        if let Some(value) = self.comfont_cpm_target.as_deref() {
+            check_choice(
+                "comfont_cpm_target",
+                value,
+                &WRITE_OPTIONS_COMFONT_CPM_TARGET,
+            )?;
+        }
+        if let Some(value) = self.consoleet_codes.as_deref() {
+            check_choice("consoleet_codes", value, &WRITE_OPTIONS_CONSOLEET_CODES)?;
+        }
+        if let Some(value) = self.xbin_count.as_deref() {
+            check_choice("xbin_count", value, &WRITE_OPTIONS_XBIN_COUNT)?;
+        }
+        if let Some(value) = self.xbin_screen.as_deref() {
+            check_choice("xbin_screen", value, &WRITE_OPTIONS_XBIN_SCREEN)?;
+        }
+        if let Some(value) = self.zapfont_variant.as_deref() {
+            check_choice("zapfont_variant", value, &WRITE_OPTIONS_ZAPFONT_VARIANT)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

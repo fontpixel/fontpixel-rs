@@ -1,5 +1,6 @@
 //! BMFont descriptor/page choices and native editor formats.
 use super::{require_feature, require_target};
+use crate::options::check_choice;
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
 /// Read options: bMFont descriptor/page choices and native editor formats.
@@ -17,6 +18,13 @@ pub struct ReadOptions {
     pub bmfont_read_threshold: Option<u8>,
 }
 impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces; this
+    /// group has none beyond its field types.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        Ok(())
+    }
+}
+impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
         require_feature(
             self.bmfont_read_threshold.is_some(),
@@ -32,6 +40,7 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_BMFONT_ENCODING: [&str; 4] = ["text", "xml", "binary", "json"];
 /// Write options: bMFont descriptor/page choices and native editor formats.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -43,7 +52,7 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// BMFont descriptor encoding (default text).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["text", "xml", "binary", "json"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_BMFONT_ENCODING))]
     pub bmfont_encoding: Option<String>,
     /// BMFont PNG page width in pixels.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -54,6 +63,16 @@ pub struct WriteOptions {
     /// Empty pixels between BMFont glyphs.
     #[cfg_attr(feature = "clap", arg(long))]
     pub bmfont_padding: Option<u32>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.bmfont_encoding.as_deref() {
+            check_choice("bmfont_encoding", value, &WRITE_OPTIONS_BMFONT_ENCODING)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

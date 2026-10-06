@@ -20,7 +20,9 @@ pub(crate) use crate::assets::Sources;
 /// Without filesystem support no file identities exist to protect.
 #[cfg(not(feature = "fs"))]
 #[derive(Clone, Default)]
-pub(crate) struct Sources;
+pub(crate) struct Sources {
+    _private: (),
+}
 #[cfg(not(feature = "fs"))]
 impl Sources {
     pub(crate) fn is_single_primary(&self) -> bool {

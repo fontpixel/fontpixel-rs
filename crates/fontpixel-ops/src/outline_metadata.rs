@@ -1,16 +1,21 @@
 //! Explicit outline-export (`variants`) metadata flags. Every flag is opt-in;
 //! without them the output is unchanged. Name records use exactly the
 //! `--otb-name-record` syntax and parser (`name_records`).
-use crate::name_records::{Records, number, record_hex, record_text};
+#[cfg(feature = "clap")]
+use crate::name_records::number;
+use crate::name_records::{Records, record_hex, record_text};
+use crate::options::{check_choice, check_parsed};
 use fontpixel::{
     Error, Result,
     sfnt::cmap::FullRecords,
     variants::{DotGlyph, GaspPolicy, GlyphOrder, MetadataOptions},
 };
 
+#[cfg(feature = "clap")]
 fn word(value: &str) -> std::result::Result<u16, String> {
     number(value)
 }
+#[cfg(feature = "clap")]
 fn code_pages(value: &str) -> std::result::Result<[u32; 2], String> {
     let values = value
         .split(',')
@@ -21,6 +26,11 @@ fn code_pages(value: &str) -> std::result::Result<[u32; 2], String> {
         .map_err(|_| "expected two comma-separated code page range words".into())
 }
 
+const OUTLINE_METADATA_OPTIONS_MAX_ZONES: [&str; 2] = ["1", "2"];
+const OUTLINE_METADATA_OPTIONS_GASP: [&str; 2] = ["keep", "omit"];
+const OUTLINE_METADATA_OPTIONS_CMAP_UNICODE_FULL: [&str; 3] = ["always", "non-bmp", "when-needed"];
+const OUTLINE_METADATA_OPTIONS_GLYPH_ORDER: [&str; 2] = ["planned", "codepoint"];
+const OUTLINE_METADATA_OPTIONS_DOT_GLYPH: [&str; 2] = ["last", "after-notdef"];
 /// Exact name-table records and OS/2 fields for outline exports.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -79,22 +89,54 @@ pub struct OutlineMetadataOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = clap::value_parser!(bool)))]
     pub fixed_pitch: Option<bool>,
     /// maxp.maxZones of TrueType output, 1 (native) or 2.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["1", "2"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_MAX_ZONES))]
     pub max_zones: Option<String>,
     /// gasp table: keep (native) or omit.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["keep", "omit"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_GASP))]
     pub gasp: Option<String>,
     /// cmap format-12 records: always (native), non-bmp, or when-needed
     /// (format 12 only when format 4 cannot hold the map, under (3,10) only).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["always", "non-bmp", "when-needed"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_CMAP_UNICODE_FULL))]
     pub cmap_unicode_full: Option<String>,
     /// Glyph IDs: planned (native, by glyph name) or codepoint (encoded glyphs
     /// by smallest scalar, then alternates in planned order).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["planned", "codepoint"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_GLYPH_ORDER))]
     pub glyph_order: Option<String>,
     /// Shared dot glyph of TrueType dot output: last (native) or after-notdef (glyph 1).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["last", "after-notdef"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_DOT_GLYPH))]
     pub dot_glyph: Option<String>,
+}
+impl OutlineMetadataOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        for value in &self.name_record {
+            check_parsed("name_record", value, record_text)?;
+        }
+        for value in &self.name_record_hex {
+            check_parsed("name_record_hex", value, record_hex)?;
+        }
+        if let Some(value) = self.max_zones.as_deref() {
+            check_choice("max_zones", value, &OUTLINE_METADATA_OPTIONS_MAX_ZONES)?;
+        }
+        if let Some(value) = self.gasp.as_deref() {
+            check_choice("gasp", value, &OUTLINE_METADATA_OPTIONS_GASP)?;
+        }
+        if let Some(value) = self.cmap_unicode_full.as_deref() {
+            check_choice(
+                "cmap_unicode_full",
+                value,
+                &OUTLINE_METADATA_OPTIONS_CMAP_UNICODE_FULL,
+            )?;
+        }
+        if let Some(value) = self.glyph_order.as_deref() {
+            check_choice("glyph_order", value, &OUTLINE_METADATA_OPTIONS_GLYPH_ORDER)?;
+        }
+        if let Some(value) = self.dot_glyph.as_deref() {
+            check_choice("dot_glyph", value, &OUTLINE_METADATA_OPTIONS_DOT_GLYPH)?;
+        }
+        Ok(())
+    }
 }
 
 impl OutlineMetadataOptions {
@@ -186,7 +228,7 @@ impl OutlineMetadataOptions {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "clap"))]
 mod tests {
     use super::*;
     use clap::Parser;

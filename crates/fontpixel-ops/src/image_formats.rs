@@ -1,6 +1,9 @@
 //! Explicit atlas and native image-directory options.
+use crate::options::{check_choice, check_range};
 use fontpixel::{Error, FontRegistry, Result};
 
+const READ_OPTIONS_IMAGE_READ_DOMAIN: [&str; 2] = ["legacy", "unicode"];
+const READ_OPTIONS_IMAGE_READ_BACKGROUND: [&str; 3] = ["black", "white", "alpha"];
 /// Read options: explicit atlas and native image-directory options.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -21,14 +24,34 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u32).range(2..=36)))]
     pub image_read_radix: Option<u32>,
     /// Input filename code domain (default legacy).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["legacy", "unicode"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_IMAGE_READ_DOMAIN))]
     pub image_read_domain: Option<String>,
     /// Input image background (default black).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["black", "white", "alpha"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_IMAGE_READ_BACKGROUND))]
     pub image_read_background: Option<String>,
     /// Input glyph baseline measured down from each image's top.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub image_read_baseline: Option<i64>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.image_read_radix {
+            check_range("image_read_radix", i128::from(value), 2, 36)?;
+        }
+        if let Some(value) = self.image_read_domain.as_deref() {
+            check_choice("image_read_domain", value, &READ_OPTIONS_IMAGE_READ_DOMAIN)?;
+        }
+        if let Some(value) = self.image_read_background.as_deref() {
+            check_choice(
+                "image_read_background",
+                value,
+                &READ_OPTIONS_IMAGE_READ_BACKGROUND,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -65,6 +88,11 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_IMAGE_LAYOUT: [&str; 2] = ["atlas", "imageset"];
+const WRITE_OPTIONS_IMAGE_ENCODING: [&str; 6] = ["png", "bmp", "gif", "tga", "pbm", "pgm"];
+const WRITE_OPTIONS_IMAGE_MAPPING_FORMAT: [&str; 2] = ["json", "toml"];
+const WRITE_OPTIONS_IMAGE_DOMAIN: [&str; 2] = ["legacy", "unicode"];
+const WRITE_OPTIONS_IMAGE_BACKGROUND: [&str; 3] = ["black", "white", "alpha"];
 /// Write options: explicit atlas and native image-directory options.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -76,16 +104,16 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Output image organization (default atlas).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["atlas", "imageset"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IMAGE_LAYOUT))]
     pub image_layout: Option<String>,
     /// Explicit image container (directory default png; atlas uses extension).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["png", "bmp", "gif", "tga", "pbm", "pgm"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IMAGE_ENCODING))]
     pub image_encoding: Option<String>,
     /// Atlas columns (default 16).
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u32).range(1..)))]
     pub image_columns: Option<u32>,
     /// Atlas mapping format (default json).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["json", "toml"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IMAGE_MAPPING_FORMAT))]
     pub image_mapping_format: Option<String>,
     /// Literal prefix on numeric output glyph filenames.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -94,14 +122,46 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u32).range(2..=36)))]
     pub image_radix: Option<u32>,
     /// Output filename code domain (default legacy).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["legacy", "unicode"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IMAGE_DOMAIN))]
     pub image_domain: Option<String>,
     /// Output image background (default black).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["black", "white", "alpha"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IMAGE_BACKGROUND))]
     pub image_background: Option<String>,
     /// Output glyph baseline measured down from the image top.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub image_baseline: Option<i64>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.image_layout.as_deref() {
+            check_choice("image_layout", value, &WRITE_OPTIONS_IMAGE_LAYOUT)?;
+        }
+        if let Some(value) = self.image_encoding.as_deref() {
+            check_choice("image_encoding", value, &WRITE_OPTIONS_IMAGE_ENCODING)?;
+        }
+        if let Some(value) = self.image_columns {
+            check_range("image_columns", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some(value) = self.image_mapping_format.as_deref() {
+            check_choice(
+                "image_mapping_format",
+                value,
+                &WRITE_OPTIONS_IMAGE_MAPPING_FORMAT,
+            )?;
+        }
+        if let Some(value) = self.image_radix {
+            check_range("image_radix", i128::from(value), 2, 36)?;
+        }
+        if let Some(value) = self.image_domain.as_deref() {
+            check_choice("image_domain", value, &WRITE_OPTIONS_IMAGE_DOMAIN)?;
+        }
+        if let Some(value) = self.image_background.as_deref() {
+            check_choice("image_background", value, &WRITE_OPTIONS_IMAGE_BACKGROUND)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

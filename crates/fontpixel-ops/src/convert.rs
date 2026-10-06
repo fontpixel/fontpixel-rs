@@ -1,6 +1,7 @@
 //! `convert`/`vectorize`: decode ordered inputs, apply names and projections,
 //! and write one output (or one per input with `each`) as a single transaction.
 use crate::context::{self, PreparedOutput};
+use crate::options::check_format;
 use crate::options::{
     COutputOptions, ConsoleOptions, PcfOptions, RasterOptions, ReportStyle, VectorOptions,
 };
@@ -90,6 +91,30 @@ pub struct ConvertRequest {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub vector: VectorOptions,
+}
+impl ConvertRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        if let Some(value) = self.to.as_deref() {
+            check_format("to", value)?;
+        }
+        self.names.validate()?;
+        self.projection.validate()?;
+        self.pcf.validate()?;
+        self.console.validate()?;
+        self.image.validate()?;
+        self.c.validate()?;
+        self.extra.validate()?;
+        self.p2.validate()?;
+        self.p3.validate()?;
+        self.raster.validate()?;
+        self.vector.validate()?;
+        Ok(())
+    }
 }
 impl ConvertRequest {
     /// The original total byte limit, before the standalone identity partition.

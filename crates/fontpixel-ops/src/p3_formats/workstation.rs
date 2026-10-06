@@ -1,6 +1,13 @@
 //! Native workstation/printer font variants and associated interpretation.
 use super::{feature, target};
+use crate::options::{check_choice, check_range};
 use fontpixel::{Error, FontRegistry, ResourceLimits, Result};
+const READ_OPTIONS_PREBUILT_READ_BYTE_ORDER: [&str; 2] = ["big", "little"];
+const READ_OPTIONS_PREBUILT_READ_BITMAP_BIT_ORDER: [&str; 2] = ["msb", "lsb"];
+const READ_OPTIONS_CATALYST_OFFSET_BASE: [&str; 2] = ["resource-body", "glyph-data"];
+const READ_OPTIONS_CHIWRITER_READ_VERSION: [&str; 2] = ["3", "4"];
+const READ_OPTIONS_CHIWRITER_READ_LAYOUT: [&str; 3] = ["contiguous", "absolute", "relative"];
+const READ_OPTIONS_DASHEN_READ_VERSION: [&str; 2] = ["3", "4"];
 /// Read options: native workstation/printer font variants and associated interpretation.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -12,29 +19,86 @@ use fontpixel::{Error, FontRegistry, ResourceLimits, Result};
 )]
 pub struct ReadOptions {
     /// Require a prebuilt bitmap numeric byte order.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PREBUILT_READ_BYTE_ORDER))]
     pub prebuilt_read_byte_order: Option<String>,
     /// Prebuilt input bitmap pixel order (default msb; independent of numeric byte order).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["msb", "lsb"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PREBUILT_READ_BITMAP_BIT_ORDER))]
     pub prebuilt_read_bitmap_bit_order: Option<String>,
     /// Catalyst native directory origin (default resource-body).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["resource-body", "glyph-data"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CATALYST_OFFSET_BASE))]
     pub catalyst_offset_base: Option<String>,
     /// Require ChiWriter version 3 or 4.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["3", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CHIWRITER_READ_VERSION))]
     pub chiwriter_read_version: Option<String>,
     /// Explicit compatible bitmap directory origin.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["contiguous", "absolute", "relative"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CHIWRITER_READ_LAYOUT))]
     pub chiwriter_read_layout: Option<String>,
     /// ChiWriter input raster bytes per row.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(1..)))]
     pub chiwriter_read_stride: Option<u8>,
     /// Require Dashen screen/printer generation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["3", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_DASHEN_READ_VERSION))]
     pub dashen_read_version: Option<String>,
     /// Explicitly accept the historical monobit PCL descriptor-size discrepancy.
     #[cfg_attr(feature = "clap", arg(long))]
     pub hppcl_allow_legacy_descriptor_size: bool,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.prebuilt_read_byte_order.as_deref() {
+            check_choice(
+                "prebuilt_read_byte_order",
+                value,
+                &READ_OPTIONS_PREBUILT_READ_BYTE_ORDER,
+            )?;
+        }
+        if let Some(value) = self.prebuilt_read_bitmap_bit_order.as_deref() {
+            check_choice(
+                "prebuilt_read_bitmap_bit_order",
+                value,
+                &READ_OPTIONS_PREBUILT_READ_BITMAP_BIT_ORDER,
+            )?;
+        }
+        if let Some(value) = self.catalyst_offset_base.as_deref() {
+            check_choice(
+                "catalyst_offset_base",
+                value,
+                &READ_OPTIONS_CATALYST_OFFSET_BASE,
+            )?;
+        }
+        if let Some(value) = self.chiwriter_read_version.as_deref() {
+            check_choice(
+                "chiwriter_read_version",
+                value,
+                &READ_OPTIONS_CHIWRITER_READ_VERSION,
+            )?;
+        }
+        if let Some(value) = self.chiwriter_read_layout.as_deref() {
+            check_choice(
+                "chiwriter_read_layout",
+                value,
+                &READ_OPTIONS_CHIWRITER_READ_LAYOUT,
+            )?;
+        }
+        if let Some(value) = self.chiwriter_read_stride {
+            check_range(
+                "chiwriter_read_stride",
+                i128::from(value),
+                1,
+                i128::from(u8::MAX),
+            )?;
+        }
+        if let Some(value) = self.dashen_read_version.as_deref() {
+            check_choice(
+                "dashen_read_version",
+                value,
+                &READ_OPTIONS_DASHEN_READ_VERSION,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -99,6 +163,20 @@ impl ReadOptions {
         Ok(())
     }
 }
+const WRITE_OPTIONS_PREBUILT_BYTE_ORDER: [&str; 2] = ["big", "little"];
+const WRITE_OPTIONS_PREBUILT_BITMAP_BIT_ORDER: [&str; 2] = ["msb", "lsb"];
+const WRITE_OPTIONS_PREBUILT_DEPTH: [&str; 4] = ["mono", "gray2", "gray4", "gray8"];
+const WRITE_OPTIONS_CATALYST_WRITE_OFFSET_BASE: [&str; 2] = ["resource-body", "glyph-data"];
+const WRITE_OPTIONS_CHIWRITER_VERSION: [&str; 2] = ["3", "4"];
+const WRITE_OPTIONS_CHIWRITER_LAYOUT: [&str; 3] = ["contiguous", "absolute", "relative"];
+const WRITE_OPTIONS_DASHEN_VERSION: [&str; 2] = ["3", "4"];
+const WRITE_OPTIONS_HPPCL_ORIENTATION: [&str; 4] = [
+    "portrait",
+    "landscape",
+    "reverse-portrait",
+    "reverse-landscape",
+];
+const WRITE_OPTIONS_HPPCL_COMPRESSION: [&str; 2] = ["raw", "rle"];
 /// Write options: native workstation/printer font variants and associated interpretation.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -110,13 +188,13 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Prebuilt numeric byte order (default big).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PREBUILT_BYTE_ORDER))]
     pub prebuilt_byte_order: Option<String>,
     /// Prebuilt output bitmap pixel order (default msb; lsb for explicit compatibility).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["msb", "lsb"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PREBUILT_BITMAP_BIT_ORDER))]
     pub prebuilt_bitmap_bit_order: Option<String>,
     /// Prebuilt native coverage precision; otherwise inferred per strike.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["mono", "gray2", "gray4", "gray8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PREBUILT_DEPTH))]
     pub prebuilt_depth: Option<String>,
     /// Explicitly round prebuilt gray samples to the selected palette.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -128,7 +206,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub prebuilt_identifier: Option<u32>,
     /// Catalyst output directory origin.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["resource-body", "glyph-data"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_CATALYST_WRITE_OFFSET_BASE))]
     pub catalyst_write_offset_base: Option<String>,
     /// Catalyst common raster height.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -140,10 +218,10 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub catalyst_sidebearing: Option<u8>,
     /// ChiWriter output generation (default 4).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["3", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_CHIWRITER_VERSION))]
     pub chiwriter_version: Option<String>,
     /// ChiWriter compatible output directory.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["contiguous", "absolute", "relative"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_CHIWRITER_LAYOUT))]
     pub chiwriter_layout: Option<String>,
     /// ChiWriter output raster bytes per row.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(1..)))]
@@ -164,7 +242,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub chiwriter_filename: Option<String>,
     /// Dashen output generation (default 3).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["3", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_DASHEN_VERSION))]
     pub dashen_version: Option<String>,
     /// Dashen native screen top offset.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -173,10 +251,10 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub dashen_codepoint_map: bool,
     /// PCL physical raster orientation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["portrait", "landscape", "reverse-portrait", "reverse-landscape"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_HPPCL_ORIENTATION))]
     pub hppcl_orientation: Option<String>,
     /// PCL character encoding (default raw).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["raw", "rle"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_HPPCL_COMPRESSION))]
     pub hppcl_compression: Option<String>,
     /// Maximum PCL character-command bytes, including descriptor (17..32767).
     #[cfg_attr(feature = "clap", arg(long))]
@@ -190,6 +268,87 @@ pub struct WriteOptions {
     /// PCL native symbol-set identifier.
     #[cfg_attr(feature = "clap", arg(long))]
     pub hppcl_symbol_set: Option<u16>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.prebuilt_byte_order.as_deref() {
+            check_choice(
+                "prebuilt_byte_order",
+                value,
+                &WRITE_OPTIONS_PREBUILT_BYTE_ORDER,
+            )?;
+        }
+        if let Some(value) = self.prebuilt_bitmap_bit_order.as_deref() {
+            check_choice(
+                "prebuilt_bitmap_bit_order",
+                value,
+                &WRITE_OPTIONS_PREBUILT_BITMAP_BIT_ORDER,
+            )?;
+        }
+        if let Some(value) = self.prebuilt_depth.as_deref() {
+            check_choice("prebuilt_depth", value, &WRITE_OPTIONS_PREBUILT_DEPTH)?;
+        }
+        if let Some(value) = self.catalyst_write_offset_base.as_deref() {
+            check_choice(
+                "catalyst_write_offset_base",
+                value,
+                &WRITE_OPTIONS_CATALYST_WRITE_OFFSET_BASE,
+            )?;
+        }
+        if let Some(value) = self.chiwriter_version.as_deref() {
+            check_choice("chiwriter_version", value, &WRITE_OPTIONS_CHIWRITER_VERSION)?;
+        }
+        if let Some(value) = self.chiwriter_layout.as_deref() {
+            check_choice("chiwriter_layout", value, &WRITE_OPTIONS_CHIWRITER_LAYOUT)?;
+        }
+        if let Some(value) = self.chiwriter_stride {
+            check_range(
+                "chiwriter_stride",
+                i128::from(value),
+                1,
+                i128::from(u8::MAX),
+            )?;
+        }
+        if let Some(value) = self.chiwriter_width {
+            check_range("chiwriter_width", i128::from(value), 1, i128::from(u8::MAX))?;
+        }
+        if let Some(value) = self.chiwriter_height {
+            check_range(
+                "chiwriter_height",
+                i128::from(value),
+                1,
+                i128::from(u8::MAX),
+            )?;
+        }
+        if let Some(value) = self.dashen_version.as_deref() {
+            check_choice("dashen_version", value, &WRITE_OPTIONS_DASHEN_VERSION)?;
+        }
+        if let Some(value) = self.hppcl_orientation.as_deref() {
+            check_choice("hppcl_orientation", value, &WRITE_OPTIONS_HPPCL_ORIENTATION)?;
+        }
+        if let Some(value) = self.hppcl_compression.as_deref() {
+            check_choice("hppcl_compression", value, &WRITE_OPTIONS_HPPCL_COMPRESSION)?;
+        }
+        if let Some(value) = self.hppcl_x_resolution {
+            check_range(
+                "hppcl_x_resolution",
+                i128::from(value),
+                1,
+                i128::from(u16::MAX),
+            )?;
+        }
+        if let Some(value) = self.hppcl_y_resolution {
+            check_range(
+                "hppcl_y_resolution",
+                i128::from(value),
+                1,
+                i128::from(u16::MAX),
+            )?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

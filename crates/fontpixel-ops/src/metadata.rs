@@ -1,4 +1,5 @@
 //! Explicit, budgeted normalized naming changes shared by conversion commands.
+use crate::options::{check_parsed, check_range};
 use fontpixel::model::{Rational, Vector};
 use fontpixel::projection::{
     BitmapProjection, EditValue, MAX_PROPERTY_EDITS, PropertyEdit, ScalableAdvance, SizeProjection,
@@ -54,6 +55,28 @@ pub struct NameOptions {
     /// Explicit foundry/vendor display name.
     #[cfg_attr(feature = "clap", arg(long))]
     pub foundry: Option<String>,
+}
+impl NameOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.family.as_deref() {
+            check_parsed("family", value, identity)?;
+        }
+        if let Some(value) = self.style.as_deref() {
+            check_parsed("style", value, identity)?;
+        }
+        if let Some(value) = self.full_name.as_deref() {
+            check_parsed("full_name", value, identity)?;
+        }
+        if let Some(value) = self.postscript_name.as_deref() {
+            check_parsed("postscript_name", value, identity)?;
+        }
+        if let Some(value) = self.font_version.as_deref() {
+            check_parsed("font_version", value, identity)?;
+        }
+        Ok(())
+    }
 }
 impl NameOptions {
     pub(crate) fn into_overrides(self) -> NameOverrides {
@@ -207,6 +230,30 @@ pub struct ProjectionOptions {
     #[cfg_attr(feature = "clap", arg(long, value_name = "NAME"))]
     pub remove_property: Vec<String>,
 }
+impl ProjectionOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.swidth_ppem {
+            check_range("swidth_ppem", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some(value) = self.swidth_units {
+            check_range("swidth_units", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some(value) = self.font_name.as_deref() {
+            check_parsed("font_name", value, identity)?;
+        }
+        if let Some(value) = self.point_size {
+            check_range("point_size", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some((x, y)) = self.resolution {
+            check_range("resolution", i128::from(x), 1, i128::from(i32::MAX))?;
+            check_range("resolution", i128::from(y), 1, i128::from(i32::MAX))?;
+        }
+        Ok(())
+    }
+}
+#[cfg(feature = "clap")]
 fn resolution(value: &str) -> std::result::Result<(u32, u32), String> {
     let parse = |s: &str| {
         s.trim()

@@ -121,53 +121,63 @@ fn standalone<T>(
 
 /// Convert inputs into one output, or each input into its own output.
 pub fn convert(request: ConvertRequest, storage: &Storage) -> Result<Completed<ConvertResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || convert::run(request))
 }
 /// Merge ordered parts and write every requested output as one group.
 pub fn merge(request: MergeRequest, storage: &Storage) -> Result<Completed<MergeResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || merge::run(request))
 }
 /// Build a locl-enabled OpenType font from regional and script faces.
 #[cfg(feature = "opentype")]
 pub fn variants(request: VariantsRequest, storage: &Storage) -> Result<Completed<SfntResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || opentype::variants(request))
 }
 /// Subset an sfnt, WOFF or WOFF2 font.
 #[cfg(feature = "opentype")]
 pub fn subset(request: SubsetRequest, storage: &Storage) -> Result<Completed<SfntResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || opentype::subset(request))
 }
 /// Remap glyph codes into another charset and write the result.
 pub fn charset(request: CharsetRequest, storage: &Storage) -> Result<Completed<CharsetResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || commands::charset(request))
 }
 /// Validate one input.
 pub fn validate(request: ValidateRequest, storage: &Storage) -> Result<ValidateResponse> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     Ok(standalone(storage, total, || commands::validate(request))?.response)
 }
 /// Compare two inputs. Differences are reported in the response, not as an error.
 pub fn diff(request: DiffRequest, storage: &Storage) -> Result<DiffResponse> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     Ok(standalone(storage, total, || commands::diff(request))?.response)
 }
 /// Decode one input and describe its fonts.
 pub fn info(request: InfoRequest, storage: &Storage) -> Result<InfoResponse> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     Ok(standalone(storage, total, || inspect::info(request))?.response)
 }
 /// Lay out text (or every mapping) as character art.
 pub fn preview(request: PreviewRequest, storage: &Storage) -> Result<PreviewResponse> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     Ok(standalone(storage, total, || render::preview(request))?.response)
 }
 /// Lay out text (or every mapping) into a PNG or SVG image.
 pub fn render(request: RenderRequest, storage: &Storage) -> Result<Completed<RenderResponse>> {
+    request.validate()?;
     let total = request.source_identity_total_bytes();
     standalone(storage, total, || render::render(request))
 }

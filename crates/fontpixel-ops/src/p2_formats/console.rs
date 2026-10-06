@@ -1,9 +1,15 @@
 //! Headerless layouts and DOS console output choices.
 use super::{require_feature, require_target};
+use crate::options::check_choice;
 #[cfg(any(feature = "raw", feature = "cpi"))]
 use fontpixel::Error;
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_RAW_BIT_ORDER: [&str; 2] = ["msb", "lsb"];
+const READ_OPTIONS_RAW_ROW_ORDER: [&str; 2] = ["top-down", "bottom-up"];
+const READ_OPTIONS_RAW_PACKING: [&str; 2] = ["byte-rows", "bit-aligned"];
+const READ_OPTIONS_RAW_BYTE_ORDER: [&str; 2] = ["row-major", "column-major"];
+const READ_OPTIONS_CPI_POINTER_MODE: [&str; 2] = ["linear", "segmented"];
 /// Read options: headerless layouts and DOS console output choices.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -30,16 +36,16 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub raw_first: Option<String>,
     /// Bit order within each raw byte (default msb).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["msb", "lsb"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_RAW_BIT_ORDER))]
     pub raw_bit_order: Option<String>,
     /// Raw row order (default top-down).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["top-down", "bottom-up"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_RAW_ROW_ORDER))]
     pub raw_row_order: Option<String>,
     /// Raw alignment: byte-aligned rows or continuous packed bits.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["byte-rows", "bit-aligned"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_RAW_PACKING))]
     pub raw_packing: Option<String>,
     /// Row-major or byte-column-major storage within each horizontal strip.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["row-major", "column-major"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_RAW_BYTE_ORDER))]
     pub raw_byte_order: Option<String>,
     /// Glyph cells placed side by side in each raw horizontal strip (default 1).
     #[cfg_attr(feature = "clap", arg(long))]
@@ -57,8 +63,30 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub raw_charset: Option<String>,
     /// DOS CPI input pointers (default linear).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["linear", "segmented"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CPI_POINTER_MODE))]
     pub cpi_pointer_mode: Option<String>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.raw_bit_order.as_deref() {
+            check_choice("raw_bit_order", value, &READ_OPTIONS_RAW_BIT_ORDER)?;
+        }
+        if let Some(value) = self.raw_row_order.as_deref() {
+            check_choice("raw_row_order", value, &READ_OPTIONS_RAW_ROW_ORDER)?;
+        }
+        if let Some(value) = self.raw_packing.as_deref() {
+            check_choice("raw_packing", value, &READ_OPTIONS_RAW_PACKING)?;
+        }
+        if let Some(value) = self.raw_byte_order.as_deref() {
+            check_choice("raw_byte_order", value, &READ_OPTIONS_RAW_BYTE_ORDER)?;
+        }
+        if let Some(value) = self.cpi_pointer_mode.as_deref() {
+            check_choice("cpi_pointer_mode", value, &READ_OPTIONS_CPI_POINTER_MODE)?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     fn raw_requested(&self) -> bool {
@@ -193,6 +221,7 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_CPI_VERSION: [&str; 5] = ["font", "font-nt", "drfont", "cp", "cpx"];
 /// Write options: headerless layouts and DOS console output choices.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -204,11 +233,21 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// DOS output layout (default CP for .cp, CPX for .cpx, otherwise FONT).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["font", "font-nt", "drfont", "cp", "cpx"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_CPI_VERSION))]
     pub cpi_version: Option<String>,
     /// DOS code page for fonts without native code-page metadata.
     #[cfg_attr(feature = "clap", arg(long))]
     pub cpi_code_page: Option<u16>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.cpi_version.as_deref() {
+            check_choice("cpi_version", value, &WRITE_OPTIONS_CPI_VERSION)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

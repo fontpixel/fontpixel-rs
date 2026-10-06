@@ -6,8 +6,14 @@ pub mod native_console;
 pub mod portable;
 pub mod system;
 pub mod workstation;
+use crate::options::{check_choice, check_parsed, check_range};
 use fontpixel::{Error, FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_HANFONT_READ_MODE: [&str; 2] = ["syllables", "components"];
+const READ_OPTIONS_DRCS_TERMINAL: [&str; 2] = ["vt320", "vt510"];
+const READ_OPTIONS_VFONT_READ_BYTE_ORDER: [&str; 2] = ["little", "big"];
+const READ_OPTIONS_PALM_READ_CONTAINER: [&str; 3] = ["bare", "pdb", "prc"];
+const READ_OPTIONS_PALM_ROUNDING: [&str; 2] = ["exact", "floor"];
 /// Read options: explicit options for embedded bitmaps, Korean components, IIgs, terminal and color fonts.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -46,7 +52,7 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub drhalo_read_first: Option<u32>,
     /// Korean 8×4×4 input: compose Hangul syllables or retain component slots.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["syllables", "components"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_HANFONT_READ_MODE))]
     pub hanfont_read_mode: Option<String>,
     /// Explicit charset label for Apple IIgs legacy character codes.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -55,20 +61,56 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub drcs_baseline: Option<i64>,
     /// DEC device matrix rules for both reading and writing DRCS.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["vt320", "vt510"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_DRCS_TERMINAL))]
     pub drcs_terminal: Option<String>,
     /// Explicit Berkeley vfont input integer byte order.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["little", "big"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_VFONT_READ_BYTE_ORDER))]
     pub vfont_read_byte_order: Option<String>,
     /// Require a Palm wrapper instead of recognizing its structure.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["bare", "pdb", "prc"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PALM_READ_CONTAINER))]
     pub palm_read_container: Option<String>,
     /// Explicit handling of fractional Palm density coordinates (default exact).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["exact", "floor"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PALM_ROUNDING))]
     pub palm_rounding: Option<String>,
     /// Interpret GDR source codes as legacy positions instead of Unicode.
     #[cfg_attr(feature = "clap", arg(long))]
     pub gdr_read_legacy: bool,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.device.validate()?;
+        self.portable.validate()?;
+        self.historical.validate()?;
+        self.system.validate()?;
+        self.workstation.validate()?;
+        self.native_console.validate()?;
+        if let Some(value) = self.hanfont_read_mode.as_deref() {
+            check_choice("hanfont_read_mode", value, &READ_OPTIONS_HANFONT_READ_MODE)?;
+        }
+        if let Some(value) = self.drcs_terminal.as_deref() {
+            check_choice("drcs_terminal", value, &READ_OPTIONS_DRCS_TERMINAL)?;
+        }
+        if let Some(value) = self.vfont_read_byte_order.as_deref() {
+            check_choice(
+                "vfont_read_byte_order",
+                value,
+                &READ_OPTIONS_VFONT_READ_BYTE_ORDER,
+            )?;
+        }
+        if let Some(value) = self.palm_read_container.as_deref() {
+            check_choice(
+                "palm_read_container",
+                value,
+                &READ_OPTIONS_PALM_READ_CONTAINER,
+            )?;
+        }
+        if let Some(value) = self.palm_rounding.as_deref() {
+            check_choice("palm_rounding", value, &READ_OPTIONS_PALM_ROUNDING)?;
+        }
+        Ok(())
+    }
 }
 
 impl ReadOptions {
@@ -165,6 +207,15 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_IIGS_VERSION: [&str; 3] = ["auto", "1.1", "1.5"];
+const WRITE_OPTIONS_IIGS_CONTAINER: [&str; 2] = ["bare", "binscii"];
+const WRITE_OPTIONS_VFONT_BYTE_ORDER: [&str; 2] = ["little", "big"];
+const WRITE_OPTIONS_PALM_CONTAINER: [&str; 3] = ["bare", "pdb", "prc"];
+const WRITE_OPTIONS_PALM_VERSION: [&str; 6] = ["1", "2", "afnx", "fontsubst", "gray1", "gray2"];
+const WRITE_OPTIONS_GDR_VERSION: [&str; 4] = ["39", "40", "41", "42"];
+const WRITE_OPTIONS_COLOR_FLAVOR: [&str; 2] = ["cbdt", "sbix"];
+const WRITE_OPTIONS_OTB_ROUNDING: [&str; 2] = ["half-away", "ties-even"];
+const WRITE_OPTIONS_DRCS_CHARSET: [&str; 2] = ["94", "96"];
 /// Write options: explicit options for embedded bitmaps, Korean components, IIgs, terminal and color fonts.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -212,13 +263,13 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub drhalo_first: Option<u32>,
     /// Apple IIgs header version (default preserves the input version).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["auto", "1.1", "1.5"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IIGS_VERSION))]
     pub iigs_version: Option<String>,
     /// IIgs output envelope (default bare).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["bare", "binscii"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_IIGS_CONTAINER))]
     pub iigs_container: Option<String>,
     /// Berkeley vfont output integer byte order (default little).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["little", "big"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_VFONT_BYTE_ORDER))]
     pub vfont_byte_order: Option<String>,
     /// Explicitly project Unicode numbers to vfont legacy byte positions.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -242,10 +293,10 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub figlet_legacy_as_unicode: bool,
     /// Palm output wrapper (default prc).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["bare", "pdb", "prc"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PALM_CONTAINER))]
     pub palm_container: Option<String>,
     /// Palm bitmap resource version (default 1).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["1", "2", "afnx", "fontsubst", "gray1", "gray2"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PALM_VERSION))]
     pub palm_version: Option<String>,
     /// Comma-separated Palm densities, one per input strike.
     #[cfg_attr(feature = "clap", arg(long, value_delimiter = ','))]
@@ -254,7 +305,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub palm_unicode_as_legacy: bool,
     /// GDR strike descriptor version (default 41).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["39", "40", "41", "42"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_GDR_VERSION))]
     pub gdr_version: Option<String>,
     /// GDR collection UID in decimal or 0x hexadecimal notation.
     #[cfg_attr(feature = "clap", arg(long, value_parser = parse_uid))]
@@ -263,7 +314,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub gdr_write_legacy: bool,
     /// Color bitmap table family; both encode black pixels with coverage alpha.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["cbdt", "sbix"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_COLOR_FLAVOR))]
     pub color_flavor: Option<String>,
     /// Explicit OTB/bdat design units per em; absent preserves automatic scaling.
     #[cfg_attr(feature = "clap", arg(long, value_parser = clap::value_parser!(u16).range(16..=16384)))]
@@ -272,7 +323,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = embedded_reference))]
     pub otb_reference: Option<String>,
     /// OTB/bdat pixel-to-design rounding; absent preserves native half-away rounding.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["half-away", "ties-even"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_OTB_ROUNDING))]
     pub otb_rounding: Option<String>,
     /// Embedded metadata options.
     #[cfg_attr(feature = "clap", command(flatten))]
@@ -297,7 +348,7 @@ pub struct WriteOptions {
     )]
     pub drcs_cell_y: Option<i64>,
     /// DRCS character set size (default 94).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["94", "96"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_DRCS_CHARSET))]
     pub drcs_charset: Option<String>,
     /// DEC character set designator (default a space followed by @).
     #[cfg_attr(feature = "clap", arg(long))]
@@ -305,6 +356,91 @@ pub struct WriteOptions {
     /// Use 8-bit DCS/ST control bytes instead of ESC P / ESC backslash.
     #[cfg_attr(feature = "clap", arg(long))]
     pub drcs_eight_bit_controls: bool,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.device.validate()?;
+        self.portable.validate()?;
+        self.historical.validate()?;
+        self.system.validate()?;
+        self.workstation.validate()?;
+        self.native_console.validate()?;
+        if let Some(value) = self.native_cell_width {
+            check_range(
+                "native_cell_width",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.native_cell_height {
+            check_range(
+                "native_cell_height",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.iigs_version.as_deref() {
+            check_choice("iigs_version", value, &WRITE_OPTIONS_IIGS_VERSION)?;
+        }
+        if let Some(value) = self.iigs_container.as_deref() {
+            check_choice("iigs_container", value, &WRITE_OPTIONS_IIGS_CONTAINER)?;
+        }
+        if let Some(value) = self.vfont_byte_order.as_deref() {
+            check_choice("vfont_byte_order", value, &WRITE_OPTIONS_VFONT_BYTE_ORDER)?;
+        }
+        if let Some(value) = self.fzx_height {
+            check_range("fzx_height", i128::from(value), 1, i128::from(u8::MAX))?;
+        }
+        if let Some(value) = self.figlet_height {
+            check_range("figlet_height", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some(value) = self.palm_container.as_deref() {
+            check_choice("palm_container", value, &WRITE_OPTIONS_PALM_CONTAINER)?;
+        }
+        if let Some(value) = self.palm_version.as_deref() {
+            check_choice("palm_version", value, &WRITE_OPTIONS_PALM_VERSION)?;
+        }
+        if let Some(value) = self.gdr_version.as_deref() {
+            check_choice("gdr_version", value, &WRITE_OPTIONS_GDR_VERSION)?;
+        }
+        if let Some(value) = self.color_flavor.as_deref() {
+            check_choice("color_flavor", value, &WRITE_OPTIONS_COLOR_FLAVOR)?;
+        }
+        if let Some(value) = self.otb_upm {
+            check_range("otb_upm", i128::from(value), 16, 16384)?;
+        }
+        if let Some(value) = self.otb_reference.as_deref() {
+            check_parsed("otb_reference", value, embedded_reference)?;
+        }
+        if let Some(value) = self.otb_rounding.as_deref() {
+            check_choice("otb_rounding", value, &WRITE_OPTIONS_OTB_ROUNDING)?;
+        }
+        self.otb_metadata.validate()?;
+        if let Some(value) = self.drcs_cell_width {
+            check_range(
+                "drcs_cell_width",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.drcs_cell_height {
+            check_range(
+                "drcs_cell_height",
+                i128::from(value),
+                1,
+                i128::from(u32::MAX),
+            )?;
+        }
+        if let Some(value) = self.drcs_charset.as_deref() {
+            check_choice("drcs_charset", value, &WRITE_OPTIONS_DRCS_CHARSET)?;
+        }
+        Ok(())
+    }
 }
 
 impl WriteOptions {
@@ -834,6 +970,7 @@ fn palm_container(value: &str) -> fontpixel::formats::palm::PalmContainer {
         _ => PalmContainer::Prc,
     }
 }
+#[cfg(feature = "clap")]
 fn parse_uid(value: &str) -> std::result::Result<u32, String> {
     if let Some(hex) = value
         .strip_prefix("0x")

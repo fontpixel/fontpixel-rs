@@ -1,5 +1,6 @@
 //! Explicit KBITX/PBF input choices and PBF/HBF output geometry.
 use crate::options::RasterOptions;
+use crate::options::{check_choice, check_range};
 use fontpixel::{Error, FontRegistry, Result};
 
 /// Read options: explicit KBITX/PBF input choices and PBF/HBF output geometry.
@@ -17,6 +18,13 @@ pub struct ReadOptions {
     /// Crop PBF blank margins during import, with a loss report.
     #[cfg_attr(feature = "clap", arg(long))]
     pub pbf_trim: bool,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces; this
+    /// group has none beyond its field types.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -44,6 +52,10 @@ impl ReadOptions {
         Ok(())
     }
 }
+const WRITE_OPTIONS_PBF_VERSION: [&str; 3] = ["1", "2", "3"];
+const WRITE_OPTIONS_PBF_COMPRESSION: [&str; 2] = ["raw", "rle4"];
+const WRITE_OPTIONS_PBF_OFFSET_WIDTH: [&str; 3] = ["auto", "16", "32"];
+const WRITE_OPTIONS_PBF_CODEPOINT_BYTES: [&str; 2] = ["2", "4"];
 /// Write options: explicit KBITX/PBF input choices and PBF/HBF output geometry.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -54,19 +66,19 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Pebble output wire version (default 3).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["1", "2", "3"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PBF_VERSION))]
     pub pbf_version: Option<String>,
     /// Pebble bitmap encoding; RLE4 requires v3.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["raw", "rle4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PBF_COMPRESSION))]
     pub pbf_compression: Option<String>,
     /// Pebble glyph offset width (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["auto", "16", "32"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PBF_OFFSET_WIDTH))]
     pub pbf_offset_width: Option<String>,
     /// Pebble hash bucket count, 1..255 (default 255).
     #[cfg_attr(feature = "clap", arg(long, value_parser = clap::value_parser!(u8).range(1..)))]
     pub pbf_hash_buckets: Option<u8>,
     /// Pebble Unicode field width; default chooses 2 or 4 bytes.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["2", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PBF_CODEPOINT_BYTES))]
     pub pbf_codepoint_bytes: Option<String>,
     /// Pebble line-top baseline override in pixels.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -80,6 +92,37 @@ pub struct WriteOptions {
     /// Split HBF bitmaps after this many glyphs per asset.
     #[cfg_attr(feature = "clap", arg(long))]
     pub hbf_glyphs_per_file: Option<usize>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.pbf_version.as_deref() {
+            check_choice("pbf_version", value, &WRITE_OPTIONS_PBF_VERSION)?;
+        }
+        if let Some(value) = self.pbf_compression.as_deref() {
+            check_choice("pbf_compression", value, &WRITE_OPTIONS_PBF_COMPRESSION)?;
+        }
+        if let Some(value) = self.pbf_offset_width.as_deref() {
+            check_choice("pbf_offset_width", value, &WRITE_OPTIONS_PBF_OFFSET_WIDTH)?;
+        }
+        if let Some(value) = self.pbf_hash_buckets {
+            check_range(
+                "pbf_hash_buckets",
+                i128::from(value),
+                1,
+                i128::from(u8::MAX),
+            )?;
+        }
+        if let Some(value) = self.pbf_codepoint_bytes.as_deref() {
+            check_choice(
+                "pbf_codepoint_bytes",
+                value,
+                &WRITE_OPTIONS_PBF_CODEPOINT_BYTES,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

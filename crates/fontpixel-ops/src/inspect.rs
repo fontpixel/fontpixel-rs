@@ -2,6 +2,7 @@
 use crate::context;
 use crate::convert::{conversion_charge, conversion_report_bytes};
 use crate::options::RasterOptions;
+use crate::options::check_format;
 use fontpixel::formats::FormatStatus;
 use fontpixel::{FontSet, ReadOptions, Report};
 use std::{io::Write, path::PathBuf};
@@ -18,6 +19,13 @@ pub struct FormatsRequest {
     /// Emit machine-readable metadata and capability flags.
     #[cfg_attr(feature = "clap", arg(long))]
     pub json: bool,
+}
+impl FormatsRequest {
+    /// Check the value constraints the command-line parser enforces; this
+    /// group has none beyond its field types.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        Ok(())
+    }
 }
 /// Every catalogue format in registry order.
 #[derive(Debug, Clone, PartialEq)]
@@ -93,6 +101,17 @@ pub struct InfoRequest {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub raster: RasterOptions,
+}
+impl InfoRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        self.raster.validate()?;
+        Ok(())
+    }
 }
 impl InfoRequest {
     /// The original total byte limit, before the standalone identity partition.

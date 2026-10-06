@@ -2,6 +2,7 @@
 use crate::context::read_primary;
 use crate::input_budget::InputBudget;
 use crate::options::ReportStyle;
+use crate::options::{check_choice, check_range};
 use crate::render::{persist, write_report_document};
 use fontpixel::{
     Error, Font, ReadOptions, Report, ReportEntry, ResourceLimits, Result, Variants,
@@ -11,6 +12,10 @@ use fontpixel::{
     woff,
 };
 use std::{collections::BTreeSet, io::Write, mem::size_of, path::PathBuf};
+const VARIANTS_REQUEST_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
+const VARIANTS_REQUEST_DOT_REUSE: [&str; 3] = ["literal", "rows", "patterns"];
+const VARIANTS_REQUEST_WOFF2_SOURCE: [&str; 3] = ["auto", "cff", "ttf"];
+const VARIANTS_REQUEST_NOTDEF: [&str; 2] = ["preserve", "empty"];
 /// Combine regional and script faces into one locl-enabled OpenType font.
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -45,13 +50,13 @@ pub struct VariantsRequest {
     #[cfg_attr(feature = "clap", arg(long))]
     pub upm: Option<u16>,
     /// Outline shape.
-    #[cfg_attr(feature = "clap", arg(long,default_value="square",value_parser=["square","square-separate","dot"]))]
+    #[cfg_attr(feature = "clap", arg(long,default_value="square",value_parser = VARIANTS_REQUEST_SHAPE))]
     pub shape: String,
     /// Pixel diameter/side ratio; default 1 for square, 0.9 for dot.
     #[cfg_attr(feature = "clap", arg(long))]
     pub dotsize: Option<f64>,
     /// Native dot reuse: literal favors webfont ratio; patterns favors export speed.
-    #[cfg_attr(feature = "clap", arg(long,default_value="patterns",value_parser=["literal","rows","patterns"]))]
+    #[cfg_attr(feature = "clap", arg(long,default_value="patterns",value_parser = VARIANTS_REQUEST_DOT_REUSE))]
     pub dot_reuse: String,
     /// Embed a matching EBDT/EBLC strike.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -90,11 +95,11 @@ pub struct VariantsRequest {
     #[cfg_attr(feature = "clap", arg(long))]
     pub license_url: Option<String>,
     /// Outline source for WOFF/WOFF2; auto uses CFF square and TrueType dots.
-    #[cfg_attr(feature = "clap", arg(long,default_value="auto",value_parser=["auto","cff","ttf"]))]
+    #[cfg_attr(feature = "clap", arg(long,default_value="auto",value_parser = VARIANTS_REQUEST_WOFF2_SOURCE))]
     pub woff2_source: String,
     /// Glyph 0: keep the generated box (preserve) or write an empty outline
     /// with exact design-unit metrics (empty; requires --notdef-advance).
-    #[cfg_attr(feature = "clap", arg(long, default_value = "preserve", value_parser = ["preserve", "empty"]))]
+    #[cfg_attr(feature = "clap", arg(long, default_value = "preserve", value_parser = VARIANTS_REQUEST_NOTDEF))]
     pub notdef: String,
     /// Empty .notdef advance width in design units.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -114,6 +119,32 @@ pub struct VariantsRequest {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub output: SfntOutputOptions,
+}
+impl VariantsRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        {
+            let value = self.shape.as_str();
+            check_choice("shape", value, &VARIANTS_REQUEST_SHAPE)?;
+        }
+        {
+            let value = self.dot_reuse.as_str();
+            check_choice("dot_reuse", value, &VARIANTS_REQUEST_DOT_REUSE)?;
+        }
+        {
+            let value = self.woff2_source.as_str();
+            check_choice("woff2_source", value, &VARIANTS_REQUEST_WOFF2_SOURCE)?;
+        }
+        {
+            let value = self.notdef.as_str();
+            check_choice("notdef", value, &VARIANTS_REQUEST_NOTDEF)?;
+        }
+        self.metadata.validate()?;
+        self.resources.validate()?;
+        self.output.validate()?;
+        Ok(())
+    }
 }
 impl Default for VariantsRequest {
     /// The command-line defaults; `base` and `output.output` must be set.
@@ -184,6 +215,13 @@ pub struct ResourceOptions {
     /// Maximum table or text-record bytes.
     #[cfg_attr(feature = "clap", arg(long))]
     pub max_table_bytes: Option<usize>,
+}
+impl ResourceOptions {
+    /// Check the value constraints the command-line parser enforces; this
+    /// group has none beyond its field types.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        Ok(())
+    }
 }
 impl ResourceOptions {
     fn limits(&self) -> ResourceLimits {
@@ -412,6 +450,15 @@ pub struct SubsetRequest {
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub output: SfntOutputOptions,
 }
+impl SubsetRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.output.validate()?;
+        Ok(())
+    }
+}
+const SFNT_OUTPUT_OPTIONS_TO: [&str; 5] = ["ttf", "otf", "otb", "woff", "woff2"];
 /// Output path, container, Brotli settings and diagnostics of sfnt writers.
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -425,7 +472,7 @@ pub struct SfntOutputOptions {
     #[cfg_attr(feature = "clap", arg(short, long))]
     pub output: PathBuf,
     /// Explicit output container; defaults to extension.
-    #[cfg_attr(feature = "clap", arg(long,value_parser=["ttf","otf","otb","woff","woff2"]))]
+    #[cfg_attr(feature = "clap", arg(long,value_parser = SFNT_OUTPUT_OPTIONS_TO))]
     pub to: Option<String>,
     /// Brotli quality, 0 through 11.
     #[cfg_attr(feature = "clap", arg(long,default_value_t=11,value_parser=clap::value_parser!(u32).range(0..=11)))]
@@ -439,6 +486,17 @@ pub struct SfntOutputOptions {
     /// Diagnostics format.
     #[cfg_attr(feature = "clap", arg(long, value_enum, default_value = "text"))]
     pub report: ReportStyle,
+}
+impl SfntOutputOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.to.as_deref() {
+            check_choice("to", value, &SFNT_OUTPUT_OPTIONS_TO)?;
+        }
+        check_range("woff2_quality", i128::from(self.woff2_quality), 0, 11)?;
+        Ok(())
+    }
 }
 impl Default for SfntOutputOptions {
     fn default() -> Self {

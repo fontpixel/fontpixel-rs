@@ -1,7 +1,10 @@
 //! TeX design metrics and Plan 9 subfont bundles.
 use super::{require_feature, require_target};
+use crate::options::check_choice;
 use fontpixel::{Error, FontRegistry, ResourceLimits, Result};
 
+const WRITE_OPTIONS_PLAN9_CONTAINER: [&str; 2] = ["font", "subfont"];
+const WRITE_OPTIONS_PLAN9_COMPRESSION: [&str; 2] = ["raw", "literal"];
 /// Write options: teX design metrics and Plan 9 subfont bundles.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -25,14 +28,27 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub tex_dpi_y: Option<u32>,
     /// Plan 9 mapping bundle or one subfont image (default font).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["font", "subfont"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PLAN9_CONTAINER))]
     pub plan9_container: Option<String>,
     /// Maximum glyphs per generated Plan 9 subfont.
     #[cfg_attr(feature = "clap", arg(long))]
     pub plan9_max_glyphs: Option<usize>,
     /// Plan 9 image encoding: raw bytes or standard LZ77 literal blocks.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["raw", "literal"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PLAN9_COMPRESSION))]
     pub plan9_compression: Option<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.plan9_container.as_deref() {
+            check_choice("plan9_container", value, &WRITE_OPTIONS_PLAN9_CONTAINER)?;
+        }
+        if let Some(value) = self.plan9_compression.as_deref() {
+            check_choice("plan9_compression", value, &WRITE_OPTIONS_PLAN9_COMPRESSION)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

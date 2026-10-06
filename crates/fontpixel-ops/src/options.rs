@@ -115,6 +115,17 @@ pub struct LayoutOptions {
     #[cfg_attr(feature = "clap", arg(long, value_enum, default_value = "text"))]
     pub report: ReportStyle,
 }
+impl LayoutOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.raster.validate()?;
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        Ok(())
+    }
+}
 impl Default for LayoutOptions {
     /// The command-line defaults; `input` is empty and must be set.
     fn default() -> Self {
@@ -191,6 +202,8 @@ pub enum DrawOrder {
     ReverseFile,
 }
 
+const PCF_OPTIONS_GLYPH_PAD: [&str; 4] = ["1", "2", "4", "8"];
+const PCF_OPTIONS_SCAN_UNIT: [&str; 3] = ["1", "2", "4"];
 /// PCF output layout and metadata options (`--to pcf` only).
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -213,16 +226,29 @@ pub struct PcfOptions {
     )]
     pub bit_order: Option<Significance>,
     /// PCF row alignment in bytes (1, 2, 4 or 8).
-    #[cfg_attr(feature = "clap", arg(long = "glyphpad", alias = "glyph-pad", value_parser = ["1", "2", "4", "8"]))]
+    #[cfg_attr(feature = "clap", arg(long = "glyphpad", alias = "glyph-pad", value_parser = PCF_OPTIONS_GLYPH_PAD))]
     pub glyph_pad: Option<String>,
     /// PCF bitmap scan unit in bytes (1, 2 or 4).
-    #[cfg_attr(feature = "clap", arg(long = "scanunit", alias = "scan-unit", value_parser = ["1", "2", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long = "scanunit", alias = "scan-unit", value_parser = PCF_OPTIONS_SCAN_UNIT))]
     pub scan_unit: Option<String>,
     /// Whether edited size/resolution rewrite existing PCF POINT_SIZE and
     /// RESOLUTION* properties (normalized-edits, the default) or the existing
     /// properties are kept and each disagreement is reported as loss.
     #[cfg_attr(feature = "clap", arg(long, value_enum))]
     pub pcf_metadata_precedence: Option<PcfMetadataPrecedence>,
+}
+impl PcfOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.glyph_pad.as_deref() {
+            check_choice("glyph_pad", value, &PCF_OPTIONS_GLYPH_PAD)?;
+        }
+        if let Some(value) = self.scan_unit.as_deref() {
+            check_choice("scan_unit", value, &PCF_OPTIONS_SCAN_UNIT)?;
+        }
+        Ok(())
+    }
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "clap", derive(clap::ValueEnum))]
@@ -317,6 +343,9 @@ impl PcfOptions {
     }
 }
 
+const CONSOLE_OPTIONS_PSF_VERSION: [&str; 2] = ["1", "2"];
+const CONSOLE_OPTIONS_PSF_UNICODE_TABLE: [&str; 3] = ["auto", "include", "omit"];
+const CONSOLE_OPTIONS_FNT_VERSION: [&str; 3] = ["1", "2", "3"];
 /// PSF and Windows FNT/FON output options.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -327,16 +356,16 @@ impl PcfOptions {
 )]
 pub struct ConsoleOptions {
     /// PSF output version, 1 or 2 (default 2).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["1","2"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = CONSOLE_OPTIONS_PSF_VERSION))]
     pub psf_version: Option<String>,
     /// PSF1 cells, 256 or 512; default chooses the smallest fit.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u16)))]
     pub psf1_count: Option<u16>,
     /// PSF Unicode table policy (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["auto","include","omit"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = CONSOLE_OPTIONS_PSF_UNICODE_TABLE))]
     pub psf_unicode_table: Option<String>,
     /// Windows raster output version; defaults to source version or 2.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["1","2","3"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = CONSOLE_OPTIONS_FNT_VERSION))]
     pub fnt_version: Option<String>,
     /// Windows dfCharSet identifier, 0..255 (ANSI=0, OEM=255).
     #[cfg_attr(feature = "clap", arg(long))]
@@ -344,6 +373,26 @@ pub struct ConsoleOptions {
     /// Explicit target page for OEM, symbol, or historical Windows mappings.
     #[cfg_attr(feature = "clap", arg(long))]
     pub fnt_code_page: Option<String>,
+}
+impl ConsoleOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.psf_version.as_deref() {
+            check_choice("psf_version", value, &CONSOLE_OPTIONS_PSF_VERSION)?;
+        }
+        if let Some(value) = self.psf_unicode_table.as_deref() {
+            check_choice(
+                "psf_unicode_table",
+                value,
+                &CONSOLE_OPTIONS_PSF_UNICODE_TABLE,
+            )?;
+        }
+        if let Some(value) = self.fnt_version.as_deref() {
+            check_choice("fnt_version", value, &CONSOLE_OPTIONS_FNT_VERSION)?;
+        }
+        Ok(())
+    }
 }
 impl ConsoleOptions {
     pub(crate) fn apply(
@@ -429,7 +478,7 @@ impl ConsoleOptions {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::ValueEnum))]
 #[cfg_attr(
     feature = "serde",
@@ -440,15 +489,11 @@ impl ConsoleOptions {
 pub enum ReportStyle {
     /// Human-readable text.
     #[cfg_attr(feature = "clap", value(help = None::<&str>))]
+    #[default]
     Text,
     /// Machine-readable JSON.
     #[cfg_attr(feature = "clap", value(help = None::<&str>))]
     Json,
-}
-impl Default for ReportStyle {
-    fn default() -> Self {
-        Self::Text
-    }
 }
 
 /// Command-line value parser accepting every catalogue format identifier.
@@ -461,6 +506,50 @@ pub(crate) fn format_parser() -> PossibleValuesParser {
     )
 }
 
+/// Reject a value outside a command-line choice list.
+pub(crate) fn check_choice(name: &str, value: &str, allowed: &[&str]) -> fontpixel::Result<()> {
+    if allowed.contains(&value) {
+        Ok(())
+    } else {
+        Err(Error::InvalidInput(format!(
+            "invalid value '{value}' for {name} [possible values: {}]",
+            allowed.join(", ")
+        )))
+    }
+}
+/// Reject an unknown catalogue format identifier.
+pub(crate) fn check_format(name: &str, value: &str) -> fontpixel::Result<()> {
+    if fontpixel::formats::catalogue::CATALOGUE
+        .iter()
+        .any(|format| format.id == value)
+    {
+        Ok(())
+    } else {
+        Err(Error::InvalidInput(format!(
+            "invalid value '{value}' for {name}: unknown format identifier"
+        )))
+    }
+}
+/// Reject a value the command-line value parser rejects.
+pub(crate) fn check_parsed<T>(
+    name: &str,
+    value: &str,
+    parser: fn(&str) -> std::result::Result<T, String>,
+) -> fontpixel::Result<()> {
+    parser(value).map(drop).map_err(|error| {
+        Error::InvalidInput(format!("invalid value '{value}' for {name}: {error}"))
+    })
+}
+/// Reject a number outside the command-line range.
+pub(crate) fn check_range(name: &str, value: i128, low: i128, high: i128) -> fontpixel::Result<()> {
+    if (low..=high).contains(&value) {
+        Ok(())
+    } else {
+        Err(Error::InvalidInput(format!(
+            "invalid value '{value}' for {name}: expected {low}..={high}"
+        )))
+    }
+}
 pub(crate) fn parse_code(value: &str) -> fontpixel::Result<u32> {
     let parsed = if let Some(v) = value
         .strip_prefix("U+")
@@ -480,6 +569,10 @@ pub(crate) fn render_bitmap_limits(args: &LayoutOptions) -> fontpixel::bitmap::B
         max_bytes: args.max_output_bytes,
     }
 }
+const RASTER_OPTIONS_C_READ_FAMILY: [&str; 10] = [
+    "auto", "font8x8", "tmat", "generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8",
+];
+const RASTER_OPTIONS_C_READ_CONTAINER: [&str; 2] = ["source", "lvgl-binary"];
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
 #[cfg_attr(
@@ -502,10 +595,10 @@ pub struct RasterOptions {
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub extra: extra_formats::ReadOptions,
     /// C header dialect (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["auto", "font8x8", "tmat", "generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = RASTER_OPTIONS_C_READ_FAMILY))]
     pub c_read_family: Option<String>,
     /// Explicit C source or LVGL binary input container (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["source", "lvgl-binary"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = RASTER_OPTIONS_C_READ_CONTAINER))]
     pub c_read_container: Option<String>,
     /// Read the pre-2019 two-byte U8x8 header.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -580,6 +673,32 @@ pub struct RasterOptions {
     /// Reviewed vertical translation in pixel units.
     #[cfg_attr(feature = "clap", arg(long, default_value_t = 0.0, allow_hyphen_values = true, help = None::<&str>, long_help = None::<&str>))]
     pub pixel_offset_y: f64,
+}
+impl RasterOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.p2.validate()?;
+        self.p3.validate()?;
+        self.extra.validate()?;
+        if let Some(value) = self.c_read_family.as_deref() {
+            check_choice("c_read_family", value, &RASTER_OPTIONS_C_READ_FAMILY)?;
+        }
+        if let Some(value) = self.c_read_container.as_deref() {
+            check_choice("c_read_container", value, &RASTER_OPTIONS_C_READ_CONTAINER)?;
+        }
+        if let Some(value) = self.c_width {
+            check_range("c_width", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        if let Some(value) = self.c_height {
+            check_range("c_height", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        self.image.validate()?;
+        if let Some(value) = self.hex_height {
+            check_range("hex_height", i128::from(value), 1, i128::from(u32::MAX))?;
+        }
+        Ok(())
+    }
 }
 impl RasterOptions {
     /// The total byte limit as requested, before any standalone partition.
@@ -679,6 +798,10 @@ impl RasterOptions {
         Ok(())
     }
 }
+const VECTOR_OPTIONS_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
+const VECTOR_OPTIONS_DOT_REUSE: [&str; 3] = ["literal", "rows", "patterns"];
+const VECTOR_OPTIONS_WOFF2_SOURCE: [&str; 3] = ["auto", "cff", "ttf"];
+const VECTOR_OPTIONS_NOTDEF: [&str; 2] = ["preserve", "empty"];
 /// SVG and OpenType outline output options.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -689,13 +812,13 @@ impl RasterOptions {
 )]
 pub struct VectorOptions {
     /// Outline shape for SVG/TTF/OTF/WOFF/WOFF2/TTC conversion.
-    #[cfg_attr(feature = "clap", arg(long,value_parser=["square","square-separate","dot"]))]
+    #[cfg_attr(feature = "clap", arg(long,value_parser = VECTOR_OPTIONS_SHAPE))]
     pub shape: Option<String>,
     /// Dot diameter or separate-square side relative to one pixel.
     #[cfg_attr(feature = "clap", arg(long, help = None::<&str>, long_help = None::<&str>))]
     pub dotsize: Option<f64>,
     /// Native dot reuse; default patterns. Literal favors smaller webfonts.
-    #[cfg_attr(feature = "clap", arg(long,value_parser=["literal","rows","patterns"]))]
+    #[cfg_attr(feature = "clap", arg(long,value_parser = VECTOR_OPTIONS_DOT_REUSE))]
     pub dot_reuse: Option<String>,
     /// Design units per source pixel (default 100).
     #[cfg_attr(feature = "clap", arg(long))]
@@ -710,7 +833,7 @@ pub struct VectorOptions {
     #[cfg_attr(feature = "clap", arg(long, help = None::<&str>, long_help = None::<&str>))]
     pub gray_threshold: Option<u8>,
     /// Outline source in webfonts/TTC (auto selects CFF squares, TrueType dots).
-    #[cfg_attr(feature = "clap", arg(long,value_parser=["auto","cff","ttf"]))]
+    #[cfg_attr(feature = "clap", arg(long,value_parser = VECTOR_OPTIONS_WOFF2_SOURCE))]
     pub woff2_source: Option<String>,
     /// WOFF2 Brotli quality, 0 through 11 (default 11).
     #[cfg_attr(feature = "clap", arg(long,value_parser=clap::value_parser!(u32).range(0..=11), help = None::<&str>, long_help = None::<&str>))]
@@ -724,7 +847,7 @@ pub struct VectorOptions {
     /// Glyph 0 of TTF/OTF/WOFF/WOFF2/TTC output: preserve (the source .notdef,
     /// otherwise an empty glyph) or empty (empty outline with exact design-unit
     /// metrics; requires --notdef-advance; replacing a source .notdef is loss).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["preserve", "empty"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = VECTOR_OPTIONS_NOTDEF))]
     pub notdef: Option<String>,
     /// Empty .notdef advance width in design units.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -732,6 +855,31 @@ pub struct VectorOptions {
     /// Empty .notdef left side bearing in design units (default 0).
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub notdef_lsb: Option<i16>,
+}
+impl VectorOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.shape.as_deref() {
+            check_choice("shape", value, &VECTOR_OPTIONS_SHAPE)?;
+        }
+        if let Some(value) = self.dot_reuse.as_deref() {
+            check_choice("dot_reuse", value, &VECTOR_OPTIONS_DOT_REUSE)?;
+        }
+        if let Some(value) = self.woff2_source.as_deref() {
+            check_choice("woff2_source", value, &VECTOR_OPTIONS_WOFF2_SOURCE)?;
+        }
+        if let Some(value) = self.woff2_quality {
+            check_range("woff2_quality", i128::from(value), 0, 11)?;
+        }
+        if let Some(value) = self.woff2_threads {
+            check_range("woff2_threads", i128::from(value), 1, 16)?;
+        }
+        if let Some(value) = self.notdef.as_deref() {
+            check_choice("notdef", value, &VECTOR_OPTIONS_NOTDEF)?;
+        }
+        Ok(())
+    }
 }
 impl VectorOptions {
     /// Explicit glyph-0 policy; validated before any input is read.
@@ -998,6 +1146,12 @@ impl RasterOptions {
         }))
     }
 }
+const COUTPUT_OPTIONS_C_FAMILY: [&str; 7] =
+    ["generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8"];
+const COUTPUT_OPTIONS_C_CONTAINER: [&str; 2] = ["source", "lvgl-binary"];
+const COUTPUT_OPTIONS_U8GLIB_FORMAT: [&str; 3] = ["full", "compact", "gray2"];
+const COUTPUT_OPTIONS_LVGL_BPP: [&str; 4] = ["1", "2", "4", "8"];
+const COUTPUT_OPTIONS_LVGL_COMPRESSION: [&str; 3] = ["plain", "rle", "rle-xor"];
 /// C header and LVGL output options (`--to c` only).
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -1008,13 +1162,13 @@ impl RasterOptions {
 )]
 pub struct COutputOptions {
     /// Output C dialect (default generic).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["generic", "gfx", "u8g2", "lvgl", "netbsd", "u8glib", "u8x8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_C_FAMILY))]
     pub c_family: Option<String>,
     /// C source (default) or native LVGL binary output.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["source", "lvgl-binary"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_C_CONTAINER))]
     pub c_container: Option<String>,
     /// U8glib native font record format (default full).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["full", "compact", "gray2"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_U8GLIB_FORMAT))]
     pub u8glib_format: Option<String>,
     /// Write the pre-2019 two-byte U8x8 header.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -1026,11 +1180,33 @@ pub struct COutputOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub c_range: Option<String>,
     /// LVGL coverage bit depth (default 1).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["1", "2", "4", "8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_LVGL_BPP))]
     pub lvgl_bpp: Option<String>,
     /// LVGL bitmap encoding (default plain).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["plain", "rle", "rle-xor"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_LVGL_COMPRESSION))]
     pub lvgl_compression: Option<String>,
+}
+impl COutputOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.c_family.as_deref() {
+            check_choice("c_family", value, &COUTPUT_OPTIONS_C_FAMILY)?;
+        }
+        if let Some(value) = self.c_container.as_deref() {
+            check_choice("c_container", value, &COUTPUT_OPTIONS_C_CONTAINER)?;
+        }
+        if let Some(value) = self.u8glib_format.as_deref() {
+            check_choice("u8glib_format", value, &COUTPUT_OPTIONS_U8GLIB_FORMAT)?;
+        }
+        if let Some(value) = self.lvgl_bpp.as_deref() {
+            check_choice("lvgl_bpp", value, &COUTPUT_OPTIONS_LVGL_BPP)?;
+        }
+        if let Some(value) = self.lvgl_compression.as_deref() {
+            check_choice("lvgl_compression", value, &COUTPUT_OPTIONS_LVGL_COMPRESSION)?;
+        }
+        Ok(())
+    }
 }
 impl COutputOptions {
     pub(crate) fn apply(

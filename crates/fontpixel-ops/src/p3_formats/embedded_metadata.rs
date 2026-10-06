@@ -4,12 +4,15 @@
 #[cfg(any(feature = "otb", feature = "bdat"))]
 use crate::name_records::Records;
 use crate::name_records::{number, record_hex, record_text};
+use crate::options::{check_choice, check_parsed, check_range};
 #[cfg(any(feature = "otb", feature = "bdat"))]
 use fontpixel::{Error, Result};
 
+#[cfg(feature = "clap")]
 fn word(value: &str) -> std::result::Result<u16, String> {
     number(value)
 }
+#[cfg(feature = "clap")]
 fn positive_word(value: &str) -> std::result::Result<u16, String> {
     number(value)
         .ok()
@@ -23,6 +26,7 @@ fn vendor(value: &str) -> std::result::Result<String, String> {
         Err("expected exactly four printable ASCII characters".into())
     }
 }
+#[cfg(feature = "clap")]
 fn panose(value: &str) -> std::result::Result<[u8; 10], String> {
     let bytes = value
         .split(',')
@@ -48,6 +52,19 @@ fn ranges(value: &str) -> std::result::Result<[u32; 4], String> {
         .try_into()
         .map_err(|_| "expected four Unicode range words".into())
 }
+const METADATA_ARGUMENTS_OTB_OS2_VERSION: [&str; 2] = ["3", "4"];
+const METADATA_ARGUMENTS_OTB_AVERAGE_WIDTH: [&str; 2] = ["nearest", "floor"];
+const METADATA_ARGUMENTS_OTB_POST_NAMES: [&str; 2] = ["keep", "omit"];
+const METADATA_ARGUMENTS_OTB_CMAP_UNICODE_FULL: [&str; 3] = ["always", "non-bmp", "when-needed"];
+const METADATA_ARGUMENTS_OTB_WIDTH_MAX: [&str; 2] = ["bitmap", "advance"];
+const METADATA_ARGUMENTS_OTB_INDEX_LAYOUT: [&str; 3] = ["canonical", "shared-runs", "spanning"];
+const METADATA_ARGUMENTS_OTB_OUTLINE_TABLES: [&str; 2] = ["none", "empty-glyf"];
+const METADATA_ARGUMENTS_OTB_MAX_ZONES: [&str; 2] = ["1", "2"];
+const METADATA_ARGUMENTS_OTB_NOTDEF: [&str; 2] = ["preserve", "empty"];
+const METADATA_ARGUMENTS_OTB_LINE_EXTREMES: [&str; 2] = ["computed", "zero"];
+const METADATA_ARGUMENTS_OTB_VERTICAL_LINE_METRICS: [&str; 2] = ["zero", "mirror-horizontal"];
+const METADATA_ARGUMENTS_OTB_HMTX: [&str; 2] = ["full", "compact-trailing"];
+const METADATA_ARGUMENTS_OTB_GLYPH_ORDER: [&str; 2] = ["first-seen", "codepoint"];
 /// Exact name-table records and OS/2 fields for OTB/bdat output.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -103,7 +120,7 @@ pub struct MetadataArguments {
     )]
     pub otb_modified: Option<i64>,
     /// OS/2 table version (same layout); native default 4.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["3", "4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_OS2_VERSION))]
     pub otb_os2_version: Option<String>,
     /// OS/2 achVendID, exactly four printable ASCII characters; native NONE.
     #[cfg_attr(feature = "clap", arg(long, value_parser = vendor))]
@@ -125,10 +142,10 @@ pub struct MetadataArguments {
     #[cfg_attr(feature = "clap", arg(long, value_parser = word))]
     pub otb_fs_selection: Option<u16>,
     /// OS/2 xAvgCharWidth arithmetic over nonzero advances (native nearest).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["nearest", "floor"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_AVERAGE_WIDTH))]
     pub otb_average_width: Option<String>,
     /// post glyph names: keep (format 2, native) or omit (format 3, reported loss).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["keep", "omit"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_POST_NAMES))]
     pub otb_post_names: Option<String>,
     /// post.isFixedPitch override; absent follows the source spacing.
     #[cfg_attr(feature = "clap", arg(long, value_parser = clap::value_parser!(bool)))]
@@ -136,28 +153,28 @@ pub struct MetadataArguments {
     /// cmap format-12 records: always (native: (0,4) and (3,10)), non-bmp
     /// (omit (0,4) for BMP-only maps) or when-needed (format 12 only when
     /// format 4 cannot hold the map, under (3,10) only). Mappings never change.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["always", "non-bmp", "when-needed"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_CMAP_UNICODE_FULL))]
     pub otb_cmap_unicode_full: Option<String>,
     /// EBLC/bloc widthMax: bitmap (largest bitmap width, native) or advance.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["bitmap", "advance"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_WIDTH_MAX))]
     pub otb_width_max: Option<String>,
     /// EBLC/bloc index layout: canonical (native), shared-runs, or spanning
     /// (one format-1 subtable across glyph IDs absent from a strike).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["canonical", "shared-runs", "spanning"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_INDEX_LAYOUT))]
     pub otb_index_layout: Option<String>,
     /// Shortest shared-metric run with --otb-index-layout shared-runs (default 8).
     #[cfg_attr(feature = "clap", arg(long, requires = "otb_index_layout", value_parser = positive_word))]
     pub otb_index_min_run: Option<u16>,
     /// TrueType outline tables: none (native OTB) or empty-glyf (one-byte glyf,
     /// short loca, maxp 1.0; outline-derived bounds and bearings become zero).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["none", "empty-glyf"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_OUTLINE_TABLES))]
     pub otb_outline_tables: Option<String>,
     /// maxp.maxZones (1 or 2) with --otb-outline-tables empty-glyf (default 1).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["1", "2"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_MAX_ZONES))]
     pub otb_max_zones: Option<String>,
     /// Glyph 0: preserve (native) or empty (no bitmap in any strike, hmtx
     /// advance from --otb-notdef-advance; replacing a source .notdef is loss).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["preserve", "empty"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_NOTDEF))]
     pub otb_notdef: Option<String>,
     /// Empty .notdef advance width in design units.
     #[cfg_attr(feature = "clap", arg(long, value_parser = word))]
@@ -166,24 +183,131 @@ pub struct MetadataArguments {
     #[cfg_attr(feature = "clap", arg(long, value_parser = caret_slope, allow_hyphen_values = true))]
     pub otb_caret_slope: Option<[i8; 2]>,
     /// EBLC/bloc minOriginSB/minAdvanceSB/maxBeforeBL/minAfterBL: computed (native) or zero.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["computed", "zero"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_LINE_EXTREMES))]
     pub otb_line_extremes: Option<String>,
     /// Vertical line record of horizontal-only strikes: zero (native) or
     /// mirror-horizontal (a copy of the horizontal record).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["zero", "mirror-horizontal"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_VERTICAL_LINE_METRICS))]
     pub otb_vertical_line_metrics: Option<String>,
     /// post underline POSITION,THICKNESS in design units; replacing source
     /// underline metrics is reported as loss.
     #[cfg_attr(feature = "clap", arg(long, value_parser = underline, allow_hyphen_values = true))]
     pub otb_underline: Option<[i16; 2]>,
     /// hmtx: full (native, one long metric per glyph) or compact-trailing.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["full", "compact-trailing"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_HMTX))]
     pub otb_hmtx: Option<String>,
     /// Glyph IDs: first-seen (native) or codepoint (encoded glyphs by smallest
     /// scalar, then unencoded glyphs in first-seen order).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["first-seen", "codepoint"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = METADATA_ARGUMENTS_OTB_GLYPH_ORDER))]
     pub otb_glyph_order: Option<String>,
 }
+impl MetadataArguments {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        for value in &self.otb_name_record {
+            check_parsed("otb_name_record", value, record_text)?;
+        }
+        for value in &self.otb_name_record_hex {
+            check_parsed("otb_name_record_hex", value, record_hex)?;
+        }
+        if let Some(value) = self.otb_lowest_rec_ppem {
+            check_range(
+                "otb_lowest_rec_ppem",
+                i128::from(value),
+                1,
+                i128::from(u16::MAX),
+            )?;
+        }
+        if let Some(value) = self.otb_os2_version.as_deref() {
+            check_choice(
+                "otb_os2_version",
+                value,
+                &METADATA_ARGUMENTS_OTB_OS2_VERSION,
+            )?;
+        }
+        if let Some(value) = self.otb_vendor.as_deref() {
+            check_parsed("otb_vendor", value, vendor)?;
+        }
+        if let Some(value) = self.otb_unicode_ranges.as_deref() {
+            check_parsed("otb_unicode_ranges", value, unicode_ranges)?;
+        }
+        if let Some(value) = self.otb_average_width.as_deref() {
+            check_choice(
+                "otb_average_width",
+                value,
+                &METADATA_ARGUMENTS_OTB_AVERAGE_WIDTH,
+            )?;
+        }
+        if let Some(value) = self.otb_post_names.as_deref() {
+            check_choice("otb_post_names", value, &METADATA_ARGUMENTS_OTB_POST_NAMES)?;
+        }
+        if let Some(value) = self.otb_cmap_unicode_full.as_deref() {
+            check_choice(
+                "otb_cmap_unicode_full",
+                value,
+                &METADATA_ARGUMENTS_OTB_CMAP_UNICODE_FULL,
+            )?;
+        }
+        if let Some(value) = self.otb_width_max.as_deref() {
+            check_choice("otb_width_max", value, &METADATA_ARGUMENTS_OTB_WIDTH_MAX)?;
+        }
+        if let Some(value) = self.otb_index_layout.as_deref() {
+            check_choice(
+                "otb_index_layout",
+                value,
+                &METADATA_ARGUMENTS_OTB_INDEX_LAYOUT,
+            )?;
+        }
+        if let Some(value) = self.otb_index_min_run {
+            check_range(
+                "otb_index_min_run",
+                i128::from(value),
+                1,
+                i128::from(u16::MAX),
+            )?;
+        }
+        if let Some(value) = self.otb_outline_tables.as_deref() {
+            check_choice(
+                "otb_outline_tables",
+                value,
+                &METADATA_ARGUMENTS_OTB_OUTLINE_TABLES,
+            )?;
+        }
+        if let Some(value) = self.otb_max_zones.as_deref() {
+            check_choice("otb_max_zones", value, &METADATA_ARGUMENTS_OTB_MAX_ZONES)?;
+        }
+        if let Some(value) = self.otb_notdef.as_deref() {
+            check_choice("otb_notdef", value, &METADATA_ARGUMENTS_OTB_NOTDEF)?;
+        }
+        if let Some(value) = self.otb_line_extremes.as_deref() {
+            check_choice(
+                "otb_line_extremes",
+                value,
+                &METADATA_ARGUMENTS_OTB_LINE_EXTREMES,
+            )?;
+        }
+        if let Some(value) = self.otb_vertical_line_metrics.as_deref() {
+            check_choice(
+                "otb_vertical_line_metrics",
+                value,
+                &METADATA_ARGUMENTS_OTB_VERTICAL_LINE_METRICS,
+            )?;
+        }
+        if let Some(value) = self.otb_hmtx.as_deref() {
+            check_choice("otb_hmtx", value, &METADATA_ARGUMENTS_OTB_HMTX)?;
+        }
+        if let Some(value) = self.otb_glyph_order.as_deref() {
+            check_choice(
+                "otb_glyph_order",
+                value,
+                &METADATA_ARGUMENTS_OTB_GLYPH_ORDER,
+            )?;
+        }
+        Ok(())
+    }
+}
+#[cfg(feature = "clap")]
 fn pair<T: std::str::FromStr>(value: &str, what: &str) -> std::result::Result<[T; 2], String> {
     let parts = value
         .split(',')
@@ -197,6 +321,7 @@ fn pair<T: std::str::FromStr>(value: &str, what: &str) -> std::result::Result<[T
         .try_into()
         .map_err(|_| format!("expected two comma-separated {what} values"))
 }
+#[cfg(feature = "clap")]
 fn caret_slope(value: &str) -> std::result::Result<[i8; 2], String> {
     let slope = pair::<i8>(value, "caret slope")?;
     if slope == [0, 0] {
@@ -204,6 +329,7 @@ fn caret_slope(value: &str) -> std::result::Result<[i8; 2], String> {
     }
     Ok(slope)
 }
+#[cfg(feature = "clap")]
 fn underline(value: &str) -> std::result::Result<[i16; 2], String> {
     pair::<i16>(value, "underline")
 }

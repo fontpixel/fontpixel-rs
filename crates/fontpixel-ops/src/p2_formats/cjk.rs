@@ -1,7 +1,10 @@
 //! FONTX2 and explicitly configured HZK/ASC geometry.
 use super::{require_feature, require_target};
+use crate::options::check_choice;
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_HZK_CODE_SPACE: [&str; 2] = ["gb2312", "ascii"];
+const READ_OPTIONS_HZK_STORAGE: [&str; 2] = ["rows", "columns"];
 /// Read options: fONTX2 and explicitly configured HZK/ASC geometry.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -31,14 +34,27 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub hzk_last: Option<String>,
     /// HZK slot domain for custom geometry.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["gb2312", "ascii"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_HZK_CODE_SPACE))]
     pub hzk_code_space: Option<String>,
     /// HZK bitmap storage orientation (default rows).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["rows", "columns"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_HZK_STORAGE))]
     pub hzk_storage: Option<String>,
     /// Exact HZK input or output glyph count.
     #[cfg_attr(feature = "clap", arg(long))]
     pub hzk_count: Option<usize>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.hzk_code_space.as_deref() {
+            check_choice("hzk_code_space", value, &READ_OPTIONS_HZK_CODE_SPACE)?;
+        }
+        if let Some(value) = self.hzk_storage.as_deref() {
+            check_choice("hzk_storage", value, &READ_OPTIONS_HZK_STORAGE)?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     fn hzk_requested(&self) -> bool {
@@ -144,6 +160,7 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_FONTX2_MODE: [&str; 3] = ["auto", "single", "double"];
 /// Write options: fONTX2 and explicitly configured HZK/ASC geometry.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -155,7 +172,7 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// FONTX2 single-byte ANK or double-byte block tables (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["auto", "single", "double"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_FONTX2_MODE))]
     pub fontx2_mode: Option<String>,
     /// Charset used for exact FONTX2 output mapping.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -166,6 +183,16 @@ pub struct WriteOptions {
     /// FONTX2 output cell height.
     #[cfg_attr(feature = "clap", arg(long))]
     pub fontx2_height: Option<u8>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.fontx2_mode.as_deref() {
+            check_choice("fontx2_mode", value, &WRITE_OPTIONS_FONTX2_MODE)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

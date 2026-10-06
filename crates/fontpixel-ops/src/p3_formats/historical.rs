@@ -1,7 +1,12 @@
 //! Native historical printer-font variants and associated metric files.
 use super::{feature, target};
+use crate::options::{check_choice, check_range};
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_DAISY_READ_VERSION: [&str; 3] = ["2", "3", "magnified"];
+const READ_OPTIONS_TASPRINT_READ_VERSION: [&str; 4] = ["48k", "plus3", "cpc", "pcw"];
+const READ_OPTIONS_PXL_READ_VERSION: [&str; 2] = ["1001", "1002"];
+const READ_OPTIONS_SIGNUM_READ_VERSION: [&str; 4] = ["e24", "p9", "p24", "l30"];
 /// Read options: native historical printer-font variants and associated metric files.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -13,7 +18,7 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 )]
 pub struct ReadOptions {
     /// Require a Daisy-Dot input generation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["2", "3", "magnified"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_DAISY_READ_VERSION))]
     pub daisy_read_version: Option<String>,
     /// PolyPrint baseline measured from the cell top.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
@@ -22,19 +27,19 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub printshop_baseline: Option<i64>,
     /// Require a TasPrint input platform.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["48k", "plus3", "cpc", "pcw"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_TASPRINT_READ_VERSION))]
     pub tasprint_read_version: Option<String>,
     /// Explicit PCW input width.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(1..=16)))]
     pub tasprint_read_width: Option<u8>,
     /// Require PXL version 1001 or 1002.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["1001", "1002"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PXL_READ_VERSION))]
     pub pxl_read_version: Option<String>,
     /// Scoped TFM sidecar path for PXL input.
     #[cfg_attr(feature = "clap", arg(long))]
     pub pxl_read_tfm: Option<String>,
     /// Require a Signum editor or printer input layout.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["e24", "p9", "p24", "l30"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_SIGNUM_READ_VERSION))]
     pub signum_read_version: Option<String>,
     /// Explicit Signum baseline.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
@@ -42,6 +47,40 @@ pub struct ReadOptions {
     /// Explicit Signum line height.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub signum_line_height: Option<i64>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.daisy_read_version.as_deref() {
+            check_choice(
+                "daisy_read_version",
+                value,
+                &READ_OPTIONS_DAISY_READ_VERSION,
+            )?;
+        }
+        if let Some(value) = self.tasprint_read_version.as_deref() {
+            check_choice(
+                "tasprint_read_version",
+                value,
+                &READ_OPTIONS_TASPRINT_READ_VERSION,
+            )?;
+        }
+        if let Some(value) = self.tasprint_read_width {
+            check_range("tasprint_read_width", i128::from(value), 1, 16)?;
+        }
+        if let Some(value) = self.pxl_read_version.as_deref() {
+            check_choice("pxl_read_version", value, &READ_OPTIONS_PXL_READ_VERSION)?;
+        }
+        if let Some(value) = self.signum_read_version.as_deref() {
+            check_choice(
+                "signum_read_version",
+                value,
+                &READ_OPTIONS_SIGNUM_READ_VERSION,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -114,6 +153,10 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_DAISY_VERSION: [&str; 3] = ["2", "3", "magnified"];
+const WRITE_OPTIONS_TASPRINT_VERSION: [&str; 4] = ["48k", "plus3", "cpc", "pcw"];
+const WRITE_OPTIONS_PXL_VERSION: [&str; 2] = ["1001", "1002"];
+const WRITE_OPTIONS_SIGNUM_VERSION: [&str; 4] = ["e24", "p9", "p24", "l30"];
 /// Write options: native historical printer-font variants and associated metric files.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -125,7 +168,7 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Daisy-Dot output generation (default 3).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["2", "3", "magnified"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_DAISY_VERSION))]
     pub daisy_version: Option<String>,
     /// Actual Daisy-Dot height marker plus one.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(1..)))]
@@ -137,7 +180,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub daisy_allow_control_bytes: bool,
     /// TasPrint output platform (default 48k).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["48k", "plus3", "cpc", "pcw"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_TASPRINT_VERSION))]
     pub tasprint_version: Option<String>,
     /// TasPrint PCW output width.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(1..=16)))]
@@ -146,7 +189,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u16).range(127..=128)))]
     pub tasprint_pcw_count: Option<u16>,
     /// Native PXL output generation (default 1001).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["1001", "1002"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PXL_VERSION))]
     pub pxl_version: Option<String>,
     /// Optional relative name of the generated PXL metric sidecar.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -155,8 +198,36 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub pxl_magnification: Option<u32>,
     /// Signum output layout (default e24).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["e24", "p9", "p24", "l30"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_SIGNUM_VERSION))]
     pub signum_version: Option<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.daisy_version.as_deref() {
+            check_choice("daisy_version", value, &WRITE_OPTIONS_DAISY_VERSION)?;
+        }
+        if let Some(value) = self.daisy_height {
+            check_range("daisy_height", i128::from(value), 1, i128::from(u8::MAX))?;
+        }
+        if let Some(value) = self.tasprint_version.as_deref() {
+            check_choice("tasprint_version", value, &WRITE_OPTIONS_TASPRINT_VERSION)?;
+        }
+        if let Some(value) = self.tasprint_width {
+            check_range("tasprint_width", i128::from(value), 1, 16)?;
+        }
+        if let Some(value) = self.tasprint_pcw_count {
+            check_range("tasprint_pcw_count", i128::from(value), 127, 128)?;
+        }
+        if let Some(value) = self.pxl_version.as_deref() {
+            check_choice("pxl_version", value, &WRITE_OPTIONS_PXL_VERSION)?;
+        }
+        if let Some(value) = self.signum_version.as_deref() {
+            check_choice("signum_version", value, &WRITE_OPTIONS_SIGNUM_VERSION)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

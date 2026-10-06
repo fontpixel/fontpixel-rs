@@ -152,6 +152,20 @@ impl TaskRequest {
             Self::Diff(r) => vec![r.a.clone(), r.b.clone()],
         }
     }
+    /// Check the value constraints of the wrapped request.
+    pub fn validate(&self) -> Result<()> {
+        match self {
+            Self::Convert(r) => r.validate(),
+            #[cfg(feature = "opentype")]
+            Self::Variants(r) => r.validate(),
+            #[cfg(feature = "opentype")]
+            Self::Subset(r) => r.validate(),
+            Self::Merge(r) => r.validate(),
+            Self::Charset(r) => r.validate(),
+            Self::Validate(r) => r.validate(),
+            Self::Diff(r) => r.validate(),
+        }
+    }
     /// Force machine-readable output, as every batch task reports JSON.
     fn into_json(mut self) -> Self {
         match &mut self {
@@ -170,6 +184,7 @@ impl TaskRequest {
     /// Run the operation in the active batch capture and write its compact
     /// JSON result. A diff with differences writes its result, then fails.
     fn execute(self, out: &mut dyn Write) -> Result<()> {
+        self.validate()?;
         match self {
             Self::Convert(r) => crate::convert::run(*r)?.write_json(out, false),
             #[cfg(feature = "opentype")]
@@ -219,15 +234,23 @@ pub struct BatchTask {
 impl BatchTask {
     /// A task running `request`, with its kind, weight and declared inputs
     /// derived from the request.
+    /// A request that fails [`TaskRequest::validate`] becomes
+    /// [`TaskAction::Invalid`], as a rejected command line would.
     pub fn new(id: impl Into<String>, request: TaskRequest) -> Self {
-        Self {
-            id: id.into(),
-            kind: request.kind(),
-            declared_inputs: request.declared_inputs(),
-            action: TaskAction::Run {
+        let kind = request.kind();
+        let declared_inputs = request.declared_inputs();
+        let action = match request.validate() {
+            Ok(()) => TaskAction::Run {
                 weight: request.weight(),
                 request,
             },
+            Err(error) => TaskAction::Invalid(error.to_string()),
+        };
+        Self {
+            id: id.into(),
+            kind,
+            declared_inputs,
+            action,
         }
     }
 }
@@ -992,7 +1015,7 @@ fn remember_file(path: &Path, sources: &Sources) -> Result<()> {
         Err(error) => Err(error.into()),
     }
 }
-#[cfg(feature = "fs")]
+#[cfg(all(feature = "fs", feature = "toml"))]
 pub(crate) fn load_text(file: &Path, sources: &Sources) -> Result<String> {
     const MAXIMUM: usize = 8 * 1024 * 1024;
     let file = File::open(file)?;

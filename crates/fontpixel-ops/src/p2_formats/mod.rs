@@ -39,6 +39,18 @@ pub struct ReadOptions {
     pub legacy: legacy::ReadOptions,
 }
 impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.console.validate()?;
+        self.cjk.validate()?;
+        self.mac.validate()?;
+        self.editor.validate()?;
+        self.legacy.validate()?;
+        Ok(())
+    }
+}
+impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
         self.console.apply(registry)?;
         self.cjk.apply(registry)?;
@@ -81,6 +93,19 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub legacy: legacy::WriteOptions,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.console.validate()?;
+        self.cjk.validate()?;
+        self.mac.validate()?;
+        self.editor.validate()?;
+        self.tex.validate()?;
+        self.legacy.validate()?;
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

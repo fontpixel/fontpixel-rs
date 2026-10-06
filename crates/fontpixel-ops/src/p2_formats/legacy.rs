@@ -1,7 +1,11 @@
 //! Explicit GEM and SNF machine layout controls.
 use super::{require_feature, require_target};
+use crate::options::{check_choice, check_range};
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_GEM_READ_BYTE_ORDER: [&str; 2] = ["big", "little"];
+const READ_OPTIONS_GEM_READ_WORD_ORDER: [&str; 2] = ["big", "little"];
+const READ_OPTIONS_SNF_READ_BYTE_ORDER: [&str; 2] = ["big", "little"];
 /// Read options: explicit GEM and SNF machine layout controls.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -13,17 +17,45 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 )]
 pub struct ReadOptions {
     /// GEM input header integer order; default uses structural detection.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_GEM_READ_BYTE_ORDER))]
     pub gem_read_byte_order: Option<String>,
     /// GEM input bitmap word order; default follows its header flag.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_GEM_READ_WORD_ORDER))]
     pub gem_read_word_order: Option<String>,
     /// SNF input integer order; default uses version stamps.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_SNF_READ_BYTE_ORDER))]
     pub snf_read_byte_order: Option<String>,
     /// SNF input bitmap layout: bits,bytes,row-padding,scan-unit,rows; e.g. msb,big,4,1,top-down.
     #[cfg_attr(feature = "clap", arg(long))]
     pub snf_read_layout: Option<String>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.gem_read_byte_order.as_deref() {
+            check_choice(
+                "gem_read_byte_order",
+                value,
+                &READ_OPTIONS_GEM_READ_BYTE_ORDER,
+            )?;
+        }
+        if let Some(value) = self.gem_read_word_order.as_deref() {
+            check_choice(
+                "gem_read_word_order",
+                value,
+                &READ_OPTIONS_GEM_READ_WORD_ORDER,
+            )?;
+        }
+        if let Some(value) = self.snf_read_byte_order.as_deref() {
+            check_choice(
+                "snf_read_byte_order",
+                value,
+                &READ_OPTIONS_SNF_READ_BYTE_ORDER,
+            )?;
+        }
+        Ok(())
+    }
 }
 #[cfg(any(feature = "gem", feature = "snf"))]
 fn order(s: &str) -> fontpixel::bitmap::ByteOrder {
@@ -94,6 +126,10 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_AMIGA_PACKAGING: [&str; 3] = ["auto", "contents", "strike"];
+const WRITE_OPTIONS_GEM_BYTE_ORDER: [&str; 2] = ["big", "little"];
+const WRITE_OPTIONS_GEM_WORD_ORDER: [&str; 2] = ["big", "little"];
+const WRITE_OPTIONS_SNF_BYTE_ORDER: [&str; 2] = ["big", "little"];
 /// Write options: explicit GEM and SNF machine layout controls.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -105,7 +141,7 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Amiga output as one strike or a .font descriptor with size assets (default auto).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["auto", "contents", "strike"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_AMIGA_PACKAGING))]
     pub amiga_packaging: Option<String>,
     /// Refuse interpreting representable Unicode characters as Amiga Latin-1 codes.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -114,16 +150,16 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = clap::value_parser!(u8).range(1..=8)))]
     pub amiga_color_depth: Option<u8>,
     /// GEM output header integer order (default big).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_GEM_BYTE_ORDER))]
     pub gem_byte_order: Option<String>,
     /// GEM output bitmap word order (default big).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_GEM_WORD_ORDER))]
     pub gem_word_order: Option<String>,
     /// Explicitly reinterpret GEM Unicode numbers as untagged legacy codes, with loss.
     #[cfg_attr(feature = "clap", arg(long))]
     pub gem_unicode_as_legacy: bool,
     /// SNF output integer order (default little).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["big", "little"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_SNF_BYTE_ORDER))]
     pub snf_byte_order: Option<String>,
     /// SNF output bitmap layout: bits,bytes,row-padding,scan-unit,rows.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -131,6 +167,28 @@ pub struct WriteOptions {
     /// Omit SNF's vendor layout property; reopening may require --snf-read-layout.
     #[cfg_attr(feature = "clap", arg(long))]
     pub snf_no_layout_property: bool,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.amiga_packaging.as_deref() {
+            check_choice("amiga_packaging", value, &WRITE_OPTIONS_AMIGA_PACKAGING)?;
+        }
+        if let Some(value) = self.amiga_color_depth {
+            check_range("amiga_color_depth", i128::from(value), 1, 8)?;
+        }
+        if let Some(value) = self.gem_byte_order.as_deref() {
+            check_choice("gem_byte_order", value, &WRITE_OPTIONS_GEM_BYTE_ORDER)?;
+        }
+        if let Some(value) = self.gem_word_order.as_deref() {
+            check_choice("gem_word_order", value, &WRITE_OPTIONS_GEM_WORD_ORDER)?;
+        }
+        if let Some(value) = self.snf_byte_order.as_deref() {
+            check_choice("snf_byte_order", value, &WRITE_OPTIONS_SNF_BYTE_ORDER)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

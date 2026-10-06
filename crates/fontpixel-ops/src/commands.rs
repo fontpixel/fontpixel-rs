@@ -2,6 +2,7 @@
 use crate::context::{self, PreparedOutput};
 use crate::input_budget::InputBudget;
 use crate::options::{RasterOptions, ReportStyle};
+use crate::options::{check_format, check_range};
 use fontpixel::charset::CharsetCodec;
 use fontpixel::model::{Codepoint, GlyphId};
 use fontpixel::report::{Impact, Level, Location};
@@ -187,6 +188,29 @@ pub struct DiffRequest {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub raster: Box<RasterOptions>,
+}
+impl DiffRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        if let Some(value) = self.from_a.as_deref() {
+            check_format("from_a", value)?;
+        }
+        if let Some(value) = self.from_b.as_deref() {
+            check_format("from_b", value)?;
+        }
+        check_range(
+            "max_differences",
+            i128::from(self.max_differences),
+            0,
+            100000,
+        )?;
+        self.raster.validate()?;
+        Ok(())
+    }
 }
 impl Default for DiffRequest {
     fn default() -> Self {
@@ -520,6 +544,17 @@ pub struct ValidateRequest {
     pub raster: Box<RasterOptions>,
 }
 impl ValidateRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        self.raster.validate()?;
+        Ok(())
+    }
+}
+impl ValidateRequest {
     /// The original total byte limit, before the standalone identity partition.
     pub fn source_identity_total_bytes(&self) -> usize {
         self.raster.original_total_bytes()
@@ -719,6 +754,20 @@ pub struct CharsetRequest {
     #[cfg_attr(feature = "clap", command(flatten))]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub raster: Box<RasterOptions>,
+}
+impl CharsetRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.from.as_deref() {
+            check_format("from", value)?;
+        }
+        if let Some(value) = self.format.as_deref() {
+            check_format("format", value)?;
+        }
+        self.raster.validate()?;
+        Ok(())
+    }
 }
 impl CharsetRequest {
     /// The original total byte limit, before the standalone identity partition.

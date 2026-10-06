@@ -3,6 +3,7 @@ use crate::context::{self, PreparedOutput};
 use crate::options::{
     DrawMode, DrawOrder, LayoutOptions, ReportStyle, parse_code, render_bitmap_limits,
 };
+use crate::options::{check_choice, check_range};
 use fontpixel::{Error, ReadOptions, Report};
 use std::{
     io::Write,
@@ -25,6 +26,14 @@ pub struct PreviewRequest {
     /// Exactly two characters: ink then paper.
     #[cfg_attr(feature = "clap", arg(long, default_value = "#."))]
     pub chars: String,
+}
+impl PreviewRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.layout.validate()?;
+        Ok(())
+    }
 }
 impl Default for PreviewRequest {
     fn default() -> Self {
@@ -92,6 +101,8 @@ pub(crate) fn preview(request: PreviewRequest) -> fontpixel::Result<PreviewRespo
     })
 }
 
+const RENDER_REQUEST_TO: [&str; 2] = ["png", "svg"];
+const RENDER_REQUEST_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
 /// Render text (or every mapping) to a PNG or SVG image.
 #[derive(Debug, Clone, PartialEq)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -109,7 +120,7 @@ pub struct RenderRequest {
     #[cfg_attr(feature = "clap", arg(short, long))]
     pub output: PathBuf,
     /// Explicit image type; otherwise inferred from output extension.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["png", "svg"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = RENDER_REQUEST_TO))]
     pub to: Option<String>,
     /// Positive integer nearest-neighbor scale.
     #[cfg_attr(feature = "clap", arg(long, default_value_t = 1, value_parser = clap::value_parser!(u32).range(1..)))]
@@ -123,11 +134,26 @@ pub struct RenderRequest {
     #[cfg_attr(feature = "serde", serde(with = "crate::serde_text::rgba"))]
     pub background: fontpixel::render::Rgba,
     /// SVG pixel shape (PNG uses square pixels).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["square", "square-separate", "dot"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = RENDER_REQUEST_SHAPE))]
     pub shape: Option<String>,
     /// SVG dot diameter or separate-square side relative to one pixel.
     #[cfg_attr(feature = "clap", arg(long))]
     pub dotsize: Option<f64>,
+}
+impl RenderRequest {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        self.layout.validate()?;
+        if let Some(value) = self.to.as_deref() {
+            check_choice("to", value, &RENDER_REQUEST_TO)?;
+        }
+        check_range("scale", i128::from(self.scale), 1, i128::from(u32::MAX))?;
+        if let Some(value) = self.shape.as_deref() {
+            check_choice("shape", value, &RENDER_REQUEST_SHAPE)?;
+        }
+        Ok(())
+    }
 }
 impl Default for RenderRequest {
     fn default() -> Self {

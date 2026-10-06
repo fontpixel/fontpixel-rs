@@ -1,7 +1,13 @@
 //! GPI, RISC OS, PFR and marker-image choices.
 use super::{feature, target};
+use crate::options::{check_choice, check_range};
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
+const READ_OPTIONS_PFR_READ_DIALECT: [&str; 2] = ["davic", "freetype"];
+const READ_OPTIONS_XEROX_READ_VARIANT: [&str; 3] = ["alto", "bitblt", "prepress"];
+const READ_OPTIONS_PCGEOS_READ_VARIANT: [&str; 2] = ["sbcs", "dbcs"];
+const READ_OPTIONS_RISCOS_READ_VERSION: [&str; 6] = ["xy", "4", "5", "6", "7", "8"];
+const READ_OPTIONS_SFONT_READ_FLAVOR: [&str; 2] = ["sfont", "rfont"];
 /// Read options: gPI, RISC OS, PFR and marker-image choices.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -13,16 +19,16 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 )]
 pub struct ReadOptions {
     /// Require the DAVIC specification or FreeType PFR wire dialect.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["davic", "freetype"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PFR_READ_DIALECT))]
     pub pfr_read_dialect: Option<String>,
     /// Require a Xerox native font family.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["alto", "bitblt", "prepress"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_XEROX_READ_VARIANT))]
     pub xerox_read_variant: Option<String>,
     /// Explicit baseline for Alto files with a zero native header baseline.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(0..=127)))]
     pub xerox_read_alto_baseline: Option<u8>,
     /// Require the SBCS or DBCS PC/GEOS layout.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["sbcs", "dbcs"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_PCGEOS_READ_VARIANT))]
     pub pcgeos_read_variant: Option<String>,
     /// Explicitly round fractional PC/GEOS input metrics.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -31,13 +37,13 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, action=clap::ArgAction::Set))]
     pub gpi_include_unmapped_null: Option<bool>,
     /// Require a RISC OS bitmap generation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["xy", "4", "5", "6", "7", "8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_RISCOS_READ_VERSION))]
     pub riscos_read_version: Option<String>,
     /// Relative RISC OS IntMetrics input companion.
     #[cfg_attr(feature = "clap", arg(long))]
     pub riscos_read_metrics: Option<String>,
     /// Explicit marker-image dialect; otherwise inspect native controls.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["sfont", "rfont"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_SFONT_READ_FLAVOR))]
     pub sfont_read_flavor: Option<String>,
     /// Ordered SFont labels, comma-separated U+0041 or legacy:0x41.
     #[cfg_attr(feature = "clap", arg(long, value_delimiter = ','))]
@@ -45,6 +51,43 @@ pub struct ReadOptions {
     /// SFont baseline down from glyph top.
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub sfont_read_baseline: Option<i64>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.pfr_read_dialect.as_deref() {
+            check_choice("pfr_read_dialect", value, &READ_OPTIONS_PFR_READ_DIALECT)?;
+        }
+        if let Some(value) = self.xerox_read_variant.as_deref() {
+            check_choice(
+                "xerox_read_variant",
+                value,
+                &READ_OPTIONS_XEROX_READ_VARIANT,
+            )?;
+        }
+        if let Some(value) = self.xerox_read_alto_baseline {
+            check_range("xerox_read_alto_baseline", i128::from(value), 0, 127)?;
+        }
+        if let Some(value) = self.pcgeos_read_variant.as_deref() {
+            check_choice(
+                "pcgeos_read_variant",
+                value,
+                &READ_OPTIONS_PCGEOS_READ_VARIANT,
+            )?;
+        }
+        if let Some(value) = self.riscos_read_version.as_deref() {
+            check_choice(
+                "riscos_read_version",
+                value,
+                &READ_OPTIONS_RISCOS_READ_VERSION,
+            )?;
+        }
+        if let Some(value) = self.sfont_read_flavor.as_deref() {
+            check_choice("sfont_read_flavor", value, &READ_OPTIONS_SFONT_READ_FLAVOR)?;
+        }
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -118,6 +161,20 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_PFR_DIALECT: [&str; 2] = ["davic", "freetype"];
+const WRITE_OPTIONS_SSFN_ENCODING: [&str; 2] = ["binary", "ascii"];
+const WRITE_OPTIONS_XEROX_VARIANT: [&str; 3] = ["alto", "bitblt", "prepress"];
+const WRITE_OPTIONS_XEROX_BITBLT_LAYOUT: [&str; 4] =
+    ["plain", "kerned", "plain-index", "kerned-index"];
+const WRITE_OPTIONS_PCGEOS_VARIANT: [&str; 2] = ["sbcs", "dbcs"];
+const WRITE_OPTIONS_GPI_CONTAINER: [&str; 3] = ["bare", "ne", "lx"];
+const WRITE_OPTIONS_GPI_KIND: [&str; 3] = ["fixed", "proportional", "abc"];
+const WRITE_OPTIONS_RISCOS_VERSION: [&str; 6] = ["xy", "4", "5", "6", "7", "8"];
+const WRITE_OPTIONS_RISCOS_DEPTH: [&str; 2] = ["mono", "gray4"];
+const WRITE_OPTIONS_RISCOS_COMPRESSION: [&str; 2] = ["raw", "packed"];
+const WRITE_OPTIONS_RISCOS_METRICS_VERSION: [&str; 2] = ["0", "2"];
+const WRITE_OPTIONS_PFR_COMPRESSION: [&str; 3] = ["raw", "rle4", "rle8"];
+const WRITE_OPTIONS_SFONT_FLAVOR: [&str; 2] = ["sfont", "rfont"];
 /// Write options: gPI, RISC OS, PFR and marker-image choices.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -129,19 +186,19 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// PFR wire dialect; otherwise preserve native source or use FreeType.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["davic", "freetype"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PFR_DIALECT))]
     pub pfr_dialect: Option<String>,
     /// Scalable Screen Font native encoding (default binary).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["binary", "ascii"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_SSFN_ENCODING))]
     pub ssfn_encoding: Option<String>,
     /// Explicitly interpret legacy numeric labels as SSFN Unicode mappings.
     #[cfg_attr(feature = "clap", arg(long))]
     pub ssfn_legacy_as_unicode: bool,
     /// Xerox native font family (default bitblt).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["alto", "bitblt", "prepress"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_XEROX_VARIANT))]
     pub xerox_variant: Option<String>,
     /// Xerox BITBLT strike directory layout (default kerned).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["plain", "kerned", "plain-index", "kerned-index"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_XEROX_BITBLT_LAYOUT))]
     pub xerox_bitblt_layout: Option<String>,
     /// Explicit Xerox Alto baseline.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(0..=127)))]
@@ -150,7 +207,7 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub xerox_rotation_minutes: Option<u16>,
     /// Native PC/GEOS layout, otherwise preserve source or use SBCS.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["sbcs", "dbcs"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PCGEOS_VARIANT))]
     pub pcgeos_variant: Option<String>,
     /// PC/GEOS registered font identifier.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -168,10 +225,10 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub pcgeos_legacy_as_unicode: bool,
     /// GPI resource packaging; otherwise preserve source choice.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["bare", "ne", "lx"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_GPI_CONTAINER))]
     pub gpi_container: Option<String>,
     /// GPI character increment representation.
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["fixed", "proportional", "abc"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_GPI_KIND))]
     pub gpi_kind: Option<String>,
     /// Native OS/2 codepage identifier.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -183,25 +240,25 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub gpi_rebuild: bool,
     /// RISC OS bitmap generation (default 6).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["xy", "4", "5", "6", "7", "8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_RISCOS_VERSION))]
     pub riscos_version: Option<String>,
     /// RISC OS native coverage depth (default mono).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["mono", "gray4"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_RISCOS_DEPTH))]
     pub riscos_depth: Option<String>,
     /// RISC OS one-bit compression (default raw).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["raw", "packed"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_RISCOS_COMPRESSION))]
     pub riscos_compression: Option<String>,
     /// Relative name for an output IntMetrics companion.
     #[cfg_attr(feature = "clap", arg(long))]
     pub riscos_metrics: Option<String>,
     /// IntMetrics generation (default 2).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["0", "2"], requires="riscos_metrics"))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_RISCOS_METRICS_VERSION, requires="riscos_metrics"))]
     pub riscos_metrics_version: Option<String>,
     /// Explicitly round coverage to the RISC OS Gray4 palette.
     #[cfg_attr(feature = "clap", arg(long))]
     pub riscos_quantize: bool,
     /// PFR bitmap encoding (default raw).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["raw", "rle4", "rle8"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PFR_COMPRESSION))]
     pub pfr_compression: Option<String>,
     /// Store PFR rows from top to bottom.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -210,11 +267,75 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u8).range(0..=1)))]
     pub pfr_black_pixel: Option<u8>,
     /// Native marker-image dialect (default sfont).
-    #[cfg_attr(feature = "clap", arg(long, value_parser=["sfont", "rfont"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_SFONT_FLAVOR))]
     pub sfont_flavor: Option<String>,
     /// Ordered SFont output labels, comma-separated U+0041 or legacy:0x41.
     #[cfg_attr(feature = "clap", arg(long, value_delimiter = ','))]
     pub sfont_codepoints: Vec<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.pfr_dialect.as_deref() {
+            check_choice("pfr_dialect", value, &WRITE_OPTIONS_PFR_DIALECT)?;
+        }
+        if let Some(value) = self.ssfn_encoding.as_deref() {
+            check_choice("ssfn_encoding", value, &WRITE_OPTIONS_SSFN_ENCODING)?;
+        }
+        if let Some(value) = self.xerox_variant.as_deref() {
+            check_choice("xerox_variant", value, &WRITE_OPTIONS_XEROX_VARIANT)?;
+        }
+        if let Some(value) = self.xerox_bitblt_layout.as_deref() {
+            check_choice(
+                "xerox_bitblt_layout",
+                value,
+                &WRITE_OPTIONS_XEROX_BITBLT_LAYOUT,
+            )?;
+        }
+        if let Some(value) = self.xerox_alto_baseline {
+            check_range("xerox_alto_baseline", i128::from(value), 0, 127)?;
+        }
+        if let Some(value) = self.pcgeos_variant.as_deref() {
+            check_choice("pcgeos_variant", value, &WRITE_OPTIONS_PCGEOS_VARIANT)?;
+        }
+        if let Some(value) = self.gpi_container.as_deref() {
+            check_choice("gpi_container", value, &WRITE_OPTIONS_GPI_CONTAINER)?;
+        }
+        if let Some(value) = self.gpi_kind.as_deref() {
+            check_choice("gpi_kind", value, &WRITE_OPTIONS_GPI_KIND)?;
+        }
+        if let Some(value) = self.riscos_version.as_deref() {
+            check_choice("riscos_version", value, &WRITE_OPTIONS_RISCOS_VERSION)?;
+        }
+        if let Some(value) = self.riscos_depth.as_deref() {
+            check_choice("riscos_depth", value, &WRITE_OPTIONS_RISCOS_DEPTH)?;
+        }
+        if let Some(value) = self.riscos_compression.as_deref() {
+            check_choice(
+                "riscos_compression",
+                value,
+                &WRITE_OPTIONS_RISCOS_COMPRESSION,
+            )?;
+        }
+        if let Some(value) = self.riscos_metrics_version.as_deref() {
+            check_choice(
+                "riscos_metrics_version",
+                value,
+                &WRITE_OPTIONS_RISCOS_METRICS_VERSION,
+            )?;
+        }
+        if let Some(value) = self.pfr_compression.as_deref() {
+            check_choice("pfr_compression", value, &WRITE_OPTIONS_PFR_COMPRESSION)?;
+        }
+        if let Some(value) = self.pfr_black_pixel {
+            check_range("pfr_black_pixel", i128::from(value), 0, 1)?;
+        }
+        if let Some(value) = self.sfont_flavor.as_deref() {
+            check_choice("sfont_flavor", value, &WRITE_OPTIONS_SFONT_FLAVOR)?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(

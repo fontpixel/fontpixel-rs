@@ -1,5 +1,6 @@
 //! Macintosh resource containers and explicit legacy charsets.
 use super::{require_feature, require_target};
+use crate::options::check_choice;
 use fontpixel::{FontRegistry, ResourceLimits, Result};
 
 /// Read options: macintosh resource containers and explicit legacy charsets.
@@ -18,6 +19,13 @@ pub struct ReadOptions {
     /// Relative AppleDouble companion when reading the data fork.
     #[cfg_attr(feature = "clap", arg(long))]
     pub nfnt_apple_double_resource: Option<String>,
+}
+impl ReadOptions {
+    /// Check the value constraints the command-line parser enforces; this
+    /// group has none beyond its field types.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        Ok(())
+    }
 }
 impl ReadOptions {
     pub(crate) fn apply(&self, registry: &mut FontRegistry) -> Result<()> {
@@ -40,6 +48,17 @@ impl ReadOptions {
     }
 }
 
+const WRITE_OPTIONS_NFNT_CONTAINER: [&str; 8] = [
+    "bare",
+    "resource-fork",
+    "dfont",
+    "suitcase",
+    "macbinary",
+    "apple-single",
+    "apple-double",
+    "binhex",
+];
+const WRITE_OPTIONS_NFNT_RESOURCE_TYPE: [&str; 2] = ["nfnt", "font"];
 /// Write options: macintosh resource containers and explicit legacy charsets.
 #[derive(Debug, Clone, PartialEq, Default)]
 #[cfg_attr(feature = "clap", derive(clap::Args))]
@@ -51,11 +70,28 @@ impl ReadOptions {
 )]
 pub struct WriteOptions {
     /// Macintosh output container (default dfont).
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["bare", "resource-fork", "dfont", "suitcase", "macbinary", "apple-single", "apple-double", "binhex"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_NFNT_CONTAINER))]
     pub nfnt_container: Option<String>,
     /// Resource type used for newly authored Macintosh bitmaps.
-    #[cfg_attr(feature = "clap", arg(long, value_parser = ["nfnt", "font"]))]
+    #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_NFNT_RESOURCE_TYPE))]
     pub nfnt_resource_type: Option<String>,
+}
+impl WriteOptions {
+    /// Check the value constraints the command-line parser enforces (choice
+    /// lists, numeric ranges and value syntax); operations call this first.
+    pub fn validate(&self) -> fontpixel::Result<()> {
+        if let Some(value) = self.nfnt_container.as_deref() {
+            check_choice("nfnt_container", value, &WRITE_OPTIONS_NFNT_CONTAINER)?;
+        }
+        if let Some(value) = self.nfnt_resource_type.as_deref() {
+            check_choice(
+                "nfnt_resource_type",
+                value,
+                &WRITE_OPTIONS_NFNT_RESOURCE_TYPE,
+            )?;
+        }
+        Ok(())
+    }
 }
 impl WriteOptions {
     pub(crate) fn apply(
