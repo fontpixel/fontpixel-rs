@@ -674,6 +674,10 @@ def fmt_time(ns: float) -> str:
     return f'{ns:.0f} ns'
 
 
+def fmt_ratio(r: float) -> str:
+    return f'{r:.2f}×' if r >= 0.1 else f'{r:.2g}×'
+
+
 def verdict(ratio: float | None) -> str:
     if ratio is None:
         return '—'
@@ -730,7 +734,7 @@ def summarize(path: Path) -> None:
         for e in ('compat', 'native'):
             x = s.get(e, {})
             r = x.get('speedup_vs_ref')
-            ratios.append(f'{r:.2f}× {verdict(r)}' if r is not None else '—')
+            ratios.append(f'{fmt_ratio(r)} {verdict(r)}' if r is not None else '—')
         same = []
         for e in ('compat', 'native'):
             x = s.get(e, {})
@@ -749,6 +753,47 @@ def summarize(path: Path) -> None:
                 print(f'- `{name}` {e}: spread min {fmt_time(x["min_ns"])} / max {fmt_time(x["max_ns"])}')
     if loads:
         print(f'\nload average (1 min) at child start/end: min {min(loads):.2f}, median {statistics.median(loads):.2f}, max {max(loads):.2f}')
+
+
+def paired_ratios(rec: dict, engine: str) -> list[float]:
+    """ref/engine per repetition (engines of one repetition ran back to back)."""
+    ref = {r['rep']: r for r in rec['runs'].get('ref', []) if r.get('outcome') == 'ok'}
+    out = []
+    for r in rec['runs'].get(engine, []):
+        if r.get('outcome') == 'ok' and r['rep'] in ref:
+            out.append(ref[r['rep']]['ns'] / r['ns'])
+    return out
+
+
+def compare(paths: list[Path]) -> None:
+    """Speedup versus ref per run (ratio of medians) and the range of the
+    per-repetition paired ratios over all runs."""
+    raws = [json.loads(p.read_text()) for p in paths]
+    names = list(raws[0]['cases'])
+    runs_hdr = ' / '.join(f'run {i + 1}' for i in range(len(raws)))
+    print(f'| Case | compat vs ref ({runs_hdr}) | paired range | native vs ref ({runs_hdr}) | paired range | verdict compat / native |')
+    print('| --- | --- | --- | --- | --- | --- |')
+    for name in names:
+        cells = []
+        verdicts = []
+        for e in ('compat', 'native'):
+            per_run, paired = [], []
+            for raw in raws:
+                rec = raw['cases'].get(name)
+                if rec is None:
+                    per_run.append(None)
+                    continue
+                per_run.append(summarize_case(rec).get(e, {}).get('speedup_vs_ref'))
+                paired += paired_ratios(rec, e)
+            if all(r is None for r in per_run):
+                cells += ['—', '—']
+                verdicts.append('n/a')
+                continue
+            cells.append(' / '.join('—' if r is None else fmt_ratio(r) for r in per_run))
+            cells.append(f'{fmt_ratio(min(paired))[:-1]}–{fmt_ratio(max(paired))}' if paired else '—')
+            vs = {verdict(r) for r in per_run if r is not None}
+            verdicts.append(vs.pop() if len(vs) == 1 else 'mixed: ' + ', '.join(sorted(vs)))
+        print(f"| `{name}` | {cells[0]} | {cells[1]} | {cells[2]} | {cells[3]} | {' / '.join(verdicts)} |")
 
 
 def main() -> None:
@@ -771,6 +816,8 @@ def main() -> None:
     w.add_argument('--ref-src')
     s = sub.add_parser('summarize')
     s.add_argument('raw')
+    c = sub.add_parser('compare')
+    c.add_argument('raws', nargs='+')
     sub.add_parser('cases')
     args = ap.parse_args()
     if args.cmd == 'run':
@@ -781,6 +828,8 @@ def main() -> None:
         print(json.dumps(worker(args.engine, args.case, Path(args.ref_src) if args.ref_src else None)))
     elif args.cmd == 'summarize':
         summarize(Path(args.raw))
+    elif args.cmd == 'compare':
+        compare([Path(p) for p in args.raws])
     else:
         for name, (kind, label, _) in CASES.items():
             print(f'{name:24s} {kind:6s} {label}')

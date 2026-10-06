@@ -70,4 +70,6 @@ mapping fails the gate.
   bdfparser and report slower calls as slower.
 - Build: `maturin develop`/`maturin build` (abi3, CPython ≥ 3.10); manylinux wheels
   with `maturin build --release --zig --compatibility manylinux2014`; nothing is
-  published.
+  published. `scripts/build_wheels.sh` builds the x86_64 and aarch64 wheels into
+  `local-work/wheels/`, runs `auditwheel show` and the pytest suite against the
+  installed wheel on CPython 3.10 and 3.12 (results in `benches/PHASE7-REPORT.md`).
