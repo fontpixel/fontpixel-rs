@@ -205,6 +205,20 @@ mod model {
         );
         rejects_unknown_field(&glyph(65));
     }
+
+    #[test]
+    fn absent_options_are_omitted_like_sibling_model_types() {
+        let glyph = serde_json::to_value(glyph(65)).unwrap();
+        assert!(glyph.get("name").is_none());
+        let parsed: Glyph = serde_json::from_value(glyph).unwrap();
+        assert_eq!(parsed.name, None);
+        let font = serde_json::to_value(Font::default()).unwrap();
+        assert!(font.get("source_format").is_none());
+        round_trip_eq(&Font::default());
+        let set = serde_json::to_value(FontSet::default()).unwrap();
+        assert_eq!(set, json!({"fonts": [], "properties": []}));
+        round_trip_eq(&FontSet::default());
+    }
 }
 
 mod report {

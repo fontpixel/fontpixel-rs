@@ -304,6 +304,10 @@ pub struct Glyph {
     /// Unicode sequences (e.g. PSF combining entries), distinct from aliases.
     pub unicode_sequences: Vec<Vec<u32>>,
     /// Original STARTCHAR/PostScript/format-specific name, if present.
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
     pub name: Option<String>,
     /// Horizontal, vertical and optional source-specific metrics.
     pub metrics: GlyphMetrics,
@@ -1012,6 +1016,10 @@ pub struct FontSet {
     /// Original container metadata in file order.
     pub properties: Properties,
     /// Container/source format identifier, if known.
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
     pub source_format: Option<String>,
 }
 impl From<Font> for FontSet {
@@ -1096,7 +1104,8 @@ mod font_serde {
         metrics: &'a FontMetrics,
         names: &'a FontNames,
         charset: &'a FontCharset,
-        source_format: &'a Option<String>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        source_format: Option<&'a str>,
         headers: &'a Properties,
         properties: &'a Properties,
     }
@@ -1108,6 +1117,7 @@ mod font_serde {
         metrics: FontMetrics,
         names: FontNames,
         charset: FontCharset,
+        #[serde(default)]
         source_format: Option<String>,
         headers: Properties,
         properties: Properties,
@@ -1123,7 +1133,7 @@ mod font_serde {
                 metrics: &self.metrics,
                 names: &self.names,
                 charset: &self.charset,
-                source_format: &self.source_format,
+                source_format: self.source_format.as_deref(),
                 headers: &self.headers,
                 properties: &self.properties,
             }
