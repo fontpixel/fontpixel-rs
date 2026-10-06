@@ -5,7 +5,7 @@
  "python": "3.10.20",
  "slow": true,
  "pytest_exit_code": 0,
- "seconds": 241.5,
+ "seconds": 230.7,
  "counts": {
   "passed": 10
  },
