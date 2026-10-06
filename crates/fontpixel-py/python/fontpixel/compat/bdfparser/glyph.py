@@ -69,16 +69,30 @@ class Glyph:
         for k, v in zip(META_TITLES, self._g.meta(), strict=True):
             self.meta[k] = v
 
-    def _push(self) -> None:
-        """Write direct edits of `self.meta` into the handle (and its font)."""
-        current = self._g.meta()
+    def _pending(self) -> dict[str, Any]:
+        """Direct edits of `self.meta` not yet in the handle."""
         changed = {}
-        for k, v in zip(META_TITLES, current, strict=True):
+        for k, v in zip(META_TITLES, self._g.meta(), strict=True):
             mine = self.meta.get(k)
             if mine != v or type(mine) is not type(v):
                 changed[k] = mine
+        return changed
+
+    def _push(self) -> None:
+        """Write direct edits of `self.meta` into the handle (and its font)."""
+        changed = self._pending()
         if changed:
             self._g.setmeta(changed)
+
+    def _reader(self) -> Any:
+        """The handle to read from: with pending direct `meta` edits, a detached
+        copy carrying them (reading never writes back, as in bdfparser)."""
+        changed = self._pending()
+        if not changed:
+            return self._g
+        g = self._g.clone()
+        g.setmeta(changed)
+        return g
 
     def _edit(self, op: Callable[[], Any]) -> Glyph:
         font = self.font
@@ -153,9 +167,8 @@ class Glyph:
         https://font.tomchen.org/bdfparser_py/glyph#draw
         """
 
-        self._push()
         try:
-            return self._g.draw(mode, None if bb is None else tuple(bb))
+            return self._reader().draw(mode, None if bb is None else tuple(bb))
         finally:
             if self.font is not None:
                 self.font._drain()
@@ -178,8 +191,7 @@ class Glyph:
             raise ValueError(
                 'Parameter xoff and yoff in origin() method must be all set when mode=-1'
             )
-        self._push()
-        return self._g.origin(mode, fromorigin, xoff, yoff)
+        return self._reader().origin(mode, fromorigin, xoff, yoff)
 
     def setbitmap(
         self,
@@ -244,6 +256,4 @@ class Glyph:
         https://font.tomchen.org/bdfparser_py/glyph#clone
         """
 
-        self._push()
-        g = Glyph._wrap(self._g.clone(), self.font, self.meta)
-        return g
+        return Glyph._wrap(self._reader().clone(), self.font, self.meta)

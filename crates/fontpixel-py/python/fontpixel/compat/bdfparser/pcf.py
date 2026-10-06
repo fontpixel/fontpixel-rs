@@ -6,6 +6,9 @@ output is byte-identical to `bdftopcf` run on the same BDF.
 
 from __future__ import annotations
 
+import gzip
+import io
+import zlib
 from typing import TYPE_CHECKING, Any
 
 from ..._native import _bdfparser as _n
@@ -90,25 +93,33 @@ def read_pcf(data: bytes | bytearray | memoryview) -> Font:
     from .font import Font
 
     data = bytes(data)
-    head = data[:4]
-    if head[:2] == b'\x1f\x8b':
-        import gzip
-        import io
-        import zlib
-
-        try:
-            with gzip.GzipFile(fileobj=io.BytesIO(data)) as g:
-                head = g.read(4)
-        except (OSError, EOFError, zlib.error) as e:
-            raise PCFError(f'invalid gzip data: {e}') from e
-    if head != b'\x01fcp':
+    try:
+        head = _head(data)
+    except (OSError, EOFError, zlib.error) as e:
+        raise PCFError(f'invalid gzip data: {e}') from e
+    if head != PCF_MAGIC:
         raise PCFError('not a PCF file (bad magic)')
     raw = _n.RawFont()
+    _load_pcf(raw, data)
+    return Font._from_raw(raw)
+
+
+PCF_MAGIC = b'\x01fcp'
+
+
+def _head(data: bytes) -> bytes:
+    """First 4 bytes of the (possibly gzip-compressed) data."""
+    if data[:2] == b'\x1f\x8b':
+        with gzip.GzipFile(fileobj=io.BytesIO(data)) as g:
+            return g.read(4)
+    return data[:4]
+
+
+def _load_pcf(raw: Any, data: bytes) -> None:
+    """Load PCF (or gzip PCF) bytes into a native handle; errors are `PCFError`s."""
     try:
         raw.load_bytes(data, None)
     except PCFError:
         raise
     except ValueError as e:
         raise PCFError(str(e)) from e
-    font = Font._from_raw(raw)
-    return font

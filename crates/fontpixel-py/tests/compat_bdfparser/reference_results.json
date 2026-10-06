@@ -5,10 +5,10 @@
  "python": "3.10.20",
  "slow": false,
  "pytest_exit_code": 1,
- "seconds": 98.6,
+ "seconds": 63.4,
  "counts": {
-  "passed": 1737,
-  "failed": 26,
+  "passed": 1738,
+  "failed": 25,
   "skipped": 10
  },
  "tests": {
@@ -373,8 +373,7 @@
    "outcome": "passed"
   },
   "tests/test_edit.py::TestAddRemove::test_addglyph_errors": {
-   "outcome": "failed",
-   "message": "tests/test_edit.py:380: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_edit.py::TestAddRemove::test_addglyph_from_other_font": {
    "outcome": "passed"

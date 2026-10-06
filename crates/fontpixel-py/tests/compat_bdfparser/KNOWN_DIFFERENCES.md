@@ -2,10 +2,11 @@
 
 `python run_reference.py` runs the unmodified bdfparser 3.0 test suite
 (`reference/bdfparser/tests`) with the `shim/` package as `bdfparser`.
-Result (`reference_results.json`): **1737 passed, 26 failed, 10 skipped**
+Result (`reference_results.json`): **1738 passed, 25 failed, 10 skipped**
 (1773 collected; the reference implementation itself: 1763 passed, 10 skipped).
 The 10 skips are the reference's own slow tests (`BDFPARSER_SLOW=1`, run with
-`--slow`). Every failure is listed below.
+`--slow`; `reference_results_slow.json`: 5 passed, 5 failed). Every failure is
+listed below.
 
 Categories:
 
@@ -22,7 +23,6 @@ Categories:
 |---|---|---|
 | `test_bdf_write.py::test_unloaded_font_raises` | `Cannot write BDF: missing header(s) fbbyoff (font not loaded?)` | `Cannot write BDF: missing headers (font not loaded?)` (names no header; `Font::tobdf`) |
 | `test_cli.py::test_truncated_gzip_input` | `Malformed gzip data: …` | `invalid gzip input: incomplete deflate stream` (native gzip transport) |
-| `test_edit.py::TestAddRemove::test_addglyph_errors` | `The glyph has no codepoint` | `expected signed integer` (`Font::addglyph` / `projection::integer`) |
 | `test_font.py::TestFontV3Querying::test_draw_linelimit_too_small` | ``` `linelimit` (3) is too small the line can't even contain one glyph: … ``` | `line_limit (3) cannot contain one glyph: code Some(Unicode(97)), width 16` (native renderer) |
 | `test_hardening.py::TestNonHexRows::test_message_quotes` | `Glyph "my "A"" (codepoint 65): …` | `Glyph "my \"A\"" (codepoint 65): …` (`Glyph::draw` formats the name with `{:?}`) |
 | `test_hardening.py::test_glyph_detached_hexrow_error_uses_meta` | `Glyph "x" (codepoint None): …` | `Glyph "x" (codepoint 0): …` (`Glyph::cp()` maps a null codepoint to 0) |
@@ -33,9 +33,25 @@ Categories:
 | `test_ttf.py::test_write_upem_too_small_and_bad_advance` | `value out of range for a TrueType field: …` | `TrueType field exceeds uint16` (`ttf::write_ttf`) |
 
 In each case the exception class matches (`ValueError` / `BDFParseError`); only
-the text differs. The binding does not rewrite core messages.
+the text differs. Rule followed by the binding: argument validation at the
+Python boundary and `warnings` emission are done by the binding with
+bdfparser's texts (see "Binding-supplied messages and checks"); exception texts
+raised inside a Rust operation (parsing, serializing, drawing, the TrueType
+reader/writer) pass through unchanged. `tobdf()` naming the missing header is
+part of the Rust writer's validation, so it stays a core item.
 
 ## Core: behaviour differs from bdfparser
+
+- `--slow` only (`reference_results_slow.json`: 5 passed, 5 failed):
+  `test_ttf.py::test_fonttools_validation[HanWangYanKai-26.bdf-circle]`,
+  `test_ttf.py::test_freetype_native[HanWangYanKai-26.bdf-circle-1.0-97-hinted]`,
+  `test_ttf.py::test_freetype_native[HanWangYanKai-26.bdf-circle-1.0-97-unhinted]`,
+  `test_ttf.py::test_round_trip[HanWangYanKai-26.bdf-circle]`,
+  `test_ttf.py::test_full_unifont_slow[circle]` — `ttf::write_ttf` with round
+  dots on the two large fonts stops with `ValueError: TrueType font point budget
+  exceeded` (a fixed point budget inside the Rust writer); bdfparser writes these
+  fonts (the HanWang circle TTF is about 68 MB). The square-dot variants of the
+  same fonts pass.
 
 - `test_bdf_write.py::test_full_format` — `setprop('FLOAT', 1.5)` then `tobdf()`:
   bdfparser quotes non-integer values (`FLOAT "1.5"`), `Font::tobdf` writes every
@@ -108,3 +124,39 @@ supplies them: `_bindata` uses the compatibility `Glyph.draw(mode=1)` (Rust);
 `_jsnum`, `_parse_tables`, `_parse_cmap` are test-inspection helpers ported from
 bdfparser. `test_ttf.py::test_jsnum` therefore checks the shim's port, not
 fontpixel; the other uses only inspect fontpixel-written TrueType bytes.
+
+## Binding-supplied messages and checks
+
+These bdfparser behaviours are produced by the Python layer (the Rust layer has
+no equivalent or a different text); all are exercised by the reference suite or
+`tests/test_compat.py::test_python_boundary_semantics`:
+
+- warnings: `glyphbycp` miss (`Glyph "A" (codepoint 65) does not exist in the
+  font. Will return `None``; the Rust warning text is replaced), `glyph()` with an
+  unrepresentable character (`… cannot be encoded in the charset …`),
+  `charsetconvert` to an unknown charset (`Unknown charset '…'`), `Bitmap.overlay`
+  size mismatch, `Bitmap.tobytes` unknown mode;
+- argument validation: `Bitmap.fromstring` (`Invalid character 'x' in bitmap row
+  N`, `Bitmap rows have different lengths`), `getpixel`/`setpixel` range
+  (`IndexError`) and value checks, `addglyph` unknown key (`KeyError`) / missing
+  codepoint (`The glyph has no codepoint`), `bitmap_contours` `ppu`/`dotsize`
+  types, `read_ttf` `pixelsize` type, `write_ttf` `ppu`/`timestamp`/`dotsize`
+  types, `write_pcf` option values, `char2cp`/`glyph` single-character `TypeError`;
+- `fmtnum(-0.0)` normalizes to `'0'` (the Rust `svg::fmtnum` writes `'-0'`);
+- a malformed PCF read through `Font(...)`/`load_bytes`/`load_file_path` inside a
+  gzip wrapper raises `PCFError` (the binding peeks at the decompressed magic).
+
+## Binding behaviour notes (not covered by a failing test)
+
+- Header writes (`font.headers[...] = …`, `del`, assignment), `unencoded.append`
+  with an alt code and `unencoded.clear()`/`del` rebuild the native model
+  (`Font::core` → edit → `Font::from_core`) because the Rust layer has no header
+  or unencoded-slot editor. Glyph handles taken before such a write detach.
+- Item assignment into `font.glyphs[cp]` lists is written back; into
+  `font.unencoded[i]['meta']` lists it is not.
+- `Glyph.draw()`, `origin()`, `clone()` and `drawcps(missing=glyph)` read pending
+  direct `glyph.meta` edits without writing them back; the next editing method
+  writes them, as in bdfparser.
+- `write_ttf`/`write_pcf` accept bdfparser's duck-typed font objects (any object
+  with `headers`, `props`, `glyphs`, optionally `unencoded`, `_propnames`) by
+  copying them into a compatibility `Font` first.

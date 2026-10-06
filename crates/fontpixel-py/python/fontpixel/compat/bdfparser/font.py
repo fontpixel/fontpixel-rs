@@ -453,8 +453,22 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#load_file_path
         """
 
+        from . import pcf
+
         raw = _n.RawFont()
-        raw.load_file_path(os.fspath(file_path))
+        try:
+            raw.load_file_path(os.fspath(file_path))
+        except pcf.PCFError:
+            raise
+        except ValueError as e:
+            try:
+                with open(file_path, 'rb') as f:
+                    is_pcf = pcf._head(f.read(1 << 16)) == pcf.PCF_MAGIC
+            except Exception:
+                is_pcf = False
+            if is_pcf:  # malformed PCF data raises PCFError, as bdfparser
+                raise pcf.PCFError(str(e)) from e
+            raise
         return self._set_raw(raw)
 
     def load_file_obj(self, file_obj: Any) -> Font:
@@ -515,8 +529,19 @@ class Font:
         unknown = set(ttfoptions) - {'pixelsize'}
         if unknown:
             raise TypeError(f'load_bytes() got unexpected keyword arguments {sorted(unknown)}')
+        data = bytes(data)
         raw = _n.RawFont()
-        raw.load_bytes(bytes(data), ttfoptions.get('pixelsize'))
+        if data[:2] == _GZIP_MAGIC:
+            from . import pcf
+
+            try:
+                is_pcf = pcf._head(data) == pcf.PCF_MAGIC
+            except Exception:  # corrupt gzip: reported by the native loader
+                is_pcf = False
+            if is_pcf:  # gzip-wrapped PCF: malformed data raises PCFError, as bdfparser
+                pcf._load_pcf(raw, data)
+                return self._set_raw(raw)
+        raw.load_bytes(data, ttfoptions.get('pixelsize'))
         return self._set_raw(raw)
 
     @classmethod
@@ -783,8 +808,7 @@ class Font:
         }
         if missing is not None:
             if isinstance(missing, Glyph):
-                missing._push()
-                kw['missing'] = dict(zip(META_TITLES, missing._g.meta(), strict=True))
+                kw['missing'] = dict(zip(META_TITLES, missing._reader().meta(), strict=True))
             else:
                 kw['missing'] = {k: v for k, v in dict(missing).items() if k in META_TITLES}
         return kw
@@ -867,6 +891,12 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#addglyph
         """
 
+        meta = glyph.meta if isinstance(glyph, Glyph) else glyph
+        for k in meta:
+            if k not in META_TITLES:
+                raise KeyError(f'Unknown glyph meta key {k!r}')
+        if meta.get('codepoint') is None:
+            raise ValueError('The glyph has no codepoint')
         try:
             if isinstance(glyph, Glyph):
                 glyph._push()

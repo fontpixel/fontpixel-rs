@@ -385,6 +385,7 @@ def test_query_and_glyph_handles():
     f = mini()
     assert list(f.itercps()) == [32, 65, 66] and list(f.itercps(2, (33, 70))) == [66, 65]
     assert list(f.itercps(-1)) == [66, 65, 32]
+    assert f.lacksglyphs('A€B€') == ['€', '€'] and f.lacksglyphs('AB') is None
     assert [g.cp() for g in f.iterglyphs(1, [(65, 65)])] == [65]
     with pytest.warns(BDFParserWarning, match=r'^Glyph "€" \(codepoint 8364\) does not exist'):
         assert f.glyphbycp(0x20AC) is None
@@ -514,3 +515,22 @@ def test_cli(tmp_path, capsys):
     assert main(['preview', str(p), 'A']) == 0
     assert capsys.readouterr().out == str(mini().draw('A')) + '\n'
     assert main(['info', str(tmp_path / 'missing.bdf')]) == 1
+
+
+def test_python_boundary_semantics(tmp_path):
+    f = mini()
+    g = f.glyphbycp(65)
+    g.meta['bbxoff'] = 3  # a direct edit: reading uses it but does not write it back
+    assert g.origin(1, True) == (3, 0) and f.glyphs[65][4] == 0
+    assert g.clone().meta['bbxoff'] == 3 and f.glyphs[65][4] == 0
+    g.shift(0)  # the next editing method writes it
+    assert f.glyphs[65][4] == 3
+    with pytest.raises(ValueError, match='no codepoint'):
+        f.addglyph({'glyphname': 'x'})
+    bad = gzip.compress(f.topcf()[:60])
+    with pytest.raises(pcf.PCFError):
+        Font(bad)
+    p = tmp_path / 'bad.pcf.gz'
+    p.write_bytes(bad)
+    with pytest.raises(pcf.PCFError):
+        Font(str(p))
