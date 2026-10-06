@@ -369,7 +369,7 @@ impl Task {
     fn action(&self, base: &Path) -> TaskAction {
         let prepared = self.command(base).and_then(|command| {
             let weight = self.weight()?;
-            Ok((task_request(command)?, weight))
+            Ok((task_request(self.kind, command)?, weight))
         });
         match prepared {
             Ok((request, weight)) => TaskAction::Run { request, weight },
@@ -377,8 +377,9 @@ impl Task {
         }
     }
 }
-fn task_request(command: Command) -> Result<TaskRequest> {
+fn task_request(kind: TaskKind, command: Command) -> Result<TaskRequest> {
     Ok(match command {
+        Command::Convert(request) if kind == TaskKind::Vectorize => TaskRequest::Vectorize(request),
         Command::Convert(request) => TaskRequest::Convert(request),
         #[cfg(feature = "opentype")]
         Command::Variants(request) => TaskRequest::Variants(request),
@@ -440,13 +441,17 @@ pub fn run_text(
 /// including the whole-batch failure document; returns the exit code.
 #[cfg(feature = "fs")]
 pub fn run_file(file: &Path, jobs: Option<u32>, output: &mut dyn Write) -> u8 {
-    match run_file_inner(file, jobs, output) {
-        Ok(code) => code,
+    match run_path(file, jobs, output) {
+        Ok(response) => response.exit_code,
         Err(error) => super::write_failure(output, &error),
     }
 }
+/// Run a job file from the filesystem like [`run_file`], returning the typed
+/// response. The job file is protected from every output; relative paths
+/// resolve against its directory. A whole-batch failure is returned as the
+/// error and nothing is written to `output` (see [`super::write_failure`]).
 #[cfg(feature = "fs")]
-fn run_file_inner(file: &Path, jobs: Option<u32>, output: &mut dyn Write) -> Result<u8> {
+pub fn run_path(file: &Path, jobs: Option<u32>, output: &mut dyn Write) -> Result<BatchResponse> {
     let sources = crate::context::Sources::default();
     let absolute = if file.is_absolute() {
         file.to_owned()
@@ -459,5 +464,5 @@ fn run_file_inner(file: &Path, jobs: Option<u32>, output: &mut dyn Write) -> Res
     drop(text);
     request.jobs = jobs.map(|v| v as usize).or(request.jobs);
     request.protected_paths.insert(0, absolute.clone());
-    Ok(super::run_with_sources(request, &Storage::Filesystem, sources, output)?.exit_code)
+    super::run_with_sources(request, &Storage::Filesystem, sources, output)
 }

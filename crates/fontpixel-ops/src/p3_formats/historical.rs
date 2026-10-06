@@ -14,7 +14,7 @@ const READ_OPTIONS_SIGNUM_READ_VERSION: [&str; 4] = ["e24", "p9", "p24", "l30"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Require a Daisy-Dot input generation.
@@ -48,6 +48,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub signum_line_height: Option<i64>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -164,7 +166,7 @@ const WRITE_OPTIONS_SIGNUM_VERSION: [&str; 4] = ["e24", "p9", "p24", "l30"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Daisy-Dot output generation (default 3).
@@ -201,6 +203,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_SIGNUM_VERSION))]
     pub signum_version: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

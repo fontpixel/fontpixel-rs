@@ -15,12 +15,15 @@ use std::path::PathBuf;
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct LayoutOptions {
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: RasterOptions,
     /// Input font (BDF/PCF, including gzip when enabled).
     pub input: PathBuf,
@@ -50,7 +53,6 @@ pub struct LayoutOptions {
     pub font_index: Option<usize>,
     /// lr, rl, tb, bt, or a four-letter pair such as lrbt or tbrl.
     #[cfg_attr(feature = "clap", arg(long, default_value = "lrtb"))]
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_text::direction"))]
     pub direction: fontpixel::render::WritingDirection,
     /// Maximum accumulated width-plus-offset per line (SPEC vertical behavior).
     #[cfg_attr(
@@ -115,6 +117,8 @@ pub struct LayoutOptions {
     #[cfg_attr(feature = "clap", arg(long, value_enum, default_value = "text"))]
     pub report: ReportStyle,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(LayoutOptions);
 impl LayoutOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -123,6 +127,23 @@ impl LayoutOptions {
         if let Some(value) = self.from.as_deref() {
             check_format("from", value)?;
         }
+        crate::options::check_conflict((self.text.is_some(), "[TEXT]"), (self.all, "--all"))?;
+        crate::options::check_conflict(
+            (self.missing.is_some(), "--missing <MISSING>"),
+            (self.fail_missing, "--fail-missing"),
+        )?;
+        crate::options::check_required(&[
+            (crate::options::given(&self.input), "<INPUT>"),
+            // `--range`/`--order` require `--all`, which the parser waives
+            // when the conflicting text is present.
+            (
+                self.all
+                    || self.text.is_some()
+                    || (self.range.is_none() && self.order == DrawOrder::Ascending),
+                "--all",
+            ),
+            (self.all || self.text.is_some(), "<TEXT>"),
+        ])?;
         Ok(())
     }
 }
@@ -210,7 +231,7 @@ const PCF_OPTIONS_SCAN_UNIT: [&str; 3] = ["1", "2", "4"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct PcfOptions {
     /// PCF table integer byte order.
@@ -237,6 +258,8 @@ pub struct PcfOptions {
     #[cfg_attr(feature = "clap", arg(long, value_enum))]
     pub pcf_metadata_precedence: Option<PcfMetadataPrecedence>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(PcfOptions);
 impl PcfOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -352,7 +375,7 @@ const CONSOLE_OPTIONS_FNT_VERSION: [&str; 3] = ["1", "2", "3"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ConsoleOptions {
     /// PSF output version, 1 or 2 (default 2).
@@ -374,6 +397,8 @@ pub struct ConsoleOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub fnt_code_page: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ConsoleOptions);
 impl ConsoleOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -540,13 +565,55 @@ pub(crate) fn check_parsed<T>(
         Error::InvalidInput(format!("invalid value '{value}' for {name}: {error}"))
     })
 }
+/// Reject absent required arguments with the command-line parser's text.
+/// Each entry is `(present, display)`, e.g. `(false, "--to <TO>")`.
+pub(crate) fn check_required(arguments: &[(bool, &str)]) -> fontpixel::Result<()> {
+    let missing: String = arguments
+        .iter()
+        .filter(|(present, _)| !present)
+        .map(|(_, display)| format!("\n  {display}"))
+        .collect();
+    if missing.is_empty() {
+        Ok(())
+    } else {
+        Err(Error::InvalidInput(format!(
+            "the following required arguments were not provided:{missing}"
+        )))
+    }
+}
+/// When `present`, require every listed argument (clap `requires`).
+pub(crate) fn check_requires(present: bool, required: &[(bool, &str)]) -> fontpixel::Result<()> {
+    if present {
+        check_required(required)
+    } else {
+        Ok(())
+    }
+}
+/// Reject two arguments given together (clap `conflicts_with`).
+pub(crate) fn check_conflict(first: (bool, &str), second: (bool, &str)) -> fontpixel::Result<()> {
+    if first.0 && second.0 {
+        Err(Error::InvalidInput(format!(
+            "the argument '{}' cannot be used with '{}'",
+            first.1, second.1
+        )))
+    } else {
+        Ok(())
+    }
+}
+/// Whether a required path argument was given (the parser rejects empty paths).
+pub(crate) fn given(path: &std::path::Path) -> bool {
+    !path.as_os_str().is_empty()
+}
 /// Reject a number outside the command-line range.
 pub(crate) fn check_range(name: &str, value: i128, low: i128, high: i128) -> fontpixel::Result<()> {
     if (low..=high).contains(&value) {
         Ok(())
     } else {
+        // The parser's text: the option as `--long-name <VALUE_NAME>`.
         Err(Error::InvalidInput(format!(
-            "invalid value '{value}' for {name}: expected {low}..={high}"
+            "invalid value '{value}' for '--{} <{}>': {value} is not in {low}..={high}",
+            name.replace('_', "-"),
+            name.to_ascii_uppercase()
         )))
     }
 }
@@ -578,21 +645,30 @@ const RASTER_OPTIONS_C_READ_CONTAINER: [&str; 2] = ["source", "lvgl-binary"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 /// Input decoding options and resource limits shared by every reading command.
 pub struct RasterOptions {
     /// Second-priority format read options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p2: Box<p2_formats::ReadOptions>,
     /// Third-priority format read options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p3: Box<p3_formats::ReadOptions>,
     /// Additional format read options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub extra: extra_formats::ReadOptions,
     /// C header dialect (default auto).
     #[cfg_attr(feature = "clap", arg(long, value_parser = RASTER_OPTIONS_C_READ_FAMILY))]
@@ -629,7 +705,10 @@ pub struct RasterOptions {
     pub c_lsb_first: bool,
     /// Image atlas and directory read options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub image: image_formats::ReadOptions,
     /// HEX input/output rows (default 16); never inferred from record length.
     #[cfg_attr(feature = "clap", arg(long, value_parser=clap::value_parser!(u32).range(1..)))]
@@ -674,6 +753,8 @@ pub struct RasterOptions {
     #[cfg_attr(feature = "clap", arg(long, default_value_t = 0.0, allow_hyphen_values = true, help = None::<&str>, long_help = None::<&str>))]
     pub pixel_offset_y: f64,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(RasterOptions);
 impl RasterOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -697,6 +778,26 @@ impl RasterOptions {
         if let Some(value) = self.hex_height {
             check_range("hex_height", i128::from(value), 1, i128::from(u32::MAX))?;
         }
+        // Every generic C option requires `--c-width`, which in turn requires
+        // height, first code and charset; the parser lists the closure.
+        let c_dependent = self.c_height.is_some()
+            || self.c_first.is_some()
+            || self.c_charset.is_some()
+            || self.c_baseline.is_some()
+            || self.c_lsb_first;
+        crate::options::check_requires(
+            self.c_width.is_some() || c_dependent,
+            &[
+                (self.c_height.is_some(), "--c-height <C_HEIGHT>"),
+                (self.c_first.is_some(), "--c-first <C_FIRST>"),
+                (self.c_charset.is_some(), "--c-charset <C_CHARSET>"),
+                (self.c_width.is_some(), "--c-width <C_WIDTH>"),
+            ],
+        )?;
+        crate::options::check_requires(
+            self.grid_units.is_some(),
+            &[(self.ppem.is_some(), "--ppem <PPEM>")],
+        )?;
         Ok(())
     }
 }
@@ -798,6 +899,7 @@ impl RasterOptions {
         Ok(())
     }
 }
+#[cfg(feature = "clap")]
 const VECTOR_OPTIONS_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
 const VECTOR_OPTIONS_DOT_REUSE: [&str; 3] = ["literal", "rows", "patterns"];
 const VECTOR_OPTIONS_WOFF2_SOURCE: [&str; 3] = ["auto", "cff", "ttf"];
@@ -808,12 +910,12 @@ const VECTOR_OPTIONS_NOTDEF: [&str; 2] = ["preserve", "empty"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct VectorOptions {
     /// Outline shape for SVG/TTF/OTF/WOFF/WOFF2/TTC conversion.
-    #[cfg_attr(feature = "clap", arg(long,value_parser = VECTOR_OPTIONS_SHAPE))]
-    pub shape: Option<String>,
+    #[cfg_attr(feature = "clap", arg(long, value_parser = clap::builder::TypedValueParser::map(clap::builder::PossibleValuesParser::new(VECTOR_OPTIONS_SHAPE), crate::options::parse_shape)))]
+    pub shape: Option<fontpixel::outline::Shape>,
     /// Dot diameter or separate-square side relative to one pixel.
     #[cfg_attr(feature = "clap", arg(long, help = None::<&str>, long_help = None::<&str>))]
     pub dotsize: Option<f64>,
@@ -856,13 +958,12 @@ pub struct VectorOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub notdef_lsb: Option<i16>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(VectorOptions);
 impl VectorOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
     pub fn validate(&self) -> fontpixel::Result<()> {
-        if let Some(value) = self.shape.as_deref() {
-            check_choice("shape", value, &VECTOR_OPTIONS_SHAPE)?;
-        }
         if let Some(value) = self.dot_reuse.as_deref() {
             check_choice("dot_reuse", value, &VECTOR_OPTIONS_DOT_REUSE)?;
         }
@@ -1017,7 +1118,7 @@ impl VectorOptions {
                     "OpenType container options cannot apply to SVG output".into(),
                 ));
             }
-            let shape = svg_shape(self.shape.as_deref());
+            let shape = self.shape.unwrap_or(fontpixel::outline::Shape::Square);
             registry.set_svg_write_options(fontpixel::formats::svg::WriteOptions {
                 units_per_pixel: self.ppu.unwrap_or(100),
                 shape,
@@ -1042,11 +1143,7 @@ impl VectorOptions {
         {
             use fontpixel::{outline::Shape, variants::OutlineFlavor};
             let mut o = fontpixel::formats::vector_raster::WriteOptions::default();
-            o.outline.shape = match self.shape.as_deref() {
-                Some("dot") => Shape::Dot,
-                Some("square-separate") => Shape::SquareSeparate,
-                _ => Shape::Square,
-            };
+            o.outline.shape = self.shape.unwrap_or(Shape::Square);
             o.outline.dot_size = self.dotsize.unwrap_or(if o.outline.shape == Shape::Dot {
                 0.9
             } else {
@@ -1085,12 +1182,30 @@ impl VectorOptions {
     }
 }
 
-#[cfg(feature = "svg")]
-pub(crate) fn svg_shape(shape: Option<&str>) -> fontpixel::outline::Shape {
-    match shape {
-        Some("dot") => fontpixel::outline::Shape::Dot,
-        Some("square-separate") => fontpixel::outline::Shape::SquareSeparate,
+/// Map a `shape` choice (one of the shape constants) to the outline shape.
+#[cfg(feature = "clap")]
+pub(crate) fn parse_shape(value: String) -> fontpixel::outline::Shape {
+    match value.as_str() {
+        "dot" => fontpixel::outline::Shape::Dot,
+        "square-separate" => fontpixel::outline::Shape::SquareSeparate,
         _ => fontpixel::outline::Shape::Square,
+    }
+}
+/// Map a merge `spacing` choice to the merge spacing policy.
+#[cfg(feature = "clap")]
+pub(crate) fn parse_spacing(value: String) -> fontpixel::merge::MergeSpacing {
+    match value.as_str() {
+        "mono" => fontpixel::merge::MergeSpacing::Mono,
+        "prop" => fontpixel::merge::MergeSpacing::Prop,
+        _ => fontpixel::merge::MergeSpacing::Auto,
+    }
+}
+/// Map a merge `geometric_width` choice to the geometric width policy.
+#[cfg(feature = "clap")]
+pub(crate) fn parse_geometric_width(value: String) -> fontpixel::merge::GeometricWidth {
+    match value.as_str() {
+        "full" => fontpixel::merge::GeometricWidth::Full,
+        _ => fontpixel::merge::GeometricWidth::Half,
     }
 }
 
@@ -1158,7 +1273,7 @@ const COUTPUT_OPTIONS_LVGL_COMPRESSION: [&str; 3] = ["plain", "rle", "rle-xor"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct COutputOptions {
     /// Output C dialect (default generic).
@@ -1186,6 +1301,8 @@ pub struct COutputOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = COUTPUT_OPTIONS_LVGL_COMPRESSION))]
     pub lvgl_compression: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(COutputOptions);
 impl COutputOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

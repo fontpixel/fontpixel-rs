@@ -7,7 +7,7 @@ use crate::options::format_parser;
 use crate::options::{
     COutputOptions, ConsoleOptions, PcfOptions, RasterOptions, ReportStyle, VectorOptions,
 };
-use crate::options::{check_choice, check_parsed, check_range};
+use crate::options::{check_parsed, check_range};
 use crate::{extra_formats, image_formats, p2_formats, p3_formats};
 #[cfg(feature = "clap")]
 use clap::{ArgAction, ArgMatches, Args, Command, FromArgMatches, error::ErrorKind};
@@ -59,7 +59,9 @@ struct RawMergeArgs {
     settings: MergeSettings,
 }
 
+#[cfg(feature = "clap")]
 const MERGE_SETTINGS_SPACING: [&str; 3] = ["auto", "mono", "prop"];
+#[cfg(feature = "clap")]
 const MERGE_SETTINGS_GEOMETRIC_WIDTH: [&str; 2] = ["half", "full"];
 /// Merge-wide settings and writer options shared by every output.
 #[derive(Debug, Clone, PartialEq)]
@@ -68,18 +70,18 @@ const MERGE_SETTINGS_GEOMETRIC_WIDTH: [&str; 2] = ["half", "full"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct MergeSettings {
     /// Required output family name; surrounding whitespace is trimmed.
     #[cfg_attr(feature = "clap", arg(long, required = true, value_parser = family_parser, help = None::<&str>, long_help = None::<&str>))]
     pub family: String,
     /// Spacing policy: `auto`, `mono` or `prop`.
-    #[cfg_attr(feature = "clap", arg(long, default_value = "auto", value_parser = MERGE_SETTINGS_SPACING, help = None::<&str>, long_help = None::<&str>))]
-    pub spacing: String,
+    #[cfg_attr(feature = "clap", arg(long, default_value = "auto", value_parser = clap::builder::TypedValueParser::map(clap::builder::PossibleValuesParser::new(MERGE_SETTINGS_SPACING), crate::options::parse_spacing), help = None::<&str>, long_help = None::<&str>))]
+    pub spacing: MergeSpacing,
     /// Width of geometric symbols: `half` or `full`.
-    #[cfg_attr(feature = "clap", arg(long, default_value = "half", value_parser = MERGE_SETTINGS_GEOMETRIC_WIDTH, help = None::<&str>, long_help = None::<&str>))]
-    pub geometric_width: String,
+    #[cfg_attr(feature = "clap", arg(long, default_value = "half", value_parser = clap::builder::TypedValueParser::map(clap::builder::PossibleValuesParser::new(MERGE_SETTINGS_GEOMETRIC_WIDTH), crate::options::parse_geometric_width), help = None::<&str>, long_help = None::<&str>))]
+    pub geometric_width: GeometricWidth,
     /// Accept parts whose baselines or cells do not align.
     #[cfg_attr(feature = "clap", arg(long, help = None::<&str>, long_help = None::<&str>))]
     pub allow_misaligned: bool,
@@ -100,56 +102,78 @@ pub struct MergeSettings {
     pub report: ReportStyle,
     /// PCF output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub pcf: PcfOptions,
     /// PSF and FNT/FON output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub console: ConsoleOptions,
     /// Image atlas and directory output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub image: image_formats::WriteOptions,
     /// C header output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub c: COutputOptions,
     /// Additional format output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub extra: extra_formats::WriteOptions,
     /// Second-priority format output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p2: Box<p2_formats::WriteOptions>,
     /// Third-priority format output options, including OTB/bdat metadata.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub p3: Box<p3_formats::WriteOptions>,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: Box<RasterOptions>,
     /// SVG and OpenType outline output options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub vector: VectorOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(MergeSettings);
 impl MergeSettings {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
     pub fn validate(&self) -> fontpixel::Result<()> {
+        crate::options::check_required(&[(!self.family.is_empty(), "--family <FAMILY>")])?;
         {
             let value = self.family.as_str();
             check_parsed("family", value, family_parser)?;
-        }
-        {
-            let value = self.spacing.as_str();
-            check_choice("spacing", value, &MERGE_SETTINGS_SPACING)?;
-        }
-        {
-            let value = self.geometric_width.as_str();
-            check_choice("geometric_width", value, &MERGE_SETTINGS_GEOMETRIC_WIDTH)?;
         }
         if let Some(value) = self.ascent {
             check_range("ascent", i128::from(value), 0, i128::from(i64::MAX))?;
@@ -174,8 +198,8 @@ impl Default for MergeSettings {
     fn default() -> Self {
         Self {
             family: String::new(),
-            spacing: "auto".into(),
-            geometric_width: "half".into(),
+            spacing: MergeSpacing::Auto,
+            geometric_width: GeometricWidth::Half,
             allow_misaligned: false,
             fallback: false,
             ascent: None,
@@ -197,12 +221,15 @@ impl Default for MergeSettings {
 
 /// One ordered merge part.
 #[derive(Debug, Clone, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(deny_unknown_fields)
+)]
 pub struct MergeInput {
     /// Input font.
     pub input: PathBuf,
     /// Selected codes, e.g. `cjk` or `western,geometric`.
-    #[cfg_attr(feature = "serde", serde(with = "crate::serde_text::selection"))]
     pub take: Selection,
     /// Vertical offset in pixels (positive moves glyphs up).
     #[cfg_attr(feature = "serde", serde(default))]
@@ -216,7 +243,11 @@ pub struct MergeInput {
 }
 /// One merge output.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(deny_unknown_fields)
+)]
 pub struct MergeOutput {
     /// Output entry point.
     pub destination: PathBuf,
@@ -229,7 +260,7 @@ pub struct MergeOutput {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct MergeRequest {
     /// Ordered parts; earlier parts win for overlapping codes.
@@ -237,9 +268,14 @@ pub struct MergeRequest {
     /// Outputs, all written in one transaction.
     pub outputs: Vec<MergeOutput>,
     /// Merge-wide settings and writer options.
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub settings: MergeSettings,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(MergeRequest);
 #[cfg(feature = "clap")]
 impl Args for MergeRequest {
     fn augment_args(command: Command) -> Command {
@@ -276,6 +312,24 @@ impl MergeRequest {
     /// Check the value constraints the command-line parser enforces for every
     /// part, output and setting; operations call this first.
     pub fn validate(&self) -> Result<()> {
+        crate::options::check_required(&[
+            (
+                !self.parts.is_empty()
+                    && self
+                        .parts
+                        .iter()
+                        .all(|part| crate::options::given(&part.input)),
+                "--part <PARTS>",
+            ),
+            (
+                !self.outputs.is_empty()
+                    && self
+                        .outputs
+                        .iter()
+                        .all(|output| crate::options::given(&output.destination)),
+                "--output <OUTPUTS>",
+            ),
+        ])?;
         for part in &self.parts {
             if let Some(from) = part.from.as_deref() {
                 crate::options::check_format("from", from)?;
@@ -297,17 +351,10 @@ impl MergeRequest {
         self.settings.raster.original_total_bytes()
     }
     fn spacing(&self) -> MergeSpacing {
-        match self.settings.spacing.as_str() {
-            "mono" => MergeSpacing::Mono,
-            "prop" => MergeSpacing::Prop,
-            _ => MergeSpacing::Auto,
-        }
+        self.settings.spacing
     }
     fn geometric_width(&self) -> GeometricWidth {
-        match self.settings.geometric_width.as_str() {
-            "full" => GeometricWidth::Full,
-            _ => GeometricWidth::Half,
-        }
+        self.settings.geometric_width
     }
 }
 #[cfg(feature = "clap")]

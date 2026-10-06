@@ -219,11 +219,18 @@ fn requests_round_trip_as_flat_option_maps() {
         panic!("render")
     };
     let value = serde_json::to_value(&*render).unwrap();
-    assert_eq!(value["color"], "#112233ff");
-    assert_eq!(value["direction"], "tbrl");
+    // Colors and directions use the core serde shapes.
+    assert_eq!(
+        value["color"],
+        serde_json::json!({"red": 17, "green": 34, "blue": 51, "alpha": 255})
+    );
+    assert_eq!(
+        value["direction"],
+        serde_json::json!({"glyphs": "down", "lines": "left"})
+    );
     let back: RenderRequest = serde_json::from_value(value).unwrap();
     assert_eq!(back, *render);
-    let merge = MergeRequest {
+    let mut merge = MergeRequest {
         parts: vec![MergeInput {
             input: "a.bdf".into(),
             take: "western,geometric".parse().unwrap(),
@@ -237,6 +244,7 @@ fn requests_round_trip_as_flat_option_maps() {
         }],
         ..Default::default()
     };
+    merge.settings.family = "Mix".into();
     let value = serde_json::to_value(&merge).unwrap();
     assert_eq!(value["parts"][0]["take"], "western,geometric");
     let back: MergeRequest = serde_json::from_value(value).unwrap();

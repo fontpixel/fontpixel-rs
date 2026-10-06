@@ -24,6 +24,22 @@
 //! Responses render the command-line documents with `write_json` / `write_text`
 //! (pretty JSON for standalone commands, compact JSON for batch tasks).
 //!
+//! Serialized requests (feature `serde`) are flat maps: every option group is
+//! flattened, so the keys are the command-line argument ids (the long option
+//! names in snake_case, e.g. `max_total_bytes`, `otb_upm`), and absent keys
+//! take the command-line defaults. Merge parts and outputs are lists of
+//! `{input, take, dy, from, font_index}` and `{destination, format}` maps; a
+//! batch task is a request map with a `kind` tag (`convert`, `vectorize`,
+//! `variants`, `subset`, `merge`, `charset`, `validate`, `diff`). Colors and
+//! writing directions use the core shapes (`{red, green, blue, alpha}`,
+//! `{glyphs, lines}`), merge selections their expression string. Deserialization
+//! is strict: unknown keys are rejected at every level, and the type's
+//! `validate()` runs, so choice lists, numeric ranges, value syntax and the
+//! relational command-line rules (`requires`, `conflicts_with`, required
+//! arguments) fail with the parser's messages. Choices whose core enum has the
+//! command-line spelling are typed (`shape`, merge `spacing` and
+//! `geometric_width`); the others are strings checked against the same lists.
+//!
 //! Features: per-format features forward to `fontpixel`; `fs` enables the
 //! filesystem mode; `clap` derives the command-line parser on the request types
 //! ([`cli`]); `toml` adds the batch job-file reader ([`batch::toml`]); `serde`
@@ -56,7 +72,7 @@ pub mod p2_formats;
 pub mod p3_formats;
 mod render;
 #[cfg(feature = "serde")]
-mod serde_text;
+mod serde_keys;
 
 pub use batch::{BatchRequest, BatchResponse, BatchTask, TaskAction, TaskKind, TaskRequest};
 pub use commands::{

@@ -15,7 +15,7 @@ const READ_OPTIONS_DASHEN_READ_VERSION: [&str; 2] = ["3", "4"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Require a prebuilt bitmap numeric byte order.
@@ -43,6 +43,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub hppcl_allow_legacy_descriptor_size: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -184,7 +186,7 @@ const WRITE_OPTIONS_HPPCL_COMPRESSION: [&str; 2] = ["raw", "rle"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Prebuilt numeric byte order (default big).
@@ -269,6 +271,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub hppcl_symbol_set: Option<u16>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -347,6 +351,20 @@ impl WriteOptions {
                 i128::from(u16::MAX),
             )?;
         }
+        crate::options::check_requires(
+            self.hppcl_x_resolution.is_some(),
+            &[(
+                self.hppcl_y_resolution.is_some(),
+                "--hppcl-y-resolution <HPPCL_Y_RESOLUTION>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.hppcl_y_resolution.is_some(),
+            &[(
+                self.hppcl_x_resolution.is_some(),
+                "--hppcl-x-resolution <HPPCL_X_RESOLUTION>",
+            )],
+        )?;
         Ok(())
     }
 }

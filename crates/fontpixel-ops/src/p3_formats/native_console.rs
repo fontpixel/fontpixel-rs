@@ -20,7 +20,7 @@ const READ_OPTIONS_ZAPFONT_READ_VARIANT: [&str; 2] = ["old", "redraw"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Baseline below cell top for BBC, COM, Consoleet, GRASP, HRCG, Wyse, XBIN and Zap.
@@ -39,6 +39,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_ZAPFONT_READ_VARIANT))]
     pub zapfont_read_variant: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -166,7 +168,7 @@ const WRITE_OPTIONS_ZAPFONT_VARIANT: [&str; 2] = ["old", "redraw"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Executable font loader variant (default frapt).
@@ -188,6 +190,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_ZAPFONT_VARIANT))]
     pub zapfont_variant: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

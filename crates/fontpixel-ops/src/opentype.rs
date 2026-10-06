@@ -12,6 +12,7 @@ use fontpixel::{
     woff,
 };
 use std::{collections::BTreeSet, io::Write, mem::size_of, path::PathBuf};
+#[cfg(feature = "clap")]
 const VARIANTS_REQUEST_SHAPE: [&str; 3] = ["square", "square-separate", "dot"];
 const VARIANTS_REQUEST_DOT_REUSE: [&str; 3] = ["literal", "rows", "patterns"];
 const VARIANTS_REQUEST_WOFF2_SOURCE: [&str; 3] = ["auto", "cff", "ttf"];
@@ -22,7 +23,7 @@ const VARIANTS_REQUEST_NOTDEF: [&str; 2] = ["preserve", "empty"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 #[cfg_attr(
     feature = "clap",
@@ -50,8 +51,8 @@ pub struct VariantsRequest {
     #[cfg_attr(feature = "clap", arg(long))]
     pub upm: Option<u16>,
     /// Outline shape.
-    #[cfg_attr(feature = "clap", arg(long,default_value="square",value_parser = VARIANTS_REQUEST_SHAPE))]
-    pub shape: String,
+    #[cfg_attr(feature = "clap", arg(long, default_value = "square", value_parser = clap::builder::TypedValueParser::map(clap::builder::PossibleValuesParser::new(VARIANTS_REQUEST_SHAPE), crate::options::parse_shape)))]
+    pub shape: Shape,
     /// Pixel diameter/side ratio; default 1 for square, 0.9 for dot.
     #[cfg_attr(feature = "clap", arg(long))]
     pub dotsize: Option<f64>,
@@ -109,25 +110,32 @@ pub struct VariantsRequest {
     pub notdef_lsb: Option<i16>,
     /// Exact name-table records and OS/2 metadata.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub metadata: crate::outline_metadata::OutlineMetadataOptions,
     /// Input and codec resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub resources: ResourceOptions,
     /// Output path, container and diagnostics.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub output: SfntOutputOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(VariantsRequest);
 impl VariantsRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
     pub fn validate(&self) -> fontpixel::Result<()> {
-        {
-            let value = self.shape.as_str();
-            check_choice("shape", value, &VARIANTS_REQUEST_SHAPE)?;
-        }
         {
             let value = self.dot_reuse.as_str();
             check_choice("dot_reuse", value, &VARIANTS_REQUEST_DOT_REUSE)?;
@@ -143,6 +151,7 @@ impl VariantsRequest {
         self.metadata.validate()?;
         self.resources.validate()?;
         self.output.validate()?;
+        crate::options::check_required(&[(crate::options::given(&self.base), "--base <BASE>")])?;
         Ok(())
     }
 }
@@ -156,7 +165,7 @@ impl Default for VariantsRequest {
             scripts: Vec::new(),
             ppu: 100,
             upm: None,
-            shape: "square".into(),
+            shape: Shape::Square,
             dotsize: None,
             dot_reuse: "patterns".into(),
             embed_bitmaps: false,
@@ -188,7 +197,7 @@ impl Default for VariantsRequest {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ResourceOptions {
     /// Maximum primary input bytes (default 64 MiB).
@@ -216,6 +225,8 @@ pub struct ResourceOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub max_table_bytes: Option<usize>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ResourceOptions);
 impl ResourceOptions {
     /// Check the value constraints the command-line parser enforces; this
     /// group has none beyond its field types.
@@ -422,7 +433,7 @@ fn auxiliary_removed(report: &mut Report, owned: usize, limit: usize) -> Result<
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 #[cfg_attr(
     feature = "clap",
@@ -447,14 +458,38 @@ pub struct SubsetRequest {
     pub drop_tables: Vec<String>,
     /// Output path, container and diagnostics.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub output: SfntOutputOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(SubsetRequest);
 impl SubsetRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
     pub fn validate(&self) -> fontpixel::Result<()> {
         self.output.validate()?;
+        crate::options::check_conflict(
+            (self.text.is_some(), "--text <TEXT>"),
+            (self.unicodes.is_some(), "--unicodes <UNICODES>"),
+        )?;
+        crate::options::check_conflict(
+            (self.text.is_some(), "--text <TEXT>"),
+            (self.text_file.is_some(), "--text-file <TEXT_FILE>"),
+        )?;
+        crate::options::check_conflict(
+            (self.unicodes.is_some(), "--unicodes <UNICODES>"),
+            (self.text_file.is_some(), "--text-file <TEXT_FILE>"),
+        )?;
+        crate::options::check_required(&[
+            (crate::options::given(&self.input), "<INPUT>"),
+            (
+                self.text.is_some() || self.unicodes.is_some() || self.text_file.is_some(),
+                "--text <TEXT>",
+            ),
+        ])?;
         Ok(())
     }
 }
@@ -465,7 +500,7 @@ const SFNT_OUTPUT_OPTIONS_TO: [&str; 5] = ["ttf", "otf", "otb", "woff", "woff2"]
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct SfntOutputOptions {
     /// TTF, OTF, OTB, WOFF or WOFF2 output (TTF/OTF retain subset outline flavor).
@@ -487,6 +522,8 @@ pub struct SfntOutputOptions {
     #[cfg_attr(feature = "clap", arg(long, value_enum, default_value = "text"))]
     pub report: ReportStyle,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(SfntOutputOptions);
 impl SfntOutputOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -495,6 +532,10 @@ impl SfntOutputOptions {
             check_choice("to", value, &SFNT_OUTPUT_OPTIONS_TO)?;
         }
         check_range("woff2_quality", i128::from(self.woff2_quality), 0, 11)?;
+        crate::options::check_required(&[(
+            crate::options::given(&self.output),
+            "--output <OUTPUT>",
+        )])?;
         Ok(())
     }
 }
@@ -705,11 +746,7 @@ pub(crate) fn variants(a: VariantsRequest) -> Result<SfntResponse> {
             font: load(PathBuf::from(path), &mut report, &mut input_budget)?,
         });
     }
-    let shape = match a.shape.as_str() {
-        "dot" => Shape::Dot,
-        "square-separate" => Shape::SquareSeparate,
-        _ => Shape::Square,
-    };
+    let shape = a.shape;
     let flavor = match a.output.kind()?.as_str() {
         "ttf" => OutlineFlavor::TrueType,
         "otf" => OutlineFlavor::Cff,

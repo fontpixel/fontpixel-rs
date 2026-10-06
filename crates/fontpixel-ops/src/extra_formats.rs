@@ -9,7 +9,7 @@ use fontpixel::{Error, FontRegistry, Result};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Explicitly reduce KBITX grayscale during import; default retains exact samples.
@@ -19,6 +19,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub pbf_trim: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces; this
     /// group has none beyond its field types.
@@ -62,7 +64,7 @@ const WRITE_OPTIONS_PBF_CODEPOINT_BYTES: [&str; 2] = ["2", "4"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Pebble output wire version (default 3).
@@ -93,6 +95,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub hbf_glyphs_per_file: Option<usize>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

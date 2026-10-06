@@ -38,7 +38,7 @@ const OUTLINE_METADATA_OPTIONS_DOT_GLYPH: [&str; 2] = ["last", "after-notdef"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct OutlineMetadataOptions {
     /// Exact name record PLATFORM/ENCODING/LANGUAGE/NAME_ID=TEXT (the
@@ -106,6 +106,8 @@ pub struct OutlineMetadataOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = OUTLINE_METADATA_OPTIONS_DOT_GLYPH))]
     pub dot_glyph: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(OutlineMetadataOptions);
 impl OutlineMetadataOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -135,6 +137,14 @@ impl OutlineMetadataOptions {
         if let Some(value) = self.dot_glyph.as_deref() {
             check_choice("dot_glyph", value, &OUTLINE_METADATA_OPTIONS_DOT_GLYPH)?;
         }
+        crate::options::check_requires(
+            self.created.is_some(),
+            &[(self.modified.is_some(), "--modified <MODIFIED>")],
+        )?;
+        crate::options::check_requires(
+            self.modified.is_some(),
+            &[(self.created.is_some(), "--created <CREATED>")],
+        )?;
         Ok(())
     }
 }

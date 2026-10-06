@@ -15,7 +15,7 @@ const READ_OPTIONS_SFONT_READ_FLAVOR: [&str; 2] = ["sfont", "rfont"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Require the DAVIC specification or FreeType PFR wire dialect.
@@ -52,6 +52,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub sfont_read_baseline: Option<i64>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -182,7 +184,7 @@ const WRITE_OPTIONS_SFONT_FLAVOR: [&str; 2] = ["sfont", "rfont"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// PFR wire dialect; otherwise preserve native source or use FreeType.
@@ -273,6 +275,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_delimiter = ','))]
     pub sfont_codepoints: Vec<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -334,6 +338,13 @@ impl WriteOptions {
         if let Some(value) = self.sfont_flavor.as_deref() {
             check_choice("sfont_flavor", value, &WRITE_OPTIONS_SFONT_FLAVOR)?;
         }
+        crate::options::check_requires(
+            self.riscos_metrics_version.is_some(),
+            &[(
+                self.riscos_metrics.is_some(),
+                "--riscos-metrics <RISCOS_METRICS>",
+            )],
+        )?;
         Ok(())
     }
 }

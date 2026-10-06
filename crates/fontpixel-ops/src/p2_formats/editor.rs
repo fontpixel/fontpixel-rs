@@ -10,13 +10,15 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Explicitly threshold imported BMFont grayscale; default preserves samples.
     #[cfg_attr(feature = "clap", arg(long))]
     pub bmfont_read_threshold: Option<u8>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces; this
     /// group has none beyond its field types.
@@ -48,7 +50,7 @@ const WRITE_OPTIONS_BMFONT_ENCODING: [&str; 4] = ["text", "xml", "binary", "json
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// BMFont descriptor encoding (default text).
@@ -64,6 +66,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub bmfont_padding: Option<u32>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

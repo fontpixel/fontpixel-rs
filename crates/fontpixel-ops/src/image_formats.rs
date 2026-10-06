@@ -11,7 +11,7 @@ const READ_OPTIONS_IMAGE_READ_BACKGROUND: [&str; 3] = ["black", "white", "alpha"
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Relative JSON/TOML atlas mapping, resolved beside the primary input.
@@ -33,6 +33,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub image_read_baseline: Option<i64>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -100,7 +102,7 @@ const WRITE_OPTIONS_IMAGE_BACKGROUND: [&str; 3] = ["black", "white", "alpha"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Output image organization (default atlas).
@@ -131,6 +133,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, allow_hyphen_values = true))]
     pub image_baseline: Option<i64>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
