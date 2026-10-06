@@ -6,7 +6,7 @@ pattern = "fontpixel::model"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
-js = "model classes (FontSet, Font, Glyph)"
+js = "model classes (FontSet, Font, Glyph, Codepoint, Properties)"
 js_test = "crates/fontpixel-wasm/tests/model.test.mjs::edits through FontSet -> Font view -> Glyph view"
 
 [[rule]]
@@ -14,6 +14,8 @@ pattern = "fontpixel::model::AbcWidths"
 status = "adapted"
 python = "fontpixel.Glyph.metrics['abc']"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "Glyph.metrics.abc (plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -21,12 +23,16 @@ pattern = "fontpixel::model::Codepoint"
 status = "bound"
 python = "fontpixel.Codepoint"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_codepoint_class"
+js = "Codepoint (results are {Unicode: n} / {Legacy: n} plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Codepoint class: kinds, ordering"
 
 [[rule]]
 pattern = "fontpixel::model::Codepoint::*"
 status = "bound"
 python = "fontpixel.Codepoint.{name}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_codepoint_class"
+js = "Codepoint.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Codepoint class: kinds, ordering"
 
 [[rule]]
 pattern = "fontpixel::model::Font"
@@ -41,7 +47,9 @@ pattern = "fontpixel::model::Font::from_glyphs"
 status = "adapted"
 python = "fontpixel.Font(glyphs)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
-reason = "the Python constructor takes the glyph iterable"
+js = "new Font(glyphs)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
+reason = "the Python constructor takes the glyph iterable; JS: the constructor takes an array of Glyph handles or plain data"
 
 [[rule]]
 pattern = "fontpixel::model::Font::len"
@@ -57,6 +65,8 @@ pattern = "fontpixel::model::Font::glyphs"
 status = "bound"
 python = "fontpixel.Font.glyphs"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.glyphs() ([id, view] pairs) / Font[Symbol.iterator]"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph"
@@ -71,48 +81,64 @@ pattern = "fontpixel::model::Font::glyph_id"
 status = "bound"
 python = "fontpixel.Font.glyph_id"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.glyphId(codepoint)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph_for_codepoint"
 status = "bound"
 python = "fontpixel.Font.glyph_for_codepoint"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.glyphForCodepoint(codepoint)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::codepoints"
 status = "bound"
 python = "fontpixel.Font.codepoints"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.codepoints() ([codepoint, id] pairs)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::is_empty"
 status = "bound"
 python = "fontpixel.Font.is_empty"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.isEmpty()"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::slot_count"
 status = "bound"
 python = "fontpixel.Font.slot_count"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+js = "Font.slotCount"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font lookup: glyph IDs, views"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph_ids_for_codepoint"
 status = "bound"
 python = "fontpixel.Font.glyph_ids_for_codepoint"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_duplicate_codes_and_ranges"
+js = "Font.glyphIdsForCodepoint(codepoint)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::duplicate codes, inclusive codepoint ranges"
 
 [[rule]]
 pattern = "fontpixel::model::Font::codepoint_range"
 status = "bound"
 python = "fontpixel.Font.codepoint_range"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_duplicate_codes_and_ranges"
+js = "Font.codepointRange(start, end)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::duplicate codes, inclusive codepoint ranges"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph_for_sequence"
 status = "bound"
 python = "fontpixel.Font.glyph_for_sequence"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_sequences"
+js = "Font.glyphForSequence(string | number[])"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::duplicate codes, inclusive codepoint ranges"
 
 [[rule]]
 pattern = "fontpixel::model::Font::add_glyph"
@@ -127,6 +153,8 @@ pattern = "fontpixel::model::Font::replace_glyph"
 status = "bound"
 python = "fontpixel.Font.replace_glyph"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+js = "Font.replaceGlyph(id, glyph)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::replaceGlyph, removeGlyph and stable IDs"
 
 [[rule]]
 pattern = "fontpixel::model::Font::remove_glyph"
@@ -141,61 +169,81 @@ pattern = "fontpixel::model::Font::edit_glyph"
 status = "adapted"
 python = "fontpixel.Font.edit_glyph(id, func)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
-reason = "the Rust closure becomes a Python callable receiving an owned Glyph copy; the edit commits through Font::edit_glyph"
+js = "Font.editGlyph(id, edit)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::editGlyph: owned copy"
+reason = "the Rust closure becomes a Python callable receiving an owned Glyph copy; the edit commits through Font::edit_glyph; JS: the callback receives an owned Glyph copy with no borrow held; a throw propagates unchanged and nothing changes"
 
 [[rule]]
 pattern = "fontpixel::model::Font::glyph_in_cell"
 status = "bound"
 python = "fontpixel.Font.glyph_in_cell"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+js = "Font.glyphInCell(id)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font metrics, names, charset"
 
 [[rule]]
 pattern = "fontpixel::model::Font::update_bounds"
 status = "bound"
 python = "fontpixel.Font.update_bounds"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+js = "Font.updateBounds()"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font metrics, names, charset"
 
 [[rule]]
 pattern = "fontpixel::model::Font::validate"
 status = "bound"
 python = "fontpixel.Font.validate"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+js = "Font.validate(limits?)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::validate and retained/cloned usage"
 
 [[rule]]
 pattern = "fontpixel::model::Font::retained_usage"
 status = "bound"
 python = "fontpixel.Font.retained_usage"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+js = "Font.retainedUsage(maxBytes?)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::validate and retained/cloned usage"
 
 [[rule]]
 pattern = "fontpixel::model::Font::cloned_usage"
 status = "bound"
 python = "fontpixel.Font.cloned_usage"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+js = "Font.clonedUsage(maxBytes?)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::validate and retained/cloned usage"
 
 [[rule]]
 pattern = "fontpixel::model::Font::draw"
 status = "bound"
 python = "fontpixel.Font.draw"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+js = "Font.draw(text, options?) (bound by the render unit)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font.draw, drawCodepoints and drawAll"
 
 [[rule]]
 pattern = "fontpixel::model::Font::draw_codepoints"
 status = "bound"
 python = "fontpixel.Font.draw_codepoints"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+js = "Font.drawCodepoints(codes, options?) (bound by the render unit)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font.draw, drawCodepoints and drawAll"
 
 [[rule]]
 pattern = "fontpixel::model::Font::draw_all"
 status = "bound"
 python = "fontpixel.Font.draw_all"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+js = "Font.drawAll(...) (bound by the render unit)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font.draw, drawCodepoints and drawAll"
 
 [[rule]]
 pattern = "fontpixel::model::FontCharset"
 status = "adapted"
 python = "fontpixel.Font.charset"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+js = "Font.charset (plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font metrics, names, charset"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -203,6 +251,8 @@ pattern = "fontpixel::model::FontCharset::canonical_name"
 status = "adapted"
 python = "fontpixel.Font.charset_canonical_name / fontpixel.charset_canonical_name"
 python_test = "crates/fontpixel-py/tests/test_charset.py::test_font_charset_codec"
+js = "Font.charsetCanonicalName()"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font metrics, names, charset"
 reason = "method of the plain-data struct offered on Font and as a function taking the dict"
 
 [[rule]]
@@ -210,6 +260,8 @@ pattern = "fontpixel::model::FontCharset::codec"
 status = "adapted"
 python = "fontpixel.CharsetCodec.for_font"
 python_test = "crates/fontpixel-py/tests/test_charset.py::test_font_charset_codec"
+js = "CharsetCodec.forFont(font | charset) (bound by the charset unit)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::FontCharset codec through CharsetCodec.forFont"
 reason = "method of the plain-data struct offered as a CharsetCodec constructor taking a Font or the dict"
 
 [[rule]]
@@ -217,6 +269,8 @@ pattern = "fontpixel::model::FontMetrics"
 status = "adapted"
 python = "fontpixel.Font.metrics"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+js = "Font.metrics (plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -224,6 +278,8 @@ pattern = "fontpixel::model::FontNames"
 status = "adapted"
 python = "fontpixel.Font.names"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+js = "Font.names (plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font metrics, names, charset"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -239,13 +295,17 @@ pattern = "fontpixel::model::FontSet::*"
 status = "bound"
 python = "fontpixel.FontSet.{name}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+js = "FontSet.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::FontSet API: constructor"
 
 [[rule]]
 pattern = "fontpixel::model::FontSet::into_single"
 status = "adapted"
 python = "fontpixel.FontSet.into_single"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
-reason = "Python cannot consume the handle: returns an owned copy of the only strike and keeps the set"
+js = "FontSet.intoSingle()"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::FontSet API: constructor"
+reason = "Python cannot consume the handle: returns an owned copy of the only strike and keeps the set; JS likewise returns an owned copy and keeps the set"
 
 [[rule]]
 pattern = "fontpixel::model::Glyph"
@@ -260,6 +320,8 @@ pattern = "fontpixel::model::Glyph::*"
 status = "bound"
 python = "fontpixel.Glyph.{name}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+js = "Glyph.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Glyph setBitmap, bitmapInCell and shift"
 
 [[rule]]
 pattern = "fontpixel::model::Glyph::new"
@@ -284,26 +346,34 @@ pattern = "fontpixel::model::GlyphBitmap::crop"
 status = "adapted"
 python = "fontpixel.Bitmap.crop_bounds"
 python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
-reason = "same operation as Bitmap::crop_bounds on the active variant"
+js = "Glyph.bitmapInCell / Glyph.setBitmap(..., trim) (crop of the active variant)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::GlyphBitmap through the model"
+reason = "same operation as Bitmap::crop_bounds on the active variant; JS: Bitmap.cropBounds belongs to the bitmap unit"
 
 [[rule]]
 pattern = "fontpixel::model::GlyphBitmap::*"
 status = "bound"
 python = "fontpixel.Bitmap.{name}"
 python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+js = "Bitmap.width / Bitmap.height / Bitmap.asBytes; bbox and crop through Glyph.setBitmap(trim) and Glyph.bitmapInCell"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::GlyphBitmap through the model"
 
 [[rule]]
 pattern = "fontpixel::model::GlyphId"
 status = "adapted"
 python = "int"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
-reason = "glyph IDs are plain ints (the serde form)"
+js = "number (glyph IDs)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::replaceGlyph, removeGlyph and stable IDs"
+reason = "glyph IDs are plain ints (the serde form); JS: glyph IDs are numbers"
 
 [[rule]]
 pattern = "fontpixel::model::GlyphId::index"
 status = "adapted"
 python = "int"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+js = "number"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::replaceGlyph, removeGlyph and stable IDs"
 reason = "the ID is the index itself"
 
 [[rule]]
@@ -311,6 +381,8 @@ pattern = "fontpixel::model::GlyphMetrics"
 status = "adapted"
 python = "fontpixel.Glyph.metrics"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "Glyph.metrics (plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -318,6 +390,8 @@ pattern = "fontpixel::model::Rational"
 status = "adapted"
 python = "dict {numerator, denominator}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "{numerator, denominator} plain data (numerator WideInt)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py); deserialization validates through Rational::new"
 
 [[rule]]
@@ -325,6 +399,8 @@ pattern = "fontpixel::model::Rational::*"
 status = "adapted"
 python = "dict {numerator, denominator}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "{numerator, denominator} plain data"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "constructor/accessors of the plain-data dict (validated on deserialization)"
 
 [[rule]]
@@ -332,6 +408,8 @@ pattern = "fontpixel::model::Spacing"
 status = "adapted"
 python = "Font.metrics['spacing']"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "Font.metrics.spacing"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -339,6 +417,8 @@ pattern = "fontpixel::model::Vector"
 status = "adapted"
 python = "dict {x, y}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "{x, y} plain data (WideInt)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -346,6 +426,8 @@ pattern = "fontpixel::model::Vector::new"
 status = "adapted"
 python = "dict {x, y}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+js = "{x, y} plain data"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::glyph metric plain data"
 reason = "constructor of the plain-data dict"
 
 [[rule]]
@@ -353,6 +435,8 @@ pattern = "fontpixel::model::budget::ModelUsage"
 status = "adapted"
 python = "dict returned by retained_usage/cloned_usage"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+js = "plain data returned by retainedUsage/clonedUsage"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::validate and retained/cloned usage"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -360,39 +444,51 @@ pattern = "fontpixel::model::properties::Properties"
 status = "bound"
 python = "fontpixel.Properties"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+js = "Properties"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
 
 [[rule]]
 pattern = "fontpixel::model::properties::Properties::*"
 status = "bound"
 python = "fontpixel.Properties.{name}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+js = "Properties.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
 
 [[rule]]
 pattern = "fontpixel::model::properties::Properties::into_vec"
 status = "adapted"
 python = "fontpixel.Properties.to_list"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
-reason = "Python keeps the handle; returns a list of property dicts"
+js = "Properties.toList()"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
+reason = "Python keeps the handle; returns a list of property dicts; JS: toList() returns plain-data records and keeps the handle"
 
 [[rule]]
 pattern = "fontpixel::model::properties::Properties::iter"
 status = "adapted"
 python = "iter(fontpixel.Properties)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
-reason = "Python __iter__ protocol"
+js = "Properties[Symbol.iterator] / Properties.at(index)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
+reason = "Python __iter__ protocol; JS: the iteration protocol"
 
 [[rule]]
 pattern = "fontpixel::model::properties::Properties::len"
 status = "adapted"
 python = "len(fontpixel.Properties)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
-reason = "Python __len__ protocol"
+js = "Properties.length"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
+reason = "Python __len__ protocol; JS: the length getter"
 
 [[rule]]
 pattern = "fontpixel::model::properties::Property"
 status = "adapted"
 python = "dict {name, value, raw?}"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+js = "Property plain data {name, value, raw?}"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -400,6 +496,8 @@ pattern = "fontpixel::model::properties::Property::new"
 status = "adapted"
 python = "fontpixel.Properties.push(name, value)"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+js = "Properties.push(name, value, raw?)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
 reason = "properties are built in place by push/set"
 
 [[rule]]
@@ -407,4 +505,6 @@ pattern = "fontpixel::model::properties::PropertyValue"
 status = "adapted"
 python = "Python value or tagged dict"
 python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
-reason = "int/str/bytes/list/None convert to Integer/Unsigned/Text/Bytes/List/Flag; the serde tagged form covers every variant"
+js = "PropertyValueLike or the tagged plain data"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Properties list: value coercion"
+reason = "int/str/bytes/list/None convert to Integer/Unsigned/Text/Bytes/List/Flag; the serde tagged form covers every variant; JS: null/number/bigint/string/bytes/array convert to Flag/Integer (Unsigned above i64)/Text/Bytes/List"

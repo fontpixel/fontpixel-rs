@@ -33,6 +33,8 @@ pattern = "fontpixel::error::Error::report"
 status = "adapted"
 python = "FontpixelError.report"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
+js = "FontpixelError.report (complete plain data)"
+js_test = "crates/fontpixel-wasm/tests/model.test.mjs::Font.draw, drawCodepoints and drawAll"
 reason = "exception attribute (dict)"
 
 [[rule]]
@@ -40,6 +42,8 @@ pattern = "fontpixel::error::Operation"
 status = "adapted"
 python = "NotImplementedFormatError.operation"
 python_test = "crates/fontpixel-py/tests/test_formats_registry.py::test_planned_registry_has_no_codecs"
+js = "NotImplementedFormatError.operation ('Read' / 'Write')"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::NotImplementedFormatError names the operation"
 reason = "exception attribute; only format operations raise NotImplemented, so the formats unit's tests exercise it"
 
 [[rule]]
@@ -47,25 +51,33 @@ pattern = "fontpixel::error::Result"
 status = "adapted"
 python = "return value or raised exception"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_error_classes_carry_structured_fields"
-reason = "Python exceptions replace Result"
+js = "return value or thrown FontpixelError"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::error classes carry kind, exitCode"
+reason = "Python exceptions replace Result; JS: thrown errors replace Result"
 
 [[rule]]
 pattern = "fontpixel::metadata"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_apply_names_is_atomic_and_bounded"
+js = "applyNames / nameOverridesIsEmpty"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::applyNames is atomic and bounded"
 
 [[rule]]
 pattern = "fontpixel::metadata::apply_names"
 status = "bound"
 python = "fontpixel.apply_names"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_apply_names_is_atomic_and_bounded"
+js = "applyNames(fontSet, overrides?, limits?)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::applyNames is atomic and bounded"
 
 [[rule]]
 pattern = "fontpixel::metadata::NameOverrides"
 status = "adapted"
 python = "overrides dict"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_apply_names_is_atomic_and_bounded"
+js = "NameOverrides plain data"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::applyNames is atomic and bounded"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -73,6 +85,8 @@ pattern = "fontpixel::metadata::NameOverrides::is_empty"
 status = "adapted"
 python = "fontpixel.name_overrides_is_empty"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_apply_names_is_atomic_and_bounded"
+js = "nameOverridesIsEmpty(overrides)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::applyNames is atomic and bounded"
 reason = "method of the plain-data struct offered as a function taking the dict"
 
 [[rule]]
@@ -80,37 +94,49 @@ pattern = "fontpixel::projection"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "BitmapProjection / applyBitmapProjection"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 
 [[rule]]
 pattern = "fontpixel::projection::apply_bitmap_projection"
 status = "bound"
 python = "fontpixel.apply_bitmap_projection"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "applyBitmapProjection(fontSet, projection, maxWorkingBytes?)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::bitmap projection matches the native convert"
 
 [[rule]]
 pattern = "fontpixel::projection::BitmapProjection"
 status = "adapted"
 python = "fontpixel.BitmapProjection"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
-reason = "borrowed options (&str, &[PropertyEdit]); the class owns the strings and edits and borrows them for the call"
+js = "BitmapProjection"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
+reason = "borrowed options (&str, &[PropertyEdit]); the class owns the strings and edits and borrows them for the call; JS likewise owns the strings and edits"
 
 [[rule]]
 pattern = "fontpixel::projection::BitmapProjection::is_identity"
 status = "bound"
 python = "fontpixel.BitmapProjection.is_identity"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_validation_is_transactional"
+js = "BitmapProjection.isIdentity()"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::bitmap projection validation is transactional"
 
 [[rule]]
 pattern = "fontpixel::projection::BitmapProjection::scalable_from_device"
 status = "bound"
 python = "fontpixel.BitmapProjection.scalable_from_device"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "BitmapProjection.scalableFromDevice(unitsPerEm, referencePpem)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection scalable_from_device"
 
 [[rule]]
 pattern = "fontpixel::projection::EditValue"
 status = "adapted"
 python = "int | str edit value"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "integer (number | bigint) or string edit value"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "borrowed &str; owned Python values"
 
 [[rule]]
@@ -118,6 +144,8 @@ pattern = "fontpixel::projection::PropertyEdit"
 status = "adapted"
 python = "{'set': {name, value}} | {'remove': {name}}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "{set: {name, value}} | {remove: {name}} plain data"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "borrowed &str; owned edit dicts converted for the call"
 
 [[rule]]
@@ -125,6 +153,8 @@ pattern = "fontpixel::projection::PropertyEdit::name"
 status = "adapted"
 python = "fontpixel.BitmapProjection.property_names"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "BitmapProjection.propertyNames()"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "names of every edit in order"
 
 [[rule]]
@@ -132,12 +162,16 @@ pattern = "fontpixel::projection::MAX_*"
 status = "bound"
 python = "fontpixel.{name}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_validation_is_transactional"
+js = "BitmapProjection.{name} (static getter)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::bitmap projection validation is transactional"
 
 [[rule]]
 pattern = "fontpixel::projection::MetadataChange"
 status = "adapted"
 python = "outcome['metadata_changes'][i]"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "outcome.metadata_changes[i]"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -145,6 +179,8 @@ pattern = "fontpixel::projection::MetadataField"
 status = "adapted"
 python = "outcome['metadata_changes'][i]['field']"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "outcome.metadata_changes[i].field"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -152,6 +188,8 @@ pattern = "fontpixel::projection::MetadataValue"
 status = "adapted"
 python = "outcome['metadata_changes'][i]['after']"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "outcome.metadata_changes[i].after"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -159,6 +197,8 @@ pattern = "fontpixel::projection::ProjectionOutcome"
 status = "adapted"
 python = "dict returned by apply_bitmap_projection"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "plain data returned by applyBitmapProjection"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection scalable_from_device"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -166,6 +206,8 @@ pattern = "fontpixel::projection::ProjectionOutcome::retained_bytes"
 status = "adapted"
 python = "outcome['retained_bytes']"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "outcome.retained_bytes"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection scalable_from_device"
 reason = "added to the outcome dict"
 
 [[rule]]
@@ -173,6 +215,8 @@ pattern = "fontpixel::projection::ScalableAdvance"
 status = "adapted"
 python = "'preserve' | {'from_device': {...}}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "'preserve' | {from_device: {...}}"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection scalable_from_device"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -180,6 +224,8 @@ pattern = "fontpixel::projection::ScalableAdvanceChange"
 status = "adapted"
 python = "outcome['scalable_advance_changes'][i]"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_scalable_from_device"
+js = "outcome.scalable_advance_changes[i]"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection scalable_from_device"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -187,6 +233,8 @@ pattern = "fontpixel::projection::SizeProjection"
 status = "adapted"
 python = "size dict"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "BitmapProjection size plain data"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -194,6 +242,8 @@ pattern = "fontpixel::projection::SyncedMetric"
 status = "adapted"
 python = "metadata change field {'metric': ...}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_bitmap_projection_metadata_and_edits"
+js = "metadata change field {metric: ...}"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::BitmapProjection metadata options and property edits"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -201,12 +251,16 @@ pattern = "fontpixel::report"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "report helpers (reportPush, reportExtend, reportHasLoss, reportHasErrors, reportToText)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 
 [[rule]]
 pattern = "fontpixel::report::Impact"
 status = "adapted"
 python = "str ('none', 'repair', 'loss')"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "string ('none', 'repair', 'loss')"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -214,6 +268,8 @@ pattern = "fontpixel::report::Level"
 status = "adapted"
 python = "str ('info', 'warning', 'error')"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "string ('info', 'warning', 'error')"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -221,6 +277,8 @@ pattern = "fontpixel::report::Location"
 status = "adapted"
 python = "entry['location'] dict"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "entry.location plain data"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -228,6 +286,8 @@ pattern = "fontpixel::report::Report"
 status = "adapted"
 python = "report dict {'entries': [...]}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "Report plain data {entries: [...]}"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -235,12 +295,16 @@ pattern = "fontpixel::report::Report::*"
 status = "bound"
 python = "fontpixel.report_{name}"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "reportPush / reportExtend / reportHasLoss / reportHasErrors (Report plain data)"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 
 [[rule]]
 pattern = "fontpixel::report::ReportEntry"
 status = "adapted"
 python = "entry dict"
 python_test = "crates/fontpixel-py/tests/test_metadata.py::test_report_helpers"
+js = "ReportEntry plain data"
+js_test = "crates/fontpixel-wasm/tests/metadata.test.mjs::report helpers: push, extend"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -248,31 +312,41 @@ pattern = "fontpixel::resources"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_read_context_accounting"
+js = "resource classes (Input, ResourceSet, ReadContext, OutputBundle, ...) and functions"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::ReadContext accounting matches the core"
 
 [[rule]]
 pattern = "fontpixel::resources::Input"
 status = "bound"
 python = "fontpixel.Input"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_input_handles"
+js = "Input"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::Input handles: name, sidecars"
 
 [[rule]]
 pattern = "fontpixel::resources::Input::*"
 status = "bound"
 python = "fontpixel.Input.{name}"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_input_handles"
+js = "Input.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::Input handles: name, sidecars"
 
 [[rule]]
 pattern = "fontpixel::resources::Input::new"
 status = "adapted"
 python = "fontpixel.Input(data, name, resources)"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_input_handles"
-reason = "Python constructor over owned bytes"
+js = "new Input(data, {name, resources})"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::Input handles: name, sidecars"
+reason = "Python constructor over owned bytes; JS: constructor with an options object"
 
 [[rule]]
 pattern = "fontpixel::resources::NoResources"
 status = "adapted"
 python = "resources=None"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_read_context_accounting"
+js = "resources omitted (undefined/null)"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::ReadContext accounting matches the core"
 reason = "the default resolver when no resources are passed; sidecar requests raise MissingResourceError"
 
 [[rule]]
@@ -280,65 +354,85 @@ pattern = "fontpixel::resources::OutputAsset"
 status = "bound"
 python = "fontpixel.OutputAsset"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
+js = "OutputAsset"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle"
 status = "bound"
 python = "fontpixel.OutputBundle"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
+js = "OutputBundle"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle::*"
 status = "bound"
 python = "fontpixel.OutputBundle.{name}"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
+js = "OutputBundle.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle::new"
 status = "adapted"
 python = "fontpixel.OutputBundle(primary, assets)"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
-reason = "Python constructor"
+js = "new OutputBundle(primary, assets)"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
+reason = "Python constructor; JS: constructor taking OutputAsset handles or [path, bytes] pairs"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle::directory"
 status = "adapted"
 python = "fontpixel.OutputBundle(primary, assets, directory=True)"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
-reason = "constructor keyword"
+js = "new OutputBundle(primary, assets, {directory: true})"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
+reason = "constructor keyword; JS: constructor option"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle::into_assets"
 status = "adapted"
 python = "fontpixel.OutputBundle.into_assets"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
-reason = "returns copies; Python keeps the bundle"
+js = "OutputBundle.intoAssets()"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
+reason = "returns copies; Python keeps the bundle; JS likewise returns copies and keeps the bundle"
 
 [[rule]]
 pattern = "fontpixel::resources::OutputBundle::into_single"
 status = "adapted"
 python = "fontpixel.OutputBundle.into_single"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
-reason = "returns a copy of the bytes; Python keeps the bundle"
+js = "OutputBundle.intoSingle()"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
+reason = "returns a copy of the bytes; Python keeps the bundle; JS likewise returns a copy (Uint8Array)"
 
 [[rule]]
 pattern = "fontpixel::resources::ReadContext"
 status = "bound"
 python = "fontpixel.ReadContext"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_read_context_accounting"
+js = "ReadContext"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::ReadContext accounting matches the core"
 
 [[rule]]
 pattern = "fontpixel::resources::ReadContext::*"
 status = "bound"
 python = "fontpixel.ReadContext.{name}"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_read_context_accounting"
+js = "ReadContext.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::ReadContext accounting matches the core"
 
 [[rule]]
 pattern = "fontpixel::resources::ReadContext::new"
 status = "adapted"
 python = "fontpixel.ReadContext(input, limits)"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_read_context_accounting"
-reason = "Python constructor; the borrowed context lives on a private worker thread that owns the input"
+js = "new ReadContext(input, limits?)"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::ReadContext accounting matches the core"
+reason = "Python constructor; the borrowed context lives on a private worker thread that owns the input; JS (no threads): the handle owns its input and replays recorded resolver results on each call, so accounting is the core's and the resolver runs once per operation"
 
 [[rule]]
 pattern = "fontpixel::resources::ResourceLimits"
@@ -354,6 +448,8 @@ pattern = "fontpixel::resources::ResourcePath"
 status = "adapted"
 python = "str validated by fontpixel.resource_path"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_resource_paths_and_limits"
+js = "string validated by resourcePath()"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::resource paths and default limits"
 reason = "plain validated string (serde form)"
 
 [[rule]]
@@ -361,12 +457,16 @@ pattern = "fontpixel::resources::ResourcePath::new"
 status = "bound"
 python = "fontpixel.resource_path"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_resource_paths_and_limits"
+js = "resourcePath(path)"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::resource paths and default limits"
 
 [[rule]]
 pattern = "fontpixel::resources::ResourcePath::as_str"
 status = "adapted"
 python = "str"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_resource_paths_and_limits"
+js = "string"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::resource paths and default limits"
 reason = "the path is already a str"
 
 [[rule]]
@@ -383,6 +483,8 @@ pattern = "fontpixel::resources::ResourceResolver::*"
 status = "adapted"
 python = "resolver.{name}(...)"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_python_resolvers"
+js = "resolver.resolve(path, maxBytes) / resolver.list(directory, maxEntries, maxBytes); ResourceSet.resolve/list"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::JS resolvers behind a ReadContext"
 reason = "trait method called on Python resolver objects; ResourceSet.resolve/list expose the in-memory implementation"
 
 [[rule]]
@@ -390,6 +492,8 @@ pattern = "fontpixel::resources::TransportLimits"
 status = "adapted"
 python = "dict; fontpixel.default_transport_limits"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_resource_paths_and_limits"
+js = "defaultTransportLimits() plain data"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::resource paths and default limits"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -397,3 +501,5 @@ pattern = "fontpixel::resources::Written"
 status = "bound"
 python = "fontpixel.Written"
 python_test = "crates/fontpixel-py/tests/test_resources.py::test_output_bundles_and_written"
+js = "Written"
+js_test = "crates/fontpixel-wasm/tests/resources.test.mjs::output bundles, assets and Written"
