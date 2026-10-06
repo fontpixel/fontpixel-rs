@@ -56,7 +56,7 @@ class Glyph:
     @classmethod
     def _wrap(cls, raw: Any, font: Font | None, extra: Mapping[str, Any] | None = None) -> Glyph:
         g = cls.__new__(cls)
-        g.font = font
+        g.font = font  # type: ignore[assignment]  # a detached glyph has no font
         g._g = raw
         g._epoch = getattr(font, '_epoch', 0)
         g.meta = dict(extra) if extra else {}
@@ -210,7 +210,7 @@ class Glyph:
         if not isinstance(bitmap, Bitmap):
             bitmap = Bitmap(list(bitmap))
         box = None if bb is None else tuple(bb)
-        return self._edit(lambda: self._g.setbitmap(bitmap, mode, box, trim))
+        return self._edit(lambda: self._g.setbitmap(bitmap, mode, box, trim))  # type: ignore[arg-type]  # 4-tuple checked natively
 
     def setmeta(self, obj: Mapping[str, Any] | None = None, /, **kwargs: Any) -> Glyph:
         """
