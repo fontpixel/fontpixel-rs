@@ -14,7 +14,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["all-formats", "serde", "compat-bdfparser", "cjk-charsets"] }
-fontpixel-ops = { path = "../fontpixel-ops", features = ["serde", "toml"] }
+fontpixel-ops = { path = "../fontpixel-ops", version = "0.1.0", features = ["serde", "toml"] }
 # multiple-pymethods lets each area module add methods to the shared handle
 # classes in its own file.
 pyo3 = { version = "0.29", features = ["abi3-py310", "multiple-pymethods"] }
