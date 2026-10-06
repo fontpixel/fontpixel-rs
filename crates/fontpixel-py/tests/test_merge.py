@@ -24,6 +24,7 @@ def test_merge_matches_rust_and_cli():
     assert isinstance(r["font"], fontpixel.Font)
     # the merged model equals Rust's (serde dict through the Variants handle)
     assert norm(variants.Variants(r["font"]).to_dict()["base"]) == E["merge.font"]
+    assert norm(r["font"].to_dict()) == E["merge.font"]
     assert variants.encode_single(r["font"])["bytes"] == h("merge.single")
     text = merge.report_to_json(r["report"])
     assert text == E["merge.report_json"]

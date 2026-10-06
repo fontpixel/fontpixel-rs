@@ -17,7 +17,7 @@ use pyo3::prelude::*;
 #[pyo3(signature = (bitmap, options = None, limits = None))]
 fn contours<'py>(
     py: Python<'py>,
-    bitmap: &PyBitmap,
+    bitmap: &Bound<'py, PyAny>,
     options: Option<&Bound<'py, PyAny>>,
     limits: Option<&Bound<'py, PyAny>>,
 ) -> PyResult<Bound<'py, PyAny>> {
@@ -43,7 +43,7 @@ fn pixel_contour<'py>(
 #[pyo3(signature = (bitmap, options = None, limits = None))]
 fn pixel_origins<'py>(
     py: Python<'py>,
-    bitmap: &PyBitmap,
+    bitmap: &Bound<'py, PyAny>,
     options: Option<&Bound<'py, PyAny>>,
     limits: Option<&Bound<'py, PyAny>>,
 ) -> PyResult<Bound<'py, PyAny>> {

@@ -17,6 +17,10 @@ def glyph_a():
 def test_outline_contours():
     bm = glyph_a()
     assert isinstance(bm, fontpixel.Bitmap)
+    assert str(bm) == E["outline.rasterize"]
+    assert str(path.rasterize(E["path.edges"], 0.01, (0.0, 0.0), 4, 4)) == E["path.rasterize"]
+    # bitmap dicts are accepted wherever Bitmap handles are
+    assert norm(outline.contours(bm.to_dict())) == E["outline.contours"]
     assert norm(outline.contours(bm)) == E["outline.contours"]
     assert norm(outline.contours(bm, outline.defaults()["Options"], outline.defaults()["Limits"])) == E[
         "outline.contours"
@@ -44,6 +48,10 @@ def test_outline_path():
 
 def test_outline_errors_and_limits():
     bm = glyph_a()
+    with pytest.raises(fontpixel.InvalidInputError):
+        outline.contours(fontpixel.Bitmap(2, 2, "gray8"))
+    with pytest.raises(fontpixel.InvalidInputError):
+        fontpixel.sfnt.glyf.glyph_pixels(fontpixel.Bitmap(2, 2, "gray8"))
     with pytest.raises(fontpixel.InvalidInputError):
         outline.contours(bm, {"dot_size": 0.5})
     with pytest.raises(fontpixel.InvalidInputError):

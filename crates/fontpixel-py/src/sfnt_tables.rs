@@ -9,7 +9,7 @@
 //! are module functions that take the dict and return a new value; the input
 //! dict is never mutated.
 use crate::errors::IntoPy;
-use crate::handles::PyBitmap;
+
 use crate::sfnt_support::{
     bytes_arg, mono, opt, out, pybytes, req, submodule, tag_str, with_bytes,
 };
@@ -490,7 +490,7 @@ fn glyph_simple<'py>(py: Python<'py>, contours: &Any<'py>) -> PyResult<Any<'py>>
 #[pyo3(signature = (bitmap, options = None, shared_glyph = 0, limits = None))]
 fn glyph_pixels<'py>(
     py: Python<'py>,
-    bitmap: &PyBitmap,
+    bitmap: &Any<'py>,
     options: Opt<'_, 'py>,
     shared_glyph: u16,
     limits: Opt<'_, 'py>,

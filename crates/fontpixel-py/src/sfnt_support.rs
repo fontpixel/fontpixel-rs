@@ -19,17 +19,15 @@ use pyo3::types::{PyBytes, PyDict};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 
-/// Read a byte buffer argument without copying `bytes` objects.
+/// Read a byte buffer argument. A `bytes` object is shared without copying
+/// (handles keep it alive); anything else `crate::bitmap::bytes_arg` accepts
+/// (`bytearray`, `memoryview`, int sequences) is copied once.
 pub fn bytes_arg(obj: &Bound<'_, PyAny>) -> PyResult<PyBackedBytes> {
-    if let Ok(b) = obj.extract::<PyBackedBytes>() {
-        return Ok(b);
+    if let Ok(b) = obj.cast::<PyBytes>() {
+        return Ok(b.clone().into());
     }
-    let converted = obj
-        .py()
-        .import("builtins")?
-        .getattr("bytes")?
-        .call1((obj,))?;
-    Ok(converted.extract::<PyBackedBytes>()?)
+    let copied = crate::bitmap::bytes_arg(obj)?;
+    Ok(PyBytes::new(obj.py(), &copied).into())
 }
 
 /// Parse a four-byte tag from `str` (Latin-1 characters) or `bytes`.
@@ -112,14 +110,15 @@ pub fn with_bytes<'py, T: Serialize>(
     Ok(d)
 }
 
-/// A copy of a Mono bitmap handle's raster; Gray8 needs explicit thresholding.
-pub fn mono(bitmap: &PyBitmap) -> PyResult<fontpixel::Bitmap> {
-    bitmap.read(|b| match b {
-        GlyphBitmap::Mono(m) => Ok(m.clone()),
+/// The Mono raster of a `Bitmap` handle or bitmap dict (copied); Gray8 needs
+/// explicit thresholding first.
+pub fn mono(bitmap: &Bound<'_, PyAny>) -> PyResult<fontpixel::Bitmap> {
+    match crate::bitmap::bitmap_arg(bitmap)? {
+        GlyphBitmap::Mono(m) => Ok(m),
         GlyphBitmap::Gray8(_) => Err(InvalidInputError::new_err(
             "this operation needs a Mono bitmap; threshold Gray8 explicitly first",
         )),
-    })
+    }
 }
 
 /// A new Mono bitmap handle.

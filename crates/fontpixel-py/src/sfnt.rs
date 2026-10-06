@@ -474,7 +474,7 @@ fn glyph_from_bitmap<'py>(
     py: Python<'py>,
     name: String,
     advance: f64,
-    bitmap: &crate::handles::PyBitmap,
+    bitmap: &Bound<'py, PyAny>,
     options: Option<&Bound<'_, PyAny>>,
     limits: Option<&Bound<'_, PyAny>>,
 ) -> PyResult<Bound<'py, PyAny>> {

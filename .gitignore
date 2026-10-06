@@ -7,3 +7,7 @@
 .venv/
 
 /tests/parity/out*/
+
+# maturin develop places the built extension next to the Python sources
+crates/fontpixel-py/python/fontpixel/*.so
+crates/fontpixel-py/python/fontpixel/*.pyd
