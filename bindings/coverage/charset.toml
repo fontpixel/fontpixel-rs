@@ -1,0 +1,166 @@
+# Charsets and Unicode merge categories (fontpixel::charset) — unit p1
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::charset"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec"
+status = "bound"
+python = "fontpixel.CharsetCodec"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::*"
+status = "bound"
+python = "fontpixel.CharsetCodec.{name}"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_single_byte_strictness_and_exact_variants"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::new"
+status = "adapted"
+python = "fontpixel.CharsetCodec(name, gl)"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_single_byte_strictness_and_exact_variants"
+reason = "Python constructor"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::from_key"
+status = "bound"
+python = "fontpixel.CharsetCodec.from_key"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::known"
+status = "bound"
+python = "fontpixel.CharsetCodec.known"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::kind"
+status = "bound"
+python = "fontpixel.CharsetCodec.kind"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetCodec::name"
+status = "bound"
+python = "fontpixel.CharsetCodec.name"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetError"
+status = "adapted"
+python = "fontpixel.FeatureDisabledError (kind='CharsetFeatureDisabled', charset)"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+reason = "raised as an exception; this build enables cjk-charsets, so every table is available and the error cannot occur (the test asserts availability)"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetInfo"
+status = "adapted"
+python = "dicts from fontpixel.charset_table"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+reason = "read-only dict records built by Serialize (the type holds &'static registry data, so there is no input form)"
+
+[[rule]]
+pattern = "fontpixel::charset::CharsetInfo::available"
+status = "adapted"
+python = "charset_table()[i]['available']"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+reason = "computed into each record dict"
+
+[[rule]]
+pattern = "fontpixel::charset::Kind"
+status = "adapted"
+python = "str ('unicode', 'single_byte', 'double_byte', 'gb18030')"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::charset::WindowsCharset"
+status = "adapted"
+python = "fontpixel.windows_charset result"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+reason = "returned as its Serialize form (input is the byte)"
+
+[[rule]]
+pattern = "fontpixel::charset::canonical_charset"
+status = "bound"
+python = "fontpixel.canonical_charset"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_canonicalization_matches_reference_fixture"
+
+[[rule]]
+pattern = "fontpixel::charset::sanitize_charset"
+status = "bound"
+python = "fontpixel.sanitize_charset"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_canonicalization_matches_reference_fixture"
+
+[[rule]]
+pattern = "fontpixel::charset::charset_props"
+status = "bound"
+python = "fontpixel.charset_props"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_canonicalization_matches_reference_fixture"
+
+[[rule]]
+pattern = "fontpixel::charset::charset_table"
+status = "bound"
+python = "fontpixel.charset_table"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
+
+[[rule]]
+pattern = "fontpixel::charset::detect_gl"
+status = "bound"
+python = "fontpixel.detect_gl"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+
+[[rule]]
+pattern = "fontpixel::charset::is_unicode_charset"
+status = "bound"
+python = "fontpixel.is_unicode_charset"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+
+[[rule]]
+pattern = "fontpixel::charset::windows_charset"
+status = "bound"
+python = "fontpixel.windows_charset"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+
+[[rule]]
+pattern = "fontpixel::charset::kuten_to_euc"
+status = "bound"
+python = "fontpixel.kuten_to_euc"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+
+[[rule]]
+pattern = "fontpixel::charset::euc_to_kuten"
+status = "bound"
+python = "fontpixel.euc_to_kuten"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_gl_windows_charsets_and_kuten"
+
+[[rule]]
+pattern = "fontpixel::charset::merge_categories"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_merge_categories"
+
+[[rule]]
+pattern = "fontpixel::charset::merge_categories::*"
+status = "bound"
+python = "fontpixel.{name}"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_merge_categories"
+
+[[rule]]
+pattern = "fontpixel::charset::merge_categories::EastAsianWidth"
+status = "adapted"
+python = "str from fontpixel.east_asian_width"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_merge_categories"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::charset::merge_categories::UnicodeRange"
+status = "adapted"
+python = "dict {start, end, name}"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_merge_categories"
+reason = "read-only dict records built by Serialize (&'static names, so there is no input form)"
