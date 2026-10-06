@@ -146,13 +146,14 @@ pub fn encode(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<Enc
 /// mapping: no scalar is ever dropped.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
+#[cfg_attr(feature = "serde", serde(rename_all = "kebab-case"))]
 pub enum FullRecords {
     /// List format 12 under both (0, 4) and (3, 10) (native default).
     #[default]
     Always,
     /// Omit the redundant (0, 4) record for a BMP-only map; maps with a
     /// supplementary-plane scalar keep both records.
+    #[cfg_attr(feature = "serde", serde(rename = "non-bmp"))]
     NonBmpOnly,
     /// Write format 12 only when format 4 cannot hold the whole map (a
     /// supplementary scalar, U+FFFF, or no representable format 4), and list

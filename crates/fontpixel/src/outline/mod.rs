@@ -17,7 +17,7 @@ pub type Contour = Vec<Point>;
 /// Pixel outline shape.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
+#[cfg_attr(feature = "serde", serde(rename_all = "kebab-case"))]
 pub enum Shape {
     /// Merge edge-connected full squares, preserving holes and separate corners.
     Square,

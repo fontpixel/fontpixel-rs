@@ -99,7 +99,7 @@ mod bitmap {
         rejects_unknown_field(&layout);
         assert_eq!(
             serde_json::to_value(layout).unwrap()["bit_order"],
-            json!("lsb_first")
+            json!("lsb")
         );
         for mode in [CompositeMode::Over, CompositeMode::AlphaOver] {
             round_trip_eq(&mode);
@@ -860,4 +860,43 @@ fn compat_options() {
     });
     rejects_unknown_field(&CreateOptions::default());
     rejects_unknown_field(&TtfOptions::default());
+}
+
+/// Serialized enum values match the CLI's value names.
+#[test]
+fn enum_names_match_the_cli() {
+    use fontpixel::bitmap::{BitOrder, RowOrder};
+    use fontpixel::outline::Shape;
+    use fontpixel::sfnt::cmap::FullRecords;
+    let names = |v: serde_json::Value| v.as_str().unwrap().to_owned();
+    assert_eq!(
+        names(serde_json::to_value(BitOrder::MsbFirst).unwrap()),
+        "msb"
+    );
+    assert_eq!(
+        names(serde_json::to_value(BitOrder::LsbFirst).unwrap()),
+        "lsb"
+    );
+    assert_eq!(
+        names(serde_json::to_value(RowOrder::TopDown).unwrap()),
+        "top-down"
+    );
+    assert_eq!(
+        names(serde_json::to_value(RowOrder::BottomUp).unwrap()),
+        "bottom-up"
+    );
+    assert_eq!(
+        names(serde_json::to_value(Shape::SquareSeparate).unwrap()),
+        "square-separate"
+    );
+    assert_eq!(
+        names(serde_json::to_value(FullRecords::NonBmpOnly).unwrap()),
+        "non-bmp"
+    );
+    assert_eq!(
+        names(serde_json::to_value(FullRecords::WhenNeeded).unwrap()),
+        "when-needed"
+    );
+    let msb: BitOrder = serde_json::from_str("\"msb_first\"").unwrap();
+    assert_eq!(msb, BitOrder::MsbFirst);
 }

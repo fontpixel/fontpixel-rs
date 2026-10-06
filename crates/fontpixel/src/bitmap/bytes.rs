@@ -6,8 +6,10 @@ use super::*;
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum BitOrder {
     /// High bit is leftmost.
+    #[cfg_attr(feature = "serde", serde(rename = "msb", alias = "msb_first"))]
     MsbFirst,
     /// Low bit is leftmost.
+    #[cfg_attr(feature = "serde", serde(rename = "lsb", alias = "lsb_first"))]
     LsbFirst,
 }
 /// Significance order of bytes in a multi-byte scan unit (X11/PCF convention).
@@ -23,7 +25,7 @@ pub enum ByteOrder {
 /// Order of rows in a serialized bitmap.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
+#[cfg_attr(feature = "serde", serde(rename_all = "kebab-case"))]
 pub enum RowOrder {
     /// First row is the top.
     TopDown,

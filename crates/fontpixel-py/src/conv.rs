@@ -9,7 +9,10 @@ use serde::Serialize;
 use serde::de::DeserializeOwned;
 
 /// Serialize a Rust value to a Python object (dicts, lists, ints, strings, …).
-pub fn to_py<'py, T: Serialize + ?Sized>(py: Python<'py>, value: &T) -> PyResult<Bound<'py, PyAny>> {
+pub fn to_py<'py, T: Serialize + ?Sized>(
+    py: Python<'py>,
+    value: &T,
+) -> PyResult<Bound<'py, PyAny>> {
     pythonize::pythonize(py, value).map_err(|e| PyValueError::new_err(e.to_string()))
 }
 

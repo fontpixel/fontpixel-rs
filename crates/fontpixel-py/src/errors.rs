@@ -9,21 +9,96 @@ use pyo3::exceptions::PyException;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
-create_exception!(fontpixel, FontpixelError, PyException, "Base class of all fontpixel errors.");
-create_exception!(fontpixel, UnknownFormatError, FontpixelError, "Unknown format identifier.");
-create_exception!(fontpixel, FeatureDisabledError, FontpixelError, "Format compiled out of this build.");
-create_exception!(fontpixel, NotImplementedFormatError, FontpixelError, "Capability not implemented for this format.");
-create_exception!(fontpixel, AmbiguousFormatError, FontpixelError, "Several formats match; pass an explicit format.");
-create_exception!(fontpixel, UnrecognizedFormatError, FontpixelError, "No detector recognized the input.");
-create_exception!(fontpixel, InvalidInputError, FontpixelError, "Invalid options, registration, paths or data.");
-create_exception!(fontpixel, BdfParseError, FontpixelError, "Fatal BDF syntax error.");
-create_exception!(fontpixel, ResourceLimitError, FontpixelError, "A configured resource limit was exceeded.");
-create_exception!(fontpixel, MissingResourceError, FontpixelError, "A referenced sidecar was not supplied.");
-create_exception!(fontpixel, MultipleAssetsError, FontpixelError, "Several output assets where one was expected.");
-create_exception!(fontpixel, StrictLossError, FontpixelError, "Strict mode rejected an information loss.");
-create_exception!(fontpixel, ReportedErrorsError, FontpixelError, "A codec reported error diagnostics.");
-create_exception!(fontpixel, FontpixelIoError, FontpixelError, "Operating-system or caller resource I/O error.");
-create_exception!(fontpixel, UnsupportedError, FontpixelError, "Capability unavailable on this platform or build; see `reason`.");
+create_exception!(
+    fontpixel,
+    FontpixelError,
+    PyException,
+    "Base class of all fontpixel errors."
+);
+create_exception!(
+    fontpixel,
+    UnknownFormatError,
+    FontpixelError,
+    "Unknown format identifier."
+);
+create_exception!(
+    fontpixel,
+    FeatureDisabledError,
+    FontpixelError,
+    "Format compiled out of this build."
+);
+create_exception!(
+    fontpixel,
+    NotImplementedFormatError,
+    FontpixelError,
+    "Capability not implemented for this format."
+);
+create_exception!(
+    fontpixel,
+    AmbiguousFormatError,
+    FontpixelError,
+    "Several formats match; pass an explicit format."
+);
+create_exception!(
+    fontpixel,
+    UnrecognizedFormatError,
+    FontpixelError,
+    "No detector recognized the input."
+);
+create_exception!(
+    fontpixel,
+    InvalidInputError,
+    FontpixelError,
+    "Invalid options, registration, paths or data."
+);
+create_exception!(
+    fontpixel,
+    BdfParseError,
+    FontpixelError,
+    "Fatal BDF syntax error."
+);
+create_exception!(
+    fontpixel,
+    ResourceLimitError,
+    FontpixelError,
+    "A configured resource limit was exceeded."
+);
+create_exception!(
+    fontpixel,
+    MissingResourceError,
+    FontpixelError,
+    "A referenced sidecar was not supplied."
+);
+create_exception!(
+    fontpixel,
+    MultipleAssetsError,
+    FontpixelError,
+    "Several output assets where one was expected."
+);
+create_exception!(
+    fontpixel,
+    StrictLossError,
+    FontpixelError,
+    "Strict mode rejected an information loss."
+);
+create_exception!(
+    fontpixel,
+    ReportedErrorsError,
+    FontpixelError,
+    "A codec reported error diagnostics."
+);
+create_exception!(
+    fontpixel,
+    FontpixelIoError,
+    FontpixelError,
+    "Operating-system or caller resource I/O error."
+);
+create_exception!(
+    fontpixel,
+    UnsupportedError,
+    FontpixelError,
+    "Capability unavailable on this platform or build; see `reason`."
+);
 
 /// Register the exception classes on the native module.
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -31,14 +106,29 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     for (name, ty) in [
         ("FontpixelError", py.get_type::<FontpixelError>()),
         ("UnknownFormatError", py.get_type::<UnknownFormatError>()),
-        ("FeatureDisabledError", py.get_type::<FeatureDisabledError>()),
-        ("NotImplementedFormatError", py.get_type::<NotImplementedFormatError>()),
-        ("AmbiguousFormatError", py.get_type::<AmbiguousFormatError>()),
-        ("UnrecognizedFormatError", py.get_type::<UnrecognizedFormatError>()),
+        (
+            "FeatureDisabledError",
+            py.get_type::<FeatureDisabledError>(),
+        ),
+        (
+            "NotImplementedFormatError",
+            py.get_type::<NotImplementedFormatError>(),
+        ),
+        (
+            "AmbiguousFormatError",
+            py.get_type::<AmbiguousFormatError>(),
+        ),
+        (
+            "UnrecognizedFormatError",
+            py.get_type::<UnrecognizedFormatError>(),
+        ),
         ("InvalidInputError", py.get_type::<InvalidInputError>()),
         ("BdfParseError", py.get_type::<BdfParseError>()),
         ("ResourceLimitError", py.get_type::<ResourceLimitError>()),
-        ("MissingResourceError", py.get_type::<MissingResourceError>()),
+        (
+            "MissingResourceError",
+            py.get_type::<MissingResourceError>(),
+        ),
         ("MultipleAssetsError", py.get_type::<MultipleAssetsError>()),
         ("StrictLossError", py.get_type::<StrictLossError>()),
         ("ReportedErrorsError", py.get_type::<ReportedErrorsError>()),
