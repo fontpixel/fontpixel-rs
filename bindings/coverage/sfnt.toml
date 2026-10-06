@@ -6,12 +6,16 @@ pattern = "fontpixel::sfnt"
 status = "bound"
 python = "fontpixel.sfnt"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "sfnt"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 
 [[rule]]
 pattern = "fontpixel::sfnt::Limits"
 status = "adapted"
 python = "dict; default fontpixel.sfnt.defaults()['Limits']"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_defaults"
+js = "plain data (SfntLimits); default sfnt.defaults()['Limits']"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt defaults"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -19,12 +23,16 @@ pattern = "fontpixel::sfnt::bitmap"
 status = "bound"
 python = "fontpixel.sfnt.bitmap"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::Bearing"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (Bearing)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -32,6 +40,8 @@ pattern = "fontpixel::sfnt::bitmap::BitmapGlyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (BitmapGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -39,6 +49,8 @@ pattern = "fontpixel::sfnt::bitmap::Kind"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (BitmapKind)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -46,6 +58,8 @@ pattern = "fontpixel::sfnt::bitmap::Kind::tags"
 status = "adapted"
 python = "fontpixel.sfnt.bitmap.kind_tags"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.kindTags -> [dataTag, locationTag]"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "method on a plain-data enum value; module function returning (data_tag, location_tag)"
 
 [[rule]]
@@ -53,6 +67,8 @@ pattern = "fontpixel::sfnt::bitmap::Limits"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (SfntBitmapLimits)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -60,6 +76,8 @@ pattern = "fontpixel::sfnt::bitmap::LineMetrics"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (LineMetrics)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -67,6 +85,8 @@ pattern = "fontpixel::sfnt::bitmap::LineMetrics::ascender"
 status = "adapted"
 python = "fontpixel.sfnt.bitmap.line_ascender"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.lineAscender"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "method on a plain-data value; module function"
 
 [[rule]]
@@ -74,6 +94,8 @@ pattern = "fontpixel::sfnt::bitmap::LineMetrics::descender"
 status = "adapted"
 python = "fontpixel.sfnt.bitmap.line_descender"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.lineDescender"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "method on a plain-data value; module function"
 
 [[rule]]
@@ -81,6 +103,8 @@ pattern = "fontpixel::sfnt::bitmap::Metrics"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (Metrics)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -88,6 +112,8 @@ pattern = "fontpixel::sfnt::bitmap::Scale"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (Scale)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -95,6 +121,8 @@ pattern = "fontpixel::sfnt::bitmap::Strike"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (Strike)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -102,6 +130,8 @@ pattern = "fontpixel::sfnt::bitmap::Tables"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "object {data: Uint8Array, location: Uint8Array}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); data/location returned as bytes"
 
 [[rule]]
@@ -109,12 +139,16 @@ pattern = "fontpixel::sfnt::bitmap::color"
 status = "bound"
 python = "fontpixel.sfnt.bitmap"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::color::Sbix"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (Sbix)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -122,6 +156,8 @@ pattern = "fontpixel::sfnt::bitmap::color::SbixGlyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (SbixGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -129,6 +165,8 @@ pattern = "fontpixel::sfnt::bitmap::color::SbixStrike"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "plain data (SbixStrike)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -136,54 +174,72 @@ pattern = "fontpixel::sfnt::bitmap::color::decode_sbix"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.decode_sbix"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.decodeSbix"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::color::encode_sbix"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.encode_sbix"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.encodeSbix"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::decode"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::decode_scaling"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.decode_scaling"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.decodeScaling"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::decode_with_color"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.decode_with_color"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.decodeWithColor"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap color"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::encode"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::encode_scaling"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.encode_scaling"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.encodeScaling"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::encode_spanning"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.encode_spanning"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.encodeSpanning"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::bitmap::runs::RunTables"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "object {tables: {data, location}, shared_runs} (Uint8Array tables)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); data/location returned as bytes"
 
 [[rule]]
@@ -191,18 +247,24 @@ pattern = "fontpixel::sfnt::bitmap::runs::encode_shared_metric_runs"
 status = "bound"
 python = "fontpixel.sfnt.bitmap.encode_shared_metric_runs"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_bitmap"
+js = "sfnt.bitmap.encodeSharedMetricRuns"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::bitmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff"
 status = "bound"
 python = "fontpixel.sfnt.cff"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "sfnt.cff"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::Command"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "plain data (Command)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -210,6 +272,8 @@ pattern = "fontpixel::sfnt::cff::DecodedGlyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "plain data (DecodedGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -217,6 +281,8 @@ pattern = "fontpixel::sfnt::cff::DotOptions"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "plain data (DotOptions)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -224,6 +290,8 @@ pattern = "fontpixel::sfnt::cff::Encoded"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "object {data: Uint8Array, bounds, maxp: Uint8Array}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); data/maxp returned as bytes"
 
 [[rule]]
@@ -231,6 +299,8 @@ pattern = "fontpixel::sfnt::cff::Font"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "plain data (CffFont)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -238,6 +308,8 @@ pattern = "fontpixel::sfnt::cff::Font::encode"
 status = "adapted"
 python = "fontpixel.sfnt.cff.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "sfnt.cff.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "method on a plain-data font; module function returning {data, bounds, maxp}"
 
 [[rule]]
@@ -245,6 +317,8 @@ pattern = "fontpixel::sfnt::cff::Glyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "plain data (SfntCffGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -252,6 +326,8 @@ pattern = "fontpixel::sfnt::cff::Glyph::from_bitmap"
 status = "adapted"
 python = "fontpixel.sfnt.cff.glyph_from_bitmap"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "sfnt.cff.glyphFromBitmap"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "constructor taking a Bitmap handle or dict (Mono); module function returning the dict"
 
 [[rule]]
@@ -259,6 +335,8 @@ pattern = "fontpixel::sfnt::cff::Limits"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "plain data (CffLimits)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -266,6 +344,8 @@ pattern = "fontpixel::sfnt::cff::Outline"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_writer"
+js = "plain data (Outline)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff writer"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -273,6 +353,8 @@ pattern = "fontpixel::sfnt::cff::Point"
 status = "adapted"
 python = "tuple (x, y)"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "array [x, y] (inside DecodedGlyph commands)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "(f64, f64) alias"
 
 [[rule]]
@@ -280,6 +362,8 @@ pattern = "fontpixel::sfnt::cff::read::Cff"
 status = "adapted"
 python = "fontpixel.sfnt.cff.Cff"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "borrows the CFF bytes; the handle owns the table or sfnt bytes and re-parses per call"
 
 [[rule]]
@@ -287,18 +371,22 @@ pattern = "fontpixel::sfnt::cff::read::Cff::data"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.data"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.data (getter)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::fontations"
 status = "unavailable"
-reason = "returns &read_fonts::ps::cff::CffFontRef<'a>, a borrowed fontations reader with no Python binding"
-evidence = "crates/fontpixel/src/sfnt/cff/read.rs: `pub fn fontations(&self) -> &CffFontRef<'a>`; the alternative is fontpixel.sfnt.cff.Cff.glyph/read_all/data"
+reason = "returns &read_fonts::ps::cff::CffFontRef<'a>, a borrowed fontations reader with no Python binding; the JS binding has no fontations reader types either"
+evidence = "crates/fontpixel/src/sfnt/cff/read.rs: `pub fn fontations(&self) -> &CffFontRef<'a>`; the alternative is fontpixel.sfnt.cff.Cff.glyph/read_all/data (JS: Cff.glyph/readAll/data)"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::from_sfnt"
 status = "adapted"
 python = "fontpixel.sfnt.cff.Cff.from_sfnt"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.fromSfnt"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "static constructor taking the Sfnt handle"
 
 [[rule]]
@@ -306,48 +394,64 @@ pattern = "fontpixel::sfnt::cff::read::Cff::global_subr_count"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.global_subr_count"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.globalSubrCount"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::glyph"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.glyph"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.glyph"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::glyph_name"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.glyph_name"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.glyphName"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::identifier"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.identifier"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.identifier"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::is_cid"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.is_cid"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.isCid"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::is_empty"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.is_empty"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.isEmpty"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::len"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.len"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.len() / Cff.length"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::parse"
 status = "adapted"
 python = "fontpixel.sfnt.cff.Cff.parse"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.parse"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 reason = "static constructor of the owning handle"
 
 [[rule]]
@@ -355,24 +459,32 @@ pattern = "fontpixel::sfnt::cff::read::Cff::read_all"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.read_all"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.readAll"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cff::read::Cff::subset"
 status = "bound"
 python = "fontpixel.sfnt.cff.Cff.subset"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_cff_reader"
+js = "Cff.subset"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cff reader"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cmap"
 status = "bound"
 python = "fontpixel.sfnt.cmap"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "sfnt.cmap"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cmap::EncodedCmap"
 status = "adapted"
 python = "dict {data: bytes, has_bmp_subtable}"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "object {data: Uint8Array, has_bmp_subtable} (BytesFields<EncodedCmap, \"data\">)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); data returned as bytes"
 
 [[rule]]
@@ -380,6 +492,8 @@ pattern = "fontpixel::sfnt::cmap::FullRecords"
 status = "adapted"
 python = "str 'always' | 'non-bmp' | 'when-needed'"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "string 'always' | 'non-bmp' | 'when-needed' (FullRecords)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -387,6 +501,8 @@ pattern = "fontpixel::sfnt::cmap::Mapping"
 status = "adapted"
 python = "dict[int, int]"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "object {codepoint: glyphId} (decimal-string keys; Map with number keys accepted)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 reason = "BTreeMap<u32, u16> alias; a Python dict codepoint -> glyph id"
 
 [[rule]]
@@ -394,36 +510,48 @@ pattern = "fontpixel::sfnt::cmap::decode"
 status = "bound"
 python = "fontpixel.sfnt.cmap.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "sfnt.cmap.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cmap::encode"
 status = "bound"
 python = "fontpixel.sfnt.cmap.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "sfnt.cmap.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cmap::encode_records"
 status = "bound"
 python = "fontpixel.sfnt.cmap.encode_records"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "sfnt.cmap.encodeRecords"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::cmap::encode_with_records"
 status = "bound"
 python = "fontpixel.sfnt.cmap.encode_with_records"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_cmap"
+js = "sfnt.cmap.encodeWithRecords"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::cmap"
 
 [[rule]]
 pattern = "fontpixel::sfnt::collection"
 status = "bound"
 python = "fontpixel.sfnt.collection"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "sfnt.collection"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 
 [[rule]]
 pattern = "fontpixel::sfnt::collection::Collection"
 status = "adapted"
 python = "fontpixel.sfnt.collection.Collection"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "Collection"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 reason = "borrows the collection bytes; the handle owns them and re-parses per call; faces/signature are properties"
 
 [[rule]]
@@ -431,6 +559,8 @@ pattern = "fontpixel::sfnt::collection::Collection::extract"
 status = "adapted"
 python = "fontpixel.sfnt.collection.Collection.extract"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "Collection.extract(index, limits) -> {bytes, report}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 reason = "returns (bytes, report dict); limits default to the handle's"
 
 [[rule]]
@@ -438,6 +568,8 @@ pattern = "fontpixel::sfnt::collection::Collection::parse"
 status = "adapted"
 python = "fontpixel.sfnt.collection.Collection.parse / Collection(data, limits)"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "Collection.parse(data, limits) / new Collection(data, limits)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 reason = "static constructor of the owning handle"
 
 [[rule]]
@@ -445,12 +577,16 @@ pattern = "fontpixel::sfnt::collection::Collection::validate_checksums"
 status = "bound"
 python = "fontpixel.sfnt.collection.Collection.validate_checksums"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "Collection.validateChecksums"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 
 [[rule]]
 pattern = "fontpixel::sfnt::collection::Face"
 status = "adapted"
 python = "dict {flavor, offset, tables} from Collection.faces"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "plain object {flavor, offset, tables} (CollectionFace) from Collection.faces"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 reason = "borrows table bytes; returned as owned dicts"
 
 [[rule]]
@@ -458,6 +594,8 @@ pattern = "fontpixel::sfnt::collection::Limits"
 status = "adapted"
 python = "dict; fontpixel.sfnt.defaults()['collection.Limits']"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_defaults"
+js = "plain data (CollectionLimits); sfnt.defaults()['collection.Limits']"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt defaults"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -465,6 +603,8 @@ pattern = "fontpixel::sfnt::collection::encode"
 status = "adapted"
 python = "fontpixel.sfnt.collection.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_collection"
+js = "sfnt.collection.encode(fonts, version, limits) -> {bytes, report}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::collection"
 reason = "returns (bytes, report dict)"
 
 [[rule]]
@@ -472,6 +612,8 @@ pattern = "fontpixel::sfnt::container::Flavor"
 status = "adapted"
 python = "str 'true_type' | 'cff' | 'apple_true_type'"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "string 'true_type' | 'cff' | 'apple_true_type' (Flavor)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -479,6 +621,8 @@ pattern = "fontpixel::sfnt::container::Flavor::version"
 status = "adapted"
 python = "fontpixel.sfnt.flavor_version"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "sfnt.flavorVersion"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 reason = "method on a plain-data enum value; a module function taking the flavor string"
 
 [[rule]]
@@ -486,6 +630,8 @@ pattern = "fontpixel::sfnt::container::Sfnt"
 status = "adapted"
 python = "fontpixel.sfnt.Sfnt"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "Sfnt"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 reason = "borrows the font bytes in Rust; the handle owns the Python bytes (no copy) and its Limits and re-parses per call"
 
 [[rule]]
@@ -493,18 +639,22 @@ pattern = "fontpixel::sfnt::container::Sfnt::flavor"
 status = "bound"
 python = "fontpixel.sfnt.Sfnt.flavor"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "Sfnt.flavor (getter)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::Sfnt::font_ref"
 status = "unavailable"
-reason = "returns &read_fonts::FontRef<'a>, a borrowed typed reader of the third-party fontations crate; there is no Python binding of read-fonts types"
-evidence = "crates/fontpixel/src/sfnt/container.rs: `pub fn font_ref(&self) -> &FontRef<'a>`; the alternative is fontpixel.sfnt.Sfnt.table(tag) plus the fontpixel.sfnt.* table decoders"
+reason = "returns &read_fonts::FontRef<'a>, a borrowed typed reader of the third-party fontations crate; there is no Python binding of read-fonts types; the JS binding has no fontations reader types either"
+evidence = "crates/fontpixel/src/sfnt/container.rs: `pub fn font_ref(&self) -> &FontRef<'a>`; the alternative is fontpixel.sfnt.Sfnt.table(tag) plus the fontpixel.sfnt.* table decoders (JS: Sfnt.table(tag) and the sfnt.* namespaces)"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::Sfnt::parse"
 status = "adapted"
 python = "fontpixel.sfnt.Sfnt.parse / fontpixel.sfnt.Sfnt(data, limits)"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "Sfnt.parse(data, limits) / new Sfnt(data, limits)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 reason = "static constructor of the owning handle"
 
 [[rule]]
@@ -512,12 +662,16 @@ pattern = "fontpixel::sfnt::container::Sfnt::table"
 status = "bound"
 python = "fontpixel.sfnt.Sfnt.table"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "Sfnt.table"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::Sfnt::tables"
 status = "adapted"
 python = "fontpixel.sfnt.Sfnt.tables"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "Sfnt.tables"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 reason = "TableRecord borrows; returned as owned dicts {tag, checksum, offset, data: bytes}"
 
 [[rule]]
@@ -525,12 +679,16 @@ pattern = "fontpixel::sfnt::container::Sfnt::validate_checksums"
 status = "bound"
 python = "fontpixel.sfnt.Sfnt.validate_checksums"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_errors"
+js = "Sfnt.validateChecksums"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt errors"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::SfntBuilder"
 status = "adapted"
 python = "fontpixel.sfnt.SfntBuilder"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "SfntBuilder"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 reason = "mutable handle class"
 
 [[rule]]
@@ -538,18 +696,24 @@ pattern = "fontpixel::sfnt::container::SfntBuilder::build"
 status = "bound"
 python = "fontpixel.sfnt.SfntBuilder.build"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "SfntBuilder.build"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::SfntBuilder::insert"
 status = "bound"
 python = "fontpixel.sfnt.SfntBuilder.insert"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "SfntBuilder.insert"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 
 [[rule]]
 pattern = "fontpixel::sfnt::container::SfntBuilder::new"
 status = "adapted"
 python = "fontpixel.sfnt.SfntBuilder(flavor)"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "new SfntBuilder(flavor)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 reason = "Python constructor"
 
 [[rule]]
@@ -557,6 +721,8 @@ pattern = "fontpixel::sfnt::container::TableRecord"
 status = "adapted"
 python = "dict {tag, checksum, offset, data}"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_container"
+js = "plain object {tag, checksum, offset, data: Uint8Array} (SfntTableRecord)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt container"
 reason = "borrows table bytes; returned as an owned dict with data as bytes"
 
 [[rule]]
@@ -564,18 +730,24 @@ pattern = "fontpixel::sfnt::container::checksum"
 status = "bound"
 python = "fontpixel.sfnt.checksum"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_sfnt_builder_and_checksum"
+js = "sfnt.checksum"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::sfnt builder and checksum"
 
 [[rule]]
 pattern = "fontpixel::sfnt::gasp"
 status = "bound"
 python = "fontpixel.sfnt.gasp"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.gasp"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 
 [[rule]]
 pattern = "fontpixel::sfnt::gasp::GaspTable"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (GaspTable)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -583,6 +755,8 @@ pattern = "fontpixel::sfnt::gasp::GaspTable::decode"
 status = "adapted"
 python = "fontpixel.sfnt.gasp.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.gasp.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -590,6 +764,8 @@ pattern = "fontpixel::sfnt::gasp::GaspTable::encode"
 status = "adapted"
 python = "fontpixel.sfnt.gasp.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.gasp.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -597,6 +773,8 @@ pattern = "fontpixel::sfnt::gasp::Range"
 status = "adapted"
 python = "dict (GaspTable.ranges)"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (Range)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -604,12 +782,16 @@ pattern = "fontpixel::sfnt::glyf"
 status = "bound"
 python = "fontpixel.sfnt.glyf"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 
 [[rule]]
 pattern = "fontpixel::sfnt::glyf::Anchor"
 status = "adapted"
 python = "str/dict enum value"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (Anchor)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -617,6 +799,8 @@ pattern = "fontpixel::sfnt::glyf::Component"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (Component)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -624,6 +808,8 @@ pattern = "fontpixel::sfnt::glyf::Component::translated"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.component_translated"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.componentTranslated"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "constructor of a plain-data value; module function"
 
 [[rule]]
@@ -631,6 +817,8 @@ pattern = "fontpixel::sfnt::glyf::CompositeGlyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (CompositeGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -638,6 +826,8 @@ pattern = "fontpixel::sfnt::glyf::Encoded"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "object {glyf: Uint8Array, loca: Uint8Array, index_to_loc_format, bounds, statistics}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); Encoded glyf/loca returned as bytes"
 
 [[rule]]
@@ -645,6 +835,8 @@ pattern = "fontpixel::sfnt::glyf::GlyfTable"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (GlyfTable)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -652,6 +844,8 @@ pattern = "fontpixel::sfnt::glyf::GlyfTable::contours"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.contours"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.contours"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "method on a plain-data table; module function"
 
 [[rule]]
@@ -659,6 +853,8 @@ pattern = "fontpixel::sfnt::glyf::GlyfTable::decode"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "method on a plain-data table; module function"
 
 [[rule]]
@@ -666,6 +862,8 @@ pattern = "fontpixel::sfnt::glyf::GlyfTable::encode"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "method on a plain-data table; glyf/loca as bytes; module function"
 
 [[rule]]
@@ -673,6 +871,8 @@ pattern = "fontpixel::sfnt::glyf::GlyfTable::from_sfnt"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.from_sfnt"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.fromSfnt"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "takes the Sfnt handle; module function"
 
 [[rule]]
@@ -680,6 +880,8 @@ pattern = "fontpixel::sfnt::glyf::Glyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (SfntGlyfGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -687,6 +889,8 @@ pattern = "fontpixel::sfnt::glyf::Glyph::pixels"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.glyph_pixels"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.glyphPixels"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "constructor taking a Bitmap handle or dict (Mono); module function"
 
 [[rule]]
@@ -694,6 +898,8 @@ pattern = "fontpixel::sfnt::glyf::Glyph::simple"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.glyph_simple"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.glyphSimple"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "constructor of a plain-data value; module function"
 
 [[rule]]
@@ -701,6 +907,8 @@ pattern = "fontpixel::sfnt::glyf::Limits"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (GlyfLimits)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -708,6 +916,8 @@ pattern = "fontpixel::sfnt::glyf::LocaFormat"
 status = "adapted"
 python = "str/dict enum value"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (LocaFormat)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -715,6 +925,8 @@ pattern = "fontpixel::sfnt::glyf::OffsetMode"
 status = "adapted"
 python = "str/dict enum value"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (OffsetMode)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -722,6 +934,8 @@ pattern = "fontpixel::sfnt::glyf::SimpleGlyph"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (SimpleGlyph)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -729,6 +943,8 @@ pattern = "fontpixel::sfnt::glyf::Statistics"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "plain data (Statistics)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -736,6 +952,8 @@ pattern = "fontpixel::sfnt::glyf::Statistics::unhinted_maxp"
 status = "adapted"
 python = "fontpixel.sfnt.glyf.unhinted_maxp"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_glyf"
+js = "sfnt.glyf.unhintedMaxp"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::glyf"
 reason = "method on a plain-data value; module function"
 
 [[rule]]
@@ -743,12 +961,16 @@ pattern = "fontpixel::sfnt::gsub"
 status = "bound"
 python = "fontpixel.sfnt.gsub"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "sfnt.gsub"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 
 [[rule]]
 pattern = "fontpixel::sfnt::gsub::Feature"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "plain data (Feature)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -756,6 +978,8 @@ pattern = "fontpixel::sfnt::gsub::Gsub"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "plain data (Gsub)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -763,6 +987,8 @@ pattern = "fontpixel::sfnt::gsub::Gsub::closure"
 status = "adapted"
 python = "fontpixel.sfnt.gsub.closure"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "sfnt.gsub.closure"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "method on a plain-data table; module function taking the dict; returns the closed set as a sorted list"
 
 [[rule]]
@@ -770,6 +996,8 @@ pattern = "fontpixel::sfnt::gsub::Gsub::decode"
 status = "adapted"
 python = "fontpixel.sfnt.gsub.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "sfnt.gsub.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "method on a plain-data table; module function taking the dict"
 
 [[rule]]
@@ -777,6 +1005,8 @@ pattern = "fontpixel::sfnt::gsub::Gsub::encode"
 status = "adapted"
 python = "fontpixel.sfnt.gsub.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "sfnt.gsub.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "method on a plain-data table; module function taking the dict"
 
 [[rule]]
@@ -784,6 +1014,8 @@ pattern = "fontpixel::sfnt::gsub::Gsub::subset"
 status = "adapted"
 python = "fontpixel.sfnt.gsub.subset"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "sfnt.gsub.subset"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "method on a plain-data table; module function taking the dict"
 
 [[rule]]
@@ -791,6 +1023,8 @@ pattern = "fontpixel::sfnt::gsub::LanguageSystem"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "plain data (LanguageSystem)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -798,6 +1032,8 @@ pattern = "fontpixel::sfnt::gsub::LayoutLimits"
 status = "adapted"
 python = "dict; fontpixel.sfnt.defaults()['gsub.LayoutLimits']"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "plain data (LayoutLimits); sfnt.defaults()['gsub.LayoutLimits']"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -805,6 +1041,8 @@ pattern = "fontpixel::sfnt::gsub::Script"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "plain data (Script)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -812,6 +1050,8 @@ pattern = "fontpixel::sfnt::gsub::Tag"
 status = "adapted"
 python = "str of four Latin-1 characters (or 4 bytes in)"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_gsub"
+js = "string of four Latin-1 characters (TagLike: also four bytes on input)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::gsub"
 reason = "[u8; 4] alias; tags cross as strings"
 
 [[rule]]
@@ -819,12 +1059,16 @@ pattern = "fontpixel::sfnt::metrics"
 status = "bound"
 python = "fontpixel.sfnt.metrics"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.metrics"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 
 [[rule]]
 pattern = "fontpixel::sfnt::metrics::Axis"
 status = "adapted"
 python = "str 'horizontal' | 'vertical'"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "string 'horizontal' | 'vertical' (Axis)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -832,6 +1076,8 @@ pattern = "fontpixel::sfnt::metrics::EncodedMetrics"
 status = "adapted"
 python = "dict {header: bytes, metrics: bytes, num_long_metrics}"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "object {header: Uint8Array, metrics: Uint8Array, num_long_metrics}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -839,6 +1085,8 @@ pattern = "fontpixel::sfnt::metrics::Header"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (MetricsHeader)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -846,6 +1094,8 @@ pattern = "fontpixel::sfnt::metrics::Header::new"
 status = "adapted"
 python = "fontpixel.sfnt.metrics.header_new"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.metrics.headerNew"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "constructor of a plain-data value; module function returning the dict"
 
 [[rule]]
@@ -853,6 +1103,8 @@ pattern = "fontpixel::sfnt::metrics::Header::recompute"
 status = "adapted"
 python = "fontpixel.sfnt.metrics.header_recompute"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.metrics.headerRecompute"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "&mut method on a plain-data value; returns the recomputed copy"
 
 [[rule]]
@@ -860,6 +1112,8 @@ pattern = "fontpixel::sfnt::metrics::LongMetric"
 status = "adapted"
 python = "dict {advance, bearing}"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (LongMetric)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -867,6 +1121,8 @@ pattern = "fontpixel::sfnt::metrics::decode"
 status = "adapted"
 python = "fontpixel.sfnt.metrics.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.metrics.decode -> {header, metrics}"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "header/metrics tables as bytes; decode returns (header dict, metrics list)"
 
 [[rule]]
@@ -874,6 +1130,8 @@ pattern = "fontpixel::sfnt::metrics::encode"
 status = "adapted"
 python = "fontpixel.sfnt.metrics.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.metrics.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "header/metrics tables as bytes; decode returns (header dict, metrics list)"
 
 [[rule]]
@@ -881,12 +1139,16 @@ pattern = "fontpixel::sfnt::name"
 status = "bound"
 python = "fontpixel.sfnt.name"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 
 [[rule]]
 pattern = "fontpixel::sfnt::name::NameRecord"
 status = "adapted"
 python = "dict {platform_id, encoding_id, language_id, name_id, value}"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "plain data (NameRecord)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); value is a list of ints out, bytes or list in"
 
 [[rule]]
@@ -894,6 +1156,8 @@ pattern = "fontpixel::sfnt::name::NameRecord::text"
 status = "adapted"
 python = "fontpixel.sfnt.name.record_text"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.recordText"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data value; module function taking the record dict"
 
 [[rule]]
@@ -901,6 +1165,8 @@ pattern = "fontpixel::sfnt::name::NameRecord::unicode"
 status = "adapted"
 python = "fontpixel.sfnt.name.record_unicode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.recordUnicode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "constructor of a plain-data value; module function returning the dict"
 
 [[rule]]
@@ -908,6 +1174,8 @@ pattern = "fontpixel::sfnt::name::NameTable"
 status = "adapted"
 python = "dict {records, language_tags}"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "plain data (NameTable)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -915,6 +1183,8 @@ pattern = "fontpixel::sfnt::name::NameTable::decode"
 status = "adapted"
 python = "fontpixel.sfnt.name.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -922,6 +1192,8 @@ pattern = "fontpixel::sfnt::name::NameTable::encode"
 status = "adapted"
 python = "fontpixel.sfnt.name.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -929,6 +1201,8 @@ pattern = "fontpixel::sfnt::name::NameTable::encode_configured"
 status = "adapted"
 python = "fontpixel.sfnt.name.encode_configured"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.encodeConfigured"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -936,6 +1210,8 @@ pattern = "fontpixel::sfnt::name::NameTable::retained_bytes"
 status = "adapted"
 python = "fontpixel.sfnt.name.retained_bytes"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.retainedBytes"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data table; module function taking/returning the dict; counts the deserialized copy's capacity"
 
 [[rule]]
@@ -943,6 +1219,8 @@ pattern = "fontpixel::sfnt::name::NameTable::validate_configured"
 status = "adapted"
 python = "fontpixel.sfnt.name.validate_configured"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.validateConfigured"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -950,18 +1228,24 @@ pattern = "fontpixel::sfnt::name::language_tag_well_formed"
 status = "bound"
 python = "fontpixel.sfnt.name.language_tag_well_formed"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_name"
+js = "sfnt.name.languageTagWellFormed"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::name"
 
 [[rule]]
 pattern = "fontpixel::sfnt::os2"
 status = "bound"
 python = "fontpixel.sfnt.os2"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 
 [[rule]]
 pattern = "fontpixel::sfnt::os2::Base"
 status = "adapted"
 python = "dict (part of the Os2Table dict)"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "plain data (Base)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -969,6 +1253,8 @@ pattern = "fontpixel::sfnt::os2::Extension"
 status = "adapted"
 python = "dict (part of the Os2Table dict)"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "plain data (Extension)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -976,6 +1262,8 @@ pattern = "fontpixel::sfnt::os2::Os2Table"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "plain data (Os2Table)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -983,6 +1271,8 @@ pattern = "fontpixel::sfnt::os2::Os2Table::decode"
 status = "adapted"
 python = "fontpixel.sfnt.os2.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "method on a plain-data table; module function taking/returning the dict (input not mutated)"
 
 [[rule]]
@@ -990,6 +1280,8 @@ pattern = "fontpixel::sfnt::os2::Os2Table::encode"
 status = "adapted"
 python = "fontpixel.sfnt.os2.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "method on a plain-data table; module function taking/returning the dict (input not mutated)"
 
 [[rule]]
@@ -997,6 +1289,8 @@ pattern = "fontpixel::sfnt::os2::Os2Table::set_unicode_coverage"
 status = "adapted"
 python = "fontpixel.sfnt.os2.set_unicode_coverage"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.setUnicodeCoverage"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "method on a plain-data table; module function taking/returning the dict (input not mutated)"
 
 [[rule]]
@@ -1004,12 +1298,16 @@ pattern = "fontpixel::sfnt::os2::average_width"
 status = "bound"
 python = "fontpixel.sfnt.os2.average_width"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.averageWidth"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 
 [[rule]]
 pattern = "fontpixel::sfnt::os2::check_code_page_ranges"
 status = "adapted"
 python = "fontpixel.sfnt.os2.check_code_page_ranges"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.checkCodePageRanges"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "Result<(), &str> maps to None or the reason string"
 
 [[rule]]
@@ -1017,6 +1315,8 @@ pattern = "fontpixel::sfnt::os2::check_embedding_flags"
 status = "adapted"
 python = "fontpixel.sfnt.os2.check_embedding_flags"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.checkEmbeddingFlags"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "Result<(), &str> maps to None or the reason string"
 
 [[rule]]
@@ -1024,6 +1324,8 @@ pattern = "fontpixel::sfnt::os2::check_selection_flags"
 status = "adapted"
 python = "fontpixel.sfnt.os2.check_selection_flags"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.checkSelectionFlags"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 reason = "Result<(), &str> maps to None or the reason string"
 
 [[rule]]
@@ -1031,24 +1333,32 @@ pattern = "fontpixel::sfnt::os2::code_page_ranges"
 status = "bound"
 python = "fontpixel.sfnt.os2.code_page_ranges"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.codePageRanges"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 
 [[rule]]
 pattern = "fontpixel::sfnt::os2::unicode_ranges"
 status = "bound"
 python = "fontpixel.sfnt.os2.unicode_ranges"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_os2"
+js = "sfnt.os2.unicodeRanges"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::os2"
 
 [[rule]]
 pattern = "fontpixel::sfnt::post"
 status = "bound"
 python = "fontpixel.sfnt.post"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.post"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 
 [[rule]]
 pattern = "fontpixel::sfnt::post::Header"
 status = "adapted"
 python = "dict (PostTable.header)"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (PostHeader)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -1056,6 +1366,8 @@ pattern = "fontpixel::sfnt::post::PostTable"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "plain data (PostTable)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -1063,6 +1375,8 @@ pattern = "fontpixel::sfnt::post::PostTable::decode"
 status = "adapted"
 python = "fontpixel.sfnt.post.decode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.post.decode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -1070,6 +1384,8 @@ pattern = "fontpixel::sfnt::post::PostTable::encode"
 status = "adapted"
 python = "fontpixel.sfnt.post.encode"
 python_test = "crates/fontpixel-py/tests/test_sfnt_tables.py::test_post_metrics_gasp"
+js = "sfnt.post.encode"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::post metrics gasp"
 reason = "method on a plain-data table; module function taking/returning the dict"
 
 [[rule]]
@@ -1077,12 +1393,16 @@ pattern = "fontpixel::sfnt::subset"
 status = "bound"
 python = "fontpixel.sfnt.subset"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_subset"
+js = "sfnt.subset"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::subset"
 
 [[rule]]
 pattern = "fontpixel::sfnt::subset::Options"
 status = "adapted"
 python = "dict; fontpixel.sfnt.defaults()['subset.Options']"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_subset"
+js = "plain data (SubsetOptions); sfnt.defaults()['subset.Options']"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::subset"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -1090,6 +1410,8 @@ pattern = "fontpixel::sfnt::subset::Options::text"
 status = "adapted"
 python = "fontpixel.sfnt.subset.options_text"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_subset"
+js = "sfnt.subset.optionsText"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::subset"
 reason = "constructor of a plain-data value; module function returning the dict"
 
 [[rule]]
@@ -1097,6 +1419,8 @@ pattern = "fontpixel::sfnt::subset::Subset"
 status = "adapted"
 python = "dict {bytes, glyph_mapping, report}"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_subset"
+js = "object {bytes: Uint8Array, glyph_mapping, report} (SubsetResult)"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::subset"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected); bytes returned as bytes"
 
 [[rule]]
@@ -1104,3 +1428,5 @@ pattern = "fontpixel::sfnt::subset::subset"
 status = "bound"
 python = "fontpixel.sfnt.subset.subset"
 python_test = "crates/fontpixel-py/tests/test_sfnt.py::test_subset"
+js = "sfnt.subset.subset"
+js_test = "crates/fontpixel-wasm/tests/sfnt.test.mjs::subset"
