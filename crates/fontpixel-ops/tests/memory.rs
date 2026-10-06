@@ -146,6 +146,7 @@ fn convert_returns_outputs_and_summaries_without_touching_storage() {
     );
 }
 
+#[cfg(feature = "yaff")]
 #[test]
 fn convert_each_and_naming_overrides_apply_per_input() {
     let mut request = convert_request(&["fonts/spleen.bdf", "fonts/block.bdf"], "out");
@@ -183,6 +184,7 @@ fn request_resource_limits_apply_in_memory_mode() {
     );
 }
 
+#[cfg(feature = "psf")]
 #[test]
 fn strict_loss_is_an_error_with_its_report() {
     let mut request = convert_request(&["fonts/spleen.bdf"], "out/spleen.psf");

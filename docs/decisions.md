@@ -1608,3 +1608,44 @@ option-like types derives `Deserialize`; brotli 9.0.0 ships a single-threaded
 - Phase 9 uses no front-end framework: PLAN and the addendum require plain HTML and
   JS/TS modules plus wasm. This overrides the owner's general Svelte 5 default for
   new front ends, which is meant for projects without such a requirement.
+
+## 2026-10-06 — `fontpixel-ops`: one typed definition for the CLI and bindings
+
+**Context:** Phase 7 needs every CLI capability callable in-process with typed
+requests, in memory (wasm) and on the filesystem, while the CLI's text, JSON,
+exit codes, outputs and budget boundaries stay byte-identical.
+
+**Choices:**
+- The command modules moved into `crates/fontpixel-ops` (git renames, logic
+  unchanged). Each command is a request struct plus a function returning a typed
+  response (`convert`, `merge`, `variants`, `subset`, `charset`, `validate`,
+  `diff`, `info`, `preview`, `render`, `formats`, `batch::run`). Responses render
+  the CLI documents with `write_json`/`write_text`; the CLI only parses,
+  dispatches and writes to stdout/stderr.
+- Option groups mirror the clap groups field for field. With the `clap` feature
+  the same structs derive `clap::Args` (`cfg_attr`), and `fontpixel_ops::cli`
+  holds the complete `Cli`/`Command` definition. One definition keeps help text,
+  error text and the batch TOML option parsing (which parses each task through
+  the CLI definition) identical. Field docs added for the library are
+  neutralized for clap with `help = None`, so `--help` output is unchanged.
+- Choice lists are shared constants used by the clap attribute and by generated
+  `validate()` methods, which also re-check numeric ranges and custom value
+  parsers. Every entry point validates first; for parsed command lines this can
+  never fail. Relational clap rules (`requires`, `conflicts_with`) are not
+  re-checked; the operations' own checks still apply.
+- `Storage::Memory` reads named buffers through a `FileProvider` (default
+  `MemoryFiles`); sidecars resolve beside the primary key with the filesystem
+  reader's bounds and listing accounting; outputs are validated as one group and
+  returned. `Storage::Filesystem` (feature `fs`) is the moved `assets` code:
+  sidecar discovery, source-alias protection and the transaction. Memory scopes
+  apply the same standalone identity/working partition, so resource outcomes
+  match the CLI. Memory batches never spool reports; a memory `--each`
+  destination is a virtual directory unless the provider holds a file there.
+- The per-call scope stays thread-local (source scope, batch capture, storage),
+  installed by each public entry point; batch workers carry their own capture.
+- Without threads (`wasm32`), a batch whose admission computes one worker runs
+  inline; more than one worker fails with an `Unsupported` I/O error rather than
+  running serially, because the document's `workers` field would differ.
+  `capabilities()` reports `filesystem`, `threads` and `toml_batch`.
+- `crates/fontpixel-cli/src/input_budget.rs` is a one-line re-export kept only
+  because `tests/input_budget.rs` includes that path; the suite is unchanged.
