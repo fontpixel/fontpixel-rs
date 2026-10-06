@@ -186,6 +186,7 @@ Rust error variant) and `exit_code` (what the command line would exit with):
 | `ReportedErrorsError` | a codec reported errors (no output) | `report` |
 | `FontpixelIoError` | operating-system or resolver I/O | |
 | `UnsupportedError` | capability unavailable on this platform/build | |
+| `CancelledError` | an `ops` `progress=` callback returned `False` (nothing written) | |
 
 Python-level argument problems use the built-in classes: `TypeError` for wrong
 argument types, `ValueError` for dicts that do not deserialize, `KeyError`
