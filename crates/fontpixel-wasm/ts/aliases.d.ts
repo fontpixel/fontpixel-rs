@@ -16,8 +16,72 @@ export type WideInt = number | bigint;
 /** `"mono"` (1 bit per pixel) or `"gray8"` (one byte per pixel). */
 export type Depth = "mono" | "gray8";
 
-/** A codepoint argument: a number is Unicode; plain data names the domain. */
-export type CodepointLike = number | CodepointDict;
+/**
+ * A codepoint argument: a number or a one-character string is Unicode; a
+ * `Codepoint` or plain data names the domain.
+ */
+export type CodepointLike = number | string | Codepoint | CodepointDict;
+
+/** Options of the `FontSet` constructor. */
+export interface FontSetArgs {
+  /** Set-level properties (copied). */
+  properties?: Properties | PropertiesDict;
+  /** Format ID the set was read from. */
+  sourceFormat?: string | null;
+}
+
+/** Options of the `Glyph` constructor. */
+export interface GlyphArgs {
+  /** Mapped codepoints. */
+  codepoints?: CodepointLike[];
+  /** Glyph name. */
+  name?: string | null;
+}
+
+/**
+ * A property value argument: `null` is `Flag`; an integer (number or
+ * bigint) is `Integer` (`Unsigned` above the i64 range); a string `Text`;
+ * bytes `Bytes`; an array `List`; or the tagged plain data.
+ */
+export type PropertyValueLike =
+  | null
+  | number
+  | bigint
+  | string
+  | BytesLike
+  | PropertyValueLike[]
+  | PropertyValue;
+
+/** A bitmap-projection property edit (plain data). */
+export type PropertyEditLike =
+  | { set: { name: string; value: WideInt | string } }
+  | { remove: { name: string } };
+
+/** Options of `BitmapProjection` / `applyBitmapProjection` (the Rust field names). */
+export interface BitmapProjectionArgs {
+  /** `"preserve"` (default) or `{from_device: {units_per_em, reference_ppem}}`. */
+  scalable_advance?: ScalableAdvance;
+  /** Complete FONT/XLFD name. */
+  font_name?: string | null;
+  /** Point size and resolution. */
+  size?: SizeProjection | null;
+  /** Property edits, applied in order. */
+  properties?: PropertyEditLike[];
+}
+
+/** Result of `applyBitmapProjection`: the outcome plus its retained bytes. */
+export interface ProjectionResult extends ProjectionOutcome {
+  /** `ProjectionOutcome::retained_bytes`. */
+  retained_bytes: number;
+}
+
+/** Options of the `Input` constructor. */
+export interface InputArgs {
+  /** Filename hint (never content evidence). */
+  name?: string | null;
+  /** Sidecars. */
+  resources?: ResourcesLike;
+}
 
 /**
  * A progress observer: receives `Progress` plain data; returning exactly
@@ -37,8 +101,9 @@ export interface ResolverObject {
   list?(directory: string | null, maxEntries: number, maxBytes: number): string[];
 }
 
-/** Sidecar resources: named files, or a synchronous resolver. */
+/** Sidecar resources: a `ResourceSet`, named files, or a synchronous resolver. */
 export type ResourcesLike =
+  | ResourceSet
   | Record<string, BytesLike>
   | Map<string, BytesLike>
   | ResolveFunction

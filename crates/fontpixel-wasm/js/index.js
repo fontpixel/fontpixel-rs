@@ -6,6 +6,7 @@
 // classes and the asynchronous resource helper.
 import initGlue, { initSync as initSyncGlue } from './fontpixel_wasm.js';
 import { guardHandles } from './guard.js';
+import { installModelProtocols } from './model.js';
 import * as glue from './fontpixel_wasm.js';
 
 export * from './fontpixel_wasm.js';
@@ -33,6 +34,7 @@ export { withAsyncResources } from './resources.js';
 export const wasmUrl = new URL('./fontpixel_wasm_bg.wasm', import.meta.url);
 
 guardHandles(glue);
+installModelProtocols(glue);
 
 let pending = null;
 
