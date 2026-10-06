@@ -68,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     again = fp.read((out / "edited.bdf").read_bytes(), format="bdf").fonts
     assert isinstance(again, fp.FontSet)
     assert again[0].glyph_for_codepoint(0xE000) is not None
-    assert again[0].names["family"] == "Spleen Edited"
+    assert again[0].names.get("family") == "Spleen Edited"
     print("saved", out / "edited.bdf")
     return 0
 

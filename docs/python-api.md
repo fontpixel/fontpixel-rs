@@ -286,9 +286,19 @@ differences in its `KNOWN_DIFFERENCES.md`).
 
 The package ships `py.typed`, a `.pyi` stub for every native module
 (`fontpixel/_native/*.pyi`, `fontpixel/formats/*.pyi`, `fontpixel/sfnt/*.pyi`,
-...) and the runtime module `fontpixel.types`. mypy and pyright see every
+...) and the runtime module `fontpixel.types`. Type checkers see every
 class, method, property, function, constant and exception with real types:
 handles as classes, plain data as `TypedDict`s, enum strings as `Literal`s.
+The examples and `tests/typing_smoke.py` are checked with mypy 2.4
+(`--strict`) and pyright 1.1.414 (no errors). The stubs import `Self` and
+`disjoint_base` from `typing_extensions`, so the checker's bundled typeshed
+needs `typing_extensions` 4.15 or later (mypy 1.18+, current pyright). pyright
+warns `reportMissingModuleSource` for the native submodules
+(`fontpixel.formats.pcf`, `fontpixel.sfnt.cmap`, ...): they are stubs over an
+extension module and have no Python source. Keys that may be omitted on input
+are not required in the `TypedDict`s even though results contain them;
+pyright's `reportTypedDictNotRequiredAccess` therefore prefers
+`metrics.get("pixel_size")` over `metrics["pixel_size"]`.
 
 The stubs are generated, not written by hand:
 `tools/bindings/gen_pyi.py` introspects the built extension, reads the Rust
@@ -300,6 +310,23 @@ generated allowlist (`tools/bindings/stubtest-allowlist.txt`, every entry with
 its reason). The test suite runs both, plus `mypy --strict` over the examples
 and `tests/typing_smoke.py`.
 
+After a binding or a serde type changes, regenerate in this order (the test
+suite's `--check` tests fail until then):
+
+```sh
+T=target/rustdoc-json                               # or $FONTPIXEL_RUSTDOC_TARGET
+tools/bindings/gate.sh python || true               # builds $T/doc/*.json (the check itself may fail)
+(cd crates/fontpixel-py && maturin develop --release)
+python tools/bindings/gen_pyi.py --rustdoc $T/doc --strict   # stubs, types.py, allowlist
+python tools/bindings/gen_pyref.py                  # docs/python-api-reference.md + index below
+python tools/bindings/stubtest.py
+```
+
+`--strict` fails on any new parameter or result the generator cannot type
+(an unconverted `&Bound<PyAny>`); add its type to
+`tools/bindings/pyi_overrides.py`. The mypy-based tests skip when mypy is not
+installed, and the stub check skips when the rustdoc JSON is missing.
+
 Some results are unions that need narrowing: `fp.read(...).fonts` is
 `FontSet | Font` (a `FontSet` unless `into_single()` was called);
 `isinstance(fonts, fp.FontSet)` narrows it.
@@ -308,11 +335,15 @@ Some results are unions that need narrowing: `fp.read(...).fonts` is
 
 - **Python**: CPython 3.10+ through the stable ABI; one wheel per platform.
   PyPy and free-threaded builds are not targeted.
-- **Threads**: the model handles are thread-safe (each is a lock-protected
-  shared value) and long-running calls release the GIL (codec reads and
-  writes, operations, WOFF compression, variants planning), so independent
-  work proceeds in parallel threads. The bdfparser layer's handles are bound to
-  their creating thread.
+- **Threads**: the model and resource handles (`FontSet`, `Font`, `Glyph`,
+  `Bitmap`, `Properties`, `ResourceSet`, ...) are immutable Python objects over
+  lock-protected shared values, so they can be used from several threads, and
+  long-running calls release the GIL (codec reads and writes, operations, WOFF
+  compression, variants planning), so independent work proceeds in parallel.
+  `Registry` and `sfnt.SfntBuilder` are mutable objects: mutating one from two
+  threads at once fails pyo3's borrow check with `RuntimeError`; give each
+  thread its own. The bdfparser layer's handles are bound to their creating
+  thread.
 - **Integers** map to Rust's fixed widths (`u8`, `u16`, `u32`, `i64`,
   `usize`); values outside a parameter's range raise `OverflowError`.
 - **Strings** are UTF-8 Unicode; four-byte OpenType tags accept a four-character

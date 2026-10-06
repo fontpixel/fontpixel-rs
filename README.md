@@ -181,7 +181,6 @@ its `sfnt` dependency; `fea` remains a reserved feature with no implementation.
 `cjk-charsets` includes exact CJK tables and GB18030 ranges without a runtime
 dependency. BDF can preserve CJK source codes without those tables; actual CJK
 conversion returns an explicit feature error when the exact table is disabled.
-Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-bindgen dependencies until their phases.
 
 ## Python
 

@@ -149,13 +149,27 @@ and ``kind``) is required; the budgets default to the ``DEFAULT_MAX_*``
 constants."""
 BatchTaskOutcome = TypedDict("BatchTaskOutcome", {
     "index": int, "id": str, "kind": str, "success": bool, "exit_code": int, "committed": bool,
-    "diagnostics_truncated": bool, "error": Union[str, None]}, total=False)
-"""One task outcome of a ``BatchResult``."""
-InspectedRequest = TypedDict("InspectedRequest", {
-    "id": str, "kind": str, "command": str, "request": Mapping[str, Any], "report_style": str,
-    "source_identity_total_bytes": int, "declared_inputs": List[str], "weight": int,
-    "error": str}, total=False)
-"""A validated, normalized request (``inspect_request``, ``parse_batch_toml``)."""
+    "diagnostics_truncated": bool, "error": Union[str, None]})
+"""One task outcome of a ``BatchResult`` (``error`` is ``None`` on success)."""
+_InspectedRequired = TypedDict("_InspectedRequired", {
+    "command": str, "request": Mapping[str, Any], "report_style": str, "source_identity_total_bytes": int})
+_InspectedOptional = TypedDict("_InspectedOptional", {"declared_inputs": List[str], "weight": int}, total=False)
+
+
+class InspectedRequest(_InspectedRequired, _InspectedOptional):
+    """``fontpixel.ops.inspect_request``: the command, the normalized request (every
+    default filled in), the report style and budget; batch task kinds add
+    ``declared_inputs`` and ``weight``."""
+
+
+_BatchTaskPlanRequired = TypedDict("_BatchTaskPlanRequired", {"id": str, "kind": str, "declared_inputs": List[str]})
+_BatchTaskPlanOptional = TypedDict("_BatchTaskPlanOptional", {
+    "request": Mapping[str, Any], "weight": int, "error": str}, total=False)
+
+
+class BatchTaskPlan(_BatchTaskPlanRequired, _BatchTaskPlanOptional):
+    """One task of ``parse_batch_toml``: ``request`` and ``weight`` when it was
+    prepared, ``error`` when preparation failed."""
 CodepointKind = Literal["unicode", "legacy"]
 """The kind of a ``Codepoint``: a Unicode scalar or a legacy charset code."""
 TableRecord = TypedDict("TableRecord", {"tag": str, "checksum": int, "offset": int, "data": bytes})
@@ -181,7 +195,7 @@ WoffDecoded = TypedDict("WoffDecoded", {"sfnt": bytes, "auxiliary": WoffAuxiliar
 """A decoded WOFF/WOFF2: the standalone sfnt, the preserved envelope fields and the report."""
 ParsedBatch = TypedDict("ParsedBatch", {
     "jobs": Union[int, None], "max_working_bytes": int, "max_pending_bytes": int, "max_report_bytes": int,
-    "max_task_report_bytes": int, "tasks": List[InspectedRequest]})
+    "max_task_report_bytes": int, "tasks": List[BatchTaskPlan]})
 """``fontpixel.ops.parse_batch_toml``: the job's budgets and its prepared tasks."""
 Capabilities = TypedDict("Capabilities", {"filesystem": bool, "threads": bool, "toml_batch": bool})
 """``fontpixel.ops.capabilities()``: what this build and platform support."""
