@@ -1,6 +1,6 @@
 [workspace]
-members = ["crates/fontpixel", "crates/fontpixel-cli", "crates/fontpixel-heap-check", "crates/fontpixel-py", "crates/fontpixel-wasm"]
-default-members = ["crates/fontpixel", "crates/fontpixel-cli"]
+members = ["crates/fontpixel", "crates/fontpixel-ops", "crates/fontpixel-cli", "crates/fontpixel-heap-check", "crates/fontpixel-py", "crates/fontpixel-wasm"]
+default-members = ["crates/fontpixel", "crates/fontpixel-ops", "crates/fontpixel-cli"]
 resolver = "3"
 
 [workspace.package]
