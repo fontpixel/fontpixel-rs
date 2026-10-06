@@ -82,6 +82,7 @@ def write_pcf(
         byteorder=byteorder, bitorder=bitorder, glyphpad=glyphpad, scanunit=scanunit
     )
     font = Font._coerce(font)
+    font._check_slots()
     try:
         return font._raw.topcf(opts)
     finally:

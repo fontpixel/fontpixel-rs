@@ -3,27 +3,16 @@ use super::projection::{num, text};
 use super::{Bitmap, Font, bitmap::invalid, outline::bitmap_contours};
 use crate::Result;
 use serde_json::{Value as V, json};
-/// Python-compatible shortest number formatting (with Python exponent spelling).
+/// Python-compatible number text (bdfparser `fmtnum`): integral values without
+/// a fraction (`3.0` -> `3`, `-0.0` -> `0`), others as Python `repr`.
 pub fn fmtnum(n: f64) -> String {
+    if n == 0.0 {
+        return "0".into();
+    }
     if n.fract() == 0.0 {
         return format!("{n:.0}");
     }
-    let a = n.abs();
-    let s = if a != 0.0 && (!(1e-4..1e16).contains(&a)) {
-        format!("{n:e}")
-    } else {
-        n.to_string()
-    };
-    if let Some((b, e)) = s.split_once('e') {
-        let ex = e.parse::<i32>().unwrap_or(0);
-        format!(
-            "{b}e{}{n:02}",
-            if ex >= 0 { "+" } else { "-" },
-            n = ex.abs()
-        )
-    } else {
-        s
-    }
+    super::projection::py_float(n)
 }
 fn xml(s: &str) -> String {
     s.replace('&', "&amp;")

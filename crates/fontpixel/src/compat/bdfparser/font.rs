@@ -66,6 +66,9 @@ impl Converter {
 pub(super) struct State {
     pub core: CoreFont,
     pub generations: BTreeMap<GlyphId, u64>,
+    /// Slots moved by a codepoint change: `(old id, generation)` to `(new id,
+    /// generation)`, so other handles on the same glyph follow it.
+    pub moved: BTreeMap<(GlyphId, u64), (GlyphId, u64)>,
     pub serial: u64,
     pub report: Report,
     pub warned: BTreeSet<String>,
@@ -187,7 +190,16 @@ impl Font {
     ) -> Result<&mut Self> {
         let input = crate::Input::new(bytes);
         let limits = ResourceLimits::default();
-        let context = crate::resources::ReadContext::new(&input, &limits)?;
+        let context = crate::resources::ReadContext::new(&input, &limits).map_err(|e| match e {
+            // bdfparser's text for a corrupt or truncated gzip wrapper.
+            crate::Error::InvalidInput(m) if m.starts_with("invalid gzip input: ") => {
+                invalid(&format!(
+                    "Malformed gzip data: {}",
+                    &m["invalid gzip input: ".len()..]
+                ))
+            }
+            e => e,
+        })?;
         let bytes = context.bytes();
         if bytes.starts_with(b"OTTO")
             || bytes.starts_with(b"\0\x01\0\0")
@@ -385,27 +397,175 @@ impl Font {
             .glyph_id(crate::model::Codepoint::Unicode(cp))
             .or_else(|| s.core.glyph_id(crate::model::Codepoint::Legacy(cp)))
     }
-    /// Obtain an attached handle, or warn and return None for a missing code.
+    /// Obtain an attached handle, or warn (bdfparser's text) and return None for
+    /// a missing code.
     pub fn glyphbycp(&self, cp: i64) -> Option<Glyph> {
-        let id = self.id(cp);
-        if id.is_none() {
-            self.warn(format!("Glyph codepoint {cp} does not exist in the font"));
+        let g = self.lookup(cp);
+        if g.is_none() {
+            let who = match self.cp2char(cp) {
+                Ok(Some(c)) => format!("Glyph \"{c}\" (codepoint {cp})"),
+                _ => format!("Glyph (codepoint {cp})"),
+            };
+            self.warn(format!(
+                "{who} does not exist in the font. Will return `None`"
+            ));
         }
-        id.map(|id| Glyph::attached(self, id))
+        g
     }
-    /// Obtain an attached handle through the font's charset conversion.
+    /// Attached handle for an encoded code, or None; unlike
+    /// [`glyphbycp`](Self::glyphbycp) a miss records no warning.
+    pub fn lookup(&self, cp: i64) -> Option<Glyph> {
+        self.id(cp).map(|id| Glyph::attached(self, id))
+    }
+    /// Obtain an attached handle through the font's charset conversion; a
+    /// character the charset cannot encode warns and returns None.
     pub fn glyph(&self, ch: &str) -> Result<Option<Glyph>> {
-        Ok(self
-            .char2cp(ch)?
-            .and_then(|cp| self.glyphbycp(i64::from(cp))))
+        match self.char2cp(ch)? {
+            Some(cp) => Ok(self.glyphbycp(i64::from(cp))),
+            None => {
+                self.warn(format!(
+                    "Character \"{ch}\" cannot be encoded in the charset {}. Will return `None`",
+                    py_repr(&self.charset())
+                ));
+                Ok(None)
+            }
+        }
     }
     /// Attached handles in the requested order and range.
     pub fn iterglyphs(&self, order: i64, r: &V) -> Result<Vec<Glyph>> {
         Ok(self
             .itercps(order, r)?
             .into_iter()
-            .filter_map(|cp| self.glyphbycp(cp))
+            .filter_map(|cp| self.lookup(cp))
             .collect())
+    }
+    /// Replace every header with `headers` (SPEC keys in insertion order; the
+    /// components of a BDF keyword pair such as `dwx0`/`dwy0` form one entry at
+    /// the position of the first, a missing component is None). Unknown keys
+    /// are ignored. The model is edited in place: attached glyph handles stay
+    /// attached and the warning report is kept.
+    pub fn set_headers(&mut self, headers: &Map<String, V>) -> &mut Self {
+        let mut s = self.state.borrow_mut();
+        let core = &mut s.core;
+        core.headers = Default::default();
+        let mut emitted = BTreeSet::new();
+        for k in headers.keys() {
+            let Some((name, group)) = header_group(k) else {
+                continue;
+            };
+            if !emitted.insert(name) {
+                continue;
+            }
+            let value = if group.len() == 1 {
+                headers[k].clone()
+            } else {
+                V::Array(
+                    group
+                        .iter()
+                        .map(|g| headers.get(*g).cloned().unwrap_or(V::Null))
+                        .collect(),
+                )
+            };
+            core.headers.push(Property::new(name, property(&value)));
+        }
+        // Header-derived native metrics are recomputed from the new headers.
+        let m = &mut core.metrics;
+        m.point_size = None;
+        m.resolution = None;
+        m.bounds = None;
+        m.metrics_set = None;
+        m.glyph_defaults = Default::default();
+        x11::project(core);
+        drop(s);
+        self
+    }
+    /// Set one header key (appended when new); see [`set_headers`](Self::set_headers).
+    pub fn set_header(&mut self, key: &str, value: V) -> &mut Self {
+        let mut h = self.headers();
+        h.insert(key.into(), value);
+        self.set_headers(&h)
+    }
+    /// Remove one header key; false if it is absent. Removing one component of a
+    /// pair leaves the other (the removed one reads as None).
+    pub fn remove_header(&mut self, key: &str) -> bool {
+        let mut h = self.headers();
+        if h.shift_remove(key).is_none() {
+            return false;
+        }
+        self.set_headers(&h);
+        true
+    }
+    fn unencoded_ids(&self) -> Vec<GlyphId> {
+        self.state
+            .borrow()
+            .core
+            .glyphs()
+            .filter(|(_, g)| g.codepoints.is_empty())
+            .map(|(id, _)| id)
+            .collect()
+    }
+    /// Attached handles of the unencoded glyphs, in `unencoded` order. Editing a
+    /// handle (`setmeta`, …) writes into that slot, as for encoded glyphs.
+    pub fn unencoded_handles(&self) -> Vec<Glyph> {
+        self.unencoded_ids()
+            .into_iter()
+            .map(|id| Glyph::attached(self, id))
+            .collect()
+    }
+    /// Attached handle of the `index`-th unencoded glyph.
+    pub fn unencoded_handle(&self, index: usize) -> Option<Glyph> {
+        self.unencoded_ids()
+            .get(index)
+            .map(|id| Glyph::attached(self, *id))
+    }
+    /// The alternate code (`ENCODING -1 n`) of the `index`-th unencoded glyph.
+    pub fn unencoded_altcode(&self, index: usize) -> Option<V> {
+        let id = *self.unencoded_ids().get(index)?;
+        let s = self.state.borrow();
+        let g = s.core.glyph(id)?;
+        Some(g.properties.get(x11::ALT).map(value).unwrap_or(V::Null))
+    }
+    /// Set (or, with None, remove) the alternate code of the `index`-th
+    /// unencoded glyph; false if there is no such glyph. Handles stay attached.
+    pub fn set_unencoded_altcode(&mut self, index: usize, altcode: &V) -> Result<bool> {
+        let Some(id) = self.unencoded_ids().get(index).copied() else {
+            return Ok(false);
+        };
+        self.state.borrow_mut().core.edit_glyph(id, |g| {
+            if altcode.is_null() {
+                g.properties.remove(x11::ALT);
+            } else {
+                g.properties.set(x11::ALT, property(altcode));
+            }
+            Ok(())
+        })?;
+        Ok(true)
+    }
+    /// Set metadata keys of the `index`-th unencoded glyph (as `Glyph::setmeta`
+    /// on its attached handle); false if there is no such glyph.
+    pub fn set_unencoded_meta(&mut self, index: usize, fields: &Map<String, V>) -> Result<bool> {
+        let Some(mut g) = self.unencoded_handle(index) else {
+            return Ok(false);
+        };
+        g.setmeta(fields)?;
+        Ok(true)
+    }
+    /// Remove the `index`-th unencoded glyph, or all of them with None; false if
+    /// `index` is out of range. Handles on removed slots detach.
+    pub fn remove_unencoded(&mut self, index: Option<usize>) -> bool {
+        let ids = self.unencoded_ids();
+        let selected = match index {
+            None => ids,
+            Some(i) => match ids.get(i) {
+                Some(id) => vec![*id],
+                None => return false,
+            },
+        };
+        let mut s = self.state.borrow_mut();
+        for id in selected {
+            s.core.remove_glyph(id);
+        }
+        true
     }
     /// Missing characters, including repeats, or None if every character exists.
     pub fn lacksglyphs(&self, text: &str) -> Result<Option<Vec<String>>> {
@@ -468,7 +628,10 @@ impl Font {
         self.put(m, replace)?;
         Ok(self)
     }
-    pub(super) fn prepare_meta(&self, fields: &Map<String, V>) -> Result<Meta> {
+    /// Normalize metadata fields to 17 slots as `addglyph` does: unknown keys
+    /// fail, a missing name gets the default name, BBX fields default to 0 and
+    /// `hexdata` to an empty list.
+    pub fn prepare_meta(&self, fields: &Map<String, V>) -> Result<Meta> {
         for key in fields.keys() {
             if !super::META_TITLES.contains(&key.as_str()) {
                 return Err(invalid(&format!("Unknown glyph meta key {key:?}")));
@@ -515,9 +678,7 @@ impl Font {
     /// Remove precisely a handle's attached slot, never a subsequent replacement.
     pub fn remove_handle(&mut self, g: &mut Glyph) -> &mut Self {
         if Rc::ptr_eq(&self.state, &g.font.state) && g.ever_attached {
-            if g.is_attached()
-                && let Some(id) = g.id
-            {
+            if let Some(id) = g.slot() {
                 self.state.borrow_mut().core.remove_glyph(id);
             }
         } else if g.cp() >= 0 {
@@ -664,6 +825,11 @@ impl Font {
         let target =
             CharsetCodec::from_key(&key, Some(info.is_some_and(|e| e.gl_capable || e.force_gl)))
                 .map_err(|e| invalid(&e.to_string()))?;
+        if !target.known() {
+            self.warn(format!(
+                "Unknown charset '{key}', characters are mapped to codepoints as Unicode"
+            ));
+        }
         let items = self
             .state
             .borrow()
@@ -757,7 +923,7 @@ impl Font {
     /// Serialize deterministic SPEC BDF, retaining exact raw rows and dynamic metadata.
     pub fn tobdf(&self) -> Result<String> {
         let h = self.headers();
-        for key in [
+        let missing = [
             "pointsize",
             "xres",
             "yres",
@@ -765,17 +931,24 @@ impl Font {
             "fbby",
             "fbbxoff",
             "fbbyoff",
-        ] {
-            if h.get(key).is_none_or(V::is_null) {
-                return Err(invalid(
-                    "Cannot write BDF: missing headers (font not loaded?)",
-                ));
-            }
+        ]
+        .into_iter()
+        .filter(|key| h.get(*key).is_none_or(V::is_null))
+        .collect::<Vec<_>>();
+        if !missing.is_empty() {
+            return Err(invalid(&format!(
+                "Cannot write BDF: missing header(s) {} (font not loaded?)",
+                missing.join(", ")
+            )));
         }
+        let version = h.get("bdfversion").map_or(Some(2.1), |v| {
+            v.as_f64()
+                .or_else(|| v.as_str().and_then(|s| s.trim().parse().ok()))
+        });
         let mut lines = vec![
             format!(
                 "STARTFONT {}",
-                fmtver(h.get("bdfversion").unwrap_or(&json!(2.1)))
+                version.map_or_else(|| text(&V::Null), fmtver)
             ),
             format!("FONT {}", h.get("fontname").map(text).unwrap_or_default()),
             format!(
@@ -829,12 +1002,14 @@ impl Font {
                     continue;
                 }
                 let name = n.get(k).map(text).unwrap_or_else(|| k.to_uppercase());
-                lines.push(if v.is_null() {
-                    name
-                } else if v.is_number() {
-                    format!("{name} {v}")
-                } else {
-                    format!("{name} \"{}\"", text(v).replace('"', "\"\""))
+                // bdfparser writes `int` values bare and quotes everything else.
+                lines.push(match v {
+                    V::Null => name,
+                    V::Number(n) if is_int(n) => format!("{name} {n}"),
+                    V::Number(n) => {
+                        format!("{name} \"{}\"", py_float(n.as_f64().unwrap_or(f64::NAN)))
+                    }
+                    _ => format!("{name} \"{}\"", text(v).replace('"', "\"\"")),
                 });
             }
             lines.push("ENDPROPERTIES".into());
@@ -891,23 +1066,52 @@ impl Font {
         lines.push("ENDFONT".into());
         Ok(lines.join("\n") + "\n")
     }
-    /// Write PCF using the native, bounded deterministic codec.
+    /// Write PCF using the native, bounded deterministic codec. As bdfparser's
+    /// writer, a glyph without its own DWIDTH/SWIDTH x uses an integer global
+    /// `dwx0`/`swx0` header (even when its pair component is None), and a
+    /// negative BBX size is refused.
     pub fn topcf(&self, o: &pcf::PcfWriteOptions) -> Result<Vec<u8>> {
+        let h = self.headers();
+        let global = |k: &str| h.get(k).and_then(V::as_i64);
+        let (hdwx, hswx) = (global("dwx0"), global("swx0"));
         let mut core = self.core();
-        let ids = core.glyphs().map(|(id, _)| id).collect::<Vec<_>>();
+        let mut ids = core
+            .glyphs()
+            .filter(|(_, g)| !g.codepoints.is_empty())
+            .map(|(id, _)| id)
+            .collect::<Vec<_>>();
+        ids.extend(
+            core.glyphs()
+                .filter(|(_, g)| g.codepoints.is_empty())
+                .map(|(id, _)| id),
+        );
+        for &id in &ids {
+            let m = core.glyph(id).map_or_else(|| vec![V::Null; 17], meta);
+            let (bw, bh) = (num(&m[2]), num(&m[3]));
+            if bw < 0 || bh < 0 {
+                return Err(invalid(&format!(
+                    "Glyph \"{}\" has a negative sized bitmap, {bw}x{bh}",
+                    pcf_label(&m[0])
+                )));
+            }
+        }
         for id in ids {
             core.edit_glyph(id, |g| {
                 let m = meta(g);
                 for cp in &mut g.codepoints {
                     *cp = crate::model::Codepoint::Legacy(cp.value());
                 }
-                for (i, key) in [(6, "SWIDTH"), (8, "DWIDTH")] {
+                for (i, key, fallback) in [(6, "SWIDTH", hswx), (8, "DWIDTH", hdwx)] {
                     if let Some(x) = m[i].as_i64() {
                         x11::set_vector(
                             &mut g.metrics,
                             key,
                             crate::model::Vector::new(x, num(&m[i + 1])),
                         );
+                    } else if m[i].is_null()
+                        && let Some(x) = fallback
+                    {
+                        x11::set_vector(&mut g.metrics, key, crate::model::Vector::new(x, 0));
                     }
                 }
                 Ok(())
@@ -926,13 +1130,20 @@ impl Font {
     pub fn drawcps(&self, cps: &[i64], kw: &Map<String, V>) -> Result<Bitmap> {
         let mut core = self.core();
         x11::project(&mut core);
+        let h = self.headers();
+        let (gdw, gdw1) = (
+            global_interglyph(&h, "dwx0", "dwy0"),
+            global_interglyph(&h, "dwx1", "dwy1"),
+        );
+        core.metrics.glyph_defaults.advance = gdw.map(|n| crate::model::Vector::new(n, 0));
+        core.metrics.glyph_defaults.vertical_advance =
+            gdw1.map(|n| crate::model::Vector::new(n, 0));
         let ids = core.glyphs().map(|(id, _)| id).collect::<Vec<_>>();
         for id in ids {
             core.edit_glyph(id, |g| {
                 let m = meta(g);
                 for (i, key) in [(8, "DWIDTH"), (12, "DWIDTH1")] {
-                    let first = m[i].as_i64().filter(|x| *x != 0);
-                    if let Some(n) = first.or_else(|| m[i + 1].as_i64()) {
+                    if let Some(n) = interglyph(&m, i) {
                         x11::set_vector(&mut g.metrics, key, crate::model::Vector::new(n, 0));
                     }
                 }
@@ -942,17 +1153,18 @@ impl Font {
         let key = self.charset();
         core.charset.name = Some(key);
         core.charset.gl = Some(self.codec()?.gl());
-        let missing = kw
+        // bdfparser treats a falsy `missing` (None or an empty dict) as absent.
+        let missing_meta = kw
             .get("missing")
-            .filter(|v| !v.is_null())
+            .filter(|v| !v.is_null() && v.as_object().is_none_or(|o| !o.is_empty()))
             .map(|v| {
                 self.prepare_meta(
                     v.as_object()
                         .ok_or_else(|| invalid("missing glyph must be metadata"))?,
                 )
-                .and_then(|m| core_glyph(&m))
             })
             .transpose()?;
+        let missing = missing_meta.as_ref().map(core_glyph).transpose()?;
         let options = RenderOptions {
             line_limit: kw.get("linelimit").map(num).unwrap_or(512),
             mode: if kw.get("mode").map(num).unwrap_or(1) == 1 {
@@ -970,14 +1182,58 @@ impl Font {
                 .unwrap_or_default(),
             ..RenderOptions::default()
         };
-        let codes = cps.iter().map(|n| {
-            let n = u32::try_from(*n).ok()?;
-            // Match codepoints()' derived domain order, including raw Unicode
-            // numbers: Unicode precedes Legacy, regardless of insertion order.
-            [Codepoint::Unicode(n), Codepoint::Legacy(n)]
-                .into_iter()
-                .find(|cp| core.glyph_id(*cp).is_some())
-        });
+        let codes = cps
+            .iter()
+            .map(|n| {
+                let n = u32::try_from(*n).ok()?;
+                // Match codepoints()' derived domain order, including raw Unicode
+                // numbers: Unicode precedes Legacy, regardless of insertion order.
+                [Codepoint::Unicode(n), Codepoint::Legacy(n)]
+                    .into_iter()
+                    .find(|cp| core.glyph_id(*cp).is_some())
+            })
+            .collect::<Vec<_>>();
+        // bdfparser's line-limit check (and its message): a glyph whose cell
+        // width (FONTBOUNDINGBOX width) plus spacing offset exceeds the limit.
+        let horizontal = horizontal_glyphs(kw.get("direction").and_then(V::as_str).unwrap_or("lr"));
+        // The drawn cell is the font bounding box (FONTBOUNDINGBOX when present).
+        let (fbbx, fbby) = core
+            .metrics
+            .bounds
+            .map_or((0, 0), |b| (i64::from(b.width), i64::from(b.height)));
+        let (idx, fbbsize, gl) = if horizontal {
+            (8, fbbx, gdw)
+        } else {
+            (12, fbby, gdw1)
+        };
+        for (&cp, code) in cps.iter().zip(&codes) {
+            let m = match code.and_then(|c| core.glyph_id(c)) {
+                Some(id) => core.glyph(id).map_or_else(|| vec![V::Null; 17], meta),
+                None => missing_meta.clone().unwrap_or_else(empty_glyph),
+            };
+            let offset = if options.mode == RenderMode::Advance {
+                interglyph(&m, idx)
+                    .or(gl)
+                    .map_or(0, |v| v.saturating_sub(fbbsize))
+            } else {
+                0
+            };
+            if fbbx.saturating_add(offset) > options.line_limit {
+                let ch = m[1]
+                    .as_i64()
+                    .and_then(|c| self.cp2char(c).ok().flatten())
+                    .map_or("None".to_owned(), String::from);
+                let cp = if cp < 0 {
+                    "None".to_owned()
+                } else {
+                    cp.to_string()
+                };
+                return Err(invalid(&format!(
+                    "`linelimit` ({}) is too small the line can't even contain one glyph: \"{ch}\" (codepoint {cp}, width: {fbbx})",
+                    options.line_limit
+                )));
+            }
+        }
         let rendered = core.draw_codepoints(codes, &options)?;
         Ok(Bitmap::from_raster(rendered.bitmap.to_gray8_palette(0, 1)?))
     }
@@ -1005,6 +1261,62 @@ impl Font {
         )
     }
 }
+/// bdfparser's per-glyph spacing value `meta[i] or meta[i + 1]` (Python
+/// truthiness: 0 and None are false), None when that is None.
+fn interglyph(m: &Meta, i: usize) -> Option<i64> {
+    let truthy = match &m[i] {
+        V::Null => false,
+        V::Bool(b) => *b,
+        V::Number(n) => n.as_f64() != Some(0.0),
+        V::String(s) => !s.is_empty(),
+        V::Array(a) => !a.is_empty(),
+        V::Object(o) => !o.is_empty(),
+    };
+    if truthy { &m[i] } else { &m[i + 1] }.as_i64()
+}
+/// bdfparser's global spacing for drawing: the x component if set, else y.
+fn global_interglyph(h: &Map<String, V>, x: &str, y: &str) -> Option<i64> {
+    h.get(x)
+        .and_then(V::as_i64)
+        .or_else(|| h.get(y).and_then(V::as_i64))
+}
+/// Whether a SPEC direction string progresses glyphs horizontally
+/// (`lr`/`rl`); invalid strings fall back to `lrtb`, as bdfparser.
+fn horizontal_glyphs(direction: &str) -> bool {
+    let d = match direction {
+        "lr" => "lrtb",
+        "rl" => "rltb",
+        "tb" => "tbrl",
+        "bt" => "btrl",
+        d => d,
+    };
+    let valid = |s: Option<&str>| matches!(s, Some("lr" | "rl" | "tb" | "bt"));
+    let (a, b) = (d.get(0..2), d.get(2..4));
+    !(valid(a) && valid(b)) || matches!(a, Some("lr" | "rl"))
+}
+/// bdfparser's `_EMPTY_GLYPH`, drawn for a missing code without `missing`.
+fn empty_glyph() -> Meta {
+    let mut m = vec![json!(0); 17];
+    m[0] = json!("empty");
+    m[1] = json!(8203);
+    m[16] = json!([]);
+    m
+}
+/// bdfparser's PCF glyph label: the first whitespace-delimited token of the
+/// name, at most 99 bytes.
+fn pcf_label(name: &V) -> String {
+    let s = if name.is_null() {
+        String::new()
+    } else {
+        text(name)
+    };
+    let space = |c: &u8| b" \t\n\x0b\x0c\r".contains(c);
+    let raw = s.as_bytes();
+    let start = raw.iter().position(|c| !space(c)).unwrap_or(raw.len());
+    let rest = &raw[start..];
+    let end = rest.iter().position(space).unwrap_or(rest.len());
+    String::from_utf8_lossy(&rest[..end.min(99)]).into_owned()
+}
 pub(super) fn matches_range(cp: i64, r: &V) -> bool {
     match r {
         V::Null => true,
@@ -1023,13 +1335,33 @@ fn append_comments(lines: &mut Vec<String>, v: Option<&V>) {
         _ => {}
     }
 }
-fn fmtver(v: &V) -> String {
-    let n = v.as_f64().unwrap_or(2.1);
-    if n.fract() == 0.0 {
-        format!("{n:.1}")
+/// BDF version text: `2` -> `2.0`, `2.1` -> `2.1` (bdfparser `fmtver`).
+pub fn fmtver(v: f64) -> String {
+    if v.is_finite() && v.fract() == 0.0 {
+        format!("{v:.0}.0")
     } else {
-        n.to_string()
+        py_float(v)
     }
+}
+/// The native header keyword holding a SPEC header key, and that keyword's keys.
+fn header_group(key: &str) -> Option<(&'static str, &'static [&'static str])> {
+    Some(match key {
+        "bdfversion" => ("STARTFONT", &["bdfversion"]),
+        "fontname" => ("FONT", &["fontname"]),
+        "pointsize" | "xres" | "yres" => ("SIZE", &["pointsize", "xres", "yres"]),
+        "fbbx" | "fbby" | "fbbxoff" | "fbbyoff" => {
+            ("FONTBOUNDINGBOX", &["fbbx", "fbby", "fbbxoff", "fbbyoff"])
+        }
+        "swx0" | "swy0" => ("SWIDTH", &["swx0", "swy0"]),
+        "dwx0" | "dwy0" => ("DWIDTH", &["dwx0", "dwy0"]),
+        "swx1" | "swy1" => ("SWIDTH1", &["swx1", "swy1"]),
+        "dwx1" | "dwy1" => ("DWIDTH1", &["dwx1", "dwy1"]),
+        "vvectorx" | "vvectory" => ("VVECTOR", &["vvectorx", "vvectory"]),
+        "metricsset" => ("METRICSSET", &["metricsset"]),
+        "contentversion" => ("CONTENTVERSION", &["contentversion"]),
+        "comment" => ("COMMENT", &["comment"]),
+        _ => return None,
+    })
 }
 impl Font {
     pub(super) fn from_parts(
@@ -1040,23 +1372,8 @@ impl Font {
         let mut core = CoreFont::default();
         let mut emitted = BTreeSet::new();
         for (k, v) in h {
-            let (key, group) = match k.as_str() {
-                "bdfversion" => ("STARTFONT", vec!["bdfversion"]),
-                "fontname" => ("FONT", vec!["fontname"]),
-                "pointsize" | "xres" | "yres" => ("SIZE", vec!["pointsize", "xres", "yres"]),
-                "fbbx" | "fbby" | "fbbxoff" | "fbbyoff" => (
-                    "FONTBOUNDINGBOX",
-                    vec!["fbbx", "fbby", "fbbxoff", "fbbyoff"],
-                ),
-                "swx0" | "swy0" => ("SWIDTH", vec!["swx0", "swy0"]),
-                "dwx0" | "dwy0" => ("DWIDTH", vec!["dwx0", "dwy0"]),
-                "swx1" | "swy1" => ("SWIDTH1", vec!["swx1", "swy1"]),
-                "dwx1" | "dwy1" => ("DWIDTH1", vec!["dwx1", "dwy1"]),
-                "vvectorx" | "vvectory" => ("VVECTOR", vec!["vvectorx", "vvectory"]),
-                "metricsset" => ("METRICSSET", vec!["metricsset"]),
-                "contentversion" => ("CONTENTVERSION", vec!["contentversion"]),
-                "comment" => ("COMMENT", vec!["comment"]),
-                _ => continue,
+            let Some((key, group)) = header_group(k) else {
+                continue;
             };
             if !emitted.insert(key) {
                 continue;
@@ -1084,7 +1401,9 @@ impl Font {
         x11::project(&mut core);
         Self::from_core(core)
     }
-    pub(super) fn put_with_alt(&mut self, m: Meta, alt: V) -> Result<()> {
+    /// Add 17-slot metadata (replacing an encoded code) and, for an unencoded
+    /// glyph (`codepoint < 0`), set its alternate code unless `alt` is None.
+    pub fn put_with_alt(&mut self, m: Meta, alt: V) -> Result<()> {
         if let Some(id) = self.put(m, true)?
             && !alt.is_null()
         {

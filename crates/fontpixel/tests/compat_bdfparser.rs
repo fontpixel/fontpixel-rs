@@ -258,3 +258,289 @@ fn ttf_metadata_cumulative_zero_width_rows_are_bounded() {
         "{error}"
     );
 }
+
+fn warnings(f: &Font) -> Vec<String> {
+    f.report()
+        .entries
+        .iter()
+        .filter(|e| e.code == "bdfparser.warning")
+        .map(|e| e.message.clone())
+        .collect()
+}
+fn obj(v: Value) -> serde_json::Map<String, Value> {
+    v.as_object().unwrap().clone()
+}
+
+#[test]
+fn header_and_unencoded_editors_edit_in_place() {
+    let mut f = mini();
+    let mut g = f.glyphbycp(65).unwrap();
+    f.set_header("fbbx", json!(9));
+    assert!(f.tobdf().unwrap().contains("FONTBOUNDINGBOX 9 8 0 -1\n"));
+    // a lone pair component is stored with its partner as None
+    f.set_header("dwx0", json!(3));
+    assert_eq!(f.headers()["dwx0"], json!(3));
+    assert_eq!(f.headers()["dwy0"], Value::Null);
+    assert!(f.remove_header("dwx0") && !f.remove_header("nope"));
+    let mut h = f.headers();
+    h.shift_remove("comment");
+    f.set_headers(&h);
+    assert!(!f.tobdf().unwrap().contains("COMMENT \"mini"));
+    // handles stay attached through header edits
+    g.shift(1, 0).unwrap();
+    assert!(g.is_attached());
+    assert_eq!(f.lookup(65).unwrap().meta()[4], json!(1));
+
+    let m = f
+        .prepare_meta(&obj(
+            json!({"glyphname": "u", "codepoint": -1, "bbw": 1, "bbh": 1, "hexdata": ["80"]}),
+        ))
+        .unwrap();
+    assert_eq!(m[2..6], [json!(1), json!(1), json!(0), json!(0)]);
+    f.put_with_alt(m, json!(42)).unwrap();
+    assert_eq!(f.unencoded_altcode(0), Some(json!(42)));
+    let mut u = f.unencoded_handle(0).unwrap();
+    assert!(
+        f.set_unencoded_meta(0, &obj(json!({"glyphname": "named"})))
+            .unwrap()
+    );
+    assert!(
+        !f.set_unencoded_meta(1, &obj(json!({"glyphname": "x"})))
+            .unwrap()
+    );
+    assert!(f.set_unencoded_altcode(0, &json!(7)).unwrap());
+    assert!(
+        f.tobdf()
+            .unwrap()
+            .contains("STARTCHAR named\nENCODING -1 7\n")
+    );
+    u.shift(2, 0).unwrap(); // the handle still edits the slot
+    assert_eq!(f.unencoded_handles()[0].meta()[4], json!(2));
+    assert_eq!(f.unencoded_handles()[0].meta()[0], json!("named"));
+    assert!(f.set_unencoded_altcode(0, &Value::Null).unwrap());
+    assert!(f.tobdf().unwrap().contains("ENCODING -1\n"));
+    assert!(!f.remove_unencoded(Some(3)));
+    assert!(f.remove_unencoded(None) && f.unencoded_handles().is_empty());
+    assert!(!u.is_attached());
+}
+
+#[test]
+fn second_handle_follows_a_moved_glyph() {
+    let f = mini();
+    let mut g1 = f.glyphbycp(65).unwrap();
+    let mut g2 = f.glyphbycp(65).unwrap();
+    g1.setmeta(&obj(json!({"codepoint": 90}))).unwrap();
+    g2.shift(2, 0).unwrap();
+    assert!(g2.is_attached());
+    assert_eq!(g2.meta()[1], json!(90));
+    assert_eq!(f.lookup(90).unwrap().meta()[4], json!(2));
+    assert!(f.lookup(65).is_none());
+    g1.setmeta(&obj(json!({"glyphname": "Z"}))).unwrap();
+    let m = f.lookup(90).unwrap().meta().clone();
+    assert_eq!((m[0].clone(), m[4].clone()), (json!("Z"), json!(2)));
+    // moving onto an existing code replaces that glyph; its handles detach
+    let b = f.glyphbycp(66).unwrap();
+    g2.setmeta(&obj(json!({"codepoint": 66}))).unwrap();
+    assert!(!b.is_attached() && g1.is_attached());
+    assert_eq!(f.lookup(66).unwrap().meta()[0], json!("Z"));
+}
+
+#[test]
+fn lookups_and_warnings_use_bdfparser_texts() {
+    let f = mini();
+    assert!(f.lookup(0x20ac).is_none() && warnings(&f).is_empty());
+    assert!(f.glyphbycp(0x20ac).is_none());
+    assert_eq!(
+        warnings(&f),
+        ["Glyph \"€\" (codepoint 8364) does not exist in the font. Will return `None`"]
+    );
+    let mut f = mini();
+    f.setprop("CHARSET_REGISTRY", json!("ISO8859"))
+        .setprop("CHARSET_ENCODING", json!("1"));
+    assert!(f.glyph("人").unwrap().is_none());
+    assert_eq!(
+        warnings(&f).last().unwrap(),
+        "Character \"人\" cannot be encoded in the charset 'iso88591'. Will return `None`"
+    );
+    f.charsetconvert("no-such-charset").unwrap();
+    let key = fontpixel::charset::canonical_charset("no-such-charset");
+    assert!(warnings(&f).contains(&format!(
+        "Unknown charset '{key}', characters are mapped to codepoints as Unicode"
+    )));
+}
+
+#[test]
+fn writer_and_drawing_behaviour_matches_bdfparser() {
+    use fontpixel::compat::bdfparser::{Glyph, fmtver, svg::fmtnum};
+    assert_eq!(
+        (fmtver(2.0), fmtver(2.1), fmtver(1e-7)),
+        ("2.0".into(), "2.1".into(), "1e-07".into())
+    );
+    assert_eq!(
+        (fmtnum(-0.0), fmtnum(3.0), fmtnum(0.5)),
+        ("0".into(), "3".into(), "0.5".into())
+    );
+    let mut f = mini();
+    f.setprop("FLOAT", json!(1.5)).setprop("BIG", json!(1e20));
+    let bdf = f.tobdf().unwrap();
+    assert!(bdf.contains("\nFLOAT \"1.5\"\n") && bdf.contains("\nBIG \"1e+20\"\n"));
+    f.remove_header("fbbyoff");
+    f.remove_header("xres");
+    assert_eq!(
+        f.tobdf().unwrap_err().to_string(),
+        "Cannot write BDF: missing header(s) xres, fbbyoff (font not loaded?)"
+    );
+
+    // a lone global DWIDTH component drives mode-1 spacing
+    let mut f = mini();
+    for cp in [65, 66] {
+        f.glyphbycp(cp)
+            .unwrap()
+            .setmeta(&obj(json!({"dwx0": null, "dwy0": null})))
+            .unwrap();
+    }
+    f.set_header("dwx0", json!(3));
+    let kw = serde_json::Map::new();
+    assert_eq!(f.drawcps(&[65, 65], &kw).unwrap().width(), 6 + 3);
+    f.remove_header("dwx0");
+    f.set_header("dwy0", json!(4));
+    assert_eq!(f.drawcps(&[65, 65], &kw).unwrap().width(), 6 + 4);
+    let err = f
+        .drawcps(&[65], &obj(json!({"linelimit": 3})))
+        .unwrap_err()
+        .to_string();
+    assert_eq!(
+        err,
+        "`linelimit` (3) is too small the line can't even contain one glyph: \"A\" (codepoint 65, width: 6)"
+    );
+
+    // PCF: global x components and negative boxes
+    let mut f = mini();
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(
+            json!({"dwx0": null, "dwy0": null, "swx0": null, "swy0": null}),
+        ))
+        .unwrap();
+    f.set_header("dwx0", json!(7));
+    f.set_header("swx0", json!(333));
+    let mut back = Font::default();
+    back.load_bytes(&f.topcf(&Default::default()).unwrap())
+        .unwrap();
+    let m = back.lookup(65).unwrap().meta().clone();
+    assert_eq!((m[6].clone(), m[8].clone()), (json!(333), json!(7)));
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(json!({"bbw": -1, "glyphname": " A name"})))
+        .unwrap();
+    assert_eq!(
+        f.topcf(&Default::default()).unwrap_err().to_string(),
+        "Glyph \"A\" has a negative sized bitmap, -1x7"
+    );
+
+    // glyph hex-row messages print Python values
+    let g = Glyph::new(
+        &obj(
+            json!({"glyphname": "my \"A\"", "codepoint": null, "bbw": 4, "bbh": 1, "hexdata": ["\"G"]}),
+        ),
+        &Font::default(),
+    )
+    .unwrap();
+    assert_eq!(g.cp(), -1);
+    assert_eq!(
+        g.draw(1, None).unwrap_err().to_string(),
+        "Glyph \"my \"A\"\" (codepoint None): bitmap row 0 \"\\\"G\" contains a non-hex character"
+    );
+
+    // gzip transport errors use bdfparser's prefix
+    let mut gz = vec![0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 3];
+    gz.extend([1, 2, 3]);
+    let err = Font::default().load_bytes(&gz).unwrap_err().to_string();
+    assert!(err.starts_with("Malformed gzip data: "), "{err}");
+}
+
+#[test]
+fn true_type_messages_match_bdfparser() {
+    let data = mini().tottf(&TtfOptions::default()).unwrap();
+    let num = u16::from_be_bytes([data[4], data[5]]) as usize;
+    for i in 0..num {
+        let rec = &data[12 + 16 * i..28 + 16 * i];
+        let tag = String::from_utf8_lossy(&rec[..4]).into_owned();
+        let off = u32::from_be_bytes(rec[8..12].try_into().unwrap()) as usize;
+        let len = u32::from_be_bytes(rec[12..16].try_into().unwrap()) as usize;
+        assert_eq!(
+            ttf::read_ttf(&data[..off + len - 1], None)
+                .unwrap_err()
+                .to_string(),
+            format!("Malformed TrueType font: table '{tag}' exceeds the file")
+        );
+    }
+    let mut renamed = data.clone();
+    let i = renamed.windows(4).position(|w| w == b"glyf").unwrap();
+    renamed[i..i + 4].copy_from_slice(b"glyx");
+    assert_eq!(
+        ttf::read_ttf(&renamed, None).unwrap_err().to_string(),
+        "Malformed TrueType font: missing required table 'glyf'"
+    );
+    assert_eq!(
+        ttf::read_ttf(b"wOFF\0\0\0\0\0\0\0\0", None)
+            .unwrap_err()
+            .to_string(),
+        "Not a TrueType font (sfnt version b'wOFF')"
+    );
+    let plain = mini()
+        .tottf(&TtfOptions {
+            metadata: false,
+            ..Default::default()
+        })
+        .unwrap();
+    let err = ttf::read_ttf(&plain, Some(8 * 700))
+        .unwrap_err()
+        .to_string();
+    assert!(
+        err.starts_with("Malformed TrueType font: glyph ")
+            && err.contains(" bounding box too large (")
+            && err.ends_with(" pixels)"),
+        "{err}"
+    );
+    let mut f = mini();
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(json!({"dwx0": -1})))
+        .unwrap();
+    assert_eq!(
+        f.tottf(&TtfOptions {
+            ppu: 2,
+            ..Default::default()
+        })
+        .unwrap_err()
+        .to_string(),
+        "value out of range for a TrueType field: (-2, 0) (argument out of range)"
+    );
+}
+
+#[test]
+fn round_dot_true_type_point_admission_follows_the_memory_budget() {
+    // 300 glyphs of 64x64 ink: 300 * 4096 dots * 8 points = 9.8M points,
+    // above the former fixed 4M point cap; admitted because each glyph's
+    // points are charged to the memory ledger and released once encoded.
+    let mut f = Font::create(&CreateOptions {
+        pixelsize: 64,
+        ..Default::default()
+    })
+    .unwrap();
+    let rows = vec!["1".repeat(64); 64];
+    let b = Bitmap::new(&rows).unwrap();
+    for cp in 0..300 {
+        f.newglyph(0x4e00 + cp, Some(&b), 1, None, None).unwrap();
+    }
+    let data = f
+        .tottf(&TtfOptions {
+            shape: "circle".into(),
+            ..Default::default()
+        })
+        .unwrap();
+    let back = ttf::read_ttf(&data, None).unwrap();
+    assert_eq!(back.length(), 300);
+    assert_eq!(back.lookup(0x4e00).unwrap().meta()[2], json!(64));
+}

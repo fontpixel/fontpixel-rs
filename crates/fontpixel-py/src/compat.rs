@@ -351,99 +351,6 @@ impl RawFont {
     }
 }
 
-fn header_property(key: &str) -> Option<(&'static str, &'static [&'static str])> {
-    Some(match key {
-        "bdfversion" => ("STARTFONT", &["bdfversion"]),
-        "fontname" => ("FONT", &["fontname"]),
-        "pointsize" | "xres" | "yres" => ("SIZE", &["pointsize", "xres", "yres"]),
-        "fbbx" | "fbby" | "fbbxoff" | "fbbyoff" => {
-            ("FONTBOUNDINGBOX", &["fbbx", "fbby", "fbbxoff", "fbbyoff"])
-        }
-        "swx0" | "swy0" => ("SWIDTH", &["swx0", "swy0"]),
-        "dwx0" | "dwy0" => ("DWIDTH", &["dwx0", "dwy0"]),
-        "swx1" | "swy1" => ("SWIDTH1", &["swx1", "swy1"]),
-        "dwx1" | "dwy1" => ("DWIDTH1", &["dwx1", "dwy1"]),
-        "vvectorx" | "vvectory" => ("VVECTOR", &["vvectorx", "vvectory"]),
-        "metricsset" => ("METRICSSET", &["metricsset"]),
-        "contentversion" => ("CONTENTVERSION", &["contentversion"]),
-        "comment" => ("COMMENT", &["comment"]),
-        _ => return None,
-    })
-}
-
-fn property_value(v: &V) -> fontpixel::model::PropertyValue {
-    use fontpixel::model::PropertyValue as P;
-    match v {
-        V::Null => P::Flag,
-        V::Bool(b) => P::Integer(i64::from(*b)),
-        V::Number(n) => n
-            .as_i64()
-            .map(P::Integer)
-            .or_else(|| n.as_u64().map(P::Unsigned))
-            .unwrap_or(P::Decimal(n.to_string())),
-        V::String(s) => P::Text(s.clone()),
-        V::Array(a) => P::List(a.iter().map(property_value).collect()),
-        V::Object(_) => P::Text(v.to_string()),
-    }
-}
-
-impl RawFont {
-    /// Edit a copy of the native model and re-wrap it with `Font::from_core`.
-    ///
-    /// The compatibility façade has no public header or unencoded-slot editors,
-    /// so these edits go through the native model. The rebuilt font starts a new
-    /// shared state: glyph handles attached before the edit no longer write
-    /// through, and the warning report restarts empty.
-    fn rebuild(
-        &mut self,
-        edit: impl FnOnce(&mut fontpixel::model::Font) -> PyResult<()>,
-    ) -> PyResult<()> {
-        let mut core = self.font.core();
-        edit(&mut core)?;
-        let charset = core.charset.name.clone();
-        let mut font = done(bp::Font::from_core(core))?;
-        if let Some(name) = charset {
-            font.encoding(&name);
-        }
-        self.font = font;
-        Ok(())
-    }
-}
-
-fn unencoded_ids(core: &fontpixel::model::Font) -> Vec<fontpixel::model::GlyphId> {
-    core.glyphs()
-        .filter(|(_, g)| g.codepoints.is_empty())
-        .map(|(id, _)| id)
-        .collect()
-}
-
-fn replace_headers(core: &mut fontpixel::model::Font, headers: &Map<String, V>) {
-    core.headers = Default::default();
-    let mut emitted = std::collections::BTreeSet::new();
-    for k in headers.keys() {
-        let Some((name, group)) = header_property(k) else {
-            continue;
-        };
-        if !emitted.insert(name) {
-            continue;
-        }
-        let value = if group.len() == 1 {
-            headers[k].clone()
-        } else {
-            V::Array(
-                group
-                    .iter()
-                    .map(|g| headers.get(*g).cloned().unwrap_or(V::Null))
-                    .collect(),
-            )
-        };
-        core.headers.push(fontpixel::model::Property::new(
-            name,
-            property_value(&value),
-        ));
-    }
-}
-
 #[pymethods]
 impl RawFont {
     /// An empty font (`Font::default`).
@@ -547,53 +454,103 @@ impl RawFont {
         v2py(py, &V::Object(self.font.headers()))
     }
 
-    /// Replace all headers (rebuilds the model; attached glyph handles detach).
+    /// Replace all headers in place (`Font::set_headers`); glyph handles stay attached.
     fn set_headers(&mut self, headers: &Bound<'_, PyAny>) -> PyResult<()> {
         let h = py2obj(headers)?;
-        self.rebuild(|core| {
-            replace_headers(core, &h);
-            Ok(())
-        })
+        self.font.set_headers(&h);
+        Ok(())
     }
 
-    /// Set the alternate code (`bdf.altcode`) of the `index`-th unencoded glyph;
-    /// None removes it (rebuilds the model; attached glyph handles detach).
+    /// Set one header key, appended when new (`Font::set_header`).
+    #[pyo3(signature = (key, value=None))]
+    fn set_header(&mut self, key: &str, value: Option<&Bound<'_, PyAny>>) -> PyResult<()> {
+        self.font.set_header(key, opt2v(value)?);
+        Ok(())
+    }
+
+    /// Remove one header key; False if absent (`Font::remove_header`).
+    fn remove_header(&mut self, key: &str) -> bool {
+        self.font.remove_header(key)
+    }
+
+    /// Attached handles of the unencoded glyphs in order (`Font::unencoded_handles`).
+    fn unencoded_handles(&self) -> Vec<RawGlyph> {
+        self.font
+            .unencoded_handles()
+            .into_iter()
+            .map(RawGlyph::wrap)
+            .collect()
+    }
+
+    /// Attached handle of the `index`-th unencoded glyph, or None
+    /// (`Font::unencoded_handle`).
+    fn unencoded_handle(&self, index: usize) -> Option<RawGlyph> {
+        self.font.unencoded_handle(index).map(RawGlyph::wrap)
+    }
+
+    /// Alternate code of the `index`-th unencoded glyph (`Font::unencoded_altcode`).
+    fn unencoded_altcode<'py>(&self, py: Python<'py>, index: usize) -> PyResult<Bound<'py, PyAny>> {
+        let v = self
+            .font
+            .unencoded_altcode(index)
+            .ok_or_else(|| PyIndexError::new_err("unencoded glyph index out of range"))?;
+        v2py(py, &v)
+    }
+
+    /// Set the alternate code of the `index`-th unencoded glyph; None removes it
+    /// (`Font::set_unencoded_altcode`). Glyph handles stay attached.
     #[pyo3(signature = (index, altcode=None))]
     fn set_altcode(&mut self, index: usize, altcode: Option<&Bound<'_, PyAny>>) -> PyResult<()> {
         let alt = opt2v(altcode)?;
-        self.rebuild(|core| {
-            let id = *unencoded_ids(core)
-                .get(index)
-                .ok_or_else(|| PyIndexError::new_err("unencoded glyph index out of range"))?;
-            done(core.edit_glyph(id, |g| {
-                if alt.is_null() {
-                    g.properties.remove("bdf.altcode");
-                } else {
-                    g.properties.set("bdf.altcode", property_value(&alt));
-                }
-                Ok(())
-            }))
-        })
+        if !done(self.font.set_unencoded_altcode(index, &alt))? {
+            return Err(PyIndexError::new_err("unencoded glyph index out of range"));
+        }
+        Ok(())
+    }
+
+    /// Set metadata keys of the `index`-th unencoded glyph (`Font::set_unencoded_meta`).
+    fn set_unencoded_meta(&mut self, index: usize, fields: &Bound<'_, PyAny>) -> PyResult<()> {
+        let m = py2obj(fields)?;
+        if !done(self.font.set_unencoded_meta(index, &m))? {
+            return Err(PyIndexError::new_err("unencoded glyph index out of range"));
+        }
+        Ok(())
     }
 
     /// Remove the `index`-th unencoded glyph, or all of them when `index` is None
-    /// (rebuilds the model; attached glyph handles detach).
+    /// (`Font::remove_unencoded`). Handles on removed slots detach.
     #[pyo3(signature = (index=None))]
     fn remove_unencoded(&mut self, index: Option<usize>) -> PyResult<()> {
-        self.rebuild(|core| {
-            let ids = unencoded_ids(core);
-            let selected =
-                match index {
-                    None => ids,
-                    Some(i) => vec![*ids.get(i).ok_or_else(|| {
-                        PyIndexError::new_err("unencoded glyph index out of range")
-                    })?],
-                };
-            for id in selected {
-                core.remove_glyph(id);
-            }
-            Ok(())
-        })
+        if !self.font.remove_unencoded(index) {
+            return Err(PyIndexError::new_err("unencoded glyph index out of range"));
+        }
+        Ok(())
+    }
+
+    /// 17 metadata slots from a dict, as `addglyph` normalizes them
+    /// (`Font::prepare_meta`).
+    fn prepare_meta<'py>(
+        &self,
+        py: Python<'py>,
+        fields: &Bound<'_, PyAny>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let m = py2obj(fields)?;
+        let meta = done(self.font.prepare_meta(&m))?;
+        v2py(py, &V::Array(meta))
+    }
+
+    /// Add normalized glyph metadata and, for an unencoded glyph, its alternate
+    /// code (`Font::prepare_meta` + `Font::put_with_alt`).
+    #[pyo3(signature = (fields, altcode=None))]
+    fn put_with_alt(
+        &mut self,
+        fields: &Bound<'_, PyAny>,
+        altcode: Option<&Bound<'_, PyAny>>,
+    ) -> PyResult<()> {
+        let m = py2obj(fields)?;
+        let alt = opt2v(altcode)?;
+        let meta = done(self.font.prepare_meta(&m))?;
+        done(self.font.put_with_alt(meta, alt))
     }
 
     /// Case-normalized properties (`Font::props`).
@@ -669,9 +626,18 @@ impl RawFont {
         done(self.font.itercps(order, &opt2v(r)?))
     }
 
-    /// Attached handle, or None with a warning (`Font::glyphbycp`).
+    /// Attached handle, or None with a warning (`Font::glyphbycp`). An exception
+    /// raised by a `cp2char` converter while describing the missing code is
+    /// ignored, as in bdfparser.
     fn glyphbycp(&self, cp: i64) -> Option<RawGlyph> {
-        self.font.glyphbycp(cp).map(RawGlyph::wrap)
+        let g = self.font.glyphbycp(cp).map(RawGlyph::wrap);
+        drop(take_pending());
+        g
+    }
+
+    /// Attached handle, or None without a warning (`Font::lookup`).
+    fn lookup(&self, cp: i64) -> Option<RawGlyph> {
+        self.font.lookup(cp).map(RawGlyph::wrap)
     }
 
     /// Attached handle by character (`Font::glyph`).
@@ -883,6 +849,12 @@ fn fmtnum(n: f64) -> String {
     bp::svg::fmtnum(n)
 }
 
+/// `fmtver(v)`: BDF version text (`2` -> `'2.0'`, `2.1` -> `'2.1'`).
+#[pyfunction]
+fn fmtver(v: f64) -> String {
+    bp::fmtver(v)
+}
+
 /// `read_ttf(data, pixelsize=None)`: glyph-based TrueType → font handle.
 #[pyfunction]
 #[pyo3(signature = (data, pixelsize=None))]
@@ -968,6 +940,7 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     sub.add("META_TITLES", PyTuple::new(py, bp::META_TITLES)?)?;
     sub.add_function(wrap_pyfunction!(defaultglyphname, &sub)?)?;
     sub.add_function(wrap_pyfunction!(fmtnum, &sub)?)?;
+    sub.add_function(wrap_pyfunction!(fmtver, &sub)?)?;
     sub.add_function(wrap_pyfunction!(read_ttf, &sub)?)?;
     sub.add_function(wrap_pyfunction!(write_ttf, &sub)?)?;
     sub.add_function(wrap_pyfunction!(bitmap_contours, &sub)?)?;

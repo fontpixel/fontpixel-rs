@@ -2,9 +2,10 @@
 
 The font data stays in the Rust model (`fontpixel::compat::bdfparser::Font`).
 `headers`, `props`, `glyphs` and `unencoded` are live views: reading them
-projects the current model, writing through them edits it. Values read from
-them are fresh copies (editing a returned list does not change the font,
-except for the 17-slot lists of `font.glyphs[cp]`, whose item assignment is
+projects the current model, writing through them edits it in place (glyph
+handles stay attached). Values read from them are fresh copies (editing a
+returned list does not change the font, except for the 17-slot meta lists of
+`font.glyphs[cp]` and `font.unencoded[i]['meta']`, whose item assignment is
 written back). Warnings collected by the Rust model are re-emitted as
 `BDFParserWarning`s through the `warnings` module after each call.
 """
@@ -16,8 +17,6 @@ import os
 import warnings
 from collections.abc import Callable, Iterable, Iterator, Mapping, MutableMapping
 from typing import Any, Union
-
-import fontpixel as _fp
 
 from ..._native import _bdfparser as _n
 from .bitmap import Bitmap
@@ -34,8 +33,7 @@ _GZIP_MAGIC = b'\x1f\x8b'
 
 def fmtver(v: float) -> str:
     """`2` -> `'2.0'`, `2.1` -> `'2.1'` (BDF version number formatting)."""
-    f = float(v)
-    return f'{int(f)}.0' if f.is_integer() else repr(f)
+    return _n.fmtver(float(v))
 
 
 def _range(r: Any) -> Any:
@@ -47,7 +45,7 @@ def _range(r: Any) -> Any:
 
 
 class _HeadersView(MutableMapping):
-    """Live view of `Font.headers` (writes rebuild the native model)."""
+    """Live view of `Font.headers` (writes edit the native model in place)."""
 
     def __init__(self, font: Font) -> None:
         self._font = font
@@ -59,14 +57,13 @@ class _HeadersView(MutableMapping):
         return self._data()[key]
 
     def __setitem__(self, key: str, value: Any) -> None:
-        d = self._data()
-        d[key] = value
-        self._font._set_headers(d)
+        self._font._raw.set_header(key, value)
+        self._font._changed()
 
     def __delitem__(self, key: str) -> None:
-        d = self._data()
-        del d[key]
-        self._font._set_headers(d)
+        if not self._font._raw.remove_header(key):
+            raise KeyError(key)
+        self._font._changed()
 
     def __iter__(self) -> Iterator[str]:
         return iter(list(self._data()))
@@ -133,11 +130,26 @@ class _MetaList(list):
     def __setitem__(self, index: Any, value: Any) -> None:
         super().__setitem__(index, value)
         if isinstance(index, int) and -17 <= index < 17:
-            raw = self._font._raw.glyphbycp(self._cp)
+            raw = self._font._raw.lookup(self._cp)
             if raw is None:
-                self._font._skip_warnings()
                 return
             raw.setmeta({META_TITLES[index]: value})
+            self._font._changed()
+
+
+class _UnencodedMetaList(list):
+    """An unencoded glyph's 17 meta values; item assignment is written back to
+    that glyph (through an attached handle, so it follows the glyph)."""
+
+    def __init__(self, font: Font, handle: Any, values: Iterable[Any]) -> None:
+        super().__init__(values)
+        self._font = font
+        self._g = handle
+
+    def __setitem__(self, index: Any, value: Any) -> None:
+        super().__setitem__(index, value)
+        if isinstance(index, int) and -17 <= index < 17 and self._g.is_attached():
+            self._g.setmeta({META_TITLES[index]: value})
             self._font._changed()
 
 
@@ -154,15 +166,23 @@ class _GlyphsView(MutableMapping):
         return cp in self._font._cpset()
 
     def __setitem__(self, cp: int, meta: Iterable[Any]) -> None:
+        meta = list(meta)
         fields = dict(zip(META_TITLES, meta, strict=False))
         fields['codepoint'] = cp
         self._font._raw.addglyph(fields, True)
+        # the native model always holds 17 slots; remember a shorter list for
+        # the PCF writer's check (bdfparser stores the list as given)
+        if len(meta) < len(META_TITLES):
+            self._font._short.add(cp)
+        else:
+            self._font._short.discard(cp)
         self._font._changed()
 
     def __delitem__(self, cp: int) -> None:
         if cp not in self:
             raise KeyError(cp)
         self._font._raw.removeglyph(cp)
+        self._font._short.discard(cp)
         self._font._changed()
 
     def __iter__(self) -> Iterator[int]:
@@ -180,6 +200,7 @@ class _GlyphsView(MutableMapping):
     def clear(self) -> None:
         for cp in self._font._cplist():
             self._font._raw.removeglyph(cp)
+        self._font._short.clear()
         self._font._changed()
 
     def __eq__(self, other: object) -> bool:
@@ -195,11 +216,12 @@ class _GlyphsView(MutableMapping):
 
 
 class _UnencodedView(list):
-    """Snapshot of `Font.unencoded` (`{'altcode', 'meta'}` dicts); `append`,
-    `extend`, `clear` and `del` edit the font."""
+    """Snapshot of `Font.unencoded` (`{'altcode', 'meta'}` dicts; item assignment
+    into a `meta` list is written back); `append`, `extend`, `clear` and `del`
+    edit the font."""
 
     def __init__(self, font: Font) -> None:
-        super().__init__(font._model()['unencoded'])
+        super().__init__(font._unencoded())
         self._font = font
 
     def append(self, entry: Mapping[str, Any] | Iterable[Any]) -> None:
@@ -208,14 +230,10 @@ class _UnencodedView(list):
         meta = list(entry['meta'])
         fields = dict(zip(META_TITLES, meta, strict=False))
         fields['codepoint'] = -1
-        raw = self._font._raw
-        raw.addglyph(fields, True)
         altcode = entry.get('altcode')
-        if altcode is not None:
-            n = len(raw.model()['unencoded'])
-            raw.set_altcode(n - 1, altcode)
-            self._font._rebuilt()
-        else:
+        try:
+            self._font._raw.put_with_alt(fields, altcode)
+        finally:
             self._font._changed()
         super().append({'altcode': altcode, 'meta': meta})
 
@@ -225,7 +243,7 @@ class _UnencodedView(list):
 
     def clear(self) -> None:
         self._font._raw.remove_unencoded(None)
-        self._font._rebuilt()
+        self._font._changed()
         super().clear()
 
     def __delitem__(self, index: Any) -> None:
@@ -233,7 +251,7 @@ class _UnencodedView(list):
         indexes = range(n)[index] if isinstance(index, slice) else [range(n)[index]]
         for i in sorted(indexes, reverse=True):
             self._font._raw.remove_unencoded(i)
-        self._font._rebuilt()
+        self._font._changed()
         super().__delitem__(index)
 
 
@@ -258,6 +276,7 @@ class Font:
         self._rev = 0
         self._epoch = 0
         self._cache: dict[str, Any] | None = None
+        self._short: set[int] = set()
         self._char2cp_override: Callable[[str], int | None] | None = None
         self._cp2char_override: Callable[[int], str | None] | None = None
         self._charset_override: str | None = None
@@ -290,9 +309,6 @@ class Font:
         for m in msgs:
             warnings.warn(m, BDFParserWarning, stacklevel=3)
 
-    def _skip_warnings(self) -> None:
-        self._wcur = self._raw.warnings_since(self._wcur)[1]
-
     def _changed(self) -> None:
         self._rev += 1
         self._drain()
@@ -303,7 +319,14 @@ class Font:
         # bdfparser's stored lists)
         st = self._cache
         if st is None or st['rev'] != self._rev:
-            st = {'rev': self._rev, 'cps': None, 'metas': {}, 'items': None, 'unencoded': None}
+            st = {
+                'rev': self._rev,
+                'cps': None,
+                'metas': {},
+                'items': None,
+                'unencoded': None,
+                'entries': None,
+            }
             self._cache = st
         return st
 
@@ -326,7 +349,7 @@ class Font:
         if m is None:
             if cp not in self._cpset():
                 raise KeyError(cp)
-            m = _MetaList(self, cp, self._raw.glyphbycp(cp).meta())
+            m = _MetaList(self, cp, self._raw.lookup(cp).meta())
             st['metas'][cp] = m
         return m
 
@@ -342,8 +365,20 @@ class Font:
             st['propnames'] = model['propnames']
         return st
 
+    def _unencoded(self) -> list[dict[str, Any]]:
+        """`unencoded` entries whose `meta` lists write back through handles."""
+        st = self._model()
+        if st['entries'] is None:
+            handles = self._raw.unencoded_handles()
+            st['entries'] = [
+                {'altcode': e['altcode'], 'meta': _UnencodedMetaList(self, g, e['meta'])}
+                for e, g in zip(st['unencoded'], handles, strict=True)
+            ]
+        return st['entries']
+
     def _set_raw(self, raw: Any) -> Font:
         self._raw = raw
+        self._short = set()
         self._epoch += 1
         self._wcur = 0
         if self._charset_override:
@@ -358,17 +393,6 @@ class Font:
 
     def _set_headers(self, headers: Mapping[str, Any]) -> None:
         self._raw.set_headers(dict(headers))
-        self._rebuilt()
-
-    def _rebuilt(self) -> None:
-        """After a native rebuild (`set_headers`, `set_altcode`, `remove_unencoded`):
-        the model has a new shared state, so glyph handles taken before detach."""
-        self._epoch += 1
-        self._wcur = 0
-        if self._charset_override:
-            self._raw.encoding(self._charset_override)
-        self._apply_converters()
-        self._skip_warnings()
         self._changed()
 
     # -- data views ---------------------------------------------------------
@@ -725,10 +749,9 @@ class Font:
         """
 
         for cp in self.itercps(order, r):
-            if cp in self._cpset():
-                raw = self._raw.glyphbycp(cp)
-                if raw is not None:
-                    yield Glyph._wrap(raw, self)
+            raw = self._raw.lookup(cp)
+            if raw is not None:
+                yield Glyph._wrap(raw, self)
 
     def glyphbycp(self, codepoint: int) -> Glyph | None:
         """
@@ -737,25 +760,11 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#glyphbycp
         """
 
-        raw = self._raw.glyphbycp(codepoint)
-        if raw is None:
-            # the Rust warning names only the code; bdfparser also names the character
-            self._skip_warnings()
-            self._warn(f'{self._describe_cp(codepoint)} does not exist in the font. Will return `None`')
-            return None
-        self._drain()
-        return Glyph._wrap(raw, self)
-
-    def _describe_cp(self, codepoint: int) -> str:
         try:
-            ch = self.cp2char(codepoint)
-        except Exception:
-            ch = None
-        return f'Glyph "{ch}" (codepoint {codepoint})' if ch else f'Glyph (codepoint {codepoint})'
-
-    @staticmethod
-    def _warn(message: str) -> None:
-        warnings.warn(message, BDFParserWarning, stacklevel=3)
+            raw = self._raw.glyphbycp(codepoint)
+        finally:
+            self._drain()
+        return None if raw is None else Glyph._wrap(raw, self)
 
     def glyph(self, character: str) -> Glyph | None:
         """
@@ -766,19 +775,11 @@ class Font:
 
         if not isinstance(character, str) or len(character) != 1:
             raise TypeError(f'glyph() expected a single character, got {character!r}')
-        if self.char2cp(character) is None:
-            self._warn(
-                f'Character "{character}" cannot be encoded in the charset '
-                f'{self.charset!r}. Will return `None`'
-            )
-            return None
         try:
             raw = self._raw.glyph(character)
         finally:
-            self._skip_warnings()
-        if raw is None:
-            return self.glyphbycp(self.char2cp(character))
-        return Glyph._wrap(raw, self)
+            self._drain()
+        return None if raw is None else Glyph._wrap(raw, self)
 
     def lacksglyphs(self, string: str) -> list[str] | None:
         """
@@ -914,6 +915,13 @@ class Font:
             self._changed()
         return self
 
+    def _check_slots(self) -> None:
+        """bdfparser's writers need 17-slot meta lists (see `glyphs[cp] = ...`)."""
+        if self._short & self._cpset():
+            from .pcf import PCFError
+
+            raise PCFError('glyph meta must be a 17-slot list')
+
     def removeglyph(self, cp_or_glyph: int | Glyph) -> Font:
         """
         Remove a glyph (by codepoint or `Glyph`); no-op if missing. An attached
@@ -1022,9 +1030,6 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#charsetconvert
         """
 
-        key = canonical_charset(newcharset)
-        if not _fp.CharsetCodec.from_key(key, None).known:
-            self._warn(f"Unknown charset '{key}', characters are mapped to codepoints as Unicode")
         try:
             self._raw.charsetconvert(newcharset)
         finally:

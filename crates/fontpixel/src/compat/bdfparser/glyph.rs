@@ -1,5 +1,5 @@
 use super::bitmap::{dim, invalid};
-use super::projection::{core_glyph, meta, num};
+use super::projection::{core_glyph, meta, num, text};
 use super::{Bitmap, Font, Meta};
 use crate::model::GlyphId;
 use crate::{
@@ -96,22 +96,50 @@ impl Glyph {
     pub fn font(&self) -> Font {
         self.font.shared()
     }
-    /// Whether the original attached slot still exists and has not been replaced.
+    /// The slot this handle refers to now: its own, or where a codepoint
+    /// change (through any handle on the same glyph) moved it.
+    fn follow(&mut self) {
+        let s = self.font.state.borrow();
+        if let Some(mut id) = self.id {
+            let mut generation = self.generation;
+            while let Some(&(next, g)) = s.moved.get(&(id, generation)) {
+                id = next;
+                generation = g;
+            }
+            self.id = Some(id);
+            self.generation = generation;
+        }
+    }
+    /// Whether the glyph's slot (followed through codepoint moves) still exists
+    /// and has not been replaced.
     pub fn is_attached(&self) -> bool {
         let s = self.font.state.borrow();
-        self.id.is_some_and(|id| {
-            s.core.glyph(id).is_some() && s.generations.get(&id) == Some(&self.generation)
-        })
+        let Some(mut id) = self.id else {
+            return false;
+        };
+        let mut generation = self.generation;
+        while let Some(&(next, g)) = s.moved.get(&(id, generation)) {
+            id = next;
+            generation = g;
+        }
+        s.core.glyph(id).is_some() && s.generations.get(&id) == Some(&generation)
     }
-    /// Numeric encoding; unencoded glyphs have -1.
+    /// The attached slot, followed through codepoint moves.
+    pub(super) fn slot(&mut self) -> Option<GlyphId> {
+        self.follow();
+        if self.is_attached() { self.id } else { None }
+    }
+    /// Numeric encoding; unencoded glyphs (and a None or non-integer
+    /// codepoint) have -1.
     pub fn cp(&self) -> i64 {
-        num(&self.meta[1])
+        self.meta[1].as_i64().unwrap_or(-1)
     }
     /// Unicode character through the owner's codec.
     pub fn chr(&self) -> Result<Option<char>> {
         self.font.cp2char(self.cp())
     }
     fn sync(&mut self) -> Result<()> {
+        self.follow();
         if !self.is_attached() {
             self.id = None;
             return Ok(());
@@ -158,6 +186,7 @@ impl Glyph {
             let existing = self.font.id(cp);
             let mut s = self.font.state.borrow_mut();
             s.core.remove_glyph(id);
+            let old = (id, self.generation);
             if let Some(existing) = existing {
                 s.core.replace_glyph(existing, g)?;
                 s.serial += 1;
@@ -170,6 +199,9 @@ impl Glyph {
                 s.generations.insert(new_id, self.generation);
                 self.id = Some(new_id);
             }
+            // Other handles on the moved glyph follow it (bdfparser shares one list).
+            s.moved
+                .insert(old, (self.id.unwrap_or(id), self.generation));
         } else {
             self.font.state.borrow_mut().core.replace_glyph(id, g)?;
         }
@@ -210,9 +242,10 @@ impl Glyph {
             for c in r.chars() {
                 let Some(v) = c.to_digit(16) else {
                     return Err(invalid(&format!(
-                        "Glyph {:?} (codepoint {}): bitmap row {i} {r:?} contains a non-hex character",
-                        self.meta[0].as_str().unwrap_or(""),
-                        self.cp()
+                        "Glyph \"{}\" (codepoint {}): bitmap row {i} {} contains a non-hex character",
+                        text(&self.meta[0]),
+                        text(&self.meta[1]),
+                        serde_json::to_string(r).unwrap_or_default()
                     )));
                 };
                 row.push_str(&format!("{v:04b}"));
@@ -226,9 +259,11 @@ impl Glyph {
         let h = dim(num(&self.meta[3]))? as usize;
         if rows.len() < h {
             self.font.warn(format!(
-                "Glyph {:?} has {} bitmap rows but its BBX height is {h}; padded with empty rows",
-                self.meta[0],
-                rows.len()
+                "Glyph \"{}\" (codepoint {}) has {} bitmap rows but its BBX height is {}; padded with empty rows",
+                text(&self.meta[0]),
+                text(&self.meta[1]),
+                rows.len(),
+                h
             ));
         }
         rows.resize(h, String::new());

@@ -534,3 +534,112 @@ def test_python_boundary_semantics(tmp_path):
     p.write_bytes(bad)
     with pytest.raises(pcf.PCFError):
         Font(str(p))
+
+
+def test_header_and_unencoded_editors_keep_handles():
+    f = mini()
+    g = f.glyphbycp(65)
+    f.headers['fbbx'] = 9  # RawFont.set_header: in place, the handle stays attached
+    del f.headers['comment']  # RawFont.remove_header
+    with pytest.raises(KeyError):
+        del f.headers['nope']
+    assert not f._raw.remove_header('nope')
+    g.shift(1)
+    assert g._attached and f.glyphs[65][4] == 1
+    out = f.tobdf()
+    assert 'FONTBOUNDINGBOX 9 8 0 -1' in out and 'COMMENT "mini' not in out
+    f.headers = {**f.headers, 'dwx0': 3}  # RawFont.set_headers
+    assert f.headers['dwx0'] == 3 and f.headers['dwy0'] is None and g._attached
+    raw = f._raw
+    assert raw.lookup(0x20AC) is None and raw.lookup(65).meta()[4] == 1
+    assert raw.prepare_meta({'codepoint': -1})[:6] == ['char-1', -1, 0, 0, 0, 0]
+    with warnings.catch_warnings():
+        warnings.simplefilter('error')  # lookup records no warning
+        assert f.glyph('A') is not None
+        f._drain()
+    f.unencoded.append({'altcode': 42, 'meta': ['u', -1, 1, 1, 0, 0] + [None] * 10 + [['80']]})
+    assert raw.unencoded_altcode(0) == 42 and raw.unencoded_handle(1) is None
+    u = raw.unencoded_handles()[0]
+    f.unencoded[0]['meta'][0] = 'named'  # written back through the slot's handle
+    assert 'STARTCHAR named\nENCODING -1 42\n' in f.tobdf()
+    raw.set_unencoded_meta(0, {'bbxoff': 2})
+    raw.set_altcode(0, 7)
+    f._changed()  # direct RawFont edits: refresh the Python views
+    assert u.is_attached() and f.unencoded == [
+        {'altcode': 7, 'meta': ['named', -1, 1, 1, 2, 0] + [None] * 10 + [['80']]}
+    ]
+    raw.set_altcode(0, None)
+    f._changed()
+    assert f.unencoded[0]['altcode'] is None
+    for call in (lambda: raw.set_altcode(3, 1), lambda: raw.set_unencoded_meta(3, {}),
+                 lambda: raw.remove_unencoded(3), lambda: raw.unencoded_altcode(3)):
+        with pytest.raises(IndexError):
+            call()
+    raw.put_with_alt({'glyphname': 'v', 'codepoint': -1}, 5)
+    f._changed()
+    del f.unencoded[0]
+    assert not u.is_attached() and f.unencoded[0]['altcode'] == 5
+    assert g._attached  # unencoded edits never detach other handles
+    assert native.fmtver(2) == '2.0' and native.fmtver(1e-7) == '1e-07'
+
+
+def test_rust_warnings_messages_and_writer_fixes():
+    f = mini()
+    with pytest.warns(BDFParserWarning, match=r'^Glyph "€" \(codepoint 8364\) does not exist in the font\. Will return `None`$'):
+        assert f.glyphbycp(0x20AC) is None
+
+    def boom(cp):
+        raise RuntimeError('x')
+
+    f2 = mini().encoding(cp2char=boom)
+    with pytest.warns(BDFParserWarning, match=r'^Glyph \(codepoint 9\) does not exist'):
+        assert f2.glyphbycp(9) is None  # the converter's exception is ignored
+    f.setprop('CHARSET_REGISTRY', 'ISO8859').setprop('CHARSET_ENCODING', '1')
+    with pytest.warns(BDFParserWarning, match=r"cannot be encoded in the charset 'iso88591'"):
+        assert f.glyph('人') is None
+    with pytest.warns(BDFParserWarning, match=r"^Unknown charset '"):
+        f.charsetconvert('no-such-charset')
+
+    f = mini()
+    f.setprop('FLOAT', 1.5)
+    assert '\nFLOAT "1.5"\n' in f.tobdf()
+    del f.headers['fbbyoff']
+    with pytest.raises(ValueError, match=r'^Cannot write BDF: missing header\(s\) fbbyoff \(font not loaded\?\)$'):
+        f.tobdf()
+
+    f = mini()
+    for m in f.glyphs.values():
+        m[8] = m[9] = None
+    f.headers['dwx0'] = 3
+    assert f.draw('AA').width() == 6 + 3
+    with pytest.raises(ValueError, match=r'^`linelimit` \(2\) is too small.*: "A" \(codepoint 65, width: 6\)$'):
+        f.draw('A', linelimit=2)  # cost: width 6 + spacing offset (3 - 6)
+    f.glyphs[65][2] = -1
+    with pytest.raises(pcf.PCFError, match=r'^Glyph "A" has a negative sized bitmap, -1x7$'):
+        f.topcf()
+    f.glyphs[66] = ['B', 66]
+    f.glyphs[65][2] = 5
+    with pytest.raises(pcf.PCFError, match='17-slot'):
+        f.topcf()
+
+    g = Glyph({'glyphname': 'x', 'codepoint': None, 'bbw': 4, 'bbh': 1, 'hexdata': ['G']}, None)
+    with pytest.raises(ValueError, match=r'^Glyph "x" \(codepoint None\): bitmap row 0 "G"'):
+        g.draw(1)
+    assert native.RawGlyph({'codepoint': None}, Font()._raw).cp() == -1
+
+    # two views of one glyph: the second follows the move made by the first
+    f = mini()
+    g1, g2 = f.glyphbycp(65), f.glyphbycp(65)
+    g1.setmeta(codepoint=90)
+    g2.shift(2)
+    assert f.glyphs[90][4] == 2 and g2.meta['codepoint'] == 90
+
+    data = mini().tottf()
+    with pytest.raises(ValueError, match=r"^Malformed TrueType font: missing required table 'glyf'$"):
+        ttf.read_ttf(data.replace(b'glyf', b'glyx', 1))
+    with pytest.raises(ValueError, match=r'^value out of range for a TrueType field: \(-2, 0\)'):
+        f = mini()
+        f.glyphs[65][8] = -1
+        ttf.write_ttf(f, ppu=2)
+    with pytest.raises(ValueError, match='^Malformed gzip data: '):
+        Font().load_bytes(gzip.compress(MINI.encode())[:30])

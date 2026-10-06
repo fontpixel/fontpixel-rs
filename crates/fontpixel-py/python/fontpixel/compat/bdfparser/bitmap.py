@@ -20,5 +20,4 @@ def fmtnum(n: float) -> str:
     a fraction (`3.0` -> `'3'`, `-0.0` -> `'0'`), others as Python `repr`.
     """
 
-    # `+ 0.0` turns -0.0 into 0.0 (bdfparser writes '0')
-    return _n.fmtnum(float(n) + 0.0)
+    return _n.fmtnum(float(n))

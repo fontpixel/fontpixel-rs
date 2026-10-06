@@ -50,6 +50,70 @@ pub(super) fn text(v: &V) -> String {
         _ => v.to_string(),
     }
 }
+/// Python `repr(float)`: shortest round-trip digits, exponent form outside 1e-4..1e16.
+pub(super) fn py_float(f: f64) -> String {
+    if f.is_nan() {
+        return "nan".into();
+    }
+    if f.is_infinite() {
+        return if f > 0.0 { "inf" } else { "-inf" }.into();
+    }
+    let s = format!("{f:e}");
+    let (m, e) = s.split_once('e').unwrap_or((&s, "0"));
+    let exp = e.parse::<i32>().unwrap_or(0);
+    let sign = if m.starts_with('-') { "-" } else { "" };
+    let digits = m.trim_start_matches('-').replace('.', "");
+    let n = digits.len() as i32;
+    if (-4..16).contains(&exp) {
+        if exp < 0 {
+            format!("{sign}0.{}{digits}", "0".repeat((-exp - 1) as usize))
+        } else if n <= exp + 1 {
+            format!("{sign}{digits}{}.0", "0".repeat((exp + 1 - n) as usize))
+        } else {
+            let (a, b) = digits.split_at((exp + 1) as usize);
+            format!("{sign}{a}.{b}")
+        }
+    } else {
+        let mantissa = if n > 1 {
+            format!("{}.{}", &digits[..1], &digits[1..])
+        } else {
+            digits
+        };
+        let es = if exp < 0 { '-' } else { '+' };
+        format!("{sign}{mantissa}e{es}{:02}", exp.abs())
+    }
+}
+/// Python `repr(str)` for diagnostic texts (quote choice and escapes).
+pub(super) fn py_repr(s: &str) -> String {
+    let q = if s.contains('\'') && !s.contains('"') {
+        '"'
+    } else {
+        '\''
+    };
+    let mut out = String::from(q);
+    for c in s.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c == q => {
+                out.push('\\');
+                out.push(c);
+            }
+            c if (c as u32) < 0x20 || (0x7f..=0xa0).contains(&(c as u32)) => {
+                out.push_str(&format!("\\x{:02x}", c as u32));
+            }
+            c => out.push(c),
+        }
+    }
+    out.push(q);
+    out
+}
+/// Whether a JSON number is an integer (Python `int`), including arbitrary precision.
+pub(super) fn is_int(n: &serde_json::Number) -> bool {
+    n.is_i64() || n.is_u64() || !n.to_string().contains(['.', 'e', 'E'])
+}
 pub(super) fn headers(f: &CoreFont) -> Map<String, V> {
     let mut h = Map::new();
     for p in f.headers.iter() {
