@@ -459,7 +459,12 @@ class Bitmap:
     def width(self) -> int:
         """Width in pixels."""
     @staticmethod
-    def with_limits(width: int, height: int, limits: _t.BitmapLimits, depth: str = ...) -> Bitmap:
+    def with_limits(
+        width: int,
+        height: int,
+        limits: _t.BitmapLimits,
+        depth: _t.Depth = ...,
+    ) -> Bitmap:
         """A blank raster under explicit limits (`Bitmap::with_limits`)."""
 
 @final

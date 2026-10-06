@@ -32,11 +32,11 @@ class Cff:
     def data(self) -> bytes:
         """The CFF table bytes."""
     @staticmethod
-    def from_sfnt(font: Sfnt, limits: _t.SfntLimits | None = ...) -> Cff:
+    def from_sfnt(font: Sfnt, limits: _t.CffLimits | None = ...) -> Cff:
         """The `CFF ` table of an `OTTO` sfnt handle (requires maxp 0.5 and head)."""
     def global_subr_count(self) -> int:
         """Number of global subroutines."""
-    def glyph(self, gid: int, limits: _t.SfntLimits | None = ...) -> _t.DecodedGlyph:
+    def glyph(self, gid: int, limits: _t.CffLimits | None = ...) -> _t.DecodedGlyph:
         """Evaluate one glyph: `{advance, commands}` (DecodedGlyph dict)."""
     def glyph_name(self, gid: int) -> bytes | None:
         """The glyph name bytes of a name-keyed font, or `None`."""
@@ -52,15 +52,15 @@ class Cff:
     def parse(
         data: _t.Buffer | _c.Sequence[int],
         units_per_em: int,
-        limits: _t.SfntLimits | None = ...,
+        limits: _t.CffLimits | None = ...,
     ) -> Cff:
         """Parse a raw `CFF ` table with the containing font's units per em."""
-    def read_all(self, limits: _t.SfntLimits | None = ...) -> list[_t.DecodedGlyph]:
+    def read_all(self, limits: _t.CffLimits | None = ...) -> list[_t.DecodedGlyph]:
         """Evaluate every glyph under one whole-font budget."""
     def subset(
         self,
         glyphs: _c.Sequence[int],
-        limits: _t.SfntLimits | None = ...,
+        limits: _t.CffLimits | None = ...,
     ) -> _t.CffEncodedBytes:
         """Subset to `glyphs` (old IDs in new order, `.notdef` first): CFF bytes."""
 

@@ -24,18 +24,25 @@ class Collection:
 
     Owns the bytes and limits; each call re-parses (every face is checked).
     """
-    def __new__(cls, data: _t.Buffer, limits: _t.SfntLimits | None = ...) -> Collection:
+    def __new__(cls, data: _t.Buffer, limits: _t.CollectionLimits | None = ...) -> Collection:
         """Parse a `ttcf` collection; same as `Collection.parse(data, limits)`."""
     @property
     def data(self) -> bytes:
         """The collection bytes this handle owns."""
-    def extract(self, index: int, limits: _t.SfntLimits | None = ...) -> tuple[bytes, _t.Report]:
+    def extract(
+        self,
+        index: int,
+        limits: _t.CollectionLimits | None = ...,
+    ) -> tuple[bytes, _t.Report]:
         """Extract face `index` as a standalone sfnt: `(bytes, report)`."""
     @property
     def faces(self) -> list[_t.CollectionFace]:
         """Faces as dicts `{flavor, offset, tables}` with table records as in `Sfnt.tables()`."""
     @staticmethod
-    def parse(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Collection:
+    def parse(
+        data: _t.Buffer | _c.Sequence[int],
+        limits: _t.CollectionLimits | None = ...,
+    ) -> Collection:
         """Parse a `ttcf` collection, checking every face before exposing any."""
     @property
     def signature(self) -> bytes | None:

@@ -395,6 +395,8 @@ SIGNATURES = {
     "fontpixel.sfnt.gsub.subset": {"return": "_t.Gsub"},
     "fontpixel.sfnt.metrics.*": {"axis": "_t.Axis"},
     "fontpixel.sfnt.os2.*": {"codepoints": "_c.Iterable[int]"},
+    "fontpixel.sfnt.cff.Cff.*": {"limits": "_t.CffLimits"},
+    "fontpixel.sfnt.collection.Collection.*": {"limits": "_t.CollectionLimits"},
 
     "fontpixel.sfnt.subset.subset": {"return": "_t.SubsetResult"},
     # ---- variants / woff -----------------------------------------------------------
@@ -454,6 +456,7 @@ SIGNATURES = {
     # ---- second pass: containers and handle round trips -------------------------
     f"{N}.Bitmap.from_dict": {"data": "_t.GlyphBitmap"},
     f"{N}.Bitmap.depth": {"return": "_t.Depth"},
+    f"{N}.Bitmap.with_limits": {"depth": "_t.Depth"},
     f"{N}.Font.from_dict": {"data": "_t.FontDict"},
     f"{N}.FontSet.from_dict": {"data": "_t.FontSetDict"},
     f"{N}.Glyph.from_dict": {"data": "_t.GlyphDict"},
@@ -528,26 +531,25 @@ def bind_serde(model):
     return None
 
 
-def _match(table, key):
-    if key in table:
-        return table[key]
-    best = None
-    for pat, val in table.items():
-        if any(ch in pat for ch in "*?[") and fnmatch.fnmatchcase(key, pat):
-            if best is None or len(pat) > len(best[0]):
-                best = (pat, val)
-    return best[1] if best else None
+def _matches(table, key):
+    """Entries for `key`: the exact one first, then globs, most specific first."""
+    out = [table[key]] if key in table else []
+    globs = [(pat, val) for pat, val in table.items()
+             if any(ch in pat for ch in "*?[") and fnmatch.fnmatchcase(key, pat)]
+    out += [val for _, val in sorted(globs, key=lambda pv: -len(pv[0]))]
+    return out
 
 
 def lookup(table, qual, item=None):
-    entry = _match(table, qual)
-    if entry is None:
-        return None
-    if item is None:
-        return entry
-    if isinstance(entry, dict):
-        return entry.get(item)
-    return entry if item == "return" else None
+    for entry in _matches(table, qual):
+        if item is None:
+            return entry
+        if isinstance(entry, dict):
+            if item in entry:
+                return entry[item]
+        elif item == "return":
+            return entry
+    return None
 
 
 def param_rule(qual, name):

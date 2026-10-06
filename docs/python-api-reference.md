@@ -445,7 +445,7 @@ default `.`/`#`) (`Bitmap::to_text`).
 
 *property* -- Width in pixels.
 
-#### `fontpixel.Bitmap.with_limits(width: int, height: int, limits: BitmapLimits, depth: str = ...) -> Bitmap`
+#### `fontpixel.Bitmap.with_limits(width: int, height: int, limits: BitmapLimits, depth: Depth = ...) -> Bitmap`
 
 *static method* -- A blank raster under explicit limits (`Bitmap::with_limits`).
 
@@ -7349,7 +7349,7 @@ Owns the table (or containing sfnt) bytes and limits; each call re-parses.
 
 *property* -- The CFF table bytes.
 
-#### `fontpixel.sfnt.cff.Cff.from_sfnt(font: Sfnt, limits: SfntLimits | None = ...) -> Cff`
+#### `fontpixel.sfnt.cff.Cff.from_sfnt(font: Sfnt, limits: CffLimits | None = ...) -> Cff`
 
 *static method* -- The `CFF ` table of an `OTTO` sfnt handle (requires maxp 0.5 and head).
 
@@ -7357,7 +7357,7 @@ Owns the table (or containing sfnt) bytes and limits; each call re-parses.
 
 *method* -- Number of global subroutines.
 
-#### `fontpixel.sfnt.cff.Cff.glyph(gid: int, limits: SfntLimits | None = ...) -> DecodedGlyph`
+#### `fontpixel.sfnt.cff.Cff.glyph(gid: int, limits: CffLimits | None = ...) -> DecodedGlyph`
 
 *method* -- Evaluate one glyph: `{advance, commands}` (DecodedGlyph dict).
 
@@ -7381,15 +7381,15 @@ Owns the table (or containing sfnt) bytes and limits; each call re-parses.
 
 *method* -- Number of glyphs (`Cff::len`).
 
-#### `fontpixel.sfnt.cff.Cff.parse(data: Buffer | Sequence[int], units_per_em: int, limits: SfntLimits | None = ...) -> Cff`
+#### `fontpixel.sfnt.cff.Cff.parse(data: Buffer | Sequence[int], units_per_em: int, limits: CffLimits | None = ...) -> Cff`
 
 *static method* -- Parse a raw `CFF ` table with the containing font's units per em.
 
-#### `fontpixel.sfnt.cff.Cff.read_all(limits: SfntLimits | None = ...) -> list[DecodedGlyph]`
+#### `fontpixel.sfnt.cff.Cff.read_all(limits: CffLimits | None = ...) -> list[DecodedGlyph]`
 
 *method* -- Evaluate every glyph under one whole-font budget.
 
-#### `fontpixel.sfnt.cff.Cff.subset(glyphs: Sequence[int], limits: SfntLimits | None = ...) -> CffEncodedBytes`
+#### `fontpixel.sfnt.cff.Cff.subset(glyphs: Sequence[int], limits: CffLimits | None = ...) -> CffEncodedBytes`
 
 *method* -- Subset to `glyphs` (old IDs in new order, `.notdef` first): CFF bytes.
 
@@ -7437,7 +7437,7 @@ record even for BMP-only mappings.
 
 TrueType/OpenType collections (ttcf).
 
-### `fontpixel.sfnt.collection.Collection(data: Buffer, limits: SfntLimits | None = ...) -> Collection`
+### `fontpixel.sfnt.collection.Collection(data: Buffer, limits: CollectionLimits | None = ...) -> Collection`
 
 *class*
 
@@ -7449,7 +7449,7 @@ Owns the bytes and limits; each call re-parses (every face is checked).
 
 *property* -- The collection bytes this handle owns.
 
-#### `fontpixel.sfnt.collection.Collection.extract(index: int, limits: SfntLimits | None = ...) -> tuple[bytes, Report]`
+#### `fontpixel.sfnt.collection.Collection.extract(index: int, limits: CollectionLimits | None = ...) -> tuple[bytes, Report]`
 
 *method* -- Extract face `index` as a standalone sfnt: `(bytes, report)`.
 
@@ -7457,7 +7457,7 @@ Owns the bytes and limits; each call re-parses (every face is checked).
 
 *property* -- Faces as dicts `{flavor, offset, tables}` with table records as in `Sfnt.tables()`.
 
-#### `fontpixel.sfnt.collection.Collection.parse(data: Buffer | Sequence[int], limits: SfntLimits | None = ...) -> Collection`
+#### `fontpixel.sfnt.collection.Collection.parse(data: Buffer | Sequence[int], limits: CollectionLimits | None = ...) -> Collection`
 
 *static method* -- Parse a `ttcf` collection, checking every face before exposing any.
 
