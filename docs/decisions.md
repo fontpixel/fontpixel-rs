@@ -1855,9 +1855,9 @@ bindings-design.md, "JS/WASM".
   Release builds use fat LTO (environment override for the module build only)
   and wasm-opt 117 `-Oz` run by `scripts/build_wasm.sh` itself, so the size
   before and after wasm-opt is recorded in `build-info.json`. Sizes of the
-  foundation build (pilot API): full 9,631,695 bytes (11,405,346 before
-  wasm-opt; ~3.96 MB gzip -9), minimal 1,491,487 (1,885,830), merge recorded in
-  the phase report. Start-up of the full module in Node 24: 16 ms
+  foundation build (pilot API), after wasm-opt (before; gzip -9 after): full
+  9,631,937 bytes (11,405,691; 3,973,830), merge 5,200,544 (5,935,142;
+  2,284,835), minimal 1,491,714 (1,886,122; 564,452). Start-up of the full module in Node 24: 16 ms
   `WebAssembly.compile` + 6 ms instantiate.
 - Plain data does **not** use serde-wasm-bindgen (superseding "Phases 7–9
   architecture"): its serializer fails for `u64`/`i64` beyond 2^53 and its
