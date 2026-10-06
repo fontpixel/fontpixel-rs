@@ -14,6 +14,8 @@
 //!   from [`_native`] in a fixed order.
 #![deny(unsafe_code)]
 
+pub mod bitmap;
+pub mod charset;
 pub mod conv;
 pub mod errors;
 pub mod formats;
@@ -21,6 +23,10 @@ pub mod formats_direct;
 pub mod formats_extra;
 pub mod formats_options;
 pub mod handles;
+pub mod metadata;
+pub mod model;
+pub mod render;
+pub mod resources;
 
 use pyo3::prelude::*;
 
@@ -30,6 +36,12 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     errors::register(m)?;
     handles::register(m)?;
+    model::register(m)?;
+    bitmap::register(m)?;
+    render::register(m)?;
+    charset::register(m)?;
+    metadata::register(m)?;
+    resources::register(m)?;
     formats::register(m)?;
     Ok(())
 }

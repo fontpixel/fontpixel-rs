@@ -216,6 +216,7 @@ pub fn to_py(err: fontpixel::Error) -> PyErr {
             }
         };
         let _ = attrs.set_item("kind", kind);
+        let _ = attrs.set_item("exit_code", err.exit_code());
         if let Some(report) = err.report()
             && let Ok(value) = crate::conv::to_py(py, report)
         {
