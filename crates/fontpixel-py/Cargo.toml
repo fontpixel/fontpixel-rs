@@ -14,7 +14,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["all-formats", "serde", "compat-bdfparser", "cjk-charsets"] }
-pyo3 = { version = "0.29", features = ["abi3-py310"] }
+fontpixel-ops = { path = "../fontpixel-ops", features = ["serde", "toml"] }
+# multiple-pymethods lets each area module add methods to the shared handle
+# classes in its own file.
+pyo3 = { version = "0.29", features = ["abi3-py310", "multiple-pymethods"] }
 pythonize = "0.29"
 serde = { workspace = true }
 serde_json = { workspace = true }
