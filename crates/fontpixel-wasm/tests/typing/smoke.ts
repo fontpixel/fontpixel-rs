@@ -112,3 +112,49 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
   // @ts-expect-error plain data is not a handle
   font.addGlyph(dict.fonts[0].glyphs[0]);
 }
+
+// Bitmap operations, rendering, charsets and outlines (appended by the
+// bitmap/render/charset/outline unit; a separate import keeps merges simple).
+import * as fpx from "fontpixel";
+
+export function smokeBitmapRender(font: fpx.Font): void {
+  const b: fpx.Bitmap = fpx.Bitmap.fromText(".#\n#.", { palette: { ".": 0, "#": 1 } });
+  const g: fpx.Bitmap = fpx.Bitmap.fromRows([[0, 255]], { depth: "gray8", limits: fpx.defaultBitmapLimits() });
+  const moved: fpx.Bitmap = b.shift(1n, -1).crop(4, 4, 0, 0).concat(b, { direction: "down", gap: 1 });
+  b.composite(moved, 0, 0, "xor");
+  const rows: Uint8Array[] = g.toRows();
+  const values: fpx.WideInt[] = b.toRowValues();
+  const text: string = b.toText([[0, " "], [1, "@"]]);
+  const box: fpx.Bounds = b.bbox();
+  const layout: fpx.ByteLayout = fpx.defaultByteLayout();
+  const packed: Uint8Array = b.toBytes({ ...layout, bit_order: "lsb" });
+  const all: fpx.Bitmap = fpx.Bitmap.concatAll([b, moved], { alignment: "end", gaps: [2n] });
+  void [rows, values, text, box, packed, all];
+
+  const options: fpx.RenderOptions = { mode: "cell", direction: fpx.parseWritingDirection("tbrl") };
+  const rendered: fpx.Rendered = font.draw("Hi", options, font.glyph(0));
+  const report: fpx.Report = rendered.report;
+  const png: Uint8Array = fpx.toPng(rendered.bitmap, { scale: 2, foreground: fpx.parseRgba("#f00") });
+  const svg: string = fpx.toSvg(font.drawAll("descending", [[65, 90]]).bitmap, { background: fpx.rgbaTransparent() });
+  const dict: fpx.RenderedDict = font.drawCodepoints([65, "B", { Legacy: 7 }, null]).toDict();
+  void [report, png, svg, dict];
+
+  const codec: fpx.CharsetCodec = fpx.CharsetCodec.forFont(font);
+  const unicode: number | undefined = codec.cp2unicode(0x41);
+  const table = fpx.charsetTable();
+  const available: boolean = table[0].available;
+  const block: fpx.UnicodeRange | undefined = fpx.unicodeBlock(0x4e00);
+  const kuten: [number, number] | undefined = fpx.eucToKuten(0xb0a1);
+  void [unicode, available, block, kuten];
+
+  const contours: fpx.Contour[] = fpx.outlineContours(b, { shape: "dot", dot_size: 0.9 });
+  const raster: fpx.Bitmap = fpx.outlineRasterize(contours, 100, [0, 0], 2, 2);
+  const edges: fpx.Edge[] = [{ line: [[0, 0], [1, 1]] }];
+  const path: fpx.Bitmap = fpx.pathRasterize(edges, 1, [0, 0], 2, 2, { max_edges: 4 });
+  void [raster, path, fpx.outlineDefaults().Limits.max_points];
+
+  // @ts-expect-error depth is "mono" | "gray8"
+  fpx.Bitmap.fromRows([[0]], { depth: "rgb" });
+  // @ts-expect-error render modes are a closed set
+  font.draw("x", { mode: "fast" });
+}
