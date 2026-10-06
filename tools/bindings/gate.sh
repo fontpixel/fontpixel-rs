@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Binding coverage gate: rustdoc JSON -> inventory -> mapping check.
+# Usage: tools/bindings/gate.sh [python|python,js] [report.md]
+set -euo pipefail
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.."
+require="${1:-}"
+report="${2:-}"
+target="${FONTPIXEL_RUSTDOC_TARGET:-${CARGO_TARGET_DIR:-target}/rustdoc-json}"
+docs=()
+for crate in fontpixel fontpixel-ops; do
+  if cargo metadata --no-deps --format-version 1 | grep -q "\"name\":\"$crate\""; then
+    CARGO_TARGET_DIR="$target" RUSTDOCFLAGS="-Z unstable-options --output-format json" \
+      cargo +nightly rustdoc -q --locked -p "$crate" --all-features --lib
+    docs+=("$target/doc/${crate//-/_}.json")
+  fi
+done
+python3 tools/bindings/inventory.py "$target/inventory.json" "${docs[@]}"
+args=("$target/inventory.json")
+[ -n "$require" ] && args+=(--require "$require")
+[ -n "$report" ] && args+=(--report "$report")
+python3 tools/bindings/check.py "${args[@]}"
