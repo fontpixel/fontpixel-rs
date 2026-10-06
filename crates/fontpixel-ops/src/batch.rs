@@ -189,7 +189,7 @@ impl TaskRequest {
         self.validate()?;
         match self {
             Self::Convert(r) | Self::Vectorize(r) => {
-                crate::convert::run(*r)?.write_json(out, false)
+                crate::convert::run(*r, &mut crate::Observer::none())?.write_json(out, false)
             }
             #[cfg(feature = "opentype")]
             Self::Variants(r) => {
@@ -197,7 +197,9 @@ impl TaskRequest {
             }
             #[cfg(feature = "opentype")]
             Self::Subset(r) => crate::opentype::subset(*r)?.write(ReportStyle::Json, out, false),
-            Self::Merge(r) => crate::merge::run(*r)?.write_json(out, false),
+            Self::Merge(r) => {
+                crate::merge::run(*r, &mut crate::Observer::none())?.write_json(out, false)
+            }
             Self::Charset(r) => crate::commands::charset(*r)?.write_json(out, false),
             Self::Validate(r) => crate::commands::validate(*r)?.write_json(out, false),
             Self::Diff(r) => {
