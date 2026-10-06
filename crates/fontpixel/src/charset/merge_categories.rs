@@ -7,6 +7,7 @@
 pub const UNICODE_VERSION: &str = "17.0.0";
 /// Inclusive Unicode block/category range.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct UnicodeRange {
     /// First code point.
     pub start: u32,
@@ -17,6 +18,8 @@ pub struct UnicodeRange {
 }
 /// Exact East Asian Width property.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EastAsianWidth {
     /// Ambiguous.
     Ambiguous,

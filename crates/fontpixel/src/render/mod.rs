@@ -34,6 +34,8 @@ pub use image::{ImageOptions, Rgba, to_svg};
 
 /// Independent glyph and line progression. All sixteen combinations are valid.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct WritingDirection {
     /// Progression within one line/column.
     pub glyphs: Direction,
@@ -97,6 +99,8 @@ impl FromStr for WritingDirection {
 
 /// Spacing mode. SPEC mode 0 concatenates font cells, not tight ink bounds.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RenderMode {
     /// Place font cells using DWIDTH/DWIDTH1 (SPEC mode 1).
     #[default]
@@ -109,6 +113,8 @@ pub enum RenderMode {
 
 /// Policy for absent or unrepresentable input codes.
 #[derive(Debug, Clone, Copy, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum MissingGlyph<'a> {
     /// SPEC blank font cell, with an explicit zero advance.
     #[default]
@@ -118,9 +124,36 @@ pub enum MissingGlyph<'a> {
     /// Draw a borrowed replacement using the target font's cell and metrics.
     Glyph(&'a Glyph),
 }
+/// Accepts `"blank"` and `"error"`. A `{"glyph": ...}` replacement serializes,
+/// but cannot deserialize into a borrow and is rejected with an explicit error;
+/// callers supply the replacement glyph separately.
+#[cfg(feature = "serde")]
+impl<'de> serde::Deserialize<'de> for MissingGlyph<'_> {
+    fn deserialize<D: serde::Deserializer<'de>>(
+        deserializer: D,
+    ) -> std::result::Result<Self, D::Error> {
+        #[derive(serde::Deserialize)]
+        #[serde(rename_all = "snake_case")]
+        enum Raw {
+            Blank,
+            Error,
+            Glyph(serde::de::IgnoredAny),
+        }
+        match Raw::deserialize(deserializer)? {
+            Raw::Blank => Ok(Self::Blank),
+            Raw::Error => Ok(Self::Error),
+            Raw::Glyph(_) => Err(serde::de::Error::custom(
+                "a borrowed replacement glyph cannot be deserialized; \
+                 pass the replacement glyph separately",
+            )),
+        }
+    }
+}
 
 /// Limits for layout, rendering and diagnostic bookkeeping.
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RenderLimits {
     /// Maximum number of input characters/codes (including missing ones).
     pub max_glyphs: usize,
@@ -145,6 +178,8 @@ impl Default for RenderLimits {
 /// Text rendering controls. No implicit shaping, bidi reordering or line-feed
 /// interpretation is performed; input order is placed in the selected direction.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct RenderOptions<'a> {
     /// Maximum accumulated width-plus-offset per line, matching SPEC exactly.
     pub line_limit: i64,
@@ -186,6 +221,8 @@ impl Default for RenderOptions<'_> {
 
 /// Ordering for `draw_all`; file order means last effective occurrence of each code, matching Python's BDF parser.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GlyphOrder {
     /// Numeric/domain ascending order (SPEC 1).
     #[default]
@@ -201,6 +238,8 @@ pub enum GlyphOrder {
 /// Result pixels and deterministic diagnostics. Missing and clipped ink are
 /// reported even though those are valid SPEC rendering operations.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Rendered {
     /// Packed monochrome result, top-left origin.
     pub bitmap: Bitmap,

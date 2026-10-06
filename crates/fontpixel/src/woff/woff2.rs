@@ -19,6 +19,8 @@ const TAGS:[[u8;4];63]=[
  *b"gvar",*b"hsty",*b"just",*b"lcar",*b"mort",*b"morx",*b"opbd",*b"prop",*b"trak",*b"Zapf",*b"Silf",*b"Glat",*b"Gloc",*b"Feat",*b"Sill"];
 /// Deterministic WOFF2 output options.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// Brotli quality in 0..=11; the required default is 11.
     pub quality: u32,

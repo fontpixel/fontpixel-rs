@@ -23,7 +23,7 @@ use std::collections::{BTreeMap, btree_map::Entry};
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "snake_case")
 )]
 pub enum MergeSpacing {
@@ -49,7 +49,7 @@ impl MergeSpacing {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "snake_case")
 )]
 pub enum GeometricWidth {
@@ -75,7 +75,7 @@ fn fullwidth_category(cp: u32, options: &MergeOptions) -> bool {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "snake_case")
 )]
 pub enum ModificationPermission {
@@ -99,6 +99,8 @@ impl ModificationPermission {
 }
 /// Supplemental notices never erase originals.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct PartLicense {
     /// Additional copyright.
     pub copyright: Option<String>,
@@ -147,24 +149,34 @@ impl<'a> MergePart<'a> {
 }
 /// Explicit merge choices.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MergeOptions {
     /// Required new family.
     pub family: String,
     /// Requested spacing.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub spacing: MergeSpacing,
     /// Independent geometric width class.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub geometric_width: GeometricWidth,
     /// Preserve/report incompatible Western glyphs.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub allow_misaligned: bool,
     /// Permit first other source after selected-present sources.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub fallback: bool,
     /// Nonnegative ascent override.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub ascent: Option<i64>,
     /// Nonnegative descent override.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub descent: Option<i64>,
     /// Reject unknown/prohibited licensing and information loss.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub strict: bool,
     /// Aggregate source/work/output limits.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub limits: ResourceLimits,
 }
 impl Default for MergeOptions {
@@ -184,6 +196,8 @@ impl Default for MergeOptions {
 }
 /// Owned output and deterministic report.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MergeResult {
     /// New strike.
     pub font: Font,

@@ -31,6 +31,8 @@ pub mod merge_categories;
 
 /// Permitted per-glyph code lengths, independent of a text-stream encoding.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Kind {
     /// Identity mapping of Unicode code points.
     Unicode,
@@ -50,6 +52,7 @@ enum TableId {
 
 /// A canonical SPEC-v3 charset's metadata; always visible in every build.
 #[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct CharsetInfo {
     /// Canonical key, such as `iso88591` or `cp932`.
     pub key: &'static str,
@@ -65,6 +68,7 @@ pub struct CharsetInfo {
     pub properties: (&'static str, &'static str),
     /// Additional cleaned aliases; code-page folding rules are separate.
     pub aliases: &'static [&'static str],
+    #[cfg_attr(feature = "serde", serde(skip))]
     table: Option<TableId>,
 }
 
@@ -200,6 +204,8 @@ pub fn charset_props(key: &str) -> (String, String) {
 
 /// Error resolving a known charset whose precise table is not compiled in.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CharsetError {
     /// Enable `cjk-charsets` to use this canonical charset.
     FeatureDisabled(String),
@@ -453,6 +459,8 @@ fn gb_encode(value: u32) -> Option<u32> {
 
 /// A Windows FNT `dfCharSet` requirement; contextual/symbol sets aren't guessed.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum WindowsCharset {
     /// A deterministic code-page mapping supported by this module.
     CodePage(&'static str),

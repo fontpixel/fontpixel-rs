@@ -10,6 +10,8 @@ use read_fonts::{FontData, FontRead, tables::glyf::SimpleGlyph as ReadSimple};
 
 /// Geometry and work limits in addition to the common sfnt byte budgets.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Container/table/glyph budgets.
     pub sfnt: super::Limits,
@@ -47,6 +49,11 @@ impl Default for Limits {
 }
 /// Placement of a component after its linear transform.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(deny_unknown_fields, rename_all = "snake_case")
+)]
 pub enum Anchor {
     /// Signed design-unit translation.
     Offset(i16, i16),
@@ -60,6 +67,8 @@ pub enum Anchor {
 }
 /// How the transform applies to offset arguments.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum OffsetMode {
     /// Neither flag present; use recommended unscaled-offset semantics.
     #[default]
@@ -71,6 +80,8 @@ pub enum OffsetMode {
 }
 /// One composite component. Matrix words are signed exact F2DOT14 values.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Component {
     /// Child glyph ID.
     pub glyph_id: u16,
@@ -106,6 +117,8 @@ impl Component {
 }
 /// Simple glyph's ordered points and opaque interpreter program.
 #[derive(Clone, Debug, Default, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct SimpleGlyph {
     /// Closed contours, with integral signed 16-bit design coordinates.
     pub contours: Vec<Contour>,
@@ -116,6 +129,8 @@ pub struct SimpleGlyph {
 }
 /// Composite glyph's ordered child references and opaque interpreter program.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct CompositeGlyph {
     /// Components in point-numbering order; must not be empty.
     pub components: Vec<Component>,
@@ -124,6 +139,8 @@ pub struct CompositeGlyph {
 }
 /// One glyph entry, retaining component relationships rather than flattening them.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Glyph {
     /// No record, represented by equal adjacent loca offsets.
     Empty,
@@ -191,12 +208,16 @@ impl Glyph {
 }
 /// Parsed glyph order, beginning with glyph 0 (`.notdef`).
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct GlyfTable {
     /// Stable glyph-ID order.
     pub glyphs: Vec<Glyph>,
 }
 /// Loca serialization choice.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum LocaFormat {
     /// Choose short offsets when all half-offsets fit in 16 bits.
     #[default]
@@ -208,6 +229,8 @@ pub enum LocaFormat {
 }
 /// Geometry maxima for an unhinted maxp table or an existing maxp update.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Statistics {
     /// Simple glyph's maximum point count.
     pub max_points: u16,
@@ -256,6 +279,8 @@ impl Statistics {
 }
 /// Encoded outlines and values the caller must reconcile with head/maxp.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Encoded {
     /// Glyph data, each entry aligned to two bytes.
     pub glyf: Vec<u8>,

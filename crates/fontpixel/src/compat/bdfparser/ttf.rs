@@ -12,6 +12,8 @@ use serde_json::{Value as V, json};
 use std::collections::{BTreeMap, BTreeSet};
 /// SPEC TrueType output options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TtfOptions {
     /// Square merged outlines or individual circles.
     pub shape: String,

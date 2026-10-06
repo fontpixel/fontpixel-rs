@@ -6,6 +6,8 @@ use std::collections::BTreeMap;
 
 /// One original name record; non-Unicode encodings remain exact byte strings.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct NameRecord {
     /// Platform ID.
     pub platform_id: u16,
@@ -51,6 +53,8 @@ impl NameRecord {
 }
 /// Owned editable name table. Language tags select format 1 when nonempty.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct NameTable {
     /// Name records, preserving source order when decoded.
     pub records: Vec<NameRecord>,

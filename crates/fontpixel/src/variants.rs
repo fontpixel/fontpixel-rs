@@ -26,24 +26,33 @@ pub use notdef::NotdefPolicy;
 
 /// A language-specific face with explicit OpenType script selection.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct LanguageVariant {
     /// OpenType language-system tag; use `language_tag` for BCP-47 conversion.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::tag"))]
     pub language: Tag,
     /// Scripts that activate this alternative.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::list"))]
     pub scripts: Vec<Tag>,
     /// Alternative glyphs; absent codepoints fall back to the base.
     pub font: Font,
 }
 /// A face selected by script, regardless of the shaping language.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct ScriptVariant {
     /// Scripts that activate this alternative (e.g. latn/grek/cyrl).
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::list"))]
     pub scripts: Vec<Tag>,
     /// Alternative glyphs.
     pub font: Font,
 }
 /// One default face plus ordered region and script alternatives.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Variants {
     /// Default face and global metadata source.
     pub base: Font,
@@ -354,6 +363,8 @@ impl PreparedVariants<'_> {
 }
 /// Planned encoded and unencoded glyphs; implicit glyph 0 is `.notdef`.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Plan {
     /// Glyph IDs 1 onward, with deterministic PostScript names.
     pub glyphs: Vec<(String, Glyph)>,

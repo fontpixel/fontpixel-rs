@@ -5,6 +5,8 @@ use crate::{Bitmap, Result, bitmap::BitmapLimits};
 pub type Point = (f64, f64);
 /// A directed Bézier edge. Callers explicitly supply contour-closing edges.
 #[derive(Clone, Copy, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Edge {
     /// Straight segment.
     Line(Point, Point),

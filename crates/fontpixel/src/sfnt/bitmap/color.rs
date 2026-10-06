@@ -355,6 +355,8 @@ pub(super) fn decode_png(
 }
 /// A decoded sbix glyph; placement offsets are pixels in the strike coordinate space.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct SbixGlyph {
     /// Signed left/bottom graphic origin offsets.
     pub origin: [i16; 2],
@@ -363,6 +365,8 @@ pub struct SbixGlyph {
 }
 /// One sbix strike, including only present images.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct SbixStrike {
     /// Pixel size.
     pub ppem: u16,
@@ -373,6 +377,8 @@ pub struct SbixStrike {
 }
 /// Decoded sbix table, retaining the optional outline-overlay requirement.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Sbix {
     /// Whether source asks consumers to draw outlines over bitmap images.
     pub draw_outlines: bool,

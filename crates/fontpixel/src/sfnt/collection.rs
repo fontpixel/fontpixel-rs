@@ -10,6 +10,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 /// Collection-wide budgets, including repeated references and extracted faces.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Per-face common limits.
     pub sfnt: super::Limits,

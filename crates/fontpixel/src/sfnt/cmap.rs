@@ -12,6 +12,8 @@ use std::collections::{BTreeMap, BTreeSet};
 pub type Mapping = BTreeMap<u32, u16>;
 /// Serialized cmap and a compatibility fact callers can report.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct EncodedCmap {
     /// Complete table bytes, including full-Unicode format 12 unless
     /// [`FullRecords::WhenNeeded`] found format 4 sufficient.
@@ -143,6 +145,8 @@ pub fn encode(mapping: &Mapping, num_glyphs: u16, limits: &Limits) -> Result<Enc
 /// and (3, 1) whenever it is representable. Every policy decodes to the same
 /// mapping: no scalar is ever dropped.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum FullRecords {
     /// List format 12 under both (0, 4) and (3, 10) (native default).
     #[default]

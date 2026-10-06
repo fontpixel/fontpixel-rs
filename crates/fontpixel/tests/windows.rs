@@ -446,10 +446,12 @@ fn cjk_legacy_bytes_roundtrip_without_conversion_tables() {
 #[cfg(feature = "yaff")]
 #[test]
 fn malformed_deserialized_rational_is_rejected_without_panic() {
-    let mut f = sample();
-    f.metrics.point_size =
-        Some(serde_json::from_str(r#"{"numerator":12,"denominator":0}"#).unwrap());
-    assert!(fnt::write(&f, &Default::default()).is_err());
+    // Deserialization validates through `Rational::new`, so a zero denominator
+    // can no longer reach a writer.
+    let error =
+        serde_json::from_str::<fontpixel::model::Rational>(r#"{"numerator":12,"denominator":0}"#)
+            .unwrap_err();
+    assert!(error.to_string().contains("denominator must be nonzero"));
 }
 
 #[test]

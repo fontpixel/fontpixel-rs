@@ -15,6 +15,8 @@ use crate::{
 use std::{borrow::Cow, fmt::Write as _, mem::size_of};
 /// Outline encoding inside the sfnt container.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum OutlineFlavor {
     /// Quadratic outlines with shared-pixel composites for dots.
     #[default]
@@ -24,6 +26,8 @@ pub enum OutlineFlavor {
 }
 /// Native default-scale dot composite representation; pixels and glyph IDs agree.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DotReuse {
     /// One circle component per pixel, favoring repetitive webfont compression.
     Literal,
@@ -35,6 +39,8 @@ pub enum DotReuse {
 }
 /// Native variant output choices, independent from the outer webfont container.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// Outline shape.
     pub shape: Shape,
@@ -68,6 +74,7 @@ pub struct Options {
     /// Deterministic version text without the `Version ` prefix.
     pub version: String,
     /// Four-byte vendor identifier.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::tag"))]
     pub vendor: [u8; 4],
     /// Optional copyright override.
     pub copyright: Option<String>,
@@ -115,6 +122,8 @@ impl Default for Options {
 }
 /// Complete standalone sfnt output and conversion diagnostics.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Encoded {
     /// TTF or OTF bytes with native GSUB.
     pub bytes: Vec<u8>,

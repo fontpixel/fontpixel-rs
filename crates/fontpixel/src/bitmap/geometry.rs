@@ -2,6 +2,8 @@ use super::*;
 
 /// Concatenation direction. Left/up reverse placement, not the supplied list.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Direction {
     /// Left to right (SPEC direction 1).
     Right,
@@ -14,6 +16,8 @@ pub enum Direction {
 }
 /// Alignment on the axis perpendicular to concatenation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Alignment {
     /// Top for horizontal, left for vertical.
     Start,

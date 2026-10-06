@@ -20,6 +20,8 @@ pub mod metrics;
 pub mod name;
 pub mod os2;
 pub mod post;
+#[cfg(feature = "serde")]
+pub(crate) mod serde_tag;
 pub mod subset;
 pub(crate) mod working;
 pub use container::{Flavor, Sfnt, SfntBuilder, TableRecord, checksum};
@@ -28,6 +30,8 @@ pub use read_fonts;
 
 /// Additional allocation/work budgets for sfnt operations.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Shared input, output, table and glyph budgets.
     pub resources: ResourceLimits,

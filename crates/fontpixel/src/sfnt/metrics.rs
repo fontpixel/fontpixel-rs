@@ -9,6 +9,8 @@ use read_fonts::{
 
 /// Metric direction; fields are left/right for horizontal and top/bottom for vertical.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Axis {
     /// `hhea`/`hmtx`.
     Horizontal,
@@ -17,6 +19,8 @@ pub enum Axis {
 }
 /// A long metric, in font design units, in glyph-ID order.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct LongMetric {
     /// Advance width or height.
     pub advance: u16,
@@ -25,6 +29,8 @@ pub struct LongMetric {
 }
 /// Axis-independent metric header. Caret vector is (rise, run), as on the wire.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Header {
     /// Version: 0x10000 for horizontal, 0x10000 or 0x11000 for vertical.
     pub version: u32,
@@ -111,6 +117,8 @@ fn validate_version(axis: Axis, version: u32) -> Result<()> {
 }
 /// Header + metric array bytes. The header's count matches compact storage.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct EncodedMetrics {
     /// hhea or vhea bytes.
     pub header: Vec<u8>,

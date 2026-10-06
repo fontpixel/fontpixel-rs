@@ -12,6 +12,8 @@ use crate::model::GlyphBitmap;
 
 /// Encoded tables plus the number of shared-metric (format 2/5) subtables.
 /// Shared runs store zero vertical big metrics for horizontal-only glyphs.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct RunTables {
     /// EBDT/EBLC or bdat/bloc pair.
     pub tables: Tables,

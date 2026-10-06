@@ -8,8 +8,30 @@ use crate::{Error, Report, Result};
 use std::{collections::BTreeSet, fmt};
 
 /// Portable relative asset name with no empty, parent, or current components.
+///
+/// Serde uses the path string, validated through [`ResourcePath::new`].
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(try_from = "String", into = "String")
+)]
 pub struct ResourcePath(String);
+
+#[cfg(feature = "serde")]
+impl TryFrom<String> for ResourcePath {
+    type Error = Error;
+    fn try_from(path: String) -> Result<Self> {
+        Self::new(path)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl From<ResourcePath> for String {
+    fn from(path: ResourcePath) -> Self {
+        path.0
+    }
+}
 
 impl ResourcePath {
     /// Validate an asset path. `/` separates components on every platform.
@@ -44,6 +66,8 @@ impl fmt::Display for ResourcePath {
 /// Configurable input budgets. Format implementations must also enforce the
 /// decompression, glyph, pixel, and table limits before allocating.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ResourceLimits {
     /// Maximum primary input size.
     pub max_input_bytes: usize,
@@ -84,6 +108,8 @@ impl Default for ResourceLimits {
 /// retained diagnostics. Built-in writers expose their actual typed limits;
 /// common write options may further restrict, but never enlarge, those limits.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TransportLimits {
     /// Limits used by the matching reader and native writer validation.
     pub resources: ResourceLimits,
@@ -405,6 +431,8 @@ impl<'a> ReadContext<'a> {
 
 /// One in-memory output asset; the caller decides where to persist it.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct OutputAsset {
     /// Validated relative path, including any subdirectory.
     pub path: ResourcePath,
@@ -413,11 +441,37 @@ pub struct OutputAsset {
 }
 
 /// Complete validated output, with one entry point and zero or more sidecars.
+///
+/// Serde uses `{primary, assets, directory}`; deserialization applies the same
+/// validation as [`OutputBundle::new`] or [`OutputBundle::directory`].
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(try_from = "OutputBundleRaw")
+)]
 pub struct OutputBundle {
     primary: ResourcePath,
     assets: Vec<OutputAsset>,
     directory: bool,
+}
+
+/// Unvalidated serde shape of [`OutputBundle`].
+#[cfg(feature = "serde")]
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct OutputBundleRaw {
+    primary: ResourcePath,
+    assets: Vec<OutputAsset>,
+    directory: bool,
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<OutputBundleRaw> for OutputBundle {
+    type Error = Error;
+    fn try_from(raw: OutputBundleRaw) -> Result<Self> {
+        Self::validated(raw.primary, raw.assets, raw.directory)
+    }
 }
 
 impl OutputBundle {
@@ -570,6 +624,8 @@ impl OutputBundle {
 
 /// Result from a format writer, still wholly in memory.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Written {
     /// All encoded assets.
     pub output: OutputBundle,
