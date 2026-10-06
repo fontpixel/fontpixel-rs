@@ -6,12 +6,16 @@ pattern = "fontpixel::outline"
 status = "bound"
 python = "fontpixel.outline"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "fontpixel (outline* functions, pathRasterize, edgePoints, edgeMaxY)"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::Contour"
 status = "adapted"
 python = "list of (x, y, on_curve) tuples"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "Contour: [x, y, onCurve][]"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 reason = "Vec<Point> alias"
 
 [[rule]]
@@ -19,6 +23,8 @@ pattern = "fontpixel::outline::Limits"
 status = "adapted"
 python = "dict; fontpixel.outline.defaults()['Limits']"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_errors_and_limits"
+js = "OutlineLimits plain data; outlineDefaults().Limits"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline errors and limits"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -26,6 +32,8 @@ pattern = "fontpixel::outline::Options"
 status = "adapted"
 python = "dict; fontpixel.outline.defaults()['Options']"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_errors_and_limits"
+js = "OutlineOptions plain data; outlineDefaults().Options"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline errors and limits"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -33,6 +41,8 @@ pattern = "fontpixel::outline::Point"
 status = "adapted"
 python = "tuple (x, y, on_curve)"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "OutlinePoint [x, y, onCurve]"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 reason = "tuple alias"
 
 [[rule]]
@@ -40,6 +50,8 @@ pattern = "fontpixel::outline::Segment"
 status = "adapted"
 python = "dict"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "Segment plain data {line|quad: points}"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -47,6 +59,8 @@ pattern = "fontpixel::outline::Shape"
 status = "adapted"
 python = "str 'square' | 'square-separate' | 'dot'"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "Shape string 'square' | 'square-separate' | 'dot'"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -54,18 +68,24 @@ pattern = "fontpixel::outline::contours"
 status = "bound"
 python = "fontpixel.outline.contours"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "outlineContours"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::path"
 status = "bound"
 python = "fontpixel.outline.path"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "fontpixel (pathRasterize, edgePoints, edgeMaxY)"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::path::Edge"
 status = "adapted"
 python = "dict {line|quad|cubic: points}"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "Edge plain data {line|quad|cubic: points}"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
 
 [[rule]]
@@ -73,6 +93,8 @@ pattern = "fontpixel::outline::path::Edge::max_y"
 status = "adapted"
 python = "fontpixel.outline.path.edge_max_y"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "edgeMaxY"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 reason = "method on a plain-data value; module function"
 
 [[rule]]
@@ -80,6 +102,8 @@ pattern = "fontpixel::outline::path::Edge::points"
 status = "adapted"
 python = "fontpixel.outline.path.edge_points"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "edgePoints"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 reason = "method on a plain-data value; module function"
 
 [[rule]]
@@ -87,6 +111,8 @@ pattern = "fontpixel::outline::path::Point"
 status = "adapted"
 python = "tuple (x, y)"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "[x, y]"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 reason = "tuple alias"
 
 [[rule]]
@@ -94,33 +120,45 @@ pattern = "fontpixel::outline::path::rasterize"
 status = "bound"
 python = "fontpixel.outline.path.rasterize"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+js = "pathRasterize"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline path edges equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::pixel_contour"
 status = "bound"
 python = "fontpixel.outline.pixel_contour"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "outlinePixelContour"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::pixel_origins"
 status = "bound"
 python = "fontpixel.outline.pixel_origins"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "outlinePixelOrigins"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::rasterize"
 status = "bound"
 python = "fontpixel.outline.rasterize"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "outlineRasterize"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::segments"
 status = "bound"
 python = "fontpixel.outline.segments"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "outlineSegments"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"
 
 [[rule]]
 pattern = "fontpixel::outline::spec_bitmap_contours"
 status = "bound"
 python = "fontpixel.outline.spec_bitmap_contours"
 python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+js = "specBitmapContours"
+js_test = "crates/fontpixel-wasm/tests/outline.test.mjs::outline contours, pixel shapes, segments and rasterization equal Rust"

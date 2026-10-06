@@ -9528,7 +9528,7 @@ export interface RenderResponse {
 }
 
 /** `fontpixel::render::Rendered`: Result pixels and deterministic diagnostics. Missing and clipped ink are reported even though those are valid SPEC rendering operations. */
-export interface Rendered {
+export interface RenderedDict {
   /** Packed monochrome result, top-left origin. */
   bitmap: BitmapDict;
   /** Warnings, repairs and information loss. */
@@ -12026,7 +12026,7 @@ export interface SerdeTypes {
   "render::RenderLimits": RenderLimits;
   "render::RenderMode": RenderMode;
   "render::RenderOptions": RenderOptions;
-  "render::Rendered": Rendered;
+  "render::Rendered": RenderedDict;
   "render::Rgba": Rgba;
   "render::WritingDirection": WritingDirection;
   "render::image::ImageOptions": ImageOptions;

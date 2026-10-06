@@ -25,6 +25,7 @@
 pub mod bitmap;
 pub mod callbacks;
 pub mod capabilities;
+pub mod charset;
 pub mod conv;
 pub mod errors;
 pub mod formats;
@@ -33,6 +34,8 @@ pub mod model;
 pub mod normalize;
 pub mod ops;
 pub mod ops_page;
+pub mod outline;
+pub mod render;
 pub mod resources;
 pub mod types;
 

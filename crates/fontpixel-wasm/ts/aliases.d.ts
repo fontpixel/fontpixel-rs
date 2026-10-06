@@ -56,6 +56,21 @@ export interface ReadArgs {
   limits?: ResourceLimits;
 }
 
+/** A palette for `Bitmap.fromText`: character -> pixel value (object, Map or `[char, value]` pairs). */
+export type TextPalette = Record<string, number> | Map<string, number> | [string, number][];
+/** A palette for `Bitmap.toText`: pixel value -> character (object, Map or `[value, char]` pairs). */
+export type OutputPalette = Record<number, string> | Map<number, string> | [number, string][];
+/** A palette for `Bitmap.toPaletteBytes`: pixel value -> bytes per pixel. */
+export type BytesPalette =
+  | Record<number, BytesLike | number[]>
+  | Map<number, BytesLike | number[]>
+  | [number, BytesLike | number[]][];
+
+/** A TrueType outline point `[x, y, onCurve]` in upward design units (`fontpixel::outline::Point`). */
+export type OutlinePoint = [number, number, boolean];
+/** A closed contour without a repeated closing point (`fontpixel::outline::Contour`). */
+export type Contour = OutlinePoint[];
+
 /** A capability record of `capabilities()`. */
 export interface Capability {
   name: string;
