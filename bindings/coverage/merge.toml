@@ -1,0 +1,200 @@
+# Merge library (fontpixel::merge) — unit p3
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::merge"
+status = "bound"
+python = "fontpixel.merge"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+
+[[rule]]
+pattern = "fontpixel::merge::GeometricWidth"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::GeometricWidth::as_str"
+status = "adapted"
+python = "fontpixel.merge.geometric_width_as_str"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "method on an enum value; module function"
+
+[[rule]]
+pattern = "fontpixel::merge::MergeOptions"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected); MergeOptions.family is required"
+
+[[rule]]
+pattern = "fontpixel::merge::MergePart"
+status = "adapted"
+python = "dict {font, selection, dy, label, license}"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_part_fields_and_errors"
+reason = "borrows &Font; a part dict whose font is a Font handle or font dict (copied for the call)"
+
+[[rule]]
+pattern = "fontpixel::merge::MergePart::new"
+status = "adapted"
+python = "{'font': font, 'selection': selection}"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_part_fields_and_errors"
+reason = "the minimal part dict; dy/label/license default as in MergePart::new"
+
+[[rule]]
+pattern = "fontpixel::merge::MergeResult"
+status = "adapted"
+python = "dict {font: fontpixel.Font, report: dict}"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data result whose font is returned as a Font handle"
+
+[[rule]]
+pattern = "fontpixel::merge::MergeSpacing"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::MergeSpacing::as_str"
+status = "adapted"
+python = "fontpixel.merge.spacing_as_str"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "method on an enum value; module function"
+
+[[rule]]
+pattern = "fontpixel::merge::ModificationPermission"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::ModificationPermission::as_str"
+status = "adapted"
+python = "fontpixel.merge.modification_as_str"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "method on an enum value; module function"
+
+[[rule]]
+pattern = "fontpixel::merge::PartLicense"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_part_fields_and_errors"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::merge"
+status = "bound"
+python = "fontpixel.merge.merge"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+
+[[rule]]
+pattern = "fontpixel::merge::report::AdjustmentKind"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::LicenseReport"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::MergeReport"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::MergeReport::to_json"
+status = "adapted"
+python = "fontpixel.merge.report_to_json"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "method on a plain-data report; module function taking the report dict"
+
+[[rule]]
+pattern = "fontpixel::merge::report::MetricsReport"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::MissingBlock"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::PartMetrics"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::PartReport"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_part_fields_and_errors"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::report::SpacingAdjustment"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_matches_rust_and_cli"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::CodepointRange"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection"
+status = "adapted"
+python = "fontpixel.merge.Selection (or the expression str)"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "handle class; serde form is the expression string"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection::contains"
+status = "bound"
+python = "fontpixel.merge.Selection.contains"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection::expression"
+status = "adapted"
+python = "fontpixel.merge.Selection.expression"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "read-only property"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection::parse"
+status = "adapted"
+python = "fontpixel.merge.Selection.parse / Selection(expression)"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+reason = "static constructor"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection::ranges"
+status = "bound"
+python = "fontpixel.merge.Selection.ranges"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"
+
+[[rule]]
+pattern = "fontpixel::merge::selection::Selection::scalar_count"
+status = "bound"
+python = "fontpixel.merge.Selection.scalar_count"
+python_test = "crates/fontpixel-py/tests/test_merge.py::test_merge_selection_and_enums"

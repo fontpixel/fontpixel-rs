@@ -1,0 +1,126 @@
+# Bitmap contours and rasterization (fontpixel::outline) — unit p3
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::outline"
+status = "bound"
+python = "fontpixel.outline"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::Contour"
+status = "adapted"
+python = "list of (x, y, on_curve) tuples"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+reason = "Vec<Point> alias"
+
+[[rule]]
+pattern = "fontpixel::outline::Limits"
+status = "adapted"
+python = "dict; fontpixel.outline.defaults()['Limits']"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_errors_and_limits"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::outline::Options"
+status = "adapted"
+python = "dict; fontpixel.outline.defaults()['Options']"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_errors_and_limits"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::outline::Point"
+status = "adapted"
+python = "tuple (x, y, on_curve)"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+reason = "tuple alias"
+
+[[rule]]
+pattern = "fontpixel::outline::Segment"
+status = "adapted"
+python = "dict"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::outline::Shape"
+status = "adapted"
+python = "str 'square' | 'square-separate' | 'dot'"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::outline::contours"
+status = "bound"
+python = "fontpixel.outline.contours"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::path"
+status = "bound"
+python = "fontpixel.outline.path"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+
+[[rule]]
+pattern = "fontpixel::outline::path::Edge"
+status = "adapted"
+python = "dict {line|quad|cubic: points}"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::outline::path::Edge::max_y"
+status = "adapted"
+python = "fontpixel.outline.path.edge_max_y"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+reason = "method on a plain-data value; module function"
+
+[[rule]]
+pattern = "fontpixel::outline::path::Edge::points"
+status = "adapted"
+python = "fontpixel.outline.path.edge_points"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+reason = "method on a plain-data value; module function"
+
+[[rule]]
+pattern = "fontpixel::outline::path::Point"
+status = "adapted"
+python = "tuple (x, y)"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+reason = "tuple alias"
+
+[[rule]]
+pattern = "fontpixel::outline::path::rasterize"
+status = "bound"
+python = "fontpixel.outline.path.rasterize"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_path"
+
+[[rule]]
+pattern = "fontpixel::outline::pixel_contour"
+status = "bound"
+python = "fontpixel.outline.pixel_contour"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::pixel_origins"
+status = "bound"
+python = "fontpixel.outline.pixel_origins"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::rasterize"
+status = "bound"
+python = "fontpixel.outline.rasterize"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::segments"
+status = "bound"
+python = "fontpixel.outline.segments"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"
+
+[[rule]]
+pattern = "fontpixel::outline::spec_bitmap_contours"
+status = "bound"
+python = "fontpixel.outline.spec_bitmap_contours"
+python_test = "crates/fontpixel-py/tests/test_outline.py::test_outline_contours"

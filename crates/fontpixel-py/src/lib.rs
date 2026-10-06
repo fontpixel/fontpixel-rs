@@ -19,11 +19,18 @@ pub mod charset;
 pub mod conv;
 pub mod errors;
 pub mod handles;
+pub mod merge;
 pub mod metadata;
 pub mod model;
 pub mod ops;
+pub mod outline;
 pub mod render;
 pub mod resources;
+pub mod sfnt;
+pub mod sfnt_support;
+pub mod sfnt_tables;
+pub mod variants;
+pub mod woff;
 
 use pyo3::prelude::*;
 
@@ -39,6 +46,11 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     charset::register(m)?;
     metadata::register(m)?;
     resources::register(m)?;
+    sfnt::register(m)?;
+    woff::register(m)?;
+    outline::register(m)?;
+    variants::register(m)?;
+    merge::register(m)?;
     ops::register(m)?;
     Ok(())
 }
