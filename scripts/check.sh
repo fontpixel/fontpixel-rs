@@ -17,6 +17,9 @@ cargo clippy --locked -p fontpixel-ops --all-targets --no-default-features --fea
 cargo clippy --locked -p fontpixel --target wasm32-unknown-unknown --all-features -- -D warnings
 # `fs` cannot build for wasm32-unknown-unknown (cap-std -> rustix -> errno has no "unknown" OS).
 cargo clippy --locked -p fontpixel-ops --target wasm32-unknown-unknown --no-default-features --features serde,toml,all-formats -- -D warnings
+# fontpixel-wasm compiles natively too (workspace lines above); its full
+# profile is checked for the real target here, the node suites in scripts/check_wasm.sh.
+cargo clippy --locked -p fontpixel-wasm --target wasm32-unknown-unknown --all-targets -- -D warnings
 cargo test --locked --workspace --all-features
 cargo test --locked --workspace
 cargo test --locked -p fontpixel --no-default-features

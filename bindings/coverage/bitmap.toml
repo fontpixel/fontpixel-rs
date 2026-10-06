@@ -12,6 +12,8 @@ pattern = "fontpixel::bitmap::Bitmap"
 status = "bound"
 python = "fontpixel.Bitmap"
 python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_buffers_and_rows"
+js = "Bitmap"
+js_test = "crates/fontpixel-wasm/tests/bitmap.test.mjs::bitmap round trip"
 
 [[rule]]
 pattern = "fontpixel::bitmap::Bitmap::new"

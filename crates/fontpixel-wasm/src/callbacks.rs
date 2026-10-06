@@ -1,12 +1,18 @@
-//! Synchronous JS callbacks behind `Send + Sync` Rust traits.
+//! Synchronous JS callbacks behind Rust callback traits.
 //!
-//! Core and ops callback traits (`ResourceResolver`, `FileProvider`, codec
-//! hooks, progress) require `Send + Sync`, which a `JsValue` is not. A
-//! [`CallbackScope`] parks the JS object in a thread-local table for the
-//! duration of one call and hands out a [`Callback`] token (an index, so
-//! `Send + Sync`); the trait implementation calls through the token. WASM
-//! runs on one thread here, so the table the token reads is the table the
-//! scope filled. This needs no `unsafe` and no relaxed trait bounds.
+//! On `target_family = "wasm"` the core/ops callback traits
+//! (`ResourceResolver`, `FileProvider`, `FormatDetector`/`Reader`/`Writer`)
+//! carry no `Send + Sync` bound, but on native hosts (where this crate also
+//! compiles for the workspace clippy/test runs) they do, and a `JsValue` is
+//! neither. A [`CallbackScope`] therefore parks the JS object in a
+//! thread-local table for the duration of one call and hands out a
+//! [`Callback`] token (an index, so `Send + Sync` everywhere); the trait
+//! implementation calls through the token. WASM runs on one thread here, so
+//! the table the token reads is the table the scope filled. No `unsafe`.
+//!
+//! Progress observers (`fontpixel_ops::merge_with_progress`,
+//! `convert_with_progress`) take a plain `FnMut` and need no token:
+//! [`progress_observer`] adapts a JS function.
 //!
 //! Errors: the first exception a callback throws is recorded (the trait
 //! method reports a Rust error so the call unwinds normally); when the call
@@ -15,6 +21,7 @@
 //! callback's exception.
 use crate::errors::JsResult;
 use std::cell::RefCell;
+use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 
 struct Slot {
@@ -106,5 +113,67 @@ impl Drop for CallbackScope {
                 *slot = None;
             }
         });
+    }
+}
+
+/// A JS progress callback for the ops `*_with_progress` operations.
+///
+/// The callback receives the plain-data `Progress` (`{step, done, total,
+/// item, glyphs, bytes}`). Only a return of exactly `false` cancels (the
+/// operation then fails with `CancelledError`, nothing written or
+/// returned); any other return value continues. A callback that throws also
+/// cancels, and its exception is what [`ProgressCallback::finish`] throws,
+/// mirroring the Python `progress=` keyword.
+pub struct ProgressCallback {
+    function: js_sys::Function,
+    error: RefCell<Option<JsValue>>,
+}
+
+impl ProgressCallback {
+    /// Wrap `callback` (a function; `undefined`/`null` gives `None`).
+    pub fn new(callback: &JsValue) -> JsResult<Option<Self>> {
+        if callback.is_undefined() || callback.is_null() {
+            return Ok(None);
+        }
+        let function = callback
+            .clone()
+            .dyn_into::<js_sys::Function>()
+            .map_err(|_| crate::errors::invalid("progress must be a function"))?;
+        Ok(Some(Self {
+            function,
+            error: RefCell::new(None),
+        }))
+    }
+
+    /// The observer to pass to `merge_with_progress` / `convert_with_progress`.
+    pub fn observer(
+        &self,
+    ) -> impl FnMut(&fontpixel_ops::Progress) -> std::ops::ControlFlow<()> + '_ {
+        use std::ops::ControlFlow;
+        move |progress| {
+            let value = match crate::conv::to_js(progress) {
+                Ok(value) => value,
+                Err(error) => {
+                    self.error.borrow_mut().get_or_insert(error);
+                    return ControlFlow::Break(());
+                }
+            };
+            match self.function.call1(&JsValue::UNDEFINED, &value) {
+                Ok(result) if result.as_bool() == Some(false) => ControlFlow::Break(()),
+                Ok(_) => ControlFlow::Continue(()),
+                Err(error) => {
+                    self.error.borrow_mut().get_or_insert(error);
+                    ControlFlow::Break(())
+                }
+            }
+        }
+    }
+
+    /// `result`, unless the callback threw: then its own exception.
+    pub fn finish<T>(&self, result: JsResult<T>) -> JsResult<T> {
+        match self.error.borrow_mut().take() {
+            Some(error) => Err(error),
+            None => result,
+        }
     }
 }

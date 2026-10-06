@@ -7,7 +7,7 @@ Rules live in bindings/coverage/*.toml:
     pattern = "fontpixel::model::Font::*"     # `*` = one path segment, `**` = any
     status = "bound"          # bound | adapted | unavailable | internal
     python = "fontpixel.Font.{name}"          # entry; {name} = last path segment
-    js = "Font.{name}"
+    js = "Font.{camelName}"                   # {camelName} = last segment, camelCase
     python_test = "crates/fontpixel-py/tests/test_model.py::test_font_api"
     js_test = "crates/fontpixel-wasm/tests/model.test.mjs::font api"
     reason = "..."            # required for adapted/unavailable/internal
@@ -19,7 +19,9 @@ ties are an error). A struct field or enum variant is covered by its parent's
 rule; when that rule is `adapted` through serde, the parent must implement
 Deserialize. `--require python` (phase 7) or `--require python,js` (phase 8)
 demands an entry and an existing test for every bound/adapted rule in those
-languages. A rule that matches nothing is stale and fails the check.
+languages. A rule that matches nothing is stale and fails the check. With
+`--require`, the summary adds `missing`: per language, the number of
+bound/adapted rules without an entry and without an existing test.
 
 Usage: check.py INVENTORY.json [--require python[,js]] [--report OUT.md]
 """
@@ -118,15 +120,18 @@ def main():
             parent = by_path.get(item["parent"], {})
             if "Deserialize" not in parent.get("serde", []):
                 errors.append(f"{item['path']}: parent adapted via serde but lacks Deserialize")
+    missing = {lang: {"entry": 0, "test": 0} for lang in require}
     for r in rules:
         if r["_hits"] == 0:
             errors.append(f"{r['_where']}: stale rule matches nothing ({r['pattern']})")
         if r.get("status") in ("bound", "adapted"):
             for lang in require:
                 if not r.get(lang):
+                    missing[lang]["entry"] += 1
                     errors.append(f"{r['_where']}: no {lang} entry for {r['pattern']}")
                 test = r.get(f"{lang}_test")
                 if not test or not test_exists(test):
+                    missing[lang]["test"] += 1
                     errors.append(f"{r['_where']}: {lang}_test missing or not found: {test!r}")
     total = sum(1 for i in items if i["kind"] not in ("field", "variant"))
     status = {}
@@ -134,13 +139,17 @@ def main():
         status[rule["status"]] = status.get(rule["status"], 0) + 1
     summary = {"items": total, "fields_and_variants": len(items) - total, "mapped": len(covered),
                "unmapped": len(unmapped), "by_status": status, "errors": len(errors)}
+    if require:
+        summary["missing"] = missing
     if a.report:
         lines = ["# Binding coverage", "", "```json", json.dumps(summary, indent=1), "```", ""]
         lines += ["| Rust item | Status | Python | JS |", "|---|---|---|---|"]
         for path, rule in sorted(covered.items()):
             name = path.split("::")[-1]
+            camel = re.sub(r"_([a-z0-9])", lambda m: m.group(1).upper(), name)
+            js = rule.get("js", "").replace("{name}", name).replace("{camelName}", camel)
             lines.append(f"| `{path}` | {rule['status']} | `{rule.get('python', '').replace('{name}', name)}` "
-                         f"| `{rule.get('js', '').replace('{name}', name)}` |")
+                         f"| `{js}` |")
         Path(a.report).write_text("\n".join(lines) + "\n")
     for e in errors[:200]:
         print("ERROR", e)

@@ -20,6 +20,12 @@ export type Depth = "mono" | "gray8";
 export type CodepointLike = number | CodepointDict;
 
 /**
+ * A progress observer: receives `Progress` plain data; returning exactly
+ * `false` cancels (`CancelledError`), throwing cancels and rethrows.
+ */
+export type ProgressFunction = (progress: Progress) => unknown;
+
+/**
  * A synchronous sidecar resolver: return the file's bytes, or `null`/`undefined`
  * when it does not exist. Called while the operation runs; it must not await.
  */

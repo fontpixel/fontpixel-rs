@@ -21,6 +21,7 @@ export {
   ReportedErrorsError,
   FontpixelIoError,
   UnsupportedError,
+  CancelledError,
 } from "./errors.js";
 export { withAsyncResources, AsyncResourceOptions } from "./resources.js";
 

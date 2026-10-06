@@ -14,12 +14,16 @@ pattern = "fontpixel_ops::capabilities"
 status = "bound"
 python = "fontpixel.ops.capabilities"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "capabilities() / requireCapability(name)"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::capabilities are explicit records"
 
 [[rule]]
 pattern = "fontpixel_ops::Capabilities"
 status = "adapted"
 python = "fontpixel.ops.capabilities() dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "capabilities() records {name, available, reason, evidence, alternative}"
+js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::capabilities are explicit records"
 reason = "plain dict {filesystem, threads, toml_batch}"
 
 [[rule]]

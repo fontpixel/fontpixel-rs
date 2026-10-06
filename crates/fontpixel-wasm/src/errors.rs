@@ -124,6 +124,7 @@ pub fn with_exit_code(err: fontpixel::Error, exit_code: u8) -> JsValue {
         }
         E::StrictLoss(_) => "StrictLoss",
         E::ReportedErrors(_) => "ReportedErrors",
+        E::Cancelled => "Cancelled",
         E::Io(io) => {
             fields = fields.set("ioKind", format!("{:?}", io.kind()));
             if io.kind() == std::io::ErrorKind::Unsupported {

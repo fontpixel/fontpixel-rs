@@ -49,6 +49,8 @@ export class FontpixelIoError extends FontpixelError {}
  * `evidence`, `alternative`); see `capabilities()`.
  */
 export class UnsupportedError extends FontpixelError {}
+/** A progress callback cancelled the operation; nothing was written or returned. */
+export class CancelledError extends FontpixelError {}
 
 const CLASSES = {
   UnknownFormat: UnknownFormatError,
@@ -65,6 +67,7 @@ const CLASSES = {
   ReportedErrors: ReportedErrorsError,
   Io: FontpixelIoError,
   Unsupported: UnsupportedError,
+  Cancelled: CancelledError,
 };
 
 /**

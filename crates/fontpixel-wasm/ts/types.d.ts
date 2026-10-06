@@ -8600,6 +8600,25 @@ export interface PrintshopWriteOptions {
   max_output_bytes?: number;
 }
 
+/** `fontpixel_ops::Progress`: One completed step of a long operation, passed to the progress observer of [`merge_with_progress`] and [`convert_with_progress`]. */
+export interface Progress {
+  /** The step that has just completed. */
+  step: ProgressStep;
+  /** Completed items of this step so far, starting at 1. */
+  done: number;
+  /** Items this step has in total. */
+  total: number;
+  /** The input path (`read`) or output destination (`encode`); `None` for `merge`. Non-UTF-8 path bytes are replaced. */
+  item?: string | null;
+  /** Glyphs decoded from the input or selected from the part (`read`), or glyphs in the merged font (`merge`). */
+  glyphs?: number | null;
+  /** Bytes of every asset of the encoded output (`encode`). */
+  bytes?: number | null;
+}
+
+/** `fontpixel_ops::ProgressStep`: Step kinds reported in [`Progress`]. */
+export type ProgressStep = "read" | "merge" | "encode";
+
 /** `fontpixel_ops::metadata::ProjectionOptions`: Explicit target-application projection; omitted means no change. Every replaced or removed source value is reported as loss, so --strict rejects it. */
 export interface ProjectionOptions {
   /** Replace every glyph's scalable advance (BDF SWIDTH x) with round-half-even(DWIDTH x * --swidth-units / PPEM). Overwritten source values are reported as loss, so --strict rejects them. */
@@ -11173,7 +11192,7 @@ export interface Woff2Options {
   transform_glyf?: boolean;
   /** Apply hmtx transform when a full LSB array is reconstructible (default true). */
   transform_hmtx?: boolean;
-  /** Intra-font Brotli workers, 1..=16. Default two; more changes compression decisions/size but still emits one standard Brotli stream. */
+  /** Intra-font Brotli workers, 1..=16. Default two; more changes compression decisions/size but still emits one standard Brotli stream. The value selects how the stream is split, not how it is scheduled: on targets without threads (`wasm`) the workers run in sequence and the bytes are identical to the native multithreaded output. */
   compression_threads?: number;
   /** Envelope version and optional blocks. */
   auxiliary?: Auxiliary;
@@ -12123,6 +12142,8 @@ export interface SerdeTypes {
   "fontpixel_ops::MergeRequest": MergeRequest;
   "fontpixel_ops::MergeSettings": MergeSettings;
   "fontpixel_ops::PreviewRequest": PreviewRequest;
+  "fontpixel_ops::Progress": Progress;
+  "fontpixel_ops::ProgressStep": ProgressStep;
   "fontpixel_ops::RenderRequest": RenderRequest;
   "fontpixel_ops::RenderResponse": RenderResponse;
   "fontpixel_ops::ReportStyle": ReportStyle;

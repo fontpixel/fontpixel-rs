@@ -16,6 +16,7 @@ export type ErrorKind =
   | "ReportedErrors"
   | "Io"
   | "Unsupported"
+  | "Cancelled"
   | "Other";
 
 /** Base class of every error fontpixel throws on purpose. */
@@ -89,3 +90,5 @@ export class UnsupportedError extends FontpixelError {
   alternative?: string;
   ioKind?: string;
 }
+/** A progress callback cancelled the operation (strict `false`, or it threw); nothing was written or returned. */
+export class CancelledError extends FontpixelError {}

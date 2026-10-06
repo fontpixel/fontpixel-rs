@@ -189,3 +189,19 @@ test('a compiled module is shared with a worker thread (initSync)', async () => 
   assert.equal(message.version, fp.version());
   assert.equal(message.glyphs, fp.read(sample(BLOCK)).fonts.font(0).length);
 });
+
+test('every error class derives from FontpixelError and Error', () => {
+  const names = [
+    'UnknownFormatError', 'FeatureDisabledError', 'NotImplementedFormatError', 'AmbiguousFormatError',
+    'UnrecognizedFormatError', 'InvalidInputError', 'BdfParseError', 'ResourceLimitError',
+    'MissingResourceError', 'MultipleAssetsError', 'StrictLossError', 'ReportedErrorsError',
+    'FontpixelIoError', 'UnsupportedError', 'CancelledError',
+  ];
+  for (const name of names) {
+    const error = new fp[name]('message');
+    assert.ok(error instanceof fp.FontpixelError && error instanceof Error, name);
+    assert.equal(error.name, name);
+    assert.equal(error.exitCode, 1);
+  }
+  assert.equal(fp.makeError, undefined, 'the internal factory is not exported');
+});
