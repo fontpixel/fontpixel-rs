@@ -1,18 +1,19 @@
-# 当前进度：第 6 阶段已按严格标准完成（2026-10-06）
+# 当前进度：第 7 阶段完成，第 8 阶段进行中（2026-10-06）
 
-交付报告 **[reports/phase-6.md](reports/phase-6.md)**；测速 [benches/REPORT.md](benches/REPORT.md)；
-ASAN 与默认负载巡检 [reports/phase6-validation/](reports/phase6-validation/)；逐 gate 记录
-[reports/phase6-local.md](reports/phase6-local.md)。用户指示「第 6 阶段完成了再停止」，现已停止，
-等待用户指示再开始第 7 阶段。
+用户要求一路做完第 7、8、9 阶段和最终报告（只做本地提交，不 push、不发布、不部署）。
+
+- 第 6 阶段：[reports/phase-6.md](reports/phase-6.md)（严格标准）。
+- 第 7 阶段：[reports/phase-7.md](reports/phase-7.md)；测速与 wheel [benches/PHASE7-REPORT.md](benches/PHASE7-REPORT.md)。
 
 - [x] 第 6 阶段按 PLAN 原文交付（`6297998`）。
 - [x] 第 6 阶段严格标准：单元 A–K 全账本与追平选项，最终源码 `8cd6d66`，冻结 v5；
   完整检查、109 种 feature 组合 Clippy、真实字体对照、104 目标 ASAN、默认负载巡检、正式测速与 A/B。
-- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）。**进行中（2026-10-06 起，用户要求一路做完 7→8→9→最终报告）**。
-  设计：docs/bindings-design.md 与 decisions.md「Phases 7–9 architecture」；覆盖率门禁 `tools/bindings/gate.sh`；
-  包骨架 crates/fontpixel-py（pyo3 0.29 abi3、maturin、Python 3.10 venv `../local-work/py310-venv`）。
-  地基单元：O（CLI 编排抽成 fontpixel-ops）、S1/S2/S3（选项与模型类型的 serde），之后分模块做 Python 绑定。
-- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。wasm32 target、wasm-pack、Node 24 已就绪。
+- [x] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API），最终源码 `d9ff25c`：覆盖率 2,004 项 0 错误，
+  pytest 1,253 通过，bdfparser 参考测试 1,755/1,773 通过（8 个失败逐条说明），测速报告，manylinux wheel（x86_64 在 3.10/3.12 测试通过）。
+- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。**进行中**：地基单元 A（核心/ops 的 wasm32 适配：
+  单线程 brotli 与原生逐字节一致、去掉 wasm 上会 panic 的 std 调用、拼合进度/取消）与 F（fontpixel-wasm 骨架、约定、
+  TS 类型生成、测试与覆盖率门禁的 JS 部分）并行；之后按模块并行做绑定单元。
+- [ ] 最终报告前：对最终源码重跑 104 目标 ASAN 和逐 feature Clippy（核心在第 7、8 阶段有改动）。
 - [ ] 第 9 阶段：拼合网页 `web/merge/`（已授权）。注意 PLAN 要求「静态网页不使用前端框架」。
 - 只做本地提交；不 push、不发布、不部署。
 

@@ -6,6 +6,9 @@
 //! [`subset`], [`charset`], [`validate`], [`diff`], [`info`], [`preview`],
 //! [`render`] and [`formats`]. Option groups mirror the command-line argument
 //! groups field for field (see [`options`] and the format option modules).
+//! [`merge_with_progress`] and [`convert_with_progress`] add a progress
+//! observer that is called at step boundaries and may cancel the operation
+//! ([`Progress`], `fontpixel::Error::Cancelled`).
 //!
 //! Operations run against a [`Storage`]:
 //!
@@ -91,7 +94,71 @@ pub use opentype::{
 pub use options::ReportStyle;
 pub use render::{PreviewRequest, PreviewResponse, RenderRequest, RenderResponse};
 
-use fontpixel::Result;
+use fontpixel::{Error, Result};
+use std::ops::ControlFlow;
+
+/// One completed step of a long operation, passed to the progress observer of
+/// [`merge_with_progress`] and [`convert_with_progress`].
+///
+/// A merge reports one `read` per part, one `merge`, then one `encode` per
+/// output. A convert reports, for each output in turn, one `read` per input
+/// of that output followed by its `encode` (with `each`, reads and encodes
+/// alternate). `encode` means encoded and prepared, not yet committed: the
+/// output group is committed only after the last event, so a cancellation
+/// never leaves an output committed or returned. Serialized as a plain map
+/// `{step, done, total, item, glyphs, bytes}` with `step` in snake_case.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Progress {
+    /// The step that has just completed.
+    pub step: ProgressStep,
+    /// Completed items of this step so far, starting at 1.
+    pub done: usize,
+    /// Items this step has in total.
+    pub total: usize,
+    /// The input path (`read`) or output destination (`encode`); `None` for
+    /// `merge`. Non-UTF-8 path bytes are replaced.
+    pub item: Option<String>,
+    /// Glyphs decoded from the input or selected from the part (`read`), or
+    /// glyphs in the merged font (`merge`).
+    pub glyphs: Option<usize>,
+    /// Bytes of every asset of the encoded output (`encode`).
+    pub bytes: Option<usize>,
+}
+/// Step kinds reported in [`Progress`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ProgressStep {
+    /// One input (convert) or merge part was read and admitted.
+    Read,
+    /// The merge plan was applied and the merged font is complete.
+    Merge,
+    /// One output was encoded; the group is committed after the last one.
+    Encode,
+}
+/// The caller's observer inside an operation; a no-op for the plain entry
+/// points, so their results cannot depend on it.
+type ObserverFn<'a> = dyn FnMut(&Progress) -> ControlFlow<()> + 'a;
+pub(crate) struct Observer<'a>(Option<&'a mut ObserverFn<'a>>);
+impl<'a> Observer<'a> {
+    pub(crate) fn none() -> Self {
+        Self(None)
+    }
+    fn new(observer: &'a mut dyn FnMut(&Progress) -> ControlFlow<()>) -> Self {
+        Self(Some(observer))
+    }
+    /// Report a completed step (built only when someone observes it).
+    /// `Break` from the observer becomes [`Error::Cancelled`].
+    pub(crate) fn report(&mut self, progress: impl FnOnce() -> Progress) -> Result<()> {
+        let Some(observer) = self.0.as_mut() else {
+            return Ok(());
+        };
+        match observer(&progress()) {
+            ControlFlow::Continue(()) => Ok(()),
+            ControlFlow::Break(()) => Err(Error::Cancelled),
+        }
+    }
+}
 
 /// A response together with the outputs it prepared. With memory storage the
 /// outputs are returned here; with filesystem storage they were already
@@ -139,13 +206,53 @@ fn standalone<T>(
 pub fn convert(request: ConvertRequest, storage: &Storage) -> Result<Completed<ConvertResponse>> {
     request.validate()?;
     let total = request.source_identity_total_bytes();
-    standalone(storage, total, || convert::run(request))
+    standalone(storage, total, || {
+        convert::run(request, &mut Observer::none())
+    })
+}
+/// [`convert()`] reporting each completed step to `progress`: for each output,
+/// one [`ProgressStep::Read`] per input it combines, then its
+/// [`ProgressStep::Encode`] (see [`Progress`]). The observer runs on the calling thread between steps (never inside
+/// a codec). Returning [`ControlFlow::Break`] cancels the operation at that
+/// boundary with [`Error::Cancelled`]; nothing is committed or returned.
+/// Results are identical to [`convert()`]'s whenever the observer continues.
+pub fn convert_with_progress(
+    request: ConvertRequest,
+    storage: &Storage,
+    progress: &mut dyn FnMut(&Progress) -> ControlFlow<()>,
+) -> Result<Completed<ConvertResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || {
+        convert::run(request, &mut Observer::new(progress))
+    })
 }
 /// Merge ordered parts and write every requested output as one group.
 pub fn merge(request: MergeRequest, storage: &Storage) -> Result<Completed<MergeResponse>> {
     request.validate()?;
     let total = request.source_identity_total_bytes();
-    standalone(storage, total, || merge::run(request))
+    standalone(storage, total, || {
+        merge::run(request, &mut Observer::none())
+    })
+}
+/// [`merge()`] reporting each completed step to `progress`: one
+/// [`ProgressStep::Read`] per part, one [`ProgressStep::Merge`], then one
+/// [`ProgressStep::Encode`] per output. The observer runs on the calling
+/// thread between steps (never inside a codec), so a long merge in a Web
+/// Worker can post progress and poll a cancel flag. Returning
+/// [`ControlFlow::Break`] cancels at that boundary with [`Error::Cancelled`];
+/// no output is committed or returned. Results are identical to
+/// [`merge()`]'s whenever the observer continues.
+pub fn merge_with_progress(
+    request: MergeRequest,
+    storage: &Storage,
+    progress: &mut dyn FnMut(&Progress) -> ControlFlow<()>,
+) -> Result<Completed<MergeResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || {
+        merge::run(request, &mut Observer::new(progress))
+    })
 }
 /// Build a locl-enabled OpenType font from regional and script faces.
 #[cfg(feature = "opentype")]

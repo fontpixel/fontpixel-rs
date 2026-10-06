@@ -1749,3 +1749,93 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
   spacing and the resolved charset) is cached in the font state and dropped by
   every model edit: all edits go through `State::core_mut`, which clears it.
   A draw then costs the layout of its text, not a copy of the font.
+
+## 2026-10-06 — wasm32 readiness of core and ops
+
+**Context:** Phase 8 binds the full native API with wasm-bindgen
+(`wasm32-unknown-unknown`). That target compiles `std` but has no threads,
+clock, filesystem or randomness: `std::thread::spawn` and
+`Instant`/`SystemTime::now` panic, `std::env::temp_dir` panics, `Builder::spawn`,
+`std::fs` and `current_dir` return `Unsupported` errors, and `panic = "abort"`
+(no unwinding). JavaScript callbacks (`js_sys::Function`) are neither `Send` nor
+`Sync`. The binding units must not have to change `fontpixel` or
+`fontpixel-ops`, so this unit settled every such point there.
+
+**Audit** (library code of `crates/fontpixel/src` and `crates/fontpixel-ops/src`;
+tests and examples excluded):
+
+| Site | Call | On wasm32-unknown-unknown before | Now |
+|---|---|---|---|
+| `woff/woff2.rs` `compress_admitted` (every WOFF2 stream ≥ 128 KiB with `compression_threads > 1`, CLI default 2) | `brotli::enc::compress_multi` → `WorkerPool` → `std::thread::spawn` | panic | private `compress_parallel` generic over the brotli spawner; native passes `new_work_pool(threads - 1)` (what `compress_multi` does), `wasm` passes `singlethreading::SingleThreadedSpawner`; same chunks, dictionaries and bytes (evidence below) |
+| `woff/woff2.rs` `encode_many` | `std::thread::scope` + `Builder::spawn_scoped` | `InvalidInput` carrying the `Unsupported` spawn error | `wasm`: jobs run in input order with the same validation, per-font limits and batch output budget, stopping at the first error; each output depends only on its input, so results equal the threaded run |
+| `fontpixel-ops/src/batch.rs` worker spawn | `std::thread::scope` (runtime `capabilities().threads`) | not reached (more than one worker already failed with `Unsupported`) | compiled only where threads exist (required once providers need not be `Send`); `wasm` runs the single admitted worker inline as before |
+| `batch.rs` default `jobs` | `std::thread::available_parallelism()` | returns `Err` → `map_or(1)`: `jobs = 1` | unchanged (no panic) |
+| `batch.rs` `Working::reserve` | `Condvar::wait` | unreachable: with one worker the previous reservation is released before the next, and every weight is ≤ the limit | unchanged |
+| `batch.rs` task isolation | `std::panic::catch_unwind` | `panic = "abort"`: a panicking task aborts the module instead of becoming a failed task | documented limitation; no reachable task panic is known |
+| `batch.rs`, `batch/toml.rs`, `assets.rs`, `context.rs` | `std::fs`, `std::env::{current_dir, temp_dir}`, `std::process::id`, `canonicalize`, `metadata` | only behind the `fs` feature (filesystem storage, `run_path`) | `fs` does not compile for this target (cap-std → rustix → errno: `compile_error!` for OS "unknown"); memory storage is the wasm mode |
+| `compat/bdfparser/io.rs` path helpers | `std::fs::File::open`, `std::fs::write` | `Error::Io(Unsupported)` | unchanged; bindings use the bytes APIs |
+| `render/mod.rs` diagnostic dedup | `HashSet` (`RandomState`) | std seeds from addresses on this target (no panic); membership only, so output is deterministic | unchanged |
+| clock | `Instant::now`, `SystemTime::now` | none in library code | — |
+| timestamps | sfnt `head` created/modified (`timestamps: Option<[i64; 2]>`, ops `otb_created`/`otb_modified`, compat TTF `timestamp: i64 = 0`) | always explicit; no API reads the clock | rule kept: an API never defaults to "now"; a time must be an explicit parameter, so native and wasm bytes stay equal |
+| `std::env::var`, `std::process`, rayon, `getrandom` | — | none in library code (rayon is not a dependency) | — |
+
+**Choices:**
+- One predicate, `target_family = "wasm"`, as `capabilities()` already uses:
+  it means "no threads" for every wasm target, so the Brotli spawner,
+  `encode_many`, the batch spawn and the trait bounds agree with
+  `capabilities().threads`.
+- WOFF2: same thread count, same output. Identity is proven natively by
+  calling the production helper with both spawners and comparing with
+  brotli's own `compress_multi`: always-on unit test (192 KiB generated
+  stream, q0/5/11, threads 2–4) and an ignored release matrix (1 MiB generated
+  and the 1,949,796-byte OTB sfnt of Tong Pixel Sans SC, q0/2/5/9/10/11 ×
+  threads 2/3/4: 36 cases identical). End to end, the production WOFF2 of Tong
+  SC (q11, threads 2 and 3) was decompressed and its raw stream re-compressed
+  with the single-threaded spawner: the compressed block equals the file's
+  byte for byte (506,436- and 501,688-byte files). At threads 4, q11 the
+  encoder admission for that stream exceeds the default 256 MiB ledger and
+  both targets refuse it before encoding.
+- The working-ledger admission stays `brotli_encoder_heap_bound(q, 22, n,
+  threads)` on wasm: the single-threaded spawner runs worker `i` to
+  completion before `i + 1`, so at most one encoder instance is live while the
+  admission covers `threads` concurrent ones. The heap check gained a
+  single-threaded column (`single_threaded_encoder_heap_never_exceeds_the_admitted_bound`,
+  108 cases of 160 KiB–2 MiB inputs, q0–11 quick set, threads 2–4): observed
+  peak at most 0.444 of the admission.
+- Callback traits drop `Send + Sync` on `wasm` only: `fontpixel_ops::FileProvider`,
+  `fontpixel::resources::ResourceResolver` (the memory input implements it over
+  a provider) and the custom-format hooks `FormatDetector`/`FormatReader`/
+  `FormatWriter` (so JS-implemented codecs work like Python ones). A
+  `macro_rules!` emits each trait twice under `cfg`, so the native definitions
+  and rustdoc are unchanged (`: Send + Sync`), no public marker trait exists
+  and no `unsafe` is needed. Nothing on `wasm` moves these values across
+  threads, so the relaxation is sound by construction; a `const` block in
+  `memory.rs` checks on `wasm` that an `Rc`-holding provider backs
+  `Storage::memory`.
+- Progress and cancellation (W8.3): `fontpixel_ops::merge_with_progress` and
+  `convert_with_progress` take `&mut dyn FnMut(&Progress) -> ControlFlow<()>`
+  (no `Send` bound). `Progress { step, done, total, item, glyphs, bytes }` is
+  strict serde plain data, `step` one of `read` (per merge part / convert
+  input, with glyph count), `merge` (merged glyph count) and `encode` (per
+  output, with byte count; prepared, not committed). Events are emitted only
+  at step boundaries in ops, never inside codecs, and always before the
+  output group is committed. `merge()`/`convert()` and batch tasks pass a
+  no-op observer, so their results cannot change; tests compare the outputs
+  and JSON documents of both entry points.
+- `Break` returns a new core variant `fontpixel::Error::Cancelled` (the enum is
+  `#[non_exhaustive]`) rather than an `Io` error: bindings map one exception
+  class per variant, and an `Io` kind would be indistinguishable from a real
+  I/O failure. `exit_code()` is 1 (a library failure; the CLI never cancels),
+  no report is attached, and nothing is committed or returned — in
+  filesystem mode a cancelled merge leaves existing destinations untouched
+  (tested). Python: `CancelledError(FontpixelError)`, `kind = "Cancelled"`.
+- Python surface: `progress=` keyword on `fontpixel.ops.merge`, `convert` and
+  `vectorize`; the callback gets a `fontpixel.types.Progress` dict with the GIL
+  held. Only a return value of exactly `False` cancels (a function returning
+  `None` keeps going); an exception raised by the callback also cancels and is
+  re-raised unchanged, as file-provider exceptions are.
+- Features on `wasm32-unknown-unknown`: `fontpixel --all-features` and
+  `fontpixel-ops --no-default-features --features all-formats,serde,clap,toml`
+  build and pass clippy with `-D warnings` (both lines are in
+  `scripts/check.sh`); `fontpixel-ops` `fs` (and therefore its default
+  feature set) is excluded for the errno reason above.

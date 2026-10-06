@@ -202,12 +202,19 @@ def convert(
     /,
     *,
     files: _t.Files | None = ...,
+    progress: _c.Callable[[_t.Progress], object] | None = ...,
     **options: Any,
 ) -> OperationResult:
     """
     Convert inputs into one output, or each input into its own output
     (`fontpixel convert`). Request keys: `inputs`, `output`, `from`, `to`,
     `each`, `strict`, `font_index`, `report` and every reader/writer option.
+
+    `progress`, if given, is called with a dict
+    `{"step", "done", "total", "item", "glyphs", "bytes"}` after each input
+    is read (`step` `"read"`) and each output is encoded (`"encode"`).
+    Returning `False` cancels with `CancelledError`; raising cancels and
+    re-raises; nothing is written either way. Results do not depend on it.
     """
 
 def diff(
@@ -262,6 +269,7 @@ def merge(
     /,
     *,
     files: _t.Files | None = ...,
+    progress: _c.Callable[[_t.Progress], object] | None = ...,
     **options: Any,
 ) -> OperationResult:
     """
@@ -269,6 +277,13 @@ def merge(
     group (`fontpixel merge`). Request keys: `parts` (list of
     `{input, take, dy, from, font_index}`), `outputs` (list of
     `{destination, format}`), `family` and the merge/writer options.
+
+    `progress`, if given, is called with a dict
+    `{"step", "done", "total", "item", "glyphs", "bytes"}` after each part
+    is read (`"read"`), after the merge (`"merge"`) and after each output
+    is encoded (`"encode"`), before anything is written. Returning `False`
+    cancels with `CancelledError`; raising cancels and re-raises; nothing
+    is written either way. Results do not depend on it.
     """
 
 def output_format_for(destination: _t.StrPath) -> str:

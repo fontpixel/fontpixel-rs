@@ -42,6 +42,34 @@ python = "fontpixel.ops.merge"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
 
 [[rule]]
+pattern = "fontpixel_ops::merge_with_progress"
+status = "adapted"
+python = "fontpixel.ops.merge(..., progress=callback)"
+python_test = "crates/fontpixel-py/tests/test_progress.py::test_merge_progress_reports_each_step_and_equals_merge"
+reason = "progress keyword of fontpixel.ops.merge: the callback gets a Progress dict per step; returning False (Break) raises CancelledError, raising cancels and re-raises"
+
+[[rule]]
+pattern = "fontpixel_ops::convert_with_progress"
+status = "adapted"
+python = "fontpixel.ops.convert(..., progress=callback)"
+python_test = "crates/fontpixel-py/tests/test_progress.py::test_convert_progress_alternates_reads_and_encodes"
+reason = "progress keyword of fontpixel.ops.convert/vectorize; same callback contract as merge"
+
+[[rule]]
+pattern = "fontpixel_ops::Progress"
+status = "adapted"
+python = "fontpixel.types.Progress dict passed to the progress callback"
+python_test = "crates/fontpixel-py/tests/test_progress.py::test_merge_progress_reports_each_step_and_equals_merge"
+reason = "plain serde data {step, done, total, item, glyphs, bytes}"
+
+[[rule]]
+pattern = "fontpixel_ops::ProgressStep"
+status = "adapted"
+python = "Progress[\"step\"]: \"read\" | \"merge\" | \"encode\""
+python_test = "crates/fontpixel-py/tests/test_progress.py::test_convert_progress_alternates_reads_and_encodes"
+reason = "snake_case serde enum string"
+
+[[rule]]
 pattern = "fontpixel_ops::variants"
 status = "bound"
 python = "fontpixel.ops.variants"

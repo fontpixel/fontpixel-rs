@@ -74,7 +74,14 @@ def signature(obj):
         return ""
 
 
+# CPython supplies the docstrings of slot wrappers (`__contains__`, ...), and
+# their wording changes between versions; the generated files use one text.
+SLOT_DOCS = {"__contains__": "Return key in self."}
+
+
 def doc(obj):
+    if type(obj).__name__ == "wrapper_descriptor" and getattr(obj, "__name__", None) in SLOT_DOCS:
+        return SLOT_DOCS[obj.__name__]
     return inspect.cleandoc(getattr(obj, "__doc__", None) or "")
 
 
@@ -114,7 +121,11 @@ def walk():
         for attr in public_names(name, mod):
             obj = getattr(mod, attr)
             qual = f"{name}.{attr}"
-            if isinstance(obj, type):
+            if isinstance(obj, types.GenericAlias):
+                # `Point = tuple[...]`: before Python 3.11 this also passes
+                # `isinstance(obj, type)`; document it as an alias everywhere.
+                yield Entry(qual, "type_alias", obj, "", f"`{attr} = {obj!r}`")
+            elif isinstance(obj, type):
                 # A class re-exported by several modules is documented once,
                 # under the first (shortest) public module that exports it.
                 if id(obj) in seen_classes:

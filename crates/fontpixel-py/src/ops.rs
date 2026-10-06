@@ -33,14 +33,15 @@ use fontpixel_ops::{
     CharsetRequest, CharsetResponse, ConvertRequest, ConvertResponse, DiffRequest, DiffResponse,
     EntryKind, FileProvider, FormatsRequest, FormatsResponse, InfoRequest, InfoResponse,
     MemoryFiles, MergeRequest, MergeResponse, PreparedOutput, PreviewRequest, PreviewResponse,
-    RenderRequest, RenderResponse, ReportStyle, SfntResponse, Storage, SubsetRequest, TaskKind,
-    TaskRequest, ValidateRequest, ValidateResponse, ValidationKind, VariantsRequest,
+    Progress, RenderRequest, RenderResponse, ReportStyle, SfntResponse, Storage, SubsetRequest,
+    TaskKind, TaskRequest, ValidateRequest, ValidateResponse, ValidationKind, VariantsRequest,
 };
 use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict, PyList, PyString, PyTuple};
+use pyo3::types::{PyBool, PyBytes, PyDict, PyList, PyString, PyTuple};
 use serde::de::DeserializeOwned;
 use serde_json::{Value, json};
+use std::ops::ControlFlow;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
@@ -603,6 +604,83 @@ macro_rules! writer_op {
             )
         }
     };
+    // An operation with a `progress=` callback (`$observed` is the
+    // `*_with_progress` entry point; without a callback `$call` runs).
+    ($(#[$doc:meta])* $name:ident, $request:ty, $call:path, $variant:ident, progress = $observed:path) => {
+        $(#[$doc])*
+        #[pyfunction]
+        #[pyo3(signature = (request = None, /, *, files = None, progress = None, **options))]
+        fn $name(
+            py: Python<'_>,
+            request: Option<&Bound<'_, PyAny>>,
+            files: Option<&Bound<'_, PyAny>>,
+            progress: Option<&Bound<'_, PyAny>>,
+            options: Option<&Bound<'_, PyDict>>,
+        ) -> PyResult<PyOperationResult> {
+            let request: $request = build(py, request, options)?;
+            let (storage, provider) = storage(files)?;
+            let completed = match progress.filter(|callback| !callback.is_none()) {
+                None => run(py, provider, move || $call(request, &storage))?,
+                Some(callback) => observed(py, provider, callback, move |observer| {
+                    $observed(request, &storage, observer)
+                })?,
+            };
+            PyOperationResult::new(
+                py,
+                stringify!($name),
+                Response::$variant(completed.response.into()),
+                completed.outputs,
+            )
+        }
+    };
+}
+/// Run `f` without the GIL, passing it an observer that calls the Python
+/// `callback` with each `fontpixel_ops::Progress` as a dict
+/// (`{"step", "done", "total", "item", "glyphs", "bytes"}`) at the
+/// operation's step boundaries, re-acquiring the GIL for each call.
+///
+/// The callback cancels the operation by returning `False` (exactly; `None`,
+/// `True` or any other value continues), which raises `CancelledError`; an
+/// exception raised by the callback also cancels it and is re-raised as is.
+/// Either way nothing is written or returned. A resolver exception still
+/// takes precedence, as in [`run`].
+fn observed<T: Send>(
+    py: Python<'_>,
+    provider: Option<Arc<PyProvider>>,
+    callback: &Bound<'_, PyAny>,
+    f: impl FnOnce(&mut dyn FnMut(&Progress) -> ControlFlow<()>) -> fontpixel::Result<T> + Send,
+) -> PyResult<T> {
+    if !callback.is_callable() {
+        return Err(PyTypeError::new_err("progress must be a callable or None"));
+    }
+    let callback = callback.clone().unbind();
+    let mut raised: Option<PyErr> = None;
+    let result = py.detach(|| {
+        let mut observer = |progress: &Progress| {
+            Python::attach(|py| {
+                let outcome =
+                    conv::to_py(py, progress).and_then(|value| callback.bind(py).call1((value,)));
+                match outcome {
+                    Ok(value) if value.cast::<PyBool>().is_ok_and(|flag| !flag.is_true()) => {
+                        ControlFlow::Break(())
+                    }
+                    Ok(_) => ControlFlow::Continue(()),
+                    Err(error) => {
+                        raised = Some(error);
+                        ControlFlow::Break(())
+                    }
+                }
+            })
+        };
+        f(&mut observer)
+    });
+    if let Some(error) = provider.and_then(|p| p.take_error()) {
+        return Err(error);
+    }
+    if let Some(error) = raised {
+        return Err(error);
+    }
+    result.map_err(op_error)
 }
 macro_rules! reader_op {
     ($(#[$doc:meta])* $name:ident, $request:ty, $call:path, $variant:ident) => {
@@ -627,14 +705,29 @@ writer_op!(
     /// Convert inputs into one output, or each input into its own output
     /// (`fontpixel convert`). Request keys: `inputs`, `output`, `from`, `to`,
     /// `each`, `strict`, `font_index`, `report` and every reader/writer option.
-    convert, ConvertRequest, fontpixel_ops::convert, Convert
+    ///
+    /// `progress`, if given, is called with a dict
+    /// `{"step", "done", "total", "item", "glyphs", "bytes"}` after each input
+    /// is read (`step` `"read"`) and each output is encoded (`"encode"`).
+    /// Returning `False` cancels with `CancelledError`; raising cancels and
+    /// re-raises; nothing is written either way. Results do not depend on it.
+    convert, ConvertRequest, fontpixel_ops::convert, Convert,
+    progress = fontpixel_ops::convert_with_progress
 );
 writer_op!(
     /// Merge selected glyphs from ordered parts and write every output as one
     /// group (`fontpixel merge`). Request keys: `parts` (list of
     /// `{input, take, dy, from, font_index}`), `outputs` (list of
     /// `{destination, format}`), `family` and the merge/writer options.
-    merge, MergeRequest, fontpixel_ops::merge, Merge
+    ///
+    /// `progress`, if given, is called with a dict
+    /// `{"step", "done", "total", "item", "glyphs", "bytes"}` after each part
+    /// is read (`"read"`), after the merge (`"merge"`) and after each output
+    /// is encoded (`"encode"`), before anything is written. Returning `False`
+    /// cancels with `CancelledError`; raising cancels and re-raises; nothing
+    /// is written either way. Results do not depend on it.
+    merge, MergeRequest, fontpixel_ops::merge, Merge,
+    progress = fontpixel_ops::merge_with_progress
 );
 writer_op!(
     /// Build a locl-enabled OpenType font from regional and script faces

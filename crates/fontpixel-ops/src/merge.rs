@@ -8,6 +8,7 @@ use crate::options::{
     COutputOptions, ConsoleOptions, PcfOptions, RasterOptions, ReportStyle, VectorOptions,
 };
 use crate::options::{check_parsed, check_range};
+use crate::{Progress, ProgressStep};
 use crate::{extra_formats, image_formats, p2_formats, p3_formats};
 #[cfg(feature = "clap")]
 use clap::{ArgAction, ArgMatches, Args, Command, FromArgMatches, error::ErrorKind};
@@ -905,7 +906,7 @@ impl MergeResponse {
         }
     }
 }
-pub(crate) fn run(args: MergeRequest) -> Result<MergeResponse> {
+pub(crate) fn run(args: MergeRequest, progress: &mut crate::Observer<'_>) -> Result<MergeResponse> {
     let spacing = args.spacing();
     let geometric_width = args.geometric_width();
     let MergeRequest {
@@ -1022,8 +1023,17 @@ pub(crate) fn run(args: MergeRequest) -> Result<MergeResponse> {
             font.retained_usage(limits.max_total_bytes)?.bytes,
             limits.max_total_bytes,
         )?;
+        let glyphs = font.len();
         selected_fonts.push(font);
         read_reports.push(loaded.report);
+        progress.report(|| Progress {
+            step: ProgressStep::Read,
+            done: part_index + 1,
+            total: parts.len(),
+            item: Some(part.input.to_string_lossy().into_owned()),
+            glyphs: Some(glyphs),
+            bytes: None,
+        })?;
     }
     drop(registry);
     if read_reports.iter().any(Report::has_errors) {
@@ -1076,6 +1086,14 @@ pub(crate) fn run(args: MergeRequest) -> Result<MergeResponse> {
             Err(error) => return Err(combined_error(error, read_reports, None)),
         }
     };
+    progress.report(|| Progress {
+        step: ProgressStep::Merge,
+        done: 1,
+        total: 1,
+        item: None,
+        glyphs: Some(merged.font.len()),
+        bytes: None,
+    })?;
     // No writer borrows the originals. Release them before computing the exact
     // remaining live-model/report/output allowance, rather than charging dead data.
     drop(selected_fonts);
@@ -1211,6 +1229,14 @@ pub(crate) fn run(args: MergeRequest) -> Result<MergeResponse> {
             destination,
             bundle: written.output,
         });
+        progress.report(|| Progress {
+            step: ProgressStep::Encode,
+            done: index + 1,
+            total: outputs.len(),
+            item: Some(spec.destination.to_string_lossy().into_owned()),
+            glyphs: None,
+            bytes: Some(bytes),
+        })?;
     }
     // Complete every writer and strict check before handing off the output group.
     // Batch defers this call; standalone execution commits the same transaction.

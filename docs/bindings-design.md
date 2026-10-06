@@ -48,6 +48,17 @@ builds argv strings.
 - **Unavailable capabilities** (for example threads or filesystem access in WASM)
   are queryable (`capabilities()`) and fail with `UnsupportedError` naming the
   reason and the alternative; they never return empty success.
+- **Progress and cancellation**: `fontpixel_ops::merge_with_progress` /
+  `convert_with_progress` call an observer with plain-data `Progress`
+  (`{step, done, total, item, glyphs, bytes}`, `step` `read`/`merge`/`encode`)
+  at step boundaries; `ControlFlow::Break` fails with
+  `fontpixel::Error::Cancelled` before anything is committed. Python:
+  `progress=` keyword, `False` cancels (`CancelledError`).
+- **Callbacks on wasm**: `FileProvider`, `ResourceResolver` and the format
+  hook traits are `Send + Sync` only where threads exist, so on wasm they can
+  wrap JS functions directly. WOFF2 parallel Brotli and `encode_many` run
+  sequentially there with byte-identical output (see decisions.md,
+  "wasm32 readiness of core and ops").
 
 ## Coverage gate
 

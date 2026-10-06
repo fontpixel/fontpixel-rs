@@ -189,7 +189,7 @@ impl TaskRequest {
         self.validate()?;
         match self {
             Self::Convert(r) | Self::Vectorize(r) => {
-                crate::convert::run(*r)?.write_json(out, false)
+                crate::convert::run(*r, &mut crate::Observer::none())?.write_json(out, false)
             }
             #[cfg(feature = "opentype")]
             Self::Variants(r) => {
@@ -197,7 +197,9 @@ impl TaskRequest {
             }
             #[cfg(feature = "opentype")]
             Self::Subset(r) => crate::opentype::subset(*r)?.write(ReportStyle::Json, out, false),
-            Self::Merge(r) => crate::merge::run(*r)?.write_json(out, false),
+            Self::Merge(r) => {
+                crate::merge::run(*r, &mut crate::Observer::none())?.write_json(out, false)
+            }
             Self::Charset(r) => crate::commands::charset(*r)?.write_json(out, false),
             Self::Validate(r) => crate::commands::validate(*r)?.write_json(out, false),
             Self::Diff(r) => {
@@ -1385,14 +1387,18 @@ pub(crate) fn run_with_sources(
             results.lock().expect("batch results lock")[index] = Some(prepared);
         }
     };
-    if crate::capabilities().threads {
-        std::thread::scope(|threads| {
-            for _ in 0..workers {
-                let (worker, scope) = (&worker, scope.clone());
-                threads.spawn(move || worker(scope));
-            }
-        });
-    } else if workers == 1 {
+    // Targets with threads run every worker on its own thread. Without threads
+    // (`wasm`, where storage providers need not be `Send`) the admission above
+    // allows at most one worker, which runs inline.
+    #[cfg(not(target_family = "wasm"))]
+    std::thread::scope(|threads| {
+        for _ in 0..workers {
+            let (worker, scope) = (&worker, scope.clone());
+            threads.spawn(move || worker(scope));
+        }
+    });
+    #[cfg(target_family = "wasm")]
+    if workers == 1 {
         worker(scope.clone());
     }
     drop(scope);

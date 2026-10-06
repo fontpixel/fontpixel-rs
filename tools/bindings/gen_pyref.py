@@ -35,7 +35,8 @@ import pyapi  # noqa: E402
 
 KIND_LABEL = {"module": "module", "class": "class", "exception": "exception", "function": "function",
               "method": "method", "staticmethod": "static method", "classmethod": "class method",
-              "property": "property", "constant": "constant", "alias": "class"}
+              "property": "property", "constant": "constant", "alias": "class",
+              "type_alias": "type alias"}
 
 
 # ------------------------------------------------------------------ stub signatures
@@ -149,7 +150,7 @@ def render():
         else:
             by_module[current].append(e)
     for m in modules:
-        n = len([e for e in by_module[m.name] if e.kind not in ("constant", "alias")])
+        n = len([e for e in by_module[m.name] if e.kind not in ("constant", "alias", "type_alias")])
         counts[m.name] = n
         summary = m.doc.split("\n\n")[0].replace("\n", " ") if m.doc else ""
         out.append(f"- [`{m.name}`](#{anchor(m.name)}) ({n}) {summary}")
@@ -165,11 +166,11 @@ def render():
             owner = owners.get(owner_name) if e.kind in ("method", "staticmethod", "classmethod", "property") else None
             sig = stubs.signature(e, owner)
             if sig is None:
-                sig = e.signature if e.kind not in ("property", "constant", "alias") else ""
+                sig = e.signature if e.kind not in ("property", "constant", "alias", "type_alias") else ""
                 if e.kind == "constant":
                     sig = ": " + type(e.obj).__name__
             sig = clean(sig)
-            level = "###" if e.kind in ("class", "exception", "function", "alias") or e.kind == "constant" \
+            level = "###" if e.kind in ("class", "exception", "function", "alias", "type_alias") or e.kind == "constant" \
                 and owner_name == m.name else "####"
             label = KIND_LABEL[e.kind]
             if e.kind == "exception":
@@ -186,7 +187,7 @@ def render():
     index = [BEGIN, "", "| module | public callables |", "| --- | ---: |"]
     for m in modules:
         index.append(f"| [`{m.name}`](python-api-reference.md#{anchor(m.name)}) | {counts[m.name]} |")
-    total = sum(1 for e in entries if e.kind not in ("module", "constant", "alias"))
+    total = sum(1 for e in entries if e.kind not in ("module", "constant", "alias", "type_alias"))
     index += ["", f"{len(modules)} modules, {total} documented callables, classes and properties.", "", END]
     return reference, "\n".join(index)
 

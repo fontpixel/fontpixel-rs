@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Python bindings gate: build the extension into a CPython 3.10 venv, run the
-# pytest suite, then the binding coverage gate (`python` required).
+# binding coverage gate (`python` required), then the pytest suite.
 # Usage: scripts/check_python.sh [VENV]   (default: ../local-work/py310-venv)
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
@@ -14,5 +14,6 @@ PYTHON="$(command -v python3)"
 export PYTHON
 export VIRTUAL_ENV="$venv" PATH="$venv/bin:$PATH"
 (cd crates/fontpixel-py && maturin develop --release --locked)
-python -m pytest crates/fontpixel-py/tests -q
+# The gate builds the rustdoc inventory that the stub and generator tests read.
 tools/bindings/gate.sh python
+python -m pytest crates/fontpixel-py/tests -q -rs

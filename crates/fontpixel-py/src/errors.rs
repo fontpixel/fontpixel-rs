@@ -99,6 +99,12 @@ create_exception!(
     FontpixelError,
     "Capability unavailable on this platform or build; see `reason`."
 );
+create_exception!(
+    fontpixel,
+    CancelledError,
+    FontpixelError,
+    "A progress callback cancelled the operation (returned False); nothing was written."
+);
 
 /// Register the exception classes on the native module.
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -134,6 +140,7 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
         ("ReportedErrorsError", py.get_type::<ReportedErrorsError>()),
         ("FontpixelIoError", py.get_type::<FontpixelIoError>()),
         ("UnsupportedError", py.get_type::<UnsupportedError>()),
+        ("CancelledError", py.get_type::<CancelledError>()),
     ] {
         m.add(name, ty)?;
     }
@@ -209,6 +216,10 @@ pub fn to_py(err: fontpixel::Error) -> PyErr {
             E::Io(_) => {
                 kind = "Io";
                 FontpixelIoError::new_err(message)
+            }
+            E::Cancelled => {
+                kind = "Cancelled";
+                CancelledError::new_err(message)
             }
             _ => {
                 kind = "Other";

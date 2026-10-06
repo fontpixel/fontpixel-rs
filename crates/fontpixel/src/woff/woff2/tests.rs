@@ -129,3 +129,224 @@ fn encoder_bound_is_admitted_and_writer_failures_stay_resource_limits() {
     drop(out);
     assert_eq!(enough.remaining(), bound + 4096);
 }
+
+// ---- parallel Brotli: thread pool versus single-threaded spawner ----
+
+/// Deterministic font-like bytes: mutated glyph bitmaps, metric words and
+/// noise, so every parallel chunk and its preceding-input dictionary matter.
+fn font_like(len: usize) -> Vec<u8> {
+    let mut state = 0x9e37_79b9u32;
+    let mut next = move || {
+        state ^= state << 13;
+        state ^= state >> 17;
+        state ^= state << 5;
+        state
+    };
+    let glyphs: Vec<[u8; 28]> = (0..96)
+        .map(|_| {
+            let mut glyph = [0u8; 28];
+            for byte in &mut glyph {
+                *byte = (next() & next() & 0xff) as u8;
+            }
+            glyph
+        })
+        .collect();
+    let mut out = Vec::with_capacity(len + 28);
+    while out.len() < len {
+        let r = next();
+        match r % 5 {
+            0..=2 => {
+                let mut glyph = glyphs[(r >> 8) as usize % glyphs.len()];
+                glyph[(r >> 16) as usize % 28] ^= 1 << ((r >> 24) % 8);
+                out.extend_from_slice(&glyph);
+            }
+            3 => out.extend_from_slice(&((r >> 4) as u16 % 2048).to_be_bytes()),
+            _ => out.push((r >> 24) as u8),
+        }
+    }
+    out.truncate(len);
+    out
+}
+/// The parallel stream through the production helper with brotli's thread
+/// pool (native) and its single-threaded spawner (`wasm`), plus brotli's own
+/// `compress_multi` (the call the writer made before the helper existed).
+fn parallel_streams(data: &[u8], quality: u32, threads: usize) -> [Vec<u8>; 3] {
+    assert!(data.len() >= brotli_encode::PARALLEL_MIN_BYTES && threads > 1);
+    let l = Limits::default();
+    let o = Options {
+        quality,
+        compression_threads: threads,
+        ..Default::default()
+    };
+    let params = encoder_params(quality, data.len());
+    let budget = ledger(&l);
+    let pool = compress_parallel(
+        data,
+        &o,
+        &l,
+        &budget,
+        &params,
+        &mut brotli::enc::new_work_pool(threads - 1),
+    )
+    .unwrap()
+    .to_vec();
+    let single = compress_parallel(
+        data,
+        &o,
+        &l,
+        &budget,
+        &params,
+        &mut brotli::enc::singlethreading::SingleThreadedSpawner::default(),
+    )
+    .unwrap()
+    .to_vec();
+    let mut out =
+        vec![0; brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(data.len(), threads)];
+    let mut allocators = (0..threads)
+        .map(|_| {
+            brotli::enc::SendAlloc::new(
+                EncoderAlloc::default(),
+                brotli::enc::backward_references::UnionHasher::Uninit,
+            )
+        })
+        .collect::<Vec<_>>();
+    let mut owned = brotli::enc::Owned::new(Bytes(data.to_vec()));
+    let n = brotli::enc::compress_multi(&params, &mut owned, &mut out, &mut allocators).unwrap();
+    out.truncate(n);
+    [pool, single, out]
+}
+fn assert_spawners_agree(name: &str, data: &[u8], qualities: &[u32], threads: &[usize]) {
+    for &quality in qualities {
+        for &t in threads {
+            let [pool, single, reference] = parallel_streams(data, quality, t);
+            assert_eq!(
+                pool, reference,
+                "{name} q{quality} t{t}: helper vs compress_multi"
+            );
+            assert_eq!(
+                pool, single,
+                "{name} q{quality} t{t}: pool vs single-threaded"
+            );
+            eprintln!(
+                "{name}: {} bytes, q{quality} t{t}: {} compressed bytes identical",
+                data.len(),
+                pool.len()
+            );
+        }
+    }
+}
+#[test]
+fn single_threaded_spawner_matches_the_thread_pool() {
+    // Above PARALLEL_MIN_BYTES (128 KiB) the writer splits the stream; below it
+    // both targets use one BrotliCompress stream and prove nothing here.
+    let data = font_like(192 << 10);
+    assert_spawners_agree("192KiB-font-like", &data, &[0, 5, 11], &[2, 3, 4]);
+}
+/// The WOFF2 compressed block of a single-font file and its raw stream length.
+fn compressed_block(woff2: &[u8]) -> (&[u8], usize) {
+    let tables = u16::from_be_bytes([woff2[12], woff2[13]]);
+    let mut cursor = Cursor::new(woff2);
+    cursor.pos = 48;
+    let mut size = 0;
+    for _ in 0..tables {
+        let flags = cursor.byte().unwrap();
+        let tag: [u8; 4] = if flags & 63 == 63 {
+            cursor.take(4).unwrap().try_into().unwrap()
+        } else {
+            TAGS[(flags & 63) as usize]
+        };
+        let transformed = matches!((&tag, flags >> 6), (b"glyf" | b"loca", 0) | (b"hmtx", 1));
+        let original = cursor.base128().unwrap() as usize;
+        size += if transformed {
+            cursor.base128().unwrap() as usize
+        } else {
+            original
+        };
+    }
+    let len = u32::from_be_bytes(woff2[20..24].try_into().unwrap()) as usize;
+    (&woff2[cursor.pos..cursor.pos + len], size)
+}
+/// Tong Pixel Sans SC (38,653 glyphs) as an OTB sfnt: `FONTPIXEL_TONG_SC_BDF`
+/// or the sibling `samples` checkout; `None` (skipped) when neither exists.
+#[cfg(all(feature = "bdf", feature = "otb"))]
+fn tong_sc_otb() -> Option<Vec<u8>> {
+    let path = std::env::var_os("FONTPIXEL_TONG_SC_BDF")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf")
+        });
+    let Ok(bdf) = std::fs::read(&path) else {
+        eprintln!(
+            "skipped: {} is absent (set FONTPIXEL_TONG_SC_BDF)",
+            path.display()
+        );
+        return None;
+    };
+    let registry = crate::registry();
+    let loaded = registry
+        .read(
+            &crate::Input::new(&bdf).with_name("TongPixelSans14Large-SC.bdf"),
+            &crate::ReadOptions::default(),
+        )
+        .unwrap();
+    let written = registry
+        .write(
+            &loaded.fonts,
+            "otb",
+            &crate::WriteOptions::new(crate::ResourcePath::new("tong.otb").unwrap()),
+        )
+        .unwrap();
+    Some(written.output.assets()[0].bytes.clone())
+}
+/// The full matrix, run in release:
+/// `cargo test --release -p fontpixel --all-features --lib -- --ignored spawner`.
+/// A 1 MiB generated stream and the real Tong SC sfnt, threads 2-4, qualities
+/// through 11; then the production WOFF2 file of Tong SC, whose compressed
+/// block the single-threaded spawner reproduces from its raw stream.
+#[test]
+#[ignore = "heavy at quality 11; run in release (see doc comment)"]
+fn single_threaded_spawner_matches_the_thread_pool_on_large_inputs() {
+    let qualities = [0, 2, 5, 9, 10, 11];
+    assert_spawners_agree(
+        "1MiB-font-like",
+        &font_like(1 << 20),
+        &qualities,
+        &[2, 3, 4],
+    );
+    #[cfg(all(feature = "bdf", feature = "otb"))]
+    if let Some(sfnt) = tong_sc_otb() {
+        assert_spawners_agree("Tong-SC-otb-sfnt", &sfnt, &qualities, &[2, 3, 4]);
+        let l = Limits::default();
+        // Default limits (q11): two threads is the command-line default; at
+        // four, the encoder admission for this 1.9 MB stream exceeds the
+        // default 256 MiB working ledger and both targets refuse it up front.
+        for threads in [2, 3] {
+            let o = Options {
+                compression_threads: threads,
+                ..Default::default()
+            };
+            let woff2 = encode(&sfnt, &o, &l).unwrap();
+            let (block, size) = compressed_block(&woff2.bytes);
+            let budget = ledger(&l);
+            let raw = decompress(block, size, &budget).unwrap();
+            assert!(raw.len() >= brotli_encode::PARALLEL_MIN_BYTES);
+            let single = compress_parallel(
+                &raw,
+                &o,
+                &l,
+                &budget,
+                &encoder_params(o.quality, raw.len()),
+                &mut brotli::enc::singlethreading::SingleThreadedSpawner::default(),
+            )
+            .unwrap();
+            assert_eq!(&single[..], block, "Tong SC WOFF2 q11 t{threads}");
+            eprintln!(
+                "Tong-SC WOFF2 q11 t{threads}: raw {} bytes, block {} bytes, file {} bytes identical",
+                raw.len(),
+                block.len(),
+                woff2.bytes.len()
+            );
+        }
+    }
+}

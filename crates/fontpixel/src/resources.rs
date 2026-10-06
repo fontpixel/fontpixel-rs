@@ -189,10 +189,15 @@ impl TransportLimits {
     }
 }
 
+callback_trait! {
 /// Resolves only resources explicitly made available by the caller.
 /// Implementations must bound the returned vector's allocation capacity by
 /// `max_bytes`, not just its length.
-pub trait ResourceResolver: Send + Sync {
+///
+/// Implementors are `Send + Sync` on every target with threads; on `wasm`
+/// targets (no threads) that bound is absent, so a resolver may wrap host
+/// callbacks such as JavaScript functions.
+pub trait ResourceResolver {
     /// Retrieve one validated relative resource, subject to the byte budget.
     fn resolve(&self, path: &ResourcePath, max_bytes: usize) -> Result<Vec<u8>>;
 
@@ -211,6 +216,7 @@ pub trait ResourceResolver: Send + Sync {
             "resource enumeration is unavailable".into(),
         ))
     }
+}
 }
 
 /// Resolver for standalone files; sidecar requests fail explicitly.

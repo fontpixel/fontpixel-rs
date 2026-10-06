@@ -37,6 +37,7 @@ __all__ = [
     "ReportedErrorsError",
     "FontpixelIoError",
     "UnsupportedError",
+    "CancelledError",
     "FontSet",
     "Font",
     "Glyph",
@@ -126,6 +127,9 @@ class AmbiguousFormatError(FontpixelError):
 class BdfParseError(FontpixelError):
     """Fatal BDF syntax error."""
     line: int
+
+class CancelledError(FontpixelError):
+    """A progress callback cancelled the operation (returned False); nothing was written."""
 
 class FeatureDisabledError(FontpixelError):
     """Format compiled out of this build."""

@@ -363,6 +363,20 @@ class SerdeModel:
         `f::fzx::read` returns in its `(model, Report)` tuple."""
         segs = rust_path.replace("f::", "formats::", 1).split("::")
         module, fname = segs[:-1], segs[-1]
+
+        def tuple_head(it):
+            text = json.dumps(it["inner"]["function"]["sig"]["output"])
+            m = re.search(r'"tuple": \[\{"resolved_path": \{"path": "([\w:]+)"', text)
+            return m.group(1).split("::")[-1] if m else None
+
+        # The public path itself (re-exports such as `pk::read` resolved) is
+        # exact; the scan below is only the fallback, because a module can hold
+        # several functions of that name and the index order is arbitrary.
+        hit = self.public.get("fontpixel::" + "::".join(segs))
+        if hit is not None:
+            it = self.items.get((hit[0], hit[1]))
+            if it is not None and "function" in it["inner"] and tuple_head(it):
+                return tuple_head(it)
         for (n, k), it in self.items.items():
             if "function" not in it["inner"] or it.get("name") != fname:
                 continue

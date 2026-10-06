@@ -4,6 +4,21 @@
 #![doc = include_str!("../../../docs/api-rustdoc.md")]
 #![forbid(unsafe_code)]
 
+/// Declares a trait that callers implement (resolvers, custom codecs). Where
+/// threads exist its implementors must be `Send + Sync`; `wasm` targets have
+/// no threads, so the bound is absent there and bindings can implement the
+/// trait over host callbacks (JavaScript functions are neither).
+macro_rules! callback_trait {
+    ($(#[$meta:meta])* $vis:vis trait $name:ident $(<$($param:ident),+>)? { $($body:tt)* }) => {
+        $(#[$meta])*
+        #[cfg(not(target_family = "wasm"))]
+        $vis trait $name $(<$($param),+>)?: Send + Sync { $($body)* }
+        $(#[$meta])*
+        #[cfg(target_family = "wasm")]
+        $vis trait $name $(<$($param),+>)? { $($body)* }
+    };
+}
+
 pub mod bitmap;
 pub mod charset;
 #[cfg(feature = "compat-bdfparser")]
