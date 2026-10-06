@@ -25,7 +25,7 @@ fn identity(value: &str) -> std::result::Result<String, String> {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct NameOptions {
     /// Explicit normalized output family; original source/XLFD provenance is retained.
@@ -56,6 +56,8 @@ pub struct NameOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub foundry: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(NameOptions);
 impl NameOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -197,7 +199,7 @@ pub(crate) fn apply(
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ProjectionOptions {
     /// Replace every glyph's scalable advance (BDF SWIDTH x) with
@@ -230,6 +232,8 @@ pub struct ProjectionOptions {
     #[cfg_attr(feature = "clap", arg(long, value_name = "NAME"))]
     pub remove_property: Vec<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ProjectionOptions);
 impl ProjectionOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -250,6 +254,18 @@ impl ProjectionOptions {
             check_range("resolution", i128::from(x), 1, i128::from(i32::MAX))?;
             check_range("resolution", i128::from(y), 1, i128::from(i32::MAX))?;
         }
+        crate::options::check_requires(
+            self.swidth_units.is_some(),
+            &[(self.swidth_ppem.is_some(), "--swidth-ppem <SWIDTH_PPEM>")],
+        )?;
+        crate::options::check_requires(
+            self.point_size.is_some(),
+            &[(self.resolution.is_some(), "--resolution <RESOLUTION>")],
+        )?;
+        crate::options::check_requires(
+            self.resolution.is_some(),
+            &[(self.point_size.is_some(), "--point-size <POINT_SIZE>")],
+        )?;
         Ok(())
     }
 }

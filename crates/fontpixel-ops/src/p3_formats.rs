@@ -21,32 +21,50 @@ const READ_OPTIONS_PALM_ROUNDING: [&str; 2] = ["exact", "floor"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Device options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub device: device::ReadOptions,
     /// Portable options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub portable: portable::ReadOptions,
     /// Historical options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub historical: historical::ReadOptions,
     /// System options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub system: system::ReadOptions,
     /// Workstation options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub workstation: workstation::ReadOptions,
     /// Native console options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub native_console: native_console::ReadOptions,
     /// Override the inferred first legacy code in a Dr. Halo font.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -76,6 +94,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub gdr_read_legacy: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -223,32 +243,50 @@ const WRITE_OPTIONS_DRCS_CHARSET: [&str; 2] = ["94", "96"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Device options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub device: device::WriteOptions,
     /// Portable options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub portable: portable::WriteOptions,
     /// Historical options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub historical: historical::WriteOptions,
     /// System options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub system: system::WriteOptions,
     /// Workstation options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub workstation: workstation::WriteOptions,
     /// Native console options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub native_console: native_console::WriteOptions,
     /// Explicitly use Unicode numbers as legacy codes in small native formats.
     #[cfg_attr(feature = "clap", arg(long))]
@@ -327,7 +365,10 @@ pub struct WriteOptions {
     pub otb_rounding: Option<String>,
     /// Embedded metadata options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub otb_metadata: embedded_metadata::MetadataArguments,
     /// DRCS output cell width; requires --drcs-cell-height.
     #[cfg_attr(feature = "clap", arg(long, requires = "drcs_cell_height", value_parser = clap::value_parser!(u32).range(1..)))]
@@ -357,6 +398,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub drcs_eight_bit_controls: bool,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -439,6 +482,48 @@ impl WriteOptions {
         if let Some(value) = self.drcs_charset.as_deref() {
             check_choice("drcs_charset", value, &WRITE_OPTIONS_DRCS_CHARSET)?;
         }
+        crate::options::check_requires(
+            self.native_cell_width.is_some(),
+            &[(
+                self.native_cell_height.is_some(),
+                "--native-cell-height <NATIVE_CELL_HEIGHT>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.native_cell_height.is_some(),
+            &[(
+                self.native_cell_width.is_some(),
+                "--native-cell-width <NATIVE_CELL_WIDTH>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.drcs_cell_width.is_some(),
+            &[(
+                self.drcs_cell_height.is_some(),
+                "--drcs-cell-height <DRCS_CELL_HEIGHT>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.drcs_cell_height.is_some(),
+            &[(
+                self.drcs_cell_width.is_some(),
+                "--drcs-cell-width <DRCS_CELL_WIDTH>",
+            )],
+        )?;
+        // The cell origin requires the width, which requires the height.
+        crate::options::check_requires(
+            self.drcs_cell_x.is_some() || self.drcs_cell_y.is_some(),
+            &[
+                (
+                    self.drcs_cell_height.is_some() || self.drcs_cell_width.is_some(),
+                    "--drcs-cell-height <DRCS_CELL_HEIGHT>",
+                ),
+                (
+                    self.drcs_cell_width.is_some(),
+                    "--drcs-cell-width <DRCS_CELL_WIDTH>",
+                ),
+            ],
+        )?;
         Ok(())
     }
 }

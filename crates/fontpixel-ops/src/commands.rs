@@ -157,7 +157,7 @@ fn load(
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct DiffRequest {
     /// First input.
@@ -186,9 +186,14 @@ pub struct DiffRequest {
     pub max_differences: u32,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: Box<RasterOptions>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(DiffRequest);
 impl DiffRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -209,6 +214,10 @@ impl DiffRequest {
             100000,
         )?;
         self.raster.validate()?;
+        crate::options::check_required(&[
+            (crate::options::given(&self.a), "<A>"),
+            (crate::options::given(&self.b), "<B>"),
+        ])?;
         Ok(())
     }
 }
@@ -523,7 +532,7 @@ fn compare_font(
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ValidateRequest {
     /// Input to validate.
@@ -540,9 +549,14 @@ pub struct ValidateRequest {
     pub strict: bool,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: Box<RasterOptions>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ValidateRequest);
 impl ValidateRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -551,6 +565,7 @@ impl ValidateRequest {
             check_format("from", value)?;
         }
         self.raster.validate()?;
+        crate::options::check_required(&[(crate::options::given(&self.input), "<INPUT>")])?;
         Ok(())
     }
 }
@@ -717,7 +732,7 @@ pub(crate) fn validate(args: ValidateRequest) -> Result<ValidateResponse> {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct CharsetRequest {
     /// Input font.
@@ -752,9 +767,14 @@ pub struct CharsetRequest {
     pub max_table_bytes: Option<usize>,
     /// Input decoding options and resource limits.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub raster: Box<RasterOptions>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(CharsetRequest);
 impl CharsetRequest {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -766,6 +786,10 @@ impl CharsetRequest {
             check_format("format", value)?;
         }
         self.raster.validate()?;
+        crate::options::check_required(&[
+            (crate::options::given(&self.input), "<INPUT>"),
+            (crate::options::given(&self.output), "--output <OUTPUT>"),
+        ])?;
         Ok(())
     }
 }

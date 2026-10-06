@@ -10,7 +10,7 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Scoped PNG mask for a PILfont descriptor (its native suffix is .pbm).
@@ -32,6 +32,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub qpf_read_family: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -52,6 +54,20 @@ impl ReadOptions {
                 i128::from(u32::MAX),
             )?;
         }
+        crate::options::check_requires(
+            self.playdate_read_cell_width.is_some(),
+            &[(
+                self.playdate_read_cell_height.is_some(),
+                "--playdate-read-cell-height <PLAYDATE_READ_CELL_HEIGHT>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.playdate_read_cell_height.is_some(),
+            &[(
+                self.playdate_read_cell_width.is_some(),
+                "--playdate-read-cell-width <PLAYDATE_READ_CELL_WIDTH>",
+            )],
+        )?;
         Ok(())
     }
 }
@@ -119,7 +135,7 @@ const WRITE_OPTIONS_MGTK_COLUMNS: [&str; 3] = ["auto", "single", "double"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// PILfont maximum atlas width (default 800).
@@ -159,6 +175,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_MGTK_COLUMNS))]
     pub mgtk_columns: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -200,6 +218,20 @@ impl WriteOptions {
         if let Some(value) = self.mgtk_columns.as_deref() {
             check_choice("mgtk_columns", value, &WRITE_OPTIONS_MGTK_COLUMNS)?;
         }
+        crate::options::check_requires(
+            self.playdate_cell_width.is_some(),
+            &[(
+                self.playdate_cell_height.is_some(),
+                "--playdate-cell-height <PLAYDATE_CELL_HEIGHT>",
+            )],
+        )?;
+        crate::options::check_requires(
+            self.playdate_cell_height.is_some(),
+            &[(
+                self.playdate_cell_width.is_some(),
+                "--playdate-cell-width <PLAYDATE_CELL_WIDTH>",
+            )],
+        )?;
         Ok(())
     }
 }

@@ -86,7 +86,13 @@ fn with_scope<T>(scope: SourceScope, f: impl FnOnce() -> T) -> (T, Vec<PreparedO
     drop(restore);
     (result, outputs)
 }
-#[cfg(all(test, feature = "opentype", feature = "bdf", feature = "fs"))]
+#[cfg(all(
+    test,
+    feature = "clap",
+    feature = "opentype",
+    feature = "bdf",
+    feature = "fs"
+))]
 pub(crate) fn with_source_scope<T>(f: impl FnOnce() -> T) -> T {
     with_scope(
         SourceScope {

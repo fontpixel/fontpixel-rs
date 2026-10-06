@@ -14,30 +14,47 @@ use fontpixel::{Error, FontRegistry, ResourceLimits, Result};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Console options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub console: console::ReadOptions,
     /// Cjk options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub cjk: cjk::ReadOptions,
     /// Mac options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub mac: mac::ReadOptions,
     /// Editor options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub editor: editor::ReadOptions,
     /// Legacy options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub legacy: legacy::ReadOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -66,34 +83,54 @@ impl ReadOptions {
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Console options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub console: console::WriteOptions,
     /// Cjk options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub cjk: cjk::WriteOptions,
     /// Mac options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub mac: mac::WriteOptions,
     /// Editor options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub editor: editor::WriteOptions,
     /// Tex options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub tex: tex::WriteOptions,
     /// Legacy options.
     #[cfg_attr(feature = "clap", command(flatten))]
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(flatten, deserialize_with = "crate::serde_keys::flattened")
+    )]
     pub legacy: legacy::WriteOptions,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

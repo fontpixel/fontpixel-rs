@@ -10,7 +10,7 @@ use fontpixel::{FontRegistry, ResourceLimits, Result};
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Explicit NFNT legacy charset label.
@@ -20,6 +20,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub nfnt_apple_double_resource: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces; this
     /// group has none beyond its field types.
@@ -66,7 +68,7 @@ const WRITE_OPTIONS_NFNT_RESOURCE_TYPE: [&str; 2] = ["nfnt", "font"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// Macintosh output container (default dfont).
@@ -76,6 +78,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_NFNT_RESOURCE_TYPE))]
     pub nfnt_resource_type: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

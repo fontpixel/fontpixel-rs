@@ -1649,3 +1649,46 @@ exit codes, outputs and budget boundaries stay byte-identical.
   `capabilities()` reports `filesystem`, `threads` and `toml_batch`.
 - `crates/fontpixel-cli/src/input_budget.rs` is a one-line re-export kept only
   because `tests/input_budget.rs` includes that path; the suite is unchanged.
+
+## 2026-10-06 — `fontpixel-ops` request rules and strict serde shape
+
+**Context:** Requests built without clap (bindings, typed batch tasks) skipped
+the parser's relational rules, flattened option groups silently ignored unknown
+keys, many choice options were unchecked strings until an operation ran, three
+private text adapters duplicated core serde derives, and `TaskRequest` had no
+`vectorize` kind.
+
+**Choices:**
+- Every `validate()` now also checks the clap relational rules (`requires`,
+  `requires_all`, `conflicts_with`, `required_unless_present`, the `selection`
+  group and required arguments), with the parser's message text. A rule is only
+  checked where the struct can tell an argument was given (`Some`, `true`, a
+  non-empty list or path, a non-default value), so `validate()` rejects a
+  subset of what clap rejects and parsed command lines still never fail it.
+  Two parser behaviours are reproduced: a requirement is waived when the
+  required argument conflicts with a present one (`--range` with text), and the
+  missing list is the closure of `requires` (`--c-height` alone lists
+  `--c-first`, `--c-charset`, `--c-width`). Range errors use the parser's text
+  (`invalid value '0' for '--swidth-ppem <SWIDTH_PPEM>': 0 is not in 1..=…`).
+  `tests/request_rules.rs` pairs each rule's command line with the equivalent
+  request map and requires identical acceptance, values and messages.
+- The serde shape stays flat (keys = clap argument ids, asserted by a test).
+  serde cannot combine `deny_unknown_fields` with `flatten`, so each request
+  and group derives with `remote = "Self"` and `serde_keys::strict!` supplies the
+  traits: `Deserialize` buffers the map, rejects keys outside the type's flat
+  key set (the serialized `Default`), deserializes and runs `validate()`;
+  flattened fields use the lenient derived code (`deserialize_with =
+  "serde_keys::flattened"`). Merge parts/outputs use `deny_unknown_fields`.
+  The derived inherent `serialize`/`deserialize` functions are public as a
+  side effect of `remote = "Self"`.
+- Choices whose core enum serializes with the command-line spelling are typed:
+  `shape` (`outline::Shape`) and merge `spacing`/`geometric_width`. clap keeps
+  `PossibleValuesParser` over the shared constants, mapped to the enum, so help
+  and errors are unchanged. Other choices (for example PCF `glyph_pad` `"1"`
+  versus core `one`, or feature-gated core enums) remain strings checked against
+  the shared constants on deserialization.
+- The private adapters for `Rgba`, `WritingDirection` and `Selection` are gone;
+  requests use the core derives (`{red, green, blue, alpha}`, `{glyphs, lines}`,
+  the selection expression string).
+- `TaskRequest::Vectorize` runs exactly like `Convert` and reports
+  `vectorize`; TOML tasks with `kind = "vectorize"` use it.

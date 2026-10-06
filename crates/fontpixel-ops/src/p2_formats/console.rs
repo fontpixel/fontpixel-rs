@@ -17,7 +17,7 @@ const READ_OPTIONS_CPI_POINTER_MODE: [&str; 2] = ["linear", "segmented"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct ReadOptions {
     /// Explicit raw layout preset (VGA, C64, Spectrum, CH8, MSX or Harlekin).
@@ -66,6 +66,8 @@ pub struct ReadOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = READ_OPTIONS_CPI_POINTER_MODE))]
     pub cpi_pointer_mode: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(ReadOptions);
 impl ReadOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
@@ -229,7 +231,7 @@ const WRITE_OPTIONS_CPI_VERSION: [&str; 5] = ["font", "font-nt", "drfont", "cp",
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// DOS output layout (default CP for .cp, CPX for .cpx, otherwise FONT).
@@ -239,6 +241,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long))]
     pub cpi_code_page: Option<u16>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.

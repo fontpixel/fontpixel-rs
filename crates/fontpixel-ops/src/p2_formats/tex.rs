@@ -12,7 +12,7 @@ const WRITE_OPTIONS_PLAN9_COMPRESSION: [&str; 2] = ["raw", "literal"];
 #[cfg_attr(
     feature = "serde",
     derive(serde::Serialize, serde::Deserialize),
-    serde(default)
+    serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
     /// TeX design size in points: integer or exact fraction, e.g. 10 or 21/2.
@@ -37,6 +37,8 @@ pub struct WriteOptions {
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PLAN9_COMPRESSION))]
     pub plan9_compression: Option<String>,
 }
+#[cfg(feature = "serde")]
+crate::serde_keys::strict!(WriteOptions);
 impl WriteOptions {
     /// Check the value constraints the command-line parser enforces (choice
     /// lists, numeric ranges and value syntax); operations call this first.
