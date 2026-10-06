@@ -15,7 +15,10 @@ confidence-threshold = 0.93
 # Its Windows adapters likewise require distinct windows-sys 0.59/0.60 ABIs.
 # Bound these transitive duplicates to their reviewed exact versions; no advisory
 # checks are suppressed and no implementation dependency is downgraded.
+# pyo3-macros 0.29 (Python bindings) still uses syn 2 while the workspace's
+# other proc macros use syn 3; syn only runs at build time inside proc macros.
 skip = [
+    { name = "syn", version = "=2.0.119" },
     { name = "miniz_oxide", version = "=0.8.9" },
     { name = "io-lifetimes", version = "=2.0.4" },
     { name = "windows-sys", version = "=0.59.0" },

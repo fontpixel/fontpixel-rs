@@ -1,6 +1,6 @@
 [package]
 name = "fontpixel-py"
-description = "Reserved for fontpixel Python bindings (not implemented)"
+description = "Python bindings for fontpixel: the complete native API plus a bdfparser-compatible layer"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -8,8 +8,22 @@ license.workspace = true
 authors.workspace = true
 publish = false
 
-[dependencies]
-fontpixel.workspace = true
+[lib]
+name = "fontpixel_py"
+crate-type = ["cdylib", "rlib"]
 
-[lints]
-workspace = true
+[dependencies]
+fontpixel = { workspace = true, features = ["all-formats", "serde", "compat-bdfparser", "cjk-charsets"] }
+pyo3 = { version = "0.29", features = ["abi3-py310"] }
+pythonize = "0.29"
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# pyo3's generated code contains `unsafe`, so this crate cannot use the
+# workspace-wide `forbid(unsafe_code)`; it still writes no unsafe code itself.
+[lints.rust]
+missing_docs = "warn"
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = "warn"

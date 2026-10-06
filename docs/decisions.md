@@ -1598,7 +1598,7 @@ option-like types derives `Deserialize`; brotli 9.0.0 ships a single-threaded
   JSON; `bindings/coverage.toml` maps each to its Python and JS entry, status
   (`bound`, `adapted`, `unavailable` with reason and evidence) and test. The checker
   fails on any unmapped or stale entry and runs in each phase gate.
-- Python: pyo3 0.28, abi3 for CPython >= 3.10, maturin; `extension-module` is enabled
+- Python: pyo3 0.29 with pythonize 0.29, abi3 for CPython >= 3.10, maturin; `extension-module` is enabled
   only by maturin so `cargo test --workspace` keeps linking. manylinux wheels are
   built locally with `maturin --zig` (the Docker daemon is not running); not published.
 - WASM: wasm-bindgen with `serde-wasm-bindgen`; WOFF2 uses brotli's single-threaded
