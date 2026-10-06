@@ -181,7 +181,41 @@ its `sfnt` dependency; `fea` remains a reserved feature with no implementation.
 `cjk-charsets` includes exact CJK tables and GB18030 ranges without a runtime
 dependency. BDF can preserve CJK source codes without those tables; actual CJK
 conversion returns an explicit feature error when the exact table is disabled.
-Python and WASM are honest, non-publishable reserved crates, without pyo3/wasm-bindgen dependencies until their phases.
+
+## Python
+
+`crates/fontpixel-py` is the Python package `fontpixel`: the complete native API
+(formats, model, bitmaps, rendering, OpenType/WOFF, variants, subsets, merge and
+every command-line operation in-process) plus `fontpixel.compat.bdfparser`, a
+bdfparser-compatible layer. It is typed (stubs and `TypedDict` option shapes)
+and documented in the [Python guide](docs/python-api.md) and the
+[API reference](docs/python-api-reference.md). Nothing is published; install a
+locally built wheel (CPython >= 3.10, one abi3 wheel per platform):
+
+```sh
+python -m pip install maturin
+cd crates/fontpixel-py && maturin build --release
+python -m pip install ../../target/wheels/fontpixel-*.whl
+```
+
+```python
+import fontpixel as fp
+
+fonts = fp.read(open("tests/data/bdf/spleen-5x8.bdf", "rb").read()).fonts
+font = fonts[0]
+print(font.glyph_for_codepoint("A").bitmap.to_text())
+png = fp.to_png(font.draw("Hello").bitmap, {"scale": 4})
+pcf = fp.write(fonts, "pcf", {"glyph_pad": "4"}).output.into_single()
+
+from fontpixel.compat.bdfparser import Font      # existing bdfparser code
+print(Font("tests/data/bdf/spleen-5x8.bdf").draw("Hello"))
+```
+
+[Examples](crates/fontpixel-py/examples) cover conversion, glyph editing,
+rendering, typed options, OpenType/WOFF2/variants/subsets, merge, batch jobs,
+sidecar resources, the bdfparser layer and error handling. For development:
+`maturin develop --release` in a virtual environment, then
+`pytest crates/fontpixel-py/tests`.
 
 ## Library contracts
 

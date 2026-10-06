@@ -45,7 +45,7 @@ _KINDS = {
 
 
 @cache
-def _rows() -> dict[str, dict[str, Any]]:
+def _rows() -> dict[str, Any]:
     return {r['key']: r for r in _fp.charset_table()}
 
 

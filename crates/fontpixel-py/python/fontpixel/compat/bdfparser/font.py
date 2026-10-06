@@ -227,7 +227,7 @@ class _UnencodedView(list):
     def append(self, entry: Mapping[str, Any] | Iterable[Any]) -> None:
         if not isinstance(entry, Mapping):  # a bare meta list (accepted by bdfparser writers)
             entry = {'altcode': None, 'meta': list(entry)}
-        meta = list(entry['meta'])
+        meta = list(entry['meta'])  # type: ignore[arg-type]  # validated by the native writer
         fields = dict(zip(META_TITLES, meta, strict=False))
         fields['codepoint'] = -1
         altcode = entry.get('altcode')
@@ -349,7 +349,7 @@ class Font:
         if m is None:
             if cp not in self._cpset():
                 raise KeyError(cp)
-            m = _MetaList(self, cp, self._raw.lookup(cp).meta())
+            m = _MetaList(self, cp, self._raw.lookup(cp).meta())  # type: ignore[union-attr]  # cp is encoded
             st['metas'][cp] = m
         return m
 

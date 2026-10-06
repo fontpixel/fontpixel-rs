@@ -40,7 +40,14 @@ Example::
                          files={"font.bdf": open("font.bdf", "rb").read()})
     pcf = result.outputs["font.pcf"]
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 from ._native import _ops
+
+if TYPE_CHECKING:
+    from .types import ConvertRequest, Files
 
 OperationResult = _ops.OperationResult
 BatchResult = _ops.BatchResult
@@ -72,7 +79,13 @@ DEFAULT_MAX_REPORT_BYTES: int = _ops.DEFAULT_MAX_REPORT_BYTES
 DEFAULT_MAX_TASK_REPORT_BYTES: int = _ops.DEFAULT_MAX_TASK_REPORT_BYTES
 
 
-def vectorize(request=None, /, *, files=None, **options):
+def vectorize(
+    request: ConvertRequest | None = None,
+    /,
+    *,
+    files: Files | None = None,
+    **options: Any,
+) -> OperationResult:
     """Vectorize (``fontpixel vectorize``): the same operation as :func:`convert`.
 
     The command-line ``vectorize`` is an alias of ``convert``; the result is

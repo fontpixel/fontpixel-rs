@@ -32,7 +32,7 @@ builds argv strings.
   explicit (`copy()`/`clone()`), pixel data is copied out only on request
   (`to_bytes`, `rows`, `to_list`, NumPy-free).
 - **Stable glyph IDs** are integers; codepoints are tagged values
-  (`{"unicode": n}` / `{"legacy": n}`) in plain data and typed classes in the API.
+  (`{"Unicode": n}` / `{"Legacy": n}`) in plain data and typed classes in the API.
 - **Errors** map to one exception (Python) or `Error` subclass (JS) per
   `fontpixel::Error` variant, carrying `kind`, structured fields (`resource`,
   `limit`, `format`, `operation`, `candidates`, `line`) and the full `report` for
@@ -70,4 +70,6 @@ mapping fails the gate.
   bdfparser and report slower calls as slower.
 - Build: `maturin develop`/`maturin build` (abi3, CPython ≥ 3.10); manylinux wheels
   with `maturin build --release --zig --compatibility manylinux2014`; nothing is
-  published.
+  published. `scripts/build_wheels.sh` builds the x86_64 and aarch64 wheels into
+  `local-work/wheels/`, runs `auditwheel show` and the pytest suite against the
+  installed wheel on CPython 3.10 and 3.12 (results in `benches/PHASE7-REPORT.md`).
