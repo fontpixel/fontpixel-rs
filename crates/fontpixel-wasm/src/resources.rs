@@ -454,7 +454,11 @@ impl JsResourceSet {
     /// Resolve like a reader would (`ResourceResolver::resolve`):
     /// `MissingResourceError` when absent, `ResourceLimitError` above
     /// `maxBytes` (default unbounded).
-    pub fn resolve(&self, path: &str, max_bytes: Option<f64>) -> JsResult<Uint8Array> {
+    pub fn resolve(
+        &self,
+        path: &str,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
+    ) -> JsResult<Uint8Array> {
         let path = path_arg(path)?;
         let max = max_or_unbounded(max_bytes, "maxBytes")?;
         let bytes = SetResolver(self.files.clone()).resolve(&path, max).js()?;
@@ -466,8 +470,8 @@ impl JsResourceSet {
     pub fn list(
         &self,
         directory: Option<String>,
-        max_entries: Option<f64>,
-        max_bytes: Option<f64>,
+        #[wasm_bindgen(js_name = maxEntries)] max_entries: Option<f64>,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
     ) -> JsResult<Vec<String>> {
         let directory = directory.as_deref().map(path_arg).transpose()?;
         let paths = SetResolver(self.files.clone())
@@ -875,7 +879,11 @@ impl JsReadContext {
     }
     /// Resolve with an extra byte allowance (`ReadContext::resource_limited`).
     #[wasm_bindgen(js_name = resourceLimited)]
-    pub fn resource_limited(&self, path: &str, max_bytes: f64) -> JsResult<Uint8Array> {
+    pub fn resource_limited(
+        &self,
+        path: &str,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: f64,
+    ) -> JsResult<Uint8Array> {
         self.resource_with(path, conv::int(max_bytes, "maxBytes")?)
     }
     /// List the immediate files of `directory` (`null`: the root) with
@@ -884,8 +892,8 @@ impl JsReadContext {
     pub fn list_resources_limited(
         &self,
         directory: Option<String>,
-        max_entries: f64,
-        max_bytes: f64,
+        #[wasm_bindgen(js_name = maxEntries)] max_entries: f64,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: f64,
     ) -> JsResult<Vec<String>> {
         let directory = directory.as_deref().map(path_arg).transpose()?;
         let op = Op::List(
@@ -1133,7 +1141,10 @@ impl JsOutputBundle {
     /// Retained bytes of the bundle, checked against `maxBytes` (default
     /// unbounded) (`OutputBundle::retained_bytes`; wasm32 sizes).
     #[wasm_bindgen(js_name = retainedBytes)]
-    pub fn retained_bytes(&self, max_bytes: Option<f64>) -> JsResult<usize> {
+    pub fn retained_bytes(
+        &self,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
+    ) -> JsResult<usize> {
         self.bundle
             .retained_bytes(max_or_unbounded(max_bytes, "maxBytes")?)
             .js()

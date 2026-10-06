@@ -105,8 +105,8 @@ fn opt_properties(value: Option<JsValue>) -> JsResult<Properties> {
 /// number or a legacy code in the font's own charset. Every function taking
 /// a codepoint also accepts a number or one-character string (Unicode) and
 /// the plain data `{Unicode: n}` / `{Legacy: n}`; results use the plain data.
-#[wasm_bindgen(js_name = Codepoint)]
 #[derive(Clone, Copy)]
+#[wasm_bindgen(js_name = Codepoint)]
 pub struct JsCodepoint(Codepoint);
 
 impl JsCodepoint {
@@ -522,7 +522,10 @@ impl JsFontSet {
     /// `{bytes, fonts, glyphs, glyph_slots}`; `ResourceLimitError` above
     /// `maxBytes` (default unbounded). Sizes are those of this wasm32 build.
     #[wasm_bindgen(js_name = retainedUsage, unchecked_return_type = "ModelUsage")]
-    pub fn retained_usage(&self, max_bytes: Option<f64>) -> JsResult<JsValue> {
+    pub fn retained_usage(
+        &self,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
+    ) -> JsResult<JsValue> {
         self.read(|s| usage(max_bytes, |m| s.retained_usage(m)))
     }
     /// Set-level properties (a live `Properties` view); assignable.
@@ -845,13 +848,19 @@ impl JsFont {
     /// `ResourceLimitError` above `maxBytes` (inclusive budget, default
     /// unbounded).
     #[wasm_bindgen(js_name = retainedUsage, unchecked_return_type = "ModelUsage")]
-    pub fn retained_usage(&self, max_bytes: Option<f64>) -> JsResult<JsValue> {
+    pub fn retained_usage(
+        &self,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
+    ) -> JsResult<JsValue> {
         self.read(|f| usage(max_bytes, |m| f.retained_usage(m)))
     }
     /// Storage a new owned copy would need, without copying
     /// (`Font::cloned_usage`).
     #[wasm_bindgen(js_name = clonedUsage, unchecked_return_type = "ModelUsage")]
-    pub fn cloned_usage(&self, max_bytes: Option<f64>) -> JsResult<JsValue> {
+    pub fn cloned_usage(
+        &self,
+        #[wasm_bindgen(js_name = maxBytes)] max_bytes: Option<f64>,
+    ) -> JsResult<JsValue> {
         self.read(|f| usage(max_bytes, |m| f.cloned_usage(m)))
     }
     /// Font-wide metrics (`FontMetrics`) as a copy; assign to replace.

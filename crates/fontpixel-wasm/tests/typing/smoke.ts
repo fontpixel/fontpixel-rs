@@ -3,9 +3,20 @@
 // executed; it checks that typical code type-checks and that misuse fails.
 import {
   Bitmap,
+  BitmapProjection,
+  Codepoint,
   Font,
   FontSet,
   Glyph,
+  Input,
+  OutputBundle,
+  Properties,
+  ReadContext,
+  ResourceSet,
+  Written,
+  applyBitmapProjection,
+  applyNames,
+  reportPush,
   InvalidInputError,
   MissingResourceError,
   ResourceLimitError,
@@ -22,6 +33,11 @@ import {
 } from "fontpixel";
 import type {
   Capability,
+  CodepointDict,
+  ModelUsage,
+  ProjectionResult,
+  PropertyValue,
+  Report,
   FontMetrics,
   FontSetDict,
   GlyphBitmap,
@@ -104,11 +120,63 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
     void scoped.width;
   }
 
+  // Model, metadata and resource API.
+  const cp = Codepoint.unicode(65);
+  const id: number | undefined = font.glyphId(cp) ?? font.glyphId("A") ?? font.glyphId({ Unicode: 65 });
+  void id;
+  const pairs: [CodepointDict, number][] = font.codepoints();
+  void pairs;
+  for (const g of font) {
+    const gid: number | undefined = g.id;
+    void gid;
+  }
+  for (const f of set) void f.length;
+  const props: Properties = font.properties;
+  props.set("BIG", 2n ** 64n - 1n);
+  props.push("COMMENT", "x", new Uint8Array(1));
+  const value: PropertyValue | undefined = props.get("BIG");
+  void value;
+  font.editGlyph(0, (g: Glyph) => {
+    g.name = "edited";
+    g.shift(1n, -1);
+  });
+  const usage: ModelUsage = font.retainedUsage(1 << 20);
+  void usage;
+  const fresh = new FontSet([font, font.toDict()], { sourceFormat: "bdf" });
+  const names: Report = applyNames(fresh, { family: "Demo" }, limits);
+  const outcome: ProjectionResult = applyBitmapProjection(fresh, {
+    scalable_advance: { from_device: { units_per_em: 1000, reference_ppem: 13 } },
+    properties: [{ set: { name: "QUAD_WIDTH", value: 7n } }],
+  });
+  const retained: number = outcome.retained_bytes + BitmapProjection.MAX_PROPERTY_EDITS;
+  void [names, retained];
+  const rs = new ResourceSet({ "a.bin": new Uint8Array(1) });
+  const ctx = new ReadContext(new Input(bytes, { name: "a.bdf", resources: rs }), limits);
+  const got: Uint8Array = ctx.resource("a.bin");
+  const listed: string[] = ctx.listResourcesLimited(null, 10, 1000);
+  void [got, listed];
+  const bundle = new OutputBundle("a.bin", [["a.bin", new Uint8Array(1)]]);
+  for (const asset of bundle) {
+    const p: string = asset.path;
+    void p;
+  }
+  const written = new Written(bundle);
+  const pushed: Report = reportPush(written.report, {
+    level: "warning",
+    impact: "loss",
+    code: "x",
+    location: { font_index: 0, glyph_index: null, codepoint: null, asset: null },
+    message: "m",
+  });
+  void pushed;
+  // @ts-expect-error codepoint kinds are "unicode" | "legacy"
+  new Codepoint(1, "other");
+
   // @ts-expect-error unknown option keys are not ReadArgs
   read(bytes, { formt: "bdf" });
   // @ts-expect-error limits are numbers
   const bad: ResourceLimits = { max_glyphs: "10" };
   void bad;
-  // @ts-expect-error plain data is not a handle
+  // @ts-expect-error a removed glyph slot (null) is not a glyph
   font.addGlyph(dict.fonts[0].glyphs[0]);
 }

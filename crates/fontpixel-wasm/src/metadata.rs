@@ -212,8 +212,8 @@ impl JsBitmapProjection {
     /// (`BitmapProjection::scalable_from_device`).
     #[wasm_bindgen(js_name = scalableFromDevice)]
     pub fn scalable_from_device(
-        units_per_em: f64,
-        reference_ppem: f64,
+        #[wasm_bindgen(js_name = unitsPerEm)] units_per_em: f64,
+        #[wasm_bindgen(js_name = referencePpem)] reference_ppem: f64,
     ) -> JsResult<JsBitmapProjection> {
         let p = BitmapProjection::scalable_from_device(
             conv::int(units_per_em, "unitsPerEm")?,
