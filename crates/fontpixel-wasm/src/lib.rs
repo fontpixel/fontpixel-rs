@@ -29,10 +29,20 @@ pub mod conv;
 pub mod errors;
 pub mod formats;
 pub mod handles;
+pub mod merge;
 pub mod model;
 pub mod normalize;
 pub mod resources;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod sfnt;
+pub mod sfnt_support;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod sfnt_tables;
 pub mod types;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod variants;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod woff;
 
 use wasm_bindgen::prelude::*;
 

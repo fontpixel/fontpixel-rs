@@ -4739,7 +4739,7 @@ export interface MergeInput {
   /** Input font. */
   input: string;
   /** Selected codes, e.g. `cjk` or `western,geometric`. */
-  take: Selection;
+  take: SelectionDict;
   /** Vertical offset in pixels (positive moves glyphs up). */
   dy?: WideInt;
   /** Explicit input format. */
@@ -9845,7 +9845,7 @@ export interface SegmentQuad {
 }
 
 /** `fontpixel::merge::selection::Selection`: Union of selected ranges, with exclusions applied last. */
-export type Selection = string;
+export type SelectionDict = string;
 
 /** `fontpixel::formats::sfd::SfdCodec`: SFD registry adapter, retaining all bitmap strikes. */
 export interface SfdCodec {
@@ -10843,7 +10843,7 @@ export interface ValidateRequest {
 }
 
 /** `fontpixel::variants::Variants`: One default face plus ordered region and script alternatives. */
-export interface Variants {
+export interface VariantsDict {
   /** Default face and global metadata source. */
   base: FontDict;
   /** Language alternatives, applied in this order. */
@@ -11514,7 +11514,7 @@ export interface SerdeTypes {
   "ReportEntry": ReportEntry;
   "ResourceLimits": ResourceLimits;
   "ResourcePath": ResourcePath;
-  "Variants": Variants;
+  "Variants": VariantsDict;
   "WriteOptions": FormatsWriteOptions;
   "bitmap::Alignment": Alignment;
   "bitmap::BitOrder": BitOrder;
@@ -11972,7 +11972,7 @@ export interface SerdeTypes {
   "merge::PartLicense": PartLicense;
   "merge::PartMetrics": PartMetrics;
   "merge::PartReport": PartReport;
-  "merge::Selection": Selection;
+  "merge::Selection": SelectionDict;
   "merge::SpacingAdjustment": SpacingAdjustment;
   "merge::report::AdjustmentKind": AdjustmentKind;
   "merge::report::LicenseReport": LicenseReport;
@@ -11983,7 +11983,7 @@ export interface SerdeTypes {
   "merge::report::PartReport": PartReport;
   "merge::report::SpacingAdjustment": SpacingAdjustment;
   "merge::selection::CodepointRange": CodepointRange;
-  "merge::selection::Selection": Selection;
+  "merge::selection::Selection": SelectionDict;
   "metadata::NameOverrides": NameOverrides;
   "model::AbcWidths": AbcWidths;
   "model::Codepoint": CodepointDict;
@@ -12113,7 +12113,7 @@ export interface SerdeTypes {
   "variants::OutlineFlavor": OutlineFlavor;
   "variants::Plan": Plan;
   "variants::ScriptVariant": ScriptVariant;
-  "variants::Variants": Variants;
+  "variants::Variants": VariantsDict;
   "variants::export::DotReuse": DotReuse;
   "variants::export::Encoded": ExportEncoded;
   "variants::export::Options": ExportOptions;
