@@ -73,7 +73,7 @@ python = "fontpixel.FeatureDisabledError (kind='CharsetFeatureDisabled', charset
 python_test = "crates/fontpixel-py/tests/test_charset.py::test_charset_table_and_codecs"
 js = "FeatureDisabledError (kind 'CharsetFeatureDisabled', charset, feature)"
 js_test = "crates/fontpixel-wasm/tests/charset.test.mjs::charset table and codecs"
-reason = "raised as an exception; this build enables cjk-charsets, so every table is available and the error cannot occur (the test asserts availability)"
+reason = "raised as an exception; this build enables cjk-charsets, so every table is available and the error cannot occur (the test asserts availability). JS: the minimal profile compiles the CJK tables out, so the error is thrown and tested there (FeatureDisabledError, kind CharsetFeatureDisabled)"
 
 [[rule]]
 pattern = "fontpixel::charset::CharsetInfo"
@@ -196,7 +196,7 @@ pattern = "fontpixel::charset::merge_categories::*"
 status = "bound"
 python = "fontpixel.{name}"
 python_test = "crates/fontpixel-py/tests/test_charset.py::test_merge_categories"
-js = "{camelName} (constants: unicodeVersion(), cjkRanges(), geometricRanges(), unicodeBlocks())"
+js = "isScalar, isCjk, isWestern, isGeometric, isHan, unicodeBlock, eastAsianWidth; constants as functions: unicodeVersion(), cjkRanges(), geometricRanges(), unicodeBlocks()"
 js_test = "crates/fontpixel-wasm/tests/charset.test.mjs::merge categories"
 
 [[rule]]
