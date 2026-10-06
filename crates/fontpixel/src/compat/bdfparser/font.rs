@@ -286,11 +286,11 @@ impl Font {
     }
     /// Headers projected in SPEC insertion order.
     pub fn headers(&self) -> Map<String, V> {
-        headers(&self.state.borrow().core())
+        headers(self.state.borrow().core())
     }
     /// Case-normalized properties projected in insertion order.
     pub fn props(&self) -> Map<String, V> {
-        props(&self.state.borrow().core()).0
+        props(self.state.borrow().core()).0
     }
     /// Get a case-insensitive property.
     pub fn getprop(&self, key: &str) -> V {
@@ -934,8 +934,8 @@ impl Font {
     /// Canonical full model used by the cross-language harness.
     pub fn model(&self) -> V {
         let s = self.state.borrow();
-        let h = headers(&s.core());
-        let (p, n) = props(&s.core());
+        let h = headers(s.core());
+        let (p, n) = props(s.core());
         let gs = s
             .core()
             .glyphs()
@@ -1045,7 +1045,7 @@ impl Font {
             }
         }
         append_comments(&mut lines, h.get("comment"));
-        let (p, n) = props(&self.state.borrow().core());
+        let (p, n) = props(self.state.borrow().core());
         let count = p.keys().filter(|k| *k != "comment").count();
         if count > 0
             || p.get("comment")
