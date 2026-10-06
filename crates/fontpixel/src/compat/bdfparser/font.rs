@@ -1193,19 +1193,24 @@ impl Font {
                     .find(|cp| core.glyph_id(*cp).is_some())
             })
             .collect::<Vec<_>>();
-        // bdfparser's line-limit check (and its message): a glyph whose cell
-        // width (FONTBOUNDINGBOX width) plus spacing offset exceeds the limit.
+        // bdfparser's line-limit check, simulated before the native layout so
+        // its message is bdfparser's: each glyph costs its drawn cell width plus
+        // its spacing offset; a glyph that overflows the line starts a new one,
+        // and one that does not fit an empty line is an error.
         let horizontal = horizontal_glyphs(kw.get("direction").and_then(V::as_str).unwrap_or("lr"));
-        // The drawn cell is the font bounding box (FONTBOUNDINGBOX when present).
+        // The drawn cell is the font bounding box (FONTBOUNDINGBOX when present);
+        // a zero-height cell is drawn empty (width 0).
         let (fbbx, fbby) = core
             .metrics
             .bounds
             .map_or((0, 0), |b| (i64::from(b.width), i64::from(b.height)));
+        let w = if fbby == 0 { 0 } else { fbbx };
         let (idx, fbbsize, gl) = if horizontal {
             (8, fbbx, gdw)
         } else {
             (12, fbby, gdw1)
         };
+        let (mut size, mut placed) = (0i128, 0usize);
         for (&cp, code) in cps.iter().zip(&codes) {
             let m = match code.and_then(|c| core.glyph_id(c)) {
                 Some(id) => core.glyph(id).map_or_else(|| vec![V::Null; 17], meta),
@@ -1214,25 +1219,34 @@ impl Font {
             let offset = if options.mode == RenderMode::Advance {
                 interglyph(&m, idx)
                     .or(gl)
-                    .map_or(0, |v| v.saturating_sub(fbbsize))
+                    .map_or(0, |v| i128::from(v) - i128::from(fbbsize))
             } else {
                 0
             };
-            if fbbx.saturating_add(offset) > options.line_limit {
-                let ch = m[1]
-                    .as_i64()
-                    .and_then(|c| self.cp2char(c).ok().flatten())
-                    .map_or("None".to_owned(), String::from);
-                let cp = if cp < 0 {
-                    "None".to_owned()
-                } else {
-                    cp.to_string()
-                };
-                return Err(invalid(&format!(
-                    "`linelimit` ({}) is too small the line can't even contain one glyph: \"{ch}\" (codepoint {cp}, width: {fbbx})",
-                    options.line_limit
-                )));
+            let cost = i128::from(w) + offset;
+            if size + cost <= i128::from(options.line_limit) {
+                size += cost;
+                placed += 1;
+                continue;
             }
+            if placed > 0 && cost <= i128::from(options.line_limit) {
+                // the glyph starts the next line
+                (size, placed) = (cost, 1);
+                continue;
+            }
+            let ch = m[1]
+                .as_i64()
+                .and_then(|c| self.cp2char(c).ok().flatten())
+                .map_or("None".to_owned(), String::from);
+            let cp = if cp < 0 {
+                "None".to_owned()
+            } else {
+                cp.to_string()
+            };
+            return Err(invalid(&format!(
+                "`linelimit` ({}) is too small the line can't even contain one glyph: \"{ch}\" (codepoint {cp}, width: {w})",
+                options.line_limit
+            )));
         }
         let rendered = core.draw_codepoints(codes, &options)?;
         Ok(Bitmap::from_raster(rendered.bitmap.to_gray8_palette(0, 1)?))

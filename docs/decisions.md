@@ -1724,8 +1724,9 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
 - Warnings and exception texts are produced in Rust with bdfparser's wording
   (glyphbycp miss, unencodable `glyph()`, unknown target charset, missing BDF
   headers, gzip, line limit, hex rows, TrueType reader/writer). The line-limit
-  check is bdfparser's (cell width plus spacing offset against `linelimit`) and
-  runs before the native layout; the native renderer's own message is
+  check is bdfparser's line simulation (each glyph costs its cell width plus
+  its spacing offset, summed per line; a glyph that does not fit an empty line
+  fails) and runs before the native layout, which applies the same rule; the native renderer's own message is
   unchanged. `_pack`'s message reproduces the values of the failing pack call
   and CPython 3.10's `struct.error` text.
 - The round-dot TrueType writer no longer has a fixed point count. Each glyph's

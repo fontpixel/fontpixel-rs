@@ -503,7 +503,7 @@ fn true_type_messages_match_bdfparser() {
             && err.ends_with(" pixels)"),
         "{err}"
     );
-    let mut f = mini();
+    let f = mini();
     f.glyphbycp(65)
         .unwrap()
         .setmeta(&obj(json!({"dwx0": -1})))
@@ -543,4 +543,24 @@ fn round_dot_true_type_point_admission_follows_the_memory_budget() {
     let back = ttf::read_ttf(&data, None).unwrap();
     assert_eq!(back.length(), 300);
     assert_eq!(back.lookup(0x4e00).unwrap().meta()[2], json!(64));
+}
+
+#[test]
+fn line_limit_check_accumulates_like_bdfparser() {
+    let f = mini();
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(json!({"dwx0": -3})))
+        .unwrap();
+    f.glyphbycp(66)
+        .unwrap()
+        .setmeta(&obj(json!({"dwx0": 12})))
+        .unwrap();
+    let kw = obj(json!({"linelimit": 10}));
+    // A costs 6 + (-3 - 6) = -3, so B (6 + 12 - 6 = 12) still fits its line.
+    assert!(f.drawcps(&[65, 66], &kw).is_ok());
+    assert_eq!(
+        f.drawcps(&[66], &kw).unwrap_err().to_string(),
+        "`linelimit` (10) is too small the line can't even contain one glyph: \"B\" (codepoint 66, width: 6)"
+    );
 }
