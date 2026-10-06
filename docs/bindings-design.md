@@ -32,7 +32,7 @@ builds argv strings.
   explicit (`copy()`/`clone()`), pixel data is copied out only on request
   (`to_bytes`, `rows`, `to_list`, NumPy-free).
 - **Stable glyph IDs** are integers; codepoints are tagged values
-  (`{"unicode": n}` / `{"legacy": n}`) in plain data and typed classes in the API.
+  (`{"Unicode": n}` / `{"Legacy": n}`) in plain data and typed classes in the API.
 - **Errors** map to one exception (Python) or `Error` subclass (JS) per
   `fontpixel::Error` variant, carrying `kind`, structured fields (`resource`,
   `limit`, `format`, `operation`, `candidates`, `line`) and the full `report` for
