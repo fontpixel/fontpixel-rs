@@ -1907,3 +1907,71 @@ bindings-design.md, "JS/WASM".
   `capabilities`/`requireCapability`, `normalize`/`optionTypes` (a few
   types), `read`/`Loaded`, `FontSet`/`Font`/`Glyph` basics, `Bitmap` basics,
   `withAsyncResources`, `init`/`initSync`/`wasmUrl`.
+
+## 2026-10-06 — JS `ops`, the W8.3 calls and the merge Worker (unit J5)
+
+**Context:** Phase 8 binds every `fontpixel-ops` operation to JS (Python's
+`fontpixel.ops`) and adds the W8.3 page calls `info`/`merge`/`render`, a Web
+Worker adapter with progress and cancellation, and byte identity with the
+native CLI.
+
+**Choices:**
+- The operations live in the wasm-bindgen namespace object `ops`
+  (`#[wasm_bindgen(js_namespace = ops)]`: `ops.convert`, `vectorize`,
+  `merge`, `variants`, `subset`, `charset`, `render`, `validate`, `diff`,
+  `info`, `preview`, `formats`, `batch`, `batchToml`, `parseBatchToml`,
+  `batchFile`, `capabilities`, `defaults`, `memoryKey`, `outputFormatFor`,
+  `parseArgs`, `inspectRequest`); the results are the top-level classes
+  `OperationResult` and `BatchResult` (Python's attributes as getters,
+  `exitCode`, `fontJson`, `formatStatus`; `bundles` is `OutputBundleDict`
+  plain data). Signature `ops.op(request, {files, progress})`; requests are
+  the flat plain-data shape, failures to build one are `InvalidInputError`
+  with `exitCode` 2. The top level keeps the W8.3 names `info`, `merge`,
+  `render`.
+- Storage is memory only: `files` is an object/`Map` of storage key → bytes
+  or a provider `{entry, read, list}` (Python's resolver object). An omitted
+  `files` (Python's filesystem mode) and `ops.batchFile` throw
+  `UnsupportedError` (capability `filesystem`). New records: `cli_parser`
+  (`ops.parseArgs`, clap only in `full`) and `sfnt_operations`
+  (`ops.variants`/`subset`, absent in `minimal`); `ops.inspectRequest` works
+  in every profile (report style and identity budget computed without clap,
+  mirroring `cli::Command`).
+- W8.3: `info(bytes, {name, …InfoRequest})` returns the `info --json`
+  document; `merge(parts, options)` builds the `MergeRequest` from
+  `[{bytes, take, dy, name, from, font_index}]` and the command line's merge
+  options (`outputs` as names or `{destination, format}`) and returns
+  `{files, report, json, text}`; `render(fontBytes, text, options)` runs the
+  native `preview` (so it equals `fontpixel preview`) and returns packed
+  1-bit rows or RGBA (`Uint8ClampedArray`, `scale`, `color`, `background`,
+  bounded by `max_pixels`). Part names are the CLI file names (they appear in
+  reports); defaults `part-<n>`/`font`.
+- Worker (`js/ops-client.js`, `js/ops-worker.js`): `createWorker()` compiles
+  the module once (cached), starts an ES module worker (browsers) or a
+  `worker_threads` worker (Node) that runs `initSync(module)`; calls are
+  Promises with plain data in and transferred output buffers out; errors are
+  rebuilt with their class and fields. Progress records are posted per step.
+  `AbortSignal` cancels cooperatively through a `SharedArrayBuffer` flag that
+  the merge progress callback reads (returns `false` → `CancelledError`)
+  where shared memory is usable (Node, cross-origin isolated pages); else the
+  worker is terminated and the next call starts a fresh one. `terminate()` is
+  the hard stop. A trapped instance is discarded.
+- `fontpixel/node-files` (`js/ops-node-files.js`, Node only, not re-exported
+  by the entry point): `readFiles`, `readDirectory`, `writeOutputs`; not
+  transactional and without source-alias protection, documented as such.
+- The wasm `full` profile enables `fontpixel-ops/png` (PNG output of
+  `ops.render`), which `fontpixel-ops/all-formats` lacks.
+
+**Finding (open, core):** WOFF2 Brotli streams are not target-independent.
+brotli 9.0.0 without its `portable-float` feature computes block-split costs
+with the platform libm (`f32::log2`, `powf`); glibc and the wasm32 libm
+differ by one ULP for some inputs. Decoded tables are identical, but e.g. a
+synthetic 34-glyph monospace merge differs in 6 of 6,004 bytes and the Tong
+SC + Mono Latin merge WOFF2 is 949,852 bytes in wasm against 953,060 natively.
+The earlier "identical WOFF2" evidence compared both spawners natively (same
+libm). With brotli `portable-float` enabled in `crates/fontpixel` (experiment,
+not committed) a native CLI and the wasm package built from that source give
+identical WOFF2 for every case tested, including the 956,372-byte Tong merge.
+That change alters native WOFF2 bytes (brotli: ~0.006% ratio), so it needs a
+core decision and a rebuilt reference CLI; until then the JS byte-identity
+test for WOFF2 is reported as TODO while BDF, PCF, OTB/TTF and the documents
+are byte-identical.

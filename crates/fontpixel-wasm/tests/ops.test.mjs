@@ -247,7 +247,11 @@ test('requests are strict and typed', () => {
 
 // ------------------------------------------------------------ convert
 
-const CONVERSIONS = FULL ? ['o.pcf', 'o.yaff', 'o.otb', 'o.ttf', 'o.woff2', 'o.svg', 'o.bdf', 'o.kbitx'] : ['o.pcf', 'o.yaff', 'o.bdf'];
+const CONVERSIONS = {
+  full: ['o.pcf', 'o.yaff', 'o.otb', 'o.ttf', 'o.woff2', 'o.svg', 'o.bdf', 'o.kbitx'],
+  minimal: ['o.pcf', 'o.yaff', 'o.bdf'],
+  merge: ['o.pcf', 'o.otb', 'o.ttf', 'o.woff2', 'o.bdf'],
+}[PROFILE];
 
 test('convert in memory equals the command line', { skip: needsCli }, () => {
   for (const output of CONVERSIONS) {
