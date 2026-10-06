@@ -5,6 +5,8 @@ use std::str::FromStr;
 
 /// Unpremultiplied sRGB color and opacity. Channels range from 0 to 255.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Rgba {
     /// Red.
     pub red: u8,
@@ -68,6 +70,8 @@ impl FromStr for Rgba {
 
 /// Image export options shared by PNG and SVG.
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ImageOptions {
     /// Positive integer nearest-neighbor scale (SVG viewBox remains unscaled).
     pub scale: u32,

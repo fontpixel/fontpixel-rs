@@ -14,6 +14,8 @@ mod zlib;
 
 /// Byte and transform budgets; auxiliary blocks share the output budget.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Common sfnt/input/decompression/output/table/glyph limits.
     pub sfnt: sfnt::Limits,
@@ -49,6 +51,8 @@ impl Default for Limits {
 }
 /// Non-sfnt WOFF header fields and optional data, independently editable.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Auxiliary {
     /// Major version, default zero (no timestamps).
     pub major_version: u16,
@@ -61,6 +65,8 @@ pub struct Auxiliary {
 }
 /// Reconstructed standalone sfnt plus preserved envelope fields and diagnostics.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Decoded {
     /// Canonical sfnt with recomputed checksums.
     pub sfnt: Vec<u8>,
@@ -71,6 +77,8 @@ pub struct Decoded {
 }
 /// Encoded webfont and any unavoidable conversion losses.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Encoded {
     /// Complete webfont file bytes.
     pub bytes: Vec<u8>,

@@ -17,6 +17,8 @@ use std::{
 
 /// Parameters of `Font.create`; defaults match SPEC-v3 §2.6.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CreateOptions {
     /// Pixel cell width and nominal size.
     pub pixelsize: i64,

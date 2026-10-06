@@ -14,6 +14,8 @@ use std::mem::size_of;
 /// Allocator bookkeeping, stack usage and process-wide library state are not
 /// included; this is an owned-storage budget, not an estimate of process RSS.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct ModelUsage {
     /// Retained storage in bytes, conservatively accounting for indexes.
     pub bytes: usize,

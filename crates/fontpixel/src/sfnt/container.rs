@@ -7,6 +7,8 @@ use std::collections::BTreeMap;
 const CHECKSUM_MAGIC: u32 = 0xb1b0_afba;
 /// Single-font sfnt flavor. Collection and web wrappers are handled separately.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Flavor {
     /// OpenType TrueType outlines or bitmap sfnt (0x00010000).
     TrueType,

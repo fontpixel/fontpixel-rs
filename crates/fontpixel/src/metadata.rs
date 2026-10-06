@@ -22,6 +22,8 @@ use std::mem::size_of;
 /// the corresponding replacement is supplied. Empty notice/foundry strings are
 /// permitted, without deleting any original source metadata.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NameOverrides {
     /// Family name; must contain a non-whitespace character when supplied.
     pub family: Option<String>,

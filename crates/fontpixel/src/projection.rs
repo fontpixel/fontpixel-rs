@@ -84,6 +84,11 @@ pub const MAX_FONT_NAME_BYTES: usize = 4096;
 
 /// How horizontal scalable advances (BDF `SWIDTH` x) are produced.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(deny_unknown_fields, rename_all = "snake_case")
+)]
 pub enum ScalableAdvance {
     /// Keep every source value unchanged (the default).
     #[default]
@@ -102,6 +107,8 @@ pub enum ScalableAdvance {
 /// Explicit point size and resolution (BDF `SIZE`). Both values are replaced
 /// together; each differing component is audited separately.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct SizeProjection {
     /// Positive typographic point size. BDF output requires an integer.
     pub point_size: Rational,
@@ -204,6 +211,8 @@ impl BitmapProjection<'_> {
 
 /// One committed scalable-advance change.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct ScalableAdvanceChange {
     /// Strike index in the projected set.
     pub font_index: usize,
@@ -221,6 +230,8 @@ pub struct ScalableAdvanceChange {
 
 /// Normalized integer metric kept in sync with an edited property.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum SyncedMetric {
     /// `PIXEL_SIZE` and `FontMetrics::pixel_size`.
     PixelSize,
@@ -290,6 +301,11 @@ impl SyncedMetric {
 
 /// The model field a [`MetadataChange`] refers to.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(deny_unknown_fields, rename_all = "snake_case")
+)]
 pub enum MetadataField {
     /// `FontNames::xlfd` (the BDF `FONT` header). The decomposed
     /// `FontNames::xlfd_fields` mirror is re-derived from the new name.
@@ -311,6 +327,8 @@ pub enum MetadataField {
 
 /// A value recorded in a [`MetadataChange`].
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum MetadataValue {
     /// Font name text.
     Text(String),
@@ -335,6 +353,8 @@ impl MetadataValue {
 
 /// One committed metadata change with its complete before/after values.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MetadataChange {
     /// Strike index in the projected set.
     pub font_index: usize,
@@ -359,6 +379,8 @@ impl MetadataChange {
 
 /// Complete result of a committed projection.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct ProjectionOutcome {
     /// Diagnostics: one entry per strike, option and impact class.
     pub report: Report,

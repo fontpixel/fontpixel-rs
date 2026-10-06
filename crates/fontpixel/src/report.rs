@@ -30,6 +30,7 @@ pub enum Impact {
 /// Optional location; glyph index and codepoint need not both be known.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Location {
     /// Strike/font index in a collection.
     pub font_index: Option<usize>,
@@ -44,6 +45,7 @@ pub struct Location {
 /// A stable machine-readable code plus a human-readable explanation.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct ReportEntry {
     /// Severity.
     pub level: Level,
@@ -60,6 +62,7 @@ pub struct ReportEntry {
 /// Diagnostics in deterministic encounter order; no generated timestamps.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Report {
     /// Entries in source/operation order.
     pub entries: Vec<ReportEntry>,

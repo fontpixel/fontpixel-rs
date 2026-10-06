@@ -13,6 +13,11 @@ use crate::{Bitmap, Error, Result};
 
 /// Glyph 0 of an outline export.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    feature = "serde",
+    serde(deny_unknown_fields, rename_all = "snake_case")
+)]
 pub enum NotdefPolicy {
     /// Source `.notdef` when retained, otherwise the generated box (default).
     #[default]

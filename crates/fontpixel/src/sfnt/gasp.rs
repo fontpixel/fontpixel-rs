@@ -4,6 +4,8 @@ use crate::Result;
 use read_fonts::{FontData, FontRead, tables::gasp::Gasp};
 /// Inclusive upper ppem bound and behavior flags (bits 0–3).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Range {
     /// Last ppem covered by this range; final range must be 65535.
     pub max_ppem: u16,
@@ -12,6 +14,8 @@ pub struct Range {
 }
 /// Explicit gasp table, ordered by inclusive upper bound.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct GaspTable {
     /// Version 0 permits bits 0–1, version 1 permits bits 0–3.
     pub version: u16,

@@ -5,7 +5,7 @@
 /// can preserve exact spelling/quoting independently of this semantic value.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
-    any(feature = "yaff", feature = "image"),
+    any(feature = "serde", feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
 pub enum PropertyValue {
@@ -43,10 +43,13 @@ impl From<i64> for PropertyValue {
 /// One original-cased source property.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(
-    any(feature = "yaff", feature = "image"),
+    any(feature = "serde", feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
-#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
+#[cfg_attr(
+    any(feature = "serde", feature = "yaff", feature = "image"),
+    serde(deny_unknown_fields)
+)]
 pub struct Property {
     /// Exact source key spelling.
     pub name: String,
@@ -55,7 +58,7 @@ pub struct Property {
     /// Optional original record bytes, including delimiters/line ending if needed.
     /// This is provenance; writers must not blindly reuse it after model edits.
     #[cfg_attr(
-        any(feature = "yaff", feature = "image"),
+        any(feature = "serde", feature = "yaff", feature = "image"),
         serde(default, skip_serializing_if = "Option::is_none")
     )]
     pub raw: Option<Vec<u8>>,
@@ -73,7 +76,7 @@ impl Property {
 /// Insertion-ordered properties preserving duplicates; getters return the last match.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[cfg_attr(
-    any(feature = "yaff", feature = "image"),
+    any(feature = "serde", feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
 pub struct Properties(Vec<Property>);

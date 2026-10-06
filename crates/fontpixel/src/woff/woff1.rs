@@ -9,6 +9,8 @@ use crate::working::Vector;
 
 /// Deterministic WOFF1 output options.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// zlib level in 0..=9 (default 9).
     pub compression_level: u32,

@@ -21,10 +21,13 @@ use crate::{
 use std::collections::{BTreeMap, BTreeSet};
 /// Options for subsetting a standalone sfnt.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// Retained Unicode scalars; all other cmap entries are removed.
     pub codepoints: BTreeSet<u32>,
     /// Explicitly discard these otherwise unsupported tables, reporting loss.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::set"))]
     pub drop_tables: BTreeSet<[u8; 4]>,
     /// Shared container and layout budgets.
     pub limits: LayoutLimits,
@@ -40,6 +43,8 @@ impl Options {
 }
 /// A complete subset and the stable old-to-new glyph correspondence.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Subset {
     /// Standalone sfnt bytes; callers may apply WOFF wrappers.
     pub bytes: Vec<u8>,

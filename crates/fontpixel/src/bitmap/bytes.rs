@@ -2,6 +2,8 @@ use super::*;
 
 /// Bit significance inside a stored byte.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum BitOrder {
     /// High bit is leftmost.
     MsbFirst,
@@ -10,6 +12,8 @@ pub enum BitOrder {
 }
 /// Significance order of bytes in a multi-byte scan unit (X11/PCF convention).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ByteOrder {
     /// High-significance byte first.
     Big,
@@ -18,6 +22,8 @@ pub enum ByteOrder {
 }
 /// Order of rows in a serialized bitmap.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum RowOrder {
     /// First row is the top.
     TopDown,
@@ -30,6 +36,8 @@ pub enum RowOrder {
 /// (`scan_unit > row_alignment` when swapping) are rejected, as SPEC-v3 requires.
 /// Gray8 accepts only MSB/Big/scan_unit=1; row padding/order still apply.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ByteLayout {
     /// Significance within bytes.
     pub bit_order: BitOrder,

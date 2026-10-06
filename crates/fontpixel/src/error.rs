@@ -7,6 +7,8 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 /// Capability being requested.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Operation {
     /// Content recognition.
     Detect,

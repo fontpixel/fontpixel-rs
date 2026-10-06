@@ -6,6 +6,8 @@ use read_fonts::{FontData, FontRead, tables::os2::Os2};
 use std::collections::BTreeSet;
 /// Fields present in every supported OS/2 version.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Base {
     /// Average nonzero horizontal advance, in design units.
     pub average_width: i16,
@@ -28,6 +30,7 @@ pub struct Base {
     /// Four 32-bit Unicode coverage bit fields.
     pub unicode_ranges: [u32; 4],
     /// Four-byte vendor ID (not constrained to a table-tag syntax).
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::tag"))]
     pub vendor_id: [u8; 4],
     /// Style selection flags.
     pub selection_flags: u16,
@@ -64,6 +67,8 @@ impl Default for Base {
 }
 /// OS/2 version-2-and-later fields.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Extension {
     /// x-height, in design units.
     pub x_height: i16,
@@ -78,6 +83,8 @@ pub struct Extension {
 }
 /// Editable, version-aware OS/2 table. Unsupported extension loss is an error.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Os2Table {
     /// Version 0 through 5.
     pub version: u16,

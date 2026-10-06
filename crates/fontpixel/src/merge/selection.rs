@@ -5,7 +5,8 @@ use std::{fmt, str::FromStr};
 
 /// Inclusive Unicode scalar range.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct CodepointRange {
     /// First included scalar.
     pub start: u32,
@@ -13,7 +14,14 @@ pub struct CodepointRange {
     pub end: u32,
 }
 /// Union of selected ranges, with exclusions applied last.
+///
+/// Serde uses the expression string, re-parsed through [`Selection::parse`].
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(try_from = "String", into = "String")
+)]
 pub struct Selection {
     expression: String,
     ranges: Vec<CodepointRange>,
@@ -201,6 +209,19 @@ impl Selection {
             .iter()
             .map(|range| u64::from(range.end - range.start) + 1)
             .sum()
+    }
+}
+#[cfg(feature = "serde")]
+impl TryFrom<String> for Selection {
+    type Error = Error;
+    fn try_from(expression: String) -> Result<Self> {
+        Self::parse(&expression)
+    }
+}
+#[cfg(feature = "serde")]
+impl From<Selection> for String {
+    fn from(selection: Selection) -> Self {
+        selection.expression
     }
 }
 impl FromStr for Selection {

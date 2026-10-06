@@ -58,6 +58,8 @@ impl PixelFormat for Gray8 {
 /// Allocation and dimension limits, propagated through bitmap operations.
 /// A zero-area bitmap still has to respect both dimension limits.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BitmapLimits {
     /// Maximum width or height, independently.
     pub max_dimension: u32,
@@ -112,10 +114,13 @@ pub(crate) fn zeros(len: usize, maximum: usize) -> Result<Vec<u8>> {
 /// Bottom-left, y-up rectangle. Width and height are unsigned; offsets may be negative.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
 #[cfg_attr(
-    any(feature = "yaff", feature = "image"),
+    any(feature = "serde", feature = "yaff", feature = "image"),
     derive(serde::Serialize, serde::Deserialize)
 )]
-#[cfg_attr(any(feature = "yaff", feature = "image"), serde(deny_unknown_fields))]
+#[cfg_attr(
+    any(feature = "serde", feature = "yaff", feature = "image"),
+    serde(deny_unknown_fields)
+)]
 pub struct Bounds {
     /// Width in pixels.
     pub width: u32,
@@ -141,6 +146,8 @@ impl Bounds {
 /// Pixel-compositing rule within the intersection of source and destination.
 /// Outside that intersection, destination pixels remain unchanged.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CompositeMode {
     /// Nonzero source wins (SPEC `b or a`; this is not alpha blending).
     Over,
@@ -707,6 +714,49 @@ fn merge_bytes(dst: &mut [u8], src: &[u8], shift: u32, operation: impl Fn(u8, u8
     } else {
         for (a, (&hi, &lo)) in dst.iter_mut().zip(src.iter().zip(&src[1..])) {
             *a = operation(*a, (hi << shift) | (lo >> (8 - shift)));
+        }
+    }
+}
+
+/// Serde form `{width, height, data}`: `data` is the canonical row storage
+/// returned by [`Bitmap::as_bytes`]. Deserialization goes through
+/// [`Bitmap::from_raw`] under default limits, so a length mismatch or an
+/// over-limit raster is an error. Resource limits are not serialized.
+#[cfg(feature = "serde")]
+mod serde_impl {
+    use super::{Bitmap, BitmapLimits, PixelFormat};
+
+    #[derive(serde::Serialize)]
+    struct RawRef<'a> {
+        width: u32,
+        height: u32,
+        data: &'a [u8],
+    }
+
+    #[derive(serde::Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Raw {
+        width: u32,
+        height: u32,
+        data: Vec<u8>,
+    }
+
+    impl<F: PixelFormat> serde::Serialize for Bitmap<F> {
+        fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+            RawRef {
+                width: self.width,
+                height: self.height,
+                data: &self.data,
+            }
+            .serialize(serializer)
+        }
+    }
+
+    impl<'de, F: PixelFormat> serde::Deserialize<'de> for Bitmap<F> {
+        fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+            let raw = Raw::deserialize(deserializer)?;
+            Self::from_raw(raw.width, raw.height, &raw.data, BitmapLimits::default())
+                .map_err(serde::de::Error::custom)
         }
     }
 }

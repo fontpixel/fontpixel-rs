@@ -6,6 +6,8 @@ use read_fonts::{FontData, FontRead, tables::post::Post};
 use std::collections::{BTreeMap, BTreeSet};
 /// PostScript table header (version is selected by `PostTable::names`).
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Header {
     /// Italic angle as signed 16.16 fixed bits.
     pub italic_angle: i32,
@@ -26,6 +28,8 @@ pub struct Header {
 }
 /// Editable post data. Omission of names explicitly requests format 3.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct PostTable {
     /// Shared header fields.
     pub header: Header,

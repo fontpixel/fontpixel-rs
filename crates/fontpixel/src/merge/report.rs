@@ -5,7 +5,8 @@ use std::fmt::{self, Write};
 
 /// Missing selected scalar positions grouped by actual Unicode block.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MissingBlock {
     /// Block name or No_Block.
     pub block: String,
@@ -18,7 +19,8 @@ pub struct MissingBlock {
 }
 /// Selection, contribution and omission totals for an input part.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct PartReport {
     /// Zero-based index.
     pub index: usize,
@@ -55,7 +57,7 @@ pub struct PartReport {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde",
-    derive(serde::Serialize),
+    derive(serde::Serialize, serde::Deserialize),
     serde(rename_all = "snake_case")
 )]
 pub enum AdjustmentKind {
@@ -66,7 +68,8 @@ pub enum AdjustmentKind {
 }
 /// One output glyph's halfwidth decision.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct SpacingAdjustment {
     /// Source part.
     pub part_index: usize,
@@ -89,7 +92,8 @@ pub struct SpacingAdjustment {
 }
 /// Per-part baseline metric accounting.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct PartMetrics {
     /// Source part.
     pub part_index: usize,
@@ -104,7 +108,8 @@ pub struct PartMetrics {
 }
 /// Natural and overridden output metrics.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MetricsReport {
     /// Source metrics.
     pub parts: Vec<PartMetrics>,
@@ -123,7 +128,8 @@ pub struct MetricsReport {
 }
 /// Ordered preserved notices and limited permission assessment.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct LicenseReport {
     /// Source part.
     pub part_index: usize,
@@ -144,7 +150,8 @@ pub struct LicenseReport {
 }
 /// Complete deterministic report.
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct MergeReport {
     /// Unicode version.
     pub unicode_version: String,

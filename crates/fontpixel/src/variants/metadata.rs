@@ -11,6 +11,8 @@ use crate::{Error, Result};
 
 /// Whether the export writes a `gasp` table.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GaspPolicy {
     /// One range up to ppem 65535 with no grid-fitting or smoothing request
     /// (native default).
@@ -21,6 +23,8 @@ pub enum GaspPolicy {
 }
 /// Glyph ID order of the planned glyphs (glyph 0 is always `.notdef`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum GlyphOrder {
     /// The plan's order (native default: sorted by glyph name).
     #[default]
@@ -32,6 +36,8 @@ pub enum GlyphOrder {
 }
 /// Glyph ID of the shared dot glyph of TrueType dot outlines.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DotGlyph {
     /// After every planned glyph (native default).
     #[default]
@@ -41,6 +47,8 @@ pub enum DotGlyph {
 }
 /// Explicit head, OS/2, post, maxp, gasp, cmap and glyph-order controls.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct MetadataOptions {
     /// `head.created` and `head.modified`, seconds since 1904-01-01 00:00 UTC.
     /// Absent writes zero (deterministic native default).

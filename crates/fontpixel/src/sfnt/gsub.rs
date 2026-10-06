@@ -8,6 +8,8 @@ use std::collections::{BTreeMap, BTreeSet};
 pub type Tag = [u8; 4];
 /// Feature selection for one language system.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct LanguageSystem {
     /// Required feature, or none.
     pub required: Option<u16>,
@@ -16,24 +18,33 @@ pub struct LanguageSystem {
 }
 /// A script's default and explicitly tagged languages.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Script {
     /// Default language system (not a language named `dflt`).
     pub default: Option<LanguageSystem>,
     /// Ordered language systems.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::map"))]
     pub languages: BTreeMap<Tag, LanguageSystem>,
 }
 /// One feature and its ordered lookup indices.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Feature {
     /// Usually `locl` for regional fonts.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::tag"))]
     pub tag: Tag,
     /// Indices into `Gsub::lookups`.
     pub lookups: Vec<u16>,
 }
 /// Lossless semantics of GSUB 1.0/1.1 without variation or filtering behavior.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Gsub {
     /// Script and language feature routing.
+    #[cfg_attr(feature = "serde", serde(with = "crate::sfnt::serde_tag::map"))]
     pub scripts: BTreeMap<Tag, Script>,
     /// Feature records, with duplicates allowed as OpenType requires.
     pub features: Vec<Feature>,
@@ -42,6 +53,8 @@ pub struct Gsub {
 }
 /// Additional cumulative traversal budgets, including aliasing offsets.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct LayoutLimits {
     /// Container and allocation limits.
     pub sfnt: Limits,

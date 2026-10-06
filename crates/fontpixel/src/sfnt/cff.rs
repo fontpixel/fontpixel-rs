@@ -24,6 +24,8 @@ pub(crate) use write::program_len;
 
 /// CFF parsing, geometry and execution budgets.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Shared sfnt byte/glyph budgets.
     pub sfnt: super::Limits,
@@ -60,6 +62,8 @@ impl Default for Limits {
 pub type Point = (f64, f64);
 /// Absolute path commands. CFF contours close implicitly on move/endchar.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Command {
     /// Begin a contour.
     MoveTo(Point),
@@ -72,6 +76,8 @@ pub enum Command {
 }
 /// Writer geometry; dots reference one font-wide global subroutine.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Outline {
     /// Explicit closed paths; empty is a valid blank glyph.
     Path(Vec<Command>),
@@ -80,6 +86,8 @@ pub enum Outline {
 }
 /// One named glyph for canonical CFF output.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Glyph {
     /// Unique PostScript glyph name; first glyph must be `.notdef`.
     pub name: String,
@@ -165,6 +173,8 @@ impl Glyph {
 }
 /// Shared circle configuration, in design units.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DotOptions {
     /// Positive size of a pixel cell.
     pub cell_size: f64,
@@ -181,6 +191,8 @@ impl Default for DotOptions {
 }
 /// A canonical, unhinted, name-keyed CFF1 font.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Font {
     /// PostScript font name.
     pub postscript_name: String,
@@ -195,6 +207,8 @@ pub struct Font {
 }
 /// Encoded CFF table plus matching sfnt fields.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Encoded {
     /// Bytes for the `CFF ` table.
     pub data: Vec<u8>,
@@ -211,6 +225,8 @@ impl Font {
 }
 /// One evaluated unhinted glyph, with fractions retained.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct DecodedGlyph {
     /// Advance from Type 2/Private DICT, transformed to design space.
     pub advance: f64,

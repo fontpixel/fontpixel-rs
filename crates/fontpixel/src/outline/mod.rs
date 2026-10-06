@@ -16,6 +16,8 @@ pub type Point = (f64, f64, bool);
 pub type Contour = Vec<Point>;
 /// Pixel outline shape.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Shape {
     /// Merge edge-connected full squares, preserving holes and separate corners.
     Square,
@@ -26,6 +28,8 @@ pub enum Shape {
 }
 /// Bounded geometry generation and expansion.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Maximum source pixels or output raster pixels.
     pub max_pixels: usize,
@@ -48,6 +52,8 @@ impl Default for Limits {
 }
 /// Explicit bitmap-to-outline options.
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Options {
     /// Shape to generate.
     pub shape: Shape,
@@ -324,6 +330,8 @@ pub(crate) fn pixel_origins_with_budget(
 }
 /// Outline segments with implied on-curve midpoints resolved.
 #[derive(Clone, Copy, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Segment {
     /// Straight edge.
     Line((f64, f64), (f64, f64)),

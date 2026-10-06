@@ -16,6 +16,8 @@ pub use runs::{RunTables, encode_shared_metric_runs};
 
 /// Resource, graph and image-work budgets shared by embedded bitmap readers.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Limits {
     /// Shared sfnt and model budgets.
     pub sfnt: SfntLimits,
@@ -41,6 +43,8 @@ impl Default for Limits {
 }
 /// Wire family; color decoding requires the `color` feature.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Kind {
     /// EBDT/EBLC version 2.
     OpenType,
@@ -68,6 +72,7 @@ impl Kind {
 }
 /// Exact 12-byte sbit line record, including caret/extrema and padding.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct LineMetrics(pub [u8; 12]);
 impl LineMetrics {
     /// Signed ascent.
@@ -81,6 +86,8 @@ impl LineMetrics {
 }
 /// One layout direction's bearings and advance, in pixels.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Bearing {
     /// Left edge relative to that layout origin.
     pub x: i8,
@@ -91,6 +98,8 @@ pub struct Bearing {
 }
 /// Native interpretation of small or big embedded glyph metrics.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Metrics {
     /// Pixel width, including intentional white margins.
     pub width: u8,
@@ -103,6 +112,8 @@ pub struct Metrics {
 }
 /// A decoded glyph, without any claim to preserve original compression/layout.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct BitmapGlyph {
     /// Exact embedded metrics.
     pub metrics: Metrics,
@@ -111,6 +122,8 @@ pub struct BitmapGlyph {
 }
 /// An embedded bitmap strike, keyed by enclosing sfnt glyph ID.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Strike {
     /// Horizontal ppem, nonzero.
     pub ppem_x: u8,
@@ -129,6 +142,8 @@ pub struct Strike {
 }
 /// Encoded bitmap pair; insert using `kind.tags()` into a shared sfnt builder.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Tables {
     /// EBDT or bdat bytes.
     pub data: Vec<u8>,
@@ -137,6 +152,8 @@ pub struct Tables {
 }
 /// An EBSC target-size instruction; this is not an additional physical strike.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Scale {
     /// Horizontal target line metrics.
     pub horizontal: LineMetrics,
