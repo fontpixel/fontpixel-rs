@@ -10,9 +10,10 @@
   完整检查、109 种 feature 组合 Clippy、真实字体对照、104 目标 ASAN、默认负载巡检、正式测速与 A/B。
 - [x] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API），最终源码 `d9ff25c`：覆盖率 2,004 项 0 错误，
   pytest 1,253 通过，bdfparser 参考测试 1,755/1,773 通过（8 个失败逐条说明），测速报告，manylinux wheel（x86_64 在 3.10/3.12 测试通过）。
-- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。**进行中**：地基单元 A（核心/ops 的 wasm32 适配：
-  单线程 brotli 与原生逐字节一致、去掉 wasm 上会 panic 的 std 调用、拼合进度/取消）与 F（fontpixel-wasm 骨架、约定、
-  TS 类型生成、测试与覆盖率门禁的 JS 部分）并行；之后按模块并行做绑定单元。
+- [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。**进行中**：地基 A（核心/ops 的 wasm32 适配，
+  `15cf8af`）与 F（fontpixel-wasm 骨架与约定，`40bc508`）已合并；6 个模块单元并行：J1 模型/元数据/资源、J2 bitmap/渲染/
+  charset/轮廓、J3 格式、J4 sfnt/WOFF/variants/merge 库、J5 ops 与 W8.3（info/merge/render、Worker、进度）、
+  J6 bdfparser-js 兼容与参考测试。之后：浏览器矩阵、与 bdfparser-js 测速、体积/初始化、第 8 阶段报告。
 - [ ] 最终报告前：对最终源码重跑 104 目标 ASAN 和逐 feature Clippy（核心在第 7、8 阶段有改动）。
 - [ ] 第 9 阶段：拼合网页 `web/merge/`（已授权）。注意 PLAN 要求「静态网页不使用前端框架」。
 - 只做本地提交；不 push、不发布、不部署。
