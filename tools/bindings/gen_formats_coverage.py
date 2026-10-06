@@ -69,20 +69,41 @@ def has(pattern):
 
 
 JS_TESTS = "crates/fontpixel-wasm/tests/"
-# JS entries the foundation pilot already binds and tests (pattern -> (js, js_test)).
-JS_PILOT = {
-    "fontpixel::read": ("read(data, {format, name, resources, limits})",
-                        JS_TESTS + "resources.test.mjs::sidecars from objects, Maps, functions and resolver objects"),
-    "fontpixel::formats::Loaded": ("Loaded (fonts, report, format)",
-                                   JS_TESTS + "model.test.mjs::edits through FontSet -> Font view -> Glyph view change the set"),
+# JS entries whose text does not follow mechanically from the Python one
+# (pattern -> JS entry). The formats binding (crates/fontpixel-wasm/src/
+# formats*.rs) takes option bags (`{primaryName, strict, ...}`) where Python
+# takes keywords, returns plain objects where Python returns dicts/tuples,
+# and exposes module constants as functions.
+JS_ENTRY = {
+    "fontpixel::read": "read(data, {format, options, name, resources, limits, directory})",
+    "fontpixel::write": "write(fonts, format, {options, report, primaryName, strict, transportLimits})",
+    "fontpixel::formats::FormatDetector": "Registry.register(format, {detector})",
+    "fontpixel::formats::FormatDetector::detect": "detector(ctx: HookContext) -> confidence",
+    "fontpixel::formats::FormatReader": "Registry.register(format, {reader})",
+    "fontpixel::formats::FormatReader::read": "reader(ctx: HookContext, options) -> [fonts, report]",
+    "fontpixel::formats::FormatWriter": "Registry.register(format, {writer: function or object})",
+    "fontpixel::formats::FormatWriter::write": "writer(fonts, options) / writer.write(fonts, options)",
+    "fontpixel::formats::FormatWriter::transport_limits": "writer.transportLimits() -> TransportLimits",
+    "fontpixel::formats::FormatWriter::validate_transport": "writer.validateTransport(fonts, options, limits)",
+    "fontpixel::formats::Registration": "Registry.register(format, {detector, reader, writer})",
+    "fontpixel::formats::Registration::planned": "Registry.register(format) without hooks",
+    "fontpixel::formats::Registry::new": "new Registry({builtin: false})",
+    "fontpixel::formats::Registry::set_*_options": "Registry.{camelName} (also setReadOptions/setWriteOptions by format id)",
+    "fontpixel::formats::ReadOptions": "{format, limits} options of read; normalize('formats::ReadOptions')",
+    "fontpixel::formats::WriteOptions": "{primaryName, strict, transportLimits} options of write",
+    "fontpixel::formats::WriteOptions::new": "write(fonts, format, {primaryName})",
+    "fontpixel::formats::catalogue": "formats.catalogue()",
+    "fontpixel::formats::catalogue::CATALOGUE": "formats.catalogue()",
 }
+# JS test titles that differ from the mechanical Python -> JS name.
+JS_TEST_TITLE = {"python codec registration": "js codec registration"}
 
 
 def js_entry(python):
     """The JS entry for a Python entry: the `fontpixel.` package prefix
-    dropped and snake_case identifiers (functions, methods, namespaces) in
-    camelCase; quoted text is kept. `{name}` (the Rust snake_case name of a
-    wildcard rule) becomes `{camelName}`."""
+    dropped, snake_case identifiers (functions, methods, namespaces) in
+    camelCase, dicts are plain objects; quoted text is kept. `{name}` (the
+    Rust snake_case name of a wildcard rule) becomes `{camelName}`."""
     python = python.replace("{name}", "{camelName}")
     parts = re.split(r"('[^']*'|\"[^\"]*\")", python)
     out = []
@@ -91,6 +112,9 @@ def js_entry(python):
             part = re.sub(r"\bfontpixel\.", "", part)
             part = re.sub(r"\b([a-z][a-z0-9]*(?:_[a-z0-9]+)+)\b",
                           lambda m: re.sub(r"_([a-z0-9])", lambda n: n.group(1).upper(), m.group(1)), part)
+            part = re.sub(r"\bdicts\b", "plain objects", part)
+            part = re.sub(r"\bdict\b", "plain object", part)
+            part = part.replace("Registry.set_*_options", "Registry.set*Options")
         out.append(part)
     return "".join(out)
 
@@ -98,11 +122,12 @@ def js_entry(python):
 def js_test_of(python_test):
     """The JS test for a Python test: `tests/test_<area>.py::test_<name>` ->
     `crates/fontpixel-wasm/tests/<area>.test.mjs::<name with spaces>`. The
-    formats binding unit names its node:test cases this way."""
+    formats binding names its node:test cases this way (JS_TEST_TITLE lists
+    the exceptions)."""
     path, _, name = python_test.partition("::")
     area = Path(path).stem.removeprefix("test_")
     title = name.removeprefix("test_").replace("_", " ")
-    return f"{JS_TESTS}{area}.test.mjs::{title}"
+    return f"{JS_TESTS}{area}.test.mjs::{JS_TEST_TITLE.get(title, title)}"
 
 
 def rule(pattern, status, python, test, reason=None, evidence=None):
@@ -110,7 +135,7 @@ def rule(pattern, status, python, test, reason=None, evidence=None):
         return
     r = {"pattern": pattern, "status": status, "python": python, "python_test": test}
     if status in ("bound", "adapted"):
-        r["js"], r["js_test"] = JS_PILOT.get(pattern, (js_entry(python), js_test_of(test)))
+        r["js"], r["js_test"] = JS_ENTRY.get(pattern, js_entry(python)), js_test_of(test)
     if reason:
         r["reason"] = reason
     if evidence:
@@ -288,8 +313,8 @@ def needed(r):
 
 
 rules = [r for r in rules if needed(r)]
-out = ["# Format registry, codecs and per-format options — unit p2 (Python); JS entries follow",
-       "# the naming scheme of js_entry()/js_test_of() (phase 8 formats unit).",
+out = ["# Format registry, codecs and per-format options — unit p2 (Python), phase 8 formats unit",
+       "# (JS: crates/fontpixel-wasm/src/formats*.rs; entries from js_entry()/JS_ENTRY, tests from js_test_of()).",
        "# Generated by tools/bindings/gen_formats_coverage.py from the rustdoc inventory;",
        "# do not edit by hand. Rule syntax: tools/bindings/check.py.", ""]
 for r in rules:
