@@ -1106,8 +1106,13 @@ impl PyGlyph {
     fn set_metrics(&self, value: &Bound<'_, PyAny>) -> PyResult<()> {
         let metrics: GlyphMetrics = from_py_required(value)?;
         self.write(|g| {
-            g.metrics = metrics;
-            g.validate().py()
+            // Owned glyphs are edited in place, so restore on a failed check.
+            let saved = std::mem::replace(&mut g.metrics, metrics);
+            let checked = g.validate().py();
+            if checked.is_err() {
+                g.metrics = saved;
+            }
+            checked
         })
     }
     /// A copy of the bitmap. Assigning a `Bitmap` replaces the pixels and

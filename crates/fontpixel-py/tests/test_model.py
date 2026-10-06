@@ -139,6 +139,7 @@ def test_font_add_replace_remove_edit():
         m = bad.metrics
         m["bounds"]["width"] = 5
         bad.metrics = m
+    assert bad.metrics["bounds"]["width"] == 1  # owned glyph left unchanged
 
 
 def test_font_views_edit_in_place():
@@ -255,10 +256,23 @@ def test_font_validate_and_usage():
     assert usage["bytes"] > 0
     cloned = font.cloned_usage()
     assert cloned["glyphs"] == 2 and 0 < cloned["bytes"] <= usage["bytes"]
+    # The budget is inclusive: exactly the retained size passes, one less fails.
+    assert font.retained_usage(usage["bytes"]) == usage
+    with pytest.raises(fp.ResourceLimitError) as e:
+        font.retained_usage(usage["bytes"] - 1)
+    assert (e.value.resource, e.value.limit) == ("retained model bytes", usage["bytes"] - 1)
+    assert font.cloned_usage(cloned["bytes"]) == cloned
     with pytest.raises(fp.ResourceLimitError):
-        font.retained_usage(10)
-    with pytest.raises(fp.ResourceLimitError):
-        font.cloned_usage(10)
+        font.cloned_usage(cloned["bytes"] - 1)
+    # Removed slots stay charged; a set charges its strikes plus its own header.
+    font.remove_glyph(1)
+    after = font.retained_usage()
+    assert after["glyphs"] == 1 and after["glyph_slots"] == 2
+    s = fp.FontSet([font])
+    assert s.retained_usage()["bytes"] > s[0].retained_usage()["bytes"]
+    with pytest.raises(fp.ResourceLimitError) as e:
+        fp.Font([glyph("#" * 9)]).validate({"max_total_bytes": 1})
+    assert (e.value.resource, e.value.limit) == ("model bitmap bytes", 1)
 
 
 def test_font_dict_roundtrip_and_protocols():
