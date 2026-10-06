@@ -1,0 +1,6 @@
+# The crate root itself: the Python package `fontpixel` re-exports the native API.
+[[rule]]
+pattern = "fontpixel"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_package.py::test_package_exports"

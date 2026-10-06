@@ -9,6 +9,9 @@ if [ ! -x "$venv/bin/python" ]; then
   echo "missing venv $venv (create it with CPython 3.10 and pip install maturin pytest)" >&2
   exit 2
 fi
+# The coverage tools need Python >= 3.11 (tomllib); keep the system interpreter.
+PYTHON="$(command -v python3)"
+export PYTHON
 export VIRTUAL_ENV="$venv" PATH="$venv/bin:$PATH"
 (cd crates/fontpixel-py && maturin develop --release --locked)
 python -m pytest crates/fontpixel-py/tests -q
