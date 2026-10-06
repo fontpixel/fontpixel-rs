@@ -5,8 +5,7 @@ use fontpixel::Error;
 use fontpixel_ops::{
     BatchRequest, BatchTask, CharsetRequest, ConvertRequest, DiffRequest, FormatsRequest,
     InfoRequest, MemoryFiles, MergeInput, MergeOutput, MergeRequest, PreparedOutput,
-    PreviewRequest, RenderRequest, ReportStyle, Storage, TaskRequest, ValidateRequest,
-    ValidationKind,
+    PreviewRequest, RenderRequest, Storage, TaskRequest, ValidateRequest, ValidationKind,
 };
 use std::path::{Path, PathBuf};
 
@@ -385,7 +384,7 @@ fn merge_writes_every_output_in_one_group() {
     assert!(done.response.glyphs > 0);
     let mut json = Vec::new();
     done.response
-        .write(ReportStyle::Json, &mut json, true)
+        .write(fontpixel_ops::ReportStyle::Json, &mut json, true)
         .unwrap();
     let value: serde_json::Value = serde_json::from_slice(&json).unwrap();
     assert_eq!(value["family"], "Mix");
