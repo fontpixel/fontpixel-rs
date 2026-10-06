@@ -1,0 +1,527 @@
+# bdfparser compatibility layer (fontpixel::compat) — unit p5
+# Rule syntax: tools/bindings/check.py. Python API: fontpixel.compat.bdfparser
+# (bdfparser 3.0 / SPEC-v3 names). Font/Glyph wrap the native handles
+# fontpixel._native._bdfparser.RawFont / RawGlyph; Bitmap is the native class
+# itself. The unmodified bdfparser test suite runs through
+# crates/fontpixel-py/tests/compat_bdfparser/run_reference.py (see its
+# KNOWN_DIFFERENCES.md).
+
+[[rule]]
+pattern = "fontpixel::compat"
+status = "bound"
+python = "fontpixel.compat"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser"
+status = "bound"
+python = "fontpixel.compat.bdfparser"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+
+# --- Bitmap -----------------------------------------------------------------
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::*"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_geometry"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::new"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap(bin_bitmap_list)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+reason = "Python constructor; rows are validated (rectangular, labels 0/1/2) before the native raster is built"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::bindata"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.bindata"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+reason = "read/write property (bdfparser attribute); reading materializes the rows, assigning rebuilds the raster"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::equals"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.equals / =="
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::repr"
+status = "adapted"
+python = "repr(fontpixel.compat.bdfparser.Bitmap)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+reason = "Python __repr__"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::width"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.width"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::height"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.height"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::fromstring"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.fromstring"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::blank"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.blank"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::todata"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.todata"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::tobytes"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.tobytes(mode='RGB', bytesdict=None)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+reason = "the palette is bdfparser's bytesdict {0: bytes, 1: bytes, 2: bytes} (bits for mode '1'); unknown modes warn and fall back to RGB"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::tosvg"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Bitmap.tosvg"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_svg"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::overlay"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.overlay"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+reason = "adds bdfparser's size-mismatch BDFParserWarning (the Rust method is silent)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::getpixel"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.getpixel"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_errors"
+reason = "out-of-range coordinates raise IndexError as in bdfparser"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::setpixel"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.setpixel"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_errors"
+reason = "out-of-range coordinates raise IndexError, non-0/1/2 values ValueError, as in bdfparser"
+
+# --- Font ---------------------------------------------------------------------
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font (handle fontpixel._native._bdfparser.RawFont)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+reason = "Python wrapper class over the unsendable native handle; adds bdfparser's live headers/props/glyphs/unencoded views, iterators, keyword arguments and warnings integration"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::*"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::load_*"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.{name} / RawFont.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::load_bytes_with_options"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.load_bytes(data, pixelsize=None)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+reason = "bdfparser passes the TrueType option as load_bytes(**ttfoptions)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::load_ttf"
+status = "bound"
+python = "fontpixel._native._bdfparser.RawFont.load_ttf (Font.load_bytes on TrueType data)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::create"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.create(pixelsize=16, ascent=None, descent=None, fontname=None, familyname='Untitled', xres=75, yres=75)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+reason = "keyword arguments instead of the CreateOptions struct"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::core"
+status = "bound"
+python = "fontpixel._native._bdfparser.RawFont.core (returns fontpixel.Font)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::from_core"
+status = "bound"
+python = "fontpixel._native._bdfparser.RawFont.from_core(fontpixel.Font)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::report"
+status = "adapted"
+python = "BDFParserWarning via the warnings module; RawFont.report() returns the plain-data report"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_parse_warnings_are_bdfparser_warnings"
+reason = "bdfparser reports warnings through Python's warnings module: warning-level entries are re-emitted after each call; info-level native notes are not warnings"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::headers"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.headers (live mapping)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+reason = "bdfparser attribute; reads project the model, writes rebuild it through the native model (no Rust header setter exists)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::props"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.props (live mapping)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+reason = "bdfparser attribute; writes go through setprop/delprop"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::getprop"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.getprop"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::setprop"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.setprop"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::delprop"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.delprop"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::swidth"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.swidth"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::charset"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.charset (property)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+reason = "bdfparser exposes charset as a property"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::encoding"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.encoding(charset=None, char2cp=None, cp2char=None)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+reason = "bdfparser combines the charset override and the converter callables in one keyword method"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::set_converters"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.encoding(char2cp=..., cp2char=...) / RawFont.set_converters"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+reason = "Python callables (str -> int | None, int -> str | None) wrapped as numeric Converters; exceptions they raise propagate"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::unicode2cp"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.unicode2cp / RawFont.unicode2cp"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::char2cp"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.char2cp / RawFont.char2cp"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::cp2unicode"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.cp2unicode / RawFont.cp2unicode"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::cp2char"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.cp2char / RawFont.cp2char"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::charsetconvert"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.charsetconvert"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::length"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.length / len(font)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::iter*"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.{name}(order=1, r=None)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+reason = "returns a Python iterator; ranges are bdfparser's int / tuple / list of tuples"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::model"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.glyphs / unencoded / _propnames (RawFont.model)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+reason = "the canonical model backs bdfparser's glyphs/unencoded views; RawFont.model() returns it as plain data"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::add_handle"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.addglyph(Glyph) / removeglyph(Glyph)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+reason = "bdfparser's addglyph/removeglyph accept a Glyph as well as a dict/codepoint"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::remove_handle"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.addglyph(Glyph) / removeglyph(Glyph)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+reason = "bdfparser's addglyph/removeglyph accept a Glyph as well as a dict/codepoint"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::addglyph"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.addglyph"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::removeglyph"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.removeglyph"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::newglyph"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.newglyph"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::glyph"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.glyph"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::updatebbox"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.updatebbox"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::subset"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.subset"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::merge"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.merge"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::transform"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.transform(fn, r=None, mode=0)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+reason = "fn is a Python callable Bitmap -> Bitmap | None; its exceptions propagate after Rust's partial-mutation order"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::draw*"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.{name}(..., linelimit, mode, direction, usecurrentglyphspacing, missing)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_drawing"
+reason = "bdfparser keyword arguments mapped to the Rust draw keyword map (ucgs, linelimit, mode, direction, missing, order, r)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::to*"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Font.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::topcf"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.topcf(byteorder='msb', bitorder='msb', glyphpad=4, scanunit=1)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+reason = "bdfparser's bdftopcf-style keywords mapped to PcfWriteOptions"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::save*"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.save(path, format=None, **opts) / RawFont.save_to(fileobj, format, options)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+reason = "format string + writer keywords instead of SaveOptions; SVG with options writes tosvgfont(**opts)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Converter"
+status = "adapted"
+python = "Python callables passed to fontpixel.compat.bdfparser.Font.encoding"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+reason = "a Rust closure wrapper; Python passes plain callables"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Converter::new"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.encoding(char2cp=callable, cp2char=callable)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+reason = "constructed from the Python callable"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::CreateOptions"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.create keywords / RawFont.create(dict)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+reason = "serde dict (Deserialize, unknown keys rejected) built from Font.create's keyword arguments"
+
+# --- Glyph --------------------------------------------------------------------
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph (handle fontpixel._native._bdfparser.RawGlyph)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+reason = "Python wrapper class: the bdfparser `meta` dict and `font` attributes, direct meta edits written with the next editing method"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::*"
+status = "bound"
+python = "fontpixel.compat.bdfparser.Glyph.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::new"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph(meta_dict, font)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+reason = "Python constructor"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::meta"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph.meta (dict) / RawGlyph.meta() (17-slot list)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+reason = "bdfparser exposes the meta as a dict keyed by META_TITLES"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::font"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph.font (the owning Python Font) / RawGlyph.font()"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+reason = "attribute holding the same Python Font object (bdfparser identity)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::is_attached"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph._attached / RawGlyph.is_attached()"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+reason = "bdfparser's (private) attribute name"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::Glyph::transform"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Glyph.transform(fn, mode=0)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+reason = "fn is a Python callable Bitmap -> Bitmap | None"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::META_TITLES"
+status = "bound"
+python = "fontpixel.compat.bdfparser.glyph.META_TITLES"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::glyph::defaultglyphname"
+status = "bound"
+python = "fontpixel.compat.bdfparser.defaultglyphname"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_defaultglyphname_and_fmtnum"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::projection::Meta"
+status = "adapted"
+python = "list of 17 values (Font.glyphs[cp], RawGlyph.meta())"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+reason = "type alias of Vec<serde_json::Value>; a Python list"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::io::SaveOptions"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.save(path, format, **opts)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+reason = "format name + writer keyword options"
+
+# --- outline / svg / ttf --------------------------------------------------------
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::outline"
+status = "bound"
+python = "fontpixel.compat.bdfparser.outline"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_outline_functions"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::outline::rasterize"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.outline.rasterize (rows) / fontpixel._native._bdfparser.rasterize (Bitmap)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_outline_functions"
+reason = "bdfparser returns the row strings"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::svg"
+status = "bound"
+python = "fontpixel.compat.bdfparser.bitmap (fmtnum), Bitmap.tosvg, Font.tosvgfont"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_svg"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::svg::fmtnum"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.bitmap.fmtnum"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_defaultglyphname_and_fmtnum"
+reason = "-0.0 is normalized to 0.0 first (bdfparser writes '0'; the Rust function writes '-0')"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::ttf"
+status = "bound"
+python = "fontpixel.compat.bdfparser.ttf"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::ttf::*_ttf"
+status = "bound"
+python = "fontpixel.compat.bdfparser.ttf.{name}"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::ttf::TtfOptions"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.ttf.write_ttf / Font.tottf keywords (shape, dotsize, ppu, metadata, timestamp)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+reason = "serde dict (Deserialize) built from bdfparser's keyword arguments"

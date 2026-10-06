@@ -32,6 +32,10 @@ pub mod sfnt_tables;
 pub mod variants;
 pub mod woff;
 
+pub mod compat;
+pub mod compat_bitmap;
+pub mod compat_glyph;
+
 use pyo3::prelude::*;
 
 /// Native extension module. Area modules add their classes and functions here.
@@ -52,5 +56,6 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     variants::register(m)?;
     merge::register(m)?;
     ops::register(m)?;
+    compat::register(m)?;
     Ok(())
 }
