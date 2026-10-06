@@ -19,6 +19,7 @@ pub mod charset;
 pub mod conv;
 pub mod errors;
 pub mod formats;
+pub mod formats_custom;
 pub mod formats_direct;
 pub mod formats_extra;
 pub mod formats_options;

@@ -6,12 +6,12 @@
 use crate::conv;
 use crate::errors::{IntoPy, InvalidInputError};
 use crate::formats::{InputArgs, SetArg, bytes_arg};
-use crate::resources::PyWritten;
 use crate::formats_direct::{
-    GENERATED, ModelReport, bytes_report, detect_codec, read_bytes_limits,
-    read_bytes_opts, read_ctx_opts, write_x_opts, write_x_primary_opts,
+    GENERATED, ModelReport, bytes_report, detect_codec, read_bytes_limits, read_bytes_opts,
+    read_ctx_opts, write_x_opts, write_x_primary_opts,
 };
 use crate::handles::{PyBitmap, PyFontSet, PyGlyph};
+use crate::resources::PyWritten;
 use fontpixel::formats::{self as f};
 use fontpixel::model::GlyphBitmap;
 use fontpixel::sfnt::bitmap::Kind;
@@ -147,7 +147,10 @@ fn embedded_module(py: Python<'_>) -> PyResult<Bound<'_, PyModule>> {
 /// a `vector_raster::Options` dict. Returns `(FontSet, report)`.
 #[pyfunction]
 #[pyo3(name = "read", signature = (data, options = None))]
-fn vector_read(data: &Bound<'_, PyAny>, options: Option<&Bound<'_, PyAny>>) -> PyResult<ModelReport> {
+fn vector_read(
+    data: &Bound<'_, PyAny>,
+    options: Option<&Bound<'_, PyAny>>,
+) -> PyResult<ModelReport> {
     read_bytes_opts::<_, f::vector_raster::Options>(data, options, |b, o| {
         f::vector_raster::read(b, o)
     })
@@ -350,7 +353,10 @@ fn charset_name(id: u8) -> Option<&'static str> {
 /// (`fnt::read_default`). Returns `(Font, report)`.
 #[pyfunction]
 #[pyo3(signature = (data, *, limits = None))]
-fn read_default(data: &Bound<'_, PyAny>, limits: Option<&Bound<'_, PyAny>>) -> PyResult<ModelReport> {
+fn read_default(
+    data: &Bound<'_, PyAny>,
+    limits: Option<&Bound<'_, PyAny>>,
+) -> PyResult<ModelReport> {
     read_bytes_limits(data, limits, f::fnt::read_default)
 }
 
@@ -423,7 +429,10 @@ fn presets() -> Vec<&'static str> {
 
 /// The `Geometry` dict of an HZK/ASC preset (`hzk::Preset::geometry`).
 #[pyfunction]
-fn preset_geometry<'py>(py: Python<'py>, preset: &Bound<'py, PyAny>) -> PyResult<Bound<'py, PyAny>> {
+fn preset_geometry<'py>(
+    py: Python<'py>,
+    preset: &Bound<'py, PyAny>,
+) -> PyResult<Bound<'py, PyAny>> {
     let p: f::hzk::Preset = conv::from_py_required(preset)?;
     conv::to_py(py, &p.geometry())
 }

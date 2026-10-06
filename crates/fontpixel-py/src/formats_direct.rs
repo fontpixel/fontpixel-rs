@@ -19,8 +19,8 @@
 use crate::conv;
 use crate::errors::IntoPy;
 use crate::formats::{
-    InputArgs, PyRegistry, SetArg, WriteArgs, WriteMode, bytes_arg, limits_arg,
-    path_arg, with_font, write_options,
+    InputArgs, PyRegistry, SetArg, WriteArgs, WriteMode, bytes_arg, limits_arg, path_arg,
+    with_font, write_options,
 };
 use crate::handles::{PyFont, PyFontSet};
 use crate::resources::PyWritten;

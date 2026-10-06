@@ -22,6 +22,7 @@
 pub use crate::bitmap::bytes_arg;
 use crate::conv;
 use crate::errors::{IntoPy, InvalidInputError};
+use crate::formats_custom::py_result;
 use crate::handles::{PyFont, PyFontSet};
 pub use crate::resources::path_arg;
 use crate::resources::{InputParts, PyInput, PyOutputBundle, PyWritten, input_arg, resolver_arg};
@@ -287,7 +288,7 @@ impl InputArgs {
 
     /// Build the borrowed `Input` and run `f` with it.
     pub fn with<R>(&self, f: impl FnOnce(&Input<'_>) -> R) -> R {
-        self.parts.with(f)
+        crate::formats_custom::with_resources(&self.parts.resolver, || self.parts.with(f))
     }
 }
 
@@ -327,7 +328,8 @@ impl PyLoaded {
 impl PyLoaded {
     /// The sole strike as a `Loaded` whose `fonts` is a `Font` handle
     /// (`Loaded::into_single`). Raises `InvalidInputError` for several strikes.
-    fn into_single(&self, py: Python<'_>) -> PyResult<Self> {
+    #[pyo3(name = "into_single")]
+    fn single_loaded(&self, py: Python<'_>) -> PyResult<Self> {
         let set = self
             .fonts
             .bind(py)
@@ -410,7 +412,6 @@ pub fn write_options(
     Ok(options)
 }
 
-
 /// How a registry write treats the model.
 #[derive(Clone, Copy)]
 pub enum WriteMode {
@@ -444,9 +445,7 @@ impl PyRegistry {
         limits: ResourceLimits,
     ) -> PyResult<PyLoaded> {
         let options = ReadOptions { format, limits };
-        let loaded = py
-            .detach(|| input.with(|i| self.registry.read(i, &options)))
-            .py()?;
+        let loaded = py_result(py.detach(|| input.with(|i| self.registry.read(i, &options))))?;
         PyLoaded::new(py, loaded)
     }
 
@@ -457,9 +456,7 @@ impl PyRegistry {
         input: &InputArgs,
         limits: ResourceLimits,
     ) -> PyResult<Bound<'py, PyAny>> {
-        let detected = py
-            .detach(|| input.with(|i| self.registry.detect(i, &limits)))
-            .py()?;
+        let detected = py_result(py.detach(|| input.with(|i| self.registry.detect(i, &limits))))?;
         conv::to_py(py, &detected)
     }
 
@@ -472,14 +469,25 @@ impl PyRegistry {
         mode: WriteMode,
     ) -> PyResult<PyWritten> {
         let py = fonts.py();
+        // Default primary from this registry's metadata (Python codecs too).
+        let default_name = match args.primary_name {
+            Some(_) => None,
+            None => {
+                let info = py_result(self.registry.status(format))?.format;
+                Some(match info.extensions.first() {
+                    Some(ext) => format!("font.{ext}"),
+                    None => "font".to_owned(),
+                })
+            }
+        };
         let options = write_options(
             format,
-            args.primary_name,
+            args.primary_name.or(default_name.as_deref()),
             args.strict,
             args.transport_limits,
         )?;
         let report = report_arg(args.report)?;
-        let written = match mode {
+        let written = py_result(match mode {
             WriteMode::Owned => {
                 let set = if let Ok(handle) = fonts.cast::<PyFontSet>() {
                     handle.get().write(|s| Ok(std::mem::take(s)))?
@@ -500,8 +508,7 @@ impl PyRegistry {
                         .write_reserved_with_report(set, format, &options, report)
                 }))
             })?,
-        }
-        .py()?;
+        })?;
         PyWritten::new(py, written)
     }
 }
@@ -779,9 +786,8 @@ fn read(
                 Some(f)
             }
             (None, Some(o)) => {
-                let detected = py
-                    .detach(|| input.with(|i| reg.registry.detect(i, &limits)))
-                    .py()?;
+                let detected =
+                    py_result(py.detach(|| input.with(|i| reg.registry.detect(i, &limits))))?;
                 let id = detected.format.id.to_owned();
                 crate::formats_options::set_read(&mut reg.registry, &id, o)?;
                 Some(id)
