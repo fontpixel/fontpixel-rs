@@ -4,11 +4,10 @@
  "bdfparser_api": "3.0.0",
  "python": "3.10.20",
  "slow": true,
- "pytest_exit_code": 1,
- "seconds": 78.4,
+ "pytest_exit_code": 0,
+ "seconds": 230.7,
  "counts": {
-  "passed": 5,
-  "failed": 5
+  "passed": 10
  },
  "tests": {
   "tests/test_ttf.py::test_fonttools_recompile_and_ttx[unifont-13.0.04-reduced.bdf-circle]": {
@@ -18,23 +17,19 @@
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_fonttools_validation[HanWangYanKai-26.bdf-circle]": {
-   "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a0501131db44e1310/crates/fontpixel-py/python/fontpixel/compat/bdfparser/ttf.py:68: InvalidInputValueError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_fonttools_validation[HanWangYanKai-26.bdf-square]": {
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_freetype_native[HanWangYanKai-26.bdf-circle-1.0-97-hinted]": {
-   "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a0501131db44e1310/crates/fontpixel-py/python/fontpixel/compat/bdfparser/ttf.py:68: InvalidInputValueError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_freetype_native[HanWangYanKai-26.bdf-circle-1.0-97-unhinted]": {
-   "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a0501131db44e1310/crates/fontpixel-py/python/fontpixel/compat/bdfparser/ttf.py:68: InvalidInputValueError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_full_unifont_slow[circle]": {
-   "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a0501131db44e1310/crates/fontpixel-py/python/fontpixel/compat/bdfparser/ttf.py:68: InvalidInputValueError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_full_unifont_slow[square]": {
    "outcome": "passed"
@@ -43,8 +38,7 @@
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_round_trip[HanWangYanKai-26.bdf-circle]": {
-   "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a0501131db44e1310/crates/fontpixel-py/python/fontpixel/compat/bdfparser/ttf.py:68: InvalidInputValueError"
+   "outcome": "passed"
   }
  }
 }

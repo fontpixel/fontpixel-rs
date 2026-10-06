@@ -34,6 +34,17 @@ pub(crate) fn set_vector(metrics: &mut GlyphMetrics, key: &str, v: Vector) {
         _ => {}
     }
 }
+#[cfg(feature = "compat-bdfparser")]
+pub(crate) fn clear_vector(metrics: &mut GlyphMetrics, key: &str) {
+    match key {
+        "SWIDTH" => metrics.scalable_advance = None,
+        "DWIDTH" => metrics.advance = None,
+        "SWIDTH1" => metrics.vertical_scalable_advance = None,
+        "DWIDTH1" => metrics.vertical_advance = None,
+        "VVECTOR" => metrics.vertical_origin = None,
+        _ => {}
+    }
+}
 pub(crate) fn values(p: &Properties, key: &str) -> Option<Vec<i64>> {
     match p.get(key)? {
         PropertyValue::List(v) => v.iter().map(integer).collect(),

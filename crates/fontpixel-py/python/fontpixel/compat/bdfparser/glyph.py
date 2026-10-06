@@ -59,18 +59,32 @@ class Glyph:
         g.font = font  # type: ignore[assignment]  # a detached glyph has no font
         g._g = raw
         g._epoch = getattr(font, '_epoch', 0)
-        g.meta = dict(extra) if extra else {}
-        g._pull()
+        if extra:
+            g.meta = dict(extra)
+            g._pull()
+        # otherwise `meta` is built from the handle's snapshot on first access
         return g
+
+    def __getattr__(self, name: str) -> Any:
+        # only called for a missing attribute: the lazily built `meta` dict
+        if name == 'meta':
+            meta = self.__dict__['meta'] = self._g.meta_dict()
+            return meta
+        raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
     # -- synchronisation with the Rust handle ------------------------------
 
     def _pull(self) -> None:
+        meta = self.__dict__.get('meta')
+        if meta is None:  # not built yet: it will read the handle's new snapshot
+            return
         for k, v in zip(META_TITLES, self._g.meta(), strict=True):
-            self.meta[k] = v
+            meta[k] = v
 
     def _pending(self) -> dict[str, Any]:
         """Direct edits of `self.meta` not yet in the handle."""
+        if 'meta' not in self.__dict__:
+            return {}
         changed = {}
         for k, v in zip(META_TITLES, self._g.meta(), strict=True):
             mine = self.meta.get(k)

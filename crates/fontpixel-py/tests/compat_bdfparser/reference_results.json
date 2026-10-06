@@ -5,10 +5,10 @@
  "python": "3.10.20",
  "slow": false,
  "pytest_exit_code": 1,
- "seconds": 63.4,
+ "seconds": 70.2,
  "counts": {
-  "passed": 1738,
-  "failed": 25,
+  "passed": 1755,
+  "failed": 8,
   "skipped": 10
  },
  "tests": {
@@ -28,8 +28,7 @@
    "outcome": "passed"
   },
   "tests/test_bdf_write.py::test_full_format": {
-   "outcome": "failed",
-   "message": "tests/test_bdf_write.py:161: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_bdf_write.py::test_glyph_order_is_dict_order": {
    "outcome": "passed"
@@ -65,8 +64,7 @@
    "outcome": "passed"
   },
   "tests/test_bdf_write.py::test_unloaded_font_raises": {
-   "outcome": "failed",
-   "message": "tests/test_bdf_write.py:246: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_bitmap.py::TestBitmap::test_bindata": {
    "outcome": "passed"
@@ -360,8 +358,7 @@
    "outcome": "passed"
   },
   "tests/test_cli.py::test_truncated_gzip_input": {
-   "outcome": "failed",
-   "message": "tests/test_cli.py:156: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_cli.py::test_usage_errors": {
    "outcome": "passed"
@@ -455,7 +452,7 @@
   },
   "tests/test_edit.py::TestAttached::test_negative_codepoint_is_normalised": {
    "outcome": "failed",
-   "message": "tests/test_edit.py:299: AttributeError"
+   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a21157199cd3815ec/crates/fontpixel-py/python/fontpixel/compat/bdfparser/glyph.py:73: AttributeError"
   },
   "tests/test_edit.py::TestAttached::test_removed_glyph_detaches": {
    "outcome": "passed"
@@ -470,8 +467,7 @@
    "outcome": "passed"
   },
   "tests/test_edit.py::TestAttached::test_two_views_of_same_glyph": {
-   "outcome": "failed",
-   "message": "tests/test_edit.py:266: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_edit.py::TestAttached::test_writeback_without_store": {
    "outcome": "passed"
@@ -988,8 +984,7 @@
    "outcome": "passed"
   },
   "tests/test_font.py::TestFontV3Misc::test_global_dwidth_used_in_mode1": {
-   "outcome": "failed",
-   "message": "tests/test_font.py:887: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_font.py::TestFontV3Misc::test_unknown_direction_falls_back_to_lrtb": {
    "outcome": "passed"
@@ -1031,8 +1026,7 @@
    "outcome": "passed"
   },
   "tests/test_font.py::TestFontV3Querying::test_draw_linelimit_too_small": {
-   "outcome": "failed",
-   "message": "tests/test_font.py:784: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_font.py::TestFontV3Querying::test_draw_nothing_is_empty_bitmap": {
    "outcome": "passed"
@@ -1226,8 +1220,7 @@
    "outcome": "passed"
   },
   "tests/test_hardening.py::TestNonHexRows::test_message_quotes": {
-   "outcome": "failed",
-   "message": "tests/test_hardening.py:621: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_hardening.py::TestNumbers::test_bad_startfont_version[+2.1]": {
    "outcome": "passed"
@@ -1356,8 +1349,7 @@
    "outcome": "passed"
   },
   "tests/test_hardening.py::TestPcfGuards::test_glyph_messages": {
-   "outcome": "failed",
-   "message": "tests/test_hardening.py:497: Failed"
+   "outcome": "passed"
   },
   "tests/test_hardening.py::TestPcfGuards::test_huge_ascent_rejected_before_allocation": {
    "outcome": "passed"
@@ -1366,12 +1358,10 @@
    "outcome": "passed"
   },
   "tests/test_hardening.py::TestReadTtfGuard::test_huge_bdfp_box_rejected": {
-   "outcome": "failed",
-   "message": "tests/test_hardening.py:817: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_hardening.py::TestReadTtfGuard::test_huge_glyph_rejected": {
-   "outcome": "failed",
-   "message": "tests/test_hardening.py:795: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_hardening.py::TestStrictConversions::test_char2cp_rejects_invalid_lengths": {
    "outcome": "passed"
@@ -1458,8 +1448,7 @@
    "outcome": "passed"
   },
   "tests/test_hardening.py::test_glyph_detached_hexrow_error_uses_meta": {
-   "outcome": "failed",
-   "message": "tests/test_hardening.py:857: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_hardening.py::test_removeglyph_stale_glyph_noop": {
    "outcome": "passed"
@@ -4574,16 +4563,13 @@
    "outcome": "passed"
   },
   "tests/test_pcf.py::test_writer_errors": {
-   "outcome": "failed",
-   "message": "tests/test_pcf.py:1425: Failed"
+   "outcome": "passed"
   },
   "tests/test_pcf.py::test_writer_fallbacks_and_odd_hex": {
-   "outcome": "failed",
-   "message": "tests/test_pcf.py:1392: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_pcf.py::test_writer_global_swidth_and_bad_resolution": {
-   "outcome": "failed",
-   "message": "tests/test_pcf.py:1418: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_pcf.py::test_writer_without_dwidth_header": {
    "outcome": "passed"
@@ -5080,8 +5066,7 @@
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_missing_table_rejected": {
-   "outcome": "failed",
-   "message": "tests/test_ttf.py:1128: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_names_fallbacks_and_notdef": {
    "outcome": "passed"
@@ -5332,8 +5317,7 @@
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_truncated_rejected": {
-   "outcome": "failed",
-   "message": "tests/test_ttf.py:1120: AssertionError"
+   "outcome": "passed"
   },
   "tests/test_ttf.py::test_write_bad_options[kwargs0]": {
    "outcome": "passed"
@@ -5363,8 +5347,7 @@
    "outcome": "passed"
   },
   "tests/test_ttf.py::test_write_upem_too_small_and_bad_advance": {
-   "outcome": "failed",
-   "message": "tests/test_ttf.py:1563: AssertionError"
+   "outcome": "passed"
   }
  }
 }

@@ -1,13 +1,14 @@
 //! Deterministic pixel TrueType compatibility codec, SPEC-v3 §8.
 //! This narrowly-scoped codec serves parity; native sfnt integration is separate.
-use super::projection::{meta, num, props, text};
+use super::projection::{meta, num, props, py_repr, text};
 use super::{
     Font, Meta,
     bitmap::invalid,
     defaultglyphname,
     outline::{Contour, bitmap_contours, rasterize},
 };
-use crate::Result;
+use crate::working::{Budget, Lease, Owned};
+use crate::{Error, ResourceLimits, Result};
 use serde_json::{Value as V, json};
 use std::collections::{BTreeMap, BTreeSet};
 /// SPEC TrueType output options.
@@ -37,6 +38,26 @@ impl Default for TtfOptions {
         }
     }
 }
+/// bdfparser's `_pack` error: the values of the failing pack call and
+/// Python's `struct.error` text.
+fn pack_error(c: char, n: i64, vals: &[i64]) -> Error {
+    let reason = match c {
+        'H' if n >= 0 => "'H' format requires 0 <= number <= 65535",
+        'h' => "'h' format requires -32768 <= number <= 32767",
+        'I' if n >= 0 => "'I' format requires 0 <= number <= 4294967295",
+        'i' => "'i' format requires -2147483648 <= number <= 2147483647",
+        _ => "argument out of range",
+    };
+    let items = vals.iter().map(i64::to_string).collect::<Vec<_>>();
+    let tuple = if items.len() == 1 {
+        format!("({},)", items[0])
+    } else {
+        format!("({})", items.join(", "))
+    };
+    invalid(&format!(
+        "value out of range for a TrueType field: {tuple} ({reason})"
+    ))
+}
 fn pack(fmt: &str, vals: &[i64]) -> Result<Vec<u8>> {
     let mut out = Vec::new();
     let mut it = vals.iter();
@@ -45,27 +66,12 @@ fn pack(fmt: &str, vals: &[i64]) -> Result<Vec<u8>> {
             continue;
         }
         let n = *it.next().ok_or_else(|| invalid("missing sfnt field"))?;
+        let bad = || pack_error(c, n, vals);
         match c {
-            'H' => out.extend(
-                u16::try_from(n)
-                    .map_err(|_| invalid("TrueType field exceeds uint16"))?
-                    .to_be_bytes(),
-            ),
-            'h' => out.extend(
-                i16::try_from(n)
-                    .map_err(|_| invalid("TrueType field exceeds int16"))?
-                    .to_be_bytes(),
-            ),
-            'I' => out.extend(
-                u32::try_from(n)
-                    .map_err(|_| invalid("TrueType field exceeds uint32"))?
-                    .to_be_bytes(),
-            ),
-            'i' => out.extend(
-                i32::try_from(n)
-                    .map_err(|_| invalid("TrueType field exceeds int32"))?
-                    .to_be_bytes(),
-            ),
+            'H' => out.extend(u16::try_from(n).map_err(|_| bad())?.to_be_bytes()),
+            'h' => out.extend(i16::try_from(n).map_err(|_| bad())?.to_be_bytes()),
+            'I' => out.extend(u32::try_from(n).map_err(|_| bad())?.to_be_bytes()),
+            'i' => out.extend(i32::try_from(n).map_err(|_| bad())?.to_be_bytes()),
             'q' => out.extend(n.to_be_bytes()),
             _ => return Err(invalid("invalid internal sfnt field")),
         }
@@ -75,20 +81,21 @@ fn pack(fmt: &str, vals: &[i64]) -> Result<Vec<u8>> {
     }
     Ok(out)
 }
-fn pad4(mut data: Vec<u8>) -> Vec<u8> {
-    data.resize(data.len().next_multiple_of(4), 0);
-    data
-}
-#[derive(Clone)]
+/// One output glyph. Its outline is encoded into `glyf` bytes as soon as it is
+/// made and the contours are dropped, so only the encoded bytes are retained.
 struct G {
-    cs: Vec<Contour>,
     advance: i64,
     bounds: Option<[i64; 4]>,
+    points: usize,
+    contours: usize,
+    /// Encoded `glyf` bytes, or bdfparser's encoding error, reported in output
+    /// order when the `glyf` table is assembled.
+    glyf: Result<Option<Owned<Vec<u8>>>>,
     name: String,
     unicode: Option<u32>,
 }
 impl G {
-    fn new(cs: Vec<Contour>, advance: i64) -> Self {
+    fn new(cs: &[Contour], advance: i64, budget: &Budget) -> Result<Self> {
         let mut bounds = None::<[i64; 4]>;
         for p in cs.iter().flatten() {
             let (x, y) = (p.0 as i64, p.1 as i64);
@@ -101,30 +108,68 @@ impl G {
                 bounds = Some([x, y, x, y]);
             }
         }
-        Self {
-            cs,
+        let glyf = match encode_glyf(cs, bounds, budget) {
+            Ok(v) => Ok(Some(v)),
+            Err(e @ Error::InvalidInput(_)) => Err(e),
+            Err(e) => return Err(e),
+        };
+        Ok(Self {
             advance,
             bounds,
+            points: cs.iter().map(Vec::len).sum(),
+            contours: cs.len(),
+            glyf,
             name: String::new(),
             unicode: None,
-        }
+        })
     }
 }
-fn encode_glyf(g: &G) -> Result<Vec<u8>> {
-    if g.cs.is_empty() {
-        return Ok(vec![]);
+/// Exact encoded size of a simple glyph (before padding).
+fn glyf_size(cs: &[Contour]) -> usize {
+    let delta = |d: i64| match d {
+        0 => 0,
+        -255..=255 => 1,
+        _ => 2,
+    };
+    let (mut px, mut py) = (0, 0);
+    let mut n = 12 + 2 * cs.len();
+    for &(x, y, _) in cs.iter().flatten() {
+        let (x, y) = (x as i64, y as i64);
+        n += 1 + delta(x - px) + delta(y - py);
+        px = x;
+        py = y;
     }
-    let b = g.bounds.ok_or_else(|| invalid("empty contour"))?;
-    let mut out = pack("hhhhh", &[g.cs.len() as i64, b[0], b[1], b[2], b[3]])?;
+    n
+}
+/// Encode a simple glyph into storage admitted by `budget` before allocation.
+fn encode_glyf(
+    cs: &[Contour],
+    bounds: Option<[i64; 4]>,
+    budget: &Budget,
+) -> Result<Owned<Vec<u8>>> {
+    if cs.is_empty() {
+        return Ok(Owned::from_parts(Vec::new(), budget.reserve(0)?));
+    }
+    let size = glyf_size(cs).next_multiple_of(4);
+    let mut lease = budget.reserve(size)?;
+    let mut out = Vec::new();
+    out.try_reserve_exact(size).map_err(|_| budget.error())?;
+    lease.grow_to(out.capacity())?;
+    let b = bounds.ok_or_else(|| invalid("empty contour"))?;
+    out.extend(pack("hhhhh", &[cs.len() as i64, b[0], b[1], b[2], b[3]])?);
     let mut end = -1;
-    for c in &g.cs {
-        end += c.len() as i64;
-        out.extend(pack("H", &[end])?);
-    }
+    let ends = cs
+        .iter()
+        .map(|c| {
+            end += c.len() as i64;
+            end
+        })
+        .collect::<Vec<_>>();
+    out.extend(pack(&"H".repeat(ends.len()), &ends)?);
     out.extend([0, 0]);
     let (mut flags, mut xb, mut yb) = (Vec::new(), Vec::new(), Vec::new());
     let (mut px, mut py) = (0, 0);
-    for &(x, y, on) in g.cs.iter().flatten() {
+    for &(x, y, on) in cs.iter().flatten() {
         let (x, y) = (x as i64, y as i64);
         let (dx, dy) = (x - px, y - py);
         px = x;
@@ -151,7 +196,8 @@ fn encode_glyf(g: &G) -> Result<Vec<u8>> {
     out.extend(flags);
     out.extend(xb);
     out.extend(yb);
-    Ok(pad4(out))
+    out.resize(size, 0);
+    Ok(Owned::from_parts(out, lease))
 }
 fn runs(mapping: &[(u32, usize)]) -> Vec<(u32, u32, usize)> {
     let mut out = Vec::<(u32, u32, usize)>::new();
@@ -183,16 +229,14 @@ fn cmap(mapping: &[(u32, usize)]) -> Result<Vec<u8>> {
     let lg = n.ilog2() as i64;
     let sr = 2 * (1 << lg);
     let mut sub4 = pack("HHHHHHH", &[4, 16 + 8 * n, 0, 2 * n, sr, lg, 2 * n - sr])?;
-    for s in &segs {
-        sub4.extend(pack("H", &[s.1])?);
-    }
+    let array = |f: fn(&(i64, i64, i64)) -> i64| {
+        let v = segs.iter().map(f).collect::<Vec<_>>();
+        pack(&"H".repeat(v.len()), &v)
+    };
+    sub4.extend(array(|s| s.1)?);
     sub4.extend([0, 0]);
-    for s in &segs {
-        sub4.extend(pack("H", &[s.0])?);
-    }
-    for s in &segs {
-        sub4.extend(pack("H", &[s.2])?);
-    }
+    sub4.extend(array(|s| s.0)?);
+    sub4.extend(array(|s| s.2)?);
     sub4.extend(vec![0; 2 * n as usize]);
     let r = runs(mapping);
     let mut sub12 = pack(
@@ -227,9 +271,25 @@ fn name_table(records: &[(i64, String)]) -> Result<Vec<u8>> {
     out.extend(strings);
     Ok(out)
 }
-fn assemble(tables: BTreeMap<&str, Vec<u8>>) -> Result<Vec<u8>> {
+/// Assemble the tables under the writer's memory ledger: the caller holds the
+/// `glyf` charge; the other tables are charged here, then the output.
+fn assemble(tables: BTreeMap<&str, Vec<u8>>, budget: &Budget) -> Result<Vec<u8>> {
+    let resources = ResourceLimits::default();
+    // One table (glyf) may use the whole writer allowance, not only the
+    // per-table read cap: admission is by the shared memory ledger.
+    let limits = crate::sfnt::Limits {
+        resources: ResourceLimits {
+            max_table_bytes: resources.max_total_bytes,
+            ..resources
+        },
+        ..Default::default()
+    };
     let mut builder = crate::sfnt::SfntBuilder::new(crate::sfnt::Flavor::TrueType);
+    let mut leases = Vec::<Lease>::new();
     for (tag, data) in tables {
+        if tag != "glyf" {
+            leases.push(budget.reserve(data.capacity())?);
+        }
         builder.insert(
             tag.as_bytes()
                 .try_into()
@@ -237,7 +297,8 @@ fn assemble(tables: BTreeMap<&str, Vec<u8>>) -> Result<Vec<u8>> {
             data,
         )?;
     }
-    builder.build(&crate::sfnt::Limits::default())
+    let (bytes, _lease) = builder.build_with_budget(&limits, budget)?.into_parts();
+    Ok(bytes)
 }
 fn source_bitmap(m: &Meta) -> Result<Vec<String>> {
     let (w, h) = (num(&m[2]), num(&m[3]));
@@ -294,30 +355,41 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
     }
     let bold = sp("weight_name").is_some_and(|s| s.to_lowercase().contains("bold"));
     let italic = sp("slant").is_some_and(|s| matches!(s.to_uppercase().as_str(), "I" | "O"));
+    // Memory admission: every glyph's outline points (`size_of::<Point>()`
+    // each) are charged to this ledger before they are allocated, then
+    // replaced by their exact encoded `glyf` bytes; the assembled output is
+    // charged too. Whatever fits the allowance is written.
+    let budget = Budget::new(
+        ResourceLimits::default().max_total_bytes,
+        "TrueType writer working bytes",
+    );
+    let outline_limits = crate::outline::Limits::default();
     let make = |m: &Meta| -> Result<G> {
         let adv = m[8]
             .as_i64()
             .or_else(|| h.get("dwx0").and_then(V::as_i64))
             .unwrap_or((num(&m[4]) + num(&m[2])).max(0));
-        Ok(G::new(
-            bitmap_contours(
-                &source_bitmap(m)?,
-                &o.shape,
-                o.dotsize,
-                ppu,
-                num(&m[4]),
-                num(&m[5]),
-            )?,
+        let cs = crate::outline::spec_contours_with_budget(
+            &source_bitmap(m)?,
+            &o.shape,
+            o.dotsize,
+            ppu,
+            (num(&m[4]), num(&m[5])),
+            &outline_limits,
+            &budget,
+        )?;
+        G::new(
+            &cs,
             adv.checked_mul(ppu)
                 .ok_or_else(|| invalid("advance overflow"))?,
-        ))
+            &budget,
+        )
     };
-    let mut point_budget = 0usize;
     let mut glyphs = vec![
-        if let Some(g) = ip("default_char").and_then(|cp| font.glyphbycp(cp)) {
+        if let Some(g) = ip("default_char").and_then(|cp| font.lookup(cp)) {
             make(g.meta())?
         } else {
-            G::new(vec![], fbbx * ppu)
+            G::new(&[], fbbx * ppu, &budget)?
         },
     ];
     glyphs[0].name = ".notdef".into();
@@ -345,10 +417,6 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
     let mut gids = BTreeMap::new();
     for (i, (cp, m, _)) in order.iter().enumerate() {
         let mut g = make(m)?;
-        point_budget += g.cs.iter().map(Vec::len).sum::<usize>();
-        if point_budget > 4 * 1024 * 1024 {
-            return Err(invalid("TrueType font point budget exceeded"));
-        }
         if i < nencoded {
             g.unicode = font.cp2char(*cp)?.map(|c| c as u32);
             gids.insert(*cp, i + 1);
@@ -405,12 +473,8 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
     let min_lsb = xmin;
     let min_rsb = min(|g, b| g.advance - b[2]);
     let adv_max = glyphs.iter().map(|g| g.advance).max().unwrap_or(0);
-    let max_points = glyphs
-        .iter()
-        .map(|g| g.cs.iter().map(Vec::len).sum::<usize>())
-        .max()
-        .unwrap_or(0) as i64;
-    let max_contours = glyphs.iter().map(|g| g.cs.len()).max().unwrap_or(0) as i64;
+    let max_points = glyphs.iter().map(|g| g.points).max().unwrap_or(0) as i64;
+    let max_contours = glyphs.iter().map(|g| g.contours).max().unwrap_or(0) as i64;
     let hasc = ascent * ppu;
     let hdesc = -descent * ppu;
     let ts = o
@@ -540,17 +604,35 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
     )?);
     tables.insert("OS/2", os2);
     tables.insert("cmap", cmap(&mapping)?);
-    let (mut glyf, mut loca, mut hmtx) = (Vec::new(), pack("I", &[0])?, Vec::new());
-    for g in &glyphs {
-        glyf.extend(encode_glyf(g)?);
-        loca.extend(pack("I", &[glyf.len() as i64])?);
+    // The glyf table is admitted before allocation; the per-glyph pieces are
+    // released as they are copied in.
+    let total = glyphs
+        .iter()
+        .map(|g| {
+            g.glyf
+                .as_ref()
+                .ok()
+                .and_then(Option::as_ref)
+                .map_or(0, |v| v.len())
+        })
+        .sum::<usize>();
+    let mut glyf_lease = budget.reserve(total)?;
+    let mut glyf = Vec::new();
+    glyf.try_reserve_exact(total).map_err(|_| budget.error())?;
+    glyf_lease.grow_to(glyf.capacity())?;
+    let (mut loca, mut hmtx) = (vec![0], Vec::new());
+    for g in &mut glyphs {
+        if let Some(piece) = std::mem::replace(&mut g.glyf, Ok(None))? {
+            glyf.extend_from_slice(&piece);
+        }
+        loca.push(glyf.len() as i64);
         hmtx.extend(pack(
             "Hh",
             &[g.advance, g.bounds.map(|b| b[0]).unwrap_or(0)],
         )?);
     }
     tables.insert("glyf", glyf);
-    tables.insert("loca", loca);
+    tables.insert("loca", pack(&"I".repeat(loca.len()), &loca)?);
     tables.insert("hmtx", hmtx);
     let present = |v: Option<&V>| {
         v.filter(|v| !v.is_null())
@@ -614,10 +696,8 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
             n,
         ],
     )?;
-    post.extend(pack("H", &[0])?);
-    for i in 0..n - 1 {
-        post.extend(pack("H", &[258 + i])?);
-    }
+    let indexes = std::iter::once(0).chain(258..257 + n).collect::<Vec<_>>();
+    post.extend(pack(&"H".repeat(indexes.len()), &indexes)?);
     for g in &glyphs[1..] {
         post.push(g.name.len() as u8);
         post.extend(g.name.as_bytes());
@@ -665,7 +745,9 @@ pub fn write_ttf(font: &Font, o: &TtfOptions) -> Result<Vec<u8>> {
         );
         tables.insert("BDFP", data.into_bytes());
     }
-    assemble(tables)
+    let output = assemble(tables, &budget);
+    drop(glyf_lease);
+    output
 }
 impl Font {
     /// Deterministic SPEC TrueType output.
@@ -701,27 +783,71 @@ impl<'a> Reader<'a> {
         Ok(u32::from_be_bytes([b[0], b[1], b[2], b[3]]))
     }
 }
+/// Python `repr(bytes)` of a short tag.
+fn bytes_repr(b: &[u8]) -> String {
+    let mut s = String::from("b'");
+    for &c in b {
+        match c {
+            b'\\' => s.push_str("\\\\"),
+            b'\'' => s.push_str("\\'"),
+            b'\t' => s.push_str("\\t"),
+            b'\n' => s.push_str("\\n"),
+            b'\r' => s.push_str("\\r"),
+            0x20..0x7f => s.push(char::from(c)),
+            _ => s.push_str(&format!("\\x{c:02x}")),
+        }
+    }
+    s.push('\'');
+    s
+}
+/// The table directory, with bdfparser's checks and messages.
 fn parse_tables(data: &[u8]) -> Result<BTreeMap<String, &[u8]>> {
+    if data.len() < 12 {
+        return Err(invalid("Malformed TrueType font: file too short"));
+    }
     let r = Reader { b: data };
     let tag = r.bytes(0, 4)?;
     if tag == b"OTTO" {
         return Err(invalid("CFF-based OpenType is not supported"));
     }
     if tag != b"\0\x01\0\0" && tag != b"true" {
-        return Err(invalid("Not a TrueType font"));
+        return Err(invalid(&format!(
+            "Not a TrueType font (sfnt version {})",
+            bytes_repr(tag)
+        )));
     }
     let n = r.u16(4)? as usize;
+    if 12 + 16 * n > data.len() {
+        return Err(invalid(
+            "Malformed TrueType font: table directory is truncated",
+        ));
+    }
     let mut out = BTreeMap::new();
     for i in 0..n {
         let off = 12 + 16 * i;
-        let tag = String::from_utf8_lossy(r.bytes(off, 4)?).into_owned();
+        // latin-1, as bdfparser decodes tags
+        let tag = r
+            .bytes(off, 4)?
+            .iter()
+            .map(|&c| char::from(c))
+            .collect::<String>();
         let start = r.u32(off + 8)? as usize;
         let len = r.u32(off + 12)? as usize;
-        out.insert(tag, r.bytes(start, len)?);
+        let end = start.checked_add(len);
+        let table = end.and_then(|e| data.get(start..e)).ok_or_else(|| {
+            invalid(&format!(
+                "Malformed TrueType font: table {} exceeds the file",
+                py_repr(&tag)
+            ))
+        })?;
+        out.insert(tag, table);
     }
     for key in ["head", "maxp", "hhea", "hmtx", "loca", "glyf"] {
         if !out.contains_key(key) {
-            return Err(invalid("Malformed TrueType font: required table missing"));
+            return Err(invalid(&format!(
+                "Malformed TrueType font: missing required table {}",
+                py_repr(key)
+            )));
         }
     }
     Ok(out)
@@ -956,6 +1082,7 @@ impl ReadBudget {
     }
 }
 fn raster_meta(
+    gid: usize,
     cs: &[Contour],
     ppu: f64,
     box_: Option<[i64; 4]>,
@@ -976,12 +1103,12 @@ fn raster_meta(
         [x1 - x0, y1 - y0, x0, y0]
     };
     let (w, h, mut x, mut y) = (b[0], b[1], b[2], b[3]);
-    budget.charge(cs, w, h)?;
     if w.max(1) as u64 * h.max(1) as u64 > 1 << 24 {
-        return Err(invalid(
-            "Malformed TrueType font: glyph bounding box too large",
-        ));
+        return Err(invalid(&format!(
+            "Malformed TrueType font: glyph {gid} bounding box too large ({w}x{h} pixels)"
+        )));
     }
+    budget.charge(cs, w, h)?;
     let mut bm = rasterize(cs, ppu, x, y, w.max(0), h.max(0))?;
     if !explicit {
         let bb = bm.bbox();
@@ -1264,6 +1391,7 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
             let cs = gr.contours(gid, 0, &mut budget)?;
             let (mut m, alt) = if e.len() == 18 {
                 let mut m = raster_meta(
+                    gid,
                     &cs,
                     ppu,
                     Some([num(&e[3]), num(&e[4]), num(&e[5]), num(&e[6])]),
@@ -1272,7 +1400,7 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
                 m[6..16].clone_from_slice(&e[7..17]);
                 (m, e[17].clone())
             } else {
-                let mut m = raster_meta(&cs, ppu, None, &mut budget)?;
+                let mut m = raster_meta(gid, &cs, ppu, None, &mut budget)?;
                 let dw = (advances[gid] as f64 / ppu + 0.5).floor() as i64;
                 m[6] = json!(f.swidth(dw));
                 m[7] = json!(0);
@@ -1357,7 +1485,13 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
         } else {
             format!("glyph{gid}")
         };
-        let mut m = raster_meta(&gr.contours(gid, 0, &mut budget)?, ppu, None, &mut budget)?;
+        let mut m = raster_meta(
+            gid,
+            &gr.contours(gid, 0, &mut budget)?,
+            ppu,
+            None,
+            &mut budget,
+        )?;
         let dw = (advances[gid] as f64 / ppu + 0.5).floor() as i64;
         m[0] = json!(name);
         m[1] = json!(cp.map(i64::from).unwrap_or(-1));

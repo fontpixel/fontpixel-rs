@@ -90,6 +90,20 @@ python = "fontpixel.compat.bdfparser.Bitmap.todata"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
 
 [[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::label_rows"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.todata(0..5) / bindata"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+reason = "the binding builds bdfparser's todata values straight from the label rows"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::row_number"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Bitmap.todata(4) / todata(5)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+reason = "hex text or Python int per row, as bdfparser's todata(4)/todata(5)"
+
+[[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::tobytes"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.tobytes(mode='RGB', bytesdict=None)"
@@ -188,7 +202,82 @@ pattern = "fontpixel::compat::bdfparser::font::Font::headers"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.headers (live mapping)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
-reason = "bdfparser attribute; reads project the model, writes rebuild it through the native model (no Rust header setter exists)"
+reason = "bdfparser attribute; reads project the model, writes go through Font::set_header / remove_header / set_headers (in place)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::set_headers"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.headers = mapping / headers.update(...) (RawFont.set_headers)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser assigns the headers dict attribute; the binding replaces the native headers in place"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::set_header"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.headers[key] = value (RawFont.set_header)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser item assignment on the headers dict"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::remove_header"
+status = "adapted"
+python = "del fontpixel.compat.bdfparser.Font.headers[key] (RawFont.remove_header; KeyError when absent)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser item deletion on the headers dict"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::lookup"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.glyphs[cp] / iterglyphs (RawFont.lookup)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser reads glyphs without a warning through its glyphs dict; the binding uses the non-warning lookup there"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::unencoded_*"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.unencoded[i]['meta'] / ['altcode'] (RawFont.{name})"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser's unencoded list of {'altcode', 'meta'} dicts; item assignment into a meta list writes through the slot's handle"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::set_unencoded_*"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.unencoded[i]['meta'][k] = v (RawFont.set_unencoded_meta / RawFont.set_altcode)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser edits the stored unencoded list entries in place"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::remove_unencoded"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.unencoded.clear() / del unencoded[i] (RawFont.remove_unencoded)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "bdfparser list operations on the unencoded list; an index out of range raises IndexError"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::prepare_meta"
+status = "bound"
+python = "fontpixel._native._bdfparser.RawFont.prepare_meta"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::put_with_alt"
+status = "adapted"
+python = "fontpixel.compat.bdfparser.Font.unencoded.append({'altcode': n, 'meta': [...]}) (RawFont.put_with_alt(fields, altcode))"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+reason = "takes the bdfparser meta fields dict; normalized with prepare_meta first"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::fmtver"
+status = "bound"
+python = "fontpixel.compat.bdfparser.font.fmtver / fontpixel._native._bdfparser.fmtver"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::warnings_since"
+status = "adapted"
+python = "BDFParserWarning via the warnings module (RawFont.warnings_since)"
+python_test = "crates/fontpixel-py/tests/test_compat.py::test_parse_warnings_are_bdfparser_warnings"
+reason = "the binding re-emits new warning-level entries through Python's warnings module after each call"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::props"
@@ -502,10 +591,9 @@ python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_svg"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::svg::fmtnum"
-status = "adapted"
+status = "bound"
 python = "fontpixel.compat.bdfparser.bitmap.fmtnum"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_defaultglyphname_and_fmtnum"
-reason = "-0.0 is normalized to 0.0 first (bdfparser writes '0'; the Rust function writes '-0')"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::ttf"

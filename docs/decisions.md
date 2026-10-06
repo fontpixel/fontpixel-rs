@@ -1692,3 +1692,60 @@ private text adapters duplicated core serde derives, and `TaskRequest` had no
   the selection expression string).
 - `TaskRequest::Vectorize` runs exactly like `Convert` and reports
   `vectorize`; TOML tasks with `kind = "vectorize"` use it.
+
+## 2026-10-06 — bdfparser compatibility: editors, messages and the TrueType memory admission
+
+**Context:** Running the unmodified bdfparser 3.0 suite on
+`fontpixel.compat.bdfparser` left 25 failures (plus 5 of the 10 slow tests).
+Seventeen came from the Rust compatibility layer: no header or unencoded-slot
+editor (the binding copied the native model out and rebuilt it, detaching
+glyph handles and resetting the warning report), a warning on every
+`glyphbycp` miss used for internal lookups, behaviour gaps (a lone global
+`dwx0`/`swx0` header, float property quoting, negative PCF boxes, a second
+handle detaching after another handle moved the glyph, `cp()` of a null
+codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
+4M-point cap in the round-dot TrueType writer.
+
+**Choices:**
+- `compat::bdfparser::Font` edits in place: `set_headers`/`set_header`/
+  `remove_header` (a pair keyword keeps a lone component, the other reads as
+  None), `unencoded_handle(s)`/`unencoded_altcode`/`set_unencoded_altcode`/
+  `set_unencoded_meta`/`remove_unencoded`, public `prepare_meta` and
+  `put_with_alt`, and the non-warning `lookup`. A codepoint move records
+  `(old id, generation) -> (new id, generation)`, so every handle on the moved
+  glyph follows it (bdfparser shares one list); a glyph displaced at the
+  destination still detaches its handles.
+- Drawing and PCF use bdfparser's global rules: spacing uses `dwx0` if set,
+  else `dwy0` (`dwx1`/`dwy1` vertically); the PCF writer uses an integer
+  `dwx0`/`swx0` for glyphs without their own. One narrow difference remains:
+  the projection cannot tell an absent pair component from an explicit None,
+  so `headers = {'dwx0': None, 'dwy0': 4}` draws with 4 where bdfparser uses
+  no global spacing.
+- Warnings and exception texts are produced in Rust with bdfparser's wording
+  (glyphbycp miss, unencodable `glyph()`, unknown target charset, missing BDF
+  headers, gzip, line limit, hex rows, TrueType reader/writer). The line-limit
+  check is bdfparser's line simulation (each glyph costs its cell width plus
+  its spacing offset, summed per line; a glyph that does not fit an empty line
+  fails) and runs before the native layout, which applies the same rule; the native renderer's own message is
+  unchanged. `_pack`'s message reproduces the values of the failing pack call
+  and CPython 3.10's `struct.error` text.
+- The round-dot TrueType writer no longer has a fixed point count. Each glyph's
+  outline points (`size_of::<Point>()` bytes each) are admitted on a ledger of
+  `ResourceLimits::default().max_total_bytes` before allocation, encoded
+  immediately into exactly-sized `glyf` bytes (also admitted first) and
+  released. The assembled `glyf` table, the other tables and the sfnt output
+  are charged to the same ledger, and the per-table cap for this writer is that
+  allowance. A font is written when its real retained memory fits: full
+  unifont with circles keeps ~97 MB of `glyf` and ~103 MB of output (29.3M
+  points never live at once); HanWangYanKai-26 ~66 MB.
+- Drawing uses the same principle: bdfparser has no image cap, so the compat
+  `drawcps`/`draw`/`drawall` admit the result by memory instead of the native
+  16,777,216-pixel cap. A result of `p` pixels needs the packed render
+  (`p / 8` plus one byte per row) and its 8-bit copy (`p` bytes) at once; the
+  renderer checks `max_pixels = max_total_bytes * 8 / 10` and
+  `max_bytes = max_total_bytes` before allocating either (Tong SC
+  `drawall()`: 22.3 Mpx, ~25 MB). The native API keeps its own limits.
+- The model prepared for drawing (SPEC spacing in the glyph advances, global
+  spacing and the resolved charset) is cached in the font state and dropped by
+  every model edit: all edits go through `State::core_mut`, which clears it.
+  A draw then costs the layout of its text, not a copy of the font.

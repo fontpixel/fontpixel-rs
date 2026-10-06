@@ -10,7 +10,7 @@ mod font;
 mod glyph;
 mod projection;
 pub use bitmap::Bitmap;
-pub use font::{Converter, CreateOptions, Font};
+pub use font::{Converter, CreateOptions, Font, fmtver};
 pub use glyph::{Glyph, META_TITLES, defaultglyphname};
 pub use projection::Meta;
 

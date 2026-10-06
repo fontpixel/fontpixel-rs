@@ -10,6 +10,8 @@ use crate::{
 mod packed;
 pub mod path;
 mod spec;
+#[cfg(feature = "compat-bdfparser")]
+pub(crate) use spec::spec_contours_with_budget;
 /// TrueType point `(x, y, on_curve)` in design units, with y upward.
 pub type Point = (f64, f64, bool);
 /// Closed contour, without a duplicated closing point.

@@ -66,13 +66,60 @@ impl Bitmap {
     }
     /// Materialize the compatibility row strings.
     pub fn bindata(&self) -> Vec<String> {
-        (0..self.height())
-            .map(|y| {
-                (0..self.width())
-                    .map(|x| char::from(b'0' + self.raster.get_pixel(x, y).unwrap_or(0)))
-                    .collect()
-            })
+        self.label_rows()
+            .map(|r| r.iter().map(|v| char::from(b'0' + v)).collect())
             .collect()
+    }
+    /// Pixel labels (0, 1, 2) row by row, top to bottom, without copying.
+    pub fn label_rows(&self) -> impl Iterator<Item = &[u8]> {
+        let w = self.width() as usize;
+        let data = self.raster.as_bytes();
+        (0..self.height() as usize).map(move |y| &data[y * w..(y + 1) * w])
+    }
+    /// bdfparser `todata(4)`/`todata(5)` row values: lower-case hex digits of
+    /// `int(row, 2)` zero-filled to `ceil(width / 4)` (empty for an empty row),
+    /// or the row as a big-endian bit string's decimal digits. A row with a
+    /// label 2 is not binary.
+    pub fn row_number(row: &[u8], hex: bool) -> Result<String> {
+        if row.contains(&2) {
+            return Err(invalid("invalid literal for int() with base 2"));
+        }
+        if hex {
+            let pad = row.len().div_ceil(4) * 4 - row.len();
+            return Ok(std::iter::repeat_n(&0, pad)
+                .chain(row)
+                .copied()
+                .collect::<Vec<_>>()
+                .chunks(4)
+                .map(|b| {
+                    let v = b.iter().fold(0u32, |a, c| a * 2 + u32::from(*c));
+                    char::from_digit(v, 16).unwrap_or('0')
+                })
+                .collect());
+        }
+        if row.len() <= 128 {
+            let v = row.iter().fold(0u128, |a, c| a << 1 | u128::from(*c));
+            return Ok(v.to_string());
+        }
+        // Arbitrary width: repeated doubling of base-10^18 limbs.
+        const BASE: u64 = 1_000_000_000_000_000_000;
+        let mut limbs = vec![0u64];
+        for &bit in row {
+            let mut carry = u64::from(bit);
+            for l in &mut limbs {
+                let x = *l * 2 + carry;
+                *l = x % BASE;
+                carry = x / BASE;
+            }
+            if carry != 0 {
+                limbs.push(carry);
+            }
+        }
+        let mut out = limbs.last().copied().unwrap_or(0).to_string();
+        for l in limbs.iter().rev().skip(1) {
+            out.push_str(&format!("{l:018}"));
+        }
+        Ok(out)
     }
     /// Normalize Python's zero-height shape after a native operation.
     pub(crate) fn from_raster(raster: Raster<Gray8>) -> Self {
@@ -262,45 +309,13 @@ impl Bitmap {
             ),
             4 | 5 => {
                 let mut out = Vec::new();
-                for row in rows {
-                    if row.contains('2') {
-                        return Err(invalid("invalid literal for int() with base 2"));
-                    }
-                    if datatype == 4 {
-                        let n = row.len().div_ceil(4);
-                        let padded = format!("{}{}", "0".repeat(n * 4 - row.len()), row);
-                        let s = padded
-                            .as_bytes()
-                            .chunks(4)
-                            .map(|b| {
-                                let v = b.iter().fold(0, |a, c| a * 2 + c - b'0');
-                                char::from_digit(v as u32, 16).unwrap_or('0')
-                            })
-                            .collect::<String>();
-                        out.push(json!(s));
+                for row in self.label_rows() {
+                    let s = Self::row_number(row, datatype == 4)?;
+                    out.push(if datatype == 4 {
+                        json!(s)
                     } else {
-                        let mut digits = vec![0u8];
-                        for bit in row.bytes() {
-                            let mut carry = bit - b'0';
-                            for d in &mut digits {
-                                let x = *d * 2 + carry;
-                                *d = x % 10;
-                                carry = x / 10;
-                            }
-                            if carry != 0 {
-                                digits.push(carry);
-                            }
-                        }
-                        let s = digits
-                            .iter()
-                            .rev()
-                            .map(|d| char::from(b'0' + *d))
-                            .collect::<String>();
-                        out.push(
-                            serde_json::from_str::<Value>(&s)
-                                .map_err(|e| invalid(&e.to_string()))?,
-                        );
-                    }
+                        serde_json::from_str::<Value>(&s).map_err(|e| invalid(&e.to_string()))?
+                    });
                 }
                 Value::Array(out)
             }

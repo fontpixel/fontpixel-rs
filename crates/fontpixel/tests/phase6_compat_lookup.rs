@@ -98,7 +98,21 @@ fn assert_scan_matches(
     let expected = scan_render(font, cps, kw, missing);
     match (actual, expected) {
         (Ok(actual), Ok(expected)) => assert_eq!(actual, expected, "cps={cps:?}, kw={kw:?}"),
-        (Err(actual), Err(expected)) => assert_eq!(actual.to_string(), expected.to_string()),
+        (Err(actual), Err(expected)) => {
+            let (actual, expected) = (actual.to_string(), expected.to_string());
+            if let Some(rest) = expected.strip_prefix("line_limit (") {
+                // The compatibility layer reports the same check with bdfparser's text.
+                let limit = rest.split(')').next().unwrap();
+                let width = expected.rsplit("width ").next().unwrap();
+                assert!(
+                    actual.starts_with(&format!("`linelimit` ({limit}) is too small"))
+                        && actual.ends_with(&format!("width: {width})")),
+                    "{actual} versus {expected}"
+                );
+            } else {
+                assert_eq!(actual, expected);
+            }
+        }
         (actual, expected) => panic!("lookup mismatch: {actual:?} versus {expected:?}, kw={kw:?}"),
     }
 }
