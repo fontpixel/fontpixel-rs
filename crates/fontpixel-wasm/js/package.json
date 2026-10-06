@@ -1,0 +1,25 @@
+{
+  "name": "fontpixel",
+  "version": "0.1.0",
+  "description": "fontpixel bitmap-font toolkit for JavaScript (WebAssembly): the complete native API plus a bdfparser-js compatible layer",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./fontpixel_wasm_bg.wasm": "./fontpixel_wasm_bg.wasm",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./index.js",
+    "./guard.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -11,3 +11,8 @@
 # maturin develop places the built extension next to the Python sources
 crates/fontpixel-py/python/fontpixel/*.so
 crates/fontpixel-py/python/fontpixel/*.pyd
+
+# WASM package builds and local JS tooling (scripts/build_wasm.sh writes under
+# $CARGO_TARGET_DIR/wasm-pkg by default; wasm-pack writes pkg/ when run by hand)
+crates/fontpixel-wasm/pkg/
+node_modules/
