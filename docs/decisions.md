@@ -1752,6 +1752,19 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
 
 ## 2026-10-06 — wasm32 readiness of core and ops
 
+> **Correction (2026-10-06, later the same day; decision pending):** the claim
+> below that wasm WOFF2 output equals native is **wrong for real wasm runs**.
+> The identity tests compared brotli's threaded and single-threaded spawners on
+> x86_64 only. Units J4 and J5 found in Node that wasm and native WOFF2 bytes
+> differ for large inputs even with one thread (Tong SC CFF → WOFF2: native
+> 890,304 B, wasm 890,000 B; both decode to the same font): brotli 9.0.0 calls
+> `f32::log2` from the platform math library, and native Linux and wasm differ
+> in the last bit on 88,636 of 16.7M inputs. Enabling brotli's `portable-float`
+> feature made native and wasm identical in an uncommitted experiment, but it
+> also changes native WOFF2 bytes (Tong SC 892,576 B), so the phase-6 frozen
+> references would need rebuilding. Waiting for the owner's decision; see
+> TODO.md "第 8 阶段暂停记录".
+
 **Context:** Phase 8 binds the full native API with wasm-bindgen
 (`wasm32-unknown-unknown`). That target compiles `std` but has no threads,
 clock, filesystem or randomness: `std::thread::spawn` and
