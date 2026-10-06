@@ -911,6 +911,8 @@ class Font:
                 if 'hexdata' in fields and fields['hexdata'] is not None:
                     fields['hexdata'] = list(fields['hexdata'])
                 self._raw.addglyph(fields, replace)
+            if replace:
+                self._short.discard(meta.get('codepoint'))
         finally:
             self._changed()
         return self
@@ -956,6 +958,7 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#newglyph
         """
 
+        self._short.discard(cp)
         try:
             raw = self._raw.newglyph(cp, bitmap, mode, name, dwidth)
         finally:

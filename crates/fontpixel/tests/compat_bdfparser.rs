@@ -564,3 +564,29 @@ fn line_limit_check_accumulates_like_bdfparser() {
         "`linelimit` (10) is too small the line can't even contain one glyph: \"B\" (codepoint 66, width: 6)"
     );
 }
+
+#[test]
+fn header_writes_keep_metrics_of_other_sources() {
+    let mut core = fontpixel::Font::default();
+    core.metrics.bounds = Some(fontpixel::bitmap::Bounds::new(4, 2, 0, 0));
+    let mut g = fontpixel::Glyph::new("#...\n.#..".parse::<fontpixel::Bitmap>().unwrap());
+    g.codepoints = vec![fontpixel::model::Codepoint::Unicode(65)];
+    core.add_glyph(g).unwrap();
+    let mut f = Font::from_core(core).unwrap();
+    let kw = serde_json::Map::new();
+    let before = f.drawcps(&[65], &kw).unwrap();
+    f.set_header("fontname", json!("x"));
+    assert_eq!(f.drawcps(&[65], &kw).unwrap(), before);
+    assert_eq!(f.core().metrics.bounds.unwrap().width, 4);
+    // a header-sourced box follows the headers
+    f.set_header("fbbx", json!(6));
+    f.set_header("fbby", json!(2));
+    f.set_header("fbbxoff", json!(0));
+    f.set_header("fbbyoff", json!(0));
+    assert_eq!(f.core().metrics.bounds.unwrap().width, 6);
+    f.remove_header("fbbx");
+    f.remove_header("fbby");
+    f.remove_header("fbbxoff");
+    f.remove_header("fbbyoff");
+    assert!(f.core().metrics.bounds.is_none());
+}

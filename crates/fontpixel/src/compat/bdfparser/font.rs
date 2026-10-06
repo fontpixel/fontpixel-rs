@@ -447,6 +447,13 @@ impl Font {
     pub fn set_headers(&mut self, headers: &Map<String, V>) -> &mut Self {
         let mut s = self.state.borrow_mut();
         let core = &mut s.core;
+        let had = |k: &str| core.headers.get(k).is_some();
+        let old = (
+            had("SIZE"),
+            had("FONTBOUNDINGBOX"),
+            had("METRICSSET"),
+            x11::METRICS.map(had),
+        );
         core.headers = Default::default();
         let mut emitted = BTreeSet::new();
         for k in headers.keys() {
@@ -468,13 +475,24 @@ impl Font {
             };
             core.headers.push(Property::new(name, property(&value)));
         }
-        // Header-derived native metrics are recomputed from the new headers.
+        // Metrics that came from a header keyword follow the new headers; those
+        // from another source (a native model without that keyword) are kept.
         let m = &mut core.metrics;
-        m.point_size = None;
-        m.resolution = None;
-        m.bounds = None;
-        m.metrics_set = None;
-        m.glyph_defaults = Default::default();
+        if old.0 {
+            m.point_size = None;
+            m.resolution = None;
+        }
+        if old.1 {
+            m.bounds = None;
+        }
+        if old.2 {
+            m.metrics_set = None;
+        }
+        for (key, had) in x11::METRICS.into_iter().zip(old.3) {
+            if had {
+                x11::clear_vector(&mut m.glyph_defaults, key);
+            }
+        }
         x11::project(core);
         drop(s);
         self
