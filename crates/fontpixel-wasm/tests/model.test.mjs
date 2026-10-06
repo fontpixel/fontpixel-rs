@@ -75,11 +75,12 @@ test('plain-data round trip keeps a property value beyond 2^53', () => {
 });
 
 test('model read in WASM equals the native CLI read of the same file', { skip: !HAS_CLI && 'native CLI not found' }, () => {
-  // Round trip through the CLI: BDF -> YAFF (native), then read both in WASM.
-  const result = cliFiles({ 'in.bdf': sample(SPLEEN) }, ['convert', 'in.bdf', '-o', 'out.yaff']);
+  // Round trip through the CLI: BDF -> PCF (native; PCF is in every
+  // profile), then read both in WASM.
+  const result = cliFiles({ 'in.bdf': sample(SPLEEN) }, ['convert', 'in.bdf', '-o', 'out.pcf']);
   assert.equal(result.code, 0, result.stderr);
-  const viaCli = fp.read(result.files['out.yaff'], { name: 'out.yaff' });
-  assert.equal(viaCli.format, 'yaff');
+  const viaCli = fp.read(result.files['out.pcf'], { name: 'out.pcf' });
+  assert.equal(viaCli.format, 'pcf');
   const direct = fp.read(sample(SPLEEN));
   const glyphsOf = (set) => withoutSource(set.font(0).toDict()).glyphs.map((g) => g && [g.codepoints, g.bitmap]);
   assert.deepEqual(glyphsOf(viaCli.fonts), glyphsOf(direct.fonts));
