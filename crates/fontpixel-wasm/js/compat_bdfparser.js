@@ -128,6 +128,69 @@ export class BDFParseError extends Error {
   }
 }
 
+// The Rust core words parser diagnostics as the Python bdfparser does, quoting
+// values with Python's `repr`; bdfparser-js quotes the same values with
+// `JSON.stringify` (numbers and counts) or verbatim between single quotes
+// (keywords and lines). `jsText` rewrites those messages to bdfparser-js's.
+const PY_ESCAPES = { n: '\n', r: '\r', t: '\t', '\\': '\\', "'": "'", '"': '"', a: '\x07', b: '\b', f: '\f', v: '\v', 0: '\0' };
+
+/** The Python `repr` string literal at the start of `s`: `[value, rest]`, or null. */
+const parsePyRepr = (s) => {
+  const q = s[0];
+  if (q !== "'" && q !== '"') return null;
+  let out = '';
+  for (let i = 1; i < s.length; i++) {
+    const c = s[i];
+    if (c === q) return [out, s.slice(i + 1)];
+    if (c !== '\\') {
+      out += c;
+      continue;
+    }
+    const n = s[++i];
+    if (n === 'x' || n === 'u' || n === 'U') {
+      const len = n === 'x' ? 2 : n === 'u' ? 4 : 8;
+      out += String.fromCodePoint(parseInt(s.slice(i + 1, i + 1 + len), 16));
+      i += len;
+    } else {
+      out += PY_ESCAPES[n] ?? '\\' + n;
+    }
+  }
+  return null;
+};
+
+const JSON_QUOTED =
+  /^((?:line \d+: )?(?:malformed number in \S+|malformed version number in STARTFONT|\S+ needs \d+ numbers?, got|malformed property count) )(.*)$/s;
+const RAW_QUOTED = [
+  [/^(line \d+: unknown header keyword )(.*)$/s, ' ignored'],
+  [/^(line \d+: unexpected line )(.*)$/s, ' ignored'],
+  [/^(line \d+: property )(.*)$/s, ' treated as a COMMENT line'],
+];
+
+/** A diagnostic of the Rust core in bdfparser-js's wording. */
+const jsText = (msg) => {
+  let m = JSON_QUOTED.exec(msg);
+  if (m !== null) {
+    const r = parsePyRepr(m[2]);
+    return r !== null && r[1] === '' ? m[1] + JSON.stringify(r[0]) : msg;
+  }
+  for (const [re, suffix] of RAW_QUOTED) {
+    m = re.exec(msg);
+    if (m !== null) {
+      const r = parsePyRepr(m[2]);
+      return r !== null && r[1] === suffix ? `${m[1]}'${r[0]}'${suffix}` : msg;
+    }
+  }
+  m = /^(line \d+: unknown keyword )(.*)$/s.exec(msg);
+  if (m !== null) {
+    const a = parsePyRepr(m[2]);
+    if (a !== null && a[1].startsWith(' in glyph ')) {
+      const b = parsePyRepr(a[1].slice(' in glyph '.length));
+      if (b !== null && b[1] === ' ignored') return `${m[1]}'${a[0]}' in glyph '${b[0]}' ignored`;
+    }
+  }
+  return msg;
+};
+
 // Messages of the Rust core that bdfparser-js raises as RangeError.
 const RANGE_PATTERNS = [
   /^Bitmap\.crop: negative/,
@@ -138,6 +201,7 @@ const RANGE_PATTERNS = [
   /^Invalid (ppu|dotsize|timestamp)/,
   /must not be negative$/,
   /^step must be/,
+  /^pixelsize must be a positive integer/,
 ];
 const TYPE_PATTERNS = [/must be an integer, not/, /expected a single character/, /^comment must be/];
 
@@ -155,7 +219,7 @@ const translate = (e) => {
   if (e.kind === 'BdfParse') {
     const line = typeof e.line === 'number' ? e.line : null;
     const prefix = `line ${line}: `;
-    out = new BDFParseError(e.message.startsWith(prefix) ? e.message.slice(prefix.length) : e.message, line);
+    out = new BDFParseError(jsText(e.message.startsWith(prefix) ? e.message.slice(prefix.length) : e.message), line);
   } else {
     const msg = e.message;
     const Class = RANGE_PATTERNS.some((p) => p.test(msg))
@@ -994,15 +1058,27 @@ export class Glyph {
 /* Font: plumbing                                                           */
 /* ------------------------------------------------------------------------ */
 
+// bdfparser-js warns about a glyph's missing bitmap rows once per stored hex
+// row list (the list is replaced whenever the glyph is edited)
+const PADDED_ROWS = / bitmap rows but its BBX height is \d+; padded with empty rows$/;
+
+/** Pass the warnings the Rust model collected since the last call to the handler. */
 const drain = (font) => {
   const st = font[S];
   const [messages, count] = st.raw.warningsSince(st.wcur);
   st.wcur = count;
-  for (const m of messages) warn(m);
+  for (const m of messages) {
+    if (PADDED_ROWS.test(m)) {
+      if (st.padded.has(m)) continue;
+      st.padded.add(m);
+    }
+    warn(jsText(m));
+  }
 };
 
 const changed = (font) => {
   font[S].rev++;
+  font[S].padded.clear();
   drain(font);
 };
 
@@ -1487,6 +1563,7 @@ export class Font {
       cache: null,
       short: new Set(),
       names: new Map(),
+      padded: new Set(),
       iconv: undefined,
       charset: null,
       char2cp: null,
@@ -1557,8 +1634,8 @@ export class Font {
   }
 
   load_string(text) {
-    let t = String(text);
-    if (t.startsWith('\uFEFF')) t = t.slice(1);
+    // the Rust loader skips one leading BOM, as bdfparser-js
+    const t = String(text);
     const raw = new RawFont();
     guard(() => raw.loadString(t));
     return setRaw(this, raw);
@@ -1581,12 +1658,9 @@ export class Font {
     if (magic === '\x00\x01\x00\x00' || magic === 'true') {
       return setRaw(this, readTtf(b, { pixelsize: options.pixelsize })[S].raw);
     }
-    let bytes = b;
-    if (bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf) {
-      bytes = bytes.subarray(3);
-    }
+    // BDF text (UTF-8, invalid sequences replaced; one leading BOM skipped)
     const raw = new RawFont();
-    guard(() => raw.loadBytes(bytes, options.pixelsize ?? undefined));
+    guard(() => raw.loadBytes(b, options.pixelsize ?? undefined));
     return setRaw(this, raw);
   }
 
@@ -1864,7 +1938,27 @@ export class Font {
   // ----------------------------------------------------------------- output
 
   tobdf() {
-    return call(this, (raw) => raw.tobdf());
+    const out = call(this, (raw) => raw.tobdf());
+    // bdfparser-js writes a non-integral numeric property value unquoted
+    // (`fmtnum`); the shared writer quotes it, as the Python bdfparser does
+    const floats = new Map();
+    for (const [k, v] of Object.entries(propsData(this))) {
+      if (k !== 'comment' && typeof v === 'number' && !Number.isInteger(v)) floats.set(propName(this, k), v);
+    }
+    if (floats.size === 0) return out;
+    const lines = out.split('\n');
+    const start = lines.findIndex((l) => l.startsWith('STARTPROPERTIES '));
+    const end = lines.indexOf('ENDPROPERTIES', start);
+    for (let i = start + 1; start >= 0 && i < end; i++) {
+      const sp = lines[i].indexOf(' "');
+      if (sp < 0 || !lines[i].endsWith('"')) continue;
+      const name = lines[i].slice(0, sp);
+      const v = floats.get(name);
+      if (v !== undefined && Number(lines[i].slice(sp + 2, -1)) === v) {
+        lines[i] = `${name} ${fmtnum(v)}`;
+      }
+    }
+    return lines.join('\n');
   }
 
   topcf(options) {
@@ -1961,9 +2055,33 @@ export function readPcf(data) {
     throw new Error('Not a PCF file (bad magic, expected "\\x01fcp")');
   }
   const raw = new RawFont();
-  guard(() => raw.loadBytes(u8));
+  guard(() => raw.loadBytes(knownPcfTables(u8)));
   return fontOf(raw);
 }
+
+const PCF_TABLE_TYPES = [1, 2, 4, 8, 16, 32, 64, 128, 256];
+
+/**
+ * The PCF data with directory entries of unknown table types removed:
+ * bdfparser-js reads only the nine PCF tables and ignores the others (the
+ * native decoder would keep them as provenance and check their ranges).
+ */
+const knownPcfTables = (u8) => {
+  if (u8.length < 8) return u8;
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const n = dv.getUint32(4, true);
+  if (n > 1024 || 8 + n * 16 > u8.length) return u8;
+  const keep = [];
+  for (let i = 0; i < n; i++) {
+    if (PCF_TABLE_TYPES.includes(dv.getUint32(8 + i * 16, true))) keep.push(i);
+  }
+  if (keep.length === n) return u8;
+  // table offsets are absolute and stay valid: the directory only shrinks
+  const out = u8.slice();
+  new DataView(out.buffer).setUint32(4, keep.length, true);
+  keep.forEach((i, j) => out.set(u8.subarray(8 + i * 16, 8 + i * 16 + 16), 8 + j * 16));
+  return out;
+};
 
 /** Read a PCF font, also gzip-compressed (`.pcf.gz`, decoded by the Rust loader). */
 export async function readPcfAsync(data) {
@@ -1972,7 +2090,15 @@ export async function readPcfAsync(data) {
     return readPcf(u8);
   }
   const raw = new RawFont();
-  guard(() => raw.loadBytes(u8));
+  try {
+    raw.loadBytes(u8);
+  } catch (e) {
+    const t = translate(e);
+    if (/^Malformed gzip data/.test(t.message)) {
+      throw new Error(`Cannot decompress gzip-compressed PCF: ${t.message}`, { cause: t });
+    }
+    throw t;
+  }
   return fontOf(raw);
 }
 
@@ -2032,6 +2158,15 @@ export const readTtf = (data, options = {}) => {
     }
   }
   const pixelsize = options.pixelsize ?? undefined;
+  if (pixelsize !== undefined && !(isInt(pixelsize) && pixelsize > 0)) {
+    // bdfparser-js checks `pixelsize` only for fonts without a BDFP table
+    try {
+      return fontOf(glue.bdfparserReadTtf(bytes, undefined));
+    } catch (e) {
+      if (!/pixelsize/.test(e?.message ?? '')) throw translate(e);
+      throw new RangeError(`pixelsize must be a positive integer, not ${String(pixelsize)}`);
+    }
+  }
   return fontOf(guard(() => glue.bdfparserReadTtf(bytes, pixelsize)));
 };
 

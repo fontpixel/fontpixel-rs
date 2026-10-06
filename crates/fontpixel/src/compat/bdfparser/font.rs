@@ -1044,15 +1044,17 @@ impl Font {
                 lines.push(format!("{k} {} {}", text(x), text(y)));
             }
         }
-        append_comments(&mut lines, h.get("comment"));
+        for c in comments(h.get("comment"))? {
+            lines.push(format!("COMMENT \"{c}\""));
+        }
         let (p, n) = props(self.state.borrow().core());
         let count = p.keys().filter(|k| *k != "comment").count();
-        if count > 0
-            || p.get("comment")
-                .is_some_and(|v| !v.is_null() && v != &json!([]) && v != &json!(""))
-        {
+        let prop_comments = comments(p.get("comment"))?;
+        if count > 0 || !prop_comments.is_empty() {
             lines.push(format!("STARTPROPERTIES {count}"));
-            append_comments(&mut lines, p.get("comment"));
+            for c in prop_comments {
+                lines.push(format!("COMMENT \"{c}\""));
+            }
             for (k, v) in &p {
                 if k == "comment" {
                     continue;
@@ -1443,12 +1445,22 @@ pub(super) fn matches_range(cp: i64, r: &V) -> bool {
         _ => false,
     }
 }
-fn append_comments(lines: &mut Vec<String>, v: Option<&V>) {
-    match v {
-        Some(V::Array(a)) => lines.extend(a.iter().map(|v| format!("COMMENT \"{}\"", text(v)))),
-        Some(V::String(s)) => lines.extend(s.chars().map(|c| format!("COMMENT \"{c}\""))),
-        _ => {}
-    }
+/// The COMMENT lines of a `comment` value, as bdfparser iterates it: a falsy
+/// value (None, false, 0, empty) is no comment, a list gives its items, a
+/// string its characters; any other value is not iterable (an error).
+fn comments(v: Option<&V>) -> Result<Vec<String>> {
+    Ok(match v {
+        None | Some(V::Null) | Some(V::Bool(false)) => vec![],
+        Some(V::Number(n)) if n.as_f64() == Some(0.0) => vec![],
+        Some(V::Array(a)) => a.iter().map(text).collect(),
+        Some(V::String(s)) => s.chars().map(String::from).collect(),
+        Some(V::Object(o)) if o.is_empty() => vec![],
+        Some(other) => {
+            return Err(invalid(&format!(
+                "comment must be a list of strings, not {other}"
+            )));
+        }
+    })
 }
 /// BDF version text: `2` -> `2.0`, `2.1` -> `2.1` (bdfparser `fmtver`).
 pub fn fmtver(v: f64) -> String {

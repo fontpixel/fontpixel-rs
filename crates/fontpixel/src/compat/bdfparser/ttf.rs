@@ -314,9 +314,14 @@ fn source_bitmap(m: &Meta) -> Result<Vec<String>> {
         let row = hex.get(y).and_then(V::as_str).unwrap_or("");
         let mut bits = String::new();
         for c in row.chars() {
-            let v = c
-                .to_digit(16)
-                .ok_or_else(|| invalid("non-hex character in glyph bitmap"))?;
+            let v = c.to_digit(16).ok_or_else(|| {
+                invalid(&format!(
+                    "Glyph \"{}\" (codepoint {}): bitmap row {y} {} contains a non-hex character",
+                    text(&m[0]),
+                    text(&m[1]),
+                    serde_json::to_string(row).unwrap_or_default()
+                ))
+            })?;
             bits.push_str(&format!("{v:04b}"));
         }
         bits.truncate(w as usize);
@@ -1348,16 +1353,28 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
         loca,
     };
     if let Some(raw) = tables.get("BDFP") {
+        // bdfparser's texts (`Malformed BDFP table: …`, as bdfparser-js words them)
+        let bdfp = |m: &str| invalid(&format!("Malformed BDFP table: {m}"));
         let obj: V = serde_json::from_slice(raw)
             .map_err(|e| invalid(&format!("Malformed BDFP table: {e}")))?;
-        let ppu = obj["ppu"]
+        let o = obj.as_object().ok_or_else(|| bdfp("bad structure"))?;
+        let (Some(ppu), Some(headers), Some(props), Some(propnames), Some(entries)) = (
+            o.get("ppu"),
+            o.get("headers"),
+            o.get("props"),
+            o.get("propnames"),
+            o.get("glyphs"),
+        ) else {
+            return Err(bdfp("missing key"));
+        };
+        let ppu = ppu
             .as_f64()
             .filter(|v| *v > 0.0 && v.is_finite())
-            .ok_or_else(|| invalid("Malformed BDFP ppu"))?;
-        let mut h = obj["headers"]
+            .ok_or_else(|| bdfp("bad ppu"))?;
+        let mut h = headers
             .as_object()
             .cloned()
-            .ok_or_else(|| invalid("Malformed BDFP headers"))?;
+            .ok_or_else(|| bdfp("bad structure"))?;
         if let Some(v) = h.get_mut("bdfversion") {
             *v = json!(
                 v.as_str()
@@ -1366,28 +1383,22 @@ pub fn read_ttf(data: &[u8], pixelsize: Option<i64>) -> Result<Font> {
                     .unwrap_or(2.1)
             );
         }
-        let p = obj["props"]
-            .as_object()
-            .ok_or_else(|| invalid("Malformed BDFP props"))?;
-        let names = obj["propnames"]
-            .as_object()
-            .ok_or_else(|| invalid("Malformed BDFP names"))?;
+        let p = props.as_object().ok_or_else(|| bdfp("bad structure"))?;
+        let entries = entries.as_array().ok_or_else(|| bdfp("bad structure"))?;
+        // a `propnames` value that is not an object names nothing (bdfparser-js)
+        let no_names = serde_json::Map::new();
+        let names = propnames.as_object().unwrap_or(&no_names);
         let mut f = Font::from_parts(&h, p, names)?;
-        let entries = obj["glyphs"]
-            .as_array()
-            .ok_or_else(|| invalid("Malformed BDFP glyphs"))?;
         for e in entries {
             let e = e
                 .as_array()
                 .filter(|e| e.len() == 3 || e.len() == 18)
-                .ok_or_else(|| invalid("Malformed BDFP glyph entry"))?;
+                .ok_or_else(|| bdfp("bad glyph entry"))?;
             let gid = e[0]
                 .as_u64()
                 .filter(|v| *v > 0 && *v < n as u64)
-                .ok_or_else(|| invalid("Malformed BDFP gid"))? as usize;
-            let cp = e[1]
-                .as_i64()
-                .ok_or_else(|| invalid("Malformed BDFP encoding"))?;
+                .ok_or_else(|| bdfp("bad glyph entry"))? as usize;
+            let cp = e[1].as_i64().ok_or_else(|| bdfp("bad glyph entry"))?;
             let cs = gr.contours(gid, 0, &mut budget)?;
             let (mut m, alt) = if e.len() == 18 {
                 let mut m = raster_meta(
