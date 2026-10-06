@@ -51,12 +51,14 @@ class Glyph:
         self.font = font
         known = {k: v for k, v in self.meta.items() if k in META_TITLES}
         self._g = _n.RawGlyph(known, _font_of(font))
+        self._epoch = getattr(font, '_epoch', 0)
 
     @classmethod
     def _wrap(cls, raw: Any, font: Font | None, extra: Mapping[str, Any] | None = None) -> Glyph:
         g = cls.__new__(cls)
         g.font = font
         g._g = raw
+        g._epoch = getattr(font, '_epoch', 0)
         g.meta = dict(extra) if extra else {}
         g._pull()
         return g
@@ -92,7 +94,8 @@ class Glyph:
     @property
     def _attached(self) -> bool:
         """Whether this handle still writes through to its font's slot."""
-        return self._g.is_attached()
+        # a font whose model was rebuilt (header edits, load_*) detaches old handles
+        return self._g.is_attached() and self._epoch == getattr(self.font, '_epoch', 0)
 
     @_attached.setter
     def _attached(self, value: bool) -> None:

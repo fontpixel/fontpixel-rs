@@ -58,9 +58,12 @@ def write_ttf(
     :param timestamp: Unix seconds for `head.created` / `head.modified`.
     """
 
+    from .font import Font
+
     opts = _ttf_options(
         shape=shape, dotsize=dotsize, ppu=ppu, metadata=metadata, timestamp=timestamp
     )
+    font = Font._coerce(font)
     try:
         return _n.write_ttf(font._raw, opts)
     finally:
@@ -76,4 +79,6 @@ def read_ttf(data: bytes | bytearray | memoryview, pixelsize: int | None = None)
 
     from .font import Font
 
+    if pixelsize is not None and (isinstance(pixelsize, bool) or not isinstance(pixelsize, int)):
+        raise ValueError(f'pixelsize must be a positive integer, not {pixelsize!r}')
     return Font._from_raw(_n.read_ttf(bytes(data), pixelsize))

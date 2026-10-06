@@ -26,9 +26,11 @@ class PCFError(BDFParseError):
 
 def _order(value: Any, name: str) -> str:
     v = str(value).lower()
-    if v not in ('msb', 'lsb'):
-        raise ValueError(f"{name} must be 'msb' or 'lsb', got {value!r}")
-    return v
+    if v in ('msb', 'big', 'm'):
+        return 'msb'
+    if v in ('lsb', 'little', 'l'):
+        return 'lsb'
+    raise ValueError(f"{name} must be 'msb' or 'lsb', got {value!r}")
 
 
 def _pcf_options(
@@ -71,9 +73,12 @@ def write_pcf(
     4 (-u).
     """
 
+    from .font import Font
+
     opts = _pcf_options(
         byteorder=byteorder, bitorder=bitorder, glyphpad=glyphpad, scanunit=scanunit
     )
+    font = Font._coerce(font)
     try:
         return font._raw.topcf(opts)
     finally:

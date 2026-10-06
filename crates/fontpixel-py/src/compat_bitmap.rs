@@ -261,6 +261,33 @@ impl Bitmap {
         construct(cls, b)
     }
 
+    /// `a + b`: a new bitmap of `b` concatenated right of `a`, bottom-aligned
+    /// (`Bitmap::concatall`).
+    fn __add__(slf: &Bound<'_, Self>, other: &Bound<'_, PyAny>) -> PyResult<Py<PyAny>> {
+        let py = slf.py();
+        let Ok(other) = other.cast::<Bitmap>() else {
+            return Ok(py.NotImplemented());
+        };
+        let bs = [slf.borrow().inner.clone(), other.borrow().inner.clone()];
+        let b = done(bp::Bitmap::concatall(&bs, 1, 1, &[]))?;
+        construct(&slf.get_type(), b)
+    }
+
+    /// `a * n` or `a * (x, y)`: a new enlarged bitmap (`Bitmap::enlarge`).
+    fn __mul__(slf: &Bound<'_, Self>, mul: &Bound<'_, PyAny>) -> PyResult<Py<PyAny>> {
+        let py = slf.py();
+        let (x, y) = if let Ok(n) = mul.extract::<i64>() {
+            (n, n)
+        } else if let Ok(xy) = mul.extract::<(i64, i64)>() {
+            xy
+        } else {
+            return Ok(py.NotImplemented());
+        };
+        let mut b = slf.borrow().inner.clone();
+        done(b.enlarge(x, y).map(|_| ()))?;
+        construct(&slf.get_type(), b)
+    }
+
     /// Concatenate another bitmap in place (`Bitmap::concat`).
     #[pyo3(signature = (bitmap, direction=1, align=1, offset=0))]
     fn concat<'py>(

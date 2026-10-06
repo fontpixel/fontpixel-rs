@@ -17,6 +17,8 @@ import warnings
 from collections.abc import Callable, Iterable, Iterator, Mapping, MutableMapping
 from typing import Any, Union
 
+import fontpixel as _fp
+
 from ..._native import _bdfparser as _n
 from .bitmap import Bitmap
 from .encoding import canonical_charset, is_unicode_charset
@@ -77,6 +79,11 @@ class _HeadersView(MutableMapping):
 
     def copy(self) -> dict[str, Any]:
         return self._data()
+
+    def update(self, other: Any = (), /, **kwargs: Any) -> None:
+        d = self._data()
+        d.update(other, **kwargs)
+        self._font._set_headers(d)
 
 
 class _PropsView(MutableMapping):
@@ -141,10 +148,7 @@ class _GlyphsView(MutableMapping):
         self._font = font
 
     def __getitem__(self, cp: int) -> list:
-        if cp not in self._font._cpset():
-            raise KeyError(cp)
-        raw = self._font._raw.glyphbycp(cp)
-        return _MetaList(self._font, cp, raw.meta())
+        return self._font._meta(cp)
 
     def __contains__(self, cp: object) -> bool:
         return cp in self._font._cpset()
@@ -168,7 +172,7 @@ class _GlyphsView(MutableMapping):
         return self._font._raw.length()
 
     def items(self) -> list[tuple[int, list]]:  # type: ignore[override]
-        return [(cp, _MetaList(self._font, cp, m)) for cp, m in self._font._raw.model()['glyphs']]
+        return list(self._font._model()['items'])
 
     def values(self) -> list[list]:  # type: ignore[override]
         return [m for _, m in self.items()]
@@ -195,12 +199,12 @@ class _UnencodedView(list):
     `extend`, `clear` and `del` edit the font."""
 
     def __init__(self, font: Font) -> None:
-        super().__init__(
-            {'altcode': alt, 'meta': meta} for alt, meta in font._raw.model()['unencoded']
-        )
+        super().__init__(font._model()['unencoded'])
         self._font = font
 
-    def append(self, entry: Mapping[str, Any]) -> None:
+    def append(self, entry: Mapping[str, Any] | Iterable[Any]) -> None:
+        if not isinstance(entry, Mapping):  # a bare meta list (accepted by bdfparser writers)
+            entry = {'altcode': None, 'meta': list(entry)}
         meta = list(entry['meta'])
         fields = dict(zip(META_TITLES, meta, strict=False))
         fields['codepoint'] = -1
@@ -210,7 +214,9 @@ class _UnencodedView(list):
         if altcode is not None:
             n = len(raw.model()['unencoded'])
             raw.set_altcode(n - 1, altcode)
-        self._font._changed()
+            self._font._rebuilt()
+        else:
+            self._font._changed()
         super().append({'altcode': altcode, 'meta': meta})
 
     def extend(self, entries: Iterable[Mapping[str, Any]]) -> None:
@@ -219,7 +225,7 @@ class _UnencodedView(list):
 
     def clear(self) -> None:
         self._font._raw.remove_unencoded(None)
-        self._font._changed()
+        self._font._rebuilt()
         super().clear()
 
     def __delitem__(self, index: Any) -> None:
@@ -227,7 +233,7 @@ class _UnencodedView(list):
         indexes = range(n)[index] if isinstance(index, slice) else [range(n)[index]]
         for i in sorted(indexes, reverse=True):
             self._font._raw.remove_unencoded(i)
-        self._font._changed()
+        self._font._rebuilt()
         super().__delitem__(index)
 
 
@@ -250,7 +256,8 @@ class Font:
         self._raw = _n.RawFont()
         self._wcur = 0
         self._rev = 0
-        self._cache: tuple[int, list[int], frozenset[int]] | None = None
+        self._epoch = 0
+        self._cache: dict[str, Any] | None = None
         self._char2cp_override: Callable[[str], int | None] | None = None
         self._cp2char_override: Callable[[int], str | None] | None = None
         self._charset_override: str | None = None
@@ -290,11 +297,22 @@ class Font:
         self._rev += 1
         self._drain()
 
+    def _state(self) -> dict[str, Any]:
+        # projections of the native model, reused until the next edit through
+        # this wrapper (so repeated reads return the same list objects, as with
+        # bdfparser's stored lists)
+        st = self._cache
+        if st is None or st['rev'] != self._rev:
+            st = {'rev': self._rev, 'cps': None, 'metas': {}, 'items': None, 'unencoded': None}
+            self._cache = st
+        return st
+
     def _cps(self) -> tuple[list[int], frozenset[int]]:
-        if self._cache is None or self._cache[0] != self._rev:
+        st = self._state()
+        if st['cps'] is None:
             cps = self._raw.itercps(0, None)
-            self._cache = (self._rev, cps, frozenset(cps))
-        return self._cache[1], self._cache[2]
+            st['cps'] = (cps, frozenset(cps))
+        return st['cps']
 
     def _cplist(self) -> list[int]:
         return list(self._cps()[0])
@@ -302,8 +320,31 @@ class Font:
     def _cpset(self) -> frozenset[int]:
         return self._cps()[1]
 
+    def _meta(self, cp: int) -> list:
+        st = self._state()
+        m = st['metas'].get(cp)
+        if m is None:
+            if cp not in self._cpset():
+                raise KeyError(cp)
+            m = _MetaList(self, cp, self._raw.glyphbycp(cp).meta())
+            st['metas'][cp] = m
+        return m
+
+    def _model(self) -> dict[str, Any]:
+        st = self._state()
+        if st['items'] is None:
+            model = self._raw.model()
+            metas = st['metas']
+            st['items'] = [
+                (cp, metas.setdefault(cp, _MetaList(self, cp, m))) for cp, m in model['glyphs']
+            ]
+            st['unencoded'] = [{'altcode': alt, 'meta': m} for alt, m in model['unencoded']]
+            st['propnames'] = model['propnames']
+        return st
+
     def _set_raw(self, raw: Any) -> Font:
         self._raw = raw
+        self._epoch += 1
         self._wcur = 0
         if self._charset_override:
             raw.encoding(self._charset_override)
@@ -317,6 +358,12 @@ class Font:
 
     def _set_headers(self, headers: Mapping[str, Any]) -> None:
         self._raw.set_headers(dict(headers))
+        self._rebuilt()
+
+    def _rebuilt(self) -> None:
+        """After a native rebuild (`set_headers`, `set_altcode`, `remove_unencoded`):
+        the model has a new shared state, so glyph handles taken before detach."""
+        self._epoch += 1
         self._wcur = 0
         if self._charset_override:
             self._raw.encoding(self._charset_override)
@@ -376,7 +423,26 @@ class Font:
 
     @property
     def _propnames(self) -> dict[str, str]:
-        return dict(self._raw.model()['propnames'])
+        return dict(self._model()['propnames'])
+
+    @classmethod
+    def _coerce(cls, font: Any) -> Font:
+        """A compatibility `Font` for bdfparser's duck-typed writer input (any
+        object with `headers`, `props`, `glyphs` and optionally `unencoded`,
+        `_propnames`)."""
+        if isinstance(font, Font):
+            return font
+        out = cls()
+        out.headers = dict(font.headers)
+        names = dict(getattr(font, '_propnames', None) or {})
+        for k, v in dict(font.props).items():
+            out._raw.setprop(k if k == 'comment' else names.get(k, k.upper()), v)
+        view = out.glyphs
+        for cp, m in dict(font.glyphs).items():
+            view[cp] = list(m)
+        out.unencoded.extend(getattr(font, 'unencoded', None) or [])
+        out._changed()
+        return out
 
     # -- loading -------------------------------------------------------------
 
@@ -401,9 +467,15 @@ class Font:
 
         if isinstance(file_obj, io.TextIOBase) or not hasattr(file_obj, 'read'):
             return self.load_lines(file_obj)
-        raw = _n.RawFont()
-        raw.load_file_obj(file_obj)
-        return self._set_raw(raw)
+        if isinstance(file_obj, (io.RawIOBase, io.BufferedIOBase)):
+            # binary stream: bounded chunked reads in Rust
+            raw = _n.RawFont()
+            raw.load_file_obj(file_obj)
+            return self._set_raw(raw)
+        data = file_obj.read()
+        if isinstance(data, str):
+            return self.load_string(data)
+        return self.load_bytes(data)
 
     def load_string(self, text: str) -> Font:
         """
@@ -641,8 +713,24 @@ class Font:
         """
 
         raw = self._raw.glyphbycp(codepoint)
+        if raw is None:
+            # the Rust warning names only the code; bdfparser also names the character
+            self._skip_warnings()
+            self._warn(f'{self._describe_cp(codepoint)} does not exist in the font. Will return `None`')
+            return None
         self._drain()
-        return None if raw is None else Glyph._wrap(raw, self)
+        return Glyph._wrap(raw, self)
+
+    def _describe_cp(self, codepoint: int) -> str:
+        try:
+            ch = self.cp2char(codepoint)
+        except Exception:
+            ch = None
+        return f'Glyph "{ch}" (codepoint {codepoint})' if ch else f'Glyph (codepoint {codepoint})'
+
+    @staticmethod
+    def _warn(message: str) -> None:
+        warnings.warn(message, BDFParserWarning, stacklevel=3)
 
     def glyph(self, character: str) -> Glyph | None:
         """
@@ -653,11 +741,19 @@ class Font:
 
         if not isinstance(character, str) or len(character) != 1:
             raise TypeError(f'glyph() expected a single character, got {character!r}')
+        if self.char2cp(character) is None:
+            self._warn(
+                f'Character "{character}" cannot be encoded in the charset '
+                f'{self.charset!r}. Will return `None`'
+            )
+            return None
         try:
             raw = self._raw.glyph(character)
         finally:
-            self._drain()
-        return None if raw is None else Glyph._wrap(raw, self)
+            self._skip_warnings()
+        if raw is None:
+            return self.glyphbycp(self.char2cp(character))
+        return Glyph._wrap(raw, self)
 
     def lacksglyphs(self, string: str) -> list[str] | None:
         """
@@ -777,6 +873,7 @@ class Font:
                 self._raw.add_handle(glyph._g, replace)
                 if glyph._g.is_attached():
                     glyph.font = self
+                    glyph._epoch = self._epoch
                 glyph._pull()
             else:
                 fields = dict(glyph)
@@ -895,6 +992,9 @@ class Font:
         https://font.tomchen.org/bdfparser_py/font#charsetconvert
         """
 
+        key = canonical_charset(newcharset)
+        if not _fp.CharsetCodec.from_key(key, None).known:
+            self._warn(f"Unknown charset '{key}', characters are mapped to codepoints as Unicode")
         try:
             self._raw.charsetconvert(newcharset)
         finally:

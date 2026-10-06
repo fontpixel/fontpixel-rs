@@ -928,103 +928,6 @@ fn rasterize(
     done(bp::outline::rasterize(&contours, ppu, xmin, ymin, w, h)).map(Bitmap::wrap)
 }
 
-/// Charset helpers used by `fontpixel.compat.bdfparser.encoding` (they call
-/// `fontpixel::charset`, whose native bindings belong to the charset area).
-mod charset_helpers {
-    use super::*;
-    use fontpixel::charset as cs;
-
-    fn kind_name(k: cs::Kind) -> &'static str {
-        match k {
-            cs::Kind::Unicode => "unicode",
-            cs::Kind::SingleByte => "sbcs",
-            cs::Kind::DoubleByte => "dbcs",
-            cs::Kind::Gb18030 => "gb18030",
-        }
-    }
-
-    /// `sanitize_charset(registry, encoding)`.
-    #[pyfunction]
-    #[pyo3(signature = (registry=None, encoding=None))]
-    pub fn charset_sanitize(registry: Option<&str>, encoding: Option<&str>) -> String {
-        cs::sanitize_charset(registry, encoding)
-    }
-    /// `canonical_charset(name)`.
-    #[pyfunction]
-    pub fn charset_canonical(name: &str) -> String {
-        cs::canonical_charset(name)
-    }
-    /// `is_unicode_charset(key)`.
-    #[pyfunction]
-    pub fn charset_is_unicode(key: &str) -> bool {
-        cs::is_unicode_charset(key)
-    }
-    /// `charset_props(key)` → (registry, encoding).
-    #[pyfunction]
-    pub fn charset_props(key: &str) -> (String, String) {
-        cs::charset_props(key)
-    }
-    /// Table rows: (key, codec, kind, gl_capable, force_gl, available).
-    #[pyfunction]
-    pub fn charset_rows<'py>(py: Python<'py>) -> PyResult<Bound<'py, PyList>> {
-        let out = PyList::empty(py);
-        for e in cs::charset_table() {
-            let d = PyDict::new(py);
-            d.set_item("key", e.key)?;
-            d.set_item("codec", e.python_codec)?;
-            d.set_item("kind", kind_name(e.kind))?;
-            d.set_item("gl", e.gl_capable)?;
-            d.set_item("forcegl", e.force_gl)?;
-            d.set_item("props", e.properties)?;
-            d.set_item("aliases", e.aliases.to_vec())?;
-            d.set_item("available", e.available())?;
-            out.append(d)?;
-        }
-        Ok(out)
-    }
-
-    /// Codec handle (`fontpixel::charset::CharsetCodec`).
-    #[pyclass(name = "RawCodec", module = "fontpixel._native._bdfparser", frozen)]
-    pub struct RawCodec {
-        pub codec: cs::CharsetCodec,
-    }
-    #[pymethods]
-    impl RawCodec {
-        /// `CharsetCodec::from_key(key, gl)`.
-        #[new]
-        #[pyo3(signature = (key, gl=None))]
-        fn new(key: &str, gl: Option<bool>) -> PyResult<Self> {
-            cs::CharsetCodec::from_key(key, gl)
-                .map(|codec| Self { codec })
-                .map_err(|e| PyValueError::new_err(e.to_string()))
-        }
-        /// Canonical key.
-        fn name(&self) -> String {
-            self.codec.name().to_owned()
-        }
-        /// Whether the key is a known charset.
-        fn known(&self) -> bool {
-            self.codec.known()
-        }
-        /// Kind name: unicode, sbcs, dbcs or gb18030.
-        fn kind(&self) -> &'static str {
-            kind_name(self.codec.kind())
-        }
-        /// GL (7-bit) form.
-        fn gl(&self) -> bool {
-            self.codec.gl()
-        }
-        /// Unicode number → code.
-        fn unicode2cp(&self, n: u32) -> Option<u32> {
-            self.codec.unicode2cp(n)
-        }
-        /// Code → Unicode number (surrogates retained).
-        fn cp2unicode(&self, cp: u32) -> Option<u32> {
-            self.codec.cp2unicode(cp)
-        }
-    }
-}
-
 /// Register `fontpixel._native._bdfparser`.
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     let py = m.py();
@@ -1032,7 +935,6 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     sub.add_class::<Bitmap>()?;
     sub.add_class::<RawFont>()?;
     sub.add_class::<RawGlyph>()?;
-    sub.add_class::<charset_helpers::RawCodec>()?;
     sub.add("META_TITLES", PyTuple::new(py, bp::META_TITLES)?)?;
     sub.add_function(wrap_pyfunction!(defaultglyphname, &sub)?)?;
     sub.add_function(wrap_pyfunction!(fmtnum, &sub)?)?;
@@ -1040,11 +942,6 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     sub.add_function(wrap_pyfunction!(write_ttf, &sub)?)?;
     sub.add_function(wrap_pyfunction!(bitmap_contours, &sub)?)?;
     sub.add_function(wrap_pyfunction!(rasterize, &sub)?)?;
-    sub.add_function(wrap_pyfunction!(charset_helpers::charset_sanitize, &sub)?)?;
-    sub.add_function(wrap_pyfunction!(charset_helpers::charset_canonical, &sub)?)?;
-    sub.add_function(wrap_pyfunction!(charset_helpers::charset_is_unicode, &sub)?)?;
-    sub.add_function(wrap_pyfunction!(charset_helpers::charset_props, &sub)?)?;
-    sub.add_function(wrap_pyfunction!(charset_helpers::charset_rows, &sub)?)?;
     m.add_submodule(&sub)?;
     Ok(())
 }

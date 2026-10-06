@@ -36,6 +36,10 @@ def bitmap_contours(
     the bottom-left pixel position.
     """
 
+    if isinstance(dotsize, bool) or not isinstance(dotsize, (int, float)):
+        raise ValueError(f'dotsize must be a number in (0, 1.5], not {dotsize!r}')
+    if isinstance(ppu, bool) or not isinstance(ppu, int):
+        raise ValueError(f'ppu must be a positive integer, not {ppu!r}')
     return _n.bitmap_contours(list(bindata), shape, float(dotsize), ppu, xoff, yoff)
 
 

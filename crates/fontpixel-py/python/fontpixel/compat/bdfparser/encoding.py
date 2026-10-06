@@ -1,7 +1,8 @@
 """Charset support of the bdfparser-compatible API (SPEC-v3 §4, §11.1).
 
-Every function delegates to the Rust charset tables (`fontpixel::charset`,
-generated from CPython's codecs): canonical keys, `CHARSET_REGISTRY` /
+Every function delegates to the native charset API (`fontpixel.CharsetCodec`,
+`fontpixel.canonical_charset`, ... over `fontpixel::charset`, generated from
+CPython's codecs): canonical keys, `CHARSET_REGISTRY` /
 `CHARSET_ENCODING` folding, strict one-character conversions and GL forms.
 """
 
@@ -12,7 +13,7 @@ from dataclasses import dataclass, field
 from functools import cache
 from typing import Any
 
-from ..._native import _bdfparser as _n
+import fontpixel as _fp
 from .errors import BDFParserWarning
 
 __all__ = [
@@ -35,9 +36,17 @@ __all__ = [
 UNICODE_PREFIXES = ('utf16', 'utf32', 'ucs2', 'ucs4')
 
 
+_KINDS = {
+    'unicode': 'unicode',
+    'single_byte': 'sbcs',
+    'double_byte': 'dbcs',
+    'gb18030': 'gb18030',
+}
+
+
 @cache
 def _rows() -> dict[str, dict[str, Any]]:
-    return {r['key']: r for r in _n.charset_rows()}
+    return {r['key']: r for r in _fp.charset_table()}
 
 
 def sanitize_charset(registry: object = None, encoding: object = None) -> str:
@@ -48,28 +57,28 @@ def sanitize_charset(registry: object = None, encoding: object = None) -> str:
 
     reg = None if registry is None else str(registry)
     enc = None if encoding is None else str(encoding)
-    return _n.charset_sanitize(reg, enc)
+    return _fp.sanitize_charset(reg, enc)
 
 
 def is_unicode_charset(key: str) -> bool:
     """Whether a canonical key denotes Unicode identity (UTF prefixes included)."""
-    return _n.charset_is_unicode(key)
+    return _fp.is_unicode_charset(key)
 
 
 def codec_name(key: str) -> str | None:
     """CPython codec name of a known non-Unicode key (`None` otherwise)."""
     row = _rows().get(key)
-    return None if row is None else row['codec']
+    return None if row is None else row['python_codec']
 
 
 def canonical_charset(name: str) -> str:
     """Canonical key of any charset spelling (`'GB2312'`, `'Shift-JIS'`, ...)."""
-    return _n.charset_canonical(name)
+    return _fp.canonical_charset(name)
 
 
 def charset_props(key: str) -> tuple[str, str]:
     """`(CHARSET_REGISTRY, CHARSET_ENCODING)` written by `Font.charsetconvert`."""
-    return tuple(_n.charset_props(key))  # type: ignore[return-value]
+    return tuple(_fp.charset_props(key))  # type: ignore[return-value]
 
 
 def charset_table() -> dict[str, dict[str, Any]]:
@@ -81,11 +90,11 @@ def charset_table() -> dict[str, dict[str, Any]]:
 
     return {
         k: {
-            'codec': r['codec'],
-            'kind': r['kind'],
-            'gl': r['gl'],
-            'forcegl': r['forcegl'],
-            'props': tuple(r['props']),
+            'codec': r['python_codec'],
+            'kind': _KINDS[r['kind']],
+            'gl': r['gl_capable'],
+            'forcegl': r['force_gl'],
+            'props': tuple(r['properties']),
             'aliases': sorted(r['aliases']),
         }
         for k, r in _rows().items()
@@ -109,7 +118,7 @@ class CharsetCodec:
     def _native(self) -> Any:
         raw = self._raw
         if raw is None:
-            raw = _n.RawCodec(self.name if self.known else self.name, self.gl)
+            raw = _fp.CharsetCodec.from_key(self.name, self.gl)
             object.__setattr__(self, '_raw', raw)
         return raw
 
@@ -119,7 +128,7 @@ class CharsetCodec:
         if self.codec is None:
             return 'unicode'
         row = _rows().get(self.name)
-        return row['kind'] if row else 'dbcs'
+        return _KINDS[row['kind']] if row else 'dbcs'
 
     def char2cp(self, char: str) -> int | None:
         """Codepoint of a single character, `None` if not representable."""
@@ -147,14 +156,14 @@ def charset_codec(key: str, gl: bool | None = None) -> CharsetCodec:
     are always GL (`iso2022cn`); GL is ignored for charsets that are not 94x94.
     """
 
-    raw = _n.RawCodec(key, gl)
-    name = raw.name()
+    raw = _fp.CharsetCodec.from_key(key, gl)
+    name = raw.name
     row = _rows().get(name)
     codec = CharsetCodec(
         name,
-        None if raw.kind() == 'unicode' or not raw.known() else (row['codec'] if row else None),
-        raw.gl(),
-        raw.known(),
+        None if raw.kind == 'unicode' or not raw.known else (row['python_codec'] if row else None),
+        raw.gl,
+        raw.known,
     )
     object.__setattr__(codec, '_raw', raw)
     return codec
