@@ -1,0 +1,104 @@
+# WOFF1/WOFF2 containers (fontpixel::woff) — unit p3
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::woff"
+status = "bound"
+python = "fontpixel.woff"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff_defaults"
+
+[[rule]]
+pattern = "fontpixel::woff::Auxiliary"
+status = "adapted"
+python = "dict {major_version, minor_version, metadata, private_data}"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected); metadata/private_data are bytes or None"
+
+[[rule]]
+pattern = "fontpixel::woff::Decoded"
+status = "adapted"
+python = "dict {sfnt: bytes, auxiliary, report}"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::woff::Encoded"
+status = "adapted"
+python = "dict {bytes, report}"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::woff::Limits"
+status = "adapted"
+python = "dict; fontpixel.woff.defaults()['Limits']"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff_defaults"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::woff::woff1"
+status = "bound"
+python = "fontpixel.woff.woff1"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+
+[[rule]]
+pattern = "fontpixel::woff::woff1::Options"
+status = "adapted"
+python = "dict; fontpixel.woff.defaults()['woff1.Options']"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff_defaults"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::woff::woff1::decode"
+status = "bound"
+python = "fontpixel.woff.woff1.decode"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+
+[[rule]]
+pattern = "fontpixel::woff::woff1::encode"
+status = "bound"
+python = "fontpixel.woff.woff1.encode"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff1"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2"
+status = "bound"
+python = "fontpixel.woff.woff2"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::Options"
+status = "adapted"
+python = "dict; fontpixel.woff.defaults()['woff2.Options']"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff_defaults"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::brotli_encode::brotli_encoder_heap_bound"
+status = "bound"
+python = "fontpixel.woff.woff2.brotli_encoder_heap_bound"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::brotli_encode::brotli_encoder_proven_heap_bound"
+status = "bound"
+python = "fontpixel.woff.woff2.brotli_encoder_proven_heap_bound"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::decode"
+status = "bound"
+python = "fontpixel.woff.woff2.decode"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::encode"
+status = "bound"
+python = "fontpixel.woff.woff2.encode"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"
+
+[[rule]]
+pattern = "fontpixel::woff::woff2::encode_many"
+status = "bound"
+python = "fontpixel.woff.woff2.encode_many"
+python_test = "crates/fontpixel-py/tests/test_woff.py::test_woff2"

@@ -1,0 +1,223 @@
+# Regional variants and OpenType export (fontpixel::variants) — unit p3
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::variants"
+status = "bound"
+python = "fontpixel.variants"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+
+[[rule]]
+pattern = "fontpixel::variants::LanguageVariant"
+status = "adapted"
+python = "dict {language, scripts, font} (Variants.languages)"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected); fonts as Font handles in the property, font dicts in to_dict"
+
+[[rule]]
+pattern = "fontpixel::variants::Plan"
+status = "adapted"
+python = "dict {glyphs, cmap, gsub}"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::PreparedVariants"
+status = "adapted"
+python = "fontpixel.variants.PreparedVariants"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+reason = "immutable handle owning the plan and base metadata"
+
+[[rule]]
+pattern = "fontpixel::variants::PreparedVariants::encode"
+status = "bound"
+python = "fontpixel.variants.PreparedVariants.encode"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+
+[[rule]]
+pattern = "fontpixel::variants::PreparedVariants::encode_allowance"
+status = "bound"
+python = "fontpixel.variants.PreparedVariants.encode_allowance"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+
+[[rule]]
+pattern = "fontpixel::variants::PreparedVariants::plan"
+status = "bound"
+python = "fontpixel.variants.PreparedVariants.plan"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+
+[[rule]]
+pattern = "fontpixel::variants::PreparedVariants::retained_bytes"
+status = "bound"
+python = "fontpixel.variants.PreparedVariants.retained_bytes"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+
+[[rule]]
+pattern = "fontpixel::variants::ScriptVariant"
+status = "adapted"
+python = "dict {scripts, font} (Variants.scripts)"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants"
+status = "adapted"
+python = "fontpixel.variants.Variants"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+reason = "handle class owning the faces (Font handles or font dicts in); to_dict/from_dict give the serde form"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::add_language"
+status = "bound"
+python = "fontpixel.variants.Variants.add_language"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::encode_owned"
+status = "adapted"
+python = "fontpixel.variants.Variants.encode_owned"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+reason = "consumes the handle's model; later calls raise InvalidInputError"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::into_prepared"
+status = "adapted"
+python = "fontpixel.variants.Variants.into_prepared"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+reason = "consumes the handle's model; later calls raise InvalidInputError"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::new"
+status = "adapted"
+python = "fontpixel.variants.Variants(base)"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+reason = "Python constructor"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::plan"
+status = "bound"
+python = "fontpixel.variants.Variants.plan"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::prepare"
+status = "adapted"
+python = "fontpixel.variants.Variants.prepare"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_prepared"
+reason = "Rust borrows the model; the binding plans an owned copy (into_prepared) so the handle never dangles"
+
+[[rule]]
+pattern = "fontpixel::variants::Variants::retained_usage"
+status = "bound"
+python = "fontpixel.variants.Variants.retained_usage"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_model"
+
+[[rule]]
+pattern = "fontpixel::variants::export::DotReuse"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::export::Encoded"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected); bytes returned as bytes"
+
+[[rule]]
+pattern = "fontpixel::variants::export::Options"
+status = "adapted"
+python = "dict / str enum value; fontpixel.variants.defaults()"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::export::OutlineFlavor"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::export::encode"
+status = "bound"
+python = "fontpixel.variants.encode"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_cli_bytes"
+
+[[rule]]
+pattern = "fontpixel::variants::export::encode_single"
+status = "bound"
+python = "fontpixel.variants.encode_single"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+
+[[rule]]
+pattern = "fontpixel::variants::export::encode_single_owned"
+status = "adapted"
+python = "fontpixel.variants.encode_single_owned"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+reason = "the export owns a copy of the face (Python handles are not moved)"
+
+[[rule]]
+pattern = "fontpixel::variants::language_tag"
+status = "adapted"
+python = "fontpixel.variants.language_tag"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+reason = "tag returned as a 4-character str"
+
+[[rule]]
+pattern = "fontpixel::variants::metadata::DotGlyph"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::metadata::GaspPolicy"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::metadata::GlyphOrder"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::metadata::MetadataOptions"
+status = "adapted"
+python = "dict / str enum value; fontpixel.variants.defaults()"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::metadata::MetadataOptions::validate"
+status = "adapted"
+python = "fontpixel.variants.validate_metadata"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_errors_and_options"
+reason = "method on a plain-data value; module function"
+
+[[rule]]
+pattern = "fontpixel::variants::notdef::NotdefPolicy"
+status = "adapted"
+python = "dict / str enum value"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+reason = "plain-data dict through serde (Rust field names, unknown keys rejected)"
+
+[[rule]]
+pattern = "fontpixel::variants::notdef::NotdefPolicy::empty_metrics"
+status = "adapted"
+python = "fontpixel.variants.notdef_empty_metrics"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+reason = "method on a plain-data value; module function"
+
+[[rule]]
+pattern = "fontpixel::variants::script_tag"
+status = "adapted"
+python = "fontpixel.variants.script_tag"
+python_test = "crates/fontpixel-py/tests/test_variants.py::test_variants_single_and_tags"
+reason = "tag returned as a 4-character str"
