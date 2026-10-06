@@ -173,6 +173,42 @@ def test_glyph_bitmap_set_and_cell():
     g.validate()
 
 
+def test_glyph_metric_dicts():
+    g = glyph("##", 65)
+    m = g.metrics
+    assert m == {"bounds": {"width": 2, "height": 1, "x": 0, "y": 0}}
+    m.update(
+        advance={"x": 3, "y": 0},
+        scalable_advance={"x": 500, "y": 0},
+        abc={"a": 0, "b": 2, "c": 1},
+        left_bearing=0,
+        image_offset={"x": 1, "y": -1},
+    )
+    g.metrics = m
+    assert g.metrics == m
+    with pytest.raises(ValueError):
+        g.metrics = {**m, "abc": {"a": 0, "b": 2}}
+    with pytest.raises(ValueError):
+        g.metrics = {**m, "advance": {"x": 1, "y": 0, "z": 0}}
+    font = fp.Font([g])
+    fm = font.metrics
+    fm.update(
+        point_size={"numerator": 21, "denominator": 2},
+        resolution={"x": 75, "y": 75},
+        spacing="Monospaced",
+        ascent=7,
+        descent=1,
+    )
+    font.metrics = fm
+    assert font.metrics["point_size"] == {"numerator": 21, "denominator": 2}
+    assert font.metrics["spacing"] == "Monospaced"
+    with pytest.raises(ValueError, match="denominator must be nonzero"):
+        font.metrics = {**fm, "point_size": {"numerator": 1, "denominator": 0}}
+    with pytest.raises(ValueError):
+        font.metrics = {**fm, "spacing": "monospaced"}
+    assert fp.Font.from_dict(font.to_dict()) == font
+
+
 def test_font_metrics_names_charset():
     font = fp.Font([glyph("#\n#", 65), glyph(".#", 66)])
     font.update_bounds()

@@ -1,0 +1,420 @@
+# Bitmaps (fontpixel::bitmap) — unit p1
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::bitmap"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_buffers_and_rows"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap"
+status = "bound"
+python = "fontpixel.Bitmap"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_buffers_and_rows"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::new"
+status = "adapted"
+python = "fontpixel.Bitmap(width, height, depth)"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+reason = "Python constructor; depth selects Mono or Gray8"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::as_bytes"
+status = "bound"
+python = "fontpixel.Bitmap.as_bytes"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::stride"
+status = "bound"
+python = "fontpixel.Bitmap.stride"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::width"
+status = "bound"
+python = "fontpixel.Bitmap.width"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_zero_dimensions_are_explicit"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::height"
+status = "bound"
+python = "fontpixel.Bitmap.height"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_zero_dimensions_are_explicit"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::from_raw"
+status = "bound"
+python = "fontpixel.Bitmap.from_raw"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::with_limits"
+status = "bound"
+python = "fontpixel.Bitmap.with_limits"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::get_pixel"
+status = "bound"
+python = "fontpixel.Bitmap.get_pixel"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::set_pixel"
+status = "bound"
+python = "fontpixel.Bitmap.set_pixel"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::limits"
+status = "bound"
+python = "fontpixel.Bitmap.limits"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_limits"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::set_limits"
+status = "bound"
+python = "fontpixel.Bitmap.set_limits"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_limits"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::bbox"
+status = "bound"
+python = "fontpixel.Bitmap.bbox"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::bold"
+status = "bound"
+python = "fontpixel.Bitmap.bold"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::byte_pad"
+status = "bound"
+python = "fontpixel.Bitmap.byte_pad"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::crop"
+status = "bound"
+python = "fontpixel.Bitmap.crop"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::crop_bounds"
+status = "bound"
+python = "fontpixel.Bitmap.crop_bounds"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::enlarge"
+status = "bound"
+python = "fontpixel.Bitmap.enlarge"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::extend"
+status = "bound"
+python = "fontpixel.Bitmap.extend"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::flip_horizontal"
+status = "bound"
+python = "fontpixel.Bitmap.flip_horizontal"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::flip_vertical"
+status = "bound"
+python = "fontpixel.Bitmap.flip_vertical"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::glow"
+status = "bound"
+python = "fontpixel.Bitmap.glow"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::has_ink"
+status = "bound"
+python = "fontpixel.Bitmap.has_ink"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::italic"
+status = "bound"
+python = "fontpixel.Bitmap.italic"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::replace"
+status = "bound"
+python = "fontpixel.Bitmap.replace"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::replace_pattern"
+status = "bound"
+python = "fontpixel.Bitmap.replace_pattern"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::rotate"
+status = "bound"
+python = "fontpixel.Bitmap.rotate"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::shadow"
+status = "bound"
+python = "fontpixel.Bitmap.shadow"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::shift"
+status = "bound"
+python = "fontpixel.Bitmap.shift"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::trim"
+status = "bound"
+python = "fontpixel.Bitmap.trim"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::paste"
+status = "bound"
+python = "fontpixel.Bitmap.paste"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::composite"
+status = "bound"
+python = "fontpixel.Bitmap.composite"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_composite_matches_scalar_reference"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::composite_region"
+status = "bound"
+python = "fontpixel.Bitmap.composite_region"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_composite_region_paste_overlay"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::overlay"
+status = "bound"
+python = "fontpixel.Bitmap.overlay"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_composite_region_paste_overlay"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::concat"
+status = "bound"
+python = "fontpixel.Bitmap.concat"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_concat_directions_and_alignment"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::concat_all"
+status = "bound"
+python = "fontpixel.Bitmap.concat_all"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_concat_directions_and_alignment"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::from_text"
+status = "bound"
+python = "fontpixel.Bitmap.from_text"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_text"
+status = "bound"
+python = "fontpixel.Bitmap.to_text"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_palette_bytes"
+status = "bound"
+python = "fontpixel.Bitmap.to_palette_bytes"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::from_hex_rows"
+status = "bound"
+python = "fontpixel.Bitmap.from_hex_rows"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_hex_rows"
+status = "bound"
+python = "fontpixel.Bitmap.to_hex_rows"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_numeric_hex_rows"
+status = "bound"
+python = "fontpixel.Bitmap.to_numeric_hex_rows"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_row_values"
+status = "bound"
+python = "fontpixel.Bitmap.to_row_values"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_mono"
+status = "bound"
+python = "fontpixel.Bitmap.to_mono"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::invert"
+status = "bound"
+python = "fontpixel.Bitmap.invert"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::invert_with"
+status = "bound"
+python = "fontpixel.Bitmap.invert_with"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::negate"
+status = "bound"
+python = "fontpixel.Bitmap.negate"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_strings_palettes_hex_and_thresholds"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_gray8"
+status = "bound"
+python = "fontpixel.Bitmap.to_gray8"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_depth_specific_methods_and_conversions"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_gray8_palette"
+status = "bound"
+python = "fontpixel.Bitmap.to_gray8_palette"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_depth_specific_methods_and_conversions"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::from_bytes"
+status = "bound"
+python = "fontpixel.Bitmap.from_bytes"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bitmap::to_bytes"
+status = "bound"
+python = "fontpixel.Bitmap.to_bytes"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+
+[[rule]]
+pattern = "fontpixel::bitmap::BitmapLimits"
+status = "adapted"
+python = "dict (limits=)"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_limits"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bounds"
+status = "adapted"
+python = "dict {width, height, x, y}"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Bounds::new"
+status = "adapted"
+python = "dict {width, height, x, y}"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+reason = "constructor of the plain-data dict"
+
+[[rule]]
+pattern = "fontpixel::bitmap::CompositeMode"
+status = "adapted"
+python = "str ('over', 'replace', ...)"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_composite_matches_scalar_reference"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Gray8"
+status = "adapted"
+python = "fontpixel.Bitmap(depth='gray8')"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_depth_specific_methods_and_conversions"
+reason = "zero-sized pixel-format marker; selected by the depth argument"
+
+[[rule]]
+pattern = "fontpixel::bitmap::Mono"
+status = "adapted"
+python = "fontpixel.Bitmap(depth='mono')"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_depth_specific_methods_and_conversions"
+reason = "zero-sized pixel-format marker; selected by the depth argument"
+
+[[rule]]
+pattern = "fontpixel::bitmap::PixelFormat"
+status = "adapted"
+python = "fontpixel.Bitmap.depth"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+reason = "sealed trait; the depth property names the format"
+
+[[rule]]
+pattern = "fontpixel::bitmap::PixelFormat::MAX"
+status = "adapted"
+python = "fontpixel.Bitmap.max_value"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+reason = "associated constant exposed as a property of the bitmap"
+
+[[rule]]
+pattern = "fontpixel::bitmap::PixelFormat::PACKED"
+status = "adapted"
+python = "fontpixel.Bitmap.packed"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+reason = "associated constant exposed as a property of the bitmap"
+
+[[rule]]
+pattern = "fontpixel::bitmap::bytes::BitOrder"
+status = "adapted"
+python = "str 'msb' | 'lsb'"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::bitmap::bytes::ByteLayout"
+status = "adapted"
+python = "dict (layout=); fontpixel.default_byte_layout"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::bitmap::bytes::ByteOrder"
+status = "adapted"
+python = "str 'big' | 'little'"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::bitmap::bytes::RowOrder"
+status = "adapted"
+python = "str 'top-down' | 'bottom-up'"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_all_wire_layouts_and_known_vectors"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::bitmap::geometry::Alignment"
+status = "adapted"
+python = "str 'start' | 'end'"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_concat_directions_and_alignment"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::bitmap::geometry::Direction"
+status = "adapted"
+python = "str 'right' | 'left' | 'down' | 'up'"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_concat_directions_and_alignment"
+reason = "plain data: the serde string/tagged form of the enum"

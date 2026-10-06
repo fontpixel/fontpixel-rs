@@ -22,7 +22,8 @@ use pyo3::types::{PyDict, PyInt, PyString};
 /// Apply family/style/name/notice overrides to every strike as one
 /// transaction (`metadata::apply_names`). `overrides` is a `NameOverrides`
 /// dict (`family`, `style`, `full_name`, `postscript_name`, `version`,
-/// `copyright`, `license`); an empty dict changes nothing. Returns the report.
+/// `copyright`, `license`, `license_url`, `foundry`); an empty dict changes
+/// nothing. Returns the report.
 #[pyfunction]
 #[pyo3(signature = (font_set, overrides = None, limits = None))]
 fn apply_names<'py>(

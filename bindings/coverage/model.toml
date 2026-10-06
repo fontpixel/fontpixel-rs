@@ -1,0 +1,390 @@
+# Model types (fontpixel::model) — unit p1
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::model"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+
+[[rule]]
+pattern = "fontpixel::model::AbcWidths"
+status = "adapted"
+python = "fontpixel.Glyph.metrics['abc']"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::Codepoint"
+status = "bound"
+python = "fontpixel.Codepoint"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_codepoint_class"
+
+[[rule]]
+pattern = "fontpixel::model::Codepoint::*"
+status = "bound"
+python = "fontpixel.Codepoint.{name}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_codepoint_class"
+
+[[rule]]
+pattern = "fontpixel::model::Font"
+status = "bound"
+python = "fontpixel.Font"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::from_glyphs"
+status = "adapted"
+python = "fontpixel.Font(glyphs)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+reason = "the Python constructor takes the glyph iterable"
+
+[[rule]]
+pattern = "fontpixel::model::Font::len"
+status = "adapted"
+python = "len(fontpixel.Font)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+reason = "Python __len__ protocol"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyphs"
+status = "bound"
+python = "fontpixel.Font.glyphs"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph"
+status = "bound"
+python = "fontpixel.Font.glyph"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph_id"
+status = "bound"
+python = "fontpixel.Font.glyph_id"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph_for_codepoint"
+status = "bound"
+python = "fontpixel.Font.glyph_for_codepoint"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::codepoints"
+status = "bound"
+python = "fontpixel.Font.codepoints"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::is_empty"
+status = "bound"
+python = "fontpixel.Font.is_empty"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::slot_count"
+status = "bound"
+python = "fontpixel.Font.slot_count"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_glyph_lookup"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph_ids_for_codepoint"
+status = "bound"
+python = "fontpixel.Font.glyph_ids_for_codepoint"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_duplicate_codes_and_ranges"
+
+[[rule]]
+pattern = "fontpixel::model::Font::codepoint_range"
+status = "bound"
+python = "fontpixel.Font.codepoint_range"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_duplicate_codes_and_ranges"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph_for_sequence"
+status = "bound"
+python = "fontpixel.Font.glyph_for_sequence"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_sequences"
+
+[[rule]]
+pattern = "fontpixel::model::Font::add_glyph"
+status = "bound"
+python = "fontpixel.Font.add_glyph"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+
+[[rule]]
+pattern = "fontpixel::model::Font::replace_glyph"
+status = "bound"
+python = "fontpixel.Font.replace_glyph"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+
+[[rule]]
+pattern = "fontpixel::model::Font::remove_glyph"
+status = "bound"
+python = "fontpixel.Font.remove_glyph"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+
+[[rule]]
+pattern = "fontpixel::model::Font::edit_glyph"
+status = "adapted"
+python = "fontpixel.Font.edit_glyph(id, func)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+reason = "the Rust closure becomes a Python callable receiving an owned Glyph copy; the edit commits through Font::edit_glyph"
+
+[[rule]]
+pattern = "fontpixel::model::Font::glyph_in_cell"
+status = "bound"
+python = "fontpixel.Font.glyph_in_cell"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+
+[[rule]]
+pattern = "fontpixel::model::Font::update_bounds"
+status = "bound"
+python = "fontpixel.Font.update_bounds"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+
+[[rule]]
+pattern = "fontpixel::model::Font::validate"
+status = "bound"
+python = "fontpixel.Font.validate"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+
+[[rule]]
+pattern = "fontpixel::model::Font::retained_usage"
+status = "bound"
+python = "fontpixel.Font.retained_usage"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+
+[[rule]]
+pattern = "fontpixel::model::Font::cloned_usage"
+status = "bound"
+python = "fontpixel.Font.cloned_usage"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+
+[[rule]]
+pattern = "fontpixel::model::Font::draw"
+status = "bound"
+python = "fontpixel.Font.draw"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+
+[[rule]]
+pattern = "fontpixel::model::Font::draw_codepoints"
+status = "bound"
+python = "fontpixel.Font.draw_codepoints"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+
+[[rule]]
+pattern = "fontpixel::model::Font::draw_all"
+status = "bound"
+python = "fontpixel.Font.draw_all"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+
+[[rule]]
+pattern = "fontpixel::model::FontCharset"
+status = "adapted"
+python = "fontpixel.Font.charset"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::FontCharset::canonical_name"
+status = "adapted"
+python = "fontpixel.Font.charset_canonical_name / fontpixel.charset_canonical_name"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_font_charset_codec"
+reason = "method of the plain-data struct offered on Font and as a function taking the dict"
+
+[[rule]]
+pattern = "fontpixel::model::FontCharset::codec"
+status = "adapted"
+python = "fontpixel.CharsetCodec.for_font"
+python_test = "crates/fontpixel-py/tests/test_charset.py::test_font_charset_codec"
+reason = "method of the plain-data struct offered as a CharsetCodec constructor taking a Font or the dict"
+
+[[rule]]
+pattern = "fontpixel::model::FontMetrics"
+status = "adapted"
+python = "fontpixel.Font.metrics"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::FontNames"
+status = "adapted"
+python = "fontpixel.Font.names"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_metrics_names_charset"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::FontSet"
+status = "bound"
+python = "fontpixel.FontSet"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+
+[[rule]]
+pattern = "fontpixel::model::FontSet::*"
+status = "bound"
+python = "fontpixel.FontSet.{name}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+
+[[rule]]
+pattern = "fontpixel::model::FontSet::into_single"
+status = "adapted"
+python = "fontpixel.FontSet.into_single"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_fontset_api"
+reason = "Python cannot consume the handle: returns an owned copy of the only strike and keeps the set"
+
+[[rule]]
+pattern = "fontpixel::model::Glyph"
+status = "bound"
+python = "fontpixel.Glyph"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+
+[[rule]]
+pattern = "fontpixel::model::Glyph::*"
+status = "bound"
+python = "fontpixel.Glyph.{name}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+
+[[rule]]
+pattern = "fontpixel::model::Glyph::new"
+status = "adapted"
+python = "fontpixel.Glyph(bitmap)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_bitmap_set_and_cell"
+reason = "Python constructor"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphBitmap"
+status = "adapted"
+python = "fontpixel.Bitmap"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_bitmap_buffers_and_rows"
+reason = "one Bitmap class holds either variant; `depth` names it and to_dict/from_dict use the serde shape"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphBitmap::crop"
+status = "adapted"
+python = "fontpixel.Bitmap.crop_bounds"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_checked_geometry_and_label_effects"
+reason = "same operation as Bitmap::crop_bounds on the active variant"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphBitmap::*"
+status = "bound"
+python = "fontpixel.Bitmap.{name}"
+python_test = "crates/fontpixel-py/tests/test_bitmap.py::test_canonical_storage_limits_and_invalid_input"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphId"
+status = "adapted"
+python = "int"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+reason = "glyph IDs are plain ints (the serde form)"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphId::index"
+status = "adapted"
+python = "int"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_add_replace_remove_edit"
+reason = "the ID is the index itself"
+
+[[rule]]
+pattern = "fontpixel::model::GlyphMetrics"
+status = "adapted"
+python = "fontpixel.Glyph.metrics"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::Rational"
+status = "adapted"
+python = "dict {numerator, denominator}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py); deserialization validates through Rational::new"
+
+[[rule]]
+pattern = "fontpixel::model::Rational::*"
+status = "adapted"
+python = "dict {numerator, denominator}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "constructor/accessors of the plain-data dict (validated on deserialization)"
+
+[[rule]]
+pattern = "fontpixel::model::Spacing"
+status = "adapted"
+python = "Font.metrics['spacing']"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::model::Vector"
+status = "adapted"
+python = "dict {x, y}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::Vector::new"
+status = "adapted"
+python = "dict {x, y}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_glyph_metric_dicts"
+reason = "constructor of the plain-data dict"
+
+[[rule]]
+pattern = "fontpixel::model::budget::ModelUsage"
+status = "adapted"
+python = "dict returned by retained_usage/cloned_usage"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_font_validate_and_usage"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Properties"
+status = "bound"
+python = "fontpixel.Properties"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Properties::*"
+status = "bound"
+python = "fontpixel.Properties.{name}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Properties::into_vec"
+status = "adapted"
+python = "fontpixel.Properties.to_list"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "Python keeps the handle; returns a list of property dicts"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Properties::iter"
+status = "adapted"
+python = "iter(fontpixel.Properties)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "Python __iter__ protocol"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Properties::len"
+status = "adapted"
+python = "len(fontpixel.Properties)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "Python __len__ protocol"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Property"
+status = "adapted"
+python = "dict {name, value, raw?}"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::model::properties::Property::new"
+status = "adapted"
+python = "fontpixel.Properties.push(name, value)"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "properties are built in place by push/set"
+
+[[rule]]
+pattern = "fontpixel::model::properties::PropertyValue"
+status = "adapted"
+python = "Python value or tagged dict"
+python_test = "crates/fontpixel-py/tests/test_model.py::test_properties_list"
+reason = "int/str/bytes/list/None convert to Integer/Unsigned/Text/Bytes/List/Flag; the serde tagged form covers every variant"

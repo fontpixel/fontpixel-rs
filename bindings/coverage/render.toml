@@ -1,0 +1,113 @@
+# Rendering and image export (fontpixel::render) — unit p1
+# Generated table; see tools/bindings/check.py for the rule syntax.
+
+[[rule]]
+pattern = "fontpixel::render"
+status = "bound"
+python = "fontpixel"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+
+[[rule]]
+pattern = "fontpixel::render::GlyphOrder"
+status = "adapted"
+python = "str ('ascending', 'descending', 'file', 'reverse_file')"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::render::MissingGlyph"
+status = "adapted"
+python = "options['missing'] + missing_glyph=Glyph"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+reason = "'blank'/'error' through serde; the borrowed Glyph variant is the separate missing_glyph argument (see bindings-serde-exclusions.md)"
+
+[[rule]]
+pattern = "fontpixel::render::RenderLimits"
+status = "adapted"
+python = "options['limits']; fontpixel.default_render_limits"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_limits_apply_before_rendering"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::render::RenderMode"
+status = "adapted"
+python = "str ('advance', 'cell', 'ink')"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+reason = "plain data: the serde string/tagged form of the enum"
+
+[[rule]]
+pattern = "fontpixel::render::RenderOptions"
+status = "adapted"
+python = "options dict; fontpixel.default_render_options"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::render::Rendered"
+status = "bound"
+python = "fontpixel.Rendered"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+
+[[rule]]
+pattern = "fontpixel::render::WritingDirection"
+status = "adapted"
+python = "dict {glyphs, lines}; fontpixel.parse_writing_direction"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::render::WritingDirection::from_spec"
+status = "bound"
+python = "fontpixel.writing_direction_from_spec"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+
+[[rule]]
+pattern = "fontpixel::render::image::ImageOptions"
+status = "adapted"
+python = "options dict; fontpixel.default_image_options"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::render::image::Rgba"
+status = "adapted"
+python = "dict {red, green, blue, alpha}; fontpixel.parse_rgba"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
+
+[[rule]]
+pattern = "fontpixel::render::image::Rgba::new"
+status = "adapted"
+python = "fontpixel.rgba"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+reason = "constructor of the plain-data dict"
+
+[[rule]]
+pattern = "fontpixel::render::image::Rgba::BLACK"
+status = "bound"
+python = "fontpixel.RGBA_BLACK"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+
+[[rule]]
+pattern = "fontpixel::render::image::Rgba::WHITE"
+status = "bound"
+python = "fontpixel.RGBA_WHITE"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+
+[[rule]]
+pattern = "fontpixel::render::image::Rgba::TRANSPARENT"
+status = "bound"
+python = "fontpixel.RGBA_TRANSPARENT"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+
+[[rule]]
+pattern = "fontpixel::render::image::to_png"
+status = "bound"
+python = "fontpixel.to_png"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_png_roundtrips_bits_dimensions_alpha_and_limits"
+
+[[rule]]
+pattern = "fontpixel::render::image::to_svg"
+status = "bound"
+python = "fontpixel.to_svg"
+python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
