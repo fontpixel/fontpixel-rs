@@ -70,11 +70,15 @@ pub struct PyFont {
 impl PyFont {
     /// Wrap an owned font.
     pub fn new(font: Font) -> Self {
-        Self { loc: FontLoc::Owned(shared(font)) }
+        Self {
+            loc: FontLoc::Owned(shared(font)),
+        }
     }
     /// A view of strike `index` of `set`.
     pub fn view(set: &Shared<FontSet>, index: usize) -> Self {
-        Self { loc: FontLoc::InSet(set.clone(), index) }
+        Self {
+            loc: FontLoc::InSet(set.clone(), index),
+        }
     }
     /// Run `f` with shared access.
     pub fn read<R>(&self, f: impl FnOnce(&Font) -> PyResult<R>) -> PyResult<R> {
@@ -111,7 +115,10 @@ pub fn write_font<R>(loc: &FontLoc, f: impl FnOnce(&mut Font) -> PyResult<R>) ->
         FontLoc::Owned(font) => f(&mut *font.write().map_err(|_| poisoned())?),
         FontLoc::InSet(set, index) => {
             let mut set = set.write().map_err(|_| poisoned())?;
-            f(set.fonts.get_mut(*index).ok_or_else(|| missing_font(*index))?)
+            f(set
+                .fonts
+                .get_mut(*index)
+                .ok_or_else(|| missing_font(*index))?)
         }
     }
 }
@@ -135,11 +142,15 @@ pub struct PyGlyph {
 impl PyGlyph {
     /// Wrap an owned glyph.
     pub fn new(glyph: Glyph) -> Self {
-        Self { loc: GlyphLoc::Owned(shared(glyph)) }
+        Self {
+            loc: GlyphLoc::Owned(shared(glyph)),
+        }
     }
     /// A view of glyph `id` in `font`.
     pub fn view(font: &FontLoc, id: GlyphId) -> Self {
-        Self { loc: GlyphLoc::InFont(font.clone(), id) }
+        Self {
+            loc: GlyphLoc::InFont(font.clone(), id),
+        }
     }
     /// Run `f` with shared access.
     pub fn read<R>(&self, f: impl FnOnce(&Glyph) -> PyResult<R>) -> PyResult<R> {
@@ -158,7 +169,8 @@ impl PyGlyph {
             GlyphLoc::InFont(font, id) => write_font(font, |font| {
                 let mut glyph = font.glyph(*id).ok_or_else(|| missing_glyph(*id))?.clone();
                 let out = f(&mut glyph)?;
-                font.replace_glyph(*id, glyph).map_err(crate::errors::to_py)?;
+                font.replace_glyph(*id, glyph)
+                    .map_err(crate::errors::to_py)?;
                 Ok(out)
             }),
         }
@@ -184,7 +196,9 @@ pub struct PyBitmap {
 impl PyBitmap {
     /// Wrap an owned raster.
     pub fn new(bitmap: GlyphBitmap) -> Self {
-        Self { bitmap: shared(bitmap) }
+        Self {
+            bitmap: shared(bitmap),
+        }
     }
     /// Run `f` with shared access.
     pub fn read<R>(&self, f: impl FnOnce(&GlyphBitmap) -> PyResult<R>) -> PyResult<R> {
