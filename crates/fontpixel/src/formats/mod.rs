@@ -844,20 +844,33 @@ pub struct Loaded<M> {
     pub format: &'static str,
 }
 
+callback_trait! {
 /// Format content-recognition hook. No filesystem writes are allowed.
-pub trait FormatDetector: Send + Sync {
+///
+/// `Send + Sync` on every target with threads; the bound is absent on `wasm`
+/// targets (no threads), as for every format hook and
+/// [`ResourceResolver`](crate::resources::ResourceResolver).
+pub trait FormatDetector {
     /// Inspect bounded input; do not treat its filename as content evidence.
     fn detect(&self, input: &mut ReadContext<'_>) -> Result<Confidence>;
 }
+}
 
+callback_trait! {
 /// Format reader over a shared model, including caller-supplied sidecars.
-pub trait FormatReader<M>: Send + Sync {
+///
+/// `Send + Sync` on every target with threads; absent on `wasm` targets.
+pub trait FormatReader<M> {
     /// Parse one complete input; diagnostics must describe repairs and loss.
     fn read(&self, input: &mut ReadContext<'_>, options: &ReadOptions) -> Result<(M, Report)>;
 }
+}
 
+callback_trait! {
 /// Side-effect-free writer returning all assets and loss diagnostics.
-pub trait FormatWriter<M>: Send + Sync {
+///
+/// `Send + Sync` on every target with threads; absent on `wasm` targets.
+pub trait FormatWriter<M> {
     /// Encode the model entirely in memory. Never persist output here: strict
     /// rejection happens in the registry after the full report is available.
     fn write(&self, fonts: &M, options: &WriteOptions) -> Result<Written>;
@@ -919,6 +932,7 @@ pub trait FormatWriter<M>: Send + Sync {
     ) -> Result<()> {
         self.validate_transport(fonts, options, limits)
     }
+}
 }
 
 /// Who accounts for the borrowed source model of a native writer.
