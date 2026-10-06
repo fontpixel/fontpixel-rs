@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -17,8 +17,8 @@ __all__ = [
     "encode",
 ]
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Any:
+def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> _t.GaspTable:
     """`GaspTable::decode`: a GaspTable dict."""
 
-def encode(table: _t.GaspTable, limits: _t.SfntLimits | None = ...) -> Any:
+def encode(table: _t.GaspTable, limits: _t.SfntLimits | None = ...) -> bytes:
     """`GaspTable::encode`: gasp table bytes."""

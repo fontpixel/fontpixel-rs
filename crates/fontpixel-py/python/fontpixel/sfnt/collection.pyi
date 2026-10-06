@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -27,7 +27,7 @@ class Collection:
     def __new__(cls, data: _t.Buffer, limits: _t.SfntLimits | None = ...) -> Collection:
         ...
     @property
-    def data(self) -> Any:
+    def data(self) -> bytes:
         """The collection bytes this handle owns."""
     def extract(self, index: int, limits: _t.SfntLimits | None = ...) -> tuple[Any, Any]:
         """Extract face `index` as a standalone sfnt: `(bytes, report)`."""
@@ -38,7 +38,7 @@ class Collection:
     def parse(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Collection:
         """Parse a `ttcf` collection, checking every face before exposing any."""
     @property
-    def signature(self) -> Any:
+    def signature(self) -> bytes | None:
         """The opaque version-2 DSIG block, or `None`."""
     def validate_checksums(self) -> None:
         """Check every face's table checksums and head adjustment."""

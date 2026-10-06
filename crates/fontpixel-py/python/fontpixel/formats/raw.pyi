@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet
@@ -22,10 +22,10 @@ __all__ = [
     "preset_layout",
 ]
 
-def preset_layout(preset: _t.RawPreset) -> Any:
+def preset_layout(preset: _t.RawPreset) -> _t.RawLayout:
     """The `RawLayout` dict of a named raw preset (`raw::RawPreset::layout`)."""
 
-def raw_layout(width: int, height: int) -> Any:
+def raw_layout(width: int, height: int) -> _t.RawLayout:
     """
     The default `RawLayout` dict of a `width`×`height` cell
     (`raw::RawLayout::new`).

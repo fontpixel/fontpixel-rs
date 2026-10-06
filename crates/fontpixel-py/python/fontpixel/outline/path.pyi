@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Bitmap
@@ -26,12 +26,12 @@ def edge_points(edge: _t.Edge) -> list[tuple[float, float]]:
     """`Edge::points`: endpoints and controls of an edge dict, in path order."""
 
 def rasterize(
-    edges: Any,
+    edges: _c.Sequence[_t.Edge],
     scale: float,
     origin: tuple[float, float],
     width: int,
     height: int,
-    limits: _t.ResourceLimits | None = ...,
+    limits: _t.OutlineLimits | None = ...,
 ) -> Bitmap:
     """
     `path::rasterize`: nonzero-winding fill at exact pixel centres of

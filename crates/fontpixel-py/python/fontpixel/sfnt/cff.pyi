@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel.sfnt import Sfnt
@@ -29,16 +29,16 @@ class Cff:
     def __len__(self) -> int:
         """Return len(self)."""
     @property
-    def data(self) -> Any:
+    def data(self) -> bytes:
         """The CFF table bytes."""
     @staticmethod
     def from_sfnt(font: Sfnt, limits: _t.SfntLimits | None = ...) -> Cff:
         """The `CFF ` table of an `OTTO` sfnt handle (requires maxp 0.5 and head)."""
     def global_subr_count(self) -> int:
         """Number of global subroutines."""
-    def glyph(self, gid: int, limits: _t.SfntLimits | None = ...) -> Any:
+    def glyph(self, gid: int, limits: _t.SfntLimits | None = ...) -> _t.DecodedGlyph:
         """Evaluate one glyph: `{advance, commands}` (DecodedGlyph dict)."""
-    def glyph_name(self, gid: int) -> Any:
+    def glyph_name(self, gid: int) -> bytes | None:
         """The glyph name bytes of a name-keyed font, or `None`."""
     def identifier(self, gid: int) -> int | None:
         """The SID or CID of glyph `gid`, or `None`."""
@@ -55,12 +55,12 @@ class Cff:
         limits: _t.SfntLimits | None = ...,
     ) -> Cff:
         """Parse a raw `CFF ` table with the containing font's units per em."""
-    def read_all(self, limits: _t.SfntLimits | None = ...) -> Any:
+    def read_all(self, limits: _t.SfntLimits | None = ...) -> list[_t.DecodedGlyph]:
         """Evaluate every glyph under one whole-font budget."""
-    def subset(self, glyphs: _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Any:
+    def subset(self, glyphs: _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> _t.CffEncoded:
         """Subset to `glyphs` (old IDs in new order, `.notdef` first): CFF bytes."""
 
-def encode(font: _t.CffFont, limits: _t.CffLimits | None = ...) -> Any:
+def encode(font: _t.CffFont, limits: _t.CffLimits | None = ...) -> _t.CffEncoded:
     """
     `cff::Font::encode`: encode a CFF Font dict; returns `{data, bounds, maxp}`
     with `data`/`maxp` as `bytes`.
@@ -72,5 +72,5 @@ def glyph_from_bitmap(
     bitmap: _t.BitmapLike,
     options: _t.OutlineOptions | None = ...,
     limits: _t.CffLimits | None = ...,
-) -> Any:
+) -> _t.SfntCffGlyph:
     """`cff::Glyph::from_bitmap`: a CFF Glyph dict from a Mono bitmap handle."""

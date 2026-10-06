@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -17,10 +17,10 @@ __all__ = [
     "options_text",
 ]
 
-def options_text(text: str) -> Any:
+def options_text(text: str) -> _t.SubsetOptions:
     """`subset::Options::text`: options selecting every scalar of `text`."""
 
-def subset(data: _t.Buffer | _c.Sequence[int], options: _t.SubsetOptions | None = ...) -> Any:
+def subset(data: _t.Buffer | _c.Sequence[int], options: _t.SubsetOptions | None = ...) -> _t.Subset:
     """
     `subset::subset`: subset a standalone sfnt. Returns
     `{bytes, glyph_mapping, report}`; `glyph_mapping` maps old to new glyph IDs.

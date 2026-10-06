@@ -90,6 +90,77 @@ ReadInput = Union[Buffer, "Input", "OutputBundle", "Written"]
 """What a reader decodes: bytes-like data, an ``Input`` (carrying its name
 and resources) or a written ``OutputBundle``/``Written`` read back with its
 own entry point and sidecars."""
+TextPalette = Union[Mapping[str, int], Sequence[tuple[str, int]]]
+"""Text-to-pixel palette for ``Bitmap.from_text``: ``{char: value}`` or pairs."""
+OutputPalette = Union[Mapping[int, str], Sequence[tuple[int, str]]]
+"""Pixel-to-text palette for ``Bitmap.to_text``: ``{value: char}`` or pairs."""
+OutlinePoint = tuple[float, float, bool]
+"""An outline point ``(x, y, on_curve)`` in upward design units."""
+Contour = List[OutlinePoint]
+"""A closed contour without a repeated closing point (``outline::Contour``)."""
+PropertyEdit = Union[Mapping[str, Mapping[str, Any]], Any]
+"""A projection property edit: ``{"set": {"name": str, "value": int | str}}``
+or ``{"remove": {"name": str}}``."""
+BitmapProjectionArgs = Mapping[str, Any]
+"""Keyword form of a ``BitmapProjection``: ``scalable_advance``, ``font_name``,
+``size`` and ``properties`` as in its constructor."""
+NewFormat = TypedDict("NewFormat", {"id": str, "name": str, "extensions": List[str]})
+"""A new format registered from Python: lowercase ID, display name, extensions."""
+PythonWriter = Union[Callable[..., Any], Any]
+"""``Registry.register`` writer: ``writer(font_set, options)`` or an object
+with ``write(font_set, options)`` (optionally ``transport_limits()`` and
+``validate_transport(...)``), returning a ``Written``, an ``OutputBundle`` or
+``(OutputBundle, report)``."""
+EncodedFont = TypedDict("EncodedFont", {"bytes": bytes, "report": "Report"})
+"""An encoded font file with its diagnostics (WOFF and variants exports)."""
+VectorRasterCodecDict = TypedDict(
+    "VectorRasterCodecDict",
+    {"id": str, "read_options": "VectorRasterOptions", "write_options": "VectorRasterWriteOptions"},
+)
+"""Default codec options of an outline format (``vector_raster::Codec::new``)."""
+MergeDefaults = TypedDict("MergeDefaults", {"MergeOptions": "MergeOptions", "PartLicense": "PartLicense"})
+"""``fontpixel.merge.defaults()``."""
+OutlineDefaults = TypedDict("OutlineDefaults", {"Options": "OutlineOptions", "Limits": "OutlineLimits"})
+"""``fontpixel.outline.defaults()``."""
+SfntDefaults = TypedDict("SfntDefaults", {
+    "Limits": "SfntLimits", "collection.Limits": "CollectionLimits", "glyf.Limits": "GlyfLimits",
+    "cff.Limits": "CffLimits", "cff.DotOptions": "DotOptions", "bitmap.Limits": "SfntBitmapLimits",
+    "gsub.LayoutLimits": "LayoutLimits", "subset.Options": "SubsetOptions"})
+"""``fontpixel.sfnt.defaults()``, keyed by Rust type path relative to ``fontpixel::sfnt``."""
+VariantsDefaults = TypedDict("VariantsDefaults", {
+    "Options": "ExportOptions", "MetadataOptions": "MetadataOptions", "NotdefPolicy": "NotdefPolicy",
+    "LayoutLimits": "LayoutLimits"})
+"""``fontpixel.variants.defaults()``."""
+WoffDefaults = TypedDict("WoffDefaults", {
+    "Limits": "WoffLimits", "Auxiliary": "Auxiliary", "woff1.Options": "Woff1Options",
+    "woff2.Options": "Woff2Options"})
+"""``fontpixel.woff.defaults()``."""
+MergePartArgs = TypedDict("MergePartArgs", {
+    "font": "FontLike", "selection": "Union[Selection, str]", "dy": int, "label": "Union[str, None]",
+    "license": "PartLicense"}, total=False)
+"""One ``fontpixel.merge.merge`` part: ``font`` and ``selection`` are required."""
+MergeOutcome = TypedDict("MergeOutcome", {"font": "Font", "report": "MergeReport"})
+"""``fontpixel.merge.merge`` result: the merged ``Font`` handle and its report."""
+BatchRequest = TypedDict("BatchRequest", {
+    "tasks": List[Mapping[str, Any]], "jobs": Union[int, None], "max_working_bytes": int,
+    "max_pending_bytes": int, "max_report_bytes": int, "max_task_report_bytes": int,
+    "protected_paths": List[StrPath]}, total=False)
+"""``fontpixel.ops.batch`` request: ``tasks`` (each a request dict plus ``id``
+and ``kind``) is required; the budgets default to the ``DEFAULT_MAX_*``
+constants."""
+BatchTaskOutcome = TypedDict("BatchTaskOutcome", {
+    "index": int, "id": str, "kind": str, "success": bool, "exit_code": int, "committed": bool,
+    "diagnostics_truncated": bool, "error": Union[str, None]}, total=False)
+"""One task outcome of a ``BatchResult``."""
+InspectedRequest = TypedDict("InspectedRequest", {
+    "id": str, "kind": str, "command": str, "request": Mapping[str, Any], "report_style": str,
+    "source_identity_total_bytes": int, "declared_inputs": List[str], "weight": int,
+    "error": str}, total=False)
+"""A validated, normalized request (``inspect_request``, ``parse_batch_toml``)."""
+ParsedArgs = TypedDict("ParsedArgs", {
+    "command": str, "request": Mapping[str, Any], "report_style": str,
+    "source_identity_total_bytes": int})
+"""A parsed ``fontpixel`` command line (``fontpixel.ops.parse_args``)."""
 '''
 
 # `*_arg` helper -> accepted Python type.
@@ -123,7 +194,7 @@ HELPERS = {
 
 # Rust (binding-local or core) type names that are not serde shapes.
 RUST_TYPES = {
-    "ModelReport": "_t.Report",
+    "ModelReport": "tuple[@fontpixel.FontSet | @fontpixel.Font, _t.Report]",
     "Report": "_t.Report",
 }
 
@@ -141,14 +212,202 @@ PARAMS = {
         "codepoints": "_c.Iterable[_t.CodepointLike]",
         "bitmap": "_t.BitmapLike",
         "font": "_t.FontLike",
-        "fonts": "_c.Iterable[_t.FontLike]",
+        "fonts": "@fontpixel.FontSet | @fontpixel.Font",
         "glyph": "_t.GlyphLike",
         "tag": "_t.Tag",
         "files": "_t.Files",
     },
 }
 
-SIGNATURES: dict = {}
+N = "fontpixel._native"
+B = "fontpixel._native._bdfparser"
+O = "fontpixel._native._ops"
+SELF = "@fontpixel.Bitmap"
+
+SIGNATURES = {
+    # ---- Bitmap ---------------------------------------------------------------
+    f"{N}.Bitmap.bbox": {"return": "_t.Bounds"},
+    f"{N}.Bitmap.composite": {"mode": "_t.CompositeMode"},
+    f"{N}.Bitmap.composite_region": {"mode": "_t.CompositeMode", "region": "_t.Bounds"},
+    f"{N}.Bitmap.concat_all": {"bitmaps": "_c.Iterable[_t.BitmapLike]"},
+    f"{N}.Bitmap.from_text": {"palette": "_t.TextPalette"},
+    f"{N}.Bitmap.to_text": {"palette": "_t.OutputPalette"},
+    f"{N}.Bitmap.to_palette_bytes": {"palette": "_c.Mapping[int, _t.Buffer] | _c.Iterable[tuple[int, _t.Buffer]]"},
+    f"{N}.Bitmap.limits": {"return": "_t.BitmapLimits"},
+    f"{N}.Bitmap.to_dict": {"return": "_t.GlyphBitmap"},
+    # ---- metadata ---------------------------------------------------------------
+    f"{N}.BitmapProjection.__new__": {"scalable_advance": "_t.ScalableAdvance", "size": "_t.SizeProjection",
+                                      "properties": "_c.Iterable[_t.PropertyEdit]"},
+    f"{N}.BitmapProjection.apply": {"return": "_t.ProjectionOutcome"},
+    f"{N}.BitmapProjection.scalable_advance": {"return": "_t.ScalableAdvance"},
+    f"{N}.BitmapProjection.size": {"return": "_t.SizeProjection | None"},
+    f"{N}.apply_bitmap_projection": {"projection": "@fontpixel.BitmapProjection | _t.BitmapProjectionArgs",
+                                     "return": "_t.ProjectionOutcome"},
+    f"{N}.apply_names": {"return": "_t.Report"},
+    # ---- charset ----------------------------------------------------------------
+    f"{N}.CharsetCodec.for_font": {"font_or_charset": "@fontpixel.Font | _t.FontCharset"},
+    f"{N}.CharsetCodec.kind": {"return": "_t.CharsetKind"},
+    f"{N}.east_asian_width": {"return": "_t.EastAsianWidth | None"},
+    f"{N}.unicode_block": {"return": "_t.UnicodeRange | None"},
+    # ---- Codepoint (pyclass ord) ------------------------------------------------
+    f"{N}.Codepoint.__lt__": {"value": "@fontpixel.Codepoint", "return": "bool"},
+    f"{N}.Codepoint.__le__": {"value": "@fontpixel.Codepoint", "return": "bool"},
+    f"{N}.Codepoint.__gt__": {"value": "@fontpixel.Codepoint", "return": "bool"},
+    f"{N}.Codepoint.__ge__": {"value": "@fontpixel.Codepoint", "return": "bool"},
+    f"{N}.Codepoint.to_dict": {"return": "_t.CodepointDict"},
+    # ---- Font / FontSet / Glyph -------------------------------------------------
+    f"{N}.Font.__new__": {"glyphs": "_c.Iterable[_t.GlyphLike]"},
+    f"{N}.Font.charset": {"return": "_t.FontCharset", "set": "_t.FontCharset"},
+    f"{N}.Font.metrics": {"return": "_t.FontMetrics", "set": "_t.FontMetrics"},
+    f"{N}.Font.names": {"return": "_t.FontNames", "set": "_t.FontNames"},
+    f"{N}.Font.retained_usage": {"return": "_t.ModelUsage"},
+    f"{N}.Font.cloned_usage": {"return": "_t.ModelUsage"},
+    f"{N}.FontSet.retained_usage": {"return": "_t.ModelUsage"},
+    f"{N}.Font.to_dict": {"return": "_t.FontDict"},
+    f"{N}.FontSet.to_dict": {"return": "_t.FontSetDict"},
+    f"{N}.Glyph.to_dict": {"return": "_t.GlyphDict"},
+    f"{N}.Glyph.metrics": {"return": "_t.GlyphMetrics", "set": "_t.GlyphMetrics"},
+    f"{N}.FontSet.__new__": {"properties": "_t.PropertiesLike"},
+    f"{N}.Font.draw": {"options": "_t.RenderOptions"},
+    f"{N}.Font.draw_codepoints": {"codes": "_c.Iterable[_t.CodepointLike | None]", "options": "_t.RenderOptions"},
+    f"{N}.Font.draw_all": {"order": "_t.RenderGlyphOrder", "options": "_t.RenderOptions"},
+    f"{N}.Font.edit_glyph": {"func": "_c.Callable[[@fontpixel.Glyph], object]"},
+    f"{N}.Font.glyph_for_sequence": {"sequence": "_c.Iterable[_t.CodepointLike] | str"},
+    f"{N}.Properties.__new__": {"items": "_t.PropertiesLike"},
+    f"{N}.Properties.__getitem__": {"return": "_t.Property"},
+    f"{N}.Properties.get": {"return": "_t.PropertyValue | None"},
+    f"{N}.Properties.get_case_insensitive": {"return": "_t.PropertyValue | None"},
+    # ---- formats / resources ----------------------------------------------------
+    f"{N}.Loaded.fonts": {"return": "@fontpixel.FontSet | @fontpixel.Font"},
+    f"{N}.Loaded.report": {"return": "_t.Report"},
+    f"{N}.Rendered.report": {"return": "_t.Report"},
+    f"{N}.Rendered.to_dict": {"return": "_t.RenderedDict"},
+    f"{N}.Written.report": {"return": "_t.Report"},
+    f"{N}.Written.to_dict": {"return": "_t.WrittenDict"},
+    f"{N}.OutputBundle.__new__": {"assets": "_c.Iterable[@fontpixel.OutputAsset | _t.OutputAssetDict]"},
+    f"{N}.OutputBundle.__iter__": {"return": "_c.Iterator[@fontpixel.OutputAsset]"},
+    f"{N}.OutputBundle.to_dict": {"return": "_t.OutputBundleDict"},
+    f"{N}.ReadContext.limits": {"return": "_t.ResourceLimits"},
+    f"{N}.Registry.detect": {"return": "_t.Detected"},
+    f"{N}.detect": {"return": "_t.Detected"},
+    f"{N}.Registry.extension_candidates": {"return": "list[_t.FormatInfo]"},
+    f"{N}.Registry.format_from_name": {"return": "_t.FormatInfo"},
+    f"{N}.Registry.status": {"return": "_t.FormatStatus"},
+    f"{N}.Registry.register": {"format": "str | _t.NewFormat",
+                               "detector": "_c.Callable[[@fontpixel.ReadContext], _t.Confidence]",
+                               "reader": "_c.Callable[[@fontpixel.ReadContext, _t.FormatsReadOptions], "
+                                         "tuple[@fontpixel.FontSet, _t.Report]]",
+                               "writer": "_t.PythonWriter"},
+    f"{N}.Registry.set_codec": {"codec": "_c.Mapping[str, Any]"},
+    f"{N}.Registry.set_options": {"read": "_c.Mapping[str, Any]", "write": "_c.Mapping[str, Any]"},
+    f"{N}.Registry.set_read_options": {"options": "_c.Mapping[str, Any]"},
+    f"{N}.Registry.set_write_options": {"options": "_c.Mapping[str, Any]"},
+    f"{N}.read": {"options": "_c.Mapping[str, Any]"},
+    f"{N}.write": {"options": "_c.Mapping[str, Any]"},
+    "fontpixel.formats.normalize": {"value": "_c.Mapping[str, Any] | str | None", "return": "Any"},
+    "fontpixel.formats.embedded.detect": {"return": "_t.Confidence"},
+    "fontpixel.formats.vector_raster.detect": {"return": "_t.Confidence"},
+    "fontpixel.formats.vector_raster.codec": {"return": "_t.VectorRasterCodecDict"},
+    "fontpixel.formats.hzk.preset_geometry": {"return": "_t.Geometry"},
+    "fontpixel.formats.raw.preset_layout": {"return": "_t.RawLayout"},
+    "fontpixel.formats.svg.path_data": {"shape": "_t.Shape"},
+    # ---- ops results ----------------------------------------------------------------
+    f"{O}.OperationResult.document": {"return": "dict[str, Any]"},
+    f"{O}.OperationResult.summary": {"return": "dict[str, Any]"},
+    f"{O}.OperationResult.report": {"return": "_t.Report | None"},
+    f"{O}.OperationResult.format_status": {"return": "_t.FormatStatus | None"},
+    f"{O}.BatchResult.document": {"return": "dict[str, Any]"},
+    f"{O}.BatchResult.tasks": {"return": "list[_t.BatchTaskOutcome]"},
+    f"{O}.batch": {"request": "_t.BatchRequest", "return": "@fontpixel.ops.BatchResult"},
+    f"{O}.inspect_request": {"request": "_c.Mapping[str, Any]", "return": "_t.InspectedRequest"},
+    f"{O}.parse_args": {"return": "_t.ParsedArgs"},
+    f"{O}.parse_batch_toml": {"return": "list[_t.InspectedRequest]"},
+    # ---- merge / outline ------------------------------------------------------------
+    "fontpixel.merge.Selection.ranges": {"return": "list[_t.CodepointRange]"},
+    "fontpixel.merge.defaults": {"return": "_t.MergeDefaults"},
+    "fontpixel.merge.merge": {"parts": "_c.Sequence[_t.MergePartArgs]", "return": "_t.MergeOutcome"},
+    "fontpixel.outline.defaults": {"return": "_t.OutlineDefaults"},
+    "fontpixel.outline.pixel_contour": {"return": "_t.Contour"},
+    "fontpixel.outline.segments": {"contour": "_t.Contour"},
+    # ---- sfnt --------------------------------------------------------------------
+    "fontpixel.sfnt.defaults": {"return": "_t.SfntDefaults"},
+    "fontpixel.sfnt.Sfnt.data": {"return": "bytes"},
+    "fontpixel.sfnt.Sfnt.flavor": {"return": "_t.Flavor"},
+    "fontpixel.sfnt.Sfnt.limits": {"return": "_t.SfntLimits"},
+    "fontpixel.sfnt.Sfnt.table": {"return": "bytes | None"},
+    "fontpixel.sfnt.collection.Collection.data": {"return": "bytes"},
+    "fontpixel.sfnt.collection.Collection.signature": {"return": "bytes | None"},
+    "fontpixel.sfnt.cff.Cff.data": {"return": "bytes"},
+    "fontpixel.sfnt.cff.Cff.glyph": {"return": "_t.DecodedGlyph"},
+    "fontpixel.sfnt.cff.Cff.glyph_name": {"return": "bytes | None"},
+    "fontpixel.sfnt.cff.Cff.read_all": {"return": "list[_t.DecodedGlyph]"},
+    "fontpixel.sfnt.cff.Cff.subset": {"return": "_t.CffEncoded"},
+    "fontpixel.sfnt.cff.encode": {"return": "_t.CffEncoded"},
+    "fontpixel.sfnt.bitmap.*": {"kind": "_t.BitmapKind"},
+    "fontpixel.sfnt.bitmap.encode": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
+    "fontpixel.sfnt.bitmap.encode_spanning": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
+    "fontpixel.sfnt.bitmap.encode_shared_metric_runs": {"kind": "_t.BitmapKind", "return": "_t.Tables"},
+    "fontpixel.sfnt.glyf.contours": {"return": "list[_t.Contour]"},
+    "fontpixel.sfnt.glyf.encode": {"format": "_t.LocaFormat", "return": "_t.GlyfEncoded"},
+    "fontpixel.sfnt.glyf.glyph_simple": {"contours": "_c.Sequence[_t.Contour]"},
+    "fontpixel.sfnt.gsub.subset": {"return": "_t.Gsub"},
+    "fontpixel.sfnt.metrics.*": {"axis": "_t.Axis"},
+    "fontpixel.sfnt.metrics.encode": {"axis": "_t.Axis", "return": "_t.EncodedMetrics"},
+    "fontpixel.sfnt.subset.subset": {"return": "_t.Subset"},
+    # ---- variants / woff -----------------------------------------------------------
+    "fontpixel.variants.defaults": {"return": "_t.VariantsDefaults"},
+    "fontpixel.variants.Variants.add_language_variant": {"scripts": "_c.Iterable[_t.Tag]"},
+    "fontpixel.variants.Variants.add_script": {"scripts": "_c.Iterable[_t.Tag]"},
+    "fontpixel.variants.Variants.from_dict": {"value": "_t.VariantsDict"},
+    "fontpixel.variants.Variants.to_dict": {"return": "_t.VariantsDict"},
+    "fontpixel.variants.Variants.plan": {"return": "_t.Plan"},
+    "fontpixel.variants.PreparedVariants.plan": {"return": "_t.Plan"},
+    "fontpixel.variants.*encode*": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
+    "fontpixel.variants.Variants.encode*": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
+    "fontpixel.variants.PreparedVariants.encode": {"options": "_t.ExportOptions", "return": "_t.EncodedFont"},
+    "fontpixel.woff.defaults": {"return": "_t.WoffDefaults"},
+    "fontpixel.woff.woff*.decode": {"return": "_t.Decoded"},
+    "fontpixel.woff.woff*.encode": {"return": "_t.EncodedFont"},
+    # ---- compat native half (private; wrapped by fontpixel.compat.bdfparser) --------
+    f"{B}.Bitmap.__new__": {"bin_bitmap_list": "_c.Iterable[str]"},
+    f"{B}.Bitmap.__add__": {"value": "Self", "return": "Self"},
+    f"{B}.Bitmap.__mul__": {"value": "int | tuple[int, int]", "return": "Self"},
+    f"{B}.Bitmap.__copy__": {"return": "Self"},
+    f"{B}.Bitmap.__deepcopy__": {"return": "Self"},
+    f"{B}.Bitmap.blank": {"return": "Self"},
+    f"{B}.Bitmap.clone": {"return": "Self"},
+    f"{B}.Bitmap.concatall": {"return": "Self"},
+    f"{B}.Bitmap.fromstring": {"return": "Self"},
+    f"{B}.Bitmap.replace": {"substr": "str | int", "newsubstr": "str | int"},
+    f"{B}.Bitmap.setpixel": {"value": "str | int"},
+    f"{B}.Bitmap.todata": {"return": "Any"},
+    f"{B}.RawFont.addglyph": {"fields": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.draw*": {"kw": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.getprop": {"return": "Any"},
+    f"{B}.RawFont.headers": {"return": "dict[str, Any]"},
+    f"{B}.RawFont.props": {"return": "dict[str, Any]"},
+    f"{B}.RawFont.model": {"return": "dict[str, Any]"},
+    f"{B}.RawFont.report": {"return": "_t.Report"},
+    f"{B}.RawFont.itercps": {"r": "Any"},
+    f"{B}.RawFont.iterglyphs": {"r": "Any"},
+    f"{B}.RawFont.subset": {"r": "Any"},
+    f"{B}.RawFont.transform": {"function": "_c.Callable[..., Any]", "r": "Any"},
+    f"{B}.RawGlyph.transform": {"function": "_c.Callable[..., Any]"},
+    f"{B}.RawFont.load_file_obj": {"reader": "Any"},
+    f"{B}.RawFont.save_to": {"writer": "Any", "options": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.save": {"options": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.topcf": {"options": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.tottf": {"options": "_c.Mapping[str, Any]"},
+    f"{B}.write_ttf": {"options": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.set_altcode": {"altcode": "Any"},
+    f"{B}.RawFont.set_converters": {"char2cp": "_c.Callable[[str], int | None]",
+                                    "cp2char": "_c.Callable[[int], str | None]"},
+    f"{B}.RawFont.set_headers": {"headers": "_c.Mapping[str, Any]"},
+    f"{B}.RawFont.setprop": {"value": "Any"},
+    f"{B}.RawGlyph.__new__": {"meta": "_c.Mapping[str, Any]"},
+    f"{B}.RawGlyph.meta": {"return": "list[Any]"},
+    f"{B}.RawGlyph.setmeta": {"fields": "_c.Mapping[str, Any]"},
+}
 CONSTANTS: dict = {}
 EXCEPTION_ATTRS = {
     "fontpixel._native.FontpixelError": {
@@ -156,7 +415,19 @@ EXCEPTION_ATTRS = {
         "exit_code": "int",
     },
 }
-EXPLICIT_ANY: set = set()
+EXPLICIT_ANY = {
+    # normalize() returns the serialized form of whichever Rust type it names.
+    "fontpixel.formats.normalize:return",
+    # bdfparser values are dynamically typed by design (SPEC-v3): property
+    # values, range specifications, data layouts and file objects.
+    "fontpixel._native._bdfparser.Bitmap.todata:return",
+    "fontpixel._native._bdfparser.RawFont.getprop:return",
+    "fontpixel._native._bdfparser.RawFont.setprop:value",
+    "fontpixel._native._bdfparser.RawFont.set_altcode:altcode",
+    "fontpixel._native._bdfparser.RawFont.*:r",
+    "fontpixel._native._bdfparser.RawFont.load_file_obj:reader",
+    "fontpixel._native._bdfparser.RawFont.save_to:writer",
+}
 
 
 def bind_serde(model):

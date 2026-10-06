@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -45,13 +45,16 @@ def code_page_ranges(
     and explicitly declared Windows code `pages`.
     """
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Any:
+def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> _t.Os2Table:
     """`Os2Table::decode`: an Os2Table dict."""
 
-def encode(table: _t.Os2Table, limits: _t.SfntLimits | None = ...) -> Any:
+def encode(table: _t.Os2Table, limits: _t.SfntLimits | None = ...) -> bytes:
     """`Os2Table::encode`: OS/2 table bytes of the dict's version."""
 
-def set_unicode_coverage(table: _t.Os2Table, codepoints: _c.Iterable[_t.CodepointLike]) -> Any:
+def set_unicode_coverage(
+    table: _t.Os2Table,
+    codepoints: _c.Iterable[_t.CodepointLike],
+) -> _t.Os2Table:
     """
     `Os2Table::set_unicode_coverage`: a copy of `table` with Unicode ranges and
     first/last character indexes derived from `codepoints`.

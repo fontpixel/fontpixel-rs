@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -38,14 +38,14 @@ def brotli_encoder_proven_heap_bound(
     of all encoder heap for the same call shape, or `None` on overflow.
     """
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> Any:
+def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> _t.Decoded:
     """`woff2::decode`: reconstruct the sfnt (or `ttcf` collection) from WOFF2."""
 
 def encode(
     data: _t.Buffer | _c.Sequence[int],
     options: _t.Woff2Options | None = ...,
     limits: _t.WoffLimits | None = ...,
-) -> Any:
+) -> _t.EncodedFont:
     """`woff2::encode`: deterministic WOFF2 of an sfnt or `ttcf` collection."""
 
 def encode_many(

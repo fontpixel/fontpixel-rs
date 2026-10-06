@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -30,7 +30,7 @@ def encode(
     mapping: _c.Mapping[int, int],
     num_glyphs: int,
     limits: _t.SfntLimits | None = ...,
-) -> Any:
+) -> _t.EncodedCmap:
     """
     `cmap::encode`: encode `{codepoint: glyph_id}` with the default record set.
     Returns `{data: bytes, has_bmp_subtable}`.
@@ -41,7 +41,7 @@ def encode_records(
     num_glyphs: int,
     unicode_full_for_bmp: bool,
     limits: _t.SfntLimits | None = ...,
-) -> Any:
+) -> _t.EncodedCmap:
     """
     `cmap::encode_records`: as `encode`, optionally adding the Unicode full
     record even for BMP-only mappings.
@@ -52,7 +52,7 @@ def encode_with_records(
     num_glyphs: int,
     records: _t.FullRecords,
     limits: _t.SfntLimits | None = ...,
-) -> Any:
+) -> _t.EncodedCmap:
     """
     `cmap::encode_with_records`: choose the full-repertoire records
     (`"always"`, `"non-bmp"` or `"when-needed"`).

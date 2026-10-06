@@ -7,7 +7,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font
@@ -31,28 +31,20 @@ class Bitmap:
     A bitmap of `'0'`/`'1'`/`'2'` rows (row 0 at the top), backed by a native
     raster. Equality compares pixels; instances are unhashable (mutable).
     """
-    def __new__(cls, bin_bitmap_list: Any) -> Bitmap:
+    def __new__(cls, bin_bitmap_list: _c.Iterable[str]) -> Bitmap:
         ...
-    def __add__(self, value: Any, /) -> Any:
+    def __add__(self, value: Self, /) -> Self:
         """Return self+value."""
-    def __copy__(self) -> Any:
+    def __copy__(self) -> Self:
         ...
-    def __deepcopy__(self, _memo: Any) -> Any:
+    def __deepcopy__(self, _memo: Any) -> Self:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __mul__(self, value: Any, /) -> Any:
+    def __mul__(self, value: int | tuple[int, int], /) -> Self:
         """Return self*value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     def bbox(self) -> tuple[int, int, int, int]:
         """Ink bounding box `(w, h, xoff, yoff)`, bottom-left origin (`Bitmap::bbox`)."""
@@ -62,13 +54,13 @@ class Bitmap:
     @bindata.setter
     def bindata(self, value: list[str]) -> None: ...
     @classmethod
-    def blank(cls, w: int, h: int) -> Any:
+    def blank(cls, w: int, h: int) -> Self:
         """An all-zero `w`×`h` bitmap (`Bitmap::blank`)."""
     def bold(self, n: int = ...) -> Bitmap:
         """Embolden by `n` pixels (`Bitmap::bold`)."""
     def bytepad(self, bits: int = ...) -> Bitmap:
         """Pad the width to a multiple of `bits` (`Bitmap::bytepad`)."""
-    def clone(self) -> Any:
+    def clone(self) -> Self:
         """Independent copy."""
     def concat(
         self,
@@ -85,7 +77,7 @@ class Bitmap:
         direction: int = ...,
         align: int = ...,
         offsetlist: _c.Sequence[int] | None = ...,
-    ) -> Any:
+    ) -> Self:
         """
         Concatenate bitmaps: `direction` 1 right, 2 left, 0 down, -1 up; `align`
         1 bottom/left, 0 top/right; `offsetlist` gaps between neighbours
@@ -105,7 +97,7 @@ class Bitmap:
     def flipv(self) -> Bitmap:
         """Mirror top-bottom (`Bitmap::flipv`)."""
     @classmethod
-    def fromstring(cls, text: str) -> Any:
+    def fromstring(cls, text: str) -> Self:
         """
         Parse a `str()` picture (`#`=1, `.`=0, `&`=2, digits accepted; outer empty
         lines ignored) (`Bitmap::fromstring`).
@@ -127,11 +119,11 @@ class Bitmap:
         """
     def paste(self, bitmap: Bitmap, x: int = ..., y: int = ...) -> Bitmap:
         """Paste non-zero pixels of `bitmap` at `(x, y)` (top-left origin) (`Bitmap::paste`)."""
-    def replace(self, substr: Any, newsubstr: Any) -> Bitmap:
+    def replace(self, substr: str | int, newsubstr: str | int) -> Bitmap:
         """Replace a label substring (str or int) in every row (`Bitmap::replace`)."""
     def rotate(self, angle: int = ...) -> Bitmap:
         """Rotate clockwise by a multiple of 90 degrees (`Bitmap::rotate`)."""
-    def setpixel(self, x: int, y: int, value: Any = ...) -> Bitmap:
+    def setpixel(self, x: int, y: int, value: str | int | None = ...) -> Bitmap:
         """Set the pixel at `(x, y)` to 0, 1 or 2 (`Bitmap::setpixel`)."""
     def shadow(self, xoff: int = ..., yoff: int = ...) -> Bitmap:
         """Add a label-2 shadow (`Bitmap::shadow`)."""
@@ -173,7 +165,7 @@ class RawFont:
         ...
     def add_handle(self, glyph: RawGlyph, replace: bool = ...) -> None:
         """Add and attach a glyph handle (`Font::add_handle`)."""
-    def addglyph(self, fields: Any, replace: bool = ...) -> None:
+    def addglyph(self, fields: _c.Mapping[str, Any], replace: bool = ...) -> None:
         """Add glyph metadata (`Font::addglyph`)."""
     def char2cp(self, ch: str) -> int | None:
         """Character → code (`Font::char2cp`)."""
@@ -190,15 +182,15 @@ class RawFont:
     def cp2unicode(self, cp: int) -> int | None:
         """Code → Unicode number, surrogates retained (`Font::cp2unicode`)."""
     @staticmethod
-    def create(options: Any = ...) -> RawFont:
+    def create(options: _t.CreateOptions | None = ...) -> RawFont:
         """New font from `CreateOptions` field names (`Font::create`)."""
     def delprop(self, key: str) -> None:
         """Delete a property (`Font::delprop`)."""
-    def draw(self, text: str, kw: Any = ...) -> Bitmap:
+    def draw(self, text: str, kw: _c.Mapping[str, Any] | None = ...) -> Bitmap:
         """Draw text after charset conversion (`Font::draw`)."""
-    def drawall(self, kw: Any = ...) -> Bitmap:
+    def drawall(self, kw: _c.Mapping[str, Any] | None = ...) -> Bitmap:
         """Draw all filtered glyphs (`Font::drawall`)."""
-    def drawcps(self, cps: _c.Sequence[int], kw: Any = ...) -> Bitmap:
+    def drawcps(self, cps: _c.Sequence[int], kw: _c.Mapping[str, Any] | None = ...) -> Bitmap:
         """Draw explicit codes with SPEC draw keywords (`Font::drawcps`)."""
     def encoding(self, name: str) -> None:
         """Override the charset ('' clears it) (`Font::encoding`)."""
@@ -211,7 +203,7 @@ class RawFont:
         """Attached handle by character (`Font::glyph`)."""
     def glyphbycp(self, cp: int) -> RawGlyph | None:
         """Attached handle, or None with a warning (`Font::glyphbycp`)."""
-    def headers(self) -> Any:
+    def headers(self) -> dict[str, Any]:
         """Projected SPEC headers (`Font::headers`)."""
     def itercps(self, order: int = ..., r: Any = ...) -> list[int]:
         """
@@ -238,7 +230,7 @@ class RawFont:
         """Load glyph-based TrueType bytes (`Font::load_ttf`)."""
     def merge(self, other: RawFont, replace: bool = ...) -> None:
         """Copy encoded glyphs from another font (`Font::merge`)."""
-    def model(self) -> Any:
+    def model(self) -> dict[str, Any]:
         """Canonical full model: headers, props, propnames, glyphs, unencoded (`Font::model`)."""
     def newglyph(
         self,
@@ -249,7 +241,7 @@ class RawFont:
         dwidth: int | None = ...,
     ) -> RawGlyph:
         """Create an attached glyph (`Font::newglyph`)."""
-    def props(self) -> Any:
+    def props(self) -> dict[str, Any]:
         """Case-normalized properties (`Font::props`)."""
     def remove_handle(self, glyph: RawGlyph) -> None:
         """Remove exactly a handle's slot (`Font::remove_handle`)."""
@@ -260,23 +252,32 @@ class RawFont:
         """
     def removeglyph(self, cp: int) -> None:
         """Remove a code; missing codes are a no-op (`Font::removeglyph`)."""
-    def report(self) -> Any:
+    def report(self) -> _t.Report:
         """Structured warnings collected so far (`Font::report`), as plain data."""
-    def save(self, path: _t.StrPath, format: str | None = ..., options: Any = ...) -> None:
+    def save(
+        self,
+        path: _t.StrPath,
+        format: str | None = ...,
+        options: _c.Mapping[str, Any] | None = ...,
+    ) -> None:
         """
         Save to a path; `format` (bdf/pcf/ttf/svg) or the extension selects the
         writer, `options` holds its typed options (`Font::save`).
         """
-    def save_to(self, writer: Any, format: str, options: Any = ...) -> None:
+    def save_to(self, writer: Any, format: str, options: _c.Mapping[str, Any] | None = ...) -> None:
         """Serialize to a binary file object with `write(bytes)` (`Font::save_to`)."""
     def set_altcode(self, index: int, altcode: Any = ...) -> None:
         """
         Set the alternate code (`bdf.altcode`) of the `index`-th unencoded glyph;
         None removes it (rebuilds the model; attached glyph handles detach).
         """
-    def set_converters(self, char2cp: Any = ..., cp2char: Any = ...) -> None:
+    def set_converters(
+        self,
+        char2cp: _c.Callable[[str], int | None] | None = ...,
+        cp2char: _c.Callable[[int], str | None] | None = ...,
+    ) -> None:
         """Install Python converters; None restores the charset table (`Font::set_converters`)."""
-    def set_headers(self, headers: Any) -> None:
+    def set_headers(self, headers: _c.Mapping[str, Any]) -> None:
         """Replace all headers (rebuilds the model; attached glyph handles detach)."""
     def setprop(self, key: str, value: Any = ...) -> None:
         """Set a property (`Font::setprop`)."""
@@ -286,7 +287,7 @@ class RawFont:
         """SWIDTH from DWIDTH (`Font::swidth`)."""
     def tobdf(self) -> str:
         """Serialize BDF text (`Font::tobdf`)."""
-    def topcf(self, options: Any = ...) -> bytes:
+    def topcf(self, options: _c.Mapping[str, Any] | None = ...) -> bytes:
         """Serialize PCF with `PcfWriteOptions` field names (`Font::topcf`)."""
     def tosvgfont(
         self,
@@ -296,9 +297,9 @@ class RawFont:
         unicodeformat: str = ...,
     ) -> str:
         """Serialize an SVG font (`Font::tosvgfont`)."""
-    def tottf(self, options: Any = ...) -> bytes:
+    def tottf(self, options: _c.Mapping[str, Any] | None = ...) -> bytes:
         """Serialize TrueType with `TtfOptions` field names (`Font::tottf`)."""
-    def transform(self, function: Any, r: Any = ..., mode: int = ...) -> None:
+    def transform(self, function: _c.Callable[..., Any], r: Any = ..., mode: int = ...) -> None:
         """Apply a Python bitmap function to glyphs (`Font::transform`)."""
     def unicode2cp(self, code: int) -> int | None:
         """Unicode scalar → code (`Font::unicode2cp`)."""
@@ -314,7 +315,7 @@ class RawFont:
 @final
 class RawGlyph:
     """Glyph metadata snapshot with an optional live attachment."""
-    def __new__(cls, meta: Any, font: RawFont) -> RawGlyph:
+    def __new__(cls, meta: _c.Mapping[str, Any], font: RawFont) -> RawGlyph:
         ...
     def chr(self) -> str | None:
         """Character through the owner's charset (`Glyph::chr`)."""
@@ -331,7 +332,7 @@ class RawGlyph:
         """Handle sharing the owning font's model (`Glyph::font`)."""
     def is_attached(self) -> bool:
         """Whether the original slot still exists unreplaced (`Glyph::is_attached`)."""
-    def meta(self) -> Any:
+    def meta(self) -> list[Any]:
         """The 17 metadata slots in `META_TITLES` order (`Glyph::meta`)."""
     def origin(
         self,
@@ -349,11 +350,11 @@ class RawGlyph:
         trim: bool = ...,
     ) -> None:
         """Replace the raster (`Glyph::setbitmap`)."""
-    def setmeta(self, fields: Any) -> None:
+    def setmeta(self, fields: _c.Mapping[str, Any]) -> None:
         """Set metadata keys, writing through when attached (`Glyph::setmeta`)."""
     def shift(self, dx: int = ..., dy: int = ...) -> None:
         """Move the ink offsets (`Glyph::shift`)."""
-    def transform(self, function: Any, mode: int = ...) -> None:
+    def transform(self, function: _c.Callable[..., Any], mode: int = ...) -> None:
         """Draw, apply a Python bitmap function, set the result (`Glyph::transform`)."""
 
 def bitmap_contours(
@@ -391,7 +392,7 @@ def rasterize(
 def read_ttf(data: _t.Buffer, pixelsize: int | None = ...) -> RawFont:
     """`read_ttf(data, pixelsize=None)`: glyph-based TrueType → font handle."""
 
-def write_ttf(font: RawFont, options: Any = ...) -> bytes:
+def write_ttf(font: RawFont, options: _c.Mapping[str, Any] | None = ...) -> bytes:
     """`write_ttf(font, options=None)`: SPEC TrueType bytes (`TtfOptions` field names)."""
 
 META_TITLES: tuple[str, ...]

@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet
@@ -46,7 +46,11 @@ def read(
     `limits`. Returns `(model, report)`.
     """
 
-def read_default(data: _t.Buffer, *, limits: _t.ResourceLimits | None = ...) -> _t.Report:
+def read_default(
+    data: _t.Buffer,
+    *,
+    limits: _t.ResourceLimits | None = ...,
+) -> tuple[FontSet | Font, _t.Report]:
     """
     Decode FNT bytes with default charset interpretation
     (`fnt::read_default`). Returns `(Font, report)`.

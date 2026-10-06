@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -19,7 +19,7 @@ __all__ = [
     "subset",
 ]
 
-def closure(gsub: _t.Gsub, glyphs: Any) -> list[int]:
+def closure(gsub: _t.Gsub, glyphs: _c.Set[int] | frozenset[int]) -> list[int]:
     """
     `Gsub::closure`: `glyphs` plus every glyph reachable by substitution,
     returned as a sorted list.
@@ -29,11 +29,11 @@ def decode(
     data: _t.Buffer | _c.Sequence[int],
     num_glyphs: int,
     limits: _t.LayoutLimits | None = ...,
-) -> Any:
+) -> _t.Gsub:
     """`Gsub::decode`: a Gsub dict (scripts keyed by tag strings)."""
 
-def encode(gsub: _t.Gsub, num_glyphs: int, limits: _t.LayoutLimits | None = ...) -> Any:
+def encode(gsub: _t.Gsub, num_glyphs: int, limits: _t.LayoutLimits | None = ...) -> bytes:
     """`Gsub::encode`: GSUB table bytes."""
 
-def subset(gsub: _t.Gsub, mapping: _c.Mapping[int, int]) -> Any:
+def subset(gsub: _t.Gsub, mapping: _c.Mapping[int, int]) -> _t.Gsub:
     """`Gsub::subset`: the Gsub dict remapped through `{old_id: new_id}`."""

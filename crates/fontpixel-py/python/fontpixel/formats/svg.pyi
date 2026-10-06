@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet, Glyph
@@ -56,7 +56,7 @@ def path_data(
     bitmap: _t.BitmapLike,
     origin: tuple[int, int],
     units_per_pixel: int,
-    shape: Any = ...,
+    shape: _t.Shape | None = ...,
     dot_size: float = ...,
     limits: _t.OutlineLimits | None = ...,
     max_bytes: int = ...,

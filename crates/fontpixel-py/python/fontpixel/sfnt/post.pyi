@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -21,8 +21,8 @@ def decode(
     data: _t.Buffer | _c.Sequence[int],
     num_glyphs: int,
     limits: _t.SfntLimits | None = ...,
-) -> Any:
+) -> _t.PostTable:
     """`PostTable::decode`: a PostTable dict."""
 
-def encode(table: _t.PostTable, num_glyphs: int, limits: _t.SfntLimits | None = ...) -> Any:
+def encode(table: _t.PostTable, num_glyphs: int, limits: _t.SfntLimits | None = ...) -> bytes:
     """`PostTable::encode`: post table bytes."""

@@ -163,10 +163,11 @@ class Shape:
 
 
 class SerdeModel:
-    def __init__(self, doc_dir: Path, reserved=()):
+    def __init__(self, doc_dir: Path, reserved=(), class_names=()):
         # Names the generated module defines otherwise (binding classes,
         # shared aliases, typing imports): serde types move off them.
-        self.reserved = set(reserved)
+        self.reserved = set(reserved) | set(class_names)
+        self.class_names = set(class_names)
         self.docs = []
         for crate in ("fontpixel", "fontpixel_ops"):
             p = doc_dir / f"{crate}.json"
@@ -208,9 +209,10 @@ class SerdeModel:
                     traits.add(tr["path"].split("::")[-1])
             if "Serialize" in traits or "Deserialize" in traits:
                 self.serde[self.path_of[key]] = key
+        self._index_public()
         self.shapes = {}
         self.names = {}
-        missing = [p for p in list(FIXED_NAMES) + list(MANUAL) if p not in self.serde]
+        missing =[p for p in list(FIXED_NAMES) + list(MANUAL) if p not in self.serde]
         if missing:
             raise SystemExit(f"serde_shapes: no serde type at {missing}")
         self._assign_names()
@@ -224,18 +226,24 @@ class SerdeModel:
             if p not in self.serde:
                 self.serde[p] = None
         depth = {p: 1 for p in paths}
+        # The plain-data shape of a binding class `X` is `XDict`.
+        fixed = dict(FIXED_NAMES)
+        for cls in sorted(self.class_names):
+            cands = [p for p in paths if p.split("::")[-1] == cls and p not in fixed]
+            if len(cands) == 1 and cls + "Dict" not in fixed.values():
+                fixed[cands[0]] = cls + "Dict"
         while True:
             names = {}
             for p in paths:
-                if p in FIXED_NAMES:
-                    names.setdefault(FIXED_NAMES[p], []).append(p)
+                if p in fixed:
+                    names.setdefault(fixed[p], []).append(p)
                     continue
                 segs = [s for s in p.split("::")[1:]]
                 tail = segs[-depth[p]:]
                 name = "".join(camel(s) for s in tail[:-1]) + tail[-1]
                 names.setdefault(name, []).append(p)
             taken = [p for name, ps in names.items() if name in self.reserved
-                     for p in ps if p not in FIXED_NAMES]
+                     for p in ps if p not in fixed]
             for p in taken:
                 if depth[p] >= len(p.split("::")) - 1:
                     raise SystemExit(f"cannot name serde type {p} apart from a reserved name")
@@ -246,9 +254,9 @@ class SerdeModel:
             for ps in clash:
                 # The one entry already at the shortest depth keeps its name.
                 low = min(depth[p] for p in ps)
-                keep = [p for p in ps if depth[p] == low and p not in FIXED_NAMES]
+                keep = [p for p in ps if depth[p] == low and p not in fixed]
                 for p in ps:
-                    if p in FIXED_NAMES or (len(keep) == 1 and p == keep[0]):
+                    if p in fixed or (len(keep) == 1 and p == keep[0]):
                         continue
                     if depth[p] >= len(p.split("::")) - 1:
                         raise SystemExit(f"cannot name serde type {p} uniquely")
@@ -258,6 +266,81 @@ class SerdeModel:
 
     def name(self, path):
         return self.names.get(path)
+
+    def _index_public(self):
+        """Every public path (re-exports included) -> (doc, id, owner path)."""
+        self.public = {}
+        for n, d in enumerate(self.docs):
+            index = d["index"]
+
+            def visit(item_id, prefix, seen, n=n, index=index):
+                item = index.get(str(item_id))
+                if item is None or item_id in seen:
+                    return
+                seen = seen | {item_id}
+                inner = item["inner"]
+                kind = next(iter(inner))
+                if kind == "use":
+                    use = inner["use"]
+                    if use.get("id") is not None and not use.get("is_glob"):
+                        target = index.get(str(use["id"]))
+                        if target is not None and target.get("visibility") == "public":
+                            alias = use.get("name")
+                            if alias and alias != target.get("name"):
+                                # `pub use a::B as C`: C names B's item.
+                                self.public.setdefault("::".join(prefix + [alias]), (n, str(use["id"]), None))
+                                return
+                            visit(use["id"], prefix, seen)
+                    return
+                if item.get("visibility") != "public":
+                    return
+                name = item.get("name")
+                path = "::".join(prefix + [name]) if name else "::".join(prefix)
+                if kind == "module":
+                    for child in inner["module"]["items"]:
+                        visit(child, prefix + [name], seen)
+                    return
+                if kind in ("struct", "enum", "function", "type_alias"):
+                    self.public.setdefault(path, (n, str(item_id), None))
+                if kind in ("struct", "enum"):
+                    for impl_id in inner[kind].get("impls", []):
+                        impl = index.get(str(impl_id))
+                        if not impl or impl["inner"]["impl"].get("trait") is not None:
+                            continue
+                        for m in impl["inner"]["impl"]["items"]:
+                            mi = index.get(str(m))
+                            if mi and mi.get("visibility") == "public" and "function" in mi["inner"]:
+                                self.public.setdefault(path + "::" + mi["name"], (n, str(m), path))
+
+            visit(d["root"], [], frozenset())
+
+    def canonical(self, path):
+        """Canonical path of a public type path (re-exports resolved)."""
+        hit = self.public.get(path)
+        if hit is None:
+            return None
+        return self.path_of.get((hit[0], hit[1]))
+
+    def fn_output(self, path):
+        """Python type of the value a public Rust function/method returns
+        (`Result<T>` unwrapped), or None."""
+        hit = self.public.get(path)
+        if hit is None:
+            return None
+        n, key, owner = hit
+        item = self.items.get((n, key))
+        if item is None or "function" not in item["inner"]:
+            return None
+        out = item["inner"]["function"]["sig"]["output"]
+        if out is None:
+            return "None"
+        self._self_path = self.canonical(owner) if owner else None
+        try:
+            return self.resolve(n, out)
+        finally:
+            self._self_path = None
+
+    _self_path = None
 
     def read_model(self, rust_path):
         """"FontSet" or "Font": the model a core reader such as
@@ -317,10 +400,14 @@ class SerdeModel:
                 return "None"
             return "tuple[" + ", ".join(self.resolve(doc_no, t, generics) for t in v) + "]"
         if k == "generic":
+            if v == "Self" and self._self_path in self.names:
+                return self.names[self._self_path]
             return "Any"
         if k == "resolved_path":
             name = v["path"].split("::")[-1]
             args = [a["type"] for a in ((v.get("args") or {}).get("angle_bracketed") or {}).get("args", []) if "type" in a]
+            if name == "Result" and args:
+                return self.resolve(doc_no, args[0], generics)
             if name == "Option" and args:
                 return union(self.resolve(doc_no, args[0], generics), "None")
             if name in SEQ and args:
@@ -337,6 +424,9 @@ class SerdeModel:
                 return "str"
             if name == "PhantomData":
                 return "None"
+            alias = self.items.get((doc_no, str(v["id"])))
+            if alias is not None and "type_alias" in alias["inner"]:
+                return self.resolve(doc_no, alias["inner"]["type_alias"]["type"], generics)
             target = self.path_of.get((doc_no, str(v["id"])))
             if target is None:
                 # Cross-crate reference (fontpixel-ops -> fontpixel).

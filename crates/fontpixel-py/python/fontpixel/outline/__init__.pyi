@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel.outline import path as path
@@ -27,31 +27,31 @@ __all__ = [
 
 def contours(
     bitmap: _t.BitmapLike,
-    options: Any = ...,
-    limits: _t.ResourceLimits | None = ...,
-) -> Any:
+    options: _t.OutlineOptions | None = ...,
+    limits: _t.OutlineLimits | None = ...,
+) -> list[list[tuple[float, float, bool]]]:
     """`outline::contours`: trace a Mono bitmap into closed contours."""
 
-def defaults() -> Any:
+def defaults() -> _t.OutlineDefaults:
     """Default `Options` and `Limits` dicts of `fontpixel.outline`."""
 
-def pixel_contour(options: Any = ...) -> Any:
+def pixel_contour(options: _t.OutlineOptions | None = ...) -> _t.Contour:
     """`outline::pixel_contour`: one independent square/dot inside the cell at `(0, 0)`."""
 
 def pixel_origins(
     bitmap: _t.BitmapLike,
-    options: Any = ...,
-    limits: _t.ResourceLimits | None = ...,
-) -> Any:
+    options: _t.OutlineOptions | None = ...,
+    limits: _t.OutlineLimits | None = ...,
+) -> list[tuple[float, float]]:
     """`outline::pixel_origins`: lower-left positions of ink cells, top-to-bottom."""
 
 def rasterize(
-    contours: Any,
+    contours: _c.Sequence[Any],
     units_per_pixel: float,
     origin: tuple[int, int],
     width: int,
     height: int,
-    limits: _t.ResourceLimits | None = ...,
+    limits: _t.OutlineLimits | None = ...,
 ) -> Bitmap:
     """
     `outline::rasterize`: unhinted nonzero-winding pixel-centre fill of
@@ -59,7 +59,7 @@ def rasterize(
     dimensions are in pixels, `units_per_pixel` is positive.
     """
 
-def segments(contour: Any) -> Any:
+def segments(contour: _t.Contour) -> list[_t.Segment]:
     """
     `outline::segments`: segment dicts of a contour, with implied on-curve
     midpoints resolved.
@@ -72,7 +72,7 @@ def spec_bitmap_contours(
     ppu: int,
     xoff: int,
     yoff: int,
-) -> Any:
+) -> list[list[tuple[float, float, bool]]]:
     """
     `outline::spec_bitmap_contours`: the exact SPEC row adapter shared with the
     bdfparser compatibility layer (`'0'` is paper, any other byte ink).

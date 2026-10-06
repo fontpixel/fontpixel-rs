@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -30,10 +30,10 @@ __all__ = [
 def decode(
     location: _t.Buffer | _c.Sequence[int],
     data: _t.Buffer | _c.Sequence[int],
-    kind: Any,
+    kind: _t.BitmapKind,
     num_glyphs: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> list[_t.Strike]:
     """`bitmap::decode`: strikes from location (EBLC/bloc/CBLC) and data tables."""
 
 def decode_sbix(
@@ -41,57 +41,60 @@ def decode_sbix(
     num_glyphs: int,
     darkness: bool = ...,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> _t.Sbix:
     """`color::decode_sbix`: an Sbix dict (PNG payloads converted to gray)."""
 
 def decode_scaling(
     data: _t.Buffer | _c.Sequence[int],
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> list[_t.Scale]:
     """`bitmap::decode_scaling`: EBSC scale dicts."""
 
 def decode_with_color(
     location: _t.Buffer | _c.Sequence[int],
     data: _t.Buffer | _c.Sequence[int],
-    kind: Any,
+    kind: _t.BitmapKind,
     num_glyphs: int,
     darkness: bool,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> list[_t.Strike]:
     """
     `bitmap::decode_with_color`: as `decode`, converting color strikes to
     gray (`darkness=True` uses darkness rather than luminance).
     """
 
 def encode(
-    strikes: Any,
-    kind: Any,
+    strikes: _c.Sequence[_t.Strike],
+    kind: _t.BitmapKind,
     num_glyphs: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> _t.Tables:
     """`bitmap::encode`: `{data, location}` bytes for strike dicts."""
 
-def encode_sbix(sbix: _t.Sbix, num_glyphs: int, limits: _t.SfntBitmapLimits | None = ...) -> Any:
+def encode_sbix(sbix: _t.Sbix, num_glyphs: int, limits: _t.SfntBitmapLimits | None = ...) -> bytes:
     """`color::encode_sbix`: sbix table bytes."""
 
-def encode_scaling(scales: Any, limits: _t.SfntBitmapLimits | None = ...) -> Any:
+def encode_scaling(
+    scales: _c.Sequence[_t.Scale],
+    limits: _t.SfntBitmapLimits | None = ...,
+) -> bytes:
     """`bitmap::encode_scaling`: EBSC bytes."""
 
 def encode_shared_metric_runs(
-    strikes: Any,
-    kind: Any,
+    strikes: _c.Sequence[_t.Strike],
+    kind: _t.BitmapKind,
     num_glyphs: int,
     minimum_run: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> _t.Tables:
     """`runs::encode_shared_metric_runs`: `{tables: {data, location}, shared_runs}`."""
 
 def encode_spanning(
-    strikes: Any,
-    kind: Any,
+    strikes: _c.Sequence[_t.Strike],
+    kind: _t.BitmapKind,
     num_glyphs: int,
     limits: _t.SfntBitmapLimits | None = ...,
-) -> Any:
+) -> _t.Tables:
     """`bitmap::encode_spanning`: as `encode`, with index subtables spanning gaps."""
 
 def kind_tags(kind: _t.BitmapKind) -> tuple[str, str]:

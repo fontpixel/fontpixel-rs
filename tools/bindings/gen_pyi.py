@@ -286,6 +286,7 @@ class Typer:
                        "properties": 0, "properties_any": 0}
         self.namespaces = rust_scan.format_namespaces(SRC)
         self.setters = rust_scan.registry_setters(SRC)
+        self.ops = rust_scan.ops_operations(SRC)
 
     # ---------- matching runtime callables to Rust fns
     def rust_for(self, module_name, cls, member):
@@ -324,7 +325,8 @@ class Typer:
         return self.py(t, position, cls_name, hint)
 
     def py(self, t, pos, cls_name, hint=None):
-        name, args = t
+        full, args = t
+        name = full.split("::")[-1]
         if name == "&":
             return self.py(args[0], pos, cls_name, hint)
         if name == "()":
@@ -385,7 +387,7 @@ class Typer:
             return self.class_ref(self.py_of_rust[name])
         if name in ovr.RUST_TYPES:
             return ovr.RUST_TYPES[name]
-        shape = self.serde_name(name)
+        shape = self.serde_name(full)
         if shape:
             return shape
         return "Any"
@@ -413,8 +415,25 @@ class Typer:
         kind, value, file = hint
         if kind == "helper":
             return self.helper_type(value, file)
-        shape = self.serde_name(value)
+        with self.in_file(file):
+            shape = self.rust_type(value, "param", None)
+            shape = None if shape == "Any" else shape
         return shape or "Any"
+
+    cur_file = None
+
+    def in_file(self, file):
+        """Resolve Rust paths with `file`'s `use` declarations."""
+        typer = self
+
+        class _Ctx:
+            def __enter__(self):
+                self.prev = typer.cur_file
+                typer.cur_file = file
+
+            def __exit__(self, *exc):
+                typer.cur_file = self.prev
+        return _Ctx()
 
     def helper_type(self, name, file):
         """Python type a conversion helper accepts: an explicit HELPERS entry,
@@ -424,16 +443,38 @@ class Typer:
                 return ovr.HELPERS[key]
         rets = rust_scan.HELPER_RETURNS
         ret = rets.get(file, {}).get(name)
+        home = file
         if ret is None:
-            found = [r[name] for r in rets.values() if name in r]
-            ret = found[0] if len(found) == 1 else None
+            found = [(f, r[name]) for f, r in rets.items() if name in r]
+            home, ret = found[0] if len(found) == 1 else (None, None)
         if ret is None:
             return "Any"
-        t = self.rust_type(ret, "return", None)
+        with self.in_file(home):
+            t = self.rust_type(ret, "return", None)
         return t if t not in ("None",) else "Any"
+
+    def full_path(self, rust_text):
+        """Expand a path as written in the current binding file to a crate path."""
+        text = re.sub(r"<.*>", "", rust_text).strip().lstrip("&").strip()
+        segs = text.split("::")
+        uses = rust_scan.USES.get(self.cur_file, {})
+        if segs[0] == "f":
+            segs = ["fontpixel", "formats"] + segs[1:]
+        elif segs[0] in uses:
+            segs = uses[segs[0]].split("::") + segs[1:]
+        elif segs[0] == "crate":
+            return None
+        if segs[0] not in ("fontpixel", "fontpixel_ops"):
+            return None
+        return "::".join(segs)
 
     def serde_name(self, rust_text):
         """`fontpixel.types` name of a Rust serde type written as in the source."""
+        full = self.full_path(rust_text)
+        if full:
+            canon = self.serde.canonical(full) or full
+            if canon in self.serde.names:
+                return "_t." + self.serde.names[canon]
         text = re.sub(r"<.*>", "", rust_text).strip().lstrip("&")
         text = text.replace("crate::", "").replace("fontpixel::", "")
         text = re.sub(r"^f::", "formats::", text)
@@ -448,6 +489,25 @@ class Typer:
         if len(hits) == 1:
             return "_t." + self.serde.names[hits[0]]
         return None
+
+    def ret_hint_type(self, hint):
+        """Python type of a `PyAny` result from its body hint."""
+        if hint is None:
+            return None
+        if hint[0] == "bytes":
+            return "bytes"
+        kind, text, file = hint
+        with self.in_file(file):
+            if kind == "type":
+                t = self.rust_type(text, "return", None)
+                return None if "Any" in split_union(t) else t
+            full = self.full_path(text)
+        if not full:
+            return None
+        out = self.serde.fn_output(full)
+        if out is None or out == "Any":
+            return None
+        return qualify_serde(out, self.serde)
 
     def class_ref(self, rc):
         return f"@{rc.module or 'fontpixel'}.{rc.py_name}"
@@ -466,6 +526,12 @@ class Typer:
     _macro_cache: dict = {}
 
     def _macro_sig(self, f):
+        m = re.fullmatch(r"fontpixel\._native\._ops\.(\w+)", f.qual)
+        if m and m.group(1) in self.ops:
+            with self.in_file("ops.rs"):
+                request = self.serde_name(self.ops[m.group(1)]) or "Any"
+            return {"request": request, "files": "_t.Files", "options": "Any",
+                    "return": "@fontpixel.ops.OperationResult"}
         m = re.fullmatch(r"fontpixel\._native\.Registry\.set_\w+_options", f.qual)
         if m:
             t = re.search(r"apply a `([^`]+)` dict", f.doc)
@@ -582,7 +648,7 @@ def parse_rust_type(text):
         name = take()
         while peek() == "::":
             take()
-            name = take()
+            name = name + "::" + take()
         args = []
         if peek() == "<":
             take()
@@ -635,7 +701,8 @@ class Renderer:
             full = m.group(1)
             mod, _, name = full.rpartition(".")
             mod = {"fontpixel": "fontpixel._native",
-                   "fontpixel.compat.bdfparser": "fontpixel._native._bdfparser"}.get(mod, mod)
+                   "fontpixel.compat.bdfparser": "fontpixel._native._bdfparser",
+                   "fontpixel.ops": "fontpixel._native._ops"}.get(mod, mod)
             return imp.ref(mod, name)
         return re.sub(r"@([\w.]+)", sub, text)
 
@@ -665,7 +732,7 @@ class Renderer:
         out.append("import types as _types")
         out.append("from typing import Any, Literal, final, overload")
         out.append("")
-        out.append("from typing_extensions import disjoint_base")
+        out.append("from typing_extensions import Self, disjoint_base")
         out.append("")
         out.append("from fontpixel import types as _t")
         if m.name == "fontpixel._native":
@@ -793,6 +860,11 @@ class Renderer:
             return lines
         rust = typer.rust_for(m.name, c, mm)
         rc = typer.rust_class_of(c)
+        if mm.name in ("__lt__", "__le__", "__gt__", "__ge__") and rust is None and rc is not None \
+                and "ord" not in rc.options:
+            # pyo3 fills the whole rich-comparison slot for `__eq__`; ordering
+            # then returns NotImplemented, so the stub leaves it out.
+            return []
         partner = PHANTOM_PARTNERS.get(mm.name)
         if rust is None and rc is not None and partner and typer.methods.get((rc.rust_name, partner, "other")):
             # pyo3 fills both halves of a slot; the half the class does not
@@ -820,6 +892,10 @@ class Renderer:
             params = params[1:]
         rendered = []
         rmap = dict(rust.params) if rust else {}
+        if rust and f.name.startswith("__") and len(rust.params) == len(params):
+            # Slot wrappers name their parameters (`key`, `value`) differently.
+            rmap = {p.name: rp[1] for p, rp in zip(params, rust.params)}
+            rust = _renamed_hints(rust, params)
         seen_kw = False
         saw_posonly = any(p.kind == "positional_only" for p in params)
         for p in params:
@@ -867,11 +943,14 @@ class Renderer:
     def param_type(self, f, p, rust, rmap, cls_name):
         typer = self.typer
         typer.counts["params"] += 1
+        if f.name in ("__eq__", "__ne__"):
+            return "object"
         t = ovr.lookup(ovr.SIGNATURES, f.qual, p.name)
         if t is None and rust is None:
             t = (typer.macro_sig(f) or {}).get(p.name)
         if t is None and rust is not None and p.name in rmap:
-            t = typer.rust_type(rmap[p.name], "param", cls_name, rust.hints.get(p.name))
+            with typer.in_file(rust.file):
+                t = typer.rust_type(rmap[p.name], "param", cls_name, rust.hints.get(p.name))
             if "Any" in split_union(t):
                 alt = ovr.param_rule(f.qual, p.name)
                 if alt:
@@ -900,7 +979,12 @@ class Renderer:
         if t is None and rust is None:
             t = (typer.macro_sig(f) or {}).get("return")
         if t is None and rust is not None:
-            t = typer.rust_type(rust.ret, "return", cls_name)
+            with typer.in_file(rust.file):
+                t = typer.rust_type(rust.ret, "return", cls_name)
+                if "Any" in split_union(t):
+                    alt = typer.ret_hint_type(rust.ret_hint)
+                    if alt:
+                        t = union(alt, "None") if "None" in split_union(t) else alt
         if t is None and f.name in DUNDER_RETURNS:
             t = DUNDER_RETURNS[f.name]
         if t is None or "Any" in split_union(t):
@@ -915,6 +999,22 @@ PHANTOM_PARTNERS = {"__delitem__": "__setitem__", "__setitem__": "__delitem__",
                     "__radd__": "__add__", "__rsub__": "__sub__", "__rmul__": "__mul__",
                     "__rmatmul__": "__matmul__", "__ror__": "__or__", "__rand__": "__and__",
                     "__rxor__": "__xor__"}
+
+
+def _renamed_hints(rust, params):
+    """A copy of `rust` whose parameter names/hints follow the runtime names."""
+    import copy
+    r = copy.copy(rust)
+    names = {rp[0]: p.name for p, rp in zip(params, rust.params)}
+    r.params = [(names[n], t) for n, t in rust.params]
+    r.hints = {names.get(k, k): v for k, v in rust.hints.items()}
+    return r
+
+
+def qualify_serde(expr, serde):
+    """Prefix serde type names in a serde_shapes type expression with `_t.`."""
+    names = set(serde.names.values()) | {"SerdeBytes", "StrPath"}
+    return re.sub(r"(?<![\w.])([A-Z]\w*)", lambda m: "_t." + m.group(1) if m.group(1) in names else m.group(1), expr)
 
 
 DUNDER_RETURNS = {"__len__": "int", "__bool__": "bool", "__int__": "int", "__index__": "int",
@@ -989,6 +1089,7 @@ def render_types(serde):
            "    from fontpixel._native import (",
            "        Bitmap, Codepoint, Font, Glyph, Input, OutputBundle, Properties, ResourceSet, Written,",
            "    )",
+           "    from fontpixel.merge import Selection",
            "",
            ovr.PRELUDE.strip(),
            "",
@@ -1070,7 +1171,8 @@ def render_typeddict(s):
     flattened = [f for f in s.fields if f.key.startswith("**")]
     if flattened:
         doc += "\n\nUntyped flattened groups: " + ", ".join(f.key[2:] for f in flattened) + "."
-    if any(not serde_shapes.ident(f.key) for f in fields):
+    used = set(re.findall(r"[A-Za-z_]\w*", " ".join(f.type for f in fields)))
+    if any(not serde_shapes.ident(f.key) or f.key in used or f.key in BUILTIN_NAMES for f in fields):
         # Functional syntax for keys that are not identifiers.
         lines = []
         if req and opt:
@@ -1109,6 +1211,9 @@ def render_typeddict(s):
     return lines
 
 
+BUILTIN_NAMES = {"bytes", "str", "int", "float", "bool", "list", "dict", "tuple", "set", "type", "object"}
+
+
 def field_lines(f):
     out = [f"    {f.key}: {f.type}"]
     if f.doc:
@@ -1131,9 +1236,9 @@ def build(rustdoc_dir):
     mods = native_modules()
     model, class_home = collect(mods)
     reserved = set(TYPES_IMPORTS)
-    reserved |= {c.name for m in model.values() for c in m.classes}
+    class_names = {c.name for m in model.values() for c in m.classes}
     reserved |= set(re.findall(r"^(?:class )?(\w+)(?: = |\()", ovr.PRELUDE, re.M))
-    serde = serde_shapes.SerdeModel(rustdoc_dir, reserved)
+    serde = serde_shapes.SerdeModel(rustdoc_dir, reserved, class_names)
     ovr.bind_serde(serde)
     typer = Typer(serde, fns, classes, class_home)
     renderer = Renderer(model, typer, class_home)

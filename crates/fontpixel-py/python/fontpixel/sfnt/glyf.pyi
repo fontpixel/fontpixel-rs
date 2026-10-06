@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel.sfnt import Sfnt
@@ -24,10 +24,14 @@ __all__ = [
     "unhinted_maxp",
 ]
 
-def component_translated(glyph_id: int, x: int, y: int) -> Any:
+def component_translated(glyph_id: int, x: int, y: int) -> _t.Component:
     """`Component::translated`: a component dict offset by `(x, y)`."""
 
-def contours(table: _t.GlyfTable, glyph_id: int, limits: _t.GlyfLimits | None = ...) -> Any:
+def contours(
+    table: _t.GlyfTable,
+    glyph_id: int,
+    limits: _t.GlyfLimits | None = ...,
+) -> list[_t.Contour]:
     """`GlyfTable::contours`: flattened contours of `glyph_id` (composites expanded)."""
 
 def decode(
@@ -36,16 +40,20 @@ def decode(
     num_glyphs: int,
     index_to_loc_format: int,
     limits: _t.GlyfLimits | None = ...,
-) -> Any:
+) -> _t.GlyfTable:
     """`GlyfTable::decode`: a GlyfTable dict from glyf and loca bytes."""
 
-def encode(table: _t.GlyfTable, format: Any, limits: _t.GlyfLimits | None = ...) -> Any:
+def encode(
+    table: _t.GlyfTable,
+    format: _t.LocaFormat,
+    limits: _t.GlyfLimits | None = ...,
+) -> _t.GlyfEncoded:
     """
     `GlyfTable::encode`: `{glyf, loca, index_to_loc_format, bounds, statistics}`
     with `glyf`/`loca` as `bytes`; `format` is `"short"`, `"long"` or `"auto"`.
     """
 
-def from_sfnt(font: Sfnt, limits: _t.GlyfLimits | None = ...) -> Any:
+def from_sfnt(font: Sfnt, limits: _t.GlyfLimits | None = ...) -> _t.GlyfTable:
     """`GlyfTable::from_sfnt`: the GlyfTable dict of an `Sfnt` handle."""
 
 def glyph_pixels(
@@ -53,14 +61,14 @@ def glyph_pixels(
     options: _t.OutlineOptions | None = ...,
     shared_glyph: int = ...,
     limits: _t.GlyfLimits | None = ...,
-) -> Any:
+) -> _t.SfntGlyfGlyph:
     """
     `Glyph::pixels`: a glyph dict tracing a Mono bitmap handle (Dot shapes
     reference `shared_glyph`).
     """
 
-def glyph_simple(contours: Any) -> Any:
+def glyph_simple(contours: _c.Sequence[_t.Contour]) -> _t.SfntGlyfGlyph:
     """`Glyph::simple`: a simple glyph dict from `[(x, y, on_curve), …]` contours."""
 
-def unhinted_maxp(statistics: _t.Statistics, num_glyphs: int) -> Any:
+def unhinted_maxp(statistics: _t.Statistics, num_glyphs: int) -> bytes:
     """`Statistics::unhinted_maxp`: maxp 1.0 bytes from encode statistics."""

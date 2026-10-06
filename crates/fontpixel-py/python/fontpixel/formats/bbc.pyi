@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet, Written
@@ -29,7 +29,7 @@ def detect(data: _t.Buffer | _c.Sequence[int]) -> _t.Confidence:
 
 def read(
     data: _t.ReadInput | None = ...,
-    options: Any = ...,
+    options: _t.NativeReadOptions | None = ...,
     *,
     name: str | None = ...,
     resources: _t.Resources | None = ...,
@@ -45,7 +45,7 @@ def read(
 
 def write(
     fonts: FontSet | Font,
-    options: Any = ...,
+    options: _t.W5a2CommonNativeWriteOptions | None = ...,
     *,
     primary_name: str | None = ...,
     strict: bool = ...,

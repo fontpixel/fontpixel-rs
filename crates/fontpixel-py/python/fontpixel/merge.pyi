@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -31,7 +31,7 @@ class Selection:
     """
     def __new__(cls, expression: str) -> Selection:
         ...
-    def __contains__(self, key: Any, /) -> bool:
+    def __contains__(self, key: int, /) -> bool:
         """Return key in self."""
     def contains(self, codepoint: int) -> bool:
         """`Selection::contains`: whether `codepoint` is selected."""
@@ -41,12 +41,12 @@ class Selection:
     @staticmethod
     def parse(expression: str) -> Selection:
         """`Selection::parse`: parse a selection expression."""
-    def ranges(self) -> Any:
+    def ranges(self) -> list[_t.CodepointRange]:
         """`Selection::ranges`: normalized inclusive ranges `[{start, end}]`."""
     def scalar_count(self) -> int:
         """`Selection::scalar_count`: number of selected Unicode scalars."""
 
-def defaults() -> Any:
+def defaults() -> _t.MergeDefaults:
     """
     Default MergeOptions (with an empty `family`, which `merge` rejects) and
     PartLicense dicts.
@@ -55,7 +55,7 @@ def defaults() -> Any:
 def geometric_width_as_str(value: _t.GeometricWidth) -> str:
     """`GeometricWidth::as_str`: the CLI/JSON spelling of a geometric width."""
 
-def merge(parts: _c.Sequence[Any], options: _t.MergeOptions) -> Any:
+def merge(parts: _c.Sequence[_t.MergePartArgs], options: _t.MergeOptions) -> _t.MergeOutcome:
     """
     `merge::merge`: merge `parts` in priority order under `options`
     (MergeOptions dict; `family` is required). Returns `{font, report}`.

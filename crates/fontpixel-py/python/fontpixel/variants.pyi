@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font
@@ -32,17 +32,17 @@ class PreparedVariants:
     An immutable plan ready for repeated exports
     (`fontpixel::variants::PreparedVariants`). Safe to share between threads.
     """
-    def encode(self, options: Any = ...) -> Any:
+    def encode(self, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
         """
         `PreparedVariants::encode`: export without replanning; `options.limits`
         must equal the limits given to `prepare`.
         """
-    def encode_allowance(self) -> int:
+    def encode_allowance(self) -> _t.EncodedFont:
         """
         `PreparedVariants::encode_allowance`: bytes one `encode` may admit
         besides the plan.
         """
-    def plan(self) -> Any:
+    def plan(self) -> _t.Plan:
         """`PreparedVariants::plan`: the Plan dict."""
     def retained_bytes(self) -> int:
         """`PreparedVariants::retained_bytes`: admitted bytes of the shared plan."""
@@ -63,12 +63,17 @@ class Variants:
         `Variants::add_language`: add a BCP-47/OpenType language with the
         default CJK script scope (DFLT, hani, kana, hang, bopo).
         """
-    def add_language_variant(self, language: _t.Tag, scripts: Any, font: _t.FontLike) -> None:
+    def add_language_variant(
+        self,
+        language: _t.Tag,
+        scripts: _c.Iterable[_t.Tag],
+        font: _t.FontLike,
+    ) -> None:
         """
         Append a language alternative with explicit OpenType `language` tag and
         `scripts` tags (the `languages` field).
         """
-    def add_script(self, scripts: Any, font: _t.FontLike) -> None:
+    def add_script(self, scripts: _c.Iterable[_t.Tag], font: _t.FontLike) -> None:
         """Append a script alternative for `scripts` tags (the `scripts` field)."""
     @property
     def base(self) -> Font:
@@ -78,15 +83,15 @@ class Variants:
     @property
     def consumed(self) -> bool:
         """Whether `encode_owned()`/`into_prepared()` consumed this handle."""
-    def encode(self, options: Any = ...) -> Any:
+    def encode(self, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
         """`variants::encode`: plan and export (`{bytes, report}`)."""
-    def encode_owned(self, options: Any = ...) -> Any:
+    def encode_owned(self, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
         """
         `Variants::encode_owned`: plan and export, consuming this handle's
         model and dropping faces as soon as they are planned.
         """
     @staticmethod
-    def from_dict(value: Any) -> Variants:
+    def from_dict(value: _t.VariantsDict) -> Variants:
         """Build from a serde Variants dict `{base, languages, scripts}`."""
     def into_prepared(self, limits: _t.LayoutLimits | None = ...) -> PreparedVariants:
         """`Variants::into_prepared`: as `prepare`, consuming this handle's model."""
@@ -98,7 +103,7 @@ class Variants:
         """
     @languages.setter
     def languages(self, value: list[Any]) -> None: ...
-    def plan(self, limits: _t.LayoutLimits | None = ...) -> Any:
+    def plan(self, limits: _t.LayoutLimits | None = ...) -> _t.Plan:
         """
         `Variants::plan`: glyph order, deduplication and locl routing as a Plan
         dict `{glyphs: [(name, glyph)], cmap, gsub}`.
@@ -120,19 +125,22 @@ class Variants:
         """Script alternatives as `[{scripts, font}]`."""
     @scripts.setter
     def scripts(self, value: list[Any]) -> None: ...
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.VariantsDict:
         """The serde Variants dict (fonts as font dicts)."""
 
-def defaults() -> Any:
+def defaults() -> _t.VariantsDefaults:
     """Default option dicts of `fontpixel.variants`."""
 
-def encode(variants: Variants, options: Any = ...) -> Any:
+def encode(variants: Variants, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
     """`variants::encode`: plan and export a `Variants` handle."""
 
-def encode_single(font: _t.FontLike, options: Any = ...) -> Any:
+def encode_single(font: _t.FontLike, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
     """`variants::encode_single`: export one face without alternatives."""
 
-def encode_single_owned(font: _t.FontLike, options: Any = ...) -> Any:
+def encode_single_owned(
+    font: _t.FontLike,
+    options: _t.ExportOptions | None = ...,
+) -> _t.EncodedFont:
     """
     `variants::encode_single_owned`: as `encode_single`, letting the export
     own (and drop early) a copy of the face; output is identical.

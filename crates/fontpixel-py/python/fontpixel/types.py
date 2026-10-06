@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from fontpixel._native import (
         Bitmap, Codepoint, Font, Glyph, Input, OutputBundle, Properties, ResourceSet, Written,
     )
+    from fontpixel.merge import Selection
 
 # ------------------------------------------------------------------ shared aliases
 
@@ -88,6 +89,77 @@ ReadInput = Union[Buffer, "Input", "OutputBundle", "Written"]
 """What a reader decodes: bytes-like data, an ``Input`` (carrying its name
 and resources) or a written ``OutputBundle``/``Written`` read back with its
 own entry point and sidecars."""
+TextPalette = Union[Mapping[str, int], Sequence[tuple[str, int]]]
+"""Text-to-pixel palette for ``Bitmap.from_text``: ``{char: value}`` or pairs."""
+OutputPalette = Union[Mapping[int, str], Sequence[tuple[int, str]]]
+"""Pixel-to-text palette for ``Bitmap.to_text``: ``{value: char}`` or pairs."""
+OutlinePoint = tuple[float, float, bool]
+"""An outline point ``(x, y, on_curve)`` in upward design units."""
+Contour = List[OutlinePoint]
+"""A closed contour without a repeated closing point (``outline::Contour``)."""
+PropertyEdit = Union[Mapping[str, Mapping[str, Any]], Any]
+"""A projection property edit: ``{"set": {"name": str, "value": int | str}}``
+or ``{"remove": {"name": str}}``."""
+BitmapProjectionArgs = Mapping[str, Any]
+"""Keyword form of a ``BitmapProjection``: ``scalable_advance``, ``font_name``,
+``size`` and ``properties`` as in its constructor."""
+NewFormat = TypedDict("NewFormat", {"id": str, "name": str, "extensions": List[str]})
+"""A new format registered from Python: lowercase ID, display name, extensions."""
+PythonWriter = Union[Callable[..., Any], Any]
+"""``Registry.register`` writer: ``writer(font_set, options)`` or an object
+with ``write(font_set, options)`` (optionally ``transport_limits()`` and
+``validate_transport(...)``), returning a ``Written``, an ``OutputBundle`` or
+``(OutputBundle, report)``."""
+EncodedFont = TypedDict("EncodedFont", {"bytes": bytes, "report": "Report"})
+"""An encoded font file with its diagnostics (WOFF and variants exports)."""
+VectorRasterCodecDict = TypedDict(
+    "VectorRasterCodecDict",
+    {"id": str, "read_options": "VectorRasterOptions", "write_options": "VectorRasterWriteOptions"},
+)
+"""Default codec options of an outline format (``vector_raster::Codec::new``)."""
+MergeDefaults = TypedDict("MergeDefaults", {"MergeOptions": "MergeOptions", "PartLicense": "PartLicense"})
+"""``fontpixel.merge.defaults()``."""
+OutlineDefaults = TypedDict("OutlineDefaults", {"Options": "OutlineOptions", "Limits": "OutlineLimits"})
+"""``fontpixel.outline.defaults()``."""
+SfntDefaults = TypedDict("SfntDefaults", {
+    "Limits": "SfntLimits", "collection.Limits": "CollectionLimits", "glyf.Limits": "GlyfLimits",
+    "cff.Limits": "CffLimits", "cff.DotOptions": "DotOptions", "bitmap.Limits": "SfntBitmapLimits",
+    "gsub.LayoutLimits": "LayoutLimits", "subset.Options": "SubsetOptions"})
+"""``fontpixel.sfnt.defaults()``, keyed by Rust type path relative to ``fontpixel::sfnt``."""
+VariantsDefaults = TypedDict("VariantsDefaults", {
+    "Options": "ExportOptions", "MetadataOptions": "MetadataOptions", "NotdefPolicy": "NotdefPolicy",
+    "LayoutLimits": "LayoutLimits"})
+"""``fontpixel.variants.defaults()``."""
+WoffDefaults = TypedDict("WoffDefaults", {
+    "Limits": "WoffLimits", "Auxiliary": "Auxiliary", "woff1.Options": "Woff1Options",
+    "woff2.Options": "Woff2Options"})
+"""``fontpixel.woff.defaults()``."""
+MergePartArgs = TypedDict("MergePartArgs", {
+    "font": "FontLike", "selection": "Union[Selection, str]", "dy": int, "label": "Union[str, None]",
+    "license": "PartLicense"}, total=False)
+"""One ``fontpixel.merge.merge`` part: ``font`` and ``selection`` are required."""
+MergeOutcome = TypedDict("MergeOutcome", {"font": "Font", "report": "MergeReport"})
+"""``fontpixel.merge.merge`` result: the merged ``Font`` handle and its report."""
+BatchRequest = TypedDict("BatchRequest", {
+    "tasks": List[Mapping[str, Any]], "jobs": Union[int, None], "max_working_bytes": int,
+    "max_pending_bytes": int, "max_report_bytes": int, "max_task_report_bytes": int,
+    "protected_paths": List[StrPath]}, total=False)
+"""``fontpixel.ops.batch`` request: ``tasks`` (each a request dict plus ``id``
+and ``kind``) is required; the budgets default to the ``DEFAULT_MAX_*``
+constants."""
+BatchTaskOutcome = TypedDict("BatchTaskOutcome", {
+    "index": int, "id": str, "kind": str, "success": bool, "exit_code": int, "committed": bool,
+    "diagnostics_truncated": bool, "error": Union[str, None]}, total=False)
+"""One task outcome of a ``BatchResult``."""
+InspectedRequest = TypedDict("InspectedRequest", {
+    "id": str, "kind": str, "command": str, "request": Mapping[str, Any], "report_style": str,
+    "source_identity_total_bytes": int, "declared_inputs": List[str], "weight": int,
+    "error": str}, total=False)
+"""A validated, normalized request (``inspect_request``, ``parse_batch_toml``)."""
+ParsedArgs = TypedDict("ParsedArgs", {
+    "command": str, "request": Mapping[str, Any], "report_style": str,
+    "source_identity_total_bytes": int})
+"""A parsed ``fontpixel`` command line (``fontpixel.ops.parse_args``)."""
 
 # ------------------------------------------------------------------ enums as strings
 
@@ -1168,19 +1240,19 @@ class ComfontWriteOptions(TypedDict, total=False):
 
 class CommandCurveTo(TypedDict):
     """`fontpixel::sfnt::cff::Command::CurveTo`: Draw a cubic Bézier using two controls and an endpoint."""
-    curve_to: tuple[Any, Any, Any]
+    curve_to: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]
     """Draw a cubic Bézier using two controls and an endpoint."""
 
 
 class CommandLineTo(TypedDict):
     """`fontpixel::sfnt::cff::Command::LineTo`: Draw a straight segment."""
-    line_to: Any
+    line_to: tuple[float, float]
     """Draw a straight segment."""
 
 
 class CommandMoveTo(TypedDict):
     """`fontpixel::sfnt::cff::Command::MoveTo`: Begin a contour."""
-    move_to: Any
+    move_to: tuple[float, float]
     """Begin a contour."""
 
 
@@ -1302,26 +1374,12 @@ class ConsoleetWriteOptions(TypedDict, total=False):
     """Aggregate directory, model and output limits."""
 
 
-class ConversionSummary(TypedDict):
-    """`fontpixel_ops::convert::ConversionSummary`: Summary of one written output."""
-    assets: list[ConvertAssetSummary]
-    """Every asset in the output bundle."""
-    bytes: int
-    """Total serialized bytes of every asset."""
-    format: str
-    """Output format identifier."""
-    output: StrPath
-    """Output entry point."""
-    report: Report
-    """Complete read, edit and write diagnostics."""
+ConversionSummary = TypedDict("ConversionSummary", {"assets": "list[ConvertAssetSummary]", "bytes": "int", "format": "str", "output": "StrPath", "report": "Report"})
+"""`fontpixel_ops::convert::ConversionSummary`: Summary of one written output."""
 
 
-class ConvertAssetSummary(TypedDict):
-    """`fontpixel_ops::convert::AssetSummary`: One asset of a written output."""
-    bytes: int
-    """Serialized length in bytes."""
-    path: str
-    """Asset path relative to the output's directory."""
+ConvertAssetSummary = TypedDict("ConvertAssetSummary", {"bytes": "int", "path": "str"})
+"""`fontpixel_ops::convert::AssetSummary`: One asset of a written output."""
 
 
 ConvertRequest = TypedDict("ConvertRequest", {"inputs": "list[StrPath]", "output": "StrPath", "from": "str | None", "to": "str | None", "strict": "bool", "each": "bool", "font_index": "int | None", "family": "str | None", "style": "str | None", "full_name": "str | None", "postscript_name": "str | None", "font_version": "str | None", "copyright": "str | None", "license": "str | None", "license_url": "str | None", "foundry": "str | None", "swidth_ppem": "int | None", "swidth_units": "int | None", "font_name": "str | None", "point_size": "int | None", "resolution": "tuple[int, int] | None", "set_integer_property": "list[str]", "set_text_property": "list[str]", "remove_property": "list[str]", "report": "ReportStyle", "byte_order": "Significance | None", "bit_order": "Significance | None", "glyph_pad": "str | None", "scan_unit": "str | None", "pcf_metadata_precedence": "PcfMetadataPrecedence | None", "psf_version": "str | None", "psf1_count": "int | None", "psf_unicode_table": "str | None", "fnt_version": "str | None", "fnt_charset": "int | None", "fnt_code_page": "str | None", "image_layout": "str | None", "image_encoding": "str | None", "image_columns": "int | None", "image_mapping_format": "str | None", "image_prefix": "str | None", "image_radix": "int | None", "image_domain": "str | None", "image_background": "str | None", "image_baseline": "int | None", "c_family": "str | None", "c_container": "str | None", "u8glib_format": "str | None", "u8x8_legacy": "bool", "c_name": "str | None", "c_range": "str | None", "lvgl_bpp": "str | None", "lvgl_compression": "str | None", "pbf_version": "str | None", "pbf_compression": "str | None", "pbf_offset_width": "str | None", "pbf_hash_buckets": "int | None", "pbf_codepoint_bytes": "str | None", "pbf_max_height": "int | None", "pbf_wildcard": "str | None", "hbf_bitmap_name": "str | None", "hbf_glyphs_per_file": "int | None", "cpi_version": "str | None", "cpi_code_page": "int | None", "fontx2_mode": "str | None", "fontx2_charset": "str | None", "fontx2_width": "int | None", "fontx2_height": "int | None", "nfnt_container": "str | None", "nfnt_resource_type": "str | None", "bmfont_encoding": "str | None", "bmfont_page_width": "int | None", "bmfont_page_height": "int | None", "bmfont_padding": "int | None", "tex_design_size": "str | None", "tex_dpi": "int | None", "tex_dpi_x": "int | None", "tex_dpi_y": "int | None", "plan9_container": "str | None", "plan9_max_glyphs": "int | None", "plan9_compression": "str | None", "amiga_packaging": "str | None", "amiga_no_unicode_latin1": "bool", "amiga_color_depth": "int | None", "gem_byte_order": "str | None", "gem_word_order": "str | None", "gem_unicode_as_legacy": "bool", "snf_byte_order": "str | None", "snf_layout": "str | None", "snf_no_layout_property": "bool", "pilfont_max_width": "int | None", "vlw_version": "str | None", "vlw_smooth": "bool | None", "rockbox_flavor": "str | None", "rockbox_depth": "str | None", "u8m_load_address": "int | None", "playdate_flavor": "str | None", "playdate_cell_width": "int | None", "playdate_cell_height": "int | None", "playdate_tracking": "int | None", "qpf2_glyph_format": "str | None", "mgtk_columns": "str | None", "pfr_dialect": "str | None", "ssfn_encoding": "str | None", "ssfn_legacy_as_unicode": "bool", "xerox_variant": "str | None", "xerox_bitblt_layout": "str | None", "xerox_alto_baseline": "int | None", "xerox_rotation_minutes": "int | None", "pcgeos_variant": "str | None", "pcgeos_font_id": "int | None", "pcgeos_family": "str | None", "pcgeos_rebuild": "bool", "pcgeos_round_fractional_metrics": "bool", "pcgeos_legacy_as_unicode": "bool", "gpi_container": "str | None", "gpi_kind": "str | None", "gpi_codepage": "int | None", "gpi_registry_id": "int | None", "gpi_rebuild": "bool", "riscos_version": "str | None", "riscos_depth": "str | None", "riscos_compression": "str | None", "riscos_metrics": "str | None", "riscos_metrics_version": "str | None", "riscos_quantize": "bool", "pfr_compression": "str | None", "pfr_top_down": "bool", "pfr_black_pixel": "int | None", "sfont_flavor": "str | None", "sfont_codepoints": "list[str]", "daisy_version": "str | None", "daisy_height": "int | None", "daisy_underline": "int | None", "daisy_allow_control_bytes": "bool", "tasprint_version": "str | None", "tasprint_width": "int | None", "tasprint_pcw_count": "int | None", "pxl_version": "str | None", "pxl_tfm": "str | None", "pxl_magnification": "int | None", "signum_version": "str | None", "geos_container": "str | None", "geos_variant": "str | None", "geos_include_del": "bool | None", "geos_font_id": "int | None", "geos_family": "str | None", "geos_rebuild": "bool", "geos_legacy_as_unicode": "bool", "vtfont_cell_width": "int | None", "vtfont_cell_height": "int | None", "vtfont_rebuild": "bool", "vtfont_legacy_as_unicode": "bool", "fbit_kind": "str | None", "fbit_container": "str | None", "fbit_definition": "str | None", "fbit_data_fork": "str | None", "lisa_compression": "str | None", "symbos_version": "str | None", "symbos_first_code": "int | None", "symbos_writing_system": "int | None", "symbos_layout": "str | None", "symbos_height": "int | None", "oberon_family": "int | None", "oberon_variant": "int | None", "wsfont_encoding": "int | None", "wsfont_bit_order": "str | None", "wsfont_byte_order": "str | None", "wsfont_depth": "str | None", "wsfont_stride": "int | None", "beos_coverage": "str | None", "beos_quantize_gray": "bool", "beos_legacy_as_unicode": "bool", "beos_round_fractional_metrics": "bool", "prebuilt_byte_order": "str | None", "prebuilt_bitmap_bit_order": "str | None", "prebuilt_depth": "str | None", "prebuilt_quantize": "bool", "prebuilt_charset_name": "str | None", "prebuilt_identifier": "int | None", "catalyst_write_offset_base": "str | None", "catalyst_height": "int | None", "catalyst_leading": "int | None", "catalyst_sidebearing": "int | None", "chiwriter_version": "str | None", "chiwriter_layout": "str | None", "chiwriter_stride": "int | None", "chiwriter_width": "int | None", "chiwriter_height": "int | None", "chiwriter_baseline": "int | None", "chiwriter_line_gap": "int | None", "chiwriter_filename": "str | None", "dashen_version": "str | None", "dashen_top": "int | None", "dashen_codepoint_map": "bool", "hppcl_orientation": "str | None", "hppcl_compression": "str | None", "hppcl_continuation_bytes": "int | None", "hppcl_x_resolution": "int | None", "hppcl_y_resolution": "int | None", "hppcl_symbol_set": "int | None", "comfont_variant": "str | None", "comfont_cpm_target": "str | None", "consoleet_codes": "str | None", "xbin_count": "str | None", "xbin_screen": "str | None", "zapfont_variant": "str | None", "native_unicode_as_legacy": "bool", "native_cell_width": "int | None", "native_cell_height": "int | None", "drhalo_first": "int | None", "iigs_version": "str | None", "iigs_container": "str | None", "vfont_byte_order": "str | None", "vfont_unicode_as_legacy": "bool", "fzx_height": "int | None", "fzx_tracking": "int | None", "fzx_unicode_as_legacy": "bool", "figlet_height": "int | None", "figlet_baseline": "int | None", "figlet_legacy_as_unicode": "bool", "palm_container": "str | None", "palm_version": "str | None", "palm_densities": "list[int]", "palm_unicode_as_legacy": "bool", "gdr_version": "str | None", "gdr_collection_uid": "int | None", "gdr_write_legacy": "bool", "color_flavor": "str | None", "otb_upm": "int | None", "otb_reference": "str | None", "otb_rounding": "str | None", "otb_name_record": "list[str]", "otb_name_record_hex": "list[str]", "otb_name_language_tag": "list[str]", "otb_head_flags": "int | None", "otb_lowest_rec_ppem": "int | None", "otb_created": "int | None", "otb_modified": "int | None", "otb_os2_version": "str | None", "otb_vendor": "str | None", "otb_panose": "SerdeBytes | None", "otb_unicode_ranges": "str | None", "otb_break_char": "int | None", "otb_fs_type": "int | None", "otb_fs_selection": "int | None", "otb_average_width": "str | None", "otb_post_names": "str | None", "otb_fixed_pitch": "bool | None", "otb_cmap_unicode_full": "str | None", "otb_width_max": "str | None", "otb_index_layout": "str | None", "otb_index_min_run": "int | None", "otb_outline_tables": "str | None", "otb_max_zones": "str | None", "otb_notdef": "str | None", "otb_notdef_advance": "int | None", "otb_caret_slope": "list[int] | None", "otb_line_extremes": "str | None", "otb_vertical_line_metrics": "str | None", "otb_underline": "list[int] | None", "otb_hmtx": "str | None", "otb_glyph_order": "str | None", "drcs_cell_width": "int | None", "drcs_cell_height": "int | None", "drcs_cell_x": "int | None", "drcs_cell_y": "int | None", "drcs_charset": "str | None", "drcs_designator": "str | None", "drcs_eight_bit_controls": "bool", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float", "shape": "Shape | None", "dotsize": "float | None", "dot_reuse": "str | None", "ppu": "int | None", "upm": "int | None", "embed_bitmaps": "bool", "gray_threshold": "int | None", "woff2_source": "str | None", "woff2_quality": "int | None", "woff2_threads": "int | None", "collection_v2": "bool", "notdef": "str | None", "notdef_advance": "int | None", "notdef_lsb": "int | None"}, total=False)
@@ -1648,19 +1706,19 @@ class DrhaloReadOptions(TypedDict, total=False):
 
 class EdgeCubic(TypedDict):
     """`fontpixel::outline::path::Edge::Cubic`: Cubic segment."""
-    cubic: tuple[Any, Any, Any, Any]
+    cubic: tuple[tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]
     """Cubic segment."""
 
 
 class EdgeLine(TypedDict):
     """`fontpixel::outline::path::Edge::Line`: Straight segment."""
-    line: tuple[Any, Any]
+    line: tuple[tuple[float, float], tuple[float, float]]
     """Straight segment."""
 
 
 class EdgeQuad(TypedDict):
     """`fontpixel::outline::path::Edge::Quad`: Quadratic segment."""
-    quad: tuple[Any, Any, Any]
+    quad: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]
     """Quadratic segment."""
 
 
@@ -1756,7 +1814,7 @@ class EmbeddedMetadataOptions(TypedDict, total=False):
     """Post glyph names (format 2) or nameless format 3."""
     fixed_pitch: bool | None
     """`post.isFixedPitch` override; absent follows the source spacing."""
-    cmap_unicode_full: Any
+    cmap_unicode_full: FullRecords
     """cmap (0, 4) record policy for BMP-only maps."""
     width_max: EmbeddedWidthMax
     """EBLC/bloc horizontal `widthMax` source."""
@@ -1850,12 +1908,8 @@ class EncodedMetrics(TypedDict):
     """Count of full pairs before trailing bearing-only entries."""
 
 
-class ExportEncoded(TypedDict):
-    """`fontpixel::variants::export::Encoded`: Complete standalone sfnt output and conversion diagnostics."""
-    bytes: SerdeBytes
-    """TTF or OTF bytes with native GSUB."""
-    report: Report
-    """Source information that could not be represented."""
+ExportEncoded = TypedDict("ExportEncoded", {"bytes": "SerdeBytes", "report": "Report"})
+"""`fontpixel::variants::export::Encoded`: Complete standalone sfnt output and conversion diagnostics."""
 
 
 class ExportOptions(TypedDict, total=False):
@@ -2280,16 +2334,6 @@ class FormatStatus(TypedDict):
     """An actual reader is registered."""
     write: bool
     """An actual writer is registered."""
-
-
-class FormatsLoaded(TypedDict):
-    """`fontpixel::formats::Loaded`: A decoded model and all read diagnostics."""
-    fonts: Any
-    """Decoded model (`FontSet` for the built-in font registry)."""
-    report: Report
-    """Reader diagnostics."""
-    format: str
-    """The actual format used to decode the input."""
 
 
 class FormatsReadOptions(TypedDict, total=False):
@@ -3190,6 +3234,16 @@ class LisaWriteOptions(TypedDict, total=False):
     """Maximum output bytes."""
 
 
+class LoadedDict(TypedDict):
+    """`fontpixel::formats::Loaded`: A decoded model and all read diagnostics."""
+    fonts: Any
+    """Decoded model (`FontSet` for the built-in font registry)."""
+    report: Report
+    """Reader diagnostics."""
+    format: str
+    """The actual format used to decode the input."""
+
+
 class Location(TypedDict, total=False):
     """`fontpixel::report::Location`: Optional location; glyph index and codepoint need not both be known."""
     font_index: int | None
@@ -3226,15 +3280,11 @@ class MacWriteOptions(TypedDict, total=False):
     """Resource type used for newly authored Macintosh bitmaps."""
 
 
-class MergeAssetSummary(TypedDict):
-    """`fontpixel_ops::merge::AssetSummary`: One asset of a merge output."""
-    path: str
-    """Asset path relative to the output's directory."""
-    bytes: int
-    """Serialized length in bytes."""
+MergeAssetSummary = TypedDict("MergeAssetSummary", {"path": "str", "bytes": "int"})
+"""`fontpixel_ops::merge::AssetSummary`: One asset of a merge output."""
 
 
-_MergeInputRequired = TypedDict("_MergeInputRequired", {"input": "StrPath", "take": "SelectionSelection"})
+_MergeInputRequired = TypedDict("_MergeInputRequired", {"input": "StrPath", "take": "SelectionDict"})
 _MergeInputOptional = TypedDict("_MergeInputOptional", {"dy": "int", "from": "str | None", "font_index": "int | None"}, total=False)
 
 
@@ -5186,16 +5236,8 @@ class MkwinfontReadOptions(TypedDict, total=False):
     """`fontpixel::formats::mkwinfont::MkwinfontReadOptions`: Typed mkwinfont input choices."""
 
 
-class ModelUsage(TypedDict):
-    """`fontpixel::model::budget::ModelUsage`: Conservative retained model storage and aggregate element counts."""
-    bytes: int
-    """Retained storage in bytes, conservatively accounting for indexes."""
-    fonts: int
-    """Number of strikes, including empty strikes."""
-    glyphs: int
-    """Number of live glyphs, including unencoded glyphs."""
-    glyph_slots: int
-    """Number of assigned glyph IDs, including deleted slots."""
+ModelUsage = TypedDict("ModelUsage", {"bytes": "int", "fonts": "int", "glyphs": "int", "glyph_slots": "int"})
+"""`fontpixel::model::budget::ModelUsage`: Conservative retained model storage and aggregate element counts."""
 
 
 class NameOptions(TypedDict, total=False):
@@ -5454,7 +5496,7 @@ class Os2Table(_Os2TableRequired, total=False):
 
 class OutlineDots(TypedDict):
     """`fontpixel::sfnt::cff::Outline::Dots`: Lower-left cell origins in design units."""
-    dots: list[Any]
+    dots: list[tuple[float, float]]
     """Lower-left cell origins in design units."""
 
 
@@ -5522,12 +5564,8 @@ class OutlinePath(TypedDict):
     """Explicit closed paths; empty is a valid blank glyph."""
 
 
-class OutputAssetDict(TypedDict):
-    """`fontpixel::resources::OutputAsset`: One in-memory output asset; the caller decides where to persist it."""
-    path: ResourcePath
-    """Validated relative path, including any subdirectory."""
-    bytes: SerdeBytes
-    """Exact bytes, with no implicit timestamps or transformations."""
+OutputAssetDict = TypedDict("OutputAssetDict", {"path": "ResourcePath", "bytes": "SerdeBytes"})
+"""`fontpixel::resources::OutputAsset`: One in-memory output asset; the caller decides where to persist it."""
 
 
 class OutputBundleDict(TypedDict, total=False):
@@ -7346,34 +7384,20 @@ class RenderOptions(TypedDict, total=False):
     """Work and output budgets."""
 
 
-class RenderRendered(TypedDict):
+RenderRequest = TypedDict("RenderRequest", {"raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float", "input": "StrPath", "text": "str | None", "all": "bool", "range": "str | None", "order": "DrawOrder", "from": "str | None", "font_index": "int | None", "direction": "WritingDirection", "line_limit": "int", "mode": "DrawMode | None", "use_current_glyph_spacing": "bool", "letter_spacing": "int", "line_spacing": "int", "missing": "str | None", "fail_missing": "bool", "gray_threshold": "int | None", "strict": "bool", "max_pixels": "int", "max_dimension": "int", "max_layout_bytes": "int", "max_report_bytes": "int", "max_glyphs": "int", "max_output_bytes": "int", "report": "ReportStyle", "output": "StrPath", "to": "str | None", "scale": "int", "color": "Rgba", "background": "Rgba", "shape": "Shape | None", "dotsize": "float | None"}, total=False)
+"""`fontpixel_ops::render::RenderRequest`: Render text (or every mapping) to a PNG or SVG image."""
+
+
+RenderResponse = TypedDict("RenderResponse", {"bytes": "int", "format": "str", "height": "int", "output": "StrPath", "report": "Report", "scale": "int", "width": "int"})
+"""`fontpixel_ops::render::RenderResponse`: Summary of one rendered image."""
+
+
+class RenderedDict(TypedDict):
     """`fontpixel::render::Rendered`: Result pixels and deterministic diagnostics. Missing and clipped ink are reported even though those are valid SPEC rendering operations."""
     bitmap: BitmapDict
     """Packed monochrome result, top-left origin."""
     report: Report
     """Warnings, repairs and information loss."""
-
-
-RenderRequest = TypedDict("RenderRequest", {"raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float", "input": "StrPath", "text": "str | None", "all": "bool", "range": "str | None", "order": "DrawOrder", "from": "str | None", "font_index": "int | None", "direction": "WritingDirection", "line_limit": "int", "mode": "DrawMode | None", "use_current_glyph_spacing": "bool", "letter_spacing": "int", "line_spacing": "int", "missing": "str | None", "fail_missing": "bool", "gray_threshold": "int | None", "strict": "bool", "max_pixels": "int", "max_dimension": "int", "max_layout_bytes": "int", "max_report_bytes": "int", "max_glyphs": "int", "max_output_bytes": "int", "report": "ReportStyle", "output": "StrPath", "to": "str | None", "scale": "int", "color": "Rgba", "background": "Rgba", "shape": "Shape | None", "dotsize": "float | None"}, total=False)
-"""`fontpixel_ops::render::RenderRequest`: Render text (or every mapping) to a PNG or SVG image."""
-
-
-class RenderResponse(TypedDict):
-    """`fontpixel_ops::render::RenderResponse`: Summary of one rendered image."""
-    bytes: int
-    """Encoded image bytes."""
-    format: str
-    """`png` or `svg`."""
-    height: int
-    """Image height in source pixels."""
-    output: StrPath
-    """Output path."""
-    report: Report
-    """Read and render diagnostics."""
-    scale: int
-    """Nearest-neighbor scale."""
-    width: int
-    """Image width in source pixels."""
 
 
 class Report(TypedDict):
@@ -7798,7 +7822,7 @@ class SignumWriteOptions(TypedDict, total=False):
 
 class SimpleGlyph(TypedDict):
     """`fontpixel::sfnt::glyf::SimpleGlyph`: Simple glyph's ordered points and opaque interpreter program."""
-    contours: list[Any]
+    contours: list[list[tuple[float, float, bool]]]
     """Closed contours, with integral signed 16-bit design coordinates."""
     instructions: SerdeBytes
     """Preserved instruction bytes."""
@@ -7938,14 +7962,8 @@ class Strike(TypedDict):
     """Only glyphs with actual embedded images; no synthesized missing glyphs."""
 
 
-class Subset(TypedDict):
-    """`fontpixel::sfnt::subset::Subset`: A complete subset and the stable old-to-new glyph correspondence."""
-    bytes: SerdeBytes
-    """Standalone sfnt bytes; callers may apply WOFF wrappers."""
-    glyph_mapping: dict[int, int]
-    """Original glyph IDs mapped to compact subset IDs, including dependencies."""
-    report: Report
-    """Signature removals and explicitly requested table losses."""
+Subset = TypedDict("Subset", {"bytes": "SerdeBytes", "glyph_mapping": "dict[int, int]", "report": "Report"})
+"""`fontpixel::sfnt::subset::Subset`: A complete subset and the stable old-to-new glyph correspondence."""
 
 
 class SubsetOptions(TypedDict, total=False):
@@ -8360,6 +8378,16 @@ ValidateRequest = TypedDict("ValidateRequest", {"input": "StrPath", "from": "str
 """`fontpixel_ops::commands::ValidateRequest`: Validate one input's native model and supported sfnt structure."""
 
 
+class VariantsDict(TypedDict):
+    """`fontpixel::variants::Variants`: One default face plus ordered region and script alternatives."""
+    base: FontDict
+    """Default face and global metadata source."""
+    languages: list[LanguageVariant]
+    """Language alternatives, applied in this order."""
+    scripts: list[ScriptVariant]
+    """Script alternatives, applied after language planning."""
+
+
 class VariantsRequest(TypedDict, total=False):
     """`fontpixel_ops::opentype::VariantsRequest`: Combine regional and script faces into one locl-enabled OpenType font."""
     base: StrPath
@@ -8472,16 +8500,6 @@ class VariantsRequest(TypedDict, total=False):
     """Diagnostics format."""
 
 
-class VariantsVariants(TypedDict):
-    """`fontpixel::variants::Variants`: One default face plus ordered region and script alternatives."""
-    base: FontDict
-    """Default face and global metadata source."""
-    languages: list[LanguageVariant]
-    """Language alternatives, applied in this order."""
-    scripts: list[ScriptVariant]
-    """Script alternatives, applied after language planning."""
-
-
 class Vector(TypedDict):
     """`fontpixel::model::Vector`: A signed two-dimensional font-space vector (y up)."""
     x: int
@@ -8546,7 +8564,7 @@ class VectorRasterOptions(TypedDict, total=False):
     """Matching physical embedded images take precedence, by default."""
     grid_units: int | None
     """Explicit design units per pixel; requires ppem (for nondivisible ems)."""
-    pixel_offset: Any
+    pixel_offset: tuple[float, float]
     """Reviewed translation in pixel units, applied to outlines only."""
     gray_threshold: int | None
     """Optional explicit gray threshold, otherwise exact gray coverage is retained."""
@@ -8712,12 +8730,8 @@ class Woff2Options(TypedDict, total=False):
     """Envelope version and optional blocks."""
 
 
-class WoffEncoded(TypedDict):
-    """`fontpixel::woff::Encoded`: Encoded webfont and any unavoidable conversion losses."""
-    bytes: SerdeBytes
-    """Complete webfont file bytes."""
-    report: Report
-    """For example, removal of an invalidated digital signature."""
+WoffEncoded = TypedDict("WoffEncoded", {"bytes": "SerdeBytes", "report": "Report"})
+"""`fontpixel::woff::Encoded`: Encoded webfont and any unavoidable conversion losses."""
 
 
 class WoffLimits(TypedDict, total=False):
@@ -9068,7 +9082,7 @@ ScalableAdvance = Union[Literal["preserve"], ScalableAdvanceFromDevice]
 Segment = Union[SegmentLine, SegmentQuad]
 """`fontpixel::outline::Segment`: Outline segments with implied on-curve midpoints resolved."""
 
-SelectionSelection = str
+SelectionDict = str
 """`fontpixel::merge::selection::Selection`: Union of selected ranges, with exclusions applied last."""
 
 SfntGlyfGlyph = Union[Literal["empty"], SfntGlyfGlyphSimple, SfntGlyfGlyphComposite]

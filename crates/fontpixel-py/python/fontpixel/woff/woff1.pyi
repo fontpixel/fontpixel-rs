@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -17,12 +17,12 @@ __all__ = [
     "encode",
 ]
 
-def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> Any:
+def decode(data: _t.Buffer | _c.Sequence[int], limits: _t.WoffLimits | None = ...) -> _t.Decoded:
     """`woff1::decode`: reconstruct the standalone sfnt from WOFF1 bytes."""
 
 def encode(
     data: _t.Buffer | _c.Sequence[int],
     options: _t.Woff1Options | None = ...,
     limits: _t.WoffLimits | None = ...,
-) -> Any:
+) -> _t.EncodedFont:
     """`woff1::encode`: deterministic WOFF1 of a standalone sfnt."""

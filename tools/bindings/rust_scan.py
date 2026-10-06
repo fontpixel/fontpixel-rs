@@ -30,7 +30,8 @@ class RustFn:
     doc: str
     params: list                 # [(name, rust type text)]
     ret: str
-    hints: dict = field(default_factory=dict)   # param -> ("type", rust path) | ("helper", name)
+    hints: dict = field(default_factory=dict)   # param -> ("type"|"helper", rust text, file)
+    ret_hint: tuple | None = None
 
 
 @dataclass
@@ -39,6 +40,7 @@ class RustClass:
     py_name: str
     module: str | None
     fields: list = field(default_factory=list)   # [(py name, rust type, doc, writable)]
+    options: set = field(default_factory=set)    # bare #[pyclass] options: frozen, eq, ord, ...
 
 
 class Lexer:
@@ -143,8 +145,38 @@ def split_top(text, sep=","):
     return out
 
 
+USES: dict = {}   # file -> {local name: full path}
+
+
+def parse_uses(text):
+    """`use` declarations of a file as {local name: full path}."""
+    out = {}
+
+    def expand(prefix, tree):
+        tree = tree.strip()
+        if tree.endswith("}") and "{" in tree:
+            head, _, inner = tree.partition("{")
+            base = prefix + [s for s in head.strip().rstrip(":").split("::") if s]
+            for part in split_top(inner[:-1]):
+                expand(base, part)
+            return
+        m = re.fullmatch(r"([\w:]+?)(?:\s+as\s+(\w+))?", tree)
+        if not m:
+            return
+        segs = prefix + [s for s in m.group(1).split("::") if s]
+        if segs[-1] == "self":
+            segs = segs[:-1]
+        if segs and segs[-1] != "*":
+            out[m.group(2) or segs[-1]] = "::".join(segs)
+
+    for m in re.finditer(r"^\s*(?:pub(?:\([^)]*\))?\s+)?use\s+([^;]+);", text, re.M):
+        expand([], " ".join(m.group(1).split()))
+    return out
+
+
 def scan_file(path: Path, rel: str):
     text = path.read_text()
+    USES[rel] = parse_uses(text)
     lx = Lexer(text)
     fns, classes = [], []
     _scan_region(lx, 0, len(text), None, fns, classes, rel, text)
@@ -219,7 +251,10 @@ def _scan_region(lx, start, end, impl_cls, fns, classes, rel, text):
 def _pyclass(rust_name, attr):
     name = re.search(r'name\s*=\s*"([^"]+)"', attr)
     module = re.search(r'module\s*=\s*"([^"]+)"', attr)
-    return RustClass(rust_name, name.group(1) if name else rust_name, module.group(1) if module else None)
+    rc = RustClass(rust_name, name.group(1) if name else rust_name, module.group(1) if module else None)
+    inner = attr[attr.find("(") + 1:attr.rfind(")")] if "(" in attr else ""
+    rc.options = {o.strip() for o in split_top(inner) if re.fullmatch(r"\w+", o.strip())}
+    return rc
 
 
 def _class_fields(body, cls):
@@ -304,9 +339,38 @@ def _parse_fn(lx, i, m, impl_cls, docs, attrs, fns, rel, text):
             continue
         params.append((pname, ptype))
     hints = {k: (v[0], v[1], rel) for k, v in _hints(body, [p for p, _ in params]).items()}
-    fns.append(RustFn(rel, line, name, py_name, kind, impl_cls, "\n".join(docs).strip(), params,
-                      " ".join(ret.split()), hints))
+    fn = RustFn(rel, line, name, py_name, kind, impl_cls, "\n".join(docs).strip(), params,
+                " ".join(ret.split()), hints)
+    fn.ret_hint = _ret_hint(body, rel)
+    fns.append(fn)
     return end
+
+
+def _ret_hint(body, rel):
+    """What a `PyAny` result is built from, judged by the body's final expression:
+    ("bytes",), ("type", rust type, file) or ("call", rust path, file)."""
+    tail = body.rstrip().rstrip("}").rstrip()
+    last = tail[tail.rfind(";") + 1:] if ";" in tail else tail.lstrip("{")
+    last = last.strip()
+    if re.match(r"(?:Ok\(\s*)?pybytes\(", last):
+        return ("bytes",)
+    conv = r"(?:Ok\(\s*)?(?:[\w.]+\(\|\w+\|\s*)?(?:conv::)?(?:out|to_py|with_bytes|encoded_cmap|tables_dict)\(\s*py\s*,\s*&\s*(?:py\.detach\(\|\|\s*)?"
+    m = re.match(conv + r"([\w:]+?)::default\(\)", last)
+    if m:
+        return ("type", m.group(1), rel)
+    m = re.match(conv + r"([\w:]+?)(?:::<[^>]*>)?\s*\(", last)
+    if m and "::" in m.group(1):
+        return ("call", m.group(1), rel)
+    m = re.match(conv + r"(\w+)\s*\)", last)
+    if m:
+        var = m.group(1)
+        t = re.search(rf"let\s+(?:mut\s+)?{var}\s*:\s*([\w:<>, ]+?)\s*=", body)
+        if t:
+            return ("type", t.group(1), rel)
+        c = re.search(rf"let\s+(?:mut\s+)?{var}\s*=\s*([\w:]+?)(?:::<[^>]*>)?\s*\(", body)
+        if c and "::" in c.group(1):
+            return ("call", c.group(1), rel)
+    return None
 
 
 def _match_angle(text, j):
@@ -323,16 +387,27 @@ def _match_angle(text, j):
 
 
 HELPER_CALL = re.compile(
-    r"let\s+(?:mut\s+)?\w+\s*:\s*([\w:<>, &']+?)\s*=\s*(?:[\w:]+::)?(\w+)\s*(?:::<[^>]*>)?\s*\(\s*(?:Some\s*\()?\s*&?\s*(\w+)")
+    r"let\s+(?:mut\s+)?\w+\s*:\s*([\w:<>, &']+?)\s*=\s*(?:[\w:]+::)?(\w+)\s*(?:::<[^>]*>)?\s*\(\s*(?:py\s*,\s*)?(?:Some\s*\()?\s*&?\s*(\w+)")
 TURBO_CALL = re.compile(r"\b(?:[\w:]+::)?(\w+)\s*::<\s*([\w:<>, ]+?)\s*>\s*\(\s*(?:Some\s*\()?\s*&?\s*(\w+)")
 PLAIN_CALL = re.compile(
     r"\b(\w+_arg|\w+_args|InputArgs::new|SetArg::extract|with_font)\s*\(\s*(?:Some\s*\()?\s*&?\s*(\w+)")
 # Generic serde conversions whose target type names the Python shape.
-SERDE_HELPERS = {"req", "opt", "from_py", "from_py_required", "enum_arg", "depythonize", "parse", "opt_or_default", "limits_or_default"}
+SERDE_HELPERS = {"req", "opt", "from_py", "from_py_required", "enum_arg", "depythonize", "parse", "opt_or_default", "limits_or_default", "build"}
+
+
+OPTS_CALL = re.compile(r"\b(?:read_bytes_opts|write_x_opts|read_ctx_opts|write_x_primary_opts|"
+                       r"read_bytes_opts_limits|write_set_wo_opts)\s*::<([^>]*)>\s*\(([^;]*)")
 
 
 def _hints(body, params):
     hints = {}
+    # Generic codec adapters: the last turbofish type is the options type.
+    for m in OPTS_CALL.finditer(body):
+        opts = split_top(m.group(1))[-1].strip()
+        args = re.findall(r"\b\w+\b", m.group(2))
+        for p in params:
+            if p in args and p == "options" and opts != "_":
+                hints.setdefault(p, ("type", opts))
     for m in HELPER_CALL.finditer(body):
         ty, helper, arg = m.groups()
         if arg in params and arg not in hints and helper in SERDE_HELPERS:
@@ -355,6 +430,7 @@ HELPER_RETURNS: dict = {}   # file -> {non-Python fn name: Rust return type}
 
 def scan(src: Path):
     HELPER_RETURNS.clear()
+    USES.clear()
     fns, classes = [], []
     for p in sorted(src.glob("*.rs")):
         f, c = scan_file(p, p.name)
@@ -381,6 +457,15 @@ def format_namespaces(src: Path):
             arms[key] = (kind, split_top(rest) if rest else [])
         ids = [i.strip().strip('"') for i in m.group(2).split(",") if i.strip()]
         out[m.group(1)] = {"ids": ids, **arms}
+    return out
+
+
+def ops_operations(src: Path):
+    """`writer_op!`/`reader_op!` invocations of ops.rs: {operation: request type}."""
+    text = (src / "ops.rs").read_text()
+    out = {}
+    for m in re.finditer(r"^(?:writer_op|reader_op)!\(\s*((?:\s*///[^\n]*\n)*)\s*(\w+),\s*([\w:]+)", text, re.M):
+        out[m.group(2)] = m.group(3)
     return out
 
 

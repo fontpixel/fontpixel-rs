@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel.sfnt import bitmap as bitmap
@@ -59,13 +59,13 @@ class Sfnt:
     ) -> Sfnt:
         ...
     @property
-    def data(self) -> Any:
+    def data(self) -> bytes:
         """The font bytes this handle owns."""
     @property
-    def flavor(self) -> Any:
+    def flavor(self) -> _t.Flavor:
         """Outline flavor: `"true_type"`, `"cff"` or `"apple_true_type"`."""
     @property
-    def limits(self) -> Any:
+    def limits(self) -> _t.SfntLimits:
         """The limits dict used for parsing."""
     @staticmethod
     def parse(data: _t.Buffer | _c.Sequence[int], limits: _t.SfntLimits | None = ...) -> Sfnt:
@@ -75,7 +75,7 @@ class Sfnt:
         `limits` is a `fontpixel.sfnt` Limits dict (see `defaults()`); checksums
         are checked separately by `validate_checksums()`.
         """
-    def table(self, tag: _t.Tag) -> Any:
+    def table(self, tag: _t.Tag) -> bytes | None:
         """The bytes of table `tag` (`str` such as `"OS/2"` or 4 `bytes`), or `None`."""
     def tables(self) -> list[Any]:
         """Directory records in tag order: dicts `{tag, checksum, offset, data}`."""
@@ -87,7 +87,7 @@ class SfntBuilder:
     """Assembles a standalone sfnt (`fontpixel::sfnt::SfntBuilder`)."""
     def __new__(cls, flavor: _t.Flavor) -> SfntBuilder:
         ...
-    def build(self, limits: _t.SfntLimits | None = ...) -> Any:
+    def build(self, limits: _t.SfntLimits | None = ...) -> bytes:
         """Build the font with sorted tables, checksums and head adjustment."""
     def insert(self, tag: _t.Tag, table: _t.Buffer | _c.Sequence[int]) -> None:
         """Add table `tag`; duplicate or malformed tags raise `InvalidInputError`."""
@@ -95,7 +95,7 @@ class SfntBuilder:
 def checksum(data: _t.Buffer | _c.Sequence[int]) -> int:
     """`fontpixel::sfnt::checksum`: wrapping big-endian 32-bit word sum."""
 
-def defaults() -> Any:
+def defaults() -> _t.SfntDefaults:
     """
     Default limit and option dicts of `fontpixel.sfnt` and its submodules,
     keyed by Rust type path relative to `fontpixel::sfnt`.

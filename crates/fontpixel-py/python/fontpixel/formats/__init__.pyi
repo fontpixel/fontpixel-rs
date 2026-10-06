@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel.formats import amiga as amiga
@@ -213,7 +213,7 @@ def configurable_formats() -> dict[str, Any]:
     `{"read": [...], "write": [...]}`.
     """
 
-def normalize(type_name: str, value: Any = ...) -> Any:
+def normalize(type_name: str, value: _c.Mapping[str, Any] | str | None = ...) -> Any:
     """
     Validate `value` as the Rust type `type_name` (a path such as
     `"formats::fzx::FzxWriteOptions"` or `"resources::ResourceLimits"`) and

@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet, Written
@@ -40,7 +40,12 @@ def read(
     (`resources` supplies sidecars). Returns `(model, report)`.
     """
 
-def write(fonts: FontSet | Font, options: Any = ..., *, primary_name: str | None = ...) -> Written:
+def write(
+    fonts: FontSet | Font,
+    options: _t.HbfWriteOptions | None = ...,
+    *,
+    primary_name: str | None = ...,
+) -> Written:
     """
     Encode with this module's write-options dict into a bundle whose
     entry point is `primary_name` (default `font.<first extension>`).

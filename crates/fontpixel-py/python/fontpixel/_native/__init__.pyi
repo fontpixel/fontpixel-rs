@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import _bdfparser as _bdfparser
@@ -185,26 +185,18 @@ class Bitmap:
         ...
     def __deepcopy__(self, _memo: Any) -> Bitmap:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __getitem__(self, key: Any, /) -> int:
+    def __getitem__(self, key: tuple[int, int], /) -> int:
         """Return self[key]."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
-    def __setitem__(self, key: Any, value: int, /) -> None:
+    def __setitem__(self, key: tuple[int, int], value: int, /) -> None:
         """Set self[key] to value."""
     def as_bytes(self) -> bytes:
         """A copy of the canonical storage (`Bitmap::as_bytes`)."""
-    def bbox(self) -> Any:
+    def bbox(self) -> _t.Bounds:
         """
         Tight ink rectangle in bottom-left coordinates, as a bounds dict
         (`Bitmap::bbox`).
@@ -213,7 +205,13 @@ class Bitmap:
         """Rightward emboldening by `n` pixels (`Bitmap::bold`)."""
     def byte_pad(self, pixels: int) -> Bitmap:
         """Pad the width up to a multiple of `pixels` (`Bitmap::byte_pad`)."""
-    def composite(self, source: _t.BitmapLike, x: int = ..., y: int = ..., mode: Any = ...) -> None:
+    def composite(
+        self,
+        source: _t.BitmapLike,
+        x: int = ...,
+        y: int = ...,
+        mode: _t.CompositeMode | None = ...,
+    ) -> None:
         """
         Combine `source` into this bitmap in place at `(x, y)` with `mode`
         (`Bitmap::composite`).
@@ -224,7 +222,7 @@ class Bitmap:
         region: _t.Bounds,
         x: int = ...,
         y: int = ...,
-        mode: Any = ...,
+        mode: _t.CompositeMode | None = ...,
     ) -> None:
         """
         Combine `region` (bounds dict, top-left offsets into `source`) of
@@ -243,7 +241,7 @@ class Bitmap:
         """
     @staticmethod
     def concat_all(
-        bitmaps: Any,
+        bitmaps: _c.Iterable[_t.BitmapLike],
         direction: _t.Direction | None = ...,
         alignment: _t.Alignment | None = ...,
         gaps: _c.Sequence[int] | None = ...,
@@ -331,7 +329,7 @@ class Bitmap:
     @staticmethod
     def from_text(
         text: str,
-        palette: Any = ...,
+        palette: _t.TextPalette | None = ...,
         depth: _t.Depth = ...,
         limits: _t.BitmapLimits | None = ...,
     ) -> Bitmap:
@@ -359,7 +357,7 @@ class Bitmap:
     def italic(self, step: int, base: int = ...) -> Bitmap:
         """Slant by `floor((row_from_bottom - base) / step)` (`Bitmap::italic`)."""
     @property
-    def limits(self) -> Any:
+    def limits(self) -> _t.BitmapLimits:
         """The bitmap's resource limits as a dict (`Bitmap::limits`)."""
     @property
     def max_value(self) -> int:
@@ -402,7 +400,7 @@ class Bitmap:
         Serialize in an explicit `ByteLayout` (default: MSB-first, byte rows,
         top-down) (`Bitmap::to_bytes`).
         """
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.GlyphBitmap:
         """Plain data: `{"mono" | "gray8": {"width", "height", "data": [...]}}`."""
     def to_gray8(self) -> Bitmap:
         """Gray8 copy with paper 0 and ink 255 (`Bitmap::<Mono>::to_gray8`)."""
@@ -419,7 +417,10 @@ class Bitmap:
         """Mono copy: ink where the value is `>= threshold` (`Bitmap::<Gray8>::to_mono`)."""
     def to_numeric_hex_rows(self) -> list[str]:
         """Right-aligned lowercase hex rows (`Bitmap::<Mono>::to_numeric_hex_rows`)."""
-    def to_palette_bytes(self, palette: Any) -> bytes:
+    def to_palette_bytes(
+        self,
+        palette: _c.Mapping[int, _t.Buffer] | _c.Iterable[tuple[int, _t.Buffer]],
+    ) -> bytes:
         """
         One fixed-size byte string per pixel, from `palette` (dict
         `{value: bytes}` or pairs) (`Bitmap::to_palette_bytes`).
@@ -431,7 +432,7 @@ class Bitmap:
         """
     def to_rows(self) -> list[list[int]]:
         """Rows of pixel values, top row first."""
-    def to_text(self, palette: Any = ...) -> str:
+    def to_text(self, palette: _t.OutputPalette | None = ...) -> str:
         """
         Text rows through `palette` (dict `{value: char}` or pairs; Mono
         default `.`/`#`) (`Bitmap::to_text`).
@@ -460,13 +461,13 @@ class BitmapProjection:
     """
     def __new__(
         cls,
-        scalable_advance: Any = ...,
+        scalable_advance: _t.ScalableAdvance | None = ...,
         font_name: str | None = ...,
-        size: Any = ...,
-        properties: Any = ...,
+        size: _t.SizeProjection | None = ...,
+        properties: _c.Iterable[_t.PropertyEdit] | None = ...,
     ) -> BitmapProjection:
         ...
-    def apply(self, font_set: FontSet, max_working_bytes: int | None = ...) -> Any:
+    def apply(self, font_set: FontSet, max_working_bytes: int | None = ...) -> _t.ProjectionOutcome:
         """Apply to every strike of `font_set` (`apply_bitmap_projection`)."""
     @property
     def font_name(self) -> str | None:
@@ -479,7 +480,7 @@ class BitmapProjection:
     def property_names(self) -> list[str]:
         """The edited property names in order (`PropertyEdit::name`)."""
     @property
-    def scalable_advance(self) -> Any:
+    def scalable_advance(self) -> _t.ScalableAdvance:
         """The scalable-advance policy (serde form)."""
     @staticmethod
     def scalable_from_device(units_per_em: int, reference_ppem: int) -> BitmapProjection:
@@ -488,7 +489,7 @@ class BitmapProjection:
         (`BitmapProjection::scalable_from_device`).
         """
     @property
-    def size(self) -> Any:
+    def size(self) -> _t.SizeProjection | None:
         """The projected size, as a dict."""
 
 @final
@@ -503,7 +504,7 @@ class CharsetCodec:
     def cp2unicode(self, code: int) -> int | None:
         """Unicode value for a glyph code, or `None` (`CharsetCodec::cp2unicode`)."""
     @staticmethod
-    def for_font(font_or_charset: Any) -> CharsetCodec:
+    def for_font(font_or_charset: Font | _t.FontCharset) -> CharsetCodec:
         """
         The codec of a font's `charset` (`FontCharset::codec`); accepts a
         `Font` or a `FontCharset` dict.
@@ -518,7 +519,7 @@ class CharsetCodec:
     def gl(self) -> bool:
         """Whether 94×94 GL codes are used (`CharsetCodec::gl`)."""
     @property
-    def kind(self) -> Any:
+    def kind(self) -> _t.CharsetKind:
         """Allowed code lengths (`CharsetCodec::kind`)."""
     @property
     def known(self) -> bool:
@@ -541,21 +542,21 @@ class Codepoint:
     """
     def __new__(cls, value: int, kind: str = ...) -> Codepoint:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
+    def __ge__(self, value: Codepoint, /) -> bool:
         """Return self>=value."""
-    def __gt__(self, value: Any, /) -> bool:
+    def __gt__(self, value: Codepoint, /) -> bool:
         """Return self>value."""
     def __hash__(self) -> int:
         """Return hash(self)."""
     def __int__(self) -> int:
         """int(self)"""
-    def __le__(self, value: Any, /) -> bool:
+    def __le__(self, value: Codepoint, /) -> bool:
         """Return self<=value."""
-    def __lt__(self, value: Any, /) -> bool:
+    def __lt__(self, value: Codepoint, /) -> bool:
         """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     @staticmethod
     def from_dict(value: _t.CodepointLike) -> Codepoint:
@@ -574,7 +575,7 @@ class Codepoint:
         The character for a Unicode scalar value, or `None` for legacy codes
         and surrogates (`Codepoint::scalar`).
         """
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.CodepointDict:
         """Plain-data form: `{"Unicode": n}` or `{"Legacy": n}`."""
     @staticmethod
     def unicode(value: int) -> Codepoint:
@@ -586,30 +587,22 @@ class Codepoint:
 @final
 class Font:
     """One strike (`fontpixel::model::Font`), owned or a view into a `FontSet`."""
-    def __new__(cls, glyphs: Any = ...) -> Font:
+    def __new__(cls, glyphs: _c.Iterable[_t.GlyphLike] | None = ...) -> Font:
         ...
     def __copy__(self) -> Font:
         ...
     def __deepcopy__(self, _memo: Any) -> Font:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __getitem__(self, key: Any, /) -> Glyph:
+    def __getitem__(self, key: int, /) -> Glyph:
         """Return self[key]."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
     def __iter__(self) -> _c.Iterator[Any]:
         """Implement iter(self)."""
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
     def __len__(self) -> int:
         """Return len(self)."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     def add_glyph(self, glyph: _t.GlyphLike) -> int:
         """
@@ -617,13 +610,13 @@ class Font:
         returns its new ID (`Font::add_glyph`).
         """
     @property
-    def charset(self) -> Any:
+    def charset(self) -> _t.FontCharset:
         """Charset identification (`FontCharset`) as a dict copy; assignable."""
     @charset.setter
     def charset(self, value: _t.FontCharset) -> None: ...
     def charset_canonical_name(self) -> str:
         """The canonical charset name of `charset` (`FontCharset::canonical_name`)."""
-    def cloned_usage(self, max_bytes: int | None = ...) -> Any:
+    def cloned_usage(self, max_bytes: int | None = ...) -> _t.ModelUsage:
         """
         Storage a new owned copy would need, without copying
         (`Font::cloned_usage`).
@@ -645,7 +638,12 @@ class Font:
         """
     def copy(self) -> Font:
         """An owned copy of this font."""
-    def draw(self, text: str, options: Any = ..., missing_glyph: Any = ...) -> Rendered:
+    def draw(
+        self,
+        text: str,
+        options: _t.RenderOptions | None = ...,
+        missing_glyph: _t.GlyphDict | None = ...,
+    ) -> Rendered:
         """
         Render Unicode `text` through the font's charset map
         (`Font::draw`). Returns `Rendered`; raises `StrictLossError` (with
@@ -653,22 +651,27 @@ class Font:
         """
     def draw_all(
         self,
-        order: Any = ...,
+        order: _t.RenderGlyphOrder | None = ...,
         ranges: _c.Sequence[tuple[int, int]] | None = ...,
-        options: Any = ...,
-        missing_glyph: Any = ...,
+        options: _t.RenderOptions | None = ...,
+        missing_glyph: _t.GlyphDict | None = ...,
     ) -> Rendered:
         """
         Render every effective mapping in `order` (`"ascending"`,
         `"descending"`, `"file"`, `"reverse_file"`), optionally restricted to
         inclusive `(start, end)` ranges (`Font::draw_all`).
         """
-    def draw_codepoints(self, codes: Any, options: Any = ..., missing_glyph: Any = ...) -> Rendered:
+    def draw_codepoints(
+        self,
+        codes: _c.Iterable[_t.CodepointLike | None],
+        options: _t.RenderOptions | None = ...,
+        missing_glyph: _t.GlyphDict | None = ...,
+    ) -> Rendered:
         """
         Render explicit codes; `None` entries stand for unencodable
         characters (`Font::draw_codepoints`).
         """
-    def edit_glyph(self, id: int, func: Any) -> None:
+    def edit_glyph(self, id: int, func: _c.Callable[[Glyph], object]) -> None:
         """
         Edit glyph `id` through `func(glyph)`, which receives an owned copy;
         the edited copy replaces the glyph when `func` returns, and nothing
@@ -687,7 +690,7 @@ class Font:
         The effective glyph for a codepoint, as a view, or `None`
         (`Font::glyph_for_codepoint`).
         """
-    def glyph_for_sequence(self, sequence: Any) -> Glyph | None:
+    def glyph_for_sequence(self, sequence: _c.Iterable[_t.CodepointLike] | str) -> Glyph | None:
         """
         The effective glyph for a Unicode sequence (list of ints or a `str`),
         as a view, or `None` (`Font::glyph_for_sequence`).
@@ -722,12 +725,12 @@ class Font:
     def localized_names(self) -> Properties:
         """Live view of `names["localized"]`."""
     @property
-    def metrics(self) -> Any:
+    def metrics(self) -> _t.FontMetrics:
         """Font-wide metrics (`FontMetrics`) as a dict copy; assign a dict to replace."""
     @metrics.setter
     def metrics(self, value: _t.FontMetrics) -> None: ...
     @property
-    def names(self) -> Any:
+    def names(self) -> _t.FontNames:
         """Font names (`FontNames`) as a dict copy; assign a dict to replace."""
     @names.setter
     def names(self, value: _t.FontNames) -> None: ...
@@ -746,7 +749,7 @@ class Font:
         Replace glyph `id` with a copy of `glyph`, re-indexing its codes;
         returns the old glyph as an owned handle (`Font::replace_glyph`).
         """
-    def retained_usage(self, max_bytes: int | None = ...) -> Any:
+    def retained_usage(self, max_bytes: int | None = ...) -> _t.ModelUsage:
         """Conservative retained storage of this strike (`Font::retained_usage`)."""
     @property
     def slot_count(self) -> int:
@@ -756,7 +759,7 @@ class Font:
         """The format ID this strike was read from, if any."""
     @source_format.setter
     def source_format(self, value: str | None) -> None: ...
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.FontDict:
         """The complete plain-data form; copies every pixel."""
     def update_bounds(self) -> None:
         """
@@ -774,8 +777,8 @@ class FontSet:
     """A set of strikes (`fontpixel::model::FontSet`)."""
     def __new__(
         cls,
-        fonts: _c.Iterable[_t.FontLike] | None = ...,
-        properties: Any = ...,
+        fonts: FontSet | Font | None = ...,
+        properties: _t.PropertiesLike | None = ...,
         source_format: str | None = ...,
     ) -> FontSet:
         ...
@@ -783,24 +786,16 @@ class FontSet:
         ...
     def __deepcopy__(self, _memo: Any) -> FontSet:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __getitem__(self, key: Any, /) -> Font:
+    def __getitem__(self, key: int, /) -> Font:
         """Return self[key]."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
     def __iter__(self) -> _c.Iterator[Any]:
         """Implement iter(self)."""
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
     def __len__(self) -> int:
         """Return len(self)."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     def append(self, font: _t.FontLike) -> int:
         """Append a copy of `font`; returns its index."""
@@ -832,7 +827,7 @@ class FontSet:
         """Set-level properties (live `Properties` view); assignable."""
     @properties.setter
     def properties(self, value: _t.PropertiesLike) -> None: ...
-    def retained_usage(self, max_bytes: int | None = ...) -> Any:
+    def retained_usage(self, max_bytes: int | None = ...) -> _t.ModelUsage:
         """
         Conservative retained storage of the set (`FontSet::retained_usage`):
         `{"bytes", "fonts", "glyphs", "glyph_slots"}`. Raises
@@ -848,7 +843,7 @@ class FontSet:
         """The format ID the set was read from, if any."""
     @source_format.setter
     def source_format(self, value: str | None) -> None: ...
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.FontSetDict:
         """
         The complete plain-data form (`{"fonts": [...], "properties": [...],
         "source_format"?: str}`); copies every pixel.
@@ -873,18 +868,10 @@ class Glyph:
         ...
     def __deepcopy__(self, _memo: Any) -> Glyph:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     @property
     def bitmap(self) -> Bitmap:
@@ -919,7 +906,7 @@ class Glyph:
     def is_view(self) -> bool:
         """Whether this handle is a view into a font."""
     @property
-    def metrics(self) -> Any:
+    def metrics(self) -> _t.GlyphMetrics:
         """
         Glyph metrics (`GlyphMetrics`) as a dict copy; assign to replace
         (validated: bounds must match the bitmap).
@@ -949,7 +936,7 @@ class Glyph:
         """
     def shift(self, dx: int, dy: int) -> None:
         """Move the glyph box by `(dx, dy)` with overflow checks (`Glyph::shift`)."""
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.GlyphDict:
         """The complete plain-data form; copies the pixels."""
     @property
     def unicode_sequences(self) -> list[list[int]]:
@@ -1002,7 +989,7 @@ class Loaded:
     (`fontpixel::formats::Loaded`).
     """
     @property
-    def fonts(self) -> Any:
+    def fonts(self) -> FontSet | Font:
         """`FontSet` handle (or `Font` handle after `into_single`)."""
     @property
     def format(self) -> str:
@@ -1013,7 +1000,7 @@ class Loaded:
         (`Loaded::into_single`). Raises `InvalidInputError` for several strikes.
         """
     @property
-    def report(self) -> Any:
+    def report(self) -> _t.Report:
         """The read report as a dict (`{"entries": [...]}`)."""
 
 @final
@@ -1021,20 +1008,12 @@ class OutputAsset:
     """One in-memory output file (`fontpixel::resources::OutputAsset`)."""
     def __new__(cls, path: str, data: _t.Buffer | _c.Sequence[int]) -> OutputAsset:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
     def __len__(self) -> int:
         """Return len(self)."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     @property
     def data(self) -> bytes:
@@ -1049,24 +1028,21 @@ class OutputBundle:
     In-memory output files with a primary asset
     (`fontpixel::resources::OutputBundle`).
     """
-    def __new__(cls, primary: str, assets: Any, directory: bool = ...) -> OutputBundle:
+    def __new__(
+        cls,
+        primary: str,
+        assets: _c.Iterable[OutputAsset | _t.OutputAssetDict],
+        directory: bool = ...,
+    ) -> OutputBundle:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
-    def __iter__(self) -> _c.Iterator[Any]:
+    def __iter__(self) -> _c.Iterator[OutputAsset]:
         """Implement iter(self)."""
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
     def __len__(self) -> int:
         """Return len(self)."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     @property
     def assets(self) -> list[OutputAsset]:
@@ -1098,7 +1074,7 @@ class OutputBundle:
     @staticmethod
     def single(path: str, data: _t.Buffer | _c.Sequence[int]) -> OutputBundle:
         """A one-file bundle (`OutputBundle::single`)."""
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.OutputBundleDict:
         """Plain-data form (`bytes` as int lists, the serde shape)."""
 
 @final
@@ -1116,39 +1092,31 @@ class Properties:
     `None` → Flag) or as the tagged plain-data form (`{"Decimal": "1.5"}`).
     Values are returned in the tagged form, which keeps every variant.
     """
-    def __new__(cls, items: Any = ...) -> Properties:
+    def __new__(cls, items: _t.PropertiesLike | None = ...) -> Properties:
         ...
     def __copy__(self) -> Properties:
         ...
     def __deepcopy__(self, _memo: Any) -> Properties:
         ...
-    def __eq__(self, value: Any, /) -> bool:
+    def __eq__(self, value: object, /) -> bool:
         """Return self==value."""
-    def __ge__(self, value: Any, /) -> bool:
-        """Return self>=value."""
-    def __getitem__(self, key: Any, /) -> Any:
+    def __getitem__(self, key: int, /) -> _t.Property:
         """Return self[key]."""
-    def __gt__(self, value: Any, /) -> bool:
-        """Return self>value."""
     __hash__: None  # type: ignore[assignment]
     def __iter__(self) -> _c.Iterator[Any]:
         """Implement iter(self)."""
-    def __le__(self, value: Any, /) -> bool:
-        """Return self<=value."""
     def __len__(self) -> int:
         """Return len(self)."""
-    def __lt__(self, value: Any, /) -> bool:
-        """Return self<value."""
-    def __ne__(self, value: Any, /) -> bool:
+    def __ne__(self, value: object, /) -> bool:
         """Return self!=value."""
     def copy(self) -> Properties:
         """A standalone copy."""
-    def get(self, name: str) -> Any:
+    def get(self, name: str) -> _t.PropertyValue | None:
         """
         The value of the last property named exactly `name`, in tagged form,
         or `None` (`Properties::get`).
         """
-    def get_case_insensitive(self, name: str) -> Any:
+    def get_case_insensitive(self, name: str) -> _t.PropertyValue | None:
         """
         Like `get`, comparing names ASCII-case-insensitively
         (`Properties::get_case_insensitive`).
@@ -1201,7 +1169,7 @@ class ReadContext:
     def is_directory(self) -> bool:
         """Whether the input is a directory entry point (`ReadContext::is_directory`)."""
     @property
-    def limits(self) -> Any:
+    def limits(self) -> _t.ResourceLimits:
         """The budgets in force (`ReadContext::limits`)."""
     def list_resources_limited(
         self,
@@ -1239,7 +1207,7 @@ class Registry:
         resources: _t.Resources | None = ...,
         limits: _t.ResourceLimits | None = ...,
         directory: str | None = ...,
-    ) -> Any:
+    ) -> _t.Detected:
         """
         Detect the format of an input: content detectors first, the filename
         hint only when no detector matches. Returns
@@ -1249,17 +1217,17 @@ class Registry:
         """
     def ensure_writable(self, format: str) -> None:
         """Raise `NotImplementedFormatError` unless `format` has a writer."""
-    def extension_candidates(self, name: str) -> Any:
+    def extension_candidates(self, name: str) -> list[_t.FormatInfo]:
         """
         Formats whose extension is the longest matching suffix of `name`
         (`FormatInfo` dicts; ties are all returned).
         """
-    def format_from_name(self, name: str) -> Any:
+    def format_from_name(self, name: str) -> _t.FormatInfo:
         """
         The unique `FormatInfo` for a filename; raises `UnrecognizedFormatError`
         or `AmbiguousFormatError` (with `candidates`).
         """
-    def formats(self) -> Any:
+    def formats(self) -> list[Any]:
         """
         Every catalogue format with its capabilities, as `FormatStatus` dicts
         (`{"format": {"id", "name", "extensions", "feature_enabled"}, "detect",
@@ -1283,11 +1251,11 @@ class Registry:
         """
     def register(
         self,
-        format: Any,
+        format: str | _t.NewFormat,
         *,
-        detector: Any = ...,
-        reader: Any = ...,
-        writer: Any = ...,
+        detector: _c.Callable[[ReadContext], _t.Confidence] | None = ...,
+        reader: _c.Callable[[ReadContext, _t.FormatsReadOptions], tuple[FontSet, _t.Report]] | None = ...,
+        writer: _t.PythonWriter | None = ...,
     ) -> None:
         """
         Register a format implemented in Python (`Registry::register` with a
@@ -1301,9 +1269,9 @@ class Registry:
         """`Registry::set_amiga_read_options`: apply a `f::amiga::AmigaReadOptions` dict."""
     def set_amiga_write_options(self, options: _t.AmigaWriteOptions) -> None:
         """`Registry::set_amiga_write_options`: apply a `f::amiga::AmigaWriteOptions` dict."""
-    def set_bbc_read_options(self, options: Any) -> Any:
+    def set_bbc_read_options(self, options: _t.NativeReadOptions) -> None:
         """`Registry::set_bbc_read_options`: apply a `f::bbc::BbcReadOptions` dict."""
-    def set_bbc_write_options(self, options: Any) -> Any:
+    def set_bbc_write_options(self, options: _t.W5a2CommonNativeWriteOptions) -> None:
         """`Registry::set_bbc_write_options`: apply a `f::bbc::BbcWriteOptions` dict."""
     def set_beos_read_options(self, options: _t.BeosReadOptions) -> None:
         """`Registry::set_beos_read_options`: apply a `f::beos::BeosReadOptions` dict."""
@@ -1325,7 +1293,7 @@ class Registry:
         """`Registry::set_chiwriter_read_options`: apply a `f::chiwriter::ChiwriterReadOptions` dict."""
     def set_chiwriter_write_options(self, options: _t.ChiwriterWriteOptions) -> None:
         """`Registry::set_chiwriter_write_options`: apply a `f::chiwriter::ChiwriterWriteOptions` dict."""
-    def set_codec(self, format: str, codec: Any) -> None:
+    def set_codec(self, format: str, codec: _c.Mapping[str, Any]) -> None:
         """
         Install a codec from its dict form (`{"read_options": …,
         "write_options": …}`, the format's `*Codec` struct); missing sides use
@@ -1359,7 +1327,7 @@ class Registry:
         """`Registry::set_dashen_write_options`: apply a `f::dashen::DashenWriteOptions` dict."""
     def set_dosstart_read_options(self, options: _t.DosstartReadOptions) -> None:
         """`Registry::set_dosstart_read_options`: apply a `f::dosstart::DosstartReadOptions` dict."""
-    def set_dosstart_write_options(self, options: Any) -> Any:
+    def set_dosstart_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_dosstart_write_options`: apply a `f::dosstart::DosstartWriteOptions` dict."""
     def set_draw_write_options(self, options: _t.DrawWriteOptions) -> None:
         """`Registry::set_draw_write_options`: apply a `f::draw::DrawWriteOptions` dict."""
@@ -1369,11 +1337,11 @@ class Registry:
         """`Registry::set_drcs_write_options`: apply a `f::drcs::DrcsWriteOptions` dict."""
     def set_drhalo_read_options(self, options: _t.DrhaloReadOptions) -> None:
         """`Registry::set_drhalo_read_options`: apply a `f::drhalo::DrhaloReadOptions` dict."""
-    def set_drhalo_write_options(self, options: Any) -> Any:
+    def set_drhalo_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_drhalo_write_options`: apply a `f::drhalo::DrhaloWriteOptions` dict."""
     def set_edwin_read_options(self, options: _t.EdwinReadOptions) -> None:
         """`Registry::set_edwin_read_options`: apply a `f::edwin::EdwinReadOptions` dict."""
-    def set_edwin_write_options(self, options: Any) -> Any:
+    def set_edwin_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_edwin_write_options`: apply a `f::edwin::EdwinWriteOptions` dict."""
     def set_embedded_write_options(self, options: _t.EmbeddedWriteOptions) -> None:
         """`Registry::set_embedded_write_options`: apply a `f::embedded::EmbeddedWriteOptions` dict."""
@@ -1409,21 +1377,21 @@ class Registry:
         """`Registry::set_geos_read_options`: apply a `f::geos::GeosReadOptions` dict."""
     def set_geos_write_options(self, options: _t.GeosWriteOptions) -> None:
         """`Registry::set_geos_write_options`: apply a `f::geos::GeosWriteOptions` dict."""
-    def set_gf_write_options(self, options: Any) -> Any:
+    def set_gf_write_options(self, options: _t.TexWriteOptions) -> None:
         """`Registry::set_gf_write_options`: apply a `f::gf::GfWriteOptions` dict."""
     def set_gpi_read_options(self, options: _t.GpiReadOptions) -> None:
         """`Registry::set_gpi_read_options`: apply a `f::gpi::GpiReadOptions` dict."""
     def set_gpi_write_options(self, options: _t.GpiWriteOptions) -> None:
         """`Registry::set_gpi_write_options`: apply a `f::gpi::GpiWriteOptions` dict."""
-    def set_grasp_read_options(self, options: Any) -> Any:
+    def set_grasp_read_options(self, options: _t.NativeReadOptions) -> None:
         """`Registry::set_grasp_read_options`: apply a `f::grasp::GraspReadOptions` dict."""
-    def set_grasp_write_options(self, options: Any) -> Any:
+    def set_grasp_write_options(self, options: _t.W5a2CommonNativeWriteOptions) -> None:
         """`Registry::set_grasp_write_options`: apply a `f::grasp::GraspWriteOptions` dict."""
     def set_hanfont_read_options(self, options: _t.HanfontReadOptions) -> None:
         """`Registry::set_hanfont_read_options`: apply a `f::hanfont::HanfontReadOptions` dict."""
     def set_hanfont_write_options(self, options: _t.HanfontWriteOptions) -> None:
         """`Registry::set_hanfont_write_options`: apply a `f::hanfont::HanfontWriteOptions` dict."""
-    def set_hbf_write_options(self, options: Any) -> Any:
+    def set_hbf_write_options(self, options: _t.HbfWriteOptions) -> None:
         """`Registry::set_hbf_write_options`: apply a `f::hbf::HbfWriteOptions` dict."""
     def set_hex_read_options(self, options: _t.HexReadOptions) -> None:
         """`Registry::set_hex_read_options`: apply a `f::hex::HexReadOptions` dict."""
@@ -1437,9 +1405,9 @@ class Registry:
         """`Registry::set_hppcl_read_options`: apply a `f::hppcl::HppclReadOptions` dict."""
     def set_hppcl_write_options(self, options: _t.HppclWriteOptions) -> None:
         """`Registry::set_hppcl_write_options`: apply a `f::hppcl::HppclWriteOptions` dict."""
-    def set_hrcg_read_options(self, options: Any) -> Any:
+    def set_hrcg_read_options(self, options: _t.NativeReadOptions) -> None:
         """`Registry::set_hrcg_read_options`: apply a `f::hrcg::HrcgReadOptions` dict."""
-    def set_hrcg_write_options(self, options: Any) -> Any:
+    def set_hrcg_write_options(self, options: _t.W5a2CommonNativeWriteOptions) -> None:
         """`Registry::set_hrcg_write_options`: apply a `f::hrcg::HrcgWriteOptions` dict."""
     def set_hzk_read_options(self, options: _t.HzkReadOptions) -> None:
         """`Registry::set_hzk_read_options`: apply a `f::hzk::HzkReadOptions` dict."""
@@ -1469,7 +1437,7 @@ class Registry:
         """`Registry::set_mgtk_write_options`: apply a `f::mgtk::MgtkWriteOptions` dict."""
     def set_mkwinfont_read_options(self, options: _t.MkwinfontReadOptions) -> None:
         """`Registry::set_mkwinfont_read_options`: apply a `f::mkwinfont::MkwinfontReadOptions` dict."""
-    def set_mkwinfont_write_options(self, options: Any) -> Any:
+    def set_mkwinfont_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_mkwinfont_write_options`: apply a `f::mkwinfont::MkwinfontWriteOptions` dict."""
     def set_nfnt_read_options(self, options: _t.NfntReadOptions) -> None:
         """`Registry::set_nfnt_read_options`: apply a `f::nfnt::NfntReadOptions` dict."""
@@ -1479,7 +1447,12 @@ class Registry:
         """`Registry::set_oberon_read_options`: apply a `f::oberon::OberonReadOptions` dict."""
     def set_oberon_write_options(self, options: _t.OberonWriteOptions) -> None:
         """`Registry::set_oberon_write_options`: apply a `f::oberon::OberonWriteOptions` dict."""
-    def set_options(self, format: str, read: Any = ..., write: Any = ...) -> None:
+    def set_options(
+        self,
+        format: str,
+        read: _c.Mapping[str, Any] | None = ...,
+        write: _c.Mapping[str, Any] | None = ...,
+    ) -> None:
         """Configure both sides of `format`; `None` leaves a side unchanged."""
     def set_palm_read_options(self, options: _t.PalmReadOptions) -> None:
         """`Registry::set_palm_read_options`: apply a `f::palm::PalmReadOptions` dict."""
@@ -1497,11 +1470,11 @@ class Registry:
         """`Registry::set_pcgeos_write_options`: apply a `f::pcgeos::PcgeosWriteOptions` dict."""
     def set_pcr_read_options(self, options: _t.PcrReadOptions) -> None:
         """`Registry::set_pcr_read_options`: apply a `f::pcr::PcrReadOptions` dict."""
-    def set_pcr_write_options(self, options: Any) -> Any:
+    def set_pcr_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_pcr_write_options`: apply a `f::pcr::PcrWriteOptions` dict."""
     def set_pf2_read_options(self, options: _t.Pf2ReadOptions) -> None:
         """`Registry::set_pf2_read_options`: apply a `f::pf2::Pf2ReadOptions` dict."""
-    def set_pf2_write_options(self, options: Any) -> Any:
+    def set_pf2_write_options(self, options: _t.Pf2WriteOptions) -> None:
         """`Registry::set_pf2_write_options`: apply a `f::pf2::Pf2WriteOptions` dict."""
     def set_pfr_read_options(self, options: _t.PfrReadOptions) -> None:
         """`Registry::set_pfr_read_options`: apply a `f::pfr::PfrReadOptions` dict."""
@@ -1511,7 +1484,7 @@ class Registry:
         """`Registry::set_pilfont_read_options`: apply a `f::pilfont::PilfontReadOptions` dict."""
     def set_pilfont_write_options(self, options: _t.PilfontWriteOptions) -> None:
         """`Registry::set_pilfont_write_options`: apply a `f::pilfont::PilfontWriteOptions` dict."""
-    def set_pk_write_options(self, options: Any) -> Any:
+    def set_pk_write_options(self, options: _t.TexWriteOptions) -> None:
         """`Registry::set_pk_write_options`: apply a `f::pk::PkWriteOptions` dict."""
     def set_plan9_write_options(self, options: _t.Plan9WriteOptions) -> None:
         """`Registry::set_plan9_write_options`: apply a `f::plan9::Plan9WriteOptions` dict."""
@@ -1521,7 +1494,7 @@ class Registry:
         """`Registry::set_playdate_write_options`: apply a `f::playdate::PlaydateWriteOptions` dict."""
     def set_plus3dos_read_options(self, options: _t.Plus3dosReadOptions) -> None:
         """`Registry::set_plus3dos_read_options`: apply a `f::plus3dos::Plus3dosReadOptions` dict."""
-    def set_plus3dos_write_options(self, options: Any) -> Any:
+    def set_plus3dos_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_plus3dos_write_options`: apply a `f::plus3dos::Plus3dosWriteOptions` dict."""
     def set_polyprint_read_options(self, options: _t.PolyprintReadOptions) -> None:
         """`Registry::set_polyprint_read_options`: apply a `f::polyprint::PolyprintReadOptions` dict."""
@@ -1537,7 +1510,7 @@ class Registry:
         """`Registry::set_printshop_write_options`: apply a `f::printshop::PrintshopWriteOptions` dict."""
     def set_psf2txt_read_options(self, options: _t.Psf2txtReadOptions) -> None:
         """`Registry::set_psf2txt_read_options`: apply a `f::psf2txt::Psf2txtReadOptions` dict."""
-    def set_psf2txt_write_options(self, options: Any) -> Any:
+    def set_psf2txt_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_psf2txt_write_options`: apply a `f::psf2txt::Psf2txtWriteOptions` dict."""
     def set_psf_write_options(self, options: _t.PsfWriteOptions) -> None:
         """`Registry::set_psf_write_options`: apply a `f::psf::PsfWriteOptions` dict."""
@@ -1557,7 +1530,7 @@ class Registry:
         """`Registry::set_raw_read_options`: apply a `f::raw::RawReadOptions` dict."""
     def set_raw_write_options(self, options: _t.RawWriteOptions) -> None:
         """`Registry::set_raw_write_options`: apply a `f::raw::RawWriteOptions` dict."""
-    def set_read_options(self, format: str, options: Any) -> None:
+    def set_read_options(self, format: str, options: _c.Mapping[str, Any]) -> None:
         """
         Configure the typed reader options of `format` from a dict (the
         format's `*ReadOptions` fields; unknown keys raise `ValueError`).
@@ -1624,24 +1597,24 @@ class Registry:
         """`Registry::set_vtfont_read_options`: apply a `f::vtfont::VtfontReadOptions` dict."""
     def set_vtfont_write_options(self, options: _t.VtfontWriteOptions) -> None:
         """`Registry::set_vtfont_write_options`: apply a `f::vtfont::VtfontWriteOptions` dict."""
-    def set_write_options(self, format: str, options: Any) -> None:
+    def set_write_options(self, format: str, options: _c.Mapping[str, Any]) -> None:
         """
         Configure the typed writer options of `format` from a dict (the
         format's `*WriteOptions` fields; unknown keys raise `ValueError`).
         """
     def set_writeon_read_options(self, options: _t.WriteonReadOptions) -> None:
         """`Registry::set_writeon_read_options`: apply a `f::writeon::WriteonReadOptions` dict."""
-    def set_writeon_write_options(self, options: Any) -> Any:
+    def set_writeon_write_options(self, options: _t.W5a1CommonNativeWriteOptions) -> None:
         """`Registry::set_writeon_write_options`: apply a `f::writeon::WriteonWriteOptions` dict."""
     def set_wsfont_read_options(self, options: _t.WsfontReadOptions) -> None:
         """`Registry::set_wsfont_read_options`: apply a `f::wsfont::WsfontReadOptions` dict."""
     def set_wsfont_write_options(self, options: _t.WsfontWriteOptions) -> None:
         """`Registry::set_wsfont_write_options`: apply a `f::wsfont::WsfontWriteOptions` dict."""
-    def set_wyse_read_options(self, options: Any) -> Any:
+    def set_wyse_read_options(self, options: _t.NativeReadOptions) -> None:
         """`Registry::set_wyse_read_options`: apply a `f::wyse::WyseReadOptions` dict."""
-    def set_wyse_write_options(self, options: Any) -> Any:
+    def set_wyse_write_options(self, options: _t.W5a2CommonNativeWriteOptions) -> None:
         """`Registry::set_wyse_write_options`: apply a `f::wyse::WyseWriteOptions` dict."""
-    def set_xbin_read_options(self, options: Any) -> Any:
+    def set_xbin_read_options(self, options: _t.NativeReadOptions) -> None:
         """`Registry::set_xbin_read_options`: apply a `f::xbin::XbinReadOptions` dict."""
     def set_xbin_write_options(self, options: _t.XbinWriteOptions) -> None:
         """`Registry::set_xbin_write_options`: apply a `f::xbin::XbinWriteOptions` dict."""
@@ -1655,11 +1628,11 @@ class Registry:
         """`Registry::set_zapfont_read_options`: apply a `f::zapfont::ZapfontReadOptions` dict."""
     def set_zapfont_write_options(self, options: _t.ZapfontWriteOptions) -> None:
         """`Registry::set_zapfont_write_options`: apply a `f::zapfont::ZapfontWriteOptions` dict."""
-    def status(self, format: str) -> Any:
+    def status(self, format: str) -> _t.FormatStatus:
         """The `FormatStatus` dict of one format ID; raises `UnknownFormatError`."""
     def write(
         self,
-        fonts: _c.Iterable[_t.FontLike],
+        fonts: FontSet | Font,
         format: str,
         *,
         report: _t.Report | None = ...,
@@ -1676,7 +1649,7 @@ class Registry:
         """
     def write_owned(
         self,
-        fonts: _c.Iterable[_t.FontLike],
+        fonts: FontSet | Font,
         format: str,
         report: _t.Report | None = ...,
         *,
@@ -1692,7 +1665,7 @@ class Registry:
         """
     def write_reserved_with_report(
         self,
-        fonts: _c.Iterable[_t.FontLike],
+        fonts: FontSet | Font,
         format: str,
         report: _t.Report | None = ...,
         *,
@@ -1707,7 +1680,7 @@ class Registry:
         """
     def write_with_report(
         self,
-        fonts: _c.Iterable[_t.FontLike],
+        fonts: FontSet | Font,
         format: str,
         report: _t.Report,
         *,
@@ -1730,9 +1703,9 @@ class Rendered:
     def bitmap(self) -> Bitmap:
         """Rendered pixels."""
     @property
-    def report(self) -> Any:
+    def report(self) -> _t.Report:
         """Plain-data report (`{"entries": [...]}`)."""
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.RenderedDict:
         """Plain data: `{"bitmap": {"width", "height", "data"}, "report": {...}}`."""
 
 @final
@@ -1744,7 +1717,7 @@ class ResourceSet:
     """
     def __new__(cls, files: dict[str, Any] | None = ...) -> ResourceSet:
         ...
-    def __contains__(self, key: Any, /) -> bool:
+    def __contains__(self, key: str, /) -> bool:
         """Return key in self."""
     def __len__(self) -> int:
         """Return len(self)."""
@@ -1781,16 +1754,16 @@ class Written:
     def output(self) -> OutputBundle:
         """Output files."""
     @property
-    def report(self) -> Any:
+    def report(self) -> _t.Report:
         """Report dict."""
-    def to_dict(self) -> Any:
+    def to_dict(self) -> _t.WrittenDict:
         """Plain-data form (`{"output": {...}, "report": {...}}`)."""
 
 def apply_bitmap_projection(
     font_set: FontSet,
-    projection: Any,
+    projection: BitmapProjection | _t.BitmapProjectionArgs,
     max_working_bytes: int | None = ...,
-) -> Any:
+) -> _t.ProjectionOutcome:
     """
     Apply `projection` (a `BitmapProjection` or a dict of its constructor
     arguments) to every strike as one transaction; on error the set is
@@ -1805,7 +1778,7 @@ def apply_names(
     font_set: FontSet,
     overrides: _t.NameOverrides | None = ...,
     limits: _t.ResourceLimits | None = ...,
-) -> Any:
+) -> _t.Report:
     """
     Apply family/style/name/notice overrides to every strike as one
     transaction (`metadata::apply_names`). `overrides` is a `NameOverrides`
@@ -1833,25 +1806,25 @@ def charset_table() -> list[Any]:
     `aliases` and `available` (`CharsetInfo::available`).
     """
 
-def default_bitmap_limits() -> Any:
+def default_bitmap_limits() -> _t.BitmapLimits:
     """Default `BitmapLimits` as a dict."""
 
-def default_byte_layout() -> Any:
+def default_byte_layout() -> _t.ByteLayout:
     """Default `ByteLayout` as a dict."""
 
-def default_image_options() -> Any:
+def default_image_options() -> _t.ImageImageOptions:
     """Default `ImageOptions` as a dict."""
 
-def default_render_limits() -> Any:
+def default_render_limits() -> _t.RenderLimits:
     """Default `RenderLimits` as a dict."""
 
-def default_render_options() -> Any:
+def default_render_options() -> _t.RenderOptions:
     """Default `RenderOptions` as a dict."""
 
-def default_resource_limits() -> Any:
+def default_resource_limits() -> _t.ResourceLimits:
     """Default `ResourceLimits` as a dict."""
 
-def default_transport_limits() -> Any:
+def default_transport_limits() -> _t.TransportLimits:
     """Default `TransportLimits` as a dict."""
 
 def detect(
@@ -1860,7 +1833,7 @@ def detect(
     *,
     resources: _t.Resources | None = ...,
     limits: _t.ResourceLimits | None = ...,
-) -> Any:
+) -> _t.Detected:
     """
     Detect the format of font bytes with the built-in registry. Returns
     `{"format": FormatInfo, "confidence": …}`.
@@ -1869,7 +1842,7 @@ def detect(
 def detect_gl(key: str, encoding: str | None, codes: _c.Sequence[int]) -> bool:
     """Infer the GL form from glyph codes (`detect_gl`)."""
 
-def east_asian_width(cp: int) -> Any:
+def east_asian_width(cp: int) -> _t.EastAsianWidth | None:
     """
     East Asian Width property, or `None` for non-scalars
     (`merge_categories::east_asian_width`).
@@ -1899,19 +1872,19 @@ def is_western(cp: int) -> bool:
 def kuten_to_euc(row: int, cell: int) -> int | None:
     """One-based 94×94 row/cell to an EUC code, or `None` (`kuten_to_euc`)."""
 
-def list_formats() -> Any:
+def list_formats() -> list[Any]:
     """Every catalogue format with its capabilities (`FormatStatus` dicts)."""
 
 def name_overrides_is_empty(overrides: _t.NameOverrides) -> bool:
     """Whether a `NameOverrides` dict requests no change (`NameOverrides::is_empty`)."""
 
-def parse_rgba(text: str) -> Any:
+def parse_rgba(text: str) -> _t.Rgba:
     """
     Parse `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA` or `transparent` into a
     color dict (`Rgba: FromStr`).
     """
 
-def parse_writing_direction(spec: str) -> Any:
+def parse_writing_direction(spec: str) -> _t.WritingDirection:
     """
     Strict direction parsing (`WritingDirection: FromStr`); raises
     `InvalidInputError` for unknown spellings.
@@ -1920,7 +1893,7 @@ def parse_writing_direction(spec: str) -> Any:
 def read(
     data: _t.ReadInput | None = ...,
     format: str | None = ...,
-    options: Any = ...,
+    options: _c.Mapping[str, Any] | None = ...,
     resources: _t.Resources | None = ...,
     *,
     name: str | None = ...,
@@ -1940,7 +1913,7 @@ def read(
 def registry() -> Registry:
     """The built-in registry (`fontpixel::registry()`)."""
 
-def report_extend(report: _t.Report, other: _t.Report) -> Any:
+def report_extend(report: _t.Report, other: _t.Report) -> _t.Report:
     """A new report dict with every entry of `other` appended (`Report::extend`)."""
 
 def report_has_errors(report: _t.Report) -> bool:
@@ -1949,7 +1922,7 @@ def report_has_errors(report: _t.Report) -> bool:
 def report_has_loss(report: _t.Report) -> bool:
     """Whether a report dict has any loss entry (`Report::has_loss`)."""
 
-def report_push(report: _t.Report, entry: _t.ReportEntry) -> Any:
+def report_push(report: _t.Report, entry: _t.ReportEntry) -> _t.Report:
     """
     A new report dict with `entry` appended, after validating both
     (`Report::push`).
@@ -1961,26 +1934,26 @@ def report_to_text(report: _t.Report) -> str:
 def resource_path(path: str) -> str:
     """Validate a portable relative asset path and return it (`ResourcePath::new`)."""
 
-def rgba(red: int, green: int, blue: int, alpha: int = ...) -> Any:
+def rgba(red: int, green: int, blue: int, alpha: int = ...) -> _t.Rgba:
     """An RGBA color dict (`Rgba::new`)."""
 
 def sanitize_charset(registry: str | None = ..., encoding: str | None = ...) -> str:
     """Canonical key from XLFD registry/encoding (`sanitize_charset`)."""
 
-def to_png(bitmap: _bdfparser_Bitmap, options: Any = ...) -> bytes:
+def to_png(bitmap: _bdfparser_Bitmap, options: _t.ImageImageOptions | None = ...) -> bytes:
     """
     Encode a Mono bitmap as an indexed 1-bit PNG (`render::image::to_png`).
     `options` is an `ImageOptions` dict (`scale`, `foreground`, `background`,
     `limits`); colors are `{red, green, blue, alpha}` dicts.
     """
 
-def to_svg(bitmap: _bdfparser_Bitmap, options: Any = ...) -> str:
+def to_svg(bitmap: _bdfparser_Bitmap, options: _t.ImageImageOptions | None = ...) -> str:
     """Export a Mono bitmap as a standalone SVG string (`render::image::to_svg`)."""
 
-def unicode_block(cp: int) -> Any:
+def unicode_block(cp: int) -> _t.UnicodeRange | None:
     """The Unicode block `{start, end, name}`, or `None` (`merge_categories::unicode_block`)."""
 
-def windows_charset(value: int) -> Any:
+def windows_charset(value: int) -> _t.WindowsCharset:
     """
     Resolve a Windows `dfCharSet` byte (`windows_charset`): `{"code_page":
     "cp1252"}`, `"system_ansi"`, `"system_oem"`, `"system_mac"`, `"symbol"` or
@@ -1988,9 +1961,9 @@ def windows_charset(value: int) -> Any:
     """
 
 def write(
-    fonts: _c.Iterable[_t.FontLike],
+    fonts: FontSet | Font,
     format: str,
-    options: Any = ...,
+    options: _c.Mapping[str, Any] | None = ...,
     *,
     report: _t.Report | None = ...,
     primary_name: str | None = ...,
@@ -2006,7 +1979,7 @@ def write(
     envelope. `strict=True` raises `StrictLossError` on any loss.
     """
 
-def writing_direction_from_spec(spec: str) -> Any:
+def writing_direction_from_spec(spec: str) -> _t.WritingDirection:
     """
     Lenient SPEC direction parsing: invalid strings give `lrtb`
     (`WritingDirection::from_spec`). Returns `{"glyphs", "lines"}`.

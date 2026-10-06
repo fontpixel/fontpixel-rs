@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet
@@ -30,10 +30,10 @@ def detect(data: _t.Buffer | _c.Sequence[int]) -> _t.Confidence:
     `"no_match"`, `"possible"` or `"certain"`.
     """
 
-def preset_geometry(preset: Any) -> Any:
+def preset_geometry(preset: _t.Preset) -> _t.Geometry:
     """The `Geometry` dict of an HZK/ASC preset (`hzk::Preset::geometry`)."""
 
-def preset_name(preset: Any) -> str:
+def preset_name(preset: _t.Preset) -> str:
     """The CLI spelling of an HZK/ASC preset (`hzk::Preset::name`)."""
 
 def presets() -> list[str]:

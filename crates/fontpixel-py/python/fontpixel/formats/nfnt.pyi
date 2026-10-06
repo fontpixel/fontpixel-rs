@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet, Written
@@ -49,8 +49,8 @@ def write(
     """
 
 def write_bundle(
-    fonts: _c.Iterable[_t.FontLike],
-    options: Any = ...,
+    fonts: FontSet | Font,
+    options: _t.NfntWriteOptions | None = ...,
     *,
     primary_name: str | None = ...,
 ) -> Written:

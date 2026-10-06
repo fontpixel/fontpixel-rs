@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 
@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 def decode(
-    axis: Any,
+    axis: _t.Axis,
     header: _t.Buffer | _c.Sequence[int],
     data: _t.Buffer | _c.Sequence[int],
     num_glyphs: int,
@@ -29,15 +29,15 @@ def decode(
     """`metrics::decode`: `(header, metrics)` from the header and metrics tables."""
 
 def encode(
-    axis: Any,
+    axis: _t.Axis,
     header: _t.MetricsHeader,
-    metrics: Any,
+    metrics: _c.Sequence[_t.LongMetric],
     compact: bool,
     limits: _t.SfntLimits | None = ...,
-) -> Any:
+) -> _t.EncodedMetrics:
     """`metrics::encode`: `{header: bytes, metrics: bytes, num_long_metrics}`."""
 
-def header_new(axis: Any) -> Any:
+def header_new(axis: _t.Axis) -> _t.MetricsHeader:
     """
     `metrics::Header::new`: a default header dict for `axis`
     (`"horizontal"` or `"vertical"`).
@@ -45,9 +45,9 @@ def header_new(axis: Any) -> Any:
 
 def header_recompute(
     header: _t.MetricsHeader,
-    metrics: Any,
+    metrics: _c.Sequence[_t.LongMetric],
     ink_extents: _c.Sequence[int | None],
-) -> Any:
+) -> _t.MetricsHeader:
     """
     `Header::recompute`: a copy of `header` with extents recomputed from
     `metrics` (LongMetric dicts) and per-glyph ink extents (`None` = blank).

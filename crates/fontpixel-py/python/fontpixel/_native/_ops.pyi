@@ -8,11 +8,10 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import FontSet
-from fontpixel.ops import BatchResult as _ops_BatchResult, OperationResult as _ops_OperationResult
 
 __all__ = [
     "__doc__",
@@ -54,7 +53,7 @@ class BatchResult:
         (memory mode only).
         """
     @property
-    def document(self) -> Any:
+    def document(self) -> dict[str, Any]:
         """The parsed batch document."""
     @property
     def exit_code(self) -> int:
@@ -68,7 +67,7 @@ class BatchResult:
     def outputs(self) -> dict[str, Any]:
         """Committed outputs as `{storage key: bytes}` (memory mode only)."""
     @property
-    def tasks(self) -> Any:
+    def tasks(self) -> list[_t.BatchTaskOutcome]:
         """
         Per-task outcomes in request order (dicts with `index`, `id`, `kind`,
         `success`, `exit_code`, `committed`, `diagnostics_truncated`, `error`).
@@ -99,7 +98,7 @@ class OperationResult:
     def destinations(self) -> list[str]:
         """The requested entry-point destination of each prepared output."""
     @property
-    def document(self) -> Any:
+    def document(self) -> dict[str, Any]:
         """The parsed JSON document (a dict), equal to `json.loads(self.json())`."""
     @property
     def exit_code(self) -> int:
@@ -112,7 +111,7 @@ class OperationResult:
     @property
     def fonts(self) -> FontSet | None:
         """Decoded fonts of an `info` call as a `fontpixel.FontSet`, else `None`."""
-    def format_status(self, id: str) -> Any:
+    def format_status(self, id: str) -> _t.FormatStatus | None:
         """The status dict of one format identifier (`formats` only), or `None`."""
     def json(self, pretty: bool = ...) -> str:
         """
@@ -129,18 +128,24 @@ class OperationResult:
         after filesystem mode, where the outputs were already committed).
         """
     @property
-    def report(self) -> Any:
+    def report(self) -> _t.Report | None:
         """
         The operation's diagnostics report, or `None` for operations with one
         report per output or input (convert, merge, diff, formats).
         """
     @property
-    def summary(self) -> Any:
+    def summary(self) -> dict[str, Any]:
         """Typed response fields as plain data (per operation; see the module docs)."""
     def text(self) -> str:
         """The command line's text-mode standard output."""
 
-def batch(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def batch(
+    request: _t.BatchRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> BatchResult:
     """
     Run typed tasks as one batch (`fontpixel batch` with typed tasks).
 
@@ -153,7 +158,7 @@ def batch(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any
     (memory). A whole-batch failure raises with a `document` attribute.
     """
 
-def batch_file(path: _t.StrPath, /, *, jobs: int | None = ...) -> _ops_BatchResult:
+def batch_file(path: _t.StrPath, /, *, jobs: int | None = ...) -> BatchResult:
     """
     Run a TOML job file from the filesystem exactly as `fontpixel batch FILE
     [--jobs N]` (the job file is protected from every output; `jobs` is
@@ -167,7 +172,7 @@ def batch_toml(
     base: _t.StrPath | None = ...,
     jobs: int | None = ...,
     files: _t.Files | None = ...,
-) -> _ops_BatchResult:
+) -> BatchResult:
     """
     Run a version-1 TOML job text (the `fontpixel batch` file format).
     Relative paths resolve against `base`; `jobs` overrides the file's
@@ -180,38 +185,71 @@ def capabilities() -> dict[str, Any]:
     `toml_batch` (bools).
     """
 
-def charset(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def charset(
+    request: _t.CharsetRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Remap glyph codes into another charset and write the result
     (`fontpixel charset`).
     """
 
-def convert(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def convert(
+    request: _t.ConvertRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Convert inputs into one output, or each input into its own output
     (`fontpixel convert`). Request keys: `inputs`, `output`, `from`, `to`,
     `each`, `strict`, `font_index`, `report` and every reader/writer option.
     """
 
-def diff(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def diff(
+    request: _t.DiffRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Compare two inputs (`fontpixel diff`). Differences are reported in the
     result (`summary["equal"]`, `exit_code` 1), not raised.
     """
 
-def formats(request: Any = ..., /, **options: dict[str, Any] | None) -> _ops_OperationResult:
+def formats(
+    request: _t.FormatsRequest | None = ...,
+    /,
+    **options: dict[str, Any] | None,
+) -> OperationResult:
     """
     List every catalogue format with the reader/writer compiled into this
     build (`fontpixel formats`).
     """
 
-def info(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def info(
+    request: _t.InfoRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Decode one input and describe its fonts (`fontpixel info`); the result's
     `fonts` is the decoded `fontpixel.FontSet`.
     """
 
-def inspect_request(operation: str, request: Any = ..., /, **options: dict[str, Any] | None) -> Any:
+def inspect_request(
+    operation: str,
+    request: _c.Mapping[str, Any] | None = ...,
+    /,
+    **options: dict[str, Any] | None,
+) -> _t.InspectedRequest:
     """
     Validate a request for `operation` and describe it: the normalized
     `request` (every default filled in), `report_style`,
@@ -223,7 +261,13 @@ def inspect_request(operation: str, request: Any = ..., /, **options: dict[str, 
 def memory_key(path: _t.StrPath) -> str:
     """The memory-storage key of a path: `.` removed, `..` folded, `/` separators."""
 
-def merge(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def merge(
+    request: _t.MergeRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Merge selected glyphs from ordered parts and write every output as one
     group (`fontpixel merge`). Request keys: `parts` (list of
@@ -238,7 +282,7 @@ def output_format_for(destination: _t.StrPath) -> str:
     ambiguous or unknown extension raises like `convert` without `to`.
     """
 
-def parse_args(argv: _c.Sequence[str]) -> Any:
+def parse_args(argv: _c.Sequence[str]) -> _t.ParsedArgs:
     """
     Parse a `fontpixel` command line (without the program name) with the
     command-line definition and return `{"command", "request", "report_style",
@@ -247,32 +291,62 @@ def parse_args(argv: _c.Sequence[str]) -> Any:
     parser's message and `exit_code` (0 for `--help`/`--version`).
     """
 
-def parse_batch_toml(text: str, /, *, base: _t.StrPath | None = ...) -> Any:
+def parse_batch_toml(text: str, /, *, base: _t.StrPath | None = ...) -> list[_t.InspectedRequest]:
     """
     Parse a TOML job text without running it: the tasks as dicts with `id`,
     `kind`, `declared_inputs` and either `request` (the normalized request)
     and `weight`, or `error` for a task that failed preparation.
     """
 
-def preview(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def preview(
+    request: _t.PreviewRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Lay out text (or every mapping) as character art (`fontpixel preview`):
     `text()` is the art, `json()` the diagnostics document.
     """
 
-def render(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def render(
+    request: _t.RenderRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Lay out text (or every mapping with `all=True`) into a PNG or SVG image
     (`fontpixel render`).
     """
 
-def subset(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def subset(
+    request: _t.SubsetRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """Subset an sfnt, WOFF or WOFF2 font (`fontpixel subset`)."""
 
-def validate(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def validate(
+    request: _t.ValidateRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """Validate one input (`fontpixel validate`)."""
 
-def variants(request: Any = ..., /, *, files: _t.Files | None = ..., **options: Any) -> Any:
+def variants(
+    request: _t.VariantsRequest | None = ...,
+    /,
+    *,
+    files: _t.Files | None = ...,
+    **options: Any,
+) -> OperationResult:
     """
     Build a locl-enabled OpenType font from regional and script faces
     (`fontpixel variants`).

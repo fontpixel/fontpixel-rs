@@ -8,7 +8,7 @@ import builtins as _b
 import types as _types
 from typing import Any, Literal, final, overload
 
-from typing_extensions import disjoint_base
+from typing_extensions import Self, disjoint_base
 
 from fontpixel import types as _t
 from fontpixel._native import Font, FontSet
@@ -24,7 +24,7 @@ __all__ = [
     "detect_native_ppem",
 ]
 
-def codec(format: str) -> Any:
+def codec(format: str) -> _t.VectorRasterCodecDict:
     """
     The default codec options of `format` (`vector_raster::Codec::new`):
     `{"id", "read_options", "write_options"}`.
@@ -36,7 +36,7 @@ def detect(
     *,
     name: str | None = ...,
     limits: _t.ResourceLimits | None = ...,
-) -> Any:
+) -> _t.Confidence:
     """Run the outline detector of `format` (`vector_raster::Codec::new(format)`)."""
 
 def detect_native_ppem(
@@ -49,13 +49,20 @@ def detect_native_ppem(
     `limits` is a `vector_raster::Limits` dict.
     """
 
-def read(data: _t.Buffer, options: Any = ...) -> _t.Report:
+def read(
+    data: _t.Buffer,
+    options: _t.VectorRasterOptions | None = ...,
+) -> tuple[FontSet | Font, _t.Report]:
     """
     Rasterize a standalone outline font (`vector_raster::read`). `options` is
     a `vector_raster::Options` dict. Returns `(FontSet, report)`.
     """
 
-def write(fonts: _c.Iterable[_t.FontLike], format: str, options: Any = ...) -> tuple[bytes, Any]:
+def write(
+    fonts: FontSet | Font,
+    format: str,
+    options: _t.VectorRasterWriteOptions | None = ...,
+) -> tuple[bytes, Any]:
     """
     Vectorize strikes as `format` (`vector_raster::write`). `options` is a
     `vector_raster::WriteOptions` dict. Returns `(bytes, report)`.
