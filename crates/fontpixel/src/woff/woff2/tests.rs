@@ -318,7 +318,10 @@ fn single_threaded_spawner_matches_the_thread_pool_on_large_inputs() {
     if let Some(sfnt) = tong_sc_otb() {
         assert_spawners_agree("Tong-SC-otb-sfnt", &sfnt, &qualities, &[2, 3, 4]);
         let l = Limits::default();
-        for threads in [2, 3, 4] {
+        // Default limits (q11): two threads is the command-line default; at
+        // four, the encoder admission for this 1.9 MB stream exceeds the
+        // default 256 MiB working ledger and both targets refuse it up front.
+        for threads in [2, 3] {
             let o = Options {
                 compression_threads: threads,
                 ..Default::default()
