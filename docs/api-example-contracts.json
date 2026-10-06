@@ -167,37 +167,43 @@
     },
     {
       "capability": "CLI grouped conversion",
-      "source": "crates/fontpixel-cli/src/main.rs",
+      "source": "crates/fontpixel-ops/src/cli.rs",
       "declarations": [
-        "visible_alias = \"vectorize\"",
-        "each: bool",
-        "font_index: Option<usize>",
+        "visible_alias = \"vectorize\""
+      ]
+    },
+    {
+      "capability": "CLI grouped conversion",
+      "source": "crates/fontpixel-ops/src/convert.rs",
+      "declarations": [
+        "pub each: bool",
+        "pub font_index: Option<usize>",
         "conversion_groups",
-        "p3: Box<p3_formats::WriteArguments>",
+        "pub p3: Box<p3_formats::WriteOptions>",
         "p3.apply(&id,"
       ]
     },
     {
       "capability": "CLI naming",
-      "source": "crates/fontpixel-cli/src/metadata.rs",
+      "source": "crates/fontpixel-ops/src/metadata.rs",
       "declarations": [
-        "struct NameArguments",
+        "struct NameOptions",
         "full_name: Option<String>",
         "postscript_name: Option<String>"
       ]
     },
     {
       "capability": "CLI metric projection",
-      "source": "crates/fontpixel-cli/src/metadata.rs",
+      "source": "crates/fontpixel-ops/src/metadata.rs",
       "declarations": [
-        "struct ProjectionArguments",
+        "struct ProjectionOptions",
         "swidth_ppem: Option<u32>",
         "swidth_units: Option<u32>"
       ]
     },
     {
       "capability": "CLI regional naming",
-      "source": "crates/fontpixel-cli/src/opentype.rs",
+      "source": "crates/fontpixel-ops/src/opentype.rs",
       "declarations": [
         "legacy_style: Option<String>",
         "full_name: Option<String>",
@@ -206,7 +212,7 @@
     },
     {
       "capability": "batch identity ledger",
-      "source": "crates/fontpixel-cli/src/batch.rs",
+      "source": "crates/fontpixel-ops/src/batch.rs",
       "declarations": [
         "sources.set_retained_budget",
         "max_pending_bytes",
@@ -215,7 +221,7 @@
     },
     {
       "capability": "sticky source protection",
-      "source": "crates/fontpixel-cli/src/assets.rs",
+      "source": "crates/fontpixel-ops/src/assets.rs",
       "declarations": [
         "incomplete: bool",
         "state.incomplete = true",
@@ -224,7 +230,7 @@
     },
     {
       "capability": "CLI embedded metric controls",
-      "source": "crates/fontpixel-cli/src/p3_formats.rs",
+      "source": "crates/fontpixel-ops/src/p3_formats.rs",
       "declarations": [
         "otb_upm: Option<u16>",
         "otb_reference: Option<String>",
@@ -240,9 +246,9 @@
     },
     {
       "capability": "merge shared embedded writer options",
-      "source": "crates/fontpixel-cli/src/merge.rs",
+      "source": "crates/fontpixel-ops/src/merge.rs",
       "declarations": [
-        "p3: Box<p3_formats::WriteArguments>",
+        "pub p3: Box<p3_formats::WriteOptions>",
         "raw.p3.apply(id,"
       ]
     },

@@ -485,14 +485,12 @@ name = "fontpixel-cli"
 version = "0.1.0"
 dependencies = [
  "base64",
- "cap-std",
  "clap",
  "fontpixel",
- "same-file",
+ "fontpixel-ops",
  "serde",
  "serde_json",
  "sha2",
- "toml",
 ]
 
 [[package]]
@@ -501,6 +499,20 @@ version = "0.1.0"
 dependencies = [
  "brotli",
  "fontpixel",
+]
+
+[[package]]
+name = "fontpixel-ops"
+version = "0.1.0"
+dependencies = [
+ "cap-std",
+ "clap",
+ "fontpixel",
+ "same-file",
+ "serde",
+ "serde_json",
+ "sha2",
+ "toml",
 ]
 
 [[package]]

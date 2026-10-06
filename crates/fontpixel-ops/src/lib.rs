@@ -1,0 +1,187 @@
+//! Typed, callable fontpixel operations shared by the command-line tool and the
+//! language bindings.
+//!
+//! Every command-line capability is a typed request and a function returning a
+//! typed response: [`convert()`], [`batch::run`], [`merge()`], [`variants`],
+//! [`subset`], [`charset`], [`validate`], [`diff`], [`info`], [`preview`],
+//! [`render`] and [`formats`]. Option groups mirror the command-line argument
+//! groups field for field (see [`options`] and the format option modules).
+//!
+//! Operations run against a [`Storage`]:
+//!
+//! - [`Storage::Memory`] (always available, including `wasm32`): request paths
+//!   are keys into a caller-supplied [`FileProvider`] such as [`MemoryFiles`];
+//!   sidecars resolve beside their primary key; outputs are validated as one
+//!   group and returned in [`Completed::outputs`]. Nothing touches the filesystem.
+//! - `Storage::Filesystem` (feature `fs`): real paths, sidecar discovery,
+//!   source-alias protection and the transactional multi-output persistence of
+//!   the command-line tool.
+//!
+//! Resource limits are request fields. A standalone call partitions its total
+//! byte limit into a fixed source-identity slice and the working allowance
+//! exactly as the command line does, in both storage modes.
+//!
+//! Responses render the command-line documents with `write_json` / `write_text`
+//! (pretty JSON for standalone commands, compact JSON for batch tasks).
+//!
+//! Features: per-format features forward to `fontpixel`; `fs` enables the
+//! filesystem mode; `clap` derives the command-line parser on the request types
+//! ([`cli`]); `toml` adds the batch job-file reader ([`batch::toml`]); `serde`
+//! derives `Serialize`/`Deserialize` for every request and option group.
+#![forbid(unsafe_code)]
+
+#[cfg(feature = "fs")]
+mod assets;
+pub mod batch;
+#[cfg(feature = "clap")]
+pub mod cli;
+mod commands;
+mod context;
+pub mod convert;
+pub mod extra_formats;
+pub mod image_formats;
+pub mod input_budget;
+mod inspect;
+pub mod json;
+pub mod memory;
+pub mod merge;
+pub mod metadata;
+mod name_records;
+#[cfg(feature = "opentype")]
+mod opentype;
+pub mod options;
+#[cfg(feature = "opentype")]
+pub mod outline_metadata;
+pub mod p2_formats;
+pub mod p3_formats;
+mod render;
+#[cfg(feature = "serde")]
+mod serde_text;
+
+pub use batch::{BatchRequest, BatchResponse, BatchTask, TaskAction, TaskKind, TaskRequest};
+pub use commands::{
+    CharsetRequest, CharsetResponse, DiffRequest, DiffResponse, Difference, FaceValidation,
+    ValidateRequest, ValidateResponse, ValidationKind,
+};
+pub use context::PreparedOutput;
+pub use convert::{ConvertRequest, ConvertResponse};
+pub use inspect::{FormatsRequest, FormatsResponse, InfoRequest, InfoResponse};
+pub use memory::{EntryKind, FileProvider, MemoryFiles, Storage};
+pub use merge::{MergeInput, MergeOutput, MergeRequest, MergeResponse, MergeSettings};
+#[cfg(feature = "opentype")]
+pub use opentype::{
+    ResourceOptions, SfntOutputOptions, SfntResponse, SubsetRequest, VariantsRequest,
+};
+pub use options::ReportStyle;
+pub use render::{PreviewRequest, PreviewResponse, RenderRequest, RenderResponse};
+
+use fontpixel::Result;
+
+/// A response together with the outputs it prepared. With memory storage the
+/// outputs are returned here; with filesystem storage they were already
+/// committed and this list is empty.
+#[derive(Debug, Clone)]
+pub struct Completed<T> {
+    /// The typed operation result.
+    pub response: T,
+    /// Prepared outputs (memory storage only).
+    pub outputs: Vec<PreparedOutput>,
+}
+
+/// Platform capabilities of this build, for explicit feature queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Capabilities {
+    /// Filesystem storage is compiled in (`fs` feature).
+    pub filesystem: bool,
+    /// Batch tasks can run on parallel worker threads. Without threads a
+    /// batch whose admission would use more than one worker fails with an
+    /// `Unsupported` I/O error instead of silently running serially.
+    pub threads: bool,
+    /// The command-line parser and the batch TOML reader are compiled in.
+    pub toml_batch: bool,
+}
+
+/// Capabilities of this build and target.
+pub fn capabilities() -> Capabilities {
+    Capabilities {
+        filesystem: cfg!(feature = "fs"),
+        threads: !cfg!(target_family = "wasm"),
+        toml_batch: cfg!(feature = "toml"),
+    }
+}
+
+fn standalone<T>(
+    storage: &Storage,
+    total: usize,
+    f: impl FnOnce() -> Result<T>,
+) -> Result<Completed<T>> {
+    let (response, outputs) = context::with_bounded_source_scope(storage, total, f)?;
+    Ok(Completed { response, outputs })
+}
+
+/// Convert inputs into one output, or each input into its own output.
+pub fn convert(request: ConvertRequest, storage: &Storage) -> Result<Completed<ConvertResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || convert::run(request))
+}
+/// Merge ordered parts and write every requested output as one group.
+pub fn merge(request: MergeRequest, storage: &Storage) -> Result<Completed<MergeResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || merge::run(request))
+}
+/// Build a locl-enabled OpenType font from regional and script faces.
+#[cfg(feature = "opentype")]
+pub fn variants(request: VariantsRequest, storage: &Storage) -> Result<Completed<SfntResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || opentype::variants(request))
+}
+/// Subset an sfnt, WOFF or WOFF2 font.
+#[cfg(feature = "opentype")]
+pub fn subset(request: SubsetRequest, storage: &Storage) -> Result<Completed<SfntResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || opentype::subset(request))
+}
+/// Remap glyph codes into another charset and write the result.
+pub fn charset(request: CharsetRequest, storage: &Storage) -> Result<Completed<CharsetResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || commands::charset(request))
+}
+/// Validate one input.
+pub fn validate(request: ValidateRequest, storage: &Storage) -> Result<ValidateResponse> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    Ok(standalone(storage, total, || commands::validate(request))?.response)
+}
+/// Compare two inputs. Differences are reported in the response, not as an error.
+pub fn diff(request: DiffRequest, storage: &Storage) -> Result<DiffResponse> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    Ok(standalone(storage, total, || commands::diff(request))?.response)
+}
+/// Decode one input and describe its fonts.
+pub fn info(request: InfoRequest, storage: &Storage) -> Result<InfoResponse> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    Ok(standalone(storage, total, || inspect::info(request))?.response)
+}
+/// Lay out text (or every mapping) as character art.
+pub fn preview(request: PreviewRequest, storage: &Storage) -> Result<PreviewResponse> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    Ok(standalone(storage, total, || render::preview(request))?.response)
+}
+/// Lay out text (or every mapping) into a PNG or SVG image.
+pub fn render(request: RenderRequest, storage: &Storage) -> Result<Completed<RenderResponse>> {
+    request.validate()?;
+    let total = request.source_identity_total_bytes();
+    standalone(storage, total, || render::render(request))
+}
+/// List every catalogue format with the reader/writer actually compiled in.
+pub fn formats(request: &FormatsRequest) -> FormatsResponse {
+    inspect::formats(request)
+}
