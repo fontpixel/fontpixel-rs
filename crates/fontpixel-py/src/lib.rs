@@ -17,6 +17,13 @@
 pub mod conv;
 pub mod errors;
 pub mod handles;
+pub mod merge;
+pub mod outline;
+pub mod sfnt;
+pub mod sfnt_support;
+pub mod sfnt_tables;
+pub mod variants;
+pub mod woff;
 
 use pyo3::prelude::*;
 
@@ -26,5 +33,10 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     errors::register(m)?;
     handles::register(m)?;
+    sfnt::register(m)?;
+    woff::register(m)?;
+    outline::register(m)?;
+    variants::register(m)?;
+    merge::register(m)?;
     Ok(())
 }
