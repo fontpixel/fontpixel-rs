@@ -53,3 +53,8 @@ stopped. Exact source/binary identities, raw runs, min/max values and ordinary
 peak process RSS are in `reports/phase4-evidence/`; medians and limits are in
 `reports/phase-4.md`. Process RSS includes retained input/model/output data;
 these measurements do not substitute for final whole-catalogue benchmarks.
+
+Phase 7 compares the Python bindings (`fontpixel.compat.bdfparser` and the native
+API) with pure-Python bdfparser, call class by call class, in fresh processes:
+`phase7_python.py`, documented in `phase7-README.md`, with results and analysis in
+`PHASE7-REPORT.md` and raw data in `results/phase7-python-run*.json`.
