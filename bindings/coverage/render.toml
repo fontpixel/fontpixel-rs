@@ -6,12 +6,16 @@ pattern = "fontpixel::render"
 status = "bound"
 python = "fontpixel"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+js = "fontpixel (Font.draw*, Rendered, toPng, toSvg, ...)"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::default advance, cell, ink and gaps"
 
 [[rule]]
 pattern = "fontpixel::render::GlyphOrder"
 status = "adapted"
 python = "str ('ascending', 'descending', 'file', 'reverse_file')"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_draw_codepoints_and_draw_all"
+js = "RenderGlyphOrder string ('ascending', 'descending', 'file', 'reverse_file')"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::draw codepoints and draw all"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -19,6 +23,8 @@ pattern = "fontpixel::render::MissingGlyph"
 status = "adapted"
 python = "options['missing'] + missing_glyph=Glyph"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+js = "options.missing + missingGlyph argument (Glyph | GlyphDict)"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::directions and missing glyphs are explicit"
 reason = "'blank'/'error' through serde; the borrowed Glyph variant is the separate missing_glyph argument (see bindings-serde-exclusions.md)"
 
 [[rule]]
@@ -26,6 +32,8 @@ pattern = "fontpixel::render::RenderLimits"
 status = "adapted"
 python = "options['limits']; fontpixel.default_render_limits"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_limits_apply_before_rendering"
+js = "options.limits; defaultRenderLimits"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::limits apply before rendering"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -33,6 +41,8 @@ pattern = "fontpixel::render::RenderMode"
 status = "adapted"
 python = "str ('advance', 'cell', 'ink')"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+js = "RenderMode string ('advance', 'cell', 'ink')"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::default advance, cell, ink and gaps"
 reason = "plain data: the serde string/tagged form of the enum"
 
 [[rule]]
@@ -40,6 +50,8 @@ pattern = "fontpixel::render::RenderOptions"
 status = "adapted"
 python = "options dict; fontpixel.default_render_options"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+js = "RenderOptions plain data; defaultRenderOptions"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::default advance, cell, ink and gaps"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -47,12 +59,16 @@ pattern = "fontpixel::render::Rendered"
 status = "bound"
 python = "fontpixel.Rendered"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_default_advance_cell_ink_and_gaps"
+js = "Rendered"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::default advance, cell, ink and gaps"
 
 [[rule]]
 pattern = "fontpixel::render::WritingDirection"
 status = "adapted"
 python = "dict {glyphs, lines}; fontpixel.parse_writing_direction"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+js = "WritingDirection plain data {glyphs, lines}; parseWritingDirection"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::directions and missing glyphs are explicit"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -60,12 +76,16 @@ pattern = "fontpixel::render::WritingDirection::from_spec"
 status = "bound"
 python = "fontpixel.writing_direction_from_spec"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_directions_and_missing_are_explicit"
+js = "writingDirectionFromSpec"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::directions and missing glyphs are explicit"
 
 [[rule]]
 pattern = "fontpixel::render::image::ImageOptions"
 status = "adapted"
 python = "options dict; fontpixel.default_image_options"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "ImageOptions plain data; defaultImageOptions"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -73,6 +93,8 @@ pattern = "fontpixel::render::image::Rgba"
 status = "adapted"
 python = "dict {red, green, blue, alpha}; fontpixel.parse_rgba"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "Rgba plain data {red, green, blue, alpha}; parseRgba"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 reason = "plain data: a dict with the Rust field names through serde (conv::from_py/to_py)"
 
 [[rule]]
@@ -80,6 +102,8 @@ pattern = "fontpixel::render::image::Rgba::new"
 status = "adapted"
 python = "fontpixel.rgba"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "rgba"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 reason = "constructor of the plain-data dict"
 
 [[rule]]
@@ -87,27 +111,37 @@ pattern = "fontpixel::render::image::Rgba::BLACK"
 status = "bound"
 python = "fontpixel.RGBA_BLACK"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "rgbaBlack()"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 
 [[rule]]
 pattern = "fontpixel::render::image::Rgba::WHITE"
 status = "bound"
 python = "fontpixel.RGBA_WHITE"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "rgbaWhite()"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 
 [[rule]]
 pattern = "fontpixel::render::image::Rgba::TRANSPARENT"
 status = "bound"
 python = "fontpixel.RGBA_TRANSPARENT"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "rgbaTransparent()"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"
 
 [[rule]]
 pattern = "fontpixel::render::image::to_png"
 status = "bound"
 python = "fontpixel.to_png"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_png_roundtrips_bits_dimensions_alpha_and_limits"
+js = "toPng"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::png round trips bits, dimensions, alpha and limits"
 
 [[rule]]
 pattern = "fontpixel::render::image::to_svg"
 status = "bound"
 python = "fontpixel.to_svg"
 python_test = "crates/fontpixel-py/tests/test_render.py::test_svg_and_color_validation"
+js = "toSvg"
+js_test = "crates/fontpixel-wasm/tests/render.test.mjs::svg export and color validation"

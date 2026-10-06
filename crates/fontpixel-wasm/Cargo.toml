@@ -17,17 +17,20 @@ crate-type = ["cdylib", "rlib"]
 # page. `serde` (plain data) is always on.
 [features]
 default = ["full"]
-full = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml"]
+full = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml", "png"]
 all-formats = ["fontpixel/all-formats", "fontpixel-ops/all-formats"]
 compat-bdfparser = ["fontpixel/compat-bdfparser"]
 cjk-charsets = ["fontpixel/cjk-charsets"]
+# PNG image export (`toPng`, ops `render` to PNG); the encoder is pure Rust
+# (flate2 + crc32fast) and is enabled in every profile.
+png = ["fontpixel/png", "fontpixel-ops/png"]
 # Batch job files in TOML text (never paths) through the shared CLI definition.
 toml = ["fontpixel-ops/toml"]
 # Smallest useful build: BDF/PCF/YAFF only.
-minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff"]
+minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "png"]
 # W8.3 merge page: bitmap inputs and every merge output (BDF, PCF, OTB,
 # TTF/OTF/WOFF/WOFF2) plus the CJK selection tables.
-merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "fontpixel/cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype"]
+merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["serde"] }
