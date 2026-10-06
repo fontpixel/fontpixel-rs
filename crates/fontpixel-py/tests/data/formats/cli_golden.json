@@ -1,0 +1,2992 @@
+{
+ "cli_version": "fontpixel 0.1.0",
+ "fixtures": {
+  "bdat-i3-f2": {
+   "flags": [
+    "--from",
+    "bdat"
+   ],
+   "path": "tests/data/embedded-bitmap/bdat-i3-f2-d1.ttf",
+   "yaff": "fa2d48669290306784999efb072dd95207d8c6edb6f99652313953f82d5af0b0"
+  },
+  "bdf-spleen": {
+   "flags": [],
+   "path": "tests/data/bdf/spleen-5x8.bdf",
+   "yaff": "0e508103a3095cc4419f4900e8627753e118db890c8b3fe6ded5ad09aba85534"
+  },
+  "color-i1-f17": {
+   "flags": [
+    "--from",
+    "color"
+   ],
+   "path": "tests/data/embedded-bitmap/color-i1-f17.ttf",
+   "yaff": "531e9f98b12378e520d1208aaf685a099ad1b4a3b9ba92f044483f7316b209a4"
+  },
+  "otb-i1-f1": {
+   "flags": [
+    "--from",
+    "otb"
+   ],
+   "path": "tests/data/embedded-bitmap/otb-i1-f1-d1.ttf",
+   "yaff": "7bb5158ece762d9449019158fd1fd8571c9b40cab83c3bcf53eab6952add4f64"
+  },
+  "pcf-lsbbit-lsbbyte": {
+   "flags": [],
+   "path": "tests/data/pcf/syn-proportional.lsbbit-lsbbyte.pcf.gz",
+   "yaff": "eab74096f017ac3712050e85f10dbcceb9d43a4676f33f8c19c1bb5c47954ddd"
+  },
+  "pcf-msbbit": {
+   "flags": [],
+   "path": "tests/data/pcf/syn-proportional.msbbit.pcf.gz",
+   "yaff": "e76d38c4cd82d97db96d961b78966f66a30894b991345dba3135e26e3da76fe4"
+  },
+  "pfr-1-1-0": {
+   "flags": [],
+   "path": "crates/fontpixel/tests/pfr/pfr-1-1-0.pfr",
+   "yaff": "ad75ffb29abbbd17e120962606f333fc0dad04b670c8f0fa7957fb4d09f11a6d"
+  },
+  "pfr-multistrike": {
+   "flags": [],
+   "path": "crates/fontpixel/tests/pfr/pfr-ft-multistrike.pfr",
+   "yaff": "580f755a312686db0244049ee3b2f9ab9751542766ff22e9716cffc1a5db20d6"
+  },
+  "pil-pillow": {
+   "flags": [],
+   "path": "crates/fontpixel/tests/fixtures/w5e2/pillow-original.pil",
+   "yaff": "766ee414f01c618f8555956d9803764365f383c087d815a73f67aed83c6265fb"
+  },
+  "playdate-fnt": {
+   "flags": [
+    "--from",
+    "playdate"
+   ],
+   "path": "crates/fontpixel/tests/fixtures/playdate/original.fnt",
+   "yaff": "00e0d5e54104ec5b76755f0ced35ecefb088aa7474f39553f743189d94b1d46f"
+  },
+  "playdate-pft": {
+   "flags": [],
+   "path": "crates/fontpixel/tests/fixtures/playdate/sdk-3.1.2-compressed.pft",
+   "yaff": "0efe744e42e941a28505bcc50563f7a59a1aeea18460d5cf671d7d5d5b2d34c5"
+  },
+  "sbix": {
+   "flags": [
+    "--from",
+    "color"
+   ],
+   "path": "tests/data/embedded-bitmap/sbix-True.ttf",
+   "yaff": "d4a538fd8dd03afc069e892b47fd97d70b4b59bb53f696de9070796d7ae39f71"
+  },
+  "sfont-png": {
+   "flags": [
+    "--from",
+    "sfont"
+   ],
+   "path": "crates/fontpixel/tests/fixtures/w5e2/sfont-original.png",
+   "yaff": "0da128394decd5a821efd6d17bd838ba1a3b8843095c518c23f7dbd3faba881a"
+  },
+  "svg-mini": {
+   "flags": [],
+   "path": "tests/data/compat/mini.svg",
+   "yaff": "d68660c34465341ce13691139adb18b96ca5f58906c3b6de14b29ddbd71e00cd"
+  },
+  "ttf-mini-circle": {
+   "flags": [
+    "--from",
+    "ttf",
+    "--ppem",
+    "16"
+   ],
+   "path": "tests/data/compat/mini-circle-1.0-0.ttf",
+   "yaff": "c2e6479e9a4d6372e3dee8d3314cc501d3e2d70427484a71163370e1fd45dd83"
+  },
+  "vlw-processing": {
+   "flags": [],
+   "path": "crates/fontpixel/tests/fixtures/w5e2/processing-original.vlw",
+   "yaff": "7abb8775246a7ff970565b105cb156935f9f38dd96818002ba7c1b9f16edae61"
+  },
+  "yaff-portable": {
+   "flags": [],
+   "path": "tests/data/yaff/portable.golden.yaff",
+   "yaff": "51b60c55ab993b87c0577c215a904969a57384caa6594f4d8908843d50da31ef"
+  }
+ },
+ "formats": {
+  "amiga": {
+   "plain": {
+    "assets": {
+     "font.font": "709146699e42b71f33cf50515f65cb834e969e6189f380084aa6837af5681074",
+     "font/6": "cdf59ee4f5d1dd2c86cd8b9032c393a44a19717a5fc68d504abb70ec25aa2580"
+    }
+   },
+   "readback": {
+    "yaff": "13da26de611787756baea494efab7c9d9d29b2fac45ce4adb1ae86aa9694b717"
+   },
+   "write": {
+    "assets": {
+     "font.font": "709146699e42b71f33cf50515f65cb834e969e6189f380084aa6837af5681074",
+     "font/6": "cdf59ee4f5d1dd2c86cd8b9032c393a44a19717a5fc68d504abb70ec25aa2580"
+    }
+   }
+  },
+  "bbc": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "85249cd828e63e712c0057d08aa35eb062830866e5206265ec263f073a4a0097"
+   },
+   "write": {
+    "assets": {
+     "font": "b9479cf8fc23488e31b627b38137fc4fe25b4406fc1602db2b28f4a8679d143c"
+    }
+   }
+  },
+  "bdat": {
+   "plain": {
+    "assets": {
+     "font.ttf": "07e58b9227c130cc2e4fa563b9996e0c28a2027cc9fa9c0afbb77bbf2e24309e"
+    }
+   },
+   "readback": {
+    "yaff": "c34992813a42079a365fb882cb5fb5e428245ec0f505d2831623baf7cc065f77"
+   },
+   "write": {
+    "assets": {
+     "font.ttf": "07e58b9227c130cc2e4fa563b9996e0c28a2027cc9fa9c0afbb77bbf2e24309e"
+    }
+   }
+  },
+  "bdf": {
+   "plain": {
+    "assets": {
+     "font.bdf": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de"
+    }
+   },
+   "readback": {
+    "yaff": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+   },
+   "write": {
+    "assets": {
+     "font.bdf": "8db8ea30e14b6d7abe9add82a2330c8c6d108ae02f6028dc700c70553c1041de"
+    }
+   }
+  },
+  "beos": {
+   "plain": {
+    "assets": {
+     "font": "38c51b8922d7dc6747c6e0a1ce0f685809f0ad3b95b91408014bcdbfa59b07d2"
+    }
+   },
+   "readback": {
+    "yaff": "db625e0234469242f8ff40189948a5cb67553d5e1a208392b565105541cd6b69"
+   },
+   "write": {
+    "assets": {
+     "font": "38c51b8922d7dc6747c6e0a1ce0f685809f0ad3b95b91408014bcdbfa59b07d2"
+    }
+   }
+  },
+  "bmfont": {
+   "plain": {
+    "assets": {
+     "font.fnt": "5bc8bb784fdda026044b2a55851a78176e02eecab8663b05576b953cca5dffeb",
+     "font_0000.png": "7e36b56b49a2ec0f993c9a0c73bfbc262748b224792f1be755505d12c4d35d39"
+    }
+   },
+   "readback": {
+    "yaff": "61c5a65e394ed096e3a341cea30bec223d2b9d573890d771e70ba36f4b451836"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "5bc8bb784fdda026044b2a55851a78176e02eecab8663b05576b953cca5dffeb",
+     "font_0000.png": "7e36b56b49a2ec0f993c9a0c73bfbc262748b224792f1be755505d12c4d35d39"
+    }
+   }
+  },
+  "c": {
+   "plain": {
+    "assets": {
+     "font.h": "a3487145089a0e29dc3a9b32987f7ecb703aeae64be0c7cbb7b72753fda8028e"
+    }
+   },
+   "readback": {
+    "yaff": "205579d90a89ae40a6abaa5b81b3f6ab715c39862db90b818d9498c768738f10"
+   },
+   "write": {
+    "assets": {
+     "font.h": "a3487145089a0e29dc3a9b32987f7ecb703aeae64be0c7cbb7b72753fda8028e"
+    }
+   }
+  },
+  "catalyst": {
+   "plain": {
+    "error": "Error [catalyst.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "f291e9e6d700adbed40a119d9ac65874b27eb77f3bc995fc46e472be86a99c61"
+   },
+   "write": {
+    "assets": {
+     "font": "2b55e58ce4b58da432da63ac75f4700c57383b0d4d3f3afc0bd5eb86d3d21254"
+    }
+   }
+  },
+  "chiwriter": {
+   "plain": {
+    "error": "Error [chiwriter.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "bd231c3822925e05e369aca4e10a8b06de7afb25c08595ecd595c8e081fa655b"
+   },
+   "write": {
+    "assets": {
+     "font.set": "9bb307a9145ad60276736c912a406633dbfcac98f7c6b95c395b41090f38bf47"
+    }
+   }
+  },
+  "color": {
+   "plain": {
+    "assets": {
+     "font.ttf": "ea5d310d31551bbbe1338136f7ccff8fe50e72c77aeaa31b05734af7569f1a1f"
+    }
+   },
+   "readback": {
+    "yaff": "8e7e084d1504653a41fb47a7cd08f0e9b24386c041e28dc9fc230e83d4cf00ad"
+   },
+   "write": {
+    "assets": {
+     "font.ttf": "ea5d310d31551bbbe1338136f7ccff8fe50e72c77aeaa31b05734af7569f1a1f"
+    }
+   }
+  },
+  "comfont": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "e8779930e11072070490a2af55c160b98adac1cbcc4e4e239794a90ca3eb99e8"
+   },
+   "write": {
+    "assets": {
+     "font.com": "bcc6865b451071c0e91d2a8a621aff37ad7ffb69c913de90e37e5bec47292324"
+    }
+   }
+  },
+  "consoleet": {
+   "plain": {
+    "error": "fontpixel: Consoleet requires storable code labels"
+   },
+   "readback": {
+    "yaff": "77852de0cc8364c68d313e7dfb461192a45798bebce9a9a2145f419cae7baa58"
+   },
+   "write": {
+    "assets": {
+     "font.txt/0020.txt": "77278d0186835a724ac59968bb583d72914aed0d078ac81c13de99768edabae5",
+     "font.txt/0021.txt": "74702f29f6b1c91378ab6fada79ee4955e7765ad9e614ed895ad0c877c385cd0",
+     "font.txt/0022.txt": "4e478fc748697726e0d4c00e6f49c4874bd560e2018667a3b1bf25db562969eb",
+     "font.txt/0023.txt": "ead9efdbded3d3e940295129bb55c9ce7bdb09cf6b1db9a9cb635843172f1b84",
+     "font.txt/0024.txt": "5f4b1df89bac3b63b5255960d19a6f2ed9583d4306d3fd35caf43845cc2df89d",
+     "font.txt/0025.txt": "935e188ff2846b2f8a46a6489a7573f21dc2177a3c17f740d93882017ff06092",
+     "font.txt/0026.txt": "085f794fac34cc507aad32abc3a419685395192f830ce01614ea75c1ce1d43ea",
+     "font.txt/0027.txt": "1df153c7819005be53019149d8081b389a7ff2a896757a14ca4f063fd1f6509c",
+     "font.txt/0028.txt": "eb20ae8d5e24fe20e9864a21eed79151c8877063e1ba29aca9f5382c1054628f",
+     "font.txt/0029.txt": "41e7180bef5cb18db24da29ce9551227bba116585154d30c88a25d9fa6f5cb79",
+     "font.txt/002A.txt": "b250330dd40eff2097ef9e686a7b1b37fa25c602a85589b44178092b03127061",
+     "font.txt/002B.txt": "3eef455bbe2c35ea1f22a94d02bf57179d2d78c79c5cedea3a7dd54105df9aaa",
+     "font.txt/002C.txt": "1df153c7819005be53019149d8081b389a7ff2a896757a14ca4f063fd1f6509c",
+     "font.txt/002D.txt": "1030515da3ef9c4b126c548565b6292391469be17d319e2a844bcf68c5a18311",
+     "font.txt/002E.txt": "b5b24e4851e7ead3981a49bd2d92113110103a0472f59c3a2fb3b83c94b84188",
+     "font.txt/002F.txt": "97a86a2524aa808b01360bf2b6a5c376da9dc2838b44ee34bc0617ea451f7897",
+     "font.txt/0030.txt": "d1946d41841aa0ff255aabfc9c2ae56e1c20541366505321dd11358be9a78d29",
+     "font.txt/0031.txt": "ef8e469319ee1d8379cf56efeba12011b8fdac1a6d81b2b235c8a4c62cfcb9c7",
+     "font.txt/0032.txt": "2672df2469b0ab36895ae678836fbc7a6d1903eec8b7a0935ce3471cfa15a3a7",
+     "font.txt/0033.txt": "56a0c9f3b0b3d5214518f94fa26aff96e62753803dc3b5a8869f532185e626d9",
+     "font.txt/0034.txt": "b92505c843f894fa9bb5210d7d875901c3c7414ccc8efcfa33800f1b0d2819c2",
+     "font.txt/0035.txt": "5e6e295176e07bdf1c09b93dd0985c7cb9e1b5cf21f5b7009da404562ebf672e",
+     "font.txt/0036.txt": "34de16b7c5e2b9375d9c933902b6ba1c7ce73665c9460118523c6058b62b0947",
+     "font.txt/0037.txt": "0c9bc4c13ae1c7686d89f276c477ef47c905c5422734a68b7bee737c173e728f",
+     "font.txt/0038.txt": "a829b33ccee56dde27b4597b208641e65e4800331bd1187585d3ac33d4537a1d",
+     "font.txt/0039.txt": "2b676b075c0419bf4c77866f5fbb72fa43abd3cdaeeed3b165df10ac0c3b7486",
+     "font.txt/003A.txt": "4f5cc71d1140a0a2204ca1882001f8628fa84301c640cf132199c51ad6656ad7",
+     "font.txt/003B.txt": "dc04511dae1fa341bf02bfcee8dc21816024153a747e08ac883d08597fccb0f0",
+     "font.txt/003C.txt": "26dbb79f9fcccd2b67180ff1e1a315d1523bdf212b6f7f85c3f346e4501de8bf",
+     "font.txt/003D.txt": "5487d66150d815207aa462332726b1d08946a401d2eff1880b22a36fcca876c0",
+     "font.txt/003E.txt": "a058f668bf8fe904d99cb63775995718259fe369c665d73d8660c5dc48f415a2",
+     "font.txt/003F.txt": "d832d365fc6a7f9aadd133d3a98044aa09547ed0fba7085c62ba3c53f16bb210",
+     "font.txt/0040.txt": "b053a24cccda2f403bf9f36eead62ee9d10bd74ba8edbbd2185fd11204f402aa",
+     "font.txt/0041.txt": "ffb5a705b1dd9a62be58f587e687cc1e7becd25ae0fb61cbefa0076f906355bf",
+     "font.txt/0042.txt": "81cee7d00b256d2e0c25158c67c46767f329670af501623ced93a6c7800077be",
+     "font.txt/0043.txt": "b0011a42cd069a81babdc0d54f68eff6028f211319c443e6931d21220317b5a5",
+     "font.txt/0044.txt": "7ea74730cf367daeaff8822e3d1d26d65525c59fb3e938d4f12a17f592615233",
+     "font.txt/0045.txt": "9ea4f868b8e5bb8eb7a5296ca2405baf890a319d2f84ce65a8d476014c644710",
+     "font.txt/0046.txt": "f826b981b7c1c66097157535f8cda135bd4c7821bfb20403ecb09c4ff1c3266e",
+     "font.txt/0047.txt": "7f29e955eed96ebe5d3bfbad6ed1e421c43c0ab11e43ceb8ca435f80970b4e5a",
+     "font.txt/0048.txt": "4b5de81e68a842b480310aec4811a20ee83f69bd78db183cb7d2a39f36dabaae",
+     "font.txt/0049.txt": "66d3d79b2c77c2766b63e7700f4dfce64da3acc39c976d487d869cb446a28fe8",
+     "font.txt/004A.txt": "d54a16734a5a241102647301d5a7759bbc728e6f8003e11fe2894fb80295044e",
+     "font.txt/004B.txt": "430f0e3af86ab20f5b4258fb1d8d72ba158a3cb95d96cd38ea38f7844e880bcc",
+     "font.txt/004C.txt": "0d773448303463f1bff9806a415144633eaa9376b2819b3ca80a698fa85f9aae",
+     "font.txt/004D.txt": "b579bd8834bfd11168236dd0d70f77a84294da5b74198b44278a8102cb2763e6",
+     "font.txt/004E.txt": "41a14b50c135d7367b700cf2ee2e042df27ccb8911e261749ef04cc98e61a0b1",
+     "font.txt/004F.txt": "d1946d41841aa0ff255aabfc9c2ae56e1c20541366505321dd11358be9a78d29",
+     "font.txt/0050.txt": "6e8508c296b9b1c5ba5d11040c5bd53852452d24412561b83554d85db1e0b394",
+     "font.txt/0051.txt": "0953e879173d8aa004b6b7481b94c1e9c9c104d511ba0050bb303693da9ae4a3",
+     "font.txt/0052.txt": "e84a33b6ec616d838a82471dd375974df05301780e6fb221877c3e7ad90b437e",
+     "font.txt/0053.txt": "5e6e295176e07bdf1c09b93dd0985c7cb9e1b5cf21f5b7009da404562ebf672e",
+     "font.txt/0054.txt": "844662ce69378a877bb5b7ddb4f6269a6ff1f7c835ce196424cef07824eb28d2",
+     "font.txt/0055.txt": "732ff3086e54980a8704eb41e6a21e9793a379c59f61620ddabbbf08d7901fd0",
+     "font.txt/0056.txt": "5864dc7ad3a2f7b0b2dc7586ff3051244df42e24590c13d7033921438bbd23ab",
+     "font.txt/0057.txt": "2c4b33a92418e58eb611196ded1281075f9211524547c20e3b56b33549f46141",
+     "font.txt/0058.txt": "8e2f26c8ce42a0a55934b93726739d14f6f06f377680acfc8ab298805016ca79",
+     "font.txt/0059.txt": "78890b6f9ee9524c15b5d7663fa6ecc6c9ccccbda3ff8ba92d25cf77b16bcdf6",
+     "font.txt/005A.txt": "cdad2975a1bf493278dbc373a11a682e899f0f4db1c2c886c4323973badeafd5",
+     "font.txt/005B.txt": "21fb731d2d3019f28bc6c0d7acff014b300ebd3881505330e0eb01ce5a3e9a35",
+     "font.txt/005C.txt": "02eb5c6059410bcdccb6a5510d1310040f340b8de07836cf0ef8f8dd25e46a9b",
+     "font.txt/005D.txt": "a0e86d4361ed0ae6412eeba7247cad34fd76e2ff787e77a710a7d7da7ba15594",
+     "font.txt/005E.txt": "cf4890c07a95efb61dbe6ed7c82cfc5524d7640fe62e86d1a5db6abdd4275587",
+     "font.txt/005F.txt": "1030515da3ef9c4b126c548565b6292391469be17d319e2a844bcf68c5a18311",
+     "font.txt/0060.txt": "ba5710617b3690fd923337070ad7e0d51ca5686a4eaab8e98a895fc206d6d5c2",
+     "font.txt/0061.txt": "462f51a10538491560f926f527ddf95d0eb8507a1b4c3ec4b5d941da04bc599f",
+     "font.txt/0062.txt": "1997b2d201d48a5a0a455c9467fbcc6743f7ce1f84c39e1f51c12b05ea804b6e",
+     "font.txt/0063.txt": "7d449ea537cf953bac3f27af9b3ad781cb82b140ffbeba74e0e7e42ff8fcc663",
+     "font.txt/0064.txt": "e94cffee8906d08d5df10a1a6633329ea70bac2bf0b099e7a3a76ec74c00d33e",
+     "font.txt/0065.txt": "b2b804962026c39285c638636eeacb9abdcb995481f95fe4296319909ef811e3",
+     "font.txt/0066.txt": "8ac3dbf2ee694b371ec6b5a6d3eb12c328a7ea2db947179bee2376d8b1fa91cb",
+     "font.txt/0067.txt": "2b676b075c0419bf4c77866f5fbb72fa43abd3cdaeeed3b165df10ac0c3b7486",
+     "font.txt/0068.txt": "befdf57b1d106dc7d8b540631aeeb7a540eac8b0c5586e8feabea97bc3f65b38",
+     "font.txt/0069.txt": "5ab30bec14036804e0a88436df9c7372c25ff6a9324c57a5e701f69ba34afac7",
+     "font.txt/006A.txt": "97f1f25011ef5429e087d7e92bff53d8d86f1ffc2a3c69ee69677ff7f6f4807f",
+     "font.txt/006B.txt": "625eb6859602dbb2a6703fb39778345a4b8db0626ec0c26f9e25eef702c995b6",
+     "font.txt/006C.txt": "8231b12f0085bfc7bcebbd19907fe8ea83385443d725227835dc794e7353a0a0",
+     "font.txt/006D.txt": "915a6ce2cd0d2e5d928002a05a723dd47c467eb4a7968ef57622cbaea4f462ae",
+     "font.txt/006E.txt": "c341a6b1f4f78c3e929678682d6a91f61e7939f8dcfbb8e3d185750f2abaef53",
+     "font.txt/006F.txt": "92839a99c151eb2f44991a6bd1458dd8fd581bec040f0183e517fe90f1d87c9c",
+     "font.txt/0070.txt": "c9f08892f00ee50a940233e97eb21cf4da1c5a675e2337f6e14a7e7c7a0e9afd",
+     "font.txt/0071.txt": "f6a34ea5f5ff0222973993f53dcf3d96186da268a9f123817167e67a5da4d949",
+     "font.txt/0072.txt": "39ffd4f47b435a8345e94fc29784f79ba3dc715b4b2eb52b90f0b004005d82ec",
+     "font.txt/0073.txt": "1e4071893e016c3ffade1eed94c5420a9ec8d41b71e425785e4fc3b0f9e98cf5",
+     "font.txt/0074.txt": "8a0e45b64c43254973b0915d7f3b24d142030becfc865278083edd5090f88ded",
+     "font.txt/0075.txt": "1a9b00305ddb49b428d78c768a403ad066f369ca4df6d9e169a4de3fdb72a4b4",
+     "font.txt/0076.txt": "9fa607d17a0f85c1f514442f8eb4080e39817d0b9d81148de27d9e53068a268a",
+     "font.txt/0077.txt": "eb1e39445ff94ba06d74b501562a44a5290d7b8a95e062c1835c6669a49190f7",
+     "font.txt/0078.txt": "1ddd8134c97cc40da4da2c148c1bda88aa6fdb446420ee312334be42239878d8",
+     "font.txt/0079.txt": "78890b6f9ee9524c15b5d7663fa6ecc6c9ccccbda3ff8ba92d25cf77b16bcdf6",
+     "font.txt/007A.txt": "99a9d388a9088ce2221d210b26c71e0da842dfa36017933942139809d7015fff",
+     "font.txt/007B.txt": "008a270cd0634a1222379d3be40ee8519f2ec6712bb659c287cb89eae9f5a23d",
+     "font.txt/007C.txt": "66d3d79b2c77c2766b63e7700f4dfce64da3acc39c976d487d869cb446a28fe8",
+     "font.txt/007D.txt": "4ac1feacbdefdfc4898ebfcd68953fdd1efabed1459f4884fbd90d926708a5a8",
+     "font.txt/007E.txt": "1bbf1e6c2b5198a9a2ab45e993bf0c1e3b1b0853d21360e942c72d16f12f36f5"
+    }
+   }
+  },
+  "cpi": {
+   "plain": {
+    "error": "Error [cpi.write.failed] None: CPI output requires code_page metadata or an explicit fallback"
+   },
+   "readback": {
+    "yaff": "e7c85c62afcd63b2aa5ee8fe36883d707d659bf670f4a528cfbb37e2e600a478"
+   },
+   "write": {
+    "assets": {
+     "font.cpi": "ec96c7d197d8b4aa12133cdda14f9cb93fde5ed705ac524d79fa3bdf8b3ef229"
+    }
+   }
+  },
+  "cybiko": {
+   "plain": {
+    "error": "fontpixel: no representable device font mappings"
+   },
+   "readback": {
+    "yaff": "ba2506cd7f6be01c55a4e424e32373a9af47adcaea6015c71cca8b1f3603d9f2"
+   },
+   "write": {
+    "assets": {
+     "font.cyf": "813ea662f578681835b1554c1f5a60ada27a1b75b4dc583bb3771352d2ed59d5"
+    }
+   }
+  },
+  "daisy": {
+   "plain": {
+    "error": "Error [daisy.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "1fd067bcb6b4114033d75d3324a948a258dcb7aa7a2f2d9c0a6fbfc8dd69c30c"
+   },
+   "source": {
+    "yaff": "1fd067bcb6b4114033d75d3324a948a258dcb7aa7a2f2d9c0a6fbfc8dd69c30c"
+   },
+   "write": {
+    "assets": {
+     "font.nlq": "5903ed9a9a42361ca922e1cf26c100e34c553155dfeab043ecd3363d186de318"
+    }
+   }
+  },
+  "dashen": {
+   "plain": {
+    "error": "Error [dashen.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "502494bc7f3457de9f315fa5ea1f49912b70afc0069edacf75aa433a7f9f0c64"
+   },
+   "write": {
+    "assets": {
+     "font.pft": "e641e47e3846f23eafb34accd50b2cc7827108d8c859319b5e0a5246a184b866"
+    }
+   }
+  },
+  "dosstart": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "472bbbdf134721fe7edd3a12cc94b68ec2182e653595cf7f0d5703b11580951b"
+   },
+   "write": {
+    "assets": {
+     "font.dsf": "64fe0a8eb55ec411bb08fec5d935d827a8ba7554b254a51080a17788f5ca3328"
+    }
+   }
+  },
+  "draw": {
+   "plain": {
+    "assets": {
+     "font.txt": "e8d92e98fad64871fe8fa784db848e3f80fadf132183fc49faf741101267eed6"
+    }
+   },
+   "readback": {
+    "yaff": "f31a931112cac3aa9350cc06f698a0644055b0739a758e398e7e19a8584d823c"
+   },
+   "write": {
+    "assets": {
+     "font.txt": "e8d92e98fad64871fe8fa784db848e3f80fadf132183fc49faf741101267eed6"
+    }
+   }
+  },
+  "drcs": {
+   "plain": {
+    "error": "fontpixel: DRCS output has no representable Legacy glyphs"
+   },
+   "readback": {
+    "yaff": "979b0cb3242ec7c3bf22a6cdb7ea3df21f57829c42bff4f8e586588ce56fb843"
+   },
+   "write": {
+    "assets": {
+     "font": "218391b0f3a8407cb05d17c7d9f35ef403e5b03106cbfd904197404b570a6c69"
+    }
+   }
+  },
+  "drhalo": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "4e0909fd4c11647a348fee9e2483f97ae61a70c8be62a543bf92d0e898924363"
+   },
+   "write": {
+    "assets": {
+     "font.fon": "08b81230a881b86203c839996d842439f34772b217fdd804d48fc1dc310e09b5"
+    }
+   }
+  },
+  "edwin": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "8ab698e7b26628b75da9573076dd508a3d8199aa5318b6b67616358d2a712f9c"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "88eb6ae14643ef497da9c28893df9daa41feeb06cb16e34f823697529d737686"
+    }
+   }
+  },
+  "fbit": {
+   "plain": {
+    "error": "fontpixel: fbit needs mapped nonempty cells"
+   },
+   "readback": {
+    "yaff": "7c7a2122e0d64f50b35dd2b7953c7c0722b27f13edc47c121d5b6e6fa66f4262"
+   },
+   "source": {
+    "yaff": "7c7a2122e0d64f50b35dd2b7953c7c0722b27f13edc47c121d5b6e6fa66f4262"
+   },
+   "write": {
+    "assets": {
+     "font.dfont": "881cb648db0ddc7ec33b05cfdec661779c586a99682d6061f6f410ad47e8233b"
+    }
+   }
+  },
+  "figlet": {
+   "plain": {
+    "assets": {
+     "font.flf": "c09be54445347b462becac47e5d453d6f2631f0e6689ce90403e46dfd5c81513"
+    }
+   },
+   "readback": {
+    "yaff": "08564b6a889c41ef27702a81ca6135490c80d75ce99f3a65c1a54961ff444764"
+   },
+   "write": {
+    "assets": {
+     "font.flf": "c09be54445347b462becac47e5d453d6f2631f0e6689ce90403e46dfd5c81513"
+    }
+   }
+  },
+  "fnt": {
+   "plain": {
+    "assets": {
+     "font.fnt": "b9184caa4016672c60a59f792eb3e5ed7d951b430480a29321c4ede6bab98c2b"
+    }
+   },
+   "readback": {
+    "yaff": "38c27a23fb7a5ae4322fb80b2ad82acbdfe8d54f66fa99ad5dd971c6617fa43c"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "b9184caa4016672c60a59f792eb3e5ed7d951b430480a29321c4ede6bab98c2b"
+    }
+   }
+  },
+  "fon": {
+   "plain": {
+    "assets": {
+     "font.fon": "ee6efb498875df7ba87f02034b9a4046f59434326625669b18a719d0ee74bfb5"
+    }
+   },
+   "readback": {
+    "yaff": "79f80ef143d38e5f728dd70095b58ec6d071d168283ba2ee5f5068161090f3b2"
+   },
+   "write": {
+    "assets": {
+     "font.fon": "ee6efb498875df7ba87f02034b9a4046f59434326625669b18a719d0ee74bfb5"
+    }
+   }
+  },
+  "fontx2": {
+   "plain": {
+    "assets": {
+     "font.fnt": "2ee2eecbe7beb1229671806764eab7e2b6f7943e28b526e629bb165f4cc528b6"
+    }
+   },
+   "readback": {
+    "yaff": "0a03677944e447022f13bd69ecf2e3a6342d0f2822ffb8cf138f4474f80b0483"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "2ee2eecbe7beb1229671806764eab7e2b6f7943e28b526e629bb165f4cc528b6"
+    }
+   }
+  },
+  "fzx": {
+   "plain": {
+    "error": "Error [fzx.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "9c3c3670bb7531266219bc2ff219b344398f82ed1604289133e3d6a0866ae2ea"
+   },
+   "write": {
+    "assets": {
+     "font.fzx": "c1206bfc97cb3c5290c220ff3a2809405a6bed6835f5c51c4a6654a02a522f2f"
+    }
+   }
+  },
+  "gdr": {
+   "plain": {
+    "assets": {
+     "font.gdr": "125e77e30420f270f6d4b271f014ef2a879df787e63851e323be190c96cb7f09"
+    }
+   },
+   "readback": {
+    "yaff": "695b4830ee9b522a48e31a1f5c97ed6ac2979d6855c15ab1d721bf2e5682bc1a"
+   },
+   "write": {
+    "assets": {
+     "font.gdr": "125e77e30420f270f6d4b271f014ef2a879df787e63851e323be190c96cb7f09"
+    }
+   }
+  },
+  "gem": {
+   "plain": {
+    "error": "Error [gem.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "db791aa149ff0d6c82d2864dbfed172d1e85e1e42ba5173373a0b8a08b16e099"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "b8ee822b2c6705dceecced0316799129a092f2f11d9e70c6cc6a1450a489921d"
+    }
+   }
+  },
+  "geos": {
+   "plain": {
+    "error": "fontpixel: GEOS byte-coded output requires explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "718e155af14f41aa43c644eb9ec92d912427314dd995cf5d2fd2c30dac3239e7"
+   },
+   "write": {
+    "assets": {
+     "font.cvt": "afcb30a1c07b944ab3ac5f457c7cc51b03087cae4a911cac2d3b62421f4660bc"
+    }
+   }
+  },
+  "gf": {
+   "plain": {
+    "assets": {
+     "font.gf": "9d7f7697fedece56cc23a839af88bd6176a50eebde2b21c9d1f3e0e20997cc73"
+    }
+   },
+   "readback": {
+    "yaff": "bc879d8d59144a63d4274da5df534ea3e41555b387cbb44588e53e6f64e4c18a"
+   },
+   "write": {
+    "assets": {
+     "font.gf": "9d7f7697fedece56cc23a839af88bd6176a50eebde2b21c9d1f3e0e20997cc73"
+    }
+   }
+  },
+  "gpi": {
+   "plain": {
+    "error": "fontpixel: GPI output requires word legacy codes (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "0a8f6453414b9f5bbd6487e023f0970029eb1231096f06b2bc5976fe7193b749"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "34ecacc7871a5f3885f73fa1d4437b6698e70adfdf19c501ea3e109b695ff882"
+    }
+   }
+  },
+  "grasp": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "36d36b949e7d280096e013afa2e0ad19e7ff9b404b2948eef8e5176b7331eb10"
+   },
+   "write": {
+    "assets": {
+     "font.set": "5ee5f68995611d9485fa6e5d1a4d99ad782305a7036fab4d2d2209626e503088"
+    }
+   }
+  },
+  "hanfont": {
+   "plain": {
+    "error": "fontpixel: hanfont writing syllables requires retained native components; inverse decomposition is undefined"
+   },
+   "readback": {
+    "yaff": "573f99f66a65215080d1d116083110502a8ac34ac44bfcb53660cdcb59b373e2"
+   },
+   "source": {
+    "yaff": "573f99f66a65215080d1d116083110502a8ac34ac44bfcb53660cdcb59b373e2"
+   },
+   "write": {
+    "assets": {
+     "font.han": "159d928b136026e192bbe488d36fd48198b394076d22821fa6da89a7000cfe38"
+    }
+   }
+  },
+  "hbf": {
+   "plain": {
+    "error": "fontpixel: HBF: HBF requires uniform positive glyph bounds"
+   },
+   "readback": {
+    "yaff": "29f46ec118595e17b121ca15a5d8e9f52857db6d3a5049b446015dca08424897"
+   },
+   "write": {
+    "assets": {
+     "font.bin": "839e61d8d41eabeba20c3eee21abb2e3a1ba22d5cd74cf4a5d9cc5f1af21a728",
+     "font.hbf": "7c84d12959d54e5489d0117fcc54738d29325c39a1165ab913633dc3f11540eb"
+    }
+   }
+  },
+  "hex": {
+   "plain": {
+    "error": "fontpixel: HEX glyph does not fit the selected height/descent or has a negative left bearing"
+   },
+   "readback": {
+    "yaff": "aa85da281bf8a0b028d1aec9bde5b3237128c790d999fce416bbf458dd12bfb2"
+   },
+   "write": {
+    "assets": {
+     "font.hex": "b4b0953afea48617301b57e540741471e8370f29ec6e70e78dd29d48599e4e96"
+    }
+   }
+  },
+  "hmzk": {
+   "plain": {
+    "error": "fontpixel: glyph does not fit native device cell without clipping"
+   },
+   "readback": {
+    "yaff": "87636000616ce8417fbe3b8faca6e262d2404765aed320ab6338c8138dd7e9f6"
+   },
+   "source": {
+    "yaff": "87636000616ce8417fbe3b8faca6e262d2404765aed320ab6338c8138dd7e9f6"
+   },
+   "write": {
+    "assets": {
+     "font.bin": "7e0dd5ac56021e6d752a5ede78cf5d33cf0a23a62a122a4b75789838a74dadea"
+    }
+   }
+  },
+  "hppcl": {
+   "plain": {
+    "error": "Error [hppcl.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "064444ebd929c91a7d8ec3854f4b75a47d0546a382142261c6a010d969643b8e"
+   },
+   "write": {
+    "assets": {
+     "font.sft": "82e97250248fab4805dd587eb5b660269d9bea7d8530176c5f09abc7e54dc3bd"
+    }
+   }
+  },
+  "hrcg": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "0236937ae0d47c91fcf52e63361e45e095ad83192d6f7824dc4be5818aa78858"
+   },
+   "source": {
+    "yaff": "0236937ae0d47c91fcf52e63361e45e095ad83192d6f7824dc4be5818aa78858"
+   },
+   "write": {
+    "assets": {
+     "font.set": "a4f672d86e0738fd869827660afa0a873a9a5d9470f80cdfcbd2bd874bf07303"
+    }
+   }
+  },
+  "hzk": {
+   "plain": {
+    "error": "fontpixel: HZK/ASC requires an explicit preset or complete geometry"
+   },
+   "readback": {
+    "yaff": "2726d3dc640517452cb8ffd5e4ed525054cac85798e4347ef1ab547a570235bf"
+   },
+   "write": {
+    "assets": {
+     "font": "73f9de5dda3f8a661e063f214a66bf303cd28dbd403ced6e93883769a09c73ba"
+    }
+   }
+  },
+  "iigs": {
+   "plain": {
+    "error": "fontpixel: IIgs output requires at least one legacy byte mapping"
+   },
+   "readback": {
+    "yaff": "df1cb87e33f651c3c3ad531be767e2f693dfd432cf09458b6ec4cf41fafaa4bb"
+   },
+   "write": {
+    "assets": {
+     "font.fon": "1f2f8ffcc6c040b78fb536e5520a80bf34b7e488b5fe7e0c59515bc5499b4310"
+    }
+   }
+  },
+  "image": {
+   "plain": {
+    "assets": {
+     "font.json": "14a67d7728183b31e70cc9d8416c743b45c55e85a4c68fbebe3c3360064e9d37",
+     "font.png": "1313b1605aad8d3eaf0e4fe6d9a73c5e701586b60a84c07dc5e9fa3024688503"
+    }
+   },
+   "readback": {
+    "yaff": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+   },
+   "write": {
+    "assets": {
+     "font.json": "14a67d7728183b31e70cc9d8416c743b45c55e85a4c68fbebe3c3360064e9d37",
+     "font.png": "1313b1605aad8d3eaf0e4fe6d9a73c5e701586b60a84c07dc5e9fa3024688503"
+    }
+   }
+  },
+  "kbits": {
+   "plain": {
+    "error": "Warning [kbits.glyph_omitted] Loss: Glyph mapping omitted because the write failed; no output returned"
+   },
+   "readback": {
+    "yaff": "6cdd442f918cd533641114c5641f9d329ff50f689f696aed69c154902f2a372c"
+   },
+   "write": {
+    "assets": {
+     "font.kbits": "f5abc7994df6d5bba9545a74d03e208e2fd69dbf8940ae936f501cd50150e5e1"
+    }
+   }
+  },
+  "kbitx": {
+   "plain": {
+    "assets": {
+     "font.kbitx": "6f0799dc6b7d53fdb570d38be30b9c58c4fff705f2993cdfa6ab4e8fa4fcb40e"
+    }
+   },
+   "readback": {
+    "yaff": "6dbb482d525a23039e8a1aa4b51abe1202bee57a83bb9d86f0118e77b1bb658d"
+   },
+   "write": {
+    "assets": {
+     "font.kbitx": "6f0799dc6b7d53fdb570d38be30b9c58c4fff705f2993cdfa6ab4e8fa4fcb40e"
+    }
+   }
+  },
+  "lisa": {
+   "plain": {
+    "error": "Error [nfnt.no_representable_glyphs] Loss: No legacy byte mappings or designated missing glyph can be encoded"
+   },
+   "readback": {
+    "yaff": "7d4fae4693c23f5410af15df8a0f28f91c5ae9f18ed6a3f5d58f7a175184b4b8"
+   },
+   "write": {
+    "assets": {
+     "font.bin": "cf6e9f56db54cddbdae2483f42a80e21170317d12cf370d8f94275531c909ab4"
+    }
+   }
+  },
+  "mgtk": {
+   "plain": {
+    "error": "fontpixel: MGTK needs a legacy byte mapping"
+   },
+   "readback": {
+    "yaff": "8729185ad9d5c24380beb08e9f6860ce3e7f2b6889799265fc43dcad91710aaf"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "8ba0deda62399215582fb144c96ae4c12731084dcc494a39541afc6b908b45d6"
+    }
+   }
+  },
+  "mkwinfont": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "ab537c8b5fc0e10ee7647e7302eda1fd09a0290f73e233fceca2d499eefe4849"
+   },
+   "write": {
+    "assets": {
+     "font.fd": "d7ae9fd7a955374b634aa735852d13b1bbef9315fcdfd687c307290b7bf73b20"
+    }
+   }
+  },
+  "nfnt": {
+   "plain": {
+    "error": "Error [nfnt.no_representable_glyphs] Loss: No legacy byte mappings or designated missing glyph can be encoded"
+   },
+   "readback": {
+    "yaff": "b41010f43744ae26f26ff88dddea354fdb8e60ab1355376c7b1a325cac39c739"
+   },
+   "write": {
+    "assets": {
+     "font.dfont": "be98ec47c59402b310bbf20584e2d64c12179c026bc9d462b016bee0f4c97fcb"
+    }
+   }
+  },
+  "oberon": {
+   "plain": {
+    "assets": {
+     "font.fnt": "f3d86b364276eaf625673da81d4cbc70c777b8d3ae1d38d89a36c8f07f37eea6"
+    }
+   },
+   "readback": {
+    "yaff": "be307f0c2efc1c1eb28c4f9976d092fcafc362542b2582e1b871facbff3b138a"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "f3d86b364276eaf625673da81d4cbc70c777b8d3ae1d38d89a36c8f07f37eea6"
+    }
+   }
+  },
+  "otb": {
+   "plain": {
+    "assets": {
+     "font.otb": "8d4244713a39771ae4040acdb6bf7ea045c26ab7c8461ba470aa4f700625f4a5"
+    }
+   },
+   "readback": {
+    "yaff": "308d7ef8e10e0f2c5bb0490fef54ab15c7e94070c21d960b475ca56d10fd6b85"
+   },
+   "write": {
+    "assets": {
+     "font.otb": "8d4244713a39771ae4040acdb6bf7ea045c26ab7c8461ba470aa4f700625f4a5"
+    }
+   }
+  },
+  "otf": {
+   "plain": {
+    "assets": {
+     "font.otf": "4b072ee190817800e213758ff88d01f60308c940e8f7445d87b6e16579af8e59"
+    }
+   },
+   "readback": {
+    "yaff": "2acc3726a6a816525af5c2cff497dafb8b15ea001b1ddf92081d560890fec95f"
+   },
+   "write": {
+    "assets": {
+     "font.otf": "4b072ee190817800e213758ff88d01f60308c940e8f7445d87b6e16579af8e59"
+    }
+   }
+  },
+  "palm": {
+   "plain": {
+    "error": "Error [palm.write.failed] Loss: Palm font has no representable character slots"
+   },
+   "readback": {
+    "yaff": "784ed0f65810abeaebffb8665df6d5c5415fd460e6b48002c98fd0b1779bbf80"
+   },
+   "write": {
+    "assets": {
+     "font.pdb": "d2e62b281b88720e50aa3f30586a498de9b23769f0515786acd77ab0c0fa7d6f"
+    }
+   }
+  },
+  "pbf": {
+   "plain": {
+    "assets": {
+     "font.pbf": "15d94aa57a322f2aece1ecd21843718235ac54326dd1c14ecdb82079aeb4c54b"
+    }
+   },
+   "readback": {
+    "yaff": "ac677e22711eec15e2b97d990ff468cb1404c7c8d0b7102f01ce169718f29697"
+   },
+   "write": {
+    "assets": {
+     "font.pbf": "15d94aa57a322f2aece1ecd21843718235ac54326dd1c14ecdb82079aeb4c54b"
+    }
+   }
+  },
+  "pcf": {
+   "plain": {
+    "assets": {
+     "font.pcf": "847d76923644d868f2bbd9b02d13acf55120994fc015c2d66042577d7d36e5be"
+    }
+   },
+   "readback": {
+    "yaff": "ae8bcf6f87bdfe60344aef977ec952c5cef5e9d83e4d0050083a724b21926536"
+   },
+   "write": {
+    "assets": {
+     "font.pcf": "847d76923644d868f2bbd9b02d13acf55120994fc015c2d66042577d7d36e5be"
+    }
+   }
+  },
+  "pcgeos": {
+   "plain": {
+    "error": "fontpixel: PC/GEOS SBCS requires explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "4dabfb7cd54d000d4c957e5cd1acb0ceecb1d15d70b45f06da552b41832b12b4"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "15b5ff914408401b08e42cc621ab8681ee3c1796e19beb1fcbb1afa801c02e6f"
+    }
+   }
+  },
+  "pcr": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "b729a1dba746f8ff02350148a2f64abbb8212329d1985727e1dbad5af54ebf27"
+   },
+   "write": {
+    "assets": {
+     "font.pcr": "c3f23f1fd5f9d2593dd39037a7258423239c4e7bce098aa6f485185662a74c54"
+    }
+   }
+  },
+  "pf2": {
+   "plain": {
+    "assets": {
+     "font.pf2": "c856a4bf29f01657915268ccedd00dab5b7a0eaa1bd72de2f440c278881ae970"
+    }
+   },
+   "readback": {
+    "yaff": "73f6536eeebca4757fa0742ac4c48e2a83f6567388b99ab855a4f9d3503ec7ef"
+   },
+   "write": {
+    "assets": {
+     "font.pf2": "c856a4bf29f01657915268ccedd00dab5b7a0eaa1bd72de2f440c278881ae970"
+    }
+   }
+  },
+  "pfr": {
+   "plain": {
+    "error": "Error [pfr.write.failed] Loss: PFR Unicode-to-legacy conversion must be explicit"
+   },
+   "readback": {
+    "yaff": "1bc1d30e4d33ec4e54784fa48383eaa832c165fa50a8459e5938fee7158bb064"
+   },
+   "write": {
+    "assets": {
+     "font.pfr": "01e14178984e2a62087017a350b0fdf901b6de9d56216a23015557d71ab54f2c"
+    }
+   }
+  },
+  "pilfont": {
+   "plain": {
+    "error": "fontpixel: no representable image-font mappings"
+   },
+   "readback": {
+    "yaff": "629595fe5b86169c3f56f882ca09bd7cf205560da7d1c681fab3073f4c24a824"
+   },
+   "write": {
+    "assets": {
+     "font.pbm": "f2fc069d986c6605455999a608d3c81111301af76e80422b01474718c84a1f8d",
+     "font.pil": "d4bb8a713b7671b672a113e71bb02e25952b90fc9c290a9f5303040f90ed5d88"
+    }
+   }
+  },
+  "pk": {
+   "plain": {
+    "assets": {
+     "font.pk": "867ec25e16a1cefbe8a577fa372c373391b35cc16f9b2656f041c858503bbd04"
+    }
+   },
+   "readback": {
+    "yaff": "678009ae1b1926d732cae964ff1d5810cfc4a00aeb6c26be9a5ccadd5b0c534d"
+   },
+   "write": {
+    "assets": {
+     "font.pk": "867ec25e16a1cefbe8a577fa372c373391b35cc16f9b2656f041c858503bbd04"
+    }
+   }
+  },
+  "plan9": {
+   "plain": {
+    "assets": {
+     "font.0000.subfont": "345088a84d4c52ddb184a073b94c22730fb9fbf08010283193fdbc5dcb83071c",
+     "font.0001.subfont": "08d3a16fd588dd8dc8a3e1ec56de9ac83ecc07722dda2d84988230a1fb5a6a7a",
+     "font.0002.subfont": "edb358e69829ae9e371d81e2286685d70c8a1e354232302268b1421a6d8364aa",
+     "font.0003.subfont": "300a68894c3d498d8329bfe080d7d0fdb0d342cd6e3ee7af9e765cbf163e757f",
+     "font.font": "3d9ed117aec1b014af20434b946164165b8801aad795cd164494fb7307cee5d2"
+    }
+   },
+   "readback": {
+    "yaff": "6f4436e00cbf37b9dcf0c02db49ce0c201f4e4a3a17902ade546c5112da5d276"
+   },
+   "write": {
+    "assets": {
+     "font.0000.subfont": "345088a84d4c52ddb184a073b94c22730fb9fbf08010283193fdbc5dcb83071c",
+     "font.0001.subfont": "08d3a16fd588dd8dc8a3e1ec56de9ac83ecc07722dda2d84988230a1fb5a6a7a",
+     "font.0002.subfont": "edb358e69829ae9e371d81e2286685d70c8a1e354232302268b1421a6d8364aa",
+     "font.0003.subfont": "300a68894c3d498d8329bfe080d7d0fdb0d342cd6e3ee7af9e765cbf163e757f",
+     "font.font": "3d9ed117aec1b014af20434b946164165b8801aad795cd164494fb7307cee5d2"
+    }
+   }
+  },
+  "playdate": {
+   "plain": {
+    "assets": {
+     "font.fnt": "69701e4b1ac38024cefb8bc1f02f41fc14b30f5f2da0a896f56ed3d50245057d"
+    }
+   },
+   "readback": {
+    "yaff": "06fec63ab6b6cc9777503e2c6dedeb1dd834a1ac8535b7c22abd3c3a5df034b1"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "69701e4b1ac38024cefb8bc1f02f41fc14b30f5f2da0a896f56ed3d50245057d"
+    }
+   }
+  },
+  "plus3dos": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "132dbfd76a49e3796a34f595570039874f391400c6b0be72b4943e6939a09576"
+   },
+   "write": {
+    "assets": {
+     "font": "2ddb80bc5ab24246f66740604eeb5dd60754a3357d6ee887cc585926f8d3fd8b"
+    }
+   }
+  },
+  "polyprint": {
+   "plain": {
+    "error": "Error [polyprint.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "4e3cb38d038e27ea94ee2e0a5206c0867126676d8af912db607752dd4a749b22"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "28c380a042158bbbae93ad1dd01c49f12391e9798a7171485b7d93a2ecc3021a"
+    }
+   }
+  },
+  "prebuilt": {
+   "plain": {
+    "assets": {
+     "font.bepf": "fc82b49bf7703b395cc6e84977ea85ecc6086c2fbf3d99ed85688153b7f2257e"
+    }
+   },
+   "readback": {
+    "yaff": "ed5142d7083dd06d776b996fba40f591746a4c5d388756c5bb082be7f931d042"
+   },
+   "write": {
+    "assets": {
+     "font.bepf": "fc82b49bf7703b395cc6e84977ea85ecc6086c2fbf3d99ed85688153b7f2257e"
+    }
+   }
+  },
+  "printshop": {
+   "plain": {
+    "error": "Error [printshop.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "dcbd5c2432fab09e890346b8dba2a3b40ab9e721211053522644dbf238f639ff"
+   },
+   "write": {
+    "assets": {
+     "font.pnf": "7839e23277fb347e158705dc9d78b00ab52bf9de019cc0a1fc3b81f0861e81be"
+    }
+   }
+  },
+  "psf": {
+   "plain": {
+    "assets": {
+     "font.psf": "45e3366b02d65d530f86119f88f99553acad4d1782d052d76f7efda7f2f36011"
+    }
+   },
+   "readback": {
+    "yaff": "4128d9d2166b651a60e6635ee5fcf191ffd01edea463a7261b3ed946f3eb44a1"
+   },
+   "write": {
+    "assets": {
+     "font.psf": "45e3366b02d65d530f86119f88f99553acad4d1782d052d76f7efda7f2f36011"
+    }
+   }
+  },
+  "psf2txt": {
+   "plain": {
+    "assets": {
+     "font.txt": "02228a889d45387f57d44a8c4252732c96765b978d4de8e2569129467f32cee4"
+    }
+   },
+   "readback": {
+    "yaff": "eb5694f40913657876e02771ade1156fa4caee66a92a54269b1d1a664e985a9a"
+   },
+   "write": {
+    "assets": {
+     "font.txt": "02228a889d45387f57d44a8c4252732c96765b978d4de8e2569129467f32cee4"
+    }
+   }
+  },
+  "pxl": {
+   "plain": {
+    "error": "Error [pxl.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "fd5651ba3842988ca82b36d3cf38588f501583a03f98e6505869650468e67a59"
+   },
+   "write": {
+    "assets": {
+     "font.pxl": "b571fb720e7c20ed8fe7d0c4c7eabf7ed4ad7cdc0065bde9e510cdfff56c0b38"
+    }
+   }
+  },
+  "qpf": {
+   "plain": {
+    "assets": {
+     "font.qpf": "0d0576d6cc4bcbdd89a2e32bc9a970cd1dc1b68ae351b9ef3d807f28a4810d07"
+    }
+   },
+   "readback": {
+    "yaff": "4b6ab6e441bc1e2cd26cb7f80884377445faac617cf25826c82148b7f419e82d"
+   },
+   "write": {
+    "assets": {
+     "font.qpf": "0d0576d6cc4bcbdd89a2e32bc9a970cd1dc1b68ae351b9ef3d807f28a4810d07"
+    }
+   }
+  },
+  "qpf2": {
+   "plain": {
+    "assets": {
+     "font.qpf2": "4958b178754326e70469af1bdcce736afb4491c465836f08da081f0eb050ceae"
+    }
+   },
+   "readback": {
+    "yaff": "ece527527bce132ca5eadd751223175f1eef0ed35fcbb07354b245871a70c577"
+   },
+   "write": {
+    "assets": {
+     "font.qpf2": "4958b178754326e70469af1bdcce736afb4491c465836f08da081f0eb050ceae"
+    }
+   }
+  },
+  "raw": {
+   "plain": {
+    "assets": {
+     "font.f08": "f286e4871a0374df04fce1b0fd67a7a1be640529b188d2eaf45ca4dc7334e47c"
+    }
+   },
+   "readback": {
+    "yaff": "93d2e5ec66955bd4f22f69420dd9e628b2d8afae2993ced032965c11d38057f8"
+   },
+   "write": {
+    "assets": {
+     "font.f08": "f286e4871a0374df04fce1b0fd67a7a1be640529b188d2eaf45ca4dc7334e47c"
+    }
+   }
+  },
+  "riscos": {
+   "plain": {
+    "error": "Error [riscos.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "4121cc4a2351ae90c34f0700c7d226714070662b72823e951c1055b1f3e7ecf2"
+   },
+   "write": {
+    "assets": {
+     "font": "c906b9b988bc2a9225ea87b8ed725485a4a5de10229543fb6bea89df0a287268"
+    }
+   }
+  },
+  "rockbox": {
+   "plain": {
+    "assets": {
+     "font.fnt": "a0185884bc95ec24a0ba4b2a807f146e70fedf21150e6cb6efbf6e9736eba20e"
+    }
+   },
+   "readback": {
+    "yaff": "4b9d53d213d7d9385e5f45964b9c26a6059c5d577a79ca1aa6a815f87ddeb3a4"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "a0185884bc95ec24a0ba4b2a807f146e70fedf21150e6cb6efbf6e9736eba20e"
+    }
+   }
+  },
+  "sbf": {
+   "plain": {
+    "error": "fontpixel: no representable device font mappings"
+   },
+   "readback": {
+    "yaff": "cddb2dfaee4978a7bdc645dc82abfe9b0d491ba0eb43b1711b736411dbf516c9"
+   },
+   "write": {
+    "assets": {
+     "font.sbf": "285b8c69615aa5de5279e3c9fb4709d75e490cb280885092efc890ff08de6c59"
+    }
+   }
+  },
+  "sfd": {
+   "plain": {
+    "assets": {
+     "font.sfd": "ab7a60c83770f9f56391d844e4dfbfd94105996fd8426ddc5f334353ff7dc65b"
+    }
+   },
+   "readback": {
+    "yaff": "03317fc17e39e0ccc5bce26f85d51964d8d3b47ceaabe4624b5b99bc9b67e6e9"
+   },
+   "write": {
+    "assets": {
+     "font.sfd": "ab7a60c83770f9f56391d844e4dfbfd94105996fd8426ddc5f334353ff7dc65b"
+    }
+   }
+  },
+  "sfont": {
+   "plain": {
+    "assets": {
+     "font.png": "754812353035ce81eaa1b73e1acb7c09518ecd7cfe60969fb1569e55bb7bd604"
+    }
+   },
+   "readback": {
+    "yaff": "a40811d10ecd50ea66547fb6c789254702d33e44055ba9436c6c76b237a8341e"
+   },
+   "write": {
+    "assets": {
+     "font.png": "754812353035ce81eaa1b73e1acb7c09518ecd7cfe60969fb1569e55bb7bd604"
+    }
+   }
+  },
+  "signum": {
+   "plain": {
+    "error": "Error [signum.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "8e1849765e5b4688ff252c4c8de9f0fdb778c34a39edfda6c879ccc2bf303f1c"
+   },
+   "write": {
+    "assets": {
+     "font.e24": "a4eb19fbeb2e1445e05a593b694f6e035396659eee9f36e989d975ddac941918"
+    }
+   }
+  },
+  "snf": {
+   "plain": {
+    "assets": {
+     "font.snf": "403405c82840e9ed7dd7947240c09a9bde41e3f25a0acdfd6917133efae11296"
+    }
+   },
+   "readback": {
+    "yaff": "b0481af73c49098a20fdb62f9924c750835f8c9b000d27c96717259b8d98899f"
+   },
+   "write": {
+    "assets": {
+     "font.snf": "403405c82840e9ed7dd7947240c09a9bde41e3f25a0acdfd6917133efae11296"
+    }
+   }
+  },
+  "ssfn": {
+   "plain": {
+    "error": "Error [ssfn.write.failed] Loss: SSFN requires Unicode-mapped glyphs"
+   },
+   "readback": {
+    "yaff": "60f4b6d98d975203dddd1835cd6f3a5ecebf287b77194be16857c1c059ae8f49"
+   },
+   "write": {
+    "assets": {
+     "font.sfn": "551afb2fc7d0853612d93a8eadc4bb8b7e08e57f0dd3849ad2ec6bfc3e1feaf1"
+    }
+   }
+  },
+  "svg": {
+   "plain": {
+    "assets": {
+     "font.svg": "ab8a019716b6ca3d5977db29cc83b1dc37e964b39c04508f5c9e07a712dda778"
+    }
+   },
+   "readback": {
+    "yaff": "d8549009616040d2ee49e5566556d7f1a7d50a52808b109930dd60b8f8c3a7f0"
+   },
+   "write": {
+    "assets": {
+     "font.svg": "ab8a019716b6ca3d5977db29cc83b1dc37e964b39c04508f5c9e07a712dda778"
+    }
+   }
+  },
+  "symbos": {
+   "plain": {
+    "assets": {
+     "font.fnt": "022d5f662dc40a023a65fc420473f1faf175e716b1261e5f9c6b6760963f725f"
+    }
+   },
+   "readback": {
+    "yaff": "c98d313044d21971c51fea9eb5624215f3c9b3cba3233d2901a557ce2c5d8759"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "022d5f662dc40a023a65fc420473f1faf175e716b1261e5f9c6b6760963f725f"
+    }
+   }
+  },
+  "tasprint": {
+   "plain": {
+    "error": "Error [tasprint.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "3954757e7ef53d6c6b0e02263dece66b536056ab1d9bf7a9ebf308249c00e662"
+   },
+   "source": {
+    "yaff": "3954757e7ef53d6c6b0e02263dece66b536056ab1d9bf7a9ebf308249c00e662"
+   },
+   "write": {
+    "assets": {
+     "font": "6aadd4299554d4880cf75d124576fa241d3fda587aac064d59df7d7afdb5019a"
+    }
+   }
+  },
+  "ttc": {
+   "plain": {
+    "assets": {
+     "font.ttc": "4aa46571babd109196b620808dd4ae35e92341be1920b8ec1d4c4a0d17ddba52"
+    }
+   },
+   "readback": {
+    "yaff": "96850a88626ba24218a65110ad1e80d2033f76c5d4404e1a97f4feb59bfbfe27"
+   },
+   "write": {
+    "assets": {
+     "font.ttc": "4aa46571babd109196b620808dd4ae35e92341be1920b8ec1d4c4a0d17ddba52"
+    }
+   }
+  },
+  "ttf": {
+   "plain": {
+    "assets": {
+     "font.ttf": "88a868ce8291a6ef48ce5ad08dbb14e819e86ebf566d0b419f598c5db9e5ed62"
+    }
+   },
+   "readback": {
+    "yaff": "2acc3726a6a816525af5c2cff497dafb8b15ea001b1ddf92081d560890fec95f"
+   },
+   "write": {
+    "assets": {
+     "font.ttf": "88a868ce8291a6ef48ce5ad08dbb14e819e86ebf566d0b419f598c5db9e5ed62"
+    }
+   }
+  },
+  "u8m": {
+   "plain": {
+    "assets": {
+     "font.u8m": "04681adb80289950d306ddb4842cbe7259c60444af8d06e19a49b0cf1412496d"
+    }
+   },
+   "readback": {
+    "yaff": "061036e419adbb833ca15de63d180d133539c56c49a546ca59ece2a477fcbf2d"
+   },
+   "write": {
+    "assets": {
+     "font.u8m": "04681adb80289950d306ddb4842cbe7259c60444af8d06e19a49b0cf1412496d"
+    }
+   }
+  },
+  "vector-raster": {
+   "plain": {
+    "assets": {
+     "font.ttf": "4b072ee190817800e213758ff88d01f60308c940e8f7445d87b6e16579af8e59"
+    }
+   },
+   "readback": {
+    "yaff": "2acc3726a6a816525af5c2cff497dafb8b15ea001b1ddf92081d560890fec95f"
+   },
+   "write": {
+    "assets": {
+     "font.ttf": "4b072ee190817800e213758ff88d01f60308c940e8f7445d87b6e16579af8e59"
+    }
+   }
+  },
+  "vfont": {
+   "plain": {
+    "error": "Error [vfont.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "3afcbdcdaf563da353e151e0fca5c0c1565b18713e12dbaa82c65095133b307a"
+   },
+   "write": {
+    "assets": {
+     "font": "526af98a70e3d6259239bc10268ddca8cc90fad4d5b5be1487a18c641c51f02c"
+    }
+   }
+  },
+  "vlw": {
+   "plain": {
+    "assets": {
+     "font.vlw": "e9b3415cde8503a5810cd1da856286c9e1cf8e54dc9ac57df535baa0d9527d20"
+    }
+   },
+   "readback": {
+    "yaff": "33306fefbf992e5925d7553f0961fa43a587cdd894ba6e25b2d37e7f9f64cd34"
+   },
+   "write": {
+    "assets": {
+     "font.vlw": "e9b3415cde8503a5810cd1da856286c9e1cf8e54dc9ac57df535baa0d9527d20"
+    }
+   }
+  },
+  "vtfont": {
+   "plain": {
+    "assets": {
+     "font.fnt": "cacd906a615c83f6d910351fe6bfceb69ba469f1bb1f687b9b422eea6ce513af"
+    }
+   },
+   "readback": {
+    "yaff": "4d546db0a8e98ab66b6b6f8c141ed9dd44085a67eb32ac71072b0428827bf839"
+   },
+   "write": {
+    "assets": {
+     "font.fnt": "cacd906a615c83f6d910351fe6bfceb69ba469f1bb1f687b9b422eea6ce513af"
+    }
+   }
+  },
+  "woff": {
+   "plain": {
+    "assets": {
+     "font.woff": "33f02eaa05d9f8d913d9f71eab57501d879a86de48090b6b8346c735e818cf4e"
+    }
+   },
+   "readback": {
+    "yaff": "be60c2ca89fa2c27b6d945fce6b3c2e92ba84dc6bb0ae00cfc613df3829fbec9"
+   },
+   "write": {
+    "assets": {
+     "font.woff": "33f02eaa05d9f8d913d9f71eab57501d879a86de48090b6b8346c735e818cf4e"
+    }
+   }
+  },
+  "woff2": {
+   "plain": {
+    "assets": {
+     "font.woff2": "e2d921843dfb71ba425cc957bdd5f015c829b97043c14bdcaa8f7f3dd755c28b"
+    }
+   },
+   "readback": {
+    "yaff": "db8de27e41b894ee5fa0911359ea14962c0591776c2e70c1a831a5c14ec1f422"
+   },
+   "write": {
+    "assets": {
+     "font.woff2": "e2d921843dfb71ba425cc957bdd5f015c829b97043c14bdcaa8f7f3dd755c28b"
+    }
+   }
+  },
+  "writeon": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy labels (or explicit unicode_as_legacy)"
+   },
+   "readback": {
+    "yaff": "9e8870980f4d988d785a5c6ef600ac280c50ccea4e93a08c7e3dac7c8607c847"
+   },
+   "write": {
+    "assets": {
+     "font.wof": "4f59c28528c8b05f3bde781b9aaa6aa0c34b083387f0a2c87c103c6e189499a3"
+    }
+   }
+  },
+  "wsfont": {
+   "plain": {
+    "error": "Error [wsfont.write.failed] Loss: WSF requires a representable codepoint"
+   },
+   "readback": {
+    "yaff": "9dd64ccceaf6996c3e0b8e7002f44d14ae8962cd6629df88dff8308e5dfb832c"
+   },
+   "write": {
+    "assets": {
+     "font.wsf": "b921d672e65cc94cf2d8b20731a1b9374910728b12f4e79439bf0c9327233966"
+    }
+   }
+  },
+  "wyse": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "2c45d31aa5cc4c352644e32207e4502a0b582acaa33b30a5bba72c4f30d83db0"
+   },
+   "write": {
+    "assets": {
+     "font": "0affb502b2f6161ecf929b922c7fb20880e93ff1b30558224a7ec02a7741dac6"
+    }
+   }
+  },
+  "xbin": {
+   "plain": {
+    "error": "fontpixel: native output requires legacy mappings or explicit unicode_as_legacy"
+   },
+   "readback": {
+    "yaff": "45d1e65395dd6d2e21dd590f67a3489f66ad7acfd949e2da262130ba35795b1c"
+   },
+   "write": {
+    "assets": {
+     "font.xb": "497d6f4b40d61bb9c5028ba4f1777c0cae86fbd43886650bec838fa516eb6388"
+    }
+   }
+  },
+  "xerox": {
+   "plain": {
+    "error": "Error [xerox.no_representable_glyphs] Loss: No representable character mappings remain"
+   },
+   "readback": {
+    "yaff": "563102426efde58b60b5cd435bb8df292d3babdf34778402e46e39cfb1c205dd"
+   },
+   "write": {
+    "assets": {
+     "font.al": "f70a8349d1154d797a8ce84ab7483115dda1c4a3785ba680a35dce9f61607df4"
+    }
+   }
+  },
+  "yaff": {
+   "plain": {
+    "assets": {
+     "font.yaff": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+    }
+   },
+   "readback": {
+    "yaff": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+   },
+   "write": {
+    "assets": {
+     "font.yaff": "070f93d82b63415945524f5a4639a4c9be09626efbcaa625ec2e14be4a6027c3"
+    }
+   }
+  },
+  "zapfont": {
+   "plain": {
+    "assets": {
+     "font": "b16991ab4a079ad88dcf9ff3c8b34501d20ba99182146645390d4ffb5852f208"
+    }
+   },
+   "readback": {
+    "yaff": "781d7fdf48cb18fc55da8589180c7414cd7cede01c2ab7c18316cff08a3e9f83"
+   },
+   "write": {
+    "assets": {
+     "font": "b16991ab4a079ad88dcf9ff3c8b34501d20ba99182146645390d4ffb5852f208"
+    }
+   }
+  }
+ },
+ "listing": [
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "bdf",
+     "bdf.gz"
+    ],
+    "feature_enabled": true,
+    "id": "bdf",
+    "name": "Glyph Bitmap Distribution Format"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pcf",
+     "pcf.gz"
+    ],
+    "feature_enabled": true,
+    "id": "pcf",
+    "name": "X11 Portable Compiled Format"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "snf"
+    ],
+    "feature_enabled": true,
+    "id": "snf",
+    "name": "X11 Server Natural Format"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "hex"
+    ],
+    "feature_enabled": true,
+    "id": "hex",
+    "name": "GNU Unifont hex"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "txt",
+     "draw"
+    ],
+    "feature_enabled": true,
+    "id": "draw",
+    "name": "Unifont hexdraw"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "psf",
+     "psfu",
+     "psf.gz",
+     "psfu.gz"
+    ],
+    "feature_enabled": true,
+    "id": "psf",
+    "name": "Linux PSF1 / PSF2"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "cpi",
+     "cp",
+     "cpx"
+    ],
+    "feature_enabled": true,
+    "id": "cpi",
+    "name": "DOS / FreeDOS CPI, CP, CPX"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "f08",
+     "f14",
+     "f16",
+     "ch8",
+     "64c",
+     "rom",
+     "bin",
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "raw",
+    "name": "Raw fixed-cell bitmap"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "yaff",
+     "yaffs",
+     "yaff.gz",
+     "yaffs.gz"
+    ],
+    "feature_enabled": true,
+    "id": "yaff",
+    "name": "monobit YAFF"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pf2"
+    ],
+    "feature_enabled": true,
+    "id": "pf2",
+    "name": "GRUB PF2"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "fnt",
+    "name": "Windows bitmap FNT"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fon",
+     "exe",
+     "dll"
+    ],
+    "feature_enabled": true,
+    "id": "fon",
+    "name": "Windows FON resources"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "f16",
+     "fx2",
+     "ftx"
+    ],
+    "feature_enabled": true,
+    "id": "fontx2",
+    "name": "DOS/V FONTX2"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "hzk",
+    "name": "UCDOS HZK / ASC"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "hbf"
+    ],
+    "feature_enabled": true,
+    "id": "hbf",
+    "name": "Hanzi Bitmap Font"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "han"
+    ],
+    "feature_enabled": true,
+    "id": "hanfont",
+    "name": "Korean DOS component fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "dfont",
+     "bin",
+     "f",
+     "nfnt",
+     "suit",
+     "as",
+     "adf",
+     "rsrc",
+     "hqx"
+    ],
+    "feature_enabled": true,
+    "id": "nfnt",
+    "name": "Mac NFNT / FONT / FOND containers"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "ttf",
+     "dfont"
+    ],
+    "feature_enabled": true,
+    "id": "bdat",
+    "name": "Apple embedded bdat / bloc"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fon",
+     "bsc",
+     "bsq"
+    ],
+    "feature_enabled": true,
+    "id": "iigs",
+    "name": "Apple IIgs QuickDraw II"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "otb",
+     "ttf",
+     "otf"
+    ],
+    "feature_enabled": true,
+    "id": "otb",
+    "name": "Bitmap-only OpenType"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "ttf"
+    ],
+    "feature_enabled": true,
+    "id": "ttf",
+    "name": "TrueType outlines"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "otf"
+    ],
+    "feature_enabled": true,
+    "id": "otf",
+    "name": "OpenType CFF"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "woff"
+    ],
+    "feature_enabled": true,
+    "id": "woff",
+    "name": "WOFF 1.0"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "woff2"
+    ],
+    "feature_enabled": true,
+    "id": "woff2",
+    "name": "WOFF 2.0"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "ttc",
+     "otc"
+    ],
+    "feature_enabled": true,
+    "id": "ttc",
+    "name": "TrueType / OpenType collection"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "ttf"
+    ],
+    "feature_enabled": true,
+    "id": "color",
+    "name": "Color bitmap CBDT / sbix"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "ttf",
+     "otf",
+     "woff",
+     "woff2",
+     "ttc",
+     "otc"
+    ],
+    "feature_enabled": true,
+    "id": "vector-raster",
+    "name": "Pixel-vector import strategy"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "svg"
+    ],
+    "feature_enabled": true,
+    "id": "svg",
+    "name": "SVG images / glyphs / fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "xml",
+     "json"
+    ],
+    "feature_enabled": true,
+    "id": "bmfont",
+    "name": "AngelCode BMFont"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "png",
+     "bmp",
+     "gif",
+     "tga",
+     "pbm",
+     "pgm",
+     "pnm",
+     "json",
+     "toml"
+    ],
+    "feature_enabled": true,
+    "id": "image",
+    "name": "Image atlas and mapping"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "h",
+     "c",
+     "cpp",
+     "cc"
+    ],
+    "feature_enabled": true,
+    "id": "c",
+    "name": "C / C++ bitmap arrays"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "kbitx"
+    ],
+    "feature_enabled": true,
+    "id": "kbitx",
+    "name": "Bits'n'Picas kbitx"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "kbits"
+    ],
+    "feature_enabled": true,
+    "id": "kbits",
+    "name": "Bits'n'Picas kbits"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pbf"
+    ],
+    "feature_enabled": true,
+    "id": "pbf",
+    "name": "PebbleOS PBF"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "sfd"
+    ],
+    "feature_enabled": true,
+    "id": "sfd",
+    "name": "FontForge SFD bitmap strikes"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pk"
+    ],
+    "feature_enabled": true,
+    "id": "pk",
+    "name": "TeX packed font"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "gf"
+    ],
+    "feature_enabled": true,
+    "id": "gf",
+    "name": "TeX generic font"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "font"
+    ],
+    "feature_enabled": true,
+    "id": "plan9",
+    "name": "Plan 9 font / subfont"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "font"
+    ],
+    "feature_enabled": true,
+    "id": "amiga",
+    "name": "Amiga diskfont"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "gem",
+     "gft",
+     "vga"
+    ],
+    "feature_enabled": true,
+    "id": "gem",
+    "name": "Atari GEM / GDOS"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "vfont",
+    "name": "Berkeley vfont"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fzx"
+    ],
+    "feature_enabled": true,
+    "id": "fzx",
+    "name": "ZX Spectrum FZX"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "flf"
+    ],
+    "feature_enabled": true,
+    "id": "figlet",
+    "name": "FIGlet"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pdb",
+     "prc",
+     "afnx"
+    ],
+    "feature_enabled": true,
+    "id": "palm",
+    "name": "Palm OS font resources"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "gdr"
+    ],
+    "feature_enabled": true,
+    "id": "gdr",
+    "name": "Psion / EPOC GDR"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "drcs",
+    "name": "DEC DRCS soft fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "bbc",
+    "name": "BBC Micro VDU 23 character definitions, code byte and eight bitmap rows"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "beos",
+    "name": "BeOS |Be; bitmap fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "catalyst",
+    "name": "Quark Catalyst SYSTEM.FONTS collection"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "set",
+     "sft",
+     "pft",
+     "eft",
+     "cft",
+     "xft"
+    ],
+    "feature_enabled": true,
+    "id": "chiwriter",
+    "name": "ChiWriter v3/v4 and compatible FONTRIX/PCPaint/GRASP new-format headers, width/offset tables and fixed-height rasters."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "com"
+    ],
+    "feature_enabled": true,
+    "id": "comfont",
+    "name": "DOS FONTEDIT, Fontraption normal/TSR, Font Mania and CP/M PSFCOM, LETAFONT, UDG binary loader envelopes"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "txt"
+    ],
+    "feature_enabled": true,
+    "id": "consoleet",
+    "name": "Consoleet/vfontas per-glyph text files in a directory, hexadecimal filenames and raster text."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "nlq",
+     "nl2",
+     "nl3",
+     "nl4"
+    ],
+    "feature_enabled": true,
+    "id": "daisy",
+    "name": "Daisy-Dot I/II/III and magnified multi-file variants NLQ/NL2/NL3/NL4, variable widths and vertical bitmap streams."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pft"
+    ],
+    "feature_enabled": true,
+    "id": "dashen",
+    "name": "Dashen PFT screen font directory and packed glyphs, optionally followed by an HP PCL printer strike."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "dsf"
+    ],
+    "feature_enabled": true,
+    "id": "dosstart",
+    "name": "DOSStart DSF bitmap branch, encoded glyph rows, height and advance information."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fon"
+    ],
+    "feature_enabled": true,
+    "id": "drhalo",
+    "name": "Dr. Halo/Dr. Genius fixed-cell FON header and bitmap payload."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "edwin",
+    "name": "EDWIN text bitmap definitions, code, dimensions, metrics and raster rows."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "dfont",
+     "suit",
+     "bin",
+     "as",
+     "adf",
+     "rsrc",
+     "hqx"
+    ],
+    "feature_enabled": true,
+    "id": "fbit",
+    "name": "Apple Japanese fbit and HFNT resources, resolution/encoding tables and optional data-fork bitmap payloads."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "cvt"
+    ],
+    "feature_enabled": true,
+    "id": "geos",
+    "name": "Commodore GEOS CVT font collections and bare VLIR strike records, including MEGA extensions documented by Bits'N'Picas."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "fon",
+     "exe",
+     "dll"
+    ],
+    "feature_enabled": true,
+    "id": "gpi",
+    "name": "OS/2 GPI bitmap fonts / NE / LX containers"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "set",
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "grasp",
+    "name": "PCPaint/GRASP old raster format with fixed-cell header and raw rows."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "sft",
+     "sfp",
+     "sfl"
+    ],
+    "feature_enabled": true,
+    "id": "hppcl",
+    "name": "HP PCL bitmap soft fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "set"
+    ],
+    "feature_enabled": true,
+    "id": "hrcg",
+    "name": "AppleSoft Toolkit Hi-Res Character Generator SET bitmaps including high-bit half-dot shifts."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "bin"
+    ],
+    "feature_enabled": true,
+    "id": "lisa",
+    "name": "Apple Lisa font libraries with resource directory and Lisa NFNT-like bitmaps, including compressed strike semantics."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "mgf",
+     "mpf"
+    ],
+    "feature_enabled": true,
+    "id": "mgtk",
+    "name": "Apple II MouseGraphics Toolkit / MousePaint fonts, one/two 7-bit-wide strips and widths."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "fd"
+    ],
+    "feature_enabled": true,
+    "id": "mkwinfont",
+    "name": "Simon Tatham mkwinfont FD text, header properties and per-character ASCII rasters."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "scn.fnt"
+    ],
+    "feature_enabled": true,
+    "id": "oberon",
+    "name": "Project Oberon bitmap FNT screen/printer files, character runs, glyph boxes and little-endian raster words."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "pcgeos",
+    "name": "PC/GEOS 2+ BSWF font files, font metadata, point-size strikes, metrics, bitmaps and kerning."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pcr"
+    ],
+    "feature_enabled": true,
+    "id": "pcr",
+    "name": "Optiks PCR fixed-width 8-pixel font header and per-glyph rows."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pil"
+    ],
+    "feature_enabled": true,
+    "id": "pilfont",
+    "name": "Pillow PILfont .pil metrics plus PBM/PNG glyph atlas."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "plus3dos",
+    "name": "ZX Spectrum +3DOS font file header, length/type/load metadata, checksum and 8x8 glyph payload."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "txt"
+    ],
+    "feature_enabled": true,
+    "id": "psf2txt",
+    "name": "psftools textual PSF representation with glyph index, dimensions, Unicode aliases/sequences and bitmap rows."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": false,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "polyprint",
+    "name": "PolyPrint printer bitmap fonts and proportional glyph packing as documented by its utility maintainer."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "bepf",
+     "lepf"
+    ],
+    "feature_enabled": true,
+    "id": "prebuilt",
+    "name": "Adobe prebuilt BEPF/LEPF files"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pnf",
+     "psf"
+    ],
+    "feature_enabled": true,
+    "id": "printshop",
+    "name": "The Print Shop PNF printer fonts, native raster/width arrangement."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pxl"
+    ],
+    "feature_enabled": true,
+    "id": "pxl",
+    "name": "TeX PXL 1001/1002 font bitmaps, 128-entry directory, TFM widths, design size and dpi"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "riscos",
+    "name": "RISC OS older x90y45 and newer Font bitmap files, strike indexes, metrics and grayscale packing."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "png"
+    ],
+    "feature_enabled": true,
+    "id": "sfont",
+    "name": "SDL SFont marker-row PNG atlas and Kreative RFont extension, explicit code sequence and proportional spacing."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "e24",
+     "p9",
+     "p24",
+     "l30"
+    ],
+    "feature_enabled": true,
+    "id": "signum",
+    "name": "Signum! editor E24 and printer P9/P24/L30 raster character sets."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "symbos",
+    "name": "SymbOS small / medium / big bitmap fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "tasprint",
+    "name": "TasPrint screen/printer character sets, widths up to 16, 16-row glyphs and multi-font sequences"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt"
+    ],
+    "feature_enabled": true,
+    "id": "vtfont",
+    "name": "FreeBSD VFNT0002 console fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "wof"
+    ],
+    "feature_enabled": true,
+    "id": "writeon",
+    "name": "Hercules Write On WOF bitmaps and native header, cells in 8x14 multiples."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "wsf"
+    ],
+    "feature_enabled": true,
+    "id": "wsfont",
+    "name": "NetBSD WSF binary fonts with geometry, stride, encoding, byte/bit order"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "wyse",
+    "name": "Wyse-60 downloadable soft-font escape sequences, 8x16 glyph rows and encoded character selectors."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "xb"
+    ],
+    "feature_enabled": true,
+    "id": "xbin",
+    "name": "XBIN font section with XBIN header, 256/512 glyph flags and optional palette/screen data."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "al",
+     "strike",
+     "ks",
+     "ac"
+    ],
+    "feature_enabled": true,
+    "id": "xerox",
+    "name": "Xerox Alto CONVERT .al, BITBLT .strike/.ks and PrePress .ac variants, each with native directory/metrics/raster packing."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [],
+    "feature_enabled": true,
+    "id": "zapfont",
+    "name": "RISC OS ZapFont old fixed-cell form and ZapRedraw UCS chunk/range form."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "rbf",
+     "rb11",
+     "rb12"
+    ],
+    "feature_enabled": true,
+    "id": "rockbox",
+    "name": "Rockbox RB11/RB12 binary bitmap fonts, glyph/offset/width tables and native row packing."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "u8m"
+    ],
+    "feature_enabled": true,
+    "id": "u8m",
+    "name": "Kreative U8/M UTF-8 font format"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "cyf",
+     "fnt",
+     "fntz",
+     "fnty"
+    ],
+    "feature_enabled": true,
+    "id": "cybiko",
+    "name": "Cybiko device font files including native bitmap and compression variants identified by the original SDK documentation."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "fnt",
+     "pft"
+    ],
+    "feature_enabled": true,
+    "id": "playdate",
+    "name": "Playdate FNT source / PFT compiled bitmap fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "bin",
+     "hmzk"
+    ],
+    "feature_enabled": true,
+    "id": "hmzk",
+    "name": "Mi Band 2 HMZK device bitmap font header, code directory and glyph data."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "sbf"
+    ],
+    "feature_enabled": true,
+    "id": "sbf",
+    "name": "Sabriel Bitmap Font binary headers, glyph maps, bitmap data and metrics."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "qpf"
+    ],
+    "feature_enabled": true,
+    "id": "qpf",
+    "name": "Qt/Embedded 2/3 legacy QPF prerendered bitmap fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "qpf2"
+    ],
+    "feature_enabled": true,
+    "id": "qpf2",
+    "name": "Qt for Embedded Linux QPF2 prerendered fonts"
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "sfn",
+     "asc",
+     "sfn.gz"
+    ],
+    "feature_enabled": true,
+    "id": "ssfn",
+    "name": "Scalable Screen Font 2 binary SFN bitmap/pixmap fragments, glyph references and mappings, plus ASCII source form."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "vlw"
+    ],
+    "feature_enabled": true,
+    "id": "vlw",
+    "name": "Processing PFont VLW versions with per-glyph metrics, Gray8 bitmaps and Java data-stream strings."
+   },
+   "read": true,
+   "write": true
+  },
+  {
+   "detect": true,
+   "format": {
+    "extensions": [
+     "pfr"
+    ],
+    "feature_enabled": true,
+    "id": "pfr",
+    "name": "Portable Font Resource bitmap strikes, character maps and packed bitmap data in bitmap-bearing PFR files."
+   },
+   "read": true,
+   "write": true
+  }
+ ]
+}

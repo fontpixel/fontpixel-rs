@@ -16,6 +16,10 @@
 
 pub mod conv;
 pub mod errors;
+pub mod formats;
+pub mod formats_direct;
+pub mod formats_extra;
+pub mod formats_options;
 pub mod handles;
 
 use pyo3::prelude::*;
@@ -26,5 +30,6 @@ fn _native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     errors::register(m)?;
     handles::register(m)?;
+    formats::register(m)?;
     Ok(())
 }
