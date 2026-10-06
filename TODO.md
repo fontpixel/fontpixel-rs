@@ -8,8 +8,10 @@ ASAN 与默认负载巡检 [reports/phase6-validation/](reports/phase6-validatio
 - [x] 第 6 阶段按 PLAN 原文交付（`6297998`）。
 - [x] 第 6 阶段严格标准：单元 A–K 全账本与追平选项，最终源码 `8cd6d66`，冻结 v5；
   完整检查、109 种 feature 组合 Clippy、真实字体对照、104 目标 ASAN、默认负载巡检、正式测速与 A/B。
-- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）。已授权，等待用户开始指令。
-  工具已就绪：`../local-work/py-bindings-venv`（maturin、pytest）、Docker（manylinux）。
+- [ ] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API）。**进行中（2026-10-06 起，用户要求一路做完 7→8→9→最终报告）**。
+  设计：docs/bindings-design.md 与 decisions.md「Phases 7–9 architecture」；覆盖率门禁 `tools/bindings/gate.sh`；
+  包骨架 crates/fontpixel-py（pyo3 0.29 abi3、maturin、Python 3.10 venv `../local-work/py310-venv`）。
+  地基单元：O（CLI 编排抽成 fontpixel-ops）、S1/S2/S3（选项与模型类型的 serde），之后分模块做 Python 绑定。
 - [ ] 第 8 阶段：WASM 绑定（完整原生 API + bdfparser-js 兼容 API）。wasm32 target、wasm-pack、Node 24 已就绪。
 - [ ] 第 9 阶段：拼合网页 `web/merge/`（已授权）。注意 PLAN 要求「静态网页不使用前端框架」。
 - 只做本地提交；不 push、不发布、不部署。
