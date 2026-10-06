@@ -119,6 +119,7 @@ fontpixel.types.PlaydateFlavor
 fontpixel.types.PointerMode
 fontpixel.types.PrebuiltDepth
 fontpixel.types.Preset
+fontpixel.types.ProgressStep
 fontpixel.types.PsfVersion
 fontpixel.types.PxlVersion
 fontpixel.types.RawByteOrder

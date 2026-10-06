@@ -31,7 +31,7 @@ def read(
     data: _t.Buffer | _c.Sequence[int],
     *,
     limits: _t.ResourceLimits | None = ...,
-) -> tuple[FontSet, _t.Report]:
+) -> tuple[Font, _t.Report]:
     """
     Decode standalone bytes under `limits` (a `ResourceLimits` dict).
     Returns `(model, report)`.

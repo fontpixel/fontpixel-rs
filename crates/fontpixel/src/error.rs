@@ -82,6 +82,10 @@ pub enum Error {
     ReportedErrors(Report),
     /// An operating-system or caller-supplied resource I/O error.
     Io(io::Error),
+    /// The caller cancelled the operation through its progress observer
+    /// (`fontpixel_ops::merge_with_progress` and friends). Cancellation takes
+    /// effect at the next step boundary; no output was committed or returned.
+    Cancelled,
 }
 
 impl Error {
@@ -136,6 +140,9 @@ impl fmt::Display for Error {
             }
             Self::ReportedErrors(_) => f.write_str("operation reported errors; no output returned"),
             Self::Io(error) => write!(f, "I/O error: {error}"),
+            Self::Cancelled => {
+                f.write_str("operation cancelled by its progress observer; no output committed")
+            }
         }
     }
 }

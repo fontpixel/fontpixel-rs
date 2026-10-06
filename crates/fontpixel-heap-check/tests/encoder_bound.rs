@@ -139,6 +139,81 @@ fn observed(data: &[u8], quality: u32, lgwin: u32, threads: usize) -> (usize, us
     }
 }
 
+/// Encoder-internal peak of the parallel call shape on `wasm` targets: the
+/// same workers run one after another on brotli's single-threaded spawner.
+fn observed_single_threaded(data: &[u8], quality: u32, lgwin: u32, threads: usize) -> usize {
+    assert!(threads > 1 && data.len() >= PARALLEL_MIN_BYTES);
+    let p = params(quality, lgwin, data.len());
+    let size = brotli::enc::encode::BrotliEncoderMaxCompressedSizeMulti(data.len(), threads);
+    let mut out = vec![0u8; size];
+    let mut allocators = (0..threads)
+        .map(|_| SendAlloc::new(StandardAlloc::default(), UnionHasher::Uninit))
+        .collect::<Vec<_>>();
+    struct Bytes(Vec<u8>);
+    impl brotli::SliceWrapper<u8> for Bytes {
+        fn slice(&self) -> &[u8] {
+            &self.0
+        }
+    }
+    let mut owned = brotli::enc::Owned::new(Bytes(data.to_vec()));
+    let (result, peak) = measure(|| {
+        brotli::enc::singlethreading::compress_multi(&p, &mut owned, &mut out, &mut allocators)
+    });
+    result.unwrap();
+    peak
+}
+
+/// The single-threaded spawner (`wasm`) runs the workers in sequence, so its
+/// peak must stay within the same admission as the concurrent workers.
+#[test]
+#[ignore = "heavy; run: cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture"]
+fn single_threaded_encoder_heap_never_exceeds_the_admitted_bound() {
+    let quick = std::env::var_os("FONTPIXEL_HEAP_CHECK_QUICK").is_some();
+    let qualities: Vec<u32> = if quick {
+        vec![0, 2, 5, 9, 10, 11]
+    } else {
+        (0..=11).collect()
+    };
+    let mut inputs: Vec<(String, Vec<u8>)> = vec![
+        ("160KiB-font-like".into(), font_like(160 << 10)),
+        ("1MiB-structured".into(), structured(1 << 20)),
+        ("1MiB-font-like".into(), font_like(1 << 20)),
+        ("1MiB-vocabulary".into(), vocabulary(1 << 20)),
+        ("1MiB-mutating".into(), mutating_chunks(1 << 20)),
+        ("2MiB-fibonacci".into(), fibonacci(2 << 20)),
+    ];
+    if let Some(paths) = std::env::var_os("FONTPIXEL_HEAP_CHECK_FONT") {
+        for path in std::env::split_paths(&paths) {
+            let data = std::fs::read(&path).expect("FONTPIXEL_HEAP_CHECK_FONT is readable");
+            inputs.push((format!("file:{}", path.to_string_lossy()), data));
+        }
+    }
+    eprintln!("input,len,quality,threads,bound,single_threaded_observed,ratio");
+    let mut failures = Vec::new();
+    for (name, data) in &inputs {
+        for &quality in &qualities {
+            for threads in [2, 3, 4] {
+                let bound = brotli_encoder_heap_bound(quality, 22, data.len(), threads)
+                    .expect("bound fits usize");
+                let peak = observed_single_threaded(data, quality, 22, threads);
+                eprintln!(
+                    "{name},{},{quality},{threads},{bound},{peak},{:.3}",
+                    data.len(),
+                    peak as f64 / bound as f64
+                );
+                if peak > bound {
+                    failures.push(format!("{name} q{quality} t{threads}: {peak} > {bound}"));
+                }
+            }
+        }
+    }
+    assert!(
+        failures.is_empty(),
+        "bound exceeded:\n{}",
+        failures.join("\n")
+    );
+}
+
 #[test]
 #[ignore = "heavy; run: cargo test --locked --release -p fontpixel-heap-check -- --ignored --nocapture"]
 fn encoder_heap_never_exceeds_the_admitted_bound() {

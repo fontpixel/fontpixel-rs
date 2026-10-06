@@ -186,6 +186,7 @@ Rust error variant) and `exit_code` (what the command line would exit with):
 | `ReportedErrorsError` | a codec reported errors (no output) | `report` |
 | `FontpixelIoError` | operating-system or resolver I/O | |
 | `UnsupportedError` | capability unavailable on this platform/build | |
+| `CancelledError` | an `ops` `progress=` callback returned `False` (nothing written) | |
 
 Python-level argument problems use the built-in classes: `TypeError` for wrong
 argument types, `ValueError` for dicts that do not deserialize, `KeyError`
@@ -382,7 +383,7 @@ checked by the test suite). Modules:
 
 | module | public callables |
 | --- | ---: |
-| [`fontpixel`](python-api-reference.md#fontpixel) | 457 |
+| [`fontpixel`](python-api-reference.md#fontpixel) | 458 |
 | [`fontpixel.compat`](python-api-reference.md#fontpixelcompat) | 0 |
 | [`fontpixel.compat.bdfparser`](python-api-reference.md#fontpixelcompatbdfparser) | 87 |
 | [`fontpixel.compat.bdfparser.bitmap`](python-api-reference.md#fontpixelcompatbdfparserbitmap) | 1 |
@@ -510,6 +511,6 @@ checked by the test suite). Modules:
 | [`fontpixel.woff.woff1`](python-api-reference.md#fontpixelwoffwoff1) | 2 |
 | [`fontpixel.woff.woff2`](python-api-reference.md#fontpixelwoffwoff2) | 5 |
 
-127 modules, 1068 documented callables, classes and properties.
+127 modules, 1069 documented callables, classes and properties.
 
 <!-- end reference index -->

@@ -33,6 +33,15 @@ status), ``kind`` and, for strict-loss and reported errors, the full
 ``report``. The GIL is released while an operation runs, so calls from several
 threads proceed in parallel.
 
+:func:`merge`, :func:`convert` and :func:`vectorize` accept
+``progress=callback``: the callback receives a :class:`fontpixel.types.Progress`
+dict (``step`` ``"read"``, ``"merge"`` or ``"encode"``, ``done``, ``total``,
+``item``, ``glyphs``, ``bytes``) after each step, on the calling thread with
+the GIL held, before anything is written. Returning ``False`` (exactly) cancels
+the operation with :class:`fontpixel.CancelledError` (``exit_code`` 1);
+raising cancels it and re-raises that exception. Nothing is written or
+returned after a cancellation, and results never depend on the callback.
+
 Example::
 
     from fontpixel import ops
@@ -47,7 +56,9 @@ from typing import TYPE_CHECKING, Any
 from ._native import _ops
 
 if TYPE_CHECKING:
-    from .types import ConvertRequest, Files
+    from collections.abc import Callable
+
+    from .types import ConvertRequest, Files, Progress
 
 OperationResult = _ops.OperationResult
 BatchResult = _ops.BatchResult
@@ -84,14 +95,16 @@ def vectorize(
     /,
     *,
     files: Files | None = None,
+    progress: Callable[[Progress], object] | None = None,
     **options: Any,
 ) -> OperationResult:
     """Vectorize (``fontpixel vectorize``): the same operation as :func:`convert`.
 
     The command-line ``vectorize`` is an alias of ``convert``; the result is
-    identical, including its JSON and text documents.
+    identical, including its JSON and text documents. ``progress`` behaves as
+    in :func:`convert`.
     """
-    return convert(request, files=files, **options)
+    return convert(request, files=files, progress=progress, **options)
 
 
 __all__ = [

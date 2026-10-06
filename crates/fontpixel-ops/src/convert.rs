@@ -6,7 +6,8 @@ use crate::options::{
     COutputOptions, ConsoleOptions, PcfOptions, RasterOptions, ReportStyle, VectorOptions,
 };
 use crate::{
-    commands, extra_formats, image_formats, input_budget, metadata, p2_formats, p3_formats,
+    Observer, Progress, ProgressStep, commands, extra_formats, image_formats, input_budget,
+    metadata, p2_formats, p3_formats,
 };
 use fontpixel::{Error, ReadOptions, ResourceLimits};
 use std::{
@@ -220,7 +221,10 @@ impl ConvertResponse {
     }
 }
 
-pub(crate) fn run(request: ConvertRequest) -> fontpixel::Result<ConvertResponse> {
+pub(crate) fn run(
+    request: ConvertRequest,
+    progress: &mut Observer<'_>,
+) -> fontpixel::Result<ConvertResponse> {
     let ConvertRequest {
         inputs,
         output: destination,
@@ -324,6 +328,7 @@ pub(crate) fn run(request: ConvertRequest) -> fontpixel::Result<ConvertResponse>
     )?;
     let sources = context::sources();
     let mut allow_single_in_place = false;
+    let mut inputs_read = 0usize;
     for group in &groups {
         let group_limits = conversion_remaining(&limits, retained)?;
         let mut registry = fontpixel::registry();
@@ -362,6 +367,15 @@ pub(crate) fn run(request: ConvertRequest) -> fontpixel::Result<ConvertResponse>
             let mut loaded = registry.read(&file.input(), &options)?;
             drop(file);
             input_budget.admit(&loaded)?;
+            inputs_read += 1;
+            progress.report(|| Progress {
+                step: ProgressStep::Read,
+                done: inputs_read,
+                total: inputs.len(),
+                item: Some(input.to_string_lossy().into_owned()),
+                glyphs: Some(loaded.fonts.fonts.iter().map(|font| font.len()).sum()),
+                bytes: None,
+            })?;
             for entry in &mut loaded.report.entries {
                 if let Some(index) = &mut entry.location.font_index {
                     *index = index
@@ -516,6 +530,14 @@ pub(crate) fn run(request: ConvertRequest) -> fontpixel::Result<ConvertResponse>
             bundle: written.output,
         });
         summaries.push(summary);
+        progress.report(|| Progress {
+            step: ProgressStep::Encode,
+            done: pending.len(),
+            total: groups.len(),
+            item: Some(group.output.to_string_lossy().into_owned()),
+            glyphs: None,
+            bytes: Some(bytes),
+        })?;
     }
     let protection = if allow_single_in_place {
         context::Sources::default()

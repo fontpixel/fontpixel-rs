@@ -55,9 +55,27 @@ pub enum EntryKind {
     Directory,
 }
 
+/// Declares [`FileProvider`] with `Send + Sync` where threads exist (batch
+/// workers share the provider) and without it on `wasm` targets, which have
+/// no threads, so a provider there may wrap JavaScript callbacks.
+macro_rules! file_provider {
+    ($(#[$meta:meta])* pub trait FileProvider { $($body:tt)* }) => {
+        $(#[$meta])*
+        #[cfg(not(target_family = "wasm"))]
+        pub trait FileProvider: Send + Sync { $($body)* }
+        $(#[$meta])*
+        #[cfg(target_family = "wasm")]
+        pub trait FileProvider { $($body)* }
+    };
+}
+file_provider! {
 /// Explicit resolver for memory storage. Keys are normalized `/`-separated
 /// paths without `.` components (see [`key`]); the empty key is the root.
-pub trait FileProvider: Send + Sync {
+///
+/// Implementors are `Send + Sync` on every target with threads. On `wasm`
+/// targets (no threads, see [`crate::capabilities`]) that bound is absent, so
+/// a provider may call back into the host (for example JavaScript functions).
+pub trait FileProvider {
     /// The entry at `path`, if any.
     fn entry(&self, path: &str) -> Option<EntryKind>;
     /// The complete contents of the file at `path`. Called only after
@@ -70,6 +88,7 @@ pub trait FileProvider: Send + Sync {
     fn is_file(&self, path: &str) -> bool {
         matches!(self.entry(path), Some(EntryKind::File { .. }))
     }
+}
 }
 
 /// A simple named-file set. Directories exist implicitly for every file key
@@ -140,6 +159,27 @@ fn prefix_len(directory: &str) -> usize {
         directory.len() + 1
     }
 }
+/// Compile-time proof for `wasm` targets: a provider that is neither `Send`
+/// nor `Sync` (as one holding JavaScript callbacks is) backs memory storage.
+#[cfg(target_family = "wasm")]
+const _: () = {
+    struct _HostCallbacks(std::rc::Rc<std::cell::RefCell<Vec<String>>>);
+    impl FileProvider for _HostCallbacks {
+        fn entry(&self, path: &str) -> Option<EntryKind> {
+            self.0.borrow_mut().push(path.to_owned());
+            None
+        }
+        fn read(&self, path: &str) -> Result<Vec<u8>> {
+            Err(not_found(path))
+        }
+        fn list(&self, _directory: &str) -> Result<Vec<String>> {
+            Ok(Vec::new())
+        }
+    }
+    fn _memory_storage(files: _HostCallbacks) -> Storage {
+        Storage::memory(files)
+    }
+};
 impl FileProvider for MemoryFiles {
     fn entry(&self, path: &str) -> Option<EntryKind> {
         if let Some(bytes) = self.files.get(path) {

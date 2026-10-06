@@ -504,6 +504,9 @@ PrebuiltDepth = Literal["mono", "gray2", "gray4", "gray8"]
 Preset = Literal["hzk12", "hzk14", "hzk16", "hzk16f", "hzk16s", "hzk24", "hzk24s", "hzk24k", "hzk24h", "hzk24f", "hzk24t", "hzk32", "hzk40", "hzk40s", "hzk40t", "hzk48", "hzk48s", "hzk48t", "asc12", "asc14", "asc16", "asc24", "asc32", "asc40", "asc48"]
 """`fontpixel::formats::hzk::presets::Preset`: Named conventional layouts. Explicit geometry can override every preset."""
 
+ProgressStep = Literal["read", "merge", "encode"]
+"""`fontpixel_ops::ProgressStep`: Step kinds reported in [`Progress`]."""
+
 PsfVersion = Literal["1", "2"]
 """`fontpixel::formats::psf::Version`: PSF wire format, independent of the source font's format."""
 
@@ -6873,6 +6876,14 @@ class PrintshopWriteOptions(TypedDict, total=False):
     """Output cap, additionally bounded by reader input limits."""
 
 
+_ProgressRequired = TypedDict("_ProgressRequired", {"step": "ProgressStep", "done": "int", "total": "int"})
+_ProgressOptional = TypedDict("_ProgressOptional", {"item": "str | None", "glyphs": "int | None", "bytes": "int | None"}, total=False)
+
+
+class Progress(_ProgressRequired, _ProgressOptional):
+    """`fontpixel_ops::Progress`: One completed step of a long operation, passed to the progress observer of [`merge_with_progress`] and [`convert_with_progress`]."""
+
+
 class ProjectionOptions(TypedDict, total=False):
     """`fontpixel_ops::metadata::ProjectionOptions`: Explicit target-application projection; omitted means no change. Every replaced or removed source value is reported as loss, so --strict rejects it."""
     swidth_ppem: int | None
@@ -8778,7 +8789,7 @@ class Woff2Options(TypedDict, total=False):
     transform_hmtx: bool
     """Apply hmtx transform when a full LSB array is reconstructible (default true)."""
     compression_threads: int
-    """Intra-font Brotli workers, 1..=16. Default two; more changes compression decisions/size but still emits one standard Brotli stream."""
+    """Intra-font Brotli workers, 1..=16. Default two; more changes compression decisions/size but still emits one standard Brotli stream. The value selects how the stream is split, not how it is scheduled: on targets without threads (`wasm`) the workers run in sequence and the bytes are identical to the native multithreaded output."""
     auxiliary: Auxiliary
     """Envelope version and optional blocks."""
 
@@ -9873,6 +9884,8 @@ SERDE_TYPES: dict[str, Any] = {
     "fontpixel_ops::MergeRequest": MergeRequest,
     "fontpixel_ops::MergeSettings": MergeSettings,
     "fontpixel_ops::PreviewRequest": PreviewRequest,
+    "fontpixel_ops::Progress": Progress,
+    "fontpixel_ops::ProgressStep": ProgressStep,
     "fontpixel_ops::RenderRequest": RenderRequest,
     "fontpixel_ops::RenderResponse": RenderResponse,
     "fontpixel_ops::ReportStyle": ReportStyle,
