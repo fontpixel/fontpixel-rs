@@ -1738,3 +1738,14 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
   allowance. A font is written when its real retained memory fits: full
   unifont with circles keeps ~97 MB of `glyf` and ~103 MB of output (29.3M
   points never live at once); HanWangYanKai-26 ~66 MB.
+- Drawing uses the same principle: bdfparser has no image cap, so the compat
+  `drawcps`/`draw`/`drawall` admit the result by memory instead of the native
+  16,777,216-pixel cap. A result of `p` pixels needs the packed render
+  (`p / 8` plus one byte per row) and its 8-bit copy (`p` bytes) at once; the
+  renderer checks `max_pixels = max_total_bytes * 8 / 10` and
+  `max_bytes = max_total_bytes` before allocating either (Tong SC
+  `drawall()`: 22.3 Mpx, ~25 MB). The native API keeps its own limits.
+- The model prepared for drawing (SPEC spacing in the glyph advances, global
+  spacing and the resolved charset) is cached in the font state and dropped by
+  every model edit: all edits go through `State::core_mut`, which clears it.
+  A draw then costs the layout of its text, not a copy of the font.

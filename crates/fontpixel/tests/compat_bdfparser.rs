@@ -590,3 +590,56 @@ fn header_writes_keep_metrics_of_other_sources() {
     f.remove_header("fbbyoff");
     assert!(f.core().metrics.bounds.is_none());
 }
+
+#[test]
+fn prepared_drawing_model_follows_every_edit() {
+    let mut f = mini();
+    let kw = serde_json::Map::new();
+    let first = f.drawcps(&[65, 66], &kw).unwrap();
+    assert_eq!(f.drawcps(&[65, 66], &kw).unwrap(), first); // cached
+    // a glyph edit through a handle
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(json!({"dwx0": 9})))
+        .unwrap();
+    assert_eq!(f.drawcps(&[65, 66], &kw).unwrap().width(), 9 + 6);
+    // a header edit
+    f.set_header("fbbx", json!(8));
+    assert_eq!(f.drawcps(&[66], &kw).unwrap().width(), 8);
+    // removal and charset changes
+    f.removeglyph(66);
+    let missing = f.drawcps(&[66], &obj(json!({"mode": 0}))).unwrap();
+    assert!(missing.bindata().iter().all(|r| !r.contains('1')));
+    f.encoding("iso8859-1");
+    assert!(
+        f.draw("A", &kw)
+            .unwrap()
+            .bindata()
+            .iter()
+            .any(|r| r.contains('1'))
+    );
+}
+
+#[test]
+fn drawing_admits_images_beyond_the_native_pixel_cap_by_memory() {
+    // 4,200 cells of 64x64: 17.2 Mpx (above the native 16,777,216-pixel cap),
+    // about 19 MB with the packed render, within max_total_bytes.
+    let mut f = Font::create(&CreateOptions {
+        pixelsize: 64,
+        ..Default::default()
+    })
+    .unwrap();
+    let b = Bitmap::new(&["1".into()]).unwrap();
+    f.newglyph(0x41, Some(&b), 1, None, None).unwrap();
+    let cps = vec![0x41; 4200];
+    let out = f
+        .drawcps(&cps, &obj(json!({"mode": 0, "linelimit": 64})))
+        .unwrap();
+    assert_eq!((out.width(), out.height()), (64, 64 * 4200));
+    // still bounded: far beyond the memory allowance is refused before allocation
+    let huge = vec![0x41; 200_000];
+    assert!(
+        f.drawcps(&huge, &obj(json!({"mode": 0, "linelimit": 64})))
+            .is_err()
+    );
+}

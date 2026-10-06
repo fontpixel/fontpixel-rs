@@ -435,18 +435,7 @@ impl RawFont {
     /// ones bdfparser emits as `BDFParserWarning`), and the new entry count.
     /// Info-level entries (native repairs and derivations) are not warnings.
     fn warnings_since(&self, start: usize) -> (Vec<String>, usize) {
-        let report = self.font.report();
-        let n = report.entries.len();
-        (
-            report
-                .entries
-                .into_iter()
-                .skip(start)
-                .filter(|e| !matches!(e.level, fontpixel::report::Level::Info))
-                .map(|e| e.message)
-                .collect(),
-            n,
-        )
+        self.font.warnings_since(start)
     }
 
     /// Projected SPEC headers (`Font::headers`).

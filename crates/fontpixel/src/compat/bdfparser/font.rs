@@ -64,7 +64,11 @@ impl Converter {
 }
 #[derive(Debug, Clone, Default)]
 pub(super) struct State {
-    pub core: CoreFont,
+    /// The native model; read with `core()`, edit with `core_mut()` (which
+    /// drops the prepared drawing model).
+    pub model: CoreFont,
+    /// The native model prepared for drawing (`drawcps`), until the next edit.
+    pub drawn: Option<Rc<Drawn>>,
     pub generations: BTreeMap<GlyphId, u64>,
     /// Slots moved by a codepoint change: `(old id, generation)` to `(new id,
     /// generation)`, so other handles on the same glyph follow it.
@@ -75,6 +79,26 @@ pub(super) struct State {
     pub codec: Option<CharsetCodec>,
     pub char_to_code: Option<Converter>,
     pub code_to_char: Option<Converter>,
+}
+impl State {
+    pub fn core(&self) -> &CoreFont {
+        &self.model
+    }
+    /// Mutable model access; any edit invalidates the prepared drawing model.
+    pub fn core_mut(&mut self) -> &mut CoreFont {
+        self.drawn = None;
+        &mut self.model
+    }
+}
+/// A copy of the model prepared for the native renderer: SPEC spacing
+/// (per-glyph `dwx0 or dwy0`, global header components) and the resolved charset.
+#[derive(Debug)]
+pub(super) struct Drawn {
+    /// Glyph advances hold bdfparser's `dwx0 or dwy0` (`dwx1 or dwy1`) as x,
+    /// glyph defaults the global header spacing.
+    pub core: CoreFont,
+    /// Global spacing: horizontal (`dwx0`, else `dwy0`) and vertical.
+    pub global: (Option<i64>, Option<i64>),
 }
 /// Mutable SPEC font backed by one native font model. Attached handles share it.
 #[derive(Debug, Default)]
@@ -139,10 +163,10 @@ impl Font {
             }
         }
         let mut s = State {
-            core: normalized,
+            model: normalized,
             ..State::default()
         };
-        for (id, _) in s.core.glyphs() {
+        for id in s.core().glyphs().map(|(id, _)| id).collect::<Vec<_>>() {
             s.generations.insert(id, 0);
         }
         Ok(Self {
@@ -151,11 +175,25 @@ impl Font {
     }
     /// A detached copy of the underlying native model.
     pub fn core(&self) -> CoreFont {
-        self.state.borrow().core.clone()
+        self.state.borrow().core().clone()
     }
     /// Structured parser and compatibility warnings collected so far.
     pub fn report(&self) -> Report {
         self.state.borrow().report.clone()
+    }
+    /// Messages of the warning-level report entries from index `start` on (the
+    /// ones bdfparser emits as warnings) and the entry count, without copying
+    /// the report.
+    pub fn warnings_since(&self, start: usize) -> (Vec<String>, usize) {
+        let s = self.state.borrow();
+        let entries = &s.report.entries;
+        let messages = entries
+            .iter()
+            .skip(start)
+            .filter(|e| !matches!(e.level, crate::report::Level::Info))
+            .map(|e| e.message.clone())
+            .collect();
+        (messages, entries.len())
     }
     pub(super) fn warn(&self, msg: String) {
         let mut s = self.state.borrow_mut();
@@ -248,11 +286,11 @@ impl Font {
     }
     /// Headers projected in SPEC insertion order.
     pub fn headers(&self) -> Map<String, V> {
-        headers(&self.state.borrow().core)
+        headers(&self.state.borrow().core())
     }
     /// Case-normalized properties projected in insertion order.
     pub fn props(&self) -> Map<String, V> {
-        props(&self.state.borrow().core).0
+        props(&self.state.borrow().core()).0
     }
     /// Get a case-insensitive property.
     pub fn getprop(&self, key: &str) -> V {
@@ -266,14 +304,14 @@ impl Font {
         self.state.borrow_mut().codec = None;
         let mut s = self.state.borrow_mut();
         if key.eq_ignore_ascii_case("comment") {
-            s.core.properties.remove(key);
-            s.core
+            s.core_mut().properties.remove(key);
+            s.core_mut()
                 .properties
                 .push(Property::new("comment", property(&v)));
         } else {
-            s.core.properties.set(key, property(&v));
+            s.core_mut().properties.set(key, property(&v));
         }
-        x11::project(&mut s.core);
+        x11::project(s.core_mut());
         drop(s);
         self
     }
@@ -281,19 +319,19 @@ impl Font {
     pub fn delprop(&mut self, key: &str) -> &mut Self {
         self.state.borrow_mut().codec = None;
         let mut s = self.state.borrow_mut();
-        s.core.properties.remove(key);
-        x11::project(&mut s.core);
+        s.core_mut().properties.remove(key);
+        x11::project(s.core_mut());
         drop(s);
         self
     }
     /// Resolve the canonical charset, including an explicit override.
     pub fn charset(&self) -> String {
-        self.state.borrow().core.charset.canonical_name()
+        self.state.borrow().core().charset.canonical_name()
     }
     /// Override charset resolution; an empty name clears the override.
     pub fn encoding(&mut self, name: &str) -> &mut Self {
         self.state.borrow_mut().codec = None;
-        self.state.borrow_mut().core.charset.name = if name.is_empty() {
+        self.state.borrow_mut().core_mut().charset.name = if name.is_empty() {
             None
         } else {
             Some(canonical_charset(name))
@@ -363,7 +401,7 @@ impl Font {
     pub fn length(&self) -> usize {
         self.state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| !g.codepoints.is_empty())
             .count()
@@ -373,7 +411,7 @@ impl Font {
         let mut cps = self
             .state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter_map(|(_, g)| g.codepoints.first().map(|cp| i64::from(cp.value())))
             .filter(|cp| matches_range(*cp, r))
@@ -393,9 +431,9 @@ impl Font {
     pub(super) fn id(&self, cp: i64) -> Option<GlyphId> {
         let cp = u32::try_from(cp).ok()?;
         let s = self.state.borrow();
-        s.core
+        s.core()
             .glyph_id(crate::model::Codepoint::Unicode(cp))
-            .or_else(|| s.core.glyph_id(crate::model::Codepoint::Legacy(cp)))
+            .or_else(|| s.core().glyph_id(crate::model::Codepoint::Legacy(cp)))
     }
     /// Obtain an attached handle, or warn (bdfparser's text) and return None for
     /// a missing code.
@@ -446,7 +484,7 @@ impl Font {
     /// attached and the warning report is kept.
     pub fn set_headers(&mut self, headers: &Map<String, V>) -> &mut Self {
         let mut s = self.state.borrow_mut();
-        let core = &mut s.core;
+        let core = s.core_mut();
         let had = |k: &str| core.headers.get(k).is_some();
         let old = (
             had("SIZE"),
@@ -516,7 +554,7 @@ impl Font {
     fn unencoded_ids(&self) -> Vec<GlyphId> {
         self.state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| g.codepoints.is_empty())
             .map(|(id, _)| id)
@@ -540,7 +578,7 @@ impl Font {
     pub fn unencoded_altcode(&self, index: usize) -> Option<V> {
         let id = *self.unencoded_ids().get(index)?;
         let s = self.state.borrow();
-        let g = s.core.glyph(id)?;
+        let g = s.core().glyph(id)?;
         Some(g.properties.get(x11::ALT).map(value).unwrap_or(V::Null))
     }
     /// Set (or, with None, remove) the alternate code of the `index`-th
@@ -549,7 +587,7 @@ impl Font {
         let Some(id) = self.unencoded_ids().get(index).copied() else {
             return Ok(false);
         };
-        self.state.borrow_mut().core.edit_glyph(id, |g| {
+        self.state.borrow_mut().core_mut().edit_glyph(id, |g| {
             if altcode.is_null() {
                 g.properties.remove(x11::ALT);
             } else {
@@ -581,7 +619,7 @@ impl Font {
         };
         let mut s = self.state.borrow_mut();
         for id in selected {
-            s.core.remove_glyph(id);
+            s.core_mut().remove_glyph(id);
         }
         true
     }
@@ -630,10 +668,10 @@ impl Font {
         let mut s = self.state.borrow_mut();
         s.codec = None;
         let id = if let Some(id) = old {
-            s.core.replace_glyph(id, g)?;
+            s.core_mut().replace_glyph(id, g)?;
             id
         } else {
-            s.core.add_glyph(g)?
+            s.core_mut().add_glyph(g)?
         };
         s.serial += 1;
         let serial = s.serial;
@@ -677,7 +715,7 @@ impl Font {
     pub fn add_handle(&mut self, g: &mut Glyph, replace: bool) -> Result<&mut Self> {
         let fields = super::META_TITLES
             .iter()
-            .zip(&g.meta)
+            .zip(g.meta.iter())
             .map(|(k, v)| ((*k).into(), v.clone()))
             .collect();
         if let Some(id) = self.put(self.prepare_meta(&fields)?, replace)? {
@@ -689,7 +727,7 @@ impl Font {
     pub fn removeglyph(&mut self, cp: i64) -> &mut Self {
         self.state.borrow_mut().codec = None;
         if let Some(id) = self.id(cp) {
-            self.state.borrow_mut().core.remove_glyph(id);
+            self.state.borrow_mut().core_mut().remove_glyph(id);
         }
         self
     }
@@ -697,7 +735,7 @@ impl Font {
     pub fn remove_handle(&mut self, g: &mut Glyph) -> &mut Self {
         if Rc::ptr_eq(&self.state, &g.font.state) && g.ever_attached {
             if let Some(id) = g.slot() {
-                self.state.borrow_mut().core.remove_glyph(id);
+                self.state.borrow_mut().core_mut().remove_glyph(id);
             }
         } else if g.cp() >= 0 {
             self.removeglyph(g.cp());
@@ -741,7 +779,7 @@ impl Font {
         let boxes = self
             .state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .map(|(_, g)| meta(g))
             .filter(|m| num(&m[2]) > 0 && num(&m[3]) > 0)
@@ -760,11 +798,11 @@ impl Font {
                 .max()
                 .unwrap_or(0);
             let mut s = self.state.borrow_mut();
-            s.core.headers.set(
+            s.core_mut().headers.set(
                 "FONTBOUNDINGBOX",
                 property(&json!([x1 - x0, y1 - y0, x0, y0])),
             );
-            x11::project(&mut s.core);
+            x11::project(s.core_mut());
         }
         Ok(self)
     }
@@ -775,7 +813,7 @@ impl Font {
         let remove = f
             .state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| {
                 g.codepoints
@@ -785,7 +823,7 @@ impl Font {
             .map(|(id, _)| id)
             .collect::<Vec<_>>();
         for id in remove {
-            f.state.borrow_mut().core.remove_glyph(id);
+            f.state.borrow_mut().core_mut().remove_glyph(id);
         }
         Ok(f)
     }
@@ -794,7 +832,7 @@ impl Font {
         let metas = other
             .state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| !g.codepoints.is_empty())
             .map(|(_, g)| meta(g))
@@ -820,7 +858,7 @@ impl Font {
             ids.extend(
                 self.state
                     .borrow()
-                    .core
+                    .core()
                     .glyphs()
                     .filter(|(_, g)| g.codepoints.is_empty())
                     .map(|(id, _)| id),
@@ -851,7 +889,7 @@ impl Font {
         let items = self
             .state
             .borrow()
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| !g.codepoints.is_empty())
             .map(|(id, g)| (id, meta(g)))
@@ -870,14 +908,14 @@ impl Font {
                 .and_then(|c| target.unicode2cp(c));
             if let Some(cp) = cp {
                 if let Some(prior) = seen.insert(cp, id) {
-                    self.state.borrow_mut().core.remove_glyph(prior);
+                    self.state.borrow_mut().core_mut().remove_glyph(prior);
                     dropped += 1;
                 }
                 m[1] = json!(cp);
                 let g = core_glyph(&m)?;
-                self.state.borrow_mut().core.replace_glyph(id, g)?;
+                self.state.borrow_mut().core_mut().replace_glyph(id, g)?;
             } else {
-                self.state.borrow_mut().core.remove_glyph(id);
+                self.state.borrow_mut().core_mut().remove_glyph(id);
                 dropped += 1;
             }
         }
@@ -896,10 +934,10 @@ impl Font {
     /// Canonical full model used by the cross-language harness.
     pub fn model(&self) -> V {
         let s = self.state.borrow();
-        let h = headers(&s.core);
-        let (p, n) = props(&s.core);
+        let h = headers(&s.core());
+        let (p, n) = props(&s.core());
         let gs = s
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| !g.codepoints.is_empty())
             .map(|(_, g)| {
@@ -908,7 +946,7 @@ impl Font {
             })
             .collect::<Vec<_>>();
         let us = s
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| g.codepoints.is_empty())
             .map(|(_, g)| {
@@ -935,7 +973,7 @@ impl Font {
         out.insert("propnames".into(), json!(n.into_iter().collect::<Vec<_>>()));
         out.insert("glyphs".into(), json!(gs));
         out.insert("unencoded".into(), json!(us));
-        out.insert("charset".into(), json!(s.core.charset.canonical_name()));
+        out.insert("charset".into(), json!(s.core().charset.canonical_name()));
         V::Object(out)
     }
     /// Serialize deterministic SPEC BDF, retaining exact raw rows and dynamic metadata.
@@ -1007,7 +1045,7 @@ impl Font {
             }
         }
         append_comments(&mut lines, h.get("comment"));
-        let (p, n) = props(&self.state.borrow().core);
+        let (p, n) = props(&self.state.borrow().core());
         let count = p.keys().filter(|k| *k != "comment").count();
         if count > 0
             || p.get("comment")
@@ -1034,11 +1072,11 @@ impl Font {
         }
         let s = self.state.borrow();
         let mut glyphs = s
-            .core
+            .core()
             .glyphs()
             .filter(|(_, g)| !g.codepoints.is_empty())
             .collect::<Vec<_>>();
-        glyphs.extend(s.core.glyphs().filter(|(_, g)| g.codepoints.is_empty()));
+        glyphs.extend(s.core().glyphs().filter(|(_, g)| g.codepoints.is_empty()));
         lines.push(format!("CHARS {}", glyphs.len()));
         for (_, g) in glyphs {
             let m = meta(g);
@@ -1144,18 +1182,21 @@ impl Font {
         x11::save_snapshot(&mut core);
         Ok(pcf::write(&core, o)?.0)
     }
-    /// Draw explicit codepoints through the native packed layout engine.
-    pub fn drawcps(&self, cps: &[i64], kw: &Map<String, V>) -> Result<Bitmap> {
+    /// The model prepared for drawing, built once per model revision.
+    fn drawn(&self) -> Result<Rc<Drawn>> {
+        if let Some(d) = self.state.borrow().drawn.clone() {
+            return Ok(d);
+        }
         let mut core = self.core();
         x11::project(&mut core);
         let h = self.headers();
-        let (gdw, gdw1) = (
+        let global = (
             global_interglyph(&h, "dwx0", "dwy0"),
             global_interglyph(&h, "dwx1", "dwy1"),
         );
-        core.metrics.glyph_defaults.advance = gdw.map(|n| crate::model::Vector::new(n, 0));
+        core.metrics.glyph_defaults.advance = global.0.map(|n| crate::model::Vector::new(n, 0));
         core.metrics.glyph_defaults.vertical_advance =
-            gdw1.map(|n| crate::model::Vector::new(n, 0));
+            global.1.map(|n| crate::model::Vector::new(n, 0));
         let ids = core.glyphs().map(|(id, _)| id).collect::<Vec<_>>();
         for id in ids {
             core.edit_glyph(id, |g| {
@@ -1168,9 +1209,19 @@ impl Font {
                 Ok(())
             })?;
         }
-        let key = self.charset();
-        core.charset.name = Some(key);
+        core.charset.name = Some(self.charset());
         core.charset.gl = Some(self.codec()?.gl());
+        let d = Rc::new(Drawn { core, global });
+        self.state.borrow_mut().drawn = Some(d.clone());
+        Ok(d)
+    }
+    /// Draw explicit codepoints through the native packed layout engine. The
+    /// result image is admitted by memory, as bdfparser has no pixel cap: the
+    /// packed render plus its 8-bit copy must fit `max_total_bytes`.
+    pub fn drawcps(&self, cps: &[i64], kw: &Map<String, V>) -> Result<Bitmap> {
+        let drawn = self.drawn()?;
+        let core = &drawn.core;
+        let (gdw, gdw1) = drawn.global;
         // bdfparser treats a falsy `missing` (None or an empty dict) as absent.
         let missing_meta = kw
             .get("missing")
@@ -1198,6 +1249,10 @@ impl Font {
                 .as_ref()
                 .map(MissingGlyph::Glyph)
                 .unwrap_or_default(),
+            limits: crate::render::RenderLimits {
+                bitmap: drawing_limits(),
+                ..Default::default()
+            },
             ..RenderOptions::default()
         };
         let codes = cps
@@ -1229,14 +1284,23 @@ impl Font {
             (12, fbby, gdw1)
         };
         let (mut size, mut placed) = (0i128, 0usize);
+        let empty = empty_glyph();
         for (&cp, code) in cps.iter().zip(&codes) {
-            let m = match code.and_then(|c| core.glyph_id(c)) {
-                Some(id) => core.glyph(id).map_or_else(|| vec![V::Null; 17], meta),
-                None => missing_meta.clone().unwrap_or_else(empty_glyph),
+            let glyph = code
+                .and_then(|c| core.glyph_id(c))
+                .and_then(|id| core.glyph(id));
+            // a prepared glyph's advance x is its `dwx0 or dwy0` (see `drawn`)
+            let own = match glyph {
+                Some(g) => if horizontal {
+                    g.metrics.advance
+                } else {
+                    g.metrics.vertical_advance
+                }
+                .map(|v| v.x),
+                None => interglyph(missing_meta.as_ref().unwrap_or(&empty), idx),
             };
             let offset = if options.mode == RenderMode::Advance {
-                interglyph(&m, idx)
-                    .or(gl)
+                own.or(gl)
                     .map_or(0, |v| i128::from(v) - i128::from(fbbsize))
             } else {
                 0
@@ -1252,8 +1316,11 @@ impl Font {
                 (size, placed) = (cost, 1);
                 continue;
             }
-            let ch = m[1]
-                .as_i64()
+            let code = match glyph {
+                Some(g) => meta(g)[1].as_i64(),
+                None => missing_meta.as_ref().unwrap_or(&empty)[1].as_i64(),
+            };
+            let ch = code
                 .and_then(|c| self.cp2char(c).ok().flatten())
                 .map_or("None".to_owned(), String::from);
             let cp = if cp < 0 {
@@ -1267,7 +1334,9 @@ impl Font {
             )));
         }
         let rendered = core.draw_codepoints(codes, &options)?;
-        Ok(Bitmap::from_raster(rendered.bitmap.to_gray8_palette(0, 1)?))
+        let gray = rendered.bitmap.to_gray8_palette(0, 1)?;
+        drop(rendered);
+        Ok(Bitmap::from_raster(gray))
     }
     /// Draw text after charset conversion.
     pub fn draw(&self, text: &str, kw: &Map<String, V>) -> Result<Bitmap> {
@@ -1325,6 +1394,20 @@ fn horizontal_glyphs(direction: &str) -> bool {
     let valid = |s: Option<&str>| matches!(s, Some("lr" | "rl" | "tb" | "bt"));
     let (a, b) = (d.get(0..2), d.get(2..4));
     !(valid(a) && valid(b)) || matches!(a, Some("lr" | "rl"))
+}
+/// Image admission for compatibility drawing, from the memory allowance
+/// (`ResourceLimits::max_total_bytes`) instead of the native pixel cap: a
+/// result of `p` pixels needs its packed render (at most `p / 8` bytes plus one
+/// padding byte per row) and its 8-bit copy (`p` bytes) at once; both are
+/// checked against these limits before allocation.
+fn drawing_limits() -> crate::bitmap::BitmapLimits {
+    let total = ResourceLimits::default().max_total_bytes;
+    crate::bitmap::BitmapLimits {
+        // p + p/8 + rows <= total for every admitted p (rows <= p)
+        max_pixels: total / 10 * 8,
+        max_bytes: total,
+        ..Default::default()
+    }
 }
 /// bdfparser's `_EMPTY_GLYPH`, drawn for a missing code without `missing`.
 fn empty_glyph() -> Meta {
@@ -1440,7 +1523,7 @@ impl Font {
             && !alt.is_null()
         {
             let mut s = self.state.borrow_mut();
-            s.core.edit_glyph(id, |g| {
+            s.core_mut().edit_glyph(id, |g| {
                 g.properties.set(x11::ALT, property(&alt));
                 Ok(())
             })?;

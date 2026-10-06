@@ -76,9 +76,11 @@ The 17 former "core" failures (and the 5 slow TrueType failures) pass now:
   table, glyph bounding box) and `write_ttf` (`value out of range for a TrueType
   field: (values) (struct.error text)`, the values of the failing pack call and
   CPython 3.10's `struct.error` wording);
-- the round-dot TrueType writer admits outline points by memory (see
-  docs/decisions.md, "bdfparser compatibility: editors, messages and the
-  TrueType memory admission").
+- the round-dot TrueType writer admits outline points by memory, and drawing
+  admits result images by memory instead of the native pixel cap (bdfparser's
+  default `drawall()` of Tong SC, 22.3 Mpx, works); see docs/decisions.md,
+  "bdfparser compatibility: editors, messages and the TrueType memory
+  admission".
 
 ## Remaining narrow differences (no failing test)
 

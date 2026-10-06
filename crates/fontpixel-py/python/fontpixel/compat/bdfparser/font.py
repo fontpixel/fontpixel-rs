@@ -44,17 +44,27 @@ def _range(r: Any) -> Any:
     return [list(t) for t in r]
 
 
+def _fresh(v: Any) -> Any:
+    """A value read from a cached projection; lists are copied."""
+    return list(v) if type(v) is list else v
+
+
 class _HeadersView(MutableMapping):
-    """Live view of `Font.headers` (writes edit the native model in place)."""
+    """Live view of `Font.headers` (writes edit the native model in place).
+    Reads use the projection cached until the next edit."""
 
     def __init__(self, font: Font) -> None:
         self._font = font
 
     def _data(self) -> dict[str, Any]:
-        return self._font._raw.headers()
+        st = self._font._state()
+        d = st['headers']
+        if d is None:
+            d = st['headers'] = self._font._raw.headers()
+        return d
 
     def __getitem__(self, key: str) -> Any:
-        return self._data()[key]
+        return _fresh(self._data()[key])
 
     def __setitem__(self, key: str, value: Any) -> None:
         self._font._raw.set_header(key, value)
@@ -68,6 +78,9 @@ class _HeadersView(MutableMapping):
     def __iter__(self) -> Iterator[str]:
         return iter(list(self._data()))
 
+    def __contains__(self, key: object) -> bool:
+        return key in self._data()
+
     def __len__(self) -> int:
         return len(self._data())
 
@@ -75,25 +88,30 @@ class _HeadersView(MutableMapping):
         return repr(self._data())
 
     def copy(self) -> dict[str, Any]:
-        return self._data()
+        return {k: _fresh(v) for k, v in self._data().items()}
 
     def update(self, other: Any = (), /, **kwargs: Any) -> None:
-        d = self._data()
+        d = self.copy()
         d.update(other, **kwargs)
         self._font._set_headers(d)
 
 
 class _PropsView(MutableMapping):
-    """Live view of `Font.props` (lower-case keys; writes call `setprop`)."""
+    """Live view of `Font.props` (lower-case keys; writes call `setprop`).
+    Reads use the projection cached until the next edit."""
 
     def __init__(self, font: Font) -> None:
         self._font = font
 
     def _data(self) -> dict[str, Any]:
-        return self._font._raw.props()
+        st = self._font._state()
+        d = st['props']
+        if d is None:
+            d = st['props'] = self._font._raw.props()
+        return d
 
     def __getitem__(self, key: str) -> Any:
-        return self._data()[key]
+        return _fresh(self._data()[key])
 
     def __setitem__(self, key: str, value: Any) -> None:
         names = self._font._propnames
@@ -109,6 +127,9 @@ class _PropsView(MutableMapping):
     def __iter__(self) -> Iterator[str]:
         return iter(list(self._data()))
 
+    def __contains__(self, key: object) -> bool:
+        return key in self._data()
+
     def __len__(self) -> int:
         return len(self._data())
 
@@ -116,7 +137,7 @@ class _PropsView(MutableMapping):
         return repr(self._data())
 
     def copy(self) -> dict[str, Any]:
-        return self._data()
+        return {k: _fresh(v) for k, v in self._data().items()}
 
 
 class _MetaList(list):
@@ -277,6 +298,8 @@ class Font:
         self._epoch = 0
         self._cache: dict[str, Any] | None = None
         self._short: set[int] = set()
+        self._headers_view = _HeadersView(self)
+        self._props_view = _PropsView(self)
         self._char2cp_override: Callable[[str], int | None] | None = None
         self._cp2char_override: Callable[[int], str | None] | None = None
         self._charset_override: str | None = None
@@ -326,6 +349,8 @@ class Font:
                 'items': None,
                 'unencoded': None,
                 'entries': None,
+                'headers': None,
+                'props': None,
             }
             self._cache = st
         return st
@@ -400,7 +425,7 @@ class Font:
     @property
     def headers(self) -> MutableMapping[str, Any]:
         """Global headers (`bdfversion`, `fontname`, `pointsize`, `fbbx`, ...)."""
-        return _HeadersView(self)
+        return self._headers_view
 
     @headers.setter
     def headers(self, value: Mapping[str, Any]) -> None:
@@ -409,7 +434,7 @@ class Font:
     @property
     def props(self) -> MutableMapping[str, Any]:
         """Properties (lower-case keys, `comment` included)."""
-        return _PropsView(self)
+        return self._props_view
 
     @props.setter
     def props(self, value: Mapping[str, Any]) -> None:

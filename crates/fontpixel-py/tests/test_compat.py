@@ -152,6 +152,15 @@ def test_bitmap_data_exports():
     assert b.todata(2) == [[0, 1], [1, 2]] and b.todata(3) == [0, 1, 1, 2]
     assert Bitmap(['0101']).todata(4) == ['5']
     assert Bitmap(['1' * 70]).todata(5) == [2**70 - 1]  # exact beyond 64 bits
+    rows = ['1' + '0' * 140 + '1', '0' * 142]  # beyond 128 bits, and an all-zero row
+    big = Bitmap(rows)
+    assert big.todata(5) == [int(r, 2) for r in rows]
+    assert big.todata(4) == [hex(int(r, 2))[2:].zfill(36) for r in rows]
+    assert Bitmap(['101']).todata(4) == ['5'] and Bitmap(['10011']).todata(5) == [19]
+    with pytest.raises(ValueError, match='invalid literal'):
+        Bitmap(['012']).todata(5)
+    with pytest.raises(ValueError, match='Unknown datatype'):
+        b.todata(6)
     one = Bitmap(['012'])
     assert one.tobytes('L') == bytes([255, 0, 127])
     assert one.tobytes('1') == bytes([0x9F])

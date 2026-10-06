@@ -4,12 +4,12 @@
 //! The pixels stay in Rust; `bindata` materializes the row strings on each
 //! access (a new list every time, assign to `bindata` to replace the raster).
 //! Editing methods mutate in place and return the same object for chaining.
-use crate::compat::{done, stash, v2py, warn};
+use crate::compat::{done, stash, warn};
 use fontpixel::compat::bdfparser as bp;
 use pyo3::basic::CompareOp;
 use pyo3::exceptions::{PyIndexError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict, PyInt, PyString};
+use pyo3::types::{PyBytes, PyDict, PyInt, PyList, PyString};
 
 /// A bitmap of `'0'`/`'1'`/`'2'` rows (row 0 at the top), backed by a native
 /// raster. Equality compares pixels; instances are unhashable (mutable).
@@ -366,12 +366,47 @@ impl Bitmap {
     /// rows) or 5 (int per row) (`Bitmap::todata`).
     #[pyo3(signature = (datatype=1))]
     fn todata<'py>(&self, py: Python<'py>, datatype: i64) -> PyResult<Bound<'py, PyAny>> {
-        if !(0..=5).contains(&datatype) {
-            return Err(PyValueError::new_err(format!(
-                "Unknown datatype {datatype}"
-            )));
-        }
-        v2py(py, &done(self.inner.todata(datatype))?)
+        // Python objects are built straight from the label rows (same values as
+        // `Bitmap::todata`, without an intermediate JSON value).
+        let text = |r: &[u8]| r.iter().map(|v| char::from(b'0' + v)).collect::<String>();
+        let rows = self.inner.label_rows();
+        Ok(match datatype {
+            0 => PyString::new(py, &rows.map(text).collect::<Vec<_>>().join("\n")).into_any(),
+            1 => PyList::new(py, rows.map(text))?.into_any(),
+            2 => PyList::new(
+                py,
+                rows.map(|r| PyList::new(py, r.iter().copied()))
+                    .collect::<PyResult<Vec<_>>>()?,
+            )?
+            .into_any(),
+            3 => PyList::new(py, rows.flatten().copied())?.into_any(),
+            4 => PyList::new(
+                py,
+                rows.map(|r| done(bp::Bitmap::row_number(r, true)))
+                    .collect::<PyResult<Vec<_>>>()?,
+            )?
+            .into_any(),
+            5 => {
+                let int = py.get_type::<PyInt>();
+                let mut out = Vec::new();
+                for r in rows {
+                    out.push(if r.len() <= 64 && !r.contains(&2) {
+                        r.iter()
+                            .fold(0u64, |a, c| a << 1 | u64::from(*c))
+                            .into_pyobject(py)?
+                            .into_any()
+                    } else {
+                        int.call1((done(bp::Bitmap::row_number(r, true))?, 16))?
+                    });
+                }
+                PyList::new(py, out)?.into_any()
+            }
+            _ => {
+                return Err(PyValueError::new_err(format!(
+                    "Unknown datatype {datatype}"
+                )));
+            }
+        })
     }
 
     /// Pillow `Image.frombytes` data for mode `'1'`, `'L'`, `'RGB'` or `'RGBA'`;

@@ -8,6 +8,7 @@ use crate::compat::{RawFont, done, py2obj, v2py};
 use crate::compat_bitmap::Bitmap;
 use fontpixel::compat::bdfparser as bp;
 use pyo3::prelude::*;
+use pyo3::types::{PyDict, PyString};
 use serde_json::Value as V;
 
 /// Glyph metadata snapshot with an optional live attachment.
@@ -49,6 +50,15 @@ impl RawGlyph {
     /// Whether the original slot still exists unreplaced (`Glyph::is_attached`).
     fn is_attached(&self) -> bool {
         self.glyph.is_attached()
+    }
+
+    /// The 17 slots as a dict keyed by `META_TITLES` (`Glyph::meta`).
+    fn meta_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let d = PyDict::new(py);
+        for (k, v) in bp::META_TITLES.iter().zip(self.glyph.meta()) {
+            d.set_item(PyString::intern(py, k), v2py(py, v)?)?;
+        }
+        Ok(d)
     }
 
     /// Code; unencoded glyphs have -1 (`Glyph::cp`).

@@ -7,6 +7,7 @@ use crate::{
     bitmap::{Bitmap as Raster, Mono},
 };
 use serde_json::{Map, Value as V, json};
+use std::rc::Rc;
 
 /// The exact ordering of SPEC-v3's 17 glyph metadata slots.
 pub const META_TITLES: [&str; 17] = [
@@ -45,8 +46,9 @@ pub struct Glyph {
     pub(super) id: Option<GlyphId>,
     pub(super) generation: u64,
     pub(super) ever_attached: bool,
-    pub(super) meta: Meta,
-    pub(super) synced: Meta,
+    /// This handle's snapshot; shared with `synced` until it is edited.
+    pub(super) meta: Rc<Meta>,
+    pub(super) synced: Rc<Meta>,
 }
 impl Clone for Glyph {
     fn clone(&self) -> Self {
@@ -56,7 +58,7 @@ impl Clone for Glyph {
             generation: 0,
             ever_attached: false,
             meta: self.meta.clone(),
-            synced: vec![],
+            synced: Rc::default(),
         }
     }
 }
@@ -72,13 +74,13 @@ impl Glyph {
             id: None,
             generation: 0,
             ever_attached: false,
-            meta,
-            synced: vec![],
+            meta: Rc::new(meta),
+            synced: Rc::default(),
         })
     }
     pub(super) fn attached(font: &Font, id: GlyphId) -> Self {
         let s = font.state.borrow();
-        let m = s.core.glyph(id).map(meta).unwrap_or(vec![V::Null; 17]);
+        let m = Rc::new(s.core().glyph(id).map(meta).unwrap_or(vec![V::Null; 17]));
         Self {
             font: font.shared(),
             id: Some(id),
@@ -91,6 +93,9 @@ impl Glyph {
     /// The metadata snapshot owned by this handle, in SPEC's 17-slot order.
     pub fn meta(&self) -> &Meta {
         &self.meta
+    }
+    fn meta_mut(&mut self) -> &mut Meta {
+        Rc::make_mut(&mut self.meta)
     }
     /// Shared owning font handle (unlike Font::clone, this is not a deep copy).
     pub fn font(&self) -> Font {
@@ -122,7 +127,7 @@ impl Glyph {
             id = next;
             generation = g;
         }
-        s.core.glyph(id).is_some() && s.generations.get(&id) == Some(&generation)
+        s.core().glyph(id).is_some() && s.generations.get(&id) == Some(&generation)
     }
     /// The attached slot, followed through codepoint moves.
     pub(super) fn slot(&mut self) -> Option<GlyphId> {
@@ -149,12 +154,12 @@ impl Glyph {
             .font
             .state
             .borrow()
-            .core
+            .core()
             .glyph(id)
             .map(meta)
             .ok_or_else(|| invalid("missing glyph"))?;
         let oldcp = num(&current[1]);
-        let mut next = self.meta.clone();
+        let mut next = (*self.meta).clone();
         for i in 0..17 {
             if next[i] == self.synced[i] && current[i] != self.synced[i] {
                 next[i] = current[i].clone();
@@ -174,7 +179,7 @@ impl Glyph {
                 .font
                 .state
                 .borrow()
-                .core
+                .core()
                 .glyph(id)
                 .and_then(|g| g.properties.get(crate::formats::x11::ALT))
                 .cloned()
@@ -185,17 +190,17 @@ impl Glyph {
             self.font.state.borrow_mut().codec = None;
             let existing = self.font.id(cp);
             let mut s = self.font.state.borrow_mut();
-            s.core.remove_glyph(id);
+            s.core_mut().remove_glyph(id);
             let old = (id, self.generation);
             if let Some(existing) = existing {
-                s.core.replace_glyph(existing, g)?;
+                s.core_mut().replace_glyph(existing, g)?;
                 s.serial += 1;
                 let generation = s.serial;
                 s.generations.insert(existing, generation);
                 self.id = Some(existing);
                 self.generation = generation;
             } else {
-                let new_id = s.core.add_glyph(g)?;
+                let new_id = s.core_mut().add_glyph(g)?;
                 s.generations.insert(new_id, self.generation);
                 self.id = Some(new_id);
             }
@@ -203,8 +208,13 @@ impl Glyph {
             s.moved
                 .insert(old, (self.id.unwrap_or(id), self.generation));
         } else {
-            self.font.state.borrow_mut().core.replace_glyph(id, g)?;
+            self.font
+                .state
+                .borrow_mut()
+                .core_mut()
+                .replace_glyph(id, g)?;
         }
+        let next = Rc::new(next);
         self.meta = next.clone();
         self.synced = next;
         Ok(())
@@ -331,7 +341,7 @@ impl Glyph {
         }
         for (k, v) in fields {
             if let Some(i) = META_TITLES.iter().position(|t| *t == k) {
-                self.meta[i] = v.clone();
+                self.meta_mut()[i] = v.clone();
             }
         }
         self.sync()?;
@@ -339,12 +349,12 @@ impl Glyph {
     }
     /// Move the glyph's ink offsets in font coordinates.
     pub fn shift(&mut self, x: i64, y: i64) -> Result<&mut Self> {
-        self.meta[4] = json!(
+        self.meta_mut()[4] = json!(
             num(&self.meta[4])
                 .checked_add(x)
                 .ok_or_else(|| invalid("offset overflows"))?
         );
-        self.meta[5] = json!(
+        self.meta_mut()[5] = json!(
             num(&self.meta[5])
                 .checked_add(y)
                 .ok_or_else(|| invalid("offset overflows"))?
@@ -388,11 +398,11 @@ impl Glyph {
                 b = b.crop_bounds(bb)?;
             }
         }
-        self.meta[2] = json!(b.width());
-        self.meta[3] = json!(b.height());
-        self.meta[4] = json!(x);
-        self.meta[5] = json!(y);
-        self.meta[16] = if b.width() == 0 {
+        self.meta_mut()[2] = json!(b.width());
+        self.meta_mut()[3] = json!(b.height());
+        self.meta_mut()[4] = json!(x);
+        self.meta_mut()[5] = json!(y);
+        self.meta_mut()[16] = if b.width() == 0 {
             json!([])
         } else {
             json!(b.to_hex_rows()?)
