@@ -4,7 +4,8 @@
 //!
 //! Type names are Rust paths without the `fontpixel::` prefix
 //! (`"resources::ResourceLimits"`, `"formats::fzx::FzxWriteOptions"`);
-//! `fontpixel_ops` types use the `ops::` prefix (`"ops::RenderRequest"`).
+//! `fontpixel_ops` types keep their crate name (`"fontpixel_ops::RenderRequest"`),
+//! as `SerdeTypes` in the TypeScript types and Python `fontpixel.types.SERDE_TYPES`.
 //! Foundation pilot: a few types covering every plain-data convention
 //! (integer-keyed maps, values beyond 2^53, flattened strict requests); the
 //! formats area extends the table with the generated rows.
@@ -36,8 +37,8 @@ normalize_table! {
     "resources::ResourceLimits" => fontpixel::resources::ResourceLimits,
     #[cfg(any(feature = "all-formats", feature = "merge"))]
     "sfnt::gsub::Gsub" => fontpixel::sfnt::gsub::Gsub,
-    "ops::RenderRequest" => fontpixel_ops::RenderRequest,
-    "ops::TaskRequest" => fontpixel_ops::TaskRequest,
+    "fontpixel_ops::RenderRequest" => fontpixel_ops::RenderRequest,
+    "fontpixel_ops::TaskRequest" => fontpixel_ops::TaskRequest,
 }
 
 /// Validate `value` as the Rust type `typeName` and return its serialized

@@ -130,14 +130,14 @@ test('maps: string-keyed objects; integer keys as decimal strings; Map input', {
 });
 
 test('flattened and tagged requests keep exact numbers and strict keys', () => {
-  const request = fp.normalize('ops::RenderRequest', { input: 'a.bdf', output: 'a.png', text: 'A', line_limit: -5 });
+  const request = fp.normalize('fontpixel_ops::RenderRequest', { input: 'a.bdf', output: 'a.png', text: 'A', line_limit: -5 });
   assert.equal(request.line_limit, -5);
   assert.equal(request.scale, 1);
   assert.throws(
-    () => fp.normalize('ops::RenderRequest', { input: 'a.bdf', output: 'a.png', text: 'A', bogus: 1 }),
+    () => fp.normalize('fontpixel_ops::RenderRequest', { input: 'a.bdf', output: 'a.png', text: 'A', bogus: 1 }),
     /unknown field `bogus`/,
   );
-  const task = fp.normalize('ops::TaskRequest', {
+  const task = fp.normalize('fontpixel_ops::TaskRequest', {
     kind: 'convert',
     inputs: ['a.bdf'],
     output: 'a.pcf',
@@ -146,7 +146,7 @@ test('flattened and tagged requests keep exact numbers and strict keys', () => {
   assert.equal(task.kind, 'convert');
   assert.equal(task.max_total_bytes, 4096);
   assert.equal(task.font_index, null);
-  assert.throws(() => fp.normalize('ops::TaskRequest', { kind: 'teleport' }), fp.InvalidInputError);
+  assert.throws(() => fp.normalize('fontpixel_ops::TaskRequest', { kind: 'teleport' }), fp.InvalidInputError);
 });
 
 test('bytes: Uint8Array, ArrayBuffer and DataView in; Uint8Array out', () => {

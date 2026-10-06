@@ -1839,3 +1839,71 @@ tests and examples excluded):
   build and pass clippy with `-D warnings` (both lines are in
   `scripts/check.sh`); `fontpixel-ops` `fs` (and therefore its default
   feature set) is excluded for the errno reason above.
+
+## 2026-10-06 — WASM binding foundation
+
+**Context:** Phase 8 binds the complete native API to JS/TypeScript
+(`crates/fontpixel-wasm`, npm package `fontpixel`, private) in parallel area
+units. They need one toolchain, package layout and set of conventions first,
+mirroring the Python binding (`crates/fontpixel-py`). Full contract:
+bindings-design.md, "JS/WASM".
+
+**Choices:**
+- Toolchain: `wasm-bindgen = "=0.2.129"`, `js-sys = "=0.3.106"`; wasm-pack
+  0.15 installs the matching CLI from `Cargo.lock`. `--target web` (ESM, works
+  in browsers, workers and Node ≥ 18 through the wrapper's `node:fs` loader).
+  Release builds use fat LTO (environment override for the module build only)
+  and wasm-opt 117 `-Oz` run by `scripts/build_wasm.sh` itself, so the size
+  before and after wasm-opt is recorded in `build-info.json`. Sizes of the
+  foundation build (pilot API): full 9,631,695 bytes (11,405,346 before
+  wasm-opt; ~3.96 MB gzip -9), minimal 1,491,487 (1,885,830), merge recorded in
+  the phase report. Start-up of the full module in Node 24: 16 ms
+  `WebAssembly.compile` + 6 ms instantiate.
+- Plain data does **not** use serde-wasm-bindgen (superseding "Phases 7–9
+  architecture"): its serializer fails for `u64`/`i64` beyond 2^53 and its
+  only alternative turns every `u64`/`usize` into a `BigInt`, and its
+  deserializer cannot read integer map keys from object keys. The bridge is
+  JSON text: `encodePlain` (JS) writes exact integers (bigint digits; an
+  integral number beyond 2^53 as a float, which integer fields reject) and
+  serde_json parses it straight into the type; on the way out a serde_json
+  formatter writes integers beyond 2^53 as marked strings and `JSON.parse`
+  with a reviver makes them bigints (no reviver when there are none). Result:
+  per-value `number`/`bigint`, string-keyed objects for integer maps that
+  round-trip, exact behaviour under the workspace's `arbitrary_precision`
+  (floats are written in the shortest form serde_json treats as exact when the
+  ops requests buffer their fields). Cost on a 38,653-glyph font: `toDict`
+  215 ms, `fromDict` 745 ms (bench/foundation.mjs); bulk work uses handles.
+- Integer parameters are `f64` checked by `conv::int` (wasm-bindgen would wrap
+  `u32` arguments silently); 64-bit parameters accept number or bigint.
+- Errors: classes in `js/errors.js`, imported by the glue via
+  `raw_module = "./errors.js"` and re-exported by `index.js` from the same
+  file (one module instance, so `instanceof` holds). Names, `kind` and fields
+  as in Python, plus `exitCode` and `CancelledError`; `Io` errors of kind
+  `Unsupported` become `UnsupportedError`.
+- Handles: `Rc<RefCell<…>>` with Python's view semantics; methods take `&self`
+  and borrow with `try_borrow*` (re-entrancy → `InvalidInputError`).
+  wasm-bindgen generates `free()`, `[Symbol.dispose]` and a
+  `FinalizationRegistry`; `js/guard.js` turns use-after-free into
+  `InvalidInputError` and makes `free()` idempotent (~10 ns per call).
+- JS callbacks go through thread-local `CallbackScope` tokens, so the same
+  code compiles natively (workspace clippy/tests, where the callback traits
+  keep `Send + Sync`) and on wasm (where unit A dropped the bound). The first
+  exception a callback throws is rethrown unchanged. Async sources:
+  `withAsyncResources` re-runs the deterministic synchronous call until it
+  requests nothing new; no I/O inside synchronous calls.
+- TypeScript: `tools/bindings/gen_dts.py` renders every serde type from
+  `serde_shapes.py` (64-bit fields `WideInt = number | bigint`, maps
+  `Record<string, V>`, byte lists `number[]`) into `ts/types.d.ts`, emitted
+  through `typescript_custom_section`; signatures name them with
+  `unchecked_(optional_)param_type`/`unchecked_return_type`. A `tsc --strict`
+  smoke runs in `scripts/check_wasm.sh`.
+- Coverage: `check.py` reports missing JS entries/tests per language;
+  `gen_formats_coverage.py` derives `js`/`js_test` for the generated format
+  rules; area units fill their own files. At the foundation the `python,js`
+  gate has 2,008 items mapped, 0 unmapped and 1,884 errors (688 rules without
+  a JS entry, 1,196 without an existing JS test), expected until every area
+  lands; `python` alone passes.
+- Pilot API (kept as final API, extended by the areas): `version`,
+  `capabilities`/`requireCapability`, `normalize`/`optionTypes` (a few
+  types), `read`/`Loaded`, `FontSet`/`Font`/`Glyph` basics, `Bitmap` basics,
+  `withAsyncResources`, `init`/`initSync`/`wasmUrl`.
