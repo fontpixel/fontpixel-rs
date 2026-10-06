@@ -25,6 +25,7 @@
 use crate::conv;
 use crate::errors;
 use crate::handles::PyFontSet;
+use crate::resources::{PyOutputBundle, PyResourceSet};
 use fontpixel::Error;
 use fontpixel_ops::batch::{self, BatchRequest, BatchResponse, BatchTask, TaskAction};
 use fontpixel_ops::cli::{Cli, Command};
@@ -37,7 +38,7 @@ use fontpixel_ops::{
 };
 use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;
-use pyo3::types::{PyByteArray, PyBytes, PyDict, PyList, PyMemoryView, PyString, PyTuple};
+use pyo3::types::{PyBytes, PyDict, PyList, PyString, PyTuple};
 use serde::de::DeserializeOwned;
 use serde_json::{Value, json};
 use std::path::PathBuf;
@@ -126,21 +127,6 @@ fn build<T: DeserializeOwned>(
 
 // ---------------------------------------------------------------- storage
 
-/// Bytes of a `bytes`, `bytearray` or `memoryview` value.
-fn bytes_of(value: &Bound<'_, PyAny>) -> PyResult<Vec<u8>> {
-    if let Ok(bytes) = value.cast::<PyBytes>() {
-        return Ok(bytes.as_bytes().to_vec());
-    }
-    if value.is_instance_of::<PyByteArray>() || value.is_instance_of::<PyMemoryView>() {
-        let copy = value.py().get_type::<PyBytes>().call1((value,))?;
-        return Ok(copy.cast::<PyBytes>()?.as_bytes().to_vec());
-    }
-    Err(PyTypeError::new_err(format!(
-        "file contents must be bytes, bytearray or memoryview, not {}",
-        value.get_type().name()?
-    )))
-}
-
 /// A `FileProvider` backed by a Python object with `entry(path)` (returning
 /// `None`, a file length `int`, or `"directory"`), `read(path) -> bytes` and
 /// `list(directory) -> list[str]`. The first exception raised by a callback
@@ -193,7 +179,7 @@ impl FileProvider for PyProvider {
             self.object
                 .bind(py)
                 .call_method1("read", (path,))
-                .and_then(|value| bytes_of(&value))
+                .and_then(|value| crate::bitmap::bytes_arg(&value))
                 .map_err(|error| self.record(error))
         })
     }
@@ -220,14 +206,22 @@ fn storage(files: Option<&Bound<'_, PyAny>>) -> PyResult<(Storage, Option<Arc<Py
         let mut set = MemoryFiles::new();
         for (name, value) in dict.iter() {
             let name: String = os.call_method1("fspath", (name,))?.extract()?;
-            set.insert(name, bytes_of(&value)?);
+            set.insert(name, crate::bitmap::bytes_arg(&value)?);
+        }
+        return Ok((Storage::memory(set), None));
+    }
+    if files.cast::<PyResourceSet>().is_ok() {
+        let mut set = MemoryFiles::new();
+        for name in files.call_method0("paths")?.extract::<Vec<String>>()? {
+            let value = files.call_method1("get", (name.as_str(),))?;
+            set.insert(name, crate::bitmap::bytes_arg(&value)?);
         }
         return Ok((Storage::memory(set), None));
     }
     for method in ["entry", "read", "list"] {
         if !files.hasattr(method)? {
             return Err(PyTypeError::new_err(
-                "files must be None, a dict of name to bytes, or an object with entry/read/list",
+                "files must be None, a dict of name to bytes, a ResourceSet, or an object with entry/read/list",
             ));
         }
     }
@@ -300,6 +294,21 @@ fn outputs_dict<'py>(py: Python<'py>, outputs: &[PreparedOutput]) -> PyResult<Bo
         }
     }
     Ok(dict)
+}
+fn bundles_dict<'py>(py: Python<'py>, outputs: &[PreparedOutput]) -> PyResult<Bound<'py, PyDict>> {
+    let dict = PyDict::new(py);
+    for output in outputs {
+        dict.set_item(
+            fontpixel_ops::memory::key(&output.destination),
+            Py::new(py, PyOutputBundle::new(output.bundle.clone()))?,
+        )?;
+    }
+    Ok(dict)
+}
+/// Plain data through JSON text (serde_json's `arbitrary_precision` makes a
+/// direct `Value` conversion expose its private number representation).
+fn value_to_py<'py>(py: Python<'py>, value: &Value) -> PyResult<Bound<'py, PyAny>> {
+    loads(py, &value.to_string())
 }
 fn loads<'py>(py: Python<'py>, text: &str) -> PyResult<Bound<'py, PyAny>> {
     py.import("json")?.call_method1("loads", (text,))
@@ -421,7 +430,7 @@ impl PyOperationResult {
     /// Typed response fields as plain data (per operation; see the module docs).
     #[getter]
     fn summary<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
-        conv::to_py(py, &self.summary_value()?)
+        value_to_py(py, &self.summary_value()?)
     }
     /// The operation's diagnostics report, or `None` for operations with one
     /// report per output or input (convert, merge, diff, formats).
@@ -443,6 +452,13 @@ impl PyOperationResult {
     #[getter]
     fn outputs<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         outputs_dict(py, &self.outputs)
+    }
+    /// Every prepared output as `{destination key: fontpixel.OutputBundle}`
+    /// (memory mode; the bundle holds the primary asset and its sidecars or
+    /// directory members, with paths relative to the destination's parent).
+    #[getter]
+    fn bundles<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        bundles_dict(py, &self.outputs)
     }
     /// The requested entry-point destination of each prepared output.
     #[getter]
@@ -530,7 +546,7 @@ impl PyBatchResult {
                 })
             })
             .collect();
-        conv::to_py(py, &tasks)
+        value_to_py(py, &Value::Array(tasks))
     }
     /// The complete batch JSON document exactly as `fontpixel batch` prints it.
     fn json(&self) -> String {
@@ -545,6 +561,12 @@ impl PyBatchResult {
     #[getter]
     fn outputs<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
         outputs_dict(py, &self.response.outputs)
+    }
+    /// Committed outputs as `{destination key: fontpixel.OutputBundle}`
+    /// (memory mode only).
+    #[getter]
+    fn bundles<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        bundles_dict(py, &self.response.outputs)
     }
     fn __repr__(&self) -> String {
         format!(
@@ -867,7 +889,7 @@ fn parse_batch_toml<'py>(
             Ok(value)
         })
         .collect::<PyResult<Vec<_>>>()?;
-    conv::to_py(
+    value_to_py(
         py,
         &json!({
             "jobs": request.jobs,
@@ -970,7 +992,7 @@ fn describe<'py>(
         value["declared_inputs"] = json!(task.declared_inputs());
         value["weight"] = json!(task.weight());
     }
-    conv::to_py(py, &value)
+    value_to_py(py, &value)
 }
 
 /// Parse a `fontpixel` command line (without the program name) with the
