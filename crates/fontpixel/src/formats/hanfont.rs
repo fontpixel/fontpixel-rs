@@ -16,6 +16,8 @@ use support::*;
 
 /// Explicit native component arrangement; no filename/length guessing.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Layout {
     /// 8×20 initials, 4×22 vowels, 4×28 finals; sixteen-square packed rasters.
     #[default]
@@ -23,6 +25,8 @@ pub enum Layout {
 }
 /// Model projection of a native component font.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ReadMode {
     /// All 11,172 modern syllables, retaining the native component byte record.
     #[default]
@@ -32,6 +36,8 @@ pub enum ReadMode {
 }
 /// Explicit layout and requested projection.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HanfontReadOptions {
     /// Native layout.
     pub layout: Layout,
@@ -40,6 +46,8 @@ pub struct HanfontReadOptions {
 }
 /// Native component output; no inferred inverse decomposition is performed.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HanfontWriteOptions {
     /// Native layout.
     pub layout: Layout,
@@ -62,6 +70,8 @@ impl Default for HanfontWriteOptions {
 }
 /// Strongly typed registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HanfontCodec {
     /// Input interpretation.
     pub read_options: HanfontReadOptions,
@@ -307,4 +317,22 @@ pub fn write(s: &FontSet, o: &HanfontWriteOptions) -> Result<(Vec<u8>, Report)> 
         compare(s, &decoded, "hanfont", &mut b, &mut report)?;
     }
     Ok((data, report))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Layout::Johab844), "johab844");
+        rejects::<Layout>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&ReadMode::Syllables), "syllables");
+        assert_eq!(round_trip(&ReadMode::Components), "components");
+        rejects::<ReadMode>(r#""not_a_variant""#);
+        defaults::<HanfontReadOptions>();
+        defaults::<HanfontWriteOptions>();
+        defaults::<HanfontCodec>();
+    }
 }

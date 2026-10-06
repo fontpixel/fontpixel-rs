@@ -8,6 +8,8 @@ use crate::{Report, ReportEntry, ResourceLimits, Result};
 /// Raster orientation in the physical printer coordinate system.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 #[repr(u8)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum HppclOrientation {
     /// Zero degrees.
     #[default]
@@ -21,6 +23,8 @@ pub enum HppclOrientation {
 }
 /// Raster encoding.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum HppclCompression {
     /// Class 1 byte-padded raster rows.
     #[default]
@@ -30,6 +34,8 @@ pub enum HppclCompression {
 }
 /// Input compatibility policy.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HppclReadOptions {
     /// Accept the historical monobit writer's 16-byte descriptor-size field
     /// when an exact class-1 payload proves its actual descriptor is 14 bytes.
@@ -37,6 +43,8 @@ pub struct HppclReadOptions {
 }
 /// Native bounded output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HppclWriteOptions {
     /// Physical raster orientation.
     pub orientation: HppclOrientation,
@@ -74,6 +82,8 @@ impl Default for HppclWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HppclCodec {
     /// Input interpretation.
     pub read_options: HppclReadOptions,
@@ -866,4 +876,31 @@ pub(crate) fn encode(
         }
     }
     Ok(out)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&HppclOrientation::Portrait), "portrait");
+        assert_eq!(round_trip(&HppclOrientation::Landscape), "landscape");
+        assert_eq!(
+            round_trip(&HppclOrientation::ReversePortrait),
+            "reverse_portrait"
+        );
+        assert_eq!(
+            round_trip(&HppclOrientation::ReverseLandscape),
+            "reverse_landscape"
+        );
+        rejects::<HppclOrientation>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&HppclCompression::Raw), "raw");
+        assert_eq!(round_trip(&HppclCompression::Rle), "rle");
+        rejects::<HppclCompression>(r#""not_a_variant""#);
+        defaults::<HppclReadOptions>();
+        defaults::<HppclWriteOptions>();
+        defaults::<HppclCodec>();
+    }
 }

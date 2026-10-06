@@ -6,9 +6,13 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// HMZK has one native wire layout.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HmzkReadOptions {}
 /// Explicit coverage reduction and cumulative output limits.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HmzkWriteOptions {
     /// Grayscale-to-monochrome threshold; absent means no implicit conversion.
     pub gray_threshold: Option<u8>,
@@ -123,4 +127,16 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &HmzkWriteOptions) -> Result<Writ
         Ok(OutputBundle::single(o.primary_name.clone(), b))
     })();
     finish(result, report, "hmzk", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<HmzkReadOptions>();
+        defaults::<HmzkWriteOptions>();
+    }
 }

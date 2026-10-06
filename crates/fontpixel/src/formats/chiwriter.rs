@@ -8,6 +8,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ReportEntry, ResourceLimits, Result};
 /// Width-directory generation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ChiwriterVersion {
     /// The original 94-entry width directory at byte 250.
     V3,
@@ -17,6 +19,8 @@ pub enum ChiwriterVersion {
 }
 /// Explicit interpretation of compatible bitmap directories.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ChiwriterLayout {
     /// ChiWriter stores equal-sized records consecutively.
     #[default]
@@ -28,6 +32,8 @@ pub enum ChiwriterLayout {
 }
 /// Input interpretation. Compatible offset origins are never guessed.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ChiwriterReadOptions {
     /// Override the width-table generation.
     pub version: Option<ChiwriterVersion>,
@@ -38,6 +44,8 @@ pub struct ChiwriterReadOptions {
 }
 /// Native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ChiwriterWriteOptions {
     /// Width-table generation.
     pub version: ChiwriterVersion,
@@ -84,6 +92,8 @@ impl Default for ChiwriterWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ChiwriterCodec {
     /// Input choices.
     pub read_options: ChiwriterReadOptions,
@@ -494,4 +504,30 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &ChiwriterWriteOptions) -> Result
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
     finish(result, report, "chiwriter", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&ChiwriterVersion::V3), "v3");
+        assert_eq!(round_trip(&ChiwriterVersion::V4), "v4");
+        rejects::<ChiwriterVersion>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&ChiwriterLayout::Contiguous), "contiguous");
+        assert_eq!(
+            round_trip(&ChiwriterLayout::AbsoluteOffsets),
+            "absolute_offsets"
+        );
+        assert_eq!(
+            round_trip(&ChiwriterLayout::RelativeOffsets),
+            "relative_offsets"
+        );
+        rejects::<ChiwriterLayout>(r#""not_a_variant""#);
+        defaults::<ChiwriterReadOptions>();
+        defaults::<ChiwriterWriteOptions>();
+        defaults::<ChiwriterCodec>();
+    }
 }

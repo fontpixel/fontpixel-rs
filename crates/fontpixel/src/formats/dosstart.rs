@@ -7,9 +7,13 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, Result};
 /// Typed dosstart input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DosstartReadOptions {}
 /// Native dosstart registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DosstartCodec {
     /// Input profile choices.
     pub read_options: DosstartReadOptions,
@@ -42,4 +46,16 @@ pub fn read(c: &mut ReadContext<'_>, _options: &DosstartReadOptions) -> Result<(
 /// Encode one font, auditing every changed or omitted model field.
 pub fn write(s: &FontSet, o: &WriteOptions, p: &DosstartWriteOptions) -> Result<Written> {
     w5a1_common::write(s, o, p, "dosstart")
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<DosstartReadOptions>();
+        defaults::<DosstartCodec>();
+    }
 }

@@ -12,6 +12,8 @@ use std::fmt::Write as _;
 
 /// Terminal profile governing omitted DECDLD dimensions and legal matrices.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Terminal {
     /// VT320: default 15 by 12 (9 by 12 in 132-column mode).
     #[default]
@@ -21,6 +23,8 @@ pub enum Terminal {
 }
 /// Downloaded character-set size. Codes remain legacy graphic-set positions.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DrcsCharset {
     /// Positions 0x21 through 0x7e.
     #[default]
@@ -30,6 +34,8 @@ pub enum DrcsCharset {
 }
 /// DRCS reading interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DrcsReadOptions {
     /// Terminal profile; dimensions cannot be inferred from omitted parameters.
     pub terminal: Terminal,
@@ -38,6 +44,8 @@ pub struct DrcsReadOptions {
 }
 /// Bounded DRCS writer options.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DrcsWriteOptions {
     /// Terminal profile limiting downloadable matrices.
     pub terminal: Terminal,
@@ -69,6 +77,8 @@ impl Default for DrcsWriteOptions {
 }
 /// Native DRCS codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DrcsCodec {
     /// Reader interpretation.
     pub read_options: DrcsReadOptions,
@@ -809,4 +819,23 @@ pub fn write(set: &FontSet, o: &DrcsWriteOptions) -> Result<(Vec<u8>, Report)> {
         }
     }
     Ok((out, r))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Terminal::Vt320), "vt320");
+        assert_eq!(round_trip(&Terminal::Vt510), "vt510");
+        rejects::<Terminal>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&DrcsCharset::NinetyFour), "ninety_four");
+        assert_eq!(round_trip(&DrcsCharset::NinetySix), "ninety_six");
+        rejects::<DrcsCharset>(r#""not_a_variant""#);
+        defaults::<DrcsReadOptions>();
+        defaults::<DrcsWriteOptions>();
+        defaults::<DrcsCodec>();
+    }
 }

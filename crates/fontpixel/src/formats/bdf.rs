@@ -24,6 +24,8 @@ pub use crate::formats::x11::{source_rows, validate_bitmap};
 
 /// BDF-specific output choices. Mono is lossless; Gray8 conversion is explicit.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BdfWriteOptions {
     /// Threshold for Gray8 conversion (ink >= threshold); None refuses Gray8.
     pub gray_threshold: Option<u8>,
@@ -41,6 +43,8 @@ impl Default for BdfWriteOptions {
 
 /// Actual BDF detector/reader/writer used by the built-in registry.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BdfCodec {
     /// Options for registry-driven writes; direct callers may use `write`.
     pub write_options: BdfWriteOptions,
@@ -226,4 +230,16 @@ fn nonprintable(c: char) -> bool {
     let ranges = nonprintable::NONPRINTABLE;
     let i = ranges.partition_point(|&(start, _)| start <= n);
     i > 0 && n <= ranges[i - 1].1
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<BdfWriteOptions>();
+        defaults::<BdfCodec>();
+    }
 }

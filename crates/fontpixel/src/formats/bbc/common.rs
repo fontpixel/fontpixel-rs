@@ -19,6 +19,8 @@ pub(super) use crate::{Report, ResourceLimits, Result};
 use std::collections::BTreeMap;
 /// Interpretation of native legacy cell positions.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NativeReadOptions {
     /// Baseline below the top; default places the baseline at the cell bottom.
     pub baseline: Option<i64>,
@@ -27,6 +29,8 @@ pub struct NativeReadOptions {
 }
 /// Explicit native-cell output projection.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct NativeWriteOptions {
     /// Optional output cell rectangle in model coordinates.
     pub cell: Option<Bounds>,
@@ -257,4 +261,16 @@ pub(super) fn source_for(
 pub(super) fn output_check(n: usize, l: &ResourceLimits, b: &mut Budget) -> Result<()> {
     check(n, l.max_input_bytes, "native output readback input bytes")?;
     b.add(n.saturating_mul(2))
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<NativeReadOptions>();
+        defaults::<NativeWriteOptions>();
+    }
 }

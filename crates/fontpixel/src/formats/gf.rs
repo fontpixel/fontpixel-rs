@@ -9,6 +9,8 @@ pub use reader::read;
 pub use writer::write;
 /// Registry codec for GF fonts.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GfCodec {
     /// Typed TeX output choices.
     pub write_options: GfWriteOptions,
@@ -56,5 +58,16 @@ pub fn detect(b: &[u8]) -> Confidence {
         Confidence::Certain
     } else {
         Confidence::NoMatch
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<GfCodec>();
     }
 }

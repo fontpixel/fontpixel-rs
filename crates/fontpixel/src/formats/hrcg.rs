@@ -8,6 +8,8 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::resources::{OutputBundle, ReadContext, Written};
 /// Native hrcg codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct HrcgCodec {
     /// Reader interpretation.
     pub read_options: HrcgReadOptions,
@@ -134,4 +136,15 @@ fn encode(f: &Font, o: &HrcgWriteOptions, b: &mut Budget) -> Result<Vec<u8>> {
         }
     }
     Ok(out)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<HrcgCodec>();
+    }
 }

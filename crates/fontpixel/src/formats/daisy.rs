@@ -7,6 +7,8 @@ use crate::resources::{OutputAsset, OutputBundle, ReadContext, ResourcePath, Wri
 use crate::{Report, ResourceLimits, Result};
 /// Daisy-Dot file generation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DaisyVersion {
     /// Daisy-Dot I/II, sixteen rows.
     V2,
@@ -18,12 +20,16 @@ pub enum DaisyVersion {
 }
 /// Read interpretation; no filesystem search is performed.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DaisyReadOptions {
     /// Require a particular generation.
     pub version: Option<DaisyVersion>,
 }
 /// Explicit bounded output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DaisyWriteOptions {
     /// Output generation.
     pub version: DaisyVersion,
@@ -58,6 +64,8 @@ impl Default for DaisyWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DaisyCodec {
     /// Reading options.
     pub read_options: DaisyReadOptions,
@@ -488,4 +496,21 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &DaisyWriteOptions) -> Result<Wri
         OutputBundle::new(o.primary_name.clone(), assets)
     })();
     finish(result, report, "daisy", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&DaisyVersion::V2), "v2");
+        assert_eq!(round_trip(&DaisyVersion::V3), "v3");
+        assert_eq!(round_trip(&DaisyVersion::Magnified), "magnified");
+        rejects::<DaisyVersion>(r#""not_a_variant""#);
+        defaults::<DaisyReadOptions>();
+        defaults::<DaisyWriteOptions>();
+        defaults::<DaisyCodec>();
+    }
 }

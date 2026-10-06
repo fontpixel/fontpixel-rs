@@ -12,6 +12,8 @@ pub use writer::write;
 
 /// Windows raster font version.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// Windows 1.x shared row-major strike.
     One,
@@ -47,6 +49,8 @@ impl Version {
 }
 /// FNT/FON read interpretation; bytes always remain legacy glyph codes.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FntReadOptions {
     /// Explicit encoding for OEM, symbol, unknown or historical ANSI charsets.
     /// It labels legacy codes and does not change their numbers.
@@ -54,6 +58,8 @@ pub struct FntReadOptions {
 }
 /// Bounded deterministic FNT output.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FntWriteOptions {
     /// None preserves a source FNT version, otherwise defaults to version 2.
     pub version: Option<Version>,
@@ -82,6 +88,8 @@ impl Default for FntWriteOptions {
 }
 /// Configurable registry implementation for Windows raster fonts.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FntCodec {
     /// Legacy encoding interpretation.
     pub read_options: FntReadOptions,
@@ -175,4 +183,21 @@ pub fn charset_name(id: u8) -> Option<&'static str> {
 /// Decode with default charset interpretation and explicit resource limits.
 pub fn read_default(bytes: &[u8], limits: &ResourceLimits) -> Result<(Font, Report)> {
     read(bytes, &FntReadOptions::default(), limits)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Version::One), "one");
+        assert_eq!(round_trip(&Version::Two), "two");
+        assert_eq!(round_trip(&Version::Three), "three");
+        rejects::<Version>(r#""not_a_variant""#);
+        defaults::<FntReadOptions>();
+        defaults::<FntWriteOptions>();
+        defaults::<FntCodec>();
+    }
 }

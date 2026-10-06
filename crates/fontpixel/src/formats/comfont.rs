@@ -5,6 +5,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 mod stubs;
 /// Historical loader envelope, independent from font payload contents.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ComfontVariant {
     /// PC Magazine FONTEDIT wrapper.
     Fontedit,
@@ -24,6 +26,8 @@ pub enum ComfontVariant {
 }
 /// CP/M machine whose documented native font memory is installed.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CpmTarget {
     /// Amstrad PCW screen environment, B800h.
     #[default]
@@ -35,6 +39,8 @@ pub enum CpmTarget {
 }
 /// Native payload interpretation; no input executable is run.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ComfontReadOptions {
     /// Require an envelope variant; default checks signatures.
     pub variant: Option<ComfontVariant>,
@@ -45,6 +51,8 @@ pub struct ComfontReadOptions {
 }
 /// Original executable output profile.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ComfontWriteOptions {
     /// Historical envelope.
     pub variant: ComfontVariant,
@@ -71,6 +79,8 @@ impl ComfontWriteOptions {
 }
 /// Native executable font codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ComfontCodec {
     /// Input choices.
     pub read_options: ComfontReadOptions,
@@ -326,4 +336,29 @@ pub fn write(s: &FontSet, o: &WriteOptions, p: &ComfontWriteOptions) -> Result<W
         Ok(OutputBundle::single(o.primary_name.clone(), bytes))
     })();
     finish(result, report, "comfont", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&ComfontVariant::Fontedit), "fontedit");
+        assert_eq!(round_trip(&ComfontVariant::Frapt), "frapt");
+        assert_eq!(round_trip(&ComfontVariant::FraptTsr), "frapt_tsr");
+        assert_eq!(round_trip(&ComfontVariant::Letafont), "letafont");
+        assert_eq!(round_trip(&ComfontVariant::Mania), "mania");
+        assert_eq!(round_trip(&ComfontVariant::Psfcom), "psfcom");
+        assert_eq!(round_trip(&ComfontVariant::Udg), "udg");
+        rejects::<ComfontVariant>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&CpmTarget::Pcw), "pcw");
+        assert_eq!(round_trip(&CpmTarget::Cpc), "cpc");
+        assert_eq!(round_trip(&CpmTarget::Spectrum), "spectrum");
+        rejects::<CpmTarget>(r#""not_a_variant""#);
+        defaults::<ComfontReadOptions>();
+        defaults::<ComfontWriteOptions>();
+        defaults::<ComfontCodec>();
+    }
 }

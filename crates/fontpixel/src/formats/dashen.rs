@@ -8,6 +8,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ReportEntry, ResourceLimits, Result};
 /// The observed three-byte character-header profiles.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum DashenVersion {
     /// Screen font, optionally followed by a code map.
     #[default]
@@ -17,6 +19,8 @@ pub enum DashenVersion {
 }
 /// Explicit input choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DashenReadOptions {
     /// Require a particular observed generation.
     pub version: Option<DashenVersion>,
@@ -25,6 +29,8 @@ pub struct DashenReadOptions {
 }
 /// Native output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DashenWriteOptions {
     /// Screen-only or combined screen/printer profile.
     pub version: DashenVersion,
@@ -59,6 +65,8 @@ impl Default for DashenWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct DashenCodec {
     /// Input choices.
     pub read_options: DashenReadOptions,
@@ -402,4 +410,20 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &DashenWriteOptions) -> Result<Wr
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
     finish(result, report, "dashen", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&DashenVersion::V3), "v3");
+        assert_eq!(round_trip(&DashenVersion::V4), "v4");
+        rejects::<DashenVersion>(r#""not_a_variant""#);
+        defaults::<DashenReadOptions>();
+        defaults::<DashenWriteOptions>();
+        defaults::<DashenCodec>();
+    }
 }

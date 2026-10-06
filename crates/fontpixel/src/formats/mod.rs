@@ -153,6 +153,39 @@ pub mod svg;
 #[path = "pk/common.rs"]
 pub(crate) mod tex_common;
 mod transport;
+#[cfg(all(test, feature = "serde"))]
+pub(crate) mod serde_test {
+    //! Shared checks for the serde forms of typed options.
+    use serde::{Serialize, de::DeserializeOwned};
+    use serde_json::Value;
+
+    /// Serialize `value`, deserialize it back, and require the same JSON.
+    pub(crate) fn round_trip<T: Serialize + DeserializeOwned>(value: &T) -> Value {
+        let json = serde_json::to_value(value).expect("serialize");
+        let back: T = serde_json::from_value(json.clone()).expect("deserialize");
+        assert_eq!(serde_json::to_value(&back).expect("reserialize"), json);
+        json
+    }
+
+    /// `T::default()` round-trips, an empty object means the default, and an
+    /// unknown field is rejected.
+    pub(crate) fn defaults<T: Serialize + DeserializeOwned + Default>() -> Value {
+        let json = round_trip(&T::default());
+        let empty: T = serde_json::from_str("{}").expect("empty object");
+        assert_eq!(serde_json::to_value(&empty).expect("serialize"), json);
+        rejects::<T>(r#"{"not_a_field":1}"#);
+        json
+    }
+
+    /// The JSON text must not deserialize as `T`.
+    pub(crate) fn rejects<T: DeserializeOwned>(text: &str) {
+        assert!(
+            serde_json::from_str::<T>(text).is_err(),
+            "{} accepted {text}",
+            std::any::type_name::<T>()
+        );
+    }
+}
 #[cfg(feature = "vector-raster")]
 pub mod vector_raster;
 #[cfg(any(feature = "pf2", feature = "fontx2", feature = "hzk"))]
@@ -727,6 +760,8 @@ pub struct FormatStatus {
 
 /// Increasing strength of structural evidence, with filename hints below content.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Confidence {
     /// No content evidence.
     NoMatch,
@@ -740,6 +775,7 @@ pub enum Confidence {
 
 /// Successful detection, explicitly preserving the strength of its evidence.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct Detected {
     /// Selected format.
     pub format: FormatInfo,
@@ -749,6 +785,8 @@ pub struct Detected {
 
 /// Common options; each implemented format will add strongly typed options.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ReadOptions {
     /// Explicit ID bypassing auto-detection.
     pub format: Option<String>,
@@ -758,8 +796,12 @@ pub struct ReadOptions {
 
 /// Common write options. Format-specific options belong to later format modules.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct WriteOptions {
     /// Refuse to return assets if the combined read/write report has loss.
+    /// Omitted in serialized form means `false`, as in [`WriteOptions::new`].
+    #[cfg_attr(feature = "serde", serde(default))]
     pub strict: bool,
     /// Primary relative output name; codecs may add sibling/nested sidecars.
     pub primary_name: ResourcePath,
@@ -792,6 +834,7 @@ impl WriteOptions {
 
 /// A decoded model and all read diagnostics.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct Loaded<M> {
     /// Decoded model (`FontSet` for the built-in font registry).
     pub fonts: M,
@@ -2089,3 +2132,61 @@ pub mod xerox;
 
 #[cfg(feature = "ssfn")]
 pub mod ssfn;
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::serde_test::{defaults, rejects, round_trip};
+    use super::*;
+
+    #[test]
+    fn common_options_serde_defaults_and_rejections() {
+        let read = defaults::<ReadOptions>();
+        assert_eq!(read["format"], serde_json::Value::Null);
+        let read: ReadOptions =
+            serde_json::from_str(r#"{"format":"bdf","limits":{"max_glyphs":7}}"#).unwrap();
+        assert_eq!(read.format.as_deref(), Some("bdf"));
+        assert_eq!(read.limits.max_glyphs, 7);
+        assert_eq!(
+            read.limits.max_input_bytes,
+            ResourceLimits::default().max_input_bytes
+        );
+        rejects::<ReadOptions>(r#"{"limits":{"max_glyphs":-1}}"#);
+
+        let write = WriteOptions::new(ResourcePath::new("out/font.bdf").unwrap());
+        let json = round_trip(&write);
+        assert_eq!(json["primary_name"], "out/font.bdf");
+        let parsed: WriteOptions = serde_json::from_str(r#"{"primary_name":"a.bdf"}"#).unwrap();
+        assert!(!parsed.strict);
+        assert!(parsed.transport_limits.is_none());
+        rejects::<WriteOptions>("{}");
+        rejects::<WriteOptions>(r#"{"primary_name":"../a.bdf"}"#);
+        rejects::<WriteOptions>(r#"{"primary_name":"a.bdf","bogus":true}"#);
+
+        assert_eq!(round_trip(&Confidence::NoMatch), "no_match");
+        assert_eq!(round_trip(&Confidence::Extension), "extension");
+        assert_eq!(round_trip(&Confidence::Possible), "possible");
+        assert_eq!(round_trip(&Confidence::Certain), "certain");
+        rejects::<Confidence>(r#""sure""#);
+    }
+
+    #[test]
+    fn descriptors_keep_their_serialized_form() {
+        let info = FormatInfo {
+            id: "bdf",
+            name: "BDF",
+            extensions: &["bdf"],
+            feature_enabled: true,
+        };
+        let detected = Detected {
+            format: info,
+            confidence: Confidence::Possible,
+        };
+        assert_eq!(
+            serde_json::to_value(detected).unwrap(),
+            serde_json::json!({
+                "format": {"id": "bdf", "name": "BDF", "extensions": ["bdf"], "feature_enabled": true},
+                "confidence": "possible"
+            })
+        );
+    }
+}

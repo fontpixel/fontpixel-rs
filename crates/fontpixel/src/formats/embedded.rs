@@ -31,6 +31,8 @@ pub use metadata::{
 
 /// Options for bitmap FontSet extraction.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct EmbeddedReadOptions {
     /// All sfnt, expansion and image budgets.
     pub limits: sbit::Limits,
@@ -41,6 +43,8 @@ pub struct EmbeddedReadOptions {
 }
 /// Options for native OTB/bdat output.
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct EmbeddedWriteOptions {
     /// All table, bitmap, glyph and output budgets.
     pub limits: sbit::Limits,
@@ -59,6 +63,8 @@ pub struct EmbeddedWriteOptions {
 }
 /// Source of shared design metrics for native OTB/bdat output.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedReferenceStrike {
     /// Use the first source strike, then original input order for missing glyphs.
     #[default]
@@ -71,6 +77,8 @@ pub enum EmbeddedReferenceStrike {
 }
 /// Rounding of signed pixel metrics scaled into design units.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum EmbeddedRounding {
     /// Nearest integer; exact halfway values go away from zero (existing default).
     #[default]
@@ -162,6 +170,8 @@ fn round_design(numerator: i128, denominator: i128, rounding: EmbeddedRounding) 
 /// Native color bitmap container, with black RGB and exact coverage alpha.
 #[cfg(feature = "color")]
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum ColorFlavor {
     /// CBDT/CBLC version 3, with exact per-strike pixel metrics.
     #[default]
@@ -172,23 +182,32 @@ pub enum ColorFlavor {
 /// Options for native color bitmap output.
 #[cfg(feature = "color")]
 #[derive(Clone, Debug, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ColorWriteOptions {
     /// Table, PNG, model, output and native readback budgets.
     pub limits: sbit::Limits,
     /// Output table family. The default is CBDT/CBLC.
     pub flavor: ColorFlavor,
 }
-/// Feature-selected registry hooks for all three embedded families.
+/// Feature-selected registry hooks for all three embedded families. In serde
+/// form only `kind` is required; omitted options take their defaults, as in
+/// [`EmbeddedCodec::new`].
 #[derive(Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct EmbeddedCodec {
     /// The intended bitmap table family.
     pub kind: sbit::Kind,
     /// Detailed extraction choices.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub read_options: EmbeddedReadOptions,
     /// Detailed OTB/bdat output choices.
+    #[cfg_attr(feature = "serde", serde(default))]
     pub write_options: EmbeddedWriteOptions,
     /// Color container choice and budgets.
     #[cfg(feature = "color")]
+    #[cfg_attr(feature = "serde", serde(default))]
     pub color_write_options: ColorWriteOptions,
 }
 impl EmbeddedCodec {
@@ -3136,5 +3155,57 @@ mod color_ledger_tests {
                 write(&set, flavor, ModelCharge::Reserved, reserved).unwrap(),
             );
         }
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<EmbeddedReadOptions>();
+        defaults::<EmbeddedWriteOptions>();
+        assert_eq!(round_trip(&EmbeddedReferenceStrike::First), "first");
+        assert_eq!(
+            round_trip(&EmbeddedReferenceStrike::LargestPpem),
+            "largest_ppem"
+        );
+        rejects::<EmbeddedReferenceStrike>(r#""not_a_variant""#);
+        assert_eq!(
+            round_trip(&EmbeddedRounding::NearestTiesAwayFromZero),
+            "nearest_ties_away_from_zero"
+        );
+        assert_eq!(
+            round_trip(&EmbeddedRounding::NearestTiesEven),
+            "nearest_ties_even"
+        );
+        rejects::<EmbeddedRounding>(r#""not_a_variant""#);
+        assert_eq!(
+            round_trip(&EmbeddedReferenceStrike::Index(2)),
+            serde_json::json!({"index": 2})
+        );
+        rejects::<EmbeddedReferenceStrike>(r#"{"index":-1}"#);
+        let codec = round_trip(&EmbeddedCodec::new(sbit::Kind::OpenType));
+        assert!(codec.get("kind").is_some());
+        rejects::<EmbeddedCodec>("{}");
+        // `Kind`'s own wire form belongs to the sfnt module.
+        let kind = serde_json::to_value(sbit::Kind::Apple).unwrap();
+        let parsed: EmbeddedCodec =
+            serde_json::from_value(serde_json::json!({ "kind": kind })).unwrap();
+        assert_eq!(parsed.kind, sbit::Kind::Apple);
+        assert_eq!(
+            serde_json::to_value(&parsed.write_options).unwrap(),
+            serde_json::to_value(EmbeddedWriteOptions::default()).unwrap()
+        );
+        #[cfg(feature = "color")]
+        assert_eq!(round_trip(&ColorFlavor::Cbdt), "cbdt");
+        #[cfg(feature = "color")]
+        assert_eq!(round_trip(&ColorFlavor::Sbix), "sbix");
+        #[cfg(feature = "color")]
+        rejects::<ColorFlavor>(r#""not_a_variant""#);
+        #[cfg(feature = "color")]
+        defaults::<ColorWriteOptions>();
     }
 }

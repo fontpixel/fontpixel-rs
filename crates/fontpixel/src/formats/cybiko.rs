@@ -6,9 +6,13 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Report, ResourceLimits, Result};
 /// Native Cybiko byte positions remain Legacy mappings.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CybikoReadOptions {}
 /// Bounded Cybiko output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CybikoWriteOptions {
     /// Permit numerical Unicode-to-native byte mapping.
     pub unicode_as_legacy: bool,
@@ -217,4 +221,16 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &CybikoWriteOptions) -> Result<Wr
         Ok(OutputBundle::single(o.primary_name.clone(), b))
     })();
     finish(result, report, "cybiko", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<CybikoReadOptions>();
+        defaults::<CybikoWriteOptions>();
+    }
 }

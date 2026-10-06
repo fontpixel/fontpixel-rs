@@ -13,9 +13,13 @@ fn required() -> impl Iterator<Item = i32> {
 }
 /// FIGfont reader choices; non-space bytes always project to ink.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FigletReadOptions {}
 /// Bounded FIGfont bitmap output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FigletWriteOptions {
     /// Override common cell height; otherwise infer it from line height and glyphs.
     pub height: Option<u32>,
@@ -44,6 +48,8 @@ impl Default for FigletWriteOptions {
 }
 /// Registry codec for FIGfont v2.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct FigletCodec {
     /// Typed input choices.
     pub read_options: FigletReadOptions,
@@ -626,4 +632,17 @@ pub fn write(s: &FontSet, o: &WriteOptions, v: &FigletWriteOptions) -> Result<Wr
         Ok(OutputBundle::single(o.primary_name.clone(), out))
     })();
     finish(result, report, "figlet", o.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<FigletReadOptions>();
+        defaults::<FigletWriteOptions>();
+        defaults::<FigletCodec>();
+    }
 }

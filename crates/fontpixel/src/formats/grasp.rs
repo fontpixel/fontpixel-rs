@@ -8,6 +8,8 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::resources::{OutputBundle, ReadContext, Written};
 /// Native grasp codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GraspCodec {
     /// Reader interpretation.
     pub read_options: GraspReadOptions,
@@ -135,4 +137,15 @@ fn encode(f: &Font, o: &GraspWriteOptions, b: &mut Budget) -> Result<Vec<u8>> {
         );
     }
     Ok(out)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<GraspCodec>();
+    }
 }

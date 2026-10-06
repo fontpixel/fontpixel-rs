@@ -7,6 +7,8 @@ use crate::resources::{OutputBundle, ReadContext, Written};
 use crate::{Error, Report, ResourceLimits, Result};
 /// Character-table layout.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CodeMode {
     /// Select from mapped code widths, retaining a native source's layout.
     #[default]
@@ -18,12 +20,16 @@ pub enum CodeMode {
 }
 /// Reader charset declaration; source codes are always retained as Legacy.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Fontx2ReadOptions {
     /// Explicit charset override. Defaults to Shift-JIS for DBCS and unknown ANK.
     pub charset: Option<String>,
 }
 /// Bounded, deterministic writer configuration.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Fontx2WriteOptions {
     /// Single-byte, double-byte or automatic selection.
     pub mode: CodeMode,
@@ -55,6 +61,8 @@ impl Default for Fontx2WriteOptions {
 }
 /// Native registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct Fontx2Codec {
     /// Reader charset declaration.
     pub read_options: Fontx2ReadOptions,
@@ -522,5 +530,22 @@ pub fn write(f: &Font, o: &Fontx2WriteOptions) -> Result<(Vec<u8>, Report)> {
 fn encode_name(s: &str, out: &mut [u8; 8]) {
     for (dst, c) in out.iter_mut().zip(s.chars()) {
         *dst = u8::try_from(c as u32).unwrap_or(b'?');
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&CodeMode::Auto), "auto");
+        assert_eq!(round_trip(&CodeMode::SingleByte), "single_byte");
+        assert_eq!(round_trip(&CodeMode::DoubleByte), "double_byte");
+        rejects::<CodeMode>(r#""not_a_variant""#);
+        defaults::<Fontx2ReadOptions>();
+        defaults::<Fontx2WriteOptions>();
+        defaults::<Fontx2Codec>();
     }
 }

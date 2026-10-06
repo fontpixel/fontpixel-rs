@@ -9,6 +9,8 @@ use crate::{Report, ResourceLimits, Result};
 
 /// Explicit GEM input interpretation.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GemReadOptions {
     /// Integer order; absent requires unique structural detection.
     pub byte_order: Option<ByteOrder>,
@@ -17,6 +19,8 @@ pub struct GemReadOptions {
 }
 /// Bounded GEM output choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GemWriteOptions {
     /// Integer byte order, default Motorola big endian.
     pub byte_order: ByteOrder,
@@ -45,6 +49,8 @@ impl Default for GemWriteOptions {
 }
 /// Registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct GemCodec {
     /// Reader interpretation.
     pub read_options: GemReadOptions,
@@ -636,4 +642,17 @@ pub fn write(s: &FontSet, w: &WriteOptions, o: &GemWriteOptions) -> Result<Writt
     let mut report = Report::default();
     let result = encode(s, w, o, &mut report);
     finish(result, report, "gem", w.strict)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<GemReadOptions>();
+        defaults::<GemWriteOptions>();
+        defaults::<GemCodec>();
+    }
 }

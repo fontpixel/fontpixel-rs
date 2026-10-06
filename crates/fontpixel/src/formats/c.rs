@@ -19,6 +19,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 /// Input/output C dialect. Auto is only valid for reads.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Family {
     /// Select structural GFX/font8x8/t-mat or an explicit generic option comment.
     #[default]
@@ -44,6 +46,8 @@ pub enum Family {
 }
 /// Wire container for an embedded C font family.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum CContainer {
     /// Literal C source declarations.
     #[default]
@@ -53,6 +57,8 @@ pub enum CContainer {
 }
 /// Native legacy U8glib record representation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum U8glibFormat {
     /// Six-byte metrics and monochrome rows (format zero).
     #[default]
@@ -64,6 +70,8 @@ pub enum U8glibFormat {
 }
 /// Native LVGL output coverage depth.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum LvglBpp {
     /// Monochrome coverage.
     #[default]
@@ -77,6 +85,8 @@ pub enum LvglBpp {
 }
 /// Native LVGL bitmap storage.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum LvglCompression {
     /// Tightly packed uncompressed pixels.
     #[default]
@@ -105,6 +115,8 @@ pub struct ArrayOptions {
 }
 /// Reader selection. Geometry never comes from an unrelated array.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CReadOptions {
     /// Explicit wire container, or structural automatic detection.
     pub container: Option<CContainer>,
@@ -119,6 +131,8 @@ pub struct CReadOptions {
 }
 /// Portable C writer choices.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CWriteOptions {
     /// Native container; binary is valid only for the LVGL family.
     pub container: CContainer,
@@ -162,6 +176,8 @@ impl Default for CWriteOptions {
 }
 /// C source codec. Parsing never compiles or executes source text.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CCodec {
     /// Reader selection and cell geometry.
     pub read_options: CReadOptions,
@@ -905,4 +921,44 @@ fn gfx(
     f.charset.name = Some("unicode".into());
     f.source_format = Some("c".into());
     Ok(f)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Family::Auto), "auto");
+        assert_eq!(round_trip(&Family::Font8x8), "font8x8");
+        assert_eq!(round_trip(&Family::Tmat), "tmat");
+        assert_eq!(round_trip(&Family::Generic), "generic");
+        assert_eq!(round_trip(&Family::Gfx), "gfx");
+        assert_eq!(round_trip(&Family::U8g2), "u8g2");
+        assert_eq!(round_trip(&Family::Lvgl), "lvgl");
+        assert_eq!(round_trip(&Family::Netbsd), "netbsd");
+        assert_eq!(round_trip(&Family::U8glib), "u8glib");
+        assert_eq!(round_trip(&Family::U8x8), "u8x8");
+        rejects::<Family>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&CContainer::Source), "source");
+        assert_eq!(round_trip(&CContainer::LvglBinary), "lvgl_binary");
+        rejects::<CContainer>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&U8glibFormat::Full), "full");
+        assert_eq!(round_trip(&U8glibFormat::Compact), "compact");
+        assert_eq!(round_trip(&U8glibFormat::Gray2), "gray2");
+        rejects::<U8glibFormat>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&LvglBpp::One), "one");
+        assert_eq!(round_trip(&LvglBpp::Two), "two");
+        assert_eq!(round_trip(&LvglBpp::Four), "four");
+        assert_eq!(round_trip(&LvglBpp::Eight), "eight");
+        rejects::<LvglBpp>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&LvglCompression::Plain), "plain");
+        assert_eq!(round_trip(&LvglCompression::Rle), "rle");
+        assert_eq!(round_trip(&LvglCompression::RleXor), "rle_xor");
+        rejects::<LvglCompression>(r#""not_a_variant""#);
+        defaults::<CReadOptions>();
+        defaults::<CWriteOptions>();
+        defaults::<CCodec>();
+    }
 }

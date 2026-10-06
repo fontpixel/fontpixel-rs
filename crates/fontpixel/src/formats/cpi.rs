@@ -4,6 +4,8 @@ use crate::resources::{ReadContext, Written};
 use crate::{FontSet, Report, ResourceLimits, Result};
 /// CPI wire container.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Version {
     /// DOS FONT with absolute file offsets.
     #[default]
@@ -19,6 +21,8 @@ pub enum Version {
 }
 /// Interpretation of DOS pointers.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum PointerMode {
     /// 32-bit linear file offsets.
     #[default]
@@ -28,12 +32,16 @@ pub enum PointerMode {
 }
 /// CPI import settings.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CpiReadOptions {
     /// Pointer representation.
     pub pointer_mode: PointerMode,
 }
 /// CPI export settings.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CpiWriteOptions {
     /// Output container.
     pub version: Version,
@@ -59,6 +67,8 @@ impl Default for CpiWriteOptions {
 }
 /// CPI registry codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct CpiCodec {
     /// Import settings.
     pub read_options: CpiReadOptions,
@@ -137,4 +147,26 @@ pub fn read(b: &[u8], o: &CpiReadOptions, l: &ResourceLimits) -> Result<(FontSet
 /// Encode all codepages and sizes, returning complete conversion diagnostics.
 pub fn write(s: &FontSet, o: &CpiWriteOptions) -> Result<(Vec<u8>, Report)> {
     writer::write(s, o)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        assert_eq!(round_trip(&Version::Font), "font");
+        assert_eq!(round_trip(&Version::FontNt), "font_nt");
+        assert_eq!(round_trip(&Version::DrFont), "dr_font");
+        assert_eq!(round_trip(&Version::Cp), "cp");
+        assert_eq!(round_trip(&Version::Cpx), "cpx");
+        rejects::<Version>(r#""not_a_variant""#);
+        assert_eq!(round_trip(&PointerMode::Linear), "linear");
+        assert_eq!(round_trip(&PointerMode::Segmented), "segmented");
+        rejects::<PointerMode>(r#""not_a_variant""#);
+        defaults::<CpiReadOptions>();
+        defaults::<CpiWriteOptions>();
+        defaults::<CpiCodec>();
+    }
 }

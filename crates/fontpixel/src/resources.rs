@@ -9,7 +9,23 @@ use std::{collections::BTreeSet, fmt};
 
 /// Portable relative asset name with no empty, parent, or current components.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(try_from = "String", into = "String"))]
 pub struct ResourcePath(String);
+
+impl TryFrom<String> for ResourcePath {
+    type Error = Error;
+    /// Validate as [`ResourcePath::new`] does.
+    fn try_from(path: String) -> Result<Self> {
+        Self::new(path)
+    }
+}
+
+impl From<ResourcePath> for String {
+    fn from(path: ResourcePath) -> Self {
+        path.0
+    }
+}
 
 impl ResourcePath {
     /// Validate an asset path. `/` separates components on every platform.
@@ -44,6 +60,8 @@ impl fmt::Display for ResourcePath {
 /// Configurable input budgets. Format implementations must also enforce the
 /// decompression, glyph, pixel, and table limits before allocating.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct ResourceLimits {
     /// Maximum primary input size.
     pub max_input_bytes: usize,
@@ -84,6 +102,8 @@ impl Default for ResourceLimits {
 /// retained diagnostics. Built-in writers expose their actual typed limits;
 /// common write options may further restrict, but never enlarge, those limits.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct TransportLimits {
     /// Limits used by the matching reader and native writer validation.
     pub resources: ResourceLimits,
@@ -405,6 +425,8 @@ impl<'a> ReadContext<'a> {
 
 /// One in-memory output asset; the caller decides where to persist it.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct OutputAsset {
     /// Validated relative path, including any subdirectory.
     pub path: ResourcePath,
@@ -414,10 +436,32 @@ pub struct OutputAsset {
 
 /// Complete validated output, with one entry point and zero or more sidecars.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(try_from = "RawOutputBundle"))]
 pub struct OutputBundle {
     primary: ResourcePath,
     assets: Vec<OutputAsset>,
     directory: bool,
+}
+
+/// Unvalidated serialized form of [`OutputBundle`]; deserialization reruns
+/// [`OutputBundle::new`] or [`OutputBundle::directory`].
+#[cfg(feature = "serde")]
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawOutputBundle {
+    primary: ResourcePath,
+    assets: Vec<OutputAsset>,
+    #[serde(default)]
+    directory: bool,
+}
+
+#[cfg(feature = "serde")]
+impl TryFrom<RawOutputBundle> for OutputBundle {
+    type Error = Error;
+    fn try_from(raw: RawOutputBundle) -> Result<Self> {
+        Self::validated(raw.primary, raw.assets, raw.directory)
+    }
 }
 
 impl OutputBundle {
@@ -570,6 +614,8 @@ impl OutputBundle {
 
 /// Result from a format writer, still wholly in memory.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields))]
 pub struct Written {
     /// All encoded assets.
     pub output: OutputBundle,
@@ -808,5 +854,90 @@ impl std::io::Write for GzipOutput {
     }
     fn flush(&mut self) -> std::io::Result<()> {
         Ok(())
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::{defaults, rejects, round_trip};
+
+    #[test]
+    fn limits_serde_defaults_and_rejections() {
+        defaults::<ResourceLimits>();
+        let json = defaults::<TransportLimits>();
+        assert_eq!(
+            json["max_output_bytes"],
+            ResourceLimits::default().max_input_bytes
+        );
+        rejects::<TransportLimits>(r#"{"max_output_bytes":-1}"#);
+        rejects::<TransportLimits>(r#"{"resources":{"bogus":1}}"#);
+    }
+
+    #[test]
+    fn paths_and_bundles_deserialize_through_validation() {
+        assert_eq!(
+            round_trip(&ResourcePath::new("a/b.png").unwrap()),
+            "a/b.png"
+        );
+        for bad in [
+            r#""""#,
+            r#""../a""#,
+            r#""a//b""#,
+            r#""./a""#,
+            r#""a\\b""#,
+            r#""c:a""#,
+        ] {
+            rejects::<ResourcePath>(bad);
+        }
+        let path = |p: &str| ResourcePath::new(p).unwrap();
+        let bundle = OutputBundle::new(
+            path("font.fnt"),
+            vec![
+                OutputAsset {
+                    path: path("font_0.png"),
+                    bytes: vec![1, 2],
+                },
+                OutputAsset {
+                    path: path("font.fnt"),
+                    bytes: vec![3],
+                },
+            ],
+        )
+        .unwrap();
+        let written = Written {
+            output: bundle,
+            report: Report::default(),
+        };
+        let back: Written = serde_json::from_value(round_trip(&written)).unwrap();
+        assert_eq!(back, written);
+        let directory = OutputBundle::directory(
+            path("glyphs"),
+            vec![OutputAsset {
+                path: path("glyphs/a.png"),
+                bytes: vec![],
+            }],
+        )
+        .unwrap();
+        let back: OutputBundle = serde_json::from_value(round_trip(&directory)).unwrap();
+        assert_eq!(back, directory);
+        // Missing primary, duplicate asset, ancestor collision, directory
+        // escape, byte overflow and unknown fields.
+        rejects::<OutputBundle>(r#"{"primary":"a.bin","assets":[{"path":"b.bin","bytes":[]}]}"#);
+        rejects::<OutputBundle>(
+            r#"{"primary":"a.bin","assets":[{"path":"a.bin","bytes":[]},{"path":"a.bin","bytes":[]}]}"#,
+        );
+        rejects::<OutputBundle>(
+            r#"{"primary":"a","assets":[{"path":"a","bytes":[]},{"path":"a/b","bytes":[]}]}"#,
+        );
+        rejects::<OutputBundle>(
+            r#"{"primary":"d","directory":true,"assets":[{"path":"e/x","bytes":[]}]}"#,
+        );
+        rejects::<OutputBundle>(r#"{"primary":"a.bin","assets":[{"path":"a.bin","bytes":[256]}]}"#);
+        rejects::<OutputBundle>(
+            r#"{"primary":"a.bin","assets":[{"path":"a.bin","bytes":[]}],"extra":0}"#,
+        );
+        rejects::<OutputAsset>(r#"{"path":"a","bytes":[],"x":1}"#);
+        rejects::<Written>(r#"{"output":{"primary":"a","assets":[]}}"#);
     }
 }

@@ -8,6 +8,8 @@ use super::{Confidence, FormatDetector, FormatReader, FormatWriter, ReadOptions,
 use crate::resources::{OutputBundle, ReadContext, Written};
 /// Native bbc codec.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(deny_unknown_fields, default))]
 pub struct BbcCodec {
     /// Reader interpretation.
     pub read_options: BbcReadOptions,
@@ -111,4 +113,15 @@ fn encode(f: &Font, o: &BbcWriteOptions, b: &mut Budget) -> Result<Vec<u8>> {
         v[2..].copy_from_slice(raster(Some(g), c, &o.limits, b)?.as_bytes());
     }
     Ok(out)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod serde_tests {
+    use super::*;
+    use crate::formats::serde_test::defaults;
+
+    #[test]
+    fn options_serde_defaults_and_rejections() {
+        defaults::<BbcCodec>();
+    }
 }
