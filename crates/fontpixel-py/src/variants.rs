@@ -340,7 +340,9 @@ fn variants_encode<'py>(
     variants.encode(py, options)
 }
 
-/// `variants::encode_single`: export one face without alternatives.
+/// `variants::encode_single`: export one face without alternatives. Unlike
+/// regional planning (`Variants`), this keeps physical glyph identity and
+/// order, so its bytes differ from `Variants.encode_owned` by design.
 #[pyfunction]
 #[pyo3(signature = (font, options = None))]
 fn encode_single<'py>(

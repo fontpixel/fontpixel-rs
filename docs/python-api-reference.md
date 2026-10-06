@@ -7838,7 +7838,11 @@ them; raises `ResourceLimitError` above `max_bytes`.
 
 ### `fontpixel.variants.encode_single(font: FontLike, options: ExportOptions | None = ...) -> EncodedFont`
 
-*function* -- `variants::encode_single`: export one face without alternatives.
+*function*
+
+`variants::encode_single`: export one face without alternatives. Unlike
+regional planning (`Variants`), this keeps physical glyph identity and
+order, so its bytes differ from `Variants.encode_owned` by design.
 
 ### `fontpixel.variants.encode_single_owned(font: FontLike, options: ExportOptions | None = ...) -> EncodedFont`
 

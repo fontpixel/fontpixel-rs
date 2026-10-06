@@ -135,7 +135,11 @@ def encode(variants: Variants, options: _t.ExportOptions | None = ...) -> _t.Enc
     """`variants::encode`: plan and export a `Variants` handle."""
 
 def encode_single(font: _t.FontLike, options: _t.ExportOptions | None = ...) -> _t.EncodedFont:
-    """`variants::encode_single`: export one face without alternatives."""
+    """
+    `variants::encode_single`: export one face without alternatives. Unlike
+    regional planning (`Variants`), this keeps physical glyph identity and
+    order, so its bytes differ from `Variants.encode_owned` by design.
+    """
 
 def encode_single_owned(
     font: _t.FontLike,

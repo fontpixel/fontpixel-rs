@@ -76,7 +76,8 @@ import zipfile
 
 names = zipfile.ZipFile(sys.argv[1]).namelist()
 bad = [n for n in names if n.endswith('.pyc') or '__pycache__' in n]
-mods = [n for n in names if n.startswith('fontpixel/_native')]
+# the extension itself; fontpixel/_native/*.pyi are its type stubs
+mods = [n for n in names if n.endswith(('.so', '.pyd'))]
 print(f'    {len(names)} members; extension module {mods}')
 if bad or len(mods) != 1:
     sys.exit(f'unexpected wheel contents: bytecode {bad}, extension modules {mods}')
