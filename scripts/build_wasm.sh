@@ -76,8 +76,30 @@ if [ "$opt" = "off" ]; then
 else
   [ -n "$opt" ] && [ -x "$opt" ] || { echo "wasm-opt not found (set WASM_OPT, or WASM_OPT=off)" >&2; exit 2; }
   opt_version="$("$opt" --version)"
-  "$opt" "${WASM_OPT_FLAGS[@]}" "$wasm" -o "$stage/fontpixel_wasm_bg.opt.wasm"
-  mv "$stage/fontpixel_wasm_bg.opt.wasm" "$wasm"
+  # Reuse only an optimization of byte-identical input with identical flags
+  # and tool version, after hashing the existing output. wasm-pack above still
+  # builds the current sources and generates fresh JS/declarations every time.
+  if python3 - "$out" "$pre_sha" "$opt_version" "${WASM_OPT_FLAGS[*]}" <<'PY'
+import hashlib, json, pathlib, sys
+out, before, version, flags = sys.argv[1:]
+try:
+    directory = pathlib.Path(out)
+    info = json.loads((directory / 'build-info.json').read_text())
+    digest = hashlib.sha256((directory / 'fontpixel_wasm_bg.wasm').read_bytes()).hexdigest()
+    valid = (info.get('wasm_sha256_before_opt') == before and
+             info.get('wasm_opt') == version and info.get('wasm_opt_flags') == flags and
+             info.get('wasm_sha256') == digest)
+except (OSError, ValueError):
+    valid = False
+sys.exit(0 if valid else 1)
+PY
+  then
+    echo "wasm-opt: reusing verified output for SHA-256 $pre_sha"
+    cp -- "$out/fontpixel_wasm_bg.wasm" "$wasm"
+  else
+    "$opt" "${WASM_OPT_FLAGS[@]}" "$wasm" -o "$stage/fontpixel_wasm_bg.opt.wasm"
+    mv "$stage/fontpixel_wasm_bg.opt.wasm" "$wasm"
+  fi
   post=$(stat -c %s "$wasm")
   post_gz=$(gzip -n -9 -c "$wasm" | wc -c)
 fi

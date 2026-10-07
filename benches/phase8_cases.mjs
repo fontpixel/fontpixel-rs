@@ -73,11 +73,17 @@ export async function benchmark(engine, api, inputs, gc = () => {}) {
       // One whole-workload warmup, 20 small-call warmups; same policy for all.
       for (let i = 0; i < (c.category === 'whole' ? 1 : 20); i++) dispose(c.fn());
       await gc();
+      let sink = 0;
       const start = performance.now();
-      for (let i = 0; i < c.iterations; i++) { value = c.fn(); dispose(value); }
+      for (let i = 0; i < c.iterations; i++) {
+        value = c.fn();
+        sink = ((sink * 33) ^ (typeof value === 'number' ? value : value ? 1 : 0)) | 0;
+        dispose(value);
+      }
       const ms = (performance.now() - start) / c.iterations;
+      globalThis.__fontpixelBenchSink = sink;
       value = undefined;
-      results.push({ id: c.id, category: c.category, iterations: c.iterations, ms, signature, compare: c.compare });
+      results.push({ id: c.id, category: c.category, iterations: c.iterations, ms, signature, compare: c.compare, sink });
     }
     return results;
   } finally { for (const value of held.reverse()) dispose(value); }
