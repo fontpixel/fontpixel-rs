@@ -40,6 +40,10 @@ done
 for profile in "${profiles[@]}"; do
   scripts/build_wasm.sh "$profile" "$target/wasm-pkg/$profile"
   FONTPIXEL_WASM_PKG="$target/wasm-pkg/$profile" node --test crates/fontpixel-wasm/tests/*.test.mjs
+  if [ "$profile" = full ]; then
+    FONTPIXEL_WASM_PKG="$target/wasm-pkg/full" node examples/js/run.mjs
+    "${PYTHON:-python3}" tools/bindings/gen_jsref.py --pkg "$target/wasm-pkg/full" --check
+  fi
 done
 
 tsc="${TSC:-$(command -v tsc || true)}"

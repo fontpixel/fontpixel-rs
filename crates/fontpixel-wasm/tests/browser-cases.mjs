@@ -53,7 +53,7 @@ export async function runBrowserCases(large = true) {
   const hbfFont = loaded.fonts.font(0);
   ok(hbfFont.length === references.glyphs, 'async read result');
   hbfFont.free(); loaded.fonts.free();
-  const bundle = new fp.OutputBundle([['x.bin', new Uint8Array([1, 2])]]);
+  const bundle = new fp.OutputBundle('x.bin', [['x.bin', new Uint8Array([1, 2])]]);
   const [asset] = bundle.assets;
   const returned = asset.data;
   returned[0] = 9;

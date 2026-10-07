@@ -226,8 +226,8 @@ export async function smoke(bytes: Uint8Array, module: WebAssembly.Module): Prom
   const pcf: Uint8Array = compat.topcf({ glyphpad: 4 });
   const codec: bdfparser.CharsetCodec = bdfparser.getCodec("gb2312", { gl: true });
   const prev: bdfparser.WarningHandler | null = bdfparser.setWarningHandler((m: string) => void m);
-  const code: number = bdfparserMain(["--version"], { stdout: () => undefined, stderr: () => undefined });
-  void [g.cp(), meta, rows, pcf, codec.char2cp("A"), prev, code];
+  const compatExitCode: number = bdfparserMain(["--version"], { stdout: () => undefined, stderr: () => undefined });
+  void [g.cp(), meta, rows, pcf, codec.char2cp("A"), prev, compatExitCode];
   // @ts-expect-error bdfparser-js's option names
   compat.topcf({ glyph_pad: "4" });
 }
