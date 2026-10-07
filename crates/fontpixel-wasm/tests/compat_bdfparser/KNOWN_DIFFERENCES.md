@@ -40,7 +40,7 @@ Categories:
   `tsup`, no bdfparser-js sources), and they fail the same way for the reference
   implementation in this environment.
 
-## Intentional (7)
+## Intentional boundaries (10 failing tests)
 
 - `bitmap.test.ts > Bitmap alter replace` (`bitmap.test.ts:87`:
   `replace('2', '3')`), `bitmap.test.ts > Bitmap pad bytepad` and `bytepad4`
@@ -86,7 +86,7 @@ Categories:
   FONT_ASCENT fallback, SWIDTH from FONTBOUNDINGBOX, point size 0, empty name and
   rows, 75 dpi fallbacks, empty FONT).
 
-## Internal (1)
+## Internal diagnostics (1 failing test)
 
 - `pcf.test.ts > readPcf malformed input gives clear errors` (`pcf.test.ts:1223`)
   — it matches the error texts of bdfparser-js's own PCF reader. PCF decoding is

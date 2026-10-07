@@ -1,0 +1,2326 @@
+{
+  "date": "2026-10-07T14:11:40.137Z",
+  "commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+  "dirty": false,
+  "node": "v24.21.0",
+  "platform": "linux 7.0.0-38-generic x64",
+  "cpu": "12th Gen Intel(R) Core(TM) i7-12700H",
+  "cpus": 20,
+  "load": [
+    2.33,
+    5.06,
+    5.78
+  ],
+  "package": {
+    "profile": "full",
+    "build_mode": "release",
+    "features": "full",
+    "source_commit": "4622ab240aa3a6168ad24e84432a41db630a75af",
+    "source_dirty": false,
+    "wasm_bindgen": "0.2.129",
+    "wasm_pack": "0.15.0",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "wasm_opt": "wasm-opt version 117 (version_117)",
+    "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+    "wasm_bytes_before_opt": 20573438,
+    "wasm_sha256_before_opt": "1db7be6a5f041e11eef84d4cd232e63b2090967801531b24b63847cf79714a1d",
+    "wasm_gzip_bytes_before_opt": 6407938,
+    "wasm_bytes": 16666863,
+    "wasm_sha256": "939cc3d85c4220eaef675252a81ab886c05c3c7f8c2e8422bea4e53a1bfe3c06",
+    "wasm_gzip_bytes": 6044581
+  },
+  "method": "5 fresh Node processes and 5 fresh Chromium processes per module; bytes fetched/read before timer; JS import, WebAssembly.compile and asynchronous init(module) measured separately; warm OS disk cache, no reuse of an engine process; no HTTP transfer latency; runtime writers exercised after timing.",
+  "combinations": [
+    {
+      "name": "full",
+      "build": {
+        "profile": "full",
+        "build_mode": "release",
+        "features": "full",
+        "source_commit": "4622ab240aa3a6168ad24e84432a41db630a75af",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 20573438,
+        "wasm_sha256_before_opt": "1db7be6a5f041e11eef84d4cd232e63b2090967801531b24b63847cf79714a1d",
+        "wasm_gzip_bytes_before_opt": 6407938,
+        "wasm_bytes": 16666863,
+        "wasm_sha256": "939cc3d85c4220eaef675252a81ab886c05c3c7f8c2e8422bea4e53a1bfe3c06",
+        "wasm_gzip_bytes": 6044581
+      },
+      "load": [
+        2.33,
+        5.06,
+        5.78
+      ],
+      "node": [
+        {
+          "importMs": 14.869771,
+          "compileMs": 29.039382000000003,
+          "instantiateMs": 19.436012000000005,
+          "totalMs": 63.34516500000001,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 11.003779999999999,
+          "compileMs": 23.172401000000004,
+          "instantiateMs": 22.839813,
+          "totalMs": 57.015994000000006,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 11.228937000000002,
+          "compileMs": 23.332626999999995,
+          "instantiateMs": 20.966558999999997,
+          "totalMs": 55.528122999999994,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 10.695423000000002,
+          "compileMs": 26.194024999999996,
+          "instantiateMs": 19.029334000000006,
+          "totalMs": 55.91878200000001,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 13.548326,
+          "compileMs": 21.568267,
+          "instantiateMs": 19.136660000000006,
+          "totalMs": 54.253253,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 24.80000001192093,
+          "compileMs": 14.719999998807907,
+          "instantiateMs": 2.405000001192093,
+          "totalMs": 41.92500001192093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 23.38000002503395,
+          "compileMs": 15.24499997496605,
+          "instantiateMs": 2.820000022649765,
+          "totalMs": 41.445000022649765,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 19.125,
+          "compileMs": 14.28999999165535,
+          "instantiateMs": 2.3700000047683716,
+          "totalMs": 35.78499999642372,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 18.030000001192093,
+          "compileMs": 15.23999997973442,
+          "instantiateMs": 2.395000010728836,
+          "totalMs": 35.66499999165535,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 18.430000007152557,
+          "compileMs": 17.639999985694885,
+          "instantiateMs": 3.2300000190734863,
+          "totalMs": 39.30000001192093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ]
+    },
+    {
+      "name": "merge",
+      "build": {
+        "profile": "merge",
+        "build_mode": "release",
+        "features": "merge",
+        "source_commit": "4622ab240aa3a6168ad24e84432a41db630a75af",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 10276178,
+        "wasm_sha256_before_opt": "14c80eaf91cd519183d80232f1d05219eb03980a7c6d41048d20ef8c51d50989",
+        "wasm_gzip_bytes_before_opt": 3527165,
+        "wasm_bytes": 8666341,
+        "wasm_sha256": "c0c09218647e491ead377ea45edcec45bf7d58ff6cd7812dfd7831574881e9e3",
+        "wasm_gzip_bytes": 3393814
+      },
+      "load": [
+        2.22,
+        5,
+        5.75
+      ],
+      "node": [
+        {
+          "importMs": 10.359895000000002,
+          "compileMs": 9.616293999999996,
+          "instantiateMs": 18.185999000000002,
+          "totalMs": 38.162188,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 7.330627000000003,
+          "compileMs": 14.23311,
+          "instantiateMs": 16.478766999999998,
+          "totalMs": 38.042504,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 7.453215,
+          "compileMs": 10.780343000000002,
+          "instantiateMs": 17.221771999999994,
+          "totalMs": 35.45533,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 9.178126000000002,
+          "compileMs": 10.253469999999997,
+          "instantiateMs": 18.375408,
+          "totalMs": 37.807004,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 10.232864999999997,
+          "compileMs": 13.711701000000005,
+          "instantiateMs": 21.981788,
+          "totalMs": 45.926354,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 16.514999985694885,
+          "compileMs": 8.245000004768372,
+          "instantiateMs": 1.8400000035762787,
+          "totalMs": 26.599999994039536,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 17.82499998807907,
+          "compileMs": 8.555000007152557,
+          "instantiateMs": 1.9449999928474426,
+          "totalMs": 28.32499998807907,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 19.030000001192093,
+          "compileMs": 9.379999995231628,
+          "instantiateMs": 1.9100000262260437,
+          "totalMs": 30.320000022649765,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 19.054999977350235,
+          "compileMs": 12.1700000166893,
+          "instantiateMs": 1.824999988079071,
+          "totalMs": 33.04999998211861,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 19.555000007152557,
+          "compileMs": 7.604999989271164,
+          "instantiateMs": 2.1350000202655792,
+          "totalMs": 29.2950000166893,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal",
+      "build": {
+        "profile": "minimal",
+        "build_mode": "release",
+        "features": "minimal",
+        "source_commit": "4622ab240aa3a6168ad24e84432a41db630a75af",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 4910428,
+        "wasm_sha256_before_opt": "33f6b98cd6ea38402d1e228510bb8a70a867f3ec0f0be244ce8028615a6a3e7b",
+        "wasm_gzip_bytes_before_opt": 1441964,
+        "wasm_bytes": 3925657,
+        "wasm_sha256": "cee987f688f519ece452d5536813f5ca395fa78daa520e3d95f782a85ea614c5",
+        "wasm_gzip_bytes": 1352234
+      },
+      "load": [
+        2.22,
+        5,
+        5.75
+      ],
+      "node": [
+        {
+          "importMs": 6.893138,
+          "compileMs": 7.8745990000000035,
+          "instantiateMs": 15.50443,
+          "totalMs": 30.272167000000003,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 6.808667,
+          "compileMs": 6.057833000000002,
+          "instantiateMs": 15.425688000000001,
+          "totalMs": 28.292188000000003,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 7.439910999999999,
+          "compileMs": 7.534254000000001,
+          "instantiateMs": 16.835009,
+          "totalMs": 31.809174,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 6.594529000000001,
+          "compileMs": 7.257847999999999,
+          "instantiateMs": 16.015435000000004,
+          "totalMs": 29.867812000000004,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 6.771739,
+          "compileMs": 7.094797000000003,
+          "instantiateMs": 16.514855999999995,
+          "totalMs": 30.381391999999998,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 14.430000007152557,
+          "compileMs": 5.139999985694885,
+          "instantiateMs": 0.9900000095367432,
+          "totalMs": 20.560000002384186,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 12.935000002384186,
+          "compileMs": 6.129999995231628,
+          "instantiateMs": 1.405000001192093,
+          "totalMs": 20.469999998807907,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 19.184999972581863,
+          "compileMs": 3.9200000166893005,
+          "instantiateMs": 0.9350000023841858,
+          "totalMs": 24.03999999165535,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 14.680000007152557,
+          "compileMs": 5.399999976158142,
+          "instantiateMs": 0.9500000178813934,
+          "totalMs": 21.030000001192093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 17.03499999642372,
+          "compileMs": 5.655000001192093,
+          "instantiateMs": 0.9399999976158142,
+          "totalMs": 23.62999999523163,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimal-cjk",
+      "build": {
+        "profile": "custom",
+        "build_mode": "release",
+        "features": "minimal,cjk-charsets",
+        "source_commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 6484516,
+        "wasm_sha256_before_opt": "4df6fe7eebcefb9bb63a74f8cc3c17ac1507f787e1e85efcd7a6310515c27767",
+        "wasm_gzip_bytes_before_opt": 2231855,
+        "wasm_bytes": 5495751,
+        "wasm_sha256": "869654244f641becb38234ed33c763bc839fb1df949ccc2385989b157601e6bc",
+        "wasm_gzip_bytes": 2141244
+      },
+      "load": [
+        16.59,
+        9.08,
+        7.06
+      ],
+      "node": [
+        {
+          "importMs": 8.539393,
+          "compileMs": 11.068114999999999,
+          "instantiateMs": 20.111144999999993,
+          "totalMs": 39.71865299999999,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 7.261747,
+          "compileMs": 11.037078000000001,
+          "instantiateMs": 23.136635,
+          "totalMs": 41.43546,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 8.977791000000003,
+          "compileMs": 11.922548999999997,
+          "instantiateMs": 22.018035000000005,
+          "totalMs": 42.918375000000005,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 9.133851,
+          "compileMs": 8.818681999999995,
+          "instantiateMs": 22.050424000000007,
+          "totalMs": 40.002957,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 8.752714999999998,
+          "compileMs": 11.785074999999999,
+          "instantiateMs": 21.320302999999996,
+          "totalMs": 41.858093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 19.655000001192093,
+          "compileMs": 5.359999984502792,
+          "instantiateMs": 1.7550000250339508,
+          "totalMs": 26.770000010728836,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 15.965000003576279,
+          "compileMs": 5.955000013113022,
+          "instantiateMs": 1.7750000059604645,
+          "totalMs": 23.695000022649765,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 19.280000001192093,
+          "compileMs": 5.869999974966049,
+          "instantiateMs": 2.560000002384186,
+          "totalMs": 27.709999978542328,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 15.770000010728836,
+          "compileMs": 5.3499999940395355,
+          "instantiateMs": 1.9449999928474426,
+          "totalMs": 23.064999997615814,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        },
+        {
+          "importMs": 19.360000014305115,
+          "compileMs": 7.2750000059604645,
+          "instantiateMs": 2.7699999809265137,
+          "totalMs": 29.405000001192093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": false,
+            "otf": false,
+            "woff": false,
+            "woff2": false,
+            "vector-raster": false
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182
+          }
+        }
+      ]
+    },
+    {
+      "name": "registry-vector",
+      "build": {
+        "profile": "custom",
+        "build_mode": "release",
+        "features": "minimal,fontpixel/ttf,fontpixel/otf,fontpixel/woff",
+        "source_commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 5807334,
+        "wasm_sha256_before_opt": "b4f7f6aa370adb14317b3086481be96008be50bcdb6320d9320e8a46d6fcc155",
+        "wasm_gzip_bytes_before_opt": 1758178,
+        "wasm_bytes": 4656888,
+        "wasm_sha256": "8197125d9ea437b8dc066928d3e97a05da2d82bcfcec4e39e02d0122bfa71cbe",
+        "wasm_gzip_bytes": 1645473
+      },
+      "load": [
+        22.5,
+        14.75,
+        9.68
+      ],
+      "node": [
+        {
+          "importMs": 11.477611000000003,
+          "compileMs": 12.691319,
+          "instantiateMs": 31.598268999999995,
+          "totalMs": 55.767199,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 12.017884000000002,
+          "compileMs": 12.826232999999995,
+          "instantiateMs": 34.865047000000004,
+          "totalMs": 59.709164,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 13.447093000000002,
+          "compileMs": 17.906927999999994,
+          "instantiateMs": 31.754216,
+          "totalMs": 63.108236999999995,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 16.115673,
+          "compileMs": 15.050497,
+          "instantiateMs": 50.996042,
+          "totalMs": 82.16221200000001,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 22.16727800000001,
+          "compileMs": 18.055003999999997,
+          "instantiateMs": 66.87968899999998,
+          "totalMs": 107.10197099999999,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 26.935000002384186,
+          "compileMs": 8.509999990463257,
+          "instantiateMs": 1.75,
+          "totalMs": 37.19499999284744,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 26.15999999642372,
+          "compileMs": 8.875,
+          "instantiateMs": 2.5,
+          "totalMs": 37.53499999642372,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 26.519999980926514,
+          "compileMs": 10.935000002384186,
+          "instantiateMs": 2.8499999940395355,
+          "totalMs": 40.304999977350235,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 36.20000001788139,
+          "compileMs": 22.554999977350235,
+          "instantiateMs": 3.475000023841858,
+          "totalMs": 62.230000019073486,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 45.5,
+          "compileMs": 20.894999980926514,
+          "instantiateMs": 3.8700000047683716,
+          "totalMs": 70.26499998569489,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        }
+      ]
+    },
+    {
+      "name": "registry-vector-cjk",
+      "build": {
+        "profile": "custom",
+        "build_mode": "release",
+        "features": "minimal,fontpixel/ttf,fontpixel/otf,fontpixel/woff,cjk-charsets",
+        "source_commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 7380288,
+        "wasm_sha256_before_opt": "155ed65c5896fba29d15b2c28426c5fe97ae7a28aa53386dc33076d66024283d",
+        "wasm_gzip_bytes_before_opt": 2548063,
+        "wasm_bytes": 6227015,
+        "wasm_sha256": "3c172e85e98dcaba9bd92a1d7dff5fddf0b78ccc18fd9e813f2fe13830c483c8",
+        "wasm_gzip_bytes": 2435921
+      },
+      "load": [
+        25.47,
+        21.57,
+        14.14
+      ],
+      "node": [
+        {
+          "importMs": 15.833680000000001,
+          "compileMs": 18.625248999999997,
+          "instantiateMs": 39.168959,
+          "totalMs": 73.627888,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 16.429351999999994,
+          "compileMs": 20.80305100000001,
+          "instantiateMs": 35.56963499999999,
+          "totalMs": 72.802038,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 21.005289000000005,
+          "compileMs": 23.135679999999994,
+          "instantiateMs": 62.078238,
+          "totalMs": 106.219207,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 22.206972,
+          "compileMs": 19.617431999999994,
+          "instantiateMs": 55.99667400000001,
+          "totalMs": 97.821078,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 18.201479999999997,
+          "compileMs": 26.538426,
+          "instantiateMs": 53.290468000000004,
+          "totalMs": 98.030374,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 43.90999999642372,
+          "compileMs": 18.365000009536743,
+          "instantiateMs": 7.449999988079071,
+          "totalMs": 69.72499999403954,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 40.48499998450279,
+          "compileMs": 44.474999994039536,
+          "instantiateMs": 3.4099999964237213,
+          "totalMs": 88.36999997496605,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 36.270000010728836,
+          "compileMs": 16.769999980926514,
+          "instantiateMs": 3.9300000071525574,
+          "totalMs": 56.96999999880791,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 38.375,
+          "compileMs": 16.36499997973442,
+          "instantiateMs": 5.175000011920929,
+          "totalMs": 59.91499999165535,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        },
+        {
+          "importMs": 37.644999980926514,
+          "compileMs": 18.695000022649765,
+          "instantiateMs": 4.694999992847443,
+          "totalMs": 61.03499999642372,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": false,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204
+          }
+        }
+      ]
+    },
+    {
+      "name": "registry-vector-woff2",
+      "build": {
+        "profile": "custom",
+        "build_mode": "release",
+        "features": "minimal,fontpixel/ttf,fontpixel/otf,fontpixel/woff,fontpixel/woff2",
+        "source_commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 7040874,
+        "wasm_sha256_before_opt": "a7fe60c6ade9143360ebe25c968a91951b3add5e9238717aed887e142e28a8eb",
+        "wasm_gzip_bytes_before_opt": 2283959,
+        "wasm_bytes": 5766686,
+        "wasm_sha256": "b9757a7891743f08063d0c72b023ea68b2ab95d9094b37234a670431ea1388a1",
+        "wasm_gzip_bytes": 2170208
+      },
+      "load": [
+        21.89,
+        23.48,
+        18.13
+      ],
+      "node": [
+        {
+          "importMs": 13.952398000000002,
+          "compileMs": 12.83466,
+          "instantiateMs": 26.91999,
+          "totalMs": 53.707048,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 12.315554999999996,
+          "compileMs": 12.749081000000004,
+          "instantiateMs": 23.537523999999998,
+          "totalMs": 48.60216,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 11.548148000000001,
+          "compileMs": 17.734096,
+          "instantiateMs": 27.945865999999995,
+          "totalMs": 57.22811,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 14.490074,
+          "compileMs": 16.044998000000007,
+          "instantiateMs": 33.08882799999999,
+          "totalMs": 63.6239,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 13.915589999999995,
+          "compileMs": 16.660556000000007,
+          "instantiateMs": 34.381986999999995,
+          "totalMs": 64.958133,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 25.25500002503395,
+          "compileMs": 8.774999976158142,
+          "instantiateMs": 2.020000010728836,
+          "totalMs": 36.05000001192093,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 23.609999984502792,
+          "compileMs": 9.340000003576279,
+          "instantiateMs": 2.780000001192093,
+          "totalMs": 35.729999989271164,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 29.405000001192093,
+          "compileMs": 10.974999994039536,
+          "instantiateMs": 2.2849999964237213,
+          "totalMs": 42.66499999165535,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 25.865000009536743,
+          "compileMs": 9.98999997973442,
+          "instantiateMs": 2.3850000202655792,
+          "totalMs": 38.24000000953674,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 20.15999999642372,
+          "compileMs": 10.245000004768372,
+          "instantiateMs": 2.0499999821186066,
+          "totalMs": 32.4549999833107,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": false,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ]
+    },
+    {
+      "name": "registry-vector-woff2-cjk",
+      "build": {
+        "profile": "custom",
+        "build_mode": "release",
+        "features": "minimal,fontpixel/ttf,fontpixel/otf,fontpixel/woff,fontpixel/woff2,cjk-charsets",
+        "source_commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+        "source_dirty": false,
+        "wasm_bindgen": "0.2.129",
+        "wasm_pack": "0.15.0",
+        "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "wasm_opt": "wasm-opt version 117 (version_117)",
+        "wasm_opt_flags": "-Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext --enable-mutable-globals --enable-reference-types --enable-multivalue",
+        "wasm_bytes_before_opt": 8611753,
+        "wasm_sha256_before_opt": "88a4a96e44f5cdfafe78b81909d07b43d249764af8da473f713b98887de353f8",
+        "wasm_gzip_bytes_before_opt": 3074000,
+        "wasm_bytes": 7337085,
+        "wasm_sha256": "666b0ec70337b062c1b1e7cfd5e835418fe3aa1b2f55789036549e0421ca9ead",
+        "wasm_gzip_bytes": 2961506
+      },
+      "load": [
+        18.7,
+        19.14,
+        17.45
+      ],
+      "node": [
+        {
+          "importMs": 11.856022,
+          "compileMs": 11.260697,
+          "instantiateMs": 21.564721,
+          "totalMs": 44.681439999999995,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 11.058263000000004,
+          "compileMs": 9.683892999999998,
+          "instantiateMs": 29.175357000000005,
+          "totalMs": 49.91751300000001,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 10.110326000000004,
+          "compileMs": 11.729000999999997,
+          "instantiateMs": 19.948369,
+          "totalMs": 41.787696,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 9.555784,
+          "compileMs": 15.630822000000002,
+          "instantiateMs": 24.799234999999996,
+          "totalMs": 49.98584099999999,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 24.229706999999998,
+          "compileMs": 27.997906999999998,
+          "instantiateMs": 54.830065000000005,
+          "totalMs": 107.05767900000001,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ],
+      "chromium": [
+        {
+          "importMs": 18.939999997615814,
+          "compileMs": 7.319999992847443,
+          "instantiateMs": 2.2150000035762787,
+          "totalMs": 28.474999994039536,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 19.53499999642372,
+          "compileMs": 9.424999982118607,
+          "instantiateMs": 2.3199999928474426,
+          "totalMs": 31.27999997138977,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 18.484999984502792,
+          "compileMs": 7.655000001192093,
+          "instantiateMs": 3.195000022649765,
+          "totalMs": 29.33500000834465,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 20.17500001192093,
+          "compileMs": 7.574999988079071,
+          "instantiateMs": 2.5550000071525574,
+          "totalMs": 30.305000007152557,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        },
+        {
+          "importMs": 91.36500000953674,
+          "compileMs": 40.29999998211861,
+          "instantiateMs": 12.030000001192093,
+          "totalMs": 143.69499999284744,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": true,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": false,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "yaff": 54182,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          }
+        }
+      ]
+    }
+  ],
+  "chromium": "153.0.8010.12"
+}
