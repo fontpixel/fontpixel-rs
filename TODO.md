@@ -63,16 +63,43 @@
    - wasm 体积（full/merge/minimal，含与不含 WOFF2/brotli、CJK 字符集、矢量化）与初始化时间（Node、浏览器）。
    - JS 文档（类似 `docs/python-api.md`）、示例、TS 类型检查；Node 18 加载验证（目前只在 Node 24 跑过）。
    - 第 8 阶段报告 `reports/phase-8.md` 与 `benches/PHASE8-REPORT.md`。
-4. 第 9 阶段 `web/merge/`。**wasm 体积决定（用户 2026-10-06 同意）**：
-   - npm 包维持完整原生 API，按构建配置分档（full / merge / minimal），没编入的格式调用时明确报 `UnsupportedError`；
-   - 网页专门做一个只含常用格式的瘦身配置（新增 profile，如 `web`）：读 BDF、PCF、PSF、FNT/FON、OTB、
-     Unifont hex、YAFF 等常见点阵格式，写 BDF、PCF、OTB、TTF/OTF、WOFF2，加拼合与预览渲染；CJK 编码表看样例
-     字体是否需要，需要时考虑按需加载；记录体积与加载时间；
-   - 用户上传冷门格式时提示「不支持此格式，请先用命令行转换」，不按需加载完整版。
-   其余要求：纯静态 HTML + 原生 JS 模块 + wasm（PLAN 明确不用前端框架，decisions.md 已记录，这一点
-   优先于用户「新前端默认 Svelte 5」的通用规则）；`docs/web-merge.md` 定义 catalogue.json；样例目录只用许可证允许的
-   `../samples/fontpixel-catalogue/*`（各有 family.toml 与许可证）和 `../samples/tong-pixel-sans`（OFL）；中英 i18n；
-   Playwright 端到端（等宽/比例拼合导出 BDF 和 WOFF2 与 CLI 逐字节比较、等宽错误提示、保留名拦截、5 万字不卡）；报告。
+4. **第 9 阶段（2026-10-07 用户改定）：直接更新 `/home/chen/githubprojects/fontpixel/fontpixel.com`，加一个 wasm 纯前端的
+   字体工具页（切割、合并、转格式、像素化）。** 原独立页 `web/merge/` 不再单独做，其设计（预览、等宽提示、命名校验、许可证、
+   Worker 进度、catalogue 思路）并入工具页。依赖第 8 阶段的 ops/formats/render/merge/Worker 接口全部合并。详见
+   docs/decisions.md「2026-10-07 — Phase 9 retargeted to fontpixel.com」。
+   - 动手前注意：fontpixel.com 当时有未提交修改（`.github/workflows/ci.yml`、`deploy.yml`、`.gitignore`），不是本项目改的，
+     先确认归属，不要覆盖；网站技术栈是 Astro + Svelte 岛组件（`site/`），工具页沿用 Svelte 5（runes），不再适用
+     「不用前端框架」（那是独立静态页的要求）；构建产物在 `dist-downloads/`，下载由 `site/scripts/stage-downloads.mjs` 暂存；
+     预览目前用 bdfparser(JS)。
+   - 用户要求：
+     1. 对象：fontpixel.com 上的任何字体，或用户上传的任何字体。
+     2. 转成我们支持的常见格式。
+     3. 选一个或多个 Unicode block 或手动输入区段进行切割；或选多个字体，各自选 block/区段，进行切割和/或合并。
+     4. 像素化：TTF/OTF/WOFF/WOFF2 矢量字体按指定像素大小栅格化成点阵（核心 `vector-raster`，像素网格矢量字自动识别网格；
+        不执行 hinting，普通矢量字小字号效果有限，页面要提示）。
+     5. 每个字体页的下载区只提供预生成的 BDF 和 WOFF2；其他所有格式在用户点击下载时由客户端 wasm 即时生成。
+   - 补充项（我提出，用户 2026-10-07 只修改了第 3 条，其余默认采纳，用户可随时删）：
+     1. OFL 保留字体名（RFN）：切割/合并属于修改，必须改名；读取保留名，改名必填且不能沿用；不允许修改的字体禁用切割/合并。
+     2. 按文字切割：粘贴一段文字，只保留用到的字（做网页字体常用）。
+     3. **生成前预览（用户细化）**：用结果字体渲染各种文字——CJK 与西文都要，按每个 Unicode block 或书写体系各显示若干
+        代表字；同时显示每个 block 的字数/覆盖情况、缺字和损失报告。
+     4. 常见输出格式：BDF、PCF、OTB、位图 TTF、矢量 TTF/OTF（方点/圆点）、WOFF/WOFF2、PSF、FNT/FON、Unifont hex、YAFF，
+        加 BMFont（PNG+.fnt）和 C 数组。
+     5. wasm 按需加载：字体页平时不加载，点「下载其他格式」或进工具页才加载；用只含常用格式的瘦身 profile；在 Web Worker
+        里运行，有进度和取消；生成过的文件缓存在浏览器（Cache API/IndexedDB），再次下载即时。
+     6. 可分享链接：字体、范围、格式写进 URL 参数；字体页可直接跳到预填好的工具页。
+     7. 旧下载链接：去掉预生成 PCF/TTF 后旧 URL 会 404——让旧 URL 跳到即时生成页；更新 README、文档、`llms.txt`；
+        不开 JS 的访问者仍可直接下载 BDF/WOFF2。
+     8. 构建流水线瘦身：停止预生成 PCF/TTF。
+     9. 许可证随文件走：生成的字体写入原许可证/版权信息，zip 附 LICENSE。
+     10. 手机内存：大字体超出资源上限时捕获错误并给明确提示。
+     11. 界面多语言沿用网站的 en / zh / zh-Hant；翻译交给 Opus 或 Sonnet 子任务（全局规则）。
+     12. 测试：Playwright 端到端，生成结果与命令行逐字节比较（BDF、WOFF2 及几种常见格式）；5 万字大字体不卡；三个浏览器。
+     13. 技术栈：沿用网站的 Astro + Svelte 5。
+     14. 只本地提交，不 push、不部署；部署由用户安排。
+   - wasm 体积决定（2026-10-06，仍适用）：npm 包维持完整原生 API 按 full/merge/minimal 分档，没编入的格式明确报
+     `UnsupportedError`；网站用只含常用格式的瘦身 profile（新增，如 `web`）；冷门格式上传时提示「不支持此格式，请先用
+     命令行转换」，不按需加载完整版；CJK 编码表看实际需要，必要时按需加载；记录体积与加载时间。
 5. 收尾：对最终源码重跑 104 目标 ASAN（参考第 6 阶段 gate 077 与 `reports/phase6-validation/fuzz-final.md`）和逐 feature
    Clippy（`feature_clippy_serde.sh`，218 种组合；之前 gate 201 被中止未完成）；写 `FINAL-REPORT.md` 逐条对照 PLAN §1.2。
 
@@ -99,7 +126,7 @@
   pytest 1,253 通过，bdfparser 参考测试 1,755/1,773 通过（8 个失败逐条说明），测速报告，manylinux wheel（x86_64 在 3.10/3.12 测试通过）。
 - [ ] 第 8 阶段：WASM 绑定。**暂停中**，详见上面「第 8 阶段暂停记录」。
 - [ ] 最终报告前：对最终源码重跑 104 目标 ASAN 和逐 feature Clippy（核心在第 7、8 阶段有改动）。
-- [ ] 第 9 阶段：拼合网页 `web/merge/`（已授权）。注意 PLAN 要求「静态网页不使用前端框架」。
+- [ ] 第 9 阶段：改为更新 fontpixel.com，加 wasm 字体工具页（切割/合并/转格式/像素化），见上面接续步骤第 4 项。
 - 只做本地提交；不 push、不发布、不部署。
 
 已知限制见 reports/phase-6.md「已知限制」。

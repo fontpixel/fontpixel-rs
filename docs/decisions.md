@@ -1921,3 +1921,29 @@ bindings-design.md, "JS/WASM".
   `capabilities`/`requireCapability`, `normalize`/`optionTypes` (a few
   types), `read`/`Loaded`, `FontSet`/`Font`/`Glyph` basics, `Bitmap` basics,
   `withAsyncResources`, `init`/`initSync`/`wasmUrl`.
+
+## 2026-10-07 — Phase 9 retargeted to fontpixel.com
+
+**Context:** PLAN phase 9 and docs/plan-addendum-merge.md W9.1–W9.3 asked for a
+standalone static merge page `web/merge/` (no front-end framework) and said the
+catalogue site repository would not be modified. On 2026-10-07 the owner changed
+this: phase 9 updates the site project `/home/chen/githubprojects/fontpixel/fontpixel.com`
+directly.
+
+**Choices:**
+- A client-side wasm tool page on fontpixel.com: subset by Unicode blocks, typed
+  ranges or pasted text; merge several fonts, each with its own selection;
+  convert to the common formats; pixelize outline fonts (`vector-raster`). It
+  works on any catalogue font or an uploaded font. The W9.1 merge-page design
+  (preview, monospace hints, naming and reserved-name checks, licenses, Worker
+  progress) moves into this page.
+- Font pages keep only prebuilt BDF and WOFF2 downloads; every other format is
+  generated in the browser on click.
+- The page follows the site's stack (Astro + Svelte 5 islands). PLAN's "no
+  front-end framework" applied to the standalone page and no longer applies.
+- The full proposal list (reserved font names, subset by text, preview with
+  representative characters per Unicode block and script incl. CJK and Latin,
+  output formats, lazy wasm with a slim profile, caching, shareable URLs, old
+  download URLs, pipeline slimming, license metadata, mobile memory, i18n,
+  tests) is in TODO.md, phase 9 step. Local commits only; no push or deploy.
+
