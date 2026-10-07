@@ -291,8 +291,8 @@ node:test suites `crates/fontpixel-wasm/tests/<area>.test.mjs` (run with
 `node --test crates/fontpixel-wasm/tests/*.test.mjs`; `FONTPIXEL_WASM_PKG`
 selects the package, default `${CARGO_TARGET_DIR:-target}/wasm-pkg/full`).
 `tests/helpers.mjs` loads and initializes the package, reads samples from
-`tests/data`, and runs the native CLI (`FONTPIXEL_CLI`, default the frozen
-phase-6 binary; tests skip when it is missing) to produce reference bytes —
+`tests/data`, and runs the native CLI (`FONTPIXEL_CLI`, default the current
+target's release binary; the acceptance gate builds it) to produce reference bytes —
 tests may run the CLI, the binding never does. Profile-dependent tests skip
 with a reason (`has(fp, 'compat_bdfparser')`, `fp.optionTypes()`). Coverage
 rules name tests as `crates/fontpixel-wasm/tests/<area>.test.mjs::<test name>`
