@@ -17,13 +17,27 @@
       "node": "./ops-node-files.js"
     },
     "./ops-worker.js": "./ops-worker.js",
+    "./compat/bdfparser": {
+      "types": "./compat_bdfparser.d.ts",
+      "default": "./compat_bdfparser.js"
+    },
+    "./compat/bdfparser/cjk": {
+      "types": "./compat_bdfparser_cjk.d.ts",
+      "default": "./compat_bdfparser_cjk.js"
+    },
+    "./compat/bdfparser/cli": {
+      "types": "./compat_bdfparser_cli.d.ts",
+      "default": "./compat_bdfparser_cli.js"
+    },
     "./fontpixel_wasm_bg.wasm": "./fontpixel_wasm_bg.wasm",
     "./package.json": "./package.json"
   },
   "sideEffects": [
     "./index.js",
     "./guard.js",
-    "./ops-worker.js"
+    "./ops-worker.js",
+    "./compat_bdfparser.js",
+    "./compat_bdfparser_cjk.js"
   ],
   "engines": {
     "node": ">=18"

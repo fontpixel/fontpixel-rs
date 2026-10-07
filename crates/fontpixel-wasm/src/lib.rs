@@ -26,6 +26,14 @@ pub mod bitmap;
 pub mod callbacks;
 pub mod capabilities;
 pub mod charset;
+#[cfg(feature = "compat-bdfparser")]
+pub mod compat;
+#[cfg(feature = "compat-bdfparser")]
+pub mod compat_bitmap;
+#[cfg(feature = "compat-bdfparser")]
+pub mod compat_glyph;
+#[cfg(feature = "compat-bdfparser")]
+pub mod compat_misc;
 pub mod conv;
 pub mod errors;
 pub mod formats;

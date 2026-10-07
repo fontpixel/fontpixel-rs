@@ -5,18 +5,29 @@
 # itself. The unmodified bdfparser test suite runs through
 # crates/fontpixel-py/tests/compat_bdfparser/run_reference.py (see its
 # KNOWN_DIFFERENCES.md).
+#
+# JS (phase 8): `fontpixel/compat/bdfparser` (bdfparser-js 3.0 names) over the
+# wasm handles BdfparserRawFont / BdfparserRawGlyph / BdfparserRawBitmap
+# (crates/fontpixel-wasm/src/compat*.rs, js/compat_bdfparser*.js). The unmodified
+# bdfparser-js suite runs through
+# crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs (see its
+# KNOWN_DIFFERENCES.md).
 
 [[rule]]
 pattern = "fontpixel::compat"
 status = "bound"
 python = "fontpixel.compat"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+js = "fontpixel/compat/bdfparser (package subpath; also /cjk, /cli)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::module surface"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser"
 status = "bound"
 python = "fontpixel.compat.bdfparser"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+js = "fontpixel/compat/bdfparser (package subpath; also /cjk, /cli)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::module surface"
 
 # --- Bitmap -----------------------------------------------------------------
 
@@ -25,18 +36,24 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap (handle BdfparserRawBitmap)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::*"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_geometry"
+js = "Bitmap.{name} / BdfparserRawBitmap.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap geometry"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::new"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap(bin_bitmap_list)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "new Bitmap(bin_bitmap_list) (new BdfparserRawBitmap(rows))"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 reason = "Python constructor; rows are validated (rectangular, labels 0/1/2) before the native raster is built"
 
 [[rule]]
@@ -44,6 +61,8 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::bindata"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.bindata"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.bindata (accessor; BdfparserRawBitmap.bindata / setBindata)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 reason = "read/write property (bdfparser attribute); reading materializes the rows, assigning rebuilds the raster"
 
 [[rule]]
@@ -51,12 +70,16 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::equals"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.equals / =="
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.equals / BdfparserRawBitmap.equals"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::repr"
 status = "adapted"
 python = "repr(fontpixel.compat.bdfparser.Bitmap)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "BdfparserRawBitmap.repr (Bitmap.repr() prints bdfparser-js's JSON form)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 reason = "Python __repr__"
 
 [[rule]]
@@ -64,36 +87,48 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::width"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.width"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.width()"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::height"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.height"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.height()"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::fromstring"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.fromstring"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.fromstring"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::blank"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.blank"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_construction_and_access"
+js = "Bitmap.blank"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap construction and access"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::todata"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.todata"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+js = "Bitmap.todata (BdfparserRawBitmap.todata)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap data exports"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::label_rows"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.todata(0..5) / bindata"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+js = "BdfparserRawBitmap.labels (label bytes) / Bitmap.todata(2|3)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap data exports"
 reason = "the binding builds bdfparser's todata values straight from the label rows"
 
 [[rule]]
@@ -101,6 +136,8 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::row_number"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.todata(4) / todata(5)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+js = "BdfparserRawBitmap.rowNumbers / Bitmap.todata(4|5)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap data exports"
 reason = "hex text or Python int per row, as bdfparser's todata(4)/todata(5)"
 
 [[rule]]
@@ -108,6 +145,8 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::tobytes"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.tobytes(mode='RGB', bytesdict=None)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+js = "BdfparserRawBitmap.tobytes(mode, palette) (bdfparser-js has no tobytes)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap data exports"
 reason = "the palette is bdfparser's bytesdict {0: bytes, 1: bytes, 2: bytes} (bits for mode '1'); unknown modes warn and fall back to RGB"
 
 [[rule]]
@@ -115,12 +154,16 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::tosvg"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Bitmap.tosvg"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_svg"
+js = "Bitmap.tosvg(pixelsize, format, inverted, offsets, shape)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap svg"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::overlay"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.overlay"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_data_exports"
+js = "Bitmap.overlay (warns on a size mismatch)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap geometry"
 reason = "adds bdfparser's size-mismatch BDFParserWarning (the Rust method is silent)"
 
 [[rule]]
@@ -128,6 +171,8 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::getpixel"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.getpixel"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_errors"
+js = "Bitmap.getpixel (RangeError out of range)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap errors"
 reason = "out-of-range coordinates raise IndexError as in bdfparser"
 
 [[rule]]
@@ -135,6 +180,8 @@ pattern = "fontpixel::compat::bdfparser::bitmap::Bitmap::setpixel"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Bitmap.setpixel"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_errors"
+js = "Bitmap.setpixel (RangeError out of range / bad value)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap errors"
 reason = "out-of-range coordinates raise IndexError, non-0/1/2 values ValueError, as in bdfparser"
 
 # --- Font ---------------------------------------------------------------------
@@ -144,6 +191,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font (handle fontpixel._native._bdfparser.RawFont)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+js = "Font (handle BdfparserRawFont)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::load paths"
 reason = "Python wrapper class over the unsendable native handle; adds bdfparser's live headers/props/glyphs/unencoded views, iterators, keyword arguments and warnings integration"
 
 [[rule]]
@@ -151,18 +200,24 @@ pattern = "fontpixel::compat::bdfparser::font::Font::*"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Font.{name} / BdfparserRawFont.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::load_*"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.{name} / RawFont.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+js = "Font.load_string / load_bytes / load_bytes_async / load_filelines; BdfparserRawFont.loadString / loadLines / loadBytes / loadFileObj (reader object) / loadFilePath (UnsupportedError: filesystem)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::load paths"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::load_bytes_with_options"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.load_bytes(data, pixelsize=None)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+js = "Font.load_bytes(data, {pixelsize}) (BdfparserRawFont.loadBytes(data, pixelsize))"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::load paths"
 reason = "bdfparser passes the TrueType option as load_bytes(**ttfoptions)"
 
 [[rule]]
@@ -170,12 +225,16 @@ pattern = "fontpixel::compat::bdfparser::font::Font::load_ttf"
 status = "bound"
 python = "fontpixel._native._bdfparser.RawFont.load_ttf (Font.load_bytes on TrueType data)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_load_paths"
+js = "BdfparserRawFont.loadTtf (Font.load_bytes on TrueType data)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::load paths"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::create"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.create(pixelsize=16, ascent=None, descent=None, fontname=None, familyname='Untitled', xres=75, yres=75)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+js = "Font.create({pixelsize, ascent, descent, fontname, familyname, xres, yres}) (BdfparserRawFont.create)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::create and core round trip"
 reason = "keyword arguments instead of the CreateOptions struct"
 
 [[rule]]
@@ -183,18 +242,24 @@ pattern = "fontpixel::compat::bdfparser::font::Font::core"
 status = "bound"
 python = "fontpixel._native._bdfparser.RawFont.core (returns fontpixel.Font)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+js = "BdfparserRawFont.core (a native Font)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::create and core round trip"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::from_core"
 status = "bound"
 python = "fontpixel._native._bdfparser.RawFont.from_core(fontpixel.Font)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+js = "BdfparserRawFont.fromCore / fromCore(nativeFont)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::create and core round trip"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::report"
 status = "adapted"
 python = "BDFParserWarning via the warnings module; RawFont.report() returns the plain-data report"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_parse_warnings_are_bdfparser_warnings"
+js = "setWarningHandler (warning-level entries); BdfparserRawFont.report"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::warnings go to the handler"
 reason = "bdfparser reports warnings through Python's warnings module: warning-level entries are re-emitted after each call; info-level native notes are not warnings"
 
 [[rule]]
@@ -202,6 +267,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::headers"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.headers (live mapping)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.headers (live view)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 reason = "bdfparser attribute; reads project the model, writes go through Font::set_header / remove_header / set_headers (in place)"
 
 [[rule]]
@@ -209,6 +276,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::set_headers"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.headers = mapping / headers.update(...) (RawFont.set_headers)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "Font.headers = object (BdfparserRawFont.setHeaders)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser assigns the headers dict attribute; the binding replaces the native headers in place"
 
 [[rule]]
@@ -216,6 +285,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::set_header"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.headers[key] = value (RawFont.set_header)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "font.headers[key] = value (BdfparserRawFont.setHeader)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser item assignment on the headers dict"
 
 [[rule]]
@@ -223,6 +294,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::remove_header"
 status = "adapted"
 python = "del fontpixel.compat.bdfparser.Font.headers[key] (RawFont.remove_header; KeyError when absent)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "delete font.headers[key] (BdfparserRawFont.removeHeader)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser item deletion on the headers dict"
 
 [[rule]]
@@ -230,6 +303,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::lookup"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.glyphs[cp] / iterglyphs (RawFont.lookup)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "Font.glyphbycp / glyphs.get (BdfparserRawFont.lookup)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser reads glyphs without a warning through its glyphs dict; the binding uses the non-warning lookup there"
 
 [[rule]]
@@ -237,6 +312,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::unencoded_*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.unencoded[i]['meta'] / ['altcode'] (RawFont.{name})"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "Font.unencoded (BdfparserRawFont.{camelName})"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser's unencoded list of {'altcode', 'meta'} dicts; item assignment into a meta list writes through the slot's handle"
 
 [[rule]]
@@ -244,6 +321,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::set_unencoded_*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.unencoded[i]['meta'][k] = v (RawFont.set_unencoded_meta / RawFont.set_altcode)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "font.unencoded[i].altcode = v / .meta[k] = v (BdfparserRawFont.{camelName})"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser edits the stored unencoded list entries in place"
 
 [[rule]]
@@ -251,6 +330,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::remove_unencoded"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.unencoded.clear() / del unencoded[i] (RawFont.remove_unencoded)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "font.unencoded.length = n / splice (BdfparserRawFont.removeUnencoded)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "bdfparser list operations on the unencoded list; an index out of range raises IndexError"
 
 [[rule]]
@@ -258,12 +339,16 @@ pattern = "fontpixel::compat::bdfparser::font::Font::prepare_meta"
 status = "bound"
 python = "fontpixel._native._bdfparser.RawFont.prepare_meta"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "BdfparserRawFont.prepareMeta"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::put_with_alt"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.unencoded.append({'altcode': n, 'meta': [...]}) (RawFont.put_with_alt(fields, altcode))"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "font.unencoded.push({altcode, meta}) (BdfparserRawFont.putWithAlt)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded editors keep handles"
 reason = "takes the bdfparser meta fields dict; normalized with prepare_meta first"
 
 [[rule]]
@@ -271,12 +356,16 @@ pattern = "fontpixel::compat::bdfparser::font::fmtver"
 status = "bound"
 python = "fontpixel.compat.bdfparser.font.fmtver / fontpixel._native._bdfparser.fmtver"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_header_and_unencoded_editors_keep_handles"
+js = "bdfparserFmtver"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::defaultglyphname, fmtnum and fmtver"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::warnings_since"
 status = "adapted"
 python = "BDFParserWarning via the warnings module (RawFont.warnings_since)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_parse_warnings_are_bdfparser_warnings"
+js = "setWarningHandler (BdfparserRawFont.warningsSince)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::warnings go to the handler"
 reason = "the binding re-emits new warning-level entries through Python's warnings module after each call"
 
 [[rule]]
@@ -284,6 +373,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::props"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.props (live mapping)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.props (live view, null prototype)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 reason = "bdfparser attribute; writes go through setprop/delprop"
 
 [[rule]]
@@ -291,30 +382,40 @@ pattern = "fontpixel::compat::bdfparser::font::Font::getprop"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.getprop"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.getprop"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::setprop"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.setprop"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.setprop"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::delprop"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.delprop"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.delprop"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::swidth"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.swidth"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_headers_props_views_write_through"
+js = "Font.swidth"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::headers and props views write through"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::charset"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.charset (property)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.charset (getter / setter)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 reason = "bdfparser exposes charset as a property"
 
 [[rule]]
@@ -322,6 +423,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::encoding"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.encoding(charset=None, char2cp=None, cp2char=None)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.encoding({iconv, charset, char2cp, cp2char})"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 reason = "bdfparser combines the charset override and the converter callables in one keyword method"
 
 [[rule]]
@@ -329,6 +432,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::set_converters"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.encoding(char2cp=..., cp2char=...) / RawFont.set_converters"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.encoding({char2cp, cp2char}) (BdfparserRawFont.setConverters)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 reason = "Python callables (str -> int | None, int -> str | None) wrapped as numeric Converters; exceptions they raise propagate"
 
 [[rule]]
@@ -336,42 +441,56 @@ pattern = "fontpixel::compat::bdfparser::font::Font::unicode2cp"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.unicode2cp / RawFont.unicode2cp"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.char2cp (BdfparserRawFont.unicode2cp)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::char2cp"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.char2cp / RawFont.char2cp"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.char2cp / BdfparserRawFont.char2cp"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::cp2unicode"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.cp2unicode / RawFont.cp2unicode"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.cp2char (BdfparserRawFont.cp2unicode)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::cp2char"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.cp2char / RawFont.cp2char"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.cp2char / BdfparserRawFont.cp2char"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::charsetconvert"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.charsetconvert"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+js = "Font.charsetconvert"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::clone, subset, merge, transform, charsetconvert"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::length"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.length / len(font)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+js = "Font.length (getter) / font.glyphs.size"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::glyphs and unencoded views"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::iter*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.{name}(order=1, r=None)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Font.{name}(order, r) (itercps: array; iterglyphs: iterator)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 reason = "returns a Python iterator; ranges are bdfparser's int / tuple / list of tuples"
 
 [[rule]]
@@ -379,6 +498,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::model"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.glyphs / unencoded / _propnames (RawFont.model)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+js = "Font.glyphs / unencoded / _propnames views (BdfparserRawFont.model)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::glyphs and unencoded views"
 reason = "the canonical model backs bdfparser's glyphs/unencoded views; RawFont.model() returns it as plain data"
 
 [[rule]]
@@ -386,6 +507,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::add_handle"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.addglyph(Glyph) / removeglyph(Glyph)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.addglyph(Glyph) (BdfparserRawFont.addHandle)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 reason = "bdfparser's addglyph/removeglyph accept a Glyph as well as a dict/codepoint"
 
 [[rule]]
@@ -393,6 +516,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::remove_handle"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.addglyph(Glyph) / removeglyph(Glyph)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.removeglyph(Glyph) (BdfparserRawFont.removeHandle)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 reason = "bdfparser's addglyph/removeglyph accept a Glyph as well as a dict/codepoint"
 
 [[rule]]
@@ -400,48 +525,64 @@ pattern = "fontpixel::compat::bdfparser::font::Font::addglyph"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.addglyph"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.addglyph / BdfparserRawFont.addglyph"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::removeglyph"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.removeglyph"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.removeglyph / BdfparserRawFont.removeglyph"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::newglyph"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.newglyph"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.newglyph(cp, bitmap, {mode, name, dwidth}) / BdfparserRawFont.newglyph"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::glyph"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.glyph"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "BdfparserRawFont.glyph (warns; Font.glyph uses char2cp + lookup without a warning, as bdfparser-js)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::updatebbox"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.updatebbox"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Font.updatebbox"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::subset"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.subset"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+js = "Font.subset"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::clone, subset, merge, transform, charsetconvert"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::merge"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.merge"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+js = "Font.merge"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::clone, subset, merge, transform, charsetconvert"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::transform"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.transform(fn, r=None, mode=0)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_clone_subset_merge_transform_charsetconvert"
+js = "Font.transform(fn, r, mode)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::clone, subset, merge, transform, charsetconvert"
 reason = "fn is a Python callable Bitmap -> Bitmap | None; its exceptions propagate after Rust's partial-mutation order"
 
 [[rule]]
@@ -449,6 +590,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::draw*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.{name}(..., linelimit, mode, direction, usecurrentglyphspacing, missing)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_drawing"
+js = "Font.{name}(..., {linelimit, mode, direction, usecurrentglyphspacing, missing})"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::drawing"
 reason = "bdfparser keyword arguments mapped to the Rust draw keyword map (ucgs, linelimit, mode, direction, missing, order, r)"
 
 [[rule]]
@@ -456,12 +599,16 @@ pattern = "fontpixel::compat::bdfparser::font::Font::to*"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Font.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+js = "Font.{name}"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::ttf and svg goldens match rust"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::topcf"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.topcf(byteorder='msb', bitorder='msb', glyphpad=4, scanunit=1)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+js = "Font.topcf({byteorder, bitorder, glyphpad, scanunit}) / writePcf"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::output and save"
 reason = "bdfparser's bdftopcf-style keywords mapped to PcfWriteOptions"
 
 [[rule]]
@@ -469,6 +616,8 @@ pattern = "fontpixel::compat::bdfparser::font::Font::save*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.save(path, format=None, **opts) / RawFont.save_to(fileobj, format, options)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+js = "BdfparserRawFont.saveTo(writer, format, options) / BdfparserRawFont.save (UnsupportedError: filesystem)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::output and save"
 reason = "format string + writer keywords instead of SaveOptions; SVG with options writes tosvgfont(**opts)"
 
 [[rule]]
@@ -476,6 +625,8 @@ pattern = "fontpixel::compat::bdfparser::font::Converter"
 status = "adapted"
 python = "Python callables passed to fontpixel.compat.bdfparser.Font.encoding"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "JS functions passed to Font.encoding({char2cp, cp2char})"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 reason = "a Rust closure wrapper; Python passes plain callables"
 
 [[rule]]
@@ -483,6 +634,8 @@ pattern = "fontpixel::compat::bdfparser::font::Converter::new"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.encoding(char2cp=callable, cp2char=callable)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_charset_encoding_and_converters"
+js = "Font.encoding({char2cp: fn, cp2char: fn}) (BdfparserRawFont.setConverters)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::charset encoding and converters"
 reason = "constructed from the Python callable"
 
 [[rule]]
@@ -490,6 +643,8 @@ pattern = "fontpixel::compat::bdfparser::font::CreateOptions"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.create keywords / RawFont.create(dict)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_create_and_core_round_trip"
+js = "Font.create options / BdfparserRawFont.create(plain data)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::create and core round trip"
 reason = "serde dict (Deserialize, unknown keys rejected) built from Font.create's keyword arguments"
 
 # --- Glyph --------------------------------------------------------------------
@@ -499,6 +654,8 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph (handle fontpixel._native._bdfparser.RawGlyph)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Glyph (handle BdfparserRawGlyph)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 reason = "Python wrapper class: the bdfparser `meta` dict and `font` attributes, direct meta edits written with the next editing method"
 
 [[rule]]
@@ -506,12 +663,16 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph::*"
 status = "bound"
 python = "fontpixel.compat.bdfparser.Glyph.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Glyph.{name} / BdfparserRawGlyph.{camelName}"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::glyph::Glyph::new"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph(meta_dict, font)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "new Glyph(meta_obj, font) (new BdfparserRawGlyph)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 reason = "Python constructor"
 
 [[rule]]
@@ -519,6 +680,8 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph::meta"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph.meta (dict) / RawGlyph.meta() (17-slot list)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Glyph.meta (object) / BdfparserRawGlyph.meta() (17 slots)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 reason = "bdfparser exposes the meta as a dict keyed by META_TITLES"
 
 [[rule]]
@@ -526,6 +689,8 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph::font"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph.font (the owning Python Font) / RawGlyph.font()"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Glyph.font / BdfparserRawGlyph.font()"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 reason = "attribute holding the same Python Font object (bdfparser identity)"
 
 [[rule]]
@@ -533,6 +698,8 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph::is_attached"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph._attached / RawGlyph.is_attached()"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_add_remove_new_glyphs"
+js = "Glyph._attached / BdfparserRawGlyph.isAttached()"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::add, remove and new glyphs"
 reason = "bdfparser's (private) attribute name"
 
 [[rule]]
@@ -540,6 +707,8 @@ pattern = "fontpixel::compat::bdfparser::glyph::Glyph::transform"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Glyph.transform(fn, mode=0)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_query_and_glyph_handles"
+js = "Glyph.transform(fn, mode)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::query and glyph handles"
 reason = "fn is a Python callable Bitmap -> Bitmap | None"
 
 [[rule]]
@@ -547,18 +716,24 @@ pattern = "fontpixel::compat::bdfparser::glyph::META_TITLES"
 status = "bound"
 python = "fontpixel.compat.bdfparser.glyph.META_TITLES"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_module_surface"
+js = "META_TITLES / bdfparserMetaTitles"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::module surface"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::glyph::defaultglyphname"
 status = "bound"
 python = "fontpixel.compat.bdfparser.defaultglyphname"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_defaultglyphname_and_fmtnum"
+js = "defaultglyphname / bdfparserDefaultGlyphName"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::defaultglyphname, fmtnum and fmtver"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::projection::Meta"
 status = "adapted"
 python = "list of 17 values (Font.glyphs[cp], RawGlyph.meta())"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_glyphs_and_unencoded_views"
+js = "17-slot arrays (font.glyphs values, BdfparserRawGlyph.meta())"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::glyphs and unencoded views"
 reason = "type alias of Vec<serde_json::Value>; a Python list"
 
 [[rule]]
@@ -566,6 +741,8 @@ pattern = "fontpixel::compat::bdfparser::io::SaveOptions"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.save(path, format, **opts)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_output_and_save"
+js = "BdfparserRawFont.saveTo(writer, format, options)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::output and save"
 reason = "format name + writer keyword options"
 
 # --- outline / svg / ttf --------------------------------------------------------
@@ -575,12 +752,16 @@ pattern = "fontpixel::compat::bdfparser::outline"
 status = "bound"
 python = "fontpixel.compat.bdfparser.outline"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_outline_functions"
+js = "bitmapContours / rasterize"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::outline functions"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::outline::rasterize"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.outline.rasterize (rows) / fontpixel._native._bdfparser.rasterize (Bitmap)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_outline_functions"
+js = "rasterize (rows) / bdfparserRasterize (BdfparserRawBitmap)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::outline functions"
 reason = "bdfparser returns the row strings"
 
 [[rule]]
@@ -588,28 +769,38 @@ pattern = "fontpixel::compat::bdfparser::svg"
 status = "bound"
 python = "fontpixel.compat.bdfparser.bitmap (fmtnum), Bitmap.tosvg, Font.tosvgfont"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_bitmap_svg"
+js = "Bitmap.tosvg, Font.tosvgfont, fmtnum"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::bitmap svg"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::svg::fmtnum"
 status = "bound"
 python = "fontpixel.compat.bdfparser.bitmap.fmtnum"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_defaultglyphname_and_fmtnum"
+js = "fmtnum / bdfparserFmtnum"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::defaultglyphname, fmtnum and fmtver"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::ttf"
 status = "bound"
 python = "fontpixel.compat.bdfparser.ttf"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+js = "readTtf / writeTtf"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::ttf and svg goldens match rust"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::ttf::*_ttf"
 status = "bound"
 python = "fontpixel.compat.bdfparser.ttf.{name}"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+js = "readTtf / writeTtf (bdfparserReadTtf / bdfparserWriteTtf)"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::ttf and svg goldens match rust"
 
 [[rule]]
 pattern = "fontpixel::compat::bdfparser::ttf::TtfOptions"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.ttf.write_ttf / Font.tottf keywords (shape, dotsize, ppu, metadata, timestamp)"
 python_test = "crates/fontpixel-py/tests/test_compat.py::test_ttf_and_svg_goldens_match_rust"
+js = "writeTtf / Font.tottf options {shape, dotsize, ppu, metadata, timestamp}"
+js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::ttf and svg goldens match rust"
 reason = "serde dict (Deserialize) built from bdfparser's keyword arguments"

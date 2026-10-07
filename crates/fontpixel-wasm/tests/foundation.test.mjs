@@ -205,3 +205,11 @@ test('every error class derives from FontpixelError and Error', () => {
   }
   assert.equal(fp.makeError, undefined, 'the internal factory is not exported');
 });
+
+test('completed asynchronous initialization makes initSync idempotent without host file access', async () => {
+  const fp = await load();
+  const before = fp.version();
+  fp.initSync();
+  await fp.init();
+  assert.equal(fp.version(), before);
+});

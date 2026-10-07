@@ -59,7 +59,11 @@ cat > "$typing/tsconfig.json" <<EOF
     "lib": ["ES2022", "DOM", "ESNext.Disposable"],
     "types": [],
     "skipLibCheck": false,
-    "paths": { "fontpixel": ["$target/wasm-pkg/${profiles[0]}/index.d.ts"] }
+    "paths": {
+      "fontpixel": ["$target/wasm-pkg/${profiles[0]}/index.d.ts"],
+      "fontpixel/compat/bdfparser": ["$target/wasm-pkg/${profiles[0]}/compat_bdfparser.d.ts"],
+      "fontpixel/compat/bdfparser/cli": ["$target/wasm-pkg/${profiles[0]}/compat_bdfparser_cli.d.ts"]
+    }
   },
   "files": ["$PWD/crates/fontpixel-wasm/tests/typing/smoke.ts"]
 }

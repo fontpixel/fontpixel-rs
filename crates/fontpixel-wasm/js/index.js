@@ -38,6 +38,7 @@ guardHandles(glue);
 installModelProtocols(glue);
 
 let pending = null;
+let initialized = false;
 
 async function readFileUrl(url) {
   // Node: fetch() cannot read file: URLs. The specifier is hidden from
@@ -59,6 +60,7 @@ export function init(source) {
       let input = source;
       if (input === undefined) input = wasmUrl.protocol === 'file:' ? await readFileUrl(wasmUrl) : wasmUrl;
       await initGlue({ module_or_path: input });
+      initialized = true;
     })();
     pending.catch(() => {
       pending = null;
@@ -76,6 +78,7 @@ export function init(source) {
  * (`process.getBuiltinModule`, Node >= 20.16 / 22.3).
  */
 export function initSync(source) {
+  if (initialized) return;
   let input = source;
   if (input === undefined) {
     const fs = globalThis.process?.getBuiltinModule?.('node:fs');
@@ -85,5 +88,6 @@ export function initSync(source) {
     input = fs.readFileSync(wasmUrl);
   }
   initSyncGlue({ module: input });
+  initialized = true;
   pending ??= Promise.resolve();
 }
