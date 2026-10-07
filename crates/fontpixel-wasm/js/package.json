@@ -12,12 +12,18 @@
       "types": "./index.d.ts",
       "default": "./index.js"
     },
+    "./node-files": {
+      "types": "./ops-node-files.d.ts",
+      "node": "./ops-node-files.js"
+    },
+    "./ops-worker.js": "./ops-worker.js",
     "./fontpixel_wasm_bg.wasm": "./fontpixel_wasm_bg.wasm",
     "./package.json": "./package.json"
   },
   "sideEffects": [
     "./index.js",
-    "./guard.js"
+    "./guard.js",
+    "./ops-worker.js"
   ],
   "engines": {
     "node": ">=18"

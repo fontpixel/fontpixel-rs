@@ -29,6 +29,7 @@ export {
   CancelledError,
 } from './errors.js';
 export { withAsyncResources } from './resources.js';
+export { FontpixelWorker, compileModule, createWorker, mergeInWorker } from './ops-client.js';
 
 /** URL of the WebAssembly module shipped next to this file. */
 export const wasmUrl = new URL('./fontpixel_wasm_bg.wasm', import.meta.url);

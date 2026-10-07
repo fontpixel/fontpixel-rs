@@ -25,7 +25,7 @@ cjk-charsets = ["fontpixel/cjk-charsets"]
 # (flate2 + crc32fast) and is enabled in every profile.
 png = ["fontpixel/png", "fontpixel-ops/png"]
 # Batch job files in TOML text (never paths) through the shared CLI definition.
-toml = ["fontpixel-ops/toml"]
+toml = ["fontpixel-ops/toml", "dep:clap"]
 # Smallest useful build: BDF/PCF/YAFF only.
 minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "png"]
 # W8.3 merge page: bitmap inputs and every merge output (BDF, PCF, OTB,
@@ -42,6 +42,8 @@ serde_json = { workspace = true, features = ["arbitrary_precision", "preserve_or
 # same version (wasm-pack installs the CLI matching Cargo.lock).
 wasm-bindgen = "=0.2.129"
 js-sys = "=0.3.106"
+# The command-line parser (`ops.parseArgs`), with the `toml` feature only.
+clap = { workspace = true, optional = true }
 
 # wasm-bindgen's generated glue contains `unsafe`, so this crate cannot use
 # the workspace-wide `forbid(unsafe_code)`; it writes no unsafe code itself

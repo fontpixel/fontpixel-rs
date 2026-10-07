@@ -39,6 +39,8 @@ pub mod metadata;
 pub mod model;
 pub mod model_args;
 pub mod normalize;
+pub mod ops;
+pub mod ops_page;
 pub mod outline;
 pub mod render;
 pub mod resources;

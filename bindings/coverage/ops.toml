@@ -8,22 +8,24 @@ pattern = "fontpixel_ops"
 status = "bound"
 python = "fontpixel.ops"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "ops namespace (ops.convert, ops.merge, …) plus info/merge/render"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 
 [[rule]]
 pattern = "fontpixel_ops::capabilities"
 status = "bound"
 python = "fontpixel.ops.capabilities"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
-js = "capabilities() / requireCapability(name)"
-js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::capabilities are explicit records"
+js = "ops.capabilities() / capabilities() / requireCapability(name)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 
 [[rule]]
 pattern = "fontpixel_ops::Capabilities"
 status = "adapted"
 python = "fontpixel.ops.capabilities() dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
-js = "capabilities() records {name, available, reason, evidence, alternative}"
-js_test = "crates/fontpixel-wasm/tests/foundation.test.mjs::capabilities are explicit records"
+js = "ops.capabilities() {filesystem, threads, toml_batch}; capabilities() records"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 reason = "plain dict {filesystem, threads, toml_batch}"
 
 [[rule]]
@@ -31,6 +33,8 @@ pattern = "fontpixel_ops::Completed"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (outputs, bundles, destinations)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "OperationResult (outputs, bundles, destinations)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert in memory equals the command line"
 reason = "response and prepared outputs carried by the result object"
 
 [[rule]]
@@ -38,18 +42,24 @@ pattern = "fontpixel_ops::convert"
 status = "bound"
 python = "fontpixel.ops.convert"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "ops.convert(request, {files, progress})"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert in memory equals the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::merge"
 status = "bound"
 python = "fontpixel.ops.merge"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
+js = "ops.merge(request, {files, progress}); merge(parts, options)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::merge equals the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::merge_with_progress"
 status = "adapted"
 python = "fontpixel.ops.merge(..., progress=callback)"
 python_test = "crates/fontpixel-py/tests/test_progress.py::test_merge_progress_reports_each_step_and_equals_merge"
+js = "ops.merge(request, {files, progress}) / merge(parts, {progress}) / FontpixelWorker.merge(parts, options, {onProgress, signal})"
+js_test = "crates/fontpixel-wasm/tests/ops-progress.test.mjs::merge progress reports each step and equals merge"
 reason = "progress keyword of fontpixel.ops.merge: the callback gets a Progress dict per step; returning False (Break) raises CancelledError, raising cancels and re-raises"
 
 [[rule]]
@@ -57,6 +67,8 @@ pattern = "fontpixel_ops::convert_with_progress"
 status = "adapted"
 python = "fontpixel.ops.convert(..., progress=callback)"
 python_test = "crates/fontpixel-py/tests/test_progress.py::test_convert_progress_alternates_reads_and_encodes"
+js = "ops.convert/ops.vectorize(request, {files, progress})"
+js_test = "crates/fontpixel-wasm/tests/ops-progress.test.mjs::convert progress alternates reads and encodes"
 reason = "progress keyword of fontpixel.ops.convert/vectorize; same callback contract as merge"
 
 [[rule]]
@@ -64,6 +76,8 @@ pattern = "fontpixel_ops::Progress"
 status = "adapted"
 python = "fontpixel.types.Progress dict passed to the progress callback"
 python_test = "crates/fontpixel-py/tests/test_progress.py::test_merge_progress_reports_each_step_and_equals_merge"
+js = "Progress plain data passed to progress / onProgress"
+js_test = "crates/fontpixel-wasm/tests/ops-progress.test.mjs::merge progress reports each step and equals merge"
 reason = "plain serde data {step, done, total, item, glyphs, bytes}"
 
 [[rule]]
@@ -71,6 +85,8 @@ pattern = "fontpixel_ops::ProgressStep"
 status = "adapted"
 python = "Progress[\"step\"]: \"read\" | \"merge\" | \"encode\""
 python_test = "crates/fontpixel-py/tests/test_progress.py::test_convert_progress_alternates_reads_and_encodes"
+js = "Progress.step: \"read\" | \"merge\" | \"encode\""
+js_test = "crates/fontpixel-wasm/tests/ops-progress.test.mjs::convert progress alternates reads and encodes"
 reason = "snake_case serde enum string"
 
 [[rule]]
@@ -78,60 +94,80 @@ pattern = "fontpixel_ops::variants"
 status = "bound"
 python = "fontpixel.ops.variants"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_variants_and_subset_equal_the_command_line"
+js = "ops.variants (sfnt_operations)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::variants and subset equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::subset"
 status = "bound"
 python = "fontpixel.ops.subset"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_variants_and_subset_equal_the_command_line"
+js = "ops.subset (sfnt_operations)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::variants and subset equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::charset"
 status = "bound"
 python = "fontpixel.ops.charset"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "ops.charset"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::charset and render equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::render"
 status = "bound"
 python = "fontpixel.ops.render"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "ops.render (PNG/SVG output); render(fontBytes, text, options) for page pixels"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::charset and render equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::validate"
 status = "bound"
 python = "fontpixel.ops.validate"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "ops.validate"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::diff"
 status = "bound"
 python = "fontpixel.ops.diff"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "ops.diff"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::info"
 status = "bound"
 python = "fontpixel.ops.info"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "ops.info; info(bytes, options)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::preview"
 status = "bound"
 python = "fontpixel.ops.preview"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "ops.preview; render(fontBytes, text, options) reuses it"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::formats"
 status = "bound"
 python = "fontpixel.ops.formats"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_formats_documents_equal_the_command_line"
+js = "ops.formats"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::formats documents equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::memory"
 status = "adapted"
 python = "fontpixel.ops.<operation>(files=...)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "ops.<operation>(request, {files})"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "storage is chosen per call with the files argument"
 
 [[rule]]
@@ -139,6 +175,8 @@ pattern = "fontpixel_ops::memory::Storage"
 status = "adapted"
 python = "files=None (filesystem) / dict / ResourceSet / resolver object"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_filesystem_mode_protects_sources_and_rolls_back_groups"
+js = "files: object / Map / provider object (memory storage); omitted files (filesystem storage) throw UnsupportedError (capability filesystem)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::filesystem storage is unavailable and throws UnsupportedError"
 reason = "storage is chosen per call with the files argument"
 
 [[rule]]
@@ -146,6 +184,8 @@ pattern = "fontpixel_ops::memory::Storage::memory"
 status = "adapted"
 python = "files={name: bytes}"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "files: {name: bytes} or Map"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "a dict or ResourceSet becomes memory storage"
 
 [[rule]]
@@ -153,6 +193,8 @@ pattern = "fontpixel_ops::memory::MemoryFiles"
 status = "adapted"
 python = "files={name: bytes} or fontpixel.ResourceSet"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "files object / Map of storage key to bytes"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "Python dict / ResourceSet of named buffers"
 
 [[rule]]
@@ -160,6 +202,8 @@ pattern = "fontpixel_ops::memory::MemoryFiles::*"
 status = "adapted"
 python = "dict operations on the files argument"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "object / Map operations on the files argument"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "the set is built from a Python dict / ResourceSet; dict methods replace insert/get/remove/iter/len"
 
 [[rule]]
@@ -167,6 +211,8 @@ pattern = "fontpixel_ops::memory::FileProvider"
 status = "adapted"
 python = "files=<object with entry/read/list>"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "files: {entry(path), read(path), list(directory)} provider object"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "duck-typed Python resolver object; callback exceptions are re-raised"
 
 [[rule]]
@@ -174,6 +220,8 @@ pattern = "fontpixel_ops::memory::FileProvider::*"
 status = "adapted"
 python = "resolver.entry/read/list(path)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_missing_inputs_and_resolver_errors"
+js = "provider.entry/read/list(path); exceptions rethrown unchanged"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::missing inputs and provider errors"
 reason = "duck-typed Python resolver methods (is_file derives from entry)"
 
 [[rule]]
@@ -181,6 +229,8 @@ pattern = "fontpixel_ops::memory::EntryKind"
 status = "adapted"
 python = "resolver.entry() -> None | int | \"directory\""
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_resolver_objects_and_resource_sets_match_named_buffers"
+js = "provider.entry() returns null | length (number or bigint) | \"directory\""
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::provider objects and Maps match named buffers"
 reason = "entry kinds as Python return values"
 
 [[rule]]
@@ -188,12 +238,16 @@ pattern = "fontpixel_ops::memory::key"
 status = "bound"
 python = "fontpixel.ops.memory_key"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "ops.memoryKey"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 
 [[rule]]
 pattern = "fontpixel_ops::context::PreparedOutput"
 status = "adapted"
 python = "OperationResult.bundles / outputs / destinations"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_memory_outputs_with_sidecars_are_grouped_by_destination"
+js = "OperationResult.bundles / outputs / destinations"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::memory outputs with sidecars are grouped by destination"
 reason = "destination -> fontpixel.OutputBundle dict plus flat key -> bytes dict"
 
 [[rule]]
@@ -201,6 +255,8 @@ pattern = "fontpixel_ops::context::PreparedOutput::keyed_assets"
 status = "adapted"
 python = "OperationResult.outputs"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_memory_outputs_with_sidecars_are_grouped_by_destination"
+js = "OperationResult.outputs / merge(...).files"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::memory outputs with sidecars are grouped by destination"
 reason = "flat {storage key: bytes} dict"
 
 [[rule]]
@@ -208,6 +264,8 @@ pattern = "fontpixel_ops::json"
 status = "adapted"
 python = "OperationResult.json(pretty)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult.json(pretty)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "documents are rendered by the result objects"
 
 [[rule]]
@@ -215,6 +273,8 @@ pattern = "fontpixel_ops::json::*"
 status = "adapted"
 python = "OperationResult.json(pretty) / BatchResult.json()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult.json(pretty) / BatchResult.json() / merge(...).json"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "documents are rendered by the result objects in the command-line layout"
 
 [[rule]]
@@ -232,18 +292,24 @@ pattern = "fontpixel_ops::batch"
 status = "bound"
 python = "fontpixel.ops.batch"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batch"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::run"
 status = "bound"
 python = "fontpixel.ops.batch"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batch(request, {files})"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::BatchRequest"
 status = "adapted"
 python = "fontpixel.ops.batch({tasks, jobs, max_*_bytes, protected_paths})"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batch({tasks, jobs, max_*_bytes, protected_paths})"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 reason = "plain request dict; unknown keys rejected"
 
 [[rule]]
@@ -251,6 +317,8 @@ pattern = "fontpixel_ops::batch::BatchResponse"
 status = "adapted"
 python = "fontpixel.ops.BatchResult"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "BatchResult"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 reason = "result object with exit_code/jobs/workers/tasks/outputs/bundles/json()"
 
 [[rule]]
@@ -258,6 +326,8 @@ pattern = "fontpixel_ops::batch::TaskSummary"
 status = "adapted"
 python = "BatchResult.tasks (dicts)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "BatchResult.tasks (plain objects)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 reason = "plain dicts"
 
 [[rule]]
@@ -265,6 +335,8 @@ pattern = "fontpixel_ops::batch::BatchTask"
 status = "adapted"
 python = "task dict {id, kind, ...request keys}"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "task object {id, kind, ...request keys}"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::typed batch runs in every profile"
 reason = "plain task dicts"
 
 [[rule]]
@@ -272,6 +344,8 @@ pattern = "fontpixel_ops::batch::BatchTask::new"
 status = "adapted"
 python = "task dict {id, kind, ...request keys}"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "task object {id, kind, ...request keys}"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::typed batch runs in every profile"
 reason = "each valid task dict is built with BatchTask::new"
 
 [[rule]]
@@ -279,6 +353,8 @@ pattern = "fontpixel_ops::batch::TaskAction"
 status = "adapted"
 python = "an invalid task dict fails alone (exit code 2)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "an invalid task object fails alone (exit code 2)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::typed batch runs in every profile"
 reason = "invalid requests become TaskAction::Invalid"
 
 [[rule]]
@@ -286,6 +362,8 @@ pattern = "fontpixel_ops::batch::TaskKind"
 status = "adapted"
 python = "task 'kind' string"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_batch_toml_lists_prepared_tasks"
+js = "task kind string"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::parseBatchToml lists prepared tasks"
 reason = "lowercase string"
 
 [[rule]]
@@ -293,6 +371,8 @@ pattern = "fontpixel_ops::batch::TaskKind::name"
 status = "adapted"
 python = "BatchResult.tasks[i]['kind']"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "BatchResult.tasks[i].kind"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 reason = "kind names in task summaries"
 
 [[rule]]
@@ -300,6 +380,8 @@ pattern = "fontpixel_ops::batch::TaskRequest"
 status = "adapted"
 python = "task dict with a 'kind' tag"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "task object with a kind tag"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -307,6 +389,8 @@ pattern = "fontpixel_ops::batch::TaskRequest::*"
 status = "adapted"
 python = "fontpixel.ops.inspect_request(kind, request)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "ops.inspectRequest(kind, request) (declared_inputs, weight)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "kind/declared_inputs/weight/validate reported by inspect_request"
 
 [[rule]]
@@ -314,12 +398,16 @@ pattern = "fontpixel_ops::batch::DEFAULT_*"
 status = "bound"
 python = "fontpixel.ops.{name}"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "ops.defaults() (max_working_bytes, max_pending_bytes, max_report_bytes, max_task_report_bytes)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::write_failure"
 status = "adapted"
 python = "exception.document of a whole-batch failure"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_whole_batch_failures_carry_the_command_line_document"
+js = "error.document of a whole-batch failure"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::whole batch failures carry the command-line document"
 reason = "the failure document is attached to the raised exception"
 
 [[rule]]
@@ -327,30 +415,40 @@ pattern = "fontpixel_ops::batch::toml"
 status = "bound"
 python = "fontpixel.ops.batch_toml"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batchToml (toml_batch)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::toml::parse"
 status = "bound"
 python = "fontpixel.ops.parse_batch_toml"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_batch_toml_lists_prepared_tasks"
+js = "ops.parseBatchToml (toml_batch)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::parseBatchToml lists prepared tasks"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::toml::run_text"
 status = "bound"
 python = "fontpixel.ops.batch_toml"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batchToml(text, {files, base, jobs})"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::batch toml and typed tasks equal the command line"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::toml::run_path"
 status = "bound"
 python = "fontpixel.ops.batch_file"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_batch_toml_file_and_typed_tasks_equal_the_command_line"
+js = "ops.batchFile(path) throws UnsupportedError (capability filesystem); read the job file and call ops.batchToml"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::filesystem storage is unavailable and throws UnsupportedError"
 
 [[rule]]
 pattern = "fontpixel_ops::batch::toml::run_file"
 status = "adapted"
 python = "fontpixel.ops.batch_file"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_whole_batch_failures_carry_the_command_line_document"
+js = "ops.batchFile(path) throws UnsupportedError (capability filesystem)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::filesystem storage is unavailable and throws UnsupportedError"
 reason = "batch_file returns a BatchResult (run_path) and raises with the failure document instead of returning only an exit code"
 
 [[rule]]
@@ -358,6 +456,8 @@ pattern = "fontpixel_ops::cli"
 status = "adapted"
 python = "fontpixel.ops.parse_args"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "ops.parseArgs (cli_parser)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::parseArgs and inspectRequest share the command-line definition"
 reason = "argv parsed with the shared definition into {command, request, report_style, source_identity_total_bytes}"
 
 [[rule]]
@@ -365,6 +465,8 @@ pattern = "fontpixel_ops::cli::*"
 status = "adapted"
 python = "fontpixel.ops.parse_args"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "ops.parseArgs (cli_parser)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::parseArgs and inspectRequest share the command-line definition"
 reason = "argv parsed with the shared definition into plain data"
 
 [[rule]]
@@ -372,6 +474,8 @@ pattern = "fontpixel_ops::cli::Command::*"
 status = "adapted"
 python = "parse_args()/inspect_request() report_style and source_identity_total_bytes"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "ops.parseArgs()/ops.inspectRequest() report_style and source_identity_total_bytes"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::parseArgs and inspectRequest share the command-line definition"
 reason = "reported as dict keys"
 
 [[rule]]
@@ -379,6 +483,8 @@ pattern = "fontpixel_ops::options"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -386,6 +492,8 @@ pattern = "fontpixel_ops::options::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -393,6 +501,8 @@ pattern = "fontpixel_ops::metadata"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -400,6 +510,8 @@ pattern = "fontpixel_ops::metadata::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -407,6 +519,8 @@ pattern = "fontpixel_ops::outline_metadata"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -414,6 +528,8 @@ pattern = "fontpixel_ops::outline_metadata::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -421,6 +537,8 @@ pattern = "fontpixel_ops::extra_formats"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -428,6 +546,8 @@ pattern = "fontpixel_ops::extra_formats::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -435,6 +555,8 @@ pattern = "fontpixel_ops::image_formats"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -442,6 +564,8 @@ pattern = "fontpixel_ops::image_formats::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -449,6 +573,8 @@ pattern = "fontpixel_ops::p2_formats"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -456,6 +582,8 @@ pattern = "fontpixel_ops::p2_formats::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -463,6 +591,8 @@ pattern = "fontpixel_ops::p3_formats"
 status = "adapted"
 python = "request dict keys"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object keys (snake_case command-line ids; strict, validate() on deserialization)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -470,6 +600,8 @@ pattern = "fontpixel_ops::p3_formats::**"
 status = "adapted"
 python = "request dict keys (validate on deserialization)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_request_rules_reject_like_the_command_line"
+js = "request object keys (validate on deserialization; exit code 2 with the parser message)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::request rules reject like the command line"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -477,12 +609,16 @@ pattern = "fontpixel_ops::convert::output_format_for"
 status = "bound"
 python = "fontpixel.ops.output_format_for"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_capabilities_constants_and_keys"
+js = "ops.outputFormatFor"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::capabilities defaults and keys"
 
 [[rule]]
 pattern = "fontpixel_ops::convert::ConvertRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -490,6 +626,8 @@ pattern = "fontpixel_ops::convert::ConvertRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -497,6 +635,8 @@ pattern = "fontpixel_ops::merge::MergeRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -504,6 +644,8 @@ pattern = "fontpixel_ops::merge::MergeRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -511,6 +653,8 @@ pattern = "fontpixel_ops::merge::MergeSettings"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -518,6 +662,8 @@ pattern = "fontpixel_ops::merge::MergeSettings::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -525,6 +671,8 @@ pattern = "fontpixel_ops::merge::MergeInput"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -532,6 +680,8 @@ pattern = "fontpixel_ops::merge::MergeOutput"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -539,6 +689,8 @@ pattern = "fontpixel_ops::opentype::VariantsRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -546,6 +698,8 @@ pattern = "fontpixel_ops::opentype::VariantsRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -553,6 +707,8 @@ pattern = "fontpixel_ops::opentype::SubsetRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -560,6 +716,8 @@ pattern = "fontpixel_ops::opentype::SubsetRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -567,6 +725,8 @@ pattern = "fontpixel_ops::opentype::SfntOutputOptions"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -574,6 +734,8 @@ pattern = "fontpixel_ops::opentype::SfntOutputOptions::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -581,6 +743,8 @@ pattern = "fontpixel_ops::opentype::ResourceOptions"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -588,6 +752,8 @@ pattern = "fontpixel_ops::opentype::ResourceOptions::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -595,6 +761,8 @@ pattern = "fontpixel_ops::render::PreviewRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -602,6 +770,8 @@ pattern = "fontpixel_ops::render::PreviewRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -609,6 +779,8 @@ pattern = "fontpixel_ops::render::RenderRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -616,6 +788,8 @@ pattern = "fontpixel_ops::render::RenderRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -623,6 +797,8 @@ pattern = "fontpixel_ops::commands::CharsetRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -630,6 +806,8 @@ pattern = "fontpixel_ops::commands::CharsetRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -637,6 +815,8 @@ pattern = "fontpixel_ops::commands::DiffRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -644,6 +824,8 @@ pattern = "fontpixel_ops::commands::DiffRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -651,6 +833,8 @@ pattern = "fontpixel_ops::commands::ValidateRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -658,6 +842,8 @@ pattern = "fontpixel_ops::commands::ValidateRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -665,6 +851,8 @@ pattern = "fontpixel_ops::inspect::InfoRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -672,6 +860,8 @@ pattern = "fontpixel_ops::inspect::InfoRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -679,6 +869,8 @@ pattern = "fontpixel_ops::inspect::FormatsRequest"
 status = "adapted"
 python = "request dict"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_requests_are_strict_and_accept_keywords_and_paths"
+js = "request object (plain data)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::requests are strict and typed"
 reason = "plain-data dict through serde: flat request keys (command-line argument ids), unknown keys rejected, validate() run on deserialization"
 
 [[rule]]
@@ -686,6 +878,8 @@ pattern = "fontpixel_ops::inspect::FormatsRequest::*"
 status = "adapted"
 python = "checked on deserialization / fontpixel.ops.inspect_request"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_parse_args_and_inspect_request_share_the_command_line_definition"
+js = "checked on deserialization / ops.inspectRequest(operation, request)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::inspectRequest validates requests in every profile"
 reason = "validate() runs on deserialization; source_identity_total_bytes/report_style/serde shape reported by inspect_request"
 
 [[rule]]
@@ -693,6 +887,8 @@ pattern = "fontpixel_ops::convert::ConvertResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert in memory equals the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -700,6 +896,8 @@ pattern = "fontpixel_ops::convert::ConvertResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -707,6 +905,8 @@ pattern = "fontpixel_ops::convert::ConversionSummary"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert each names and options equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -714,6 +914,8 @@ pattern = "fontpixel_ops::convert::AssetSummary"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_convert_memory_and_filesystem_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert in memory equals the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -721,6 +923,8 @@ pattern = "fontpixel_ops::merge::MergeResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::merge equals the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -728,6 +932,8 @@ pattern = "fontpixel_ops::merge::MergeResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::merge equals the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -735,6 +941,8 @@ pattern = "fontpixel_ops::merge::OutputSummary"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::merge equals the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -742,6 +950,8 @@ pattern = "fontpixel_ops::merge::AssetSummary"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_merge_equals_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::convert in memory equals the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -749,6 +959,8 @@ pattern = "fontpixel_ops::opentype::SfntResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_variants_and_subset_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::variants and subset equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -756,6 +968,8 @@ pattern = "fontpixel_ops::opentype::SfntResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_variants_and_subset_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::variants and subset equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -763,6 +977,8 @@ pattern = "fontpixel_ops::render::PreviewResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::reader results expose typed fields"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -770,6 +986,8 @@ pattern = "fontpixel_ops::render::PreviewResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::reader results expose typed fields"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -777,6 +995,8 @@ pattern = "fontpixel_ops::render::RenderResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::charset and render equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -784,6 +1004,8 @@ pattern = "fontpixel_ops::render::RenderResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_charset_and_render_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::charset and render equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -791,6 +1013,8 @@ pattern = "fontpixel_ops::commands::CharsetResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -798,6 +1022,8 @@ pattern = "fontpixel_ops::commands::CharsetResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -805,6 +1031,8 @@ pattern = "fontpixel_ops::commands::DiffResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -812,6 +1040,8 @@ pattern = "fontpixel_ops::commands::DiffResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -819,6 +1049,8 @@ pattern = "fontpixel_ops::commands::Difference"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -826,6 +1058,8 @@ pattern = "fontpixel_ops::commands::ValidateResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -833,6 +1067,8 @@ pattern = "fontpixel_ops::commands::ValidateResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -840,6 +1076,8 @@ pattern = "fontpixel_ops::commands::FaceValidation"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -847,6 +1085,8 @@ pattern = "fontpixel_ops::commands::ValidationKind"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::readers equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -854,6 +1094,8 @@ pattern = "fontpixel_ops::inspect::InfoResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::reader results expose typed fields"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -861,6 +1103,8 @@ pattern = "fontpixel_ops::inspect::InfoResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_reader_results_expose_typed_fields"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::reader results expose typed fields"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"
 
 [[rule]]
@@ -868,6 +1112,8 @@ pattern = "fontpixel_ops::inspect::FormatsResponse"
 status = "adapted"
 python = "fontpixel.ops.OperationResult (summary/report/document)"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_readers_equal_the_command_line"
+js = "OperationResult (summary/report/document)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::formats documents equal the command line"
 reason = "typed response fields as OperationResult.summary plain data; documents via json()/text()"
 
 [[rule]]
@@ -875,4 +1121,6 @@ pattern = "fontpixel_ops::inspect::FormatsResponse::*"
 status = "adapted"
 python = "OperationResult.json()/text()/exit_code/font_json()/format_status()"
 python_test = "crates/fontpixel-py/tests/test_ops.py::test_reader_results_expose_typed_fields"
+js = "OperationResult.json(pretty)/text()/exitCode/fontJson(index)/formatStatus(id)"
+js_test = "crates/fontpixel-wasm/tests/ops.test.mjs::formats documents equal the command line"
 reason = "write/write_json/write_text/write_report render the result documents; equal/status -> summary['equal']/exit_code; font_json/get -> font_json()/format_status()"

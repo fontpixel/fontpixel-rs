@@ -538,6 +538,7 @@ dependencies = [
 name = "fontpixel-wasm"
 version = "0.1.0"
 dependencies = [
+ "clap",
  "fontpixel",
  "fontpixel-ops",
  "js-sys",
