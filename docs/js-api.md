@@ -35,7 +35,11 @@ Serve the package over HTTP(S) with `.wasm` MIME type `application/wasm`.
 Node's filesystem in Node. It also accepts bytes, a URL/Response or a compiled
 `WebAssembly.Module`. `initSync(bytesOrModule)` avoids asynchronous loading.
 The no-argument synchronous loader only works where the runtime provides
-synchronous host access; browsers should supply bytes/module or await `init()`.
+synchronous host access. On browser main threads use `await init()`: Chromium
+rejects synchronous instantiation of modules larger than 8 MB even if already
+compiled. Supplying a compiled module to `await init(module)` avoids compiling
+it again and uses asynchronous instantiation. `initSync` remains useful in
+Workers and Node with explicit bytes/module (including Node 18).
 Successful initialization is idempotent, including `initSync()` after `init()`.
 Each Worker has its own instance and memory. Share a compiled module, not handles.
 

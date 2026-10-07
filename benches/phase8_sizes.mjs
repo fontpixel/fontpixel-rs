@@ -18,7 +18,7 @@ const combinations = [
   ['registry-vector-woff2', vector + ',fontpixel/woff2', true, true, false],
   ['registry-vector-woff2-cjk', vector + ',fontpixel/woff2,cjk-charsets', true, true, true],
 ];
-const evidence = { ...metadata(), method: '5 fresh Node processes and 5 fresh Chromium processes per module; bytes fetched/read before timer; JS import, WebAssembly.compile and initSync measured separately; warm OS disk cache, no reuse of an engine process; no HTTP transfer latency; runtime writers exercised after timing.', combinations: [] };
+const evidence = { ...metadata(), method: '5 fresh Node processes and 5 fresh Chromium processes per module; bytes fetched/read before timer; JS import, WebAssembly.compile and asynchronous init(module) measured separately; warm OS disk cache, no reuse of an engine process; no HTTP transfer latency; runtime writers exercised after timing.', combinations: [] };
 const mounts = { '/bench/': path.join(ROOT, 'benches'), '/input/': path.join(ROOT, 'tests/data/bdf') };
 for (const [name] of combinations) mounts[`/${name}/`] = path.join(target, 'wasm-pkg', name);
 const server = await serve(mounts);

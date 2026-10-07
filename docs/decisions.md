@@ -2158,3 +2158,7 @@ The first release gate passed all full-profile tests but found a documentation m
 A repeated build still runs wasm-pack over current sources and regenerates glue/declarations. It may reuse an already optimized module only when the fresh input SHA-256, wasm-opt version and flags match, and the saved output SHA-256 verifies. This saves a repeated optimization after a documentation-only fix without bypassing source builds, type checks or tests. The rejected Sol artifacts are absent from this build directory.
 
 Benchmark loops consume each returned value through a common checksum sink; the JS noop case measures that floor. Ratios of very short scalar calls close to the baseline are not treated as precise speedups.
+
+### 2026-10-07 — Browser initialization uses asynchronous instantiation
+
+The first size/init run (gate 246) exposed Chromium’s main-thread 8 MB limit on synchronous instantiation, including already compiled modules. The matrix now measures `await init(compiledModule)` after `WebAssembly.compile` in both hosts. This follows the supported public API and does not enable a browser flag to bypass the limit. The guide and loader comment no longer suggest that precompilation alone makes large synchronous main-thread initialization possible. Worker synchronous initialization remains covered by the browser acceptance tests.

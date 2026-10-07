@@ -5,7 +5,7 @@ export async function measure(url, bytes, fontBytes) {
   const t1 = performance.now();
   const module = await WebAssembly.compile(bytes);
   const t2 = performance.now();
-  fp.initSync(module);
+  await fp.init(module);
   const t3 = performance.now();
   const catalogue = fp.formats.catalogue();
   const enabled = Object.fromEntries(['bdf', 'pcf', 'yaff', 'ttf', 'otf', 'woff', 'woff2', 'vector-raster'].map(id => [id, catalogue.find(f => f.id === id).feature_enabled]));

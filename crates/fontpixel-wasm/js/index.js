@@ -71,9 +71,9 @@ export function init(source) {
 
 /**
  * Instantiate synchronously from bytes or a compiled WebAssembly.Module
- * (idempotent). Browsers allow synchronous compilation of large modules only
- * off the main thread: on the main thread pass a module compiled with
- * `WebAssembly.compile`. Without an argument it reads the `.wasm` next to
+ * (idempotent). Browser main threads may reject synchronous compilation or
+ * instantiation of large modules, even precompiled ones; use `await init()`
+ * there. Without an argument it reads the `.wasm` next to
  * this module where the runtime offers synchronous file access
  * (`process.getBuiltinModule`, Node >= 20.16 / 22.3).
  */
