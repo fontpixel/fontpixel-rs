@@ -7,7 +7,7 @@
  "slow": false,
  "restored_fonts": 18,
  "vitest_exit_code": 1,
- "seconds": 31,
+ "seconds": 28,
  "counts": {
   "passed": 1178,
   "failed": 11,
@@ -194,11 +194,11 @@
   },
   "test/browser.test.ts::<suite>": {
    "outcome": "error",
-   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-j6/ref-run/test/browser.test.ts"
+   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run/test/browser.test.ts"
   },
   "test/build.test.ts::<suite>": {
    "outcome": "error",
-   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-j6/ref-run/test/build.test.ts"
+   "message": "Cannot find package 'tsup' imported from /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run/test/build.test.ts"
   },
   "test/charsets.test.ts::charset tables: exact parity with Python (generated fixture) ascii: cp2char over the code space, char2cp over the characters": {
    "outcome": "passed"

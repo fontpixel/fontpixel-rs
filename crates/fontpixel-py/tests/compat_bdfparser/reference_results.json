@@ -5,7 +5,7 @@
  "python": "3.10.20",
  "slow": false,
  "pytest_exit_code": 1,
- "seconds": 70.2,
+ "seconds": 117.8,
  "counts": {
   "passed": 1755,
   "failed": 8,
@@ -452,7 +452,7 @@
   },
   "tests/test_edit.py::TestAttached::test_negative_codepoint_is_normalised": {
    "outcome": "failed",
-   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/.claude/worktrees/agent-a21157199cd3815ec/crates/fontpixel-py/python/fontpixel/compat/bdfparser/glyph.py:73: AttributeError"
+   "message": "/home/chen/githubprojects/fontpixel/fontpixel-rs/crates/fontpixel-py/python/fontpixel/compat/bdfparser/glyph.py:73: AttributeError"
   },
   "tests/test_edit.py::TestAttached::test_removed_glyph_detaches": {
    "outcome": "passed"

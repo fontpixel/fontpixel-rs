@@ -2,16 +2,18 @@
   "gate": "233-p8-redo-portable-heap",
   "parallel": {
     "cases": 432,
-    "max_ratio": 0.97
+    "max_ratio": 0.9699874587128502,
+    "max_ratio_lgwin22": 0.8990232653913657
   },
   "single_threaded": {
     "cases": 252,
-    "max_ratio": 0.444
+    "max_ratio": 0.44366028337499097
   },
   "sfnt": {
     "bytes": 5621172,
     "sha256": "61fe4b721b032ef425e9980f7c592d5e2685ad00b4937506750da0266ad8af42"
   },
   "cli_sha256": "d660d98beb978b9f32f70b99ea71e5b0d178123221079fbbb1ebf669784dcf03",
-  "qualification": "Quality 10\u201311 remains an empirical envelope, not a proof; admission values unchanged."
+  "qualification": "Quality 10\u201311 remains an empirical envelope, not a proof; admission values unchanged.",
+  "source_note": "Gate 233 snapshots differ only in two newly added JS example files; all tested Rust and Cargo sources were unchanged."
 }

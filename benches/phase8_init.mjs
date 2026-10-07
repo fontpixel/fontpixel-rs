@@ -8,11 +8,11 @@ export async function measure(url, bytes, fontBytes) {
   fp.initSync(module);
   const t3 = performance.now();
   const catalogue = fp.formats.catalogue();
-  const enabled = Object.fromEntries(['bdf', 'pcf', 'yaff', 'ttf', 'otf', 'woff', 'woff2'].map(id => [id, catalogue.find(f => f.id === id).feature_enabled]));
+  const enabled = Object.fromEntries(['bdf', 'pcf', 'yaff', 'ttf', 'otf', 'woff', 'woff2', 'vector-raster'].map(id => [id, catalogue.find(f => f.id === id).feature_enabled]));
   const set = fp.read(fontBytes).fonts;
   const outputs = {};
   try {
-    for (const id of Object.keys(enabled).filter(id => enabled[id])) {
+    for (const id of Object.keys(enabled).filter(id => enabled[id] && id !== 'vector-raster')) {
       const w = fp.write(set, id);
       const out = w.output;
       try { outputs[id] = out.intoSingle().length; } finally { out.free(); w.free(); }

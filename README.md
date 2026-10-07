@@ -182,6 +182,25 @@ its `sfnt` dependency; `fea` remains a reserved feature with no implementation.
 dependency. BDF can preserve CJK source codes without those tables; actual CJK
 conversion returns an explicit feature error when the exact table is disabled.
 
+## JavaScript / WASM
+
+`crates/fontpixel-wasm` builds the ESM package `fontpixel`, with the complete
+native API and a separate `fontpixel/compat/bdfparser` API. See the
+[JS guide](docs/js-api.md), [generated reference](docs/js-api-reference.md),
+and [executable examples](examples/js/recipes.mjs).
+
+```sh
+source scripts/local-env.sh
+scripts/build_wasm.sh full          # also: minimal, merge
+node examples/js/run.mjs
+```
+
+Call `await init()` before using the native API. Inputs and outputs are buffers
+and named resource bundles. Use `createWorker()` for CPU work, progress and
+cancellation; persistence is an explicit host operation. Check `capabilities()`
+and `formats.catalogue()` for the selected profile. Local packages are built
+without publishing or deploying them.
+
 ## Python
 
 `crates/fontpixel-py` is the Python package `fontpixel`: the complete native API

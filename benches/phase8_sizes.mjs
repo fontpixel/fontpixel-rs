@@ -53,6 +53,7 @@ try {
       } finally { await browser.close(); }
       for (const result of [row.node[n], row.chromium[n]]) {
         assert.equal(result.enabled.ttf, vectorEnabled, `${name}: ttf`);
+        assert.equal(result.enabled['vector-raster'], vectorEnabled, `${name}: vector-raster`);
         assert.equal(result.enabled.woff2, woff2, `${name}: woff2`);
         assert.equal(result.cjk, cjk, `${name}: cjk`);
       }
