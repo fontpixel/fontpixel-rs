@@ -1036,7 +1036,7 @@ fn asset_arg(value: &JsValue) -> JsResult<OutputAsset> {
         });
     }
     Err(errors::invalid(
-        "asset: expected an OutputAsset, {path, data} or a [path, bytes] pair",
+        "asset: expected an OutputAsset or a [path, bytes] pair, or {path, data}",
     ))
 }
 
