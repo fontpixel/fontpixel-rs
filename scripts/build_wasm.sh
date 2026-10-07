@@ -32,8 +32,9 @@ case "$profile" in
   minimal) features="minimal" ;;
   merge) features="merge" ;;
   web) features="web" ;;
+  convert) features="convert" ;;
   custom) features="${WASM_FEATURES:?custom requires WASM_FEATURES}" ;;
-  *) echo "unknown profile '$profile' (full|minimal|merge|web|custom)" >&2; exit 2 ;;
+  *) echo "unknown profile '$profile' (full|minimal|merge|web|convert|custom)" >&2; exit 2 ;;
 esac
 out="${2:-${FONTPIXEL_WASM_OUT:+$FONTPIXEL_WASM_OUT/$profile}}"
 out="${out:-${CARGO_TARGET_DIR:-target}/wasm-pkg/$profile}"
@@ -47,7 +48,13 @@ mkdir -p "$stage" "$out"
 # Fast builds are for integration, never acceptance or size measurements.
 build_mode="${WASM_BUILD_MODE:-release}"
 case "$build_mode" in
-  release) export CARGO_PROFILE_RELEASE_LTO=fat ;;
+  release)
+    export CARGO_PROFILE_RELEASE_LTO=fat
+    # The website's two runtimes are downloaded by visitors: optimise them for
+    # size (opt-level "s": ~12% smaller, ~15-30% slower than 3; "z" was ~18%
+    # smaller but up to 2.4x slower, measured 2026-10-08). Other profiles keep 3.
+    case "$profile" in web|convert) export CARGO_PROFILE_RELEASE_OPT_LEVEL="${CARGO_PROFILE_RELEASE_OPT_LEVEL:-s}" ;; esac
+    ;;
   fast)
     export CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_OPT_LEVEL=1
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16
@@ -121,6 +128,7 @@ cat > "$out/build-info.json" <<EOF
 {
   "profile": "$profile",
   "build_mode": "$build_mode",
+  "opt_level": "${CARGO_PROFILE_RELEASE_OPT_LEVEL:-3}",
   "features": "$features",
   "source_commit": "$(git rev-parse HEAD)",
   "source_dirty": $(if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo true; else echo false; fi),

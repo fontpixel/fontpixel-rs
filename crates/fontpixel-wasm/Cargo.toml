@@ -32,6 +32,11 @@ minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bd
 # TTF/OTF/WOFF/WOFF2) plus the CJK selection tables.
 merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
 
+# Catalogue download table: BDF to PCF, bitmap TTF (OTB), vector TTF and WOFF2,
+# with the same CJK code-page coverage as `web` so outputs match it byte for
+# byte. YAFF is the intermediate the site uses to resolve legacy code pages.
+convert = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/otb", "fontpixel/ttf", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
+
 # Catalogue tool: common bitmap/vector formats and exact CJK code-page coverage.
 # No bdfparser compatibility, TOML or uncommon codecs.
 web = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/hex", "fontpixel/bmfont", "fontpixel/c", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "fontpixel-ops/otb", "fontpixel-ops/opentype", "fontpixel-ops/psf", "fontpixel-ops/fnt", "fontpixel-ops/fon", "fontpixel-ops/hex", "fontpixel-ops/bmfont", "fontpixel-ops/c", "cjk-charsets", "png"]
