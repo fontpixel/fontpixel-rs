@@ -1976,3 +1976,14 @@ Registry option setters first check the actual catalogue feature bit. A shared
 embedded setter does not make compiled-out `bdat` available merely because
 `otb` is enabled. `configurableFormats()` filters aliases using the same bit.
 Neither unsupported-format errors nor their tests are relaxed.
+
+## 2026-10-07 — Library merge naming and preview contract
+
+The library namespace is `mergeLib` (`mergeLib.merge`, selection/report helpers);
+the byte-oriented W8.3 operation keeps top-level `merge(parts, options)`.
+This preserves an unambiguous entry for both complete API layers. The library
+merge test now also writes its BDF and compares bytes with the native CLI.
+
+W8.3 `render` keeps the shared native `ops::preview` path and its layout/result
+contract. Detailed bitmap rendering remains available through `Font.draw` and
+`Rendered`; switching W8.3 to those different options would break preview parity.

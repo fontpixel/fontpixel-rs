@@ -34,6 +34,7 @@ pub mod formats_direct;
 pub mod formats_extra;
 pub mod formats_options;
 pub mod handles;
+pub mod merge;
 pub mod metadata;
 pub mod model;
 pub mod model_args;
@@ -41,7 +42,16 @@ pub mod normalize;
 pub mod outline;
 pub mod render;
 pub mod resources;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod sfnt;
+pub mod sfnt_support;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod sfnt_tables;
 pub mod types;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod variants;
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+pub mod woff;
 
 use wasm_bindgen::prelude::*;
 

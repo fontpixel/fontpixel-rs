@@ -111,6 +111,48 @@ const CJK: Capability = missing(
     "Use Unicode-encoded fonts, or load the `full` build.",
 );
 
+#[cfg(any(feature = "all-formats", feature = "merge"))]
+const OPENTYPE: Capability = available(
+    "opentype",
+    "OpenType tables and containers (`sfnt`, `Sfnt`, `Cff`), WOFF1/WOFF2 (`woff`) and regional variants (`variants`, `Variants`).",
+);
+#[cfg(not(any(feature = "all-formats", feature = "merge")))]
+const OPENTYPE: Capability = missing(
+    "opentype",
+    "OpenType tables and containers (`sfnt`, `Sfnt`, `Cff`), WOFF1/WOFF2 (`woff`) and regional variants (`variants`, `Variants`).",
+    "Compiled out of this build profile (fontpixel feature `sfnt` and the WOFF codecs), which keeps the module small.",
+    "scripts/build_wasm.sh enables them in the `full` and `merge` profiles; the `minimal` profile has BDF/PCF/YAFF only, so the `sfnt`, `woff` and `variants` namespaces are absent there.",
+    "Load the `full` (or `merge`) build.",
+);
+
+#[cfg(feature = "all-formats")]
+const SFNT_COLLECTIONS: Capability = available(
+    "sfnt_collections",
+    "TrueType/OpenType collections (`Collection`, `sfnt.collection.encode`, WOFF2 collections).",
+);
+#[cfg(not(feature = "all-formats"))]
+const SFNT_COLLECTIONS: Capability = missing(
+    "sfnt_collections",
+    "TrueType/OpenType collections (`Collection`, `sfnt.collection.encode`, WOFF2 collections).",
+    "Compiled out of this build profile (fontpixel feature `ttc`).",
+    "scripts/build_wasm.sh enables `ttc` only in the `full` profile; `Collection` and `sfnt.collection` are absent elsewhere and WOFF2 collections are rejected as in a native build without `ttc`.",
+    "Load the `full` build.",
+);
+
+#[cfg(feature = "all-formats")]
+const COLOR_BITMAPS: Capability = available(
+    "color_bitmaps",
+    "Color embedded bitmaps: CBDT/CBLC and sbix decoding to gray (`sfnt.bitmap.decodeWithColor`, `decodeSbix`, `encodeSbix`).",
+);
+#[cfg(not(feature = "all-formats"))]
+const COLOR_BITMAPS: Capability = missing(
+    "color_bitmaps",
+    "Color embedded bitmaps: CBDT/CBLC and sbix decoding to gray (`sfnt.bitmap.decodeWithColor`, `decodeSbix`, `encodeSbix`).",
+    "Compiled out of this build profile (fontpixel feature `color`, which brings the PNG decoder).",
+    "scripts/build_wasm.sh enables `color` only in the `full` profile; the three functions are absent elsewhere.",
+    "Load the `full` build.",
+);
+
 const SYNC_RESOLVERS: Capability = available(
     "sync_resolvers",
     "Synchronous JS resolver and file-provider callbacks invoked while a call runs (asynchronous sources go through withAsyncResources).",
@@ -118,8 +160,17 @@ const SYNC_RESOLVERS: Capability = available(
 
 /// Every capability this build reports, in a fixed order. Area modules
 /// append entries for the unavailable items they expose.
-pub const CAPABILITIES: &[Capability] =
-    &[FILESYSTEM, THREADS, TOML_BATCH, COMPAT, CJK, SYNC_RESOLVERS];
+pub const CAPABILITIES: &[Capability] = &[
+    FILESYSTEM,
+    THREADS,
+    TOML_BATCH,
+    COMPAT,
+    CJK,
+    SYNC_RESOLVERS,
+    OPENTYPE,
+    SFNT_COLLECTIONS,
+    COLOR_BITMAPS,
+];
 
 /// The capability records with the operations layer's own answers applied
 /// (`fontpixel_ops::capabilities()`: `threads` is false on `wasm32`).
