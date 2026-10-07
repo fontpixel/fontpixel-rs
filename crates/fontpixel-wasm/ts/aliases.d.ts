@@ -113,12 +113,131 @@ export type ResourcesLike =
 export interface ReadArgs {
   /** Format ID; bypasses detection. */
   format?: string;
+  /** The format's typed read options (applied to the detected format when `format` is absent). */
+  options?: object;
   /** Filename hint (never content evidence). */
   name?: string;
   /** Sidecars. */
   resources?: ResourcesLike;
   /** Input resource limits. */
   limits?: ResourceLimits;
+  /** Directory entry point (no primary bytes; files come from `resources`; needs `format`). */
+  directory?: string;
+}
+
+/** Options of `Registry.read`. */
+export interface RegistryReadArgs {
+  /** Format ID; bypasses detection. */
+  format?: string;
+  /** Filename hint (never content evidence). */
+  name?: string;
+  /** Sidecars. */
+  resources?: ResourcesLike;
+  /** Input resource limits. */
+  limits?: ResourceLimits;
+  /** Directory entry point (no primary bytes; files come from `resources`; needs `format`). */
+  directory?: string;
+}
+
+/** Options of `detect` / `Registry.detect`. */
+export interface DetectArgs {
+  /** Filename hint, used only when no content detector matches. */
+  name?: string;
+  /** Sidecars. */
+  resources?: ResourcesLike;
+  /** Input resource limits. */
+  limits?: ResourceLimits;
+  /** Directory entry point (`Registry.detect` only; always an error: directory inputs need a format). */
+  directory?: string;
+}
+
+/** Common options of every registry write route. */
+export interface WriteCommonArgs {
+  /** Primary output name (default `font.<first extension>`; a `.gz` suffix selects the gzip envelope). */
+  primaryName?: string;
+  /** Throw `StrictLossError` on any read or write loss. */
+  strict?: boolean;
+  /** Common transport limits. */
+  transportLimits?: TransportLimits;
+}
+
+/** Options of `Registry.write`, `writeReservedWithReport` and `writeOwned`. */
+export interface RegistryWriteArgs extends WriteCommonArgs {
+  /** Earlier diagnostics (for example a read report) combined before strict checks. */
+  report?: Report;
+}
+
+/** Options of the module function `write`. */
+export interface WriteArgs extends RegistryWriteArgs {
+  /** The format's typed write options. */
+  options?: object;
+}
+
+/** `Loaded.intoSingle()`: the sole strike as a `Font`. */
+export interface LoadedFont {
+  fonts: Font;
+  report: Report;
+  format: string;
+}
+
+/** One output file: a validated relative path and a fresh copy of its bytes. */
+export interface OutputAssetLike {
+  path: string;
+  data: Uint8Array;
+}
+
+/** Result of a direct reader: the model exactly as the Rust function returns it, and its report. */
+export interface ModelReport<M> {
+  model: M;
+  report: Report;
+}
+
+/** Result of a direct byte writer. */
+export interface BytesReport {
+  data: Uint8Array;
+  report: Report;
+}
+
+/** Options of a direct context reader (`formats.<module>.read`). */
+export interface DirectContextReadArgs<O> {
+  /** The module's read options. */
+  options?: O;
+  /** Filename hint. */
+  name?: string;
+  /** Sidecars. */
+  resources?: ResourcesLike;
+  /** Input resource limits. */
+  limits?: ResourceLimits;
+  /** Directory entry point. */
+  directory?: string;
+}
+
+/** Options of a direct bundle writer (`formats.<module>.write`). */
+export interface DirectWriteArgs<O> extends WriteCommonArgs {
+  /** The module's write options. */
+  options?: O;
+}
+
+/** The input of a JS codec hook (a `HookContext`). */
+export type CodecContext = HookContext;
+
+/** A JS writer: a function, or an object with `write` and optional transport hooks. */
+export type WriterHook =
+  | ((fonts: FontSet, options: FormatsWriteOptions) => Written | OutputBundle | [OutputBundle, Report])
+  | {
+      write(fonts: FontSet, options: FormatsWriteOptions): Written | OutputBundle | [OutputBundle, Report];
+      transportLimits?(): TransportLimits;
+      validateTransport?(fonts: FontSet, options: FormatsWriteOptions, limits: TransportLimits): void;
+    };
+
+/** Hooks of `Registry.register`. */
+export interface CodecHooks {
+  /** Content detector: `"no_match"`, `"possible"` or `"certain"`. */
+  detector?: (ctx: HookContext) => Confidence;
+  /** Reader: `[fonts, report]`. */
+  reader?: (ctx: HookContext, options: FormatsReadOptions) => [FontSet | Font, Report];
+  /** Writer. */
+  writer?: WriterHook;
 }
 
 /** A palette for `Bitmap.fromText`: character -> pixel value (object, Map or `[char, value]` pairs). */

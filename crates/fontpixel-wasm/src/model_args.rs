@@ -66,6 +66,8 @@ pub enum Handle {
     OutputAsset(fontpixel::resources::OutputAsset),
     /// An `OutputBundle`.
     OutputBundle(fontpixel::resources::OutputBundle),
+    /// A writer result.
+    Written(fontpixel::resources::Written),
     /// A `BitmapProjection`.
     Projection(crate::metadata::ProjectionSpec),
 }
@@ -106,6 +108,7 @@ fn class_of(handle: &Handle) -> &'static str {
         Handle::Input(_) => "Input",
         Handle::OutputAsset(_) => "OutputAsset",
         Handle::OutputBundle(_) => "OutputBundle",
+        Handle::Written(_) => "Written",
         Handle::Projection(_) => "BitmapProjection",
     }
 }

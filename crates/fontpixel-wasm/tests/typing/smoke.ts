@@ -226,3 +226,17 @@ export function smokeBitmapRender(font: fpx.Font): void {
   // @ts-expect-error render modes are a closed set
   font.draw("x", { mode: "fast" });
 }
+
+import * as formatApi from "fontpixel";
+export function smokeFormats(set: FontSet, bytes: Uint8Array): void {
+  const registry = new formatApi.Registry();
+  registry.setPcfWriteOptions({});
+  const result: Written = registry.write(set, "pcf");
+  const bundle: OutputBundle = result.output;
+  const data: Uint8Array = bundle.intoSingle();
+  const again: Written = Written.fromDict(result.toDict());
+  const asset: formatApi.OutputAssetLike = { path: "font.pcf", data };
+  const rebuilt = new OutputBundle("font.pcf", [asset]);
+  formatApi.formats.bdf.read(bytes);
+  registry.free(); result.free(); bundle.free(); again.free(); rebuilt.free();
+}

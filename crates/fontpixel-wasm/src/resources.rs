@@ -1024,8 +1024,19 @@ fn asset_arg(value: &JsValue) -> JsResult<OutputAsset> {
             });
         }
     }
+    if value.is_object() && !Array::is_array(value) {
+        let options = conv::Options::new(value, &["path", "data"], "asset")?;
+        let path = options
+            .string("path")?
+            .ok_or_else(|| errors::invalid("asset: path must be a string"))?;
+        let data = Reflect::get(value, &JsValue::from_str("data"))?;
+        return Ok(OutputAsset {
+            path: path_arg(&path)?,
+            bytes: conv::bytes_from_js(&data, "asset data")?,
+        });
+    }
     Err(errors::invalid(
-        "asset: expected an OutputAsset or a [path, bytes] pair",
+        "asset: expected an OutputAsset, {path, data} or a [path, bytes] pair",
     ))
 }
 
@@ -1063,7 +1074,9 @@ impl JsOutputBundle {
     #[wasm_bindgen(constructor)]
     pub fn constructor(
         primary: &str,
-        #[wasm_bindgen(unchecked_param_type = "(OutputAsset | [string, BytesLike])[]")]
+        #[wasm_bindgen(
+            unchecked_param_type = "(OutputAsset | OutputAssetLike | [string, BytesLike])[]"
+        )]
         assets: JsValue,
         #[wasm_bindgen(unchecked_optional_param_type = "{ directory?: boolean }")] options: Option<
             JsValue,
@@ -1199,6 +1212,19 @@ impl JsWritten {
 
 #[wasm_bindgen(js_class = Written)]
 impl JsWritten {
+    /// Decode the complete plain-data writer result.
+    #[wasm_bindgen(js_name = fromDict)]
+    pub fn from_dict(
+        #[wasm_bindgen(unchecked_param_type = "WrittenDict")] data: JsValue,
+    ) -> JsResult<JsWritten> {
+        Ok(Self::new(conv::from_js(&data)?))
+    }
+    /// Internal: borrow the writer result as a union argument.
+    #[doc(hidden)]
+    #[wasm_bindgen(js_name = __fpStash, skip_typescript)]
+    pub fn fp_stash(&self) {
+        stash(Handle::Written(self.written.clone()));
+    }
     /// `new Written(output, report?)` (`report` defaults to no entries).
     #[wasm_bindgen(constructor)]
     pub fn constructor(

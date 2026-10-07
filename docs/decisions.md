@@ -1961,3 +1961,18 @@ inputs required by the handover. Previous target outputs were removed.
 required build/test cycle after each merge. `build-info.json` records the mode.
 Final gates and measurements use the default release mode (fat LTO + wasm-opt).
 This changes build cost only; default API resource caps and validation stay intact.
+
+## 2026-10-07 — Shared JS output resources and feature aliases
+
+J1's `OutputAsset`, `OutputBundle` and `Written` remain the single resource
+classes. J3 registry/direct/custom writers use those same classes. Bundle
+constructors accept asset handles, `[path, bytes]` pairs and `{path, data}`;
+`Written.fromDict` restores the complete result. Assets stay releasable handles
+with copied byte getters. Union arguments use J1's checked stash protocol,
+including `Written`; no temporary JS handle is consumed to obtain a reference.
+Named bundle sidecars use the existing `SetResolver` and validated paths.
+
+Registry option setters first check the actual catalogue feature bit. A shared
+embedded setter does not make compiled-out `bdat` available merely because
+`otb` is enabled. `configurableFormats()` filters aliases using the same bit.
+Neither unsupported-format errors nor their tests are relaxed.

@@ -22,6 +22,7 @@ const STASHABLE = [
   'Input',
   'OutputAsset',
   'OutputBundle',
+  'Written',
   'BitmapProjection',
 ];
 
