@@ -190,11 +190,14 @@ def rust_doc(shape):
 
 def render_struct(shape, wide_fields=()):
     out = doc_comment(rust_doc(shape))
-    fields = shape.fields
+    # Reuse the existing payload interface instead of duplicating hundreds
+    # of request fields for each internally tagged newtype variant.
+    fields = shape.fields[:1] if shape.flattened_base else shape.fields
     if not fields:
         out.append(f"export interface {shape.name} {{}}")
         return out
-    out.append(f"export interface {shape.name} {{")
+    base = f" extends {ts_type(shape.flattened_base)}" if shape.flattened_base else ""
+    out.append(f"export interface {shape.name}{base} {{")
     for f in fields:
         if f.key.startswith("**"):
             out += doc_comment(f"Keys of the flattened `{f.key[2:]}` group.", "  ")

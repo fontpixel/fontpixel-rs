@@ -167,20 +167,12 @@ test('woff2 on Tong Pixel Sans SC: same sfnt and same decoded font as the native
   );
 });
 
-// Byte identity of the compressed stream. Core blocker: brotli 9 estimates
-// costs with FastLog2, which calls the platform libm's f32 log2 for counts
-// >= 256 unless brotli's `portable-float` feature is on (fontpixel enables
-// only `std`). glibc and the wasm32 libm differ by one ulp in 88,636 of the
-// 16.7M values in [256, 2^24), so larger inputs compress differently (with
-// one thread too). With `portable-float` on both targets the outputs are
-// identical (probe in the phase 8 J4 report). Small inputs (every
-// expected.json case above) are identical already.
+// Both targets enable portable-float; compressed bytes must match too.
 test(
   'woff2 byte identity with the native CLI on Tong Pixel Sans SC',
   {
     skip: skipTong,
     timeout: 600_000,
-    todo: 'core blocker: brotli FastLog2 uses the platform libm f32::log2 (fontpixel enables brotli "std" without "portable-float"); glibc and wasm32 libm differ in 88,636 of 16.7M values, so large WOFF2 streams differ',
   },
   () => {
     const { nativeWoff2, woff2 } = tongResults();

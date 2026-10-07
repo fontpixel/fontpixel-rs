@@ -1752,7 +1752,7 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
 
 ## 2026-10-06 — wasm32 readiness of core and ops
 
-> **Correction (2026-10-06, later the same day; decision pending):** the claim
+> **Correction (2026-10-06, later the same day; implemented 2026-10-07):** the claim
 > below that wasm WOFF2 output equals native is **wrong for real wasm runs**.
 > The identity tests compared brotli's threaded and single-threaded spawners on
 > x86_64 only. Units J4 and J5 found in Node that wasm and native WOFF2 bytes
@@ -1764,7 +1764,7 @@ codepoint, `fmtnum(-0.0)`), texts that differ from bdfparser, and a fixed
 > also changes native WOFF2 bytes (Tong SC 892,576 B), so the phase-6 frozen
 > references would need rebuilding. **Owner decision (2026-10-06): enable
 > `portable-float`** so wasm and native WOFF2 bytes are identical; implemented
-> when phase 8 resumes (TODO.md "第 8 阶段暂停记录").
+> in the current Phase 8 redo; fresh byte and heap checks are recorded in the phase report.
 
 **Context:** Phase 8 binds the full native API with wasm-bindgen
 (`wasm32-unknown-unknown`). That target compiles `std` but has no threads,
@@ -2040,7 +2040,7 @@ native CLI.
 - The wasm `full` profile enables `fontpixel-ops/png` (PNG output of
   `ops.render`), which `fontpixel-ops/all-formats` lacks.
 
-**Finding (open, core):** WOFF2 Brotli streams are not target-independent.
+**Historical finding (resolved by portable-float in Phase 8):** WOFF2 Brotli streams are not target-independent.
 brotli 9.0.0 without its `portable-float` feature computes block-split costs
 with the platform libm (`f32::log2`, `powf`); glibc and the wasm32 libm
 differ by one ULP for some inputs. Decoded tables are identical, but e.g. a
@@ -2119,3 +2119,20 @@ Previously it attempted synchronous file access before asking the wasm glue
 whether initialization had already happened; that failed on Node 18 and in
 browsers despite the documented idempotence. First-time synchronous loading
 still requires bytes/a compiled module where synchronous host I/O is unavailable.
+
+## 2026-10-07 — Portable WOFF2 and tagged request declarations
+
+The owner's WOFF2 decision is implemented by enabling brotli 9.0.0
+`portable-float` alongside `std` in the core dependency. Native and wasm use
+the same table-driven cost calculations. No resource bound is increased.
+Fresh native references, counting-allocator measurements and large-stream
+byte comparisons validate this change; the two WOFF2 TODOs become assertions.
+Historical phase 6 numbers describe the pre-change binary and are retained
+as such, with post-change values appended after measurement.
+
+The shared serde shape generator now represents internally tagged newtype
+variants as a tag plus the payload's flat fields. This corrects `TaskRequest`
+in both language declarations. TypeScript uses interface inheritance to avoid
+duplicating large request declarations. `BatchTaskSpec` is `{id} & TaskRequest`,
+so misspelled request keys are checked rather than accepted by a loose index
+signature. Runtime request validation remains unchanged.

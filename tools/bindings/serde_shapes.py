@@ -172,6 +172,7 @@ class Shape:
     alias: str = ""
     extra: list = field(default_factory=list)    # auxiliary shapes (variant dicts)
     name: str = ""
+    flattened_base: str = ""  # tagged newtype payload; fields remain expanded for Python
 
 
 class SerdeModel:
@@ -607,6 +608,22 @@ class SerdeModel:
                 payload = types[0] if len(types) == 1 else "tuple[" + ", ".join(types) + "]"
                 if untagged:
                     members.append(payload)
+                    continue
+                if tag:
+                    # Serde internally tagged newtypes merge the tag into the
+                    # payload object; they do not add a variant-name wrapper.
+                    inner_path = next((p for p, n in self.names.items() if n == payload), None)
+                    inner_key = self.serde.get(inner_path)
+                    inner = self.items.get(inner_key, {})
+                    plain = inner.get("inner", {}).get("struct", {}).get("kind", {}).get("plain")
+                    if len(types) != 1 or not plain or attr_value(parts, "content"):
+                        raise SystemExit(f"{path}: tagged payload needs an explicit supported shape: {payload}")
+                    fields = self._fields(inner_key, plain["fields"], serde_attrs(inner))
+                    sub = Shape(path + "::" + var["name"], "struct", name=name + var["name"], doc=vdoc,
+                                fields=[Field(tag, f'Literal["{vname}"]', True, "Variant tag.")] + fields,
+                                flattened_base=payload)
+                    extra.append(sub)
+                    members.append(sub.name)
                     continue
                 sub = Shape(path + "::" + var["name"], "struct", name=name + var["name"], doc=vdoc,
                             fields=[Field(vname, payload, True, vdoc)])

@@ -306,11 +306,7 @@ export interface BatchTomlOptions extends OpsCallOptions {
  * A typed batch task: a string `id`, the task `kind` and the flat request
  * keys of that operation (`ConvertRequest`, `MergeRequest`, ...).
  */
-export type BatchTaskSpec = {
-  id: string;
-  kind: "convert" | "vectorize" | "variants" | "subset" | "merge" | "charset" | "validate" | "diff";
-  [key: string]: unknown;
-};
+export type BatchTaskSpec = { id: string } & TaskRequest;
 
 /** The request of `ops.batch`. */
 export interface BatchSpec {

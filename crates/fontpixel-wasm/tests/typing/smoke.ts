@@ -322,3 +322,15 @@ export function smokeOpenType(bytes: Uint8Array, base: Font): void {
   // @ts-expect-error tags are strings or bytes
   s.table(1);
 }
+
+import type { TaskRequest, BatchTaskSpec } from "fontpixel";
+export function smokeTaggedRequests(): void {
+  const task: TaskRequest = { kind: "validate", input: "a.bdf" };
+  const batch: BatchTaskSpec = { id: "check", ...task };
+  ops.batch({ tasks: [batch] }, { files: {} });
+  // @ts-expect-error externally tagged shape is not the serde contract
+  const wrong: TaskRequest = { validate: { input: "a.bdf" } };
+  // @ts-expect-error unknown request fields must not be admitted by an index signature
+  const typo: BatchTaskSpec = { id: "check", kind: "validate", inpt: "a.bdf" };
+  void [wrong, typo];
+}
