@@ -2253,3 +2253,30 @@ Benchmark reporting uses the median of same-round pure/measured ratios and inclu
 - Keep the failed experiment and its size evidence externally. Recheck full/web
   plus the complete shared gates after this profile-only correction; minimal
   and merge already passed in gate 250 and their feature graphs are unchanged.
+
+
+### 2026-10-07 — Phase 9 production acceptance and diagnostic display
+
+- Uploaded legacy encodings must pass through shared `ops.charset` to Unicode
+  before the catalogue BDF dialect, whose input codes are normalized in the
+  pipeline. Use YAFF for this intermediate to retain grayscale. CP1252 Euro
+  (0x80 → U+20AC) is checked against the same native CLI recipe.
+- Astro 5 static preview omits user Vite plugins. Keep one shared download
+  handler for development and the preview HTTP server, and use Pages' existing
+  `_redirects` / `_headers` for deployment. Production-preview acceptance must
+  exercise old URLs rather than assuming a development-only pass applies.
+- A synthetic 50k font produced 9.4 MB of diagnostics in the page DOM, and
+  Chromium's text inspection stalled. Render at most 200 entries / 32,000
+  characters with complete severity/impact counts. Serialize complete reports
+  in the Worker for direct download and ZIP, including strict-error reports;
+  count all report bytes toward the existing cache budget. No diagnostic,
+  native limit or strict decision is dropped or changed. Bump recipe identity.
+  The final browser test compares the downloadable report's full entry count.
+- PCF keeps a supplementary-plane glyph unencoded because its encoding table
+  is 16-bit. Test actual output coverage and require `pcf.write.code_range`
+  loss; a global page-text match can accidentally find the input's coverage in
+  diagnostics. Keep native byte comparisons and require Extension B in formats
+  that can encode it. Failed runs 259 and 261 remain in the evidence.
+- Final site build: 13,072 files, 6,928 slots remaining below the owner-specified
+  20,000 limit; net reduction 6,853. Final acceptance and five-run measurements
+  are in reports/phase-9.md. No deployment and no project final report.
