@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-07T14:11:40.137Z",
-  "commit": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+  "date": "2026-10-07T14:42:41.512Z",
+  "commit": "3d3e707d620a2a21c60160443fee8669c00131e2",
   "dirty": false,
   "node": "v24.21.0",
   "platform": "linux 7.0.0-38-generic x64",
   "cpu": "12th Gen Intel(R) Core(TM) i7-12700H",
   "cpus": 20,
   "load": [
-    2.33,
-    5.06,
-    5.78
+    10.77,
+    16.8,
+    16.76
   ],
   "package": {
     "profile": "full",
@@ -29,7 +29,8 @@
     "wasm_sha256": "939cc3d85c4220eaef675252a81ab886c05c3c7f8c2e8422bea4e53a1bfe3c06",
     "wasm_gzip_bytes": 6044581
   },
-  "method": "5 fresh Node processes and 5 fresh Chromium processes per module; bytes fetched/read before timer; JS import, WebAssembly.compile and asynchronous init(module) measured separately; warm OS disk cache, no reuse of an engine process; no HTTP transfer latency; runtime writers exercised after timing.",
+  "buildPolicy": "verify existing release artifacts; no rebuild",
+  "method": "5 fresh Node processes and 5 fresh Chromium processes per module; bytes fetched/read before timer; JS import, WebAssembly.compile and asynchronous init(module) measured separately; warm OS disk cache, no reuse of an engine process; WASM/input transfer excluded; browser import includes loopback JS fetch; five rounds rotate/reverse profile order after all builds finish; per-sample load recorded; runtime writers exercised after timing.",
   "combinations": [
     {
       "name": "full",
@@ -51,17 +52,12 @@
         "wasm_sha256": "939cc3d85c4220eaef675252a81ab886c05c3c7f8c2e8422bea4e53a1bfe3c06",
         "wasm_gzip_bytes": 6044581
       },
-      "load": [
-        2.33,
-        5.06,
-        5.78
-      ],
       "node": [
         {
-          "importMs": 14.869771,
-          "compileMs": 29.039382000000003,
-          "instantiateMs": 19.436012000000005,
-          "totalMs": 63.34516500000001,
+          "importMs": 82.040526,
+          "compileMs": 117.459721,
+          "instantiateMs": 117.32851799999997,
+          "totalMs": 316.828765,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -82,13 +78,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.77,
+            16.8,
+            16.76
+          ],
+          "loadAfter": [
+            10.77,
+            16.8,
+            16.76
+          ]
         },
         {
-          "importMs": 11.003779999999999,
-          "compileMs": 23.172401000000004,
-          "instantiateMs": 22.839813,
-          "totalMs": 57.015994000000006,
+          "importMs": 15.334437000000001,
+          "compileMs": 24.917236000000003,
+          "instantiateMs": 19.62937799999999,
+          "totalMs": 59.88105099999999,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -109,13 +116,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 11.228937000000002,
-          "compileMs": 23.332626999999995,
-          "instantiateMs": 20.966558999999997,
-          "totalMs": 55.528122999999994,
+          "importMs": 12.217212999999997,
+          "compileMs": 25.729591,
+          "instantiateMs": 19.337964999999997,
+          "totalMs": 57.284769,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -136,13 +154,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 10.695423000000002,
-          "compileMs": 26.194024999999996,
-          "instantiateMs": 19.029334000000006,
-          "totalMs": 55.91878200000001,
+          "importMs": 36.842321999999996,
+          "compileMs": 70.335516,
+          "instantiateMs": 75.25825000000003,
+          "totalMs": 182.43608800000004,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -163,13 +192,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.59,
+            16.04,
+            16.51
+          ]
         },
         {
-          "importMs": 13.548326,
-          "compileMs": 21.568267,
-          "instantiateMs": 19.136660000000006,
-          "totalMs": 54.253253,
+          "importMs": 81.743448,
+          "compileMs": 164.24423299999998,
+          "instantiateMs": 193.79088200000007,
+          "totalMs": 439.7785630000001,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -190,15 +230,26 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.6,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.6,
+            15.79,
+            16.4
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 24.80000001192093,
-          "compileMs": 14.719999998807907,
-          "instantiateMs": 2.405000001192093,
-          "totalMs": 41.92500001192093,
+          "importMs": 105.8299999833107,
+          "compileMs": 91.9200000166893,
+          "instantiateMs": 16.734999984502792,
+          "totalMs": 214.4849999845028,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -219,13 +270,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.77,
+            16.8,
+            16.76
+          ],
+          "loadAfter": [
+            10.47,
+            16.63,
+            16.7
+          ]
         },
         {
-          "importMs": 23.38000002503395,
-          "compileMs": 15.24499997496605,
-          "instantiateMs": 2.820000022649765,
-          "totalMs": 41.445000022649765,
+          "importMs": 21.94999998807907,
+          "compileMs": 14.775000005960464,
+          "instantiateMs": 2.6500000059604645,
+          "totalMs": 39.375,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -246,13 +308,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 19.125,
-          "compileMs": 14.28999999165535,
-          "instantiateMs": 2.3700000047683716,
-          "totalMs": 35.78499999642372,
+          "importMs": 24.935000002384186,
+          "compileMs": 17.229999989271164,
+          "instantiateMs": 2.600000023841858,
+          "totalMs": 44.76500001549721,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -273,13 +346,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 18.030000001192093,
-          "compileMs": 15.23999997973442,
-          "instantiateMs": 2.395000010728836,
-          "totalMs": 35.66499999165535,
+          "importMs": 117.875,
+          "compileMs": 84.60499998927116,
+          "instantiateMs": 17.705000013113022,
+          "totalMs": 220.1850000023842,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -300,13 +384,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.59,
+            16.04,
+            16.51
+          ],
+          "loadAfter": [
+            9.59,
+            16.04,
+            16.51
+          ]
         },
         {
-          "importMs": 18.430000007152557,
-          "compileMs": 17.639999985694885,
-          "instantiateMs": 3.2300000190734863,
-          "totalMs": 39.30000001192093,
+          "importMs": 125.57499998807907,
+          "compileMs": 123.62999999523163,
+          "instantiateMs": 20.105000019073486,
+          "totalMs": 269.3100000023842,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -327,7 +422,18 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.6,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.95,
+            15.79,
+            16.4
+          ]
         }
       ]
     },
@@ -351,17 +457,12 @@
         "wasm_sha256": "c0c09218647e491ead377ea45edcec45bf7d58ff6cd7812dfd7831574881e9e3",
         "wasm_gzip_bytes": 3393814
       },
-      "load": [
-        2.22,
-        5,
-        5.75
-      ],
       "node": [
         {
-          "importMs": 10.359895000000002,
-          "compileMs": 9.616293999999996,
-          "instantiateMs": 18.185999000000002,
-          "totalMs": 38.162188,
+          "importMs": 57.263146000000006,
+          "compileMs": 91.558311,
+          "instantiateMs": 175.94910899999996,
+          "totalMs": 324.770566,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -381,13 +482,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.47,
+            16.63,
+            16.7
+          ],
+          "loadAfter": [
+            10.47,
+            16.63,
+            16.7
+          ]
         },
         {
-          "importMs": 7.330627000000003,
-          "compileMs": 14.23311,
-          "instantiateMs": 16.478766999999998,
-          "totalMs": 38.042504,
+          "importMs": 8.914633000000002,
+          "compileMs": 12.555231,
+          "instantiateMs": 19.989658,
+          "totalMs": 41.459522,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -407,13 +519,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 7.453215,
-          "compileMs": 10.780343000000002,
-          "instantiateMs": 17.221771999999994,
-          "totalMs": 35.45533,
+          "importMs": 8.363362000000002,
+          "compileMs": 13.707238999999998,
+          "instantiateMs": 21.565404,
+          "totalMs": 43.636005,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -433,13 +556,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 9.178126000000002,
-          "compileMs": 10.253469999999997,
-          "instantiateMs": 18.375408,
-          "totalMs": 37.807004,
+          "importMs": 87.88315900000003,
+          "compileMs": 94.20886299999995,
+          "instantiateMs": 252.61325900000003,
+          "totalMs": 434.705281,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -459,13 +593,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.71,
+            15.74,
+            16.4
+          ],
+          "loadAfter": [
+            9.71,
+            15.74,
+            16.4
+          ]
         },
         {
-          "importMs": 10.232864999999997,
-          "compileMs": 13.711701000000005,
-          "instantiateMs": 21.981788,
-          "totalMs": 45.926354,
+          "importMs": 59.430334999999985,
+          "compileMs": 64.63367500000001,
+          "instantiateMs": 117.922121,
+          "totalMs": 241.986131,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -485,15 +630,26 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.95,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.95,
+            15.79,
+            16.4
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 16.514999985694885,
-          "compileMs": 8.245000004768372,
-          "instantiateMs": 1.8400000035762787,
-          "totalMs": 26.599999994039536,
+          "importMs": 99.51000002026558,
+          "compileMs": 45.36499997973442,
+          "instantiateMs": 10.400000005960464,
+          "totalMs": 155.27500000596046,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -513,13 +669,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.47,
+            16.63,
+            16.7
+          ],
+          "loadAfter": [
+            10.47,
+            16.63,
+            16.7
+          ]
         },
         {
-          "importMs": 17.82499998807907,
-          "compileMs": 8.555000007152557,
-          "instantiateMs": 1.9449999928474426,
-          "totalMs": 28.32499998807907,
+          "importMs": 18.674999982118607,
+          "compileMs": 7.790000021457672,
+          "instantiateMs": 2.369999974966049,
+          "totalMs": 28.834999978542328,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -539,64 +706,23 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
-        },
-        {
-          "importMs": 19.030000001192093,
-          "compileMs": 9.379999995231628,
-          "instantiateMs": 1.9100000262260437,
-          "totalMs": 30.320000022649765,
-          "enabled": {
-            "bdf": true,
-            "pcf": true,
-            "yaff": false,
-            "ttf": true,
-            "otf": true,
-            "woff": true,
-            "woff2": true,
-            "vector-raster": true
           },
-          "cjk": true,
-          "specializedOpenType": true,
-          "outputs": {
-            "bdf": 9512,
-            "pcf": 11720,
-            "ttf": 5520,
-            "otf": 4700,
-            "woff": 2204,
-            "woff2": 1356
-          }
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 19.054999977350235,
-          "compileMs": 12.1700000166893,
-          "instantiateMs": 1.824999988079071,
-          "totalMs": 33.04999998211861,
-          "enabled": {
-            "bdf": true,
-            "pcf": true,
-            "yaff": false,
-            "ttf": true,
-            "otf": true,
-            "woff": true,
-            "woff2": true,
-            "vector-raster": true
-          },
-          "cjk": true,
-          "specializedOpenType": true,
-          "outputs": {
-            "bdf": 9512,
-            "pcf": 11720,
-            "ttf": 5520,
-            "otf": 4700,
-            "woff": 2204,
-            "woff2": 1356
-          }
-        },
-        {
-          "importMs": 19.555000007152557,
-          "compileMs": 7.604999989271164,
-          "instantiateMs": 2.1350000202655792,
+          "importMs": 18.705000013113022,
+          "compileMs": 8.270000010728836,
+          "instantiateMs": 2.3199999928474426,
           "totalMs": 29.2950000166893,
           "enabled": {
             "bdf": true,
@@ -617,7 +743,92 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
+        },
+        {
+          "importMs": 140.0450000166893,
+          "compileMs": 57.71999999880791,
+          "instantiateMs": 12.48999997973442,
+          "totalMs": 210.25499999523163,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.71,
+            15.74,
+            16.4
+          ],
+          "loadAfter": [
+            10.13,
+            15.73,
+            16.39
+          ]
+        },
+        {
+          "importMs": 111.9699999988079,
+          "compileMs": 54.71999999880791,
+          "instantiateMs": 15.83500000834465,
+          "totalMs": 182.52500000596046,
+          "enabled": {
+            "bdf": true,
+            "pcf": true,
+            "yaff": false,
+            "ttf": true,
+            "otf": true,
+            "woff": true,
+            "woff2": true,
+            "vector-raster": true
+          },
+          "cjk": true,
+          "specializedOpenType": true,
+          "outputs": {
+            "bdf": 9512,
+            "pcf": 11720,
+            "ttf": 5520,
+            "otf": 4700,
+            "woff": 2204,
+            "woff2": 1356
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.95,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.95,
+            15.79,
+            16.4
+          ]
         }
       ]
     },
@@ -641,17 +852,12 @@
         "wasm_sha256": "cee987f688f519ece452d5536813f5ca395fa78daa520e3d95f782a85ea614c5",
         "wasm_gzip_bytes": 1352234
       },
-      "load": [
-        2.22,
-        5,
-        5.75
-      ],
       "node": [
         {
-          "importMs": 6.893138,
-          "compileMs": 7.8745990000000035,
-          "instantiateMs": 15.50443,
-          "totalMs": 30.272167000000003,
+          "importMs": 53.00683799999999,
+          "compileMs": 44.667114,
+          "instantiateMs": 97.89070199999998,
+          "totalMs": 195.56465399999996,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -668,13 +874,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.47,
+            16.63,
+            16.7
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 6.808667,
-          "compileMs": 6.057833000000002,
-          "instantiateMs": 15.425688000000001,
-          "totalMs": 28.292188000000003,
+          "importMs": 8.536072999999998,
+          "compileMs": 11.138304000000005,
+          "instantiateMs": 20.15210799999999,
+          "totalMs": 39.82648499999999,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -691,13 +908,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 7.439910999999999,
-          "compileMs": 7.534254000000001,
-          "instantiateMs": 16.835009,
-          "totalMs": 31.809174,
+          "importMs": 9.193119,
+          "compileMs": 12.129452,
+          "instantiateMs": 23.311707,
+          "totalMs": 44.634277999999995,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -714,13 +942,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 6.594529000000001,
-          "compileMs": 7.257847999999999,
-          "instantiateMs": 16.015435000000004,
-          "totalMs": 29.867812000000004,
+          "importMs": 64.97888,
+          "compileMs": 55.32996399999999,
+          "instantiateMs": 179.306375,
+          "totalMs": 299.615219,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -737,13 +976,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.71,
+            15.74,
+            16.4
+          ],
+          "loadAfter": [
+            9.71,
+            15.74,
+            16.4
+          ]
         },
         {
-          "importMs": 6.771739,
-          "compileMs": 7.094797000000003,
-          "instantiateMs": 16.514855999999995,
-          "totalMs": 30.381391999999998,
+          "importMs": 45.453796,
+          "compileMs": 38.311846,
+          "instantiateMs": 131.29795800000002,
+          "totalMs": 215.0636,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -760,15 +1010,26 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.95,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.95,
+            15.79,
+            16.4
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 14.430000007152557,
-          "compileMs": 5.139999985694885,
-          "instantiateMs": 0.9900000095367432,
-          "totalMs": 20.560000002384186,
+          "importMs": 93.91499999165535,
+          "compileMs": 50.81999999284744,
+          "instantiateMs": 9.205000013113022,
+          "totalMs": 153.9399999976158,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -785,13 +1046,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 12.935000002384186,
-          "compileMs": 6.129999995231628,
-          "instantiateMs": 1.405000001192093,
-          "totalMs": 20.469999998807907,
+          "importMs": 14.495000004768372,
+          "compileMs": 5.609999984502792,
+          "instantiateMs": 1.1050000190734863,
+          "totalMs": 21.21000000834465,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -808,13 +1080,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 19.184999972581863,
-          "compileMs": 3.9200000166893005,
-          "instantiateMs": 0.9350000023841858,
-          "totalMs": 24.03999999165535,
+          "importMs": 14.784999996423721,
+          "compileMs": 4.7249999940395355,
+          "instantiateMs": 1.2699999809265137,
+          "totalMs": 20.77999997138977,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -831,13 +1114,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 14.680000007152557,
-          "compileMs": 5.399999976158142,
-          "instantiateMs": 0.9500000178813934,
-          "totalMs": 21.030000001192093,
+          "importMs": 126.00500002503395,
+          "compileMs": 45.229999989271164,
+          "instantiateMs": 7.28999999165535,
+          "totalMs": 178.52500000596046,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -854,13 +1148,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.71,
+            15.74,
+            16.4
+          ],
+          "loadAfter": [
+            9.71,
+            15.74,
+            16.4
+          ]
         },
         {
-          "importMs": 17.03499999642372,
-          "compileMs": 5.655000001192093,
-          "instantiateMs": 0.9399999976158142,
-          "totalMs": 23.62999999523163,
+          "importMs": 86.81999999284744,
+          "compileMs": 25.17500001192093,
+          "instantiateMs": 9.025000005960464,
+          "totalMs": 121.02000001072884,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -877,7 +1182,18 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.95,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.95,
+            15.79,
+            16.4
+          ]
         }
       ]
     },
@@ -901,17 +1217,12 @@
         "wasm_sha256": "869654244f641becb38234ed33c763bc839fb1df949ccc2385989b157601e6bc",
         "wasm_gzip_bytes": 2141244
       },
-      "load": [
-        16.59,
-        9.08,
-        7.06
-      ],
       "node": [
         {
-          "importMs": 8.539393,
-          "compileMs": 11.068114999999999,
-          "instantiateMs": 20.111144999999993,
-          "totalMs": 39.71865299999999,
+          "importMs": 77.081896,
+          "compileMs": 57.54155799999998,
+          "instantiateMs": 176.60208300000005,
+          "totalMs": 311.22553700000003,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -928,13 +1239,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 7.261747,
-          "compileMs": 11.037078000000001,
-          "instantiateMs": 23.136635,
-          "totalMs": 41.43546,
+          "importMs": 7.553127999999997,
+          "compileMs": 7.413886000000005,
+          "instantiateMs": 21.060893,
+          "totalMs": 36.027907,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -951,13 +1273,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 8.977791000000003,
-          "compileMs": 11.922548999999997,
-          "instantiateMs": 22.018035000000005,
-          "totalMs": 42.918375000000005,
+          "importMs": 11.206145999999997,
+          "compileMs": 7.910323000000005,
+          "instantiateMs": 20.831522999999997,
+          "totalMs": 39.947992,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -974,13 +1307,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 9.133851,
-          "compileMs": 8.818681999999995,
-          "instantiateMs": 22.050424000000007,
-          "totalMs": 40.002957,
+          "importMs": 81.20432000000002,
+          "compileMs": 62.63160099999996,
+          "instantiateMs": 178.51554400000003,
+          "totalMs": 322.351465,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -997,13 +1341,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.68,
+            15.84,
+            16.44
+          ],
+          "loadAfter": [
+            9.68,
+            15.84,
+            16.44
+          ]
         },
         {
-          "importMs": 8.752714999999998,
-          "compileMs": 11.785074999999999,
-          "instantiateMs": 21.320302999999996,
-          "totalMs": 41.858093,
+          "importMs": 49.401602999999994,
+          "compileMs": 49.655445000000014,
+          "instantiateMs": 159.700592,
+          "totalMs": 258.75764000000004,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1020,15 +1375,26 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.95,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.87,
+            15.71,
+            16.37
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 19.655000001192093,
-          "compileMs": 5.359999984502792,
-          "instantiateMs": 1.7550000250339508,
-          "totalMs": 26.770000010728836,
+          "importMs": 83.8449999988079,
+          "compileMs": 37.814999997615814,
+          "instantiateMs": 10.449999988079071,
+          "totalMs": 132.1099999845028,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1045,13 +1411,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 15.965000003576279,
-          "compileMs": 5.955000013113022,
-          "instantiateMs": 1.7750000059604645,
-          "totalMs": 23.695000022649765,
+          "importMs": 19.03999999165535,
+          "compileMs": 5.53999999165535,
+          "instantiateMs": 2.4600000083446503,
+          "totalMs": 27.03999999165535,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1068,13 +1445,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 19.280000001192093,
-          "compileMs": 5.869999974966049,
-          "instantiateMs": 2.560000002384186,
-          "totalMs": 27.709999978542328,
+          "importMs": 16.580000013113022,
+          "compileMs": 6.865000009536743,
+          "instantiateMs": 1.7099999785423279,
+          "totalMs": 25.155000001192093,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1091,13 +1479,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 15.770000010728836,
-          "compileMs": 5.3499999940395355,
-          "instantiateMs": 1.9449999928474426,
-          "totalMs": 23.064999997615814,
+          "importMs": 92.68999999761581,
+          "compileMs": 34.88000002503395,
+          "instantiateMs": 13.7049999833107,
+          "totalMs": 141.27500000596046,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1114,13 +1513,24 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.68,
+            15.84,
+            16.44
+          ],
+          "loadAfter": [
+            9.71,
+            15.74,
+            16.4
+          ]
         },
         {
-          "importMs": 19.360000014305115,
-          "compileMs": 7.2750000059604645,
-          "instantiateMs": 2.7699999809265137,
-          "totalMs": 29.405000001192093,
+          "importMs": 98.19499999284744,
+          "compileMs": 34.474999994039536,
+          "instantiateMs": 10.745000004768372,
+          "totalMs": 143.41499999165535,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1137,7 +1547,18 @@
             "bdf": 9512,
             "pcf": 11720,
             "yaff": 54182
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.87,
+            15.71,
+            16.37
+          ],
+          "loadAfter": [
+            11.87,
+            15.71,
+            16.37
+          ]
         }
       ]
     },
@@ -1161,17 +1582,12 @@
         "wasm_sha256": "8197125d9ea437b8dc066928d3e97a05da2d82bcfcec4e39e02d0122bfa71cbe",
         "wasm_gzip_bytes": 1645473
       },
-      "load": [
-        22.5,
-        14.75,
-        9.68
-      ],
       "node": [
         {
-          "importMs": 11.477611000000003,
-          "compileMs": 12.691319,
-          "instantiateMs": 31.598268999999995,
-          "totalMs": 55.767199,
+          "importMs": 62.330354,
+          "compileMs": 57.712389,
+          "instantiateMs": 176.83268100000004,
+          "totalMs": 296.87542400000007,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1191,13 +1607,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 12.017884000000002,
-          "compileMs": 12.826232999999995,
-          "instantiateMs": 34.865047000000004,
-          "totalMs": 59.709164,
+          "importMs": 7.214154000000001,
+          "compileMs": 7.793690000000002,
+          "instantiateMs": 24.948752,
+          "totalMs": 39.956596000000005,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1217,13 +1644,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 13.447093000000002,
-          "compileMs": 17.906927999999994,
-          "instantiateMs": 31.754216,
-          "totalMs": 63.108236999999995,
+          "importMs": 7.733991,
+          "compileMs": 11.096771000000004,
+          "instantiateMs": 18.337846999999996,
+          "totalMs": 37.168609000000004,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1243,13 +1681,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 16.115673,
-          "compileMs": 15.050497,
-          "instantiateMs": 50.996042,
-          "totalMs": 82.16221200000001,
+          "importMs": 51.71372099999999,
+          "compileMs": 45.722319,
+          "instantiateMs": 110.88693600000002,
+          "totalMs": 208.322976,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1269,13 +1718,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.68,
+            15.84,
+            16.44
+          ],
+          "loadAfter": [
+            9.68,
+            15.84,
+            16.44
+          ]
         },
         {
-          "importMs": 22.16727800000001,
-          "compileMs": 18.055003999999997,
-          "instantiateMs": 66.87968899999998,
-          "totalMs": 107.10197099999999,
+          "importMs": 48.63585999999998,
+          "compileMs": 50.99984900000001,
+          "instantiateMs": 160.420304,
+          "totalMs": 260.056013,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1295,15 +1755,26 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            10.13,
+            15.73,
+            16.39
+          ],
+          "loadAfter": [
+            10.13,
+            15.73,
+            16.39
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 26.935000002384186,
-          "compileMs": 8.509999990463257,
-          "instantiateMs": 1.75,
-          "totalMs": 37.19499999284744,
+          "importMs": 31.305000007152557,
+          "compileMs": 11.16499999165535,
+          "instantiateMs": 2.689999997615814,
+          "totalMs": 45.15999999642372,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1323,13 +1794,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.43,
+            16.52,
+            16.67
+          ]
         },
         {
-          "importMs": 26.15999999642372,
-          "compileMs": 8.875,
-          "instantiateMs": 2.5,
-          "totalMs": 37.53499999642372,
+          "importMs": 14.52999997138977,
+          "compileMs": 5.120000004768372,
+          "instantiateMs": 0.9750000238418579,
+          "totalMs": 20.625,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1349,13 +1831,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 26.519999980926514,
-          "compileMs": 10.935000002384186,
-          "instantiateMs": 2.8499999940395355,
-          "totalMs": 40.304999977350235,
+          "importMs": 14.439999997615814,
+          "compileMs": 4.799999982118607,
+          "instantiateMs": 0.9900000095367432,
+          "totalMs": 20.229999989271164,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1375,13 +1868,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 36.20000001788139,
-          "compileMs": 22.554999977350235,
-          "instantiateMs": 3.475000023841858,
-          "totalMs": 62.230000019073486,
+          "importMs": 106.62999999523163,
+          "compileMs": 41.08000001311302,
+          "instantiateMs": 8.685000002384186,
+          "totalMs": 156.39500001072884,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1401,13 +1905,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.68,
+            15.84,
+            16.44
+          ],
+          "loadAfter": [
+            9.68,
+            15.84,
+            16.44
+          ]
         },
         {
-          "importMs": 45.5,
-          "compileMs": 20.894999980926514,
-          "instantiateMs": 3.8700000047683716,
-          "totalMs": 70.26499998569489,
+          "importMs": 114.5,
+          "compileMs": 34.54999998211861,
+          "instantiateMs": 5.719999998807907,
+          "totalMs": 154.7699999809265,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1427,7 +1942,18 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            10.13,
+            15.73,
+            16.39
+          ],
+          "loadAfter": [
+            11.16,
+            15.85,
+            16.43
+          ]
         }
       ]
     },
@@ -1451,17 +1977,12 @@
         "wasm_sha256": "3c172e85e98dcaba9bd92a1d7dff5fddf0b78ccc18fd9e813f2fe13830c483c8",
         "wasm_gzip_bytes": 2435921
       },
-      "load": [
-        25.47,
-        21.57,
-        14.14
-      ],
       "node": [
         {
-          "importMs": 15.833680000000001,
-          "compileMs": 18.625248999999997,
-          "instantiateMs": 39.168959,
-          "totalMs": 73.627888,
+          "importMs": 12.861470000000004,
+          "compileMs": 12.862268999999998,
+          "instantiateMs": 28.680355999999996,
+          "totalMs": 54.404095,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1481,13 +2002,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.43,
+            16.52,
+            16.67
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 16.429351999999994,
-          "compileMs": 20.80305100000001,
-          "instantiateMs": 35.56963499999999,
-          "totalMs": 72.802038,
+          "importMs": 6.9352990000000005,
+          "compileMs": 11.905502000000002,
+          "instantiateMs": 17.960854999999995,
+          "totalMs": 36.801655999999994,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1507,13 +2039,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 21.005289000000005,
-          "compileMs": 23.135679999999994,
-          "instantiateMs": 62.078238,
-          "totalMs": 106.219207,
+          "importMs": 8.409464000000003,
+          "compileMs": 10.434593999999997,
+          "instantiateMs": 23.191434,
+          "totalMs": 42.035492000000005,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1533,13 +2076,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 22.206972,
-          "compileMs": 19.617431999999994,
-          "instantiateMs": 55.99667400000001,
-          "totalMs": 97.821078,
+          "importMs": 47.49264800000002,
+          "compileMs": 55.51093999999998,
+          "instantiateMs": 151.829283,
+          "totalMs": 254.832871,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1559,13 +2113,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.3,
+            15.87,
+            16.45
+          ],
+          "loadAfter": [
+            9.3,
+            15.87,
+            16.45
+          ]
         },
         {
-          "importMs": 18.201479999999997,
-          "compileMs": 26.538426,
-          "instantiateMs": 53.290468000000004,
-          "totalMs": 98.030374,
+          "importMs": 95.94481900000002,
+          "compileMs": 72.47549599999996,
+          "instantiateMs": 210.29587099999998,
+          "totalMs": 378.716186,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1585,15 +2150,26 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.16,
+            15.85,
+            16.43
+          ],
+          "loadAfter": [
+            11.16,
+            15.85,
+            16.43
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 43.90999999642372,
-          "compileMs": 18.365000009536743,
-          "instantiateMs": 7.449999988079071,
-          "totalMs": 69.72499999403954,
+          "importMs": 16.519999980926514,
+          "compileMs": 6.860000014305115,
+          "instantiateMs": 1.7450000047683716,
+          "totalMs": 25.125,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1613,13 +2189,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 40.48499998450279,
-          "compileMs": 44.474999994039536,
-          "instantiateMs": 3.4099999964237213,
-          "totalMs": 88.36999997496605,
+          "importMs": 18.099999994039536,
+          "compileMs": 5.2950000166893005,
+          "instantiateMs": 1.6649999916553497,
+          "totalMs": 25.060000002384186,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1639,13 +2226,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 36.270000010728836,
-          "compileMs": 16.769999980926514,
-          "instantiateMs": 3.9300000071525574,
-          "totalMs": 56.96999999880791,
+          "importMs": 31.854999989271164,
+          "compileMs": 11.015000015497208,
+          "instantiateMs": 3.3400000035762787,
+          "totalMs": 46.21000000834465,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1665,13 +2263,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 38.375,
-          "compileMs": 16.36499997973442,
-          "instantiateMs": 5.175000011920929,
-          "totalMs": 59.91499999165535,
+          "importMs": 85.46500000357628,
+          "compileMs": 60.935000002384186,
+          "instantiateMs": 21.615000009536743,
+          "totalMs": 168.0150000154972,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1691,13 +2300,24 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.3,
+            15.87,
+            16.45
+          ],
+          "loadAfter": [
+            9.68,
+            15.84,
+            16.44
+          ]
         },
         {
-          "importMs": 37.644999980926514,
-          "compileMs": 18.695000022649765,
-          "instantiateMs": 4.694999992847443,
-          "totalMs": 61.03499999642372,
+          "importMs": 105.05000001192093,
+          "compileMs": 38.86999997496605,
+          "instantiateMs": 11.590000003576279,
+          "totalMs": 155.50999999046326,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1717,7 +2337,18 @@
             "ttf": 5520,
             "otf": 4700,
             "woff": 2204
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.16,
+            15.85,
+            16.43
+          ],
+          "loadAfter": [
+            11.16,
+            15.85,
+            16.43
+          ]
         }
       ]
     },
@@ -1741,17 +2372,12 @@
         "wasm_sha256": "b9757a7891743f08063d0c72b023ea68b2ab95d9094b37234a670431ea1388a1",
         "wasm_gzip_bytes": 2170208
       },
-      "load": [
-        21.89,
-        23.48,
-        18.13
-      ],
       "node": [
         {
-          "importMs": 13.952398000000002,
-          "compileMs": 12.83466,
-          "instantiateMs": 26.91999,
-          "totalMs": 53.707048,
+          "importMs": 12.981566,
+          "compileMs": 15.057274,
+          "instantiateMs": 21.545038000000005,
+          "totalMs": 49.583878000000006,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1772,13 +2398,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 12.315554999999996,
-          "compileMs": 12.749081000000004,
-          "instantiateMs": 23.537523999999998,
-          "totalMs": 48.60216,
+          "importMs": 20.279750999999997,
+          "compileMs": 23.106009999999998,
+          "instantiateMs": 53.852107000000004,
+          "totalMs": 97.23786799999999,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1799,13 +2436,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 11.548148000000001,
-          "compileMs": 17.734096,
-          "instantiateMs": 27.945865999999995,
-          "totalMs": 57.22811,
+          "importMs": 7.842219,
+          "compileMs": 13.712600000000002,
+          "instantiateMs": 17.411096,
+          "totalMs": 38.965915,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1826,13 +2474,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 14.490074,
-          "compileMs": 16.044998000000007,
-          "instantiateMs": 33.08882799999999,
-          "totalMs": 63.6239,
+          "importMs": 37.83264200000001,
+          "compileMs": 38.989844000000005,
+          "instantiateMs": 86.800637,
+          "totalMs": 163.62312300000002,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1853,13 +2512,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.3,
+            15.87,
+            16.45
+          ],
+          "loadAfter": [
+            9.3,
+            15.87,
+            16.45
+          ]
         },
         {
-          "importMs": 13.915589999999995,
-          "compileMs": 16.660556000000007,
-          "instantiateMs": 34.381986999999995,
-          "totalMs": 64.958133,
+          "importMs": 79.263779,
+          "compileMs": 70.34083099999998,
+          "instantiateMs": 178.12186600000007,
+          "totalMs": 327.72647600000005,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1880,15 +2550,26 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.16,
+            15.85,
+            16.43
+          ],
+          "loadAfter": [
+            11.39,
+            15.82,
+            16.42
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 25.25500002503395,
-          "compileMs": 8.774999976158142,
-          "instantiateMs": 2.020000010728836,
-          "totalMs": 36.05000001192093,
+          "importMs": 21.060000002384186,
+          "compileMs": 8.030000001192093,
+          "instantiateMs": 1.4899999797344208,
+          "totalMs": 30.5799999833107,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1909,13 +2590,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 23.609999984502792,
-          "compileMs": 9.340000003576279,
-          "instantiateMs": 2.780000001192093,
-          "totalMs": 35.729999989271164,
+          "importMs": 17.644999980926514,
+          "compileMs": 5.4200000166893005,
+          "instantiateMs": 1.399999976158142,
+          "totalMs": 24.464999973773956,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1936,13 +2628,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 29.405000001192093,
-          "compileMs": 10.974999994039536,
-          "instantiateMs": 2.2849999964237213,
-          "totalMs": 42.66499999165535,
+          "importMs": 16.230000019073486,
+          "compileMs": 6.924999982118607,
+          "instantiateMs": 1.270000010728836,
+          "totalMs": 24.42500001192093,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1963,13 +2666,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 25.865000009536743,
-          "compileMs": 9.98999997973442,
-          "instantiateMs": 2.3850000202655792,
-          "totalMs": 38.24000000953674,
+          "importMs": 80.32499998807907,
+          "compileMs": 29.110000014305115,
+          "instantiateMs": 6.425000011920929,
+          "totalMs": 115.86000001430511,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -1990,13 +2704,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.3,
+            15.87,
+            16.45
+          ],
+          "loadAfter": [
+            9.3,
+            15.87,
+            16.45
+          ]
         },
         {
-          "importMs": 20.15999999642372,
-          "compileMs": 10.245000004768372,
-          "instantiateMs": 2.0499999821186066,
-          "totalMs": 32.4549999833107,
+          "importMs": 92.58500000834465,
+          "compileMs": 35.65500000119209,
+          "instantiateMs": 10.609999984502792,
+          "totalMs": 138.84999999403954,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2017,7 +2742,18 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.39,
+            15.82,
+            16.42
+          ],
+          "loadAfter": [
+            11.39,
+            15.82,
+            16.42
+          ]
         }
       ]
     },
@@ -2041,17 +2777,12 @@
         "wasm_sha256": "666b0ec70337b062c1b1e7cfd5e835418fe3aa1b2f55789036549e0421ca9ead",
         "wasm_gzip_bytes": 2961506
       },
-      "load": [
-        18.7,
-        19.14,
-        17.45
-      ],
       "node": [
         {
-          "importMs": 11.856022,
-          "compileMs": 11.260697,
-          "instantiateMs": 21.564721,
-          "totalMs": 44.681439999999995,
+          "importMs": 11.797625,
+          "compileMs": 11.078604999999996,
+          "instantiateMs": 20.461033999999998,
+          "totalMs": 43.33726399999999,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2072,13 +2803,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 11.058263000000004,
-          "compileMs": 9.683892999999998,
-          "instantiateMs": 29.175357000000005,
-          "totalMs": 49.91751300000001,
+          "importMs": 8.285407,
+          "compileMs": 10.485984000000002,
+          "instantiateMs": 22.640950000000004,
+          "totalMs": 41.412341000000005,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2099,13 +2841,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 10.110326000000004,
-          "compileMs": 11.729000999999997,
-          "instantiateMs": 19.948369,
-          "totalMs": 41.787696,
+          "importMs": 11.141763999999995,
+          "compileMs": 10.492571000000005,
+          "instantiateMs": 19.970878999999996,
+          "totalMs": 41.605214,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2126,13 +2879,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 9.555784,
-          "compileMs": 15.630822000000002,
-          "instantiateMs": 24.799234999999996,
-          "totalMs": 49.98584099999999,
+          "importMs": 37.65065600000001,
+          "compileMs": 54.722927,
+          "instantiateMs": 104.00921399999999,
+          "totalMs": 196.38279699999998,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2153,13 +2917,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.59,
+            16.04,
+            16.51
+          ],
+          "loadAfter": [
+            9.59,
+            16.04,
+            16.51
+          ]
         },
         {
-          "importMs": 24.229706999999998,
-          "compileMs": 27.997906999999998,
-          "instantiateMs": 54.830065000000005,
-          "totalMs": 107.05767900000001,
+          "importMs": 98.09876499999999,
+          "compileMs": 103.72645,
+          "instantiateMs": 193.6506,
+          "totalMs": 395.475815,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2180,15 +2955,26 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.39,
+            15.82,
+            16.42
+          ],
+          "loadAfter": [
+            11.6,
+            15.79,
+            16.4
+          ]
         }
       ],
       "chromium": [
         {
-          "importMs": 18.939999997615814,
-          "compileMs": 7.319999992847443,
-          "instantiateMs": 2.2150000035762787,
-          "totalMs": 28.474999994039536,
+          "importMs": 18.655000001192093,
+          "compileMs": 6.944999992847443,
+          "instantiateMs": 2.1399999856948853,
+          "totalMs": 27.73999997973442,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2209,13 +2995,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 0,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 19.53499999642372,
-          "compileMs": 9.424999982118607,
-          "instantiateMs": 2.3199999928474426,
-          "totalMs": 31.27999997138977,
+          "importMs": 33.40500000119209,
+          "compileMs": 12.53999999165535,
+          "instantiateMs": 5.060000002384186,
+          "totalMs": 51.00499999523163,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2236,13 +3033,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 1,
+          "loadBefore": [
+            10.24,
+            16.38,
+            16.62
+          ],
+          "loadAfter": [
+            10.24,
+            16.38,
+            16.62
+          ]
         },
         {
-          "importMs": 18.484999984502792,
-          "compileMs": 7.655000001192093,
-          "instantiateMs": 3.195000022649765,
-          "totalMs": 29.33500000834465,
+          "importMs": 17.980000019073486,
+          "compileMs": 8.344999998807907,
+          "instantiateMs": 2.7649999856948853,
+          "totalMs": 29.09000000357628,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2263,13 +3071,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 2,
+          "loadBefore": [
+            9.82,
+            16.19,
+            16.56
+          ],
+          "loadAfter": [
+            9.82,
+            16.19,
+            16.56
+          ]
         },
         {
-          "importMs": 20.17500001192093,
-          "compileMs": 7.574999988079071,
-          "instantiateMs": 2.5550000071525574,
-          "totalMs": 30.305000007152557,
+          "importMs": 74.80500000715256,
+          "compileMs": 38.88499999046326,
+          "instantiateMs": 15.620000004768372,
+          "totalMs": 129.3100000023842,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2290,13 +3109,24 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 3,
+          "loadBefore": [
+            9.59,
+            16.04,
+            16.51
+          ],
+          "loadAfter": [
+            9.3,
+            15.87,
+            16.45
+          ]
         },
         {
-          "importMs": 91.36500000953674,
-          "compileMs": 40.29999998211861,
-          "instantiateMs": 12.030000001192093,
-          "totalMs": 143.69499999284744,
+          "importMs": 83.50499999523163,
+          "compileMs": 47.80000001192093,
+          "instantiateMs": 13.405000001192093,
+          "totalMs": 144.71000000834465,
           "enabled": {
             "bdf": true,
             "pcf": true,
@@ -2317,7 +3147,18 @@
             "otf": 4700,
             "woff": 2204,
             "woff2": 1356
-          }
+          },
+          "repeat": 4,
+          "loadBefore": [
+            11.6,
+            15.79,
+            16.4
+          ],
+          "loadAfter": [
+            11.6,
+            15.79,
+            16.4
+          ]
         }
       ]
     }

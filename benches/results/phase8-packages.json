@@ -1,0 +1,1087 @@
+{
+  "schema": 1,
+  "archive_directory": "/home/chen/githubprojects/fontpixel/local-work/p8-redo/packages",
+  "qualification": "Exact measured artifacts; original build-info source commits retained. Subsequent source changes to the loader are documentation comments only. No publication.",
+  "files": [
+    {
+      "file": "full/build-info.json",
+      "bytes": 802,
+      "sha256": "369b089cfc54a586d7ad1d3a51d5f8a7e34a58c67346f6d6116dfce81427c605"
+    },
+    {
+      "file": "full/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "full/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "full/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "full/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "full/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "full/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "full/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "full/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "full/fontpixel_wasm.d.ts",
+      "bytes": 966406,
+      "sha256": "2165339aa2dde7238ff9054f9597525d5852da404fcf145f745b51c3d9d5f124"
+    },
+    {
+      "file": "full/fontpixel_wasm.js",
+      "bytes": 646791,
+      "sha256": "156a7af2dacb331bede3c0574de936ea173effc93cf5560c803546e26825a0f4"
+    },
+    {
+      "file": "full/fontpixel_wasm_bg.wasm",
+      "bytes": 16666863,
+      "sha256": "939cc3d85c4220eaef675252a81ab886c05c3c7f8c2e8422bea4e53a1bfe3c06"
+    },
+    {
+      "file": "full/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 108080,
+      "sha256": "7538671da293788282b4f70ee97a83638c3fee57429fd86c62d6a014552139bc"
+    },
+    {
+      "file": "full/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "full/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "full/index.js",
+      "bytes": 3203,
+      "sha256": "e6c9f624a221ee761604f42bb7d0a903001c98d078f4c0ca7f5d25c75f814056"
+    },
+    {
+      "file": "full/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "full/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "full/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "full/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "full/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "full/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "full/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "full/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "full/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "full/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "full/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "merge/build-info.json",
+      "bytes": 803,
+      "sha256": "2f866f55ddde101efe1ad833a457356b58513d1b28404063f141d9c35e36e66a"
+    },
+    {
+      "file": "merge/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "merge/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "merge/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "merge/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "merge/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "merge/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "merge/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "merge/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "merge/fontpixel_wasm.d.ts",
+      "bytes": 759040,
+      "sha256": "09d5f1801352760ad6f3c5b6775205da0bb3747d89a87749a3dfc9b7985bf6e1"
+    },
+    {
+      "file": "merge/fontpixel_wasm.js",
+      "bytes": 326505,
+      "sha256": "f23eea18c258c107fe089a2368d8fe68a51ac7c28a58b5dca7dbaf9dc43aa07b"
+    },
+    {
+      "file": "merge/fontpixel_wasm_bg.wasm",
+      "bytes": 8666341,
+      "sha256": "c0c09218647e491ead377ea45edcec45bf7d58ff6cd7812dfd7831574881e9e3"
+    },
+    {
+      "file": "merge/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 51113,
+      "sha256": "6584763d9f9b6990934872870cdedc944ba3ef64f2a838e8188410958621acfd"
+    },
+    {
+      "file": "merge/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "merge/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "merge/index.js",
+      "bytes": 3203,
+      "sha256": "e6c9f624a221ee761604f42bb7d0a903001c98d078f4c0ca7f5d25c75f814056"
+    },
+    {
+      "file": "merge/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "merge/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "merge/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "merge/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "merge/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "merge/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "merge/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "merge/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "merge/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "merge/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "merge/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "minimal/build-info.json",
+      "bytes": 806,
+      "sha256": "be48a6d579b14000373957f886ba49e46882efccaddcaf8500755b38037958fc"
+    },
+    {
+      "file": "minimal/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "minimal/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "minimal/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "minimal/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "minimal/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "minimal/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "minimal/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "minimal/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "minimal/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "618525f7f47cd43c2837795d02dcd4fc6c5201042c0c9bc3750b2b1266377c5c"
+    },
+    {
+      "file": "minimal/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "31a478eede6b2b64d5096edef125b273370b0451c7c30982cd97110477152268"
+    },
+    {
+      "file": "minimal/fontpixel_wasm_bg.wasm",
+      "bytes": 3925657,
+      "sha256": "cee987f688f519ece452d5536813f5ca395fa78daa520e3d95f782a85ea614c5"
+    },
+    {
+      "file": "minimal/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "d6a9b818fc3e6f3c2452e9f7cbae84d4c813fd80d72119cab699030973fbc89c"
+    },
+    {
+      "file": "minimal/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "minimal/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "minimal/index.js",
+      "bytes": 3203,
+      "sha256": "e6c9f624a221ee761604f42bb7d0a903001c98d078f4c0ca7f5d25c75f814056"
+    },
+    {
+      "file": "minimal/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "minimal/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "minimal/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "minimal/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "minimal/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "minimal/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "minimal/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "minimal/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "minimal/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "minimal/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "minimal/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "minimal-cjk/build-info.json",
+      "bytes": 818,
+      "sha256": "cb661b87df2ba5135c612f9b7b250c138db43efd4568457f71f47ff4e78c01db"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "minimal-cjk/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "minimal-cjk/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "minimal-cjk/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "minimal-cjk/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "618525f7f47cd43c2837795d02dcd4fc6c5201042c0c9bc3750b2b1266377c5c"
+    },
+    {
+      "file": "minimal-cjk/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "31a478eede6b2b64d5096edef125b273370b0451c7c30982cd97110477152268"
+    },
+    {
+      "file": "minimal-cjk/fontpixel_wasm_bg.wasm",
+      "bytes": 5495751,
+      "sha256": "869654244f641becb38234ed33c763bc839fb1df949ccc2385989b157601e6bc"
+    },
+    {
+      "file": "minimal-cjk/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "d6a9b818fc3e6f3c2452e9f7cbae84d4c813fd80d72119cab699030973fbc89c"
+    },
+    {
+      "file": "minimal-cjk/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "minimal-cjk/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "minimal-cjk/index.js",
+      "bytes": 3191,
+      "sha256": "b0e925a33f3e7f3196257afcaa63efaae33c13141d6fa065fd93104b647b3fc3"
+    },
+    {
+      "file": "minimal-cjk/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "minimal-cjk/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "minimal-cjk/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "minimal-cjk/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "minimal-cjk/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "minimal-cjk/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "minimal-cjk/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "minimal-cjk/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "minimal-cjk/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "minimal-cjk/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "minimal-cjk/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "registry-vector/build-info.json",
+      "bytes": 848,
+      "sha256": "6e3730ae1c4321f54fa8e5628de9e5edbc6900309b49f14c02e2bc8582aead5d"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "registry-vector/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "registry-vector/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "registry-vector/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "registry-vector/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "54357d732e9e7c27d9f64c8fe608fc415e9e9adad726527bb8b08fba169bc7f4"
+    },
+    {
+      "file": "registry-vector/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "9e26fa8edabedc8a6fd5984711ba7e10e8d1c92f6ae7a3c976433f5550cdc37b"
+    },
+    {
+      "file": "registry-vector/fontpixel_wasm_bg.wasm",
+      "bytes": 4656888,
+      "sha256": "8197125d9ea437b8dc066928d3e97a05da2d82bcfcec4e39e02d0122bfa71cbe"
+    },
+    {
+      "file": "registry-vector/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "ab2744afba49ee9d14d369c28342c52ac586e10f652f8cfe4a0c10186a0a731d"
+    },
+    {
+      "file": "registry-vector/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "registry-vector/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "registry-vector/index.js",
+      "bytes": 3191,
+      "sha256": "b0e925a33f3e7f3196257afcaa63efaae33c13141d6fa065fd93104b647b3fc3"
+    },
+    {
+      "file": "registry-vector/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "registry-vector/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "registry-vector/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "registry-vector/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "registry-vector/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "registry-vector/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "registry-vector/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "registry-vector/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "registry-vector/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "registry-vector/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "registry-vector/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "registry-vector-cjk/build-info.json",
+      "bytes": 861,
+      "sha256": "08d53a72796a9552d4982a41f977d9707cb807f45141a79c5de9772b62676843"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "registry-vector-cjk/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "registry-vector-cjk/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "registry-vector-cjk/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "registry-vector-cjk/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "54357d732e9e7c27d9f64c8fe608fc415e9e9adad726527bb8b08fba169bc7f4"
+    },
+    {
+      "file": "registry-vector-cjk/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "9e26fa8edabedc8a6fd5984711ba7e10e8d1c92f6ae7a3c976433f5550cdc37b"
+    },
+    {
+      "file": "registry-vector-cjk/fontpixel_wasm_bg.wasm",
+      "bytes": 6227015,
+      "sha256": "3c172e85e98dcaba9bd92a1d7dff5fddf0b78ccc18fd9e813f2fe13830c483c8"
+    },
+    {
+      "file": "registry-vector-cjk/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "ab2744afba49ee9d14d369c28342c52ac586e10f652f8cfe4a0c10186a0a731d"
+    },
+    {
+      "file": "registry-vector-cjk/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "registry-vector-cjk/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "registry-vector-cjk/index.js",
+      "bytes": 3191,
+      "sha256": "b0e925a33f3e7f3196257afcaa63efaae33c13141d6fa065fd93104b647b3fc3"
+    },
+    {
+      "file": "registry-vector-cjk/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "registry-vector-cjk/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "registry-vector-cjk/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "registry-vector-cjk/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "registry-vector-cjk/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "registry-vector-cjk/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "registry-vector-cjk/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "registry-vector-cjk/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "registry-vector-cjk/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "registry-vector-cjk/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "registry-vector-cjk/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "registry-vector-woff2/build-info.json",
+      "bytes": 864,
+      "sha256": "feb5b6d1770943bcb60a3f76891311d7e5150852c669d59c47be6e003421b77b"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "registry-vector-woff2/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "registry-vector-woff2/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "registry-vector-woff2/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "registry-vector-woff2/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "54357d732e9e7c27d9f64c8fe608fc415e9e9adad726527bb8b08fba169bc7f4"
+    },
+    {
+      "file": "registry-vector-woff2/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "9e26fa8edabedc8a6fd5984711ba7e10e8d1c92f6ae7a3c976433f5550cdc37b"
+    },
+    {
+      "file": "registry-vector-woff2/fontpixel_wasm_bg.wasm",
+      "bytes": 5766686,
+      "sha256": "b9757a7891743f08063d0c72b023ea68b2ab95d9094b37234a670431ea1388a1"
+    },
+    {
+      "file": "registry-vector-woff2/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "ab2744afba49ee9d14d369c28342c52ac586e10f652f8cfe4a0c10186a0a731d"
+    },
+    {
+      "file": "registry-vector-woff2/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "registry-vector-woff2/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "registry-vector-woff2/index.js",
+      "bytes": 3191,
+      "sha256": "b0e925a33f3e7f3196257afcaa63efaae33c13141d6fa065fd93104b647b3fc3"
+    },
+    {
+      "file": "registry-vector-woff2/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "registry-vector-woff2/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "registry-vector-woff2/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "registry-vector-woff2/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "registry-vector-woff2/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "registry-vector-woff2/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "registry-vector-woff2/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "registry-vector-woff2/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "registry-vector-woff2/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "registry-vector-woff2/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "registry-vector-woff2/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/build-info.json",
+      "bytes": 877,
+      "sha256": "0add7cdd7ee268a4bf78b7e2cd906db7837e2547bbc607ef5c3af88b01c78708"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser.d.ts",
+      "bytes": 17374,
+      "sha256": "6dda93851167e31d2fdfacb0a4969b4379e9385ef99072983be0c53dfbf58302"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser.js",
+      "bytes": 72611,
+      "sha256": "3058c902cbe12243029b8733d5998ad976d9ef7b4464e52cd831ef047a54f5ba"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser_cjk.d.ts",
+      "bytes": 339,
+      "sha256": "e1ed1167dd7d72d0ed406c343246a11f82068539d6be8b4b26deb1b99221977e"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser_cjk.js",
+      "bytes": 756,
+      "sha256": "fa4e1cce88deba1e3091c649e2c49939e63a3e4d527612fd895f01988d8514c4"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser_cli.d.ts",
+      "bytes": 615,
+      "sha256": "205df165671327f913f00e5961db78a1866cf2ece9757e8a54f08b0c4260beef"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/compat_bdfparser_cli.js",
+      "bytes": 7887,
+      "sha256": "ab2233a0eb2ba9143d44b461dbfe32a7bbec99d37416613907204e44c306934a"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/errors.d.ts",
+      "bytes": 2979,
+      "sha256": "ba62cafc8c5744f1a77f95806a68a18dd1955148072d657c73c709e47ef5cb09"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/errors.js",
+      "bytes": 3645,
+      "sha256": "291fea482329c8ab0f0a5cab507acee00bf904e13b690d5d799724bf57f39edd"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/fontpixel_wasm.d.ts",
+      "bytes": 711715,
+      "sha256": "54357d732e9e7c27d9f64c8fe608fc415e9e9adad726527bb8b08fba169bc7f4"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/fontpixel_wasm.js",
+      "bytes": 253774,
+      "sha256": "9e26fa8edabedc8a6fd5984711ba7e10e8d1c92f6ae7a3c976433f5550cdc37b"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/fontpixel_wasm_bg.wasm",
+      "bytes": 7337085,
+      "sha256": "666b0ec70337b062c1b1e7cfd5e835418fe3aa1b2f55789036549e0421ca9ead"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/fontpixel_wasm_bg.wasm.d.ts",
+      "bytes": 39020,
+      "sha256": "ab2744afba49ee9d14d369c28342c52ac586e10f652f8cfe4a0c10186a0a731d"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/guard.js",
+      "bytes": 2921,
+      "sha256": "78cbe6aaac59fe8e6b1f495e0537b88bf55b66174f7d2fb7be023b5767fee45d"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/index.d.ts",
+      "bytes": 1658,
+      "sha256": "e12e8368166034dfecbf3843b5888e36c0657b9af929a36142432f0f72d396c0"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/index.js",
+      "bytes": 3191,
+      "sha256": "b0e925a33f3e7f3196257afcaa63efaae33c13141d6fa065fd93104b647b3fc3"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/model.d.ts",
+      "bytes": 707,
+      "sha256": "3bd4aca10db04c2274507352fc0d23569f4e2d2c19d7cb84d76e7df28ff4dfb4"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/model.js",
+      "bytes": 2464,
+      "sha256": "d5153b6f1a6bc8e8c8a97e53935f82aabac3d407f09976607b2b61d02a993dd5"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/ops-client.d.ts",
+      "bytes": 2911,
+      "sha256": "f0e37d5232e6dc9cc28de7fcf9bdac091884a550145e307cc7e95a237da87c9a"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/ops-client.js",
+      "bytes": 14326,
+      "sha256": "75d030f456d5ba3006765d9ec629fe72300677e72c52aac12ff73467705ec16b"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/ops-node-files.d.ts",
+      "bytes": 897,
+      "sha256": "b8781cf6ba28adc8e4afd54d5b36636ba324f7be8dc71d37978f2803bf6877b6"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/ops-node-files.js",
+      "bytes": 3522,
+      "sha256": "beeece2bfd48dce2c8466e0d155529487ff4fc46c7ebeef7c0f29e3696c0f2de"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/ops-worker.js",
+      "bytes": 4051,
+      "sha256": "9ffea83dcdd0d98b11bd7f57cfdbb10f59efb5ef4e0b93c320c8b84ea55415c4"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/package.json",
+      "bytes": 1205,
+      "sha256": "2313b146f1e0ab4499784371749b1654ca80157beab5094b55eef3b227b7f956"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/plain.js",
+      "bytes": 5098,
+      "sha256": "9d34c54577da8401094b211463f46079cfe382c6b69a0e67c463676e886d995e"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/resources.d.ts",
+      "bytes": 973,
+      "sha256": "bf06acffce32fcf3110020dbf88585a9f9fdada9976bcba617b0ea35a7513f3f"
+    },
+    {
+      "file": "registry-vector-woff2-cjk/resources.js",
+      "bytes": 3462,
+      "sha256": "497122e68e6d55e8cd3c5d2864a79899a861b287dd795405d8eba55575cda8e9"
+    }
+  ]
+}

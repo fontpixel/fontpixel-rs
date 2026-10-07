@@ -1,12 +1,26 @@
-# 当前进度：第 8 阶段进行到一半，已暂停；2026-10-07 交接给 Codex（gpt-6-astra）做第 8 阶段，交接说明 docs/CODEX-HANDOVER-PHASE8.md
+# 当前进度：第 8 阶段已完成；在此停止
 
-用户要求一路做完第 7、8、9 阶段和最终报告（只做本地提交，不 push、不发布、不部署）。2026-10-06 晚用户因 token
-额度不足要求在合适的点暂停，并详细记录进度和接续方法——见下面「第 8 阶段暂停记录」。
+2026-10-07：按用户最新要求，将上一轮 Sol 的阶段 8 工作从 main 撤销到交接点 `cac4e0d`，
+由本轮当前 Astra 模型重新实施并完成。只做本地提交，没有 push、发布或部署。
+**本轮授权仅到阶段 8；第 9 阶段和项目最终报告均未开始。**
 
-- 第 6 阶段：[reports/phase-6.md](reports/phase-6.md)（严格标准）。
-- 第 7 阶段：[reports/phase-7.md](reports/phase-7.md)；测速与 wheel [benches/PHASE7-REPORT.md](benches/PHASE7-REPORT.md)。
+- 第 6 阶段：[reports/phase-6.md](reports/phase-6.md)（严格标准；追加 portable-float 后的新值）。
+- 第 7 阶段：[reports/phase-7.md](reports/phase-7.md)；[测速与 wheel](benches/PHASE7-REPORT.md)。
+- 第 8 阶段：[reports/phase-8.md](reports/phase-8.md)；[测速、体积和初始化](benches/PHASE8-REPORT.md)；
+  [JS API](docs/js-api.md)、[逐项参考](docs/js-api-reference.md)、[可运行示例](examples/js/recipes.mjs)。
+- 五个原始分支均合并，`portable-float`、WOFF2 大输入字节一致性与 684 项堆复核完成。
+- `check_wasm.sh`（full/minimal/merge）、`check.sh`、`check_python.sh` 均通过；Python/JS 覆盖率
+  2,008 项、0 未映射、0 错误；Python 1,262 项通过。
+- Chromium/Firefox/WebKit、Node 18/24、五轮 Node/headless Chromium 基准、八组合体积/初始化均完成。
+- 参考套件保留已解释差异：Python 1,755/8/10（慢测试另跑 10/10）；JS 1,178/11/3，含慢测试
+  1,181/11/0，均有 2 个参考构建套件加载错误。详细原因与原始失败退出码见阶段报告。
+- 新证据为 gates 224–248；上一轮 gates 213–223 不作验收依据。正式包与 SHA 清单在
+  `../local-work/p8-redo/packages/`，主 target 和可再生缓存已清理。
 
-## 第 8 阶段暂停记录（接续从这里开始）
+以下暂停记录保留为 **2026-10-06/07 交接时的历史状态**；其中“未合并”“待实施”“暂停”均已由上述
+阶段 8 交付取代。第 9 阶段的规格仍保留，等待用户另行启动。
+
+## 第 8 阶段暂停记录（历史交接，已完成）
 
 ### 1. 现在的状态
 
@@ -124,7 +138,7 @@
   完整检查、109 种 feature 组合 Clippy、真实字体对照、104 目标 ASAN、默认负载巡检、正式测速与 A/B。
 - [x] 第 7 阶段：Python 绑定（完整原生 API + bdfparser 兼容 API），最终源码 `d9ff25c`：覆盖率 2,004 项 0 错误，
   pytest 1,253 通过，bdfparser 参考测试 1,755/1,773 通过（8 个失败逐条说明），测速报告，manylinux wheel（x86_64 在 3.10/3.12 测试通过）。
-- [ ] 第 8 阶段：WASM 绑定。**暂停中**，详见上面「第 8 阶段暂停记录」。
+- [x] 第 8 阶段：WASM 绑定完成；见 [阶段 8 报告](reports/phase-8.md)，本轮在此停止。
 - [ ] 最终报告前：对最终源码重跑 104 目标 ASAN 和逐 feature Clippy（核心在第 7、8 阶段有改动）。
 - [ ] 第 9 阶段：改为更新 fontpixel.com，加 wasm 字体工具页（切割/合并/转格式/像素化），见上面接续步骤第 4 项。
 - 只做本地提交；不 push、不发布、不部署。

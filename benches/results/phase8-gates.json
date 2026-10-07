@@ -1,0 +1,722 @@
+{
+  "schema": 1,
+  "gate_directory": "/home/chen/githubprojects/fontpixel/local-work/phase6-local-20261004/gates",
+  "qualification": "Raw exits retained. 225, 235 and 246 are superseded failures; 240, 242 and 243 retain the explained reference-suite failures. Source changes in preparation/evidence runs are listed explicitly. Gates 213–223 are rejected Sol history and excluded.",
+  "gates": [
+    {
+      "gate": "224-p8-redo-j1",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T11:59:37.975090+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:04:51.857947+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "37ba8160cb70386dbaf6a004c3ae75699095b2a3",
+      "head_after": "37ba8160cb70386dbaf6a004c3ae75699095b2a3",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "2133ca3a37f0702bf0af140c9972a9278b93c72336d4db2afcbd9bfb35472546",
+        "result.json": "4f374f4d994c26ab74cb0b6e2d8e8565c4e06317e3a3f608ebcf825217bc4fd4",
+        "source-after.json": "f32df718de0fd0ac37766a23ffed3eb22d42987047f20caab8baf6e2d3815ff4",
+        "source-before.json": "f32df718de0fd0ac37766a23ffed3eb22d42987047f20caab8baf6e2d3815ff4",
+        "stderr.log": "d870eaa5a33bb631cdf5707ce95dd7ea91a2534384cd662e90d0a133e8f2414c",
+        "stdout.log": "8af2d5649712faf6ce2b9993be6eabfe44566f7d3beeb6a3cb90160dcfe10645"
+      }
+    },
+    {
+      "gate": "225-p8-redo-j3",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:07:59.898411+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:08:16.692517+00:00",
+        "exit": 1,
+        "source_unchanged": true
+      },
+      "head_before": "c0672d749383dbb8c433d7a9c670ff836c4a8798",
+      "head_after": "c0672d749383dbb8c433d7a9c670ff836c4a8798",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "e5a61f7189c01495d2d16b1c53852fda6652c6a30f24ff3c272d6369e22a616f",
+        "result.json": "866904b3b75553e2d1617b0f3cf75106e18923440b7384b6e75969039283e313",
+        "source-after.json": "012b5d391fc7642a949ef9437c8993348e04c7e9691861357e859eec982a4a24",
+        "source-before.json": "012b5d391fc7642a949ef9437c8993348e04c7e9691861357e859eec982a4a24",
+        "stderr.log": "6a6b2cb25506ec986533499758a57a82894f332e5ea2b73a27ffce8d277b6b75",
+        "stdout.log": "6798dd303cfb188982fab5f0b1be326d24186b9c55d2d206039aeb2d61b28bdd"
+      }
+    },
+    {
+      "gate": "226-p8-redo-j3-fixed",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:09:14.923675+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:10:29.631514+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "4809139b20223b2ad3a993703fb6d9f8998cac6f",
+      "head_after": "4809139b20223b2ad3a993703fb6d9f8998cac6f",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "3bf678de05ecbb12c25cc3facb6960fca1fc902606063ab60356b3f7d7556812",
+        "result.json": "b9185faa800666f2dc6a49341b127012d7e34a3158105e86cd982fb45df0d99e",
+        "source-after.json": "802ea9d9c187fbff4d173c405e8b6acdb886e80e4e8821af1c688a49d664ab68",
+        "source-before.json": "802ea9d9c187fbff4d173c405e8b6acdb886e80e4e8821af1c688a49d664ab68",
+        "stderr.log": "0dcd674c19b5ca8b649232ed3bf47f6eac9e7a9a487650f6dc1da8ae51ee53da",
+        "stdout.log": "ef247a804b14026defc6d7307740b75cf5e2e39c4d6aa2485a0452060b028ded"
+      }
+    },
+    {
+      "gate": "227-p8-redo-j4",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:11:50.164064+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:13:12.359151+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "fb0cf3c1a17099954ebb3756ee794f0933437590",
+      "head_after": "fb0cf3c1a17099954ebb3756ee794f0933437590",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "23fda46963887431b1b77b943a8dc49fd53f2ceff0342f6254d3f371708de86d",
+        "result.json": "88aa451d589ab8279b5e2c8891f58138bbe0a1bd1345daea9dbd65c86935865b",
+        "source-after.json": "522ee83959a3b02611b1b37892cb946c8a981d96c551ec311678057d5ba4673a",
+        "source-before.json": "522ee83959a3b02611b1b37892cb946c8a981d96c551ec311678057d5ba4673a",
+        "stderr.log": "6f514c71425ee0af87536fbf39f1f6a92d3b6fddb92000518dd23abb6ae3edbc",
+        "stdout.log": "0addf97d653e8e8a25d5059851236a0c97f7a909f47e33fdd6161859d7724f1d"
+      }
+    },
+    {
+      "gate": "228-p8-redo-j5",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:14:38.771369+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:16:15.235320+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "5e7b11844a99101d437701b2543ee944c4be74a2",
+      "head_after": "5e7b11844a99101d437701b2543ee944c4be74a2",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "0f5ea2606e1ed982ef0d7f9614e325c62852aaecb3770037dd1a127565df9c32",
+        "result.json": "4e4c4cc87a4da603a9f79a8e22be6e922a30e1cfe58dff7fb8c65683eeac3781",
+        "source-after.json": "d3fecba692d666dbb5e894262b093c73c8e4e6519e141ff73ae7309d8c5ede55",
+        "source-before.json": "d3fecba692d666dbb5e894262b093c73c8e4e6519e141ff73ae7309d8c5ede55",
+        "stderr.log": "ff10e33605a1c5ed9ffae1c938c39be51c1426e7b1bc69d889629e1d56491684",
+        "stdout.log": "4bfefd8040be14506bea9aeae03c48879be6fe97a74a0297534527bcbc673db1"
+      }
+    },
+    {
+      "gate": "229-p8-redo-j6",
+      "result": {
+        "command": "WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nWASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/*.test.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:17:25.116426+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:20:40.551856+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "70163a3d86be1876c6f851f5efc9b2d7e4a4c9f2",
+      "head_after": "70163a3d86be1876c6f851f5efc9b2d7e4a4c9f2",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "9f41c0ba8dd89ba3b017d7dca3c5fefe7c99571aa50128b42f6168f2949bb415",
+        "result.json": "96db9269536130484a588dbd5cd8720b054fac52606fe37a673dddddcbbd48fd",
+        "source-after.json": "e68b46c6241657223dd7df1d09164646794c19247ae144456ce53002f080e3aa",
+        "source-before.json": "e68b46c6241657223dd7df1d09164646794c19247ae144456ce53002f080e3aa",
+        "stderr.log": "b2fab3cb4157451bb207b8a7eb4292df2f94634f87ea3f775a4840d2b034808b",
+        "stdout.log": "156b97b74253e1d60aeedd1e3e864b2f83cfc72e97de67fdc66bf842855cad2a"
+      }
+    },
+    {
+      "gate": "230-p8-redo-portable-prepare",
+      "result": {
+        "command": "cargo build --locked --release -p fontpixel-cli --all-features && mkdir -p /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference && cp \"$CARGO_TARGET_DIR/release/fontpixel\" /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel && for c in fontpixel fontpixel-ops; do CARGO_TARGET_DIR=\"$CARGO_TARGET_DIR/rustdoc-json\" RUSTDOCFLAGS=\"-Z unstable-options --output-format json\" cargo +nightly rustdoc -q --locked -p \"$c\" --all-features --lib; done && python3 tools/bindings/gen_dts.py",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\ncargo build --locked --release -p fontpixel-cli --all-features && mkdir -p /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference && cp \"$CARGO_TARGET_DIR/release/fontpixel\" /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel && for c in fontpixel fontpixel-ops; do CARGO_TARGET_DIR=\"$CARGO_TARGET_DIR/rustdoc-json\" RUSTDOCFLAGS=\"-Z unstable-options --output-format json\" cargo +nightly rustdoc -q --locked -p \"$c\" --all-features --lib; done && python3 tools/bindings/gen_dts.py",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:22:58.697456+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:27:21.540131+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "head_after": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "status_before": "",
+      "status_after": " M crates/fontpixel-wasm/tests/ops-page.test.mjs\n M crates/fontpixel-wasm/ts/types.d.ts\n",
+      "changed_files": [
+        "crates/fontpixel-wasm/tests/ops-page.test.mjs",
+        "crates/fontpixel-wasm/ts/types.d.ts"
+      ],
+      "evidence_sha256": {
+        "command.json": "5382a8013c6b3ec50bb7fcc08add6d725129e43a3e9168315c53542b3c331273",
+        "result.json": "acfbd0c390e09d840d6c1855f612a65967c327ac426d4575e6d6c182c8f11e3b",
+        "source-after.json": "4947049866aa2a662e994333b8775ba961339fa7f862a27aca914a066d80d5be",
+        "source-before.json": "8818ea15e00ddf0d87874abbb092892add97d4c335874265437666fd158afe1c",
+        "stderr.log": "492c89320b2bec816f968986db030c140e1f3c62324096c8028df45716fab4f6",
+        "stdout.log": "b77940f91cd36df9722afd9474e273786bf5ba25851074b682ec442287e35cad"
+      }
+    },
+    {
+      "gate": "231-p8-redo-python-prepare",
+      "result": {
+        "command": "export VIRTUAL_ENV=/home/chen/githubprojects/fontpixel/local-work/py310-venv; export PATH=\"$VIRTUAL_ENV/bin:$PATH\"; maturin develop --release --locked --manifest-path crates/fontpixel-py/Cargo.toml && python tools/bindings/gen_pyi.py --strict && python3 tools/bindings/gen_pyref.py",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nexport VIRTUAL_ENV=/home/chen/githubprojects/fontpixel/local-work/py310-venv; export PATH=\"$VIRTUAL_ENV/bin:$PATH\"; maturin develop --release --locked --manifest-path crates/fontpixel-py/Cargo.toml && python tools/bindings/gen_pyi.py --strict && python3 tools/bindings/gen_pyref.py",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:29:18.332424+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:32:38.380572+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "head_after": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "status_before": " M crates/fontpixel-wasm/tests/helpers.mjs\n M crates/fontpixel-wasm/tests/ops-page.test.mjs\n M crates/fontpixel-wasm/ts/types.d.ts\n M scripts/build_wasm.sh\n M scripts/check_wasm.sh\n",
+      "status_after": " M crates/fontpixel-py/python/fontpixel/types.py\n M crates/fontpixel-py/tests/test_ops.py\n M crates/fontpixel-wasm/tests/helpers.mjs\n M crates/fontpixel-wasm/tests/ops-page.test.mjs\n M crates/fontpixel-wasm/ts/types.d.ts\n M docs/decisions.md\n M scripts/build_wasm.sh\n M scripts/check_wasm.sh\n?? tools/bindings/gen_jsref.py\n",
+      "changed_files": [
+        "crates/fontpixel-py/python/fontpixel/types.py",
+        "crates/fontpixel-py/tests/test_ops.py",
+        "docs/decisions.md",
+        "tools/bindings/gen_jsref.py"
+      ],
+      "evidence_sha256": {
+        "command.json": "18220a63d8fec8895cde30fe8eae49e9c2bbd47430453e856064f6f81bb1f8da",
+        "result.json": "d37ee5e808e93e2c4173ac3ce9d847c84b8266852ad94b3b67b278ce7f59c3ac",
+        "source-after.json": "a061a18a9fcec280f7a656b6638e31a40ae2c4559afc10b41e2977a94d35cf6f",
+        "source-before.json": "a707d40fbc4453254099a7bfc87dbeefd7fcfad40f8fac59289e811a0a7519d8",
+        "stderr.log": "51d3f1ccaac2e5227826837add1c5467f8dd4524f0f41909a01dd173420d6c21",
+        "stdout.log": "1f9baef3c75a0a8102e3611769687f5e2d01d70b5b6d55edd829d460e1416489"
+      }
+    },
+    {
+      "gate": "232-p8-redo-goldens",
+      "result": {
+        "command": "bash /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/cli.sh && cargo run --offline --release --manifest-path /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/Cargo.toml && FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel python3 crates/fontpixel-py/tests/data/formats/regen_cli_golden.py",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nbash /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/cli.sh && cargo run --offline --release --manifest-path /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/Cargo.toml && FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel python3 crates/fontpixel-py/tests/data/formats/regen_cli_golden.py",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:32:54.624451+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:35:47.285757+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "head_after": "1f77b59521cb78cc555a66982a7555d78acf2f1e",
+      "status_before": " M crates/fontpixel-py/python/fontpixel/types.py\n M crates/fontpixel-py/tests/test_ops.py\n M crates/fontpixel-wasm/tests/helpers.mjs\n M crates/fontpixel-wasm/tests/ops-page.test.mjs\n M crates/fontpixel-wasm/ts/types.d.ts\n M docs/decisions.md\n M scripts/build_wasm.sh\n M scripts/check_wasm.sh\n?? tools/bindings/gen_jsref.py\n",
+      "status_after": " M crates/fontpixel-py/python/fontpixel/types.py\n M crates/fontpixel-py/tests/test_ops.py\n M crates/fontpixel-wasm/tests/helpers.mjs\n M crates/fontpixel-wasm/tests/ops-page.test.mjs\n M crates/fontpixel-wasm/ts/types.d.ts\n M docs/decisions.md\n M scripts/build_wasm.sh\n M scripts/check_wasm.sh\n?? benches/phase8_support.mjs\n?? crates/fontpixel-wasm/tests/browser-cases.mjs\n?? tools/bindings/gen_jsref.py\n",
+      "changed_files": [
+        "benches/phase8_support.mjs",
+        "crates/fontpixel-wasm/tests/browser-cases.mjs"
+      ],
+      "evidence_sha256": {
+        "command.json": "796a86af1b6c34fdf184a6847b94748c059721b47e7915b68b0982cc1a275807",
+        "result.json": "87c86691458635b010187618e28aac58ce9a4daa3d114d8d583f4701ac874acf",
+        "source-after.json": "675c001ded64691726265d854dfcab9529daef5ee784e98d958afc9eb9a8b18f",
+        "source-before.json": "a061a18a9fcec280f7a656b6638e31a40ae2c4559afc10b41e2977a94d35cf6f",
+        "stderr.log": "4d2f584c24fc71b44b235cf7d66da542b3ef54e447f121ba2df6f6b7245e469e",
+        "stdout.log": "bf87779445ec094e2aa641f655202515af63676a4490ce8f95630588f78188e8"
+      }
+    },
+    {
+      "gate": "233-p8-redo-portable-heap",
+      "result": {
+        "command": "/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel variants --base /home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf -o /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/sc.otf && FONTPIXEL_HEAP_CHECK_FONT=/home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/sc.otf cargo test --locked --release -p fontpixel-heap-check --test encoder_bound -- --ignored --nocapture --test-threads=1",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\n/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel variants --base /home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf -o /home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/sc.otf && FONTPIXEL_HEAP_CHECK_FONT=/home/chen/githubprojects/fontpixel/local-work/p8-redo/golden/sc.otf cargo test --locked --release -p fontpixel-heap-check --test encoder_bound -- --ignored --nocapture --test-threads=1",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:37:31.483937+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:41:11.936675+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "4c505a8273cb04b487655ad2d80c6899de87cab9",
+      "head_after": "4c505a8273cb04b487655ad2d80c6899de87cab9",
+      "status_before": "?? benches/phase8_browser.mjs\n?? benches/phase8_support.mjs\n?? crates/fontpixel-wasm/tests/browser-cases.mjs\n",
+      "status_after": "?? benches/phase8_browser.mjs\n?? benches/phase8_support.mjs\n?? crates/fontpixel-wasm/tests/browser-cases.mjs\n?? examples/js/recipes.mjs\n?? examples/js/run.mjs\n",
+      "changed_files": [
+        "examples/js/recipes.mjs",
+        "examples/js/run.mjs"
+      ],
+      "evidence_sha256": {
+        "command.json": "18f18bca7d8de460ef3f7f6b6b25e9321399aa10925bdbfcb34d23c34f6289e8",
+        "result.json": "d4ac45a29ea0f7b0f1bf1b2f18911cd3377be8b93480c5a04ecf8960c110ebc9",
+        "source-after.json": "03d03de6fde63414fc36e006330ee0d1529cebb6831a8cbe3b29d91e6974f52a",
+        "source-before.json": "9b7beb804d13dfe53a045219fbdda4b846fbb54c8847d4055f6765d6fb84bc04",
+        "stderr.log": "f7d948db0124a00f1dc38622f23241c7270963b1720ada9571152161d8b7c915",
+        "stdout.log": "ffe5d182b135321b3353aac4ec0d6a4ab8c5f6e5fdadc28cc6861effe3a13014"
+      }
+    },
+    {
+      "gate": "234-p8-redo-portable-smoke",
+      "result": {
+        "command": "export FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/woff.test.mjs crates/fontpixel-wasm/tests/ops-page.test.mjs && node examples/js/run.mjs && python3 tools/bindings/gen_jsref.py",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nexport FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; WASM_BUILD_MODE=fast scripts/build_wasm.sh full && node --test crates/fontpixel-wasm/tests/woff.test.mjs crates/fontpixel-wasm/tests/ops-page.test.mjs && node examples/js/run.mjs && python3 tools/bindings/gen_jsref.py",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:41:56.833777+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T12:45:30.041249+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "b7679d588599c148ee8e614eb3ef26976e42ceb0",
+      "head_after": "b7679d588599c148ee8e614eb3ef26976e42ceb0",
+      "status_before": "",
+      "status_after": "?? docs/js-api-reference.md\n",
+      "changed_files": [
+        "docs/js-api-reference.md"
+      ],
+      "evidence_sha256": {
+        "command.json": "d299e3d5dec9ac0b170ced1ebad9a78f81aeddf02e5d59931a8e2a4e122a8607",
+        "result.json": "d7cd3c2be845227915d34e95624cdff1686c91a66cc9f4e759475d0f4b0ad5ad",
+        "source-after.json": "58cf4c4870d4cd22a2299588ba1d398a89f5a22fe509a43761408d16962e3b28",
+        "source-before.json": "b5a34a73ca202bd8b9283c277813cc37385710d1c7d4d541d06db388cdfef153",
+        "stderr.log": "3df3d3756876a2af17b1e70689146fd53ba9d73fb5c01ad4fb4e80010ffeff50",
+        "stdout.log": "4599db81a8064d8631d0272628f9fd84010197d6965ced454cf42948b289368f"
+      }
+    },
+    {
+      "gate": "235-p8-redo-wasm-release",
+      "result": {
+        "command": "export FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; scripts/check_wasm.sh",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nexport FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; scripts/check_wasm.sh",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T12:52:03.947320+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:11:44.194725+00:00",
+        "exit": 1,
+        "source_unchanged": true
+      },
+      "head_before": "7346faa12f4a55b8651ab664ac30ec11df0202e8",
+      "head_after": "7346faa12f4a55b8651ab664ac30ec11df0202e8",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "ff8a5036b7a962c4d30265e594c96de3ca34168b025daa158a2d3a96c845c475",
+        "result.json": "dc2c204bf5b8107e12ea6359686dc9bf8e9de5f09d8ea5de173f63f3681f9667",
+        "source-after.json": "bdbcc262e28e0e71b30b0b9045b7a73656c9116372006dfaf83f4be027b88be2",
+        "source-before.json": "bdbcc262e28e0e71b30b0b9045b7a73656c9116372006dfaf83f4be027b88be2",
+        "stderr.log": "8c0d9d5686a7597c4db870827c910f58d1799e8b7406d0a08600d382bef20ff3",
+        "stdout.log": "bf7f3c810cab276b2e7bc8c977074e3be60f5ff1f0c23ed82817a4bdbbbab70c"
+      }
+    },
+    {
+      "gate": "236-p8-redo-wasm-release-fixed",
+      "result": {
+        "command": "export FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; scripts/check_wasm.sh",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nexport FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WASM_LARGE=1; scripts/check_wasm.sh",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:15:25.824536+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:26:46.201784+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "c8b8c2ff2ad238632b11ce4563dc5a54f90f4f69b2f2b1bc676df2d1434f3f5a",
+        "result.json": "da513da162a2414258df1f8846b57732b6aa317fe4b4b550152302429bed87e4",
+        "source-after.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "source-before.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "stderr.log": "5c7dbdc75e3b4b71d8556b0118e3c40c4549ed4307617985f7127590aaf6e3d4",
+        "stdout.log": "b178e6d781b564e0b839a445fba3c6639bfca55b48e618a870382f665bea9730"
+      }
+    },
+    {
+      "gate": "237-p8-redo-native",
+      "result": {
+        "command": "scripts/check.sh",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nscripts/check.sh",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:27:12.337408+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:43:20.054808+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "f53e7d4ded15e6a52161e1790c4df33db2e149aa12d310e2d161f5ebe6e29be0",
+        "result.json": "9a0f2af08a56b9b5cccf5986493c797ed7fe3280c9856f5b66aa92ccca7b4629",
+        "source-after.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "source-before.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "stderr.log": "b2afe5c49742d807f1af0bcf5ba631128d4c5a45dc4d099825439481bd855664",
+        "stdout.log": "95e7d3cca1c79058ad94d9c3b3ef74bcbec3bfbee4f33c35c90c9e5411f8f481"
+      }
+    },
+    {
+      "gate": "238-p8-redo-python",
+      "result": {
+        "command": "export FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_FROZEN_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel; scripts/check_python.sh /home/chen/githubprojects/fontpixel/local-work/py310-venv",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nexport FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_FROZEN_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel; scripts/check_python.sh /home/chen/githubprojects/fontpixel/local-work/py310-venv",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:43:44.699800+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:44:05.964673+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "af06174189c153b8438816836cd0f1c0421a9e9cd444c3dc1de1ccb989b53fb6",
+        "result.json": "61c6bca9ac6ad1ef8f7134c4c25638e396cc1c5aeb7ba4bdc75ac40f8f4df573",
+        "source-after.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "source-before.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "stderr.log": "754e0e877c0e702f01a227b0227dbb5fd099ced5705137d2e81eee21fd16b699",
+        "stdout.log": "b61686eaeb5e1cf7e8d410d536f5e432e37ce11fa73c5393bf49c0fd89ac5e62"
+      }
+    },
+    {
+      "gate": "239-p8-redo-node18",
+      "result": {
+        "command": "for profile in full minimal merge; do FONTPIXEL_WASM_PKG=\"$CARGO_TARGET_DIR/wasm-pkg/$profile\" /home/chen/githubprojects/fontpixel/local-work/p8-tools/node_modules/node-linux-x64/bin/node --test crates/fontpixel-wasm/tests/foundation.test.mjs crates/fontpixel-wasm/tests/ops-worker-lifecycle.test.mjs; done; /home/chen/githubprojects/fontpixel/local-work/p8-tools/node_modules/node-linux-x64/bin/node examples/js/run.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nfor profile in full minimal merge; do FONTPIXEL_WASM_PKG=\"$CARGO_TARGET_DIR/wasm-pkg/$profile\" /home/chen/githubprojects/fontpixel/local-work/p8-tools/node_modules/node-linux-x64/bin/node --test crates/fontpixel-wasm/tests/foundation.test.mjs crates/fontpixel-wasm/tests/ops-worker-lifecycle.test.mjs; done; /home/chen/githubprojects/fontpixel/local-work/p8-tools/node_modules/node-linux-x64/bin/node examples/js/run.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:45:29.409464+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:45:33.847843+00:00",
+        "exit": 0,
+        "source_unchanged": true
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": "",
+      "status_after": "",
+      "changed_files": [],
+      "evidence_sha256": {
+        "command.json": "01ffc1331aadb42cce06891627a717efbf6594b81a0cba64c0ace5786648d563",
+        "result.json": "54cef79f829676b923a6712729d61ac73735560fe8a193ce5930d9269f56332b",
+        "source-after.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "source-before.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "2d898ea60ce439807044738b25d00a9282428c21a05e4c343bef331acc32b5d0"
+      }
+    },
+    {
+      "gate": "240-p8-redo-python-reference",
+      "result": {
+        "command": "/home/chen/githubprojects/fontpixel/local-work/py310-venv/bin/python crates/fontpixel-py/tests/compat_bdfparser/run_reference.py",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\n/home/chen/githubprojects/fontpixel/local-work/py310-venv/bin/python crates/fontpixel-py/tests/compat_bdfparser/run_reference.py",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:46:25.771664+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:48:24.441863+00:00",
+        "exit": 1,
+        "source_unchanged": false
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": "",
+      "status_after": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n",
+      "changed_files": [
+        "crates/fontpixel-py/tests/compat_bdfparser/reference_results.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "bb4446d435e33b4594192e74d3a620fbe634c8213d999d567f54d32c263b1b54",
+        "result.json": "c150b8722e85c855faf6768c560fb48eb83fd3008cd087725c6166f9b5af9917",
+        "source-after.json": "c32080a26ae7a8ecc590a5015e63e9de4392682221030ad0ab99e60204390974",
+        "source-before.json": "aeab238e31aa56e1539cb453ae0e58aeab9d46c3c40aab81755077f36efbbaf0",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "5707707acd7a3c5b19e956b094f3c956db1c0ce7b9df318cbd6a656ad60454af"
+      }
+    },
+    {
+      "gate": "241-p8-redo-python-reference-slow",
+      "result": {
+        "command": "/home/chen/githubprojects/fontpixel/local-work/py310-venv/bin/python crates/fontpixel-py/tests/compat_bdfparser/run_reference.py --slow --json crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json -- -m slow",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\n/home/chen/githubprojects/fontpixel/local-work/py310-venv/bin/python crates/fontpixel-py/tests/compat_bdfparser/run_reference.py --slow --json crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json -- -m slow",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:49:06.815026+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:53:23.805933+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n",
+      "status_after": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json\n",
+      "changed_files": [
+        "crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "765e480db826947969cafd005f19c98b7c68a0d831efdfe0f660dff02cd1e769",
+        "result.json": "7dd620368cd3ae156cdda0e4ce77586105ddc1bd6f2859f0d6bd7c8058eecf2a",
+        "source-after.json": "f4e0b546d745b7b7e770520856bcd916232151e1f990584b21ededfe44ce5d21",
+        "source-before.json": "c32080a26ae7a8ecc590a5015e63e9de4392682221030ad0ab99e60204390974",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "03e7f6ebb310ba52aea00ba008567efd3790ac345a52fa5b06a1bf602cdcea24"
+      }
+    },
+    {
+      "gate": "242-p8-redo-js-reference",
+      "result": {
+        "command": "node crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs --work /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run -- --maxWorkers=2",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs --work /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run -- --maxWorkers=2",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:54:38.528381+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:55:06.830603+00:00",
+        "exit": 1,
+        "source_unchanged": false
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json\n",
+      "status_after": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json\n M crates/fontpixel-wasm/tests/compat_bdfparser/reference_results.json\n",
+      "changed_files": [
+        "crates/fontpixel-wasm/tests/compat_bdfparser/reference_results.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "8a64fc0cb3f87f8b307e7dcb00044f217a0941b4e0e1a13304d8279e45d7830a",
+        "result.json": "a8b7f0298f2ca5f6b5b329f6d176130df123781cbc4b096e9258fbc72f3b21a5",
+        "source-after.json": "cd2dad27ea34dcade934658a0d77f0ac11703ed7ada9e9a287e8e055d0748c43",
+        "source-before.json": "f4e0b546d745b7b7e770520856bcd916232151e1f990584b21ededfe44ce5d21",
+        "stderr.log": "f678908a0e635cb1f45e9e1ab1cb95b7067cd43df965f12d4d97fe613d28a40b",
+        "stdout.log": "4519a78b53fb71cb846202cd3c305332ebd7b329261d7b9f70409e04653cf306"
+      }
+    },
+    {
+      "gate": "243-p8-redo-js-reference-slow",
+      "result": {
+        "command": "node crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs --work /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run --slow --json crates/fontpixel-wasm/tests/compat_bdfparser/reference_results_slow.json -- --maxWorkers=2",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs --work /home/chen/githubprojects/fontpixel/local-work/p8-redo/reference-js-run --slow --json crates/fontpixel-wasm/tests/compat_bdfparser/reference_results_slow.json -- --maxWorkers=2",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:56:49.130034+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T13:58:00.177972+00:00",
+        "exit": 1,
+        "source_unchanged": false
+      },
+      "head_before": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "head_after": "4622ab240aa3a6168ad24e84432a41db630a75af",
+      "status_before": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json\n M crates/fontpixel-wasm/tests/compat_bdfparser/reference_results.json\n",
+      "status_after": " M crates/fontpixel-py/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-py/tests/compat_bdfparser/reference_results_slow.json\n M crates/fontpixel-wasm/tests/compat_bdfparser/reference_results.json\n M crates/fontpixel-wasm/tests/compat_bdfparser/reference_results_slow.json\n",
+      "changed_files": [
+        "crates/fontpixel-wasm/tests/compat_bdfparser/reference_results_slow.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "e6cbc7c48c80c29e258c9e5e4461ace0d0bcb5580cf7cad1a2e2fcd477c031bc",
+        "result.json": "2b1ce93a711024936b3523782d2dcfbd2f0b734c96e626036f0a733d6a8dd9e4",
+        "source-after.json": "bc80e4ace4d3ba535bbe82d3f9e93e45cf78007bad685cb8a1f3e0fea5fd10f2",
+        "source-before.json": "cd2dad27ea34dcade934658a0d77f0ac11703ed7ada9e9a287e8e055d0748c43",
+        "stderr.log": "ca9179a3d4b920178bd29082781fbd6baaa681b76ee739910d88b0695d3cd453",
+        "stdout.log": "081a1522e92d91441dcaa8aa59c8edaa46dfb1b82d94322b6784233f4a347c37"
+      }
+    },
+    {
+      "gate": "244-p8-redo-browsers",
+      "result": {
+        "command": "FONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WEBKIT_EXECUTABLE=/home/chen/githubprojects/fontpixel/local-work/p8-tools/webkit-local.sh node benches/phase8_browser.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nFONTPIXEL_CLI=/home/chen/githubprojects/fontpixel/local-work/p8-redo/reference/fontpixel FONTPIXEL_WEBKIT_EXECUTABLE=/home/chen/githubprojects/fontpixel/local-work/p8-tools/webkit-local.sh node benches/phase8_browser.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T13:59:58.292012+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T14:02:05.127843+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "154f077fd591597c0f71a09fcff70dbdd02701ec",
+      "head_after": "154f077fd591597c0f71a09fcff70dbdd02701ec",
+      "status_before": "",
+      "status_after": "?? benches/results/phase8-browser.json\n",
+      "changed_files": [
+        "benches/results/phase8-browser.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "1db63c901cc49c54a769d4e427861ed658aafb209b32e242af59466a1430ef86",
+        "result.json": "320ef4d3a61351d3bef97d037fa3aa7220778f4a5ae14e95119b740be6aeb3e4",
+        "source-after.json": "c23942ce8ec0d940d1328b16b4f440a392c03c65b660da0e2624b3d2036f1f6f",
+        "source-before.json": "cd77f00b4e06a595ecaefe77680ce159a55ea91ec23fbc5a4de2465c8c442f0f",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "e3a492b470444b660e5b4a1c71ad8ee6f2e18162213928070ad60839062ae3a6"
+      }
+    },
+    {
+      "gate": "245-p8-redo-js-bench",
+      "result": {
+        "command": "node benches/phase8_js.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode benches/phase8_js.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T14:02:56.959269+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T14:06:51.398764+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "154f077fd591597c0f71a09fcff70dbdd02701ec",
+      "head_after": "154f077fd591597c0f71a09fcff70dbdd02701ec",
+      "status_before": "?? benches/results/phase8-browser.json\n",
+      "status_after": "?? benches/results/phase8-browser.json\n?? benches/results/phase8-js.json\n",
+      "changed_files": [
+        "benches/results/phase8-js.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "5a96eb4c8ce7a945409f867d465d5d182ec3e67a4b7dae6afe1ba02770458277",
+        "result.json": "fb70bbd52b09b18855e373d84971b08be7d4b786c0ce4fe449014fcd232d3df2",
+        "source-after.json": "f4f6d3fbf8c866a913aaf6ef81bdc88b23a192b8544be39c7700a28afedf0c82",
+        "source-before.json": "c23942ce8ec0d940d1328b16b4f440a392c03c65b660da0e2624b3d2036f1f6f",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "a7ea7c8dde4252103565b1365c67faa9825440e75037d255e048084c25edd3c7"
+      }
+    },
+    {
+      "gate": "246-p8-redo-size-init",
+      "result": {
+        "command": "node benches/phase8_sizes.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode benches/phase8_sizes.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T14:10:06.521669+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T14:10:08.676804+00:00",
+        "exit": 1,
+        "source_unchanged": false
+      },
+      "head_before": "d1f7914e19255842ee4f918aacadc463a99d9afb",
+      "head_after": "d1f7914e19255842ee4f918aacadc463a99d9afb",
+      "status_before": "",
+      "status_after": "?? benches/results/phase8-sizes.json\n",
+      "changed_files": [
+        "benches/results/phase8-sizes.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "4e87ff43bc21e5f3a53da09189b8e4051962656cf1470a4e76a2bb994223b979",
+        "result.json": "13a952f20226d7c5f5f05a85fcf22f5754d718e6ea06d1aaa7b6643da67905d6",
+        "source-after.json": "b69dea0eb056233a98afdfd588303f16dcc25630776bd52a800e7b53996e43dc",
+        "source-before.json": "1d253b19e36a9758ae5e4a95a709225f3d60cd83de78787a20d71f09e31dea7e",
+        "stderr.log": "be669b1992a593350443bc3b15feab15f17926f1a942d0ca5f7b29762f3005c9",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "gate": "247-p8-redo-size-init",
+      "result": {
+        "command": "node benches/phase8_sizes.mjs",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode benches/phase8_sizes.mjs",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T14:11:40.080430+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T14:41:43.812013+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+      "head_after": "ef796b42f40cc520f6b2fce0372b79812ddeac90",
+      "status_before": "",
+      "status_after": "?? benches/results/phase8-sizes.json\n",
+      "changed_files": [
+        "benches/results/phase8-sizes.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "aa1210684b41ef3ad1c1d9dc5a6c5eade0feaf80696955a9316973193b412165",
+        "result.json": "6d2fa968c056c3c07f19936f7f7e4a35d494664c82d8aa4904651c0a9c23f1f1",
+        "source-after.json": "f3d3bb6a7e154710bb3428993182931b64085609e069b553b5c0e6ee1d6036da",
+        "source-before.json": "69e8e3ed41afda144fe7fac04a219cc1523c892db01c5e6674bbf78b05db85cc",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "eb2d3ea601b678796a3c1c3d98a46d8c36c5f17f5e177167fc74afd2c906b2fc"
+      }
+    },
+    {
+      "gate": "248-p8-redo-init-rotated",
+      "result": {
+        "command": "node benches/phase8_sizes.mjs --measure-only",
+        "shell_script": "set -euo pipefail\nexport CARGO_BUILD_JOBS=2\nsource scripts/local-env.sh\nunset RUSTC_BOOTSTRAP\nnode benches/phase8_sizes.mjs --measure-only",
+        "cwd": "/home/chen/githubprojects/fontpixel/fontpixel-rs",
+        "start": "2026-10-07T14:42:41.292680+00:00",
+        "RUSTC_BOOTSTRAP": null,
+        "CARGO_BUILD_JOBS": 2,
+        "end": "2026-10-07T14:43:52.189041+00:00",
+        "exit": 0,
+        "source_unchanged": false
+      },
+      "head_before": "3d3e707d620a2a21c60160443fee8669c00131e2",
+      "head_after": "3d3e707d620a2a21c60160443fee8669c00131e2",
+      "status_before": "",
+      "status_after": " M benches/results/phase8-sizes.json\n",
+      "changed_files": [
+        "benches/results/phase8-sizes.json"
+      ],
+      "evidence_sha256": {
+        "command.json": "46cf6503d19f277647d88976182313886cccbb5ace2d45545a21e2707e3e4933",
+        "result.json": "04cfa23b81ea723aebf6a39bd7adcd45038f372aa7695a411baa680aab0d8eb1",
+        "source-after.json": "9b7abe2813fe477bb492a85358081fbadaca2cdc4be4a7b02eb872846e601021",
+        "source-before.json": "6a8422fe41124481541d4e0bc6060c4794e7d196c76245f1084503aceb6d2ff9",
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "90508f4b56f8d82a98134353d605429b75ee45efa7c0b4a73d4032eb63233dc8"
+      }
+    }
+  ],
+  "superseded_initialization": {
+    "gate": 247,
+    "file": "/home/chen/githubprojects/fontpixel/local-work/p8-redo/sizes-before-rotation.json",
+    "sha256": "15c5d6bc7a1627fe74ffce168aa889a8383bf670416b546bdfb999c207a79daa",
+    "reason": "Fixed profile order interleaved with builds; retain all records, use rotated post-build run 248 for final initialization table."
+  }
+}
