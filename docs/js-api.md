@@ -48,6 +48,7 @@ Each Worker has its own instance and memory. Share a compiled module, not handle
 | `full` | All 99 catalogue codecs, compatibility layer, CJK tables, TOML batch parsing |
 | `minimal` | BDF, PCF, YAFF; native model, bitmap, layout, typed operations and PNG |
 | `merge` | BDF, PCF, OTB, TTF, OTF, WOFF, WOFF2, CJK tables, OpenType/merge operations and PNG |
+| `web` | Catalogue tool: merge formats plus YAFF, PSF, FNT/FON, HEX, BMFont and C; CJK tables and PNG; no compatibility or TOML |
 
 All profiles ship TypeScript declarations for the API. Check
 `fp.capabilities()` and `fp.formats.catalogue()` before offering a feature.

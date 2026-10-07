@@ -83,7 +83,7 @@ binding foundation".
   bdfparser-js layer, CJK charsets, TOML batch text and the clap request parser),
   `minimal` (BDF, PCF, YAFF) and `merge` (the W8.3 page: BDF/PCF/OTB/TTF/OTF/
   WOFF/WOFF2 + CJK charsets), and `web` (catalogue tool: those common formats
-  plus YAFF/PSF/FNT/FON/HEX/BMFont/C, without legacy CJK tables, compatibility
+  plus YAFF/PSF/FNT/FON/HEX/BMFont/C and CJK tables, without compatibility
   or TOML). PNG is enabled in every profile. `fontpixel-ops` is always built without `fs`
   (cap-std does not build for wasm32). Output: `$FONTPIXEL_WASM_OUT/<profile>`,
   else `${CARGO_TARGET_DIR:-target}/wasm-pkg/<profile>` (outside the repository

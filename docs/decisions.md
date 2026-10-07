@@ -2172,8 +2172,8 @@ Benchmark reporting uses the median of same-round pure/measured ratios and inclu
 ## 2026-10-07 — Phase 9 web profile and catalogue serialization
 
 - `web` is a separate WASM profile: BDF/PCF/YAFF/OTB, TTF/OTF/WOFF/WOFF2,
-  PSF, FNT/FON, Unifont HEX, BMFont and C, with PNG; no legacy CJK charset
-  tables, compatibility layer or TOML parser. Unsupported uploads get a CLI
+  PSF, FNT/FON, Unifont HEX, BMFont and C, with PNG and CJK charset tables
+  (required by the parity evidence below); no compatibility layer or TOML parser. Unsupported uploads get a CLI
   conversion instruction; there is no full-profile fallback.
 - The catalogue BDF dialect is explicit (`BdfWriteOptions.catalogue_family`,
   CLI/ops `bdf_catalogue_family`). Existing default serialization, resource
@@ -2239,3 +2239,17 @@ Benchmark reporting uses the median of same-round pure/measured ratios and inclu
   and retain original notices in LICENSE.txt. Latin-1 limitations remain reported.
 - Production runtime staging verifies its SHA-256 and requires optimized release
   metadata. Fast staging needs an explicit local-development override.
+
+### 2026-10-07 — Web CJK tables are required for native byte identity
+
+- The first optimized `web` experiment omitted CJK tables: 8,113,644 bytes,
+  2,974,888 gzip. Gate 250 exposed different OS/2 code-page coverage on Tong
+  Pixel Sans SC, hence different sfnt and WOFF2 bytes. Its explicit CP936
+  code-page API check also failed. Portable-float was already enabled.
+- Enable `cjk-charsets` in `web`. The owner allowed this choice when needed;
+  keeping the native default metadata and byte identity takes priority over
+  this size saving. No native algorithm, default cap, strict rule or golden
+  output is relaxed. Uncommon codecs, compatibility and TOML stay excluded.
+- Keep the failed experiment and its size evidence externally. Recheck full/web
+  plus the complete shared gates after this profile-only correction; minimal
+  and merge already passed in gate 250 and their feature graphs are unchanged.

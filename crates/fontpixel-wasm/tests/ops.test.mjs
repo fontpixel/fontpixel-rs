@@ -251,6 +251,7 @@ const CONVERSIONS = {
   full: ['o.pcf', 'o.yaff', 'o.otb', 'o.ttf', 'o.woff2', 'o.svg', 'o.bdf', 'o.kbitx'],
   minimal: ['o.pcf', 'o.yaff', 'o.bdf'],
   merge: ['o.pcf', 'o.otb', 'o.ttf', 'o.woff2', 'o.bdf'],
+  web: ['o.pcf', 'o.yaff', 'o.otb', 'o.ttf', 'o.woff2', 'o.bdf'],
 }[PROFILE];
 
 test('convert in memory equals the command line', { skip: needsCli }, () => {

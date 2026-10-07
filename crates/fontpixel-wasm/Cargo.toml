@@ -32,9 +32,9 @@ minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bd
 # TTF/OTF/WOFF/WOFF2) plus the CJK selection tables.
 merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
 
-# Catalogue tool: common bitmap/vector formats, without legacy CJK tables,
-# bdfparser compatibility, TOML or uncommon codecs.
-web = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/hex", "fontpixel/bmfont", "fontpixel/c", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "fontpixel-ops/otb", "fontpixel-ops/opentype", "fontpixel-ops/psf", "fontpixel-ops/fnt", "fontpixel-ops/fon", "fontpixel-ops/hex", "fontpixel-ops/bmfont", "fontpixel-ops/c", "png"]
+# Catalogue tool: common bitmap/vector formats and exact CJK code-page coverage.
+# No bdfparser compatibility, TOML or uncommon codecs.
+web = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "fontpixel/psf", "fontpixel/fnt", "fontpixel/fon", "fontpixel/hex", "fontpixel/bmfont", "fontpixel/c", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/yaff", "fontpixel-ops/otb", "fontpixel-ops/opentype", "fontpixel-ops/psf", "fontpixel-ops/fnt", "fontpixel-ops/fon", "fontpixel-ops/hex", "fontpixel-ops/bmfont", "fontpixel-ops/c", "cjk-charsets", "png"]
 
 [dependencies]
 fontpixel = { workspace = true, features = ["serde"] }

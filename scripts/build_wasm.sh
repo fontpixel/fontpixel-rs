@@ -8,7 +8,7 @@
 #            tables and TOML batch text (the complete API; the default)
 #   minimal  BDF, PCF and YAFF only
 #   merge    the W8.3 merge page: BDF/PCF/OTB/TTF/OTF/WOFF/WOFF2 + CJK tables
-#   web      catalogue tool: common formats, no legacy CJK tables/compat/TOML
+#   web      catalogue tool: common formats + CJK tables, no compat/TOML
 #
 # OUT_DIR defaults to $FONTPIXEL_WASM_OUT/<profile>, else
 # ${CARGO_TARGET_DIR:-target}/wasm-pkg/<profile> (outside the repository when
