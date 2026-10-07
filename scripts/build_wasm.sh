@@ -40,9 +40,20 @@ wasm_pack="${WASM_PACK:-$(command -v wasm-pack || echo "$HOME/.cargo/bin/wasm-pa
 
 stage="${CARGO_TARGET_DIR:-target}/wasm-stage/$profile"
 mkdir -p "$stage" "$out"
+# Fast builds are for integration, never acceptance or size measurements.
+build_mode="${WASM_BUILD_MODE:-release}"
+case "$build_mode" in
+  release) export CARGO_PROFILE_RELEASE_LTO=fat ;;
+  fast)
+    export CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_OPT_LEVEL=1
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16
+    export WASM_OPT=off
+    ;;
+  *) echo "unknown WASM_BUILD_MODE '$build_mode' (release|fast)" >&2; exit 2 ;;
+esac
 # Fat LTO for the module only (environment override of the release profile;
 # native builds keep the workspace's thin LTO).
-CARGO_PROFILE_RELEASE_LTO=fat "$wasm_pack" build crates/fontpixel-wasm --release --target web \
+"$wasm_pack" build crates/fontpixel-wasm --release --target web \
   --no-pack --no-opt --out-dir "$(realpath "$stage")" --out-name fontpixel_wasm \
   -- --locked --no-default-features --features "$features"
 
@@ -79,6 +90,7 @@ bindgen_version="$(sed -n '/^name = "wasm-bindgen"$/{n;s/^version = "\(.*\)"/\1/
 cat > "$out/build-info.json" <<EOF
 {
   "profile": "$profile",
+  "build_mode": "$build_mode",
   "features": "$features",
   "wasm_bindgen": "$bindgen_version",
   "wasm_pack": "$("$wasm_pack" --version | sed 's/^wasm-pack //')",

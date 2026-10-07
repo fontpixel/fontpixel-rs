@@ -1947,3 +1947,17 @@ directly.
   download URLs, pipeline slimming, license metadata, mobile memory, i18n,
   tests) is in TODO.md, phase 9 step. Local commits only; no push or deploy.
 
+
+## 2026-10-07 — Phase 8 restart and integration builds
+
+The owner rejected the preceding Codex implementation and requested a fresh
+Phase 8 implementation using the current Astra xhigh model. Main was restored
+to handover `cac4e0d`; rejected commits and evidence are archived outside the
+repository at `local-work/p8-sol-discarded-20261007`. They are not acceptance
+evidence for this run. The five original Claude unit branches remain the
+inputs required by the handover. Previous target outputs were removed.
+
+`WASM_BUILD_MODE=fast` builds with opt-level 1, no LTO and no wasm-opt for the
+required build/test cycle after each merge. `build-info.json` records the mode.
+Final gates and measurements use the default release mode (fat LTO + wasm-opt).
+This changes build cost only; default API resource caps and validation stay intact.
