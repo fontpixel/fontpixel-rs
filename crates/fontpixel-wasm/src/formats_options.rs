@@ -193,7 +193,7 @@ setters! {
         "kbitx" => set_kbitx_read_options("setKbitxReadOptions", "SerdeTypes['formats::kbitx::KbitxReadOptions']"): f::kbitx::KbitxReadOptions,
         #[cfg(feature = "all-formats")]
         "pbf" => set_pbf_read_options("setPbfReadOptions", "SerdeTypes['formats::pbf::PbfReadOptions']"): f::pbf::PbfReadOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
         "ttf" | "otf" | "woff" | "woff2" | "ttc" | "vector-raster" => set_vector_read_options("setVectorReadOptions", "SerdeTypes['formats::vector_raster::Options']"): f::vector_raster::Options,
         #[cfg(feature = "all-formats")]
         "hanfont" => set_hanfont_read_options("setHanfontReadOptions", "SerdeTypes['formats::hanfont::HanfontReadOptions']"): f::hanfont::HanfontReadOptions,
@@ -351,11 +351,11 @@ setters! {
         "gem" => set_gem_write_options("setGemWriteOptions", "SerdeTypes['formats::gem::GemWriteOptions']"): f::gem::GemWriteOptions,
         #[cfg(feature = "all-formats")]
         "snf" => set_snf_write_options("setSnfWriteOptions", "SerdeTypes['formats::snf::SnfWriteOptions']"): f::snf::SnfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
         "otb" | "bdat" => set_embedded_write_options("setEmbeddedWriteOptions", "SerdeTypes['formats::embedded::EmbeddedWriteOptions']"): f::embedded::EmbeddedWriteOptions,
         #[cfg(feature = "all-formats")]
         "color" => set_color_write_options("setColorWriteOptions", "SerdeTypes['formats::embedded::ColorWriteOptions']"): f::embedded::ColorWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
         "ttf" | "otf" | "woff" | "woff2" | "ttc" | "vector-raster" => set_vector_write_options("setVectorWriteOptions", "SerdeTypes['formats::vector_raster::WriteOptions']"): f::vector_raster::WriteOptions,
         #[cfg(feature = "all-formats")]
         "svg" => set_svg_write_options("setSvgWriteOptions", "SerdeTypes['formats::svg::WriteOptions']"): f::svg::WriteOptions,
@@ -499,11 +499,11 @@ setters! {
         "ssfn" => set_ssfn_write_options("setSsfnWriteOptions", "SerdeTypes['formats::ssfn::SsfnWriteOptions']"): f::ssfn::SsfnWriteOptions,
     }
     checked_write {
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
         "bdf" => set_bdf_write_options("setBdfWriteOptions", "SerdeTypes['formats::bdf::BdfWriteOptions']"): f::bdf::BdfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
         "pcf" => set_pcf_write_options("setPcfWriteOptions", "SerdeTypes['formats::pcf::PcfWriteOptions']"): f::pcf::PcfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "convert", feature = "web"))]
         "yaff" => set_yaff_write_options("setYaffWriteOptions", "SerdeTypes['formats::yaff::YaffWriteOptions']"): f::yaff::YaffWriteOptions,
     }
 }

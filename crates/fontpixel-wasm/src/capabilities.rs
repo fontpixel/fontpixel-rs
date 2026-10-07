@@ -111,12 +111,22 @@ const CJK: Capability = missing(
     "Use Unicode-encoded fonts, or load the `full` build.",
 );
 
-#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+))]
 const OPENTYPE: Capability = available(
     "opentype",
     "OpenType tables and containers (`sfnt`, `Sfnt`, `Cff`), WOFF1/WOFF2 (`woff`) and regional variants (`variants`, `Variants`).",
 );
-#[cfg(not(any(feature = "all-formats", feature = "merge", feature = "web")))]
+#[cfg(not(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+)))]
 const OPENTYPE: Capability = missing(
     "opentype",
     "OpenType tables and containers (`sfnt`, `Sfnt`, `Cff`), WOFF1/WOFF2 (`woff`) and regional variants (`variants`, `Variants`).",
@@ -172,12 +182,22 @@ const CLI_PARSER: Capability = missing(
     "Pass request objects to the ops functions directly (ops.inspectRequest validates and normalizes them in every profile), or load the `full` build.",
 );
 
-#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+))]
 const SFNT_OPERATIONS: Capability = available(
     "sfnt_operations",
     "The OpenType operations `ops.variants` (locl-enabled regional faces) and `ops.subset` (sfnt/WOFF/WOFF2 subsetting), and their batch task kinds.",
 );
-#[cfg(not(any(feature = "all-formats", feature = "merge", feature = "web")))]
+#[cfg(not(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+)))]
 const SFNT_OPERATIONS: Capability = missing(
     "sfnt_operations",
     "The OpenType operations `ops.variants` (locl-enabled regional faces) and `ops.subset` (sfnt/WOFF/WOFF2 subsetting), and their batch task kinds.",

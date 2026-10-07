@@ -39,14 +39,25 @@ pub fn compiled(ids: &[&str]) -> Vec<String> {
 }
 
 const SPECIAL: &[&str] = &[
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "merge",
+        feature = "convert",
+        feature = "web"
+    ))]
     "embedded",
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "merge",
+        feature = "convert",
+        feature = "web"
+    ))]
     "vectorRaster",
     #[cfg(any(
         feature = "all-formats",
         feature = "minimal",
         feature = "merge",
+        feature = "convert",
         feature = "web"
     ))]
     "x11",
@@ -55,7 +66,12 @@ const SPECIAL: &[&str] = &[
 // --- embedded (otb / bdat / color) -----------------------------------------
 
 /// `formats.embedded`: embedded bitmap sfnt codecs (otb, bdat, color).
-#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+))]
 pub mod embedded {
     use crate::conv;
     use crate::errors::{IntoJs, JsResult};
@@ -191,7 +207,12 @@ pub mod embedded {
 // --- vector_raster (ttf / otf / woff / woff2 / ttc / vector-raster) --------
 
 /// `formats.vectorRaster`: outline rasterization and vectorization.
-#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+))]
 pub mod vector_raster {
     use crate::conv;
     use crate::errors::{IntoJs, JsResult, invalid};
@@ -332,6 +353,7 @@ pub mod vector_raster {
     feature = "all-formats",
     feature = "minimal",
     feature = "merge",
+    feature = "convert",
     feature = "web"
 ))]
 pub mod x11 {

@@ -15,7 +15,7 @@ normalize_table! {
     "ReportEntry" => fontpixel::report::ReportEntry,
     "ResourceLimits" => fontpixel::resources::ResourceLimits,
     "ResourcePath" => fontpixel::resources::ResourcePath,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "Variants" => fontpixel::variants::Variants,
     "WriteOptions" => fontpixel::formats::WriteOptions,
     "bitmap::Alignment" => fontpixel::bitmap::Alignment,
@@ -62,9 +62,9 @@ normalize_table! {
     "formats::bbc::BbcReadOptions" => fontpixel::formats::bbc::BbcReadOptions,
     #[cfg(feature = "all-formats")]
     "formats::bbc::BbcWriteOptions" => fontpixel::formats::bbc::BbcWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::bdf::BdfCodec" => fontpixel::formats::bdf::BdfCodec,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::bdf::BdfWriteOptions" => fontpixel::formats::bdf::BdfWriteOptions,
     #[cfg(feature = "all-formats")]
     "formats::beos::BeosCodec" => fontpixel::formats::beos::BeosCodec,
@@ -204,63 +204,63 @@ normalize_table! {
     "formats::embedded::ColorFlavor" => fontpixel::formats::embedded::ColorFlavor,
     #[cfg(feature = "all-formats")]
     "formats::embedded::ColorWriteOptions" => fontpixel::formats::embedded::ColorWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedAverageWidth" => fontpixel::formats::embedded::EmbeddedAverageWidth,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedCodec" => fontpixel::formats::embedded::EmbeddedCodec,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedGlyphOrder" => fontpixel::formats::embedded::EmbeddedGlyphOrder,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedHmtx" => fontpixel::formats::embedded::EmbeddedHmtx,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedIndexLayout" => fontpixel::formats::embedded::EmbeddedIndexLayout,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedLineExtremes" => fontpixel::formats::embedded::EmbeddedLineExtremes,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedMetadataOptions" => fontpixel::formats::embedded::EmbeddedMetadataOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedNotdef" => fontpixel::formats::embedded::EmbeddedNotdef,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedOutlineTables" => fontpixel::formats::embedded::EmbeddedOutlineTables,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedPostNames" => fontpixel::formats::embedded::EmbeddedPostNames,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedReadOptions" => fontpixel::formats::embedded::EmbeddedReadOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedReferenceStrike" => fontpixel::formats::embedded::EmbeddedReferenceStrike,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedRounding" => fontpixel::formats::embedded::EmbeddedRounding,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedUnicodeRanges" => fontpixel::formats::embedded::EmbeddedUnicodeRanges,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedVerticalLineMetrics" => fontpixel::formats::embedded::EmbeddedVerticalLineMetrics,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedWidthMax" => fontpixel::formats::embedded::EmbeddedWidthMax,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::EmbeddedWriteOptions" => fontpixel::formats::embedded::EmbeddedWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedAverageWidth" => fontpixel::formats::embedded::EmbeddedAverageWidth,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedGlyphOrder" => fontpixel::formats::embedded::EmbeddedGlyphOrder,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedHmtx" => fontpixel::formats::embedded::EmbeddedHmtx,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedIndexLayout" => fontpixel::formats::embedded::EmbeddedIndexLayout,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedLineExtremes" => fontpixel::formats::embedded::EmbeddedLineExtremes,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedMetadataOptions" => fontpixel::formats::embedded::EmbeddedMetadataOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedNotdef" => fontpixel::formats::embedded::EmbeddedNotdef,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedOutlineTables" => fontpixel::formats::embedded::EmbeddedOutlineTables,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedPostNames" => fontpixel::formats::embedded::EmbeddedPostNames,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedUnicodeRanges" => fontpixel::formats::embedded::EmbeddedUnicodeRanges,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedVerticalLineMetrics" => fontpixel::formats::embedded::EmbeddedVerticalLineMetrics,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::embedded::metadata::EmbeddedWidthMax" => fontpixel::formats::embedded::EmbeddedWidthMax,
     #[cfg(feature = "all-formats")]
     "formats::fbit::Definition" => fontpixel::formats::fbit::Definition,
@@ -523,17 +523,17 @@ normalize_table! {
     "formats::pbf::PbfWriteOptions" => fontpixel::formats::pbf::PbfWriteOptions,
     #[cfg(feature = "all-formats")]
     "formats::pbf::Version" => fontpixel::formats::pbf::Version,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::GlyphPad" => fontpixel::formats::pcf::GlyphPad,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::MetadataPrecedence" => fontpixel::formats::pcf::MetadataPrecedence,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::Order" => fontpixel::formats::pcf::Order,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::PcfCodec" => fontpixel::formats::pcf::PcfCodec,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::PcfWriteOptions" => fontpixel::formats::pcf::PcfWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
     "formats::pcf::ScanUnit" => fontpixel::formats::pcf::ScanUnit,
     #[cfg(feature = "all-formats")]
     "formats::pcgeos::PcgeosCodec" => fontpixel::formats::pcgeos::PcgeosCodec,
@@ -772,11 +772,11 @@ normalize_table! {
     "formats::u8m::U8mReadOptions" => fontpixel::formats::u8m::U8mReadOptions,
     #[cfg(feature = "all-formats")]
     "formats::u8m::U8mWriteOptions" => fontpixel::formats::u8m::U8mWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::vector_raster::Limits" => fontpixel::formats::vector_raster::Limits,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::vector_raster::Options" => fontpixel::formats::vector_raster::Options,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "formats::vector_raster::WriteOptions" => fontpixel::formats::vector_raster::WriteOptions,
     "formats::vfont::ByteOrder" => fontpixel::bitmap::ByteOrder,
     #[cfg(feature = "all-formats")]
@@ -847,9 +847,9 @@ normalize_table! {
     "formats::xerox::XeroxVariant" => fontpixel::formats::xerox::XeroxVariant,
     #[cfg(feature = "all-formats")]
     "formats::xerox::XeroxWriteOptions" => fontpixel::formats::xerox::XeroxWriteOptions,
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "convert", feature = "web"))]
     "formats::yaff::YaffCodec" => fontpixel::formats::yaff::YaffCodec,
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "convert", feature = "web"))]
     "formats::yaff::YaffWriteOptions" => fontpixel::formats::yaff::YaffWriteOptions,
     #[cfg(feature = "all-formats")]
     "formats::zapfont::ZapVariant" => fontpixel::formats::zapfont::ZapVariant,
@@ -941,29 +941,29 @@ normalize_table! {
     "resources::ResourcePath" => fontpixel::resources::ResourcePath,
     "resources::TransportLimits" => fontpixel::resources::TransportLimits,
     "resources::Written" => fontpixel::resources::Written,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::Flavor" => fontpixel::sfnt::Flavor,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::Limits" => fontpixel::sfnt::Limits,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Bearing" => fontpixel::sfnt::bitmap::Bearing,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::BitmapGlyph" => fontpixel::sfnt::bitmap::BitmapGlyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Kind" => fontpixel::sfnt::bitmap::Kind,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Limits" => fontpixel::sfnt::bitmap::Limits,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::LineMetrics" => fontpixel::sfnt::bitmap::LineMetrics,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Metrics" => fontpixel::sfnt::bitmap::Metrics,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::RunTables" => fontpixel::sfnt::bitmap::RunTables,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Scale" => fontpixel::sfnt::bitmap::Scale,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Strike" => fontpixel::sfnt::bitmap::Strike,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::Tables" => fontpixel::sfnt::bitmap::Tables,
     #[cfg(feature = "all-formats")]
     "sfnt::bitmap::color::Sbix" => fontpixel::sfnt::bitmap::color::Sbix,
@@ -971,149 +971,149 @@ normalize_table! {
     "sfnt::bitmap::color::SbixGlyph" => fontpixel::sfnt::bitmap::color::SbixGlyph,
     #[cfg(feature = "all-formats")]
     "sfnt::bitmap::color::SbixStrike" => fontpixel::sfnt::bitmap::color::SbixStrike,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::bitmap::runs::RunTables" => fontpixel::sfnt::bitmap::RunTables,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Command" => fontpixel::sfnt::cff::Command,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::DecodedGlyph" => fontpixel::sfnt::cff::DecodedGlyph,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::DotOptions" => fontpixel::sfnt::cff::DotOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Encoded" => fontpixel::sfnt::cff::Encoded,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Font" => fontpixel::sfnt::cff::Font,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Glyph" => fontpixel::sfnt::cff::Glyph,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Limits" => fontpixel::sfnt::cff::Limits,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cff::Outline" => fontpixel::sfnt::cff::Outline,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cmap::EncodedCmap" => fontpixel::sfnt::cmap::EncodedCmap,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::cmap::FullRecords" => fontpixel::sfnt::cmap::FullRecords,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::collection::Limits" => fontpixel::sfnt::collection::Limits,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::container::Flavor" => fontpixel::sfnt::Flavor,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gasp::GaspTable" => fontpixel::sfnt::gasp::GaspTable,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gasp::Range" => fontpixel::sfnt::gasp::Range,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Anchor" => fontpixel::sfnt::glyf::Anchor,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Component" => fontpixel::sfnt::glyf::Component,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::CompositeGlyph" => fontpixel::sfnt::glyf::CompositeGlyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Encoded" => fontpixel::sfnt::glyf::Encoded,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::GlyfTable" => fontpixel::sfnt::glyf::GlyfTable,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Glyph" => fontpixel::sfnt::glyf::Glyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Limits" => fontpixel::sfnt::glyf::Limits,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::LocaFormat" => fontpixel::sfnt::glyf::LocaFormat,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::OffsetMode" => fontpixel::sfnt::glyf::OffsetMode,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::SimpleGlyph" => fontpixel::sfnt::glyf::SimpleGlyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::glyf::Statistics" => fontpixel::sfnt::glyf::Statistics,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gsub::Feature" => fontpixel::sfnt::gsub::Feature,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gsub::Gsub" => fontpixel::sfnt::gsub::Gsub,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gsub::LanguageSystem" => fontpixel::sfnt::gsub::LanguageSystem,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gsub::LayoutLimits" => fontpixel::sfnt::gsub::LayoutLimits,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::gsub::Script" => fontpixel::sfnt::gsub::Script,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::metrics::Axis" => fontpixel::sfnt::metrics::Axis,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::metrics::EncodedMetrics" => fontpixel::sfnt::metrics::EncodedMetrics,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::metrics::Header" => fontpixel::sfnt::metrics::Header,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::metrics::LongMetric" => fontpixel::sfnt::metrics::LongMetric,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::name::NameRecord" => fontpixel::sfnt::name::NameRecord,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::name::NameTable" => fontpixel::sfnt::name::NameTable,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::os2::Base" => fontpixel::sfnt::os2::Base,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::os2::Extension" => fontpixel::sfnt::os2::Extension,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::os2::Os2Table" => fontpixel::sfnt::os2::Os2Table,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::post::Header" => fontpixel::sfnt::post::Header,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::post::PostTable" => fontpixel::sfnt::post::PostTable,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::subset::Options" => fontpixel::sfnt::subset::Options,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "sfnt::subset::Subset" => fontpixel::sfnt::subset::Subset,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::DotGlyph" => fontpixel::variants::DotGlyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::DotReuse" => fontpixel::variants::DotReuse,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::Encoded" => fontpixel::variants::Encoded,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::GaspPolicy" => fontpixel::variants::GaspPolicy,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::GlyphOrder" => fontpixel::variants::GlyphOrder,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::LanguageVariant" => fontpixel::variants::LanguageVariant,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::MetadataOptions" => fontpixel::variants::MetadataOptions,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::NotdefPolicy" => fontpixel::variants::NotdefPolicy,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::Options" => fontpixel::variants::Options,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::OutlineFlavor" => fontpixel::variants::OutlineFlavor,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::Plan" => fontpixel::variants::Plan,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::ScriptVariant" => fontpixel::variants::ScriptVariant,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::Variants" => fontpixel::variants::Variants,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::export::DotReuse" => fontpixel::variants::DotReuse,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::export::Encoded" => fontpixel::variants::Encoded,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::export::Options" => fontpixel::variants::Options,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::export::OutlineFlavor" => fontpixel::variants::OutlineFlavor,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::metadata::DotGlyph" => fontpixel::variants::DotGlyph,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::metadata::GaspPolicy" => fontpixel::variants::GaspPolicy,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::metadata::GlyphOrder" => fontpixel::variants::GlyphOrder,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::metadata::MetadataOptions" => fontpixel::variants::MetadataOptions,
-    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "compat-bdfparser", feature = "merge", feature = "convert", feature = "web"))]
     "variants::notdef::NotdefPolicy" => fontpixel::variants::NotdefPolicy,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::Auxiliary" => fontpixel::woff::Auxiliary,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::Decoded" => fontpixel::woff::Decoded,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::Encoded" => fontpixel::woff::Encoded,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::Limits" => fontpixel::woff::Limits,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::woff1::Options" => fontpixel::woff::woff1::Options,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "woff::woff2::Options" => fontpixel::woff::woff2::Options,
     "fontpixel_ops::CharsetRequest" => fontpixel_ops::CharsetRequest,
     "fontpixel_ops::ConvertRequest" => fontpixel_ops::convert::ConvertRequest,
@@ -1129,16 +1129,16 @@ normalize_table! {
     "fontpixel_ops::ProgressStep" => fontpixel_ops::ProgressStep,
     "fontpixel_ops::RenderRequest" => fontpixel_ops::RenderRequest,
     "fontpixel_ops::ReportStyle" => fontpixel_ops::options::ReportStyle,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::ResourceOptions" => fontpixel_ops::ResourceOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::SfntOutputOptions" => fontpixel_ops::SfntOutputOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::SubsetRequest" => fontpixel_ops::SubsetRequest,
     "fontpixel_ops::TaskKind" => fontpixel_ops::batch::TaskKind,
     "fontpixel_ops::TaskRequest" => fontpixel_ops::batch::TaskRequest,
     "fontpixel_ops::ValidateRequest" => fontpixel_ops::ValidateRequest,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::VariantsRequest" => fontpixel_ops::VariantsRequest,
     "fontpixel_ops::batch::TaskKind" => fontpixel_ops::batch::TaskKind,
     "fontpixel_ops::batch::TaskRequest" => fontpixel_ops::batch::TaskRequest,
@@ -1158,13 +1158,13 @@ normalize_table! {
     "fontpixel_ops::merge::MergeSettings" => fontpixel_ops::merge::MergeSettings,
     "fontpixel_ops::metadata::NameOptions" => fontpixel_ops::metadata::NameOptions,
     "fontpixel_ops::metadata::ProjectionOptions" => fontpixel_ops::metadata::ProjectionOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::opentype::ResourceOptions" => fontpixel_ops::ResourceOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::opentype::SfntOutputOptions" => fontpixel_ops::SfntOutputOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::opentype::SubsetRequest" => fontpixel_ops::SubsetRequest,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::opentype::VariantsRequest" => fontpixel_ops::VariantsRequest,
     "fontpixel_ops::options::COutputOptions" => fontpixel_ops::options::COutputOptions,
     "fontpixel_ops::options::ConsoleOptions" => fontpixel_ops::options::ConsoleOptions,
@@ -1177,7 +1177,7 @@ normalize_table! {
     "fontpixel_ops::options::ReportStyle" => fontpixel_ops::options::ReportStyle,
     "fontpixel_ops::options::Significance" => fontpixel_ops::options::Significance,
     "fontpixel_ops::options::VectorOptions" => fontpixel_ops::options::VectorOptions,
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web"))]
     "fontpixel_ops::outline_metadata::OutlineMetadataOptions" => fontpixel_ops::outline_metadata::OutlineMetadataOptions,
     "fontpixel_ops::p2_formats::ReadOptions" => fontpixel_ops::p2_formats::ReadOptions,
     "fontpixel_ops::p2_formats::WriteOptions" => fontpixel_ops::p2_formats::WriteOptions,

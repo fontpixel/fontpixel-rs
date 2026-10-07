@@ -42,7 +42,12 @@ use fontpixel_ops::{
     RenderRequest, RenderResponse, ReportStyle, Storage, TaskKind, TaskRequest, ValidateRequest,
     ValidateResponse, ValidationKind,
 };
-#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+))]
 use fontpixel_ops::{SfntResponse, SubsetRequest, VariantsRequest};
 use js_sys::{Array, Function, Map, Object, Reflect};
 use serde::de::DeserializeOwned;
@@ -289,7 +294,12 @@ impl Call {
 enum Response {
     Convert(ConvertResponse),
     Merge(Box<MergeResponse>),
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "merge",
+        feature = "convert",
+        feature = "web"
+    ))]
     Sfnt(SfntResponse),
     Charset(CharsetResponse),
     Validate(ValidateResponse),
@@ -380,7 +390,12 @@ impl JsOperationResult {
         capture(|out| match &self.response {
             Response::Convert(r) => r.write_json(out, pretty),
             Response::Merge(r) => r.write_json(out, pretty),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Response::Sfnt(r) => r.write(ReportStyle::Json, out, pretty),
             Response::Charset(r) => r.write_json(out, pretty),
             Response::Validate(r) => r.write_json(out, pretty),
@@ -408,7 +423,12 @@ impl JsOperationResult {
                 }))).collect::<JsResult<Vec<_>>>()?,
                 "reads": to_value(&r.reads)?,
             }),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Response::Sfnt(r) => json!({
                 "output": r.output, "bytes": r.bytes, "report": to_value(&r.report)?,
             }),
@@ -459,7 +479,12 @@ impl JsOperationResult {
         capture(|out| match &self.response {
             Response::Convert(r) => r.write_text(out),
             Response::Merge(r) => r.write_text(out),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Response::Sfnt(r) => r.write(ReportStyle::Text, out, true),
             Response::Charset(r) => r.write_text(out),
             Response::Validate(r) => r.write_text(out),
@@ -487,7 +512,12 @@ impl JsOperationResult {
     #[wasm_bindgen(getter, unchecked_return_type = "Report | null")]
     pub fn report(&self) -> JsResult<JsValue> {
         let report = match &self.response {
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Response::Sfnt(r) => &r.report,
             Response::Charset(r) => &r.report,
             Response::Validate(r) => &r.report,
@@ -753,13 +783,13 @@ pub fn ops_merge(
 writer_op!(
     /// Build a locl-enabled OpenType font from regional and script faces
     /// (`fontpixel variants`). Needs the `sfnt_operations` capability.
-    cfg(any(feature = "all-formats", feature = "merge", feature = "web")),
+    cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web")),
     ops_variants, "variants", VariantsRequest, "VariantsRequest", fontpixel_ops::variants, Sfnt
 );
 writer_op!(
     /// Subset an sfnt, WOFF or WOFF2 font (`fontpixel subset`). Needs the
     /// `sfnt_operations` capability.
-    cfg(any(feature = "all-formats", feature = "merge", feature = "web")),
+    cfg(any(feature = "all-formats", feature = "merge", feature = "convert", feature = "web")),
     ops_subset, "subset", SubsetRequest, "SubsetRequest", fontpixel_ops::subset, Sfnt
 );
 writer_op!(
@@ -794,7 +824,12 @@ reader_op!(
     ops_preview, "preview", PreviewRequest, "PreviewRequest", fontpixel_ops::preview, Preview
 );
 
-#[cfg(not(any(feature = "all-formats", feature = "merge", feature = "web")))]
+#[cfg(not(any(
+    feature = "all-formats",
+    feature = "merge",
+    feature = "convert",
+    feature = "web"
+)))]
 mod sfnt_unavailable {
     use super::*;
     /// `fontpixel variants`: compiled out of this build profile; throws
@@ -1144,9 +1179,19 @@ pub fn ops_output_format_for(destination: &str) -> JsResult<String> {
 enum Described {
     Convert(Box<ConvertRequest>),
     Merge(Box<MergeRequest>),
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "merge",
+        feature = "convert",
+        feature = "web"
+    ))]
     Variants(Box<VariantsRequest>),
-    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "merge",
+        feature = "convert",
+        feature = "web"
+    ))]
     Subset(Box<SubsetRequest>),
     Charset(Box<CharsetRequest>),
     Validate(Box<ValidateRequest>),
@@ -1172,9 +1217,19 @@ impl Described {
             Self::Diff(r) => r.report_style(),
             Self::Validate(r) => r.report_style(),
             Self::Charset(r) => r.report,
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Variants(r) => r.output.report,
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Subset(r) => r.output.report,
             Self::Info(r) if r.json => ReportStyle::Json,
             Self::Formats(r) if r.json => ReportStyle::Json,
@@ -1191,9 +1246,19 @@ impl Described {
             Self::Diff(r) => r.source_identity_total_bytes(),
             Self::Validate(r) => r.source_identity_total_bytes(),
             Self::Charset(r) => r.source_identity_total_bytes(),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Variants(r) => r.source_identity_total_bytes(),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Subset(r) => r.source_identity_total_bytes(),
             Self::Info(r) => r.source_identity_total_bytes(),
             Self::Convert(r) => r.source_identity_total_bytes(),
@@ -1206,9 +1271,19 @@ impl Described {
         match self {
             Self::Convert(r) => to_value(r),
             Self::Merge(r) => to_value(r),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Variants(r) => to_value(r),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Self::Subset(r) => to_value(r),
             Self::Charset(r) => to_value(r),
             Self::Validate(r) => to_value(r),
@@ -1263,7 +1338,12 @@ pub fn ops_inspect_request(
                 Some(TaskRequest::Merge(Box::new(r))),
             )
         }
-        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+        #[cfg(any(
+            feature = "all-formats",
+            feature = "merge",
+            feature = "convert",
+            feature = "web"
+        ))]
         "variants" => {
             let r: VariantsRequest = self::request(&object)?;
             (
@@ -1271,7 +1351,12 @@ pub fn ops_inspect_request(
                 Some(TaskRequest::Variants(Box::new(r))),
             )
         }
-        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+        #[cfg(any(
+            feature = "all-formats",
+            feature = "merge",
+            feature = "convert",
+            feature = "web"
+        ))]
         "subset" => {
             let r: SubsetRequest = self::request(&object)?;
             (
@@ -1279,7 +1364,12 @@ pub fn ops_inspect_request(
                 Some(TaskRequest::Subset(Box::new(r))),
             )
         }
-        #[cfg(not(any(feature = "all-formats", feature = "merge", feature = "web")))]
+        #[cfg(not(any(
+            feature = "all-formats",
+            feature = "merge",
+            feature = "convert",
+            feature = "web"
+        )))]
         "variants" | "subset" => {
             return Err(capabilities::unsupported(
                 "sfnt_operations",
@@ -1354,9 +1444,19 @@ pub fn ops_parse_args(argv: Vec<String>) -> JsResult<JsValue> {
             Command::Diff(r) => ("diff", Described::Diff(r)),
             Command::Validate(r) => ("validate", Described::Validate(r)),
             Command::Charset(r) => ("charset", Described::Charset(r)),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Command::Variants(r) => ("variants", Described::Variants(r)),
-            #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
+            #[cfg(any(
+                feature = "all-formats",
+                feature = "merge",
+                feature = "convert",
+                feature = "web"
+            ))]
             Command::Subset(r) => ("subset", Described::Subset(r)),
             Command::Formats(r) => ("formats", Described::Formats(Box::new(r))),
             Command::Info(r) => ("info", Described::Info(r)),
