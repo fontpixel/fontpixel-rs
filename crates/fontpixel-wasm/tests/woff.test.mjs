@@ -122,8 +122,10 @@ test('woff defaults', { skip }, () => {
 // ------------------------------------------------- WOFF2 identity, large input
 
 const TONG_SC = '/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf';
+// `variants` sets the CJK OS/2 code-page bits only with the charset tables.
 const skipTong =
   skip ||
+  needs(fp, 'cjk_charsets') ||
   (!HAS_CLI && 'native CLI not found (FONTPIXEL_CLI)') ||
   (!existsSync(TONG_SC) && `sample ${TONG_SC} not found`);
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');

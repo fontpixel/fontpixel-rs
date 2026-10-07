@@ -107,7 +107,7 @@ const CJK: Capability = missing(
     "cjk_charsets",
     "Legacy CJK charset tables (GB 2312, Big5, Shift_JIS, KS X 1001, ...).",
     "Compiled out of this build profile (fontpixel feature `cjk-charsets`), which saves the tables' size.",
-    "scripts/build_wasm.sh enables `cjk-charsets` in the `full` and `merge` profiles.",
+    "scripts/build_wasm.sh enables `cjk-charsets` in the `full`, `merge` and `web` profiles.",
     "Use Unicode-encoded fonts, or load the `full` build.",
 );
 

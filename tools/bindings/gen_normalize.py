@@ -15,7 +15,7 @@ from the sources: the `#[cfg]` attributes of every `mod` declaration on the
 canonical and the public path, of the item itself and of the `pub use` that
 re-exports it. Each core/ops feature condition is evaluated for every
 combination of the binding crate's profile features (`all-formats`,
-`compat-bdfparser`, `cjk-charsets`, `toml`, `minimal`, `merge`; feature lists
+`compat-bdfparser`, `cjk-charsets`, `toml`, `minimal`, `merge`, `web`, `convert`; feature lists
 read from the three Cargo.toml files, unified like Cargo does) and written as
 the minimal `any(all(...))` over those features. Types that no combination
 provides (for example behind fontpixel-ops `fs`) get no row.
@@ -45,7 +45,7 @@ import gen_dts  # noqa: E402
 OUT = ROOT / "crates/fontpixel-wasm/src/normalize_types.rs"
 CRATES = {"fontpixel": ROOT / "crates/fontpixel", "fontpixel_ops": ROOT / "crates/fontpixel-ops"}
 # Binding-crate features a build combines (`full` = the first four).
-ATOMS = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml", "minimal", "merge", "web"]
+ATOMS = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml", "minimal", "merge", "web", "convert"]
 
 
 # ------------------------------------------------------------ cargo features

@@ -10,6 +10,7 @@ const fp = await load();
 const skip = needs(fp, 'opentype');
 const skipTtc = skip || needs(fp, 'sfnt_collections');
 const skipColor = skip || needs(fp, 'color_bitmaps');
+const noCjk = needs(fp, 'cjk_charsets');
 const S = skip ? null : new fp.Sfnt(GOLDEN);
 const N = E['sfnt.num_glyphs'];
 
@@ -281,7 +282,8 @@ test('os2', { skip }, () => {
   assertBytes(fp.sfnt.os2.encode(t), h('os2.encode'));
   assert.deepEqual(norm(fp.sfnt.os2.unicodeRanges([65, 0x4e00, 0x1f600])), E['os2.unicode_ranges']);
   assert.deepEqual(norm(fp.sfnt.os2.unicodeRanges(new Set([65, 0x4e00, 0x1f600]))), E['os2.unicode_ranges']);
-  assert.deepEqual(norm(fp.sfnt.os2.codePageRanges([65, 0x4e00], [1252, 936])), E['os2.code_page_ranges']);
+  if (noCjk) throwsError(() => fp.sfnt.os2.codePageRanges([65, 0x4e00], [1252, 936]), fp.InvalidInputError);
+  else assert.deepEqual(norm(fp.sfnt.os2.codePageRanges([65, 0x4e00], [1252, 936])), E['os2.code_page_ranges']);
   assert.equal(fp.sfnt.os2.averageWidth([500, 600, 0, 700]), E['os2.average_width']);
   assert.deepEqual(norm(fp.sfnt.os2.setUnicodeCoverage(t, new Set([65, 0x4e00]))), E['os2.set_unicode_coverage']);
   assert.deepEqual(t, before); // input object untouched
