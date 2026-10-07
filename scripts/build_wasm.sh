@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Build the `fontpixel` WebAssembly package for one profile.
 #
-# Usage: scripts/build_wasm.sh [full|minimal|merge] [OUT_DIR]
+# Usage: scripts/build_wasm.sh [full|minimal|merge|custom] [OUT_DIR]
+# `custom` uses WASM_FEATURES for experimental feature measurements only.
 #
 #   full     every format, the bdfparser-js compatibility layer, CJK charset
 #            tables and TOML batch text (the complete API; the default)
@@ -29,7 +30,8 @@ case "$profile" in
   full) features="full" ;;
   minimal) features="minimal" ;;
   merge) features="merge" ;;
-  *) echo "unknown profile '$profile' (full|minimal|merge)" >&2; exit 2 ;;
+  custom) features="${WASM_FEATURES:?custom requires WASM_FEATURES}" ;;
+  *) echo "unknown profile '$profile' (full|minimal|merge|custom)" >&2; exit 2 ;;
 esac
 out="${2:-${FONTPIXEL_WASM_OUT:+$FONTPIXEL_WASM_OUT/$profile}}"
 out="${out:-${CARGO_TARGET_DIR:-target}/wasm-pkg/$profile}"
@@ -59,7 +61,8 @@ esac
 
 wasm="$stage/fontpixel_wasm_bg.wasm"
 pre=$(stat -c %s "$wasm")
-pre_gz=$(gzip -9 -c "$wasm" | wc -c)
+pre_gz=$(gzip -n -9 -c "$wasm" | wc -c)
+pre_sha=$(sha256sum "$wasm" | cut -d ' ' -f 1)
 opt="${WASM_OPT:-}"
 if [ -z "$opt" ]; then
   opt="$(command -v wasm-opt || true)"
@@ -76,7 +79,7 @@ else
   "$opt" "${WASM_OPT_FLAGS[@]}" "$wasm" -o "$stage/fontpixel_wasm_bg.opt.wasm"
   mv "$stage/fontpixel_wasm_bg.opt.wasm" "$wasm"
   post=$(stat -c %s "$wasm")
-  post_gz=$(gzip -9 -c "$wasm" | wc -c)
+  post_gz=$(gzip -n -9 -c "$wasm" | wc -c)
 fi
 
 # Package layout: replace only the files this script writes.
@@ -95,14 +98,18 @@ cat > "$out/build-info.json" <<EOF
   "profile": "$profile",
   "build_mode": "$build_mode",
   "features": "$features",
+  "source_commit": "$(git rev-parse HEAD)",
+  "source_dirty": $(if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo true; else echo false; fi),
   "wasm_bindgen": "$bindgen_version",
   "wasm_pack": "$("$wasm_pack" --version | sed 's/^wasm-pack //')",
   "rustc": "$(rustc --version)",
   "wasm_opt": "$opt_version",
   "wasm_opt_flags": "$(if [ "$opt" = off ]; then echo; else echo "${WASM_OPT_FLAGS[*]}"; fi)",
   "wasm_bytes_before_opt": $pre,
+  "wasm_sha256_before_opt": "$pre_sha",
   "wasm_gzip_bytes_before_opt": $pre_gz,
   "wasm_bytes": $post,
+  "wasm_sha256": "$(sha256sum "$wasm" | cut -d ' ' -f 1)",
   "wasm_gzip_bytes": $post_gz
 }
 EOF

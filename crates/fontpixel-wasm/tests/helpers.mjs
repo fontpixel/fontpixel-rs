@@ -5,7 +5,7 @@
 //                           ${CARGO_TARGET_DIR:-<repo>/target}/wasm-pkg/<profile>)
 //   FONTPIXEL_WASM_PROFILE  profile of the default package directory (full)
 //   FONTPIXEL_CLI           native CLI for reference outputs (default: the
-//                           frozen phase-6 binary); tests needing it skip
+//                           current target/release/fontpixel); tests needing it skip
 //                           when it is missing. Tests may run the CLI to
 //                           produce reference bytes; the binding never does.
 import { spawnSync } from 'node:child_process';
@@ -23,7 +23,7 @@ export const PKG = path.resolve(
 export const DATA = path.join(REPO, 'tests', 'data');
 export const CLI =
   process.env.FONTPIXEL_CLI ??
-  '/home/chen/githubprojects/fontpixel/local-work/phase6-local-20261004/frozen-binaries-v5/release/fontpixel';
+  path.join(process.env.CARGO_TARGET_DIR ?? path.join(REPO, 'target'), 'release', 'fontpixel');
 export const HAS_CLI = existsSync(CLI);
 
 let loaded;

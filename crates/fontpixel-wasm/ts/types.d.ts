@@ -10424,51 +10424,51 @@ export type TaskKind = "convert" | "vectorize" | "variants" | "subset" | "merge"
 export type TaskRequest = TaskRequestConvert | TaskRequestVectorize | TaskRequestVariants | TaskRequestSubset | TaskRequestMerge | TaskRequestCharset | TaskRequestValidate | TaskRequestDiff;
 
 /** `fontpixel_ops::batch::TaskRequest::Charset`: Charset remapping. */
-export interface TaskRequestCharset {
-  /** Charset remapping. */
-  charset: CharsetRequest;
+export interface TaskRequestCharset extends CharsetRequest {
+  /** Variant tag. */
+  kind: "charset";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Convert`: Convert. */
-export interface TaskRequestConvert {
-  /** Convert. */
-  convert: ConvertRequest;
+export interface TaskRequestConvert extends ConvertRequest {
+  /** Variant tag. */
+  kind: "convert";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Diff`: Comparison. */
-export interface TaskRequestDiff {
-  /** Comparison. */
-  diff: DiffRequest;
+export interface TaskRequestDiff extends DiffRequest {
+  /** Variant tag. */
+  kind: "diff";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Merge`: Multi-part merge. */
-export interface TaskRequestMerge {
-  /** Multi-part merge. */
-  merge: MergeRequest;
+export interface TaskRequestMerge extends MergeRequest {
+  /** Variant tag. */
+  kind: "merge";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Subset`: sfnt subsetting. */
-export interface TaskRequestSubset {
-  /** sfnt subsetting. */
-  subset: SubsetRequest;
+export interface TaskRequestSubset extends SubsetRequest {
+  /** Variant tag. */
+  kind: "subset";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Validate`: Validation. */
-export interface TaskRequestValidate {
-  /** Validation. */
-  validate: ValidateRequest;
+export interface TaskRequestValidate extends ValidateRequest {
+  /** Variant tag. */
+  kind: "validate";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Variants`: Regional OpenType variants. */
-export interface TaskRequestVariants {
-  /** Regional OpenType variants. */
-  variants: VariantsRequest;
+export interface TaskRequestVariants extends VariantsRequest {
+  /** Variant tag. */
+  kind: "variants";
 }
 
 /** `fontpixel_ops::batch::TaskRequest::Vectorize`: Vectorize: the same operation as convert, reported as `vectorize`. */
-export interface TaskRequestVectorize {
-  /** Vectorize: the same operation as convert, reported as `vectorize`. */
-  vectorize: ConvertRequest;
+export interface TaskRequestVectorize extends ConvertRequest {
+  /** Variant tag. */
+  kind: "vectorize";
 }
 
 /** `fontpixel::formats::tasprint::TasprintCodec`: Registry codec. */

@@ -2136,3 +2136,11 @@ in both language declarations. TypeScript uses interface inheritance to avoid
 duplicating large request declarations. `BatchTaskSpec` is `{id} & TaskRequest`,
 so misspelled request keys are checked rather than accepted by a loose index
 signature. Runtime request validation remains unchanged.
+
+### 2026-10-07 — Phase 8 acceptance and feature experiments (Astra redo)
+
+- Acceptance runs use release + fat LTO + the recorded wasm-opt pass list. `check_wasm.sh` defaults to all three supported profiles (full, minimal, merge), builds the current native CLI and uses it for byte references. Integration-only `WASM_BUILD_MODE=fast` is rejected by this gate. Python's CLI tests also default to the current target binary; evidence runs set both reference environment variables to the freshly frozen portable-float binary.
+- `build_wasm.sh custom` is an experimental size measurement entry requiring explicit `WASM_FEATURES`. It does not add a supported distribution profile. The matrix varies the registry's TTF/OTF/WOFF writers, WOFF2/Brotli, and CJK tables independently on top of minimal. The `merge` profile keeps the complete `fontpixel-ops/opentype` contract, which includes WOFF2; experiments do not pretend that removing a core flag disables an indirectly enabled dependency. Runtime catalogue/capability checks accompany the measurements. Specialized sfnt/variants bindings remain a full/merge facility.
+- Module metadata now includes the source commit, dirty status, SHA-256 before/after optimization and deterministic gzip sizes (`gzip -n`). Size and initialization evidence records the actual package metadata, not inferred feature labels.
+- The internally tagged `TaskRequest` fix belongs in the shared serde shape resolver, so Python and TypeScript both describe the runtime's flat `{kind, ...request}` representation. TypeScript extends the request interfaces to avoid duplicating large shapes. `BatchTaskSpec` intersects its ID with that union, preserving excess-property checking.
+- The JS reference is generated from the built full package's declarations (including Rust doc comments, serde types and wrapper augmentations) plus all binding coverage rules. The conceptual guide and executable examples explain lifetime, copies, unavailable capabilities and host persistence separately.

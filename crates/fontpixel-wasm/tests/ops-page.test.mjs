@@ -194,7 +194,7 @@ const WOFF2_CASES = [];
 /**
  * A WOFF2 output must decode to the same font as the CLI's (checked here);
  * its raw bytes are compared in "WOFF2 merge outputs equal the command line
- * byte for byte" (the Brotli stream depends on the platform libm, see there).
+ * byte for byte" (portable-float makes the Brotli stream platform independent).
  */
 function assertSameWoff2(label, name, wasm, cli) {
   const decode = (bytes) => fp.read(bytes, { format: 'woff2' }).fonts.toDict();
@@ -374,16 +374,6 @@ test('WOFF2 merge outputs equal the command line byte for byte', { skip: (needsC
         `CLI ${c.cli.length} B sha256 ${await sha256(c.cli)}, ${same ? 'identical' : `${diff} bytes differ`}`,
     );
     if (!same) differing.push(`${c.label} ${c.name}`);
-  }
-  if (differing.length) {
-    // Known blocker (reported): brotli 9.0.0 without its `portable-float`
-    // feature computes block-split costs with the platform libm (`f32::log2`,
-    // `powf`); glibc and the wasm32 libm differ by one ULP for some inputs,
-    // which moves split boundaries. The decoded fonts are equal (checked
-    // above). Enabling brotli `portable-float` in the core makes the stream
-    // target-independent (it changes native bytes, so the reference CLI must
-    // be rebuilt from that source).
-    t.todo(`WOFF2 Brotli streams differ from the native CLI: ${differing.join(', ')}`);
   }
   assert.deepEqual(differing, []);
 });

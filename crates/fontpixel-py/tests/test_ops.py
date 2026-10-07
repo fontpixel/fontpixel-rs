@@ -25,8 +25,7 @@ EMBEDDED_TTF = (DATA / "embedded-bitmap" / "bdat-i1-f1-d1.ttf").read_bytes()
 FROZEN = Path(
     os.environ.get(
         "FONTPIXEL_FROZEN_CLI",
-        "/home/chen/githubprojects/fontpixel/local-work/phase6-local-20261004/"
-        "frozen-binaries-v5/release/fontpixel",
+        str(Path(os.environ.get("CARGO_TARGET_DIR", REPO / "target")) / "release" / "fontpixel"),
     )
 )
 needs_cli = pytest.mark.skipif(not FROZEN.is_file(), reason="frozen fontpixel CLI not found")

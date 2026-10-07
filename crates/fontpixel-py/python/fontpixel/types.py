@@ -8286,52 +8286,1000 @@ class Tables(TypedDict):
     """EBLC or bloc bytes."""
 
 
-class TaskRequestCharset(TypedDict):
+_TaskRequestCharsetRequired = TypedDict("_TaskRequestCharsetRequired", {"kind": "Literal[\"charset\"]"})
+_TaskRequestCharsetOptional = TypedDict("_TaskRequestCharsetOptional", {"input": "StrPath", "output": "StrPath", "to": "str", "source_charset": "str | None", "from": "str | None", "format": "str | None", "gl": "bool | None", "strict": "bool", "report": "ReportStyle", "max_table_bytes": "int | None", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float"}, total=False)
+
+
+class TaskRequestCharset(_TaskRequestCharsetRequired, _TaskRequestCharsetOptional):
     """`fontpixel_ops::batch::TaskRequest::Charset`: Charset remapping."""
-    charset: CharsetRequest
-    """Charset remapping."""
 
 
-class TaskRequestConvert(TypedDict):
+_TaskRequestConvertRequired = TypedDict("_TaskRequestConvertRequired", {"kind": "Literal[\"convert\"]"})
+_TaskRequestConvertOptional = TypedDict("_TaskRequestConvertOptional", {"inputs": "list[StrPath]", "output": "StrPath", "from": "str | None", "to": "str | None", "strict": "bool", "each": "bool", "font_index": "int | None", "family": "str | None", "style": "str | None", "full_name": "str | None", "postscript_name": "str | None", "font_version": "str | None", "copyright": "str | None", "license": "str | None", "license_url": "str | None", "foundry": "str | None", "swidth_ppem": "int | None", "swidth_units": "int | None", "font_name": "str | None", "point_size": "int | None", "resolution": "tuple[int, int] | None", "set_integer_property": "list[str]", "set_text_property": "list[str]", "remove_property": "list[str]", "report": "ReportStyle", "byte_order": "Significance | None", "bit_order": "Significance | None", "glyph_pad": "str | None", "scan_unit": "str | None", "pcf_metadata_precedence": "PcfMetadataPrecedence | None", "psf_version": "str | None", "psf1_count": "int | None", "psf_unicode_table": "str | None", "fnt_version": "str | None", "fnt_charset": "int | None", "fnt_code_page": "str | None", "image_layout": "str | None", "image_encoding": "str | None", "image_columns": "int | None", "image_mapping_format": "str | None", "image_prefix": "str | None", "image_radix": "int | None", "image_domain": "str | None", "image_background": "str | None", "image_baseline": "int | None", "c_family": "str | None", "c_container": "str | None", "u8glib_format": "str | None", "u8x8_legacy": "bool", "c_name": "str | None", "c_range": "str | None", "lvgl_bpp": "str | None", "lvgl_compression": "str | None", "pbf_version": "str | None", "pbf_compression": "str | None", "pbf_offset_width": "str | None", "pbf_hash_buckets": "int | None", "pbf_codepoint_bytes": "str | None", "pbf_max_height": "int | None", "pbf_wildcard": "str | None", "hbf_bitmap_name": "str | None", "hbf_glyphs_per_file": "int | None", "cpi_version": "str | None", "cpi_code_page": "int | None", "fontx2_mode": "str | None", "fontx2_charset": "str | None", "fontx2_width": "int | None", "fontx2_height": "int | None", "nfnt_container": "str | None", "nfnt_resource_type": "str | None", "bmfont_encoding": "str | None", "bmfont_page_width": "int | None", "bmfont_page_height": "int | None", "bmfont_padding": "int | None", "tex_design_size": "str | None", "tex_dpi": "int | None", "tex_dpi_x": "int | None", "tex_dpi_y": "int | None", "plan9_container": "str | None", "plan9_max_glyphs": "int | None", "plan9_compression": "str | None", "amiga_packaging": "str | None", "amiga_no_unicode_latin1": "bool", "amiga_color_depth": "int | None", "gem_byte_order": "str | None", "gem_word_order": "str | None", "gem_unicode_as_legacy": "bool", "snf_byte_order": "str | None", "snf_layout": "str | None", "snf_no_layout_property": "bool", "pilfont_max_width": "int | None", "vlw_version": "str | None", "vlw_smooth": "bool | None", "rockbox_flavor": "str | None", "rockbox_depth": "str | None", "u8m_load_address": "int | None", "playdate_flavor": "str | None", "playdate_cell_width": "int | None", "playdate_cell_height": "int | None", "playdate_tracking": "int | None", "qpf2_glyph_format": "str | None", "mgtk_columns": "str | None", "pfr_dialect": "str | None", "ssfn_encoding": "str | None", "ssfn_legacy_as_unicode": "bool", "xerox_variant": "str | None", "xerox_bitblt_layout": "str | None", "xerox_alto_baseline": "int | None", "xerox_rotation_minutes": "int | None", "pcgeos_variant": "str | None", "pcgeos_font_id": "int | None", "pcgeos_family": "str | None", "pcgeos_rebuild": "bool", "pcgeos_round_fractional_metrics": "bool", "pcgeos_legacy_as_unicode": "bool", "gpi_container": "str | None", "gpi_kind": "str | None", "gpi_codepage": "int | None", "gpi_registry_id": "int | None", "gpi_rebuild": "bool", "riscos_version": "str | None", "riscos_depth": "str | None", "riscos_compression": "str | None", "riscos_metrics": "str | None", "riscos_metrics_version": "str | None", "riscos_quantize": "bool", "pfr_compression": "str | None", "pfr_top_down": "bool", "pfr_black_pixel": "int | None", "sfont_flavor": "str | None", "sfont_codepoints": "list[str]", "daisy_version": "str | None", "daisy_height": "int | None", "daisy_underline": "int | None", "daisy_allow_control_bytes": "bool", "tasprint_version": "str | None", "tasprint_width": "int | None", "tasprint_pcw_count": "int | None", "pxl_version": "str | None", "pxl_tfm": "str | None", "pxl_magnification": "int | None", "signum_version": "str | None", "geos_container": "str | None", "geos_variant": "str | None", "geos_include_del": "bool | None", "geos_font_id": "int | None", "geos_family": "str | None", "geos_rebuild": "bool", "geos_legacy_as_unicode": "bool", "vtfont_cell_width": "int | None", "vtfont_cell_height": "int | None", "vtfont_rebuild": "bool", "vtfont_legacy_as_unicode": "bool", "fbit_kind": "str | None", "fbit_container": "str | None", "fbit_definition": "str | None", "fbit_data_fork": "str | None", "lisa_compression": "str | None", "symbos_version": "str | None", "symbos_first_code": "int | None", "symbos_writing_system": "int | None", "symbos_layout": "str | None", "symbos_height": "int | None", "oberon_family": "int | None", "oberon_variant": "int | None", "wsfont_encoding": "int | None", "wsfont_bit_order": "str | None", "wsfont_byte_order": "str | None", "wsfont_depth": "str | None", "wsfont_stride": "int | None", "beos_coverage": "str | None", "beos_quantize_gray": "bool", "beos_legacy_as_unicode": "bool", "beos_round_fractional_metrics": "bool", "prebuilt_byte_order": "str | None", "prebuilt_bitmap_bit_order": "str | None", "prebuilt_depth": "str | None", "prebuilt_quantize": "bool", "prebuilt_charset_name": "str | None", "prebuilt_identifier": "int | None", "catalyst_write_offset_base": "str | None", "catalyst_height": "int | None", "catalyst_leading": "int | None", "catalyst_sidebearing": "int | None", "chiwriter_version": "str | None", "chiwriter_layout": "str | None", "chiwriter_stride": "int | None", "chiwriter_width": "int | None", "chiwriter_height": "int | None", "chiwriter_baseline": "int | None", "chiwriter_line_gap": "int | None", "chiwriter_filename": "str | None", "dashen_version": "str | None", "dashen_top": "int | None", "dashen_codepoint_map": "bool", "hppcl_orientation": "str | None", "hppcl_compression": "str | None", "hppcl_continuation_bytes": "int | None", "hppcl_x_resolution": "int | None", "hppcl_y_resolution": "int | None", "hppcl_symbol_set": "int | None", "comfont_variant": "str | None", "comfont_cpm_target": "str | None", "consoleet_codes": "str | None", "xbin_count": "str | None", "xbin_screen": "str | None", "zapfont_variant": "str | None", "native_unicode_as_legacy": "bool", "native_cell_width": "int | None", "native_cell_height": "int | None", "drhalo_first": "int | None", "iigs_version": "str | None", "iigs_container": "str | None", "vfont_byte_order": "str | None", "vfont_unicode_as_legacy": "bool", "fzx_height": "int | None", "fzx_tracking": "int | None", "fzx_unicode_as_legacy": "bool", "figlet_height": "int | None", "figlet_baseline": "int | None", "figlet_legacy_as_unicode": "bool", "palm_container": "str | None", "palm_version": "str | None", "palm_densities": "list[int]", "palm_unicode_as_legacy": "bool", "gdr_version": "str | None", "gdr_collection_uid": "int | None", "gdr_write_legacy": "bool", "color_flavor": "str | None", "otb_upm": "int | None", "otb_reference": "str | None", "otb_rounding": "str | None", "otb_name_record": "list[str]", "otb_name_record_hex": "list[str]", "otb_name_language_tag": "list[str]", "otb_head_flags": "int | None", "otb_lowest_rec_ppem": "int | None", "otb_created": "int | None", "otb_modified": "int | None", "otb_os2_version": "str | None", "otb_vendor": "str | None", "otb_panose": "SerdeBytes | None", "otb_unicode_ranges": "str | None", "otb_break_char": "int | None", "otb_fs_type": "int | None", "otb_fs_selection": "int | None", "otb_average_width": "str | None", "otb_post_names": "str | None", "otb_fixed_pitch": "bool | None", "otb_cmap_unicode_full": "str | None", "otb_width_max": "str | None", "otb_index_layout": "str | None", "otb_index_min_run": "int | None", "otb_outline_tables": "str | None", "otb_max_zones": "str | None", "otb_notdef": "str | None", "otb_notdef_advance": "int | None", "otb_caret_slope": "list[int] | None", "otb_line_extremes": "str | None", "otb_vertical_line_metrics": "str | None", "otb_underline": "list[int] | None", "otb_hmtx": "str | None", "otb_glyph_order": "str | None", "drcs_cell_width": "int | None", "drcs_cell_height": "int | None", "drcs_cell_x": "int | None", "drcs_cell_y": "int | None", "drcs_charset": "str | None", "drcs_designator": "str | None", "drcs_eight_bit_controls": "bool", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float", "shape": "Shape | None", "dotsize": "float | None", "dot_reuse": "str | None", "ppu": "int | None", "upm": "int | None", "embed_bitmaps": "bool", "gray_threshold": "int | None", "woff2_source": "str | None", "woff2_quality": "int | None", "woff2_threads": "int | None", "collection_v2": "bool", "notdef": "str | None", "notdef_advance": "int | None", "notdef_lsb": "int | None"}, total=False)
+
+
+class TaskRequestConvert(_TaskRequestConvertRequired, _TaskRequestConvertOptional):
     """`fontpixel_ops::batch::TaskRequest::Convert`: Convert."""
-    convert: ConvertRequest
-    """Convert."""
 
 
-class TaskRequestDiff(TypedDict):
+_TaskRequestDiffRequired = TypedDict("_TaskRequestDiffRequired", {"kind": "Literal[\"diff\"]"})
+_TaskRequestDiffOptional = TypedDict("_TaskRequestDiffOptional", {"a": "StrPath", "b": "StrPath", "from": "str | None", "from_a": "str | None", "from_b": "str | None", "json": "bool", "strict": "bool", "max_differences": "int", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float"}, total=False)
+
+
+class TaskRequestDiff(_TaskRequestDiffRequired, _TaskRequestDiffOptional):
     """`fontpixel_ops::batch::TaskRequest::Diff`: Comparison."""
-    diff: DiffRequest
-    """Comparison."""
 
 
-class TaskRequestMerge(TypedDict):
+class _TaskRequestMergeRequired(TypedDict):
+    """
+    `fontpixel_ops::batch::TaskRequest::Merge`: Multi-part merge.
+
+    Required keys.
+    """
+    kind: Literal["merge"]
+    """Variant tag."""
+
+
+class TaskRequestMerge(_TaskRequestMergeRequired, total=False):
     """`fontpixel_ops::batch::TaskRequest::Merge`: Multi-part merge."""
-    merge: MergeRequest
-    """Multi-part merge."""
+    parts: list[MergeInput]
+    """Ordered parts; earlier parts win for overlapping codes."""
+    outputs: list[MergeOutput]
+    """Outputs, all written in one transaction."""
+    family: str
+    """Required output family name; surrounding whitespace is trimmed."""
+    spacing: MergeSpacing
+    """Spacing policy: `auto`, `mono` or `prop`."""
+    geometric_width: GeometricWidth
+    """Width of geometric symbols: `half` or `full`."""
+    allow_misaligned: bool
+    """Accept parts whose baselines or cells do not align."""
+    fallback: bool
+    """Let later parts fill codes missing from earlier parts."""
+    ascent: int | None
+    """Explicit output ascent in pixels."""
+    descent: int | None
+    """Explicit output descent in pixels."""
+    strict: bool
+    """Reject read, merge or write loss before any output is written."""
+    report: ReportStyle
+    """Diagnostic format."""
+    byte_order: Significance | None
+    """PCF table integer byte order."""
+    bit_order: Significance | None
+    """PCF bitmap bit order."""
+    glyph_pad: str | None
+    """PCF row alignment in bytes (1, 2, 4 or 8)."""
+    scan_unit: str | None
+    """PCF bitmap scan unit in bytes (1, 2 or 4)."""
+    pcf_metadata_precedence: PcfMetadataPrecedence | None
+    """Whether edited size/resolution rewrite existing PCF POINT_SIZE and RESOLUTION* properties (normalized-edits, the default) or the existing properties are kept and each disagreement is reported as loss."""
+    psf_version: str | None
+    """PSF output version, 1 or 2 (default 2)."""
+    psf1_count: int | None
+    """PSF1 cells, 256 or 512; default chooses the smallest fit."""
+    psf_unicode_table: str | None
+    """PSF Unicode table policy (default auto)."""
+    fnt_version: str | None
+    """Windows raster output version; defaults to source version or 2."""
+    fnt_charset: int | None
+    """Windows dfCharSet identifier, 0..255 (ANSI=0, OEM=255)."""
+    fnt_code_page: str | None
+    """Explicit target page for OEM, symbol, or historical Windows mappings."""
+    image_layout: str | None
+    """Output image organization (default atlas)."""
+    image_encoding: str | None
+    """Explicit image container (directory default png; atlas uses extension)."""
+    image_columns: int | None
+    """Atlas columns (default 16)."""
+    image_mapping_format: str | None
+    """Atlas mapping format (default json)."""
+    image_prefix: str | None
+    """Literal prefix on numeric output glyph filenames."""
+    image_radix: int | None
+    """Output directory filename radix (default 16)."""
+    image_domain: str | None
+    """Output filename code domain (default legacy)."""
+    image_background: str | None
+    """Output image background (default black)."""
+    image_baseline: int | None
+    """Output glyph baseline measured down from the image top."""
+    c_family: str | None
+    """Output C dialect (default generic)."""
+    c_container: str | None
+    """C source (default) or native LVGL binary output."""
+    u8glib_format: str | None
+    """U8glib native font record format (default full)."""
+    u8x8_legacy: bool
+    """Write the pre-2019 two-byte U8x8 header."""
+    c_name: str | None
+    """Output C symbol (default font)."""
+    c_range: str | None
+    """Inclusive C output range, e.g. U+0020-U+007E."""
+    lvgl_bpp: str | None
+    """LVGL coverage bit depth (default 1)."""
+    lvgl_compression: str | None
+    """LVGL bitmap encoding (default plain)."""
+    pbf_version: str | None
+    """Pebble output wire version (default 3)."""
+    pbf_compression: str | None
+    """Pebble bitmap encoding; RLE4 requires v3."""
+    pbf_offset_width: str | None
+    """Pebble glyph offset width (default auto)."""
+    pbf_hash_buckets: int | None
+    """Pebble hash bucket count, 1..255 (default 255)."""
+    pbf_codepoint_bytes: str | None
+    """Pebble Unicode field width; default chooses 2 or 4 bytes."""
+    pbf_max_height: int | None
+    """Pebble line-top baseline override in pixels."""
+    pbf_wildcard: str | None
+    """Pebble BMP fallback codepoint, e.g. U+003F."""
+    hbf_bitmap_name: str | None
+    """Relative HBF bitmap asset name, resolved beside the output header."""
+    hbf_glyphs_per_file: int | None
+    """Split HBF bitmaps after this many glyphs per asset."""
+    cpi_version: str | None
+    """DOS output layout (default CP for .cp, CPX for .cpx, otherwise FONT)."""
+    cpi_code_page: int | None
+    """DOS code page for fonts without native code-page metadata."""
+    fontx2_mode: str | None
+    """FONTX2 single-byte ANK or double-byte block tables (default auto)."""
+    fontx2_charset: str | None
+    """Charset used for exact FONTX2 output mapping."""
+    fontx2_width: int | None
+    """FONTX2 output cell width."""
+    fontx2_height: int | None
+    """FONTX2 output cell height."""
+    nfnt_container: str | None
+    """Macintosh output container (default dfont)."""
+    nfnt_resource_type: str | None
+    """Resource type used for newly authored Macintosh bitmaps."""
+    bmfont_encoding: str | None
+    """BMFont descriptor encoding (default text)."""
+    bmfont_page_width: int | None
+    """BMFont PNG page width in pixels."""
+    bmfont_page_height: int | None
+    """BMFont PNG page height in pixels."""
+    bmfont_padding: int | None
+    """Empty pixels between BMFont glyphs."""
+    tex_design_size: str | None
+    """TeX design size in points: integer or exact fraction, e.g. 10 or 21/2."""
+    tex_dpi: int | None
+    """TeX horizontal and vertical resolution in dpi."""
+    tex_dpi_x: int | None
+    """TeX horizontal resolution override in dpi."""
+    tex_dpi_y: int | None
+    """TeX vertical resolution override in dpi."""
+    plan9_container: str | None
+    """Plan 9 mapping bundle or one subfont image (default font)."""
+    plan9_max_glyphs: int | None
+    """Maximum glyphs per generated Plan 9 subfont."""
+    plan9_compression: str | None
+    """Plan 9 image encoding: raw bytes or standard LZ77 literal blocks."""
+    amiga_packaging: str | None
+    """Amiga output as one strike or a .font descriptor with size assets (default auto)."""
+    amiga_no_unicode_latin1: bool
+    """Refuse interpreting representable Unicode characters as Amiga Latin-1 codes."""
+    amiga_color_depth: int | None
+    """Amiga planar coverage depth, from 1 through 8 bits."""
+    gem_byte_order: str | None
+    """GEM output header integer order (default big)."""
+    gem_word_order: str | None
+    """GEM output bitmap word order (default big)."""
+    gem_unicode_as_legacy: bool
+    """Explicitly reinterpret GEM Unicode numbers as untagged legacy codes, with loss."""
+    snf_byte_order: str | None
+    """SNF output integer order (default little)."""
+    snf_layout: str | None
+    """SNF output bitmap layout: bits,bytes,row-padding,scan-unit,rows."""
+    snf_no_layout_property: bool
+    """Omit SNF's vendor layout property; reopening may require --snf-read-layout."""
+    pilfont_max_width: int | None
+    """PILfont maximum atlas width (default 800)."""
+    vlw_version: str | None
+    """Processing VLW generation (default 11)."""
+    vlw_smooth: bool | None
+    """Explicit VLW smoothing hint; preserves source hint when omitted."""
+    rockbox_flavor: str | None
+    """Rockbox file generation (default rb12)."""
+    rockbox_depth: str | None
+    """Rockbox native coverage representation."""
+    u8m_load_address: int | None
+    """U8/M load address in decimal."""
+    playdate_flavor: str | None
+    """Playdate descriptor/atlas or compiled font (default fnt-embedded)."""
+    playdate_cell_width: int | None
+    """Playdate output atlas cell width."""
+    playdate_cell_height: int | None
+    """Playdate output atlas cell height."""
+    playdate_tracking: int | None
+    """Explicit Playdate font tracking."""
+    qpf2_glyph_format: str | None
+    """QPF2 native glyph coverage storage (default gray8)."""
+    mgtk_columns: str | None
+    """MGTK one/two seven-bit raster strips (default auto)."""
+    pfr_dialect: str | None
+    """PFR wire dialect; otherwise preserve native source or use FreeType."""
+    ssfn_encoding: str | None
+    """Scalable Screen Font native encoding (default binary)."""
+    ssfn_legacy_as_unicode: bool
+    """Explicitly interpret legacy numeric labels as SSFN Unicode mappings."""
+    xerox_variant: str | None
+    """Xerox native font family (default bitblt)."""
+    xerox_bitblt_layout: str | None
+    """Xerox BITBLT strike directory layout (default kerned)."""
+    xerox_alto_baseline: int | None
+    """Explicit Xerox Alto baseline."""
+    xerox_rotation_minutes: int | None
+    """Native Xerox PrePress raster rotation metadata in arc-minutes."""
+    pcgeos_variant: str | None
+    """Native PC/GEOS layout, otherwise preserve source or use SBCS."""
+    pcgeos_font_id: int | None
+    """PC/GEOS registered font identifier."""
+    pcgeos_family: str | None
+    """PC/GEOS shared family name."""
+    pcgeos_rebuild: bool
+    """Rebuild PC/GEOS records instead of preserving unchanged native bytes."""
+    pcgeos_round_fractional_metrics: bool
+    """Explicitly round fractional PC/GEOS output metrics."""
+    pcgeos_legacy_as_unicode: bool
+    """Explicitly use legacy code numbers as Unicode in PC/GEOS DBCS output."""
+    gpi_container: str | None
+    """GPI resource packaging; otherwise preserve source choice."""
+    gpi_kind: str | None
+    """GPI character increment representation."""
+    gpi_codepage: int | None
+    """Native OS/2 codepage identifier."""
+    gpi_registry_id: int | None
+    """Native registered OS/2 font identifier."""
+    gpi_rebuild: bool
+    """Rebuild GPI records instead of preserving unchanged native bytes."""
+    riscos_version: str | None
+    """RISC OS bitmap generation (default 6)."""
+    riscos_depth: str | None
+    """RISC OS native coverage depth (default mono)."""
+    riscos_compression: str | None
+    """RISC OS one-bit compression (default raw)."""
+    riscos_metrics: str | None
+    """Relative name for an output IntMetrics companion."""
+    riscos_metrics_version: str | None
+    """IntMetrics generation (default 2)."""
+    riscos_quantize: bool
+    """Explicitly round coverage to the RISC OS Gray4 palette."""
+    pfr_compression: str | None
+    """PFR bitmap encoding (default raw)."""
+    pfr_top_down: bool
+    """Store PFR rows from top to bottom."""
+    pfr_black_pixel: int | None
+    """PFR raw ink bit value (default 1)."""
+    sfont_flavor: str | None
+    """Native marker-image dialect (default sfont)."""
+    sfont_codepoints: list[str]
+    """Ordered SFont output labels, comma-separated U+0041 or legacy:0x41."""
+    daisy_version: str | None
+    """Daisy-Dot output generation (default 3)."""
+    daisy_height: int | None
+    """Actual Daisy-Dot height marker plus one."""
+    daisy_underline: int | None
+    """Daisy-Dot underline row, which defines its baseline."""
+    daisy_allow_control_bytes: bool
+    """Explicitly allow graphics bytes forbidden by the Daisy-Dot manual."""
+    tasprint_version: str | None
+    """TasPrint output platform (default 48k)."""
+    tasprint_width: int | None
+    """TasPrint PCW output width."""
+    tasprint_pcw_count: int | None
+    """PCW character count: the documented 127 or observed 128."""
+    pxl_version: str | None
+    """Native PXL output generation (default 1001)."""
+    pxl_tfm: str | None
+    """Optional relative name of the generated PXL metric sidecar."""
+    pxl_magnification: int | None
+    """PXL magnification value."""
+    signum_version: str | None
+    """Signum output layout (default e24)."""
+    geos_container: str | None
+    """GEOS output resource envelope (default preserves source, otherwise cvt)."""
+    geos_variant: str | None
+    """GEOS native strike and mapping variant."""
+    geos_include_del: bool | None
+    """Explicitly include or omit the GEOS DEL slot."""
+    geos_font_id: int | None
+    """GEOS family identifier."""
+    geos_family: str | None
+    """GEOS family name."""
+    geos_rebuild: bool
+    """Rebuild GEOS records instead of preserving unchanged native resources."""
+    geos_legacy_as_unicode: bool
+    """Explicitly use legacy codes as Unicode in GEOS extended output."""
+    vtfont_cell_width: int | None
+    """VFNT single-column width (double-width glyphs use two halves)."""
+    vtfont_cell_height: int | None
+    """VFNT cell height."""
+    vtfont_rebuild: bool
+    """Rebuild VFNT native glyph pools and maps even for unchanged input."""
+    vtfont_legacy_as_unicode: bool
+    """Explicitly project legacy numeric labels to VFNT Unicode mappings."""
+    fbit_kind: str | None
+    """Japanese Macintosh resource kind (default fbit)."""
+    fbit_container: str | None
+    """Japanese Macintosh resource envelope (default bare)."""
+    fbit_definition: str | None
+    """fbit bitmap placement (default inline)."""
+    fbit_data_fork: str | None
+    """Relative companion name for a split bare fbit output."""
+    lisa_compression: str | None
+    """Lisa resource compression (default preserve)."""
+    symbos_version: str | None
+    """SymbOS native layout."""
+    symbos_first_code: int | None
+    """Initial native SymbOS character code."""
+    symbos_writing_system: int | None
+    """SymbOS extended writing-system identifier."""
+    symbos_layout: str | None
+    """SymbOS alternative extended layout header."""
+    symbos_height: int | None
+    """SymbOS output cell height."""
+    oberon_family: int | None
+    """Project Oberon family byte."""
+    oberon_variant: int | None
+    """Project Oberon variant byte."""
+    wsfont_encoding: int | None
+    """WSF native encoding identifier."""
+    wsfont_bit_order: str | None
+    """WSF wire bit order."""
+    wsfont_byte_order: str | None
+    """WSF wire byte order."""
+    wsfont_depth: str | None
+    """WSF coverage storage."""
+    wsfont_stride: int | None
+    """WSF bytes per raster row."""
+    beos_coverage: str | None
+    """BeOS output coverage palette."""
+    beos_quantize_gray: bool
+    """Explicitly quantize BeOS gray samples to the selected palette."""
+    beos_legacy_as_unicode: bool
+    """Interpret BeOS source legacy labels as Unicode numbers."""
+    beos_round_fractional_metrics: bool
+    """Permit retained fractional BeOS advances on output."""
+    prebuilt_byte_order: str | None
+    """Prebuilt numeric byte order (default big)."""
+    prebuilt_bitmap_bit_order: str | None
+    """Prebuilt output bitmap pixel order (default msb; lsb for explicit compatibility)."""
+    prebuilt_depth: str | None
+    """Prebuilt native coverage precision; otherwise inferred per strike."""
+    prebuilt_quantize: bool
+    """Explicitly round prebuilt gray samples to the selected palette."""
+    prebuilt_charset_name: str | None
+    """Prebuilt character-set name."""
+    prebuilt_identifier: int | None
+    """Prebuilt font identifier."""
+    catalyst_write_offset_base: str | None
+    """Catalyst output directory origin."""
+    catalyst_height: int | None
+    """Catalyst common raster height."""
+    catalyst_leading: int | None
+    """Catalyst inter-line leading."""
+    catalyst_sidebearing: int | None
+    """Catalyst common trailing bearing."""
+    chiwriter_version: str | None
+    """ChiWriter output generation (default 4)."""
+    chiwriter_layout: str | None
+    """ChiWriter compatible output directory."""
+    chiwriter_stride: int | None
+    """ChiWriter output raster bytes per row."""
+    chiwriter_width: int | None
+    """ChiWriter output cell width."""
+    chiwriter_height: int | None
+    """ChiWriter output cell height."""
+    chiwriter_baseline: int | None
+    """ChiWriter cell-top to baseline distance."""
+    chiwriter_line_gap: int | None
+    """ChiWriter v3 baseline-to-next-cell-top distance."""
+    chiwriter_filename: str | None
+    """ChiWriter native filename (Latin-1, at most thirteen bytes)."""
+    dashen_version: str | None
+    """Dashen output generation (default 3)."""
+    dashen_top: int | None
+    """Dashen native screen top offset."""
+    dashen_codepoint_map: bool
+    """Emit an explicit Dashen codepoint remapping table."""
+    hppcl_orientation: str | None
+    """PCL physical raster orientation."""
+    hppcl_compression: str | None
+    """PCL character encoding (default raw)."""
+    hppcl_continuation_bytes: int | None
+    """Maximum PCL character-command bytes, including descriptor (17..32767)."""
+    hppcl_x_resolution: int | None
+    """PCL format 20 horizontal resolution."""
+    hppcl_y_resolution: int | None
+    """PCL format 20 vertical resolution."""
+    hppcl_symbol_set: int | None
+    """PCL native symbol-set identifier."""
+    comfont_variant: str | None
+    """Executable font loader variant (default frapt)."""
+    comfont_cpm_target: str | None
+    """CP/M target for PSFCOM and UDG native loaders (default pcw)."""
+    consoleet_codes: str | None
+    """Meaning of Consoleet output filenames (default legacy)."""
+    xbin_count: str | None
+    """XBIN glyph-slot count (default auto)."""
+    xbin_screen: str | None
+    """Retain validated XBIN screen metadata or write font alone."""
+    zapfont_variant: str | None
+    """Zap output layout (default redraw)."""
+    native_unicode_as_legacy: bool
+    """Explicitly use Unicode numbers as legacy codes in small native formats."""
+    native_cell_width: int | None
+    """Fixed cell width for supported native console and small font formats."""
+    native_cell_height: int | None
+    """Fixed cell height, paired with --native-cell-width."""
+    drhalo_first: int | None
+    """First legacy position in Dr. Halo output (zero or 32)."""
+    iigs_version: str | None
+    """Apple IIgs header version (default preserves the input version)."""
+    iigs_container: str | None
+    """IIgs output envelope (default bare)."""
+    vfont_byte_order: str | None
+    """Berkeley vfont output integer byte order (default little)."""
+    vfont_unicode_as_legacy: bool
+    """Explicitly project Unicode numbers to vfont legacy byte positions."""
+    fzx_height: int | None
+    """FZX line height (otherwise inferred from font metrics)."""
+    fzx_tracking: int | None
+    """FZX common tracking in pixels."""
+    fzx_unicode_as_legacy: bool
+    """Explicitly project Unicode numbers to FZX legacy byte positions."""
+    figlet_height: int | None
+    """Common FIGlet character-art cell height."""
+    figlet_baseline: int | None
+    """FIGlet baseline measured in rows from the cell top."""
+    figlet_legacy_as_unicode: bool
+    """Explicitly interpret legacy code numbers as FIGlet Unicode values."""
+    palm_container: str | None
+    """Palm output wrapper (default prc)."""
+    palm_version: str | None
+    """Palm bitmap resource version (default 1)."""
+    palm_densities: list[int]
+    """Comma-separated Palm densities, one per input strike."""
+    palm_unicode_as_legacy: bool
+    """Explicitly project Unicode numbers to Palm legacy character codes."""
+    gdr_version: str | None
+    """GDR strike descriptor version (default 41)."""
+    gdr_collection_uid: int | None
+    """GDR collection UID in decimal or 0x hexadecimal notation."""
+    gdr_write_legacy: bool
+    """Use legacy character codes for GDR output instead of Unicode."""
+    color_flavor: str | None
+    """Color bitmap table family; both encode black pixels with coverage alpha."""
+    otb_upm: int | None
+    """Explicit OTB/bdat design units per em; absent preserves automatic scaling."""
+    otb_reference: str | None
+    """OTB/bdat metric source: first, largest y-ppem, or a zero-based strike index."""
+    otb_rounding: str | None
+    """OTB/bdat pixel-to-design rounding; absent preserves native half-away rounding."""
+    otb_name_record: list[str]
+    """Complete OTB/bdat name table record PLATFORM/ENCODING/LANGUAGE/NAME_ID=TEXT."""
+    otb_name_record_hex: list[str]
+    """Name record with exact bytes: PLATFORM/ENCODING/LANGUAGE/NAME_ID=HEX."""
+    otb_name_language_tag: list[str]
+    """BCP 47 language tag for name format 1; the Nth tag is language 0x8000+N."""
+    otb_head_flags: int | None
+    """Exact head.flags (bit 15 is reserved); native default 11."""
+    otb_lowest_rec_ppem: int | None
+    """head.lowestRecPPEM, 1..=65535; native default 8."""
+    otb_created: int | None
+    """head.created, seconds since 1904-01-01 UTC; requires --otb-modified."""
+    otb_modified: int | None
+    """head.modified, seconds since 1904-01-01 UTC; requires --otb-created."""
+    otb_os2_version: str | None
+    """OS/2 table version (same layout); native default 4."""
+    otb_vendor: str | None
+    """OS/2 achVendID, exactly four printable ASCII characters; native NONE."""
+    otb_panose: SerdeBytes | None
+    """Ten comma-separated PANOSE bytes; native default all zero."""
+    otb_unicode_ranges: str | None
+    """OS/2 Unicode ranges: coverage (native), non-bmp (only bit 57, when the cmap maps a supplementary scalar), or four comma-separated words."""
+    otb_break_char: int | None
+    """OS/2 usBreakChar; native default 0."""
+    otb_fs_type: int | None
+    """OS/2 fsType embedding permissions; native default 0."""
+    otb_fs_selection: int | None
+    """OS/2 fsSelection; native default 0x40 (regular)."""
+    otb_average_width: str | None
+    """OS/2 xAvgCharWidth arithmetic over nonzero advances (native nearest)."""
+    otb_post_names: str | None
+    """post glyph names: keep (format 2, native) or omit (format 3, reported loss)."""
+    otb_fixed_pitch: bool | None
+    """post.isFixedPitch override; absent follows the source spacing."""
+    otb_cmap_unicode_full: str | None
+    """cmap format-12 records: always (native: (0,4) and (3,10)), non-bmp (omit (0,4) for BMP-only maps) or when-needed (format 12 only when format 4 cannot hold the map, under (3,10) only). Mappings never change."""
+    otb_width_max: str | None
+    """EBLC/bloc widthMax: bitmap (largest bitmap width, native) or advance."""
+    otb_index_layout: str | None
+    """EBLC/bloc index layout: canonical (native), shared-runs, or spanning (one format-1 subtable across glyph IDs absent from a strike)."""
+    otb_index_min_run: int | None
+    """Shortest shared-metric run with --otb-index-layout shared-runs (default 8)."""
+    otb_outline_tables: str | None
+    """TrueType outline tables: none (native OTB) or empty-glyf (one-byte glyf, short loca, maxp 1.0; outline-derived bounds and bearings become zero)."""
+    otb_max_zones: str | None
+    """maxp.maxZones (1 or 2) with --otb-outline-tables empty-glyf (default 1)."""
+    otb_notdef: str | None
+    """Glyph 0: preserve (native) or empty (no bitmap in any strike, hmtx advance from --otb-notdef-advance; replacing a source .notdef is loss)."""
+    otb_notdef_advance: int | None
+    """Empty .notdef advance width in design units."""
+    otb_caret_slope: list[int] | None
+    """EBLC/bloc caret slope RISE,RUN of every strike (native 1,0: upright)."""
+    otb_line_extremes: str | None
+    """EBLC/bloc minOriginSB/minAdvanceSB/maxBeforeBL/minAfterBL: computed (native) or zero."""
+    otb_vertical_line_metrics: str | None
+    """Vertical line record of horizontal-only strikes: zero (native) or mirror-horizontal (a copy of the horizontal record)."""
+    otb_underline: list[int] | None
+    """post underline POSITION,THICKNESS in design units; replacing source underline metrics is reported as loss."""
+    otb_hmtx: str | None
+    """hmtx: full (native, one long metric per glyph) or compact-trailing."""
+    otb_glyph_order: str | None
+    """Glyph IDs: first-seen (native) or codepoint (encoded glyphs by smallest scalar, then unencoded glyphs in first-seen order)."""
+    drcs_cell_width: int | None
+    """DRCS output cell width; requires --drcs-cell-height."""
+    drcs_cell_height: int | None
+    """DRCS output cell height; requires --drcs-cell-width."""
+    drcs_cell_x: int | None
+    """DRCS cell left edge relative to the glyph origin (default zero)."""
+    drcs_cell_y: int | None
+    """DRCS cell bottom edge relative to the baseline (default zero)."""
+    drcs_charset: str | None
+    """DRCS character set size (default 94)."""
+    drcs_designator: str | None
+    """DEC character set designator (default a space followed by @)."""
+    drcs_eight_bit_controls: bool
+    """Use 8-bit DCS/ST control bytes instead of ESC P / ESC backslash."""
+    raw_preset: str | None
+    """Explicit raw layout preset (VGA, C64, Spectrum, CH8, MSX or Harlekin)."""
+    raw_width: int | None
+    """Raw glyph width; overrides a selected preset."""
+    raw_height: int | None
+    """Raw glyph height; overrides a selected preset."""
+    raw_count: int | None
+    """Exact raw glyph count; otherwise consume complete records."""
+    raw_first: str | None
+    """First raw slot code, e.g. U+0020 or 32."""
+    raw_bit_order: str | None
+    """Bit order within each raw byte (default msb)."""
+    raw_row_order: str | None
+    """Raw row order (default top-down)."""
+    raw_packing: str | None
+    """Raw alignment: byte-aligned rows or continuous packed bits."""
+    raw_byte_order: str | None
+    """Row-major or byte-column-major storage within each horizontal strip."""
+    raw_strike_count: int | None
+    """Glyph cells placed side by side in each raw horizontal strip (default 1)."""
+    raw_row_padding: int | None
+    """Extra padding bytes after every raw row."""
+    raw_offset: int | None
+    """Prefix bytes before the first raw glyph."""
+    raw_default_load_address: str | None
+    """Fallback two-byte little-endian load address when no matching source prefix exists."""
+    raw_charset: str | None
+    """Explicit charset identity of raw slot codes."""
+    cpi_pointer_mode: str | None
+    """DOS CPI input pointers (default linear)."""
+    fontx2_read_charset: str | None
+    """Exact charset label of FONTX2 source codes."""
+    hzk_preset: str | None
+    """Explicit HZK/ASC preset, e.g. HZK16, HZK24S, ASC16."""
+    hzk_width: int | None
+    """HZK glyph width; overrides a preset's geometry."""
+    hzk_height: int | None
+    """HZK glyph height; overrides a preset's geometry."""
+    hzk_first: str | None
+    """HZK first slot code, e.g. 0xA1A1."""
+    hzk_last: str | None
+    """HZK last permitted slot code, inclusive."""
+    hzk_code_space: str | None
+    """HZK slot domain for custom geometry."""
+    hzk_storage: str | None
+    """HZK bitmap storage orientation (default rows)."""
+    hzk_count: int | None
+    """Exact HZK input or output glyph count."""
+    nfnt_read_charset: str | None
+    """Explicit NFNT legacy charset label."""
+    nfnt_apple_double_resource: str | None
+    """Relative AppleDouble companion when reading the data fork."""
+    bmfont_read_threshold: int | None
+    """Explicitly threshold imported BMFont grayscale; default preserves samples."""
+    gem_read_byte_order: str | None
+    """GEM input header integer order; default uses structural detection."""
+    gem_read_word_order: str | None
+    """GEM input bitmap word order; default follows its header flag."""
+    snf_read_byte_order: str | None
+    """SNF input integer order; default uses version stamps."""
+    snf_read_layout: str | None
+    """SNF input bitmap layout: bits,bytes,row-padding,scan-unit,rows; e.g. msb,big,4,1,top-down."""
+    pilfont_read_atlas: str | None
+    """Scoped PNG mask for a PILfont descriptor (its native suffix is .pbm)."""
+    playdate_read_atlas: str | None
+    """Scoped PNG atlas for a Playdate FNT descriptor."""
+    playdate_read_cell_width: int | None
+    """Playdate source atlas cell width."""
+    playdate_read_cell_height: int | None
+    """Playdate source atlas cell height."""
+    mgtk_read_charset: str | None
+    """Charset label for MGTK legacy positions; no implicit Unicode remapping."""
+    qpf_read_family: str | None
+    """Family name supplied externally for a QPF font."""
+    pfr_read_dialect: str | None
+    """Require the DAVIC specification or FreeType PFR wire dialect."""
+    xerox_read_variant: str | None
+    """Require a Xerox native font family."""
+    xerox_read_alto_baseline: int | None
+    """Explicit baseline for Alto files with a zero native header baseline."""
+    pcgeos_read_variant: str | None
+    """Require the SBCS or DBCS PC/GEOS layout."""
+    pcgeos_read_round_fractional_metrics: bool
+    """Explicitly round fractional PC/GEOS input metrics."""
+    gpi_include_unmapped_null: bool | None
+    """Retain the additional GPI unmapped null descriptor (default true)."""
+    riscos_read_version: str | None
+    """Require a RISC OS bitmap generation."""
+    riscos_read_metrics: str | None
+    """Relative RISC OS IntMetrics input companion."""
+    sfont_read_flavor: str | None
+    """Explicit marker-image dialect; otherwise inspect native controls."""
+    sfont_read_codepoints: list[str]
+    """Ordered SFont labels, comma-separated U+0041 or legacy:0x41."""
+    sfont_read_baseline: int | None
+    """SFont baseline down from glyph top."""
+    daisy_read_version: str | None
+    """Require a Daisy-Dot input generation."""
+    polyprint_baseline: int | None
+    """PolyPrint baseline measured from the cell top."""
+    printshop_baseline: int | None
+    """Print Shop baseline measured from the cell top."""
+    tasprint_read_version: str | None
+    """Require a TasPrint input platform."""
+    tasprint_read_width: int | None
+    """Explicit PCW input width."""
+    pxl_read_version: str | None
+    """Require PXL version 1001 or 1002."""
+    pxl_read_tfm: str | None
+    """Scoped TFM sidecar path for PXL input."""
+    signum_read_version: str | None
+    """Require a Signum editor or printer input layout."""
+    signum_baseline: int | None
+    """Explicit Signum baseline."""
+    signum_line_height: int | None
+    """Explicit Signum line height."""
+    geos_read_include_del: bool
+    """Include the later GEOS DEL slot when interpreting a native strike."""
+    fbit_read_kind: str | None
+    """Bare Japanese Macintosh resource type (default fbit)."""
+    fbit_read_data_fork: str | None
+    """Scoped bitmap data fork for an fbit resource."""
+    fbit_apple_double_resource: str | None
+    """Scoped AppleDouble resource companion for an fbit data-fork input."""
+    fbit_read_hfnt_width: int | None
+    """Explicit cell width for bare HFNT input."""
+    lisa_read_charset: str | None
+    """Charset label for Lisa legacy positions."""
+    symbos_read_allow_short_range: bool
+    """Accept shortened SymbOS character ranges."""
+    wsfont_known_bit_order: str | None
+    """Meaning of WSF driver-specific bit order zero."""
+    wsfont_known_byte_order: str | None
+    """Meaning of WSF driver-specific byte order zero."""
+    beos_read_coverage: str | None
+    """BeOS coverage interpretation (default native8)."""
+    beos_read_round_fractional_metrics: bool
+    """Permit explicit rounding of fractional BeOS advances on input."""
+    prebuilt_read_byte_order: str | None
+    """Require a prebuilt bitmap numeric byte order."""
+    prebuilt_read_bitmap_bit_order: str | None
+    """Prebuilt input bitmap pixel order (default msb; independent of numeric byte order)."""
+    catalyst_offset_base: str | None
+    """Catalyst native directory origin (default resource-body)."""
+    chiwriter_read_version: str | None
+    """Require ChiWriter version 3 or 4."""
+    chiwriter_read_layout: str | None
+    """Explicit compatible bitmap directory origin."""
+    chiwriter_read_stride: int | None
+    """ChiWriter input raster bytes per row."""
+    dashen_read_version: str | None
+    """Require Dashen screen/printer generation."""
+    hppcl_allow_legacy_descriptor_size: bool
+    """Explicitly accept the historical monobit PCL descriptor-size discrepancy."""
+    native_read_baseline: int | None
+    """Baseline below cell top for BBC, COM, Consoleet, GRASP, HRCG, Wyse, XBIN and Zap."""
+    native_read_charset: str | None
+    """Charset label for native console positions; numeric codes stay unchanged."""
+    comfont_read_variant: str | None
+    """Require one executable font loader variant."""
+    consoleet_read_codes: str | None
+    """Meaning of Consoleet numeric filenames (default legacy)."""
+    zapfont_read_variant: str | None
+    """Require one Zap font layout."""
+    drhalo_read_first: int | None
+    """Override the inferred first legacy code in a Dr. Halo font."""
+    hanfont_read_mode: str | None
+    """Korean 8×4×4 input: compose Hangul syllables or retain component slots."""
+    iigs_read_charset: str | None
+    """Explicit charset label for Apple IIgs legacy character codes."""
+    drcs_baseline: int | None
+    """DRCS baseline down from cell top (default cell height)."""
+    drcs_terminal: str | None
+    """DEC device matrix rules for both reading and writing DRCS."""
+    vfont_read_byte_order: str | None
+    """Explicit Berkeley vfont input integer byte order."""
+    palm_read_container: str | None
+    """Require a Palm wrapper instead of recognizing its structure."""
+    palm_rounding: str | None
+    """Explicit handling of fractional Palm density coordinates (default exact)."""
+    gdr_read_legacy: bool
+    """Interpret GDR source codes as legacy positions instead of Unicode."""
+    kbitx_read_threshold: int | None
+    """Explicitly reduce KBITX grayscale during import; default retains exact samples."""
+    pbf_trim: bool
+    """Crop PBF blank margins during import, with a loss report."""
+    c_read_family: str | None
+    """C header dialect (default auto)."""
+    c_read_container: str | None
+    """Explicit C source or LVGL binary input container (default auto)."""
+    c_read_u8x8_legacy: bool
+    """Read the pre-2019 two-byte U8x8 header."""
+    c_array: str | None
+    """C input array or GFXfont symbol to select."""
+    c_width: int | None
+    """Generic C cell width; requires height, first code and charset."""
+    c_height: int | None
+    """Generic C cell height; requires `c_width`."""
+    c_first: str | None
+    """First code in generic C arrays, e.g. U+0020 or 32."""
+    c_charset: str | None
+    """unicode or an explicit legacy charset name."""
+    c_baseline: int | None
+    """Generic C baseline down from cell top (default height)."""
+    c_lsb_first: bool
+    """Generic C bytes store the leftmost pixel in bit zero."""
+    image_mapping: str | None
+    """Relative JSON/TOML atlas mapping, resolved beside the primary input."""
+    image_read_prefix: str | None
+    """Literal prefix on numeric glyph filenames in an input directory."""
+    image_read_radix: int | None
+    """Input directory filename radix (default 16)."""
+    image_read_domain: str | None
+    """Input filename code domain (default legacy)."""
+    image_read_background: str | None
+    """Input image background (default black)."""
+    image_read_baseline: int | None
+    """Input glyph baseline measured down from each image's top."""
+    hex_height: int | None
+    """HEX input/output rows (default 16); never inferred from record length."""
+    hex_descent: int | None
+    """HEX baseline-to-bottom distance (default 0)."""
+    fnt_read_code_page: str | None
+    """Explicit source FNT/FON legacy code page (does not remap byte positions)."""
+    max_input_bytes: int | None
+    """Primary input byte budget (default 64 MiB)."""
+    max_resource_bytes: int | None
+    """Individual companion-file byte budget."""
+    max_total_bytes: int | None
+    """Aggregate resource and codec allocation budget (default 256 MiB)."""
+    max_resources: int | None
+    """Maximum companion reads and directory entries."""
+    ppem: int | None
+    """Explicit raster size for reviewed off-grid/curved outlines."""
+    face_index: int | None
+    """Select a TTC/OTC face (zero based); otherwise read every face."""
+    no_embedded_bitmaps: bool
+    """Rasterize outlines even when matching embedded images exist."""
+    grid_units: int | None
+    """Explicit design units per pixel; requires --ppem."""
+    pixel_offset_x: float
+    """Reviewed horizontal and vertical translations in pixel units."""
+    pixel_offset_y: float
+    """Reviewed vertical translation in pixel units."""
+    shape: Shape | None
+    """Outline shape for SVG/TTF/OTF/WOFF/WOFF2/TTC conversion."""
+    dotsize: float | None
+    """Dot diameter or separate-square side relative to one pixel."""
+    dot_reuse: str | None
+    """Native dot reuse; default patterns. Literal favors smaller webfonts."""
+    ppu: int | None
+    """Design units per source pixel (default 100)."""
+    upm: int | None
+    """Explicit units per em for outline output."""
+    embed_bitmaps: bool
+    """Embed a matching EBDT/EBLC bitmap strike in outline output."""
+    gray_threshold: int | None
+    """Explicit grayscale-to-monochrome threshold."""
+    woff2_source: str | None
+    """Outline source in webfonts/TTC (auto selects CFF squares, TrueType dots)."""
+    woff2_quality: int | None
+    """WOFF2 Brotli quality, 0 through 11 (default 11)."""
+    woff2_threads: int | None
+    """Intra-font Brotli workers (1..16), independent of batch task workers."""
+    collection_v2: bool
+    """Write a version 2 TTC/OTC header."""
+    notdef: str | None
+    """Glyph 0 of TTF/OTF/WOFF/WOFF2/TTC output: preserve (the source .notdef, otherwise an empty glyph) or empty (empty outline with exact design-unit metrics; requires --notdef-advance; replacing a source .notdef is loss)."""
+    notdef_advance: int | None
+    """Empty .notdef advance width in design units."""
+    notdef_lsb: int | None
+    """Empty .notdef left side bearing in design units (default 0)."""
 
 
-class TaskRequestSubset(TypedDict):
+class _TaskRequestSubsetRequired(TypedDict):
+    """
+    `fontpixel_ops::batch::TaskRequest::Subset`: sfnt subsetting.
+
+    Required keys.
+    """
+    kind: Literal["subset"]
+    """Variant tag."""
+
+
+class TaskRequestSubset(_TaskRequestSubsetRequired, total=False):
     """`fontpixel_ops::batch::TaskRequest::Subset`: sfnt subsetting."""
-    subset: SubsetRequest
-    """sfnt subsetting."""
+    input: StrPath
+    """sfnt, WOFF or WOFF2 input font."""
+    text: str | None
+    """Keep all characters in this Unicode text."""
+    unicodes: str | None
+    """Inclusive hexadecimal ranges, e.g. U+0020-007E,U+4E00."""
+    text_file: StrPath | None
+    """Read UTF-8 text from a file."""
+    drop_tables: list[str]
+    """Explicitly discard a table whose glyph references cannot be remapped."""
+    output: StrPath
+    """TTF, OTF, OTB, WOFF or WOFF2 output (TTF/OTF retain subset outline flavor)."""
+    to: str | None
+    """Explicit output container; defaults to extension."""
+    woff2_quality: int
+    """Brotli quality, 0 through 11."""
+    woff2_threads: int
+    """Legal intra-font parallel Brotli workers, 1 through 16."""
+    strict: bool
+    """Reject any conversion loss before replacing output."""
+    report: ReportStyle
+    """Diagnostics format."""
 
 
-class TaskRequestValidate(TypedDict):
+_TaskRequestValidateRequired = TypedDict("_TaskRequestValidateRequired", {"kind": "Literal[\"validate\"]"})
+_TaskRequestValidateOptional = TypedDict("_TaskRequestValidateOptional", {"input": "StrPath", "from": "str | None", "json": "bool", "strict": "bool", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float"}, total=False)
+
+
+class TaskRequestValidate(_TaskRequestValidateRequired, _TaskRequestValidateOptional):
     """`fontpixel_ops::batch::TaskRequest::Validate`: Validation."""
-    validate: ValidateRequest
-    """Validation."""
 
 
-class TaskRequestVariants(TypedDict):
+class _TaskRequestVariantsRequired(TypedDict):
+    """
+    `fontpixel_ops::batch::TaskRequest::Variants`: Regional OpenType variants.
+
+    Required keys.
+    """
+    kind: Literal["variants"]
+    """Variant tag."""
+
+
+class TaskRequestVariants(_TaskRequestVariantsRequired, total=False):
     """`fontpixel_ops::batch::TaskRequest::Variants`: Regional OpenType variants."""
-    variants: VariantsRequest
-    """Regional OpenType variants."""
+    base: StrPath
+    """Default Unicode bitmap font."""
+    languages: list[str]
+    """Language tag(s) and font, e.g. zh-Hant,zh-HK=TC.bdf; repeatable."""
+    language_scripts: list[str]
+    """Override scripts for a language: ja=DFLT,hani,kana; repeatable."""
+    scripts: list[str]
+    """Script list and font, e.g. latn,grek,cyrl=Latin.bdf; repeatable."""
+    ppu: int
+    """Font design units per source pixel."""
+    upm: int | None
+    """Override units per em (otherwise pixel size times ppu)."""
+    shape: Shape
+    """Outline shape."""
+    dotsize: float | None
+    """Pixel diameter/side ratio; default 1 for square, 0.9 for dot."""
+    dot_reuse: str
+    """Native dot reuse: literal favors webfont ratio; patterns favors export speed."""
+    embed_bitmaps: bool
+    """Embed a matching EBDT/EBLC strike."""
+    gray_threshold: int | None
+    """Explicit gray-to-mono threshold."""
+    family: str | None
+    """Family name override."""
+    style: str | None
+    """Style name override."""
+    legacy_style: str | None
+    """Legacy subfamily (name ID 2); defaults to Regular independently of --style."""
+    full_name: str | None
+    """Exact full display name override (name ID 4)."""
+    postscript_name: str | None
+    """Exact PostScript name override (name ID 6); no silent sanitization."""
+    version: str
+    """Version without the Version prefix; no timestamps are generated."""
+    vendor: str
+    """Exactly four printable ASCII bytes."""
+    copyright: str | None
+    """Copyright text override."""
+    license: str | None
+    """License text override."""
+    license_url: str | None
+    """License URL override."""
+    woff2_source: str
+    """Outline source for WOFF/WOFF2; auto uses CFF square and TrueType dots."""
+    notdef: str
+    """Glyph 0: keep the generated box (preserve) or write an empty outline with exact design-unit metrics (empty; requires --notdef-advance)."""
+    notdef_advance: int | None
+    """Empty .notdef advance width in design units."""
+    notdef_lsb: int | None
+    """Empty .notdef left side bearing in design units (default 0)."""
+    name_record: list[str]
+    """Exact name record PLATFORM/ENCODING/LANGUAGE/NAME_ID=TEXT (the --otb-name-record syntax). Repeatable; any record (or --name-record-hex / --name-language-tag) replaces the whole generated table and the --family/--style/--full-name/--postscript-name/--copyright name texts. Source notices the table drops are reported as loss. Example:"""
+    name_record_hex: list[str]
+    """Name record with exact bytes: PLATFORM/ENCODING/LANGUAGE/NAME_ID=HEX."""
+    name_language_tag: list[str]
+    """BCP 47 language tag for name format 1; the Nth tag is language 0x8000+N."""
+    fs_type: int | None
+    """OS/2 fsType embedding permissions; native default 0."""
+    fs_selection: int | None
+    """OS/2 fsSelection (version 3: bits 7..=9 rejected); native default 0x40."""
+    break_char: int | None
+    """OS/2 usBreakChar; native default 0."""
+    code_page_ranges: list[int] | None
+    """Exact OS/2 ulCodePageRange1,ulCodePageRange2 instead of the cmap-derived bits."""
+    created: int | None
+    """head.created, seconds since 1904-01-01 UTC; requires --modified."""
+    modified: int | None
+    """head.modified, seconds since 1904-01-01 UTC; requires --created."""
+    fixed_pitch: bool | None
+    """post.isFixedPitch override; absent follows the source spacing."""
+    max_zones: str | None
+    """maxp.maxZones of TrueType output, 1 (native) or 2."""
+    gasp: str | None
+    """gasp table: keep (native) or omit."""
+    cmap_unicode_full: str | None
+    """cmap format-12 records: always (native), non-bmp, or when-needed (format 12 only when format 4 cannot hold the map, under (3,10) only)."""
+    glyph_order: str | None
+    """Glyph IDs: planned (native, by glyph name) or codepoint (encoded glyphs by smallest scalar, then alternates in planned order)."""
+    dot_glyph: str | None
+    """Shared dot glyph of TrueType dot output: last (native) or after-notdef (glyph 1)."""
+    max_input_bytes: int | None
+    """Maximum primary input bytes (default 64 MiB)."""
+    max_resource_bytes: int | None
+    """Maximum bytes in one companion resource."""
+    max_total_bytes: int | None
+    """Aggregate input/model and codec allocation budget (default 256 MiB)."""
+    max_resources: int | None
+    """Maximum companion resource resolutions."""
+    max_decompressed_bytes: int | None
+    """Maximum decompressed bytes."""
+    max_glyphs: int | None
+    """Maximum aggregate source glyph slots and writer glyph count."""
+    max_pixels_per_glyph: int | None
+    """Maximum pixels in a source glyph."""
+    max_table_bytes: int | None
+    """Maximum table or text-record bytes."""
+    output: StrPath
+    """TTF, OTF, OTB, WOFF or WOFF2 output (TTF/OTF retain subset outline flavor)."""
+    to: str | None
+    """Explicit output container; defaults to extension."""
+    woff2_quality: int
+    """Brotli quality, 0 through 11."""
+    woff2_threads: int
+    """Legal intra-font parallel Brotli workers, 1 through 16."""
+    strict: bool
+    """Reject any conversion loss before replacing output."""
+    report: ReportStyle
+    """Diagnostics format."""
 
 
-class TaskRequestVectorize(TypedDict):
+_TaskRequestVectorizeRequired = TypedDict("_TaskRequestVectorizeRequired", {"kind": "Literal[\"vectorize\"]"})
+_TaskRequestVectorizeOptional = TypedDict("_TaskRequestVectorizeOptional", {"inputs": "list[StrPath]", "output": "StrPath", "from": "str | None", "to": "str | None", "strict": "bool", "each": "bool", "font_index": "int | None", "family": "str | None", "style": "str | None", "full_name": "str | None", "postscript_name": "str | None", "font_version": "str | None", "copyright": "str | None", "license": "str | None", "license_url": "str | None", "foundry": "str | None", "swidth_ppem": "int | None", "swidth_units": "int | None", "font_name": "str | None", "point_size": "int | None", "resolution": "tuple[int, int] | None", "set_integer_property": "list[str]", "set_text_property": "list[str]", "remove_property": "list[str]", "report": "ReportStyle", "byte_order": "Significance | None", "bit_order": "Significance | None", "glyph_pad": "str | None", "scan_unit": "str | None", "pcf_metadata_precedence": "PcfMetadataPrecedence | None", "psf_version": "str | None", "psf1_count": "int | None", "psf_unicode_table": "str | None", "fnt_version": "str | None", "fnt_charset": "int | None", "fnt_code_page": "str | None", "image_layout": "str | None", "image_encoding": "str | None", "image_columns": "int | None", "image_mapping_format": "str | None", "image_prefix": "str | None", "image_radix": "int | None", "image_domain": "str | None", "image_background": "str | None", "image_baseline": "int | None", "c_family": "str | None", "c_container": "str | None", "u8glib_format": "str | None", "u8x8_legacy": "bool", "c_name": "str | None", "c_range": "str | None", "lvgl_bpp": "str | None", "lvgl_compression": "str | None", "pbf_version": "str | None", "pbf_compression": "str | None", "pbf_offset_width": "str | None", "pbf_hash_buckets": "int | None", "pbf_codepoint_bytes": "str | None", "pbf_max_height": "int | None", "pbf_wildcard": "str | None", "hbf_bitmap_name": "str | None", "hbf_glyphs_per_file": "int | None", "cpi_version": "str | None", "cpi_code_page": "int | None", "fontx2_mode": "str | None", "fontx2_charset": "str | None", "fontx2_width": "int | None", "fontx2_height": "int | None", "nfnt_container": "str | None", "nfnt_resource_type": "str | None", "bmfont_encoding": "str | None", "bmfont_page_width": "int | None", "bmfont_page_height": "int | None", "bmfont_padding": "int | None", "tex_design_size": "str | None", "tex_dpi": "int | None", "tex_dpi_x": "int | None", "tex_dpi_y": "int | None", "plan9_container": "str | None", "plan9_max_glyphs": "int | None", "plan9_compression": "str | None", "amiga_packaging": "str | None", "amiga_no_unicode_latin1": "bool", "amiga_color_depth": "int | None", "gem_byte_order": "str | None", "gem_word_order": "str | None", "gem_unicode_as_legacy": "bool", "snf_byte_order": "str | None", "snf_layout": "str | None", "snf_no_layout_property": "bool", "pilfont_max_width": "int | None", "vlw_version": "str | None", "vlw_smooth": "bool | None", "rockbox_flavor": "str | None", "rockbox_depth": "str | None", "u8m_load_address": "int | None", "playdate_flavor": "str | None", "playdate_cell_width": "int | None", "playdate_cell_height": "int | None", "playdate_tracking": "int | None", "qpf2_glyph_format": "str | None", "mgtk_columns": "str | None", "pfr_dialect": "str | None", "ssfn_encoding": "str | None", "ssfn_legacy_as_unicode": "bool", "xerox_variant": "str | None", "xerox_bitblt_layout": "str | None", "xerox_alto_baseline": "int | None", "xerox_rotation_minutes": "int | None", "pcgeos_variant": "str | None", "pcgeos_font_id": "int | None", "pcgeos_family": "str | None", "pcgeos_rebuild": "bool", "pcgeos_round_fractional_metrics": "bool", "pcgeos_legacy_as_unicode": "bool", "gpi_container": "str | None", "gpi_kind": "str | None", "gpi_codepage": "int | None", "gpi_registry_id": "int | None", "gpi_rebuild": "bool", "riscos_version": "str | None", "riscos_depth": "str | None", "riscos_compression": "str | None", "riscos_metrics": "str | None", "riscos_metrics_version": "str | None", "riscos_quantize": "bool", "pfr_compression": "str | None", "pfr_top_down": "bool", "pfr_black_pixel": "int | None", "sfont_flavor": "str | None", "sfont_codepoints": "list[str]", "daisy_version": "str | None", "daisy_height": "int | None", "daisy_underline": "int | None", "daisy_allow_control_bytes": "bool", "tasprint_version": "str | None", "tasprint_width": "int | None", "tasprint_pcw_count": "int | None", "pxl_version": "str | None", "pxl_tfm": "str | None", "pxl_magnification": "int | None", "signum_version": "str | None", "geos_container": "str | None", "geos_variant": "str | None", "geos_include_del": "bool | None", "geos_font_id": "int | None", "geos_family": "str | None", "geos_rebuild": "bool", "geos_legacy_as_unicode": "bool", "vtfont_cell_width": "int | None", "vtfont_cell_height": "int | None", "vtfont_rebuild": "bool", "vtfont_legacy_as_unicode": "bool", "fbit_kind": "str | None", "fbit_container": "str | None", "fbit_definition": "str | None", "fbit_data_fork": "str | None", "lisa_compression": "str | None", "symbos_version": "str | None", "symbos_first_code": "int | None", "symbos_writing_system": "int | None", "symbos_layout": "str | None", "symbos_height": "int | None", "oberon_family": "int | None", "oberon_variant": "int | None", "wsfont_encoding": "int | None", "wsfont_bit_order": "str | None", "wsfont_byte_order": "str | None", "wsfont_depth": "str | None", "wsfont_stride": "int | None", "beos_coverage": "str | None", "beos_quantize_gray": "bool", "beos_legacy_as_unicode": "bool", "beos_round_fractional_metrics": "bool", "prebuilt_byte_order": "str | None", "prebuilt_bitmap_bit_order": "str | None", "prebuilt_depth": "str | None", "prebuilt_quantize": "bool", "prebuilt_charset_name": "str | None", "prebuilt_identifier": "int | None", "catalyst_write_offset_base": "str | None", "catalyst_height": "int | None", "catalyst_leading": "int | None", "catalyst_sidebearing": "int | None", "chiwriter_version": "str | None", "chiwriter_layout": "str | None", "chiwriter_stride": "int | None", "chiwriter_width": "int | None", "chiwriter_height": "int | None", "chiwriter_baseline": "int | None", "chiwriter_line_gap": "int | None", "chiwriter_filename": "str | None", "dashen_version": "str | None", "dashen_top": "int | None", "dashen_codepoint_map": "bool", "hppcl_orientation": "str | None", "hppcl_compression": "str | None", "hppcl_continuation_bytes": "int | None", "hppcl_x_resolution": "int | None", "hppcl_y_resolution": "int | None", "hppcl_symbol_set": "int | None", "comfont_variant": "str | None", "comfont_cpm_target": "str | None", "consoleet_codes": "str | None", "xbin_count": "str | None", "xbin_screen": "str | None", "zapfont_variant": "str | None", "native_unicode_as_legacy": "bool", "native_cell_width": "int | None", "native_cell_height": "int | None", "drhalo_first": "int | None", "iigs_version": "str | None", "iigs_container": "str | None", "vfont_byte_order": "str | None", "vfont_unicode_as_legacy": "bool", "fzx_height": "int | None", "fzx_tracking": "int | None", "fzx_unicode_as_legacy": "bool", "figlet_height": "int | None", "figlet_baseline": "int | None", "figlet_legacy_as_unicode": "bool", "palm_container": "str | None", "palm_version": "str | None", "palm_densities": "list[int]", "palm_unicode_as_legacy": "bool", "gdr_version": "str | None", "gdr_collection_uid": "int | None", "gdr_write_legacy": "bool", "color_flavor": "str | None", "otb_upm": "int | None", "otb_reference": "str | None", "otb_rounding": "str | None", "otb_name_record": "list[str]", "otb_name_record_hex": "list[str]", "otb_name_language_tag": "list[str]", "otb_head_flags": "int | None", "otb_lowest_rec_ppem": "int | None", "otb_created": "int | None", "otb_modified": "int | None", "otb_os2_version": "str | None", "otb_vendor": "str | None", "otb_panose": "SerdeBytes | None", "otb_unicode_ranges": "str | None", "otb_break_char": "int | None", "otb_fs_type": "int | None", "otb_fs_selection": "int | None", "otb_average_width": "str | None", "otb_post_names": "str | None", "otb_fixed_pitch": "bool | None", "otb_cmap_unicode_full": "str | None", "otb_width_max": "str | None", "otb_index_layout": "str | None", "otb_index_min_run": "int | None", "otb_outline_tables": "str | None", "otb_max_zones": "str | None", "otb_notdef": "str | None", "otb_notdef_advance": "int | None", "otb_caret_slope": "list[int] | None", "otb_line_extremes": "str | None", "otb_vertical_line_metrics": "str | None", "otb_underline": "list[int] | None", "otb_hmtx": "str | None", "otb_glyph_order": "str | None", "drcs_cell_width": "int | None", "drcs_cell_height": "int | None", "drcs_cell_x": "int | None", "drcs_cell_y": "int | None", "drcs_charset": "str | None", "drcs_designator": "str | None", "drcs_eight_bit_controls": "bool", "raw_preset": "str | None", "raw_width": "int | None", "raw_height": "int | None", "raw_count": "int | None", "raw_first": "str | None", "raw_bit_order": "str | None", "raw_row_order": "str | None", "raw_packing": "str | None", "raw_byte_order": "str | None", "raw_strike_count": "int | None", "raw_row_padding": "int | None", "raw_offset": "int | None", "raw_default_load_address": "str | None", "raw_charset": "str | None", "cpi_pointer_mode": "str | None", "fontx2_read_charset": "str | None", "hzk_preset": "str | None", "hzk_width": "int | None", "hzk_height": "int | None", "hzk_first": "str | None", "hzk_last": "str | None", "hzk_code_space": "str | None", "hzk_storage": "str | None", "hzk_count": "int | None", "nfnt_read_charset": "str | None", "nfnt_apple_double_resource": "str | None", "bmfont_read_threshold": "int | None", "gem_read_byte_order": "str | None", "gem_read_word_order": "str | None", "snf_read_byte_order": "str | None", "snf_read_layout": "str | None", "pilfont_read_atlas": "str | None", "playdate_read_atlas": "str | None", "playdate_read_cell_width": "int | None", "playdate_read_cell_height": "int | None", "mgtk_read_charset": "str | None", "qpf_read_family": "str | None", "pfr_read_dialect": "str | None", "xerox_read_variant": "str | None", "xerox_read_alto_baseline": "int | None", "pcgeos_read_variant": "str | None", "pcgeos_read_round_fractional_metrics": "bool", "gpi_include_unmapped_null": "bool | None", "riscos_read_version": "str | None", "riscos_read_metrics": "str | None", "sfont_read_flavor": "str | None", "sfont_read_codepoints": "list[str]", "sfont_read_baseline": "int | None", "daisy_read_version": "str | None", "polyprint_baseline": "int | None", "printshop_baseline": "int | None", "tasprint_read_version": "str | None", "tasprint_read_width": "int | None", "pxl_read_version": "str | None", "pxl_read_tfm": "str | None", "signum_read_version": "str | None", "signum_baseline": "int | None", "signum_line_height": "int | None", "geos_read_include_del": "bool", "fbit_read_kind": "str | None", "fbit_read_data_fork": "str | None", "fbit_apple_double_resource": "str | None", "fbit_read_hfnt_width": "int | None", "lisa_read_charset": "str | None", "symbos_read_allow_short_range": "bool", "wsfont_known_bit_order": "str | None", "wsfont_known_byte_order": "str | None", "beos_read_coverage": "str | None", "beos_read_round_fractional_metrics": "bool", "prebuilt_read_byte_order": "str | None", "prebuilt_read_bitmap_bit_order": "str | None", "catalyst_offset_base": "str | None", "chiwriter_read_version": "str | None", "chiwriter_read_layout": "str | None", "chiwriter_read_stride": "int | None", "dashen_read_version": "str | None", "hppcl_allow_legacy_descriptor_size": "bool", "native_read_baseline": "int | None", "native_read_charset": "str | None", "comfont_read_variant": "str | None", "consoleet_read_codes": "str | None", "zapfont_read_variant": "str | None", "drhalo_read_first": "int | None", "hanfont_read_mode": "str | None", "iigs_read_charset": "str | None", "drcs_baseline": "int | None", "drcs_terminal": "str | None", "vfont_read_byte_order": "str | None", "palm_read_container": "str | None", "palm_rounding": "str | None", "gdr_read_legacy": "bool", "kbitx_read_threshold": "int | None", "pbf_trim": "bool", "c_read_family": "str | None", "c_read_container": "str | None", "c_read_u8x8_legacy": "bool", "c_array": "str | None", "c_width": "int | None", "c_height": "int | None", "c_first": "str | None", "c_charset": "str | None", "c_baseline": "int | None", "c_lsb_first": "bool", "image_mapping": "str | None", "image_read_prefix": "str | None", "image_read_radix": "int | None", "image_read_domain": "str | None", "image_read_background": "str | None", "image_read_baseline": "int | None", "hex_height": "int | None", "hex_descent": "int | None", "fnt_read_code_page": "str | None", "max_input_bytes": "int | None", "max_resource_bytes": "int | None", "max_total_bytes": "int | None", "max_resources": "int | None", "ppem": "int | None", "face_index": "int | None", "no_embedded_bitmaps": "bool", "grid_units": "int | None", "pixel_offset_x": "float", "pixel_offset_y": "float", "shape": "Shape | None", "dotsize": "float | None", "dot_reuse": "str | None", "ppu": "int | None", "upm": "int | None", "embed_bitmaps": "bool", "gray_threshold": "int | None", "woff2_source": "str | None", "woff2_quality": "int | None", "woff2_threads": "int | None", "collection_v2": "bool", "notdef": "str | None", "notdef_advance": "int | None", "notdef_lsb": "int | None"}, total=False)
+
+
+class TaskRequestVectorize(_TaskRequestVectorizeRequired, _TaskRequestVectorizeOptional):
     """`fontpixel_ops::batch::TaskRequest::Vectorize`: Vectorize: the same operation as convert, reported as `vectorize`."""
-    vectorize: ConvertRequest
-    """Vectorize: the same operation as convert, reported as `vectorize`."""
 
 
 class TasprintCodec(TypedDict, total=False):
