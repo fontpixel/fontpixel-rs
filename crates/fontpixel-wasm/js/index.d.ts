@@ -2,6 +2,7 @@
 // functions and plain-data types come from the wasm-bindgen declarations
 // (`fontpixel_wasm.d.ts`, including the generated `types.d.ts` section).
 import type { InitInput, SyncInitInput } from "./fontpixel_wasm.js";
+import "./model.js";
 
 export * from "./fontpixel_wasm.js";
 export {
