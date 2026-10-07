@@ -52,15 +52,15 @@ pub mod ops_page;
 pub mod outline;
 pub mod render;
 pub mod resources;
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod sfnt;
 pub mod sfnt_support;
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod sfnt_tables;
 pub mod types;
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod variants;
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod woff;
 
 use wasm_bindgen::prelude::*;

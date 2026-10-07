@@ -322,6 +322,7 @@ setters! {
         "ssfn" => set_ssfn_write_options: f::ssfn::SsfnWriteOptions,
     }
     checked_write {
+        "bdf" => set_bdf_write_options: f::bdf::BdfWriteOptions,
         "pcf" => set_pcf_write_options: f::pcf::PcfWriteOptions,
         "yaff" => set_yaff_write_options: f::yaff::YaffWriteOptions,
     }

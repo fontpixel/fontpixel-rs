@@ -131,7 +131,7 @@ function setters() {
 
 test('every typed setter is a method', () => {
   const names = setters();
-  const expected = { full: 170, minimal: 2, merge: 4 }[PROFILE];
+  const expected = { full: 171, minimal: 3, merge: 5, web: 15 }[PROFILE];
   if (expected !== undefined) assert.equal(names.length, expected);
   assert.ok(names.includes('setPcfWriteOptions'));
   if (PROFILE !== 'minimal') assert.ok(names.includes('setVectorReadOptions'));
@@ -165,12 +165,12 @@ for (const fid of [...configurable.write].sort()) {
 }
 
 test('setter dispatch errors and effects', { skip: !enabled(fp, 'fzx') && `fzx compiled out of the ${PROFILE} build` }, () => {
-  assert.equal(configurable.write.length, 98);
-  assert.ok(!configurable.write.includes('bdf'));
+  assert.equal(configurable.write.length, 99);
+  assert.ok(configurable.write.includes('bdf'));
   assert.equal(configurable.read.length, 85);
   const reg = new fp.Registry();
   assert.throws(() => reg.setReadOptions('nope', {}), fp.UnknownFormatError);
-  assert.throws(() => reg.setWriteOptions('bdf', {}), /formats\.bdf\.write/);
+  reg.setWriteOptions('bdf', {});
   assert.throws(() => reg.setReadOptions('otb', {}), /formats\.embedded\.read/);
   assert.throws(() => reg.setReadOptions('pcf', {}), fp.InvalidInputError);
   // The fallible setters report a missing writer.
@@ -233,4 +233,14 @@ test('configurable aliases correspond to codecs enabled in this profile', () => 
       reg.free();
     }
   }
+});
+
+test('BDF catalogue setter preserves source SIZE, COMMENT and SWIDTH', () => {
+  const data = new TextEncoder().encode('STARTFONT 2.1\nCOMMENT source notice\nFONT Demo\nSIZE  8  72 72\nFONTBOUNDINGBOX 8 1 0 0\nSTARTPROPERTIES 5\nFONT_ASCENT 1\nFONT_DESCENT 0\nPIXEL_SIZE 8\nCHARSET_REGISTRY "ISO10646"\nCHARSET_ENCODING "1"\nENDPROPERTIES\nCHARS 1\nSTARTCHAR A\nENCODING 65\nSWIDTH 777 0\nDWIDTH 5 0\nBBX 8 1 0 0\nBITMAP\nAB\nENDCHAR\nENDFONT\n');
+  const read = fp.read(data), reg = new fp.Registry();
+  try {
+    reg.setBdfWriteOptions({ catalogue_family: 'demo' });
+    const written = reg.write(read.fonts, 'bdf');
+    try { assert.deepEqual(written.output.intoSingle(), data); } finally { written.free(); }
+  } finally { reg.free(); read.fonts.free(); }
 });

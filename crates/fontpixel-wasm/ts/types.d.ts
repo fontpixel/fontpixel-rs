@@ -154,6 +154,8 @@ export interface BdfCodec {
 export interface BdfWriteOptions {
   /** Threshold for Gray8 conversion (ink >= threshold); None refuses Gray8. */
   gray_threshold?: number | null;
+  /** Opt into fontpixel.com pipeline BDF serialization (Latin-1, canonical rows, source FONT/SIZE/COMMENT/SWIDTH). The value is the fallback family slug. Default None retains the library's SPEC-v3 UTF-8 serialization. */
+  catalogue_family?: string | null;
   /** Maximum UTF-8 output bytes, checked while serializing. */
   max_output_bytes?: number;
 }
@@ -1242,6 +1244,8 @@ export interface ConvertRequest {
   lvgl_bpp?: string | null;
   /** LVGL bitmap encoding (default plain). */
   lvgl_compression?: string | null;
+  /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+  bdf_catalogue_family?: string | null;
   /** Pebble output wire version (default 3). */
   pbf_version?: string | null;
   /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -2878,6 +2882,8 @@ export interface ExtraFormatsReadOptions {
 
 /** `fontpixel_ops::extra_formats::WriteOptions`: Write options: explicit KBITX/PBF input choices and PBF/HBF output geometry. */
 export interface ExtraFormatsWriteOptions {
+  /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+  bdf_catalogue_family?: string | null;
   /** Pebble output wire version (default 3). */
   pbf_version?: string | null;
   /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -4884,6 +4890,8 @@ export interface MergeRequest {
   lvgl_bpp?: string | null;
   /** LVGL bitmap encoding (default plain). */
   lvgl_compression?: string | null;
+  /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+  bdf_catalogue_family?: string | null;
   /** Pebble output wire version (default 3). */
   pbf_version?: string | null;
   /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -5676,6 +5684,8 @@ export interface MergeSettings {
   lvgl_bpp?: string | null;
   /** LVGL bitmap encoding (default plain). */
   lvgl_compression?: string | null;
+  /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+  bdf_catalogue_family?: string | null;
   /** Pebble output wire version (default 3). */
   pbf_version?: string | null;
   /** Pebble bitmap encoding; RLE4 requires v3. */

@@ -2168,3 +2168,74 @@ The first size/init run (gate 246) exposed Chromium’s main-thread 8 MB limit o
 The first complete async matrix (gate 247) interleaved builds and measurements in fixed profile order. During it load1 rose from about 2 to 25 and smaller experimental modules sometimes initialized slower than full. The initialization evidence is therefore repeated after all builds, rotating/reversing the eight-profile order over five rounds, still with a fresh Node and Chromium process per sample. `--measure-only` reuses the measured artifacts only after the same release/features/hash checks; it does not rebuild or select individual fast samples. Preserve the complete first matrix externally and record per-sample load in the replacement evidence. Shared-host load remains a limitation. Browser import timing includes loopback JS module fetches; preloaded WASM/input transfer is excluded.
 
 Benchmark reporting uses the median of same-round pure/measured ratios and includes all five sample ranges. When the pure median is within five times its host’s pure noop median, omit the precise ratio and show absolute times with a floor marker. Do not subtract the baseline or discard slow samples.
+
+## 2026-10-07 — Phase 9 web profile and catalogue serialization
+
+- `web` is a separate WASM profile: BDF/PCF/YAFF/OTB, TTF/OTF/WOFF/WOFF2,
+  PSF, FNT/FON, Unifont HEX, BMFont and C, with PNG; no legacy CJK charset
+  tables, compatibility layer or TOML parser. Unsupported uploads get a CLI
+  conversion instruction; there is no full-profile fallback.
+- The catalogue BDF dialect is explicit (`BdfWriteOptions.catalogue_family`,
+  CLI/ops `bdf_catalogue_family`). Existing default serialization, resource
+  caps, loss reports and strict behavior remain in force. It preserves source
+  FONT/SIZE/COMMENT/SWIDTH and follows the catalogue's Unicode declarations,
+  property order, canonical bitmap rows and Latin-1 output. Unrepresentable
+  Latin-1 text produces a loss report, so strict mode rejects it.
+- The pipeline's default download set is BDF + vector WOFF2. Bitmap TTF, PCF
+  and ZIP are no longer generated for deployment; vector sfnt exists only as
+  the intermediate needed by the WOFF2 compressor. Existing cached manifests
+  are filtered without retracing every catalogue font. Offline callers can
+  explicitly request the previous multi-format generator for regression work.
+- Font-tool UI has en/zh/zh-Hant routes, with both Chinese translations authored
+  by the owner's requested Sol sub-agent. Other site languages link to its
+  English route. No new unreviewed automatic translations are presented.
+- Retired PCF/TTF/ZIP paths redirect to a preview-first generation page. Keep
+  the old filename-to-family mapping in one asset; a legacy multi-strike TTF
+  asks the visitor to select a current size/style instead of implying the new
+  output is the historical artifact. Use three suffix wildcard rules, within
+  [Pages' redirect limits](https://developers.cloudflare.com/pages/configuration/redirects/).
+
+### 2026-10-07 — Phase 9 output preview, pixelization and bounded browser state
+
+- Preview decodes the generated artifact, with its sidecars and explicit HEX
+  geometry, rather than assuming every selected glyph survived encoding. Mono
+  and Gray8 samples are interpreted through the binding's tagged bitmap shape;
+  browser tests assert actual SVG ink as well as coverage text. Output-read
+  diagnostics accompany the operation reports and participate in strict checks.
+- Pixelization explicitly uses a 128/255 coverage threshold. The shared command
+  layer now forwards `--gray-threshold` to BDF write options too, so this works
+  identically in native/Python/WASM. Quantization remains a reported loss and
+  strict conversion rejects it. No default resource or reporting policy changes.
+- Catalogue BDF rows preserve unused bits of an unchanged source bitmap (needed
+  by Cozette's pipeline output), normalize hex case/row length, and stop using
+  source provenance after a raster edit. Real-font pipeline oracles cover
+  Spleen, Cozette, Galmuri and three export-name cases.
+- The browser additionally limits sources to 16, each compressed/expanded input
+  to 64 MiB, their combined original size to 256 MiB, shared URLs to 16,000
+  characters, and generated-result cache storage to 64 MiB. Validated URL state
+  cannot replace bytes, license evidence or catalogue naming metadata. The
+  engine keeps its existing stricter limits where applicable.
+- Cache keys include the engine hash, recipe version, font bytes/metadata and
+  settings, but exclude per-session random UI IDs. Worker termination implements
+  cancellation during synchronous codec calls. A cached result still displays
+  its preview before offering download.
+
+### 2026-10-07 — Phase 9 complete output coverage and browser responsiveness
+
+- Prepare compact SVG scanline paths in the Worker; defer offscreen sample DOM
+  until it enters the viewport. Both keyboard-scrollable coverage panels retain
+  every block/script and its counts. This fixes the WebKit 50k preview stall
+  without relaxing the responsiveness check or engine limits.
+- Preview FNT/FON legacy byte positions through the engine's declared charset
+  codec. Unknown mappings are not treated as Unicode identity. BMFont uploads
+  accept their PNG pages together; sidecars participate in input budgets and
+  cache identity. Expanded inputs also share the 256 MiB browser bound.
+- All bitmap intermediate conversions explicitly use threshold 128, including
+  BMFont's Gray8 page decoding. The UI explains binarization and full loss/strict
+  checks remain in force. Explicit spacing or raster size changes use the same
+  modification permission and renaming checks as subsetting.
+- Capture original Unicode upload names/notices before the Latin-1 catalogue
+  intermediate, restore family/copyright/license in capable generated formats,
+  and retain original notices in LICENSE.txt. Latin-1 limitations remain reported.
+- Production runtime staging verifies its SHA-256 and requires optimized release
+  metadata. Fast staging needs an explicit local-development override.

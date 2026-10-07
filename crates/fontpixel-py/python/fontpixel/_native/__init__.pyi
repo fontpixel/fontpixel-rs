@@ -1346,6 +1346,8 @@ class Registry:
         """`Registry::set_bbc_read_options`: apply a `f::bbc::BbcReadOptions` dict."""
     def set_bbc_write_options(self, options: _t.W5a2CommonNativeWriteOptions) -> None:
         """`Registry::set_bbc_write_options`: apply a `f::bbc::BbcWriteOptions` dict."""
+    def set_bdf_write_options(self, options: _t.BdfWriteOptions) -> None:
+        """`Registry::set_bdf_write_options`: apply a `f::bdf::BdfWriteOptions` dict; invalid combinations raise."""
     def set_beos_read_options(self, options: _t.BeosReadOptions) -> None:
         """`Registry::set_beos_read_options`: apply a `f::beos::BeosReadOptions` dict."""
     def set_beos_write_options(self, options: _t.BeosWriteOptions) -> None:

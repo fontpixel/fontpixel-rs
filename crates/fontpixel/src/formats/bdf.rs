@@ -29,6 +29,10 @@ pub use crate::formats::x11::{source_rows, validate_bitmap};
 pub struct BdfWriteOptions {
     /// Threshold for Gray8 conversion (ink >= threshold); None refuses Gray8.
     pub gray_threshold: Option<u8>,
+    /// Opt into fontpixel.com pipeline BDF serialization (Latin-1, canonical rows,
+    /// source FONT/SIZE/COMMENT/SWIDTH). The value is the fallback family slug.
+    /// Default None retains the library's SPEC-v3 UTF-8 serialization.
+    pub catalogue_family: Option<String>,
     /// Maximum UTF-8 output bytes, checked while serializing.
     pub max_output_bytes: usize,
 }
@@ -36,6 +40,7 @@ impl Default for BdfWriteOptions {
     fn default() -> Self {
         Self {
             gray_threshold: None,
+            catalogue_family: None,
             max_output_bytes: 256 * 1024 * 1024,
         }
     }

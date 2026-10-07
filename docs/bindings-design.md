@@ -82,12 +82,14 @@ binding foundation".
 - Profiles (crate features): `full` (default: every format, the
   bdfparser-js layer, CJK charsets, TOML batch text and the clap request parser),
   `minimal` (BDF, PCF, YAFF) and `merge` (the W8.3 page: BDF/PCF/OTB/TTF/OTF/
-  WOFF/WOFF2 + CJK charsets). `fontpixel-ops` is always built without `fs`
+  WOFF/WOFF2 + CJK charsets), and `web` (catalogue tool: those common formats
+  plus YAFF/PSF/FNT/FON/HEX/BMFont/C, without legacy CJK tables, compatibility
+  or TOML). PNG is enabled in every profile. `fontpixel-ops` is always built without `fs`
   (cap-std does not build for wasm32). Output: `$FONTPIXEL_WASM_OUT/<profile>`,
   else `${CARGO_TARGET_DIR:-target}/wasm-pkg/<profile>` (outside the repository
   when `CARGO_TARGET_DIR` is set, gitignored otherwise).
-- `scripts/check_wasm.sh [PROFILE…]` (default `full minimal`): wasm32 clippy
-  `-D warnings` for all three profiles, the crate's native unit tests,
+- `scripts/check_wasm.sh [PROFILE…]` (default `full minimal merge web`): wasm32 clippy
+  `-D warnings` for all four profiles, the crate's native unit tests,
   `gen_dts.py --check`, build + node:test suites per profile, a `tsc --strict`
   smoke (`tests/typing/smoke.ts`) over the declarations, then
   `tools/bindings/gate.sh python,js` (`SKIP_GATE=1` stops before it).
@@ -404,3 +406,16 @@ tests that way or edits the scheme there.
   published. `scripts/build_wheels.sh` builds the x86_64 and aarch64 wheels into
   `local-work/wheels/`, runs `auditwheel show` and the pytest suite against the
   installed wheel on CPython 3.10 and 3.12 (results in `benches/PHASE7-REPORT.md`).
+
+### Catalogue BDF output (phase 9)
+
+The opt-in `BdfWriteOptions.catalogue_family` / shared request
+`bdf_catalogue_family` writes the fontpixel.com pipeline dialect. The value is a
+fallback family slug, not a naming override. Use `family` and `font_name` for
+explicit naming changes. The dialect retains source FONT/SIZE/COMMENT/SWIDTH,
+ordered properties and unchanged bitmap padding, with canonical uppercase hex
+and Latin-1 output. Unrepresentable text is reported as loss. The default BDF
+writer and resource caps are unchanged. `Registry.setBdfWriteOptions()` and the
+Python `set_bdf_write_options()` configure the same native options. Shared
+`convert`/`merge` requests now forward explicit grayscale thresholds to BDF;
+quantization remains a loss under strict mode.

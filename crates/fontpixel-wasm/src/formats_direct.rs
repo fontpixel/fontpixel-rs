@@ -412,7 +412,7 @@ namespaces! {
         read: (ctx_opts f::bbc::read, f::bbc::BbcReadOptions, "DirectContextReadArgs<SerdeTypes['formats::bbc::BbcReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "bbc", f::bbc::write, f::bbc::BbcWriteOptions, "DirectWriteArgs<SerdeTypes['formats::bbc::BbcWriteOptions']>"),
     }
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
     bdf "bdf" ["bdf"] {
         detect: (bytes f::bdf::detect),
         read: (bytes_limits f::bdf::read, "{ limits?: ResourceLimits }", "ModelReport<Font>"),
@@ -424,13 +424,13 @@ namespaces! {
         read: (ctx_opts f::beos::read, f::beos::BeosReadOptions, "DirectContextReadArgs<SerdeTypes['formats::beos::BeosReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "beos", f::beos::write, f::beos::BeosWriteOptions, "DirectWriteArgs<SerdeTypes['formats::beos::BeosWriteOptions']>"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     bmfont "bmfont" ["bmfont"] {
         detect: (bytes f::bmfont::detect),
         read: (ctx_opts f::bmfont::read, f::bmfont::BmfontReadOptions, "DirectContextReadArgs<SerdeTypes['formats::bmfont::BmfontReadOptions']>", "ModelReport<Font>"),
         write: (x_primary_opts "bmfont", Font, f::bmfont::write, f::bmfont::BmfontWriteOptions, "{ options?: SerdeTypes['formats::bmfont::BmfontWriteOptions']; primaryName?: string }"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     c "c" ["c"] {
         detect: (codec f::c::CCodec::default()),
         read: (registry "c", "DirectContextReadArgs<object>", "ModelReport<FontSet>"),
@@ -526,13 +526,13 @@ namespaces! {
         read: (ctx_opts f::figlet::read, f::figlet::FigletReadOptions, "DirectContextReadArgs<SerdeTypes['formats::figlet::FigletReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "figlet", f::figlet::write, f::figlet::FigletWriteOptions, "DirectWriteArgs<SerdeTypes['formats::figlet::FigletWriteOptions']>"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     fnt "fnt" ["fnt"] {
         detect: (bytes f::fnt::detect),
         read: (bytes_opts_limits f::fnt::read, f::fnt::FntReadOptions, "{ options?: SerdeTypes['formats::fnt::FntReadOptions']; limits?: ResourceLimits }", "ModelReport<Font>"),
         write: (x_opts Font, f::fnt::write, f::fnt::FntWriteOptions, "{ options?: SerdeTypes['formats::fnt::FntWriteOptions'] }"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     fon "fon" ["fon"] {
         detect: (bytes f::fon::detect),
         read: (bytes_opts_limits f::fon::read, f::fnt::FntReadOptions, "{ options?: SerdeTypes['formats::fnt::FntReadOptions']; limits?: ResourceLimits }", "ModelReport<FontSet>"),
@@ -598,7 +598,7 @@ namespaces! {
         read: (ctx f::hbf::read, "DirectContextReadArgs<never>", "ModelReport<Font>"),
         write: (x_primary_opts "hbf", Font, f::hbf::write, f::hbf::HbfWriteOptions, "{ options?: SerdeTypes['formats::hbf::HbfWriteOptions']; primaryName?: string }"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     hex "hex" ["hex"] {
         detect: (bytes f::hex::detect),
         read: (bytes_opts_limits f::hex::read, f::hex::HexReadOptions, "{ options?: SerdeTypes['formats::hex::HexReadOptions']; limits?: ResourceLimits }", "ModelReport<Font>"),
@@ -694,7 +694,7 @@ namespaces! {
         read: (bytes_opts_limits f::pbf::read, f::pbf::PbfReadOptions, "{ options?: SerdeTypes['formats::pbf::PbfReadOptions']; limits?: ResourceLimits }", "ModelReport<Font>"),
         write: (x_opts Font, f::pbf::write, f::pbf::PbfWriteOptions, "{ options?: SerdeTypes['formats::pbf::PbfWriteOptions'] }"),
     }
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
     pcf "pcf" ["pcf"] {
         detect: (bytes f::pcf::detect),
         read: (bytes_limits f::pcf::read, "{ limits?: ResourceLimits }", "ModelReport<Font>"),
@@ -772,7 +772,7 @@ namespaces! {
         read: (ctx_opts f::printshop::read, f::printshop::PrintshopReadOptions, "DirectContextReadArgs<SerdeTypes['formats::printshop::PrintshopReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "printshop", f::printshop::write, f::printshop::PrintshopWriteOptions, "DirectWriteArgs<SerdeTypes['formats::printshop::PrintshopWriteOptions']>"),
     }
-    #[cfg(feature = "all-formats")]
+    #[cfg(any(feature = "all-formats", feature = "web"))]
     psf "psf" ["psf"] {
         detect: (bytes f::psf::detect),
         read: (bytes_limits f::psf::read, "{ limits?: ResourceLimits }", "ModelReport<Font>"),
@@ -928,7 +928,7 @@ namespaces! {
         read: (ctx_opts f::xerox::read, f::xerox::XeroxReadOptions, "DirectContextReadArgs<SerdeTypes['formats::xerox::XeroxReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "xerox", f::xerox::write, f::xerox::XeroxWriteOptions, "DirectWriteArgs<SerdeTypes['formats::xerox::XeroxWriteOptions']>"),
     }
-    #[cfg(any(feature = "all-formats", feature = "minimal"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "web"))]
     yaff "yaff" ["yaff"] {
         detect: (bytes f::yaff::detect),
         read: (bytes_limits f::yaff::read, "{ limits?: ResourceLimits }", "ModelReport<FontSet>"),

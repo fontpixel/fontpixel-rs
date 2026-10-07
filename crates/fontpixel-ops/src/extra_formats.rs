@@ -67,6 +67,9 @@ const WRITE_OPTIONS_PBF_CODEPOINT_BYTES: [&str; 2] = ["2", "4"];
     serde(default, remote = "Self")
 )]
 pub struct WriteOptions {
+    /// Opt into the fontpixel.com BDF dialect, with this fallback family slug.
+    #[cfg_attr(feature = "clap", arg(long))]
+    pub bdf_catalogue_family: Option<String>,
     /// Pebble output wire version (default 3).
     #[cfg_attr(feature = "clap", arg(long, value_parser = WRITE_OPTIONS_PBF_VERSION))]
     pub pbf_version: Option<String>,
@@ -136,6 +139,25 @@ impl WriteOptions {
         threshold: Option<u8>,
         registry: &mut FontRegistry,
     ) -> Result<()> {
+        if let Some(family) = &self.bdf_catalogue_family {
+            if family.trim().is_empty() || family.contains(['\n', '\r']) {
+                return Err(Error::InvalidInput(
+                    "BDF catalogue family must be a nonempty single line".into(),
+                ));
+            }
+            #[cfg(not(feature = "bdf"))]
+            return Err(Error::FeatureDisabled {
+                format: "bdf".into(),
+            });
+        }
+        #[cfg(feature = "bdf")]
+        if id == "bdf" && (self.bdf_catalogue_family.is_some() || threshold.is_some()) {
+            registry.set_bdf_write_options(fontpixel::formats::bdf::BdfWriteOptions {
+                catalogue_family: self.bdf_catalogue_family.clone(),
+                gray_threshold: threshold,
+                ..Default::default()
+            })?;
+        }
         let pbf_requested = self.pbf_version.is_some()
             || self.pbf_compression.is_some()
             || self.pbf_offset_width.is_some()

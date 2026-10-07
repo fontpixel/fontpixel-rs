@@ -11,7 +11,7 @@ shapes at run time.
 
 ## Modules
 
-- [`fontpixel`](#fontpixel) (458) fontpixel: bitmap font toolkit (Python bindings).
+- [`fontpixel`](#fontpixel) (459) fontpixel: bitmap font toolkit (Python bindings).
 - [`fontpixel.compat`](#fontpixelcompat) (0) Compatibility layers over the native fontpixel core.
 - [`fontpixel.compat.bdfparser`](#fontpixelcompatbdfparser) (87) bdfparser-compatible API (bdfparser 3.0 / SPEC-v3) on the fontpixel Rust core.
 - [`fontpixel.compat.bdfparser.bitmap`](#fontpixelcompatbdfparserbitmap) (1) `Bitmap` of the bdfparser-compatible API.
@@ -1327,6 +1327,12 @@ digits and hyphens). Without hooks this is an honest planned entry
 #### `fontpixel.Registry.set_bbc_write_options(options: W5a2CommonNativeWriteOptions) -> None`
 
 *method* -- `Registry::set_bbc_write_options`: apply a `f::bbc::BbcWriteOptions` dict.
+
+#### `fontpixel.Registry.set_bdf_write_options(options: BdfWriteOptions) -> None`
+
+*method*
+
+`Registry::set_bdf_write_options`: apply a `f::bdf::BdfWriteOptions` dict; invalid combinations raise.
 
 #### `fontpixel.Registry.set_beos_read_options(options: BeosReadOptions) -> None`
 

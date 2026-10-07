@@ -45,7 +45,7 @@ import gen_dts  # noqa: E402
 OUT = ROOT / "crates/fontpixel-wasm/src/normalize_types.rs"
 CRATES = {"fontpixel": ROOT / "crates/fontpixel", "fontpixel_ops": ROOT / "crates/fontpixel-ops"}
 # Binding-crate features a build combines (`full` = the first four).
-ATOMS = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml", "minimal", "merge"]
+ATOMS = ["all-formats", "compat-bdfparser", "cjk-charsets", "toml", "minimal", "merge", "web"]
 
 
 # ------------------------------------------------------------ cargo features

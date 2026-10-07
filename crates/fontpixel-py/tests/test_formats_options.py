@@ -95,7 +95,7 @@ def _setters():
 
 def test_every_typed_setter_is_a_method():
     names = _setters()
-    assert len(names) == 170
+    assert len(names) == 171
     assert "set_vector_read_options" in names and "set_color_write_options" in names
 
 
@@ -126,13 +126,12 @@ def test_write_options_by_format_id(fid):
 
 def test_setter_dispatch_errors_and_effects():
     configurable = F.configurable_formats()
-    assert len(configurable["write"]) == 98 and "bdf" not in configurable["write"]
+    assert len(configurable["write"]) == 99 and "bdf" in configurable["write"]
     assert len(configurable["read"]) == 85
     reg = fontpixel.Registry()
     with pytest.raises(fontpixel.UnknownFormatError):
         reg.set_read_options("nope", {})
-    with pytest.raises(fontpixel.InvalidInputError, match="bdf.write"):
-        reg.set_write_options("bdf", {})
+    reg.set_write_options("bdf", {})
     with pytest.raises(fontpixel.InvalidInputError, match="embedded.read"):
         reg.set_read_options("otb", {})
     with pytest.raises(fontpixel.InvalidInputError):
@@ -169,3 +168,11 @@ def test_setter_dispatch_errors_and_effects():
     # fon shares the FNT options.
     reg3.set_read_options("fon", {})
     reg3.set_write_options("fon", {})
+
+
+def test_bdf_catalogue_setter_preserves_source_headers_and_metrics():
+    data = b'STARTFONT 2.1\nCOMMENT source notice\nFONT Demo\nSIZE  8  72 72\nFONTBOUNDINGBOX 8 1 0 0\nSTARTPROPERTIES 5\nFONT_ASCENT 1\nFONT_DESCENT 0\nPIXEL_SIZE 8\nCHARSET_REGISTRY "ISO10646"\nCHARSET_ENCODING "1"\nENDPROPERTIES\nCHARS 1\nSTARTCHAR A\nENCODING 65\nSWIDTH 777 0\nDWIDTH 5 0\nBBX 8 1 0 0\nBITMAP\nAB\nENDCHAR\nENDFONT\n'
+    loaded = fontpixel.read(data)
+    registry = fontpixel.Registry()
+    registry.set_bdf_write_options({"catalogue_family": "demo"})
+    assert single(registry.write(loaded.fonts, "bdf")) == data

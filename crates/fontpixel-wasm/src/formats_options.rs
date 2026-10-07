@@ -171,7 +171,7 @@ setters! {
         "cpi" => set_cpi_read_options("setCpiReadOptions", "SerdeTypes['formats::cpi::CpiReadOptions']"): f::cpi::CpiReadOptions,
         #[cfg(feature = "all-formats")]
         "nfnt" => set_nfnt_read_options("setNfntReadOptions", "SerdeTypes['formats::nfnt::NfntReadOptions']"): f::nfnt::NfntReadOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "bmfont" => set_bmfont_read_options("setBmfontReadOptions", "SerdeTypes['formats::bmfont::BmfontReadOptions']"): f::bmfont::BmfontReadOptions,
         #[cfg(feature = "all-formats")]
         "amiga" => set_amiga_read_options("setAmigaReadOptions", "SerdeTypes['formats::amiga::AmigaReadOptions']"): f::amiga::AmigaReadOptions,
@@ -181,19 +181,19 @@ setters! {
         "snf" => set_snf_read_options("setSnfReadOptions", "SerdeTypes['formats::snf::SnfReadOptions']"): f::snf::SnfReadOptions,
         #[cfg(feature = "all-formats")]
         "svg" => set_svg_read_options("setSvgReadOptions", "SerdeTypes['formats::svg::ReadOptions']"): f::svg::ReadOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "hex" => set_hex_read_options("setHexReadOptions", "SerdeTypes['formats::hex::HexReadOptions']"): f::hex::HexReadOptions,
         #[cfg(feature = "all-formats")]
         "image" => set_image_read_options("setImageReadOptions", "SerdeTypes['formats::image::ImageReadOptions']"): f::image::ImageReadOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "fnt" | "fon" => set_fnt_read_options("setFntReadOptions", "SerdeTypes['formats::fnt::FntReadOptions']"): f::fnt::FntReadOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "c" => set_c_read_options("setCReadOptions", "SerdeTypes['formats::c::CReadOptions']"): f::c::CReadOptions,
         #[cfg(feature = "all-formats")]
         "kbitx" => set_kbitx_read_options("setKbitxReadOptions", "SerdeTypes['formats::kbitx::KbitxReadOptions']"): f::kbitx::KbitxReadOptions,
         #[cfg(feature = "all-formats")]
         "pbf" => set_pbf_read_options("setPbfReadOptions", "SerdeTypes['formats::pbf::PbfReadOptions']"): f::pbf::PbfReadOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
         "ttf" | "otf" | "woff" | "woff2" | "ttc" | "vector-raster" => set_vector_read_options("setVectorReadOptions", "SerdeTypes['formats::vector_raster::Options']"): f::vector_raster::Options,
         #[cfg(feature = "all-formats")]
         "hanfont" => set_hanfont_read_options("setHanfontReadOptions", "SerdeTypes['formats::hanfont::HanfontReadOptions']"): f::hanfont::HanfontReadOptions,
@@ -333,7 +333,7 @@ setters! {
         "cpi" => set_cpi_write_options("setCpiWriteOptions", "SerdeTypes['formats::cpi::CpiWriteOptions']"): f::cpi::CpiWriteOptions,
         #[cfg(feature = "all-formats")]
         "nfnt" => set_nfnt_write_options("setNfntWriteOptions", "SerdeTypes['formats::nfnt::NfntWriteOptions']"): f::nfnt::NfntWriteOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "bmfont" => set_bmfont_write_options("setBmfontWriteOptions", "SerdeTypes['formats::bmfont::BmfontWriteOptions']"): f::bmfont::BmfontWriteOptions,
         #[cfg(feature = "all-formats")]
         "sfd" => set_sfd_write_options("setSfdWriteOptions", "SerdeTypes['formats::sfd::SfdWriteOptions']"): f::sfd::SfdWriteOptions,
@@ -351,23 +351,23 @@ setters! {
         "gem" => set_gem_write_options("setGemWriteOptions", "SerdeTypes['formats::gem::GemWriteOptions']"): f::gem::GemWriteOptions,
         #[cfg(feature = "all-formats")]
         "snf" => set_snf_write_options("setSnfWriteOptions", "SerdeTypes['formats::snf::SnfWriteOptions']"): f::snf::SnfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
         "otb" | "bdat" => set_embedded_write_options("setEmbeddedWriteOptions", "SerdeTypes['formats::embedded::EmbeddedWriteOptions']"): f::embedded::EmbeddedWriteOptions,
         #[cfg(feature = "all-formats")]
         "color" => set_color_write_options("setColorWriteOptions", "SerdeTypes['formats::embedded::ColorWriteOptions']"): f::embedded::ColorWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "merge"))]
+        #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
         "ttf" | "otf" | "woff" | "woff2" | "ttc" | "vector-raster" => set_vector_write_options("setVectorWriteOptions", "SerdeTypes['formats::vector_raster::WriteOptions']"): f::vector_raster::WriteOptions,
         #[cfg(feature = "all-formats")]
         "svg" => set_svg_write_options("setSvgWriteOptions", "SerdeTypes['formats::svg::WriteOptions']"): f::svg::WriteOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "hex" => set_hex_write_options("setHexWriteOptions", "SerdeTypes['formats::hex::HexWriteOptions']"): f::hex::HexWriteOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "psf" => set_psf_write_options("setPsfWriteOptions", "SerdeTypes['formats::psf::PsfWriteOptions']"): f::psf::PsfWriteOptions,
         #[cfg(feature = "all-formats")]
         "image" => set_image_write_options("setImageWriteOptions", "SerdeTypes['formats::image::ImageWriteOptions']"): f::image::ImageWriteOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "fnt" | "fon" => set_fnt_write_options("setFntWriteOptions", "SerdeTypes['formats::fnt::FntWriteOptions']"): f::fnt::FntWriteOptions,
-        #[cfg(feature = "all-formats")]
+        #[cfg(any(feature = "all-formats", feature = "web"))]
         "c" => set_c_write_options("setCWriteOptions", "SerdeTypes['formats::c::CWriteOptions']"): f::c::CWriteOptions,
         #[cfg(feature = "all-formats")]
         "kbitx" => set_kbitx_write_options("setKbitxWriteOptions", "SerdeTypes['formats::kbitx::KbitxWriteOptions']"): f::kbitx::KbitxWriteOptions,
@@ -499,9 +499,11 @@ setters! {
         "ssfn" => set_ssfn_write_options("setSsfnWriteOptions", "SerdeTypes['formats::ssfn::SsfnWriteOptions']"): f::ssfn::SsfnWriteOptions,
     }
     checked_write {
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
+        "bdf" => set_bdf_write_options("setBdfWriteOptions", "SerdeTypes['formats::bdf::BdfWriteOptions']"): f::bdf::BdfWriteOptions,
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "web"))]
         "pcf" => set_pcf_write_options("setPcfWriteOptions", "SerdeTypes['formats::pcf::PcfWriteOptions']"): f::pcf::PcfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "minimal"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "web"))]
         "yaff" => set_yaff_write_options("setYaffWriteOptions", "SerdeTypes['formats::yaff::YaffWriteOptions']"): f::yaff::YaffWriteOptions,
     }
 }

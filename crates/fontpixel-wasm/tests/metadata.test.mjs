@@ -244,7 +244,7 @@ test('error classes carry kind, exitCode and structured fields', () => {
 test('NotImplementedFormatError names the operation (Operation::Read)', { skip: buildInfo().profile === 'full' && 'every format has a reader in the full build' }, () => {
   // Formats compiled out of this profile stay planned catalogue entries without a reader.
   assert.throws(
-    () => fp.read(new Uint8Array([1, 2, 3]), { format: buildInfo().profile === 'merge' ? 'hex' : 'otb' }),
+    () => fp.read(new Uint8Array([1, 2, 3]), { format: buildInfo().profile === 'web' ? 'amiga' : buildInfo().profile === 'merge' ? 'hex' : 'otb' }),
     (e) => e instanceof fp.NotImplementedFormatError && e.kind === 'NotImplemented' && e.operation === 'Read' && typeof e.format === 'string',
   );
 });

@@ -39,18 +39,23 @@ pub fn compiled(ids: &[&str]) -> Vec<String> {
 }
 
 const SPECIAL: &[&str] = &[
-    #[cfg(any(feature = "all-formats", feature = "merge"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
     "embedded",
-    #[cfg(any(feature = "all-formats", feature = "merge"))]
+    #[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
     "vectorRaster",
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge"))]
+    #[cfg(any(
+        feature = "all-formats",
+        feature = "minimal",
+        feature = "merge",
+        feature = "web"
+    ))]
     "x11",
 ];
 
 // --- embedded (otb / bdat / color) -----------------------------------------
 
 /// `formats.embedded`: embedded bitmap sfnt codecs (otb, bdat, color).
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod embedded {
     use crate::conv;
     use crate::errors::{IntoJs, JsResult};
@@ -186,7 +191,7 @@ pub mod embedded {
 // --- vector_raster (ttf / otf / woff / woff2 / ttc / vector-raster) --------
 
 /// `formats.vectorRaster`: outline rasterization and vectorization.
-#[cfg(any(feature = "all-formats", feature = "merge"))]
+#[cfg(any(feature = "all-formats", feature = "merge", feature = "web"))]
 pub mod vector_raster {
     use crate::conv;
     use crate::errors::{IntoJs, JsResult, invalid};
@@ -323,7 +328,12 @@ pub mod vector_raster {
 
 /// `formats.x11` (and the same helpers on `formats.bdf`): source rows of
 /// glyphs read from BDF/PCF.
-#[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge"))]
+#[cfg(any(
+    feature = "all-formats",
+    feature = "minimal",
+    feature = "merge",
+    feature = "web"
+))]
 pub mod x11 {
     use crate::errors::{IntoJs, JsResult};
     use crate::formats::glyph_arg;

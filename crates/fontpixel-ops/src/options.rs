@@ -1014,6 +1014,7 @@ impl VectorOptions {
             || self.embed_bitmaps
             || (self.gray_threshold.is_some()
                 && ![
+                    "bdf",
                     "hex",
                     "psf",
                     "fnt",

@@ -1444,6 +1444,21 @@ impl Registry<crate::FontSet> {
             entry.writer = Some(transport::writer(bdf::BdfCodec::default()));
         }
     }
+    /// Configure the built-in BDF writer without altering its detector/reader.
+    pub fn set_bdf_write_options(&mut self, options: bdf::BdfWriteOptions) -> Result<()> {
+        let entry = self
+            .entries
+            .iter_mut()
+            .find(|e| e.format.id == "bdf" && e.writer.is_some())
+            .ok_or_else(|| Error::NotImplemented {
+                format: "bdf".into(),
+                operation: Operation::Write,
+            })?;
+        entry.writer = Some(transport::writer(bdf::BdfCodec {
+            write_options: options,
+        }));
+        Ok(())
+    }
 }
 
 #[cfg(feature = "pcf")]

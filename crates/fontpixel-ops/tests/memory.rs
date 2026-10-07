@@ -666,3 +666,61 @@ fn filesystem_merge_transaction_rolls_back_every_output() {
         BLOCK
     );
 }
+
+#[cfg(feature = "yaff")]
+#[test]
+fn bdf_gray_threshold_is_explicit_and_strict_still_rejects_quantization() {
+    use fontpixel::bitmap::{Bitmap, BitmapLimits, Gray8};
+    use fontpixel::model::Codepoint;
+    use fontpixel::{FontSet, ResourceLimits};
+    let (mut font, _) = fontpixel::formats::bdf::read(SPLEEN, &ResourceLimits::default()).unwrap();
+    let id = font.glyph_id(Codepoint::Unicode(65)).unwrap();
+    font.edit_glyph(id, |glyph| {
+        let bounds = glyph.metrics.bounds;
+        let pixels = vec![127; bounds.width as usize * bounds.height as usize];
+        glyph.bitmap = Bitmap::<Gray8>::from_raw(
+            bounds.width,
+            bounds.height,
+            &pixels,
+            BitmapLimits::default(),
+        )?
+        .into();
+        Ok(())
+    })
+    .unwrap();
+    let set = FontSet {
+        fonts: vec![font],
+        ..Default::default()
+    };
+    let bytes = fontpixel::formats::yaff::write(&set, &Default::default())
+        .unwrap()
+        .0;
+    let storage = Storage::memory(MemoryFiles::new().with("gray.yaff", bytes));
+    let mut request = convert_request(&["gray.yaff"], "out.bdf");
+    request.extra.bdf_catalogue_family = Some("fixture".into());
+    assert!(fontpixel_ops::convert(request.clone(), &storage).is_err());
+    request.vector.gray_threshold = Some(128);
+    let converted = fontpixel_ops::convert(request.clone(), &storage).unwrap();
+    let actual = primary(output(&converted.outputs, "out.bdf"));
+    let (decoded, _) = fontpixel::formats::bdf::read(&actual, &ResourceLimits::default()).unwrap();
+    assert!(
+        decoded
+            .glyph_for_codepoint(Codepoint::Unicode(65))
+            .unwrap()
+            .bitmap
+            .as_bytes()
+            .iter()
+            .all(|&byte| byte == 0)
+    );
+    assert!(
+        converted.response.outputs[0]
+            .report
+            .entries
+            .iter()
+            .any(|e| e.code == "bdf.write.gray_quantization")
+    );
+    request.strict = true;
+    assert!(
+        matches!(fontpixel_ops::convert(request, &storage), Err(Error::StrictLoss(report)) if report.has_loss())
+    );
+}

@@ -329,6 +329,8 @@ export interface BdfCodec {
 export interface BdfWriteOptions {
     /** Threshold for Gray8 conversion (ink >= threshold); None refuses Gray8. */
     gray_threshold?: number | null;
+    /** Opt into fontpixel.com pipeline BDF serialization (Latin-1, canonical rows, source FONT/SIZE/COMMENT/SWIDTH). The value is the fallback family slug. Default None retains the library's SPEC-v3 UTF-8 serialization. */
+    catalogue_family?: string | null;
     /** Maximum UTF-8 output bytes, checked while serializing. */
     max_output_bytes?: number;
 }
@@ -1417,6 +1419,8 @@ export interface ConvertRequest {
     lvgl_bpp?: string | null;
     /** LVGL bitmap encoding (default plain). */
     lvgl_compression?: string | null;
+    /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+    bdf_catalogue_family?: string | null;
     /** Pebble output wire version (default 3). */
     pbf_version?: string | null;
     /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -3053,6 +3057,8 @@ export interface ExtraFormatsReadOptions {
 
 /** `fontpixel_ops::extra_formats::WriteOptions`: Write options: explicit KBITX/PBF input choices and PBF/HBF output geometry. */
 export interface ExtraFormatsWriteOptions {
+    /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+    bdf_catalogue_family?: string | null;
     /** Pebble output wire version (default 3). */
     pbf_version?: string | null;
     /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -5059,6 +5065,8 @@ export interface MergeRequest {
     lvgl_bpp?: string | null;
     /** LVGL bitmap encoding (default plain). */
     lvgl_compression?: string | null;
+    /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+    bdf_catalogue_family?: string | null;
     /** Pebble output wire version (default 3). */
     pbf_version?: string | null;
     /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -5851,6 +5859,8 @@ export interface MergeSettings {
     lvgl_bpp?: string | null;
     /** LVGL bitmap encoding (default plain). */
     lvgl_compression?: string | null;
+    /** Opt into the fontpixel.com BDF dialect, with this fallback family slug. */
+    bdf_catalogue_family?: string | null;
     /** Pebble output wire version (default 3). */
     pbf_version?: string | null;
     /** Pebble bitmap encoding; RLE4 requires v3. */
@@ -15068,6 +15078,7 @@ export class Registry {
     setAmigaWriteOptions(options: SerdeTypes['formats::amiga::AmigaWriteOptions']): void;
     setBbcReadOptions(options: SerdeTypes['formats::bbc::BbcReadOptions']): void;
     setBbcWriteOptions(options: SerdeTypes['formats::bbc::BbcWriteOptions']): void;
+    setBdfWriteOptions(options: SerdeTypes['formats::bdf::BdfWriteOptions']): void;
     setBeosReadOptions(options: SerdeTypes['formats::beos::BeosReadOptions']): void;
     setBeosWriteOptions(options: SerdeTypes['formats::beos::BeosWriteOptions']): void;
     setBmfontReadOptions(options: SerdeTypes['formats::bmfont::BmfontReadOptions']): void;
@@ -20972,6 +20983,7 @@ export interface InitOutput {
     readonly registry_setAmigaWriteOptions: (a: number, b: any) => [number, number];
     readonly registry_setBbcReadOptions: (a: number, b: any) => [number, number];
     readonly registry_setBbcWriteOptions: (a: number, b: any) => [number, number];
+    readonly registry_setBdfWriteOptions: (a: number, b: any) => [number, number];
     readonly registry_setBeosReadOptions: (a: number, b: any) => [number, number];
     readonly registry_setBeosWriteOptions: (a: number, b: any) => [number, number];
     readonly registry_setBmfontReadOptions: (a: number, b: any) => [number, number];
