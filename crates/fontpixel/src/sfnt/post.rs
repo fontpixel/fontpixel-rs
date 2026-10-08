@@ -160,6 +160,20 @@ impl PostTable {
         mut ledger: Option<(&Budget, &mut Lease)>,
     ) -> Result<Vec<u8>> {
         limits.glyphs(num_glyphs as usize)?;
+        // Format 2 numbers custom names from 258 in 16 bits. A font with more
+        // names than that leaves (a full-BMP font such as Unifont Ex) goes
+        // nameless, as format 3, instead of failing.
+        if self
+            .names
+            .as_ref()
+            .is_some_and(|names| names.len() > usize::from(u16::MAX) - POST_NAMES.len())
+        {
+            let nameless = PostTable {
+                header: self.header.clone(),
+                names: None,
+            };
+            return nameless.encode_into(num_glyphs, limits, ledger);
+        }
         let count = self.names.as_ref().map_or(0, Vec::len);
         // Temporaries share one lease that outlives them; the custom-name tree
         // is admitted node-by-node before each insertion.
@@ -250,5 +264,22 @@ impl PostTable {
             }
         }
         Ok(out)
+    }
+}
+
+#[cfg(test)]
+mod name_overflow {
+    use super::*;
+    #[test]
+    fn more_names_than_format_2_numbers_fall_back_to_format_3() {
+        let glyphs = 65_300u16;
+        let names = (0..glyphs).map(|i| format!("g{i}")).collect();
+        let table = PostTable {
+            header: Header::default(),
+            names: Some(names),
+        };
+        let out = table.encode(glyphs, &Limits::default()).unwrap();
+        assert_eq!(&out[..4], &[0, 3, 0, 0]);
+        assert_eq!(out.len(), 32);
     }
 }
