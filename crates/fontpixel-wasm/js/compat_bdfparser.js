@@ -1099,7 +1099,17 @@ const cache = (font) => {
   const st = font[S];
   let c = st.cache;
   if (c === null || c.rev !== st.rev) {
-    c = { rev: st.rev, cps: null, cpset: null, metas: new Map(), headers: null, props: null, model: null, unencoded: null };
+    c = {
+      rev: st.rev,
+      cps: null,
+      cpset: null,
+      orders: new Map(),
+      metas: new Map(),
+      headers: null,
+      props: null,
+      model: null,
+      unencoded: null,
+    };
     st.cache = c;
   }
   return c;
@@ -1112,6 +1122,23 @@ const cplist = (font) => {
     c.cpset = new Set(c.cps);
   }
   return c.cps;
+};
+
+/** Encoded codes in an order (0 file, -1 reverse, 1 ascending, 2 descending), cached per revision. */
+const cpsInOrder = (font, order) => {
+  const c = cache(font);
+  let l = c.orders.get(order);
+  if (l === undefined) {
+    const file = cplist(font);
+    if (order === 0) l = file;
+    else if (order === -1) l = [...file].reverse();
+    else {
+      l = [...file].sort((a, b) => a - b);
+      if (order === 2) l.reverse();
+    }
+    c.orders.set(order, l);
+  }
+  return l;
 };
 
 const cpset = (font) => {
@@ -1749,7 +1776,15 @@ export class Font {
   // ------------------------------------------------------------- properties
 
   getprop(key) {
-    const v = this[S].raw.getprop(String(key));
+    const k = String(key);
+    // ASCII keys from the projection cached per revision (Rust lower-cases
+    // the same way); other keys keep the Rust case mapping
+    if (/^[\x00-\x7f]*$/.test(k)) {
+      const d = propsData(this);
+      const lower = k.toLowerCase();
+      return hasOwn(d, lower) ? fresh(d[lower]) : null;
+    }
+    const v = this[S].raw.getprop(k);
     return v === undefined ? null : v;
   }
 
@@ -1774,7 +1809,8 @@ export class Font {
   // --------------------------------------------------------------- querying
 
   get length() {
-    return this[S].raw.length();
+    // the encoded codes are cached per edit revision (`Font::length` counts them)
+    return cplist(this).length;
   }
 
   itercps(order, r) {
@@ -1782,7 +1818,8 @@ export class Font {
     if (!ORDERS.includes(o)) {
       throw new Error(`Unknown order ${String(o)}`);
     }
-    return call(this, (raw) => raw.itercps(o, rangeArg(r ?? null)));
+    if (r === undefined || r === null) return [...cpsInOrder(this, o)];
+    return call(this, (raw) => raw.itercps(o, rangeArg(r)));
   }
 
   *iterglyphs(order, r) {
