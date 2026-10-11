@@ -370,41 +370,134 @@ const checkxy = (b, x, y) => {
   }
 };
 
-const bitmapOf = (raw) => {
-  const b = Object.create(Bitmap.prototype);
-  initBitmap(b, raw);
+// A bitmap keeps its row strings JS-side (`rows`, never mutated in place, so
+// clones share them) and creates the native raster (`raw`) only for an
+// operation that needs it; a native edit drops the rows, and the next read
+// takes them from the raster once. Rows built from a JS list stay without a
+// raster only up to this size, far below the native raster limits, so a
+// larger list is still checked (and rejected) at construction as before.
+const LAZY_SIDE = 4096;
+const LAZY_PIXELS = 65536;
+const lazyFits = (rows) => {
+  const h = rows.length;
+  const w = h === 0 ? 0 : rows[0].length;
+  return h <= LAZY_SIDE && w <= LAZY_SIDE && w * h <= LAZY_PIXELS;
+};
+
+/** Native raster of validated rows (`fromstring` reads them exactly when they are non-empty). */
+const rawOfRows = (rows) =>
+  guard(() => (rows.length > 0 && rows[0].length > 0 ? RawBitmap.fromstring(rows.join('\n')) : new RawBitmap(rows)));
+
+/** The native raster of a bitmap, created from its rows on first use. */
+const nat = (b) => {
+  const st = b[S];
+  if (st.raw === null) st.raw = rawOfRows(st.rows);
+  return st.raw;
+};
+
+/** The current rows (internal array: copy before handing it out). */
+const rowsOf = (b) => {
+  const st = b[S];
+  if (st.rows !== null && !st.pinned) return st.rows;
+  const rows = st.raw.bindata();
+  if (!st.pinned) st.rows = rows;
+  return rows;
+};
+
+/** Cached rows, or null when only the raster is current. */
+const liveRows = (st) => (st.pinned ? null : st.rows);
+
+/** The raster changed: drop the rows and memoized exports. */
+const touched = (st) => {
+  st.rows = null;
+  st.memo = null;
+};
+
+/** Run a native edit of `b`'s raster (errors translated); returns `b`. */
+const edit = (b, op) => {
+  const st = b[S];
+  const raw = nat(b);
+  try {
+    op(raw);
+  } catch (e) {
+    throw translate(e);
+  } finally {
+    touched(st);
+  }
   return b;
 };
 
-const initBitmap = (b, raw) => {
-  hidden(b, S, raw);
-  Object.defineProperty(b, 'bindata', {
-    get: () => b[S].bindata(),
-    set: (rows) => {
-      guard(() => b[S].setBindata(rawRows(rows)));
-    },
-    enumerable: true,
-    configurable: true,
-  });
+const BINDATA = {
+  get() {
+    return [...rowsOf(this)];
+  },
+  set(rows) {
+    const st = this[S];
+    const r = rawRows(rows);
+    if (st.raw !== null) {
+      // the raster may be shared (a transform callback's argument): keep it current
+      guard(() => st.raw.setBindata(r));
+      touched(st);
+      if (!st.pinned && lazyFits(r)) st.rows = [...r];
+    } else if (lazyFits(r)) {
+      st.rows = [...r];
+      st.memo = null;
+    } else {
+      st.raw = guard(() => new RawBitmap(r));
+      touched(st);
+    }
+  },
+  enumerable: true,
+  configurable: true,
+};
+
+const initBitmap = (b, raw, rows) => {
+  hidden(b, S, { raw, rows, memo: null, pinned: false });
+  Object.defineProperty(b, 'bindata', BINDATA);
+};
+
+const bitmapOf = (raw) => {
+  const b = Object.create(Bitmap.prototype);
+  initBitmap(b, raw, null);
+  return b;
+};
+
+const bitmapOfRows = (rows) => {
+  const b = Object.create(Bitmap.prototype);
+  initBitmap(b, null, rows);
+  return b;
 };
 
 /** The raw handle of a Bitmap (or a new one from a bindata array). */
 const rawBitmapOf = (b) => {
-  if (b instanceof Bitmap) return b[S];
+  if (b instanceof Bitmap) return nat(b);
   if (b !== null && typeof b === 'object' && Array.isArray(b.bindata)) {
     return guard(() => new RawBitmap(rawRows(b.bindata)));
   }
   throw new TypeError('expected a Bitmap');
 };
 
+/** `todata(t)` from row strings (types 0 to 3, as the native export). */
+const rowsData = (rows, t) => {
+  if (t === 0) return rows.join('\n');
+  if (t === 1) return [...rows];
+  if (t === 2) return rows.map((r) => Array.from(r, (c) => c.charCodeAt(0) - 48));
+  const out = [];
+  for (const r of rows) for (let i = 0; i < r.length; i++) out.push(r.charCodeAt(i) - 48);
+  return out;
+};
+
 /**
- * `Bitmap` object: rows of `'0'`, `'1'`, `'2'` (row 0 at the top) backed by a
- * native raster. `bindata` builds the row strings on each read (assign to
- * replace the raster). Editing methods return the bitmap for chaining.
+ * `Bitmap` object: rows of `'0'`, `'1'`, `'2'` (row 0 at the top). The row
+ * strings are kept JS-side and a native raster is made for the operations
+ * that need one; `bindata` returns a new array on each read (assign to
+ * replace the pixels). Editing methods return the bitmap for chaining.
  */
 export class Bitmap {
   constructor(bin_bitmap_list) {
-    initBitmap(this, guard(() => new RawBitmap(rawRows(bin_bitmap_list))));
+    const rows = rawRows(bin_bitmap_list);
+    if (lazyFits(rows)) initBitmap(this, null, [...rows]);
+    else initBitmap(this, guard(() => new RawBitmap(rows)), null);
   }
 
   static fromstring(text) {
@@ -436,7 +529,7 @@ export class Bitmap {
   }
 
   toString() {
-    return this[S].toString();
+    return nat(this).toString();
   }
 
   repr() {
@@ -444,39 +537,45 @@ export class Bitmap {
   }
 
   equals(other) {
-    return other instanceof Bitmap ? this[S].equals(other[S]) : slotEquals(this.bindata, other?.bindata);
+    if (!(other instanceof Bitmap)) return slotEquals(this.bindata, other?.bindata);
+    const a = liveRows(this[S]);
+    const b = liveRows(other[S]);
+    if (a !== null && b !== null) return slotEquals(a, b);
+    return nat(this).equals(nat(other));
   }
 
   width() {
-    return this[S].width();
+    const rows = liveRows(this[S]);
+    if (rows !== null) return rows.length === 0 ? 0 : rows[0].length;
+    return this[S].raw.width();
   }
 
   height() {
-    return this[S].height();
+    const rows = liveRows(this[S]);
+    return rows !== null ? rows.length : this[S].raw.height();
   }
 
   clone() {
-    return bitmapOf(this[S].clone());
+    const rows = liveRows(this[S]);
+    return rows !== null ? bitmapOfRows(rows) : bitmapOf(this[S].raw.clone());
   }
 
   crop(w, h, xoff, yoff) {
     if (w < 0 || h < 0) {
       throw new RangeError(`Bitmap.crop: negative width or height (${String(w)}, ${String(h)})`);
     }
-    guard(() => this[S].crop(w, h, xoff ?? 0, yoff ?? 0));
-    return this;
+    return edit(this, (raw) => raw.crop(w, h, xoff ?? 0, yoff ?? 0));
   }
 
   overlay(bitmap) {
     const other = rawBitmapOf(bitmap);
-    if (this[S].height() !== other.height()) {
+    if (this.height() !== other.height()) {
       warn('the bitmaps to overlay have different height');
     }
-    if (this[S].width() !== other.width()) {
+    if (this.width() !== other.width()) {
       warn('the bitmaps to overlay have different width');
     }
-    guard(() => this[S].overlay(other));
-    return this;
+    return edit(this, (raw) => raw.overlay(other));
   }
 
   static concatall(bitmaplist, options = {}) {
@@ -493,39 +592,36 @@ export class Bitmap {
 
   concat(bitmap, options = {}) {
     const { direction, align, offset } = options;
-    guard(() => this[S].concat(rawBitmapOf(bitmap), direction ?? 1, align ?? 1, offset ?? 0));
-    return this;
+    const other = rawBitmapOf(bitmap);
+    return edit(this, (raw) => raw.concat(other, direction ?? 1, align ?? 1, offset ?? 0));
   }
 
   enlarge(x, y) {
-    guard(() => this[S].enlarge(x ?? 1, y ?? 1));
-    return this;
+    return edit(this, (raw) => raw.enlarge(x ?? 1, y ?? 1));
   }
 
   replace(substr, newsubstr) {
-    guard(() => this[S].replace(String(substr), String(newsubstr)));
-    return this;
+    const a = String(substr);
+    const b = String(newsubstr);
+    return edit(this, (raw) => raw.replace(a, b));
   }
 
   shadow(xoff, yoff) {
-    guard(() => this[S].shadow(xoff ?? 1, yoff ?? -1));
-    return this;
+    return edit(this, (raw) => raw.shadow(xoff ?? 1, yoff ?? -1));
   }
 
   glow(mode) {
-    guard(() => this[S].glow(mode ?? 0));
-    return this;
+    return edit(this, (raw) => raw.glow(mode ?? 0));
   }
 
   bytepad(bits) {
-    guard(() => this[S].bytepad(bits ?? 8));
-    return this;
+    return edit(this, (raw) => raw.bytepad(bits ?? 8));
   }
 
   todata(datatype) {
     const t = datatype ?? 1;
     if (t === 4 || t === 5) {
-      const rows = this.bindata;
+      const rows = rowsOf(this);
       for (const s of rows) {
         if (!/^[01]*$/.test(s)) {
           throw new Error(`Invalid binary string: ${s}`);
@@ -541,12 +637,23 @@ export class Bitmap {
     if (![0, 1, 2, 3, 4, 5].includes(t)) {
       return undefined;
     }
-    return guard(() => this[S].todata(t));
+    const st = this[S];
+    if (t <= 3) return rowsData(rowsOf(this), t);
+    // the row numbers are made natively once per raster state
+    if (st.pinned) return guard(() => st.raw.todata(t));
+    st.memo ??= new Map();
+    let v = st.memo.get(t);
+    if (v === undefined) {
+      v = guard(() => nat(this).todata(t));
+      st.memo.set(t, v);
+    }
+    return [...v];
   }
 
   getpixel(x, y) {
     checkxy(this, x, y);
-    return this[S].getpixel(x, y);
+    const rows = liveRows(this[S]);
+    return rows !== null ? rows[y].charCodeAt(x) - 48 : this[S].raw.getpixel(x, y);
   }
 
   setpixel(x, y, value = 1) {
@@ -554,66 +661,57 @@ export class Bitmap {
       throw new RangeError(`Pixel value must be 0, 1 or 2, not ${String(value)}`);
     }
     checkxy(this, x, y);
-    this[S].setpixel(x, y, value);
-    return this;
+    return edit(this, (raw) => raw.setpixel(x, y, value));
   }
 
   fliph() {
-    guard(() => this[S].fliph());
-    return this;
+    return edit(this, (raw) => raw.fliph());
   }
 
   flipv() {
-    guard(() => this[S].flipv());
-    return this;
+    return edit(this, (raw) => raw.flipv());
   }
 
   rotate(angle = 90) {
     if (!Number.isInteger(angle) || angle % 90 !== 0) {
       throw new Error(`Rotation angle must be a multiple of 90, not ${String(angle)}`);
     }
-    guard(() => this[S].rotate(angle));
-    return this;
+    return edit(this, (raw) => raw.rotate(angle));
   }
 
   invert() {
-    this[S].invert();
-    return this;
+    return edit(this, (raw) => raw.invert());
   }
 
   shift(dx = 0, dy = 0) {
-    guard(() => this[S].shift(dx, dy));
-    return this;
+    return edit(this, (raw) => raw.shift(dx, dy));
   }
 
   bbox() {
-    return this[S].bbox();
+    return nat(this).bbox();
   }
 
   trim() {
-    guard(() => this[S].trim());
-    return this;
+    return edit(this, (raw) => raw.trim());
   }
 
   bold(n = 1) {
     if (n < 0) {
       throw new RangeError('n must not be negative');
     }
-    guard(() => this[S].bold(n));
-    return this;
+    return edit(this, (raw) => raw.bold(n));
   }
 
   italic(step = 2, base = 0) {
     if (!(step > 0)) {
       throw new RangeError('step must be a positive integer');
     }
-    guard(() => this[S].italic(step, base));
-    return this;
+    return edit(this, (raw) => raw.italic(step, base));
   }
 
   paste(bitmap, x = 0, y = 0) {
-    guard(() => this[S].paste(rawBitmapOf(bitmap), x, y));
-    return this;
+    const other = rawBitmapOf(bitmap);
+    return edit(this, (raw) => raw.paste(other, x, y));
   }
 
   /**
@@ -661,7 +759,7 @@ export class Bitmap {
     if (format === 'rect' && shape !== 'square') {
       throw new Error("format 'rect' only supports shape 'square'");
     }
-    return guard(() => this[S].tosvg(pixelsize, format, inverted, offsets.x ?? 0, offsets.y ?? 0, shape));
+    return guard(() => nat(this).tosvg(pixelsize, format, inverted, offsets.x ?? 0, offsets.y ?? 0, shape));
   }
 }
 
@@ -898,8 +996,9 @@ const bitmapFn = (fn) => (raw) => {
   const bm = bitmapOf(raw);
   const res = fn(bm);
   if (res !== null && typeof res === 'object' && res !== bm && Array.isArray(res.bindata)) {
-    if (res instanceof Bitmap) raw.assign(res[S]);
+    if (res instanceof Bitmap) raw.assign(nat(res));
     else raw.setBindata(rawRows(res.bindata));
+    touched(bm[S]);
   }
 };
 
@@ -2431,7 +2530,12 @@ export const $Bitmap = (bin_bitmap_list) => new Bitmap(bin_bitmap_list);
 export const rawHandle = (obj) => {
   if (obj instanceof Font) return obj[S].raw;
   if (obj instanceof Glyph) return obj[S].raw;
-  if (obj instanceof Bitmap) return obj[S];
+  if (obj instanceof Bitmap) {
+    // the caller may edit the raster directly: stop serving cached rows
+    const raw = nat(obj);
+    obj[S].pinned = true;
+    return raw;
+  }
   throw new TypeError('expected a compatibility Font, Glyph or Bitmap');
 };
 
