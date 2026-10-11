@@ -1,5 +1,21 @@
 # 当前进度：第 9 阶段已完成；在此停止
 
+
+## 发布计划（2026-10-12 用户要求，进行中）
+
+用户要求：bdfparser（Python）与 bdfparser-js 的 Rust 绑定版各升一个 major（4.x），与原生 3.x 同时发布、都要维护；
+fontpixel-rs 发 crates；fontpixel.com 更新三个库的文档（新 API 标 since 版本，写明哪个版本是 Rust 绑定），并有脚本从
+上级目录的 bdfparser / bdfparser-js / fontpixel-rs 导入、更新文档；GitHub CI 只管发布到 npm / PyPI / crates（不管同步网站）；
+相关 README 等一并更新。**push 或发布到网上之前先给用户看。** 用户决定：
+- bdfparser 4.x = 薄包装：依赖并转出 `fontpixel` 包里的 compat API；为此 PyPI 和 npm 也发布 `fontpixel`。
+- 默认版本：Python 4.x 为默认；npm 先修 JS 兼容层性能再重测，若小调用仍明显偏慢，`latest` 留给 3.x、4.x 用 `rust` 标签。
+- 分支：默认分支（bdfparser 是 `master`，bdfparser-js 是 `main`）= 4.x；3.x 在 `v3` 维护分支。
+- crates：`fontpixel`、`fontpixel-ops`、`fontpixel-cli`，版本 0.1.0。仓库地址 github.com/fontpixel/fontpixel-rs（尚未创建、未 push）。
+- 测速事实：Python Rust 版整批操作大幅更快、小属性读取更慢；JS wasm 兼容层整批（解析、PCF、绘图）更快，但小调用、遍历、
+  写 BDF 更慢，`font.length` 312 µs（实现缺陷）。
+步骤（一次一个 Opus 子任务）：1 JS 兼容层性能修复与重测（进行中，分支 `js-compat-perf`）→ 2 fontpixel-rs 发布准备
+（crates 元数据与 dry-run、PyPI `fontpixel` 多平台 wheel、npm `fontpixel`、release CI、README）→ 3 bdfparser 4.x/v3 →
+4 bdfparser-js 4.x/v3 → 5 fontpixel.com 文档与导入脚本 → 6 给用户审阅后再 push/发布。
 2026-10-07：用户改定的 fontpixel.com 浏览器字体工具已完成，详见
 [reports/phase-9.md](reports/phase-9.md) 与 [验收数据](reports/phase9-validation/summary.json)。
 
