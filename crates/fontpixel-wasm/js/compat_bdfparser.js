@@ -1079,6 +1079,11 @@ const drain = (font) => {
 const changed = (font) => {
   font[S].rev++;
   font[S].padded.clear();
+  const views = font[S].views;
+  if (views !== null) {
+    views.headersLive.dirty();
+    views.propsLive.dirty();
+  }
   drain(font);
 };
 
@@ -1207,9 +1212,102 @@ const headersData = (font) => {
   return c.headers;
 };
 
+/**
+ * A live view (`font.headers`, `font.props`) over a projection cached per edit
+ * revision (`data(font)`). Writes always go through `writes` (the model is
+ * edited in place). Reads go straight to `target`, a plain object mirroring
+ * the projection's keys (array values as accessors returning a copy, so a
+ * read never hands out the cached array): while the font has edits the view
+ * has not seen (`dirty`, called by `changed`), the read traps are installed,
+ * and the first read refreshes the mirror and removes them again. A Proxy
+ * with no read traps reads its target without calling into JS.
+ *
+ * Symbol-keyed values live on the target unprojected, as before; once one is
+ * set the view keeps the read traps (and no mirror) for good, so symbols stay
+ * out of `ownKeys` and property descriptors as before.
+ */
+const READ_TRAPS = ['get', 'has', 'ownKeys', 'getOwnPropertyDescriptor'];
+
+const liveView = (font, target, data, legacyReads, writes) => {
+  let mirrored = -1;
+  let legacy = false;
+  const refresh = () => {
+    const rev = font[S].rev;
+    if (legacy || mirrored === rev) return;
+    const d = data(font);
+    for (const k of Object.getOwnPropertyNames(target)) delete target[k];
+    for (const k of Object.keys(d)) {
+      const v = d[k];
+      Object.defineProperty(
+        target,
+        k,
+        Array.isArray(v)
+          ? { get: () => [...v], enumerable: true, configurable: true }
+          : { value: v, writable: true, enumerable: true, configurable: true },
+      );
+    }
+    mirrored = rev;
+    for (const t of READ_TRAPS) handler[t] = undefined;
+  };
+  const reads = {
+    get(t, k, r) {
+      refresh();
+      return legacy ? legacyReads.get(t, k, r) : Reflect.get(t, k, r);
+    },
+    has(t, k) {
+      refresh();
+      return legacy ? legacyReads.has(t, k) : Reflect.has(t, k);
+    },
+    ownKeys(t) {
+      refresh();
+      return legacy ? legacyReads.ownKeys(t) : Reflect.ownKeys(t);
+    },
+    getOwnPropertyDescriptor(t, k) {
+      refresh();
+      return legacy ? legacyReads.getOwnPropertyDescriptor(t, k) : Reflect.getOwnPropertyDescriptor(t, k);
+    },
+  };
+  const toLegacy = () => {
+    if (legacy) return;
+    legacy = true;
+    for (const k of Object.getOwnPropertyNames(target)) delete target[k];
+    Object.assign(handler, reads);
+  };
+  const handler = {
+    ...reads,
+    set(t, k, v) {
+      if (typeof k !== 'string') {
+        toLegacy();
+        return Reflect.set(t, k, v);
+      }
+      writes.set(k, v);
+      return true;
+    },
+    deleteProperty(t, k) {
+      if (typeof k !== 'string') return Reflect.deleteProperty(t, k);
+      writes.delete(k);
+      return true;
+    },
+    defineProperty(t, k, desc) {
+      if (typeof k !== 'string' || !('value' in desc)) return false;
+      writes.set(k, desc.value);
+      return true;
+    },
+  };
+  const proxy = new Proxy(target, handler);
+  return {
+    proxy,
+    dirty() {
+      if (handler.get === undefined) Object.assign(handler, reads);
+    },
+  };
+};
+
 const headersView = (font) =>
-  new Proxy(
+  liveView(
+    font,
     {},
+    headersData,
     {
       get(t, k, r) {
         if (typeof k === 'string') {
@@ -1217,16 +1315,6 @@ const headersView = (font) =>
           if (hasOwn(d, k)) return fresh(d[k]);
         }
         return Reflect.get(t, k, r);
-      },
-      set(t, k, v) {
-        if (typeof k !== 'string') return Reflect.set(t, k, v);
-        call(font, (raw) => raw.setHeader(k, v), true);
-        return true;
-      },
-      deleteProperty(t, k) {
-        if (typeof k !== 'string') return Reflect.deleteProperty(t, k);
-        call(font, (raw) => raw.removeHeader(k), true);
-        return true;
       },
       has(t, k) {
         return (typeof k === 'string' && hasOwn(headersData(font), k)) || Reflect.has(t, k);
@@ -1239,11 +1327,10 @@ const headersView = (font) =>
         if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
         return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
       },
-      defineProperty(t, k, desc) {
-        if (typeof k !== 'string' || !('value' in desc)) return false;
-        call(font, (raw) => raw.setHeader(k, desc.value), true);
-        return true;
-      },
+    },
+    {
+      set: (k, v) => call(font, (raw) => raw.setHeader(k, v), true),
+      delete: (k) => call(font, (raw) => raw.removeHeader(k), true),
     },
   );
 
@@ -1269,41 +1356,37 @@ const setProp = (font, k, v) => {
 };
 
 const propsView = (font) =>
-  new Proxy(Object.create(null), {
-    get(t, k) {
-      if (typeof k === 'string') {
+  liveView(
+    font,
+    Object.create(null),
+    propsData,
+    {
+      get(t, k) {
+        if (typeof k === 'string') {
+          const d = propsData(font);
+          if (hasOwn(d, k)) return fresh(d[k]);
+        }
+        return undefined;
+      },
+      has(t, k) {
+        return typeof k === 'string' && hasOwn(propsData(font), k);
+      },
+      ownKeys() {
+        return Object.keys(propsData(font));
+      },
+      getOwnPropertyDescriptor(t, k) {
         const d = propsData(font);
-        if (hasOwn(d, k)) return fresh(d[k]);
-      }
-      return undefined;
+        if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
+        return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
+      },
     },
-    set(t, k, v) {
-      if (typeof k !== 'string') return false;
-      setProp(font, k, v);
-      return true;
+    {
+      set: (k, v) => setProp(font, k, v),
+      delete: (k) => {
+        if (hasOwn(propsData(font), k)) call(font, (raw) => raw.delprop(k), true);
+      },
     },
-    deleteProperty(t, k) {
-      if (typeof k !== 'string') return false;
-      if (hasOwn(propsData(font), k)) call(font, (raw) => raw.delprop(k), true);
-      return true;
-    },
-    has(t, k) {
-      return typeof k === 'string' && hasOwn(propsData(font), k);
-    },
-    ownKeys() {
-      return Object.keys(propsData(font));
-    },
-    getOwnPropertyDescriptor(t, k) {
-      const d = propsData(font);
-      if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
-      return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
-    },
-    defineProperty(t, k, desc) {
-      if (typeof k !== 'string' || !('value' in desc)) return false;
-      setProp(font, k, desc.value);
-      return true;
-    },
-  });
+  );
 
 /**
  * A 17-slot meta list whose item assignment is written back through `write`
@@ -1609,7 +1692,16 @@ export class Font {
       cp2char: null,
       views: null,
     });
-    const views = { headers: headersView(this), props: propsView(this), glyphs: new GlyphsView(this), propnames: new PropnamesView(this) };
+    const headersLive = headersView(this);
+    const propsLive = propsView(this);
+    const views = {
+      headers: headersLive.proxy,
+      props: propsLive.proxy,
+      headersLive,
+      propsLive,
+      glyphs: new GlyphsView(this),
+      propnames: new PropnamesView(this),
+    };
     this[S].views = views;
     Object.defineProperties(this, {
       headers: {
