@@ -487,6 +487,12 @@ fn writer_and_drawing_behaviour_matches_bdfparser() {
     gz.extend([1, 2, 3]);
     let err = Font::default().load_bytes(&gz).unwrap_err().to_string();
     assert!(err.starts_with("Malformed gzip data: "), "{err}");
+    // as in bdfparser, the two magic bytes alone already mean gzip
+    let err = Font::default()
+        .load_bytes(b"\x1f\x8bgarbage")
+        .unwrap_err()
+        .to_string();
+    assert!(err.starts_with("Malformed gzip data: "), "{err}");
 }
 
 #[test]

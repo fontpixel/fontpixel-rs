@@ -2322,3 +2322,28 @@ suite at 1178/11/3, the Python suites).
   algorithms (Python semantics, shared with the Python binding).
   Measurements and the remaining slower calls are in
   benches/PHASE8-REPORT.md ("after compat performance fixes").
+
+## 2026-10-12 — A gzip envelope needs a deflate member header, not just the magic bytes
+
+**Question:** The release ASAN campaign (gate 264, `0f97ac5`, 103/104 passed)
+failed on `printshop`: a Print Shop font whose widest glyph is 31 and tallest
+is 139 is written starting `1f 8b 00`, and `ReadContext::new` took any input
+beginning `1f 8b` for a gzip envelope, so the writer's own output could not be
+read back (`FeatureDisabled { gzip }` without the feature, "invalid gzip
+input" with it). Any format whose first bytes are data can hit this.
+
+**Choice:** Transport detection, the nested-envelope check after decoding and
+the writer's nested-envelope refusal all require an RFC 1952 member header:
+`1f 8b`, CM = 8 (deflate, the only defined method) and reserved FLG bits
+(0xe0) clear (`resources::is_gzip_envelope`). Input with the magic bytes but
+another header is handed to format detection as raw bytes. Real gzip input is
+treated exactly as before: CRC, trailer and trailing-junk errors are unchanged.
+Input that is neither gzip nor a recognised format is still rejected, by
+detection instead of the gzip decoder, so its error no longer names gzip.
+The bdfparser compatibility layer keeps bdfparser's rule (the two magic bytes
+mean gzip; anything else there fails as "Malformed gzip data").
+
+**Known limit:** a headerless font that begins `1f 8b 08` with a flag byte
+below 0x20 is still taken for gzip. For Print Shop that needs a preserved
+header whose third byte is 8; it is recorded here rather than guessed around.
+Regression test: `tests/printshop.rs` `widest_31_tallest_139_is_not_taken_for_gzip`.

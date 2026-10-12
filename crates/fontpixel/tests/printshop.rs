@@ -41,6 +41,34 @@ fn original_fixture_pixels_and_native_roundtrip() {
     assert_eq!(g.metrics.advance, h.metrics.advance);
 }
 #[test]
+fn widest_31_tallest_139_is_not_taken_for_gzip() {
+    // The writer stores the widest and tallest glyph in bytes 0 and 1, so this
+    // file begins with the gzip magic bytes 1f 8b (ASAN campaign, 2026-10-12).
+    let mut b = vec![0; 601 + 4 * 139];
+    b[0] = 31;
+    b[1] = 139;
+    b[4 + 33] = 31;
+    b[99 + 33] = 139;
+    b[592] = 139;
+    for (i, v) in b[601..].iter_mut().enumerate() {
+        *v = if i % 4 == 3 { 0xfe } else { 0xa5 };
+    }
+    let s = read(&b, &Default::default()).unwrap();
+    let w = printshop::write(&s, &output(), &Default::default()).unwrap();
+    let bytes = w.output.into_single().unwrap();
+    assert_eq!(bytes[..3], [0x1f, 0x8b, 0]);
+    let back = read(&bytes, &Default::default()).unwrap();
+    let glyph = |s: &FontSet| {
+        s.single()
+            .unwrap()
+            .glyph_for_codepoint(Codepoint::Legacy(65))
+            .unwrap()
+            .bitmap
+            .clone()
+    };
+    assert_eq!(glyph(&s), glyph(&back));
+}
+#[test]
 fn every_truncation_and_trailing_byte_rejected() {
     let b = fixture();
     for n in 0..b.len() {

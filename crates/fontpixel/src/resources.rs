@@ -639,11 +639,19 @@ pub struct Written {
     pub report: Report,
 }
 
+/// Whether `bytes` begin with an RFC 1952 member header: the two magic bytes,
+/// compression method 8 (deflate) and clear reserved flag bits. The magic bytes
+/// alone are not enough: headerless formats can start with them as data (a Print
+/// Shop font whose widest glyph is 31 and tallest is 139 begins `1f 8b 00`).
+pub(crate) fn is_gzip_envelope(bytes: &[u8]) -> bool {
+    matches!(bytes, [0x1f, 0x8b, 8, flags, ..] if flags & 0xe0 == 0)
+}
+
 /// Decode a gzip envelope independently of font format detection. Concatenated
 /// members are supported; CRC/trailer corruption and trailing junk fail. Nested
 /// compression is not recursively expanded. The output cap is enforced in chunks.
 fn decode_transport(bytes: &[u8], limits: &ResourceLimits) -> Result<Option<Vec<u8>>> {
-    if !bytes.starts_with(&[0x1f, 0x8b]) {
+    if !is_gzip_envelope(bytes) {
         return Ok(None);
     }
     #[cfg(not(feature = "gzip"))]
@@ -695,7 +703,7 @@ fn decode_transport(bytes: &[u8], limits: &ResourceLimits) -> Result<Option<Vec<
             }
             decoded.extend_from_slice(&chunk[..count]);
         }
-        if decoded.starts_with(&[0x1f, 0x8b]) {
+        if is_gzip_envelope(&decoded) {
             return Err(Error::InvalidInput(
                 "nested gzip envelopes are not supported".into(),
             ));
@@ -775,7 +783,7 @@ pub(crate) fn encode_transport(
                 limit: resources.max_decompressed_bytes,
             });
         }
-        if bytes.starts_with(&[0x1f, 0x8b]) {
+        if is_gzip_envelope(&bytes) {
             return Err(Error::InvalidInput(
                 "nested gzip envelopes are not supported".into(),
             ));

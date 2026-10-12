@@ -513,7 +513,7 @@ fn bounded_gzip_transport_is_deterministic_and_codec_independent() {
     for bad in [
         &compressed[..8],
         &compressed[..compressed.len() - 2],
-        b"\x1f\x8bgarbage",
+        b"\x1f\x8b\x08\x00garbage",
     ] {
         assert!(
             fontpixel::read(bad, &ReadOptions::default())
@@ -522,6 +522,12 @@ fn bounded_gzip_transport_is_deterministic_and_codec_independent() {
                 .contains("gzip")
         );
     }
+    // The magic bytes without a deflate member header are not a gzip envelope:
+    // the input is still rejected, by format detection.
+    let err = fontpixel::read(b"\x1f\x8bgarbage", &ReadOptions::default())
+        .unwrap_err()
+        .to_string();
+    assert!(!err.contains("gzip"), "{err}");
     let mut corrupt = compressed.clone();
     let i = corrupt.len() - 8;
     corrupt[i] ^= 1;

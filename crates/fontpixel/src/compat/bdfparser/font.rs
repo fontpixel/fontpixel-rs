@@ -242,6 +242,10 @@ impl Font {
         bytes: &[u8],
         pixelsize: Option<i64>,
     ) -> Result<&mut Self> {
+        // bdfparser treats the two gzip magic bytes alone as a gzip wrapper.
+        if bytes.starts_with(&[0x1f, 0x8b]) && !crate::resources::is_gzip_envelope(bytes) {
+            return Err(invalid("Malformed gzip data: invalid gzip header"));
+        }
         let input = crate::Input::new(bytes);
         let limits = ResourceLimits::default();
         let context = crate::resources::ReadContext::new(&input, &limits).map_err(|e| match e {
