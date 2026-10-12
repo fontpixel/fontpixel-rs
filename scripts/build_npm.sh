@@ -90,6 +90,21 @@ for (const profile of profiles) {
 exportsMap['./package.json'] = './package.json';
 manifest.exports = exportsMap;
 writeFileSync(path.join(stage, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+
+// README: the size table's SIZE_<PROFILE> / GZ_<PROFILE> placeholders take the
+// measured sizes of these builds; a placeholder left over is an error.
+const mb = (bytes) => `${(bytes / 1e6).toFixed(2)} MB`;
+const readmePath = path.join(stage, 'README.md');
+let readme = readFileSync(readmePath, 'utf8');
+for (const profile of ['full', ...profiles]) {
+  const dir = profile === 'full' ? stage : path.join(stage, 'profiles', profile);
+  const info = JSON.parse(readFileSync(path.join(dir, 'build-info.json'), 'utf8'));
+  const key = profile.toUpperCase();
+  readme = readme.replaceAll(`SIZE_${key}`, mb(info.wasm_bytes)).replaceAll(`GZ_${key}`, mb(info.wasm_gzip_bytes));
+}
+const left = readme.match(/\b(SIZE|GZ)_[A-Z]+\b/g);
+if (left) throw new Error(`README.md: no build for the size placeholders ${[...new Set(left)].join(', ')}`);
+writeFileSync(readmePath, readme);
 EOF
 
 (cd "$stage" && npm pack --pack-destination "$out" --json >"$out/pack.json")

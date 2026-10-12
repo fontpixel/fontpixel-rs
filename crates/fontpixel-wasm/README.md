@@ -47,6 +47,8 @@ The package contains several builds of the same API. Pick one per application;
 each is a separate WebAssembly module, and functions that a build leaves out
 throw `FeatureDisabledError`/`UnsupportedError` (check `capabilities()`).
 
+<!-- scripts/build_npm.sh replaces SIZE_* / GZ_* with the sizes of the packed builds. -->
+
 | import | contents | `.wasm` | gzip |
 |---|---|---:|---:|
 | `fontpixel` | everything: 99 formats, bdfparser compatibility, CJK charset tables, TOML batch jobs | SIZE_FULL | GZ_FULL |
