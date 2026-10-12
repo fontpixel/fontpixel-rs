@@ -431,10 +431,17 @@ fn directories_multiple_assets_and_nongzip_names_keep_their_contracts() {
             .bytes
             .starts_with(&[31, 139])
     );
+    // A payload with a gzip member header is not wrapped again; the magic
+    // bytes alone are font data (decisions.md, 2026-10-12).
     assert!(matches!(
-        wire(&r, vec![31, 139], "font.gz"),
+        wire(&r, vec![31, 139, 8, 0], "font.gz"),
         Err(Error::InvalidInput(_))
     ));
+    assert!(
+        wire(&r, vec![31, 139], "font.gz").unwrap().output.assets()[0]
+            .bytes
+            .starts_with(&[31, 139, 8])
+    );
 }
 
 #[test]

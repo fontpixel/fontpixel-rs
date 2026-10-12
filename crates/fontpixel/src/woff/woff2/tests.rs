@@ -279,7 +279,10 @@ fn tong_sc_otb() -> Vec<u8> {
             let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
                 .join("../../fixtures/tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz");
             let gz = std::fs::read(&path).unwrap_or_else(|e| {
-                panic!("{}: {e} (repository fixture; see fixtures/README.md)", path.display())
+                panic!(
+                    "{}: {e} (repository fixture; see fixtures/README.md)",
+                    path.display()
+                )
             });
             let mut bdf = Vec::new();
             flate2::read::GzDecoder::new(&gz[..])
