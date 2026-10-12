@@ -1,18 +1,302 @@
+# Every push and pull request; also called by release.yml before anything is
+# published. Jobs:
+#   check           scripts/check.sh (fmt, clippy, tests, feature matrix, cargo-deny) on Linux
+#   rust-test       cargo test --workspace on Linux, macOS and Windows
+#   python          release wheel built and installed, pytest against the installed
+#                   package on CPython 3.10 and 3.13, on Linux, macOS and Windows
+#   python-gate     scripts/check_python.sh (binding coverage gate + pytest, CPython 3.10)
+#   wasm            scripts/check_wasm.sh (every profile, node:test, tsc --strict, coverage gate)
+#   npm-package     scripts/build_npm.sh + scripts/test_npm_package.sh on Node 18/20/22/24
+#   reference-*     the unmodified bdfparser / bdfparser-js 3.x suites (branch v3)
+#                   against the compatibility layers, compared with the expected failures
 name: Check
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_call:
 permissions:
   contents: read
+concurrency:
+  group: check-${{ github.workflow_ref }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  # Versions of the build tools (keep in sync with release.yml).
+  WASM_PACK_VERSION: 0.15.0
+  BINARYEN_VERSION: "117"
+  TYPESCRIPT_VERSION: 6.0.3
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.12"
-      - name: Install pinned Rust toolchain
-        run: rustup show
-      - name: Install license and advisory checker
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: check
+      - name: Install cargo-deny
         run: cargo install cargo-deny --version 0.20.2 --locked
-      - name: Check workspace
+      - name: scripts/check.sh
         run: scripts/check.sh
+
+  rust-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - name: Keep LF line endings (byte-exact test data)
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: test
+      - name: cargo test --workspace
+        shell: bash
+        run: |
+          # fontpixel-py's test binary links libpython (pyo3 without extension-module).
+          libdir="$(python -c 'import sysconfig; print(sysconfig.get_config_var("LIBDIR") or "")')"
+          export LD_LIBRARY_PATH="$libdir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          export DYLD_FALLBACK_LIBRARY_PATH="$libdir${DYLD_FALLBACK_LIBRARY_PATH:+:$DYLD_FALLBACK_LIBRARY_PATH}"
+          cargo test --locked --workspace
+
+  python:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.13"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - name: Keep LF line endings (byte-exact test data)
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: python
+      - name: Build the wheel and the reference CLI
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check "maturin>=1.9.4,<2"
+          maturin build --release --locked -m crates/fontpixel-py/Cargo.toml --out "$RUNNER_TEMP/dist"
+          cargo build --locked --release -p fontpixel-cli --all-features
+      - name: pytest against the installed wheel
+        shell: bash
+        run: |
+          exe=""; [ "$RUNNER_OS" = Windows ] && exe=".exe"
+          export FONTPIXEL_FROZEN_CLI="$PWD/target/release/fontpixel$exe"
+          python -m venv "$RUNNER_TEMP/venv"
+          bin="$RUNNER_TEMP/venv/bin"; [ "$RUNNER_OS" = Windows ] && bin="$RUNNER_TEMP/venv/Scripts"
+          "$bin/python" -m pip install --disable-pip-version-check pytest mypy
+          "$bin/python" -m pip install --disable-pip-version-check --no-index --find-links "$RUNNER_TEMP/dist" fontpixel
+          cd "$RUNNER_TEMP"
+          PYTHONPATH="$GITHUB_WORKSPACE/tools" "$bin/python" -m pytest \
+            -p pytest_installed_package -p no:cacheprovider -q -rs "$GITHUB_WORKSPACE/crates/fontpixel-py/tests"
+
+  python-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: |
+            3.10
+            3.12
+      - name: Install the pinned Rust toolchain and nightly (rustdoc JSON)
+        run: |
+          rustup toolchain install
+          rustup toolchain install nightly --profile minimal
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: python-gate
+      - name: Reference CLI for the command-line identity tests
+        run: cargo build --locked --release -p fontpixel-cli --all-features
+      - name: scripts/check_python.sh
+        run: |
+          python3.10 -m venv "$RUNNER_TEMP/py310"
+          "$RUNNER_TEMP/py310/bin/pip" install --disable-pip-version-check "maturin>=1.9.4,<2" pytest mypy
+          # check_python.sh runs its coverage tools with python3: 3.12, the last
+          # version set up above.
+          scripts/check_python.sh "$RUNNER_TEMP/py310"
+
+  wasm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "24"
+      - name: Install the pinned Rust toolchain and nightly (rustdoc JSON)
+        run: |
+          rustup toolchain install
+          rustup toolchain install nightly --profile minimal
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: wasm
+      - name: Install wasm-pack, binaryen and TypeScript
+        run: |
+          cargo install wasm-pack --version "$WASM_PACK_VERSION" --locked
+          curl -sSfL "https://github.com/WebAssembly/binaryen/releases/download/version_$BINARYEN_VERSION/binaryen-version_$BINARYEN_VERSION-x86_64-linux.tar.gz" | tar xz -C "$RUNNER_TEMP"
+          echo "WASM_OPT=$RUNNER_TEMP/binaryen-version_$BINARYEN_VERSION/bin/wasm-opt" >> "$GITHUB_ENV"
+          npm install --prefix "$RUNNER_TEMP/ts" --no-audit --no-fund "typescript@$TYPESCRIPT_VERSION"
+          echo "TSC=$RUNNER_TEMP/ts/node_modules/.bin/tsc" >> "$GITHUB_ENV"
+      - name: scripts/check_wasm.sh
+        run: scripts/check_wasm.sh
+
+  npm-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "24"
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: npm
+      - name: Install wasm-pack and binaryen
+        run: |
+          cargo install wasm-pack --version "$WASM_PACK_VERSION" --locked
+          curl -sSfL "https://github.com/WebAssembly/binaryen/releases/download/version_$BINARYEN_VERSION/binaryen-version_$BINARYEN_VERSION-x86_64-linux.tar.gz" | tar xz -C "$RUNNER_TEMP"
+          echo "WASM_OPT=$RUNNER_TEMP/binaryen-version_$BINARYEN_VERSION/bin/wasm-opt" >> "$GITHUB_ENV"
+      - name: Build the package and the reference CLI
+        run: |
+          scripts/build_npm.sh "$RUNNER_TEMP/npm"
+          cargo build --locked --release -p fontpixel-cli --all-features
+          mkdir -p "$RUNNER_TEMP/upload" && cp "$RUNNER_TEMP"/npm/fontpixel-*.tgz target/release/fontpixel "$RUNNER_TEMP/upload/"
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: npm-package-check
+          path: ${{ runner.temp }}/upload/
+          retention-days: 7
+
+  npm-test:
+    needs: npm-package
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["18", "20", "22", "24"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: npm-package-check
+          path: ${{ runner.temp }}/pkg
+      - name: Install the tarball and test it
+        env:
+          NPM_TEST_ALL_PROFILES: ${{ matrix.node == '24' && '1' || '0' }}
+        run: |
+          chmod +x "$RUNNER_TEMP/pkg/fontpixel"
+          FONTPIXEL_CLI="$RUNNER_TEMP/pkg/fontpixel" scripts/test_npm_package.sh "$(ls "$RUNNER_TEMP"/pkg/fontpixel-*.tgz)" "$RUNNER_TEMP/npm-test"
+
+  reference-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          path: fontpixel-rs
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: tomchen/bdfparser
+          ref: v3
+          path: reference/bdfparser
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        working-directory: fontpixel-rs
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          workspaces: fontpixel-rs
+          key: reference-python
+      - name: Install fontpixel and the reference's test dependencies
+        working-directory: fontpixel-rs
+        run: |
+          python -m pip install --disable-pip-version-check "maturin>=1.9.4,<2" pytest fonttools pillow
+          maturin build --release --locked -m crates/fontpixel-py/Cargo.toml --out "$RUNNER_TEMP/dist"
+          python -m pip install --disable-pip-version-check --no-index --find-links "$RUNNER_TEMP/dist" fontpixel
+      - name: bdfparser's suite on fontpixel.compat.bdfparser
+        run: |
+          python fontpixel-rs/crates/fontpixel-py/tests/compat_bdfparser/run_reference.py \
+            --reference reference/bdfparser --json "$RUNNER_TEMP/reference-python.json" || true
+          python3 fontpixel-rs/tools/check_reference_results.py "$RUNNER_TEMP/reference-python.json" \
+            fontpixel-rs/crates/fontpixel-py/tests/compat_bdfparser/expected_failures.txt
+
+  reference-js:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          path: fontpixel-rs
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: tomchen/bdfparser
+          ref: v3
+          path: reference/bdfparser
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: tomchen/bdfparser-js
+          ref: v3
+          path: reference/bdfparser-js
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: "24"
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        working-directory: fontpixel-rs
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          workspaces: fontpixel-rs
+          key: reference-js
+      - name: Install wasm-pack and binaryen
+        run: |
+          cargo install wasm-pack --version "$WASM_PACK_VERSION" --locked
+          curl -sSfL "https://github.com/WebAssembly/binaryen/releases/download/version_$BINARYEN_VERSION/binaryen-version_$BINARYEN_VERSION-x86_64-linux.tar.gz" | tar xz -C "$RUNNER_TEMP"
+          echo "WASM_OPT=$RUNNER_TEMP/binaryen-version_$BINARYEN_VERSION/bin/wasm-opt" >> "$GITHUB_ENV"
+      - name: Build the full package
+        working-directory: fontpixel-rs
+        run: scripts/build_wasm.sh full "$RUNNER_TEMP/wasm-full"
+      - name: bdfparser-js's suite on fontpixel/compat/bdfparser
+        run: |
+          node fontpixel-rs/crates/fontpixel-wasm/tests/compat_bdfparser/run_reference.mjs \
+            --reference reference/bdfparser-js --fonts reference/bdfparser/tests/fonts \
+            --pkg "$RUNNER_TEMP/wasm-full" --work "$RUNNER_TEMP/reference-js" --install \
+            --json "$RUNNER_TEMP/reference-js.json" || true
+          python3 fontpixel-rs/tools/check_reference_results.py "$RUNNER_TEMP/reference-js.json" \
+            fontpixel-rs/crates/fontpixel-wasm/tests/compat_bdfparser/expected_failures.txt
