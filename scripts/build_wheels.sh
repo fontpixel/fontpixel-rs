@@ -171,6 +171,9 @@ for py in $pythons; do
   test_suite wheel "$py" "$whl"
 done
 if [ -n "${SDIST_TEST_PYTHON:-}" ]; then
+  # pip builds the sdist in a temporary directory, outside rust-toolchain.toml.
+  RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-$(sed -n 's/^channel = "\(.*\)"$/\1/p' "$repo/rust-toolchain.toml")}"
+  export RUSTUP_TOOLCHAIN
   test_suite sdist "$SDIST_TEST_PYTHON" "$sdist"
 fi
 exit "$status"
