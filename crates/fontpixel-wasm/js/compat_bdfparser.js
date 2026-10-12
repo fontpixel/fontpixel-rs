@@ -8,8 +8,10 @@
 // `fontpixel.compat.bdfparser`): `Font`/`Glyph`/`Bitmap` hold handles, and
 // `font.headers`, `font.props`, `font.glyphs`, `font.unencoded` and
 // `font._propnames` are live views that project the model when read and edit
-// it in place when written (glyph handles stay attached). Pixels become row
-// strings only when `bindata` (or another export) is read.
+// it in place when written (glyph handles stay attached). Reads are served
+// from projections cached per edit revision; glyphs read from a font make
+// their handle on first need, and bitmaps built from rows keep the rows
+// JS-side until a native operation needs the raster.
 //
 // The module initializes the WebAssembly instance itself (top-level
 // `await init()`); it needs the `full` build (capability `compat_bdfparser`),
@@ -313,9 +315,10 @@ const slotEquals = (a, b) => {
 /** 17-slot list → meta object */
 const listToMeta = (list) => {
   const d = {};
-  META_TITLES.forEach((k, i) => {
-    d[k] = Array.isArray(list[i]) ? [...list[i]] : list[i];
-  });
+  for (let i = 0; i < META_TITLES.length; i++) {
+    const v = list[i];
+    d[META_TITLES[i]] = Array.isArray(v) ? [...v] : v;
+  }
   return d;
 };
 
@@ -344,11 +347,14 @@ const pyStrip = (s) => s.replace(RE_PY_STRIP, '');
 
 const DEFAULT_PIXELCOLORS = { 0: null, 1: 'black', 2: 'red' };
 
+const RE_LABELS = /^[012]*$/;
+
 const rawRows = (rows) => {
   if (!Array.isArray(rows) || !rows.every((r) => typeof r === 'string')) {
     throw new TypeError('Bitmap() expects an array of row strings');
   }
   for (let i = 0; i < rows.length; i++) {
+    if (RE_LABELS.test(rows[i])) continue;
     const m = /[^012]/.exec(rows[i]);
     if (m !== null) {
       throw new Error(
@@ -370,41 +376,143 @@ const checkxy = (b, x, y) => {
   }
 };
 
-const bitmapOf = (raw) => {
-  const b = Object.create(Bitmap.prototype);
-  initBitmap(b, raw);
+// A bitmap keeps its row strings JS-side (`rows`, never mutated in place, so
+// clones share them) and creates the native raster (`raw`) only for an
+// operation that needs it; a native edit drops the rows, and the next read
+// takes them from the raster once. Rows built from a JS list stay without a
+// raster only up to this size, far below the native raster limits, so a
+// larger list is still checked (and rejected) at construction as before.
+const LAZY_SIDE = 4096;
+const LAZY_PIXELS = 65536;
+const lazyFits = (rows) => {
+  const h = rows.length;
+  const w = h === 0 ? 0 : rows[0].length;
+  return h <= LAZY_SIDE && w <= LAZY_SIDE && w * h <= LAZY_PIXELS;
+};
+
+/** Native raster of validated rows. */
+const rawOfRows = (rows) => guard(() => RawBitmap.fromRowsText(rows.join('\n'), rows.length));
+
+/** The native raster of a bitmap, created from its rows on first use. */
+const nat = (b) => natOf(b[S]);
+
+// A clone made from rows remembers its source (`base`): while the source
+// still holds the same rows, the raster is a native copy of the source's
+// (made once), which is cheaper than building one from the rows.
+const natOf = (st) => {
+  if (st.raw === null) {
+    const base = st.base;
+    st.raw = base !== null && base.rows === st.rows && !base.pinned ? natOf(base).clone() : rawOfRows(st.rows);
+    st.base = null;
+  }
+  return st.raw;
+};
+
+/** The current rows (internal array: copy before handing it out). */
+const rowsOf = (b) => {
+  const st = b[S];
+  if (st.rows !== null && !st.pinned) return st.rows;
+  const text = st.raw.bindataText();
+  const rows = text === '' && st.raw.height() === 0 ? [] : text.split('\n');
+  if (!st.pinned) st.rows = rows;
+  return rows;
+};
+
+/** Cached rows, or null when only the raster is current. */
+const liveRows = (st) => (st.pinned ? null : st.rows);
+
+/** The raster changed: drop the rows and memoized exports. */
+const touched = (st) => {
+  st.rows = null;
+  st.memo = null;
+};
+
+/** Run a native edit of `b`'s raster (errors translated); returns `b`. */
+const edit = (b, op) => {
+  const st = b[S];
+  const raw = nat(b);
+  try {
+    op(raw);
+  } catch (e) {
+    throw translate(e);
+  } finally {
+    touched(st);
+  }
   return b;
 };
 
-const initBitmap = (b, raw) => {
-  hidden(b, S, raw);
-  Object.defineProperty(b, 'bindata', {
-    get: () => b[S].bindata(),
-    set: (rows) => {
-      guard(() => b[S].setBindata(rawRows(rows)));
-    },
-    enumerable: true,
-    configurable: true,
-  });
+const BINDATA = {
+  get() {
+    return [...rowsOf(this)];
+  },
+  set(rows) {
+    const st = this[S];
+    const r = rawRows(rows);
+    if (st.raw !== null) {
+      // the raster may be shared (a transform callback's argument): keep it current
+      guard(() => st.raw.setBindata(r));
+      touched(st);
+      if (!st.pinned && lazyFits(r)) st.rows = [...r];
+    } else if (lazyFits(r)) {
+      st.rows = [...r];
+      st.base = null;
+      st.memo = null;
+    } else {
+      st.raw = guard(() => new RawBitmap(r));
+      touched(st);
+    }
+  },
+  enumerable: true,
+  configurable: true,
+};
+
+const initBitmap = (b, raw, rows, base = null) => {
+  hidden(b, S, { raw, rows, base, memo: null, pinned: false });
+  Object.defineProperty(b, 'bindata', BINDATA);
+};
+
+const bitmapOf = (raw) => {
+  const b = Object.create(Bitmap.prototype);
+  initBitmap(b, raw, null);
+  return b;
+};
+
+const bitmapOfRows = (rows, base) => {
+  const b = Object.create(Bitmap.prototype);
+  initBitmap(b, null, rows, base);
+  return b;
 };
 
 /** The raw handle of a Bitmap (or a new one from a bindata array). */
 const rawBitmapOf = (b) => {
-  if (b instanceof Bitmap) return b[S];
+  if (b instanceof Bitmap) return nat(b);
   if (b !== null && typeof b === 'object' && Array.isArray(b.bindata)) {
     return guard(() => new RawBitmap(rawRows(b.bindata)));
   }
   throw new TypeError('expected a Bitmap');
 };
 
+/** `todata(t)` from row strings (types 0 to 3, as the native export). */
+const rowsData = (rows, t) => {
+  if (t === 0) return rows.join('\n');
+  if (t === 1) return [...rows];
+  if (t === 2) return rows.map((r) => Array.from(r, (c) => c.charCodeAt(0) - 48));
+  const out = [];
+  for (const r of rows) for (let i = 0; i < r.length; i++) out.push(r.charCodeAt(i) - 48);
+  return out;
+};
+
 /**
- * `Bitmap` object: rows of `'0'`, `'1'`, `'2'` (row 0 at the top) backed by a
- * native raster. `bindata` builds the row strings on each read (assign to
- * replace the raster). Editing methods return the bitmap for chaining.
+ * `Bitmap` object: rows of `'0'`, `'1'`, `'2'` (row 0 at the top). The row
+ * strings are kept JS-side and a native raster is made for the operations
+ * that need one; `bindata` returns a new array on each read (assign to
+ * replace the pixels). Editing methods return the bitmap for chaining.
  */
 export class Bitmap {
   constructor(bin_bitmap_list) {
-    initBitmap(this, guard(() => new RawBitmap(rawRows(bin_bitmap_list))));
+    const rows = rawRows(bin_bitmap_list);
+    if (lazyFits(rows)) initBitmap(this, null, [...rows]);
+    else initBitmap(this, guard(() => new RawBitmap(rows)), null);
   }
 
   static fromstring(text) {
@@ -436,7 +544,7 @@ export class Bitmap {
   }
 
   toString() {
-    return this[S].toString();
+    return nat(this).toString();
   }
 
   repr() {
@@ -444,39 +552,48 @@ export class Bitmap {
   }
 
   equals(other) {
-    return other instanceof Bitmap ? this[S].equals(other[S]) : slotEquals(this.bindata, other?.bindata);
+    if (!(other instanceof Bitmap)) return slotEquals(this.bindata, other?.bindata);
+    const a = liveRows(this[S]);
+    const b = liveRows(other[S]);
+    if (a !== null && b !== null) return slotEquals(a, b);
+    return nat(this).equals(nat(other));
   }
 
   width() {
-    return this[S].width();
+    const rows = liveRows(this[S]);
+    if (rows !== null) return rows.length === 0 ? 0 : rows[0].length;
+    return this[S].raw.width();
   }
 
   height() {
-    return this[S].height();
+    const rows = liveRows(this[S]);
+    return rows !== null ? rows.length : this[S].raw.height();
   }
 
   clone() {
-    return bitmapOf(this[S].clone());
+    const st = this[S];
+    const rows = liveRows(st);
+    if (rows === null) return bitmapOf(st.raw.clone());
+    // point at the bitmap that has (or will make) the raster for these rows
+    return bitmapOfRows(rows, st.raw === null && st.base !== null && st.base.rows === rows ? st.base : st);
   }
 
   crop(w, h, xoff, yoff) {
     if (w < 0 || h < 0) {
       throw new RangeError(`Bitmap.crop: negative width or height (${String(w)}, ${String(h)})`);
     }
-    guard(() => this[S].crop(w, h, xoff ?? 0, yoff ?? 0));
-    return this;
+    return edit(this, (raw) => raw.crop(w, h, xoff ?? 0, yoff ?? 0));
   }
 
   overlay(bitmap) {
     const other = rawBitmapOf(bitmap);
-    if (this[S].height() !== other.height()) {
+    if (this.height() !== other.height()) {
       warn('the bitmaps to overlay have different height');
     }
-    if (this[S].width() !== other.width()) {
+    if (this.width() !== other.width()) {
       warn('the bitmaps to overlay have different width');
     }
-    guard(() => this[S].overlay(other));
-    return this;
+    return edit(this, (raw) => raw.overlay(other));
   }
 
   static concatall(bitmaplist, options = {}) {
@@ -493,39 +610,36 @@ export class Bitmap {
 
   concat(bitmap, options = {}) {
     const { direction, align, offset } = options;
-    guard(() => this[S].concat(rawBitmapOf(bitmap), direction ?? 1, align ?? 1, offset ?? 0));
-    return this;
+    const other = rawBitmapOf(bitmap);
+    return edit(this, (raw) => raw.concat(other, direction ?? 1, align ?? 1, offset ?? 0));
   }
 
   enlarge(x, y) {
-    guard(() => this[S].enlarge(x ?? 1, y ?? 1));
-    return this;
+    return edit(this, (raw) => raw.enlarge(x ?? 1, y ?? 1));
   }
 
   replace(substr, newsubstr) {
-    guard(() => this[S].replace(String(substr), String(newsubstr)));
-    return this;
+    const a = String(substr);
+    const b = String(newsubstr);
+    return edit(this, (raw) => raw.replace(a, b));
   }
 
   shadow(xoff, yoff) {
-    guard(() => this[S].shadow(xoff ?? 1, yoff ?? -1));
-    return this;
+    return edit(this, (raw) => raw.shadow(xoff ?? 1, yoff ?? -1));
   }
 
   glow(mode) {
-    guard(() => this[S].glow(mode ?? 0));
-    return this;
+    return edit(this, (raw) => raw.glow(mode ?? 0));
   }
 
   bytepad(bits) {
-    guard(() => this[S].bytepad(bits ?? 8));
-    return this;
+    return edit(this, (raw) => raw.bytepad(bits ?? 8));
   }
 
   todata(datatype) {
     const t = datatype ?? 1;
     if (t === 4 || t === 5) {
-      const rows = this.bindata;
+      const rows = rowsOf(this);
       for (const s of rows) {
         if (!/^[01]*$/.test(s)) {
           throw new Error(`Invalid binary string: ${s}`);
@@ -541,12 +655,23 @@ export class Bitmap {
     if (![0, 1, 2, 3, 4, 5].includes(t)) {
       return undefined;
     }
-    return guard(() => this[S].todata(t));
+    const st = this[S];
+    if (t <= 3) return rowsData(rowsOf(this), t);
+    // the row numbers are made natively once per raster state
+    if (st.pinned) return guard(() => st.raw.todata(t));
+    st.memo ??= new Map();
+    let v = st.memo.get(t);
+    if (v === undefined) {
+      v = guard(() => nat(this).todata(t));
+      st.memo.set(t, v);
+    }
+    return [...v];
   }
 
   getpixel(x, y) {
     checkxy(this, x, y);
-    return this[S].getpixel(x, y);
+    const rows = liveRows(this[S]);
+    return rows !== null ? rows[y].charCodeAt(x) - 48 : this[S].raw.getpixel(x, y);
   }
 
   setpixel(x, y, value = 1) {
@@ -554,66 +679,57 @@ export class Bitmap {
       throw new RangeError(`Pixel value must be 0, 1 or 2, not ${String(value)}`);
     }
     checkxy(this, x, y);
-    this[S].setpixel(x, y, value);
-    return this;
+    return edit(this, (raw) => raw.setpixel(x, y, value));
   }
 
   fliph() {
-    guard(() => this[S].fliph());
-    return this;
+    return edit(this, (raw) => raw.fliph());
   }
 
   flipv() {
-    guard(() => this[S].flipv());
-    return this;
+    return edit(this, (raw) => raw.flipv());
   }
 
   rotate(angle = 90) {
     if (!Number.isInteger(angle) || angle % 90 !== 0) {
       throw new Error(`Rotation angle must be a multiple of 90, not ${String(angle)}`);
     }
-    guard(() => this[S].rotate(angle));
-    return this;
+    return edit(this, (raw) => raw.rotate(angle));
   }
 
   invert() {
-    this[S].invert();
-    return this;
+    return edit(this, (raw) => raw.invert());
   }
 
   shift(dx = 0, dy = 0) {
-    guard(() => this[S].shift(dx, dy));
-    return this;
+    return edit(this, (raw) => raw.shift(dx, dy));
   }
 
   bbox() {
-    return this[S].bbox();
+    return nat(this).bbox();
   }
 
   trim() {
-    guard(() => this[S].trim());
-    return this;
+    return edit(this, (raw) => raw.trim());
   }
 
   bold(n = 1) {
     if (n < 0) {
       throw new RangeError('n must not be negative');
     }
-    guard(() => this[S].bold(n));
-    return this;
+    return edit(this, (raw) => raw.bold(n));
   }
 
   italic(step = 2, base = 0) {
     if (!(step > 0)) {
       throw new RangeError('step must be a positive integer');
     }
-    guard(() => this[S].italic(step, base));
-    return this;
+    return edit(this, (raw) => raw.italic(step, base));
   }
 
   paste(bitmap, x = 0, y = 0) {
-    guard(() => this[S].paste(rawBitmapOf(bitmap), x, y));
-    return this;
+    const other = rawBitmapOf(bitmap);
+    return edit(this, (raw) => raw.paste(other, x, y));
   }
 
   /**
@@ -661,7 +777,7 @@ export class Bitmap {
     if (format === 'rect' && shape !== 'square') {
       throw new Error("format 'rect' only supports shape 'square'");
     }
-    return guard(() => this[S].tosvg(pixelsize, format, inverted, offsets.x ?? 0, offsets.y ?? 0, shape));
+    return guard(() => nat(this).tosvg(pixelsize, format, inverted, offsets.x ?? 0, offsets.y ?? 0, shape));
   }
 }
 
@@ -814,28 +930,62 @@ const glyphOf = (raw, font) => {
   return g;
 };
 
-const initGlyph = (g, raw, font, meta) => {
-  hidden(g, S, { raw, meta, epoch: font instanceof Font ? font[S].epoch : 0 });
-  Object.defineProperty(g, 'meta', {
-    get: () => {
-      const st = g[S];
-      if (st.meta === null) st.meta = listToMeta(st.raw.meta());
-      return st.meta;
-    },
-    set: (v) => {
-      g[S].meta = v;
-    },
-    enumerable: true,
-    configurable: true,
+/**
+ * A glyph read from a font: it holds the font's slot (`slotOf`) and makes
+ * its attached handle only when an operation needs one (`handle`), which is
+ * then the handle `lookup` gave when the slot was read.
+ */
+const glyphOfSlot = (font, slot) => {
+  const g = Object.create(Glyph.prototype);
+  initGlyph(g, null, font, null, slot);
+  return g;
+};
+
+const GLYPH_META = {
+  get() {
+    const st = this[S];
+    if (st.meta === null) st.meta = listToMeta(metaNow(st));
+    return st.meta;
+  },
+  set(v) {
+    this[S].meta = v;
+  },
+  enumerable: true,
+  configurable: true,
+};
+
+const initGlyph = (g, raw, font, meta, slot = null) => {
+  const isFont = font instanceof Font;
+  hidden(g, S, {
+    raw,
+    slot,
+    rawFont: slot !== null ? font[S].raw : null,
+    meta,
+    epoch: isFont ? font[S].epoch : 0,
   });
+  Object.defineProperty(g, 'meta', GLYPH_META);
   g.font = font;
 };
+
+/** The glyph's handle (made from its slot on first use). */
+const handle = (g) => {
+  const st = g[S];
+  if (st.raw === null) {
+    const { id, gen, rev, meta } = st.slot;
+    // the slot's own handle while the model is unchanged, else rebuilt from its snapshot
+    st.raw = st.rawFont.attachSlot(id, gen, rev) ?? st.rawFont.attachSlot(id, gen, rev, meta);
+  }
+  return st.raw;
+};
+
+/** The 17 slots the glyph's handle holds (the slot snapshot until the handle exists). */
+const metaNow = (st) => (st.raw === null ? st.slot.meta : st.raw.meta());
 
 /** Direct edits of `glyph.meta` not yet in the handle (`{key: value}`). */
 const pending = (g) => {
   const st = g[S];
   if (st.meta === null) return null;
-  const now = st.raw.meta();
+  const now = metaNow(st);
   let out = null;
   META_TITLES.forEach((k, i) => {
     const mine = st.meta[k];
@@ -850,14 +1000,14 @@ const pending = (g) => {
 /** Write direct `meta` edits into the handle (and its font). */
 const push = (g) => {
   const changed = pending(g);
-  if (changed !== null) g[S].raw.setmeta(changed);
+  if (changed !== null) handle(g).setmeta(changed);
 };
 
 /** Refresh `meta` in place from the handle. */
 const pull = (g) => {
   const st = g[S];
   if (st.meta === null) return;
-  const now = st.raw.meta();
+  const now = metaNow(st);
   META_TITLES.forEach((k, i) => {
     st.meta[k] = Array.isArray(now[i]) ? [...now[i]] : now[i];
   });
@@ -866,8 +1016,8 @@ const pull = (g) => {
 /** The handle to read from: with pending direct `meta` edits, a detached copy carrying them. */
 const reader = (g) => {
   const changed = pending(g);
-  if (changed === null) return g[S].raw;
-  const c = g[S].raw.clone();
+  if (changed === null) return handle(g);
+  const c = handle(g).clone();
   c.setmeta(changed);
   return c;
 };
@@ -878,7 +1028,7 @@ const editGlyph = (g, op) => {
   const font = fontOfGlyph(g);
   try {
     push(g);
-    op(g[S].raw);
+    op(handle(g));
   } catch (e) {
     throw translate(e);
   } finally {
@@ -890,7 +1040,7 @@ const editGlyph = (g, op) => {
 
 const isAttached = (g) => {
   const font = fontOfGlyph(g);
-  return g[S].raw.isAttached() && font !== null && g[S].epoch === font[S].epoch;
+  return handle(g).isAttached() && font !== null && g[S].epoch === font[S].epoch;
 };
 
 /** A transform callback adapter: `fn(Bitmap)` editing the raw bitmap it receives. */
@@ -898,8 +1048,9 @@ const bitmapFn = (fn) => (raw) => {
   const bm = bitmapOf(raw);
   const res = fn(bm);
   if (res !== null && typeof res === 'object' && res !== bm && Array.isArray(res.bindata)) {
-    if (res instanceof Bitmap) raw.assign(res[S]);
+    if (res instanceof Bitmap) raw.assign(nat(res));
     else raw.setBindata(rawRows(res.bindata));
+    touched(bm[S]);
   }
 };
 
@@ -1043,10 +1194,10 @@ export class Glyph {
   get _store() {
     if (!isAttached(this)) return null;
     const font = this.font;
-    const cp = this[S].raw.cp();
+    const cp = handle(this).cp();
     if (cp >= 0) return font.glyphs.get(cp) ?? null;
     // an unencoded glyph: the entry holding this glyph's values
-    const mine = JSON.stringify(this[S].raw.meta());
+    const mine = JSON.stringify(handle(this).meta());
     for (const e of font.unencoded) {
       if (JSON.stringify([...e.meta]) === mine) return e.meta;
     }
@@ -1065,6 +1216,7 @@ const PADDED_ROWS = / bitmap rows but its BBX height is \d+; padded with empty r
 /** Pass the warnings the Rust model collected since the last call to the handler. */
 const drain = (font) => {
   const st = font[S];
+  if (st.raw.reportLength() === st.wcur) return;
   const [messages, count] = st.raw.warningsSince(st.wcur);
   st.wcur = count;
   for (const m of messages) {
@@ -1079,6 +1231,11 @@ const drain = (font) => {
 const changed = (font) => {
   font[S].rev++;
   font[S].padded.clear();
+  const views = font[S].views;
+  if (views !== null) {
+    views.headersLive.dirty();
+    views.propsLive.dirty();
+  }
   drain(font);
 };
 
@@ -1099,7 +1256,18 @@ const cache = (font) => {
   const st = font[S];
   let c = st.cache;
   if (c === null || c.rev !== st.rev) {
-    c = { rev: st.rev, cps: null, cpset: null, metas: new Map(), headers: null, props: null, model: null, unencoded: null };
+    c = {
+      rev: st.rev,
+      cps: null,
+      cpset: null,
+      orders: new Map(),
+      slots: new Map(),
+      metas: new Map(),
+      headers: null,
+      props: null,
+      model: null,
+      unencoded: null,
+    };
     st.cache = c;
   }
   return c;
@@ -1112,6 +1280,48 @@ const cplist = (font) => {
     c.cpset = new Set(c.cps);
   }
   return c.cps;
+};
+
+/** Encoded codes in an order (0 file, -1 reverse, 1 ascending, 2 descending), cached per revision. */
+const cpsInOrder = (font, order) => {
+  const c = cache(font);
+  let l = c.orders.get(order);
+  if (l === undefined) {
+    const file = cplist(font);
+    if (order === 0) l = file;
+    else if (order === -1) l = [...file].reverse();
+    else {
+      l = [...file].sort((a, b) => a - b);
+      if (order === 2) l.reverse();
+    }
+    c.orders.set(order, l);
+  }
+  return l;
+};
+
+/** A slot from `lookupSlot`/`lookupSlots` as `{id, gen, rev, meta}`, or null. */
+const slotFrom = (v) => (v === undefined || v === null ? null : { id: v[0], gen: v[1], rev: v[2], meta: v.slice(3) });
+
+/** What `lookup(cp)` attaches to (cached per revision), or null. */
+const slotOf = (font, cp) => {
+  const slots = cache(font).slots;
+  let slot = slots.get(cp);
+  if (slot === undefined) {
+    slot = slotFrom(font[S].raw.lookupSlot(cp));
+    slots.set(cp, slot);
+  }
+  return slot;
+};
+
+const SLOT_BATCH = 256;
+
+/** Read the slots of the codes not cached yet in one call. */
+const prefetchSlots = (font, cps) => {
+  const slots = cache(font).slots;
+  const missing = cps.filter((cp) => isInt(cp) && !slots.has(cp));
+  if (missing.length < 2) return;
+  const got = font[S].raw.lookupSlots(missing);
+  missing.forEach((cp, i) => slots.set(cp, slotFrom(got[i])));
 };
 
 const cpset = (font) => {
@@ -1180,9 +1390,104 @@ const headersData = (font) => {
   return c.headers;
 };
 
+/**
+ * A live view (`font.headers`, `font.props`) over a projection cached per edit
+ * revision (`data(font)`). Writes always go through `writes` (the model is
+ * edited in place). Reads go straight to `target`, a plain object mirroring
+ * the projection's keys (array values as accessors returning a copy, so a
+ * read never hands out the cached array): while the font has edits the view
+ * has not seen (`dirty`, called by `changed`), the read traps are installed,
+ * and the first read refreshes the mirror and removes them again. A Proxy
+ * with no read traps reads its target without calling into JS.
+ *
+ * Symbol keys: with `symbols` (headers) their values live on the target
+ * unprojected, as before, and once one is set the view keeps the read traps
+ * (and no mirror) for good, so symbols stay out of `ownKeys` and property
+ * descriptors as before; without (props) writing one fails, as before.
+ */
+const READ_TRAPS = ['get', 'has', 'ownKeys', 'getOwnPropertyDescriptor'];
+
+const liveView = (font, target, data, legacyReads, writes, symbols) => {
+  let mirrored = -1;
+  let legacy = false;
+  const refresh = () => {
+    const rev = font[S].rev;
+    if (legacy || mirrored === rev) return;
+    const d = data(font);
+    for (const k of Object.getOwnPropertyNames(target)) delete target[k];
+    for (const k of Object.keys(d)) {
+      const v = d[k];
+      Object.defineProperty(
+        target,
+        k,
+        Array.isArray(v)
+          ? { get: () => [...v], enumerable: true, configurable: true }
+          : { value: v, writable: true, enumerable: true, configurable: true },
+      );
+    }
+    mirrored = rev;
+    for (const t of READ_TRAPS) handler[t] = undefined;
+  };
+  const reads = {
+    get(t, k, r) {
+      refresh();
+      return legacy ? legacyReads.get(t, k, r) : Reflect.get(t, k, r);
+    },
+    has(t, k) {
+      refresh();
+      return legacy ? legacyReads.has(t, k) : Reflect.has(t, k);
+    },
+    ownKeys(t) {
+      refresh();
+      return legacy ? legacyReads.ownKeys(t) : Reflect.ownKeys(t);
+    },
+    getOwnPropertyDescriptor(t, k) {
+      refresh();
+      return legacy ? legacyReads.getOwnPropertyDescriptor(t, k) : Reflect.getOwnPropertyDescriptor(t, k);
+    },
+  };
+  const toLegacy = () => {
+    if (legacy) return;
+    legacy = true;
+    for (const k of Object.getOwnPropertyNames(target)) delete target[k];
+    Object.assign(handler, reads);
+  };
+  const handler = {
+    ...reads,
+    set(t, k, v) {
+      if (typeof k !== 'string') {
+        if (!symbols) return false;
+        toLegacy();
+        return Reflect.set(t, k, v);
+      }
+      writes.set(k, v);
+      return true;
+    },
+    deleteProperty(t, k) {
+      if (typeof k !== 'string') return symbols && Reflect.deleteProperty(t, k);
+      writes.delete(k);
+      return true;
+    },
+    defineProperty(t, k, desc) {
+      if (typeof k !== 'string' || !('value' in desc)) return false;
+      writes.set(k, desc.value);
+      return true;
+    },
+  };
+  const proxy = new Proxy(target, handler);
+  return {
+    proxy,
+    dirty() {
+      if (handler.get === undefined) Object.assign(handler, reads);
+    },
+  };
+};
+
 const headersView = (font) =>
-  new Proxy(
+  liveView(
+    font,
     {},
+    headersData,
     {
       get(t, k, r) {
         if (typeof k === 'string') {
@@ -1190,16 +1495,6 @@ const headersView = (font) =>
           if (hasOwn(d, k)) return fresh(d[k]);
         }
         return Reflect.get(t, k, r);
-      },
-      set(t, k, v) {
-        if (typeof k !== 'string') return Reflect.set(t, k, v);
-        call(font, (raw) => raw.setHeader(k, v), true);
-        return true;
-      },
-      deleteProperty(t, k) {
-        if (typeof k !== 'string') return Reflect.deleteProperty(t, k);
-        call(font, (raw) => raw.removeHeader(k), true);
-        return true;
       },
       has(t, k) {
         return (typeof k === 'string' && hasOwn(headersData(font), k)) || Reflect.has(t, k);
@@ -1212,12 +1507,12 @@ const headersView = (font) =>
         if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
         return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
       },
-      defineProperty(t, k, desc) {
-        if (typeof k !== 'string' || !('value' in desc)) return false;
-        call(font, (raw) => raw.setHeader(k, desc.value), true);
-        return true;
-      },
     },
+    {
+      set: (k, v) => call(font, (raw) => raw.setHeader(k, v), true),
+      delete: (k) => call(font, (raw) => raw.removeHeader(k), true),
+    },
+    true,
   );
 
 const propsData = (font) => {
@@ -1242,41 +1537,38 @@ const setProp = (font, k, v) => {
 };
 
 const propsView = (font) =>
-  new Proxy(Object.create(null), {
-    get(t, k) {
-      if (typeof k === 'string') {
+  liveView(
+    font,
+    Object.create(null),
+    propsData,
+    {
+      get(t, k) {
+        if (typeof k === 'string') {
+          const d = propsData(font);
+          if (hasOwn(d, k)) return fresh(d[k]);
+        }
+        return undefined;
+      },
+      has(t, k) {
+        return typeof k === 'string' && hasOwn(propsData(font), k);
+      },
+      ownKeys() {
+        return Object.keys(propsData(font));
+      },
+      getOwnPropertyDescriptor(t, k) {
         const d = propsData(font);
-        if (hasOwn(d, k)) return fresh(d[k]);
-      }
-      return undefined;
+        if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
+        return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
+      },
     },
-    set(t, k, v) {
-      if (typeof k !== 'string') return false;
-      setProp(font, k, v);
-      return true;
+    {
+      set: (k, v) => setProp(font, k, v),
+      delete: (k) => {
+        if (hasOwn(propsData(font), k)) call(font, (raw) => raw.delprop(k), true);
+      },
     },
-    deleteProperty(t, k) {
-      if (typeof k !== 'string') return false;
-      if (hasOwn(propsData(font), k)) call(font, (raw) => raw.delprop(k), true);
-      return true;
-    },
-    has(t, k) {
-      return typeof k === 'string' && hasOwn(propsData(font), k);
-    },
-    ownKeys() {
-      return Object.keys(propsData(font));
-    },
-    getOwnPropertyDescriptor(t, k) {
-      const d = propsData(font);
-      if (typeof k !== 'string' || !hasOwn(d, k)) return undefined;
-      return { value: fresh(d[k]), writable: true, enumerable: true, configurable: true };
-    },
-    defineProperty(t, k, desc) {
-      if (typeof k !== 'string' || !('value' in desc)) return false;
-      setProp(font, k, desc.value);
-      return true;
-    },
-  });
+    false,
+  );
 
 /**
  * A 17-slot meta list whose item assignment is written back through `write`
@@ -1299,10 +1591,9 @@ const encodedMeta = (font, cp) => {
   let m = c.metas.get(cp);
   if (m === undefined) {
     if (!cpset(font).has(cp)) return undefined;
-    const raw = font[S].raw.lookup(cp);
-    if (raw === undefined) return undefined;
-    const values = raw.meta();
-    raw.free();
+    const slot = slotOf(font, cp);
+    if (slot === null) return undefined;
+    const values = slot.meta.map((v) => (Array.isArray(v) ? [...v] : v));
     m = metaList(values, (fields) => {
       const g = font[S].raw.lookup(cp);
       if (g === undefined) return;
@@ -1582,7 +1873,16 @@ export class Font {
       cp2char: null,
       views: null,
     });
-    const views = { headers: headersView(this), props: propsView(this), glyphs: new GlyphsView(this), propnames: new PropnamesView(this) };
+    const headersLive = headersView(this);
+    const propsLive = propsView(this);
+    const views = {
+      headers: headersLive.proxy,
+      props: propsLive.proxy,
+      headersLive,
+      propsLive,
+      glyphs: new GlyphsView(this),
+      propnames: new PropnamesView(this),
+    };
     this[S].views = views;
     Object.defineProperties(this, {
       headers: {
@@ -1749,7 +2049,15 @@ export class Font {
   // ------------------------------------------------------------- properties
 
   getprop(key) {
-    const v = this[S].raw.getprop(String(key));
+    const k = String(key);
+    // ASCII keys from the projection cached per revision (Rust lower-cases
+    // the same way); other keys keep the Rust case mapping
+    if (/^[\x00-\x7f]*$/.test(k)) {
+      const d = propsData(this);
+      const lower = k.toLowerCase();
+      return hasOwn(d, lower) ? fresh(d[lower]) : null;
+    }
+    const v = this[S].raw.getprop(k);
     return v === undefined ? null : v;
   }
 
@@ -1774,7 +2082,8 @@ export class Font {
   // --------------------------------------------------------------- querying
 
   get length() {
-    return this[S].raw.length();
+    // the encoded codes are cached per edit revision (`Font::length` counts them)
+    return cplist(this).length;
   }
 
   itercps(order, r) {
@@ -1782,19 +2091,23 @@ export class Font {
     if (!ORDERS.includes(o)) {
       throw new Error(`Unknown order ${String(o)}`);
     }
-    return call(this, (raw) => raw.itercps(o, rangeArg(r ?? null)));
+    if (r === undefined || r === null) return [...cpsInOrder(this, o)];
+    return call(this, (raw) => raw.itercps(o, rangeArg(r)));
   }
 
   *iterglyphs(order, r) {
-    for (const cp of this.itercps(order, r)) {
-      yield this.glyphbycp(cp);
+    const cps = this.itercps(order, r);
+    for (let i = 0; i < cps.length; i++) {
+      // read the slots a batch at a time (each read sees the current model)
+      if (i % SLOT_BATCH === 0) prefetchSlots(this, cps.slice(i, i + SLOT_BATCH));
+      yield this.glyphbycp(cps[i]);
     }
   }
 
   glyphbycp(codepoint) {
     if (!isInt(codepoint)) return null;
-    const raw = this[S].raw.lookup(codepoint);
-    return raw === undefined ? null : glyphOf(raw, this);
+    const slot = slotOf(this, codepoint);
+    return slot === null ? null : glyphOfSlot(this, slot);
   }
 
   glyph(character) {
@@ -1862,9 +2175,9 @@ export class Font {
     if (isGlyph) {
       try {
         push(glyph);
-        call(this, (raw) => raw.addHandle(glyph[S].raw, rep), true);
+        call(this, (raw) => raw.addHandle(handle(glyph), rep), true);
       } finally {
-        if (glyph[S].raw.isAttached()) {
+        if (handle(glyph).isAttached()) {
           glyph.font = this;
           glyph[S].epoch = this[S].epoch;
           glyph[S].meta = null;
@@ -1881,7 +2194,7 @@ export class Font {
   removeglyph(cpOrGlyph) {
     if (cpOrGlyph instanceof Glyph) {
       if (cpOrGlyph.font === this) {
-        call(this, (raw) => raw.removeHandle(cpOrGlyph[S].raw), true);
+        call(this, (raw) => raw.removeHandle(handle(cpOrGlyph)), true);
       } else {
         const cp = cpOrGlyph.cp();
         if (isInt(cp) && cp >= 0) call(this, (raw) => raw.removeglyph(cp), true);
@@ -2301,8 +2614,13 @@ export const $Bitmap = (bin_bitmap_list) => new Bitmap(bin_bitmap_list);
  */
 export const rawHandle = (obj) => {
   if (obj instanceof Font) return obj[S].raw;
-  if (obj instanceof Glyph) return obj[S].raw;
-  if (obj instanceof Bitmap) return obj[S];
+  if (obj instanceof Glyph) return handle(obj);
+  if (obj instanceof Bitmap) {
+    // the caller may edit the raster directly: stop serving cached rows
+    const raw = nat(obj);
+    obj[S].pinned = true;
+    return raw;
+  }
   throw new TypeError('expected a compatibility Font, Glyph or Bitmap');
 };
 

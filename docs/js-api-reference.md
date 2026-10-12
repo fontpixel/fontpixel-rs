@@ -12929,6 +12929,12 @@ export class BdfparserRawBitmap {
      */
     bbox(): [number, number, number, number];
     /**
+     * The rows of [`bindata`](Self::bindata) joined by `\n` (one string
+     * across the boundary; an empty bitmap and a single empty row both
+     * give `''`, told apart by `height()`).
+     */
+    bindataText(): string;
+    /**
      * The rows as a new array of strings (`Bitmap::bindata`).
      */
     bindata(): string[];
@@ -12977,6 +12983,11 @@ export class BdfparserRawBitmap {
      * Mirror top-bottom (`Bitmap::flipv`).
      */
     flipv(): void;
+    /**
+     * The constructor's raster from its rows joined by `\n` and the row
+     * count (one string across the boundary; same checks).
+     */
+    static fromRowsText(text: string, height: number): BdfparserRawBitmap;
     /**
      * Parse a `toString()` picture (`#`=1, `.`=0, `&`=2, digits accepted;
      * outer empty lines ignored) (`Bitmap::fromstring`).
@@ -13172,6 +13183,14 @@ export class BdfparserRawFont {
      */
     addglyph(fields: Record<string, unknown>, replace: boolean): void;
     /**
+     * The handle [`lookup`](Self::lookup) returned when
+     * [`lookupSlot`](Self::lookup_slot) gave `id`, `generation`, `revision`
+     * (`Font::attach`). After an edit of the model the 17-slot `snapshot`
+     * from the same `lookupSlot` result is needed: without it the result
+     * is then `undefined`.
+     */
+    attachSlot(id: number, generation: any, revision: any, snapshot: unknown[] | undefined): BdfparserRawGlyph | undefined;
+    /**
      * One-character string → code (`Font::char2cp`).
      */
     char2cp(ch: string): number | undefined;
@@ -13295,6 +13314,18 @@ export class BdfparserRawFont {
      */
     loadTtf(data: BytesLike, pixelsize?: number): void;
     /**
+     * What [`lookup`](Self::lookup) would attach to, without making the
+     * handle (`Font::slot`): `[glyph ID, generation, model revision,
+     * ...17 meta slots]`, or `undefined`. Pass the first three to
+     * [`attachSlot`](Self::attach_slot) to get the handle.
+     */
+    lookupSlot(cp: any): unknown[] | undefined;
+    /**
+     * [`lookupSlot`](Self::lookup_slot) for many codes in one call (`null`
+     * for a code without a glyph).
+     */
+    lookupSlots(cps: Float64Array): (unknown[] | null)[];
+    /**
      * Attached handle, or `undefined` without a warning (`Font::lookup`).
      */
     lookup(cp: any): BdfparserRawGlyph | undefined;
@@ -13342,6 +13373,11 @@ export class BdfparserRawFont {
      * Remove a code; missing codes are a no-op (`Font::removeglyph`).
      */
     removeglyph(cp: any): void;
+    /**
+     * Number of report entries so far (`Font::report_len`): the count
+     * [`warningsSince`](Self::warnings_since) returns, without the messages.
+     */
+    reportLength(): number;
     /**
      * Structured warnings collected so far (`Font::report`), as plain data.
      */
@@ -20072,6 +20108,7 @@ export interface InitOutput {
     readonly bdfparserrawbitmap_assign: (a: number, b: number) => [number, number];
     readonly bdfparserrawbitmap_bbox: (a: number) => [number, number, number];
     readonly bdfparserrawbitmap_bindata: (a: number) => [number, number, number, number];
+    readonly bdfparserrawbitmap_bindataText: (a: number) => [number, number, number, number];
     readonly bdfparserrawbitmap_blank: (a: number, b: number) => [number, number, number];
     readonly bdfparserrawbitmap_bold: (a: number, b: number) => [number, number];
     readonly bdfparserrawbitmap_bytepad: (a: number, b: number) => [number, number];
@@ -20083,6 +20120,7 @@ export interface InitOutput {
     readonly bdfparserrawbitmap_equals: (a: number, b: number) => [number, number, number];
     readonly bdfparserrawbitmap_fliph: (a: number) => [number, number];
     readonly bdfparserrawbitmap_flipv: (a: number) => [number, number];
+    readonly bdfparserrawbitmap_fromRowsText: (a: number, b: number, c: number) => [number, number, number];
     readonly bdfparserrawbitmap_fromstring: (a: number, b: number) => [number, number, number];
     readonly bdfparserrawbitmap_getpixel: (a: number, b: number, c: number) => [number, number, number];
     readonly bdfparserrawbitmap_glow: (a: number, b: number) => [number, number];
@@ -20121,6 +20159,7 @@ export interface InitOutput {
     readonly bdfparserrawcodec_unicode2cp: (a: number, b: number) => number;
     readonly bdfparserrawfont_addHandle: (a: number, b: number, c: number) => [number, number];
     readonly bdfparserrawfont_addglyph: (a: number, b: any, c: number) => [number, number];
+    readonly bdfparserrawfont_attachSlot: (a: number, b: number, c: any, d: any, e: any) => [number, number, number];
     readonly bdfparserrawfont_char2cp: (a: number, b: number, c: number) => [number, number, number];
     readonly bdfparserrawfont_charset: (a: number) => [number, number, number, number];
     readonly bdfparserrawfont_charsetconvert: (a: number, b: number, c: number) => [number, number];
@@ -20151,6 +20190,8 @@ export interface InitOutput {
     readonly bdfparserrawfont_loadString: (a: number, b: number, c: number) => [number, number];
     readonly bdfparserrawfont_loadTtf: (a: number, b: any, c: number) => [number, number];
     readonly bdfparserrawfont_lookup: (a: number, b: any) => [number, number, number];
+    readonly bdfparserrawfont_lookupSlot: (a: number, b: any) => [number, number, number];
+    readonly bdfparserrawfont_lookupSlots: (a: number, b: number, c: number) => [number, number, number];
     readonly bdfparserrawfont_merge: (a: number, b: number, c: number) => [number, number];
     readonly bdfparserrawfont_model: (a: number) => [number, number, number];
     readonly bdfparserrawfont_newglyph: (a: number, b: any, c: number, d: number, e: number, f: number, g: any) => [number, number, number];
@@ -20162,6 +20203,7 @@ export interface InitOutput {
     readonly bdfparserrawfont_removeUnencoded: (a: number, b: number, c: number) => [number, number, number];
     readonly bdfparserrawfont_removeglyph: (a: number, b: any) => [number, number];
     readonly bdfparserrawfont_report: (a: number) => [number, number, number];
+    readonly bdfparserrawfont_reportLength: (a: number) => [number, number, number];
     readonly bdfparserrawfont_save: (a: number, b: number, c: number) => [number, number];
     readonly bdfparserrawfont_saveTo: (a: number, b: any, c: number, d: number, e: number) => [number, number];
     readonly bdfparserrawfont_setConverters: (a: number, b: any, c: any) => [number, number];
@@ -22174,6 +22216,9 @@ Each rule below is checked against the Rust public inventory by `tools/bindings/
 | `fontpixel::compat::bdfparser::font::Font::set_header` | adapted | font.headers[key] = value (BdfparserRawFont.setHeader); bdfparser item assignment on the headers dict |
 | `fontpixel::compat::bdfparser::font::Font::remove_header` | adapted | delete font.headers[key] (BdfparserRawFont.removeHeader); bdfparser item deletion on the headers dict |
 | `fontpixel::compat::bdfparser::font::Font::lookup` | adapted | Font.glyphbycp / glyphs.get (BdfparserRawFont.lookup); bdfparser reads glyphs without a warning through its glyphs dict; the binding uses the non-warning lookup there |
+| `fontpixel::compat::bdfparser::font::Font::slot` | internal | ; binding support: the JS layer reads a glyph's slot and metadata (BdfparserRawFont.lookupSlot/lookupSlots, cached per edit revision) and makes the attached handle only when an operation needs it; Python makes handles at once (RawFont.lookup) |
+| `fontpixel::compat::bdfparser::font::Font::attach` | internal | ; binding support: the handle for a slot read with Font::slot (BdfparserRawFont.attachSlot), exactly the handle Font::lookup gave at that time |
+| `fontpixel::compat::bdfparser::font::Font::report_len` | internal | ; binding support: the JS layer skips Font::warnings_since after a call that added no report entry (BdfparserRawFont.reportLength) |
 | `fontpixel::compat::bdfparser::font::Font::unencoded_*` | adapted | Font.unencoded (BdfparserRawFont.{camelName}); bdfparser's unencoded list of {'altcode', 'meta'} dicts; item assignment into a meta list writes through the slot's handle |
 | `fontpixel::compat::bdfparser::font::Font::set_unencoded_*` | adapted | font.unencoded[i].altcode = v / .meta[k] = v (BdfparserRawFont.{camelName}); bdfparser edits the stored unencoded list entries in place |
 | `fontpixel::compat::bdfparser::font::Font::remove_unencoded` | adapted | font.unencoded.length = n / splice (BdfparserRawFont.removeUnencoded); bdfparser list operations on the unencoded list; an index out of range raises IndexError |

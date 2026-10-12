@@ -78,6 +78,19 @@ impl Glyph {
             synced: Rc::default(),
         })
     }
+    /// An attached handle on slot `id` at `generation` holding `snapshot`
+    /// (what [`attached`](Self::attached) built when the slot held it).
+    pub(super) fn with_snapshot(font: &Font, id: GlyphId, generation: u64, snapshot: Meta) -> Self {
+        let m = Rc::new(snapshot);
+        Self {
+            font: font.shared(),
+            id: Some(id),
+            generation,
+            ever_attached: true,
+            meta: m.clone(),
+            synced: m,
+        }
+    }
     pub(super) fn attached(font: &Font, id: GlyphId) -> Self {
         let s = font.state.borrow();
         let m = Rc::new(s.core().glyph(id).map(meta).unwrap_or(vec![V::Null; 17]));

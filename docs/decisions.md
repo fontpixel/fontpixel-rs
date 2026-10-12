@@ -2280,3 +2280,45 @@ Benchmark reporting uses the median of same-round pure/measured ratios and inclu
 - Final site build: 13,072 files, 6,928 slots remaining below the owner-specified
   20,000 limit; net reduction 6,853. Final acceptance and five-run measurements
   are in reports/phase-9.md. No deployment and no project final report.
+
+## 2026-10-12 — bdfparser-js compatibility: small-call performance
+
+**Context:** Phase 8 measured the JS compatibility layer 3–50× slower than
+pure-JS bdfparser-js 3.0.0 on small calls (`Font.length` scanned every glyph,
+`getprop` rebuilt the property map in Rust, every glyph read made a wasm
+handle and a JSON round trip, bitmaps crossed the boundary for every read).
+This decides whether npm `latest` of the rust-backed bdfparser-js 4.x can be
+4.x. Behaviour must not change (compat tests, the unmodified bdfparser-js
+suite at 1178/11/3, the Python suites).
+
+**Choices:**
+- Per-revision caches in the JS layer serve `length`, `itercps()` (no range;
+  a copy per call), `getprop()` (ASCII keys; other keys keep Rust's case
+  mapping) and glyph slots.
+- `headers`/`props` stay Proxies (writes, deletes and new keys must reach
+  the model at once and in order; a plain object with deferred
+  reconciliation would reorder integer-like keys and delay errors). Between
+  edits their target mirrors the projection and the read traps are removed;
+  array values are accessors returning a copy, so a property descriptor of
+  such a key reports an accessor instead of a data property — the only
+  reflective difference, recorded here. Symbol keys behave as before.
+  A spread over a Proxy stays far slower than over a plain object.
+- Glyphs read from a font make their wasm handle on demand. The shared core
+  gains binding-support methods (`Font::slot`, `Font::attach`,
+  `Font::report_len`; coverage status `internal`) and a model revision
+  renewed by every `core_mut()`; `attach` returns exactly `lookup`'s handle
+  while the revision is unchanged and rebuilds it from the slot's
+  generation and snapshot otherwise, so attachment and merge semantics are
+  those of an eager handle. Python keeps eager handles. Cost: the slot
+  cache holds the metadata snapshot of every glyph read until the next edit
+  or until the font is collected (tens of MB of JS heap after one
+  `iterglyphs` over a 38k-glyph font).
+- Bitmaps built from row lists keep the rows JS-side (up to 4096×4096 and
+  64K pixels; larger lists still meet the native limits at construction)
+  and make the raster on demand; rows cross the boundary as one string;
+  `todata(4/5)` is memoized until the next edit; `rawHandle()` pins a bitmap
+  to its raster.
+- Not changed: the shared core's drawing, cropping and BDF writer
+  algorithms (Python semantics, shared with the Python binding).
+  Measurements and the remaining slower calls are in
+  benches/PHASE8-REPORT.md ("after compat performance fixes").
