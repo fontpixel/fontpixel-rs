@@ -25,7 +25,10 @@ fontpixel-rs 发 crates；fontpixel.com 更新三个库的文档（新 API 标 s
   四个构建）、check.yml/release.yml、RELEASING.md（列出用户需配置的 secrets/受信任发布者/环境）、测试字体入库、
   docs/bdfparser-compat-differences.md（3.x→4.x 行为变化，供 4.0.0 CHANGELOG）。本机只验证了 Linux x86_64；其余靠 CI。
 - 两个 bdfparser 仓库已从 `v3.0` 建 `v3` 分支并 push（CI 参考套件用；`v3.0` 远端分支仍在，旧的）。
-- 下一步：看 CI 结果并修复 → 第 3 步 bdfparser 4.x。
+- CI 第 1 轮（38260036991）10 个 job 失败，已在 `ca0d48c`、`6ea0cde` 修复并 push（rustfmt、gzip 测试、Windows 路径/换行、
+  wasm bdfparser 档 clippy 与测试范围、crates 预演脚本）；Node 18 的 3 个失败原因未知（日志只有尾部，已改为完整打印）。
+  第 2 轮 run 38305833681（2026-10-12 22:41 开始）。续接：`gh run view 38305833681 -R fontpixel/fontpixel-rs` 看结果、修复。
+- 下一步：CI 全绿 → 第 3 步 bdfparser 4.x。
 2026-10-07：用户改定的 fontpixel.com 浏览器字体工具已完成，详见
 [reports/phase-9.md](reports/phase-9.md) 与 [验收数据](reports/phase9-validation/summary.json)。
 
