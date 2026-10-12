@@ -272,6 +272,36 @@ fn obj(v: Value) -> serde_json::Map<String, Value> {
 }
 
 #[test]
+fn slots_attach_like_lookup_before_and_after_edits() {
+    let mut f = mini();
+    let (id, generation, revision, snapshot) = f.slot(65).unwrap();
+    assert_eq!(&snapshot, f.lookup(65).unwrap().meta());
+    assert!(f.slot(999).is_none());
+    // an unchanged model gives lookup's handle
+    let a = f.attach(id, generation, revision, None).unwrap();
+    assert!(a.is_attached() && a.meta() == &snapshot);
+    // after an edit (through another handle) the snapshot is needed
+    f.glyphbycp(65)
+        .unwrap()
+        .setmeta(&obj(json!({"dwx0": 9})))
+        .unwrap();
+    assert!(f.attach(id, generation, revision, None).is_none());
+    let mut b = f
+        .attach(id, generation, revision, Some(snapshot.clone()))
+        .unwrap();
+    assert!(b.is_attached() && b.meta() == &snapshot);
+    // it merges like a handle taken before the edit: its own change wins,
+    // the other handle's change stays
+    b.setmeta(&obj(json!({"swx0": 500}))).unwrap();
+    let now = f.lookup(65).unwrap().meta().clone();
+    assert_eq!((now[6].clone(), now[8].clone()), (json!(500), json!(9)));
+    // the report length is the count warnings_since returns
+    assert_eq!(f.report_len(), f.warnings_since(0).1);
+    f.set_header("fbbx", json!(8));
+    assert!(f.slot(65).unwrap().2 != revision);
+}
+
+#[test]
 fn header_and_unencoded_editors_edit_in_place() {
     let mut f = mini();
     let mut g = f.glyphbycp(65).unwrap();

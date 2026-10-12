@@ -341,12 +341,25 @@ fontpixel/compat/bdfparser/cli   loadFontFile, main (Node.js; node:fs in JS, in-
   (`font.glyphs.get(cp)[i] = v`, `font.unencoded[i].meta[k] = v`) and to
   `font.unencoded[i].altcode` is written back; `push`, `splice` and
   `length = n` on `font.unencoded` edit the font. Values read are copies
-  (pushing into a returned array does not change the font).
+  (pushing into a returned array does not change the font). Between edits
+  the `headers`/`props` Proxies have no read traps: their target mirrors the
+  cached projection (array values as accessors returning a copy) and the read
+  traps return only until the first read after an edit. `length`,
+  `itercps()` and `getprop()` read the same per-revision cache.
 - `Glyph.meta` is a plain object; direct edits are written with the next
   editing method (only the changed keys, so another handle's edits are not
-  reverted). `Bitmap.bindata` is an accessor building the rows on each read.
-  Handles live in non-enumerable symbol properties, so `toEqual`-style
-  comparisons see bdfparser-js's attributes only.
+  reverted). A glyph read from a font (`glyphbycp`, `glyph`, `iterglyphs`)
+  holds its slot and metadata snapshot (`BdfparserRawFont.lookupSlot`, cached
+  per edit revision; `iterglyphs` reads them in batches with `lookupSlots`)
+  and makes its attached handle only when an operation needs one
+  (`attachSlot`: the handle `lookup` gave when the slot was read).
+  A `Bitmap` built from rows keeps the row strings JS-side (up to 4096×4096
+  and 64K pixels; larger lists are checked natively at construction) and
+  makes the native raster only for an operation that needs it; native edits
+  drop the rows and the next read takes them from the raster once.
+  `Bitmap.bindata` returns a new array on each read. Handles live in
+  non-enumerable symbol properties, so `toEqual`-style comparisons see
+  bdfparser-js's attributes only.
 - Warnings: the Rust model records them in its report; after each call the
   layer passes the new warning-level entries to the current handler (with
   bdfparser-js's quoting: `JSON.stringify` for numbers in parse messages,

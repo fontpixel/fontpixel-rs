@@ -127,6 +127,31 @@ impl JsCompatBitmap {
         self.read(|b| Ok(b.bindata()))
     }
 
+    /// The rows of [`bindata`](Self::bindata) joined by `\n` (one string
+    /// across the boundary; an empty bitmap and a single empty row both
+    /// give `''`, told apart by `height()`).
+    #[wasm_bindgen(js_name = bindataText)]
+    pub fn bindata_text(&self) -> JsResult<String> {
+        self.read(|b| Ok(b.bindata().join("\n")))
+    }
+
+    /// The constructor's raster from its rows joined by `\n` and the row
+    /// count (one string across the boundary; same checks).
+    #[wasm_bindgen(js_name = fromRowsText)]
+    pub fn from_rows_text(text: &str, height: u32) -> JsResult<JsCompatBitmap> {
+        let rows: Vec<String> = if height == 0 {
+            Vec::new()
+        } else {
+            text.split('\n').map(str::to_owned).collect()
+        };
+        if rows.len() != height as usize {
+            return Err(errors::invalid(
+                "Bitmap rows must be rectangular labels 0, 1, 2",
+            ));
+        }
+        done(bp::Bitmap::new(&rows)).map(Self::wrap)
+    }
+
     /// Replace the raster with new rows (`Bitmap::new`).
     #[wasm_bindgen(js_name = setBindata)]
     pub fn set_bindata(

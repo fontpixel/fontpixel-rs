@@ -223,6 +223,18 @@ fn save_options(format: &str, options: &JsValue) -> JsResult<bp::SaveOptions> {
     })
 }
 
+/// `Font::slot` as `[id, generation, revision, ...meta]`.
+fn slot_value(
+    (id, generation, revision, meta): (fontpixel::model::GlyphId, u64, u64, bp::Meta),
+) -> V {
+    let mut out = Vec::with_capacity(20);
+    out.push(V::from(id.index()));
+    out.push(V::from(generation));
+    out.push(V::from(revision));
+    out.extend(meta);
+    V::Array(out)
+}
+
 fn glyphs_to_js(glyphs: Vec<bp::Glyph>) -> Array {
     glyphs
         .into_iter()
@@ -365,6 +377,13 @@ impl JsCompatFont {
             let list: Array = messages.iter().map(|m| JsValue::from_str(m)).collect();
             Ok(Array::of2(&list, &JsValue::from(count as u32)).into())
         })
+    }
+
+    /// Number of report entries so far (`Font::report_len`): the count
+    /// [`warningsSince`](Self::warnings_since) returns, without the messages.
+    #[wasm_bindgen(js_name = reportLength)]
+    pub fn report_length(&self) -> JsResult<u32> {
+        self.read(|f| Ok(f.report_len() as u32))
     }
 
     /// Projected SPEC headers in insertion order (`Font::headers`).
@@ -598,6 +617,66 @@ impl JsCompatFont {
     pub fn lookup(&self, cp: JsValue) -> JsResult<Option<JsCompatGlyph>> {
         let cp: i64 = conv::int_from_js(&cp, "cp")?;
         self.read(|f| Ok(f.lookup(cp).map(JsCompatGlyph::wrap)))
+    }
+
+    /// What [`lookup`](Self::lookup) would attach to, without making the
+    /// handle (`Font::slot`): `[glyph ID, generation, model revision,
+    /// ...17 meta slots]`, or `undefined`. Pass the first three to
+    /// [`attachSlot`](Self::attach_slot) to get the handle.
+    #[wasm_bindgen(js_name = lookupSlot, unchecked_return_type = "unknown[] | undefined")]
+    pub fn lookup_slot(&self, cp: JsValue) -> JsResult<JsValue> {
+        let cp: i64 = conv::int_from_js(&cp, "cp")?;
+        self.read(|f| match f.slot(cp) {
+            Some(slot) => v2js(&slot_value(slot)),
+            None => Ok(JsValue::UNDEFINED),
+        })
+    }
+
+    /// [`lookupSlot`](Self::lookup_slot) for many codes in one call (`null`
+    /// for a code without a glyph).
+    #[wasm_bindgen(js_name = lookupSlots, unchecked_return_type = "(unknown[] | null)[]")]
+    pub fn lookup_slots(&self, cps: Vec<f64>) -> JsResult<JsValue> {
+        let cps = cps
+            .into_iter()
+            .map(|c| conv::int::<i64>(c, "cp"))
+            .collect::<JsResult<Vec<_>>>()?;
+        self.read(|f| {
+            v2js(&V::Array(
+                cps.iter()
+                    .map(|&cp| f.slot(cp).map_or(V::Null, slot_value))
+                    .collect(),
+            ))
+        })
+    }
+
+    /// The handle [`lookup`](Self::lookup) returned when
+    /// [`lookupSlot`](Self::lookup_slot) gave `id`, `generation`, `revision`
+    /// (`Font::attach`). After an edit of the model the 17-slot `snapshot`
+    /// from the same `lookupSlot` result is needed: without it the result
+    /// is then `undefined`.
+    #[wasm_bindgen(js_name = attachSlot)]
+    pub fn attach_slot(
+        &self,
+        id: f64,
+        generation: JsValue,
+        revision: JsValue,
+        #[wasm_bindgen(unchecked_param_type = "unknown[] | undefined")] snapshot: JsValue,
+    ) -> JsResult<Option<JsCompatGlyph>> {
+        let id = crate::model::glyph_id(conv::int(id, "id")?);
+        let generation: u64 = conv::int_from_js(&generation, "generation")?;
+        let revision: u64 = conv::int_from_js(&revision, "revision")?;
+        let snapshot = if snapshot.is_undefined() {
+            None
+        } else {
+            match js2v(&snapshot)? {
+                V::Array(m) if m.len() == 17 => Some(m),
+                _ => return Err(errors::invalid("snapshot must be the 17 meta slots")),
+            }
+        };
+        self.read(|f| {
+            Ok(f.attach(id, generation, revision, snapshot)
+                .map(JsCompatGlyph::wrap))
+        })
     }
 
     /// Attached handle by character, with bdfparser's warning on a miss (`Font::glyph`).

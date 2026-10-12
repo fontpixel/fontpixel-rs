@@ -678,6 +678,90 @@ test('compat: header and unencoded editors keep handles', { skip }, () => {
   assert.ok(g._attached); // unencoded edits never detach other handles
 });
 
+test('compat: cached reads and on-demand handles follow every edit', { skip }, () => {
+  const f = mini();
+  // length, itercps and getprop come from the per-revision cache
+  assert.equal(f.length, 3);
+  const cps = f.itercps();
+  cps.push(1); // a copy
+  assert.deepEqual(f.itercps(), [32, 65, 66]);
+  assert.deepEqual(f.itercps(2), [66, 65, 32]);
+  assert.equal(f.getprop('FAMILY_NAME'), f.props.family_name);
+  assert.equal(f.getprop('nope'), null);
+  f.removeglyph(66);
+  assert.equal(f.length, 2);
+  assert.deepEqual(f.itercps(-1), [65, 32]);
+  // headers/props read without traps between edits, and see every edit
+  const h = f.headers;
+  const comments = h.comment;
+  comments.push('x'); // a copy
+  assert.notDeepEqual(h.comment, comments);
+  f.headers.fbbx = 11;
+  assert.equal(h.fbbx, 11);
+  f.updatebbox();
+  assert.deepEqual({ ...h }, { ...f.headers });
+  f.setprop('family_name', 'Other');
+  assert.equal(f.props.family_name, 'Other');
+  assert.equal(f.getprop('family_name'), 'Other');
+  const tag = Symbol('tag');
+  assert.throws(() => {
+    f.props[tag] = 1; // props take string keys only, as before
+  }, TypeError);
+  h[tag] = 1; // headers keep symbols unprojected, as before
+  assert.equal(h[tag], 1);
+  assert.deepEqual(Object.getOwnPropertySymbols(h), []);
+  assert.equal(h.fbbx, f.headers.fbbx);
+  assert.equal(f.props.family_name, 'Other');
+  // a glyph read before another handle's edit merges like an eager handle
+  const g = f.glyphbycp(65);
+  const other = f.glyphbycp(65);
+  other.setmeta({ dwx0: 9 });
+  g.setmeta({ swx0: 500 });
+  assert.ok(g._attached);
+  assert.equal(f.glyphbycp(65).meta.dwx0, 9);
+  assert.equal(f.glyphbycp(65).meta.swx0, 500);
+  // ... and one whose slot was removed is detached
+  const gone = f.glyphbycp(32);
+  f.removeglyph(32);
+  assert.equal(gone._attached, false);
+  assert.equal(f.glyphbycp(32), null);
+  // iterglyphs sees edits made while iterating
+  const g2 = mini();
+  const seen = [];
+  for (const x of g2.iterglyphs(0)) {
+    seen.push(x === null ? null : x.cp());
+    if (seen.length === 1) g2.removeglyph(66);
+  }
+  assert.deepEqual(seen, [32, 65, null]);
+});
+
+test('compat: bitmap rows stay current with the raster', { skip }, () => {
+  const b = new bp.Bitmap(['010', '111']);
+  const c = b.clone();
+  c.setpixel(0, 0, 2);
+  assert.deepEqual(b.bindata, ['010', '111']);
+  assert.deepEqual(c.bindata, ['210', '111']);
+  assert.equal(c.getpixel(0, 0), 2);
+  assert.deepEqual(c.todata(2), [[2, 1, 0], [1, 1, 1]]);
+  assert.deepEqual(b.todata(4), ['2', '7']);
+  b.bindata = ['11', '00'];
+  assert.deepEqual(b.todata(4), ['3', '0']);
+  assert.ok(b.equals(new bp.Bitmap(['11', '00'])));
+  assert.deepEqual(new bp.Bitmap(['', '']).clone().crop(0, 1).bindata, ['']);
+  // a transform callback's bitmap is the glyph's raster
+  const f = mini();
+  f.glyphbycp(65).transform((bm) => {
+    bm.bindata = bm.bindata.map((r) => r.replace(/./g, '1'));
+    return bm;
+  });
+  assert.ok(f.glyphbycp(65).draw(1).bindata.every((r) => /^1+$/.test(r)));
+  // rawHandle() edits are seen at once
+  const p = new bp.Bitmap(['00']);
+  bp.rawHandle(p).setpixel(1, 0, 1);
+  assert.deepEqual(p.bindata, ['01']);
+  assert.equal(p.getpixel(1, 0), 1);
+});
+
 test('compat: cli main in-process', { skip }, () => {
   const { dir, cleanup } = tempDir('fontpixel-compat-cli-');
   try {

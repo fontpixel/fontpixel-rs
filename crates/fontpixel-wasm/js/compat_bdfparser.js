@@ -8,8 +8,10 @@
 // `fontpixel.compat.bdfparser`): `Font`/`Glyph`/`Bitmap` hold handles, and
 // `font.headers`, `font.props`, `font.glyphs`, `font.unencoded` and
 // `font._propnames` are live views that project the model when read and edit
-// it in place when written (glyph handles stay attached). Pixels become row
-// strings only when `bindata` (or another export) is read.
+// it in place when written (glyph handles stay attached). Reads are served
+// from projections cached per edit revision; glyphs read from a font make
+// their handle on first need, and bitmaps built from rows keep the rows
+// JS-side until a native operation needs the raster.
 //
 // The module initializes the WebAssembly instance itself (top-level
 // `await init()`); it needs the `full` build (capability `compat_bdfparser`),
@@ -384,9 +386,8 @@ const lazyFits = (rows) => {
   return h <= LAZY_SIDE && w <= LAZY_SIDE && w * h <= LAZY_PIXELS;
 };
 
-/** Native raster of validated rows (`fromstring` reads them exactly when they are non-empty). */
-const rawOfRows = (rows) =>
-  guard(() => (rows.length > 0 && rows[0].length > 0 ? RawBitmap.fromstring(rows.join('\n')) : new RawBitmap(rows)));
+/** Native raster of validated rows. */
+const rawOfRows = (rows) => guard(() => RawBitmap.fromRowsText(rows.join('\n'), rows.length));
 
 /** The native raster of a bitmap, created from its rows on first use. */
 const nat = (b) => {
@@ -399,7 +400,8 @@ const nat = (b) => {
 const rowsOf = (b) => {
   const st = b[S];
   if (st.rows !== null && !st.pinned) return st.rows;
-  const rows = st.raw.bindata();
+  const text = st.raw.bindataText();
+  const rows = text === '' && st.raw.height() === 0 ? [] : text.split('\n');
   if (!st.pinned) st.rows = rows;
   return rows;
 };
@@ -912,28 +914,62 @@ const glyphOf = (raw, font) => {
   return g;
 };
 
-const initGlyph = (g, raw, font, meta) => {
-  hidden(g, S, { raw, meta, epoch: font instanceof Font ? font[S].epoch : 0 });
-  Object.defineProperty(g, 'meta', {
-    get: () => {
-      const st = g[S];
-      if (st.meta === null) st.meta = listToMeta(st.raw.meta());
-      return st.meta;
-    },
-    set: (v) => {
-      g[S].meta = v;
-    },
-    enumerable: true,
-    configurable: true,
+/**
+ * A glyph read from a font: it holds the font's slot (`slotOf`) and makes
+ * its attached handle only when an operation needs one (`handle`), which is
+ * then the handle `lookup` gave when the slot was read.
+ */
+const glyphOfSlot = (font, slot) => {
+  const g = Object.create(Glyph.prototype);
+  initGlyph(g, null, font, null, slot);
+  return g;
+};
+
+const GLYPH_META = {
+  get() {
+    const st = this[S];
+    if (st.meta === null) st.meta = listToMeta(metaNow(st));
+    return st.meta;
+  },
+  set(v) {
+    this[S].meta = v;
+  },
+  enumerable: true,
+  configurable: true,
+};
+
+const initGlyph = (g, raw, font, meta, slot = null) => {
+  const isFont = font instanceof Font;
+  hidden(g, S, {
+    raw,
+    slot,
+    rawFont: slot !== null ? font[S].raw : null,
+    meta,
+    epoch: isFont ? font[S].epoch : 0,
   });
+  Object.defineProperty(g, 'meta', GLYPH_META);
   g.font = font;
 };
+
+/** The glyph's handle (made from its slot on first use). */
+const handle = (g) => {
+  const st = g[S];
+  if (st.raw === null) {
+    const { id, gen, rev, meta } = st.slot;
+    // the slot's own handle while the model is unchanged, else rebuilt from its snapshot
+    st.raw = st.rawFont.attachSlot(id, gen, rev) ?? st.rawFont.attachSlot(id, gen, rev, meta);
+  }
+  return st.raw;
+};
+
+/** The 17 slots the glyph's handle holds (the slot snapshot until the handle exists). */
+const metaNow = (st) => (st.raw === null ? st.slot.meta : st.raw.meta());
 
 /** Direct edits of `glyph.meta` not yet in the handle (`{key: value}`). */
 const pending = (g) => {
   const st = g[S];
   if (st.meta === null) return null;
-  const now = st.raw.meta();
+  const now = metaNow(st);
   let out = null;
   META_TITLES.forEach((k, i) => {
     const mine = st.meta[k];
@@ -948,14 +984,14 @@ const pending = (g) => {
 /** Write direct `meta` edits into the handle (and its font). */
 const push = (g) => {
   const changed = pending(g);
-  if (changed !== null) g[S].raw.setmeta(changed);
+  if (changed !== null) handle(g).setmeta(changed);
 };
 
 /** Refresh `meta` in place from the handle. */
 const pull = (g) => {
   const st = g[S];
   if (st.meta === null) return;
-  const now = st.raw.meta();
+  const now = metaNow(st);
   META_TITLES.forEach((k, i) => {
     st.meta[k] = Array.isArray(now[i]) ? [...now[i]] : now[i];
   });
@@ -964,8 +1000,8 @@ const pull = (g) => {
 /** The handle to read from: with pending direct `meta` edits, a detached copy carrying them. */
 const reader = (g) => {
   const changed = pending(g);
-  if (changed === null) return g[S].raw;
-  const c = g[S].raw.clone();
+  if (changed === null) return handle(g);
+  const c = handle(g).clone();
   c.setmeta(changed);
   return c;
 };
@@ -976,7 +1012,7 @@ const editGlyph = (g, op) => {
   const font = fontOfGlyph(g);
   try {
     push(g);
-    op(g[S].raw);
+    op(handle(g));
   } catch (e) {
     throw translate(e);
   } finally {
@@ -988,7 +1024,7 @@ const editGlyph = (g, op) => {
 
 const isAttached = (g) => {
   const font = fontOfGlyph(g);
-  return g[S].raw.isAttached() && font !== null && g[S].epoch === font[S].epoch;
+  return handle(g).isAttached() && font !== null && g[S].epoch === font[S].epoch;
 };
 
 /** A transform callback adapter: `fn(Bitmap)` editing the raw bitmap it receives. */
@@ -1142,10 +1178,10 @@ export class Glyph {
   get _store() {
     if (!isAttached(this)) return null;
     const font = this.font;
-    const cp = this[S].raw.cp();
+    const cp = handle(this).cp();
     if (cp >= 0) return font.glyphs.get(cp) ?? null;
     // an unencoded glyph: the entry holding this glyph's values
-    const mine = JSON.stringify(this[S].raw.meta());
+    const mine = JSON.stringify(handle(this).meta());
     for (const e of font.unencoded) {
       if (JSON.stringify([...e.meta]) === mine) return e.meta;
     }
@@ -1164,6 +1200,7 @@ const PADDED_ROWS = / bitmap rows but its BBX height is \d+; padded with empty r
 /** Pass the warnings the Rust model collected since the last call to the handler. */
 const drain = (font) => {
   const st = font[S];
+  if (st.raw.reportLength() === st.wcur) return;
   const [messages, count] = st.raw.warningsSince(st.wcur);
   st.wcur = count;
   for (const m of messages) {
@@ -1208,6 +1245,7 @@ const cache = (font) => {
       cps: null,
       cpset: null,
       orders: new Map(),
+      slots: new Map(),
       metas: new Map(),
       headers: null,
       props: null,
@@ -1243,6 +1281,31 @@ const cpsInOrder = (font, order) => {
     c.orders.set(order, l);
   }
   return l;
+};
+
+/** A slot from `lookupSlot`/`lookupSlots` as `{id, gen, rev, meta}`, or null. */
+const slotFrom = (v) => (v === undefined || v === null ? null : { id: v[0], gen: v[1], rev: v[2], meta: v.slice(3) });
+
+/** What `lookup(cp)` attaches to (cached per revision), or null. */
+const slotOf = (font, cp) => {
+  const slots = cache(font).slots;
+  let slot = slots.get(cp);
+  if (slot === undefined) {
+    slot = slotFrom(font[S].raw.lookupSlot(cp));
+    slots.set(cp, slot);
+  }
+  return slot;
+};
+
+const SLOT_BATCH = 256;
+
+/** Read the slots of the codes not cached yet in one call. */
+const prefetchSlots = (font, cps) => {
+  const slots = cache(font).slots;
+  const missing = cps.filter((cp) => isInt(cp) && !slots.has(cp));
+  if (missing.length < 2) return;
+  const got = font[S].raw.lookupSlots(missing);
+  missing.forEach((cp, i) => slots.set(cp, slotFrom(got[i])));
 };
 
 const cpset = (font) => {
@@ -1321,13 +1384,14 @@ const headersData = (font) => {
  * and the first read refreshes the mirror and removes them again. A Proxy
  * with no read traps reads its target without calling into JS.
  *
- * Symbol-keyed values live on the target unprojected, as before; once one is
- * set the view keeps the read traps (and no mirror) for good, so symbols stay
- * out of `ownKeys` and property descriptors as before.
+ * Symbol keys: with `symbols` (headers) their values live on the target
+ * unprojected, as before, and once one is set the view keeps the read traps
+ * (and no mirror) for good, so symbols stay out of `ownKeys` and property
+ * descriptors as before; without (props) writing one fails, as before.
  */
 const READ_TRAPS = ['get', 'has', 'ownKeys', 'getOwnPropertyDescriptor'];
 
-const liveView = (font, target, data, legacyReads, writes) => {
+const liveView = (font, target, data, legacyReads, writes, symbols) => {
   let mirrored = -1;
   let legacy = false;
   const refresh = () => {
@@ -1376,6 +1440,7 @@ const liveView = (font, target, data, legacyReads, writes) => {
     ...reads,
     set(t, k, v) {
       if (typeof k !== 'string') {
+        if (!symbols) return false;
         toLegacy();
         return Reflect.set(t, k, v);
       }
@@ -1383,7 +1448,7 @@ const liveView = (font, target, data, legacyReads, writes) => {
       return true;
     },
     deleteProperty(t, k) {
-      if (typeof k !== 'string') return Reflect.deleteProperty(t, k);
+      if (typeof k !== 'string') return symbols && Reflect.deleteProperty(t, k);
       writes.delete(k);
       return true;
     },
@@ -1431,6 +1496,7 @@ const headersView = (font) =>
       set: (k, v) => call(font, (raw) => raw.setHeader(k, v), true),
       delete: (k) => call(font, (raw) => raw.removeHeader(k), true),
     },
+    true,
   );
 
 const propsData = (font) => {
@@ -1485,6 +1551,7 @@ const propsView = (font) =>
         if (hasOwn(propsData(font), k)) call(font, (raw) => raw.delprop(k), true);
       },
     },
+    false,
   );
 
 /**
@@ -1508,10 +1575,9 @@ const encodedMeta = (font, cp) => {
   let m = c.metas.get(cp);
   if (m === undefined) {
     if (!cpset(font).has(cp)) return undefined;
-    const raw = font[S].raw.lookup(cp);
-    if (raw === undefined) return undefined;
-    const values = raw.meta();
-    raw.free();
+    const slot = slotOf(font, cp);
+    if (slot === null) return undefined;
+    const values = slot.meta.map((v) => (Array.isArray(v) ? [...v] : v));
     m = metaList(values, (fields) => {
       const g = font[S].raw.lookup(cp);
       if (g === undefined) return;
@@ -2014,15 +2080,18 @@ export class Font {
   }
 
   *iterglyphs(order, r) {
-    for (const cp of this.itercps(order, r)) {
-      yield this.glyphbycp(cp);
+    const cps = this.itercps(order, r);
+    for (let i = 0; i < cps.length; i++) {
+      // read the slots a batch at a time (each read sees the current model)
+      if (i % SLOT_BATCH === 0) prefetchSlots(this, cps.slice(i, i + SLOT_BATCH));
+      yield this.glyphbycp(cps[i]);
     }
   }
 
   glyphbycp(codepoint) {
     if (!isInt(codepoint)) return null;
-    const raw = this[S].raw.lookup(codepoint);
-    return raw === undefined ? null : glyphOf(raw, this);
+    const slot = slotOf(this, codepoint);
+    return slot === null ? null : glyphOfSlot(this, slot);
   }
 
   glyph(character) {
@@ -2090,9 +2159,9 @@ export class Font {
     if (isGlyph) {
       try {
         push(glyph);
-        call(this, (raw) => raw.addHandle(glyph[S].raw, rep), true);
+        call(this, (raw) => raw.addHandle(handle(glyph), rep), true);
       } finally {
-        if (glyph[S].raw.isAttached()) {
+        if (handle(glyph).isAttached()) {
           glyph.font = this;
           glyph[S].epoch = this[S].epoch;
           glyph[S].meta = null;
@@ -2109,7 +2178,7 @@ export class Font {
   removeglyph(cpOrGlyph) {
     if (cpOrGlyph instanceof Glyph) {
       if (cpOrGlyph.font === this) {
-        call(this, (raw) => raw.removeHandle(cpOrGlyph[S].raw), true);
+        call(this, (raw) => raw.removeHandle(handle(cpOrGlyph)), true);
       } else {
         const cp = cpOrGlyph.cp();
         if (isInt(cp) && cp >= 0) call(this, (raw) => raw.removeglyph(cp), true);
@@ -2529,7 +2598,7 @@ export const $Bitmap = (bin_bitmap_list) => new Bitmap(bin_bitmap_list);
  */
 export const rawHandle = (obj) => {
   if (obj instanceof Font) return obj[S].raw;
-  if (obj instanceof Glyph) return obj[S].raw;
+  if (obj instanceof Glyph) return handle(obj);
   if (obj instanceof Bitmap) {
     // the caller may edit the raster directly: stop serving cached rows
     const raw = nat(obj);

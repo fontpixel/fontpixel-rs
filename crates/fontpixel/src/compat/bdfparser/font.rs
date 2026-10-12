@@ -69,6 +69,10 @@ pub(super) struct State {
     pub model: CoreFont,
     /// The native model prepared for drawing (`drawcps`), until the next edit.
     pub drawn: Option<Rc<Drawn>>,
+    /// Model revision: a process-unique stamp renewed by every `core_mut()`
+    /// (and for every new state), so a [`Font::slot`] taken before an edit is
+    /// recognized as stale by [`Font::attach`].
+    pub revision: u64,
     pub generations: BTreeMap<GlyphId, u64>,
     /// Slots moved by a codepoint change: `(old id, generation)` to `(new id,
     /// generation)`, so other handles on the same glyph follow it.
@@ -87,8 +91,14 @@ impl State {
     /// Mutable model access; any edit invalidates the prepared drawing model.
     pub fn core_mut(&mut self) -> &mut CoreFont {
         self.drawn = None;
+        self.revision = next_revision();
         &mut self.model
     }
+}
+/// A process-unique model revision stamp (never 0).
+fn next_revision() -> u64 {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
 }
 /// A copy of the model prepared for the native renderer: SPEC spacing
 /// (per-glyph `dwx0 or dwy0`, global header components) and the resolved charset.
@@ -164,6 +174,7 @@ impl Font {
         }
         let mut s = State {
             model: normalized,
+            revision: next_revision(),
             ..State::default()
         };
         for id in s.core().glyphs().map(|(id, _)| id).collect::<Vec<_>>() {
@@ -180,6 +191,11 @@ impl Font {
     /// Structured parser and compatibility warnings collected so far.
     pub fn report(&self) -> Report {
         self.state.borrow().report.clone()
+    }
+    /// Number of report entries so far (the count [`warnings_since`](Self::warnings_since)
+    /// returns), without copying the report.
+    pub fn report_len(&self) -> usize {
+        self.state.borrow().report.entries.len()
     }
     /// Messages of the warning-level report entries from index `start` on (the
     /// ones bdfparser emits as warnings) and the entry count, without copying
@@ -454,6 +470,38 @@ impl Font {
     /// [`glyphbycp`](Self::glyphbycp) a miss records no warning.
     pub fn lookup(&self, cp: i64) -> Option<Glyph> {
         self.id(cp).map(|id| Glyph::attached(self, id))
+    }
+    /// What [`lookup`](Self::lookup) would attach to, without making the
+    /// handle: `(slot, generation, model revision, metadata snapshot)`.
+    /// Bindings that create handles on demand pass the first three back to
+    /// [`attach`](Self::attach).
+    pub fn slot(&self, cp: i64) -> Option<(GlyphId, u64, u64, Meta)> {
+        let id = self.id(cp)?;
+        let s = self.state.borrow();
+        let m = s.core().glyph(id).map(meta).unwrap_or(vec![V::Null; 17]);
+        Some((
+            id,
+            s.generations.get(&id).copied().unwrap_or(0),
+            s.revision,
+            m,
+        ))
+    }
+    /// The handle [`lookup`](Self::lookup) returned when [`slot`](Self::slot)
+    /// gave `(id, generation, revision, snapshot)`. While the model is still
+    /// at `revision` this is exactly `lookup`'s handle; after an edit it is
+    /// rebuilt from `generation` and `snapshot` (None asks for the snapshot:
+    /// the result is then None).
+    pub fn attach(
+        &self,
+        id: GlyphId,
+        generation: u64,
+        revision: u64,
+        snapshot: Option<Meta>,
+    ) -> Option<Glyph> {
+        if self.state.borrow().revision == revision {
+            return Some(Glyph::attached(self, id));
+        }
+        snapshot.map(|m| Glyph::with_snapshot(self, id, generation, m))
     }
     /// Obtain an attached handle through the font's charset conversion; a
     /// character the charset cannot encode warns and returns None.

@@ -308,6 +308,21 @@ js_test = "crates/fontpixel-wasm/tests/compat.test.mjs::header and unencoded edi
 reason = "bdfparser reads glyphs without a warning through its glyphs dict; the binding uses the non-warning lookup there"
 
 [[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::slot"
+status = "internal"
+reason = "binding support: the JS layer reads a glyph's slot and metadata (BdfparserRawFont.lookupSlot/lookupSlots, cached per edit revision) and makes the attached handle only when an operation needs it; Python makes handles at once (RawFont.lookup)"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::attach"
+status = "internal"
+reason = "binding support: the handle for a slot read with Font::slot (BdfparserRawFont.attachSlot), exactly the handle Font::lookup gave at that time"
+
+[[rule]]
+pattern = "fontpixel::compat::bdfparser::font::Font::report_len"
+status = "internal"
+reason = "binding support: the JS layer skips Font::warnings_since after a call that added no report entry (BdfparserRawFont.reportLength)"
+
+[[rule]]
 pattern = "fontpixel::compat::bdfparser::font::Font::unencoded_*"
 status = "adapted"
 python = "fontpixel.compat.bdfparser.Font.unencoded[i]['meta'] / ['altcode'] (RawFont.{name})"
