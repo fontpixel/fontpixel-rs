@@ -1,9 +1,18 @@
 {
   "name": "fontpixel",
   "version": "0.1.0",
-  "description": "fontpixel bitmap-font toolkit for JavaScript (WebAssembly): the complete native API plus a bdfparser-js compatible layer",
+  "description": "Bitmap font toolkit for JavaScript (WebAssembly): read, edit, render and write 99 font formats, plus a bdfparser-js compatible API",
   "private": true,
   "license": "MIT",
+  "author": "Tom Chen",
+  "homepage": "https://github.com/fontpixel/fontpixel-rs/tree/main/crates/fontpixel-wasm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fontpixel/fontpixel-rs.git",
+    "directory": "crates/fontpixel-wasm"
+  },
+  "bugs": "https://github.com/fontpixel/fontpixel-rs/issues",
+  "keywords": ["font", "bitmap-font", "pixel-font", "bdf", "pcf", "opentype", "woff2", "bdfparser", "webassembly", "wasm"],
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -32,6 +41,15 @@
     "./fontpixel_wasm_bg.wasm": "./fontpixel_wasm_bg.wasm",
     "./package.json": "./package.json"
   },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "*.wasm",
+    "build-info.json",
+    "profiles/",
+    "LICENSES/",
+    "THIRD_PARTY_NOTICES.md"
+  ],
   "sideEffects": [
     "./index.js",
     "./guard.js",

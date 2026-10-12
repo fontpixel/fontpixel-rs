@@ -3,7 +3,7 @@
 # up to date, build the packages, node:test suites, `tsc --strict` smoke over
 # the declarations, then the binding coverage gate.
 #
-# Usage: scripts/check_wasm.sh [PROFILE ...]   (default: full minimal merge web convert)
+# Usage: scripts/check_wasm.sh [PROFILE ...]   (default: full minimal merge web convert bdfparser)
 #
 # Environment: CARGO_TARGET_DIR (packages go to $CARGO_TARGET_DIR/wasm-pkg),
 # TSC (TypeScript compiler; default `tsc` on PATH, else the read-only copy in
@@ -12,7 +12,7 @@
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 profiles=("$@")
-[ ${#profiles[@]} -gt 0 ] || profiles=(full minimal merge web convert)
+[ ${#profiles[@]} -gt 0 ] || profiles=(full minimal merge web convert bdfparser)
 target="${CARGO_TARGET_DIR:-$PWD/target}"
 export CARGO_TARGET_DIR="$target"
 [ "${WASM_BUILD_MODE:-release}" = release ] && [ "${WASM_OPT:-}" != off ] || {
@@ -23,7 +23,7 @@ cargo build --locked --release -p fontpixel-cli --all-features
 export FONTPIXEL_CLI="${FONTPIXEL_CLI:-$target/release/fontpixel}"
 [ -x "$FONTPIXEL_CLI" ] || { echo "missing native reference: $FONTPIXEL_CLI" >&2; exit 2; }
 
-for features in full minimal merge web convert; do
+for features in full minimal merge web convert bdfparser; do
   cargo clippy --locked -p fontpixel-wasm --target wasm32-unknown-unknown --all-targets \
     --no-default-features --features "$features" -- -D warnings
 done

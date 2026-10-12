@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the `fontpixel` WebAssembly package for one profile.
 #
-# Usage: scripts/build_wasm.sh [full|minimal|merge|web|custom] [OUT_DIR]
+# Usage: scripts/build_wasm.sh [full|minimal|merge|web|convert|bdfparser|custom] [OUT_DIR]
 # `custom` uses WASM_FEATURES for experimental feature measurements only.
 #
 #   full     every format, the bdfparser-js compatibility layer, CJK charset
@@ -9,6 +9,9 @@
 #   minimal  BDF, PCF and YAFF only
 #   merge    the W8.3 merge page: BDF/PCF/OTB/TTF/OTF/WOFF/WOFF2 + CJK tables
 #   web      catalogue tool: common formats + CJK tables, no compat/TOML
+#   convert  catalogue download table: BDF/PCF/YAFF/OTB/TTF/WOFF2, no CJK tables
+#   bdfparser the bdfparser-js compatibility layer only (BDF, PCF, its TrueType
+#            reader/writer, CJK tables)
 #
 # OUT_DIR defaults to $FONTPIXEL_WASM_OUT/<profile>, else
 # ${CARGO_TARGET_DIR:-target}/wasm-pkg/<profile> (outside the repository when
@@ -33,8 +36,9 @@ case "$profile" in
   merge) features="merge" ;;
   web) features="web" ;;
   convert) features="convert" ;;
+  bdfparser) features="bdfparser" ;;
   custom) features="${WASM_FEATURES:?custom requires WASM_FEATURES}" ;;
-  *) echo "unknown profile '$profile' (full|minimal|merge|web|convert|custom)" >&2; exit 2 ;;
+  *) echo "unknown profile '$profile' (full|minimal|merge|web|convert|bdfparser|custom)" >&2; exit 2 ;;
 esac
 out="${2:-${FONTPIXEL_WASM_OUT:+$FONTPIXEL_WASM_OUT/$profile}}"
 out="${out:-${CARGO_TARGET_DIR:-target}/wasm-pkg/$profile}"

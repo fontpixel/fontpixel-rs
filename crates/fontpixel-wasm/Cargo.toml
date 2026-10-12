@@ -34,6 +34,13 @@ minimal = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/yaff", "fontpixel-ops/bd
 # TTF/OTF/WOFF/WOFF2) plus the CJK selection tables.
 merge = ["fontpixel/bdf", "fontpixel/pcf", "fontpixel/otb", "fontpixel/ttf", "fontpixel/otf", "fontpixel/woff", "fontpixel/woff2", "cjk-charsets", "fontpixel-ops/bdf", "fontpixel-ops/pcf", "fontpixel-ops/otb", "fontpixel-ops/opentype", "png"]
 
+# bdfparser-js compatibility only (`fontpixel/bdfparser` in the npm package;
+# the module behind bdfparser 4.x in browsers): BDF, PCF and the bdfparser
+# TrueType writer/reader through `compat-bdfparser`, the exact CJK charset
+# tables bdfparser's charset API needs, and PNG export. No other codecs, no
+# TOML batch text.
+bdfparser = ["compat-bdfparser", "cjk-charsets", "png"]
+
 # Catalogue download table: BDF to PCF, bitmap TTF (OTB), vector TTF and WOFF2.
 # YAFF is the intermediate the site uses to resolve legacy code pages. No CJK
 # charset tables (about 1 MB gzipped): catalogue BDFs are ISO 10646 or

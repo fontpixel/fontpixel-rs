@@ -3,8 +3,9 @@
 `fontpixel` is the in-process WASM binding of `fontpixel` and `fontpixel-ops`.
 It provides the native API and a separate bdfparser-js 3.0.0 compatibility API.
 The complete signatures, options, Rust mappings and unavailable items are in
-the generated [reference](js-api-reference.md). Phase 8 produces local packages;
-it does not publish an npm release.
+the generated [reference](js-api-reference.md). Install it with
+`npm install fontpixel`; the [package README](../crates/fontpixel-wasm/README.md)
+lists the builds it contains.
 
 ## Build and load
 
@@ -49,6 +50,15 @@ Each Worker has its own instance and memory. Share a compiled module, not handle
 | `minimal` | BDF, PCF, YAFF; native model, bitmap, layout, typed operations and PNG |
 | `merge` | BDF, PCF, OTB, TTF, OTF, WOFF, WOFF2, CJK tables, OpenType/merge operations and PNG |
 | `web` | Catalogue tool: merge formats plus YAFF, PSF, FNT/FON, HEX, BMFont and C; CJK tables and PNG; no compatibility or TOML |
+| `convert` | Catalogue downloads: BDF, PCF, YAFF, OTB, TTF and WOFF2; PNG; no CJK tables |
+| `bdfparser` | The bdfparser-js compatibility layer: BDF, PCF, its TrueType reader/writer, CJK tables and PNG |
+
+The npm package contains `full` at its root (`fontpixel`,
+`fontpixel/compat/bdfparser`, ...) and the `bdfparser`, `web` and `minimal`
+builds as `fontpixel/bdfparser`, `fontpixel/web` and `fontpixel/minimal`
+(with `fontpixel/bdfparser/compat/bdfparser`, `/cjk` and `/cli`). Each build
+is a separate WebAssembly module with its own instance: use one per
+application.
 
 All profiles ship TypeScript declarations for the API. Check
 `fp.capabilities()` and `fp.formats.catalogue()` before offering a feature.
