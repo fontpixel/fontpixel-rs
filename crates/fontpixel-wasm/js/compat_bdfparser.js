@@ -390,9 +390,17 @@ const lazyFits = (rows) => {
 const rawOfRows = (rows) => guard(() => RawBitmap.fromRowsText(rows.join('\n'), rows.length));
 
 /** The native raster of a bitmap, created from its rows on first use. */
-const nat = (b) => {
-  const st = b[S];
-  if (st.raw === null) st.raw = rawOfRows(st.rows);
+const nat = (b) => natOf(b[S]);
+
+// A clone made from rows remembers its source (`base`): while the source
+// still holds the same rows, the raster is a native copy of the source's
+// (made once), which is cheaper than building one from the rows.
+const natOf = (st) => {
+  if (st.raw === null) {
+    const base = st.base;
+    st.raw = base !== null && base.rows === st.rows && !base.pinned ? natOf(base).clone() : rawOfRows(st.rows);
+    st.base = null;
+  }
   return st.raw;
 };
 
@@ -443,6 +451,7 @@ const BINDATA = {
       if (!st.pinned && lazyFits(r)) st.rows = [...r];
     } else if (lazyFits(r)) {
       st.rows = [...r];
+      st.base = null;
       st.memo = null;
     } else {
       st.raw = guard(() => new RawBitmap(r));
@@ -453,8 +462,8 @@ const BINDATA = {
   configurable: true,
 };
 
-const initBitmap = (b, raw, rows) => {
-  hidden(b, S, { raw, rows, memo: null, pinned: false });
+const initBitmap = (b, raw, rows, base = null) => {
+  hidden(b, S, { raw, rows, base, memo: null, pinned: false });
   Object.defineProperty(b, 'bindata', BINDATA);
 };
 
@@ -464,9 +473,9 @@ const bitmapOf = (raw) => {
   return b;
 };
 
-const bitmapOfRows = (rows) => {
+const bitmapOfRows = (rows, base) => {
   const b = Object.create(Bitmap.prototype);
-  initBitmap(b, null, rows);
+  initBitmap(b, null, rows, base);
   return b;
 };
 
@@ -558,8 +567,11 @@ export class Bitmap {
   }
 
   clone() {
-    const rows = liveRows(this[S]);
-    return rows !== null ? bitmapOfRows(rows) : bitmapOf(this[S].raw.clone());
+    const st = this[S];
+    const rows = liveRows(st);
+    if (rows === null) return bitmapOf(st.raw.clone());
+    // point at the bitmap that has (or will make) the raster for these rows
+    return bitmapOfRows(rows, st.raw === null && st.base !== null && st.base.rows === rows ? st.base : st);
   }
 
   crop(w, h, xoff, yoff) {
