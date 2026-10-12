@@ -7,6 +7,7 @@ depend on the callback.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -62,8 +63,9 @@ def test_convert_progress_alternates_reads_and_encodes():
     observed = ops.convert(convert_request(), files=FILES, progress=events.append)
     assert observed.outputs == plain.outputs and observed.json(True) == plain.json(True)
     assert [(e["step"], e["done"], e["total"], e["item"]) for e in events] == [
-        ("read", 1, 2, "fonts/s.bdf"), ("encode", 1, 2, "out/s.pcf"),
-        ("read", 2, 2, "fonts/b.bdf"), ("encode", 2, 2, "out/b.pcf")]
+        # outputs are reported as platform paths (out\\s.pcf on Windows)
+        ("read", 1, 2, "fonts/s.bdf"), ("encode", 1, 2, os.path.join("out", "s.pcf")),
+        ("read", 2, 2, "fonts/b.bdf"), ("encode", 2, 2, os.path.join("out", "b.pcf"))]
     assert [e["bytes"] for e in events[1::2]] == [len(plain.outputs["out/s.pcf"]),
                                                   len(plain.outputs["out/b.pcf"])]
     # vectorize is convert: the same callback contract.

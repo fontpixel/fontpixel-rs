@@ -64,8 +64,9 @@ jobs:
           key: crates-package
       - name: cargo publish --workspace --dry-run
         run: |
-          cargo publish --locked --workspace --dry-run 2>&1 | tee "$RUNNER_TEMP/publish.log"
-          ls -l target/package/*.crate
+          set -o pipefail
+          cargo publish --locked --workspace --dry-run --color never 2>&1 | tee "$RUNNER_TEMP/publish.log"
+          find target/package -name '*.crate' -exec ls -l {} +
           if grep '^warning' "$RUNNER_TEMP/publish.log" |
               grep -v -e 'is not included in the published package$' -e '^warning: aborting upload due to dry run$'; then
             echo "unexpected cargo publish warnings (docs/decisions.md, \"Release packaging\")"; exit 1

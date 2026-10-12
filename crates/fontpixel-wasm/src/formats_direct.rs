@@ -412,7 +412,7 @@ namespaces! {
         read: (ctx_opts f::bbc::read, f::bbc::BbcReadOptions, "DirectContextReadArgs<SerdeTypes['formats::bbc::BbcReadOptions']>", "ModelReport<FontSet>"),
         write: (set_wo_opts "bbc", f::bbc::write, f::bbc::BbcWriteOptions, "DirectWriteArgs<SerdeTypes['formats::bbc::BbcWriteOptions']>"),
     }
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web", feature = "bdfparser"))]
     bdf "bdf" ["bdf"] {
         detect: (bytes f::bdf::detect),
         read: (bytes_limits f::bdf::read, "{ limits?: ResourceLimits }", "ModelReport<Font>"),
@@ -694,7 +694,7 @@ namespaces! {
         read: (bytes_opts_limits f::pbf::read, f::pbf::PbfReadOptions, "{ options?: SerdeTypes['formats::pbf::PbfReadOptions']; limits?: ResourceLimits }", "ModelReport<Font>"),
         write: (x_opts Font, f::pbf::write, f::pbf::PbfWriteOptions, "{ options?: SerdeTypes['formats::pbf::PbfWriteOptions'] }"),
     }
-    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
+    #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web", feature = "bdfparser"))]
     pcf "pcf" ["pcf"] {
         detect: (bytes f::pcf::detect),
         read: (bytes_limits f::pcf::read, "{ limits?: ResourceLimits }", "ModelReport<Font>"),

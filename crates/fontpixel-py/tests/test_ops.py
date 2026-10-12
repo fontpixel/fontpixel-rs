@@ -564,7 +564,10 @@ def test_batch_toml_file_and_typed_tasks_equal_the_command_line(tmp_path, monkey
     assert code == 2 and [t["kind"] for t in document["tasks"]][:2] == ["convert", "vectorize"]
 
     def relative(text, root):
-        return text.replace(str(root) + os.sep, "")
+        # the JSON text escapes Windows separators
+        for prefix in (str(root) + os.sep, json.dumps(str(root) + os.sep)[1:-1]):
+            text = text.replace(prefix, "")
+        return text
 
     # batch_file: the same file in another directory, run from the filesystem.
     fs_dir = workdir(tmp_path, "fs")

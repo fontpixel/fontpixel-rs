@@ -499,9 +499,9 @@ setters! {
         "ssfn" => set_ssfn_write_options("setSsfnWriteOptions", "SerdeTypes['formats::ssfn::SsfnWriteOptions']"): f::ssfn::SsfnWriteOptions,
     }
     checked_write {
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web", feature = "bdfparser"))]
         "bdf" => set_bdf_write_options("setBdfWriteOptions", "SerdeTypes['formats::bdf::BdfWriteOptions']"): f::bdf::BdfWriteOptions,
-        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web"))]
+        #[cfg(any(feature = "all-formats", feature = "minimal", feature = "merge", feature = "convert", feature = "web", feature = "bdfparser"))]
         "pcf" => set_pcf_write_options("setPcfWriteOptions", "SerdeTypes['formats::pcf::PcfWriteOptions']"): f::pcf::PcfWriteOptions,
         #[cfg(any(feature = "all-formats", feature = "minimal", feature = "convert", feature = "web"))]
         "yaff" => set_yaff_write_options("setYaffWriteOptions", "SerdeTypes['formats::yaff::YaffWriteOptions']"): f::yaff::YaffWriteOptions,
