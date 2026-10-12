@@ -315,9 +315,10 @@ const slotEquals = (a, b) => {
 /** 17-slot list → meta object */
 const listToMeta = (list) => {
   const d = {};
-  META_TITLES.forEach((k, i) => {
-    d[k] = Array.isArray(list[i]) ? [...list[i]] : list[i];
-  });
+  for (let i = 0; i < META_TITLES.length; i++) {
+    const v = list[i];
+    d[META_TITLES[i]] = Array.isArray(v) ? [...v] : v;
+  }
   return d;
 };
 
@@ -346,11 +347,14 @@ const pyStrip = (s) => s.replace(RE_PY_STRIP, '');
 
 const DEFAULT_PIXELCOLORS = { 0: null, 1: 'black', 2: 'red' };
 
+const RE_LABELS = /^[012]*$/;
+
 const rawRows = (rows) => {
   if (!Array.isArray(rows) || !rows.every((r) => typeof r === 'string')) {
     throw new TypeError('Bitmap() expects an array of row strings');
   }
   for (let i = 0; i < rows.length; i++) {
+    if (RE_LABELS.test(rows[i])) continue;
     const m = /[^012]/.exec(rows[i]);
     if (m !== null) {
       throw new Error(
