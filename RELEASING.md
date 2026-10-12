@@ -7,7 +7,31 @@ publishes them; nothing is uploaded from a developer machine.
 
 ## One-time setup
 
-Repository: `https://github.com/fontpixel/fontpixel-rs`.
+Checklist (details below):
+
+1. GitHub: create the organization `fontpixel` and the **public** repository
+   `fontpixel-rs` (`https://github.com/fontpixel/fontpixel-rs`, the URL in
+   every manifest). Public matters: `npm publish --provenance` refuses
+   private source repositories, and the release matrix uses the
+   `ubuntu-24.04-arm`, `macos-15-intel` and `windows-11-arm` hosted runners.
+2. Repository settings:
+   - Actions → General: allow GitHub Actions; "Workflow permissions" = read
+     repository contents (the workflows ask for `id-token: write` themselves
+     where they need it).
+   - Rules → Rulesets: a tag ruleset for `v*` (restrict creation, update and
+     deletion to maintainers) so only maintainers can trigger a release.
+   - Optionally a branch ruleset for `main` requiring the Check workflow.
+3. Environments `crates-io`, `pypi`, `testpypi`, `npm` with their secrets
+   (table below).
+4. Trusted publishers on PyPI and TestPyPI (pending publishers).
+5. npm: an account owning the name `fontpixel` and the `NPM_TOKEN` secret
+   (or npm trusted publishing after the first release).
+6. crates.io: an account (GitHub login) and the `CARGO_REGISTRY_TOKEN` secret.
+7. The `v3` branches of `tomchen/bdfparser` and `tomchen/bdfparser-js`
+   (3.x maintenance; release step 3/4). **Every** check run needs them: the
+   `reference-python` / `reference-js` jobs of check.yml check them out, and
+   release.yml runs check.yml before any publish job, so the release dry run
+   cannot pass until both branches exist.
 
 GitHub → Settings → Environments: create four environments. Add required
 reviewers to each if every upload should wait for a manual approval (dry runs
@@ -43,7 +67,8 @@ the token after the first release.)
 
 The `reference-python` and `reference-js` jobs of check.yml check out
 `tomchen/bdfparser` and `tomchen/bdfparser-js` at branch `v3`; they fail until
-those branches exist.
+those branches exist, and with them every check run and every release run
+(item 7 above). Nothing in either workflow touches fontpixel.com.
 
 ## Release steps
 
@@ -56,7 +81,11 @@ those branches exist.
 2. Local checks: `scripts/check.sh`, `scripts/check_python.sh`,
    `scripts/check_wasm.sh`, `cargo publish --workspace --dry-run`,
    `scripts/build_wheels.sh` and `scripts/build_npm.sh` +
-   `scripts/test_npm_package.sh` (usage in each script's header).
+   `scripts/test_npm_package.sh` (usage in each script's header). The
+   `cargo publish` dry run prints one "ignoring test/example/bench ... not
+   included in the published package" warning per repository-only target;
+   that is expected (docs/decisions.md, "Release packaging"). Any other
+   warning is not.
 3. Push the commit; wait for check.yml to pass.
 4. Dry run: Actions → Release → Run workflow on the commit's branch with
    `dry_run` checked. It runs every check and test, `cargo publish

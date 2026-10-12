@@ -322,11 +322,14 @@ jobs:
           pattern: wheels-*
           path: dist
           merge-multiple: true
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.13"
       - name: List and check the distributions
         run: |
           ls -l dist
-          python3 -m pip install --disable-pip-version-check twine
-          python3 -m twine check --strict dist/*
+          python -m pip install --disable-pip-version-check twine
+          python -m twine check --strict dist/*
       - name: Publish to TestPyPI
         if: needs.plan.outputs.dry_run != 'true' && needs.plan.outputs.pypi == 'testpypi'
         uses: pypa/gh-action-pypi-publish@v1.14.2

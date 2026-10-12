@@ -11,7 +11,9 @@
 #                   against the compatibility layers, compared with the expected failures
 name: Check
 on:
+  # Branches only: a release tag runs these jobs once, through release.yml.
   push:
+    branches: ["**"]
   pull_request:
   workflow_call:
 permissions:
@@ -247,7 +249,8 @@ jobs:
       - name: Install fontpixel and the reference's test dependencies
         working-directory: fontpixel-rs
         run: |
-          python -m pip install --disable-pip-version-check "maturin>=1.9.4,<2" pytest fonttools pillow
+          # bdfparser's dev dependency group (pyproject.toml), without its lint/coverage tools.
+          python -m pip install --disable-pip-version-check "maturin>=1.9.4,<2" "pytest>=8" "fonttools>=4.60" "pillow>=11" "freetype-py>=2.5.1"
           maturin build --release --locked -m crates/fontpixel-py/Cargo.toml --out "$RUNNER_TEMP/dist"
           python -m pip install --disable-pip-version-check --no-index --find-links "$RUNNER_TEMP/dist" fontpixel
       - name: bdfparser's suite on fontpixel.compat.bdfparser
