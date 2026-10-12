@@ -13,12 +13,12 @@ cargo install fontpixel-cli          # installs the `fontpixel` binary
 fontpixel formats                                    # every format and its capabilities
 fontpixel info font.bdf --json
 fontpixel convert font.bdf -o font.pcf.gz
-fontpixel convert font.bdf -o font.ttf --strict     # refuse any information loss
+fontpixel convert font.bdf -o font.yaff --strict    # exit 3, no output, if anything would be lost
 fontpixel variants --base SC.bdf --lang ja=JP.bdf -o regional.woff2
 fontpixel subset regional.woff2 --text 'Hello' -o small.woff2
-fontpixel merge latin.bdf cjk.bdf -o merged.bdf
-fontpixel preview font.bdf --text 'Hello'
-fontpixel render font.bdf --text 'Hello' -o hello.png --scale 4
+fontpixel merge --part latin.bdf --take western --part cjk.bdf --take cjk --family 'My Mix' -o merged.bdf
+fontpixel preview font.bdf 'Hello'
+fontpixel render font.bdf 'Hello' -o hello.png --scale 4
 fontpixel batch jobs.toml
 ```
 
