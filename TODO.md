@@ -10,12 +10,22 @@ fontpixel-rs 发 crates；fontpixel.com 更新三个库的文档（新 API 标 s
 - bdfparser 4.x = 薄包装：依赖并转出 `fontpixel` 包里的 compat API；为此 PyPI 和 npm 也发布 `fontpixel`。
 - 默认版本：Python 4.x 为默认；npm 先修 JS 兼容层性能再重测，若小调用仍明显偏慢，`latest` 留给 3.x、4.x 用 `rust` 标签。
 - 分支：默认分支（bdfparser 是 `master`，bdfparser-js 是 `main`）= 4.x；3.x 在 `v3` 维护分支。
-- crates：`fontpixel`、`fontpixel-ops`、`fontpixel-cli`，版本 0.1.0。仓库地址 github.com/fontpixel/fontpixel-rs（尚未创建、未 push）。
+- crates：`fontpixel`、`fontpixel-ops`、`fontpixel-cli`，版本 0.1.0。仓库地址 github.com/fontpixel/fontpixel-rs（2026-10-12 已建，公开）。
 - 测速事实：Python Rust 版整批操作大幅更快、小属性读取更慢；JS wasm 兼容层整批（解析、PCF、绘图）更快，但小调用、遍历、
   写 BDF 更慢，`font.length` 312 µs（实现缺陷）。
 步骤（一次一个 Opus 子任务）：1 JS 兼容层性能修复与重测（已完成，2026-10-12 合并为 `4c1d5c2`；结果见 benches/PHASE8-REPORT.md「兼容层性能修复之后」；单字形 draw、逐个 bitmap 构造/编辑、headers 展开仍明显偏慢，建议 npm `latest` 留 3.x、4.x 用 `rust` 标签，待用户确认；可选后续：加速核心 `Glyph::draw`）→ 2 fontpixel-rs 发布准备
 （crates 元数据与 dry-run、PyPI `fontpixel` 多平台 wheel、npm `fontpixel`、release CI、README）→ 3 bdfparser 4.x/v3 →
 4 bdfparser-js 4.x/v3 → 5 fontpixel.com 文档与导入脚本 → 6 给用户审阅后再 push/发布。
+进度（2026-10-12 下午）：
+- 用户新指示：本机太忙，重活交给 GitHub CI；单纯 push（不打 tag）可直接做，发布前仍须用户审阅。仓库已建为**公开**
+  github.com/fontpixel/fontpixel-rs，main 已 push（`b260a6f`）。
+- ASAN 104 目标（gate 264，`0f97ac5`）：103 过，printshop 失败——gzip 只认两字节魔数，导致开头 `1f 8b` 的无头格式读不回；
+  `279c3f4` 改为校验 RFC 1952 成员头（bdfparser 兼容层保留两字节规则），printshop 修复后重跑通过（gate 265）。
+- 第 2 步完成并合并（`b260a6f`）：三个 crate 元数据与打包、PyPI 元数据与 sdist、npm `fontpixel`（full/web/bdfparser/minimal
+  四个构建）、check.yml/release.yml、RELEASING.md（列出用户需配置的 secrets/受信任发布者/环境）、测试字体入库、
+  docs/bdfparser-compat-differences.md（3.x→4.x 行为变化，供 4.0.0 CHANGELOG）。本机只验证了 Linux x86_64；其余靠 CI。
+- 两个 bdfparser 仓库已从 `v3.0` 建 `v3` 分支并 push（CI 参考套件用；`v3.0` 远端分支仍在，旧的）。
+- 下一步：看 CI 结果并修复 → 第 3 步 bdfparser 4.x。
 2026-10-07：用户改定的 fontpixel.com 浏览器字体工具已完成，详见
 [reports/phase-9.md](reports/phase-9.md) 与 [验收数据](reports/phase9-validation/summary.json)。
 
