@@ -6,7 +6,12 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
 publish = false
+# The source distribution (maturin sdist) ships these; tests stay in the repository.
+include = ["/src/**", "/python/**", "/pyproject.toml", "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES.md", "/LICENSES/**"]
 
 [lib]
 name = "fontpixel_py"
