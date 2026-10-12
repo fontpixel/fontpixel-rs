@@ -267,21 +267,26 @@ fn compressed_block(woff2: &[u8]) -> (&[u8], usize) {
     (&woff2[cursor.pos..cursor.pos + len], size)
 }
 /// Tong Pixel Sans SC (38,653 glyphs) as an OTB sfnt: `FONTPIXEL_TONG_SC_BDF`
-/// or the sibling `samples` checkout; `None` (skipped) when neither exists.
+/// (an uncompressed BDF) or the repository fixture
+/// `fixtures/tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz`.
 #[cfg(all(feature = "bdf", feature = "otb"))]
-fn tong_sc_otb() -> Option<Vec<u8>> {
-    let path = std::env::var_os("FONTPIXEL_TONG_SC_BDF")
-        .map(std::path::PathBuf::from)
-        .unwrap_or_else(|| {
-            std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-                .join("../../../samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf")
-        });
-    let Ok(bdf) = std::fs::read(&path) else {
-        eprintln!(
-            "skipped: {} is absent (set FONTPIXEL_TONG_SC_BDF)",
-            path.display()
-        );
-        return None;
+fn tong_sc_otb() -> Vec<u8> {
+    let bdf = match std::env::var_os("FONTPIXEL_TONG_SC_BDF") {
+        Some(path) => std::fs::read(&path)
+            .unwrap_or_else(|e| panic!("FONTPIXEL_TONG_SC_BDF {}: {e}", path.display())),
+        None => {
+            use std::io::Read;
+            let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../fixtures/tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz");
+            let gz = std::fs::read(&path).unwrap_or_else(|e| {
+                panic!("{}: {e} (repository fixture; see fixtures/README.md)", path.display())
+            });
+            let mut bdf = Vec::new();
+            flate2::read::GzDecoder::new(&gz[..])
+                .read_to_end(&mut bdf)
+                .unwrap();
+            bdf
+        }
     };
     let registry = crate::registry();
     let loaded = registry
@@ -297,7 +302,7 @@ fn tong_sc_otb() -> Option<Vec<u8>> {
             &crate::WriteOptions::new(crate::ResourcePath::new("tong.otb").unwrap()),
         )
         .unwrap();
-    Some(written.output.assets()[0].bytes.clone())
+    written.output.assets()[0].bytes.clone()
 }
 /// The full matrix, run in release:
 /// `cargo test --release -p fontpixel --all-features --lib -- --ignored spawner`.
@@ -315,7 +320,8 @@ fn single_threaded_spawner_matches_the_thread_pool_on_large_inputs() {
         &[2, 3, 4],
     );
     #[cfg(all(feature = "bdf", feature = "otb"))]
-    if let Some(sfnt) = tong_sc_otb() {
+    {
+        let sfnt = tong_sc_otb();
         assert_spawners_agree("Tong-SC-otb-sfnt", &sfnt, &qualities, &[2, 3, 4]);
         let l = Limits::default();
         // Default limits (q11): two threads is the command-line default; at

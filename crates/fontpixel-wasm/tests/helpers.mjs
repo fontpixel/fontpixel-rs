@@ -13,6 +13,7 @@ import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, w
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { gunzipSync } from 'node:zlib';
 
 export const REPO = path.resolve(fileURLToPath(new URL('../../..', import.meta.url)));
 export const PROFILE = process.env.FONTPIXEL_WASM_PROFILE ?? 'full';
@@ -44,6 +45,22 @@ export function buildInfo() {
   return JSON.parse(readFileSync(path.join(PKG, 'build-info.json'), 'utf8'));
 }
 
+/**
+ * The package.json that governs PKG: PKG's own (a scripts/build_wasm.sh
+ * build or the npm package root) or, for a profile directory of the npm
+ * package (`profiles/<name>/`), the package root's. `subpath` is the export
+ * prefix ('.' or './<name>') and `dir` the directory of PKG's files ('.' or
+ * './profiles/<name>').
+ */
+export function packageManifest() {
+  const own = path.join(PKG, 'package.json');
+  if (existsSync(own)) return { manifest: JSON.parse(readFileSync(own, 'utf8')), subpath: '.', dir: '.' };
+  const name = path.basename(PKG);
+  const root = path.resolve(PKG, '..', '..');
+  const manifest = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
+  return { manifest, subpath: `./${name}`, dir: `./profiles/${name}` };
+}
+
 /** Whether the loaded build has capability `name`. */
 export function has(fp, name) {
   return fp.capabilities().some((c) => c.name === name && c.available);
@@ -52,6 +69,17 @@ export function has(fp, name) {
 /** Bytes of a file under tests/data. */
 export function sample(relative) {
   return new Uint8Array(readFileSync(path.join(DATA, relative)));
+}
+
+/** The repository's gzip-compressed real-font fixtures (fixtures/README.md). */
+export const FIXTURES = path.join(REPO, 'fixtures');
+const fixtureCache = new Map();
+/** Decompressed bytes of `fixtures/<relative>` (a `.gz` file), cached per process. */
+export function fixture(relative) {
+  if (!fixtureCache.has(relative)) {
+    fixtureCache.set(relative, new Uint8Array(gunzipSync(readFileSync(path.join(FIXTURES, relative)))));
+  }
+  return fixtureCache.get(relative);
 }
 
 /** Common samples. */

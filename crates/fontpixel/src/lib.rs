@@ -1,7 +1,7 @@
 //! Bitmap-font core with bounded Mono/Gray8 operations, loss-preserving strikes,
 //! and exact charset maps. Native format profiles are feature-gated; query the
 //! registry for enabled capabilities.
-#![doc = include_str!("../../../docs/api-rustdoc.md")]
+#![doc = include_str!("../docs/api-rustdoc.md")]
 #![forbid(unsafe_code)]
 
 /// Declares a trait that callers implement (resolvers, custom codecs). Where

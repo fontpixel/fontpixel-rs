@@ -10,7 +10,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
-import { DATA, PKG, has, load, runCli, tempDir, HAS_CLI } from './helpers.mjs';
+import { DATA, PKG, has, load, packageManifest, runCli, tempDir, HAS_CLI } from './helpers.mjs';
 
 const fp = await load();
 const COMPAT = has(fp, 'compat_bdfparser');
@@ -43,10 +43,11 @@ test('compat: module surface', { skip }, async () => {
   assert.equal(bp.META_TITLES[0], 'glyphname');
   assert.equal(bp.META_TITLES[16], 'hexdata');
   assert.deepEqual([...bp.META_TITLES], fp.bdfparserMetaTitles());
-  const pkg = JSON.parse(readFileSync(path.join(PKG, 'package.json'), 'utf8'));
-  assert.equal(pkg.exports['./compat/bdfparser'].default, './compat_bdfparser.js');
-  assert.equal(pkg.exports['./compat/bdfparser/cjk'].default, './compat_bdfparser_cjk.js');
-  assert.equal(pkg.exports['./compat/bdfparser/cli'].default, './compat_bdfparser_cli.js');
+  const { manifest: pkg, subpath, dir } = packageManifest();
+  const key = (s) => (subpath === '.' ? `./${s}` : `${subpath}/${s}`);
+  assert.equal(pkg.exports[key('compat/bdfparser')].default, `${dir}/compat_bdfparser.js`);
+  assert.equal(pkg.exports[key('compat/bdfparser/cjk')].default, `${dir}/compat_bdfparser_cjk.js`);
+  assert.equal(pkg.exports[key('compat/bdfparser/cli')].default, `${dir}/compat_bdfparser_cli.js`);
   // the raw handles are classes of the package itself
   assert.ok(bp.rawHandle(mini()) instanceof fp.BdfparserRawFont);
   assert.ok(bp.rawHandle(new bp.Bitmap(['1'])) instanceof fp.BdfparserRawBitmap);

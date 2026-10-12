@@ -2347,3 +2347,57 @@ mean gzip; anything else there fails as "Malformed gzip data").
 below 0x20 is still taken for gzip. For Print Shop that needs a preserved
 header whose third byte is 8; it is recorded here rather than guessed around.
 Regression test: `tests/printshop.rs` `widest_31_tallest_139_is_not_taken_for_gzip`.
+
+## 2026-10-12 — Release packaging (crates.io, PyPI, npm, CI)
+
+**Context:** release step 2: make `fontpixel`, `fontpixel-ops`,
+`fontpixel-cli` (crates.io), `fontpixel` (PyPI) and `fontpixel` (npm)
+publishable at 0.1.0 with release CI, everything dry-run locally; nothing is
+pushed or published before the owner's review. Repository URL in every
+manifest: `https://github.com/fontpixel/fontpixel-rs` (to be created, public).
+
+**Choices:**
+- Crates: an explicit `include` per crate. `fontpixel` ships `src/`, its
+  rustdoc page (`docs/api-rustdoc.md`), the build script, licences and the
+  user-facing `examples/api_quickstart.rs` only. Tests, their fixtures and
+  reference data, the criterion benchmarks and the ~45 internal
+  timing/check examples stay in the repository: they need the repository's
+  fixtures or the sibling `samples/` checkout and would not run from a
+  `.crate`. Cargo therefore prints one "ignoring test/example/bench `x` as
+  `…` is not included in the published package" warning per such target
+  and drops the target from the published manifest; cargo has no setting
+  to silence this, and shipping test sources that cannot pass would be
+  worse. These warnings are expected; any other packaging warning is not.
+  `fontpixel-py`, `fontpixel-wasm` and `fontpixel-heap-check` are
+  `publish = false`.
+- Real-font fixtures are committed under `fixtures/` (gzip -n -9, OFL; Tong
+  Pixel Sans SC/Latin/Mono Latin and GNU Unifont 13.0.04, 2.16 MB
+  compressed in total) so the WOFF2 and merge tests that need
+  production-size fonts no longer skip in a clean checkout or CI. They are
+  in no published package.
+- PyPI: one abi3 (`cp310-abi3`) wheel per platform plus the sdist; the
+  installed-package pytest run (`tools/pytest_installed_package.py`) refuses
+  to import from the source tree, so CI tests the wheel, not the checkout.
+- npm package profiles: one package `fontpixel`. The `full` build is the
+  package root (`fontpixel`, `fontpixel/compat/bdfparser`, `/cjk`, `/cli`,
+  `fontpixel/node-files`); the smaller `bdfparser`, `web` and `minimal`
+  builds live in `profiles/<name>/` and are exported as `fontpixel/<name>`
+  (with the same sub-paths). A user picks a build by import path; each is a
+  separate WebAssembly module, so a bundler includes only the one imported.
+  Separate packages per profile were rejected (four version streams for one
+  API). The README's size table is filled from each build's
+  `build-info.json` at pack time (`scripts/build_npm.sh` fails on a
+  leftover placeholder).
+- Reference suites: CI runs the unmodified bdfparser / bdfparser-js 3.x
+  suites (branch `v3`) against the compatibility layers and fails on any
+  failure or error that is not in the explicit
+  `expected_failures.txt` lists (8 Python, 13 JS ids; reasons in
+  `docs/bdfparser-compat-differences.md`). A listed test that starts
+  passing is reported but accepted.
+- Release order: crates.io → PyPI → npm, each publish job gated on every
+  check and every per-platform/per-Node install test; PyPI by trusted
+  publishing (environments `pypi`/`testpypi`), npm with `--provenance`,
+  crates with `CARGO_REGISTRY_TOKEN`. Manual runs default to a dry run; a
+  real upload from a branch may only go to TestPyPI. check.yml runs on
+  branch pushes and pull requests only, so a release tag runs it once
+  (through release.yml). No workflow touches fontpixel.com.

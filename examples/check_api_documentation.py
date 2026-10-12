@@ -125,11 +125,11 @@ def check(require_rustdoc_link: bool):
     lib_path = ROOT / "crates/fontpixel/src/lib.rs"
     linked = contract["rustdoc_include"] in lib_path.read_text()
     if require_rustdoc_link and not linked:
-        raise ValueError("lib.rs does not include docs/api-rustdoc.md; root patch is still pending")
+        raise ValueError("lib.rs does not include crates/fontpixel/docs/api-rustdoc.md; root patch is still pending")
     source_hashes[contract["rustdoc"]] = digest(doc_path)
     source_hashes["crates/fontpixel/src/lib.rs"] = digest(lib_path)
 
-    guides = ["README.md", "docs/api.md", "docs/api-rustdoc.md", "docs/bitmap-model.md",
+    guides = ["README.md", "docs/api.md", "crates/fontpixel/docs/api-rustdoc.md", "docs/bitmap-model.md",
               "docs/migration-fontpixel.md", "docs/migration-tong.md", "docs/w6.1-cli.md",
               "docs/recovery-status.md", "docs/development.md", "examples/README.md",
               "docs/w6.1-writer-budget.md"]

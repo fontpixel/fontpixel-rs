@@ -1,11 +1,24 @@
 [package]
 name = "fontpixel"
-description = "Bitmap font conversion library (under development)"
+description = "Bitmap font library: read, edit, render and write 99 bitmap and outline font formats (BDF, PCF, PSF, YAFF, FNT/FON, OpenType, WOFF2, ...) with explicit loss reports"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/fontpixel"
+readme = "README.md"
+keywords = ["font", "bitmap-font", "bdf", "pcf", "opentype"]
+categories = ["graphics", "parser-implementations", "encoding", "rendering"]
+# Tests, their fixtures, generated reference data, benchmarks and the internal
+# timing/check examples stay in the repository (docs/decisions.md, "Release
+# packaging"); only the user-facing example ships.
+include = ["/src/**", "/examples/api_quickstart.rs", "/docs/**", "/build.rs", "/build_support.rs", "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES.md", "/LICENSES/**"]
+
+[package.metadata.docs.rs]
+all-features = true
 
 [features]
 default = ["bdf", "pcf", "yaff"]

@@ -1,32 +1,72 @@
 # fontpixel
 
-A Rust bitmap-font library and CLI, under development. MIT, copyright Tom Chen.
-The requirements and surveyed 99-format scope are in [PLAN.md](PLAN.md) and
-[FORMATS.md](FORMATS.md).
+[![Check](https://github.com/fontpixel/fontpixel-rs/actions/workflows/check.yml/badge.svg)](https://github.com/fontpixel/fontpixel-rs/actions/workflows/check.yml)
+[![crates.io](https://img.shields.io/crates/v/fontpixel.svg)](https://crates.io/crates/fontpixel)
+[![docs.rs](https://img.shields.io/docsrs/fontpixel)](https://docs.rs/fontpixel)
+[![PyPI](https://img.shields.io/pypi/v/fontpixel.svg)](https://pypi.org/project/fontpixel/)
+[![npm](https://img.shields.io/npm/v/fontpixel.svg)](https://www.npmjs.com/package/fontpixel)
 
-## Current status: phase 6 delivered (2026-10-05)
+A bitmap font toolkit in Rust, with a command-line tool and Python and
+JavaScript (WebAssembly) bindings: detect, read, edit, render and write
+bitmap fonts in 99 formats (BDF, PCF, PSF, YAFF, HEX, FNT/FON, BMFont, image
+atlases, C headers, OpenType bitmap and outline fonts, WOFF/WOFF2, TTC and
+many historical formats), build regional OpenType fonts, subset and merge.
+Every conversion reports what the target format cannot keep, and `--strict`
+refuses any loss. MIT, copyright Tom Chen.
 
-Phase 6 (CLI, batch, documentation, benchmarks, robustness, merge) is complete;
-see the [phase 6 report](reports/phase-6.md). `scripts/check.sh`, warning-free
-rustdoc, full Tong/catalogue/SC/merge/legacy-parity comparisons against frozen
-release binaries, a 104-target ASAN fuzz campaign and the formal PLAN §10
-benchmarks ([benches/REPORT.md](benches/REPORT.md)) all passed. The phase-6
-source was reconstructed after the earlier workspace was lost; the
-[recovery status](docs/recovery-status.md) explains which historical results
-predate this source.
+## Install
 
-The catalogue contains the same 99 IDs and documented profiles. Differences
-between catalogue downloads and the original Python pipeline are documented in
-[catalogue download differences](docs/migration-fontpixel.md#catalogue-download-differences).
+| | package | install |
+|---|---|---|
+| command line | [`fontpixel-cli`](https://crates.io/crates/fontpixel-cli) | `cargo install fontpixel-cli` (binary `fontpixel`) |
+| Rust library | [`fontpixel`](https://crates.io/crates/fontpixel), [`fontpixel-ops`](https://crates.io/crates/fontpixel-ops) | `cargo add fontpixel` |
+| Python 3.10+ | [`fontpixel`](https://pypi.org/project/fontpixel/) | `pip install fontpixel` |
+| JavaScript (Node 18+, browsers) | [`fontpixel`](https://www.npmjs.com/package/fontpixel) | `npm install fontpixel` |
 
-After phase-6 delivery, work is authorized through phase 7 then phase 8, with
-full native Python and WASM/JS APIs plus separate legacy compatibility APIs.
-Phase 9, remote push, publication and deployment are excluded. Blocked long ASAN
-validation remains explicitly deferred to the user's local computer. This scope
-change is not phase-6 acceptance. Root-owned [TODO.md](TODO.md) tracks integration.
+```sh
+fontpixel info font.bdf --json
+fontpixel convert font.bdf -o font.pcf.gz
+fontpixel convert font.bdf -o font.yaff --strict   # refuses any information loss
+```
 
-The baseline functionality and historical evidence below are preserved as context;
-they are not fresh tests of the reconstructed changes.
+```python
+import fontpixel as fp
+fonts = fp.read(open("font.bdf", "rb").read(), name="font.bdf").fonts
+open("font.pcf", "wb").write(fp.write(fonts, "pcf").output.into_single())
+```
+
+```js
+import * as fp from 'fontpixel';
+await fp.init();
+const { fonts } = fp.read(bytes, { name: 'font.bdf' });
+const pcf = fp.write(fonts, 'pcf').output.intoSingle();
+```
+
+Both bindings include a compatibility layer for
+[bdfparser](https://github.com/tomchen/bdfparser) 3.x
+(`fontpixel.compat.bdfparser`) and
+[bdfparser-js](https://github.com/tomchen/bdfparser-js) 3.x
+(`fontpixel/compat/bdfparser`); the differences are listed in
+[docs/bdfparser-compat-differences.md](docs/bdfparser-compat-differences.md).
+
+## Documentation
+
+- Rust: [docs.rs/fontpixel](https://docs.rs/fontpixel), the
+  [native API guide](docs/api.md) and [bitmap/model contracts](docs/bitmap-model.md)
+- command line: [crates/fontpixel-cli/README.md](crates/fontpixel-cli/README.md),
+  [CLI guide](docs/w6.1-cli.md) and the command examples below
+- Python: [guide](docs/python-api.md), [API reference](docs/python-api-reference.md),
+  [examples](crates/fontpixel-py/examples)
+- JavaScript: [guide](docs/js-api.md), [API reference](docs/js-api-reference.md),
+  [examples](examples/js/recipes.mjs), [package README](crates/fontpixel-wasm/README.md)
+- formats: [FORMATS.md](FORMATS.md) and one document per format in
+  [docs/formats/](docs/formats/README.md); [charsets](docs/charsets.md)
+- [CHANGELOG.md](CHANGELOG.md), [RELEASING.md](RELEASING.md),
+  [design decisions](docs/decisions.md), [development](docs/development.md),
+  [project status and history](docs/project-status.md),
+  [requirements (PLAN.md)](PLAN.md)
+
+## Format notes
 
 BDF 2.1/2.2 can be detected, read, edited and written, with Python SPEC-v3
 canonical byte parity, full horizontal/vertical metrics, source charsets,
@@ -184,22 +224,30 @@ conversion returns an explicit feature error when the exact table is disabled.
 
 ## JavaScript / WASM
 
-`crates/fontpixel-wasm` builds the ESM package `fontpixel`, with the complete
-native API and a separate `fontpixel/compat/bdfparser` API. See the
+`crates/fontpixel-wasm` is the npm package `fontpixel`: the complete native
+API (ESM, WebAssembly, Node 18+ and browsers, TypeScript declarations) and a
+separate `fontpixel/compat/bdfparser` API, plus smaller builds for browsers
+(see the [package README](crates/fontpixel-wasm/README.md)). See the
 [JS guide](docs/js-api.md), [generated reference](docs/js-api-reference.md),
 and [executable examples](examples/js/recipes.mjs).
 
 ```sh
+npm install fontpixel
+```
+
+From the repository:
+
+```sh
 source scripts/local-env.sh
-scripts/build_wasm.sh full          # also: minimal, merge
+scripts/build_wasm.sh full          # also: minimal, merge, web, convert, bdfparser
 node examples/js/run.mjs
+scripts/build_npm.sh ../local-work/npm   # the npm package and its tarball
 ```
 
 Call `await init()` before using the native API. Inputs and outputs are buffers
 and named resource bundles. Use `createWorker()` for CPU work, progress and
 cancellation; persistence is an explicit host operation. Check `capabilities()`
-and `formats.catalogue()` for the selected profile. Local packages are built
-without publishing or deploying them.
+and `formats.catalogue()` for the selected profile.
 
 ## Python
 
@@ -208,13 +256,11 @@ without publishing or deploying them.
 every command-line operation in-process) plus `fontpixel.compat.bdfparser`, a
 bdfparser-compatible layer. It is typed (stubs and `TypedDict` option shapes)
 and documented in the [Python guide](docs/python-api.md) and the
-[API reference](docs/python-api-reference.md). Nothing is published; install a
-locally built wheel (CPython >= 3.10, one abi3 wheel per platform):
+[API reference](docs/python-api-reference.md). CPython 3.10+, one abi3 wheel
+per platform:
 
 ```sh
-python -m pip install maturin
-cd crates/fontpixel-py && maturin build --release
-python -m pip install ../../target/wheels/fontpixel-*.whl
+pip install fontpixel
 ```
 
 ```python
@@ -234,7 +280,8 @@ print(Font("tests/data/bdf/spleen-5x8.bdf").draw("Hello"))
 rendering, typed options, OpenType/WOFF2/variants/subsets, merge, batch jobs,
 sidecar resources, the bdfparser layer and error handling. For development:
 `maturin develop --release` in a virtual environment, then
-`pytest crates/fontpixel-py/tests`.
+`pytest crates/fontpixel-py/tests`, or `scripts/check_python.sh`;
+`scripts/build_wheels.sh` builds and tests release wheels and the sdist.
 
 ## Library contracts
 
@@ -494,7 +541,7 @@ The filesystem-free [API quickstart](crates/fontpixel/examples/api_quickstart.rs
 has been rewritten against current source signatures, including names, retained
 budgets, merge, sidecars, embedded metrics, regional names, subsets and WOFF2.
 It compiles under `cargo clippy --all-targets` but is not run by `scripts/check.sh`;
-the [crate-root guide](docs/api-rustdoc.md) examples run as doctests. [Static documentation checks](examples/check_api_documentation.py)
+the [crate-root guide](crates/fontpixel/docs/api-rustdoc.md) examples run as doctests. [Static documentation checks](examples/check_api_documentation.py)
 inspect files and declarations only; they do not compile Rust or invoke the CLI.
 
 The [documentation smoke runner](examples/README.md#recording-cli-smokes) records

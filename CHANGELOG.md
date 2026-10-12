@@ -1,6 +1,43 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 (unreleased)
+
+First public release: the Rust crates `fontpixel`, `fontpixel-ops` and
+`fontpixel-cli` on crates.io, the Python package `fontpixel` on PyPI and the
+JavaScript/WebAssembly package `fontpixel` on npm, all at 0.1.0.
+
+- 99 native font formats behind one registry: detection, bounded readers,
+  deterministic writers, a structured report of repairs and losses for every
+  conversion, and strict mode that refuses any loss. Bitmap formats (BDF, PCF,
+  PSF, YAFF, HEX, FNT/FON, BMFont, image atlases, C headers, KBITX, PBF, HBF,
+  and many console, editor, Macintosh, TeX, printer, device and system
+  families), OpenType bitmap (OTB, EBDT/CBDT/sbix) and outline fonts
+  (TrueType/CFF, square or round dots), WOFF/WOFF2, TTC/OTC and SVG.
+- Exact charset tables (CJK tables optional), OpenType `locl` regional
+  variants, subsetting, merging with baseline/spacing reports, text rendering
+  to PNG/SVG.
+- `fontpixel` command line: `formats`, `info`, `convert`, `preview`,
+  `render`, `variants`, `subset`, `merge`, `diff`, `validate`, `charset`,
+  `batch` (TOML jobs); validated in-memory outputs replace files
+  safely.
+- `fontpixel-ops`: the command-line operations as a typed API with memory or
+  sandboxed filesystem storage, shared by the CLI and both bindings.
+- Python (CPython 3.10+, abi3 wheels for Linux glibc/musl x86_64/aarch64, macOS
+  x86_64/arm64, Windows x64/arm64): the complete native API, typed, plus
+  `fontpixel.compat.bdfparser`.
+- JavaScript (ESM + WebAssembly, Node 18+ and browsers, TypeScript
+  declarations): the complete native API, Web Worker helpers, plus
+  `fontpixel/compat/bdfparser` (`/cjk`, `/cli`); the full build at the package
+  root and smaller `fontpixel/bdfparser`, `fontpixel/web` and
+  `fontpixel/minimal` builds.
+- The bdfparser and bdfparser-js compatibility layers pass the unmodified 3.x
+  test suites except for the documented differences in
+  [docs/bdfparser-compat-differences.md](docs/bdfparser-compat-differences.md).
+
+### Development history
+
+The work items before the first release, as recorded during development
+(details in `reports/`):
 
 - W0.1: workspace and planned feature catalogue, structured reports/errors,
   generic registry, bounded multi-resource input and multi-asset output contracts,

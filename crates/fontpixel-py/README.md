@@ -4,7 +4,7 @@ Bitmap font toolkit for Python on a Rust core: read, edit, render and write
 bitmap fonts in 99 formats (BDF, PCF, PSF, YAFF, FNT/FON, BMFont, image
 atlases, OpenType bitmap and outline fonts, WOFF/WOFF2, ...), with OpenType
 `locl` variants, subsets, merging and every `fontpixel` command-line
-operation available in-process. `fontpixel.compat.bdfparser` is a drop-in
+operation available in-process. `fontpixel.compat.bdfparser` is a compatible
 replacement for [bdfparser](https://github.com/tomchen/bdfparser) 3.
 
 - CPython 3.10+ (one stable-ABI wheel per platform), no runtime dependencies
@@ -16,14 +16,13 @@ replacement for [bdfparser](https://github.com/tomchen/bdfparser) 3.
 
 ## Install
 
-Nothing is published to PyPI; build a wheel from the repository:
-
 ```sh
-python -m pip install maturin
-cd crates/fontpixel-py
-maturin build --release
-python -m pip install ../../target/wheels/fontpixel-*.whl
+pip install fontpixel
 ```
+
+Wheels: Linux (manylinux and musllinux, x86_64 and aarch64), macOS (x86_64
+and arm64), Windows (x64). Elsewhere pip builds the source distribution, which
+needs a Rust toolchain (1.99 or newer).
 
 ## Quick start
 
@@ -49,21 +48,40 @@ result = ops.convert(inputs=["s.bdf"], output="s.ttf", to="ttf",
 ttf = result.outputs["s.ttf"]
 ```
 
-bdfparser code keeps working:
+## bdfparser compatibility
+
+`fontpixel.compat.bdfparser` is the API of
+[bdfparser](https://github.com/tomchen/bdfparser) 3.x on the Rust core
+(`Font`, `Glyph`, `Bitmap`, the encoding helpers, PCF and TrueType reading
+and writing, the outline functions and the command line). Existing code only
+changes its import:
 
 ```python
-from fontpixel.compat.bdfparser import Font
+from fontpixel.compat.bdfparser import Font      # was: from bdfparser import Font
 
 font = Font("spleen-5x8.bdf")
 print(font.draw("Hello").shadow())
 ```
 
+The submodules `fontpixel.compat.bdfparser.{bitmap, cli, encoding, errors,
+font, glyph, outline, pcf, ttf}` mirror bdfparser's, and
+`python -m fontpixel.compat.bdfparser` is its command line. This import path
+is stable within fontpixel 0.x; bdfparser 4.x is a thin package over it.
+The behaviour differences from bdfparser 3.x are listed in
+[bdfparser-compat-differences.md](https://github.com/fontpixel/fontpixel-rs/blob/main/docs/bdfparser-compat-differences.md).
+
 ## Documentation
 
-- [Python guide](../../docs/python-api.md): data model, options, errors,
-  limits, resources, memory vs filesystem, typing, platform notes
-- [API reference](../../docs/python-api-reference.md): every module, class,
-  function, method and property with its typed signature
-- [Examples](examples): runnable scripts for common tasks
+- [Python guide](https://github.com/fontpixel/fontpixel-rs/blob/main/docs/python-api.md):
+  data model, options, errors, limits, resources, memory vs filesystem,
+  typing, platform notes
+- [API reference](https://github.com/fontpixel/fontpixel-rs/blob/main/docs/python-api-reference.md):
+  every module, class, function, method and property with its typed signature
+- [Examples](https://github.com/fontpixel/fontpixel-rs/tree/main/crates/fontpixel-py/examples):
+  runnable scripts for common tasks
+- [Changelog](https://github.com/fontpixel/fontpixel-rs/blob/main/CHANGELOG.md)
 
-MIT license.
+## License
+
+MIT. The charset tables derive from CPython's codecs and some semantics from
+other projects; the wheels carry `THIRD_PARTY_NOTICES.md` and `LICENSES/`.

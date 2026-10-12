@@ -1,11 +1,21 @@
 [package]
 name = "fontpixel-ops"
-description = "Typed fontpixel operations shared by the CLI and bindings (under development)"
+description = "The fontpixel command-line operations (convert, merge, render, subset, batch, ...) as a typed Rust API with memory or sandboxed filesystem storage"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/fontpixel-ops"
+readme = "README.md"
+keywords = ["font", "bitmap-font", "bdf", "conversion", "opentype"]
+categories = ["graphics", "encoding"]
+include = ["/src/**", "/README.md", "/LICENSE"]
+
+[package.metadata.docs.rs]
+all-features = true
 
 [lib]
 name = "fontpixel_ops"

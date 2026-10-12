@@ -1,8 +1,8 @@
 {
   "status": "source-reference checklist only; not compiler/runtime validation or exhaustive binding coverage",
   "example": "crates/fontpixel/examples/api_quickstart.rs",
-  "rustdoc": "docs/api-rustdoc.md",
-  "rustdoc_include": "#![doc = include_str!(\"../../../docs/api-rustdoc.md\")]",
+  "rustdoc": "crates/fontpixel/docs/api-rustdoc.md",
+  "rustdoc_include": "#![doc = include_str!(\"../docs/api-rustdoc.md\")]",
   "features": [
     "yaff",
     "pcf",

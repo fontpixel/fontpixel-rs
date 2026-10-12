@@ -1,17 +1,16 @@
 // The package entry point: exported classes, functions and error hierarchy
 // (mirrors crates/fontpixel-py/tests/test_package.py).
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 import { test } from 'node:test';
-import { PKG, load } from './helpers.mjs';
+import { load, packageManifest } from './helpers.mjs';
 
 const fp = await load();
 
 test('package exports the native API, loaders and error hierarchy', () => {
-  const manifest = JSON.parse(readFileSync(path.join(PKG, 'package.json'), 'utf8'));
+  const { manifest } = packageManifest();
   assert.equal(manifest.name, 'fontpixel');
-  assert.equal(manifest.private, true);
+  // A local build is private; the npm package (scripts/build_npm.sh) lists its files.
+  if (manifest.private !== true) assert.ok(Array.isArray(manifest.files), 'published manifest lists files');
   assert.equal(manifest.type, 'module');
   assert.ok(fp.version());
   for (const name of ['init', 'initSync', 'version', 'capabilities', 'requireCapability', 'withAsyncResources']) {
