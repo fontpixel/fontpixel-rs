@@ -34,7 +34,8 @@ WASM 兼容层在 SC 解析、PCF 写出、批量文字绘图上更快；小型�
   共享桌面，其他用户的任务在开发期间曾把 load 推到 50 以上；正式测量时较低，但仍只是本机单次五轮实验。
 - 行为不变的验证：兼容 node 测试（新增两组覆盖缓存/按需句柄/行缓存）、bdfparser-js 未修改参考套件
   1178 通过 / 11 失败 / 3 跳过（`--slow` 1181/11/0，失败集合与修复前相同），以及新旧包在同一脚本上的
-  逐项输出对比（视图、字形句柄合并、行缓存、警告、错误类别与消息完全相同）。共享 Rust 核心只增加方法：
+  逐项输出对比（视图、字形句柄合并、行缓存、警告、错误类别与消息完全相同；脚本与输出在仓库外的
+  `../local-work/js-perf/bin/diffcheck.mjs`、`diff-base.json`/`diff-rust.json`）。共享 Rust 核心只增加方法：
   `scripts/check.sh` 通过，`scripts/check_python.sh`（CPython 3.10）1265 通过，Python bdfparser 参考套件
   1755 通过 / 8 失败 / 10 跳过（与修复前相同），`scripts/check_wasm.sh` 五个 profile 全部通过、
   `gate.sh python,js` 0 错误。
@@ -199,6 +200,8 @@ JS noop 循环下限（µs）：pure 0.009 [0.009–0.017]；compat 0.008 [0.007
 - Node 的 `glyph_metadata`（0.50，+0.63 µs）、`font_property`（0.49，+0.11 µs）、`iterate_glyphs_latin`（0.74）、
   `lookup_A`（0.92）：每个字形对象仍有两个属性定义（非枚举状态、`meta` 访问器）；Chromium 中这四项为
   0.98 / 0.98 / 1.09 / 1.88，接近或快于 pure。
+- 内存代价：每版本的槽位缓存保留读过的每个字形的元数据快照，直到下一次编辑或字体被回收；
+  对 SC 执行一次 `iterglyphs` 后约为数十 MB 的 JS 堆，修复前的即时句柄设计不持有这部分。
 - 整批任务：`write_bdf_sc`（0.40 / 0.57）——兼容层在 Rust 重新生成 5.7 MB 文本再整体解码成 JS 字符串，
   pure 主要拼接已持有的字符串；`write_ttf_latin`（0.98 / 0.99）持平。
 

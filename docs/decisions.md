@@ -2309,7 +2309,10 @@ suite at 1178/11/3, the Python suites).
   renewed by every `core_mut()`; `attach` returns exactly `lookup`'s handle
   while the revision is unchanged and rebuilds it from the slot's
   generation and snapshot otherwise, so attachment and merge semantics are
-  those of an eager handle. Python keeps eager handles.
+  those of an eager handle. Python keeps eager handles. Cost: the slot
+  cache holds the metadata snapshot of every glyph read until the next edit
+  or until the font is collected (tens of MB of JS heap after one
+  `iterglyphs` over a 38k-glyph font).
 - Bitmaps built from row lists keep the rows JS-side (up to 4096×4096 and
   64K pixels; larger lists still meet the native limits at construction)
   and make the raster on demand; rows cross the boundary as one string;
