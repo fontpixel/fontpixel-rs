@@ -13,7 +13,7 @@ fontpixel-rs 发 crates；fontpixel.com 更新三个库的文档（新 API 标 s
 - crates：`fontpixel`、`fontpixel-ops`、`fontpixel-cli`，版本 0.1.0。仓库地址 github.com/fontpixel/fontpixel-rs（尚未创建、未 push）。
 - 测速事实：Python Rust 版整批操作大幅更快、小属性读取更慢；JS wasm 兼容层整批（解析、PCF、绘图）更快，但小调用、遍历、
   写 BDF 更慢，`font.length` 312 µs（实现缺陷）。
-步骤（一次一个 Opus 子任务）：1 JS 兼容层性能修复与重测（进行中，分支 `js-compat-perf`）→ 2 fontpixel-rs 发布准备
+步骤（一次一个 Opus 子任务）：1 JS 兼容层性能修复与重测（已完成，2026-10-12 合并为 `4c1d5c2`；结果见 benches/PHASE8-REPORT.md「兼容层性能修复之后」；单字形 draw、逐个 bitmap 构造/编辑、headers 展开仍明显偏慢，建议 npm `latest` 留 3.x、4.x 用 `rust` 标签，待用户确认；可选后续：加速核心 `Glyph::draw`）→ 2 fontpixel-rs 发布准备
 （crates 元数据与 dry-run、PyPI `fontpixel` 多平台 wheel、npm `fontpixel`、release CI、README）→ 3 bdfparser 4.x/v3 →
 4 bdfparser-js 4.x/v3 → 5 fontpixel.com 文档与导入脚本 → 6 给用户审阅后再 push/发布。
 2026-10-07：用户改定的 fontpixel.com 浏览器字体工具已完成，详见
