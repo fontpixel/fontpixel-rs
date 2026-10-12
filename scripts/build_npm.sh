@@ -110,7 +110,9 @@ EOF
 (cd "$stage" && npm pack --pack-destination "$out" --json >"$out/pack.json")
 node --input-type=module - "$out/pack.json" <<'EOF'
 import { readFileSync } from 'node:fs';
-const [pack] = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+// npm <= 11 prints an array of results, npm 12 an object keyed by package name.
+const parsed = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const pack = Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0];
 console.log(`${pack.filename}: ${pack.size} bytes packed, ${pack.unpackedSize} bytes unpacked, ${pack.entryCount} files`);
 for (const f of pack.files) console.log(`  ${String(f.size).padStart(10)}  ${f.path}`);
 EOF
