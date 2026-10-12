@@ -1,0 +1,19 @@
+# Expected failures of bdfparser-js's own test suite (3.x, branch v3) on
+# fontpixel/compat/bdfparser: one `file::test name` per line; `::<suite>` is a
+# test file that cannot load. Reasons:
+# crates/fontpixel-wasm/tests/compat_bdfparser/KNOWN_DIFFERENCES.md and
+# docs/bdfparser-compat-differences.md. CI (tools/check_reference_results.py)
+# fails on any failure or error not listed here.
+test/bitmap.test.ts::Bitmap alter replace
+test/bitmap.test.ts::Bitmap pad bytepad
+test/bitmap.test.ts::Bitmap pad bytepad4
+test/browser.test.ts::<suite>
+test/build.test.ts::<suite>
+test/encoding.test.ts::v3 charsets multi-byte charsets without bdfparser/cjk: iconv-lite instead of TextDecoder
+test/encoding.test.ts::v3 charsets multi-byte charsets without bdfparser/cjk: restricted TextDecoder, one warning
+test/hardening.test.ts::§11.4 parsing and drawing overlay keeps its size, aligns at the top-left, clips (K04)
+test/parse.test.ts::glyph section fewer hex rows than BBX height: padded when drawing, warned once
+test/pcf.test.ts::more edge cases readPcfAsync without DecompressionStream
+test/pcf.test.ts::more edge cases writer: unusual model values
+test/pcf.test.ts::readPcf malformed input gives clear errors
+test/svg.test.ts::Bitmap.draw2canvas v2 / v3-rc signature (pixelcolors, xoff, yoff) still works

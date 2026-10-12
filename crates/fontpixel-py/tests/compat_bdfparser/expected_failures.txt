@@ -1,0 +1,13 @@
+# Expected failures of bdfparser's own test suite (3.x, branch v3) on
+# fontpixel.compat.bdfparser: one pytest id per line. Reasons:
+# crates/fontpixel-py/tests/compat_bdfparser/KNOWN_DIFFERENCES.md and
+# docs/bdfparser-compat-differences.md. CI (tools/check_reference_results.py)
+# fails on any failure or error not listed here.
+tests/test_bitmap.py::TestBitmapAlter::test_replace
+tests/test_bitmap.py::TestBitmapPad::test_bytepad
+tests/test_bitmap.py::TestBitmapPad::test_bytepad4
+tests/test_edit.py::TestAttached::test_negative_codepoint_is_normalised
+tests/test_encoding.py::test_tottf_resolves_charset_once
+tests/test_hardening.py::TestFontCodecCache::test_cached
+tests/test_hardening.py::TestFontCodecCache::test_invalidated_by_props_and_override
+tests/test_pcf.py::test_reader_swaps_partial_scan_units
