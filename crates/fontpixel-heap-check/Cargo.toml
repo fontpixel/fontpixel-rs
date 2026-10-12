@@ -6,6 +6,8 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
 publish = false
 
 # Not in workspace default-members. The measurement tests are #[ignore]d so the

@@ -9,6 +9,8 @@ edition = "2024"
 rust-version = "1.99"
 license = "MIT"
 authors = ["Tom Chen"]
+repository = "https://github.com/fontpixel/fontpixel-rs"
+homepage = "https://github.com/fontpixel/fontpixel-rs"
 
 [workspace.dependencies]
 fontpixel = { path = "crates/fontpixel", version = "0.1.0", default-features = false }

@@ -494,7 +494,7 @@ The filesystem-free [API quickstart](crates/fontpixel/examples/api_quickstart.rs
 has been rewritten against current source signatures, including names, retained
 budgets, merge, sidecars, embedded metrics, regional names, subsets and WOFF2.
 It compiles under `cargo clippy --all-targets` but is not run by `scripts/check.sh`;
-the [crate-root guide](docs/api-rustdoc.md) examples run as doctests. [Static documentation checks](examples/check_api_documentation.py)
+the [crate-root guide](crates/fontpixel/docs/api-rustdoc.md) examples run as doctests. [Static documentation checks](examples/check_api_documentation.py)
 inspect files and declarations only; they do not compile Rust or invoke the CLI.
 
 The [documentation smoke runner](examples/README.md#recording-cli-smokes) records

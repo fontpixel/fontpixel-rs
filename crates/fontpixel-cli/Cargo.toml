@@ -1,11 +1,18 @@
 [package]
 name = "fontpixel-cli"
-description = "Command-line interface for fontpixel (under development)"
+description = "fontpixel command-line tool: inspect, convert, merge, subset, preview and render bitmap fonts in 99 formats"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://github.com/fontpixel/fontpixel-rs/blob/main/crates/fontpixel-cli/README.md"
+readme = "README.md"
+keywords = ["font", "bitmap-font", "bdf", "converter", "cli"]
+categories = ["command-line-utilities", "graphics", "encoding"]
+include = ["/src/**", "/README.md", "/LICENSE"]
 
 [[bin]]
 name = "fontpixel"

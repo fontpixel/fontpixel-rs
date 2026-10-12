@@ -2,7 +2,7 @@
 
 **Status (2026-10-05):** the reconstructed phase-6 source compiles; `scripts/check.sh` passed (3,453 tests, clippy `-D warnings`, cargo-deny) and `cargo doc` with `RUSTDOCFLAGS=-D warnings` is clean. Historical observations are not current acceptance. See [recovery status](recovery-status.md) for known gaps and catalogue metadata/metric work.
 
-This is a semantic reconstruction. The recovered crate-root examples are in `api-rustdoc.md`; the model
+This is a semantic reconstruction. The recovered crate-root examples are in `crates/fontpixel/docs/api-rustdoc.md`; the model
 contract is in [bitmap-model.md](bitmap-model.md). Reconcile this guide with recovered source
 before integration; the crate-root examples run as doctests in `scripts/check.sh`.
 
