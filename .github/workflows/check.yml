@@ -1,6 +1,7 @@
 # Every push and pull request; also called by release.yml before anything is
 # published. Jobs:
 #   check           scripts/check.sh (fmt, clippy, tests, feature matrix, cargo-deny) on Linux
+#   crates-package  cargo publish --workspace --dry-run, only the expected warnings
 #   rust-test       cargo test --workspace on Linux, macOS and Windows
 #   python          release wheel built and installed, pytest against the installed
 #                   package on CPython 3.10 and 3.13, on Linux, macOS and Windows
@@ -48,6 +49,27 @@ jobs:
         run: cargo install cargo-deny --version 0.20.2 --locked
       - name: scripts/check.sh
         run: scripts/check.sh
+
+  # The crates.io packages: `cargo publish --dry-run` (package + verify build)
+  # with no warning besides the expected "ignoring <repository-only target>".
+  crates-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Install the pinned Rust toolchain (rust-toolchain.toml)
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: crates-package
+      - name: cargo publish --workspace --dry-run
+        run: |
+          cargo publish --locked --workspace --dry-run 2>&1 | tee "$RUNNER_TEMP/publish.log"
+          ls -l target/package/*.crate
+          if grep '^warning' "$RUNNER_TEMP/publish.log" |
+              grep -v -e 'is not included in the published package$' -e '^warning: aborting upload due to dry run$'; then
+            echo "unexpected cargo publish warnings (docs/decisions.md, \"Release packaging\")"; exit 1
+          fi
 
   rust-test:
     strategy:
