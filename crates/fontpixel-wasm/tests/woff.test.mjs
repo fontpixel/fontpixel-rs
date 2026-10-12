@@ -3,9 +3,8 @@
 // stream large enough for the parallel Brotli layout.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { HAS_CLI, cliFiles, load } from './helpers.mjs';
+import { HAS_CLI, cliFiles, fixture, load } from './helpers.mjs';
 import { CIRCLE, E, GOLDEN, assertBytes, h, needs, norm, throwsError, toHex } from './sfnt_support.mjs';
 
 const fp = await load();
@@ -121,20 +120,18 @@ test('woff defaults', { skip }, () => {
 
 // ------------------------------------------------- WOFF2 identity, large input
 
-const TONG_SC = '/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf';
 // `variants` sets the CJK OS/2 code-page bits only with the charset tables.
 const skipTong =
   skip ||
   needs(fp, 'cjk_charsets') ||
-  (!HAS_CLI && 'native CLI not found (FONTPIXEL_CLI)') ||
-  (!existsSync(TONG_SC) && `sample ${TONG_SC} not found`);
+  (!HAS_CLI && 'native CLI not found (FONTPIXEL_CLI)');
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 // Native reference outputs and the WASM results, computed once per run.
 let tong;
 function tongResults() {
   if (!tong) {
-    const bdf = new Uint8Array(readFileSync(TONG_SC));
+    const bdf = fixture('tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz');
     const native = (out) => {
       const cli = cliFiles({ 'sc.bdf': bdf }, ['variants', '--base', 'sc.bdf', '-o', out]);
       assert.equal(cli.code, 0, cli.stderr.slice(0, 2000));

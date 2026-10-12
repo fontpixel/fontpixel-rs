@@ -7,8 +7,10 @@
 // merge) must equal the native CLI `merge` byte for byte for the same inputs
 // and options, `info` must equal `info --json` and `render` must equal
 // `preview`. The large merges (Unifont 57,086 glyphs + Tong Pixel Sans
-// Latin; Tong SC + Tong Mono Latin) run when the samples exist; the large
-// WOFF2 merge runs with FONTPIXEL_WASM_LARGE=1 (it takes minutes).
+// Latin; Tong SC + Tong Mono Latin) use the repository fixtures
+// (fixtures/README.md; FONTPIXEL_UNIFONT may name an uncompressed Unifont
+// BDF instead); the large WOFF2 merge runs with FONTPIXEL_WASM_LARGE=1 (it
+// takes minutes).
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -16,7 +18,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { pathToFileURL } from 'node:url';
-import { BLOCK, HAS_CLI, PKG, SPLEEN, buildInfo, cliFiles, load, sample } from './helpers.mjs';
+import { BLOCK, HAS_CLI, PKG, SPLEEN, buildInfo, cliFiles, fixture, load, sample } from './helpers.mjs';
 
 const fp = await load();
 const PROFILE = buildInfo().profile;
@@ -28,16 +30,13 @@ const needsCli = !HAS_CLI && 'native CLI not found (FONTPIXEL_CLI)';
 const S = sample(SPLEEN);
 const B = sample(BLOCK);
 
-const SAMPLES = '/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans';
-const UNIFONT_PATH =
-  process.env.FONTPIXEL_UNIFONT ?? '/home/chen/githubprojects/fontpixel/reference/bdfparser/tests/fonts/unifont-13.0.04.bdf';
-const LATIN_PATH = path.join(SAMPLES, 'TongPixelSans14Large-Latin.bdf');
-const SC_PATH = path.join(SAMPLES, 'TongPixelSans14Large-SC.bdf');
-const MONO_LATIN_PATH = path.join(SAMPLES, 'TongPixelSansMono14Large-Latin.bdf');
-const HAS_UNIFONT = existsSync(UNIFONT_PATH) && existsSync(LATIN_PATH);
-const HAS_TONG_MONO = existsSync(SC_PATH) && existsSync(MONO_LATIN_PATH);
 const LARGE = process.env.FONTPIXEL_WASM_LARGE === '1';
-const unifontSkip = needsCli || (!HAS_UNIFONT && `samples missing: ${UNIFONT_PATH}, ${LATIN_PATH}`);
+const unifontSkip = needsCli;
+const unifontBytes = () =>
+  process.env.FONTPIXEL_UNIFONT ? read(process.env.FONTPIXEL_UNIFONT) : fixture('unifont/unifont-13.0.04.bdf.gz');
+const latinBytes = () => fixture('tong-pixel-sans/TongPixelSans14Large-Latin.bdf.gz');
+const scBytes = () => fixture('tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz');
+const monoLatinBytes = () => fixture('tong-pixel-sans/TongPixelSansMono14Large-Latin.bdf.gz');
 const read = (file) => new Uint8Array(readFileSync(file));
 
 /** A synthetic monospace CJK BDF (10x8 cells, ascent 7, descent 1, like Spleen 5x8). */
@@ -295,8 +294,8 @@ test('merge options mirror the command line and fail like it', { skip: needsCli 
 // ------------------------------------------------------------ merge (large, identity)
 
 test('large merge of Unifont and Tong Latin equals the command line', { skip: unifontSkip, timeout: 600000 }, async (t) => {
-  const unifont = read(UNIFONT_PATH);
-  const latin = read(LATIN_PATH);
+  const unifont = unifontBytes();
+  const latin = latinBytes();
   const inputs = { 'latin.bdf': latin, 'unifont.bdf': unifont };
   const args = ['--family', 'Unifont Western Mix', '--part', 'latin.bdf', '--take', 'western', '--part', 'unifont.bdf', '--take', 'all',
     '--spacing', 'prop', '-o', 'merged.bdf', '--report', 'json'];
@@ -333,9 +332,9 @@ test('large merge of Unifont and Tong Latin equals the command line', { skip: un
   );
 });
 
-test('large monospace merge of Tong SC and Tong Mono Latin equals the command line', { skip: needsCli || (!HAS_TONG_MONO && 'Tong samples missing'), timeout: 1800000 }, async (t) => {
-  const sc = read(SC_PATH);
-  const latin = read(MONO_LATIN_PATH);
+test('large monospace merge of Tong SC and Tong Mono Latin equals the command line', { skip: needsCli, timeout: 1800000 }, async (t) => {
+  const sc = scBytes();
+  const latin = monoLatinBytes();
   const inputs = { 'sc.bdf': sc, 'mono-latin.bdf': latin };
   const outputs = LARGE && WOFF2 ? ['mono.bdf', 'mono.woff2'] : ['mono.bdf'];
   const args = ['--family', 'Tong Mono Mix', '--part', 'sc.bdf', '--take', 'cjk', '--part', 'mono-latin.bdf', '--take', 'western',
@@ -381,8 +380,8 @@ test('WOFF2 merge outputs equal the command line byte for byte', { skip: (needsC
 // ------------------------------------------------------------ worker
 
 test('merge in a worker equals merge, reports progress and keeps the main thread responsive', { skip: unifontSkip, timeout: 600000 }, async (t) => {
-  const unifont = read(UNIFONT_PATH);
-  const latin = read(LATIN_PATH);
+  const unifont = unifontBytes();
+  const latin = latinBytes();
   const parts = [
     { bytes: latin, take: 'western', name: 'latin.bdf' },
     { bytes: unifont, take: 'all', name: 'unifont.bdf' },
@@ -452,7 +451,7 @@ test('worker calls equal the synchronous calls and keep error classes', async ()
 });
 
 test('AbortSignal cancels a worker merge cooperatively', { timeout: 600000 }, async () => {
-  const big = HAS_UNIFONT ? read(UNIFONT_PATH) : HAN;
+  const big = unifontBytes();
   const parts = [
     { bytes: S, take: 'western', name: 's.bdf' },
     { bytes: big, take: 'all', name: 'big.bdf' },
@@ -496,7 +495,7 @@ test('AbortSignal cancels a worker merge cooperatively', { timeout: 600000 }, as
 });
 
 test('terminate cancellation and terminate() stop the worker at once', { timeout: 600000 }, async () => {
-  const big = HAS_UNIFONT ? read(UNIFONT_PATH) : HAN;
+  const big = unifontBytes();
   const parts = [{ bytes: big, take: 'all', name: 'big.bdf' }];
   const options = { family: 'Mix', spacing: 'prop', outputs: ['m.bdf'] };
   const worker = await fp.createWorker({ cancellation: 'terminate' });

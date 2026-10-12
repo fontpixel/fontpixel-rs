@@ -2,17 +2,18 @@
 // font, and the released-handle guard's per-call cost.
 //
 // Usage: node crates/fontpixel-wasm/bench/foundation.mjs [FONT.bdf]
-// (FONTPIXEL_WASM_PKG as for the tests; default font: the largest Tong Pixel
-// Sans sample when present, else tests/data/bdf/spleen-5x8.bdf).
-import { existsSync, readFileSync } from 'node:fs';
+// (FONTPIXEL_WASM_PKG as for the tests; default font: Tong Pixel Sans SC from
+// the repository fixtures).
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
-import { DATA, PKG, buildInfo } from '../tests/helpers.mjs';
+import { PKG, buildInfo, fixture } from '../tests/helpers.mjs';
 
-const big = '/home/chen/githubprojects/fontpixel/samples/tong-pixel-sans/TongPixelSans14Large-SC.bdf';
-const fontPath = process.argv[2] ?? (existsSync(big) ? big : path.join(DATA, 'bdf/spleen-5x8.bdf'));
-const bytes = new Uint8Array(readFileSync(fontPath));
+const fontPath = process.argv[2] ?? 'fixtures/tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz';
+const bytes = process.argv[2]
+  ? new Uint8Array(readFileSync(process.argv[2]))
+  : fixture('tong-pixel-sans/TongPixelSans14Large-SC.bdf.gz');
 const wasmBytes = readFileSync(path.join(PKG, 'fontpixel_wasm_bg.wasm'));
 
 function time(label, fn, runs = 5) {
