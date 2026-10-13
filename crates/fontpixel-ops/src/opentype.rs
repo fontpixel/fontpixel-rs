@@ -1266,9 +1266,14 @@ mod tests {
     #[test]
     fn repeated_language_clones_obey_exact_total_byte_admission() {
         let input = loaded_font();
+        // Probe the font that is routed below, not the decoded original: off
+        // the audited toolchain (fontpixel_verified_btree_1_99, x86_64 Linux
+        // only) a clone is charged by its source's capacities, and the decoded
+        // font's spare capacity is larger than a clone's.
+        let font = input.fonts.fonts[0].clone();
         let mut probe = InputBudget::new(ResourceLimits::default());
         probe.admit(&input).unwrap();
-        probe.reserve_font_clone(&input.fonts.fonts[0]).unwrap();
+        probe.reserve_font_clone(&font).unwrap();
         let exact = ResourceLimits::default().max_total_bytes
             - probe.remaining_limits().unwrap().max_total_bytes;
         for (maximum, succeeds) in [(exact - 1, false), (exact, true)] {
@@ -1279,12 +1284,8 @@ mod tests {
             budget.admit(&input).unwrap();
             let before = budget.remaining_limits().unwrap();
             let mut variants = Variants::new(Font::default());
-            let result = add_language_routes(
-                &mut variants,
-                "zh-Hant,zh-HK",
-                input.fonts.fonts[0].clone(),
-                &mut budget,
-            );
+            let result =
+                add_language_routes(&mut variants, "zh-Hant,zh-HK", font.clone(), &mut budget);
             assert_eq!(result.is_ok(), succeeds);
             if succeeds {
                 assert_eq!(variants.languages.len(), 2);
