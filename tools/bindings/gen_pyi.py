@@ -1379,7 +1379,7 @@ def render_allowlist(serde, entries):
 def stale_files(files):
     existing = set()
     for p in PKG.rglob("*.pyi"):
-        if p.read_text().startswith(HEADER):
+        if p.read_text(encoding="utf-8").startswith(HEADER):
             existing.add(p)
     return sorted(existing - set(files))
 
@@ -1395,7 +1395,7 @@ def main(argv=None):
     stale = stale_files(files)
     if args.check:
         bad = [p for p, text in sorted(files.items())
-               if not p.exists() or p.read_text() != text]
+               if not p.exists() or p.read_text(encoding="utf-8") != text]
         for p in bad:
             print(f"out of date: {p.relative_to(ROOT)}", file=sys.stderr)
         for p in stale:
@@ -1406,8 +1406,8 @@ def main(argv=None):
     else:
         for path, text in sorted(files.items()):
             path.parent.mkdir(parents=True, exist_ok=True)
-            if not path.exists() or path.read_text() != text:
-                path.write_text(text)
+            if not path.exists() or path.read_text(encoding="utf-8") != text:
+                path.write_text(text, encoding="utf-8", newline="\n")
         for p in stale:
             print(f"stale generated stub (delete it): {p}", file=sys.stderr)
     if args.report or args.strict:

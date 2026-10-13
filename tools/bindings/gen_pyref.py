@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import difflib
 import inspect
 import sys
 import types
@@ -49,7 +50,7 @@ class StubIndex:
         self.by_id = {}
         mods = gen_pyi.native_modules()
         for dotted, (mod, rel) in mods.items():
-            tree = ast.parse((PKG / rel).read_text())
+            tree = ast.parse((PKG / rel).read_text(encoding="utf-8"))
             defs = {}
             for node in tree.body:
                 if isinstance(node, ast.FunctionDef):
@@ -197,20 +198,24 @@ def main(argv=None):
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
     reference, index = render()
-    guide = GUIDE.read_text()
+    guide = GUIDE.read_text(encoding="utf-8")
     if BEGIN not in guide or END not in guide:
         print(f"{GUIDE.relative_to(ROOT)} lacks the reference index markers", file=sys.stderr)
         return 1
     start, end = guide.index(BEGIN), guide.index(END) + len(END)
     new_guide = guide[:start] + index + guide[end:]
     if args.check:
-        bad = [p for p, text in ((REFERENCE, reference), (GUIDE, new_guide))
-               if not p.exists() or p.read_text() != text]
-        for p in bad:
+        bad = [(p, text) for p, text in ((REFERENCE, reference), (GUIDE, new_guide))
+               if not p.exists() or p.read_text(encoding="utf-8") != text]
+        for p, text in bad:
             print(f"out of date: {p.relative_to(ROOT)} (run tools/bindings/gen_pyref.py)", file=sys.stderr)
+            if p.exists():
+                diff = difflib.unified_diff(p.read_text(encoding="utf-8").splitlines(), text.splitlines(),
+                                            "committed", "generated", lineterm="", n=1)
+                print("\n".join(list(diff)[:40]), file=sys.stderr)
         return 1 if bad else 0
-    REFERENCE.write_text(reference)
-    GUIDE.write_text(new_guide)
+    REFERENCE.write_text(reference, encoding="utf-8", newline="\n")
+    GUIDE.write_text(new_guide, encoding="utf-8", newline="\n")
     return 0
 
 
