@@ -27,8 +27,14 @@ fontpixel-rs 发 crates；fontpixel.com 更新三个库的文档（新 API 标 s
 - 两个 bdfparser 仓库已从 `v3.0` 建 `v3` 分支并 push（CI 参考套件用；`v3.0` 远端分支仍在，旧的）。
 - CI 第 1 轮（38260036991）10 个 job 失败，已在 `ca0d48c`、`6ea0cde` 修复并 push（rustfmt、gzip 测试、Windows 路径/换行、
   wasm bdfparser 档 clippy 与测试范围、crates 预演脚本）；Node 18 的 3 个失败原因未知（日志只有尾部，已改为完整打印）。
-  第 2 轮 run 38305833681（2026-10-12 22:41 开始）。续接：`gh run view 38305833681 -R fontpixel/fontpixel-rs` 看结果、修复。
-- 下一步：CI 全绿 → 第 3 步 bdfparser 4.x。
+  第 2 轮 run 38305833681 失败；第 3 轮 38412149968 只剩 macOS/Windows 的 rust-test。
+- **CI 全绿：run 38416869575（commit `cf0a53d`，2026-10-13，20/20 job）。** 修复：输出父目录的 root 所有的系统符号链接
+  （macOS `/var`、`/tmp`）先解析，用户自建的符号链接仍拒绝（docs/decisions.md 2026-10-13，产品 bug，用户可改为全部跟随）；
+  Windows 目录输入改用 cap-std 打开、回滚时先释放句柄再删新建目录、目录作主输入报 InvalidInput（产品 bug）；
+  gen_pyref/gen_pyi 读写一律 UTF-8+LF；wasm/npm 两个脚本共用 `scripts/wasm_suites.sh` 的测试套件清单，ops-page 的 WOFF2
+  合并只在有 WOFF2 的档；Node 18 用 node:crypto；若干测试的平台假设（macOS 克隆计费探针、Windows TMP/TEMP、路径分隔符、
+  打开中的目录不能改名）。check.yml 的 cargo test 加了 `--no-fail-fast`。
+- 下一步：第 3 步 bdfparser 4.x。
 2026-10-07：用户改定的 fontpixel.com 浏览器字体工具已完成，详见
 [reports/phase-9.md](reports/phase-9.md) 与 [验收数据](reports/phase9-validation/summary.json)。
 
