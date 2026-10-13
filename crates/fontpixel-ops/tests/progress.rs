@@ -188,7 +188,12 @@ fn convert_progress_alternates_reads_and_encodes_and_equals_convert() {
         ]
     );
     assert_eq!(events[0].item.as_deref(), Some("fonts/spleen.bdf"));
-    assert_eq!(events[1].item.as_deref(), Some("out/spleen.pcf"));
+    // `out` joined with the input's stem, with the platform's separator.
+    let first_output = std::path::Path::new("out").join("spleen.pcf");
+    assert_eq!(
+        events[1].item.as_deref(),
+        Some(first_output.to_string_lossy().as_ref())
+    );
     assert_eq!(events[1].bytes, Some(plain.response.outputs[0].bytes));
     assert_eq!(events[3].bytes, Some(plain.response.outputs[1].bytes));
 

@@ -7,6 +7,11 @@ use std::{
     process::{Command, Output},
     sync::atomic::{AtomicUsize, Ordering},
 };
+/// The spool directory variables: TMPDIR on Unix, TMP and TEMP on Windows
+/// (std::env::temp_dir).
+fn temp_root_env(path: PathBuf) -> [(&'static str, PathBuf); 3] {
+    ["TMPDIR", "TMP", "TEMP"].map(|name| (name, path.clone()))
+}
 struct Work(PathBuf);
 impl Work {
     fn new() -> Self {
@@ -260,7 +265,7 @@ fn batch_large_reports_spool_without_changing_payload_order_or_outputs() {
     w.write("jobs.toml", format!("version=1\njobs=3\n{tasks}"));
     let output = Command::new(env!("CARGO_BIN_EXE_fontpixel"))
         .current_dir(&w.0)
-        .env("TMPDIR", w.0.join("spools"))
+        .envs(temp_root_env(w.0.join("spools")))
         .args(["batch", "jobs.toml"])
         .output()
         .unwrap();
@@ -298,7 +303,7 @@ fn batch_spool_io_failure_aborts_all_outputs_and_preserves_inputs() {
     w.write("jobs.toml", format!("version=1\n{tasks}"));
     let output = Command::new(env!("CARGO_BIN_EXE_fontpixel"))
         .current_dir(&w.0)
-        .env("TMPDIR", w.0.join("not-a-directory"))
+        .envs(temp_root_env(w.0.join("not-a-directory")))
         .args(["batch", "jobs.toml"])
         .output()
         .unwrap();
@@ -342,7 +347,7 @@ fn batch_report_exhaustion_after_spilling_cleans_up_before_commit() {
     );
     let output = Command::new(env!("CARGO_BIN_EXE_fontpixel"))
         .current_dir(&w.0)
-        .env("TMPDIR", w.0.join("spools"))
+        .envs(temp_root_env(w.0.join("spools")))
         .args(["batch", "jobs.toml"])
         .output()
         .unwrap();
