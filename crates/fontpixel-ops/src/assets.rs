@@ -445,7 +445,15 @@ pub(crate) fn read_primary(
     limits: &ResourceLimits,
     sources: Sources,
 ) -> Result<Vec<u8>> {
-    let file = File::open(path)?;
+    let file = File::open(path).map_err(|error| {
+        // Windows cannot open a directory as a file ("Access is denied");
+        // report it as elsewhere (`bounded`).
+        if std::fs::metadata(path).is_ok_and(|metadata| metadata.is_dir()) {
+            invalid("font input must be a regular file")
+        } else {
+            error.into()
+        }
+    })?;
     sources.remember(&file)?;
     bounded(file, limits.max_input_bytes.min(limits.max_total_bytes)).map_err(|error| match error {
         Error::ResourceLimit { limit, .. } => Error::ResourceLimit {
@@ -679,22 +687,33 @@ impl Drop for Transaction {
                 remove_owned_file(&stage.dir, backup, identity);
             }
         }
+        // Windows cannot remove a directory while a handle to it is open
+        // (cap-std opens directories without FILE_SHARE_DELETE, and there a
+        // FileIdentity is an open handle). Close the stages' directory handles
+        // and identities first; then, innermost first, each created directory
+        // after its children have released their parent handle.
+        self.stages.clear();
         if !self.committed {
-            for created in self.created.iter().rev() {
+            while let Some(CreatedDirectory {
+                parent,
+                name,
+                identity,
+            }) = self.created.pop()
+            {
                 // The pathname might have been replaced since creation. Only
                 // remove the exact empty directory made by this transaction.
-                let matches = created
-                    .parent
-                    .symlink_metadata(&created.name)
+                // `same` consumes the identity, releasing it before removal.
+                let same = move |found: FileIdentity| found == identity;
+                let matches = parent
+                    .symlink_metadata(&name)
                     .is_ok_and(|metadata| metadata.is_dir() && !metadata.is_symlink())
-                    && created
-                        .parent
-                        .open_dir(&created.name)
+                    && parent
+                        .open_dir(&name)
                         .ok()
                         .and_then(|dir| directory_identity(&dir).ok())
-                        .is_some_and(|identity| identity == created.identity);
+                        .is_some_and(same);
                 if matches {
-                    let _ = created.parent.remove_dir(&created.name);
+                    let _ = parent.remove_dir(&name);
                 }
             }
         }
@@ -1490,6 +1509,18 @@ mod tests {
             hook,
         )
     }
+    /// Rename a directory that the code under test holds open. Windows refuses
+    /// (cap-std opens directories without FILE_SHARE_DELETE: a sharing
+    /// violation), so a renamed or replaced open directory cannot arise there.
+    /// Returns whether the directory was renamed.
+    fn rename_open_directory(from: &Path, to: &Path) -> bool {
+        match std::fs::rename(from, to) {
+            Ok(()) => true,
+            // ERROR_ACCESS_DENIED, ERROR_SHARING_VIOLATION
+            Err(error) if cfg!(windows) && matches!(error.raw_os_error(), Some(5 | 32)) => false,
+            Err(error) => panic!("rename {}: {error}", from.display()),
+        }
+    }
     fn assert_no_temporaries(path: &Path) {
         for entry in std::fs::read_dir(path).unwrap() {
             let entry = entry.unwrap();
@@ -1723,7 +1754,9 @@ mod tests {
         let sources = Sources::default();
         let _input = FileInput::open(&source, &ResourceLimits::default(), sources.clone()).unwrap();
         assert!(!sources.is_single_primary());
-        std::fs::rename(&source, &moved).unwrap();
+        if !rename_open_directory(&source, &moved) {
+            return;
+        }
         let outputs = [pending(moved.join("new.bin"), b"new")];
         assert!(persist_bundles(&outputs, &sources).is_err());
         assert_eq!(std::fs::read(moved.join("a")).unwrap(), b"source");
@@ -1745,7 +1778,9 @@ mod tests {
             b"source"
         );
         let moved = t.0.join("moved");
-        std::fs::rename(source.join("nested"), &moved).unwrap();
+        if !rename_open_directory(&source.join("nested"), &moved) {
+            return;
+        }
         assert!(persist_bundles(&[pending(moved.join("new.bin"), b"new")], &sources).is_err());
         assert_eq!(std::fs::read(moved.join("a")).unwrap(), b"source");
         assert!(!moved.join("new.bin").exists());
@@ -1963,7 +1998,9 @@ mod tests {
         assert!(
             run_group(&outputs, &Sources::default(), |index| {
                 if index == 0 {
-                    std::fs::rename(t.0.join("nested"), t.0.join("moved"))?;
+                    if !rename_open_directory(&t.0.join("nested"), &t.0.join("moved")) {
+                        return Err(invalid("the created directory cannot be replaced here"));
+                    }
                     std::fs::create_dir(t.0.join("nested"))?;
                     std::fs::write(t.0.join("nested/keep"), b"external")?;
                 }
@@ -1971,6 +2008,12 @@ mod tests {
             })
             .is_err()
         );
+        if !t.0.join("moved").exists() {
+            // Windows: no replacement happened; the rollback removed the
+            // transaction's own directory.
+            assert_eq!(std::fs::read_dir(&t.0).unwrap().count(), 0);
+            return;
+        }
         assert_eq!(std::fs::read(t.0.join("nested/keep")).unwrap(), b"external");
         assert!(!t.0.join("font.json").exists());
         assert!(!t.0.join("font.png").exists());
@@ -2322,9 +2365,10 @@ mod tests {
         )
         .unwrap();
         assert_eq!(*used.lock().unwrap(), source_storage(2));
-        std::fs::rename(t.0.join("source"), t.0.join("moved")).unwrap();
-        assert!(persist_bundles(&[pending(t.0.join("moved/new"), b"new")], &sources).is_err());
-        assert!(!t.0.join("moved/new").exists());
+        if rename_open_directory(&t.0.join("source"), &t.0.join("moved")) {
+            assert!(persist_bundles(&[pending(t.0.join("moved/new"), b"new")], &sources).is_err());
+            assert!(!t.0.join("moved/new").exists());
+        }
         assert_eq!(*used.lock().unwrap(), source_storage(2));
         drop(sources);
         assert_eq!(*used.lock().unwrap(), source_storage(2));
