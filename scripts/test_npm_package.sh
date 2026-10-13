@@ -31,18 +31,12 @@ echo "== smoke (bare specifiers)"
 cp "$repo/crates/fontpixel-wasm/tests/package/smoke.mjs" "$project/smoke.mjs"
 (cd "$project" && node smoke.mjs "${profiles[@]}")
 
-# The bdfparser build backs bdfparser 4.x: it carries the compat API, BDF/PCF
-# and charsets but no ops codecs, so the general format and ops suites (whose
-# expectations are per profile: full, minimal, merge, web, convert) do not
-# apply to it.
-GENERAL_ONLY='ops.test.mjs ops-progress.test.mjs formats_extra.test.mjs formats_options.test.mjs foundation.test.mjs'
-run_suites() { # run_suites DIR LABEL
+# shellcheck source=scripts/wasm_suites.sh
+. "$repo/scripts/wasm_suites.sh"
+run_suites() { # run_suites DIR LABEL (the package root is the full build)
   echo "== node:test suites against $2"
-  local tests=() t
-  for t in "$repo"/crates/fontpixel-wasm/tests/*.test.mjs; do
-    if [ "$2" = bdfparser ] && [[ " $GENERAL_ONLY " == *" $(basename "$t") "* ]]; then continue; fi
-    tests+=("$t")
-  done
+  local tests=()
+  mapfile -t tests < <(wasm_suites "$repo" "$([ "$2" = root ] && echo full || echo "$2")")
   FONTPIXEL_WASM_PKG="$1" node --test "${tests[@]}" >"$work/node-test-$2.log" 2>&1 || {
     grep -E -A20 '^ *(not ok|✖)' "$work/node-test-$2.log" | head -n 400
     tail -n 15 "$work/node-test-$2.log"; echo "node:test failed for $2 (log $work/node-test-$2.log)"; return 1; }

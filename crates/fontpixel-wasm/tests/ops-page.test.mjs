@@ -12,6 +12,7 @@
 // BDF instead); the large WOFF2 merge runs with FONTPIXEL_WASM_LARGE=1 (it
 // takes minutes).
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -22,7 +23,10 @@ import { BLOCK, HAS_CLI, PKG, SPLEEN, buildInfo, cliFiles, fixture, load, sample
 
 const fp = await load();
 const PROFILE = buildInfo().profile;
-const WOFF2 = PROFILE !== 'minimal';
+// WOFF2 output exists in every build but minimal and bdfparser (BDF/PCF only;
+// those merges write PCF instead). Listed per profile, as in ops.test.mjs, so
+// a build that should write WOFF2 and does not still fails here.
+const WOFF2 = !['minimal', 'bdfparser'].includes(PROFILE);
 const decoder = new TextDecoder();
 const text = (bytes) => decoder.decode(bytes);
 const needsCli = !HAS_CLI && 'native CLI not found (FONTPIXEL_CLI)';
@@ -67,8 +71,9 @@ function plainFiles(files) {
   return Object.fromEntries(Object.entries(files).map(([k, v]) => [k, new Uint8Array(v)]));
 }
 
-function sha256(bytes) {
-  return globalThis.crypto.subtle.digest('SHA-256', bytes).then((d) => Buffer.from(d).toString('hex'));
+// node:crypto, not globalThis.crypto: Web Crypto is a global only from Node 19.
+async function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
 }
 
 /** Character art of a mono render result, re-derived from its bits. */

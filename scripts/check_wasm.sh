@@ -37,9 +37,12 @@ for crate in fontpixel fontpixel-ops; do
 done
 "${PYTHON:-python3}" tools/bindings/gen_dts.py --rustdoc "$docs/doc" --check
 
+# shellcheck source=scripts/wasm_suites.sh
+. scripts/wasm_suites.sh
 for profile in "${profiles[@]}"; do
   scripts/build_wasm.sh "$profile" "$target/wasm-pkg/$profile"
-  FONTPIXEL_WASM_PKG="$target/wasm-pkg/$profile" node --test crates/fontpixel-wasm/tests/*.test.mjs
+  mapfile -t suites < <(wasm_suites "$PWD" "$profile")
+  FONTPIXEL_WASM_PKG="$target/wasm-pkg/$profile" node --test "${suites[@]}"
   if [ "$profile" = full ]; then
     FONTPIXEL_WASM_PKG="$target/wasm-pkg/full" node examples/js/run.mjs
     "${PYTHON:-python3}" tools/bindings/gen_jsref.py --pkg "$target/wasm-pkg/full" --check
