@@ -2401,3 +2401,38 @@ manifest: `https://github.com/fontpixel/fontpixel-rs` (to be created, public).
   real upload from a branch may only go to TestPyPI. check.yml runs on
   branch pushes and pull requests only, so a release tag runs it once
   (through release.yml). No workflow touches fontpixel.com.
+
+## 2026-10-13 — Output parents: resolve system symlinks, keep rejecting user symlinks
+
+**Question:** The first macOS CI run rejected every CLI output under the
+temporary directory: `output parent must be a real directory, not a symlink:
+/var`. macOS reaches `/tmp`, `/var` (and so `$TMPDIR`) and `/etc` through
+symlinks into `/private`; merged-usr Linux has `/bin` and `/lib` links, and
+some distributions link `/home`. The W3.3 rule ("output symlinks and symlink
+parents are rejected") therefore made ordinary output locations unusable.
+**Choice:** The output directory's spelling is resolved component by
+component before any `..` is collapsed (`resolved_directory` in
+`fontpixel-ops/src/assets.rs`). A symlink owned by root (Unix uid 0; only
+root can create one) is a system link: it is replaced by its canonical
+target and resolution continues, so a later `..` means what it means to the
+operating system. Any other symlink in an output parent is still rejected,
+as is a symlink output target and any symlink inside an output bundle. The
+resolved, symlink-free path is the bundle root for every later check: the
+duplicate/overlap comparisons of new targets, the source-directory overlap
+check on each ancestor, and the strict `checked_directory` re-verification
+before each commit step (which still rejects a symlink that appears after
+resolution). Windows has no equivalent ownership marker; there every
+reparse-point link in an output parent stays rejected.
+**Reason:** The guarantee that matters is unchanged: outputs never alias an
+input or each other, and lexical path checks agree with the directories the
+operating system opens. A root-owned link is part of the system layout, not
+something the user (or another unprivileged user) placed in the path, so
+following it once and then working on its target loses no protection.
+Resolving every link (`canonicalize` of the whole parent) was rejected
+because it would silently drop the documented rejection of user-created
+symlink parents; whether to follow user links is left to the owner. Unit
+tests cover a trusted link (writes land in the target, `link/..` is the
+target's parent, two spellings of one new file collide), untrusted links
+(still rejected before and after `..`) and real root-owned links on the
+test machine (`/bin` on Ubuntu; `/var`, `/tmp` on macOS); the CLI suites
+under `std::env::temp_dir()` are the macOS end-to-end check.

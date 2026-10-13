@@ -465,12 +465,18 @@ pub(crate) struct FileInput {
 }
 impl FileInput {
     pub fn open(path: &Path, limits: &ResourceLimits, sources: Sources) -> Result<Self> {
-        let file = File::open(path)?;
-        let directory = file.metadata()?.is_dir();
-        sources.remember(&file)?;
+        let directory = std::fs::metadata(path)?.is_dir();
         let (root, bytes) = if directory {
-            (Dir::from_std_file(file), Vec::new())
+            // std's `File::open` cannot open a directory on Windows (it lacks
+            // FILE_FLAG_BACKUP_SEMANTICS: "Access is denied"); cap-std can.
+            let root = Dir::open_ambient_dir(path, ambient_authority())?;
+            sources.remember(&root.open_dir(".")?.into_std_file())?;
+            (root, Vec::new())
         } else {
+            // A path replaced by a directory after the check above fails in
+            // `bounded`, which accepts regular files only.
+            let file = File::open(path)?;
+            sources.remember(&file)?;
             (
                 Dir::open_ambient_dir(parent(path), ambient_authority())?,
                 bounded(file, limits.max_input_bytes.min(limits.max_total_bytes))?,
@@ -702,21 +708,60 @@ fn absolute(path: &Path) -> Result<PathBuf> {
         std::env::current_dir()?.join(path)
     })
 }
-fn normalized(path: &Path) -> Result<PathBuf> {
-    let mut result = PathBuf::new();
+/// Whether a symlink met while resolving an output directory belongs to the
+/// operating system's own layout. On Unix that is a root-owned link (only root
+/// can create one), such as `/var` and `/tmp` on macOS or `/bin` on merged-usr
+/// Linux. Windows has no such marker, so every link there stays rejected.
+fn system_link(metadata: &std::fs::Metadata) -> bool {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        metadata.uid() == 0
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = metadata;
+        false
+    }
+}
+// Resolve the spelled output directory component by component, before any `..`
+// is collapsed: a trusted (system) link is replaced by its canonical target and
+// any other symlink is rejected. The result contains no symlink, so lexical
+// target comparisons and the strict `checked_directory` re-checks agree with
+// the directory the operating system opens (docs/decisions.md, 2026-10-13).
+fn resolved_directory(
+    path: &Path,
+    trusted: &dyn Fn(&std::fs::Metadata) -> bool,
+) -> Result<PathBuf> {
+    let mut resolved = PathBuf::new();
     for component in absolute(path)?.components() {
         match component {
+            Component::Prefix(_) | Component::RootDir => resolved.push(component.as_os_str()),
             Component::CurDir => {}
+            // `resolved` holds no symlink here, so dropping its last component
+            // is the parent the operating system would use.
             Component::ParentDir => {
-                result.pop();
+                resolved.pop();
             }
-            component => result.push(component.as_os_str()),
+            Component::Normal(name) => {
+                resolved.push(name);
+                let metadata = std::fs::symlink_metadata(&resolved)?;
+                if metadata.is_symlink() && trusted(&metadata) {
+                    resolved = std::fs::canonicalize(&resolved)?;
+                } else if metadata.is_symlink() || !metadata.is_dir() {
+                    return Err(invalid(format!(
+                        "output parent must be a real directory, not a symlink: {}",
+                        resolved.display()
+                    )));
+                }
+            }
         }
     }
-    Ok(result)
+    Ok(resolved)
 }
-// Check the unnormalized spelling first. Collapsing `link/..` before checking
-// would otherwise hide a symlink in the user-supplied output path.
+// Open a `resolved_directory` path, re-verifying that every component is still
+// a real directory (no symlink appeared since resolution) and none is a source
+// directory. Preflight and each commit step use it to detect replacement.
 fn checked_directory(path: &Path, sources: &Sources) -> Result<Dir> {
     let mut prefix = PathBuf::new();
     let mut last = None;
@@ -881,6 +926,7 @@ pub(crate) fn persist_bundles(outputs: &[PreparedOutput], sources: &Sources) -> 
             .iter()
             .map(|output| (output.destination.as_path(), &output.bundle)),
         sources,
+        &system_link,
         |_| Ok(()),
     )
 }
@@ -891,13 +937,18 @@ fn persist_impl(
     sources: &Sources,
     fail_after: Option<usize>,
 ) -> Result<()> {
-    persist_group(std::iter::once((destination, bundle)), sources, |index| {
-        if fail_after == Some(index) {
-            Err(invalid("injected commit failure"))
-        } else {
-            Ok(())
-        }
-    })
+    persist_group(
+        std::iter::once((destination, bundle)),
+        sources,
+        &system_link,
+        |index| {
+            if fail_after == Some(index) {
+                Err(invalid("injected commit failure"))
+            } else {
+                Ok(())
+            }
+        },
+    )
 }
 
 // This is an error-rollback transaction, not crash-atomic multi-file visibility.
@@ -906,6 +957,7 @@ fn persist_impl(
 fn persist_group<'a>(
     outputs: impl IntoIterator<Item = (&'a Path, &'a OutputBundle)>,
     sources: &Sources,
+    trusted_link: &dyn Fn(&std::fs::Metadata) -> bool,
     mut before_commit: impl FnMut(usize) -> Result<()>,
 ) -> Result<()> {
     sources.ensure_complete()?;
@@ -918,8 +970,8 @@ fn persist_group<'a>(
                 "output bundle entry point differs from destination",
             ));
         }
-        let root = Arc::new(checked_directory(parent(destination), sources)?);
-        let root_path = normalized(parent(destination))?;
+        let root_path = resolved_directory(parent(destination), trusted_link)?;
+        let root = Arc::new(checked_directory(&root_path, sources)?);
         insert_file_target(&mut destinations, root_path.join(bundle.primary().as_str()))?;
         prepared.push(PreparedBundle {
             root_identity: directory_identity(&root)?,
@@ -1434,6 +1486,7 @@ mod tests {
                 .iter()
                 .map(|output| (output.destination.as_path(), &output.bundle)),
             sources,
+            &system_link,
             hook,
         )
     }
@@ -1785,10 +1838,92 @@ mod tests {
         let outside = Temp::new();
         std::os::unix::fs::symlink(&outside.0, t.0.join("link")).unwrap();
         for destination in [t.0.join("link/font.bin"), t.0.join("link/../font.bin")] {
-            assert!(persist_bundles(&[pending(destination, b"new")], &Sources::default()).is_err());
+            let outputs = [pending(destination, b"new")];
+            // Untrusted, whoever runs the test (a root-owned link is a system link).
+            assert!(group_with(&outputs, &|_| false).is_err());
+            if !link_owned_by_root(&t.0.join("link")) {
+                assert!(persist_bundles(&outputs, &Sources::default()).is_err());
+            }
         }
         assert_eq!(std::fs::read_dir(&outside.0).unwrap().count(), 0);
         assert_eq!(std::fs::read_dir(&t.0).unwrap().count(), 1);
+    }
+    #[cfg(unix)]
+    fn link_owned_by_root(path: &Path) -> bool {
+        use std::os::unix::fs::MetadataExt;
+        std::fs::symlink_metadata(path).unwrap().uid() == 0
+    }
+    #[cfg(unix)]
+    fn group_with(
+        outputs: &[PreparedOutput],
+        trusted: &dyn Fn(&std::fs::Metadata) -> bool,
+    ) -> Result<()> {
+        persist_group(
+            outputs
+                .iter()
+                .map(|output| (output.destination.as_path(), &output.bundle)),
+            &Sources::default(),
+            trusted,
+            |_| Ok(()),
+        )
+    }
+    // macOS reaches every temporary directory through the root-owned `/var`
+    // (and `/tmp`) links; the 2026-10-13 decision resolves such system links.
+    // A trusted link resolves to its target before `..` applies, as the
+    // operating system resolves it, so lexical checks see the real directory.
+    #[cfg(unix)]
+    #[test]
+    fn trusted_parent_links_resolve_to_their_target_before_dot_dot() {
+        let t = Temp::new();
+        std::fs::create_dir_all(t.0.join("real/inner")).unwrap();
+        std::os::unix::fs::symlink(t.0.join("real/inner"), t.0.join("link")).unwrap();
+        let outputs = [
+            pending(t.0.join("link/a.bin"), b"a"),
+            pending(t.0.join("link/../b.bin"), b"b"),
+        ];
+        group_with(&outputs, &|_| true).unwrap();
+        assert_eq!(std::fs::read(t.0.join("real/inner/a.bin")).unwrap(), b"a");
+        assert_eq!(std::fs::read(t.0.join("real/b.bin")).unwrap(), b"b");
+        assert!(!t.0.join("b.bin").exists());
+        // Two spellings of one new file are one target, not two.
+        let aliases = [
+            pending(t.0.join("link/c.bin"), b"1"),
+            pending(t.0.join("real/inner/c.bin"), b"2"),
+        ];
+        assert!(group_with(&aliases, &|_| true).is_err());
+        assert!(!t.0.join("real/inner/c.bin").exists());
+        assert_no_temporaries(&t.0);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn only_root_owned_links_are_system_links() {
+        use std::os::unix::fs::MetadataExt;
+        let t = Temp::new();
+        std::os::unix::fs::symlink(&t.0, t.0.join("link")).unwrap();
+        let link = std::fs::symlink_metadata(t.0.join("link")).unwrap();
+        let running_as_root = std::fs::metadata(&t.0).unwrap().uid() == 0;
+        assert_eq!(system_link(&link), running_as_root);
+        if !running_as_root {
+            assert!(resolved_directory(&t.0.join("link"), &system_link).is_err());
+        }
+        // Real system links (macOS /var, /tmp, /etc; merged-usr /bin, /lib)
+        // resolve to their canonical directory.
+        for path in ["/bin", "/sbin", "/lib", "/etc", "/tmp", "/var"] {
+            let path = Path::new(path);
+            if std::fs::symlink_metadata(path).is_ok_and(|m| m.is_symlink() && m.uid() == 0)
+                && std::fs::metadata(path).is_ok_and(|m| m.is_dir())
+            {
+                assert_eq!(
+                    resolved_directory(path, &system_link).unwrap(),
+                    std::fs::canonicalize(path).unwrap()
+                );
+            }
+        }
+        // std::env::temp_dir() is behind such a link on macOS.
+        assert_eq!(
+            resolved_directory(&t.0, &system_link).unwrap(),
+            std::fs::canonicalize(&t.0).unwrap()
+        );
     }
     #[cfg(unix)]
     #[test]
